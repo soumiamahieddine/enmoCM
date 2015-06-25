@@ -34,7 +34,7 @@ try {
     require_once('core/class/class_db.php');
     require_once('core/class/class_history.php');
 } catch (Exception $e) {
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 class LinkController
@@ -161,7 +161,6 @@ class LinkController
                 if ($linksArray[$i] != '' ) {
                     if (!preg_match("/".' ' . $linksArray[$i] . ' '."/", $this->previousId)) {
                         $this->previousId .= $parentId . ' ';
-                        //echo $this->previousId . '<br />';
                         $return[$linksArray[$i]] = $this->getMap($linksArray[$i], $collection, $sens);
                     }
                 } else {

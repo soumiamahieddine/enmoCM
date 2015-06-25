@@ -82,9 +82,6 @@ class MyRestServer extends webService
             $this->makeAtomEntryRootFolder();
         } else {
             $restRequest = explode('/', $_SERVER['QUERY_STRING']);
-            /*echo '<pre>';
-            print_r($restRequest);
-            echo '</pre>';*/
             if ($restRequest[3] <> '') {
                 $this->requestedCollection = $restRequest[3];
             }
@@ -111,8 +108,6 @@ class MyRestServer extends webService
      */
     public function call()
     {
-        //echo $this->dispatchMap[$this->requestedResource]['pathToController'] 
-        //    . '<br>';
         if (
             file_exists(
                 $this->dispatchMap[$this->requestedResource]['pathToController']
@@ -140,16 +135,6 @@ class MyRestServer extends webService
     function makeRESTServer()
     {
         //only for tests
-        /* echo '<pre>';
-        var_dump($_SERVER);
-        var_dump($this->dispatchMap);
-        echo '</pre>';*/
-        //echo 'method ? ' . $this->crudMethod . '<br>';
-        //echo 'requested resource : ' . $this->requestedResource 
-        //  . '<br>';
-        //echo 'requested resource id : ' . $this->requestedResourceId 
-        //  . '<br>';
-        //echo 'result of the function call : ' . $this->call();
         header("Content-type: text/xml");
         $this->call();
     }
@@ -254,30 +239,6 @@ xmlns:maarch="http://www.maarch.org">
     function makeAtomEntryRootFolder()
     {
         header("Content-type: text/xml");
-        /*echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<atom:entry xmlns:atom="http://www.w3.org/2005/Atom" 
-xmlns:cmisra="http://docs.oasis-open.org/ns/cmis/restatom/200908/" 
-xmlns:cmis="http://docs.oasis-open.org/ns/cmis/core/200908/" 
-xmlns:maarch="http://www.maarch.org">
-    <atom:author>
-        <atom:name>maarch</atom:name>
-    </atom:author>
-    <atom:id>ROOT</atom:id>
-    <atom:title>' . $_SESSION['config']['applicationname'] . '</atom:title>
-    <cmisra:object/>
-    <atom:link rel="service" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7?repositoryId=371554cd-ac06-40ba-98b8-e6b60275cca7" type="application/atomsvc+xml"/>
-    <atom:link rel="self" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/entry?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=entry" cmisra:id="workspace://SpacesStore/87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1"/>
-    <atom:link rel="enclosure" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/entry?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=entry"/>
-    <atom:link rel="edit" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/entry?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=entry"/>
-    <atom:link rel="describedby" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/type?id=cmis%3Afolder" type="application/atom+xml;type=entry"/>
-    <atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/allowableactions?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/cmisallowableactions+xml"/>
-    <atom:link rel="down" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/children?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=feed"/>
-    <atom:link rel="down" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/descendants?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/cmistree+xml"/>
-    <atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/foldertree?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/cmistree+xml"/>
-    <atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/acl?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/cmisacl+xml"/>
-    <atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/policies" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/policies?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=feed"/>
-    <atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/relationships?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=feed"/>
-</atom:entry>';*/
         echo '<?xml version="1.0" encoding="UTF-8"?>
 <atom:entry xmlns:atom="http://www.w3.org/2005/Atom" 
 xmlns:cmis="http://docs.oasis-open.org/ns/cmis/core/200908/" 

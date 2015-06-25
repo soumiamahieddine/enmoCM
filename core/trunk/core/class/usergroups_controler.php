@@ -40,7 +40,7 @@ try {
     require_once 'core/class/SecurityControler.php';
 
 } catch (Exception $e) {
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 /**
@@ -130,7 +130,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         try{
             $db->query($query);
         } catch (Exception $e){
-            echo _NO_GROUP_WITH_ID . ' ' . $groupId . ' // ';
+            echo _NO_GROUP_WITH_ID . ' ' . functions::xssafe($groupId) . ' // ';
         }
 
         while ($res = $db->fetch_object()) {
@@ -160,7 +160,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         try {
             $db->query($query);
         } catch (Exception $e){
-            echo _NO_USER_WITH_ID.' '.$userId.' // ';
+            echo _NO_USER_WITH_ID.' '.functions::xssafe($userId).' // ';
         }
 
         $res = $db->fetch_object();
@@ -193,7 +193,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         try{
             $db->query($query);
         } catch (Exception $e){
-            echo _NO_GROUP_WITH_ID.' '.$groupId.' // ';
+            echo _NO_GROUP_WITH_ID.' '.functions::xssafe($groupId).' // ';
         }
 
         while ($res = $db->fetch_object()) {
@@ -222,7 +222,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         try {
             $db->query($query);
         } catch (Exception $e){
-            echo _NO_GROUP_WITH_ID . ' ' . $groupId . ' // ';
+            echo _NO_GROUP_WITH_ID . ' ' . functions::xssafe($groupId) . ' // ';
         }
 
         $services = array();
@@ -645,7 +645,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             $db->query($query);
             $ok = true;
         } catch (Exception $e){
-            echo _CANNOT_DELETE_GROUP_ID . ' ' . $groupId . ' // ';
+            echo _CANNOT_DELETE_GROUP_ID . ' ' . functions::xssafe($groupId) . ' // ';
             $ok = false;
         }
 
@@ -766,7 +766,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         try {
             $db->query($query);
         } catch (Exception $e) {
-            echo _UNKNOWN . _GROUP . ' ' . $groupId . ' // ';
+            echo _UNKNOWN . _GROUP . ' ' . functions::xssafe($groupId) . ' // ';
         }
 
         if ($db->nb_result() > 0) {
@@ -797,7 +797,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             $db->query($query);
             $ok = true;
         } catch (Exception $e) {
-            echo _CANNOT_DELETE_GROUP_ID . ' ' . $groupId . ' // ';
+            echo _CANNOT_DELETE_GROUP_ID . ' ' . functions::xssafe($groupId) . ' // ';
             $ok = false;
         }
         $db->disconnect();
@@ -828,7 +828,8 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             $db->query($query);
             $ok = true;
         } catch (Exception $e) {
-            echo _CANNOT_INSERT . ' ' . $groupId . ' ' . $serviceId . ' // ';
+            echo _CANNOT_INSERT . ' ' . functions::xssafe($groupId) 
+                . ' ' . functions::xssafe($serviceId) . ' // ';
             $ok = false;
         }
         $db->disconnect();
@@ -858,7 +859,8 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         try {
             $db->query($query);
         } catch (Exception $e) {
-            echo _CANNOT_FIND . ' ' . $groupId . ' ' . $userId . ' // ';
+            echo _CANNOT_FIND . ' ' . functions::xssafe($groupId) 
+                . ' ' . functions::xssafe($userId) . ' // ';
         }
         $db->disconnect();
 

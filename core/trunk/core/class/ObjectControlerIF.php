@@ -4,7 +4,7 @@ try {
     //require_once("modules/moreq/moreq_tables_definition.php");
     require_once("core/class/class_db.php");
 } catch (Exception $e){
-    echo $e->getMessage().' // ';
+    echo functions::xssafe($e->getMessage()) . ' // ';
 }
 
 /**

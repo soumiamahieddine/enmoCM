@@ -44,7 +44,7 @@ try {
     require_once 'core/class/docservers_controler.php';
     require_once 'core/class/class_resource.php';
 } catch (Exception $e) {
-    echo $e->getMessage().' // ';
+    echo functions::xssafe($e->getMessage()).' // ';
 }
 
 /**

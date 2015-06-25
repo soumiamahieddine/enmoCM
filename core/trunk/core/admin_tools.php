@@ -91,7 +91,7 @@ function At_showAjaxList($db, $whatRequest)
             $flagAuthView = true;
         }
         if (stripos($what, $whatRequest) === 0) {
-            echo "<li>".$what."</li>\n";
+            echo "<li>" . functions::xssafe($what) . "</li>\n";
             if ($flagAuthView) {
                 echo "<li>...</li>\n";
                 break;

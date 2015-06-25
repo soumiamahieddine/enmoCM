@@ -35,7 +35,7 @@ try {
     require_once 'core/class/docservers_controler.php';
     require_once 'core/core_tables.php';
 } catch (Exception $e) {
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 /**
@@ -215,7 +215,6 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
             }
             $tmpCmd = '';
             exec($command, $tmpCmd, $execError);
-            //echo $command . '<br>';
             if ($execError > 0) {
                 if (DIRECTORY_SEPARATOR == '/') {
                     //else try to extract only the first container
@@ -326,7 +325,6 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
                             }
                             $tmpCmd = '';
                             exec($commandBis, $tmpCmd, $execError);
-                            //echo $commandBis;exit;
                             if ($execError > 0) {
                                 $result = array(
                                     'status' => 'ko',

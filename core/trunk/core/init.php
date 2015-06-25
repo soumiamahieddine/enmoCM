@@ -53,7 +53,6 @@ if (isset($_SESSION['custom_override_id'])
 ) {
     $path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
         . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR;
-    //echo $path;
     set_include_path(
         $path . PATH_SEPARATOR . $_SESSION['config']['corepath']
         . PATH_SEPARATOR . get_include_path()

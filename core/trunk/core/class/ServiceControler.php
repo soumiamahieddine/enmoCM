@@ -44,7 +44,7 @@ try {
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."users_controler.php");
 	require_once 'core/core_tables.php';
 } catch (Exception $e){
-	echo $e->getMessage().' // ';
+	echo functions::xssafe($e->getMessage()).' // ';
 }
 
 /**

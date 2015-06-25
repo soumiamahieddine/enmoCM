@@ -38,7 +38,7 @@ try {
     require_once 'core/class/class_history.php';
     require_once 'modules/entities/class/class_users_entities.php';
 } catch (Exception $e){
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 /**
@@ -167,7 +167,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         try{
             self::$db->query($query);
         } catch (Exception $e){
-            echo _NO_USER_WITH_ID.' '.$userId.' // ';
+            echo _NO_USER_WITH_ID.' '.functions::xssafe($userId).' // ';
         }
 
         while ($res = self::$db->fetch_object()) {
@@ -663,7 +663,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         try{
             self::$db->query($query);
         } catch (Exception $e){
-            echo _UNKNOWN . ' ' . _USER . ' ' . $userId . ' // ';
+            echo _UNKNOWN . ' ' . _USER . ' ' . functions::xssafe($userId) . ' // ';
         }
 
         if (self::$db->nb_result() > 0) {
@@ -856,7 +856,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         try{
             self::$db->query($query);
         } catch (Exception $e){
-            echo _UNKNOWN . ' ' . _USER . ' ' . $userId . ' // ';
+            echo _UNKNOWN . ' ' . _USER . ' ' . functions::xssafe($userId) . ' // ';
         }
 
         if (self::$db->nb_result() > 0) {
@@ -956,7 +956,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         try{
             self::$db->query($query);
         } catch (Exception $e){
-            echo _NO_USER_WITH_ID.' '.$userId.' // ';
+            echo _NO_USER_WITH_ID.' '.functions::xssafe($userId).' // ';
         }
 
         while ($res = self::$db->fetch_object()) {

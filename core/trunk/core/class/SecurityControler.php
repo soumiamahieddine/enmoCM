@@ -41,7 +41,7 @@ try {
         define('_CLASSIFICATION_SCHEME_VIEW', 'mr_classification_scheme_view');
     }
 } catch (Exception $e) {
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 /**
@@ -78,7 +78,7 @@ class SecurityControler
         try {
             $db->query($query);
         } catch (Exception $e){
-            echo _NO_ACCESS_WITH_ID . ' ' . $securityId . ' // ';
+            echo _NO_ACCESS_WITH_ID . ' ' . functions::xssafe($securityId) . ' // ';
         }
 
         if ($db->nb_result() > 0) {
@@ -113,7 +113,7 @@ class SecurityControler
         try {
             $db->query($query);
         } catch (Exception $e) {
-            echo _NO_GROUP_WITH_ID . ' ' . $groupId . ' // ';
+            echo _NO_GROUP_WITH_ID . ' ' . functions::xssafe($groupId) . ' // ';
         }
 
         $security = array();
@@ -172,7 +172,7 @@ class SecurityControler
             $db->query($query);
             $ok = true;
         } catch (Exception $e) {
-            echo _CANNOT_INSERT_ACCESS . " " . $security->toString() . ' // ';
+            echo _CANNOT_INSERT_ACCESS . " " . functions::xssafe($security->toString()) . ' // ';
             $ok = false;
         }
         return $ok;
@@ -199,7 +199,7 @@ class SecurityControler
             $db->query($query);
             $ok = true;
         } catch (Exception $e) {
-            echo _CANNOT_UPDATE_ACCESS . " " . $security->toString() . ' // ';
+            echo _CANNOT_UPDATE_ACCESS . " " . functions::xssafe($security->toString()) . ' // ';
             $ok = false;
         }
         return $ok;
@@ -224,7 +224,7 @@ class SecurityControler
             $db->query($query);
             $ok = true;
         } catch (Exception $e) {
-            echo _CANNOT_DELETE_SECURITY_ID . " " . $securityId . ' // ';
+            echo _CANNOT_DELETE_SECURITY_ID . " " . functions::xssafe($securityId) . ' // ';
             $ok = false;
         }
         return $ok;
@@ -249,7 +249,7 @@ class SecurityControler
             $db->query($query);
             $ok = true;
         } catch (Exception $e) {
-            echo _CANNOT_DELETE . ' ' . _GROUP_ID . " " . $groupId . ' // ';
+            echo _CANNOT_DELETE . ' ' . _GROUP_ID . " " . functions::xssafe($groupId) . ' // ';
             $ok = false;
         }
         return $ok;
@@ -661,7 +661,6 @@ class SecurityControler
                            . $_SESSION['collections'][$ind]['view'] . " where ("
                            . $where . ') and res_id = ' . $objectId;
                 }
-                //echo $query;
                 $db = new dbquery();
                 $db->connect();
                 if (! empty($query)) {

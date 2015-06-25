@@ -44,7 +44,7 @@ try {
     require_once 'core/class/class_resource.php';
     require_once 'core/class/class_history.php';
 } catch (Exception $e) {
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 /**
@@ -708,7 +708,7 @@ class docservers_controler
         try{
             $db->query($query);
         } catch (Exception $e) {
-            echo _UNKNOWN . _DOCSERVER . ' ' . $docserver_id . ' // ';
+            echo _UNKNOWN . _DOCSERVER . ' ' . functions::xssafe($docserver_id) . ' // ';
         }
         if ($db->nb_result() > 0) {
             $db->disconnect();
@@ -1623,10 +1623,6 @@ class docservers_controler
                             $adrToExtract['path_to_file']
                         );
                     }
-                    /*echo $file . '<br>';
-                    echo $docserverTypeObject->fingerprint_mode . '<br>';
-                    echo 'from ds:' . $fingerprintFromDocserver . '<br>';
-                    echo 'from db:' . $fingerprintFromDb . '<br>';exit;*/
                     //manage view of the file
                     $use_tiny_mce = false;
                     if (strtolower($format) == 'maarch'

@@ -28,6 +28,8 @@
  * @author Boulio Nicolas
  *
  */
+require_once("core/class/class_functions.php");
+
 class BaseObject {
 	protected $data = array(); 
 
@@ -66,7 +68,7 @@ class BaseObject {
 		try {
 			if (isset($this->data[$name])) return $this->data[$name];
 		} catch (Exception $e) {
-			echo 'Exception catched: '.$e->getMessage().', null returned<br/>';
+			echo 'Exception catched: '.functions::xssafe($e->getMessage()).', null returned<br/>';
 			return null;
 		}
 	}

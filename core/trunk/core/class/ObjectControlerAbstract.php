@@ -54,12 +54,12 @@ abstract class ObjectControler
         self::$db->connect();
         try{
             if (_DEBUG) {
-                echo "insert: $query // ";
+                echo "insert: " . functions::xssafe($query) . " // ";
             }
             self::$db->query($query);
             $result = true;
         } catch (Exception $e) {
-            echo 'Impossible to insert object ' . $object->toString() . ' // ';
+            echo 'Impossible to insert object ' . functions::xssafe($object->toString()) . ' // ';
             $result = false;
         }
         self::$db->disconnect();
@@ -161,12 +161,12 @@ abstract class ObjectControler
         self::$db->connect();
         try{
             if (_DEBUG) {
-               echo "update: $query // ";
+               echo "update: " . functions::xssafe($query) . " // ";
             }
             self::$db->query($query);
             $result = true;
         } catch (Exception $e) {
-            echo 'Impossible to update object ' . $object->toString() . ' // ';
+            echo 'Impossible to update object ' . functions::xssafe($object->toString()) . ' // ';
             $result = false;
         }
         self::$db->disconnect();
@@ -255,7 +255,8 @@ abstract class ObjectControler
                 $queryResult = self::$db->fetch_object();
                 foreach ((array)$queryResult as $key => $value) {
                     if (_ADVANCED_DEBUG) {
-                        echo "Getting property: $key with value: $value // ";
+                        echo "Getting property: " . functions::xssafe($key) 
+                            . " with value: " . functions::xssafe($value) . " // ";
                     }
                     if ($value == 't') {          /* BUG FROM PGSQL DRIVER! */
                         $value = true;            /*                        */
@@ -266,7 +267,7 @@ abstract class ObjectControler
                 }
             }
         } catch (Exception $e) {
-            echo "Impossible to get object $id // ";
+            echo "Impossible to get object " . functions::xssafe($id) . " // ";
         }
 
         self::$db->disconnect();
@@ -317,7 +318,7 @@ abstract class ObjectControler
             for ($cpt=0;$cpt<count($rows);$cpt++) {
                 foreach ($rows[$cpt] as $key => $value) {
                     if (_ADVANCED_DEBUG) {
-                        echo "Getting property: $key with value: $value // ";
+                        echo "Getting property: $key with value: " . functions::xssafe($value) . " // ";
                     }
                     if ($value == 't') {          /* BUG FROM PGSQL DRIVER! */
                         $value = true;            /*                        */
@@ -364,12 +365,12 @@ abstract class ObjectControler
 
         try{
             if (_DEBUG) {
-                echo "delete: $query // ";
+                echo "delete: " . functions::xssafe($query) . " // ";
             }
             self::$db->query($query);
             $result = true;
         } catch (Exception $e) {
-            echo 'Impossible to delete object with id=' . $object->$table_id
+            echo 'Impossible to delete object with id=' . functions::xssafe($object->$table_id)
                 . ' // ';
             $result = false;
         }
@@ -405,12 +406,12 @@ abstract class ObjectControler
         }
         try{
             if(_DEBUG){
-                echo "enable: $query // ";
+                echo "enable: " . functions::xssafe($query) . " // ";
             }
             self::$db->query($query);
             $result = true;
         } catch (Exception $e) {
-            echo 'Impossible to enable object with id=' . $object->$table_id
+            echo 'Impossible to enable object with id=' . functions::xssafe($object->$table_id)
                 . ' // ';
             $result = false;
         }
@@ -446,12 +447,12 @@ abstract class ObjectControler
         }
         try{
             if(_DEBUG){
-                echo "enable: $query // ";
+                echo "enable: " . functions::xssafe($query) . " // ";
             }
             self::$db->query($query);
             $result = true;
         } catch (Exception $e) {
-            echo 'Impossible to enable object with id=' . $object->$table_id
+            echo 'Impossible to enable object with id=' . functions::xssafe($object->$table_id)
                 . ' // ';
             $result = false;
         }
@@ -488,12 +489,12 @@ abstract class ObjectControler
         }
         try {
             if (_DEBUG) {
-                echo "disable: $query // ";
+                echo "disable: " . functions::xssafe($query) . " // ";
             }
             self::$db->query($query);
             $result = true;
         } catch (Exception $e) {
-            echo 'Impossible to disable object with id=' . $object->$table_id
+            echo 'Impossible to disable object with id=' . functions::xssafe($object->$table_id)
                 . ' // ';
             $result = false;
         }

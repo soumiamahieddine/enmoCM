@@ -377,7 +377,6 @@ class dbquery extends functions
                 } 
                 else {
                     if(count($params) > 0) {
-                        //echo "<br/>Params to bind:"; var_dump($params);
                         foreach($params as $paramname => &$paramvar) {   
                             $binded = oci_bind_by_name($this->query, $paramname, $paramvar, 100, SQLT_CHR);
                         }
@@ -389,7 +388,7 @@ class dbquery extends functions
                         $this->error();
                     }
                     if(count($params) > 0) {
-                        //echo "<br/>Params after execution: "; var_dump($params);
+                        //
                     }
                 }
                 break;
@@ -688,7 +687,8 @@ class dbquery extends functions
     * SQL Error management
     *
     */
-    private function error() {
+    private function error() 
+    {
         
         require_once('core' . DIRECTORY_SEPARATOR . 'class' 
             . DIRECTORY_SEPARATOR . 'class_history.php');
@@ -696,8 +696,6 @@ class dbquery extends functions
         
         // Connexion error
         if ($this->_sqlError == 1) {
-            //$trace->add("", 0, "CONNECT", "DBERROR", _CONNECTION_DB_FAILED." : ".$this->_user."@".$this->_server.":".$this->_port, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_FATAL);
-            // Shows the connexion data (server, port, user, pass)
             echo '- <b>' . _DB_CONNEXION_ERROR . '</b>';
             if ($_SESSION['config']['debug'] == 'true') {
                 echo ' -<br /><br />' . _DATABASE_SERVER . ' : '
@@ -742,31 +740,6 @@ class dbquery extends functions
             
             throw new Exception (_QUERY_DB_FAILED.": '".$sqlError."' "._QUERY.": [".$this->protect_string_db($this->_debugQuery)."]");
             
-            /*
-            $sqlErrorToView = '<b>' . _QUERY_ERROR . '</b><br />';
-            $sqlError = '';
-            if ($this->_databasetype == 'MYSQL') {
-                $sqlError .= _ERROR_NUM . @mysqli_errno($this->_sqlLink) . ' '
-                    . _HAS_JUST_OCCURED . ' :<br />';
-                //$sqlError .= _MESSAGE . ' : ' .  @mysqli_error($this->_sqlLink) . '<br />';
-            } else if ($this->_databasetype == 'POSTGRESQL') {
-                @pg_send_query($this->_sqlLink, $this->_debugQuery);
-                $res = @pg_get_result($this->_sqlLink);
-                $sqlError .= @pg_result_error($res);
-            } else if ($this->_databasetype == 'SQLSERVER') {
-                $sqlError .= @mssql_get_last_message();
-            } else if ($this->_databasetype == 'ORACLE') {
-                $res = @oci_error($this->statement);
-                $sqlError .= $res['message'];
-            }
-            $_SESSION['error'] = $sqlErrorToView;
-            if ($_SESSION['config']['debug'] == 'true') {
-                echo $sqlError;
-                echo '<br/>' . _QUERY . ' : <textarea cols="70" rows="10">'
-                    . $this->_debugQuery . '</textarea>';
-                exit();
-            }*/
-            //exit();
         }
 
         // Closing connexion error
@@ -791,7 +764,6 @@ class dbquery extends functions
         // Query Preparation error (ORACLE & DB2)
         if ($this->_sqlError == 7) {
             $_SESSION['error'] .= '<b>' . _SQL_QUERY_NOT_SECURE . '</b> <br />';
-            //echo $_SESSION['error']; 
             $trace->add("", 0, "QUERY", "DBERROR", _SQL_QUERY_NOT_SECURE, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             //exit();
         }

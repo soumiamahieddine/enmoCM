@@ -39,7 +39,7 @@ try {
     require_once('core/class/ObjectControlerAbstract.php');
     require_once('core/class/class_history.php');
 } catch (Exception $e) {
-	echo $e->getMessage() . ' // ';
+	functions::xecho($e->getMessage()) . ' // ';
 }
 
 /**
@@ -107,10 +107,10 @@ class ActionControler
 		$query = "select * from ".self::$actions_table." where id = ".$action_id;
 
 		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
+			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
-		echo _NO_ACTION_WITH_ID.' '.$action_id.' // ';
+		echo _NO_ACTION_WITH_ID . ' ' . functions::xssafe($action_id) . ' // ';
 		}
 
 		if(self::$db->nb_result() > 0)
@@ -142,7 +142,7 @@ class ActionControler
 		$query = "select * from ".self::$actions_table;
 
 		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
+			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
 		echo _NO_ACTION;
@@ -185,7 +185,7 @@ class ActionControler
 		$query = "select category_id from actions_categories where action_id = " . $actionId;
 
 		try {
-			if($_ENV['DEBUG']){echo $query.' // ';}
+			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
 			self::$db->query($query);
 		} catch (Exception $e) {
             echo _NO_CATEGORY;
@@ -264,11 +264,11 @@ class ActionControler
 					.$prep_query['VALUES']
 					.")";
 		try{
-			if($_ENV['DEBUG']){ echo $query.' // '; }
+			if($_ENV['DEBUG']){ functions::xecho($query) . ' // '; }
 			self::$db->query($query);
 			$ok = true;
 		} catch (Exception $e){
-			echo _CANNOT_INSERT_ACTION." ".$action->toString().' // ';
+			echo _CANNOT_INSERT_ACTION." ".functions::xssafe($action->toString()).' // ';
 			$ok = false;
 		}
 		self::disconnect();
@@ -292,11 +292,11 @@ class ActionControler
 					." where id=".$action->id;
 
 		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
+			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
 			self::$db->query($query);
 			$ok = true;
 		} catch (Exception $e){
-			echo _CANNOT_UPDATE_ACTION." ".$action->toString().' // ';
+			echo _CANNOT_UPDATE_ACTION." ".functions::xssafe($action->toString()).' // ';
 			$ok = false;
 		}
 		self::disconnect();
@@ -320,11 +320,11 @@ class ActionControler
 		$query="delete from ".self::$actions_table." where id=".$action_id;
 
 		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
+			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
 			self::$db->query($query);
 			$ok = true;
 		} catch (Exception $e){
-			echo _CANNOT_DELETE_ACTION_ID." ".$action_id.' // ';
+			echo _CANNOT_DELETE_ACTION_ID." ".functions::xssafe($action_id).' // ';
 			$ok = false;
 		}
 		if($ok)
@@ -349,11 +349,11 @@ class ActionControler
 		self::connect();
 		$query="delete from ".self::$actions_groupbaskets_table."  where id_action=".$action_id;
 		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
+			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
 			self::$db->query($query);
 			$ok = true;
 		} catch (Exception $e){
-			echo _CANNOT_DELETE_ACTION_ID." ".$action_id.' // ';
+			echo _CANNOT_DELETE_ACTION_ID." ".functions::xssafe($action_id).' // ';
 			$ok = false;
 		}
 
@@ -376,10 +376,10 @@ class ActionControler
 		$query = "select id from ".self::$actions_table." where id = ".$action_id;
 
 		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
+			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
-			echo _UNKNOWN.' '._ACTION." ".$action_id.' // ';
+			echo _UNKNOWN.' '._ACTION." ".functions::xssafe($action_id).' // ';
 		}
 
 		if(self::$db->nb_result() > 0)

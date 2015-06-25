@@ -34,7 +34,7 @@
 try {
     require_once("core/class/BaseObject.php");
 } catch (Exception $e) {
-    echo $e->getMessage().' // ';
+    echo functions::xssafe($e->getMessage()).' // ';
 }
 
 class docserver_types extends BaseObject

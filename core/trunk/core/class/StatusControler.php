@@ -38,7 +38,7 @@ try {
     // require_once 'core/class/ObjectControlerIF.php';
     require_once 'core/class/class_history.php';
 } catch (Exception $e){
-    echo $e->getMessage().' // ';
+    echo functions::xssafe($e->getMessage()).' // ';
 }
 
 /**
@@ -382,7 +382,7 @@ class Maarch_Core_Class_StatusControler
         try{
             self::$db->query($query);
         } catch (Exception $e){
-            echo _UNKNOWN . ' ' . _STATUS . ' ' . $status_id . ' // ';
+            echo _UNKNOWN . ' ' . _STATUS . ' ' . functions::xssafe($status_id) . ' // ';
         }
 
         if (self::$db->nb_result() > 0) {
@@ -403,7 +403,7 @@ class Maarch_Core_Class_StatusControler
         $query = "select * from " . STATUS_TABLE . " order by label_status";
         try {
             if ($_ENV['DEBUG'])
-                echo $query . ' // ';
+                functions::xecho($query) . ' // ';
             $db->query($query);
         } catch (Exception $e) {
             echo _NO_STATUS . ' // ';

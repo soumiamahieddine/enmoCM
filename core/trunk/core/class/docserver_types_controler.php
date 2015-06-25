@@ -41,7 +41,7 @@ try {
     require_once ("core/class/ObjectControlerAbstract.php");
     require_once ("core/class/ObjectControlerIF.php");
 } catch (Exception $e) {
-    echo $e->getMessage().' // ';
+    echo functions::xssafe($e->getMessage()).' // ';
 }
 
 /**
@@ -274,7 +274,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
             $db->connect();
             $query="delete from "._DOCSERVER_TYPES_TABLE_NAME." where docserver_type_id ='".$func->protect_string_db($docserver_type->docserver_type_id)."'";
             try {
-                if ($_ENV['DEBUG']) {echo $query.' // ';}
+                if ($_ENV['DEBUG']) {functions::xecho($query) . ' // ';}
                 $db->query($query);
                 $ok = true;
             } catch (Exception $e) {
@@ -414,11 +414,11 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
         $query = "select docserver_type_id from " . _DOCSERVER_TYPES_TABLE_NAME . " where docserver_type_id = '" . $docserver_type_id . "'";
         try {
             if ($_ENV['DEBUG']) {
-                echo $query . ' // ';
+                functions::xecho($query) . ' // ';
             }
             $db->query($query);
         } catch (Exception $e) {
-            echo _UNKNOWN . _LC_CYCLE . " " . $docserver_type_id . ' // ';
+            echo _UNKNOWN . _LC_CYCLE . " " . functions::xssafe($docserver_type_id) . ' // ';
         }
         if ($db->nb_result() > 0) {
             $db->disconnect();
@@ -483,10 +483,10 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
         $db->connect();
         $query = "select docserver_id from "._DOCSERVERS_TABLE_NAME." where docserver_type_id = '".$docserver_type_id."'";
         try{
-            if ($_ENV['DEBUG']) {echo $query.' // ';}
+            if ($_ENV['DEBUG']) {functions::xecho($query) . ' // ';}
                     $db->query($query);
         } catch (Exception $e) {
-                    echo _NO_TYPE_WITH_ID.' '.$docserver_type_id.' // ';
+                    echo _NO_TYPE_WITH_ID.' '.functions::xssafe($docserver_type_id).' // ';
         }
         while($res = $db->fetch_object())
         {
@@ -508,7 +508,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
             $query .= " where enabled = 'Y'";
         try {
             if ($_ENV['DEBUG'])
-                echo $query . ' // ';
+                functions::xecho($query) . ' // ';
             $db->query($query);
         } catch (Exception $e) {
             echo _NO_DOCSERVER_TYPE . ' // ';

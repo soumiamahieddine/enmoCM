@@ -36,7 +36,7 @@ try {
 	require_once("core/class/ObjectControlerAbstract.php");
 	require_once("core/class/ObjectControlerIF.php");
 } catch (Exception $e){
-	echo $e->getMessage().' // ';
+	echo functions::xssafe($e->getMessage()).' // ';
 }
 
 /**
@@ -144,10 +144,10 @@ class session_security_controler extends ObjectControler implements ObjectContro
 		$query = "select user_id from ".SESSION_SECURITY_TABLE." where user_id = '".functions::protect_string_db($user_id)."'";
 
 		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
+			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
 			$this->$db->query($query);
 		} catch (Exception $e){
-			echo _UNKNOWN.' '._USER." ".$user_id.' // ';
+			echo _UNKNOWN.' '._USER." ".functions::xssafe($user_id).' // ';
 		}
 
 		if($this->$db->nb_result() > 0)

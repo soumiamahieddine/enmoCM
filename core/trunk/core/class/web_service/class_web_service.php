@@ -165,7 +165,6 @@ class webService {
                 $_SESSION['user']['UserId'] = $func->decrypt($_SERVER["PHP_AUTH_USER"]);
                 $password = $func->decrypt($_SERVER["PHP_AUTH_PW"]);
             } else {
-                //echo "ici";exit;
                 $_SESSION['user']['UserId'] = $_SERVER["PHP_AUTH_USER"];
                 $password = $_SERVER["PHP_AUTH_PW"];
             }
@@ -281,9 +280,6 @@ class webService {
                     $rootPathArray = explode("#",$stringMethod);
                     $rootPath = $rootPathArray[0];
                     $objectPath = $rootPathArray[1];
-                    //echo "<br>generic path : " . $stringMethod . "<br>";
-                    //echo "root path : " . $rootPath . "<br>";
-                    //echo "object path : " . $objectPath . "<br>";
                     $objectPathArray = array();
                     $objectPathArray = explode("::",$objectPath);
                     if ($rootPath == "core") {

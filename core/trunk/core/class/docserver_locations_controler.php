@@ -43,7 +43,7 @@ try {
     require_once ('core/class/ObjectControlerIF.php');
     //require_once('apps/maarch_entreprise/tools/Net_Ping-2.4.5/Ping.php');
 } catch (Exception $e){
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 /**
@@ -394,7 +394,7 @@ class docserver_locations_controler extends ObjectControler
                ) . "'";
         try {
             if ($_ENV['DEBUG']) {
-                echo $query . ' // ';
+                functions::xecho($query) . ' // ';
             }
             $db->query($query);
         } catch (Exception $e) {
@@ -563,12 +563,12 @@ class docserver_locations_controler extends ObjectControler
                . "'";
         try {
             if ($_ENV['DEBUG']) {
-                echo $query . ' // ';
+                functions::xecho($query) . ' // ';
             }
             $db->query($query);
         } catch (Exception $e) {
             echo _UNKNOWN . _DOCSERVER_LOCATION . ' ' 
-                . $docserverLocationId . ' // ';
+                . functions::xssafe($docserverLocationId) . ' // ';
         }
         if ($db->nb_result() > 0) {
             $db->disconnect();
@@ -700,12 +700,12 @@ class docserver_locations_controler extends ObjectControler
                . "'";
         try{
             if ($_ENV['DEBUG']) {
-                echo $query . ' // ';
+                functions::xecho($query) . ' // ';
             }
             $db->query($query);
         } catch (Exception $e) {
                     echo _NO_DOCSERVER_LOCATION_WITH_ID . ' ' 
-                    . $docserverLocationId . ' // ';
+                    . functions::xssafe($docserverLocationId) . ' // ';
         }
         while ($res = $db->fetch_object()) {
             array_push($docservers, $res->docserver_id);
@@ -728,7 +728,7 @@ class docserver_locations_controler extends ObjectControler
             $query .= " where enabled = 'Y'";
         try {
             if ($_ENV['DEBUG'])
-                echo $query . ' // ';
+                functions::xecho($query) . ' // ';
             $db->query($query);
         } catch (Exception $e) {
             echo _NO_DOCSERVER_LOCATION . ' // ';

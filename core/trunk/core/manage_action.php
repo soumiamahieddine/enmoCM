@@ -73,7 +73,7 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
     if($db->nb_result() < 1)
     {
         $_SESSION['action_error'] = _ACTION_NOT_IN_DB;
-        echo "{status : 5, error_txt : '".addslashes($_SESSION['action_error'])."'}";
+        echo "{status : 5, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
         exit();
     }
 
@@ -88,7 +88,7 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
     if($action_page == '')
     {
         $_SESSION['action_error'] = _ACTION_NOT_IN_DB;
-        echo "{status : 5, error_txt : '".addslashes($_SESSION['action_error'])."'}";
+        echo "{status : 5, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
         exit();
     }
     $custom_path = '';
@@ -112,7 +112,7 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
         {
             // Invalid path to script
             $_SESSION['action_error'] = $label_action.' '._ACTION_PAGE_MISSING;
-            echo "{status : 8, error_txt: '".addslashes($_SESSION['action_error'])."'}";
+            echo "{status : 8, error_txt: '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
             exit();
         }
     }
@@ -121,18 +121,18 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
     $frm_error = check_form(trim($_POST['form_to_check']),get_values_in_array($_POST['form_values']));
     if($frm_error == false)
     {
-        echo "{status : 1, error_txt : '".addslashes($_SESSION['action_error'])."'}";
+        echo "{status : 1, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
         exit();
     }
     else
     {
         if($create_id == 'N')
         {
-            echo "{status : 0, error_txt : '".addslashes($_SESSION['action_error'])."', page_result : '', manage_form_now : false}";
+            echo "{status : 0, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."', page_result : '', manage_form_now : false}";
         }
         else
         {
-            echo "{status : 0, error_txt : '".addslashes($_SESSION['action_error'])."', page_result : '', manage_form_now : true}";
+            echo "{status : 0, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."', page_result : '', manage_form_now : true}";
         }
         exit();
     }
@@ -162,15 +162,15 @@ elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values']) && !em
                 $req = $db->query($query_str, true);
                 if (!$req) {
                     $_SESSION['action_error'] = _SQL_ERROR.' : '.$query_str;
-                    echo "{status : 1, error_txt : '".addslashes(_ERROR_WITH_STATUS)." ".$query_str."'}";
+                    echo "{status : 1, error_txt : '".addslashes(_ERROR_WITH_STATUS." ".functions::xssafe($query_str))."'}";
                     exit();
                 }
             }
         }
-        echo "{status : 0, error_txt : '".addslashes(_STATUS_UPDATED.' : '.$_POST['new_status'])."'}";
+        echo "{status : 0, error_txt : '".addslashes(_STATUS_UPDATED.' : '.functions::xssafe($_POST['new_status']))."'}";
         exit();
     } else {
-        echo "{status : 0, error_txt : '".addslashes(_STATUS_NOT_EXISTS.' : '.$_POST['new_status'])."'}";
+        echo "{status : 0, error_txt : '".addslashes(_STATUS_NOT_EXISTS.' : '.functions::xssafe($_POST['new_status']))."'}";
         exit();
     }
 }
@@ -181,7 +181,7 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
 {
     $tmp = 'values : '.$_POST['values'].', action_id : '.$_POST['action_id'].', mode : '. $_POST['mode'].', table : '.$_POST['table'].', coll_id : '.$_POST['coll_id'].', module : '.$_POST['module'].', req : '.$_POST['req'];
     $_SESSION['action_error'] = $tmp._AJAX_PARAM_ERROR;
-    echo "{status : 1, error_txt : '".$id_action.addslashes($_SESSION['action_error'])."'}";
+    echo "{status : 1, error_txt : '".functions::xssafe($id_action).addslashes(functions::xssafe($_SESSION['action_error']))."'}";
     exit();
 }
 
@@ -197,7 +197,7 @@ else
     if($db->nb_result() < 1)
     {
         $_SESSION['action_error'] = _ACTION_NOT_IN_DB;
-        echo "{status : 5, error_txt : '".addslashes($_SESSION['action_error'])."'}";
+        echo "{status : 5, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
         exit();
     }
 
@@ -214,7 +214,7 @@ else
         if($_POST['req'] == 'second_request')
         {
             $_SESSION['action_error'] = _ACTION_NOT_IN_DB;
-            echo "{status : 5, error_txt : '".addslashes($_SESSION['action_error'])."'}";
+            echo "{status : 5, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
             exit();
         }
 
@@ -222,7 +222,7 @@ else
         if($status == '' || $status == 'NONE')
         {
             $_SESSION['action_error'] = $label_action.' : '._ERROR_PARAM_ACTION;
-            echo "{status : 6, error_txt : '".addslashes($_SESSION['action_error'])."'}";
+            echo "{status : 6, error_txt : '".functions::xssafe(addslashes($_SESSION['action_error']))."'}";
             exit();
         }
         $db->query("select id from status where id ='" . $status . "'");
@@ -247,7 +247,7 @@ else
                     $req = $db->query($query_str, true);
                     if (!$req) {
                         $_SESSION['action_error'] = _SQL_ERROR . ' : ' . $query_str;
-                        echo "{status : 7, error_txt : '" . addslashes($label_action . ' : ' . $_SESSION['action_error']) . "'}";
+                        echo "{status : 7, error_txt : '" . addslashes(functions::xssafe($label_action) . ' : ' . functions::xssafe($_SESSION['action_error'])) . "'}";
                         exit();
                     }
                 }
@@ -255,7 +255,7 @@ else
         }
         $res_action = array('result' => $result, 'history_msg' => '');
         $_SESSION['action_error'] = _ACTION_DONE.' : '.$label_action;
-        echo "{status : 0, error_txt : '".addslashes($_SESSION['action_error']).", status : ".$status.", ".$_POST['values']."', page_result : ''}";
+        echo "{status : 0, error_txt : '".addslashes($_SESSION['action_error']).", status : ".functions::xssafe($status).", ".functions::xssafe($_POST['values'])."', page_result : ''}";
 
 
     }
@@ -283,19 +283,19 @@ else
             {
                 // Invalid path to script
                 $_SESSION['action_error'] = $label_action.' '._ACTION_PAGE_MISSING;
-                echo "{status : 8, error_txt: '".addslashes($_SESSION['action_error'])."'}";
+                echo "{status : 8, error_txt: '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
                 exit();
             }
         }
         if($_POST['req'] == 'first_request' && in_array('form', $etapes))
         {
             $frm_test = get_form_txt($arr_id, $_SESSION['config']['businessappurl'].'index.php?display=true&page=manage_action&module=core', $id_action, $_POST['table'],$_POST['module'], $_POST['coll_id'],  $_POST['mode'] );
-            echo "{status : 3, form_content : '".$frm_test."', height : '".$frm_height."', width : '".$frm_width."', 'mode_frm' : '".$mode_form."', 'action_status' : '".$status."'}";
+            echo "{status : 3, form_content : '".$frm_test."', height : '".$frm_height."', width : '".$frm_width."', 'mode_frm' : '".$mode_form."', 'action_status' : '".functions::xssafe($status)."'}";
             exit();
         }
         elseif( $_POST['req'] == 'first_request' && $confirm == true)
         {
-            echo "{status : 2, confirm_content : '".addslashes(_ACTION_CONFIRM." ".$label_action)."', validate : '"._VALIDATE."', cancel : '"._CANCEL."', label_action : '".addslashes($label_action)."', 'action_status' : '".$status."'}";
+            echo "{status : 2, confirm_content : '".addslashes(_ACTION_CONFIRM." ".functions::xssafe($label_action))."', validate : '"._VALIDATE."', cancel : '"._CANCEL."', label_action : '".addslashes(functions::xssafe($label_action))."', 'action_status' : '".functions::xssafe($status)."'}";
             exit();
         }
         else
@@ -323,13 +323,13 @@ else
                         }
                         catch(Exception $e)
                         {
-                            echo "{status : 9, error_txt : '".addslashes($_SESSION['action_error'])."'}";
+                            echo "{status : 9, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
                             exit();
                         }
                     }
                     else
                     {
-                        echo "{status : 9, error_txt : '".addslashes($_SESSION['action_error'])."'}";
+                        echo "{status : 9, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
                         exit();
                     }
                 }
@@ -337,7 +337,7 @@ else
             //print_r($res_action);
             if($res_action == false)
             {
-                echo "{status : 9, error_txt : '".addslashes($_SESSION['action_error'])."'}";
+                echo "{status : 9, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
                 exit();
             }
             $comp = ", page_result  : ''";
@@ -361,7 +361,7 @@ else
             }
 			
             $_SESSION['action_error'] = _ACTION_DONE.' : '.$label_action;
-            echo "{status : 0, error_txt : '".addslashes($_SESSION['action_error'])."'".$comp.", result_id : '".$res_action['result']."'}";
+            echo "{status : 0, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'".$comp.", result_id : '".$res_action['result']."'}";
         }
     }
     // Save action in history if needed

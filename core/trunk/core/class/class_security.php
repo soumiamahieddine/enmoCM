@@ -267,9 +267,6 @@ class security extends dbquery
                     $_SESSION['user']['department'] = $array['department'];
 					$_SESSION['user']['thumbprint'] = $array['thumbprint'];
                     $_SESSION['user']['primarygroup'] = $array['primarygroup'];
-                    /*echo '<pre>';
-                    print_r($_SESSION['user']);
-                    echo '<pre>';exit;*/
                     $hist->add(
                         $_SESSION['tablename']['users'],
                         $s_login,

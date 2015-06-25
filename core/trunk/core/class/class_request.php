@@ -270,10 +270,8 @@ class request extends dbquery
         //Time to create the SQL Query
         $query = "";
         $query = "UPDATE ".$table." SET ".$update_string.$where_string;
-        //echo $query;
         $this->connect();
         return $this->query($query, true);
     }
 
 }
-?>

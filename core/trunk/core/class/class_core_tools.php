@@ -227,7 +227,6 @@ class core_tools extends functions
             $path_module_tools = 'modules' . DIRECTORY_SEPARATOR
                 . $modules[$i]['moduleid'] . DIRECTORY_SEPARATOR . 'class'
                 . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
-                //echo "<br/>".$modules[$i]['moduleid']."<br/>";
             if (file_exists($path_module_tools)) {
                 require_once $path_module_tools;
                 $modules_tools = new $modules[$i]['moduleid'];
@@ -1511,7 +1510,7 @@ class core_tools extends functions
             <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
             <link rel="icon" type="image/png" href="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=favicon.png"/>
             <link href="index.php?display&page=generate_search_xml" title="Maarch <?php 
-                echo $_SESSION['config']['applicationname'] . ' ' 
+                echo functions::xssafe($_SESSION['config']['applicationname']) . ' ' 
                     . _GLOBAL_SEARCH
                 ;?>" type="application/opensearchdescription+xml" rel="search">
             <?php
@@ -1760,8 +1759,8 @@ class core_tools extends functions
     */
     public function load_footer()
     {
-        echo _MEP_VERSION . ', <b>database release : ' . $_SESSION['maarch_entreprise']['xml_versionbase'] . '</b> ';
-        echo ' ' . _POWERED_BY . ' ' . $this->show_page_stat();
+        echo _MEP_VERSION . ', <b>database release : ' . functions::xssafe($_SESSION['maarch_entreprise']['xml_versionbase']) . '</b> ';
+        echo ' ' . _POWERED_BY . ' ' . functions::xssafe($this->show_page_stat());
     }
 
     /**
@@ -2191,9 +2190,7 @@ class core_tools extends functions
         } else {
             $path = $arr[count($arr)-2];
         }
-        //echo "the path:".$path;exit;
 
-        //echo $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml';
         $xml = simplexml_load_file($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml');
         //var_dump($xml);
         foreach($xml->custom as $custom)
