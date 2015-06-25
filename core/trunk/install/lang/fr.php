@@ -51,16 +51,16 @@ if (!defined('_ACTIVATED')) {
 }
 
 if (!defined('_GENERAL')) {
-    define('_GENERAL', "G&eacute;n&eacute;ral");
+    define('_GENERAL', "Général");
 }
 if (!defined('_PHP_VERSION')) {
     define('_PHP_VERSION', "Version de PHP (5.3 ou sup.)");
 }
 if (!defined('_MAARCH_PATH_RIGHTS')) {
-    define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'&eacute;criture du r&eacute;pertoire racine de Maarch");
+    define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'écriture du répertoire racine de Maarch");
 }
 if (!defined('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
-    define('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Les droits du r&eacute;pertoire racine de Maarch ne sont pas corrects");
+    define('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Les droits du répertoire racine de Maarch ne sont pas corrects");
 }
 if (!defined('_PGSQL')) {
     define('_PGSQL', "Librairie pgsql");
@@ -202,7 +202,7 @@ if (!defined('_BAD_INFORMATIONS_FOR_CONNECTION')) {
     define('_BAD_INFORMATIONS_FOR_CONNECTION', "Les informations de connexion sont invalides");
 }
 if (!defined('_UNABLE_TO_CREATE_DATABASE')) {
-    define('_UNABLE_TO_CREATE_DATABASE', "Impossible de créer la base de données, essayer un autre nom ou v&eacute;rifier le script structure.sql");
+    define('_UNABLE_TO_CREATE_DATABASE', "Impossible de créer la base de données, essayer un autre nom ou vérifier le script structure.sql");
 }
 if (!defined('_UNABLE_TO_LOAD_DATAS')) {
     define('_UNABLE_TO_LOAD_DATAS', "Impossible d'importer les datas");
@@ -211,10 +211,10 @@ if (!defined('_CHOOSE_A_NAME_FOR_DB')) {
     define('_CHOOSE_A_NAME_FOR_DB', "Vous devez choisir un nom pour la base de données");
 }
 if (!defined('_LOAD_DATA')) {
-    define('_LOAD_DATA', "Charger les donn&eacute;es");
+    define('_LOAD_DATA', "Charger les données");
 }
 if (!defined('_CREATE_DATABASE')) {
-    define('_CREATE_DATABASE', "Cr&eacute;er la base");
+    define('_CREATE_DATABASE', "Créer la base");
 }
 //PASSWORD
 if (!defined('_PASSWORD')) {
@@ -332,7 +332,7 @@ if (!defined('_SMTP_EXP')) {
 }
 
 if (!defined('_VERIF_SMTP')) {
-    define('_VERIF_SMTP', "V&eacute;rification");
+    define('_VERIF_SMTP', "Vérification");
 }
 
 if (!defined('_SMTP')) {
