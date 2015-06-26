@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2008-2012 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -86,8 +86,8 @@ function get_folder_data($coll_id, $res_id)
     if ($db->nb_result() == 1) {
         $res = $db->fetch_object();
         if (!empty($res->folders_system_id)) {
-        // $folder = $res->folder_name.', '.$res->fold_subject.' ('.$res->folders_system_id.')';
-            $folder = $res->folder_id.', '.$res->folder_name.' ('.$res->folders_system_id.')';
+            $folder = functions::xssafe($res->folder_id).', '.functions::xssafe($res->folder_name)
+                .' ('.functions::xssafe($res->folders_system_id).')';
         }
     }
 
@@ -126,7 +126,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $_SESSION['req'] = "action";
     $res_id = $values[0];
 	
-		// Ouverture de la modal
+	// Ouverture de la modal
 
 	$docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
     $docLockerPath = $_SESSION['config']['businessappurl'] . '/actions/docLocker.php';
@@ -141,7 +141,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if (!$docLocker->canOpen()) {
         $docLockerscriptError = '<script>';
             $docLockerscriptError .= 'destroyModal("modal_' . $id_action . '");';
-            $docLockerscriptError .= 'alert("'._DOC_LOCKER_RES_ID.''.$res_id.''._DOC_LOCKER_USER.' ' . $_SESSION['userLock'] . '");';
+            $docLockerscriptError .= 'alert("'._DOC_LOCKER_RES_ID.''
+                .$res_id.''._DOC_LOCKER_USER.' ' . functions::xssafe($_SESSION['userLock']) . '");';
         $docLockerscriptError .= '</script>';
         return $docLockerscriptError;
     }
@@ -217,7 +218,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$lastname = str_replace('"'," ", $lastname);
 		$society = str_replace("'","\'", $res->society);
 		$society = str_replace('"'," ", $society);
-		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " " . $society . " (contact)', ";
+		$frameContacts .= "'contact ".$nbContacts."' : '" 
+            . functions::xssafe($firstname) . " " . functions::xssafe($lastname) 
+            . " " . functions::xssafe($society) . " (contact)', ";
 	}
     $query = "select u.firstname, u.lastname, u.user_id ";
 			$query .= "from users u, contacts_res cres  ";
@@ -232,7 +235,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$firstname = str_replace('"'," ", $firstname);
 		$lastname = str_replace("'","\'", $res->lastname);
 		$lastname = str_replace('"'," ", $lastname);
-		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " (utilisateur)', ";
+		$frameContacts .= "'contact ".$nbContacts."' : '" 
+            . functions::xssafe($firstname) . " " . functions::xssafe($lastname) . " (utilisateur)', ";
 	}
 	$frameContacts = substr($frameContacts, 0, -2);
 	$frameContacts .= "}";
@@ -333,7 +337,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     . _CHRONO_NUMBER . ' :</span></td>';
                 $frm_str .= '<td>';
                 $frm_str .= '<input type="text" name="alt_identifier" id="alt_identifier" value="'
-                    . $chrono_number . '" readonly="readonly" class="readonly" style="border:none;" />';
+                    . functions::xssafe($chrono_number) 
+                    . '" readonly="readonly" class="readonly" style="border:none;" />';
                 $frm_str .= '</td>';
                 $frm_str .= '</tr>';
             }
@@ -371,7 +376,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<td width="50%" align="left"><span class="form_title_process">' . _FORMAT . ' :</span></td>';
             $frm_str .= '<td>';
             $frm_str .= '<input type="text" name="alt_identifier" id="alt_identifier" value="'
-                . $formatLine->format . '" readonly="readonly" class="readonly" style="border:none;" />';
+                . functions::xssafe($formatLine->format) . '" readonly="readonly" class="readonly" style="border:none;" />';
             $frm_str .= '</td >';
             $frm_str .= '</tr>';
         $frm_str .= '</table>';
@@ -383,7 +388,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $db = new request;
     $db->connect();
-    $db->query("select answer_type_bitmask from ".$_SESSION['collections'][0]['extensions'][0]." where res_id = ".$res_id);
+    $db->query("select answer_type_bitmask from "
+        .$_SESSION['collections'][0]['extensions'][0]." where res_id = ".$res_id);
     $res = $db->fetch_object();
     $bitmask = $res->answer_type_bitmask;
     switch ($bitmask) {
@@ -558,9 +564,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<br>';
     }
 
-
-
-
     //ACTIONS
     $frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '<p align="center" style="width:90%;">';
@@ -570,22 +573,25 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='<select name="chosen_action" id="chosen_action">';
                 $frm_str .='<option value="">'._CHOOSE_ACTION.'</option>';
                 for ($ind_act = 0;$ind_act<count($actions);$ind_act++) {
-                    $frm_str .='<option value="'.$actions[$ind_act]['VALUE'].'"';
+                    $frm_str .='<option value="'.functions::xssafe($actions[$ind_act]['VALUE']).'"';
                     if ($ind_act==0) {
                         $frm_str .= 'selected="selected"';
                     }
-                    $frm_str .= '>'.$actions[$ind_act]['LABEL'].'</option>';
+                    $frm_str .= '>'.functions::xssafe($actions[$ind_act]['LABEL']).'</option>';
                 }
             $frm_str .='</select><br>';
             $frm_str .= '<input type="button" name="send" id="send" value="'
                 . _VALIDATE
-                . '" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form(\'process\', \''
+                . '" class="button" onclick="new Ajax.Request(\'' 
+                . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form(\'process\', \''
                 . $path_manage_action . '\', \'' . $id_action.'\', \''
                 . $res_id . '\', \'' . $table . '\', \'' . $module . '\', \''
                 . $coll_id . '\', \'' . $mode . '\');"/> ';
         }
         $frm_str .= '<input name="close" id="close" type="button" value="'
-            . _CANCEL . '" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '}, onSuccess: function(answer){window.location.href=window.location.href;} });var tmp_bask=$(\'baskets\');';
+            . _CANCEL . '" class="button" onclick="new Ajax.Request(\'' 
+            . $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '}, onSuccess: function(answer){window.location.href=window.location.href;} });var tmp_bask=$(\'baskets\');';
         $frm_str .= 'if (tmp_bask){tmp_bask.style.visibility=\'visible\';}var tmp_ent =$(\'entity\');';
         $frm_str .= 'if (tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\');';
         $frm_str .= 'if (tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_'
@@ -707,7 +713,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');hideOtherDiv(\'versions_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_versions_div" style="color:#1C99C5;"><<</span><b>'
-            . '&nbsp;<small>' . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)</small>';
+            . '&nbsp;<small>' . _VERSIONS . ' (<span id="nbVersions">' 
+            . $extend_title_for_versions . '</span>)</small>';
         $frm_str .= '</b></span>';
         $frm_str .= '</td>';
     }
@@ -775,7 +782,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $req = new request;
                     $req->connect();
                     $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
-                        . " where (status = 'A_TRA' or status = 'TRA') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
+                        . " where (status = 'A_TRA' or status = 'TRA') and res_id_master = " 
+                        . $res_id . " and coll_id = '" . $coll_id . "'");
                     //$req->show();
                     $nb_attach = 0;
                     if ($req->nb_result() > 0) {

@@ -82,4 +82,3 @@ function manage_persistentOn($arr_id, $history, $id_action, $label_action, $stat
     }
     return array('result' => $result, 'history_msg' => '');
  }
-?>

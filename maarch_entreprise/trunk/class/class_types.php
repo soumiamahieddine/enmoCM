@@ -1016,6 +1016,26 @@ class types extends dbquery
                 }
             }
         }
+        //print_r($indexes);
+        foreach(array_keys($indexes) as $key) {
+            if (is_array($indexes[$key])) {
+                //print_r($indexes[$key]);
+                $indexes[$key]['label'] = functions::xssafe($indexes[$key]['label']);
+                $indexes[$key]['type'] = functions::xssafe($indexes[$key]['type']);
+                $indexes[$key]['img'] = functions::xssafe($indexes[$key]['img']);
+                $indexes[$key]['type_field'] = functions::xssafe($indexes[$key]['type_field']);
+                $indexes[$key]['default_value'] = functions::xssafe($indexes[$key]['default_value']);
+                $indexes[$key]['origin'] = functions::xssafe($indexes[$key]['origin']);
+                if (is_array($indexes[$key]['values'])) {
+                    for ($cpt=0;$cpt<count($indexes[$key]['values']);$cpt++) {
+                        //print_r($indexes[$key]['values'][$cpt]);
+                        $indexes[$key]['values'][$cpt]['id'] = functions::xssafe($indexes[$key]['values'][$cpt]['id']);
+                        $indexes[$key]['values'][$cpt]['label'] = functions::xssafe($indexes[$key]['values'][$cpt]['label']);
+                    }
+                    $indexes[$key]['type_field'] = functions::xssafe($indexes[$key]['type_field']);
+                }
+            }
+        }
         return $indexes;
     }
 

@@ -73,4 +73,3 @@ function manage_close($arr_id, $history, $id_action, $label_action, $status)
                          . 'index.php?page=view_baskets&module=basket&baskets=IndexingBasket'
     );
  }
-?>

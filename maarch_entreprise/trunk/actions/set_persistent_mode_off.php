@@ -82,4 +82,3 @@ function manage_persistentOff($arr_id, $history, $id_action, $label_action, $sta
     }
     return array('result' => $result, 'history_msg' => '');
  }
-?>

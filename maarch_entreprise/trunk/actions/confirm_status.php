@@ -50,5 +50,3 @@
 	}
 	return array('result' => $result, 'history_msg' => '');
 }
-
-?>
