@@ -337,7 +337,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<option value="">' . _CHOOSE_CATEGORY . '</option>';
     foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $catId) {
         if ($catId <> 'default_category') {
-            $frmStr .= '<option value="' . $catId . '"';
+            $frmStr .= '<option value="' . functions::xssafe($catId) . '"';
             if ($_SESSION['coll_categories']['letterbox_coll']['default_category'] == $catId
                 || (isset($_SESSION['indexing']['category_id'])
                     && $_SESSION['indexing']['category_id'] == $catId)
@@ -345,7 +345,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 $frmStr .= 'selected="selected"';
             }
 
-            $frmStr .= '>' . $_SESSION['coll_categories']['letterbox_coll'][$catId] . '</option>';
+            $frmStr .= '>' . functions::xssafe($_SESSION['coll_categories']['letterbox_coll'][$catId]) . '</option>';
         }
     }
     $frmStr .= '</select></td>';
@@ -419,11 +419,11 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '\');">';
     $frmStr .= '<option value="">' . _CHOOSE_PRIORITY . '</option>';
     for ($i = 0; $i < count($_SESSION['mail_priorities']); $i ++) {
-        $frmStr .= '<option value="' . $i . '" ';
+        $frmStr .= '<option value="' . functions::xssafe($i) . '" ';
         if ($_SESSION['default_mail_priority'] == $i) {
             $frmStr .= 'selected="selected"';
         }
-        $frmStr .= '>' . $_SESSION['mail_priorities'][$i] . '</option>';
+        $frmStr .= '>' . functions::xssafe($_SESSION['mail_priorities'][$i]) . '</option>';
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="priority_mandatory" '
@@ -632,11 +632,11 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '\');affiche_reference();">';
     $frmStr .= '<option value="">' . _CHOOSE_NATURE . '</option>';
     foreach (array_keys($_SESSION['mail_natures']) as $nature) {
-        $frmStr .= '<option value="' . $nature . '" with_reference = "'.$_SESSION['mail_natures_attribute'][$nature].'"';
+        $frmStr .= '<option value="' . functions::xssafe($nature) . '" with_reference = "'.$_SESSION['mail_natures_attribute'][$nature].'"';
         if ($_SESSION['default_mail_nature'] == $nature) {
             $frmStr .= 'selected="selected"';
         }
-        $frmStr .= '>' . $_SESSION['mail_natures'][$nature] . '</option>';
+        $frmStr .= '>' . functions::xssafe($_SESSION['mail_natures'][$nature]) . '</option>';
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="nature_id_mandatory" '

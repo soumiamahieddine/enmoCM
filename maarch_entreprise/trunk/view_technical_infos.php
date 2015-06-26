@@ -163,32 +163,6 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
                 <td align="left"><?php echo _WORK_BATCH;?> :</td>
                 <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($workBatch);?>" title="<?php functions::xecho($workBatch);?>" alt="<?php functions::xecho($workBatch);?>" /></td>
             </tr>
-            <!--
-            <tr>
-                <th align="left"><?php echo _PAGECOUNT;?> :</th>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($pageCount);?>"  /></td>
-                <th align="left"><?php echo _ISPAPER;?> :</th>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($isPaper);?>" /></td>
-            </tr>
-                <tr class="col">
-                <th align="left"><?php echo _SCANUSER;?> :</th>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($scanUser);?>"  /></td>
-                <th align="left"><?php echo _SCANDATE;?> :</th>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($scanDate);?>" /></td>
-            </tr>
-            <tr>
-                <th align="left"><?php echo _SCANWKSATION;?> :</th>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($scanWkstation);?>" /></td>
-                <th align="left"><?php echo _SCANLOCATION;?> :</th>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($scanLocation);?>" /></td>
-            </tr>
-            <tr class="col">
-                <th align="left"><?php echo _SCANBATCH;?> :</th>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($scanBatch);?>"  /></td>
-                <th align="right"><?php echo _SOURCE;?> :</th>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($source);?>" /></td>
-            </tr>
-            -->
         </table>
         <br>
         <?php 
@@ -225,17 +199,14 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
         </h2>
         <br/>
         <?php
-        /*echo '<pre>';
-        print_r($adr);
-        echo '</pre>';*/
         $docserversControler = new docservers_controler();
         if ($isMultiDs == 'Y') {
             for ($cptAdr = 0;$cptAdr < count($adr[0]);$cptAdr++) {
                 $docserver = $docserversControler->get(
                     $adr[0][$cptAdr]['docserver_id']
                 );
-                echo '<h4>' . $adr[0][$cptAdr]['docserver_id'] 
-                    . ' (' . $docserver->device_label . ')</h4>';
+                echo '<h4>' . $functions::xssafe(adr[0][$cptAdr]['docserver_id'])
+                    . ' (' . functions::xssafe($docserver->device_label) . ')</h4>';
                 ?>
                 <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                     <tr>
@@ -243,7 +214,7 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
                             &nbsp;
                         </th>
                         <td align="left" width="200px"><?php echo _PATH_TEMPLATE;?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo str_replace('#', '/', $adr[0][$cptAdr]['path']);?>"/></td>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo str_replace('#', '/', functions::xssafe($adr[0][$cptAdr]['path']));?>"/></td>
                         <th align="left" class="picto">
                             &nbsp;
                         </th>
@@ -279,8 +250,8 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
             }
         } else {
             $docserver = $docserversControler->get($docserverId);
-           echo '<h4>' . $docserverId 
-                    . ' (' . $docserver->device_label . ')</h4>';
+           echo '<h4>' . functions::xssafe($docserverId) 
+                    . ' (' . functions::xssafe($docserver->device_label) . ')</h4>';
             ?>
             <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                 <tr>
@@ -288,7 +259,7 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
                         &nbsp;
                     </th>
                     <td align="left" width="200px"><?php echo _PATH_TEMPLATE;?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php echo str_replace('#', '/', $path);?>"/></td>
+                    <td><input type="text" class="readonly" readonly="readonly" value="<?php echo functions::xssafe(str_replace('#', '/', $path));?>"/></td>
                     <th align="left" class="picto">
                         &nbsp;
                     </th>

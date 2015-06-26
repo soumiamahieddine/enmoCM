@@ -119,7 +119,7 @@ if (! empty($_SESSION['error'])) {
         try {
             $ad = new LDAP($domain, $login_admin, $pass, $ssl);
         } catch(Exception $conFailure) {
-            echo $conFailure->getMessage();
+            echo functions::xssafe($conFailure->getMessage());
             exit;
         }
         

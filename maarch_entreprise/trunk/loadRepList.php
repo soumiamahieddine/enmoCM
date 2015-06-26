@@ -53,7 +53,7 @@ if (isset($_REQUEST['res_id_master'])) {
                     $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $return .= $return_db->identifier;
+                            $return .= functions::xssafe($return_db->identifier);
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
@@ -62,13 +62,13 @@ if (isset($_REQUEST['res_id_master'])) {
                             $query = "SELECT label_status FROM status WHERE id ='".$return_db->status."'";
                             $db2->query($query);
                             while ($status_db = $db2->fetch_object()) {
-                                $return .= $status_db->label_status;
+                                $return .= functions::xssafe($status_db->label_status);
                             }
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
                             $attachment_types_valeur = $return_db->attachment_type;
-                            $return .= $_SESSION['attachment_types'][$attachment_types_valeur];
+                            $return .= functions::xssafe($_SESSION['attachment_types'][$attachment_types_valeur]);
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
@@ -89,16 +89,17 @@ if (isset($_REQUEST['res_id_master'])) {
                                 case '12': $date_m_txt = _DECEMBER; break;
                                 default: $date_m_txt = $date_m;
                             }
-                            $return .= $date_d.' '.$date_m_txt.' '.$date_Y;
+                            $return .= functions::xssafe($date_d.' '.$date_m_txt.' '.$date_Y);
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $return .= $return_db->title;
+                            $return .= functions::xssafe($return_db->title);
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
                             $current_user = $users->get_user($return_db->typist);
-                            $return .= $current_user['firstname'] . ' ' . $current_user['lastname'];
+                            $return .= functions::xssafe($current_user['firstname']) 
+                                . ' ' . functions::xssafe($current_user['lastname']);
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
@@ -109,7 +110,8 @@ if (isset($_REQUEST['res_id_master'])) {
                             } else {
                                 $id = $return_db->res_id_version;
                             }
-                              $return .= 'index.php?display=true&module=attachments&page=view_attachment&id='.$id.'&res_id_master='.$_REQUEST['res_id_master'];
+                              $return .= 'index.php?display=true&module=attachments&page=view_attachment&id='.$id.'&res_id_master='
+                                . functions::xssafe($_REQUEST['res_id_master']);
                             $return .= '" ';
                             $return .= 'target="_blank" ';
                             $return .= '>';

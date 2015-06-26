@@ -39,13 +39,13 @@ $type = new types();
 
 if (!isset($_REQUEST['type_id']) || empty($_REQUEST['type_id'])) {
     $_SESSION['error'] = _DOCTYPE.' '._IS_EMPTY;
-    echo "{status : 1, error_txt : '".addslashes($_SESSION['error'])."'}";
+    echo "{status : 1, error_txt : '".addslashes(functions::xssafe($_SESSION['error']))."'}";
     exit();
 }
 
 if (!isset($_REQUEST['id_action']) || empty($_REQUEST['id_action'])) {
     $_SESSION['error'] = _ACTION_ID.' '._IS_EMPTY;
-    echo "{status : 1, error_txt : '".addslashes($_SESSION['error'])."'}";
+    echo "{status : 1, error_txt : '".addslashes(functions::xssafe($_SESSION['error']))."'}";
     exit();
 }
 $id_action = $_REQUEST['id_action'];
@@ -93,13 +93,6 @@ if ($core->service_is_enabled('param_mlb_doctypes')) {
         . $_REQUEST['type_id']
     );
     //$db->show();
-/*
-    if ($db->nb_result() == 0) {
-        $_SESSION['error'] = _NO_DOCTYPE_IN_DB;
-        echo "{status : 2, error_txt : '".addslashes($_SESSION['error'])."'}";
-        exit();
-    }
-*/
 
     $res = $db->fetch_object();
     $delay = $res->process_delay;
@@ -155,52 +148,51 @@ if(count($indexes) > 0)
     
     $opt_indexes .= '<table width="100%" align="center" border="0">';
     foreach (array_keys($indexes) as $key) {
-        //echo $key.' ';
         $mandatory = false;
         if (in_array($key, $mandatory_indexes)) {
             $mandatory = true;
         }
             $opt_indexes .= '<tr >';
-            $opt_indexes.='<td><label for="' . $key . '" class="form_title" >' 
+            $opt_indexes.='<td><label for="' . functions::xssafe($key) . '" class="form_title" >' 
                 . $indexes[$key]['label'].'</label></td>';
             $opt_indexes .='<td>&nbsp;</td>';
             $opt_indexes .='<td class="indexing_field">';
             if ($indexes[$key]['type_field'] == 'input') {
                 if ($indexes[$key]['type'] == 'date') {
-                    $opt_indexes .='<input name="' . $key . '" type="text" id="' 
+                    $opt_indexes .='<input name="' . functions::xssafe($key) . '" type="text" id="' 
                         . $key . '" value="';
                     if (isset($values_fields->$key)) {
                         $opt_indexes .= $db->format_date_db(
-                            $values_fields->$key, true
+                            functions::xssafe($values_fields->$key), true
                         );
                     } elseif ($indexes[$key]['default_value'] <> false) {
                         $opt_indexes .= $db->format_date_db(
-                            $indexes[$key]['default_value'], true
+                            functions::xssafe($indexes[$key]['default_value']), true
                         );
                     }
                     $opt_indexes .= '" onclick="clear_error(\'frm_error_' 
                         . $id_action . '\');showCalender(this);"/>';
                 } else {
-                    $opt_indexes .= '<input name="'.$key.'" type="text" id="' 
+                    $opt_indexes .= '<input name="'.functions::xssafe($key).'" type="text" id="' 
                         . $key . '" value="';
                     if (isset($values_fields->$key)) {
                         $opt_indexes .= $db->show_string(
-                            $values_fields->$key, true
+                            functions::xssafe($values_fields->$key), true
                         );
                     } else if ($indexes[$key]['default_value'] <> false) {
                         $opt_indexes .= $db->show_string(
-                            $indexes[$key]['default_value'], true
+                            functions::xssafe($indexes[$key]['default_value']), true
                         );
                     }
                     $opt_indexes .= '" onclick="clear_error(\'frm_error_' 
                         . $id_action . '\');" />';
                 }
             } else {
-                $opt_indexes .= '<select name="'.$key.'" id="'.$key.'" >';
+                $opt_indexes .= '<select name="'.functions::xssafe($key).'" id="'.functions::xssafe($key).'" >';
                     $opt_indexes .= '<option value="">'._CHOOSE.'...</option>';
                     for ($i=0; $i<count($indexes[$key]['values']);$i++) {
                         $opt_indexes .= '<option value="' 
-                            . $indexes[$key]['values'][$i]['id'] . '"';
+                            . functions::xssafe($indexes[$key]['values'][$i]['id']) . '"';
                         if ($indexes[$key]['values'][$i]['id'] 
                             == $values_fields->$key) {
                             $opt_indexes .= 'selected="selected"';
@@ -211,7 +203,7 @@ if(count($indexes) > 0)
                         ) {
                             $opt_indexes .= 'selected="selected"';
                         }
-                        $opt_indexes .= ' >' . $indexes[$key]['values'][$i]['label'] 
+                        $opt_indexes .= ' >' . functions::xssafe($indexes[$key]['values'][$i]['label']) 
                             . '</option>';
                     }
                 $opt_indexes .= '</select>';
@@ -250,14 +242,14 @@ $core->execute_app_services(
 for ($i=0;$i< count($_SESSION['indexing_services']);$i++) {
     $services .= "{ script : '" . $_SESSION['indexing_services'][$i]['script'] 
         . "', function_to_execute : '" 
-        . $_SESSION['indexing_services'][$i]['function_to_execute'] 
+        . functions::xssafe($_SESSION['indexing_services'][$i]['function_to_execute'])
         . "', arguments : '[";
     for ($j=0;$j<count($_SESSION['indexing_services'][$i]['arguments']);$j++) {
         $services .= " { id : \'" 
-            . $_SESSION['indexing_services'][$i]['arguments'][$j]['id'] 
+            . functions::xssafe($_SESSION['indexing_services'][$i]['arguments'][$j]['id'])
             . "\', value : \'" 
             . addslashes(
-                $_SESSION['indexing_services'][$i]['arguments'][$j]['value']
+                functions::xssafe($_SESSION['indexing_services'][$i]['arguments'][$j]['value'])
             )
             . "\' }, ";
     }
@@ -284,7 +276,7 @@ if (isset($delay) && $delay > 0) {
         $date = $alert_engine->date_max_treatment($delay, false);
     }
     $process_date = $db->dateformat($date, '-');
-    echo "{status : 0, process_date : '" . trim($process_date) 
+    echo "{status : 0, process_date : '" . trim(functions::xssafe($process_date)) 
         . "', opt_indexes : '" . addslashes($opt_indexes) . "', services : " 
         . $services . "}";
     exit();

@@ -9,7 +9,7 @@ if($_SESSION['service_tag'] == 'group_basket')
     $current_groupbasket = $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']];
     $current_compteur = $_SESSION['m_admin']['compteur'];
     // This param is only for the actions with the keyword : indexing
-    if( trim($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['KEYWORD']) == 'indexing') // Indexing case
+    if(trim($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['KEYWORD']) == 'indexing') // Indexing case
     {
         $_SESSION['m_admin']['show_where_clause'] = false;
         $is_default_action = false;
@@ -53,7 +53,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                     if($state_status == false)
                     {
                         ?>
-                        <option value="<?php functions::xecho($_SESSION['m_admin']['statuses'][$cpt]['id']);?>"><?php echo $_SESSION['m_admin']['statuses'][$cpt]['label'];?></option>
+                        <option value="<?php functions::xecho($_SESSION['m_admin']['statuses'][$cpt]['id']);?>"><?php functions::xecho($_SESSION['m_admin']['statuses'][$cpt]['label']); ?></option>
                     <?php
                     }
                 }
@@ -100,7 +100,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                     if($state_status == true)
                     {
                     ?>
-                        <option value="<?php functions::xecho($_SESSION['m_admin']['statuses'][$cpt]['id']);?>" selected="selected" ><?php echo $_SESSION['m_admin']['statuses'][$cpt]['label'];?></option>
+                        <option value="<?php functions::xecho($_SESSION['m_admin']['statuses'][$cpt]['id']);?>" selected="selected" ><?php functions::xecho($_SESSION['m_admin']['statuses'][$cpt]['label']);?></option>
                     <?php
                     }
                 }
@@ -119,11 +119,6 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
 {
     $db = new dbquery();
     $db->connect();
-    /*
-    echo 'before<br>';
-    echo 'param status';
-    $db->show_array($_SESSION['m_admin']['basket']['groups']);
-    */
     $groupe = $_REQUEST['group'];
     if(isset($_REQUEST['old_group']) && !empty($_REQUEST['old_group']))
     {
@@ -176,12 +171,6 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
         }
     }
     $_SESSION['m_admin']['load_groupbasket'] = false;
-    /*
-    echo 'after<br>';
-    echo 'param status';
-    $ent->show_array($_SESSION['m_admin']['basket']['groups']);
-    exit;
-    */
 }
 elseif($_SESSION['service_tag'] == 'load_basket_session')
 {

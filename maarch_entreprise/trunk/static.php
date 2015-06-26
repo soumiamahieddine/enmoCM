@@ -90,9 +90,6 @@ if(isset($_GET['filename']) && !empty($_GET['filename']))
         }
     }
 
-    //echo get_include_path();
-    //echo '<br/>';
-    //echo $path;
     if(!empty($mime_type) && !empty($path))
     {
 
@@ -112,5 +109,3 @@ if(isset($_GET['filename']) && !empty($_GET['filename']))
 }
 
 exit();
-
-?>

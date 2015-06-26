@@ -34,4 +34,3 @@ include_once('../../core/init.php');
         }
     }
   ob_end_flush();
-?>

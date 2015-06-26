@@ -82,11 +82,11 @@ else
                     ?><option value=""><?php
                     if($entities[$i]['PRIMARY'] == 'Y')
                     {
-                        echo '<b>'.$entities[$i]['LABEL'].'</b>';
+                        echo '<b>'.functions::xssafe($entities[$i]['LABEL']).'</b>';
                     }
                     else
                     {
-                        echo $entities[$i]['LABEL'];
+                        echo functions::xssafe($entities[$i]['LABEL']);
                     }
                     ?></option><?php
                 }?>
@@ -106,4 +106,3 @@ else
     <?php
 }
 $core_tools->load_js();
-?>

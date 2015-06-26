@@ -25,7 +25,7 @@ require_once
 $core = new core_tools();
 
 if (isset($_SESSION['error'])) {
-    echo $_SESSION['error'];
+    echo functions::xssafe($_SESSION['error']);
     $_SESSION['error'] = '';
     exit;
 }

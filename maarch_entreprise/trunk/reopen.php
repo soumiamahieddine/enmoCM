@@ -26,21 +26,7 @@ if(!isset($_SESSION['config']['app_id']) || empty($_SESSION['config']['app_id'])
 {
     $_SESSION['config']['app_id'] = $path_tmp[count($path_tmp) -2];
 }
-/*
-if(isset($_SESSION['config']['corepath']))
-{
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
-}
-else
-{
-    require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
 
-}*/
-//require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
-//require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
-//require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-//$core_tools = new core_tools();
-//$business_app_tools = new business_app_tools();
 $func = new functions();
 $cookie = explode("&", $_COOKIE['maarch']);
 $user = explode("=",$cookie[0]);

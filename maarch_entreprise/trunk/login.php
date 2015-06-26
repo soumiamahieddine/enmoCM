@@ -127,7 +127,7 @@ if (isset($_SESSION['error'])) {
         ?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
         <div align="center">
             <h3>
-                <?php echo$_SESSION['config']['applicationname'] ?>
+                <?php functions::xecho($_SESSION['config']['applicationname']); ?>
             </h3>
         </div>
         <?php
@@ -135,7 +135,7 @@ if (isset($_SESSION['error'])) {
                 ?>
                 <div class="error" id="main_error_popup" onclick="this.hide();">
                     <?php
-                    echo $_SESSION['error'];
+                    functions::xecho($_SESSION['error']);
                     ?>
                 </div>
                 <?php
@@ -145,7 +145,7 @@ if (isset($_SESSION['error'])) {
                 ?>
                 <div class="info" id="main_info" onclick="this.hide();">
                     <?php
-                    echo $_SESSION['info'];
+                    functions::xecho($_SESSION['info']);
                     ?>
                 </div>
                 <?php

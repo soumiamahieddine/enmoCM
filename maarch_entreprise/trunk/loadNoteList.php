@@ -104,13 +104,13 @@ if (isset($_REQUEST['identifier'])) {
                             // $return .= '<blockquote style="padding: 1px;">';
                                 $return .= '<div style="text-align: right; background-color: rgb(230, 230, 230); padding: 2px;">';
                                     $return .= ucfirst(_BY) . ' : ';
-                                    $return .= $firstname . ' ' . $lastname;
+                                    $return .= functions::xssafe($firstname) . ' ' . functions::xssafe($lastname);
                                     $return .= ', ';
-                                    $return .= $Core_Tools->format_date_db($return_db->date_note);
+                                    $return .= functions::xssafe($Core_Tools->format_date_db($return_db->date_note));
                                 $return .= '</div>';
                                 // $return .= '<br />';
                                 $return .= '<div style="padding-top:2px;padding-bottom:2px;">';
-                                    $note_text = str_replace(array("\r", "\n"), array("<br />", "<br />"), $return_db->note_text);
+                                    $note_text = str_replace(array("\r", "\n"), array("<br />", "<br />"), functions::xssafe($return_db->note_text));
                                     $return .= str_replace('<br /><br />', '<br />', $note_text);
                                 $return .= '</div>';
                             // $return .= '</blockquote>';

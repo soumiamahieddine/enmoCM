@@ -544,4 +544,4 @@ $content .= "<script>$$('#container')[0].setAttribute('style', 'width: 90%; min-
                     // "$$('table#extended_list')[0].setAttribute('style', 'width: 100%; min-width: 900px; margin: 0;');".
             "</script>";
 
-echo "{'status' : " . $status . ", 'content' : '" . addslashes($debug.$content) . "', 'error' : '" . addslashes($error) . "'}";
+echo "{'status' : " . $status . ", 'content' : '" . addslashes($debug.$content) . "', 'error' : '" . addslashes(functions::xssafe($error)) . "'}";

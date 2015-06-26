@@ -52,7 +52,8 @@ $core_tools->test_service('quicklaunch', "apps");
                             <?php
                             foreach ($_SESSION['user']['security'] as $key => $value) {
                                 if ($key == 'letterbox_coll' || $key == 'business_coll' || $key == 'rm_coll' || $key == 'res_coll') {
-                                    echo '<option id="' . $key . '" value="' . $key . '">' . $value['DOC']['label_coll'] .'</option>';
+                                    echo '<option id="' . functions::xssafe($key) . '" value="' . functions::xssafe($key) . '">' 
+                                        . functions::xssafe($value['DOC']['label_coll']) .'</option>';
                                 }
                             }
                             ?>

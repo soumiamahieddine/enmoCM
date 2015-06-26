@@ -89,4 +89,3 @@ elseif($_SESSION['service_tag'] == "doctype_delete")
     $db->connect();
     $db->query("delete from ".$_SESSION['tablename']['mlb_doctype_ext']." where type_id = ".$_SESSION['m_admin']['doctypes']['TYPE_ID']."");
 }
-?>

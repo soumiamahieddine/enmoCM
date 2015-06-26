@@ -31,25 +31,30 @@ if (isset($_REQUEST['res_id'])) {
                                     $return .= '(contact) ';
 
                                     if ($res->is_corporate_person == 'Y') {
-                                        $return .= $res->society . ' ' ;
+                                        $return .= functions::xssafe($res->society) . ' ' ;
                                         if (!empty ($res->society_short)) {
-                                            $return .= '('.$res->society_short.') ';
+                                            $return .= '('.functions::xssafe($res->society_short).') ';
                                         }
                                     } else {
-                                        $return .= $res->contact_lastname . ' ' . $res->contact_firstname . ' ';
+                                        $return .= functions::xssafe($res->contact_lastname) 
+                                            . ' ' . functions::xssafe($res->contact_firstname) . ' ';
                                         if (!empty ($res->society)) {
-                                            $return .= '(' .$res->society . ') ';
+                                            $return .= '(' . functions::xssafe($res->society) . ') ';
                                         }                        
                                     }
                                     if ($res->is_private == 'Y') {
                                         $return .= '('._CONFIDENTIAL_ADDRESS.')';
                                     } else {
-                                        $return .= "- " . $res->contact_purpose_label." : ";
+                                        $return .= "- " . functions::xssafe($res->contact_purpose_label)." : ";
                                         if (!empty($res->lastname) || !empty($res->firstname)) {
-                                            $return .= $res->lastname . ' ' . $res->firstname;
+                                            $return .= functions::xssafe($res->lastname) 
+                                                . ' ' . functions::xssafe($res->firstname);
                                         }
                                         if (!empty($res->address_num) || !empty($res->address_street) || !empty($res->address_town) || !empty($res->address_postal_code)) {
-                                            $return .= ', '.$res->address_num .' ' . $res->address_street .' ' . $res->address_postal_code .' ' . strtoupper($res->address_town);
+                                            $return .= ', ' . functions::xssafe($res->address_num) . ' ' 
+                                                . functions::xssafe($res->address_street) . ' ' 
+                                                . functions::xssafe($res->address_postal_code) . ' ' 
+                                                . functions::xssafe(strtoupper($res->address_town));
                                         }         
                                     }
           
@@ -75,7 +80,8 @@ if (isset($_REQUEST['res_id'])) {
                         $return .= '<td style="background: transparent; border: 0px dashed rgb(200, 200, 200);">';
                             
                                 $return .= '<div style="text-align: left; background-color: rgb(230, 230, 230); padding: 3px; margin-left: 20px; margin-top: -6px;">';
-                                    $return .= ' (utilisateur) ' . $res->firstname . ' ' . $res->lastname;
+                                    $return .= ' (utilisateur) ' 
+                                        . functions::xssafe($res->firstname) . ' ' . functions::xssafe($res->lastname);
                                                 
                                 $return .= '</div>';
                                 //$return .= '<br />';

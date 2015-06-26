@@ -204,7 +204,6 @@ for ($i=0;$i<count($tab);$i++)
                    $query .= "OR ";
                     $query .= "user_id = '" . $_SESSION['user']['UserId'] . "' ";
                   $query .= ") ";
-                  //echo $query . '<br />';
                 $db->query($query);
                 $tab[$i][$j]['hasNotes'] = $db->fetch_object();             
                 $tab[$i][$j]['res_multi_contacts'] = $_SESSION['mlb_search_current_res_id'];
@@ -560,4 +559,4 @@ $content .= "<script>$$('#container')[0].setAttribute('style', 'width: 90%; min-
                     // "$$('table#extended_list')[0].setAttribute('style', 'width: 100%; min-width: 900px; margin: 0;');".
             "</script>";
 
-echo "{'status' : " . $status . ", 'content' : '" . addslashes($debug.$content) . "', 'error' : '" . addslashes($error) . "'}";
+echo "{'status' : " . $status . ", 'content' : '" . addslashes($debug.$content) . "', 'error' : '" . addslashes(functions::xssafe($error)) . "'}";

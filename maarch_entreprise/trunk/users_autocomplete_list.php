@@ -36,7 +36,9 @@ $res = $req->select($select, $where, $other, $_SESSION['config']['databasetype']
 echo "<ul>\n";
 for($i=0; $i< min(count($res), 10)  ;$i++)
 {
-	echo "<li>".$req->show_string($res[$i][0]['value']).', '.$req->show_string($res[$i][1]['value']).' ('.$res[$i][2]['value'].")</li>\n";
+	echo "<li>".functions::xssafe($req->show_string($res[$i][0]['value']))
+		.', ' . functions::xssafe($req->show_string($res[$i][1]['value']))
+		.' (' . functions::xssafe($res[$i][2]['value']).")</li>\n";
 }
 if(count($res) == 11)
 {

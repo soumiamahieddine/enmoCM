@@ -345,7 +345,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                 $frm_str .='<option value="">'._CHOOSE_CATEGORY.'</option>';
                             foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $cat_id) {
                                 if ($cat_id <> 'default_category') {
-                                    $frm_str .='<option value="'.$cat_id.'"';
+                                    $frm_str .='<option value="'.functions::xssafe($cat_id).'"';
                                     if (
                                         (isset($data['category_id']['value']) && $data['category_id']['value'] == $cat_id)
                                         || $_SESSION['coll_categories']['letterbox_coll']['default_category'] == $cat_id
@@ -353,7 +353,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                     ) {
                                         $frm_str .='selected="selected"';
                                     }
-                                    $frm_str .='>'.$_SESSION['coll_categories']['letterbox_coll'][$cat_id].'</option>';
+                                    $frm_str .='>'.functions::xssafe($_SESSION['coll_categories']['letterbox_coll'][$cat_id]).'</option>';
                                 }
                             }
                         $frm_str.='</select></td>';
@@ -420,14 +420,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $frm_str .='<option value="">'._CHOOSE_PRIORITY.'</option>';
                                 for($i=0; $i<count($_SESSION['mail_priorities']);$i++)
                                 {
-                                    $frm_str .='<option value="'.$i.'" ';
+                                    $frm_str .='<option value="'.functions::xssafe($i).'" ';
                                     if(isset($data['type_id'])&& $data['priority'] == $i)
                                     {
                                         $frm_str .='selected="selected"';
                                     }else if($data['priority']=='' && $_SESSION['default_mail_priority']==$i){
 					$frm_str .='selected="selected"';
 				}
-                                    $frm_str .='>'.$_SESSION['mail_priorities'][$i].'</option>';
+                                    $frm_str .='>'.functions::xssafe($_SESSION['mail_priorities'][$i]).'</option>';
                                 }
                             $frm_str .='</select></td>';
                             $frm_str .= '<td><span class="red_asterisk" id="priority_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
@@ -657,13 +657,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $frm_str .='<option value="">'. _CHOOSE_NATURE.'</option>';
                             foreach(array_keys($_SESSION['mail_natures']) as $nature)
                             {
-                                $frm_str .='<option value="'.$nature.'"  with_reference = "'.$_SESSION['mail_natures_attribute'][$nature].'"';
+                                $frm_str .='<option value="'.functions::xssafe($nature).'"  with_reference = "'.$_SESSION['mail_natures_attribute'][$nature].'"';
                                 if(isset($data['nature_id']) && $data['nature_id'] == $nature) {
                                     $frm_str .='selected="selected"';
                                 } else if ($data['nature_id'] == "" && $_SESSION['default_mail_nature'] == $nature) {
                                     $frm_str .='selected="selected"';
                                 }
-                                $frm_str .='>'.$_SESSION['mail_natures'][$nature].'</option>';
+                                $frm_str .='>'.functions::xssafe($_SESSION['mail_natures'][$nature]).'</option>';
                             }
                         $frm_str .= '</select></td>';
                         $frm_str .= '<td><span class="red_asterisk" id="nature_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
@@ -864,7 +864,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='<td><label for="chrono_number" class="form_title" >'._CHRONO_NUMBER.'</label></td>';
             $frm_str .='<td>&nbsp;</td>';
             $frm_str .='<td class="indexing_field"><input type="text" name="chrono_number" value="' 
-                . $chrono_number . '" id="chrono_number" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
+                . functions::xssafe($chrono_number) . '" id="chrono_number" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
             $frm_str .='<td><span class="red_asterisk" id="chrono_number_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frm_str .= '</tr>';
         

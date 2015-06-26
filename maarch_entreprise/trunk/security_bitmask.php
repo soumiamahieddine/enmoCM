@@ -103,13 +103,6 @@ if ($core->is_module_loaded('moreq')) {
         	'LABEL' => _DELETE_RECORD_LABEL,
         )
     );
-/*    array_push(
-        $_ENV['security_bitmask'],
-        array(
-        	'ID' => VIEW_LOG,
-        	'LABEL' => _VIEW_LOG_LABEL,
-        )
-    );*/
 }
 
 function getTaskLabel($taskId, $tasksArray)

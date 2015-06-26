@@ -880,7 +880,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
     }
     // Folder
     if (isset ($_ENV['categories'][$cat_id]['other_cases']['folder']) && count($_ENV['categories'][$cat_id]['other_cases']['folder']) > 0 && (!isset ($params['show_folder']) || $params['show_folder'] == true)) {
-        //echo 'folder';
         $fields .= 'folders_system_id,';
 
 

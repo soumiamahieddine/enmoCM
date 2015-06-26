@@ -43,13 +43,6 @@ $requestTemplateContent = trim(str_replace(
     $requestTemplateContent
 ));
 
-
-/*echo $sessionTemplateContent;
-echo "
-";
-echo $requestTemplateContent;
-exit;*/
-
 if ($sessionTemplateContent == $requestTemplateContent) {
     $_SESSION['template_content'] = '';
     echo "{status : '1, responseText : same content ! '}";
