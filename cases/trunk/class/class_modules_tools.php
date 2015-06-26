@@ -289,28 +289,28 @@ class cases extends dbquery
 
 		$my_return = array();
 		$request = new request();
-		$f_date =
 
 		//$query = " select case_id, case_label, case_description, date(case_creation_date) as ccd, case_typist, case_parent, case_custom_t1, case_custom_t2, case_custom_t3, case_custom_t4, case_type, date(case_closing_date) as clo, date(case_last_update_date)	as cud   FROM ".$_SESSION['tablename']['cases']." WHERE  CASE_ID = '".$caseId."' ";
-		$query = " select case_id, case_label, case_description, ".$request->extract_date('case_creation_date', 'date')." as ccd, case_typist, case_parent, case_custom_t1, case_custom_t2, case_custom_t3, case_custom_t4, case_type, ".$request->extract_date('case_closing_date', 'date')." as clo, ".$request->extract_date('case_last_update_date', 'date')." as cud   FROM ".$_SESSION['tablename']['cases']." WHERE  CASE_ID = '".$caseId."' ";
+		$query = " select case_id, case_label, case_description, "
+			.$request->extract_date('case_creation_date', 'date')
+			." as ccd, case_typist, case_parent, case_custom_t1, case_custom_t2, case_custom_t3, case_custom_t4, case_type, ".$request->extract_date('case_closing_date', 'date')." as clo, ".$request->extract_date('case_last_update_date', 'date')." as cud   FROM ".$_SESSION['tablename']['cases']." WHERE  CASE_ID = '".$caseId."' ";
 
 		$db->query($query);
 		$res = $db->fetch_object();
 
-		$my_return['case_id'] = $res->case_id;
-		$my_return['case_label'] = $db->show_string($res->case_label);
-		$my_return['case_description'] = $db->show_string($res->case_description);
-		$my_return['case_creation_date'] = $db->show_string($res->ccd);
-		$my_return['case_typist'] = $db->show_string($res->case_typist);
-		$my_return['case_parent'] = $db->show_string($res->case_parent);
-		$my_return['case_custom_t1'] = $db->show_string($res->case_custom_t1);
-		$my_return['case_custom_t2'] = $db->show_string($res->case_custom_t2);
-		$my_return['case_custom_t3'] = $db->show_string($res->case_custom_t3);
-		$my_return['case_custom_t4'] = $db->show_string($res->case_custom_t4);
-		$my_return['case_type'] = $db->show_string($res->case_type);
-		$my_return['case_closing_date'] = $db->show_string($res->clo);
-		$my_return['case_last_update_date'] = $db->show_string($res->cud);
-
+		$my_return['case_id'] = functions::xssafe($res->case_id);
+		$my_return['case_label'] = functions::xssafe($db->show_string($res->case_label));
+		$my_return['case_description'] = functions::xssafe($db->show_string($res->case_description));
+		$my_return['case_creation_date'] = functions::xssafe($db->show_string($res->ccd));
+		$my_return['case_typist'] = functions::xssafe($db->show_string($res->case_typist));
+		$my_return['case_parent'] = functions::xssafe($db->show_string($res->case_parent));
+		$my_return['case_custom_t1'] = functions::xssafe($db->show_string($res->case_custom_t1));
+		$my_return['case_custom_t2'] = functions::xssafe($db->show_string($res->case_custom_t2));
+		$my_return['case_custom_t3'] = functions::xssafe($db->show_string($res->case_custom_t3));
+		$my_return['case_custom_t4'] = functions::xssafe($db->show_string($res->case_custom_t4));
+		$my_return['case_type'] = functions::xssafe($db->show_string($res->case_type));
+		$my_return['case_closing_date'] = functions::xssafe($db->show_string($res->clo));
+		$my_return['case_last_update_date'] = functions::xssafe($db->show_string($res->cud));
 
 		return $my_return;
 	}
