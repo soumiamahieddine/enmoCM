@@ -358,7 +358,6 @@ class business_app_tools extends dbquery
                 $collections = array();
                 $collectionsTag = $actionPage->COLLECTIONS;
                 foreach ($collectionsTag->COLL_ID as $collection) {
-                    //echo $collection . '<br />';
                     array_push($collections, (string) $collection);
                 }
                 $_SESSION['actions_pages'][$i] = array(

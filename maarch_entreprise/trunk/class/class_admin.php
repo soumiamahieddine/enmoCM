@@ -78,8 +78,7 @@ class admin extends functions
 	                    <div><i class="<?php functions::xecho($app_services[$i]['style']);?> fa-4x"></i></div>
 	                    <div <?php functions::xecho($debug_style);?>>
 
-	                            <strong><?php echo $app_services[$i]['name'];?></strong>
-	                           <!-- <em><br/><?php functions::xecho($app_services[$i]['comment']);?></em>-->
+	                            <strong><?php functions::xecho($app_services[$i]['name']);?></strong>
 
 	                    </div>
 	                </div>
@@ -103,8 +102,6 @@ class admin extends functions
 	    if (preg_match("/MSIE 6.0/", $_SERVER['HTTP_USER_AGENT'])) {
 			$debug_style =  'style="height:100px;"';
 	    }
-		// echo '<h2 class="admin_subtitle block">Modules</h2>';
-		// echo '<div id="admin_modules">';
 		$nb = 0;
 		foreach (array_keys($modules_services) as $value) {
 			for ($i = 0; $i < count($modules_services[$value]); $i ++) {
@@ -119,13 +116,13 @@ class admin extends functions
 					}
 					$nb ++;
 					?>
-					<div class="admin_item" title="<?php echo 'Module '.$value.' : '.$modules_services[$value][$i]['comment'];?>" onclick="window.top.location='<?php functions::xecho($modules_services[$value][$i]['servicepage']);?>';">
+					<div class="admin_item" title="<?php echo 'Module '
+					. functions::xssafe($value) .' : ' 
+					. functions::xssafe($modules_services[$value][$i]['comment']);?>" onclick="window.top.location='<?php functions::xecho($modules_services[$value][$i]['servicepage']);?>';">
 						<i class="<?php functions::xecho($modules_services[$value][$i]['style']);?> fa-4x"></i>
 						<div <?php functions::xecho($debug_style);?> >
 
-								<strong><?php echo $modules_services[$value][$i]['name'];?></strong><!--<br/>
-                                <em><?php functions::xecho($modules_services[$value][$i]['comment']);?></em>-->
-
+								<strong><?php functions::xecho($modules_services[$value][$i]['name']);?></strong><
 						</div>
 					</div>
 					<?php
@@ -140,4 +137,3 @@ class admin extends functions
 		
 	}
 }
-?>
