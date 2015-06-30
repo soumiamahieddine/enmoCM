@@ -83,7 +83,7 @@ class Database
         }
         
         // Set DSN
-        $this->dsn = $this->databasetype 
+        $this->dsn = $this->driver 
             . ':host=' . $this->server
             . ';port=' . $this->port
             . ';dbname=' . $this->database
