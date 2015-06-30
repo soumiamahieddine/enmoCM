@@ -52,9 +52,7 @@ $stmt = $db->query(
         . " or lower(users.user_id) like lower(:what) "
     . ") and users.status <> 'DEL' " . $whereSecurityOnEntities . " and (users.user_id = users_entities.user_id) "
     . " order by users.lastname",
-    array(
-        ':what' => html_entity_decode($_REQUEST['what']).'%'
-    )
+    array(':what' => $_REQUEST['what'].'%')
 );
 
 $listArray = array();
