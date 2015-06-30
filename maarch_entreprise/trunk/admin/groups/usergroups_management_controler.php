@@ -432,10 +432,6 @@ function displayDelCheck($groupId)
             $users = $ugc->getUsers($old_group);
             //$users_sql = "'".implode("','", $users)."'";
             $db = new Database();
-            /*$params = $users;
-            $placeholders = implode(',', array_fill(0, count($params), '?'));
-            array_unshift($old_group, $params);*/
-
             $db->query(
                 "delete from usergroup_content WHERE group_id=? AND user_id in (?)",
                 array($old_group, $users)
