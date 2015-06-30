@@ -181,6 +181,26 @@ class Database
      */
     public function query($queryString, $parameters=null, $catchExceptions=false)
     {
+        if ($parameters) {
+            foreach ($parameters as $key => $value) {
+                if (is_array($value)) {
+                    if (is_int($key)) {
+                        $placeholders = implode(',', array_fill(0, count($value), '?'));
+                        preg_match_all("/\?/", $queryString, $matches, PREG_OFFSET_CAPTURE);
+                        $match = $matches[0][$key];
+                        $queryString = substr($queryString, 0, $match[1]) . $placeholders . substr($queryString, $match[1]+1);
+                    } else {
+                        $placeholdersArr = array();
+                        foreach ($value as $pos => $item) {
+                            $placeholdersArr[] = ':item_'.$pos;
+                        }
+                        $placeholders = implode(',', $placeholdersArr);
+                        $queryString = str_replace($key, $placeholders, $queryString);    
+                    }
+                }
+            }
+        }
+
         try {
             $this->stmt = $this->prepare($queryString);
 
