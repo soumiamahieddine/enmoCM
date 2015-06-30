@@ -49,7 +49,7 @@ $stmt = $db->query(
     "select distinct(users.user_id), users.lastname as tag from users, users_entities "
     . " where ("
         . "lower(users.lastname) like lower(:what) "
-        . " or lower(users.user_id) like lower(?) "
+        . " or lower(users.user_id) like lower(:what) "
     . ") and users.status <> 'DEL' " . $whereSecurityOnEntities . " and (users.user_id = users_entities.user_id) "
     . " order by users.lastname",
     array(
