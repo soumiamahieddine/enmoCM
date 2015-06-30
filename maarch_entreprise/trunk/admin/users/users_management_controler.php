@@ -365,12 +365,13 @@ function display_del_check($user_id){
             // Mise à jour des enregistrements (egal suppression puis insertion)
             $listDiffusion_sql = "'".implode("','", $listDiffusion)."'";
             $db->query(
-                "update listmodels set item_id=:newItemId where item_id=:oldItemId and object_id in (" .$listDiffusion_sql. ")");
+                "update listmodels set item_id=:newItemId where item_id=:oldItemId and object_id in (" .$listDiffusion_sql. ")",
                 array(
                     ':newItemId' => $new_user,
                     ':oldItemId' => $old_user,
                     )
-            );
+                );
+
             $_SESSION['error'] = _DELETED_USER.' : '.$old_user;
 
            ?>
