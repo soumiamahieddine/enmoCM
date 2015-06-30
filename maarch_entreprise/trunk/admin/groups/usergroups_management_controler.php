@@ -430,12 +430,22 @@ function displayDelCheck($groupId)
             $new_group=$_POST['group_id'];
             $ugc = new usergroups_controler();
             $users = $ugc->getUsers($old_group);
-            $users_sql = "'".implode("','", $users)."'";
-            $db = new dbquery();
-            $db->query("delete from usergroup_content WHERE group_id='".$old_group."' AND user_id in (".$users_sql.")" );
+            //$users_sql = "'".implode("','", $users)."'";
+            $db = new Database();
+            $params = $users;
+            $placeholders = implode(',', array_fill(0, count($params), '?'));
+            array_unshift($old_group, $params);
+
+            $db->query(
+                "delete from usergroup_content WHERE group_id=? AND user_id in (".$placeholders.")",
+                array($params)
+            );
             if($_POST['group_id'] != 'no_group'){
                 foreach ($users as $key => $value) {
-                    $db->query("INSERT INTO usergroup_content(group_id, user_id,primary_group) values ('".$new_group."', '".$value."','N')" );
+                    $db->query(
+                        "INSERT INTO usergroup_content(group_id, user_id, primary_group) values (?, ?, 'N')",
+                        array($new_group, $value)
+                    );
                 } 
 
                 $_SESSION['error'] = _DELETED_GROUP.' : '.$old_group;
@@ -475,9 +485,9 @@ function displayDelCheck($groupId)
                 <select name="group_id" id="group_id" onchange=''>
                     <option value="no_group"><?php echo _NO_REPLACEMENT;?></option>
                     <?php
-                    $db = new dbquery();
-                    $db->query("select * from usergroups order by group_desc ASC");
-                    while($groups = $db->fetch_object())
+                    $db = new Database();
+                    $stmt = $db->query("select * from usergroups order by group_desc ASC");
+                    while($groups = $stmt->fetchObject())
                     {
                         if($groups->group_id != $groupId){
                          ?>

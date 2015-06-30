@@ -29,13 +29,15 @@
 * @ingroup admin
 */
 
-$db = new dbquery();
-$db->connect();
-$db->query("select group_desc as tag from ".$_SESSION['tablename']['usergroups']
-." where lower(group_desc) like lower('".$_REQUEST['what']."%') order by group_desc");
+$db = new Database();
+$stmt = $db->query(
+    "select group_desc as tag from ".$_SESSION['tablename']['usergroups']
+    ." where lower(group_desc) like lower(?) order by group_desc"
+    array($_REQUEST['what'].'%')
+);
 
 $listArray = array();
-while($line = $db->fetch_object())
+while($line = $stmt->fetchObject())
 {
     array_push($listArray, $line->tag);
 }
