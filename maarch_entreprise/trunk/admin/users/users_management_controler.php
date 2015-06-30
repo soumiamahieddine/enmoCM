@@ -285,6 +285,7 @@ function display_del($user_id){
     $db = new dbquery();
     $db->connect();
     $db->query("select * from listmodels WHERE item_id='".$user_id."' AND item_mode='dest'" );
+    //$db->query("select * from listmodels WHERE item_id=? AND item_mode='dest'", array($user_id));
     while ($res = $db->fetch_object()) {
             array_push($listDiffusion, $res->description);
         }

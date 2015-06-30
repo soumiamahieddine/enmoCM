@@ -136,10 +136,11 @@ if (! empty($_SESSION['error'])) {
 
                 // Instantiate database.
                 $database = new Database();
-                $database->query("SELECT * FROM users WHERE user_id LIKE :login");
-                $database->bind(':login', $login);
-                $database->execute();
-                $result = $database->single();
+                $stmt = $database->query(
+                    "SELECT * FROM users WHERE user_id LIKE :login", 
+                    array(':login', $login)
+                );
+                $result = $stmt->fetch();
             } else {
                 $db = new dbquery();
                 $db->connect();

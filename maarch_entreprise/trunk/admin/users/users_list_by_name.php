@@ -44,19 +44,22 @@ if ($whereSecurityOnEntities == '') {
     $whereSecurityOnEntities = " and 1=1 ";
 }
 
-$db = new dbquery();
-$db->connect();
-$db->query(
+$db = new Database();
+$stmt = $db->query(
     "select distinct(users.user_id), users.lastname as tag from users, users_entities "
     . " where ("
-        . "lower(users.lastname) like lower('".$db->protect_string_db($_REQUEST['what'])."%') "
-        . " or lower(users.user_id) like lower('".$db->protect_string_db($_REQUEST['what'])."%') "
+        . "lower(users.lastname) like lower(?) "
+        . " or lower(users.user_id) like lower(?) "
     . ") and users.status <> 'DEL' " . $whereSecurityOnEntities . " and (users.user_id = users_entities.user_id) "
-    . " order by users.lastname"
+    . " order by users.lastname",
+    array(
+        $_REQUEST['what'].'%',
+        $_REQUEST['what'].'%'
+    )
 );
 
 $listArray = array();
-while ($line = $db->fetch_object()) {
+while ($line = $stmt->fetchObject()) {
     array_push($listArray, $line->tag);
 }
 echo "<ul>\n";

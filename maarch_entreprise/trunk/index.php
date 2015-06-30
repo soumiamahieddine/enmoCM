@@ -31,6 +31,7 @@
 */
 include_once('../../core/class/class_functions.php');
 include_once '../../core/init.php';
+include_once '../../core/class/class_db_pdo.php';
 
 if ($_SESSION['config']['usePHPIDS'] == 'true') {
     include 'apps/maarch_entreprise/phpids_control.php';
