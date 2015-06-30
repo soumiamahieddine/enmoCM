@@ -104,7 +104,7 @@ if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
 foreach ($_REQUEST as $name => $value) {
     //if (is_string($value) && strpos($value, "<") !== false) {
         //$value = preg_replace('/(<\/?script[^>]*>|<\w+[\s\n\r]*on[^>]*>|<\?php|<\?[\s|\n|\r])/i', "", $value);
-        $value = functions::xssafe($value);
+        // $value = functions::xssafe($value);
         $_REQUEST[$name] = $value;
     //}
 }
