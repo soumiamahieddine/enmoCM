@@ -29,21 +29,21 @@
 * @ingroup admin
 */
 
-$db = new dbquery();
-$db->connect();
-$db->query(
+$db = new Database();
+$stmt = $db->query(
     "select lastname, firstname, user_id from ".$_SESSION['tablename']['users']
     . " where ("
-        . "lower(lastname) like lower('".$_REQUEST['what']."%') "
-        . " or lower(firstname) like lower('".$_REQUEST['what']."%') "
-        . " or lower(user_id) like lower('".$_REQUEST['what']."%') "
+        . "lower(lastname) like lower(:what) "
+        . " or lower(firstname) like lower(:what) "
+        . " or lower(user_id) like lower(:what) "
     . ") and status <> 'DEL'"
-    . " order by lastname, firstname"
+    . " order by lastname, firstname",
+    array(':what' => $_REQUEST['what'] . "%")
 );
 
 $listArray = array();
-while ($line = $db->fetch_object()) {
-    $listArray[$line->user_id] = $db->show_string($line->lastname)." ".$db->show_string($line->firstname);
+while ($line = $stmt->fetchObject()) {
+    $listArray[$line->user_id] = functions::show_string($line->lastname)." ".functions::show_string($line->firstname);
 }
 echo "<ul>\n";
 $authViewList = 0;

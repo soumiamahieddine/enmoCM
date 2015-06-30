@@ -118,13 +118,12 @@ function display_up($user_id){
         if ($user->signature_path <> '' 
             && $user->signature_file_name <> '' 
         ) {
-            $db = new dbquery();
-            $db->connect();
+            $db = new Database();
             $query = "select path_template from " 
                 . _DOCSERVERS_TABLE_NAME 
                 . " where docserver_id = 'TEMPLATES'";
-            $db->query($query);
-            $resDs = $db->fetch_object();
+            $stmt = $db->query($query);
+            $resDs = $stmt->fetchObject();
             $pathToDs = $resDs->path_template;
             $user->pathToSignature = $pathToDs . str_replace(
                     "#", 
@@ -282,14 +281,14 @@ function display_del($user_id){
 
     // information liste(s) de diffusion exists in users
     $listDiffusion=array();
-    $db = new dbquery();
-    $db->connect();
-    $db->query("select * from listmodels WHERE item_id='".$user_id."' AND item_mode='dest'" );
-    //$db->query("select * from listmodels WHERE item_id=? AND item_mode='dest'", array($user_id));
-    while ($res = $db->fetch_object()) {
-            array_push($listDiffusion, $res->description);
-        }
-    $db->disconnect();
+    $db = new Database();
+    $stmt = $db->query(
+        "select * from listmodels WHERE item_id=? AND item_mode='dest'",
+        array($user_id)
+    );
+    while ($res = $stmt->fetchObject()) {
+        array_push($listDiffusion, $res->description);
+    }
 
     if(!empty($listDiffusion)){ ?>
         <script type="text/javascript">window.top.location='<?php
@@ -331,6 +330,7 @@ function display_del_check($user_id){
 
 /****************Management of the location bar  ************/
         $admin = new core_tools();
+        $db = new Database();
         $init = false;
         if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
             $init = true;
@@ -347,30 +347,29 @@ function display_del_check($user_id){
         $pageId = "users";
         $admin->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 
-    
         /***********************************************************/
         if(isset($_POST['user_id'])){
             $old_user=$_POST['id'];
             $new_user=$_POST['user_id'];
 
             $listDiffusion=array();
-            $db = new dbquery();
-            $db->connect();
-            $db->query("select * from listmodels WHERE item_id='".$user_id."' AND item_mode='dest'" );
-            while ($res = $db->fetch_object()) {
-                    array_push($listDiffusion, $res->object_id);
-                }
-            $db->disconnect();
-
+            
+            $stmt = $db->query(
+                "select * from listmodels WHERE item_id=? AND item_mode='dest'",
+                array($user_id)
+            );
+            while ($res = $stmt->fetchObject()) {
+                array_push($listDiffusion, $res->object_id);
+            }
 
             // Mise à jour des enregistrements (egal suppression puis insertion)
             $listDiffusion_sql = "'".implode("','", $listDiffusion)."'";
-            $db = new dbquery();
-            $db->connect();
-            $db->query("update listmodels set item_id='" .$new_user. "' where item_id='" .$old_user. "' and object_id in (" .$listDiffusion_sql. ")");
-            //echo "update listmodels set item_id='" .$new_user. "' where item_id='" .$old_user. "' and object_id in (" .$listDiffusion_sql. ")";
-            $db->disconnect();
-
+            $db->query(
+                "update listmodels set item_id=:newItemId where item_id=:oldItemId and object_id in (" .$listDiffusion_sql. ")");
+                array(
+                    ':newItemId' => $new_user,
+                    ':oldItemId' => $old_user,
+                    )
 
             $_SESSION['error'] = _DELETED_USER.' : '.$old_user;
 
@@ -384,13 +383,13 @@ function display_del_check($user_id){
         }
 
         $listDiffusion=array();
-        $db = new dbquery();
-        $db->connect();
-        $db->query("select * from listmodels list, entities it WHERE list.object_id = it.entity_id and item_id='".$user_id."' AND item_mode='dest'" );
-        while ($res = $db->fetch_object()) {
+        $stmt = $db->query(
+            "select * from listmodels list, entities it WHERE list.object_id = it.entity_id and item_id=? AND item_mode='dest'",
+            array($user_id)
+        );
+        while ($res = $stmt->fetchObject()) {
             array_push($listDiffusion, $res->entity_label);
         }
-        $db->disconnect();
 
         echo '<h1><i class="fa fa-users fa-2x"></i>'._USER_DELETION.': <i>'.$user_id.'</i></h1>';
         echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
@@ -420,9 +419,8 @@ function display_del_check($user_id){
                 <select name="user_id" id="user_id" onchange=''>
                     <option value="no_user"><?php echo _NO_REPLACEMENT;?></option>
                     <?php
-                    $db = new dbquery();
-                    $db->query("select * from users order by user_id ASC");
-                    while($users = $db->fetch_object())
+                    $stmt = $db->query("select * from users order by user_id ASC");
+                    while($users = $stmt->fetchObject())
                     {
                         if($users->user_id != $user_id){
                          ?>
