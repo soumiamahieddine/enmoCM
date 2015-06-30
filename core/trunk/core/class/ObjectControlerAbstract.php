@@ -298,22 +298,22 @@ abstract class ObjectControler
         require_once 'core/class/class_db_pdo.php';
         $database = new Database();
         $theQuery = "SELECT * FROM $table_name WHERE $table_id = :id " . $whereComp;
-        $database->query($theQuery);
-        $database->bind(':id', $id);
+        $queryParams = array(':id' => $id);
 
         if (count($params > 0)) {
             foreach ($params as $keyParam => $keyValue) {
-                $database->bind(":" . $keyParam, $keyValue);
+                $queryParams[":" . $keyParam] = $keyValue;
             }
         }
-        $database->execute();
+
+        $stmt = $database->query($theQuery, $queryParams);
         
-        if ($database->rowCount() == 0) {
+        if ($stmt->rowCount() == 0) {
             return null;
         } else {
             // Constructing result
             $object = new $object_name();
-            $rows = $database->resultset();    
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);    
             
             for ($cpt=0;$cpt<count($rows);$cpt++) {
                 foreach ($rows[$cpt] as $key => $value) {
