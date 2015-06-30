@@ -370,7 +370,7 @@ function display_del_check($user_id){
                     ':newItemId' => $new_user,
                     ':oldItemId' => $old_user,
                     )
-
+            );
             $_SESSION['error'] = _DELETED_USER.' : '.$old_user;
 
            ?>
