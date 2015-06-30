@@ -189,14 +189,22 @@ class Database
                         preg_match_all("/\?/", $queryString, $matches, PREG_OFFSET_CAPTURE);
                         $match = $matches[0][$key];
                         $queryString = substr($queryString, 0, $match[1]) . $placeholders . substr($queryString, $match[1]+1);
+                        $parameters1 = array_slice($parameters, 0, $key);
+                        $parameters2 = array_slice($parameters, $key+1);
+                        $parameters = array_merge($parameters1, $value, $parameters2);
                     } else {
                         $placeholdersArr = array();
                         foreach ($value as $pos => $item) {
-                            $placeholdersArr[] = ':item_'.$pos;
+                            $pname = $key.'_'.$pos;
+                            $placeholdersArr[] = $pname;
+                            $parameters[$pname] = $item;
                         }
                         $placeholders = implode(',', $placeholdersArr);
-                        $queryString = str_replace($key, $placeholders, $queryString);    
+                        $queryString = str_replace($key, $placeholders, $queryString);
+                        unset($parameters[$key]);  
                     }
+                    var_dump($queryString);
+                    var_dump($parameters);
                 }
             }
         }
