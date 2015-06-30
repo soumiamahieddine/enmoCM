@@ -32,7 +32,7 @@
 $db = new Database();
 $stmt = $db->query(
     "select group_desc as tag from ".$_SESSION['tablename']['usergroups']
-    ." where lower(group_desc) like lower(?) order by group_desc"
+    ." where lower(group_desc) like lower(?) order by group_desc",
     array($_REQUEST['what'].'%')
 );
 
