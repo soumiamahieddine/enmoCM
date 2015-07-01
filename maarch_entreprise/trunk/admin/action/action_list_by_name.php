@@ -29,8 +29,8 @@
 */
 
 $db = new Database();
-$stmt = $db->query('select label_action as tag from '
-    . $_SESSION['tablename']['actions'] . " where lower(label_action) like lower(?) order by label_action",
+$stmt = $db->query('SELECT label_action as tag FROM '
+    . $_SESSION['tablename']['actions'] . " WHERE lower(label_action) like lower(?) order by label_action",
     array('%'.$_REQUEST['what'].'%')
     );
 
