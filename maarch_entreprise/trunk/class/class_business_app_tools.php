@@ -692,7 +692,7 @@ class business_app_tools extends dbquery
                   . 'contacts' . DIRECTORY_SEPARATOR . 'contact_addresses'
                   . DIRECTORY_SEPARATOR . $name . '.php';
             return $path;
-        } else if ($name == 'view_tree_contacts' || $name == 'show_tree_contacts') {
+        } else if ($name == 'view_tree_contacts' || $name == 'show_tree_contacts' || $name == 'get_tree_children_contact') {
             $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
                   . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
                   . 'contacts' . DIRECTORY_SEPARATOR . 'contact_tree'

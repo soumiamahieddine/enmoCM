@@ -66,21 +66,23 @@ array_push($search_customer_results, array('contact' => _VIEW_TREE_CONTACTS . ' 
 
 //$core_tools->show_array($search_customer_results);
 
-if (file_exists(
-    $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-    . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-    . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'contacts'
-    . DIRECTORY_SEPARATOR . 'contact_tree' . DIRECTORY_SEPARATOR . 'get_tree_children_contact.php'
-)
-) {
-    $openlink = '../../custom/'
-           . $_SESSION['custom_override_id']
-          . '/apps/' . $_SESSION['config']['app_id'] 
-          . '/admin/contacts/contact_tree/get_tree_children_contact.php';
-} else {
-    $openlink = 'admin/contacts/contact_tree/get_tree_children_contact.php';
-}
+// if (file_exists(
+//     $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+//     . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+//     . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+//     . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'contacts'
+//     . DIRECTORY_SEPARATOR . 'contact_tree' . DIRECTORY_SEPARATOR . 'get_tree_children_contact.php'
+// )
+// ) {
+//     $openlink = '../../custom/'
+//            . $_SESSION['custom_override_id']
+//           . '/apps/' . $_SESSION['config']['app_id'] 
+//           . '/admin/contacts/contact_tree/get_tree_children_contact.php';
+// } else {
+//     $openlink = 'admin/contacts/contact_tree/get_tree_children_contact.php';
+// }
+
+$openlink =  $_SESSION['config']['businessappurl']."index.php?display=true&page=get_tree_children_contact";
 
 ?>
 <script type="text/javascript">
