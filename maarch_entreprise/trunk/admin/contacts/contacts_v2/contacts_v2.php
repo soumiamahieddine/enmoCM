@@ -106,12 +106,13 @@ if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) 
 } elseif(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
     $what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
 
-    $what = str_replace("  ", "", $func->protect_string_db($_REQUEST['what']));
+    $what = str_replace("  ", "", $_REQUEST['what']);
     $what_table = explode(" ", $what);
 
-    foreach($what_table as $what_a){
-        $sql_lastname[] = " lower(lastname) LIKE lower('%".$what_a."%')";
-        $sql_society[] = " lower(society) LIKE lower('%".$what_a."%')";
+    foreach($what_table as $key => $what_a){
+        $sql_lastname[] = " lower(lastname) LIKE lower(:what_".$key.")";
+        $sql_society[] = " lower(society) LIKE lower(:what_".$key.")";
+        $arrayPDO = array_merge($arrayPDO, array(":what_".$key => $what_a."%"));
     }
 
     $where .= " (" . implode(' OR ', $sql_lastname) . " ";

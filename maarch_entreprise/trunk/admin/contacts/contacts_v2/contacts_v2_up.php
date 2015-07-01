@@ -97,11 +97,11 @@ array_push(
     "ca_id as id", "contact_id", "contact_purpose_id", "departement", "lastname", "firstname", "function", "address_num", "address_street", "address_postal_code", "address_town", "phone", "email", "enabled", "contact_purpose_label"
 );
 $what = "";
-$where = "contact_id = ? ";
-$arrayPDO = array($id);
+$where = "contact_id = :contactid ";
+$arrayPDO = array(":contactid" => $id);
 if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) {
-    $where .= " and ca_id = ? ";
-    $arrayPDO = array_merge($arrayPDO, $_REQUEST['selectedObject']);
+    $where .= " and ca_id = :selectedObject ";
+    $arrayPDO = array_merge($arrayPDO, array(":selectedObject" => $_REQUEST['selectedObject']));
 } elseif (isset($_REQUEST['what2']) && ! empty($_REQUEST['what2'])) {
     $what = $func->protect_string_db($_REQUEST['what2']);
     // $where .= " and (lower(lastname) like lower('" . $what. "%') 
@@ -109,15 +109,16 @@ if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) 
     //                 or lower(departement) like lower('" . $what. "%'))";
 
 
-    $what = str_replace("  ", "", $func->protect_string_db($_REQUEST['what2']));
+    $what = str_replace("  ", "", $_REQUEST['what2']);
     $what_table = explode(" ", $what);
 
-    foreach($what_table as $what_a){
+    foreach($what_table as $key => $what_a){
         if (strlen($what_a) > 2) {
-            $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
-            $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
-            $sql_society[] = " lower(departement) LIKE lower('".$what_a."%')";
-            $sql_purpose[] = " lower(contact_purpose_label) LIKE lower('%".$what_a."%')";
+            $sql_lastname[] = " lower(lastname) LIKE lower(:what_".$key.")";
+            $sql_firstname[] = " lower(firstname) LIKE lower(:what_".$key.")";
+            $sql_society[] = " lower(departement) LIKE lower(:what_".$key.")";
+            $sql_purpose[] = " lower(contact_purpose_label) LIKE lower(:what_".$key.")";
+            $arrayPDO = array_merge($arrayPDO, array(":what_".$key => $what_a."%"));
         }
     }
     if ($sql_lastname <> "") {
@@ -128,6 +129,9 @@ if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) 
     }
 
 }
+
+// var_dump($arrayPDO);
+// var_dump($where);
 
 $list = new list_show();
 $order = 'asc';
