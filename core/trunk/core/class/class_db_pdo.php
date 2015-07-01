@@ -226,5 +226,49 @@ class Database
         return $this->stmt;
     }
 
+    public function limit_select($start, $count, $select_expr, $table_refs, $where_def='1=1', $other_clauses='', $select_opts='')
+    {
+            
+        // LIMIT
+        if($count || $start) 
+        {
+            switch($_SESSION['config']['databasetype']) {
+            case 'MYSQL' : 
+                $limit_clause = 'LIMIT ' . $start . ',' . $count;
+                break;
+                
+            case 'POSTGRESQL' : 
+                $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
+                break;
+                
+            case 'SQLSERVER' : 
+                $select_opts .= ' TOP ' . $count;
+                break;
+                
+            case 'ORACLE' : 
+                if($where_def) $where_def .= ' AND ';
+                $where_def .= ' ROWNUM <= ' . $count;
+                break;
+                
+            default : 
+                break;
+            }
+        }
+        
+        if(empty($where_def)) $where_def = '1=1';
+        
+        // CONSTRUCT QUERY
+        $query = 'SELECT' . 
+            ' ' . $select_opts . 
+            ' ' . $select_expr . 
+            ' FROM ' . $table_refs .
+            ' WHERE ' . $where_def .
+            ' ' . $other_clauses .
+            ' ' . $limit_clause;
+        
+        return $query;
+        
+    }
+
 }
 

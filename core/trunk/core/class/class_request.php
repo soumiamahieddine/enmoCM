@@ -180,6 +180,149 @@ class request extends dbquery
     }
 
     /**
+    * Constructs the select query and returns the results in an array
+    *
+    * @param  $select array Query fields
+    * @param  $where  string Where clause of the query
+    * @param  $parameters  array An indexed or associative array of parameters
+    * @param  $other  string Query complement (order by, ...)
+    * @param  $database_type string Type of the database
+    * @param  $limit string Maximum numbers of results (500 by default)
+    * @param  $left_join boolean Is the request is a left join ? (false by default)
+    * @param  $first_join_table string Name of the first join table (empty by default)
+    * @param  $second_join_table string Name of the second join table (empty by default)
+    * @param  $join_key string  Key of the join (empty by default)
+    * @param  $add_security string  Add the user security where clause or not (true by default)
+    * @param  $distinct_argument  Add the distinct parameters in the sql query (false by default)
+    * @return array Results of the built query
+    */
+    public function PDOselect($select, $where, $parameters = null, $other, $database_type, $limit="default", $left_join=false, $first_join_table="", $second_join_table="", $join_key="", $add_security = true, $catch_error = false, $distinct_argument = false)
+    {
+        $db = new Database();
+        if($limit == 0 || $limit == "default")
+        {
+            $limit = $_SESSION['config']['databasesearchlimit'];
+        }
+      
+        //Extracts data in the first argument : $select.
+        $tab_field = array();
+        $table = '';
+        $table_string = '';
+        $field_string = '';
+        foreach (array_keys($select) as $value)
+        {
+            $table = $value;
+            $table_string .= $table.",";
+            foreach ($select[$value] as $subvalue)
+            {
+                $field = $subvalue;
+                $field_string .= $table.".".$field.",";
+            }
+            //Query fields and table names have been wrote in 2 strings
+        }
+        //Strings need to be cleaned
+        $table_string = substr($table_string, 0, -1);
+        $field_string = substr($field_string, 0, -1);
+
+        //Extracts data from the second argument : the where clause
+        if (trim($where) <> "")
+        {
+            $where_string = $where;
+            //$where_string = " where ".$where;
+        }
+        else
+        {
+            $where_string = "";
+        }
+         $join = '';
+        if($left_join)
+        {
+            //Reste table string
+            $table_string = "";
+
+            //Add more table in join syntax
+            foreach (array_keys($select) as $value)
+            {
+                if ($value <> $first_join_table && $value <> $second_join_table)
+                {
+                    $table_string = $value.",";
+                }
+            }
+
+            $join = " left join ";
+            $table_string .= $first_join_table;
+            $join .= $second_join_table." on ".$second_join_table.".".$join_key." = ".$first_join_table.".".$join_key;
+        }
+
+        if($add_security)
+        {
+            foreach(array_keys($_SESSION['user']['security']) as $coll)
+            {
+                if(isset($_SESSION['user']['security'][$coll]['DOC']['table']))
+                {
+                    if(preg_match('/'.$_SESSION['user']['security'][$coll]['DOC']['table'].'/',$table_string) || preg_match('/'.$_SESSION['user']['security'][$coll]['DOC']['view'].'/',$table_string) )
+                    {
+                        if(empty($where_string))
+                        {
+                            $where_string = "( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
+                            //$where_string = " where ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
+                        }
+                        else
+                        {
+                            $where_string = ''.$where_string." and ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        //Time to create the SQL Query
+        $query = "";
+        $dist = '';
+        if($distinct_argument == true)
+        {
+            $dist = " distinct ";
+        }
+        
+        $query = $db->limit_select(0, $limit, $field_string, $table_string." ".$join, $where_string, $other, $dist);
+
+        if (preg_match('/_view/i', $query)) {
+            $_SESSION['last_select_query'] = $query;
+        }
+
+        $res_query = $db->query($query, $parameters, $catch_error);
+
+        if($catch_error && !$res_query)
+        {
+            return false;
+        }
+        $result=array();
+        while($line = $res_query->fetch(PDO::FETCH_ASSOC))
+        {
+            $temp= array();
+            foreach (array_keys($line) as $resval)
+            {
+                if (!is_int($resval))
+                {
+                    array_push(
+                        $temp,
+                        array(
+                            'column'=>$resval,
+                            'value'=>functions::xssafe($line[$resval]),
+                        )
+                    );
+                }
+            }
+            array_push($result,$temp);
+        }
+        if(count($result) == 0 && $catch_error)
+        {
+            return true;
+        }
+        return $result;
+    }
+
+    /**
     * Builds the insert query and sends it to the database
     *
     * @param string $table table to insert
