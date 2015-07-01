@@ -41,8 +41,8 @@ $fp = fopen($_SESSION['config']['tmppath'].'admin_list_'.$_SESSION['user']['User
 $list_row = array();
 $list_address = array();
 $list_header = array();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 $header_done = false;
 
 $nb_colum = count($_SESSION['export_admin_list'][0]);
@@ -67,10 +67,10 @@ for ($i_export=0;$i_export<count($_SESSION['export_admin_list']);$i_export++){
 		}
     }
 
-    $db->query("SELECT * FROM contact_addresses WHERE contact_id = ".$_SESSION['export_admin_list'][$i_export][0]['value']);
+    $stmt = $db->query("SELECT * FROM contact_addresses WHERE contact_id = ? ", array($_SESSION['export_admin_list'][$i_export][0]['value']));
 
-    if ($db->nb_result()>0) {
-	    while($address = $db->fetch_object()){
+    if ($stmt->rowCount()>0) {
+	    while($address = $stmt->fetchObject()){
 	    	if ($i_export==0) {
 	    		array_push($list_header, mb_strtoupper(utf8_decode(html_entity_decode(_CONTACT_PURPOSE))));
 	    		array_push($list_header, mb_strtoupper(utf8_decode(html_entity_decode(_SERVICE))));

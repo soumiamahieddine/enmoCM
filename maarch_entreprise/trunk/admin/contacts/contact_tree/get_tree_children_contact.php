@@ -65,15 +65,16 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 	$core_tools->test_user();
 	$func = new functions();
 	$tree_id = $_REQUEST['tree_id'];
-	$db = new dbquery();
-	$db->connect();
+	$db = new Database();
 	$contactv2 = new contacts_v2();
 	$where = "";
 
 	if($branch_level_id == "1") {
-		$db->query("select contact_id, society, society_short, lastname, firstname, is_corporate_person, enabled from ".$_SESSION['tablename']['contacts_v2']." where contact_type = ".$_REQUEST['branch_id']." order by society, lastname ");
+		$stmt = $db->query("SELECT contact_id, society, society_short, lastname, firstname, is_corporate_person, enabled 
+						FROM ".$_SESSION['tablename']['contacts_v2']." WHERE contact_type = ? order by society, lastname ",
+						array($_REQUEST['branch_id']));
 		$children = array();
-		while($res = $db->fetch_object()) {
+		while($res = $stmt->fetchObject()) {
 	        $contact = '';
 	        if($res->is_corporate_person == 'Y'){
 	            $contact = ucfirst($func->show_string($res->society, true));
@@ -125,9 +126,11 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 		}
 	}
 	if($branch_level_id == "2") {
-		$db->query("select id, contact_purpose_id, lastname, firstname, address_num, address_street, address_town, address_postal_code, enabled from ".$_SESSION['tablename']['contact_addresses']." where contact_id = ".$_REQUEST['branch_id']." order by lastname, firstname, address_num");
+		$stmt = $db->query("SELECT id, contact_purpose_id, lastname, firstname, address_num, address_street, address_town, address_postal_code, enabled 
+							FROM ".$_SESSION['tablename']['contact_addresses']." where contact_id = ? order by lastname, firstname, address_num",
+							array($_REQUEST['branch_id']));
 		$children = array();
-		while($res = $db->fetch_object()) {
+		while($res = $stmt->fetchObject()) {
 			$address = '';
 			$address = '('.$contactv2->get_label_contact($res->contact_purpose_id, $_SESSION['tablename']['contact_purposes']).') ';
 			if ($res->lastname <> '' || $res->firstname <> ''){

@@ -122,7 +122,7 @@ class admin extends functions
 						<i class="<?php functions::xecho($modules_services[$value][$i]['style']);?> fa-4x"></i>
 						<div <?php functions::xecho($debug_style);?> >
 
-								<strong><?php functions::xecho($modules_services[$value][$i]['name']);?></strong><
+								<strong><?php functions::xecho($modules_services[$value][$i]['name']);?></strong>
 						</div>
 					</div>
 					<?php

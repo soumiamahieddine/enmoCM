@@ -51,8 +51,7 @@ $page_label = _DELETION;
 $page_id = "contacts_v2_del";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 $func = new functions();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $contact = new contacts_v2();
 
 if(isset($_GET['id']))
@@ -73,18 +72,15 @@ if(isset($_REQUEST['valid']))
         $new_address = $_REQUEST['address'];
 
         $i=0;
-        $db->query("update ".$_SESSION['collections'][$i]['extensions'][$i] 
-            . " set exp_contact_id = '".$db->protect_string_db($new_contact) 
-            . "', address_id = ".$new_address." where exp_contact_id = '".$db->protect_string_db($s_id) . "'");
-        $db->query("update ".$_SESSION['collections'][$i]['extensions'][$i] 
-            . " set dest_contact_id = '".$db->protect_string_db($new_contact) 
-            . "', address_id = ".$new_address." where dest_contact_id = '".$db->protect_string_db($s_id) . "'");
-        $db->query("update contacts_res set contact_id = '".$db->protect_string_db($new_contact) 
-            . "', address_id = ".$new_address." where contact_id = '".$db->protect_string_db($s_id) . "'");
-        $db->query("delete from " . $_SESSION['tablename']['contacts_v2']
-            . " where contact_id = ".$db->protect_string_db($s_id));
-        $db->query("delete from " . $_SESSION['tablename']['contact_addresses']
-            . " where contact_id = ".$db->protect_string_db($s_id));
+        $db->query("UPDATE ".$_SESSION['collections'][$i]['extensions'][$i] 
+            . " SET exp_contact_id = ?, address_id = ? WHERE exp_contact_id = ?", array($new_contact, $new_address, $s_id));
+        $db->query("UPDATE ".$_SESSION['collections'][$i]['extensions'][$i] 
+            . " SET dest_contact_id = ?, address_id = ? WHERE dest_contact_id = ?", array($new_contact, $new_address, $s_id));
+        $db->query("UPDATE contacts_res SET contact_id = ?, address_id = ? WHERE contact_id = ?", array($new_contact, $new_address, $s_id));
+        $db->query("DELETE FROM " . $_SESSION['tablename']['contacts_v2']
+            . " WHERE contact_id = ?", array($s_id));
+        $db->query("DELETE FROM " . $_SESSION['tablename']['contact_addresses']
+            . " WHERE contact_id = ?", array($s_id));
         if($_SESSION['history']['contactdel'])
         {
             require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');

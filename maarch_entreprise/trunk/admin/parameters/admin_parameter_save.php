@@ -5,12 +5,11 @@ listmodel_type_label : $('listmodel_type_label').value,
 */
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core/core_tables.php");
-$request = new request();
-$request->connect();
+$db = new Database();
 
 $mode = $_REQUEST['mode']; 
-$id = $request->protect_string_db($_REQUEST['id']); 
-$description = $request->protect_string_db($_REQUEST['description']);
+$id = $_REQUEST['id']; 
+$description = $_REQUEST['description'];
 $param_value_string = $_REQUEST['param_value_string'];
 $param_value_int = $_REQUEST['param_value_int'];
 $param_value_date = $_REQUEST['param_value_date'];
@@ -20,7 +19,7 @@ $type = $_REQUEST['type'];
 switch($type) {
 case 'string':
     $column = 'param_value_string';
-    $value = (string)$request->protect_string_db($param_value_string);
+    $value = (string)$param_value_string;
     break;
     
 case 'int':
@@ -38,31 +37,30 @@ case 'date':
 # If no error, proceed
 switch($_REQUEST['mode']) {
 case 'add':
-    $res = $request->query(
-        "insert into " . PARAM_TABLE
+    $res = $db->query(
+        "INSERT INTO " . PARAM_TABLE
             . " (id, description, ".$column.")"
-            . " values (" 
-                . "'" . $id . "',"
-                . "'" . $description .  "', "
-                . "'" . $value .  "'"
-            .")"
+            . " values (?, ?, ? )",
+    array($id, $description, $value)
     );
     break;
     
 case 'up':
-    $res = $request->query(
-        "update " . PARAM_TABLE 
-        . " set "
-            . "description = '" . $description .  "', "
-            . $column. " = '" . $value . "' "
-        . "where id = '" . $id . "'"
+    $res = $db->query(
+        "UPDATE " . PARAM_TABLE 
+        . " SET "
+            . "description = ?, "
+            . $column. " = ? "
+        . "where id = ?",
+        array($description, $value, $id)
     );
     break;
     
 case 'del':
-    $res = $request->query(
-        "delete from " . PARAM_TABLE 
-        . " where id = '" . $id . "'"
+    $res = $db->query(
+        "DELETE FROM " . PARAM_TABLE 
+        . " WHERE id = ?",
+        array($id)
     );
     break;
 

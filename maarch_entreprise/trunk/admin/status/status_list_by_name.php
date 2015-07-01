@@ -31,15 +31,15 @@
 
 require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
              . 'class_request.php');
-$db = new dbquery();
-$db->connect();
-$db->query(
-        'select label_status as tag from ' .
-        $_SESSION['tablename']['status'] . " where lower(label_status) like lower('"
-        . $db->protect_string_db($_REQUEST['what'])."%') order by label_status"
+$db = new Database();
+
+$stmt = $db->query(
+        'SELECT label_status as tag FROM ' .
+        $_SESSION['tablename']['status'] . " WHERE lower(label_status) like lower(?) order by label_status",
+        array($_REQUEST['what'].'%')
     );
 $listArray = array();
-while ($line = $db->fetch_object()) {
+while ($line = $stmt->fetchObject()) {
     array_push($listArray, $line->tag);
 }
 echo '<ul>';

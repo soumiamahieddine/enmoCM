@@ -23,16 +23,17 @@ $core_tools2->manage_location_bar(
     $page_path, $page_label, $page_id, $init, $level
 );
 /***********************************************************/
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 $where = '';
+$arrayPDO = array();
 $label = '';
 $tab = array();
 $modules = array();
-$db->query(
-    'select DISTINCT module_name from '.$_SESSION['tablename']['history_batch']
+$stmt = $db->query(
+    'SELECT DISTINCT module_name FROM '.$_SESSION['tablename']['history_batch']
 );
-while ($res = $db->fetch_object()) {
+while ($res = $stmt->fetchObject()) {
     if ($res->module_name == 'admin') {
         array_push(
             $modules, array(
@@ -75,8 +76,8 @@ if ((isset($_REQUEST['search']) && $_REQUEST['search']) ||
             $_SESSION['m_admin']['history_batch_module'] = $_REQUEST['module'];
         }
         $where .= ' ' . $_SESSION['tablename']['history_batch']
-               . ".module_name = '"
-               . $_SESSION['m_admin']['history_batch_module'] . "' and";
+               . ".module_name = ? and";
+        $arrayPDO = array_merge($arrayPDO, array($_SESSION['m_admin']['history_batch_module']));
         $_SESSION['m_admin']['history_batch_module'] = '';
     }
     if ((isset($_REQUEST['onlyerrors']) && ! empty($_REQUEST['onlyerrors']))
@@ -105,9 +106,8 @@ if ((isset($_REQUEST['search']) && $_REQUEST['search']) ||
                     $core_tools2->format_date_db($_REQUEST['datestart']);
             }
             $where .= " (" . $_SESSION['tablename']['history_batch']
-                   . ".event_date >= '"
-                   . $_SESSION['m_admin']['history_batch_datestart']
-                   . "') and ";
+                   . ".event_date >= ?) and ";
+            $arrayPDO = array_merge($arrayPDO, array($_SESSION['m_admin']['history_batch_datestart']));
             $_SESSION['m_admin']['history_batch_datestart'] = '';
         }
     }
@@ -124,8 +124,8 @@ if ((isset($_REQUEST['search']) && $_REQUEST['search']) ||
                     $core_tools2->format_date_db($_REQUEST['dateend']);
             }
             $where .= " ( " . $_SESSION['tablename']['history_batch']
-                   . ".event_date <= '"
-                   . $_SESSION['m_admin']['history_batch_dateend'] . "') and ";
+                   . ".event_date <= ?) and ";
+            $arrayPDO = array_merge($arrayPDO, array($_SESSION['m_admin']['history_batch_dateend']));
             $_SESSION['m_admin']['history_batch_dateend'] = '';
         }
     }
@@ -151,8 +151,8 @@ if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field'])) {
 $orderstr = $list->define_order($order, $field);
 
 $req = new request();
-$tab = $req->select(
-    $select, $where, $orderstr, $_SESSION['config']['databasetype'],
+$tab = $req->PDOselect(
+    $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'],
     '500', false, $_SESSION['tablename']['history_batch']
 );
 //$req->show();

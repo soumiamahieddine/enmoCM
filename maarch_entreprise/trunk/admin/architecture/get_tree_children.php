@@ -47,14 +47,16 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 	$core_tools->load_lang();
 	$func = new functions();
 	$tree_id = $_REQUEST['IdTree'];
-	$db = new dbquery();
-	$db->connect();
+	$db = new Database();
 	$where = "";
 	if($branch_level_id == "1")
 	{
-		$db->query("select * from ".$_SESSION['tablename']['doctypes_second_level']." where doctypes_first_level_id = '".$_REQUEST['branch_id']."' and enabled ='Y' order by doctypes_second_level_label asc");
+		$stmt = $db->query("SELECT * FROM ".$_SESSION['tablename']['doctypes_second_level']
+							." WHERE doctypes_first_level_id = ? and enabled ='Y' order by doctypes_second_level_label asc",
+							array($_REQUEST['branch_id'])
+							);
 		$children = array();
-		while($res = $db->fetch_object())
+		while($res = $stmt->fetchObject())
 		{
 			array_push($children, array('id' => $res->doctypes_second_level_id, 'tree' => $_SESSION['doctypes_chosen_tree'], 'key_value' => $res->doctypes_second_level_id, 'label_value' => $db->show_string($res->doctypes_second_level_label, true), 'script' => "show_doctypes"));
 		}
@@ -74,9 +76,11 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 	}
 	if($branch_level_id == "2")
 	{
-		$db->query("select * from ".$_SESSION['tablename']['doctypes']." where doctypes_second_level_id = '".$_REQUEST['branch_id']."' and enabled ='Y' order by description");
+		$db->query("SELECT * FROM ".$_SESSION['tablename']['doctypes']
+					." WHERE doctypes_second_level_id = ? and enabled ='Y' order by description", 
+					array($_REQUEST['branch_id']));
 		$children = array();
-		while($res = $db->fetch_object())
+		while($res = $db->fetchObject())
 		{
 			array_push($children, array('id' => $res->type_id, 'tree' => $_SESSION['doctypes_chosen_tree'], 'key_value' => $res->type_id, 'label_value' => $db->show_string($res->description, true), 'script' => "other"));
 		}

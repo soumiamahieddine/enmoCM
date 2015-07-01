@@ -187,10 +187,9 @@ if (isset($_REQUEST['action_submit'])) {
         ActionControler::razActionPage();
 
         if ($_SESSION['history']['actionadd'] == 'true' && $mode == 'add') {
-            $db = new request();
-            $db->connect();
-            $db->query("SELECT id FROM actions ORDER BY id desc limit 1");
-            $last_insert = $db->fetch_object();
+            $db = new Database();
+            $stmt = $db->query("SELECT id FROM actions ORDER BY id desc limit 1");
+            $last_insert = $stmt->fetchObject();
 
             require_once('core/class/class_history.php');
             $hist = new history();
@@ -267,13 +266,11 @@ if ($mode == 'up') {
     );
     $what = '';
     $where = " enabled = 'Y' ";
+    $arrayPDO = array();
     if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
         $what = $_REQUEST['what'];
-        //$what = functions::protect_string_db($_REQUEST['what']);
-        $where .= " and (lower(label_action) like lower('"
-                   . functions::protect_string_db($what,
-                        $_SESSION['config']['databasetype'])
-                   . "%')) ";
+        $where .= " and (lower(label_action) like lower(?)) ";
+        $arrayPDO = array($what.'%');
     }
     $order = 'asc';
     if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
@@ -286,7 +283,7 @@ if ($mode == 'up') {
 
     $orderstr = list_show::define_order($order, $field);
     $request = new request();
-    $tab = $request->select($select, $where, $orderstr,
+    $tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr,
         $_SESSION['config']['databasetype']);
     for ($i = 0;$i < count($tab); $i++) {
         for ($j = 0;$j < count($tab[$i]); $j++) {
@@ -390,7 +387,7 @@ if ($mode == 'up') {
         . 'index.php?page=action_management_controler&mode=list&admin=action'
         . '&order='.$_REQUEST['order'] . '&order_field=' 
         . $_REQUEST['order_field'] . '&start=' . $_REQUEST['start'] . '&what='
-        . $_REQUEST['what'];?>';</script>
+        . addslashes($_REQUEST['what']);?>';</script>
     <?php
     exit();
 }

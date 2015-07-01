@@ -31,22 +31,21 @@
 $core_tools = new core_tools('admin_architecture');
 $core_tools->test_admin('admin_architecture', 'apps');
 $core_tools->load_lang();
-$db = new dbquery();
+$db = new Database();
 
 if(isset($_GET['id']))
 {
-	$id = addslashes($db->wash($_GET['id'], "no", _THE_STRUCTURE));
+	$id = addslashes(functions::wash($_GET['id'], "no", _THE_STRUCTURE));
 }
 else
 {
 	$id = "";
 }
 
-$db->connect();
 
-$db->query("select doctypes_first_level_label from ".$_SESSION['tablename']['doctypes_first_level']." where doctypes_first_level_id = ".$id."");
+$stmt = $db->query("SELECT doctypes_first_level_label FROM ".$_SESSION['tablename']['doctypes_first_level']." WHERE doctypes_first_level_id = ?", array($id));
 
-if($db->nb_result() == 0)
+if($stmt->rowCount() == 0)
 {
 	$_SESSION['error'] = _STRUCTURE.' '._UNKNOWN.".";
 	header("location: ".$_SESSION['config']['businessappurl']."index.php?page=structures&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what']);
@@ -54,31 +53,29 @@ if($db->nb_result() == 0)
 }
 else
 {
-	$info = $db->fetch_object();
+	$info = $stmt->fetchObject();
 
 	// delete structure
-	$db->query("update ".$_SESSION['tablename']['doctypes_first_level']." set enabled = 'N' where doctypes_first_level_id = ".$id);
+	$db->query("UPDATE ".$_SESSION['tablename']['doctypes_first_level']." SET enabled = 'N' WHERE doctypes_first_level_id = ? ", array($id));
 
 	//delete subfolders depending on that structure
-	$db->query("update ".$_SESSION['tablename']['doctypes_second_level']." set enabled = 'N' where doctypes_first_level_id = ".$id);
+	$db->query("UPDATE ".$_SESSION['tablename']['doctypes_second_level']." SET enabled = 'N' WHERE doctypes_first_level_id = ? ", array($id));
 
-	$db2 = new dbquery();
-	$db2->connect();
 	if($core_tools->is_module_loaded('folder') == true)
 	{
-		$db->query("delete from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." where doctypes_first_level_id = ".$id);
+		$db->query("DELETE FROM ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." WHERE doctypes_first_level_id = ? ", array($id));
 	
-		$db->query("select type_id from ".$_SESSION['tablename']['doctypes']." where doctypes_first_level_id = ".$id);
+		$stmt = $db->query("SELECT type_id FROM ".$_SESSION['tablename']['doctypes']." WHERE doctypes_first_level_id = ? ", array($id));
 
 		
-		while($res = $db->fetch_object())
+		while($res = $stmt->fetchObject())
 		{
 			//delete the doctypes from the foldertypes_doctypes table
-			$db2->query("delete from  ".$_SESSION['tablename']['fold_foldertypes_doctypes']."  where doctype_id = ".$res->type_id);
+			$db->query("DELETE FROM  ".$_SESSION['tablename']['fold_foldertypes_doctypes']."  WHERE doctype_id = ? ", array($res->type_id));
 		}
 	}
 	// delete the doctypes
-	$db2->query("update ".$_SESSION['tablename']['doctypes']." set enabled = 'N' where doctypes_first_level_id = ".$id);
+	$db->query("UPDATE ".$_SESSION['tablename']['doctypes']." SET enabled = 'N' WHERE doctypes_first_level_id = ? ", array($id));
 
 	if($_SESSION['history']['structuredel'] == "true")
 	{

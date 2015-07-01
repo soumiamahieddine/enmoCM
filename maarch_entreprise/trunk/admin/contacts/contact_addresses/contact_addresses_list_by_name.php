@@ -29,29 +29,32 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 $contact = new contacts_v2();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 $query = "SELECT ca.id, ca.lastname as tag, ca.firstname, ca.contact_purpose_id, cp.label 
 			FROM ".$_SESSION['tablename']['contact_addresses']." ca
 			LEFT JOIN contact_purposes cp on ca.contact_purpose_id = cp.id	
-			WHERE (lower(lastname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')
-			or lower(firstname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')
-			or lower(address_town) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')
-			or lower(label) like lower('%".$db->protect_string_db($_REQUEST['what'])."%'))";
+			WHERE (lower(lastname) like lower(?)
+			or lower(firstname) like lower(?)
+			or lower(address_town) like lower(?)
+			or lower(label) like lower(?))";
+	$arrayPDO = array('%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%');
 if(isset($_GET['id']) &&  $_GET['id'] <> ''){
-	$query .= ' and ca.id <> '.$_GET['id'].' and contact_id = '.$_SESSION['contact']['current_contact_id'];
+	$query .= ' and ca.id <> ? and contact_id = ?';
+	$arrayPDO = array_merge($arrayPDO, array($_GET['id'], $_SESSION['contact']['current_contact_id']));
 } else if (isset($_REQUEST['idContact']) &&  $_REQUEST['idContact'] <> ''){
-	$query .= ' and contact_id = '.$_REQUEST['idContact'];
+	$query .= ' and contact_id = ?';
+	$arrayPDO = array_merge($arrayPDO, array($_REQUEST['idContact']));
 } else if (isset($_REQUEST['reaffectAddress']) &&  $_REQUEST['reaffectAddress'] <> ''){
-	$query .= ' and contact_id = '.$_REQUEST['reaffectAddress'] .' and ca.id <> '.$_SESSION['contact']['current_address_id'];
+	$query .= ' and contact_id = ? and ca.id <> ?';
+	$arrayPDO = array_merge($arrayPDO, array($_REQUEST['reaffectAddress'], $_SESSION['contact']['current_address_id']));
 }
 
 $query .= " order by lastname";
-$db->query($query);
- // $db->show();
+$stmt = $db->query($query, $arrayPDO);
 
 $listArray = array();
-while($line = $db->fetch_object())
+while($line = $stmt->fetchObject())
 {
 	$listArray[$line->id] = $contact->get_label_contact($line->contact_purpose_id, $_SESSION['tablename']['contact_purposes']);
 	

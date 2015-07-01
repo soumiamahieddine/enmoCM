@@ -19,13 +19,13 @@ if ($xmlconfig <> false) {
 } 
 
 $status_obj = new manage_status();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 $status_tab = array();
 $i=0;
 $status_query = "SELECT DISTINCT ON (img_filename) img_filename, id FROM status WHERE img_filename <> '' and img_filename <> 'Y' ";
-$db->query($status_query);
-while ($line = $db->fetch_object()) {
+$stmt = $db->query($status_query);
+while ($line = $stmt->fetchObject()) {
   array_push(
     $status_tab,
     array(

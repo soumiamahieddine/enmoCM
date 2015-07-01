@@ -63,11 +63,14 @@ array_push(
 );
 $what = "";
 $where = " enabled = 'Y' ";
+$arrayPDO = array();
 if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
-    $what = $func->protect_string_db($_REQUEST['what']);
-    $where .= " and lower(description) like lower('" .$what. "%') ";
+    $what = $_REQUEST['what'];
+    $where .= " and lower(description) like lower(?) ";
+    $arrayPDO = array($what.'%');
 }
 $list = new list_show();
+$db = new Database();
 $order = 'asc';
 if (isset($_REQUEST['order']) && ! empty($_REQUEST['order'])) {
     $order = trim($_REQUEST['order']);
@@ -79,8 +82,8 @@ if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field'])) {
 
 $orderstr = $list->define_order($order, $field);
 $request = new request;
-$tab = $request->select(
-	$select, $where, $orderstr, $_SESSION['config']['databasetype']
+$tab = $request->PDOselect(
+	$select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
 );
 for ($i = 0; $i < count($tab); $i ++) {
     for ($j = 0; $j < count($tab[$i]); $j ++) {
@@ -123,11 +126,12 @@ $_SESSION['m_admin']['load_security']  = true;
 $_SESSION['m_admin']['init'] = true;
 $_SESSION['m_admin']['doctypes'] = array();
 $_SESSION['sous_dossiers'] = array();
-$request->query(
-	"select * from " . $_SESSION['tablename']['doctypes_second_level']
-	. " where enabled = 'Y'"
+
+$stmt = $db->query(
+	"SELECT * FROM " . $_SESSION['tablename']['doctypes_second_level']
+	. " WHERE enabled = 'Y'"
 );
-while ($res = $request->fetch_object()) {
+while ($res = $stmt->fetchObject()) {
     array_push(
     	$_SESSION['sous_dossiers'], 
     	array(

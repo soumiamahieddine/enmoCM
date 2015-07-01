@@ -45,11 +45,10 @@ else
 }
 
 // delete a doc type
-$db = new dbquery();
+$db = new Database();
 $sec = new security();
-$db->connect();
-$db->query("select description from ".$_SESSION['tablename']['doctypes']." where type_id = '".$s_id."'");
-if($db->nb_result() == 0)
+$stmt= $db->query("SELECT description FROM ".$_SESSION['tablename']['doctypes']." WHERE type_id = ? ", array($s_id));
+if($stmt->rowCount() == 0)
 {
     $_SESSION['error'] = _DOCTYPE.' '._UNKNOWN;
     ?>
@@ -59,17 +58,17 @@ if($db->nb_result() == 0)
 }
 else
 {
-    $db->query("select coll_id from doctypes where type_id = '".$s_id."'");
-    $collId = $db->fetch_object();
+    $stmt=$db->query("SELECT coll_id FROM doctypes WHERE type_id = ?", array($s_id));
+    $collId = $stmt->fetchObject();
     $table = $sec->retrieve_table_from_coll($collId->coll_id);
 
-    $db->query("select res_id from ". $table ." where type_id = '".$s_id."' limit 1");
+    $stmt = $db->query("SELECT res_id FROM ". $table ." WHERE type_id = ? limit 1", array($s_id));
 
-    if($db->nb_result() == 0)
+    if($stmt->rowCount() == 0)
     {
-        $info = $db->fetch_object();
-        $db->query("delete from ".$_SESSION['tablename']['doctypes']." where type_id = ".$s_id."");
-        $db->query("delete from ".$_SESSION['tablename']['doctypes_indexes']." where type_id = ".$s_id."");
+        $info = $stmt->fetchObject();
+        $db->query("DELETE FROM ".$_SESSION['tablename']['doctypes']." WHERE type_id = ?", array($s_id));
+        $db->query("DELETE FROM ".$_SESSION['tablename']['doctypes_indexes']." WHERE type_id = ?", array($s_id));
 
         $_SESSION['service_tag'] = "doctype_delete";
         $_SESSION['m_admin']['doctypes']['TYPE_ID'] = $s_id;
@@ -94,7 +93,7 @@ else
         $s_id=$_POST['id'];
         require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 
-        $db->query("UPDATE ".$table." SET type_id = '".$new_s_id."' WHERE res_id IN (SELECT res_id FROM ".$table." WHERE type_id = '".$s_id."')");
+        $db->query("UPDATE ".$table." SET type_id = ? WHERE res_id IN (SELECT res_id FROM ".$table." WHERE type_id = ?)", array($new_s_id, $s_id));
 
         /*if($_SESSION['history']['res_up'] == 'true')
         {
@@ -108,8 +107,8 @@ else
             }
         }*/
 
-        $db->query("delete from ".$_SESSION['tablename']['doctypes']." where type_id = ".$s_id."");
-        $db->query("delete from ".$_SESSION['tablename']['doctypes_indexes']." where type_id = ".$s_id."");
+        $db->query("DELETE FROM ".$_SESSION['tablename']['doctypes']." WHERE type_id = ?", array($s_id));
+        $db->query("DELETE FROM ".$_SESSION['tablename']['doctypes_indexes']." WHERE type_id = ?", array($s_id));
 
         $_SESSION['service_tag'] = "doctype_delete";
         $_SESSION['m_admin']['doctypes']['TYPE_ID'] = $s_id;
@@ -163,15 +162,15 @@ else
             <h2 class="tit"><?php echo _DOCTYPE_DELETION." : <i>".$label."</i>";?></h2>
             <?php
 
-                echo " - ".$db->nb_result()." "._DOCS_IN_DOCTYPES;
+                echo " - ".$stmt->rowCount()." "._DOCS_IN_DOCTYPES;
                 ?>
                 <br>
                 <br>
                 <select name="doc_type_id" id="doc_type_id" onchange=''>
                     <option value=""><?php echo _CHOOSE_REPLACEMENT_DOCTYPES;?></option>
                     <?php
-                    $db->query("select * from doctypes where coll_id = '".$collId->coll_id."' order by description ASC");
-                    while($doctypes = $db->fetch_object())
+                    $stmt = $db->query("SELECT * FROM doctypes WHERE coll_id = ? order by description ASC", array($collId->coll_id));
+                    while($doctypes = $stmt->fetchObject())
                     {
                         if($doctypes->type_id != $s_id){
                          ?>

@@ -34,8 +34,7 @@ $core = new core_tools();
 $core->test_admin('admin_architecture', 'apps');
 $core->load_lang();
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $desc = "";
 $id = "";
 $structureId = "";
@@ -43,16 +42,16 @@ $cssStyle = "default_style";
 //$fontColor = '#000000'; // Black by default
 if (isset($_GET['id']) && ! empty($_GET['id'])) {
 	$id = $_GET['id'];
-	$db->query(
-		"select doctypes_second_level_label, doctypes_first_level_id, css_style from "
+	$stmt= $db->query(
+		"SELECT doctypes_second_level_label, doctypes_first_level_id, css_style FROM "
 		. $_SESSION['tablename']['doctypes_second_level']
-		. " where doctypes_second_level_id = " . $id
+		. " WHERE doctypes_second_level_id = ? ", array($id)
 	);
 
-	$res = $db->fetch_object();
-	$desc = $db->show_string($res->doctypes_second_level_label);
+	$res = $stmt->fetchObject();
+	$desc = functions::show_string($res->doctypes_second_level_label);
 	if (isset($res->css_style)) {
-        $cssStyle = $db->show_string($res->css_style);
+        $cssStyle = functions::show_string($res->css_style);
 	}
 	$structureId = $res->doctypes_first_level_id;
 }
@@ -64,17 +63,16 @@ if (isset($_REQUEST['mode']) && ! empty($_REQUEST['mode'])) {
 $erreur = "";
 if (isset($_REQUEST['valid'])) {
 	if (isset($_REQUEST['css_style']) && !empty($_REQUEST['css_style'])) {
-	    $cssStyle = $db->protect_string_db($_REQUEST['css_style']);
+	    $cssStyle = $_REQUEST['css_style'];
 
 		if (isset($_REQUEST['desc_sd']) && ! empty($_REQUEST['desc_sd'])) {
-			$desc = $db->protect_string_db($_REQUEST['desc_sd']);
-			$db->query(
-				"select * from " . $_SESSION['tablename']['doctypes_second_level']
-				. " where doctypes_second_level_label = '" . $desc
-				. "' and enabled = 'Y'"
+			$desc = $_REQUEST['desc_sd'];
+			$stmt= $db->query(
+				"SELECT * FROM " . $_SESSION['tablename']['doctypes_second_level']
+				. " WHERE doctypes_second_level_label = ? and enabled = 'Y'", array($desc)
 			);
 			//$db->show();
-			if ($db->nb_result() < 2) {
+			if ($stmt->rowCount() < 2) {
 				if (isset($_REQUEST['structure']) 
 					&& ! empty($_REQUEST['structure'])
 				) {
@@ -83,19 +81,19 @@ if (isset($_REQUEST['valid'])) {
 						if (isset($_REQUEST['ID_sd']) 
 							&& ! empty($_REQUEST['ID_sd'])
 						) {
-							$id = $db->protect_string_db($_REQUEST['ID_sd']);
+							$id = $_REQUEST['ID_sd'];
 							$db->query(
 								"UPDATE " 
 								. $_SESSION['tablename']['doctypes_second_level']
-								. " set doctypes_second_level_label = '" . $desc
-								. "', doctypes_first_level_id = " . $structure
-								. ", css_style = '".$cssStyle."' "
-								. " where doctypes_second_level_id = " . $id . ""
+								. " SET doctypes_second_level_label = ?, doctypes_first_level_id = ? "
+								. ", css_style = ? "
+								. " WHERE doctypes_second_level_id = ?", array($desc, $structure, $cssStyle, $id)
 							);
 							$db->query(
-								"update " . $_SESSION['tablename']['doctypes']
-								. " set doctypes_first_level_id = " . $structure
-								. " where doctypes_second_level_id = " . $id
+								"UPDATE " . $_SESSION['tablename']['doctypes']
+								. " SET doctypes_first_level_id = ? "
+								. " WHERE doctypes_second_level_id = ?",
+								array($structure, $id)
 							);
 							if ($_SESSION['history']['subfolderup'] == "true") {
 								$hist = new history();
@@ -112,21 +110,21 @@ if (isset($_REQUEST['valid'])) {
 							$erreur .= _SUBFOLDER_ID_PB . ".";
 						}
 					} else {
-						$desc = $db->protect_string_db($_REQUEST['desc_sd']);
+						$desc = $_REQUEST['desc_sd'];
 						$db->query(
 							"INSERT INTO "
 							. $_SESSION['tablename']['doctypes_second_level']
 							. " ( css_style, doctypes_second_level_label, "
-							. "doctypes_first_level_id) VALUES ( '".$cssStyle 
-							."',  '" . $desc . "', ". $structure . ")"
+							. "doctypes_first_level_id) VALUES ( ?, ?, ?)",
+							array($cssStyle, $desc, $structure)
 						);
-						$db->query(
-							"select doctypes_first_level_id from "
+						$stmt = $db->query(
+							"SELECT doctypes_first_level_id FROM "
 							. $_SESSION['tablename']['doctypes_second_level']
-							. " where doctypes_second_level_label =  '" . $desc
-							. "' and doctypes_first_level_id= " . $structure
+							. " WHERE doctypes_second_level_label = ? and doctypes_first_level_id= ?",
+							array($desc, $structure)
 						);
-						$res = $db->fetch_object();
+						$res = $stmt->fetchObject();
 						if ($_SESSION['history']['subfolderadd'] == "true") {
 							$hist = new history();
 							$hist->add(

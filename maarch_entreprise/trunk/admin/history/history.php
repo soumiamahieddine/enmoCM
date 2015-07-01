@@ -49,14 +49,15 @@ $page_label = _VIEW_HISTORY2;
 $page_id = "history";
 $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 $where = '';
+$arrayPDO = array();
 $label = '';
 $tab = array();
 $modules = array();
-$db->query("select DISTINCT id_module from ".$_SESSION['tablename']['history']);
-while ($res = $db->fetch_object()) {
+$stmt = $db->query("SELECT DISTINCT id_module FROM ".$_SESSION['tablename']['history']);
+while ($res = $stmt->fetchObject()) {
     if ($res->id_module == 'admin') {
         array_push($modules, array('id' => 'admin', 'label' => _ADMIN));
     } elseif (isset($_SESSION['modules_loaded'][$res->id_module]['comment']) && !empty($_SESSION['modules_loaded'][$res->id_module]['comment'])) {
@@ -97,7 +98,8 @@ if (isset($_REQUEST['search'])  ||
             $history_action=$_SESSION['m_admin']['history']['action'];
         }
         if (!empty($history_action)) {
-            $where .= "  ".$_SESSION['tablename']['history'].".event_type = '".$history_action."' and ";
+            $where .= "  ".$_SESSION['tablename']['history'].".event_type = ? and ";
+            $arrayPDO = array_merge($arrayPDO, array($history_action));
         }
     }
 
@@ -110,7 +112,8 @@ if (isset($_REQUEST['search'])  ||
         }
         if (!empty($history_user)) {
             $tmp = str_replace(')', '', substr($history_user, strrpos($history_user,'(')+1));
-            $where .= "  ".$_SESSION['tablename']['history'].".user_id = '".$tmp."' and";
+            $where .= "  ".$_SESSION['tablename']['history'].".user_id = ? and";
+            $arrayPDO = array_merge($arrayPDO, array($tmp));
         }
     }
     if (isset($_REQUEST['module']) || (isset($_SESSION['m_admin']['history']['module']) && !empty($_SESSION['m_admin']['history']['module']))) {
@@ -121,7 +124,8 @@ if (isset($_REQUEST['search'])  ||
             $history_module=$_SESSION['m_admin']['history']['module'];
         }
         if (!empty($history_module)) {
-            $where .= "  ".$_SESSION['tablename']['history'].".id_module = '".$history_module."' and";
+            $where .= "  ".$_SESSION['tablename']['history'].".id_module = ? and";
+            $arrayPDO = array_merge($arrayPDO, array($history_module));
         }
     }
     if (isset($_REQUEST['datestart']) || (isset( $_SESSION['m_admin']['history']['datestart']) && !empty($_SESSION['m_admin']['history']['datestart']))) {
@@ -137,7 +141,8 @@ if (isset($_REQUEST['search'])  ||
             //} else {
             //    $history_datestart = str_replace('-','', $_SESSION['m_admin']['history']['datestart']);
             //}
-            $where .= " (".$req->extract_date($_SESSION['tablename']['history'].".event_date")." >= '".$history_datestart."') and ";
+            $where .= " (".$req->extract_date($_SESSION['tablename']['history'].".event_date")." >= ?) and ";
+            $arrayPDO = array_merge($arrayPDO, array($history_datestart));
         }
     }
     if (isset($_REQUEST['datefin']) || (isset( $_SESSION['m_admin']['history']['datefin']) && !empty($_SESSION['m_admin']['history']['datefin']))) {
@@ -152,7 +157,8 @@ if (isset($_REQUEST['search'])  ||
             //} else {
             //    $history_datefin = str_replace('-','', $_SESSION['m_admin']['history']['datefin']);
             //}
-            $where .= " (".$req->extract_date($_SESSION['tablename']['history'].".event_date")." <= '".$history_datefin."') and ";
+            $where .= " (".$req->extract_date($_SESSION['tablename']['history'].".event_date")." <= ?) and ";
+            $arrayPDO = array_merge($arrayPDO, array($history_datefin));
         }
     }
     $where = trim($where);
@@ -173,7 +179,7 @@ if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
     $field = trim($_REQUEST['order_field']);
 }
 $orderstr = $list->define_order($order, $field);
-$tab = $req->select($select, $where,$orderstr, $_SESSION['config']['databasetype'], $limit="500",true,$_SESSION['tablename']['history'],$_SESSION['tablename']['users'], 'user_id');
+$tab = $req->PDOselect($select, $where,$arrayPDO,$orderstr, $_SESSION['config']['databasetype'], $limit="500",true,$_SESSION['tablename']['history'],$_SESSION['tablename']['users'], 'user_id');
 for ($i=0;$i<count($tab);$i++) {
     for ($j=0;$j<count($tab[$i]);$j++) {
         foreach(array_keys($tab[$i][$j]) as $value) {

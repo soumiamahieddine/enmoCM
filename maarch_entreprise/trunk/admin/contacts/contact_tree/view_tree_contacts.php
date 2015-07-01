@@ -30,8 +30,7 @@
 
 $admin = new core_tools();
 $admin->test_admin('admin_contacts', 'apps');
-$db = new dbquery();
-$db->connect();
+
 /****************Management of the location bar  ************/
 $init = false;
 if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")

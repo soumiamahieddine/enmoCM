@@ -3,21 +3,18 @@
 require_once('core/class/class_core_tools.php');
 $Core_Tools = new core_tools;
 $Core_Tools->load_lang();
-$db = new dbquery();
-$db->connect();
-$db2 = new dbquery();
-$db2->connect();
+$db = new Database();
 $return = '';
+$arrayPDO = array();
 if ($_REQUEST['society_label'] <> '') {
     $selectDuplicates = "SELECT contact_id, user_id, society, lower(society) as lowsoc, society_short,"
         . "is_corporate_person, lastname, firstname "
         . "from contacts_v2 "
         . "WHERE lower(society) in ("
         . "SELECT lower(society) FROM contacts_v2 GROUP BY lower(society) "
-        . "     HAVING Count(lower(society)) > 1 and lower(society) <> '' ) and contact_id <> "
-        . $_REQUEST['contact_id'] . " and lower(society) = '" 
-        . mb_strtolower($db->protect_string_db($_REQUEST['society_label']), 'utf-8') . "' "
+        . "     HAVING Count(lower(society)) > 1 and lower(society) <> '' ) and contact_id <> ? and lower(society) = ?' "
         . "order by lower(society)";
+    $arrayPDO = array($_REQUEST['contact_id'], $_REQUEST['society_label']);
 }
 if ($_REQUEST['name'] <> '') {
     $selectDuplicates = "SELECT contact_id, lower(lastname||' '||firstname) as lastname_firstname, society, society_short,"
@@ -25,29 +22,26 @@ if ($_REQUEST['name'] <> '') {
     . "from contacts_v2 "
     . "WHERE lower(lastname||' '||firstname) in ("
     . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts_v2 GROUP BY lastname_firstname, contact_type "
-    . "     HAVING Count(lower(lastname||' '||firstname)) > 1 and lower(lastname||' '||firstname) <> ' ') and contact_id <> "
-        . $_REQUEST['contact_id'] . " and lower(lastname||' '||firstname) = '" 
-        . mb_strtolower($db->protect_string_db($_REQUEST['name']), 'utf-8') . "' "
+    . "     HAVING Count(lower(lastname||' '||firstname)) > 1 and lower(lastname||' '||firstname) <> ' ') and contact_id <> ? and lower(lastname||' '||firstname) = ? "
     . "order by lower(lastname||' '||firstname)";
+    $arrayPDO = array($_REQUEST['contact_id'], $_REQUEST['name']);
 }
 if (isset($_REQUEST['contact_id'])) {
     //test if res attached to the contact
-    $query = "select res_id from res_view_letterbox where (exp_contact_id = " 
-        . $_REQUEST['contact_id'] . " or dest_contact_id = " 
-        . $_REQUEST['contact_id'] . ") and status <> 'DEL'";
-    $db->query($query);
+    $query = "SELECT res_id FROM res_view_letterbox WHERE (exp_contact_id = ? or dest_contact_id = ?) and status <> 'DEL'";
+    $stmt = $db->query($query, array($_REQUEST['contact_id'], $_REQUEST['contact_id']));
     $flagResAttached = false;
-    $return_db = $db->fetch_object();
+    $return_db = $stmt->fetchObject();
     if ($return_db->res_id <> '') {
         $flagResAttached = true;
-        $db->query($selectDuplicates);
-        //$db->show();
+        $stmt = $db->query($selectDuplicates, $arrayPDO);
+
         $contactList = array();
         array_push($contactList, "Selectionner un contact");
-        while($lineDoubl = $db->fetch_object()) {
-            $db2->query("SELECT id FROM contact_addresses WHERE contact_id = " . $lineDoubl->contact_id);
-            // $db2->show();
-            $result_address = $db2->fetch_object();
+        while($lineDoubl = $stmt->fetchObject()) {
+            $stmt2 = $db->query("SELECT id FROM contact_addresses WHERE contact_id = ?", array($lineDoubl->contact_id));
+
+            $result_address = $stmt2->fetchObject();
 
             if ($result_address->id <> '') {
                 array_push($contactList, $lineDoubl->contact_id);

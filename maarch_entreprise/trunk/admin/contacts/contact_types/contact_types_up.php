@@ -67,21 +67,21 @@ $pageId = "contact_types_up";
 $core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 $desc = "";
 $id = "";
 
 if (isset($_GET['id']) && ! empty($_GET['id'])) {
 	$id = $_GET['id'];
-	$db->query(
-		"select label from "
+	$stmt = $db->query(
+		"SELECT label FROM "
 	    . $_SESSION['tablename']['contact_types']
-	    . " where id = " . $id
+	    . " WHERE id = ?", array($id)
 	);
 
-	$res = $db->fetch_object();
-	$desc = $db->show_string($res->label);
+	$res = $stmt->fetchObject();
+	$desc = functions::show_string($res->label);
 	$_SESSION['CURRENT_ID_CONTACT_TYPE'] = $id;
 	$_SESSION['CURRENT_DESC_CONTACT_TYPE'] = $desc;
 }
@@ -91,7 +91,7 @@ if (isset($_REQUEST['valid'])) {
 	if (isset($_REQUEST['desc_contact_types'])
 	    && ! empty($_REQUEST['desc_contact_types'])
 	) {
-		$desc = $db->protect_string_db($_REQUEST['desc_contact_types']);
+		$desc = $_REQUEST['desc_contact_types'];
         $desc=str_replace(';', ' ', $desc);
         $desc=str_replace('--', '-', $desc);
 	    $desc = $core->wash(
@@ -109,20 +109,22 @@ if (isset($_REQUEST['valid'])) {
 		if(utf8_encode(utf8_decode($desc)) != $desc) {
 			$desc = utf8_encode($desc);
 		}
-		$db->query(
-			"select * from ".$_SESSION['tablename']['contact_types']
-		    . " where lower(label) = lower('" . $desc . "')"
+		$stmt = $db->query(
+			"SELECT * FROM ".$_SESSION['tablename']['contact_types']
+		    . " WHERE lower(label) = lower(?)",
+		    array($desc)
 		);
 
-		if ($db->nb_result() > 0 && $mode <> 'up') {
+		if ($stmt->rowCount() > 0 && $mode <> 'up') {
 			$erreur .= _THIS_CONTACT_TYPE . ' ' . _ALREADY_EXISTS ;
 		} else {
 			if ($mode == "up") {
-				$db->query(
-					"select * from ".$_SESSION['tablename']['contact_types']
-				    . " where lower(label) = lower('" . $desc . "') and id <> ".$_REQUEST['ID_contact_types']
+				$stmt = $db->query(
+					"SELECT * FROM ".$_SESSION['tablename']['contact_types']
+				    . " WHERE lower(label) = lower(?) and id <> ?",
+				    array($desc, $_REQUEST['ID_contact_types'])
 				);	
-				if($db->nb_result() > 0){
+				if($stmt->rowCount() > 0){
 					$erreur .= _THIS_CONTACT_TYPE . ' ' . _ALREADY_EXISTS ;
 				} else {			
 					if (isset($_REQUEST['ID_contact_types'])
@@ -131,8 +133,8 @@ if (isset($_REQUEST['valid'])) {
 						$id = $_REQUEST['ID_contact_types'];
 						$db->query(
 							"UPDATE " . $_SESSION['tablename']['contact_types']
-						    . " set label = '" . $desc . "'"
-						    . "WHERE id = " . $id
+						    . " SET label = ? WHERE id = ?",
+						    array($desc, $id)
 						);
 
 						if ($_SESSION['history']['contact_types_up'] == "true") {
@@ -150,7 +152,7 @@ if (isset($_REQUEST['valid'])) {
 					}
 				}
 			} else {
-				$desc = $db->protect_string_db($_REQUEST['desc_contact_types']);
+				$desc = $_REQUEST['desc_contact_types'];
 				if(utf8_encode(utf8_decode($desc)) != $desc) {
 					$desc = utf8_encode($desc);
 				}
@@ -159,15 +161,16 @@ if (isset($_REQUEST['valid'])) {
 				$db->query(
 					"INSERT INTO "
 				    . $_SESSION['tablename']['contact_types']
-				    . " ( label) VALUES ( '"
-				    . $desc . "')"
+				    . " ( label) VALUES (?)",
+					array($desc)
 				);
-				$db->query(
-					"select id from "
+				$stmt = $db->query(
+					"SELECT id FROM "
 				    . $_SESSION['tablename']['contact_types']
-				    . " where label = '" . $desc . "'"
+				    . " WHERE label = ?",
+				    array($desc)
 				);
-				$res = $db->fetch_object();
+				$res = $stmt->fetchObject();
 				$id = $res->id;
 
 				if ($_SESSION['history']['contact_types_add'] == "true") {

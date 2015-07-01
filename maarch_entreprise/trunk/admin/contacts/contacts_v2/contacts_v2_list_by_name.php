@@ -32,33 +32,36 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 $contact = new contacts_v2();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 $listArray = array();
-$query = "select contact_type, society, lastname, firstname, contact_id, is_corporate_person, society_short from "
-	.$_SESSION['tablename']['contacts_v2']." where ((lower(lastname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') "
-	."or lower(firstname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') "
-    ."or lower(society_short) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') "
-	."or lower(society) like lower('%".$db->protect_string_db($_REQUEST['what'])."%'))) ";
+$query = "SELECT contact_type, society, lastname, firstname, contact_id, is_corporate_person, society_short FROM "
+	.$_SESSION['tablename']['contacts_v2']." WHERE ((lower(lastname) like lower(?) "
+	."or lower(firstname) like lower(?) "
+    ."or lower(society_short) like lower(?) "
+	."or lower(society) like lower(?))) ";
+
+$arrayPDO = array('%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%');
 
 if(isset($_GET['id']) &&  $_GET['id'] <> ''){
-    $query .= ' and contact_id <> '.$_GET['id'];
+    $query .= ' and contact_id <> ?';
+    $arrayPDO = array_merge($arrayPDO, array($_GET['id']));
 }
 
 if(isset($_GET['my_contact']) &&  $_GET['my_contact'] == 'Y'){
-    $query .= " and user_id = '".$_SESSION['user']['UserId']."'";
+    $query .= " and user_id = ?";
+    $arrayPDO = array_merge($arrayPDO, array($_SESSION['user']['UserId']));
 }
 
 $query .= " order by lastname";
-$db->query($query);
- // $db->show();
+$stmt = $db->query($query, $arrayPDO);
 
 if(isset($_GET['id']) &&  $_GET['id'] <> ''){
-    while($line = $db->fetch_object())
+    while($line = $stmt->fetchObject())
     {
         $listArray[$line->contact_id] = $contact->get_label_contact($line->contact_type, $_SESSION['tablename']['contact_types']) . ' : ';
         if($line->is_corporate_person == 'N'){
-            $listArray[$line->contact_id] = $db->show_string($line->lastname)." ".$db->show_string($line->firstname);
+            $listArray[$line->contact_id] = functions::show_string($line->lastname)." ".functions::show_string($line->firstname);
             if($line->society <> ''){
                 $listArray[$line->contact_id] .= ' ('.$line->society.')';
             }
@@ -70,9 +73,9 @@ if(isset($_GET['id']) &&  $_GET['id'] <> ''){
         }
     }
 } else {
-    while ($line = $db->fetch_object()) {
+    while ($line = $stmt->fetchObject()) {
         if($line->is_corporate_person == 'N'){
-        	$listArray[$line->contact_id] = $db->show_string($line->lastname)." ".$db->show_string($line->firstname);
+        	$listArray[$line->contact_id] = functions::show_string($line->lastname)." ".functions::show_string($line->firstname);
             if($line->society <> ''){
                 $listArray[$line->contact_id] .= ' ('.$line->society.')';
             }

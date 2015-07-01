@@ -32,14 +32,17 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
+$db = new Database();
 $select[$_SESSION['tablename']['doctypes_second_level']] = array();
 array_push($select[$_SESSION['tablename']['doctypes_second_level']],"doctypes_second_level_id","doctypes_first_level_id","doctypes_second_level_label");
 $what = "";
 $where= " enabled = 'Y' ";
+$arrayPDO = array();
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-    $what = $func->protect_string_db($_REQUEST['what']);
-	$where .= " and (lower(doctypes_second_level_label) like lower('".$what."%')) ";
+    $what = $_REQUEST['what'];
+	$where .= " and (lower(doctypes_second_level_label) like lower(?)) ";
+    $arrayPDO = array($what.'%');
 }
 $list = new list_show();
 $order = 'asc';
@@ -56,7 +59,7 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 $orderstr = $list->define_order($order, $field);
 
 $request= new request;
-$tab=$request->select($select,$where,$orderstr ,$_SESSION['config']['databasetype']);
+$tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr ,$_SESSION['config']['databasetype']);
 for ($i=0;$i<count($tab);$i++)
 {
     for ($j=0;$j<count($tab[$i]);$j++)
@@ -110,8 +113,9 @@ $table_name = $_SESSION['tablename']['doctypes_second_level'];
 $page_name_ban = "";
 $label_add = _ADD_SUBFOLDER;
 $_SESSION['m_admin']['structures'] = array();
-$request->query("select * from ".$_SESSION['tablename']['doctypes_first_level']." where enabled = 'Y'");
-while($res = $request->fetch_object())
+
+$stmt= $db->query("SELECT * FROM ".$_SESSION['tablename']['doctypes_first_level']." WHERE enabled = 'Y'");
+while($res = $stmt->fetchObject())
 {
     array_push($_SESSION['m_admin']['structures'], array('ID' => $res->doctypes_first_level_id, 'LABEL'=> $request->show_string($res->doctypes_first_level_label)));
 }

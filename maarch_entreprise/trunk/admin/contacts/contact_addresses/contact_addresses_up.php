@@ -94,32 +94,32 @@ if(isset($_GET['mycontact']) && $_GET['mycontact'] <> ''){
 }
 
 $contact = new contacts_v2();
-$db = new request;
+$request = new request;
+$db = new Database();
 
 if (isset($_REQUEST['fromContactAddressesList']) || isset($_REQUEST['fromSearchContacts'])) {
-    $db->connect();
-    $query = "select contact_id from contact_addresses where id = ".$id;
-    $db->query($query);
-    $result = $db->fetch_object();
-    $db->query("select * from contacts_v2 where contact_id = ".$result->contact_id);
+    $query = "SELECT contact_id FROM contact_addresses WHERE id = ?";
+    $stmt = $db->query($query, array($id));
+    $result = $stmt->fetchObject();
+    $stmt = $db->query("SELECT * FROM contacts_v2 WHERE contact_id = ?", array($result->contact_id));
 
     $_SESSION['m_admin']['contact'] = array();
-    $line = $db->fetch_object();
+    $line = $stmt->fetchObject();
     $_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
-    $_SESSION['m_admin']['contact']['TITLE'] = $db->show_string($line->title);
-    $_SESSION['m_admin']['contact']['LASTNAME'] = $db->show_string($line->lastname);
-    $_SESSION['m_admin']['contact']['FIRSTNAME'] = $db->show_string($line->firstname);
-    $_SESSION['m_admin']['contact']['SOCIETY'] = $db->show_string($line->society);
-    $_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = $db->show_string($line->society_short);
-    $_SESSION['m_admin']['contact']['FUNCTION'] = $db->show_string($line->function);
-    $_SESSION['m_admin']['contact']['OTHER_DATA'] = $db->show_string($line->other_data);
-    $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $db->show_string($line->is_corporate_person);
+    $_SESSION['m_admin']['contact']['TITLE'] = $request->show_string($line->title);
+    $_SESSION['m_admin']['contact']['LASTNAME'] = $request->show_string($line->lastname);
+    $_SESSION['m_admin']['contact']['FIRSTNAME'] = $request->show_string($line->firstname);
+    $_SESSION['m_admin']['contact']['SOCIETY'] = $request->show_string($line->society);
+    $_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = $request->show_string($line->society_short);
+    $_SESSION['m_admin']['contact']['FUNCTION'] = $request->show_string($line->function);
+    $_SESSION['m_admin']['contact']['OTHER_DATA'] = $request->show_string($line->other_data);
+    $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $request->show_string($line->is_corporate_person);
     $_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
     $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
     if($admin && !empty($_SESSION['m_admin']['contact']['OWNER']))
     {
-        $db->query("select lastname, firstname from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['m_admin']['contact']['OWNER']."'");
-        $res = $db->fetch_object();
+        $stmt = $db->query("SELECT lastname, firstname FROM ".$_SESSION['tablename']['users']." WHERE user_id = ?", array($_SESSION['m_admin']['contact']['OWNER']));
+        $res = $stmt->fetchObject();
         $_SESSION['m_admin']['contact']['OWNER'] = $res->lastname.', '.$res->firstname.' ('.$_SESSION['m_admin']['contact']['OWNER'].')';
     }
     $_SESSION['contact_address']['fromContactAddressesList'] = "yes";

@@ -46,8 +46,8 @@ if ($whereSecurityOnEntities == '') {
 
 $db = new Database();
 $stmt = $db->query(
-    "select distinct(users.user_id), users.lastname as tag from users, users_entities "
-    . " where ("
+    "SELECT DISTINCT(users.user_id), users.lastname as tag FROM users, users_entities "
+    . " WHERE ("
         . "lower(users.lastname) like lower(:what) "
         . " or lower(users.user_id) like lower(:what) "
     . ") and users.status <> 'DEL' " . $whereSecurityOnEntities . " and (users.user_id = users_entities.user_id) "

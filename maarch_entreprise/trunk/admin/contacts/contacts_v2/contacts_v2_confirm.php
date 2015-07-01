@@ -57,8 +57,7 @@ require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_request.php';
 $contact = new contacts_v2();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
 if (isset($_REQUEST['popup'])) {
 	echo '<div class="error" id="main_error">';
@@ -111,9 +110,9 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 <?php
 
 $query = $contact->query_contact_exists($_GET['mode']);
-$db->query($query);
+$stmt = $db->query($query);
 $tab = array();
-while ($res = $db->fetch_array()){
+while ($res = $stmt->fetch(PDO::FETCH_ASSOC)){
     $temp= array();
     foreach (array_keys($res) as $resval)
     {

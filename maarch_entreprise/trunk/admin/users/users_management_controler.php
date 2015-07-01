@@ -172,9 +172,11 @@ function display_list(){
     array_push($select[USERS_TABLE],'user_id','lastname','firstname','enabled','status','mail');
     $where = " ((status = 'OK' or status = 'ABS') and user_id != 'superadmin')";
     $what = '';
+    $arrayPDO = array();
     if(isset($_REQUEST['what'])){
-        $what = $func->protect_string_db($_REQUEST['what']);
-		$where .= " and (lower(lastname) like lower('".$what."%') or lower(users.user_id) like lower('".$what."%') )";
+        $what = $_REQUEST['what'];
+		$where .= " and (lower(lastname) like lower(?) or lower(users.user_id) like lower(?) )";
+        $arrayPDO = array($what.'%', $what.'%');
     }
 
     // Checking order and order_field values
@@ -191,7 +193,7 @@ function display_list(){
     $request = new request();
 	
 	if($entities_loaded == true ){
-		$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+		$tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype']);
     } else {
 	
 		require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
@@ -206,8 +208,9 @@ function display_list(){
 		
 		$what = '';
 		if(isset($_REQUEST['what'])){
-			$what = $func->protect_string_db($_REQUEST['what']);
-			$where .= " and lower(lastname) like lower('".$what."%')";
+			$what = $_REQUEST['what'];
+			$where .= " and lower(lastname) like lower(?)";
+            $arrayPDO = array($what.'%');
 		}
 
 		// Checking order and order_field values
@@ -221,7 +224,7 @@ function display_list(){
 			$field = trim($_REQUEST['order_field']);
 
 		$orderstr = $list->define_order($order, $field);
-		$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'], 'default', 'users_entities', 'users','users_entities', 'user_id', true, false, true);
+		$tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype'], 'default', 'users_entities', 'users','users_entities', 'user_id', true, false, true);
 	
 	}
     for ($i=0;$i<count($tab);$i++) {

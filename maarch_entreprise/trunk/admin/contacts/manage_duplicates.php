@@ -34,10 +34,8 @@ require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
 $admin = new core_tools();
 $admin->test_admin('admin_contacts', 'apps');
 $func = new functions();
-$db = new dbquery();
-$db->connect();
-$db2 = new dbquery();
-$db2->connect();
+$db = new Database();
+
 $business = new business_app_tools();
 
 $_SESSION['m_admin'] = array();
@@ -89,7 +87,6 @@ $db->query("UPDATE contacts_v2 SET user_id='' WHERE user_id IS NULL");
 //duplicates by society
 $selectDuplicatesBySociety = "SELECT contact_id, user_id, society, lower(society) as lowsoc, society_short,"
     . "is_corporate_person, lastname, firstname "
-    // . "address_num, address_street, address_town "
     . "from contacts_v2 "
     . "WHERE lower(society) in ("
     . "SELECT lower(society) FROM contacts_v2 GROUP BY lower(society) "
@@ -110,14 +107,13 @@ $tabSoc = array();
 $socCompare = '';
 $colorToUse = '';
 $colorNumber = '2';
-$db->query($selectDuplicatesBySociety);
+$stmt = $db->query($selectDuplicatesBySociety);
 
 $cptSoc = 0;
-while($lineDoublSoc = $db->fetch_object()) {
+while($lineDoublSoc = $stmt->fetchObject()) {
 
-    $db2->query("SELECT id FROM contact_addresses WHERE contact_id = " . $lineDoublSoc->contact_id);
-    // $db2->show();
-    $result_address = $db2->fetch_object();
+    $stmt2 = $db->query("SELECT id FROM contact_addresses WHERE contact_id = ?", array($lineDoublSoc->contact_id));
+    $result_address = $stmt2->fetchObject();
 
     if ($lineDoublSoc->contact_id <> '' && $result_address->id <> '') {
         $cptSoc++;
@@ -206,13 +202,12 @@ $tabName = array();
 $nameCompare = '';
 $colorToUse = '';
 $colorNumber = '2';
-$db->query($selectDuplicatesByName);
+$stmt = $db->query($selectDuplicatesByName);
 $cptName = 0;
-while($lineDoublName = $db->fetch_object()) {
+while($lineDoublName = $stmt->fetchObject()) {
 
-    $db2->query("SELECT id FROM contact_addresses WHERE contact_id = " . $lineDoublName->contact_id);
-    // $db2->show();
-    $result_address = $db2->fetch_object();
+    $stmt2 = $db->query("SELECT id FROM contact_addresses WHERE contact_id = ? ", array($lineDoublName->contact_id));
+    $result_address = $stmt2->fetchObject();
 
     if ($lineDoublName->contact_id <> '' && $result_address->id <> '') {
         $cptName++;

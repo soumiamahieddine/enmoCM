@@ -29,15 +29,16 @@
 * @license GPL
 * @author Laurent Giovannoni <dev@maarch.org>
 */
-$db = new dbquery();
-$db->connect();
-$db->query("SELECT doctypes_second_level_label as tag FROM "
+$db = new Database();
+
+$stmt = $db->query("SELECT doctypes_second_level_label as tag FROM "
 	.$_SESSION['tablename']['doctypes_second_level']
-	." WHERE lower(doctypes_second_level_label) like lower('".$_REQUEST['what']."%') and enabled = 'Y' ORDER BY doctypes_second_level_label");
+	." WHERE lower(doctypes_second_level_label) like lower(?) and enabled = 'Y' ORDER BY doctypes_second_level_label",
+	array($_REQUEST['what'].'%'));
 
 //$db->show();
 $listArray = array();
-while($line = $db->fetch_object())
+while($line = $stmt->fetchObject())
 {
 	array_push($listArray, $line->tag);
 }

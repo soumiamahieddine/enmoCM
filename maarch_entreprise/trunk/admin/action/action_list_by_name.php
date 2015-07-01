@@ -28,16 +28,15 @@
 * @ingroup admin
 */
 
-$db = new dbquery();
-$db->connect();
-$db->query('select label_action as tag from '
-    . $_SESSION['tablename']['actions'] . " where lower(label_action) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') order by label_action");
+$db = new Database();
+$stmt = $db->query('select label_action as tag from '
+    . $_SESSION['tablename']['actions'] . " where lower(label_action) like lower(?) order by label_action",
+    array('%'.$_REQUEST['what'].'%')
+    );
 
 
-
-	
 $listArray = array();
-while($line = $db->fetch_object()){
+while($line = $stmt->fetchObject()){
 	array_push($listArray, $line->tag);
 }
 echo "<ul>\n";

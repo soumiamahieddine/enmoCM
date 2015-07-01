@@ -32,13 +32,14 @@
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."core_tables.php");
-$db = new dbquery();
-$db->connect();
-$db->query("select docserver_type_id as tag from "._DOCSERVER_TYPES_TABLE_NAME
-	." where lower(docserver_type_id) like lower('".$_REQUEST['what']."%') order by docserver_type_id");
+$db = new Database();
+
+$stmt = $db->query("SELECT docserver_type_id as tag FROM "._DOCSERVER_TYPES_TABLE_NAME
+	." WHERE lower(docserver_type_id) like lower(?) order by docserver_type_id",
+	array($_REQUEST['what'].'%'));
 
 $listArray = array();
-while($line = $db->fetch_object()) {
+while($line = $stmt->fetchObject()) {
 	array_push($listArray, $line->tag);
 }
 echo "<ul>\n";

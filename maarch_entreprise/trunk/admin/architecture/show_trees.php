@@ -33,16 +33,8 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $func = new functions();
-$db = new dbquery();
-$db->connect();
-$db1 = new dbquery();
-$db1->connect();
-$db2 = new dbquery();
-$db2->connect();
-$db3 = new dbquery();
-$db3->connect();
-$db4 = new dbquery();
-$db4->connect();
+$db = new Database();
+
 $nb_trees = 0;
 if(isset($_SESSION['doctypes_chosen_tree']))
 {
@@ -76,23 +68,24 @@ else
         $f_level = array();
         if($folder_module)
         {
-            $query="select d.doctypes_first_level_id, d.doctypes_first_level_label from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." g, ".$_SESSION['tablename']['doctypes_first_level']." d where g.foldertype_id = '".$_SESSION['doctypes_chosen_tree']."' and g.doctypes_first_level_id = d.doctypes_first_level_id and d.enabled = 'Y' order by d.doctypes_first_level_label";
+            $query="SELECT d.doctypes_first_level_id, d.doctypes_first_level_label FROM ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." g, ".$_SESSION['tablename']['doctypes_first_level']." d WHERE g.foldertype_id = ? and g.doctypes_first_level_id = d.doctypes_first_level_id and d.enabled = 'Y' order by d.doctypes_first_level_label";
+            $stmt = $db->query($query, array($_SESSION['doctypes_chosen_tree']));
         }
         else
         {
-            $query="select d.doctypes_first_level_id, d.doctypes_first_level_label from  ".$_SESSION['tablename']['doctypes_first_level']." d where d.enabled = 'Y' order by d.doctypes_first_level_label";
+            $query="SELECT d.doctypes_first_level_id, d.doctypes_first_level_label FROM  ".$_SESSION['tablename']['doctypes_first_level']." d WHERE d.enabled = 'Y' order by d.doctypes_first_level_label";
+            $stmt = $db->query($query);
         }
-        $db1->query($query);
 
-        while($res1 = $db1->fetch_object())
+        while($res1 = $stmt->fetchObject())
         {
             $s_level = array();
-            $db2->query("select doctypes_second_level_id, doctypes_second_level_label from ".$_SESSION['tablename']['doctypes_second_level']." where doctypes_first_level_id = ".$res1->doctypes_first_level_id." and enabled = 'Y'");
-            while($res2 = $db2->fetch_object())
+            $stmt2 = $db->query("SELECT doctypes_second_level_id, doctypes_second_level_label FROM ".$_SESSION['tablename']['doctypes_second_level']." WHERE doctypes_first_level_id = ? and enabled = 'Y'", array($res1->doctypes_first_level_id));
+            while($res2 = $stmt2->fetchObject())
             {
                 $doctypes = array();
-                $db3->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where doctypes_first_level_id = ".$res1->doctypes_first_level_id." and doctypes_second_level_id = ".$res2->doctypes_second_level_id." and enabled = 'Y' ");
-                while($res3 = $db3->fetch_object())
+                $stmt3 = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE doctypes_first_level_id = ? and doctypes_second_level_id = ? and enabled = 'Y' ", array($res1->doctypes_first_level_id, $res2->doctypes_second_level_id));
+                while($res3 = $stmt3->fetchObject())
                 {
                     $results = array();
                     array_push($doctypes, array('type_id' => $res3->type_id, 'description' => $func->show_string($res3->description), "results" => $results));

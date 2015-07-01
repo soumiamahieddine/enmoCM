@@ -30,8 +30,8 @@
 
 $admin = new core_tools();
 $admin->test_admin('admin_architecture', 'apps');
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 /****************Management of the location bar  ************/
 $init = false;
 if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
@@ -52,9 +52,9 @@ unset($_SESSION['m_admin']);
 if($admin->is_module_loaded('folder') == true)
 {
     $_SESSION['tree_foldertypes'] = array();
-    $db->query("select distinct foldertype_id, foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." order by foldertype_label");
+    $stmt = $db->query("SELECT distinct foldertype_id, foldertype_label FROM ".$_SESSION['tablename']['fold_foldertypes']." order by foldertype_label");
 
-    while($res = $db->fetch_object())
+    while($res = $stmt->fetchObject())
     {
         array_push($_SESSION['tree_foldertypes'], array("ID" => $res->foldertype_id, "LABEL" => $res->foldertype_label));
     }

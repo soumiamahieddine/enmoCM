@@ -118,13 +118,13 @@ case 'add':
     
 case 'up':
 case 'del':
-    $request = new request();
-    $request->connect();
-    $request->query(
-        "select * from " . PARAM_TABLE
-        . " where id = '".$_REQUEST['id']."' "
+    $db = new Database();
+    $stmt = $db->query(
+        "SELECT * FROM " . PARAM_TABLE
+        . " WHERE id = ? ",
+        array($_REQUEST['id'])
     );
-    $param = $request->fetch_object();
+    $param = $stmt->fetchObject();
 
     # param id (readonly)
     $param_id = $view->getElementById("id");

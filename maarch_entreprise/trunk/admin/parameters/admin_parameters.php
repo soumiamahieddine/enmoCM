@@ -50,13 +50,15 @@ $request = new request;
 
 $what = '';
 $where = '';
+$arrayPDO = array();
 
 $list = new list_show();
 
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-    $what = $func->protect_string_db($_REQUEST['what']);
-	$where = " lower(id) like lower('".$what."%') or lower(description) like lower('%".$what."%') ";
+    $what = $_REQUEST['what'];
+	$where = " lower(id) like lower(?) or lower(description) like lower(?) ";
+    $arrayPDO = array($what.'%', '%'.$what.'%');
 }
 
 $order = 'asc';
@@ -75,8 +77,7 @@ $orderstr = $list->define_order($order, $field);
 $select[PARAM_TABLE] = array();
 array_push($select[PARAM_TABLE], "id", "description", "param_value_string", "param_value_int", "param_value_date");
 
-$tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype']);
-//$request->show();
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
 
 # loop on lines
 for ($i=0;$i<count($tab);$i++)

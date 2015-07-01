@@ -34,8 +34,7 @@ $core = new core_tools();
 $core->test_admin('admin_architecture', 'apps');
 $core->load_lang();
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $desc = "";
 $id = "";
 $cssStyle = "default_style";
@@ -47,28 +46,29 @@ if ($core->is_module_loaded('folder') == true) {
 }
 if (isset($_GET['id']) && ! empty($_GET['id'])) {
 	$id = $_GET['id'];
-	$db->query(
-		"select doctypes_first_level_label, css_style from "
+	$stmt = $db->query(
+		"SELECT doctypes_first_level_label, css_style FROM "
 	    . $_SESSION['tablename']['doctypes_first_level']
-	    . " where doctypes_first_level_id = " . $id
+	    . " WHERE doctypes_first_level_id = ? ", array($id)
 	);
 
-	$res = $db->fetch_object();
-	$desc = $db->show_string($res->doctypes_first_level_label);
+	$res = $stmt->fetchObject();
+	$desc = functions::show_string($res->doctypes_first_level_label);
 	if (isset($res->css_style)) {
-        $cssStyle = $db->show_string($res->css_style);
+        $cssStyle = functions::show_string($res->css_style);
 	}
 	if ($folderModuleLoaded) {
-		$db->query(
-			'select ffdl.foldertype_id, f.foldertype_label from '
+		$stmt = $db->query(
+			'SELECT ffdl.foldertype_id, f.foldertype_label FROM '
 		    . $_SESSION['tablename']['fold_foldertypes_doctypes_level1']
 		    . " ffdl, " . $_SESSION['tablename']['fold_foldertypes']
-		    . " f where ffdl.doctypes_first_level_id = " . $id
-		    . " and ffdl.foldertype_id = f.foldertype_id"
+		    . " f WHERE ffdl.doctypes_first_level_id = ? "
+		    . " and ffdl.foldertype_id = f.foldertype_id",
+		    array($id)
 		);
 
 		//$_SESSION['m_admin']['loaded_foldertypes']= array();
-		while ($res = $db->fetch_object()) {
+		while ($res = $stmt->fetchObject()) {
 			//array_push($_SESSION['m_admin']['loaded_foldertypes'], $res->foldertype_id);
 			array_push($foldertypesArr, $res->foldertype_id);
 		}
@@ -86,13 +86,13 @@ if (isset($_REQUEST['valid'])) {
 	if (isset($_REQUEST['desc_structure'])
 	    && ! empty($_REQUEST['desc_structure'])
 	) {
-		$desc = $db->protect_string_db($_REQUEST['desc_structure']);
+		$desc = $_REQUEST['desc_structure'];
 	} else {
 		$erreur .= _DESC_STRUCTURE_MISSING . ".<br/>";
 	}
 
 	if (isset($_REQUEST['css_style']) && !empty($_REQUEST['css_style'])) {
-	    $cssStyle = $db->protect_string_db($_REQUEST['css_style']);
+	    $cssStyle = $_REQUEST['css_style'];
 	} else {
 	    $erreur .= _FONT_COLOR. ' ' . _MISSING . '.<br/>';
 	}
@@ -106,41 +106,38 @@ if (isset($_REQUEST['valid'])) {
 	}
 
 	if (empty($erreur)) {
-		$db->connect();
-		$db->query(
-			"select * from ".$_SESSION['tablename']['doctypes_first_level']
-		    . " where doctypes_first_level_label = '" . $desc
-		    . "' and enabled = 'Y'"
+		$stmt = $db->query(
+			"SELECT * FROM ".$_SESSION['tablename']['doctypes_first_level']
+		    . " WHERE doctypes_first_level_label = ? and enabled = 'Y'",
+		    array($desc)
 		);
 
-		if ($db->nb_result() > 0 && $mode <> 'up') {
+		if ($stmt->rowCount() > 0 && $mode <> 'up') {
 			$erreur .= _THE_STRUCTURE . ' ' . _ALREADY_EXISTS . ".";
 		} else {
 			if ($mode == "up") {
-				$db->connect();
 				if (isset($_REQUEST['ID_structure'])
 				    && ! empty($_REQUEST['ID_structure'])
 				) {
 					$id = $_REQUEST['ID_structure'];
 					$db->query(
 						"UPDATE " . $_SESSION['tablename']['doctypes_first_level']
-					    . " set doctypes_first_level_label = '" . $desc
-					    . "', css_style = '" . $cssStyle. "' "
-					    . "WHERE doctypes_first_level_id = " . $id
+					    . " SET doctypes_first_level_label = ?, css_style = ? "
+					    . "WHERE doctypes_first_level_id = ? ",
+					    array($desc, $cssStyle, $id)
 					);
 					if ($folderModuleLoaded) {
 						$db->query(
-							"delete from "
+							"DELETE FROM "
 						    . $_SESSION['tablename']['fold_foldertypes_doctypes_level1']
-						    . " where doctypes_first_level_id = " . $id . ""
+						    . " WHERE doctypes_first_level_id = ? ", array($id)
 						);
 
 						for ($i = 0; $i < count($_REQUEST['foldertypes']); $i ++) {
 							$db->query(
-								"insert into "
+								"INSERT INTO "
 							    . $_SESSION['tablename']['fold_foldertypes_doctypes_level1']
-							    . " values (" . $_REQUEST['foldertypes'][$i]
-							    . ", " . $id . ")"
+							    . " VALUES (?, ?)", array($_REQUEST['foldertypes'][$i], $id)
 							);
 						}
 					}
@@ -158,29 +155,26 @@ if (isset($_REQUEST['valid'])) {
 					$erreur .= _ID_STRUCTURE_PB . ".";
 				}
 			} else {
-				$db->connect();
-				$desc = $db->protect_string_db($_REQUEST['desc_structure']);
+				$desc = $_REQUEST['desc_structure'];
 				$db->query(
 					"INSERT INTO "
 				    . $_SESSION['tablename']['doctypes_first_level']
-				    . " ( doctypes_first_level_label, css_style) VALUES ( '"
-				    . $desc . "', '" . $cssStyle . "')"
+				    . " ( doctypes_first_level_label, css_style) VALUES (?, ?)", array($desc, $cssStyle)
 				);
-				$db->query(
-					"select doctypes_first_level_id from "
+				$stmt = $db->query(
+					"SELECT  doctypes_first_level_id FROM "
 				    . $_SESSION['tablename']['doctypes_first_level']
-				    . " where doctypes_first_level_label = '" . $desc . "'"
+				    . " WHERE doctypes_first_level_label = ?", array($desc)
 				);
-				$res = $db->fetch_object();
+				$res = $stmt->fetchObject();
 				$id = $res->doctypes_first_level_id;
 
 				if ($folderModuleLoaded) {
 					for ($i = 0; $i < count($_REQUEST['foldertypes']); $i ++) {
 						$db->query(
-							"insert into "
+							"INSERT INTO "
 						    . $_SESSION['tablename']['fold_foldertypes_doctypes_level1']
-						    . " values (" . $_REQUEST['foldertypes'][$i] . ", "
-						    . $id  . ")"
+						    . " VALUES (?, ?)", array($_REQUEST['foldertypes'][$i], $id)
 						);
 					}
 				}

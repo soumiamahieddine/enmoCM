@@ -31,8 +31,8 @@
 
 $db = new Database();
 $stmt = $db->query(
-    "select group_desc as tag from ".$_SESSION['tablename']['usergroups']
-    ." where lower(group_desc) like lower(?) order by group_desc",
+    "SELECT group_desc as tag FROM ".$_SESSION['tablename']['usergroups']
+    ." WHERE lower(group_desc) like lower(?) order by group_desc",
     array($_REQUEST['what'].'%')
 );
 

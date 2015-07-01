@@ -55,6 +55,7 @@ require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_list_show.php";
 $func = new functions();
+$db = new Database();
 $select[$_SESSION['tablename']['doctypes_first_level']] = array();
 array_push(
     $select[$_SESSION['tablename']['doctypes_first_level']],
@@ -62,9 +63,11 @@ array_push(
 );
 $what = "";
 $where = " enabled = 'Y' ";
+$arrayPDO = array();
 if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
-    $what = $func->protect_string_db($_REQUEST['what']);
-    $where .= " and lower(doctypes_first_level_label) like lower('" . $what. "%')";
+    $what = $_REQUEST['what'];
+    $where .= " and lower(doctypes_first_level_label) like lower(?)";
+    $arrayPDO = array($what. '%');
 }
 
 $list = new list_show();
@@ -80,8 +83,8 @@ if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field'])) {
 $orderstr = $list->define_order($order, $field);
 
 $request = new request;
-$tab = $request->select(
-    $select, $where, $orderstr, $_SESSION['config']['databasetype']
+$tab = $request->PDOselect(
+    $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
 );
 for ($i = 0; $i < count($tab); $i ++) {
     for ($j = 0; $j < count($tab[$i]); $j ++) {
@@ -123,11 +126,11 @@ $addLabel = _NEW_STRUCTURE_ADDED;
 $_SESSION['m_admin']['init'] = true;
 $_SESSION['m_admin']['sous_dossiers'] = array();
 
-$request->query(
-	"select * from " . $_SESSION['tablename']['doctypes_second_level']
-    . " where enabled = 'Y'"
+$stmt = $db->query(
+	"SELECT * FROM " . $_SESSION['tablename']['doctypes_second_level']
+    . " WHERE enabled = 'Y'"
 );
-while ($res = $request->fetch_object()) {
+while ($res = $stmt->fetchObject()) {
     array_push(
         $_SESSION['m_admin']['sous_dossiers'],
         array(
@@ -138,19 +141,17 @@ while ($res = $request->fetch_object()) {
 }
 
 if ($admin->is_module_loaded('folder') == true) {
-    $db = new dbquery();
-    $db->connect();
     $_SESSION['m_admin']['foldertypes'] = array();
-    $db->query(
-    	"select foldertype_id, foldertype_label from "
+    $stmt2 = $db->query(
+    	"SELECT foldertype_id, foldertype_label FROM "
         . $_SESSION['tablename']['fold_foldertypes']
     );
-    while ($res = $db->fetch_object()) {
+    while ($res = $stmt2->fetchObject()) {
         array_push(
             $_SESSION['m_admin']['foldertypes'],
             array(
             	'id' => $res->foldertype_id,
-            	'label' => $db->show_string($res->foldertype_label)
+            	'label' => functions::show_string($res->foldertype_label)
             )
         );
     }

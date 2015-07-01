@@ -319,9 +319,11 @@ function display_list()
     );
     $what = "";
     $where = "";
+    $arrayPDO = array();
     if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
-        $what = $func->protect_string_db($_REQUEST['what']);
-        $where = "lower(".$idName.") like lower('".strtoupper($what)."%') ";
+        $what = $_REQUEST['what'];
+        $where = "lower(".$idName.") like lower(?) ";
+        $arrayPDO = array($what.'%');
     }
     // Checking order and order_field values
     $order = 'asc';
@@ -334,8 +336,8 @@ function display_list()
     }
     $orderstr = $listShow->define_order($order, $field);
     $request = new request();
-    $tab = $request->select(
-        $select, $where, $orderstr, $_SESSION['config']['databasetype']
+    $tab = $request->PDOselect(
+        $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
     );
     for ($i = 0; $i < count($tab); $i ++) {
         foreach ($tab[$i] as &$item) {

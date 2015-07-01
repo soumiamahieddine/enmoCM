@@ -33,7 +33,7 @@ $contact = new contacts_v2();
 $core_tools = new core_tools('');
 $core_tools->test_admin('admin_contacts', 'apps');
 $core_tools->load_lang();
-$db = new dbquery();
+$db = new Database();
 
 /****************Management of the location bar  ************/
 $init = false;
@@ -55,7 +55,7 @@ $core_tools->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 
 if(isset($_GET['id']))
 {
-	$id = addslashes($db->wash($_GET['id'], "no", _THE_CONTACT_PURPOSE));
+	$id = addslashes(functions::wash($_GET['id'], "no", _THE_CONTACT_PURPOSE));
 }
 else
 {
@@ -66,11 +66,10 @@ if ($_REQUEST['valid']) {
 	$id = $_POST['id'];
 	if ($_POST['new']){
 		$newid = $_POST['new'];
-		$db->connect();
 
 		// delete contact types
-		$db->query("DELETE FROM ".$_SESSION['tablename']['contact_purposes']." WHERE id = ".$id);
-		$db->query("UPDATE ".$_SESSION['tablename']['contact_addresses']." SET contact_purpose_id = ".$newid." WHERE contact_purpose_id = ".$id);
+		$db->query("DELETE FROM ".$_SESSION['tablename']['contact_purposes']." WHERE id = ?", array($id));
+		$db->query("UPDATE ".$_SESSION['tablename']['contact_addresses']." SET contact_purpose_id = ? WHERE contact_purpose_id = ?", array($newid, $id));
 
 		if($_SESSION['history']['contact_purposes_del'] == "true")
 		{

@@ -36,16 +36,13 @@ if (isset($_REQUEST['contact_id'])) {
                 $return .= '</tr>';
 
 
-                $db = new dbquery();
-                $db->connect();
+                $db = new Database();
 
-                $query = "select * from res_view_letterbox where (exp_contact_id = " 
-                    . $_REQUEST['contact_id'] . " or dest_contact_id = " 
-                    . $_REQUEST['contact_id'] .") and status <> 'DEL'";
+                $query = "SELECT * FROM res_view_letterbox WHERE (exp_contact_id = ? or dest_contact_id = ?) and status <> 'DEL'";
 
-                $db->query($query);
+                $stmt = $db->query($query, array($_REQUEST['contact_id'], $_REQUEST['contact_id']));
                 $cptDocs = 0;
-                while ($return_db = $db->fetch_object()) {
+                while ($return_db = $stmt->fetchObject()) {
                     if ($cptDocs < 10) {
                     $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
                         $return .= '<td>';
@@ -65,22 +62,21 @@ if (isset($_REQUEST['contact_id'])) {
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $db2 = new dbquery;
-                            $db2->connect();
-                            $query = "select label_status from status " 
-                                . "where id ='".$return_db->status."'";
-                            $db2->query($query);
-                            while ($status_db = $db2->fetch_object()) {
+
+                            $query = "SELECT label_status FROM status " 
+                                . "WHERE id = ?";
+                            $stmt2 = $db->query($query, array($return_db->status));
+                            while ($status_db = $stmt2->fetchObject()) {
                                 $return .= $status_db->label_status;
                             }
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $return .= $db2->format_date_db($return_db->creation_date);
+                            $return .= functions::format_date_db($return_db->creation_date);
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $return .= $db2->cut_string($return_db->subject, 40);
+                            $return .= functions::cut_string($return_db->subject, 40);
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';

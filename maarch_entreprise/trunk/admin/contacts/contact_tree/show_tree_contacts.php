@@ -34,8 +34,7 @@ require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR.
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $func = new functions();
-$db1 = new dbquery();
-$db1->connect();
+$db = new Database();
 
 $core_tools->load_html();
 $core_tools->load_header('', true, false);
@@ -53,11 +52,11 @@ $f_level = array();
 $search_customer_results = array();
 $f_level = array();
 
-$query="select id, label from  ".$_SESSION['tablename']['contact_types']." order by label";
+$query="SELECT id, label FROM  ".$_SESSION['tablename']['contact_types']." order by label";
 
-$db1->query($query);
+$stmt = $db->query($query);
 $contactv2 = new contacts_v2();
-while($res1 = $db1->fetch_object())
+while($res1 = $stmt->fetchObject())
 {
     $s_level = array(array());
     array_push($f_level, array('contact_type_id' => $res1->id, 'contact_type_label' => ucfirst($func->show_string($res1->label, true)), 'second_level' => $s_level));

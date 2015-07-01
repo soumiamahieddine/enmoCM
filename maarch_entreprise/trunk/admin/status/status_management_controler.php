@@ -135,18 +135,11 @@ function display_list()
     array_push($select[STATUS_TABLE], 'id', 'label_status','img_filename');
     $where = '';
     $what = '';
-
+    $arrayPDO = array();
     if (isset($_REQUEST['what'])) {
-        //$what = $func->protect_string_db($_REQUEST['what']);
         $what = $_REQUEST['what'];
-		$where .= " (lower(label_status) like lower('"
-               . $func->protect_string_db(
-                   $what, $_SESSION['config']['databasetype']
-               )
-               . "%')  or id like '" . $func->protect_string_db(
-                   $what, $_SESSION['config']['databasetype']
-               )
-               . "%' ) ";
+		$where .= " (lower(label_status) like lower(?)  or id like ?) ";
+        $arrayPDO = array($what.'%', $what.'%');
     }
 
     // Checking order and order_field values
@@ -162,8 +155,8 @@ function display_list()
 
     $orderstr = $list->define_order($order, $field);
     $request = new request();
-    $tab = $request->select(
-        $select, $where, $orderstr, $_SESSION['config']['databasetype']
+    $tab = $request->PDOselect(
+        $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
     );
 
 
@@ -232,7 +225,7 @@ function display_del($statusId)
                 . 'index.php?page=status_management_controler&mode=list&admin='
                 . 'status&order=' . $_REQUEST['order'] . '&order_field='
                 . $_REQUEST['order_field'] . '&start=' . $_REQUEST['start']
-                . '&what=' . $_REQUEST['what'];
+                . '&what=' . addslashes($_REQUEST['what']);
         ?>';</script>
         <?php
         exit();

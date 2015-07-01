@@ -30,20 +30,22 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-$db = new dbquery();
-$db->connect();
-$query = "select id, label as tag from ".$_SESSION['tablename']['contact_purposes']." where lower(label) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')";
+$db = new Database();
+
+$query = "SELECT id, label as tag FROM ".$_SESSION['tablename']['contact_purposes']." WHERE lower(label) like lower(?)";
+
+$arrayPDO = array('%'.$_REQUEST['what'].'%');
 
 if(isset($_GET['id']) &&  $_GET['id'] <> ''){
-	$query .= ' and id <> '.$_GET['id'];
+	$query .= ' and id <> ?';
+	$arrayPDO = array_merge($arrayPDO, array($_GET['id']));
 }
 
 $query .= " order by label";
-$db->query($query);
-// $db->show();
+$stmt = $db->query($query, $arrayPDO);
 
 $listArray = array();
-while($line = $db->fetch_object())
+while($line = $stmt->fetchObject())
 {
 	// array_push($listArray, $line->tag);
 	$listArray[$line->id] = $line->tag;

@@ -30,12 +30,12 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-$db = new dbquery();
-$db->connect();
-$db->query("select label as tag from ".$_SESSION['tablename']['contact_types']." where lower(label) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') order by label");
+$db = new Database();
+$stmt = $db->query("SELECT label as tag FROM ".$_SESSION['tablename']['contact_types']." WHERE lower(label) like lower(?) order by label",
+	array('%'.$_REQUEST['what'].'%'));
 
 $listArray = array();
-while($line = $db->fetch_object())
+while($line = $stmt->fetchObject())
 {
 	array_push($listArray, $line->tag);
 }

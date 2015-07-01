@@ -51,8 +51,7 @@ if (!$return) {
     exit();
 }
 $core_tools->load_lang();
-$db = new dbquery();
-$db2 = new dbquery();
+$db = new Database();
 
 /****************Management of the location bar  ************/
 $init = false;
@@ -73,7 +72,7 @@ $core_tools->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 
 if(isset($_GET['id'])){
-	$id = addslashes($db->wash($_GET['id'], "no", _THE_CONTACT_ADDRESS));
+	$id = addslashes(functions::wash($_GET['id'], "no", _THE_CONTACT_ADDRESS));
 } else{
 	$id = "";
 }
@@ -90,24 +89,22 @@ if ($_REQUEST['valid']) {
 	if ($_POST['new'] && $_POST['new_contact_id']){
 		$newid = $_POST['new'];
 		$new_contact_id = $_POST['new_contact_id'];
-		$db->connect();
-		$db2->connect();
 
 		// delete contact types
-		$db->query("DELETE FROM ".$_SESSION['tablename']['contact_addresses']." WHERE id = ".$id);
+		$db->query("DELETE FROM ".$_SESSION['tablename']['contact_addresses']." WHERE id = ?", array($id));
 
-		$db->query("SELECT res_id, exp_contact_id, dest_contact_id FROM mlb_coll_ext WHERE address_id = ".$id);
+		$stmt = $db->query("SELECT res_id, exp_contact_id, dest_contact_id FROM mlb_coll_ext WHERE address_id = ?", array($id));
 
-		while($res = $db->fetch_object()){
+		while($res = $stmt->fetchObject()){
 			if ($res->exp_contact_id <> "") {
-				$db2->query("UPDATE mlb_coll_ext SET exp_contact_id = ".$new_contact_id." WHERE res_id = ".$res->res_id);
+				$db->query("UPDATE mlb_coll_ext SET exp_contact_id = ? WHERE res_id = ?", array($new_contact_id, $res->res_id));
 			} else {
-				$db2->query("UPDATE mlb_coll_ext SET dest_contact_id = ".$new_contact_id." WHERE res_id = ".$res->res_id);
+				$db->query("UPDATE mlb_coll_ext SET dest_contact_id = ? WHERE res_id = ?", array($new_contact_id, $res->res_id));
 			}
 		}
 
-		$db->query("UPDATE mlb_coll_ext SET address_id = ".$newid." WHERE address_id = ".$id);
-		$db->query("UPDATE contacts_res SET contact_id = ".$new_contact_id.", address_id = ".$newid." WHERE address_id = ".$id);
+		$db->query("UPDATE mlb_coll_ext SET address_id = ? WHERE address_id = ?", array($newid, $id));
+		$db->query("UPDATE contacts_res SET contact_id = ?, address_id = ? WHERE address_id = ?", array($new_contact_id, $newid, $id));
 
 		if($_SESSION['history']['contact_addresses_del'] == "true")
 		{
@@ -134,16 +131,16 @@ if ($_REQUEST['valid']) {
 	$id = $_POST['id'];
 	
 	if ($_POST['new_contact_id_reaffect']) {
-		$db->query("UPDATE contact_addresses set contact_id = ".$_POST['new_contact_id_reaffect']." WHERE id = ".$id);
-		$db->query("UPDATE contacts_res set contact_id = '".$_POST['new_contact_id_reaffect']."' WHERE address_id = ".$id);
+		$db->query("UPDATE contact_addresses set contact_id = ? WHERE id = ?", array($_POST['new_contact_id_reaffect'], $id));
+		$db->query("UPDATE contacts_res set contact_id = ? WHERE address_id = ?", array($_POST['new_contact_id_reaffect'], $id));
 
-		$db->query("SELECT res_id, exp_contact_id, dest_contact_id FROM mlb_coll_ext WHERE address_id = ".$id);
+		$stmt = $db->query("SELECT res_id, exp_contact_id, dest_contact_id FROM mlb_coll_ext WHERE address_id = ?", array($id));
 
-		while($res = $db->fetch_object()){
+		while($res = $stmt->fetchObject()){
 			if ($res->exp_contact_id <> "") {
-				$db2->query("UPDATE mlb_coll_ext SET exp_contact_id = ".$_POST['new_contact_id_reaffect']." WHERE res_id = ".$res->res_id);
+				$db->query("UPDATE mlb_coll_ext SET exp_contact_id = ? WHERE res_id = ?", array($_POST['new_contact_id_reaffect'], $res->res_id));
 			} else {
-				$db2->query("UPDATE mlb_coll_ext SET dest_contact_id = ".$_POST['new_contact_id_reaffect']." WHERE res_id = ".$res->res_id);
+				$db->query("UPDATE mlb_coll_ext SET dest_contact_id = ? WHERE res_id = ?", array($_POST['new_contact_id_reaffect'], $res->res_id));
 			}
 		}
 
@@ -170,7 +167,7 @@ if ($_REQUEST['valid']) {
 } else if($_REQUEST['delete']) {
 
 	$id = $_POST['id'];
-	$db->query("DELETE FROM contact_addresses WHERE id = ".$id);
+	$db->query("DELETE FROM contact_addresses WHERE id = ?", array($id));
 
 	if($_SESSION['history']['contact_addresses_del'] == "true")
 	{

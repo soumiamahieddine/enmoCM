@@ -44,16 +44,15 @@ $query .= 'FROM ';
 $query .= 'WHERE ';
         $query .= "lower(docserver_id) ";
     $query .= "like ";
-        $query .= "lower('" . $_REQUEST['what'] . "%') ";
+        $query .= "lower(?) ";
 $query .= 'ORDER BY ';
     $query .= 'docserver_id';
 
-$db = new dbquery();
-$db->connect();
-$db->query($query);
+$db = new Database();
+$stmt = $db->query($query, array($_REQUEST['what'] . '%'));
 
 $listArray = array();
-while($line = $db->fetch_object()) {
+while($line = $stmt->fetchObject()) {
     array_push($listArray, $line->tag);
 }
 

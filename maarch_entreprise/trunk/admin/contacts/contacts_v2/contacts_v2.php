@@ -99,8 +99,10 @@ array_push($select[$_SESSION['tablename']['contacts_v2']],"contact_id", "is_corp
 $what = "";
 
 $where =" ";
+$arrayPDO = array();
 if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) {
-    $where .= " contact_id = ".$_REQUEST['selectedObject'];
+    $where .= " contact_id = ? ";
+    $arrayPDO = array($_REQUEST['selectedObject']);
 } elseif(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
     $what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
 
@@ -136,13 +138,13 @@ array_push($select2[$_SESSION['tablename']['contacts_v2']], 'contact_id as "'._I
 
 $request= new request;
 
-$tab_export = $request->select($select2,$where,$orderstr,$_SESSION['config']['databasetype'], 20000);
+$tab_export = $request->PDOselect($select2,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype'], 20000);
 // $request->show();
 
 $_SESSION['export_admin_list'] = array();
 $_SESSION['export_admin_list'] = $tab_export;
 
-$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+$tab=$request->PDOselect($select,$where,$arrayPDO, $orderstr,$_SESSION['config']['databasetype']);
 
 for ($i=0;$i<count($tab);$i++)
 {

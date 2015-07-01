@@ -272,9 +272,11 @@ function displayList(){
     array_push($select[USERGROUPS_TABLE], 'group_id', 'group_desc', 'enabled');
     $where = '';
     $what = '';
+    $arrayPDO = array();
     if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
-        $what = $func->protect_string_db($_REQUEST['what']);
-		$where = "lower(group_desc) like lower('" .$what. "%')";
+        $what = $_REQUEST['what'];
+		$where = "lower(group_desc) like lower(?)";
+        $arrayPDO = array($what.'%');
 	}
     // Checking order and order_field values
     $order = 'asc';
@@ -289,8 +291,8 @@ function displayList(){
     $list = new list_show();
     $orderstr = $list->define_order($order, $field);
     $request = new request();
-    $arr = $request->select(
-        $select, $where, $orderstr, $_SESSION['config']['databasetype']
+    $arr = $request->PDOselect(
+        $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
     );
     for ($i = 0; $i < count($arr); $i ++) {
         foreach ($arr[$i] as &$item) {
@@ -390,7 +392,7 @@ function displayDel($groupId)
         echo $_SESSION['config']['businessappurl'] . 'index.php?page='
             . 'usergroups_management_controler&mode=list&admin=groups&order='
             . $_REQUEST['order'] . '&order_field=' . $_REQUEST['order_field']
-            . '&start=' . $_REQUEST['start'] . '&what=' . $_REQUEST['what'];
+            . '&start=' . $_REQUEST['start'] . '&what=' . addslashes($_REQUEST['what']);
         ?>';</script>
         <?php
         exit();

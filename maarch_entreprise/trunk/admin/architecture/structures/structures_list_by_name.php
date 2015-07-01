@@ -30,14 +30,14 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-$db = new dbquery();
-$db->connect();
-$db->query("SELECT doctypes_first_level_label as tag FROM "
+$db = new Database();
+$stmt = $db->query("SELECT doctypes_first_level_label as tag FROM "
 	.$_SESSION['tablename']['doctypes_first_level']
-	." WHERE lower(doctypes_first_level_label) like lower('".$_REQUEST['what']."%') and enabled = 'Y' ORDER BY doctypes_first_level_label");
+	." WHERE lower(doctypes_first_level_label) like lower(?) and enabled = 'Y' ORDER BY doctypes_first_level_label",
+	array($_REQUEST['what'].'%'));
 
 $listArray = array();
-while($line = $db->fetch_object())
+while($line = $stmt->fetchObject())
 {
 	array_push($listArray, $line->tag);
 }

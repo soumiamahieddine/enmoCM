@@ -30,14 +30,15 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-$db = new dbquery();
-$db->connect();
-$db->query("SELECT description as tag FROM "
+$db = new Database();
+
+$stmt= $db->query("SELECT description as tag FROM "
 	.$_SESSION['tablename']['doctypes']
-	." WHERE lower(description) like lower('".$_REQUEST['what']."%') and enabled = 'Y' ORDER BY description");
+	." WHERE lower(description) like lower(?) and enabled = 'Y' ORDER BY description",
+	array($_REQUEST['what'].'%'));
 
 $listArray = array();
-while($line = $db->fetch_object())
+while($line = $stmt->fetchObject())
 {
 	array_push($listArray, $line->tag);
 }

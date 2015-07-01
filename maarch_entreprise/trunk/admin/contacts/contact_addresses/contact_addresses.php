@@ -56,10 +56,12 @@ array_push(
     "id", "contact_id", "contact_purpose_id", "departement", "lastname", "firstname", "function", "is_private","address_num", "address_street", "address_postal_code", "address_town", "phone", "email"
 );
 $what = "";
-$where = "contact_id = " . $_SESSION['contact']['current_contact_id'];
+$where = "contact_id = ? ";
+$arrayPDO = array($_SESSION['contact']['current_contact_id']);
 if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
-    $what = $func->protect_string_db($_REQUEST['what']);
-    $where .= " and lower(lastname) like lower('" . $what. "%')";
+    $what = $_REQUEST['what'];
+    $where .= " and lower(lastname) like lower(?)";
+    $arrayPDO = array_merge($arrayPDO, array($what. '%'));
 }
 
 $list = new list_show();
@@ -75,8 +77,8 @@ if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field'])) {
 $orderstr = $list->define_order($order, $field);
 
 $request = new request;
-$tab = $request->select(
-    $select, $where, $orderstr, $_SESSION['config']['databasetype']
+$tab = $request->PDOselect(
+    $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
 );
 for ($i = 0; $i < count($tab); $i ++) {
     for ($j = 0; $j < count($tab[$i]); $j ++) {
