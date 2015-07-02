@@ -730,11 +730,11 @@ $linkwithwhat =
 						</td>
 						<td><?php
 						if($user['visible'] == 'Y') { ?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_user_unvisible&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>">
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_user_unvisible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
 								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i>
 							</a><?php
 						} else {?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_user_visible&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>">
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_user_visible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
 								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i>
 							</a><?php
 						} ?>
@@ -744,7 +744,7 @@ $linkwithwhat =
 						<td class="action_entities"><?php 
 							/*if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { */
 							if (!$noDelete && !$onlyCc) { ?>
-								<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>&id=<?php functions::xecho($user['user_id']);?>"><!-- i class="fa fa-remove"></i --><?php echo _DELETE;?></a><?php
+								<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id);?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($user['user_id']);?>"><!-- i class="fa fa-remove"></i --><?php echo _DELETE;?></a><?php
 							} ?>
 						</td>
 						<td class="action_entities"><!-- Switch copy to dest --><?php
@@ -757,12 +757,12 @@ $linkwithwhat =
 						</td>
 						<td class="action_entities"><!-- Move up in list --><?php 
 							if($i > 0) { ?>
-								<a href="<?php functions::xecho($linkwithwhat);?>&action=move_user_up&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>"><i class="fa fa-arrow-up"></i></a><?php 
+								<a href="<?php functions::xecho($linkwithwhat);?>&action=move_user_up&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i></a><?php 
 							} ?>
 						</td>
 						<td class="action_entities"><!-- Move down in list --><?php 
 							if($i < $l-1) { ?>
-								<a href="<?php functions::xecho($linkwithwhat);?>&action=move_user_down&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>"><i class="fa fa-arrow-down"></i></a><?php 
+								<a href="<?php functions::xecho($linkwithwhat);?>&action=move_user_down&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-down"></i></a><?php 
 							} ?>
 						</td>
 					</tr> <?php
@@ -784,11 +784,11 @@ $linkwithwhat =
 						</td>
 						<td><?php
 						if($entity['visible'] == 'Y') { ?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_entity_unvisible&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>">
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_entity_unvisible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
 								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i>
 							</a><?php
 						} else {?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_entity_visible&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>">
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_entity_visible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
 								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i>
 							</a><?php
 						} ?>
@@ -797,7 +797,7 @@ $linkwithwhat =
 						<td ><?php functions::xecho($entity['entity_label']);?></td>
 						<td class="action_entities"><?php 
 						if (!$noDelete && !$onlyCc) { ?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_entity&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>&id=<?php functions::xecho($entity['entity_id']);?>">
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_entity&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($entity['entity_id']);?>">
 								<!--i class="fa fa-remove"></i--><?php echo _DELETE;?>
 							</a><?php
 						} ?>
@@ -805,12 +805,12 @@ $linkwithwhat =
 						<td class="action_entities">&nbsp;</td>
 						<td class="action_entities"><!-- Move up in list --><?php
 						if($i > 0) { ?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=move_entity_up&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>"><i class="fa fa-arrow-up"></i></a><?php
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=move_entity_up&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i></a><?php
 						} ?>
 						</td>
 						<td class="action_entities"><!-- Move down in list --><?php 
 						if($i < $l-1) { ?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=move_entity_down&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>"><i class="fa fa-arrow-down"></i></a><?php
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=move_entity_down&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-down"></i></a><?php
 						} ?>
 						</td>
 					</tr> <?php
@@ -924,7 +924,7 @@ $linkwithwhat =
 						
 						if ($color == ' class="col"') $color = '';
 						else $color = ' class="col"';?>
-						<tr <?php functions::xecho($color);?> id="user_<?php functions::xecho($j);?>">
+						<tr <?php echo $color;?> id="user_<?php functions::xecho($j);?>">
 							<td><?php functions::xecho($users[$j]['NOM'] . " " .$users[$j]['PRENOM']);?></td>
 							<td><?php functions::xecho($users[$j]['DEP']);?></td>
 							<td class="action_entities"><?php
@@ -979,7 +979,7 @@ $linkwithwhat =
                             
                             if ($color == ' class="col"') $color = '';
                             else $color = ' class="col"';?>
-                            <tr <?php functions::xecho($color);?>>
+                            <tr <?php echo $color;?>>
                                 <td><?php functions::xecho($entities[$j]['ID']);?></td>
                                 <td><?php functions::xecho($entities[$j]['DEP']);?></td>
                                 <td class="action_entities"><?php
