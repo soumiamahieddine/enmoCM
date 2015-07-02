@@ -205,7 +205,7 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
                 $docserver = $docserversControler->get(
                     $adr[0][$cptAdr]['docserver_id']
                 );
-                echo '<h4>' . $functions::xssafe(adr[0][$cptAdr]['docserver_id'])
+                echo '<h4>' . functions::xssafe($adr[0][$cptAdr]['docserver_id'])
                     . ' (' . functions::xssafe($docserver->device_label) . ')</h4>';
                 ?>
                 <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
