@@ -417,4 +417,62 @@ class request extends dbquery
         return $this->query($query, true);
     }
 
+    /**
+    * Constructs the update query and sends it to the database with PDO
+    *
+    * @param  $table string Table to update
+    * @param  $data array Data to update
+    * @param  $where string Where clause of the query
+    * @param  $parameters array An indexed or associative array of parameters
+    * @param  $databasetype array Type of the database
+    */
+
+    public function PDOupdate($table, $data, $where, $parameters = null, $databasetype)
+    {
+        $db = new Database();
+        $update_string = "";
+        for($i=0; $i < count($data);$i++)
+        {
+            if($data[$i]['type'] == "string" || $data[$i]['type'] == "date")
+            {
+                if($databasetype == "POSTGRESQL" && $data[$i]['type'] == "date" && ($data[$i]['value'] == '' || $data[$i]['value'] == ' '))
+                {
+                    $update_string .= $data[$i]['column']."=NULL,";
+                }
+                else
+                {
+                    if(trim(strtoupper($data[$i]['value'])) == "SYSDATE")
+                    {
+                        $update_string .= $data[$i]['column']."=sysdate,";
+                    }
+                    elseif(trim(strtoupper($data[$i]['value'])) == "CURRENT_TIMESTAMP")
+                    {
+                        $update_string .= $data[$i]['column']."=CURRENT_TIMESTAMP,";
+                    }
+                    else
+                    {
+                        $update_string .= $data[$i]['column']."='".$data[$i]['value']."',";
+                    }
+                }
+            }
+            else
+            {
+                $update_string .= $data[$i]['column']."=".$data[$i]['value'].",";
+            }
+        }
+        $update_string = substr($update_string, 0, -1);
+        if ($where <> "")
+        {
+            $where_string = " WHERE ".$where;
+        }
+        else
+        {
+            $where_string = "";
+        }
+        //Time to create the SQL Query
+        $query = "";
+        $query = "UPDATE ".$table." SET ".$update_string.$where_string;
+        return $db->query($query, $parameters, true);
+    }
+
 }
