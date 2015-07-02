@@ -1241,8 +1241,8 @@ class types extends dbquery
             for ($i = 0; $i < count($indexes); $i ++) {
                 $query .= $indexes[$i]['column'] . " = NULL, ";
             }
-            $query = preg_replace('/, $/', ' where res_id = ' . $resId, $query);
-            $db->query($query);
+            $query = preg_replace('/, $/', ' where res_id = ?', $query);
+            $db->query($query, array($resId));
         }
     }
 
