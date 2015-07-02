@@ -162,17 +162,16 @@ class lists extends dbquery
         $filters = $filtersClause = $where = $options = '';
         
         //Db query
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         
         //Load filter's data
         switch ($filter) {
         
             case 'status':
-                $db->query(
-                    "select * from " . STATUS_TABLE . " where can_be_searched = 'Y' order by label_status"
+                $stmt = $db->query(
+                    "SELECT * FROM " . STATUS_TABLE . " WHERE can_be_searched = 'Y' order by label_status"
                 );
-                while ($res = $db->fetch_object()) {
+                while ($res = $stmt->fetchObject()) {
                     if (isset($_SESSION['filters']['status']['VALUE']) 
                         && $_SESSION['filters']['status']['VALUE'] == $res->id
                         ) $selected = 'selected="selected"'; else $selected =  '';
@@ -205,14 +204,14 @@ class lists extends dbquery
                         $where = 'where ' . $this->params['basketClause'];
                     }
 
-                    $db->query(
-                        "select distinct(r.destination) as entity_id, count(distinct r.res_id)"
-                        . " as total, e.entity_label , e.short_label from " 
+                    $stmt = $db->query(
+                        "SELECT distinct(r.destination) as entity_id, count(distinct r.res_id)"
+                        . " as total, e.entity_label , e.short_label FROM " 
                         . $view. " r left join " . ENT_ENTITIES
                         . " e on e.entity_id = r.destination " .$where
                         . " group by e.entity_label,  e.short_label, r.destination order by e.entity_label"
                     );
-                    while ($res = $db->fetch_object()) {
+                    while ($res = $stmt->fetchObject()) {
                         
                         if (isset($_SESSION['filters']['entity']['VALUE']) 
                             && $_SESSION['filters']['entity']['VALUE'] == $res->entity_id
@@ -238,9 +237,6 @@ class lists extends dbquery
                     
                 $ent = new entity();
                 $sec = new security();
-                
-                $db2 = new dbquery();
-                $db2->connect();
 
                 $view = $sec->retrieve_view_from_table($this->params['tableName']);
                 if (empty($view)) {
@@ -252,14 +248,14 @@ class lists extends dbquery
                         $where = 'where ' . $this->params['basketClause'];
                     }
 
-                    $db->query(
-                        "select distinct(r.destination) as entity_id, count(distinct r.res_id)"
-                        . " as total, e.entity_label , e.short_label from " 
+                    $stmt = $db->query(
+                        "SELECT distinct(r.destination) as entity_id, count(distinct r.res_id)"
+                        . " as total, e.entity_label , e.short_label FROM " 
                         . $view. " r left join " . ENT_ENTITIES
                         . " e on e.entity_id = r.destination " .$where
                         . " group by e.entity_label,  e.short_label, r.destination order by e.entity_label"
                     );
-                    while ($res = $db->fetch_object()) {
+                    while ($res = $stmt->fetchObject()) {
                         
                         if (isset($_SESSION['filters']['entity_subentities']['VALUE']) 
                             && $_SESSION['filters']['entity_subentities']['VALUE'] == $res->entity_id
@@ -281,8 +277,8 @@ class lists extends dbquery
                         }
 
                         $this->params['basketClause'] = str_replace('r.', 'res_view_letterbox.', $this->params['basketClause']);
-                        $db2->query("SELECT count(res_id) as total FROM ".$view." WHERE (".$this->params['basketClause'].") and destination in (" . implode(",",$subEntities) . ")");
-                        $res2 = $db2->fetch_object();
+                        $stmt2 = $db->query("SELECT count(res_id) as total FROM ".$view." WHERE (".$this->params['basketClause'].") and destination in (" . implode(",",$subEntities) . ")");
+                        $res2 = $stmt2->fetchObject();
 
                         $options .='<option value="'.$res->entity_id.'" '.$selected.' '.$style.'>'.$res->short_label.' ('.$res2->total.')</option>';
                     }
@@ -304,13 +300,13 @@ class lists extends dbquery
                 if (!empty($view)) {
                     if (! empty($this->params['basketClause'])) $where = 'where '.$this->params['basketClause'];
 
-                    $db->query(
-                        "select distinct(typist) as typist, count(distinct r.res_id)"
-                        . " as total from " 
+                    $stmt = $db->query(
+                        "SELECT distinct(typist) as typist, count(distinct r.res_id)"
+                        . " as total FROM " 
                         . $view. " r " .$where
                         . " group by typist order by typist"
                     );
-                    while ($res = $db->fetch_object()) {
+                    while ($res = $stmt->fetchObject()) {
                         
                         if (isset($_SESSION['filters']['typist']['VALUE']) 
                             && $_SESSION['filters']['typist']['VALUE'] == $res->typist
@@ -381,18 +377,16 @@ class lists extends dbquery
                 if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
 
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-                    $db = new dbquery();
-                    $db->connect();
 
                     if (is_numeric($_SESSION['filters']['contact']['VALUE'])) {
                         $query = "SELECT society, lastname, firstname, is_corporate_person, society_short FROM "
-                            . $_SESSION['tablename']['contacts_v2'] . " WHERE contact_id = ".$_SESSION['filters']['contact']['VALUE'];
+                            . $_SESSION['tablename']['contacts_v2'] . " WHERE contact_id = ?";
                         
-                        $db->query($query);
-                        $line = $db->fetch_object();
+                        $stmt = $db->query($query, array($_SESSION['filters']['contact']['VALUE']));
+                        $line = $stmt->fetchObject();
 
                         if($line->is_corporate_person == 'N'){
-                            $contact = $db->show_string($line->lastname)." ".$db->show_string($line->firstname);
+                            $contact = functions::show_string($line->lastname)." ".functions::show_string($line->firstname);
                             if($line->society <> ''){
                                 $contact .= ' ('.$line->society.')';
                             }
@@ -403,12 +397,12 @@ class lists extends dbquery
                             }
                         }
                     } else {
-                        $query = "SELECT lastname, firstname FROM users WHERE user_id = '".$_SESSION['filters']['contact']['VALUE']."'";
+                        $query = "SELECT lastname, firstname FROM users WHERE user_id = ?";
                         
-                        $db->query($query);
-                        $line = $db->fetch_object();
+                        $stmt = $db->query($query, array($_SESSION['filters']['contact']['VALUE']));
+                        $line = $stmt->fetchObject();
 
-                        $contact .= $db->show_string($line->firstname) . " " . $db->show_string($line->lastname);
+                        $contact .= functions::show_string($line->firstname) . " " . functions::show_string($line->lastname);
                     }
 
                 } else {
@@ -436,13 +430,13 @@ class lists extends dbquery
                 
                 if (! empty($this->params['basketClause'])) $where = 'where '.$this->params['basketClause'];
                 
-                $db->query(
-                    "select distinct(r.type_id), t.description from " 
+                $stmt = $db->query(
+                    "SELECT distinct(r.type_id), t.description FROM " 
                     .$this->params['tableName']. " r left join " . DOCTYPES_TABLE
                     . " t on t.type_id = r.type_id " .$where
                     . " group by t.description, r.type_id order by t.description"
                 );
-                while ($res = $db->fetch_object()) {
+                while ($res = $stmt->fetchObject()) {
                     if (isset($_SESSION['filters']['type']['VALUE']) 
                         && $_SESSION['filters']['type']['VALUE'] == $res->type_id
                         ) $selected = 'selected="selected"'; else $selected =  '';
@@ -474,12 +468,12 @@ class lists extends dbquery
             break;
             
             case 'action':
-                $db->query(
-                    "select id, label_action from "
+                $stmt = $db->query(
+                    "SELECT id, label_action FROM "
                     . $_SESSION['tablename']['actions']
-                    . " where origin = 'folder' and enabled = 'Y' and history = 'Y'"
+                    . " WHERE origin = 'folder' and enabled = 'Y' and history = 'Y'"
                 );
-                while ($res = $db->fetch_object()) {
+                while ($res = $stmt->fetchObject()) {
                     $id = 'ACTION#' . $res->id;
                     if (isset($_SESSION['filters']['action']['VALUE']) 
                         && $_SESSION['filters']['action']['VALUE'] == $id
@@ -680,18 +674,6 @@ class lists extends dbquery
                        
                     } else if ($_REQUEST['filter'] == 'contact') {
                     
-/*                        $contactTmp = str_replace(')', '', 
-                            substr($_SESSION['filters']['contact']['VALUE'], 
-                            strrpos($_SESSION['filters']['contact']['VALUE'],'(')+1));
-                        $find1 = strpos($contactTmp, ':');
-                        $find2 =  $find1 + 1;
-                        $contactType = substr($contactTmp, 0, $find1);
-                        $contactId = $this->protect_string_db(substr($contactTmp, $find2, strlen($contactTmp)));
-                        if($contactType == "user") {
-                            $_SESSION['filters']['contact']['CLAUSE'] = "(exp_user_id = '".$contactId."' or dest_user_id = '".$contactId."')";
-                        } else if($contactType == "contact") {
-                            $_SESSION['filters']['contact']['CLAUSE'] = "(exp_contact_id = '".$contactId."' or dest_contact_id = '".$contactId."')";
-                        }*/
                         if(is_numeric($_SESSION['filters']['contact']['VALUE'])){
                             $_SESSION['filters']['contact']['CLAUSE'] = "(exp_contact_id = '".$_SESSION['filters']['contact']['VALUE']."' or dest_contact_id = '".$_SESSION['filters']['contact']['VALUE']."')";
                         } else {
@@ -1460,15 +1442,13 @@ class lists extends dbquery
 
     public function tmplt_showDefaultAction($parameter) 
     {
-        //Db query
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         
         //Load action name   
-        $db->query(
-            "select label_action from actions where id = ".$_SESSION['current_basket']['default_action']
+        $stmt = $db->query(
+            "SELECT label_action FROM actions WHERE id = ?", array($_SESSION['current_basket']['default_action'])
         );
-        $res = $db->fetch_object();
+        $res = $stmt->fetchObject();
 
         return $res->label_action;
     }

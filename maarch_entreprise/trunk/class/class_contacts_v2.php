@@ -116,8 +116,9 @@ class contacts_v2 extends dbquery
 
     public function is_exists($mode, $mycontact){
         $query = $this->query_contact_exists($mode);
-        $this->query($query);
-        if($this->nb_result() > 0){
+        $db = new Database();
+        $stmt = $db->query($query['query'], $query['params']);
+        if($stmt->rowCount() > 0){
             if($mode <> 'up'){
                 $_SESSION['error'] = _THE_CONTACT.' '._ALREADY_EXISTS;
             }
@@ -135,22 +136,24 @@ class contacts_v2 extends dbquery
     }
 
     public function query_contact_exists($mode){
-        $this->connect();
+
         $query = '';
         if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){
             $query = "SELECT contact_id, contact_type, society, contact_firstname, contact_lastname, contact_enabled FROM view_contacts 
-                WHERE lower(contact_firstname) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."')
-                  and lower(contact_lastname) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."')";
+                WHERE lower(contact_firstname) = lower(?)
+                  and lower(contact_lastname) = lower(?)";
+            $arrayPDO = array($_SESSION['m_admin']['contact']['FIRSTNAME'], $_SESSION['m_admin']['contact']['LASTNAME']);
 
         } else if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){
             $query = "SELECT contact_id, contact_type, society, contact_firstname, contact_lastname, contact_enabled FROM view_contacts 
-                WHERE lower(society) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."')";
-
+                WHERE lower(society) = lower(?)";
+            $arrayPDO = array($_SESSION['m_admin']['contact']['SOCIETY']);
         }
         if ($mode == 'up'){
-            $query .= " and contact_id <> " . $_SESSION['m_admin']['contact']['ID'];
+            $query .= " and contact_id <> ?";
+            $arrayPDO = array_merge($arrayPDO, array($_SESSION['m_admin']['contact']['ID']));
         }
-        return $query;    
+        return array("query" => $query, "params" => $arrayPDO);    
     }
 
 
@@ -161,6 +164,7 @@ class contacts_v2 extends dbquery
     */
     public function addupcontact($mode, $admin = true, $confirm = 'N', $mycontact = 'N')
     {
+        $db = new Database();
         // add ou modify users in the database
         if($confirm == 'N'){
             $this->contactinfo($mode);
@@ -240,7 +244,6 @@ class contacts_v2 extends dbquery
                 exit;
             }
         } else {
-            $this->connect();
             if ($mode == 'add') {
                 if($_SESSION['user']['UserId'] == 'superadmin'){
                     $entity_id = 'SUPERADMIN';
@@ -250,40 +253,18 @@ class contacts_v2 extends dbquery
                 $query = 'INSERT INTO ' . $_SESSION['tablename']['contacts_v2']
                        . ' ( contact_type, lastname , firstname , society , society_short, function , '
                        . 'other_data,'
-                       . " title, is_corporate_person, user_id, entity_id, creation_date) VALUES (  "
-                         . $_SESSION['m_admin']['contact']['CONTACT_TYPE']                          
-                         . ", '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['contact']['LASTNAME']
-                       ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['contact']['FIRSTNAME']
-                       ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['contact']['SOCIETY']
-                       ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['contact']['SOCIETY_SHORT']
-                       ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['contact']['FUNCTION']
-                       ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['contact']['OTHER_DATA']
-                       ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['contact']['TITLE']
-                       ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']                                   
-                       ) . "','" . $this->protect_string_db(
-                            $_SESSION['user']['UserId']
-                       ) . "','" . $this->protect_string_db(
-                            $entity_id
-                       ) . "', current_timestamp)";
-                $this->query($query);
+                       . " title, is_corporate_person, user_id, entity_id, creation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp)";
+
+                $db->query($query, array($_SESSION['m_admin']['contact']['CONTACT_TYPE'], $_SESSION['m_admin']['contact']['LASTNAME'], $_SESSION['m_admin']['contact']['FIRSTNAME']
+                            , $_SESSION['m_admin']['contact']['SOCIETY'], $_SESSION['m_admin']['contact']['SOCIETY_SHORT'], $_SESSION['m_admin']['contact']['FUNCTION'], $_SESSION['m_admin']['contact']['OTHER_DATA']
+                            , $_SESSION['m_admin']['contact']['TITLE'], $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'], $_SESSION['user']['UserId'], $entity_id));
                 if($_SESSION['history']['contactadd'])
                 {
-                    $this->query("select contact_id, creation_date from ".$_SESSION['tablename']['contacts_v2']
-                        ." where lastname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])
-                        ."' and firstname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])
-                        ."' and society = '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])
-                        ."' and function = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])
-                        ."' and is_corporate_person = '".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])
-                        ."' order by creation_date desc");
-                    $res = $this->fetch_object();
+                    $stmt = $db->query("SELECT contact_id, creation_date FROM ".$_SESSION['tablename']['contacts_v2']
+                        ." WHERE lastname = ? and firstname = ? and society = ? and function = ? and is_corporate_person = ? order by creation_date desc"
+                        , array($_SESSION['m_admin']['contact']['LASTNAME'], $_SESSION['m_admin']['contact']['FIRSTNAME'], $_SESSION['m_admin']['contact']['SOCIETY']
+                            , $_SESSION['m_admin']['contact']['FUNCTION'], $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']));
+                    $res = $stmt->fetchObject();
                     $id = $res->contact_id;
                     if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y')
                     {
@@ -297,20 +278,13 @@ class contacts_v2 extends dbquery
                     $hist = new history();
                     $hist->add($_SESSION['tablename']['contacts_v2'], $id,"ADD",'contacts_v2_add',$msg, $_SESSION['config']['databasetype']);
                 }
-                // if($mycontact = 'iframe'){
-                    $this->query("select contact_id, creation_date from ".$_SESSION['tablename']['contacts_v2']
-                        ." where lastname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])
-                        ."' and firstname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])
-                        ."' and society = '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])
-                        ."' and function = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])
-                        ."' and is_corporate_person = '".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])
-                        ."' order by creation_date desc");
-                    $res = $this->fetch_object();
+                    $stmt = $db->query("SELECT contact_id, creation_date FROM ".$_SESSION['tablename']['contacts_v2']
+                        ." WHERE lastname = ? and firstname = ? and society = ? and function = ? and is_corporate_person = ? order by creation_date desc"
+                        , array($_SESSION['m_admin']['contact']['LASTNAME'], $_SESSION['m_admin']['contact']['FIRSTNAME'], $_SESSION['m_admin']['contact']['SOCIETY']
+                            , $_SESSION['m_admin']['contact']['FUNCTION'], $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']));
+                    $res = $stmt->fetchObject();
                     $id = $res->contact_id;
                     $_SESSION['contact']['current_contact_id'] = $id;
-                // } else {
-                //     $this->clearcontactinfos();
-                // }
                 
                 $_SESSION['info'] = _CONTACT_ADDED;
                 header("location: ".$path_contacts);
@@ -318,17 +292,14 @@ class contacts_v2 extends dbquery
             }
             elseif($mode == "up")
             {
-                $query = "update ".$_SESSION['tablename']['contacts_v2']." set update_date = current_timestamp, contact_type = ".$_SESSION['m_admin']['contact']['CONTACT_TYPE'].", lastname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."', firstname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."',society = '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."',society_short = '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY_SHORT'])."',function = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])."', other_data = '".$this->protect_string_db($_SESSION['m_admin']['contact']['OTHER_DATA'])."', title = '".$this->protect_string_db($_SESSION['m_admin']['contact']['TITLE'])."', is_corporate_person = '".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])."'";
-                // if($admin)
-                // {
-                //     $query .= ", user_id = '".$this->protect_string_db($_SESSION['m_admin']['contact']['OWNER'])."'";
-                // }
-                $query .=" where contact_id = '".$_SESSION['m_admin']['contact']['ID']."'";
-                if(!$admin)
-                {
-                    //$query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
-                }
-                $this->query($query);
+                $query = "UPDATE ".$_SESSION['tablename']['contacts_v2']
+                    ." SET update_date = current_timestamp, contact_type = ?, lastname = ?, firstname = ?,society = ?,society_short = ?,function = ?, other_data = ?, title = ?, is_corporate_person = ?";
+                $query .= " WHERE contact_id = ?";
+                $arrayPDO = array($_SESSION['m_admin']['contact']['CONTACT_TYPE'], $_SESSION['m_admin']['contact']['LASTNAME'], $_SESSION['m_admin']['contact']['FIRSTNAME']
+                    , $_SESSION['m_admin']['contact']['SOCIETY'], $_SESSION['m_admin']['contact']['SOCIETY_SHORT'], $_SESSION['m_admin']['contact']['FUNCTION']
+                    , $_SESSION['m_admin']['contact']['OTHER_DATA'], $_SESSION['m_admin']['contact']['TITLE'], $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'], $_SESSION['m_admin']['contact']['ID']);
+
+                $db->query($query, $arrayPDO);
                 if($_SESSION['history']['contactup'])
                 {
                     if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y')
@@ -365,6 +336,7 @@ class contacts_v2 extends dbquery
     */
     public function formcontact($mode,$id = "", $admin = true, $iframe = false)
     {
+        $db = new Database();
         if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"]))
         {
             $browser_ie = true;
@@ -388,15 +360,12 @@ class contacts_v2 extends dbquery
         }
         if( $mode <> "add")
         {
-            $this->connect();
-            $query = "select * from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$id;
-            if(!$admin)
-            {
-                //$query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
-            }
-            $this->query($query);
 
-            if($this->nb_result() == 0)
+            $query = "SELECT * FROM ".$_SESSION['tablename']['contacts_v2']." WHERE contact_id = ?";
+
+            $stmt = $db->query($query, array($id));
+
+            if($stmt->rowCount() == 0)
             {
                 $_SESSION['error'] = _THE_CONTACT.' '._ALREADY_EXISTS;
                 $state = false;
@@ -404,7 +373,7 @@ class contacts_v2 extends dbquery
             else
             {
                 $_SESSION['m_admin']['contact'] = array();
-                $line = $this->fetch_object();
+                $line = $stmt->fetchObject();
                 $_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
                 $_SESSION['m_admin']['contact']['TITLE'] = $this->show_string($line->title);
                 $_SESSION['m_admin']['contact']['LASTNAME'] = $this->show_string($line->lastname);
@@ -418,8 +387,9 @@ class contacts_v2 extends dbquery
                 $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
                 if($admin && !empty($_SESSION['m_admin']['contact']['OWNER']))
                 {
-                    $this->query("select lastname, firstname from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['m_admin']['contact']['OWNER']."'");
-                    $res = $this->fetch_object();
+                    $stmt = $db->query("SELECT lastname, firstname FROM ".$_SESSION['tablename']['users']." WHERE user_id = ?",
+                        array($_SESSION['m_admin']['contact']['OWNER']));
+                    $res = $stmt->fetchObject();
                     $_SESSION['m_admin']['contact']['OWNER'] = $res->lastname.', '.$res->firstname.' ('.$_SESSION['m_admin']['contact']['OWNER'].')';
                 }
             }
@@ -434,9 +404,9 @@ class contacts_v2 extends dbquery
         $titles = $tmp['titles'];
 
         $contact_types = array();
-        $this->connect();
-        $this->query("SELECT id, label FROM ".$_SESSION['tablename']['contact_types']." ORDER BY label");
-        while($res = $this->fetch_object()){
+
+        $stmt = $db->query("SELECT id, label FROM ".$_SESSION['tablename']['contact_types']." ORDER BY label");
+        while($res = $stmt->fetchObject()){
             $contact_types[$res->id] = $this->show_string($res->label); 
         }
 
@@ -487,9 +457,7 @@ class contacts_v2 extends dbquery
                         <input type="hidden" name="admin"  value="contacts_v2" />
                         <input type="hidden" name="page"  value="contacts_v2_up_db" />
                 <?php 
-/*                if (isset($_REQUEST['fromContactTree'])){
-                        ?><input type="hidden" name="fromContactTree" value="yes" /><?php
-                    }*/
+
                    }?>
                     <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])) {functions::xecho($_REQUEST['order']);}?>" />
                     <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])) { functions::xecho($_REQUEST['order_field']);}?>" />
@@ -685,7 +653,8 @@ class contacts_v2 extends dbquery
     }
 
     public function chooseContact(){
-        $this->connect();
+
+        $db = new Database();
         $this->clearcontactinfos();
         ?>
         <h1><i class="fa fa-plus fa-2x"></i>
@@ -707,8 +676,8 @@ class contacts_v2 extends dbquery
                                 <select id="contact_type_selected" onchange="getContacts('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=my_contacts&page=getContacts', this.options[this.selectedIndex].value, 'set');">
                                     <option value="all"><?php echo _ALL;?></option>
                                     <?php
-                                        $this->query("SELECT id, label FROM contact_types ORDER BY label");
-                                        while ($res_label = $this->fetch_object()){
+                                        $stmt = $db->query("SELECT id, label FROM contact_types ORDER BY label");
+                                        while ($res_label = $stmt->fetchObject()){
                                             ?><option value="<?php functions::xecho($res_label->id);?>"><?php functions::xecho($res_label->label);?></option>
                                         <?php
                                         }
@@ -722,8 +691,8 @@ class contacts_v2 extends dbquery
                                 <select id="contactSelect">
                                     <option value=""><?php echo _CHOOSE_A_CONTACT;?></option>
                                     <?php
-                                        $this->query("SELECT contact_id, society, firstname, lastname, is_corporate_person FROM contacts_v2 WHERE enabled = 'Y' ORDER BY is_corporate_person desc, society, lastname");
-                                        while ($res_contact = $this->fetch_object()){
+                                        $stmt = $db->query("SELECT contact_id, society, firstname, lastname, is_corporate_person FROM contacts_v2 WHERE enabled = 'Y' ORDER BY is_corporate_person desc, society, lastname");
+                                        while ($res_contact = $stmt->fetchObject()){
                                             ?><option value="<?php functions::xecho($res_contact->contact_id);?>"><?php
                                             if ($res_contact->is_corporate_person == "Y") {
                                                 functions::xecho($res_contact->society);
@@ -774,6 +743,7 @@ class contacts_v2 extends dbquery
     */
     public function delcontact($id, $admin = true)
     {
+        $db = new Database();
         $element_found = false;
         $nb_docs = 0;
         $tables = array();
@@ -791,40 +761,33 @@ class contacts_v2 extends dbquery
         
         if(!empty($id))
         {
-            $this->query("select res_id from ".$_SESSION['collections'][0]['view'] 
-                . " where exp_contact_id = '".$this->protect_string_db($id) 
-                . "' or dest_contact_id = '".$this->protect_string_db($id) . "'");
-            // $this->show();
-            if($this->nb_result() > 0)$nb_docs = $nb_docs + $this->nb_result();
+            $stmt = $db->query("SELECT res_id FROM ".$_SESSION['collections'][0]['view'] 
+                . " WHERE exp_contact_id = ? or dest_contact_id = ?",
+                array($id, $id));
+            if($stmt->rowCount() > 0)$nb_docs = $nb_docs + $stmt->rowCount();
 
-                $this->query("select contact_id from contacts_res where contact_id = '". $this->protect_string_db($id)."'");
-                if($this->nb_result() > 0)$nb_docs = $nb_docs + $this->nb_result();
-/*            $this->query("select res_id from mlb_coll_ext 
-                            where address_id in 
-                                (select distinct id from ".$_SESSION['tablename']['contact_addresses'] 
-                                . " where contact_id = '".$this->protect_string_db($id)."')"
-                    );
-            // $this->show();
-            if($this->nb_result() > 0)$nb_docs_address = $nb_docs_address + $this->nb_result();*/
+                $stmt = $db->query("SELECT contact_id FROM contacts_res WHERE contact_id = ?", array($id));
+                if($stmt->rowCount() > 0)$nb_docs = $nb_docs + $stmt->rowCount();
                          
             if ($nb_docs == 0)
             {
-                $this->connect();
-                $query = "select contact_id from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$id;
+                $query = "SELECT contact_id FROM ".$_SESSION['tablename']['contacts_v2']." WHERE contact_id = ? ";
+                $arrayPDO = array($id);
                 if(!$admin)
                 {
-                    $query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
+                    $query .= " and user_id = ?";
+                    $arrayPDO = array_merge($arrayPDO, array($_SESSION['user']['UserId']));
                 }
-                $this->query($query);
-                if($this->nb_result() == 0)
+                $stmt = $db->query($query, $arrayPDO);
+                if($stmt->rowCount() == 0)
                 {
                     $_SESSION['error'] = _CONTACT.' '._UNKNOWN;
                 }
                 else
                 {
-                    $res = $this->fetch_object();
-                    $this->query("delete from " . $_SESSION['tablename']['contacts_v2'] . " where contact_id = " . $id);
-                    $this->query("delete from " . $_SESSION['tablename']['contact_addresses'] . " where contact_id = " . $id);
+                    $res = $stmt->fetchObject();
+                    $db->query("DELETE FROM " . $_SESSION['tablename']['contacts_v2'] . " WHERE contact_id = ?", array($id));
+                    $db->query("DELETE FROM " . $_SESSION['tablename']['contact_addresses'] . " WHERE contact_id = ?", array($id));
                     if($_SESSION['history']['contactdel'])
                     {
                         require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
@@ -964,6 +927,7 @@ class contacts_v2 extends dbquery
     */
     public function formaddress($mode,$id = "", $admin = true, $iframe = "")
     {
+        $db = new Database();
         if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"]))
         {
             $browser_ie = true;
@@ -987,16 +951,17 @@ class contacts_v2 extends dbquery
         }
         if( $mode <> "add")
         {
-            $this->connect();
-            $query = "select * from ".$_SESSION['tablename']['contact_addresses']." where id = ".$id;
+            $query = "SELECT * FROM ".$_SESSION['tablename']['contact_addresses']." WHERE id = ?";
+            $arrayPDO = array($id);
             $core_tools = new core_tools();
             if(!$admin && !$core_tools->test_service('update_contacts', 'apps', false))
             {
-                $query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
+                $query .= " and user_id = ?";
+                $arrayPDO = array_merge($arrayPDO, array($_SESSION['user']['UserId']));
             }
-            $this->query($query);
+            $stmt = $db->query($query, $arrayPDO);
 
-            if($this->nb_result() == 0)
+            if($stmt->rowCount() == 0)
             {
                 $_SESSION['error'] = _THE_ADDRESS.' '._ALREADY_EXISTS;
                 $state = false;
@@ -1005,7 +970,7 @@ class contacts_v2 extends dbquery
             {
                 if (!isset($_SESSION['address_up_error'])) {
                     $_SESSION['m_admin']['address'] = array();
-                    $line = $this->fetch_object();
+                    $line = $stmt->fetchObject();
                     $_SESSION['m_admin']['address']['ID'] = $line->id;
                     $_SESSION['m_admin']['address']['CONTACT_ID'] = $line->contact_id;
                     $_SESSION['m_admin']['address']['TITLE'] = $this->show_string($line->title);
@@ -1034,8 +999,8 @@ class contacts_v2 extends dbquery
                 }
                 if($admin && !empty($_SESSION['m_admin']['address']['OWNER']))
                 {
-                    $this->query("select lastname, firstname from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['m_admin']['address']['OWNER']."'");
-                    $res = $this->fetch_object();
+                    $stmt = $db->query("SELECT lastname, firstname FROM ".$_SESSION['tablename']['users']." WHERE user_id = ?", array($_SESSION['m_admin']['address']['OWNER']));
+                    $res = $stmt->fetchObject();
                     $_SESSION['m_admin']['address']['OWNER'] = $res->lastname.', '.$res->firstname.' ('.$_SESSION['m_admin']['address']['OWNER'].')';
                 }
             }
@@ -1050,9 +1015,9 @@ class contacts_v2 extends dbquery
         $titles = $tmp['titles'];
 
         $contact_purposes = array();
-        $this->connect();
-        $this->query("SELECT id, label FROM ".$_SESSION['tablename']['contact_purposes']);
-        while($res = $this->fetch_object()){
+
+        $stmt = $db->query("SELECT id, label FROM ".$_SESSION['tablename']['contact_purposes']);
+        while($res = $stmt->fetchObject()){
             $contact_purposes[$res->id] = $this->show_string($res->label); 
         }
 
@@ -1124,27 +1089,11 @@ class contacts_v2 extends dbquery
                     <table width="65%" id="frmaddress_table1">
                         <tr id="contact_purposes_tr" >
                             <td><label for="contact_purposes"><?php echo _CONTACT_PURPOSE;?>&nbsp;:&nbsp;</label>
-<!--                                 <a href="#" id="create_contact" title="<?php echo _NEW_CONTACT_PURPOSE_ADDED;?>" 
-                                    onclick="javascript:window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=false&page=contact_purposes_up&mode=popup','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=250');" style="display:inline;" >
-                                    <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=modif_liste.png" alt="<?php echo _NEW_CONTACT_PURPOSE_ADDED;?>"/>
-                                </a> -->
+
                             </td>
                             <td>&nbsp;</td>
                             <td class="indexing_field">
-                                                        <!-- <select name="contact_purposes" id="contact_purposes" >
-                                                            <option value=""><?php echo _CHOOSE_CONTACT_PURPOSES;?></option>
-                                                            <?php
-                                                            foreach(array_keys($contact_purposes) as $key)
-                                                            {
-                                                                ?><option value="<?php functions::xecho($key);?>" <?php
 
-                                                                if(isset($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']) && $key == $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] )
-                                                                {
-                                                                    echo 'selected="selected"';
-                                                                }
-                                                                ?>><?php functions::xecho($contact_purposes[$key]);?></option><?php
-                                                            }?>
-                                                        </select> -->
                                 <input name="new_id" id="new_id" onfocus="$('rule_purpose').style.display='table-row'" onblur="purposeCheck();$('rule_purpose').style.display='none'";
                                     <?php if(isset($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']) && $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] <> '')
                                         {
@@ -1257,12 +1206,7 @@ class contacts_v2 extends dbquery
                             <td class="indexing_field"><input name="add_comp" type="text"  id="add_comp" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COMP'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_COMP'])); }?>"/></td>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
-                        <!--tr>
-                            <td><?php echo _POSTAL_CODE;?>&nbsp;:</td>
-                            <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="cp" type="text" id="cp" onkeyup="showVille('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=ajaxShowVille',this.value);" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_CP'])){functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_CP'])); }?>"/></td>
-                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
-                        </tr-->
+
                         <tr>
                             <td><?php echo _POSTAL_CODE;?>&nbsp;:</td>
                             <td>&nbsp;</td>
@@ -1434,6 +1378,7 @@ class contacts_v2 extends dbquery
     */
     public function addupaddress($mode, $admin = true, $iframe = false)
     {
+        $db = new Database();
         // add ou modify users in the database
         $this->addressinfo($mode);
         $order = $_SESSION['m_admin']['address']['order'];
@@ -1518,21 +1463,21 @@ class contacts_v2 extends dbquery
             $this->connect();
             if ($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] == "") {
 
-                $this->query("SELECT id FROM contact_purposes WHERE label = '".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."'");
-                if ($this->nb_result() == 0) {
-                    $this->query("INSERT INTO contact_purposes (label) VALUES ('".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."')");
-                    $this->query("SELECT id FROM contact_purposes WHERE label = '".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."'");
+                $stmt = $db->query("SELECT id FROM contact_purposes WHERE label = ?", array($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME']));
+                if ($stmt->rowCount() == 0) {
+                    $db->query("INSERT INTO contact_purposes (label) VALUES (?)", array($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME']));
+                    $stmt = $db->query("SELECT id FROM contact_purposes WHERE label = ?", array($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME']));
                 }
 
-                $res_purpose = $this->fetch_object();
+                $res_purpose = $stmt->fetchObject();
                 $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $res_purpose->id;
             } else if($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] <> "" && $_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'] <> ""){
-                $this->query("SELECT id FROM contact_purposes WHERE label = '".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."'");
-                $res_purpose = $this->fetch_object();
+                $stmt = $db->query("SELECT id FROM contact_purposes WHERE label = ?", array($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME']));
+                $res_purpose = $stmt->fetchObject();
                 if ($res_purpose->id != $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']) {
-                    $this->query("INSERT INTO contact_purposes (label) VALUES ('".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."')");
-                    $this->query("SELECT id FROM contact_purposes WHERE label = '".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."'");
-                    $res_purpose = $this->fetch_object();
+                    $db->query("INSERT INTO contact_purposes (label) VALUES (?)", array($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME']));
+                    $stmt = $db->query("SELECT id FROM contact_purposes WHERE label = ?", array($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME']));
+                    $res_purpose = $stmt->fetchObject();
                     $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $res_purpose->id;
                 }
             }
@@ -1547,58 +1492,23 @@ class contacts_v2 extends dbquery
                         . 'phone , email , address_num, address_street, '
                         . 'address_complement, address_town, '
                         . 'address_postal_code, address_country, other_data,'
-                        . " title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer) VALUES (  "
-                        .   $_SESSION['contact']['current_contact_id']
-                        . ", " .  $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']
-                        . ", '" . $this->protect_string_db(
-                           $_SESSION['m_admin']['address']['DEPARTEMENT']
-                        ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['LASTNAME']
-                        ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['FIRSTNAME']
-                        ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['FUNCTION']
-                        ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['PHONE']
-                        ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['MAIL']
-                        ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['ADD_NUM']
-                        ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['ADD_STREET']
-                        ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['ADD_COMP']
-                        ) . "', '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['ADD_TOWN']
-                        ) . "',  '" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['ADD_CP']
-                        ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['ADD_COUNTRY']
-                        ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['OTHER_DATA']
-                        ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['TITLE']
-                        ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['IS_PRIVATE']
-                        ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['WEBSITE']
-                        ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['OCCUPANCY']
-                        ) . "','" . $this->protect_string_db(
-                            $_SESSION['user']['UserId']
-                        ) . "','" . $this->protect_string_db(
-                            $entity_id
-                        ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['SALUTATION_HEADER']
-                        ) . "','" . $this->protect_string_db(
-                            $_SESSION['m_admin']['address']['SALUTATION_FOOTER']
-                        ) . "' )";
+                        . " title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer) VALUES (?, ?, 
+                            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                $this->query($query);
+                $arrayPDO = array($_SESSION['contact']['current_contact_id'], $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'], $_SESSION['m_admin']['address']['DEPARTEMENT'],
+                    $_SESSION['m_admin']['address']['LASTNAME'], $_SESSION['m_admin']['address']['FIRSTNAME'], $_SESSION['m_admin']['address']['FUNCTION'], $_SESSION['m_admin']['address']['PHONE'],
+                    $_SESSION['m_admin']['address']['MAIL'], $_SESSION['m_admin']['address']['ADD_NUM'], $_SESSION['m_admin']['address']['ADD_STREET'], $_SESSION['m_admin']['address']['ADD_COMP'],
+                    $_SESSION['m_admin']['address']['ADD_TOWN'], $_SESSION['m_admin']['address']['ADD_CP'], $_SESSION['m_admin']['address']['ADD_COUNTRY'], $_SESSION['m_admin']['address']['OTHER_DATA'],
+                    $_SESSION['m_admin']['address']['TITLE'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['WEBSITE'], $_SESSION['m_admin']['address']['OCCUPANCY'],
+                    $_SESSION['user']['UserId'], $entity_id, $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER']);
+
+                $db->query($query, $arrayPDO);
                 if($_SESSION['history']['addressadd'])
                 {
-                    $this->query("select id from ".$_SESSION['tablename']['contact_addresses']." where lastname = '".$this->protect_string_db($_SESSION['m_admin']['address']['LASTNAME'])."' and firstname = '".$this->protect_string_db($_SESSION['m_admin']['address']['FIRSTNAME'])."' and society = '".$this->protect_string_db($_SESSION['m_admin']['address']['SOCIETY'])."' and function = '".$this->protect_string_db($_SESSION['m_admin']['address']['FUNCTION'])."' and is_corporate_person = '".$this->protect_string_db($_SESSION['m_admin']['address']['IS_CORPORATE_PERSON'])."'");
-                    $res = $this->fetch_object();
+                    $stmt = $db->query("SELECT id FROM ".$_SESSION['tablename']['contact_addresses']." WHERE 
+                        lastname = ? and firstname = ? and society = ? and function = ? and is_corporate_person = ?", 
+                        array($_SESSION['m_admin']['address']['LASTNAME'], $_SESSION['m_admin']['address']['FIRSTNAME'], $_SESSION['m_admin']['address']['SOCIETY'], $_SESSION['m_admin']['address']['FUNCTION'], $_SESSION['m_admin']['address']['IS_CORPORATE_PERSON']));
+                    $res = $stmt->fetchObject();
                     $id = $res->contact_id;
                     if($_SESSION['m_admin']['address']['IS_CORPORATE_PERSON'] == 'Y')
                     {
@@ -1624,31 +1534,39 @@ class contacts_v2 extends dbquery
             }
             elseif($mode == "up")
             {
-                $query = "update ".$_SESSION['tablename']['contact_addresses']." 
-                      set contact_purpose_id = '".$_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']."'
-                        , departement = '".$this->protect_string_db($_SESSION['m_admin']['address']['DEPARTEMENT'])."'
-                        , firstname = '".$this->protect_string_db($_SESSION['m_admin']['address']['FIRSTNAME'])."'
-                        , lastname = '".$this->protect_string_db($_SESSION['m_admin']['address']['LASTNAME'])."'
-                        , title = '".$this->protect_string_db($_SESSION['m_admin']['address']['TITLE'])."'
-                        , function = '".$this->protect_string_db($_SESSION['m_admin']['address']['FUNCTION'])."'
-                        , phone = '".$this->protect_string_db($_SESSION['m_admin']['address']['PHONE'])."'
-                        , email = '".$this->protect_string_db($_SESSION['m_admin']['address']['MAIL'])."'
-                        , occupancy = '".$this->protect_string_db($_SESSION['m_admin']['address']['OCCUPANCY'])."'
-                        , address_num = '".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_NUM'])."'
-                        , address_street = '".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_STREET'])."'
-                        , address_complement = '".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_COMP'])."'
-                        , address_town = '".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_TOWN'])."'
-                        , address_postal_code = '".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_CP'])."'
-                        , address_country = '".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_COUNTRY'])."'
-                        , website = '".$this->protect_string_db($_SESSION['m_admin']['address']['WEBSITE'])."'
-                        , other_data = '".$this->protect_string_db($_SESSION['m_admin']['address']['OTHER_DATA'])."'
-                        , is_private = '".$this->protect_string_db($_SESSION['m_admin']['address']['IS_PRIVATE'])."'
-                        , salutation_header = '".$this->protect_string_db($_SESSION['m_admin']['address']['SALUTATION_HEADER'])."'
-                        , salutation_footer = '".$this->protect_string_db($_SESSION['m_admin']['address']['SALUTATION_FOOTER'])."'";
+                $query = "UPDATE ".$_SESSION['tablename']['contact_addresses']." 
+                      SET contact_purpose_id = ?
+                        , departement = ?
+                        , firstname = ?
+                        , lastname = ?
+                        , title = ?
+                        , function = ?
+                        , phone = ?
+                        , email = ?
+                        , occupancy = ?
+                        , address_num = ?
+                        , address_street = ?
+                        , address_complement = ?
+                        , address_town = ?
+                        , address_postal_code = ?
+                        , address_country = ?
+                        , website = ?
+                        , other_data = ?
+                        , is_private = ?
+                        , salutation_header = ?
+                        , salutation_footer = ?";
 
-                $query .=" where id = ".$_SESSION['m_admin']['address']['ID'];
+                $query .=" WHERE id = ?";
 
-                $this->query($query);
+                $arrayPDO = array($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'], $_SESSION['m_admin']['address']['DEPARTEMENT'], $_SESSION['m_admin']['address']['FIRSTNAME'],
+                    $_SESSION['m_admin']['address']['LASTNAME'], $_SESSION['m_admin']['address']['TITLE'], $_SESSION['m_admin']['address']['FUNCTION'], $_SESSION['m_admin']['address']['PHONE'],
+                    $_SESSION['m_admin']['address']['MAIL'], $_SESSION['m_admin']['address']['OCCUPANCY'], $_SESSION['m_admin']['address']['ADD_NUM'], $_SESSION['m_admin']['address']['ADD_STREET'], $_SESSION['m_admin']['address']['ADD_COMP'],
+                    $_SESSION['m_admin']['address']['ADD_TOWN'], $_SESSION['m_admin']['address']['ADD_CP'], $_SESSION['m_admin']['address']['ADD_COUNTRY'], $_SESSION['m_admin']['address']['WEBSITE'], 
+                    $_SESSION['m_admin']['address']['OTHER_DATA'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER'],
+                    $_SESSION['m_admin']['address']['ID']);
+
+
+                $db->query($query, $arrayPDO);
                 if($_SESSION['history']['contactup'])
                 {
                     $msg =  _ADDRESS_EDITED.' : '.$this->protect_string_db($_SESSION['m_admin']['address']['SOCIETY']).' '.$this->protect_string_db($_SESSION['m_admin']['address']['LASTNAME'].' '.$_SESSION['m_admin']['address']['FIRSTNAME']);
@@ -1854,9 +1772,9 @@ class contacts_v2 extends dbquery
     * @param string $table
     */
     public function get_label_contact($contact_type_id, $table){
-        $this->connect();
-        $this->query('select label from '.$table . ' where id = '.$contact_type_id);
-        $res = $this->fetch_object();
+        $db = new Database();
+        $stmt = $db->query('SELECT label FROM '.$table . ' WHERE id = ?',array($contact_type_id));
+        $res = $stmt->fetchObject();
         return $this->show_string($res->label);
     }
 
@@ -1897,7 +1815,7 @@ class contacts_v2 extends dbquery
 
     public function type_purpose_address_del($id, $admin = true, $tablename, $mode='contact_type', $deleted_sentence, $warning_sentence, $title, $reaffect_sentence, $new_sentence, $choose_sentence, $page_return, $page_del, $name){
         $nb_elements = 0;
-        $this->connect();
+        $db = new Database();
         $order = $_REQUEST['order'];
         $order_field = $_REQUEST['order_field'];
         $start = $_REQUEST['start'];
@@ -1914,20 +1832,20 @@ class contacts_v2 extends dbquery
         if(!empty($id))
         {
             if ($mode == 'contact_type') {
-                $this->query("select contact_id from ".$_SESSION['tablename']['contacts_v2'] 
-                . " where contact_type = ". $id );
+                $stmt = $db->query("SELECT contact_id FROM ".$_SESSION['tablename']['contacts_v2'] 
+                . " WHERE contact_type = ?", array($id));
             } else if ($mode == 'contact_purpose'){
-                $this->query("select id from ".$_SESSION['tablename']['contact_addresses']
-                    . " where contact_purpose_id = ". $id );
+                $stmt = $db->query("SELECT id FROM ".$_SESSION['tablename']['contact_addresses']
+                    . " WHERE contact_purpose_id = ?", array($id));
             } else if ($mode == 'contact_address'){
-                $this->query("select address_id from mlb_coll_ext where address_id = ". $id );
+                $stmt = $db->query("SELECT address_id FROM mlb_coll_ext WHERE address_id = ?", array($id));
             }
             
-            if($this->nb_result() > 0)$nb_elements = $nb_elements + $this->nb_result();
+            if($stmt->rowCount() > 0)$nb_elements = $nb_elements + $stmt->rowCount();
             // $this->show(); 
             if ($mode == 'contact_address'){
-                $this->query("select address_id from contacts_res where address_id = ". $id );
-                if($this->nb_result() > 0)$nb_elements = $nb_elements + $this->nb_result();
+                $stmt = $db->query("SELECT address_id FROM contacts_res WHERE address_id = ?", array($id));
+                if($stmt->rowCount() > 0)$nb_elements = $nb_elements + $stmt->rowCount();
             }
                 ?>
 
@@ -1947,7 +1865,7 @@ class contacts_v2 extends dbquery
 
             if ($nb_elements == 0 && $mode != "contact_address" )
             {
-                $this->query("DELETE FROM ".$tablename." WHERE id = ".$id);
+                $db->query("DELETE FROM ".$tablename." WHERE id = ?", array($id));
 
                 if($_SESSION['history'][$page_del] == "true")
                 {
@@ -1995,9 +1913,9 @@ class contacts_v2 extends dbquery
                         <?php
                             if($mode == 'contact_address'){ 
 
-                                $this->query("SELECT * FROM ".$_SESSION['tablename']['contacts_v2'] 
-                                . " WHERE contact_id = ". $_SESSION['contact']['current_contact_id'] );                                
-                                while($line = $this->fetch_object())
+                                $stmt = $db->query("SELECT * FROM ".$_SESSION['tablename']['contacts_v2'] 
+                                . " WHERE contact_id = ?", array($_SESSION['contact']['current_contact_id']));                                
+                                while($line = $stmt->fetchObject())
                                 {
                                     $CurrentContact = $this->get_label_contact($line->contact_type, $_SESSION['tablename']['contact_types']) . ' : ';
                                     if($line->is_corporate_person == 'N'){
@@ -2059,9 +1977,9 @@ class contacts_v2 extends dbquery
                                     <input type="hidden" id="new" name="new" />
                                 <?php
                             }else{
-                                $this->query("select id, label from ".$tablename." where id <> ".$id);
+                                $stmt = $db->query("SELECT id, label FROM ".$tablename." WHERE id <> ?", array($id));
 
-                                while ($res = $this->fetch_object()) {
+                                while ($res = $stmt->fetchObject()) {
                                     $array[$res->id] = $this->protect_string_db($res->label);
                                 }
                             ?>
@@ -2386,14 +2304,14 @@ class contacts_v2 extends dbquery
     }
 
     function contactEnabled($userId, $mode) {
-        $this->connect();
-        $this->query("UPDATE contacts_v2 SET enabled = '".$mode."' WHERE contact_id = '".$userId."'");
-        $this->query("UPDATE contact_addresses SET enabled = '".$mode."' WHERE contact_id = '".$userId."'");
+        $db = new Database();
+        $db->query("UPDATE contacts_v2 SET enabled = ? WHERE contact_id = ?", array($mode, $userId));
+        $db->query("UPDATE contact_addresses SET enabled = ? WHERE contact_id = ?", array($mode, $userId));
     }
 
     function addressEnabled($addressId, $mode) {
-        $this->connect();
-        $this->query("UPDATE contact_addresses SET enabled = '".$mode."' WHERE id = '".$addressId."'");
+        $db = new Database();
+        $db->query("UPDATE contact_addresses SET enabled = ? WHERE id = ?", array($mode, $addressId));
     }
 
 }

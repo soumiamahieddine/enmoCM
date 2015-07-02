@@ -507,16 +507,15 @@ class business_app_tools extends dbquery
         } else {
             $_SESSION['maarch_entreprise']['xml_versionbase'] = 'none';
         }
-        $checkBase = new dbquery();
-        $checkBase->connect();
-        $query = "select param_value_int from " . PARAM_TABLE
-               . " where id = 'database_version'";
+        $checkBase = new Database();
+        $query = "SELECT param_value_int FROM " . PARAM_TABLE
+               . " WHERE id = 'database_version'";
 
-        $checkBase->query($query); //Find value in parameters table on database
-        if ($checkBase->nb_result() == 0) {
+        $stmt = $checkBase->query($query); //Find value in parameters table on database
+        if ($stmt->rowCount() == 0) {
             $_SESSION['maarch_entreprise']['database_version'] = "none";
         } else {
-            $vbg = $checkBase->fetch_object();
+            $vbg = $stmt->fetchObject();
             $_SESSION['maarch_entreprise']
                 ['database_version'] = $vbg->param_value_int;
         }
@@ -569,12 +568,12 @@ class business_app_tools extends dbquery
     private function _loadCurrentFolder($userId)
     {
         if (isset($userId)) {
-            $this->connect();
-            $this->query(
-                "select custom_t1 from " . USERS_TABLE . " where user_id = '"
-                . $userId . "'"
+            $db = new Database();
+            $stmt = $db->query(
+                "SELECT custom_t1 FROM " . USERS_TABLE . " WHERE user_id = ?",
+                array($userId)
             );
-            $res = $this->fetch_object();
+            $res = $stmt->fetchObject();
 
             $_SESSION['current_folder_id'] = $res->custom_t1;
         }

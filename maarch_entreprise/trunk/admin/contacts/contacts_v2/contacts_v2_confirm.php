@@ -110,7 +110,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 <?php
 
 $query = $contact->query_contact_exists($_GET['mode']);
-$stmt = $db->query($query);
+$stmt = $db->query($query['query'], $query['params']);
 $tab = array();
 while ($res = $stmt->fetch(PDO::FETCH_ASSOC)){
     $temp= array();

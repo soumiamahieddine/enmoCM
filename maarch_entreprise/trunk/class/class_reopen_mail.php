@@ -64,6 +64,7 @@ class ReopenMail extends dbquery
     */
     public function update_db()
     {
+        $db = new Database();
         // add ou modify users in the database
         $this->reopen_mail_check();
         if (! empty($_SESSION['error'])) {
@@ -81,25 +82,23 @@ class ReopenMail extends dbquery
             $sec = new security();
             $ind_coll = $sec->get_ind_collection('letterbox_coll');
             $table = $_SESSION['collections'][$ind_coll]['table'];
-            $this->connect();
+
             if (!empty($_SESSION['m_admin']['reopen_mail']['REF_ID'])) { 
-                $this->query(
-                    "select res_id, alt_identifier, status from res_view_letterbox where alt_identifier = '" 
-                        . $_SESSION['m_admin']['reopen_mail']['REF_ID'] . "'"
+                $stmt = $db->query(
+                    "SELECT res_id, alt_identifier, status FROM res_view_letterbox WHERE alt_identifier = ?", array($_SESSION['m_admin']['reopen_mail']['REF_ID'])
                 );
-                $result_object=$this->fetch_object();
+                $result_object=$stmt->fetchObject();
                 $res_id = $result_object->res_id;
                 $_SESSION['m_admin']['reopen_mail']['ID'] = $res_id;
                 $errorMsg = _REF_ID . ' ' . _UNKNOWN;
             } elseif (!empty($_SESSION['m_admin']['reopen_mail']['ID'])) {
-                $this->query(
-                    'select res_id, alt_identifier, status from res_view_letterbox where res_id = ' 
-                        . $_SESSION['m_admin']['reopen_mail']['ID'] 
+                $stmt = $db->query(
+                    'SELECT res_id, alt_identifier, status FROM res_view_letterbox WHERE res_id = ?', array($_SESSION['m_admin']['reopen_mail']['ID']) 
                 );
                 $errorMsg = _GED_ID . ' ' . _UNKNOWN;
             }
             
-            if ($this->nb_result() == 0) {
+            if ($stmt->rowCount() == 0) {
                 $_SESSION['error'] = $errorMsg;
                 header(
                     'location: ' . $_SESSION['config']['businessappurl']
@@ -108,30 +107,15 @@ class ReopenMail extends dbquery
                     . '&admin=reopen_mail'
                 );
                 exit();
-            } /*else {
-                $resultRes = $this->fetch_object();
-
-                if ($resultRes->status <> "END" && $resultRes->status <> "CLO" && $resultRes->status <> "CLOS" && $resultRes->status <> "VAL" && $resultRes->status <> "NEW" && $resultRes->status <> "DEL" && $resultRes->status <> "COU") {
-                    $_SESSION['error'] = _DOC_NOT_CLOSED;
-                    header(
-                        'location: ' . $_SESSION['config']['businessappurl']
-                        . 'index.php?page=reopen_mail&id='
-                        . $_SESSION['m_admin']['reopen_mail']['ID']
-                        . '&admin=reopen_mail'
-                    );
-                    exit();
-                }
-            }*/
+            }
             
-            $this->query(
-                'update ' . $table . " set status = '".$_REQUEST['status_id']."' where res_id = "
-                . $_SESSION['m_admin']['reopen_mail']['ID']
+            $db->query(
+                'UPDATE ' . $table . " SET status = ? where res_id = ?"
+                , array($_REQUEST['status_id'], $_SESSION['m_admin']['reopen_mail']['ID'])
             );
-            $db = new dbquery();
-            $db->connect();
 
-            $db->query("SELECT  id, label_status from status where id = '".$_REQUEST['status_id']."'");
-            while ( $line = $db->fetch_object()) {$label_status = $line->label_status;}
+            $stmt = $db->query("SELECT id, label_status FROM status WHERE id = ?", array($_REQUEST['status_id']));
+            while ( $line = $stmt->fetchObject()) {$label_status = $line->label_status;}
 
             $historyMsg = _MODIFICATION_OF_THE_STATUS_FROM_THIS_MAIL .$label_status. ' du courrier ';
             if ($resultRes->alt_identifier <> '') {
@@ -167,15 +151,14 @@ class ReopenMail extends dbquery
     */
     public function formreopenmail()
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
 
-        $db->query(
-            "SELECT  id, label_status from status where is_folder_status = 'N' ");
+        $stmt = $db->query(
+            "SELECT  id, label_status FROM status WHERE is_folder_status = 'N' ");
 
         $notesList = '';
-        if ($db->nb_result() < 1) {
-            $notesList = 'no contact or error query';
+        if ($stmt->rowCount() < 1) {
+            $notesList = 'No contact or error query';
         }
 
         ?>
@@ -196,7 +179,7 @@ class ReopenMail extends dbquery
           <?php echo _CHOOSE_STATUS;?> : 
                                         <SELECT NAME='status_id'>
                                         <?php 
-                                        while ( $line = $db->fetch_object()) {
+                                        while ( $line = $stmt->fetchObject()) {
                                             echo "<OPTION VALUE='".$line->id."'>".$line->label_status."</OPTION>";
                                         }
                                         ?>

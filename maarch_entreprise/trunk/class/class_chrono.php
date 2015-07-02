@@ -19,13 +19,12 @@ class chrono
 {
     public function get_chrono_number($resId, $view)
     {
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
-            "select alt_identifier from " . $view . " where res_id = "
-            . $resId . " "
+        $db = new Database();
+        $stmt = $db->query(
+            "SELECT alt_identifier FROM " . $view . " where res_id = ?",
+            array($resId)
         );
-        $res = $db->fetch_object();
+        $res = $stmt->fetchObject();
         return $res->alt_identifier;
     }
     /**
@@ -190,17 +189,16 @@ class chrono
 
     public function execute_chrono_for_this_year()
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         //Get the crono key for this year
-        $db->query(
-            "SELECT param_value_int from " . PARAM_TABLE
-            . " where id = 'chrono_global_" . date('Y') . "' "
+        $stmt = $db->query(
+            "SELECT param_value_int FROM " . PARAM_TABLE
+            . " WHERE id = 'chrono_global_" . date('Y') . "' "
         );
-        if ($db->nb_result() == 0) {
+        if ($stmt->rowCount() == 0) {
             $chrono = $this->_createNewChronoGlobal($db);
         } else {
-            $fetch = $db->fetch_object();
+            $fetch = $stmt->fetchObject();
             $chrono = $fetch->param_value_int;
         }
         $this->_updateChronoForThisYear($chrono, $db);
@@ -209,20 +207,20 @@ class chrono
 
     public function execute_chrono_by_res_id($res_id)
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         //Get res_id of document
         if($res_id==''){
-            $db->query(
-                "SELECT res_id from res_letterbox ORDER BY res_id DESC LIMIT 1"
+            $stmt = $db->query(
+                "SELECT res_id FROM res_letterbox ORDER BY res_id DESC LIMIT 1"
             );
         }else{
-            $db->query(
-                "SELECT res_id from res_letterbox WHERE res_id='".$res_id."'"
+            $stmt = $db->query(
+                "SELECT res_id FROM res_letterbox WHERE res_id=?",
+                array($res_id)
             );
         }
 
-        $fetch = $db->fetch_object();
+        $fetch = $stmt->fetchObject();
         $chrono = $fetch->res_id;
         return $chrono;
     }
@@ -230,17 +228,17 @@ class chrono
 
     public function execute_chrono_by_entity($entity)
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         //Get the crono key for this year
-        $db->query(
-            "SELECT param_value_int from " . PARAM_TABLE
-            . " where id = 'chrono_" . $entity . "_" . date('Y') . "' "
+        $stmt = $db->query(
+            "SELECT param_value_int FROM " . PARAM_TABLE
+            . " WHERE id = ?",
+            array('chrono_' . $entity . '_' . date('Y'))
         );
-        if ($db->nb_result() == 0) {
+        if ($stmt->rowCount() == 0) {
             $chrono = $this->_createNewChronoForEntity($db, $entity);
         } else {
-            $fetch = $db->fetch_object();
+            $fetch = $stmt->fetchObject();
             $chrono = $fetch->param_value_int;
         }
         $this->_updateChronoForEntity($chrono, $db, $entity);
@@ -250,17 +248,17 @@ class chrono
 
     public function execute_chrono_by_category($category)
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         //Get the crono key for this year
-        $db->query(
-            "SELECT param_value_int from " . PARAM_TABLE
-            . " where id = 'chrono_" . $category . "_" . date('Y') . "' "
+        $stmt = $db->query(
+            "SELECT param_value_int FROM " . PARAM_TABLE
+            . " WHERE id = ?",
+            array('chrono_' . $category . '_' . date('Y'))
         );
-        if ($db->nb_result() == 0) {
+        if ($stmt->rowCount() == 0) {
             $chrono = $this->_createNewChronoForCategory($db, $category);
         } else {
-            $fetch = $db->fetch_object();
+            $fetch = $stmt->fetchObject();
             $chrono = $fetch->param_value_int;
         }
         $this->_updateChronoForCategory($chrono, $db, $category);
@@ -271,18 +269,18 @@ class chrono
 
     public function execute_chrono_by_folder($folder)
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $folders_system_id = $_SESSION['folderId'];
         //Get the crono key for this folder
-        $db->query(
-                "SELECT param_value_int from " . PARAM_TABLE
-            . " where id = 'chrono_folder_" . $folders_system_id .  "' "
+        $stmt = $db->query(
+                "SELECT param_value_int FROM " . PARAM_TABLE
+            . " WHERE id = ? ",
+            array('chrono_folder_' . $folders_system_id)
         );
-        if ($db->nb_result() == 0) {
+        if ($stmt->rowCount() == 0) {
                 $chrono = $this->_createNewChronoForFolder($db, $folder);
         } else {
-                $fetch = $db->fetch_object();
+                $fetch = $stmt->fetchObject();
                 $chrono = $fetch->param_value_int;
         }
         $this->_updateChronoForFolder($chrono, $db, $folder);
@@ -309,8 +307,8 @@ class chrono
     {
         $actualChrono++;
         $db->query(
-            "UPDATE " . PARAM_TABLE . " SET param_value_int = '" . $actualChrono
-            . "'  WHERE id = 'chrono_global_" . date('Y') . "' "
+            "UPDATE " . PARAM_TABLE . " SET param_value_int = ?  WHERE id = 'chrono_global_" . date('Y') . "' ",
+            array($actualChrono)
         );
     }
 
@@ -329,8 +327,8 @@ class chrono
     {
         $actualChrono++;
         $db->query(
-            "UPDATE " . PARAM_TABLE . " SET param_value_int = '" . $actualChrono
-            . "' WHERE id = 'chrono_" . $category . "_" . date('Y') . "' "
+            "UPDATE " . PARAM_TABLE . " SET param_value_int = ? WHERE id = ? ",
+            array($actualChrono, 'chrono_' . $category . '_' . date('Y'))
         );
     }
 
@@ -338,7 +336,8 @@ class chrono
     {
         $db->query(
             "INSERT INTO " . PARAM_TABLE . " (id, param_value_int) VALUES "
-            . "('chrono_" . $category . "_" . date('Y') . "', '1')"
+            . "(?, '1')",
+            array('chrono_' . $category . '_' . date('Y'))
         );
         return 1;
     }
@@ -349,8 +348,8 @@ class chrono
     {
         $actualChrono++;
         $db->query(
-            "UPDATE " . PARAM_TABLE . " SET param_value_int = '" . $actualChrono
-            . "'  WHERE id = 'chrono_" . $entity . "_" . date('Y') . "' "
+            "UPDATE " . PARAM_TABLE . " SET param_value_int = ?  WHERE id = ? ",
+            array($actualChrono, 'chrono_' . $entity . '_' . date('Y'))
         );
     }
 
@@ -358,7 +357,8 @@ class chrono
     {
         $db->query(
             "INSERT INTO " . PARAM_TABLE . " (id, param_value_int) VALUES "
-            . "('chrono_" . $entity . "_" . date('Y') . "', '1')"
+            . "(?, '1')",
+            array('chrono_' . $entity . '_' . date('Y'))
         );
         return 1;
     }
@@ -368,8 +368,8 @@ class chrono
     {
         $actualChrono++;
         $db->query(
-                "UPDATE " . PARAM_TABLE . " SET param_value_int = '" . $actualChrono
-            . "'  WHERE id = 'chrono_folder_" . $folder .  "' "
+                "UPDATE " . PARAM_TABLE . " SET param_value_int = ?  WHERE id = ? ",
+            array($actualChrono, 'chrono_folder_' . $folder)
         );
     }
     
@@ -377,7 +377,8 @@ class chrono
     {
         $db->query(
                 "INSERT INTO " . PARAM_TABLE . " (id, param_value_int) VALUES "
-            . "('chrono_folder_" . $folder .  "', '1')"
+            . "(?, '1')",
+            array('chrono_folder_' . $folder)
         );
         return 1;
     }

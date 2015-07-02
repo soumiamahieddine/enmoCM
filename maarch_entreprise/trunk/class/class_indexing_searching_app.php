@@ -173,6 +173,7 @@ class indexing_searching_app extends dbquery
         $data_ext = array();
         $request = new request();
         $core = new core_tools();
+        $db = new Database();
 
         $table = $sec->retrieve_table_from_coll($coll_id);
         $view = $sec->retrieve_view_from_coll_id($coll_id);
@@ -199,10 +200,11 @@ class indexing_searching_app extends dbquery
             <?php
             exit();
         }
-        $where = "res_id = ".$id_to_update;
-        $request->connect();
-        $request->query("select category_id from ".$view." where ".$where);
-        $res = $request->fetch_object();
+        $where = "res_id = ? ";
+        $arrayPDO = array($id_to_update);
+
+        $stmt = $db->query("SELECT category_id FROM ".$view." WHERE res_id = ?", array($id_to_update));
+        $res = $stmt->fetchObject();
         $cat_id = $res->category_id;
         if (empty($cat_id) || !isset($cat_id))
         {
@@ -303,9 +305,9 @@ class indexing_searching_app extends dbquery
         
         if ($core->is_module_loaded('folder'))
         {
-            $request->connect();
-            $request->query("select folders_system_id from ".$table." where res_id = ".$id_to_update);
-            $res = $request->fetch_object();
+
+            $stmt = $db->query("SELECT folders_system_id FROM ".$table." WHERE res_id = ?", array($id_to_update));
+            $res = $stmt->fetchObject();
             $old_folder_id = $res->folders_system_id;
             $market = '';
             if (isset($post['folder']))
@@ -328,8 +330,8 @@ class indexing_searching_app extends dbquery
                     $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['market']['label']." "._WRONG_FORMAT." <br/>";
                 }
                 $market_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
-                $request->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id);
-                if ($request->nb_result() == 0)
+                $stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($market_id));
+                if ($stmt->rowCount() == 0)
                 {
                     $_SESSION['error'] .= _MARKET.' '.$market_id.' '._UNKNOWN.'<br/>';
                 }
@@ -353,16 +355,16 @@ class indexing_searching_app extends dbquery
                     $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['project']['label']." "._WRONG_FORMAT." <br/>";
                 }
                 $project_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
-                $request->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$project_id);
-                if ($request->nb_result() == 0)
+                $stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($project_id));
+                if ($stmt->rowCount() == 0)
                 {
                     $_SESSION['error'] .= _MARKET.' '.$project_id.' '._UNKNOWN.'<br/>';
                 }
             }
             if (!empty($project_id) && !empty($market_id))
             {
-                $request->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id." and parent_id = ".$project_id);
-                if ($request->nb_result() == 0)
+                $stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ? and parent_id = ?", array($market_id, $project_id));
+                if ($stmt->rowCount() == 0)
                 {
                     $_SESSION['error'] .= _INCOMPATIBILITY_MARKET_PROJECT.'<br/>';
                 }
@@ -417,10 +419,10 @@ class indexing_searching_app extends dbquery
             $type->inits_opt_indexes($coll_id, $id_to_update);
             //$request->show_array($data_res);
             //exit();
-            $request->update($table, $data_res, $where, $_SESSION['config']['databasetype']);
+            $request->PDOupdate($table, $data_res, $where, $arrayPDO, $_SESSION['config']['databasetype']);
             if (count($data_ext) > 0)
             {
-                $request->update($table_ext, $data_ext, $where, $_SESSION['config']['databasetype']);
+                $request->PDOupdate($table_ext, $data_ext, $where, $arrayPDO, $_SESSION['config']['databasetype']);
             }
             $_SESSION['info'] = _INDEX_UPDATED." (".strtolower(_NUM).$id_to_update.")";
 
@@ -478,8 +480,9 @@ class indexing_searching_app extends dbquery
             $request = new request();
             $data = array();
             array_push($data, array('column' => 'status', 'value' => 'DEL', 'type' => 'string'));
-            $where = "res_id = ".$id_to_delete;
-            $request->update($table, $data, $where, $_SESSION['config']['databasetype']);
+            $where = "res_id = ? ";
+            $arrayPDO = array($id_to_delete);
+            $request->PDOupdate($table, $data, $where, $arrayPDO, $_SESSION['config']['databasetype']);
             $_SESSION['error'] = _DOC_DELETED." ("._NUM." : ".$id_to_delete.")";
             if ($_SESSION['history']['resdel'])
             {
@@ -513,8 +516,9 @@ class indexing_searching_app extends dbquery
             $request = new request();
             $data = array();
             array_push($data, array('column' => 'status', 'value' => $status, 'type' => 'string'));
-            $where = "res_id = ".$idDoc;
-            $request->update($table, $data, $where, $_SESSION['config']['databasetype']);
+            $where = "res_id = ?";
+            $arrayPDO = array($idDoc);
+            $request->PDOupdate($table, $data, $where, $arrayPDO, $_SESSION['config']['databasetype']);
             $_SESSION['error'] = _UPDATE_DOC_STATUS." ("._NUM." : ".$idDoc.") "._TO." ".$status;
             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
             $hist = new history();
@@ -806,13 +810,12 @@ class indexing_searching_app extends dbquery
         {
             $view = $sec->retrieve_table_from_coll($coll_id);
         }
-        $db = new dbquery();
-        $db->connect();
-        $db->query("select answer_type_bitmask, process_notes, other_answer_desc from ".$view." where res_id = ".$res_id);
-        $res = $db->fetch_object();
+        $db = new Database();
+        $stmt = $db->query("SELECT answer_type_bitmask, process_notes, other_answer_desc FROM ".$view." WHERE res_id = ?", array($res_id));
+        $res = $stmt->fetchObject();
         $bitmask = $res->answer_type_bitmask;
-        $process_notes = $db->show_string($res->process_notes);
-        $other_answer_desc = $db->show_string($res->other_answer_desc);
+        $process_notes = functions::show_string($res->process_notes);
+        $other_answer_desc = functions::show_string($res->other_answer_desc);
         $contact = false;
         $mail = false;
         $AR = false;

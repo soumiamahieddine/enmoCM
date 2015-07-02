@@ -41,6 +41,7 @@ class class_users extends dbquery
     */
     public function user_modif()
     {
+        $db = new Database();
         $_SESSION['user']['FirstName'] = $this->wash(
             $_POST['FirstName'], 'no', _FIRSTNAME
         );
@@ -59,7 +60,6 @@ class class_users extends dbquery
                 $_POST['Phone'], 'phone', _PHONE, "no", "",32
             );
         }
-
         
         if ($_SESSION['config']['ldap'] != "true") {
             $_SESSION['user']['pass2'] = $this->wash(
@@ -151,31 +151,23 @@ class class_users extends dbquery
         }
 
         if (empty($_SESSION['error'])) {
-            $firstname = $this->protect_string_db(
-                $_SESSION['user']['FirstName']
-            );
-            $lastname = $this->protect_string_db($_SESSION['user']['LastName']);
-            $department = $this->protect_string_db(
-                $_SESSION['user']['department']
-            );
-            $this->connect();
+            $firstname = $_SESSION['user']['FirstName'];
+            $lastname = $_SESSION['user']['LastName'];
+            $department = $_SESSION['user']['department'];
 
-            $query = "update " . USERS_TABLE . " set";
+            $query = "UPDATE " . USERS_TABLE . " SET";
 
+            $arrayPDO = array();
             if ($_SESSION['config']['ldap'] != "true") {
-                $query .= " password = '" . md5($_SESSION['user']['pass1']) . "',";
+                $query .= " password = ?,";
+                $arrayPDO = array_merge($arrayPDO, array(md5($_SESSION['user']['pass1'])));
             }
 
-            $query .= " firstname = '"
-                . $firstname . "', lastname = '" . $lastname . "', phone = '"
-                . $_SESSION['user']['Phone'] . "', mail = '"
-                . $_SESSION['user']['Mail'] . "' , department = '" . $department
-                . "', thumbprint = '" . $_SESSION['user']['thumbprint']
-                . "', signature_path = '" . $_SESSION['user']['signature_path']
-                . "', signature_file_name = '" . $_SESSION['user']['signature_file_name']
-                . "' where user_id = '" . $_SESSION['user']['UserId'] . "'"; 
+            $query .= " firstname = ?, lastname = ?, phone = ?, mail = ? , department = ?, thumbprint = ?, signature_path = ?, signature_file_name = ? WHERE user_id = ?"; 
 
-            $this->query($query);
+            $arrayPDO = array_merge($arrayPDO, array($firstname, $lastname, $_SESSION['user']['Phone'], $_SESSION['user']['Mail'], $department, $_SESSION['user']['thumbprint'],
+                $_SESSION['user']['signature_path'], $_SESSION['user']['signature_file_name'], $_SESSION['user']['UserId']));
+            $db->query($query, $arrayPDO);
 
             if ($_SESSION['history']['usersup'] == 'true') {
                 require_once 'core' . DIRECTORY_SEPARATOR . 'class'
@@ -211,6 +203,7 @@ class class_users extends dbquery
     public function change_info_user()
     {
         $core = new core_tools();
+        $db = new Database();
         ?>
         <h1><i class="fa fa-user fa-2x" title=""></i> <?php echo _MY_INFO;?></h1>
 
@@ -222,15 +215,16 @@ class class_users extends dbquery
                          <h2 class="tit"><?php echo _USER_ENTITIES_TITLE;?> : </h2>
                             <ul id="my_profil" style="height:280px;overflow:auto;">
                          <?php
-                            $this->query("SELECT e.entity_label, ue.primary_entity FROM ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e
-                            where ue.user_id ='".$_SESSION['user']['UserId']."' and ue.entity_id = e.entity_id order by e.entity_label");
-                            if($this->nb_result() < 1)
+                            $stmt = $db->query("SELECT e.entity_label, ue.primary_entity FROM ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e
+                            WHERE ue.user_id = ? and ue.entity_id = e.entity_id order by e.entity_label",
+                            array($_SESSION['user']['UserId']));
+                            if($stmt->rowCount() < 1)
                             {
                                 echo _USER_BELONGS_NO_ENTITY.".";
                             }
                             else
                             {
-                                while($line = $this->fetch_object())
+                                while($line = $stmt->fetchObject())
                                 {
                                     if($line->primary_entity == 'Y'){
                                         echo "<li style='list-style-position:inside;padding:5px;'><i class=\"fa fa-arrow-right\"></i> ".$line->entity_label." </li>";
@@ -250,18 +244,18 @@ class class_users extends dbquery
                  <h2 class="tit"><?php echo _USER_GROUPS_TITLE;?> : </h2>
                      <ul id="my_profil" style="height:280px;overflow:auto;">
                       <?php
-            $this->connect();
-            $this->query(
+
+            $stmt = $db->query(
                 "SELECT u.group_desc, uc.primary_group FROM " . USERGROUP_CONTENT_TABLE . " uc, "
-                . USERGROUPS_TABLE ." u where uc.user_id ='"
-                . $_SESSION['user']['UserId'] . "' and uc.group_id = u.group_id"
-                . " order by u.group_desc"
+                . USERGROUPS_TABLE ." u WHERE uc.user_id = ? and uc.group_id = u.group_id"
+                . " order by u.group_desc",
+                array($_SESSION['user']['UserId'])
             );
 
-            if ($this->nb_result() < 1) {
+            if ($stmt->rowCount() < 1) {
                 echo _USER_BELONGS_NO_GROUP . ".";
             } else {
-                while ($line = $this->fetch_object()) {
+                while ($line = $stmt->fetchObject()) {
                     if($line->primary_group == 'Y'){
                         echo "<li style='list-style-position:inside;padding:5px;'><i class=\"fa fa-arrow-right\"></i> ".$line->group_desc." </li>";
                     }else{
@@ -399,23 +393,23 @@ class class_users extends dbquery
     */
     public function get_user($user_id) {
         if (!empty($user_id)) {
-            $this->connect();
-            $this->query(
-                "select user_id, firstname, lastname, mail, phone, status, thumbprint, signature_path, signature_file_name from " 
-                . USERS_TABLE . " where user_id = '" . $user_id . "'"
+            $db = new Database();
+            $stmt = $db->query(
+                "SELECT user_id, firstname, lastname, mail, phone, status, thumbprint, signature_path, signature_file_name FROM " 
+                . USERS_TABLE . " WHERE user_id = ?",
+                array($user_id)
             );
-            if ($this->nb_result() >0) {
-                $line = $this->fetch_object();
+            if ($stmt->rowCount() >0) {
+                $line = $stmt->fetchObject();
                 if ($line->signature_path <> '' 
                     && $line->signature_file_name <> '' 
                 ) {
-                    $db = new dbquery();
-                    $db->connect();
-                    $query = "select path_template from " 
+
+                    $query = "SELECT path_template FROM " 
                         . _DOCSERVERS_TABLE_NAME 
-                        . " where docserver_id = 'TEMPLATES'";
-                    $db->query($query);
-                    $resDs = $db->fetch_object();
+                        . " WHERE docserver_id = 'TEMPLATES'";
+                    $stmt = $db->query($query);
+                    $resDs = $stmt->fetchObject();
                     $pathToDs = $resDs->path_template;
                     $pathToSignature = $pathToDs . str_replace(
                             "#", 

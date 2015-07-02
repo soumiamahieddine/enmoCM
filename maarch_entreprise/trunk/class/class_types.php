@@ -40,21 +40,21 @@ class types extends dbquery
         $func = new functions();
         $core = new core_tools();
         $sec = new security();
+        $db = new Database();
         $state = true;
         if (! isset($_SESSION['m_admin']['doctypes'])) {
             $this->cleartypeinfos();
         }
         if ($mode <> "prop" && $mode <> "add") {
-            $this->connect();
-            $this->query(
-                "select * from " . DOCTYPES_TABLE . " where type_id = " . $id
+            $stmt = $db->query(
+                "SELECT * FROM " . DOCTYPES_TABLE . " WHERE type_id = ?", array($id)
             );
-            if ($this->nb_result() == 0) {
+            if ($stmt->rowCount() == 0) {
                 $_SESSION['error'] = _DOCTYPE . ' ' . _ALREADY_EXISTS;
                 $state = false;
             } else {
                 $_SESSION['m_admin']['doctypes'] = array();
-                $line = $this->fetch_object();
+                $line = $stmt->fetchObject();
                 $_SESSION['m_admin']['doctypes']['TYPE_ID'] = $line->type_id;
                 $_SESSION['m_admin']['doctypes']['COLL_ID'] = $line->coll_id;
                 $_SESSION['m_admin']['doctypes']['COLL_LABEL'] = $_SESSION['m_admin']['doctypes']['COLL_ID'];
@@ -260,6 +260,7 @@ class types extends dbquery
     */
     private function typesinfo()
     {
+        $db = new Database();
         $core = new core_tools();
         $func = new functions();
         if (! isset($_REQUEST['mode'])) {
@@ -320,14 +321,14 @@ class types extends dbquery
             $_SESSION['m_admin']['doctypes']['SUB_FOLDER'] = $func->wash(
                 $_REQUEST['sous_dossier'], "no", _THE_SUBFOLDER
             );
-            $this->connect();
-            $this->query(
-                "select doctypes_first_level_id as id from "
+
+            $stmt = $db->query(
+                "SELECT doctypes_first_level_id as id FROM "
                 . $_SESSION['tablename']['doctypes_second_level']
-                . " where doctypes_second_level_id = "
-                . $_REQUEST['sous_dossier']
+                . " WHERE doctypes_second_level_id = ?",
+                 array($_REQUEST['sous_dossier'])
             );
-            $res = $this->fetch_object();
+            $res = $stmt->fetchObject();
             $_SESSION['m_admin']['doctypes']['STRUCTURE'] = $res->id;
         }
         $_SESSION['m_admin']['doctypes']['order'] = $_REQUEST['order'];
@@ -341,6 +342,7 @@ class types extends dbquery
     */
     public function uptypes()
     {
+        $db = new Database();
         // modify, add or validate a doctype
         $core = new core_tools();
         $this->typesinfo();
@@ -381,29 +383,17 @@ class types extends dbquery
         } else {
             $this->connect();
             if ($_REQUEST['mode'] <> "prop" && $_REQUEST['mode'] <> "add") {
-                $this->query(
-                    "update " . DOCTYPES_TABLE . " set description = '"
-                    . $this->protect_string_db(
-                        $_SESSION['m_admin']['doctypes']['LABEL']
-                    ) . "' , doctypes_first_level_id = "
-                    . $_SESSION['m_admin']['doctypes']['STRUCTURE']
-                    . ", doctypes_second_level_id = "
-                    . $_SESSION['m_admin']['doctypes']['SUB_FOLDER']
-                    . ", enabled = 'Y', coll_id = '"
-                    . $this->protect_string_db(
-                        $_SESSION['m_admin']['doctypes']['COLL_ID']
-                    ) . "' where type_id = "
-                    . $_SESSION['m_admin']['doctypes']['TYPE_ID'] . ""
+                $db->query(
+                    "UPDATE " . DOCTYPES_TABLE . " SET description = ? , doctypes_first_level_id = ?, doctypes_second_level_id = ?, enabled = 'Y', coll_id = ? 
+                    WHERE type_id = ?",
+                    array($_SESSION['m_admin']['doctypes']['LABEL'], $_SESSION['m_admin']['doctypes']['STRUCTURE'], $_SESSION['m_admin']['doctypes']['SUB_FOLDER'], 
+                        $_SESSION['m_admin']['doctypes']['COLL_ID'], $_SESSION['m_admin']['doctypes']['TYPE_ID'])
                 );
 
-                $this->query(
-                    "delete from " . DOCTYPES_INDEXES_TABLE . " where coll_id = '"
-                    . $this->protect_string_db(
-                        $_SESSION['m_admin']['doctypes']['COLL_ID']
-                    ) . "' and type_id = "
-                    . $_SESSION['m_admin']['doctypes']['TYPE_ID']
+                $db->query(
+                    "DELETE FROM " . DOCTYPES_INDEXES_TABLE . " WHERE coll_id = ? and type_id = ?",
+                    array($_SESSION['m_admin']['doctypes']['COLL_ID'], $_SESSION['m_admin']['doctypes']['TYPE_ID'])
                 );
-                //$this->show();
 
                 for ($i = 0; $i < count(
                     $_SESSION['m_admin']['doctypes']['indexes']
@@ -417,14 +407,11 @@ class types extends dbquery
                     ) {
                         $mandatory = 'Y';
                     }
-                    $this->query(
-                        "insert into " . DOCTYPES_INDEXES_TABLE
-                        . " (coll_id, type_id, field_name, mandatory) values('"
-                        . $this->protect_string_db(
-                            $_SESSION['m_admin']['doctypes']['COLL_ID']
-                        ) . "', " . $_SESSION['m_admin']['doctypes']['TYPE_ID']
-                        . ", '" . $_SESSION['m_admin']['doctypes']['indexes'][$i]
-                        . "', '" . $mandatory . "')"
+                    $db->query(
+                        "INSERT INTO " . DOCTYPES_INDEXES_TABLE
+                        . " (coll_id, type_id, field_name, mandatory) values(?, ?, ?, ?)",
+                    array($_SESSION['m_admin']['doctypes']['COLL_ID'], $_SESSION['m_admin']['doctypes']['TYPE_ID'], 
+                        $_SESSION['m_admin']['doctypes']['indexes'][$i], $mandatory)
                     );
                 }
                 $_SESSION['service_tag'] = "doctype_updatedb";
@@ -463,29 +450,21 @@ class types extends dbquery
                     $tmp = $this->protect_string_db(
                         $_SESSION['m_admin']['doctypes']['LABEL']
                     );
-                    $this->query(
-                        "insert into " . DOCTYPES_TABLE . " (coll_id, "
+                    $db->query(
+                        "INSERT INTO " . DOCTYPES_TABLE . " (coll_id, "
                         ." description, doctypes_first_level_id, "
-                        . "doctypes_second_level_id,  enabled ) VALUES ('"
-                        . $_SESSION['m_admin']['doctypes']['COLL_ID'] . "', '"
-                        . $tmp . "',"
-                        . $_SESSION['m_admin']['doctypes']['STRUCTURE'] . ","
-                        . $_SESSION['m_admin']['doctypes']['SUB_FOLDER']
-                        . ", 'Y' )"
+                        . "doctypes_second_level_id,  enabled ) VALUES (?, ?, ?, ?, 'Y' )",
+                        array($_SESSION['m_admin']['doctypes']['COLL_ID'], $tmp, $_SESSION['m_admin']['doctypes']['STRUCTURE'], $_SESSION['m_admin']['doctypes']['SUB_FOLDER'])
                     );
                     //$this->show();
-                    $this->query(
-                        "select type_id from " . DOCTYPES_TABLE
-                        . " where coll_id = '"
-                        . $_SESSION['m_admin']['doctypes']['COLL_ID']
-                        . "' and description = '" . $tmp
-                        . "' and doctypes_first_level_id = "
-                        . $_SESSION['m_admin']['doctypes']['STRUCTURE']
-                        . " and doctypes_second_level_id = "
-                        . $_SESSION['m_admin']['doctypes']['SUB_FOLDER']
+                    $stmt = $db->query(
+                        "SELECT type_id FROM " . DOCTYPES_TABLE
+                        . " WHERE coll_id = ? and description = ? and doctypes_first_level_id = ? and doctypes_second_level_id = ?",
+                        array($_SESSION['m_admin']['doctypes']['COLL_ID'], $tmp, $_SESSION['m_admin']['doctypes']['STRUCTURE']
+                            , $_SESSION['m_admin']['doctypes']['SUB_FOLDER'])
                     );
                     //$this->show();
-                    $res = $this->fetch_object();
+                    $res = $stmt->fetchObject();
                     $_SESSION['m_admin']['doctypes']['TYPE_ID'] = $res->type_id;
                     for ($i = 0; $i < count(
                         $_SESSION['m_admin']['doctypes']['indexes']
@@ -499,14 +478,12 @@ class types extends dbquery
                         ) {
                             $mandatory = 'Y';
                         }
-                        $this->query(
-                            "insert into " . DOCTYPES_INDEXES_TABLE
+                        $db->query(
+                            "INSERT INTO " . DOCTYPES_INDEXES_TABLE
                             . " (coll_id, type_id, field_name, mandatory) "
-                            . "values('" . $this->protect_string_db(
-                                $_SESSION['m_admin']['doctypes']['COLL_ID']
-                            ) . "', " . $_SESSION['m_admin']['doctypes']['TYPE_ID']
-                            . ", '" . $_SESSION['m_admin']['doctypes']['indexes'][$i]
-                            . "', '" . $mandatory . "')"
+                            . "values(?, ?, ?, ?)",
+                            array($_SESSION['m_admin']['doctypes']['COLL_ID'], $_SESSION['m_admin']['doctypes']['TYPE_ID']
+                                , $_SESSION['m_admin']['doctypes']['indexes'][$i], $mandatory)
                         );
                     }
 
@@ -562,13 +539,14 @@ class types extends dbquery
             return $types;
         }
 
-        $this->connect();
-        $this->query(
-            "select type_id, description from " . DOCTYPES_TABLE
-            . " where coll_id = '" . $collId . "' and enabled = 'Y' "
-            . "order by description"
+        $db = new Database();
+        $stmt = $db->query(
+            "SELECT type_id, description FROM " . DOCTYPES_TABLE
+            . " WHERE coll_id = ? and enabled = 'Y' "
+            . "order by description",
+            array($collId)
         );
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push(
                 $types,
                 array(
@@ -588,14 +566,15 @@ class types extends dbquery
     */
     public function GetFullStructure($doctype)
     {
+        $db = new Database();
         $structure = array();
-        $levelQuery = "select doctypes_first_level_id, "
-            . "doctypes_second_level_id from " . DOCTYPES_TABLE
-            . " where type_id = '" . $doctype . "'";
-        $this->connect();
-        $this->query($levelQuery);
-        $result = $this->fetch_object();
-        if ($this->nb_result() == 0) {
+        $levelQuery = "SELECT doctypes_first_level_id, "
+            . "doctypes_second_level_id FROM " . DOCTYPES_TABLE
+            . " WHERE type_id = ?";
+
+        $stmt = $db->query($levelQuery, array($doctype));
+        $result = $stmt->fetchObject();
+        if ($stmt->rowCount() == 0) {
             return false;
         } else {
             array_push(
@@ -618,14 +597,14 @@ class types extends dbquery
     public function getArrayDoctypesSecondLevel()
     {
         $secondLevel = array();
-        $this->connect();
-        $this->query(
-            "select doctypes_second_level_id, doctypes_second_level_label, "
-            . "css_style from "
+        $db = new Database();
+        $stmt = $this->query(
+            "SELECT doctypes_second_level_id, doctypes_second_level_label, "
+            . "css_style FROM "
             . $_SESSION['tablename']['doctypes_second_level']
-            . " where enabled = 'Y' order by doctypes_second_level_label"
+            . " WHERE enabled = 'Y' order by doctypes_second_level_label"
         );
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push(
                 $secondLevel,
                 array(
@@ -645,27 +624,28 @@ class types extends dbquery
     */
     public function getArrayStructTypes($collId)
     {
-        $this->connect();
+        $db = new Database();
         $level1 = array();
-        $this->query(
-            "select d.type_id, d.description, d.doctypes_first_level_id, "
+        $stmt = $db->query(
+            "SELECT d.type_id, d.description, d.doctypes_first_level_id, "
             . "d.doctypes_second_level_id, dsl.doctypes_second_level_label, "
             . "dfl.doctypes_first_level_label, dfl.css_style as style_level1, "
-            . " dsl.css_style as style_level2 from " . DOCTYPES_TABLE . " d, "
+            . " dsl.css_style as style_level2 FROM " . DOCTYPES_TABLE . " d, "
             . $_SESSION['tablename']['doctypes_second_level'] . " dsl, "
             . $_SESSION['tablename']['doctypes_first_level']
-            . " dfl where coll_id = '" . $collId . "' and d.enabled = 'Y' "
+            . " dfl WHERE coll_id = ? and d.enabled = 'Y' "
             . "and d.doctypes_second_level_id = dsl.doctypes_second_level_id "
             . "and d.doctypes_first_level_id = dfl.doctypes_first_level_id "
             . "and dsl.enabled = 'Y' and dfl.enabled = 'Y' "
             . "order by dfl.doctypes_first_level_label,"
-            . "dsl.doctypes_second_level_label, d.description "
+            . "dsl.doctypes_second_level_label, d.description ",
+            array($collId)
         );
         $lastLevel1 = '';
         $nbLevel1 = 0;
         $lastLevel2 = '';
         $nbLevel2 = 0;
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             //var_dump($res);
             if ($lastLevel1 <> $res->doctypes_first_level_id) {
                 array_push(
@@ -737,6 +717,7 @@ class types extends dbquery
     public function get_all_indexes($collId)
     {
         $sec = new security();
+        $db = new Database();
         $indColl = $sec->get_ind_collection($collId);
         if (file_exists(
             $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
@@ -825,9 +806,9 @@ class types extends dbquery
                 if (isset($order) && ! empty($order)) {
                     $query .= ' '.$order;
                 }
-                $this->connect();
-                $this->query($query);
-                while ($res = $this->fetch_array()) {
+                
+                $stmt = $db->query($query);
+                while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
                      array_push(
                          $values,
                          array(
@@ -877,14 +858,14 @@ class types extends dbquery
     public function get_indexes($typeId, $collId, $mode='full')
     {
         $fields = array();
-        $this->connect();
-        $this->query(
-            "select field_name from " . DOCTYPES_INDEXES_TABLE
-            . " where coll_id = '" . $collId . "' and type_id = " . $typeId
+        $db = new Database();
+        $stmt = $db->query(
+            "SELECT field_name FROM " . DOCTYPES_INDEXES_TABLE
+            . " WHERE coll_id = ? and type_id = ?",
+            array($collId, $typeId)
         );
-        //$this->show();
 
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push($fields, $res->field_name);
         }
         if ($mode == 'minimal') {
@@ -984,9 +965,9 @@ class types extends dbquery
                     if (isset($order) && ! empty($order)) {
                         $query .= ' '.$order;
                     }
-                    $this->connect();
-                    $this->query($query);
-                    while ($res = $this->fetch_object()) {
+                    
+                    $stmt = $db->query($query);
+                    while ($res = $stmt->fetchObject()) {
                          array_push(
                              $values,
                              array(
@@ -1050,14 +1031,14 @@ class types extends dbquery
     public function get_mandatory_indexes($typeId, $collId)
     {
         $fields = array();
-        $this->connect();
-        $this->query(
-            "select field_name from " . DOCTYPES_INDEXES_TABLE
-            . " where coll_id = '" . $collId . "' and type_id = " . $typeId
-            . " and mandatory = 'Y'"
+        $db = new Database();
+        $stmt = $db->query(
+            "SELECT field_name FROM " . DOCTYPES_INDEXES_TABLE
+            . " WHERE coll_id = ? and type_id = ? and mandatory = 'Y'",
+            array($collId, $typeId)
         );
 
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push($fields, $res->field_name);
         }
         return $fields;
@@ -1252,16 +1233,16 @@ class types extends dbquery
     {
         $sec = new security();
         $table = $sec->retrieve_table_from_coll($collId);
+        $db = new Database();
 
         $indexes = $this->get_all_indexes($collId);
         if (count($indexes) > 0) {
-            $query = "update " . $table . " set ";
+            $query = "UPDATE " . $table . " set ";
             for ($i = 0; $i < count($indexes); $i ++) {
                 $query .= $indexes[$i]['column'] . " = NULL, ";
             }
             $query = preg_replace('/, $/', ' where res_id = ' . $resId, $query);
-            $this->connect();
-            $this->query($query);
+            $db->query($query);
         }
     }
 
