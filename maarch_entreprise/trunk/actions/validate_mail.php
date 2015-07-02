@@ -734,12 +734,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='<td class="indexing_label"><label for="process_limit_date_use" class="form_title" >'._PROCESS_LIMIT_DATE_USE.'</label></td>';
             $frm_str .='<td>&nbsp;</td>';
             $frm_str .='<td class="indexing_field"><input type="radio"  class="check" name="process_limit_date_use" id="process_limit_date_use_yes" value="yes" ';
-            if($data['process_limit_date_use'] == true || !isset($data['process_limit_date_use']))
+            if($data['process_limit_date_use'] == true)
             {
                 $frm_str .=' checked="checked"';
             }
             $frm_str .=' onclick="clear_error(\'frm_error_'.$id_action.'\');activate_process_date(true, \''.$display_value.'\');" />'._YES.'<input type="radio" name="process_limit_date_use"  class="check"  id="process_limit_date_use_no" value="no" onclick="clear_error(\'frm_error_'.$id_action.'\');activate_process_date(false, \''.$display_value.'\');" ';
-            if(isset($data['process_limit_date_use']) && $data['process_limit_date_use'] == false)
+            if(!isset($data['process_limit_date_use']))
             {
                 $frm_str .=' checked="checked"';
             }
@@ -1212,7 +1212,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . $_SESSION['config']['businessappurl'] 
             . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
             . '&resId=' . $res_id . '&collId=' . $coll_id . '\');';
+        if($data['process_limit_date'] != null){
         $frm_str .='if(type_id){change_doctype(type_id.options[type_id.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\', '.$res_id.', \''. $coll_id.'\', true);}';
+         }else{
+            $frm_str .="activate_process_date(false, '".$display_value."');";
+           }
         if($core_tools->is_module_loaded('entities') )
         {
             $frm_str .='change_entity(\''.$data['destination'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
@@ -1542,6 +1546,7 @@ function get_value_fields($values, $field)
  **/
 function manage_form($arr_id, $history, $id_action, $label_action, $status,  $coll_id, $table, $values_form )
 {
+//var_dump("manage_form");
 
     if(empty($values_form) || count($arr_id) < 1 || empty($coll_id))
     {
