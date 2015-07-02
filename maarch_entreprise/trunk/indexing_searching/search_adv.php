@@ -709,7 +709,7 @@ if(isset($_REQUEST['nodetails']))
 <div class="block">
 <h2><?php echo _ADD_PARAMETERS;?>&nbsp;:&nbsp;<select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'parameters_tab', <?php 
         echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');window.location.href = '#bottom';">
-            <?php functions::xecho($src_tab);?>
+            <?php echo $src_tab;?>
         </select></h2>
 <table border = "0" width="100%" class="content" id="parameters_tab">
        <tr>
