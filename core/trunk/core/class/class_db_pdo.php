@@ -203,8 +203,8 @@ class Database
                         $queryString = str_replace($key, $placeholders, $queryString);
                         unset($parameters[$key]);  
                     }
-                    var_dump($queryString);
-                    var_dump($parameters);
+                    // var_dump($queryString);
+                    // var_dump($parameters);
                 }
             }
         }
