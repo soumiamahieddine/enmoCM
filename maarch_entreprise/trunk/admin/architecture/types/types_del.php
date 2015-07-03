@@ -95,18 +95,6 @@ else
 
         $db->query("UPDATE ".$table." SET type_id = ? WHERE res_id IN (SELECT res_id FROM ".$table." WHERE type_id = ?)", array($new_s_id, $s_id));
 
-        /*if($_SESSION['history']['res_up'] == 'true')
-        {
-            while($doctypes = $db->fetch_object())
-            {
-                echo 'toto';
-                
-                    
-                $docs = new history();
-                $docs->add($table, $s_id,"UP",'doctypesup',_DOC_OF_DOCTYPE_UPDATED." : ".$info->description, $_SESSION['config']['databasetype']);
-            }
-        }*/
-
         $db->query("DELETE FROM ".$_SESSION['tablename']['doctypes']." WHERE type_id = ?", array($s_id));
         $db->query("DELETE FROM ".$_SESSION['tablename']['doctypes_indexes']." WHERE type_id = ?", array($s_id));
 

@@ -30,7 +30,6 @@
 
 require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_types.php");
 
-$db = new dbquery();
 $core = new core_tools();
 $core->load_lang();
 $type = new types();
@@ -102,7 +101,7 @@ if(count($indexes) > 0)
 				$opt_indexes .= '<input type="text" name="'.$key.'" id="'.$key.'" value="';
 				if($indexes[$key]['default_value'] <> false)
 				{
-					$opt_indexes .= $db->show_string($indexes[$key]['default_value'], true);
+					$opt_indexes .= functions::show_string($indexes[$key]['default_value'], true);
 				}
 				$opt_indexes .='" size="40"  />';
 			}
@@ -111,7 +110,7 @@ if(count($indexes) > 0)
 				$opt_indexes .= '<input type="text" name="'.$key.'" id="'.$key.'" value="';
 				if($indexes[$key]['default_value'] <> false)
 				{
-					$opt_indexes .= $db->format_date_db($indexes[$key]['default_value'], true);
+					$opt_indexes .= functions::format_date_db($indexes[$key]['default_value'], true);
 				}
 				$opt_indexes .='" size="40"  onclick="showCalender(this);" />';
 			}

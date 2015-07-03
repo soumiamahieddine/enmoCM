@@ -381,7 +381,6 @@ class types extends dbquery
                 exit();
             }
         } else {
-            $this->connect();
             if ($_REQUEST['mode'] <> "prop" && $_REQUEST['mode'] <> "add") {
                 $db->query(
                     "UPDATE " . DOCTYPES_TABLE . " SET description = ? , doctypes_first_level_id = ?, doctypes_second_level_id = ?, enabled = 'Y', coll_id = ? 

@@ -28,7 +28,6 @@
 * @ingroup indexing_searching_mlb
 */
 
-$db = new dbquery();
 $core = new core_tools();
 $core->load_lang();
 

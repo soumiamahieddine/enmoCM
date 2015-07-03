@@ -748,7 +748,6 @@ class contacts_v2 extends dbquery
         $nb_docs = 0;
         $tables = array();
         $_SESSION['m_admin']['contact'] = array();
-        $this->connect();
         $order = $_REQUEST['order'];
         $order_field = $_REQUEST['order_field'];
         $start = $_REQUEST['start'];
@@ -1460,7 +1459,6 @@ class contacts_v2 extends dbquery
                 exit;
             }
         } else {
-            $this->connect();
             if ($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] == "") {
 
                 $stmt = $db->query("SELECT id FROM contact_purposes WHERE label = ?", array($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME']));

@@ -1,7 +1,7 @@
 <?php
 /*
 *
-*   Copyright 2008,2013 Maarch
+*   Copyright 2008,2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -20,10 +20,10 @@
 */
 
 /**
-* @brief   Displays document extended list in baskets
+* @brief   Displays Five last documents
 *
 * @file
-* @author Yves Christian Kpakpo <dev@maarch.org>
+* @author <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup apps
@@ -45,68 +45,41 @@ $list       = new lists();
 //Include definition fields
 include_once('apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categories.php');
 
-//Order
-  /*  $order = $order_field = '';
-    $order = $list->getOrder();
-    $order_field = $list->getOrderField();
-    $_SESSION['save_list']['order'] = $order;
-    $_SESSION['save_list']['order_field'] = $order_field;
- //URL extra Parameters  
-    $parameters = '';
-    $start = $list->getStart();
-    if (!empty($order_field) && !empty($order)) $parameters .= '&order='.$order.'&order_field='.$order_field;
-    if (!empty($what)) $parameters .= '&what='.$what;
-    if (!empty($selectedTemplate)) $parameters .= '&template='.$selectedTemplate;
-    if (!empty($start)) $parameters .= '&start='.$start;
-    $_SESSION['save_list']['start'] = $start; 
-
-*/
-
 //Keep some parameters
 $parameters = '';
-/*if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
-    $parameters .= '&order='.$_REQUEST['order'];
-    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters 
-		.= '&order_field='.$_REQUEST['order_field'];
-}
-if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
-if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])) $parameters .= '&template='.$_REQUEST['template'];
-if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
-*/
+
 //URL extra parameters
 $urlParameters = '';
 
-$db = new dbquery();
-$db->connect();
-$db->query("SELECT ir.record_id as res_id, ir.subject, ir.doc_date, ir.event_date, ir.creation_date, ir.alt_identifier 
+$db = new Database();
+
+$stmt = $db->query("SELECT ir.record_id as res_id, ir.subject, ir.doc_date, ir.event_date, ir.creation_date, ir.alt_identifier 
 FROM
 (SELECT DISTINCT ON (h.record_id) h.record_id, h.event_date, r.subject, r.doc_date, r.creation_date, r.alt_identifier FROM history h, res_view_letterbox r
-  WHERE h.user_id = '".$_SESSION['user']['UserId']."' 
+  WHERE h.user_id = ? 
   AND event_id !='linkup'
   AND (h.table_name='res_letterbox' OR h.table_name='res_view_letterbox')
   AND CAST(h.record_id AS INT) = r.res_id
   ORDER BY h.record_id, h.event_date desc) AS ir
 ORDER BY ir.event_date desc 
-LIMIT 5");
+LIMIT 5", array($_SESSION['user']['UserId']));
 $i=0;
 $j=0;
 $x=0;
-while($result=$db->fetch_array()){
+while($result=$stmt->fetch(PDO::FETCH_ASSOC)){
 	$j=0; $x=0;
     foreach ($result as $key => $value) {
     	//
-        if($j%2){
+        // if($j%2){
 
             $tab[$i][$x]['column']=$key; 
             $tab[$i][$x]['value']=functions::xssafe($value);
             $x++;
-        }
+        // }
         $j++;
     }
     $i++;
 }
-
-
 
 //var_dump($tab);
 

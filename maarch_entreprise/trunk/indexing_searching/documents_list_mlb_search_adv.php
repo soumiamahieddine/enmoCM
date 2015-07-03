@@ -234,6 +234,7 @@ if($mode == 'normal') {
     }
 //Where clause
     $where_tab = array();
+    $arrayPDO = array();
     //From search
     if (!empty($_SESSION['searching']['where_request'])) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
     
@@ -243,9 +244,10 @@ if($mode == 'normal') {
 
     //From popup excluding some id
     if ($_REQUEST['mode'] == 'popup' && isset($_SESSION['excludeId'])) {
-        $where_tab[] = 'res_id <> '.$_SESSION['excludeId'].' and '
-                        . '(res_id not in (SELECT res_parent FROM res_linked WHERE res_child = '.$_SESSION['excludeId'].') and '
-                        . 'res_id not in (SELECT res_child FROM res_linked WHERE res_parent = '.$_SESSION['excludeId'].'))';
+        $where_tab[] = 'res_id <> :excludeId and '
+                        . '(res_id not in (SELECT res_parent FROM res_linked WHERE res_child = :excludeId) and '
+                        . 'res_id not in (SELECT res_child FROM res_linked WHERE res_parent = :excludeId))';
+        $arrayPDO = array(":excludeId" => $_SESSION['excludeId']);
         unset($_SESSION['excludeId']);
     }
 
@@ -253,12 +255,13 @@ if($mode == 'normal') {
 
     if(count($status) > 0) {    
         $status_tab = array();
-        $status_str = '';
+        // $status_str = '';
         for($i=0; $i<count($status);$i++){
                 array_push($status_tab, "'".$status[$i]['ID']."'");
         }
-        $status_str = implode(' ,', $status_tab);
-        $where_tab[] = "status not in (".$status_str.")";
+        // $status_str = implode(' ,', $status_tab);
+        $where_tab[] = "status not in (:statustab)";
+        $arrayPDO = array_merge($arrayPDO, array(":statustab" => $status_tab));
     }
     
     //From searching comp query
@@ -309,7 +312,7 @@ if($mode == 'normal') {
     }
 
 //Query    
-    $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
+    $tab=$request->PDOselect($select,$where_request,$arrayPDO, $orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
     // $request->show();
 //Result array
     for ($i=0;$i<count($tab);$i++)
@@ -348,29 +351,33 @@ if($mode == 'normal') {
                     $tab[$i][$j]["order"]='res_id';
                     $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
                         // notes
-                        $db = new dbquery();
-                        $db->connect();
-                        $query = "select ";
+                        $db = new Database();
+
+                        $arrayPDO = array();
+                        $query = "SELECT ";
                          $query .= "notes.id ";
-                        $query .= "from ";
+                        $query .= "FROM ";
                          $query .= "notes "; 
                         $query .= "left join "; 
                          $query .= "note_entities "; 
                         $query .= "on "; 
                          $query .= "notes.id = note_entities.note_id ";
-                        $query .= "where ";
+                        $query .= "WHERE ";
                           $query .= "tablename = 'res_letterbox' ";
                          $query .= "AND "; 
                           $query .= "coll_id = 'letterbox_coll' ";
                          $query .= "AND ";
-                          $query .= "identifier = " . $tab[$i][$j]['value'] . " ";
+                          $query .= "identifier = ? ";
+                            $arrayPDO = array($tab[$i][$j]['value']);
+
                          $query .= "AND ";
                           $query .= "( ";
                             $query .= "( ";
                               $query .= "item_id IN (";
-                              
+
                                foreach($_SESSION['user']['entities'] as $entitiestmpnote) {
-                                $query .= "'" . $entitiestmpnote['ENTITY_ID'] . "', ";
+                                $query .= "?, ";
+                                $arrayPDO = array_merge($arrayPDO, array($entitiestmpnote['ENTITY_ID']));
                                }
 
                                 if ($_SESSION['user']['UserId'] == 'superadmin') {
@@ -384,11 +391,12 @@ if($mode == 'normal') {
                               $query .= "item_id IS NULL ";
                             $query .= ") ";
                            $query .= "OR ";
-                            $query .= "user_id = '" . $_SESSION['user']['UserId'] . "' ";
+                            $query .= "user_id = ? ";
                           $query .= ") ";
-                          //echo $query . '<br />';
-                        $db->query($query);
-                        $tab[$i][$j]['hasNotes'] = $db->fetch_object();
+                            $arrayPDO = array_merge($arrayPDO, array($_SESSION['user']['UserId']));
+
+                        $stmt = $db->query($query, $arrayPDO);
+                        $tab[$i][$j]['hasNotes'] = $stmt->fetchObject();
 						$tab[$i][$j]['res_multi_contacts'] = $_SESSION['mlb_search_current_res_id'];
                 }
                 if($tab[$i][$j][$value]=="type_label")

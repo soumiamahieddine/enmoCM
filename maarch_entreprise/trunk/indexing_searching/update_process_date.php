@@ -30,7 +30,7 @@
 require_once('core/class/class_security.php');
 require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php');
 
-$db = new dbquery();
+$db = new Database();
 $core = new core_tools();
 $core->load_lang();
 $type = new types();
@@ -62,12 +62,12 @@ if (!isset($_REQUEST['priority_id']) || $_REQUEST['priority_id'] == '') {
 //Process limit process date compute
 //Bug fix if delay process is disabled in services
 if ($core->service_is_enabled('param_mlb_doctypes')) {
-    $db->connect();
-    $db->query("select process_delay from " 
-        . $_SESSION['tablename']['mlb_doctype_ext'] . " where type_id = " 
-        . $typeId
+
+    $stmt = $db->query("SELECT process_delay FROM " 
+        . $_SESSION['tablename']['mlb_doctype_ext'] . " WHERE type_id = ?", 
+        array($typeId)
     );
-    $res = $db->fetch_object();
+    $res = $stmt->fetchObject();
     $delay = $res->process_delay;
 }
 

@@ -58,7 +58,7 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 		$children = array();
 		while($res = $stmt->fetchObject())
 		{
-			array_push($children, array('id' => $res->doctypes_second_level_id, 'tree' => $_SESSION['doctypes_chosen_tree'], 'key_value' => $res->doctypes_second_level_id, 'label_value' => $db->show_string($res->doctypes_second_level_label, true), 'script' => "show_doctypes"));
+			array_push($children, array('id' => $res->doctypes_second_level_id, 'tree' => $_SESSION['doctypes_chosen_tree'], 'key_value' => $res->doctypes_second_level_id, 'label_value' => functions::show_string($res->doctypes_second_level_label, true), 'script' => "show_doctypes"));
 		}
 		if(count($children) > 0)
 		{
@@ -76,13 +76,13 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 	}
 	if($branch_level_id == "2")
 	{
-		$db->query("SELECT * FROM ".$_SESSION['tablename']['doctypes']
+		$stmt = $db->query("SELECT * FROM ".$_SESSION['tablename']['doctypes']
 					." WHERE doctypes_second_level_id = ? and enabled ='Y' order by description", 
 					array($_REQUEST['branch_id']));
 		$children = array();
-		while($res = $db->fetchObject())
+		while($res = $stmt->fetchObject())
 		{
-			array_push($children, array('id' => $res->type_id, 'tree' => $_SESSION['doctypes_chosen_tree'], 'key_value' => $res->type_id, 'label_value' => $db->show_string($res->description, true), 'script' => "other"));
+			array_push($children, array('id' => $res->type_id, 'tree' => $_SESSION['doctypes_chosen_tree'], 'key_value' => $res->type_id, 'label_value' => functions::show_string($res->description, true), 'script' => "other"));
 		}
 		if(count($children) > 0)
 		{

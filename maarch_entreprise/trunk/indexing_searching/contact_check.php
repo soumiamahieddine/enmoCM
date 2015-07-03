@@ -30,27 +30,32 @@
 if(empty($_POST['contact_id'])){
 	echo "success";
 } else {
-	$db = new dbquery();
-	$db->connect();
+	$db = new Database();
+	$arrayPDO = array();
 
 	if (is_numeric($_POST['contact_id'])) {
 		$where = "contact_id = ".$_POST['contact_id']." AND address_id = ".$_POST['address_id']." AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
-		$query = "SELECT res_id FROM res_view_letterbox WHERE ".$where;
+		$wherePDO = "contact_id = ? AND address_id = ? AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
+		$arrayPDO = array($_POST['contact_id'], $_POST['address_id']);
 	} else {
 		$where = "(exp_user_id = '".$_POST['contact_id']."' OR dest_user_id = '".$_POST['contact_id']."') AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
-		$query = "SELECT res_id FROM res_view_letterbox WHERE ".$where;
+		$wherePDO = "(exp_user_id = ? OR dest_user_id = ?) AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
+		$arrayPDO = array($_POST['contact_id'], $_POST['contact_id']);
 	}
+	
+	$query = "SELECT res_id FROM res_view_letterbox WHERE ".$wherePDO;
 
 	if($_POST['res_id'] != "none"){
-		$query .= " AND res_id NOT IN (".$_POST['res_id'].")";
+		$query .= " AND res_id NOT IN (?)";
+		$allResId = explode(",", $_POST['res_id']);
+		$arrayPDO = array_merge($arrayPDO, array($allResId));
 		$_SESSION['excludeId'] = $_POST['res_id'];
 	}
 
 	$query .= "  ORDER by creation_date DESC limit 1";
-	$db->query($query);
-	// $db->show();
+	$stmt = $db->query($query, $arrayPDO);
 
-	if ($db->nb_result() > 0){
+	if ($stmt->rowCount() > 0){
 		$_SESSION['where_from_contact_check'] = " AND (".$where.")";
 		echo "fail";
 	} else {

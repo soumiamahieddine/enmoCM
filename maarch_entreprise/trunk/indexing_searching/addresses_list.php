@@ -41,6 +41,7 @@ $core_tools = new core_tools();
 $request    = new request();
 $list       = new lists();   
 $contact    = new contacts_v2();
+$db         = new Database();
 
  $parameters = '';
  if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) $parameters .= '&order='.$_REQUEST['order'];
@@ -100,20 +101,23 @@ if (!$return) {
     $what = "";
     $where = "";
 
+    $arrayPDO = array();
     if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) {
-        $where .= " ca_id = ".$_REQUEST['selectedObject'];
+        $where .= " ca_id = ? ";
+        $arrayPDO = array_merge($arrayPDO, array($_REQUEST['selectedObject']));
     } elseif (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
         $what = $request->protect_string_db($_REQUEST['what']);
 
-        $what = str_replace("  ", "", $request->protect_string_db($_REQUEST['what']));
+        $what = str_replace("  ", "", $_REQUEST['what']);
         $what_table = explode(" ", $what);
 
-        foreach($what_table as $what_a){
-            $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
-            $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
-            $sql_society[] = " lower(departement) LIKE lower('".$what_a."%')";
-            $sql_contact_firstname[] = " lower(contact_firstname) LIKE lower('".$what_a."%')";
-            $sql_contact_lastname[] = " lower(contact_lastname) LIKE lower('".$what_a."%')";
+        foreach($what_table as $key => $what_a){
+            $sql_lastname[] = " lower(lastname) LIKE lower(:what_".$key.")";
+            $sql_firstname[] = " lower(firstname) LIKE lower(:what_".$key.")";
+            $sql_society[] = " lower(departement) LIKE lower(:what_".$key.")";
+            $sql_contact_firstname[] = " lower(contact_firstname) LIKE lower(:what_".$key.")";
+            $sql_contact_lastname[] = " lower(contact_lastname) LIKE lower(:what_".$key.")";
+            $arrayPDO = array_merge($arrayPDO, array(":what_".$key => $what_a."%"));
         }
 
         $where .= " (" . implode(' OR ', $sql_lastname) . " ";
@@ -148,8 +152,8 @@ if (!$return) {
     $orderstr = $list_show->define_order($order, $field);
 
     $request = new request;
-    $tab = $request->select(
-        $select, $where, $orderstr, $_SESSION['config']['databasetype']
+    $tab = $request->PDOselect(
+        $select, $where, $orderstr, $arrayPDO, $_SESSION['config']['databasetype']
     );
     // $request->show();
 

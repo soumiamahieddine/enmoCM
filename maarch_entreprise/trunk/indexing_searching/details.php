@@ -159,10 +159,10 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $s_id = addslashes($func->wash($_GET['id'], 'num', _THE_DOC));
 }
 
-$db = new dbquery();
-$db->connect();
-$db->query("select res_id from mlb_coll_ext where res_id = " . $s_id);
-if ($db->nb_result() <= 0) {
+$db = new Database();
+
+$stmt = $db->query("SELECT res_id FROM mlb_coll_ext WHERE res_id = ?", array($s_id));
+if ($stmt->rowCount() <= 0) {
     $_SESSION['error'] = _QUALIFY_FIRST;
     ?>
         <script type="text/javascript">window.top.location.href='<?php
@@ -174,8 +174,8 @@ $_SESSION['doc_id'] = $s_id;
 $right = $security->test_right_doc($coll_id, $s_id);
 //$_SESSION['error'] = 'coll '.$coll_id.', res_id : '.$s_id;
 
-$db->query("select typist, creation_date from ".$table." where res_id = " . $s_id);
-$info_mail = $db->fetch_object();
+$stmt = $db->query("SELECT typist, creation_date FROM ".$table." WHERE res_id = ?", array($s_id));
+$info_mail = $stmt->fetchObject();
 
 $date1 = new DateTime($info_mail->creation_date);
 $date2 = new DateTime();
@@ -273,14 +273,14 @@ if (isset($_POST['put_doc_on_validation'])) {
 //Load multicontacts
 	$query = "SELECT c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society 
                 FROM view_contacts c, contacts_res cres 
-                WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['id']." AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id 
+                WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id 
                 GROUP BY c.firstname, c.lastname, c.society, c.contact_firstname, c.contact_lastname";
 			
-	$db->query($query);
+	$stmt = $db->query($query, array($_REQUEST['id']));
 	$nbContacts = 0;
 	$frameContacts = "";
 	$frameContacts = "{";
-	while($res = $db->fetch_object()){
+	while($res = $stmt->fetchObject()){
 		$nbContacts = $nbContacts + 1;
         $contact_firstname = str_replace("'","\'", $res->contact_firstname);
         $contact_firstname = str_replace('"'," ", $contact_firstname);
@@ -294,14 +294,14 @@ if (isset($_POST['put_doc_on_validation'])) {
 		$society = str_replace('"'," ", $society);
 		$frameContacts .= "'contact ".$nbContacts."' : '" . $contact_firstname . " " . $contact_lastname . " " . $firstname . " " . $lastname . " " . $society . " (contact)', ";
 	}
-    $query = "select u.firstname, u.lastname, u.user_id ";
-			$query .= "from users u, contacts_res cres  ";
-			$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['id']." AND cast (u.user_id as varchar) = cres.contact_id ";
+    $query = "SELECT u.firstname, u.lastname, u.user_id ";
+			$query .= "FROM users u, contacts_res cres  ";
+			$query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id ";
 			$query .= "GROUP BY u.firstname, u.lastname, u.user_id";
 			
-	$db->query($query);
+	$stmt = $db->query($query, array($_REQUEST['id']));
 	
-	while($res = $db->fetch_object()){
+	while($res = $stmt->fetchObject()){
 		$nbContacts = $nbContacts + 1;
 		$firstname = str_replace("'","\'", $res->firstname);
 		$firstname = str_replace('"'," ", $firstname);
@@ -313,9 +313,9 @@ if (isset($_POST['put_doc_on_validation'])) {
 	$frameContacts .= "}";
 if (empty($_SESSION['error']) || $_SESSION['indexation']) {
     $comp_fields = '';
-    $db->query("select type_id from ".$table." where res_id = ".$s_id);
-    if ($db->nb_result() > 0) {
-        $res = $db->fetch_object();
+    $stmt = $db->query("SELECT type_id FROM ".$table." WHERE res_id = ?", array($s_id));
+    if ($stmt->rowCount() > 0) {
+        $res = $stmt->fetchObject();
         $type_id = $res->type_id;
         $indexes = $type->get_indexes($type_id, $coll_id, 'minimal');
         for($i=0;$i<count($indexes);$i++) {
@@ -331,15 +331,15 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
     if ($core->is_module_loaded('cases') == true) {
         $case_sql_complementary = " , case_id";
     }
-    $db->query(
-        "select status, format, typist, creation_date, fingerprint, filesize, "
+    $stmt = $db->query(
+        "SELECT status, format, typist, creation_date, fingerprint, filesize, "
         . "res_id, work_batch, page_count, is_paper, scan_date, scan_user, "
         . "scan_location, scan_wkstation, scan_batch, source, doc_language, "
         . "description, closing_date, alt_identifier, initiator, entity_label " . $comp_fields
-        . $case_sql_complementary . " from " . $table . " where res_id = "
-        . $s_id
+        . $case_sql_complementary . " FROM " . $table . " WHERE res_id = ?",
+        array($s_id)
     );
-    //$db->show();
+
 }
 ?>
 <div id="details_div" style="display:block;">
@@ -368,7 +368,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
     </div>
     <?php
 } else {
-    if ($db->nb_result() == 0) {
+    if ($stmt->rowCount() == 0) {
         ?>
         <div align="center">
                 <br />
@@ -418,36 +418,34 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 'img_confidentiality' => true,
                 );
 
-            $res = $db->fetch_object();
+            $res = $stmt->fetchObject();
             $typist = $res->typist;
             $format = $res->format;
             $filesize = $res->filesize;
-            $creation_date = $db->format_date_db($res->creation_date, false);
+            $creation_date = functions::format_date_db($res->creation_date, false);
             $chrono_number = $res->alt_identifier;
             $initiator = $res->initiator;
             $fingerprint = $res->fingerprint;
             $work_batch = $res->work_batch;
             $page_count = $res->page_count;
             $is_paper = $res->is_paper;
-            $scan_date = $db->format_date_db($res->scan_date);
+            $scan_date = functions::format_date_db($res->scan_date);
             $scan_user = $res->scan_user;
             $scan_location = $res->scan_location;
             $scan_wkstation = $res->scan_wkstation;
             $scan_batch = $res->scan_batch;
             $doc_language = $res->doc_language;
-            $closing_date = $db->format_date_db($res->closing_date, false);
+            $closing_date = functions::format_date_db($res->closing_date, false);
             $indexes = $type->get_indexes($type_id, $coll_id);
             $entityLabel = $res->entity_label;
 
-            $dbUser = new dbquery();
-            $queryUser = "select firstname, lastname from users where user_id = '" . $typist ."'";
-            $dbUser->query($queryUser);
-            $resultUser = $dbUser->fetch_object();
+            $queryUser = "SELECT firstname, lastname FROM users WHERE user_id = ?";
+            $stmt = $db->query($queryUser, array($typist));
+            $resultUser = $stmt->fetchObject();
 
-            $dbEntities = new dbquery();
-            $queryEntities = "select entity_label from entities where entity_id = '" . $initiator . "'";
-            $dbEntities->query($queryEntities);
-            $resultEntities = $dbEntities->fetch_object();
+            $queryEntities = "SELECT entity_label FROM entities WHERE entity_id = ?";
+            $stmt = $db->query($queryEntities, array($initiator));
+            $resultEntities = $stmt->fetchObject();
             $entities = $resultEntities->entity_label;
 
 
@@ -472,14 +470,14 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $tmp = $key;
                 }
                 if ($indexes[$key]['type'] == "date") {
-                    $res->$tmp = $db->format_date_db($res->$tmp, false);
+                    $res->$tmp = functions::format_date_db($res->$tmp, false);
                 }
                 $indexes[$key]['value'] = $res->$tmp;
                 $indexes[$key]['show_value'] = $res->$tmp;
                 if ($indexes[$key]['type'] == "string") {
-                    $indexes[$key]['show_value'] = $db->show_string($res->$tmp);
+                    $indexes[$key]['show_value'] = functions::show_string($res->$tmp);
                 } elseif ($indexes[$key]['type'] == "date") {
-                    $indexes[$key]['show_value'] = $db->format_date_db($res->$tmp, true);
+                    $indexes[$key]['show_value'] = functions::format_date_db($res->$tmp, true);
                 }
             }
             //$db->show_array($indexes);
@@ -1054,11 +1052,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         //Identifiant du courrier en cours
                         $idCourrier=$_GET['id'];
                         //Requete pour récupérer position_label
-                        $db->query("SELECT position_label FROM fp_fileplan_positions INNER JOIN fp_res_fileplan_positions 
+                        $stmt = $db->query("SELECT position_label FROM fp_fileplan_positions INNER JOIN fp_res_fileplan_positions 
                                     ON fp_fileplan_positions.position_id = fp_res_fileplan_positions.position_id
-                                    WHERE fp_res_fileplan_positions.res_id=".$idCourrier);
+                                    WHERE fp_res_fileplan_positions.res_id=?",array($idCourrier));
 
-                        while($res= $db->fetch_object()){
+                        while($res= $stmt->fetchObject()){
                             if(!isset($positionLabel)){
                                 $positionLabel=$res->position_label;
                             }else{
@@ -1067,10 +1065,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         }
 
                         //Requete pour récuperer fileplan_label
-                        $db->query("SELECT fileplan_label FROM fp_fileplan INNER JOIN fp_res_fileplan_positions
+                        $stmt = $db->query("SELECT fileplan_label FROM fp_fileplan INNER JOIN fp_res_fileplan_positions
                                     ON fp_fileplan.fileplan_id = fp_res_fileplan_positions.fileplan_id
-                                    WHERE fp_res_fileplan_positions.res_id=".$idCourrier);
-                        $res2 = $db->fetch_object();
+                                    WHERE fp_res_fileplan_positions.res_id=?", array($idCourrier));
+                        $res2 = $stmt->fetchObject();
                         $fileplanLabel=$res2->fileplan_label;
                         $planClassement= $fileplanLabel." / ".$positionLabel;
                     ?>
@@ -1250,16 +1248,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 $nb_attach = '';
                 if ($core->is_module_loaded('attachments'))
                 {
-                    $req = new dbquery;
-                    $req->connect();
-                    $countAttachments = "select res_id, creation_date, title, format from " 
+                    $countAttachments = "SELECT res_id, creation_date, title, format FROM " 
                         . $_SESSION['tablename']['attach_res_attachments'] 
-                        . " where res_id_master = " . $_SESSION['doc_id'] 
-                        . " and coll_id ='" . $_SESSION['collection_id_choice'] 
-                        . "' and status <> 'DEL' and attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed'";
-                    $req->query($countAttachments);
-                    if ($req->nb_result() > 0) {
-                        $nb_attach = ' (' . $req->nb_result() . ')';
+                        . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed'";
+                    $db = new Database();
+                    $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice']));
+                    if ($stmt->rowCount() > 0) {
+                        $nb_attach = ' (' . $stmt->rowCount() . ')';
                     } else {
                         $nb_attach = '';
                     }
@@ -1336,10 +1331,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 		            $templates = $templatesControler->getAllTemplatesForProcess($data['destination']['value']);
 
                         $detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
-                        $selectAttachments = "select res_id, creation_date, title, format from ".$_SESSION['tablename']['attach_res_attachments']." where res_id_master = ".$_SESSION['doc_id']." and coll_id ='".$_SESSION['collection_id_choice']."' and status <> 'DEL'";
-                        $dbAttachments = new dbquery();
-                        $dbAttachments->connect();
-                        $dbAttachments->query($selectAttachments);
+                        $selectAttachments = "SELECT res_id, creation_date, title, format FROM ".$_SESSION['tablename']['attach_res_attachments']
+                                ." WHERE res_id_master = ? and coll_id = ? and status <> 'DEL'";
+                        $stmt = $db->query($selectAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice']));
 
                         ?>
                         <div>
@@ -1364,17 +1358,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     ?>
                 </dd>
                 <?php
-                        $req = new dbquery;
-                        $req->connect();
                         
-                        $countAttachments = "select res_id, creation_date, title, format from " 
+                        $countAttachments = "SELECT res_id, creation_date, title, format FROM " 
                                 . $_SESSION['tablename']['attach_res_attachments'] 
-                                . " where res_id_master = " . $_SESSION['doc_id'] 
-                                . " and coll_id ='" . $_SESSION['collection_id_choice'] 
-                                . "' and status <> 'DEL' and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed')";
-                            $req->query($countAttachments);
-                            if ($req->nb_result() > 0) {
-                                $nb_rep = ' <span id="answer_number">(' . ($req->nb_result()). ')</span>';
+                                . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed')";
+                            $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice']));
+                            if ($stmt->rowCount() > 0) {
+                                $nb_rep = ' <span id="answer_number">(' . ($stmt->rowCount()). ')</span>';
                             }
                     
                         ?>
@@ -1495,14 +1485,12 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 $versionTable = $security->retrieve_version_table_from_coll_id(
                     $coll_id
                 );
-                $selectVersions = "select res_id from "
-                    . $versionTable . " where res_id_master = "
-                    . $s_id . " and status <> 'DEL' order by res_id desc";
-                $dbVersions = new dbquery();
-                $dbVersions->connect();
-                $dbVersions->query($selectVersions);
-                $nb_versions_for_title = $dbVersions->nb_result();
-                $lineLastVersion = $dbVersions->fetch_object();
+                $selectVersions = "SELECT res_id FROM "
+                    . $versionTable . " WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
+
+                $stmt = $db->query($selectVersions, array($s_id));
+                $nb_versions_for_title = $stmt->rowCount();
+                $lineLastVersion = $stmt->fetchObject();
                 $lastVersion = $lineLastVersion->res_id;
                 if ($lastVersion <> '') {
                     $objectId = $lastVersion;

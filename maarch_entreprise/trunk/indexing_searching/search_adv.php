@@ -50,8 +50,8 @@ if (isset($_REQUEST['fromValidateMail'])) {
 
 $type = new types();
 $func = new functions();
-$conn = new dbquery();
-$conn->connect();
+$conn = new Database();
+
 $search_obj = new indexing_searching_app();
 $status_obj = new manage_status();
 $sec = new security();
@@ -104,18 +104,18 @@ elseif($mode == 'popup' || $mode == 'frame')
 }
 
 // load saved queries for the current user in an array
-$conn->query("select query_id, query_name from ".$_SESSION['tablename']['saved_queries']." where user_id = '".$_SESSION['user']['UserId']."' order by query_name");
+$stmt = $conn->query("SELECT query_id, query_name FROM ".$_SESSION['tablename']['saved_queries']." WHERE user_id = ? order by query_name", array($_SESSION['user']['UserId']));
 $queries = array();
-while($res = $conn->fetch_object())
+while($res = $stmt->fetchObject())
 {
     array_push($queries, array('ID'=>$res->query_id, 'LABEL' => $res->query_name));
 }
 
-$conn->query("select user_id, firstname, lastname, status from ".$_SESSION['tablename']['users']." where enabled = 'Y' and status <> 'DEL' order by lastname asc");
+$stmt = $conn->query("SELECT user_id, firstname, lastname, status FROM ".$_SESSION['tablename']['users']." WHERE enabled = 'Y' and status <> 'DEL' order by lastname asc");
 $users_list = array();
-while($res = $conn->fetch_object())
+while($res = $stmt->fetchObject())
 {
-    array_push($users_list, array('ID' => $conn->show_string($res->user_id), 'NOM' => $conn->show_string($res->lastname), 'PRENOM' => $conn->show_string($res->firstname), 'STATUT' => $res->status));
+    array_push($users_list, array('ID' => functions::show_string($res->user_id), 'NOM' => functions::show_string($res->lastname), 'PRENOM' => functions::show_string($res->firstname), 'STATUT' => $res->status));
 }
 
 $coll_id = 'letterbox_coll';
@@ -275,7 +275,7 @@ if($core_tools->is_module_loaded('tags'))
     if ($tag_return_value){
         foreach($tag_return_value as $tagelem)
         {
-            array_push($arr_tmptag, array('VALUE' => $conn->protect_string_db($tagelem['tag_label']), 'LABEL' => $tagelem['tag_label']));
+            array_push($arr_tmptag, array('VALUE' => functions::protect_string_db($tagelem['tag_label']), 'LABEL' => $tagelem['tag_label']));
         }
     }
     else
@@ -302,11 +302,11 @@ if($core_tools->is_module_loaded('entities'))
     {
         $where = ' where '.$where;
     }
-    //$conn->query("select distinct r.destination from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by r.destination ");
-    $conn->query("select distinct r.destination, e.short_label from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by e.short_label, r.destination order by e.short_label");
-    //  $conn->show();
+
+    $stmt = $conn->query("SELECT DISTINCT r.destination, e.short_label FROM ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by e.short_label, r.destination order by e.short_label");
+
     $arr_tmp = array();
-    while($res = $conn->fetch_object())
+    while($res = $stmt->fetchObject())
     {
         array_push($arr_tmp, array('VALUE' => $res->destination, 'LABEL' => $res->short_label));
     }
@@ -373,14 +373,13 @@ $arr_tmp2 = array('label' => _CONFIDENTIALITY, 'type' => 'select_simple', 'param
 $param['confidentiality'] = $arr_tmp2;
 
 //doc_type
-$conn->query("select type_id, description  from  " 
-    . $_SESSION['tablename']['doctypes'] . " where enabled = 'Y' and coll_id = '" 
-    . $coll_id . "' order by description asc"
+$stmt = $conn->query("SELECT type_id, description  FROM  " 
+    . $_SESSION['tablename']['doctypes'] . " WHERE enabled = 'Y' and coll_id = ? order by description asc", array($coll_id)
 );
 $arr_tmp = array();
-while ($res=$conn->fetch_object())
+while ($res=$stmt->fetchObject())
 {
-    array_push($arr_tmp, array('VALUE' => $res->type_id, 'LABEL' => $conn->show_string($res->description)));
+    array_push($arr_tmp, array('VALUE' => $res->type_id, 'LABEL' => functions::show_string($res->description)));
 }
 $arr_tmp2 = array('label' => _DOCTYPES_MAIL, 'type' => 'select_multiple', 'param' => array('field_label' => _DOCTYPES_MAIL,'label_title' => _CHOOSE_DOCTYPES_MAIL_SEARCH_TITLE, 'id' => 'doctypes', 'options' => $arr_tmp));
 $param['doctype'] = $arr_tmp2;
@@ -436,8 +435,6 @@ function cmp($a, $b)
 uasort($param, "cmp");
 
 $tab = $search_obj->send_criteria_data($param);
-//$conn->show_array($param);
-//$conn->show_array($tab);
 
 // criteria list options
 $src_tab = $tab[0];

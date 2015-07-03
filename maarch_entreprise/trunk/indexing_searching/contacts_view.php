@@ -18,6 +18,7 @@ require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'cla
 
 $func = new functions();
 $list2 = new lists(); 
+$db = new Database();
 
 if(isset($_GET['id']))
 {
@@ -55,9 +56,9 @@ if (!isset($_REQUEST['letters'])) {
 $contact = new contacts_v2();
 $request = new request();
 
-$query = "select * from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$_SESSION['contact']['current_contact_id'];
-$request->query($query);
-$line = $request->fetch_object();
+$query = "SELECT * FROM ".$_SESSION['tablename']['contacts_v2']." WHERE contact_id = ?";
+$stmt = $db->query($query, array($_SESSION['contact']['current_contact_id']));
+$line = $stmt->fetchObject();
 
 $_SESSION['m_admin']['contact'] = array();
 $_SESSION['m_admin']['contact']['ID'] = $line->contact_id;

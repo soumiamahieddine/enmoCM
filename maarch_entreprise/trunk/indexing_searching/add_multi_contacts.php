@@ -50,6 +50,7 @@ $is             = new indexing_searching_app();
 $users_tools    = new class_users();
 $sendmail_tools = new sendmail();
 $multicontacts  = new multicontacts();
+$db             = new Database();
 
 function _parse($text) {
     //...
@@ -67,7 +68,6 @@ function _parse_error($text) {
 }
     
 $core_tools->load_lang();
-$request->connect();
 
 $status = 0;
 $error = $content = $js = $parameters = '';
@@ -148,11 +148,11 @@ switch ($mode) {
                             if (empty($error)) {
                             
                                 //Data
-                                $collId = $request->protect_string_db($_REQUEST['coll_id']);
-                                $to =  $request->protect_string_db($to);
-                                $cc = $request->protect_string_db($cc);
-                                $cci = $request->protect_string_db($cci);
-                                $object = $request->protect_string_db($_REQUEST['object']);
+                                $collId = $_REQUEST['coll_id'];
+                                $to =  $to;
+                                $cc = $cc;
+                                $cci = $cci;
+                                $object = $_REQUEST['object'];
                                 (isset($_REQUEST['join_file']) 
                                     && count($_REQUEST['join_file']) > 0
                                 )? $res_master_attached = 'Y' : $res_master_attached = 'N';
@@ -173,9 +173,9 @@ switch ($mode) {
                                 (!empty($_REQUEST['is_html']) && $_REQUEST['is_html'] == 'Y')? $isHtml = 'Y' : $isHtml = 'N';
                                 //Body content
                                 if ($isHtml == 'Y') {
-                                    $body = $request->protect_string_db($sendmail_tools->cleanHtml($_REQUEST['body_from_html']));
+                                    $body = $sendmail_tools->cleanHtml($_REQUEST['body_from_html']);
                                 } else {
-                                     $body = $request->protect_string_db($_REQUEST['body_from_raw']);
+                                     $body = $_REQUEST['body_from_raw'];
                                 }
                                 
                                 //Status
@@ -186,13 +186,13 @@ switch ($mode) {
                                 }
                                 
                                 //Query                 
-                                $request->query(
+                                $db->query(
                                     "INSERT INTO " . EMAILS_TABLE . "(coll_id, res_id, user_id, to_list, cc_list,
                                     cci_list, email_object, email_body, is_res_master_attached, res_version_id_list, 
                                     res_attachment_id_list, note_id_list, is_html, email_status, creation_date) VALUES (
-                                    '" . $collId. "', '" .$identifier. "', '" .$userId. "', '" .$to. "', '" .$cc. "',
-                                    '" .$cci . "', '" .$object. "', '" .$body. "', '" .$res_master_attached . "', '".$version_list."', 
-                                    '" . $attachment_list . "', '" . $note_list . "', '" . $isHtml . "', '" . $email_status . "', " . $date . ")"
+                                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                array($collId, $identifier, $userId, $to, $cc, $cci, $object, $body, $res_master_attached, $version_list,
+                                    $attachment_list, $note_list, $isHtml, $email_status, $date)
                                 );
                                 
                                 //Last insert ID from sequence
@@ -312,15 +312,11 @@ switch ($mode) {
                                     }
                                     
                                     //Query                 
-                                    $request->query(
-                                        "UPDATE " . EMAILS_TABLE . " SET to_list = '" . $to . "', cc_list = '" 
-                                            . $cc . "', cci_list = '" . $cci . "', email_object = '" 
-                                            . $object . "', email_body = '" . $body . "', is_res_master_attached = '" 
-                                            . $res_master_attached . "', res_version_id_list = '".$version_list."', "
-                                            . "res_attachment_id_list = '".$attachment_list . "', note_id_list = '" . $note_list 
-                                            . "', is_html = '" . $isHtml . "', email_status = '" 
-                                            . $email_status . "' where email_id = ". $id 
-                                            ." and res_id =  '" . $identifier . "' and user_id = '" . $userId . "'"
+                                    $db->query(
+                                        "UPDATE " . EMAILS_TABLE . " SET to_list = ?, cc_list = ?, cci_list = ?, email_object = ?, email_body = ?, is_res_master_attached = ?, res_version_id_list = ?, "
+                                            . "res_attachment_id_list = ?, note_id_list = ?, is_html = ?, email_status = ? where email_id = ? and res_id = ? and user_id = ?",
+                                array($to, $cc, $cci, $object, $body, $res_master_attached, $version_list,
+                                    $attachment_list, $note_list, $isHtml, $email_status, $id, $identifier, $userId)
                                     );
                                     
                                     //History
@@ -383,11 +379,11 @@ switch ($mode) {
             $object = $request->protect_string_db($_REQUEST['object']);
             
             //Delete mail
-            $request->query("delete from " . EMAILS_TABLE . " where email_id = " . $id);
+            $db->query("DELETE FROM " . EMAILS_TABLE . " WHERE email_id = ?", array($id));
             
             //Delete email from stack too ???
-            $request->query("delete from " . _NOTIF_EVENT_STACK_TABLE_NAME 
-                . " where table_name = '" . EMAILS_TABLE . "' and record_id = '" . $id . "'");
+            $db->query("DELETE FROM " . _NOTIF_EVENT_STACK_TABLE_NAME 
+                . " WHERE table_name = '" . EMAILS_TABLE . "' and record_id = ?", array($id));
             
             //History
             if ($_SESSION['history']['mailadd']) {

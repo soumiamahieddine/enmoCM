@@ -32,8 +32,8 @@ $core_tools->load_lang();
 $_SESSION['search']['plain_text'] = "";
 
 $func = new functions();
-$conn = new dbquery();
-$conn->connect();
+$conn = new Database();
+
 $search_obj = new indexing_searching_app();
 
 $_SESSION['indexation'] = false;
@@ -94,8 +94,6 @@ function cmp($a, $b)
 uasort($param, "cmp");
 
 $tab = $search_obj->send_criteria_data($param);
-//$conn->show_array($param);
-//$conn->show_array($tab);
 
 // criteria list options
 $src_tab = $tab[0];
@@ -122,10 +120,10 @@ $core_tools->load_js();
     <input type="hidden" name="mode" value="<?php echo $mode;?>" />
     <?php
     $contact_types = array();
-    $conn->connect();
-    $conn->query("SELECT id, label FROM ".$_SESSION['tablename']['contact_types']);
-    while($res = $conn->fetch_object()){
-        $contact_types[$res->id] = $conn->show_string($res->label); 
+
+    $stmt = $conn->query("SELECT id, label FROM ".$_SESSION['tablename']['contact_types']);
+    while($res = $stmt->fetchObject()){
+        $contact_types[$res->id] = functions::show_string($res->label); 
     }
     ?>
     <table width="100%">

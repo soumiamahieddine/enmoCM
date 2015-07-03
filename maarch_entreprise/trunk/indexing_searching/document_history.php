@@ -38,6 +38,7 @@ $core_tools = new core_tools();
 $request    = new request();
 $sec        = new security();
 $list       = new lists();
+$db         = new Database();
 
 $parameters = '';
 
@@ -146,17 +147,15 @@ if (isset($_REQUEST['load'])) {
                 $whereTableOrView = "(h.table_name= '" . $table . "' OR h.table_name = '" . $view . "')";
             }
             
-            $request->query("select h.event_date, ".$_SESSION['tablename']['users'].".user_id, "
+            $stmt = $db->query("SELECT h.event_date, ".$_SESSION['tablename']['users'].".user_id, "
                 .$_SESSION['tablename']['users'].".firstname, ".$_SESSION['tablename']['users']
-                .".lastname, h.info from " .$_SESSION['tablename']['history']
-                ." h, ".$_SESSION['tablename']['users'] ." where "
-                .$whereTableOrView." and h.record_id = '".$id
-                ."' and h.user_id = ".$_SESSION['tablename']['users']
-                .".user_id".$where." ".$orderstr);
-            // $request->show();
+                .".lastname, h.info FROM " .$_SESSION['tablename']['history']
+                ." h, ".$_SESSION['tablename']['users'] ." WHERE "
+                .$whereTableOrView." and h.record_id = ? and h.user_id = ".$_SESSION['tablename']['users']
+                .".user_id".$where." ".$orderstr, array($id));
             
             $tab=array();
-            while($line = $request->fetch_array())
+            while($line = $stmt->fetch(PDO::FETCH_ASSOC))
             {
                 $temp= array();
                 foreach (array_keys($line) as $resval)

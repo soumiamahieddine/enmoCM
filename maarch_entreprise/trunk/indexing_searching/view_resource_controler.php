@@ -150,13 +150,11 @@ if ($s_id == '') {
         && !isset($_REQUEST['original'])
         && !isset($_REQUEST['aVersion'])
     ) {
-        $selectVersions = "select res_id from " 
-            . $versionTable . " where res_id_master = " 
-            . $s_id . " and status <> 'DEL' order by res_id desc";
-        $dbVersions = new dbquery();
-        $dbVersions->connect();
-        $dbVersions->query($selectVersions);
-        $lineLastVersion = $dbVersions->fetch_object();
+        $selectVersions = "SELECT res_id FROM " 
+            . $versionTable . " WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
+        $db = new Database();
+        $stmt = $db->query($selectVersions, array($s_id));
+        $lineLastVersion = $stmt->fetchObject();
         $lastVersion = $lineLastVersion->res_id;
         if ($lastVersion <> '') {
             $s_id = $lastVersion;

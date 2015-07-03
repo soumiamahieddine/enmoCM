@@ -57,6 +57,7 @@ $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $lev
 /***********************************************************/
 
 $request = new request();
+$db = new Database();
 
 echo '<div class="error" id="main_error">';
 echo $_SESSION['error'];
@@ -78,9 +79,9 @@ if (!isset($_GET['addressid']) || $_GET['addressid'] == '') {
 
 $contact = new contacts_v2();
 
-$query = "select * from ".$_SESSION['tablename']['contact_addresses']." where id = ".$_GET['addressid'];
-$request->query($query);
-$line = $request->fetch_object();
+$query = "SELECT * FROM ".$_SESSION['tablename']['contact_addresses']." WHERE id = ?";
+$stmt = $db->query($query, array($_GET['addressid']));
+$line = $stmt->fetchObject();
 
 $_SESSION['m_admin']['address'] = array();
 $_SESSION['m_admin']['address']['ID'] = $line->id;

@@ -100,43 +100,13 @@ if (isset($resId) && ! empty($resId)
 }
 $modifyDoc = false;
 $deleteDoc = false;
-/*
-$modifyDoc = check_right(
-    $_SESSION['user']['security'][$collId]['DOC']['securityBitmask'],
-    DATA_MODIFICATION
-);
-$deleteDoc = check_right(
-    $_SESSION['user']['security'][$collId]['DOC']['securityBitmask'],
-    DELETE_RECORD
-);
 
-if(isset($_POST['submit_index_doc']))
-{
-	if($core->is_module_loaded('entities') && is_array($_SESSION['details']['diff_list'])) {
-		require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
-		$list = new diffusion_list();
-		$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $collId, 'res_id' => $resId, 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => false);
-		$list->load_list_db($_SESSION['details']['diff_list'], $params); //pb enchainement avec action redirect
-	}
-    $is->update_mail($_POST, "POST", $resId, $collId);
-}
-//delete the doctype
-if(isset($_POST['delete_doc']))
-{
-    $is ->delete_doc( $resId, $collId);
-    ?>
-        <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
-    <?php
-    exit();
-}
-   */
 if (empty($_SESSION['error'])) {
-	$db = new dbquery();
-    $db->connect();
+	$db = new Database();
     $compFields = '';
-    $db->query("select type_id from " . $table . " where res_id = " . $resId);
-    if ($db->nb_result() > 0) {
-        $res = $db->fetch_object();
+    $stmt = $db->query("SELECT type_id FROM " . $table . " WHERE res_id = ?", array($resId));
+    if ($stmt->rowCount() > 0) {
+        $res = $stmt->fetchObject();
         $typeId = $res->type_id;
         $indexes = $type->get_indexes($typeId, $collId, 'minimal');
 
@@ -153,13 +123,13 @@ if (empty($_SESSION['error'])) {
     if ($core->is_module_loaded('cases') == true && $table == 'res_view_letterbox') {
         $caseSqlComplementary = " , case_id";
     }
-    $db->query(
-    	"select status, format, typist, creation_date, fingerprint, filesize, "
+    $stmt = $db->query(
+    	"SELECT status, format, typist, creation_date, fingerprint, filesize, "
         . "res_id, work_batch, page_count, is_paper, scan_date, scan_user, "
         . "scan_location, scan_wkstation, scan_batch, source, doc_language, "
         . "description, closing_date, type_id " . $compFields
-        . $caseSqlComplementary . " from " . $table . " where res_id = "
-        . $resId
+        . $caseSqlComplementary . " FROM " . $table . " WHERE res_id = ?",
+         array($resId)
     );
 }
 ?>
@@ -181,7 +151,7 @@ if (! empty($_SESSION['error']) ) {
         </div>
         <?php
 } else {
-    if ($db->nb_result() == 0) {
+    if ($stmt->rowCount() == 0) {
             ?>
             <div align="center">
                 <br />
@@ -208,23 +178,23 @@ if (! empty($_SESSION['error']) ) {
     		'img_project' => true
         );
 
-        $res = $db->fetch_object();
+        $res = $stmt->fetchObject();
         $typeId = $res->type_id;
         $typist = $res->typist;
         $format = $res->format;
         $filesize = $res->filesize;
-        $creationDate = $db->format_date_db($res->creation_date, false);
+        $creationDate = functions::format_date_db($res->creation_date, false);
         $fingerprint = $res->fingerprint;
         $workBatch = $res->work_batch;
         $pageCount = $res->page_count;
         $isPaper = $res->is_paper;
-        $scanDate = $db->format_date_db($res->scan_date);
+        $scanDate = functions::format_date_db($res->scan_date);
         $scanUser = $res->scan_user;
         $scanLocation = $res->scan_location;
         $scanWkstation = $res->scan_wkstation;
         $scanBatch = $res->scan_batch;
         $docLanguage = $res->doc_language;
-        $closingDate = $db->format_date_db($res->closing_date, false);
+        $closingDate = functions::format_date_db($res->closing_date, false);
         $indexes = $type->get_indexes($typeId, $collId);
 
         if ($core->is_module_loaded('cases') == true) {
@@ -234,7 +204,7 @@ if (! empty($_SESSION['error']) ) {
                 $caseProperties = $case->get_case_info($res->case_id);
             }
         }
-        //$db->show_array($indexes);
+
         foreach (array_keys($indexes) as $key) {
             if (preg_match('/^custom/', $key)) {
                 $tmp = 'doc_' . $key;
@@ -242,17 +212,17 @@ if (! empty($_SESSION['error']) ) {
                 $tmp = $key;
             }
             if ($indexes[$key]['type'] == "date") {
-                $res->$tmp = $db->format_date_db($res->$tmp, false);
+                $res->$tmp = functions::format_date_db($res->$tmp, false);
             }
             $indexes[$key]['value'] = $res->$tmp;
             $indexes[$key]['show_value'] = $res->$tmp;
             if ($indexes[$key]['type'] == "string") {
-                $indexes[$key]['show_value'] = $db->show_string($res->$tmp);
+                $indexes[$key]['show_value'] = functions::show_string($res->$tmp);
             } else if ($indexes[$key]['type'] == "date") {
-                $indexes[$key]['show_value'] = $db->format_date_db($res->$tmp, true);
+                $indexes[$key]['show_value'] = functions::format_date_db($res->$tmp, true);
             }
         }
-        //$db->show_array($indexes);
+
         // $processData = $is->get_process_data($collId, $resId);
         $status = $res->status;
         if (! empty($status)) {

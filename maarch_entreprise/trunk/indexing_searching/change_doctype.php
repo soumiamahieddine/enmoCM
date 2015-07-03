@@ -32,7 +32,7 @@
 require_once('core/class/class_security.php');
 require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php');
 
-$db = new dbquery();
+$db = new Database();
 $core = new core_tools();
 $core->load_lang();
 $type = new types();
@@ -87,14 +87,12 @@ if (!isset($_REQUEST['priority_id']) || $_REQUEST['priority_id'] == '') {
 // Process limit date calcul
 //Bug fix if delay process is disabled in services
 if ($core->service_is_enabled('param_mlb_doctypes')) {
-    $db->connect();
-    $db->query("select process_delay from " 
-        . $_SESSION['tablename']['mlb_doctype_ext'] . " where type_id = " 
-        . $_REQUEST['type_id']
+    $stmt = $db->query("SELECT process_delay FROM " 
+        . $_SESSION['tablename']['mlb_doctype_ext'] . " WHERE type_id = ?", 
+        array($_REQUEST['type_id'])
     );
-    //$db->show();
 
-    $res = $db->fetch_object();
+    $res = $stmt->fetchObject();
     $delay = $res->process_delay;
 }
 $mandatory_indexes = $type->get_mandatory_indexes($_REQUEST['type_id'], $coll_id);
@@ -128,10 +126,10 @@ if(count($indexes) > 0)
             {
                 $fields .= ', '.$key;
             }
-            $db->query("select " . $fields . " from " . $table 
-                . " where res_id = " . $res_id
+            $stmt = $db->query("SELECT " . $fields . " FROM " . $table 
+                . " WHERE res_id = ?", array($res_id)
             );
-            $values_fields = $db->fetch_object();
+            $values_fields = $stmt->fetchObject();
         }
     }
     $opt_indexes .= '<hr />';
@@ -162,11 +160,11 @@ if(count($indexes) > 0)
                     $opt_indexes .='<input name="' . functions::xssafe($key) . '" type="text" id="' 
                         . $key . '" value="';
                     if (isset($values_fields->$key)) {
-                        $opt_indexes .= $db->format_date_db(
+                        $opt_indexes .= functions::format_date_db(
                             functions::xssafe($values_fields->$key), true
                         );
                     } elseif ($indexes[$key]['default_value'] <> false) {
-                        $opt_indexes .= $db->format_date_db(
+                        $opt_indexes .= functions::format_date_db(
                             functions::xssafe($indexes[$key]['default_value']), true
                         );
                     }
@@ -176,11 +174,11 @@ if(count($indexes) > 0)
                     $opt_indexes .= '<input name="'.functions::xssafe($key).'" type="text" id="' 
                         . $key . '" value="';
                     if (isset($values_fields->$key)) {
-                        $opt_indexes .= $db->show_string(
+                        $opt_indexes .= functions::show_string(
                             functions::xssafe($values_fields->$key), true
                         );
                     } else if ($indexes[$key]['default_value'] <> false) {
-                        $opt_indexes .= $db->show_string(
+                        $opt_indexes .= functions::show_string(
                             functions::xssafe($indexes[$key]['default_value']), true
                         );
                     }
@@ -275,7 +273,7 @@ if (isset($delay) && $delay > 0) {
     } else {
         $date = $alert_engine->date_max_treatment($delay, false);
     }
-    $process_date = $db->dateformat($date, '-');
+    $process_date = functions::dateformat($date, '-');
     echo "{status : 0, process_date : '" . trim(functions::xssafe($process_date)) 
         . "', opt_indexes : '" . addslashes($opt_indexes) . "', services : " 
         . $services . "}";
