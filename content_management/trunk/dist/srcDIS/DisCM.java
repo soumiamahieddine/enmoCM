@@ -45,6 +45,7 @@ public class DisCM extends JApplet {
     protected String objectType;
     protected String objectTable;
     protected String objectId;
+    protected String cookie;
     protected String userLocalDirTmp;
     protected String userMaarch;
     protected String userMaarchPwd;
@@ -84,6 +85,7 @@ public class DisCM extends JApplet {
         this.objectType = this.getParameter("objectType");
         this.objectTable = this.getParameter("objectTable");
         this.objectId = this.getParameter("objectId");
+        this.cookie = this.getParameter("cookie");
         this.userMaarch = this.getParameter("userMaarch");
         this.userMaarchPwd = this.getParameter("userMaarchPwd");
         this.psExecMode = this.getParameter("psExecMode");
@@ -92,6 +94,7 @@ public class DisCM extends JApplet {
         System.out.println("OBJECT TYPE : " + this.objectType);
         System.out.println("OBJECT TABLE : " + this.objectTable);
         System.out.println("OBJECT ID : " + this.objectId);
+        System.out.println("COOKIE : " + this.cookie);
         System.out.println("USER MAARCH : " + this.userMaarch);
         System.out.println("PSEXEC MODE : " + this.psExecMode);
         
@@ -186,14 +189,16 @@ public class DisCM extends JApplet {
         this.objectType = args[1];
         this.objectTable = args[2];
         this.objectId = args[3];
-        this.userMaarch = args[4];
-        this.userMaarchPwd = args[5];
-        this.psExecMode = args[6];
+        this.cookie = args[4];
+        this.userMaarch = args[5];
+        this.userMaarchPwd = args[6];
+        this.psExecMode = args[7];
         
         System.out.println("URL : " + this.url);
         System.out.println("OBJECT TYPE : " + this.objectType);
         System.out.println("OBJECT TABLE : " + this.objectTable);
         System.out.println("OBJECT ID : " + this.objectId);
+        System.out.println("COOKIE : " + this.cookie);
         System.out.println("USER MAARCH : " + this.userMaarch);
         System.out.println("USER MAARCHPWD : " + this.userMaarchPwd);
         System.out.println("PSEXEC MODE : " + this.psExecMode);
@@ -248,6 +253,9 @@ public class DisCM extends JApplet {
             }
             if ("OBJECT_ID".equals(key)) {
                 this.objectId = value;
+            }
+            if ("COOKIE".equals(key)) {
+                this.cookie = value;
             }
             if ("APP_PATH".equals(key)) {
                 //this.appPath = value;
@@ -574,6 +582,7 @@ public class DisCM extends JApplet {
         HttpURLConnection HttpOpenRequest = (HttpURLConnection) UrlOpenRequest.openConnection();
         HttpOpenRequest.setDoOutput(true);
         HttpOpenRequest.setRequestMethod("POST");
+        HttpOpenRequest.setRequestProperty("Cookie", this.cookie);
         if (!"none".equals(postRequest)) {
             OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
             if (endProcess){
