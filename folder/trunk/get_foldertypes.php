@@ -31,7 +31,7 @@ if(!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id']))
 $db = new dbquery();
 $db->connect();
 
-$db->query("select foldertype_id,foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." where coll_id = '".$_REQUEST['coll_id']."'");
+$db->query("select foldertype_id,foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." where coll_id = '".$_REQUEST['coll_id']."' order by foldertype_label ASC");
 
 $content = '<option value="">'._CHOOSE_FOLDERTYPE.'</option>';
 while($res = $db->fetch_object())
