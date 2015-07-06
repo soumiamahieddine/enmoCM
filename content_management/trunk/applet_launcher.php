@@ -147,6 +147,15 @@ if ($objectType <> 'templateStyle') {
     }
 }
 
+$cookieKey = '';
+$cptCook = 0;
+foreach ($_COOKIE as $key => $value) {
+    if ($cptCook == 0) {
+        $cookieKey = $key . '=' . $value;
+    }
+    $cptCook++;
+}
+
 //init error session
 $_SESSION['error'] = '';
 if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "false"){
@@ -166,6 +175,7 @@ if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "false"){
         <param name="objectType" value="<?php functions::xecho($objectType);?>">
         <param name="objectTable" value="<?php functions::xecho($objectTable);?>">
         <param name="objectId" value="<?php functions::xecho($objectId);?>">
+        <param name="cookie" value="<?php echo $cookieKey;?>">
         <param name="userMaarch" value="<?php 
             echo $cMFeatures['CONFIG']['userMaarchOnClient'];
         ?>">
@@ -204,6 +214,7 @@ else if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
         <param name="objectType" value="<?php functions::xecho($objectType);?>">
         <param name="objectTable" value="<?php functions::xecho($objectTable);?>">
         <param name="objectId" value="<?php functions::xecho($objectId);?>">
+        <param name="cookie" value="<?php echo $cookieKey;?>">
         <param name="userMaarch" value="<?php 
             echo $cMFeatures['CONFIG']['userMaarchOnClient'];
         ?>">
