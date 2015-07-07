@@ -46,13 +46,11 @@ foreach($listArray as $what){
 	if($authViewList >= 10){
 		$flagAuthView = true;
 	}
-    //if(stripos($what, $_REQUEST['what']) === 0){
-        echo "<li>".$what."</li>\n";
-		if(isset($flagAuthView) && $flagAuthView){
-			echo "<li>...</li>\n";
-			break;
-		}
-		$authViewList++;
-    //}
+    echo "<li>".functions::xssafe($what)."</li>\n";
+	if(isset($flagAuthView) && $flagAuthView){
+		echo "<li>...</li>\n";
+		break;
+	}
+	$authViewList++;
 }
 echo "</ul>";

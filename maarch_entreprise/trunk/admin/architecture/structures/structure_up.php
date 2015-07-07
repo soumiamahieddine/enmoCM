@@ -258,7 +258,7 @@ $time = $core->get_session_time_expire();
 
 <div class="error">
 <?php
-echo $erreur;
+functions::xecho($erreur);
 $erreur = "";
 ?>
 </div>
@@ -299,11 +299,12 @@ if ($mode == "up") {
             <option value=""><?php echo _CHOOSE_STYLE;?></option>
             <?php
 				for ($i = 0; $i < count($fontColors); $i ++) {
-				    echo '<option value="' . $fontColors[$i]['id'] . '" ';
+				    echo '<option value="' . functions::xssafe($fontColors[$i]['id']) . '" ';
 				    if ($fontColors[$i]['id'] == $cssStyle) {
 				        echo ' selected="selected" ';
 				    }
-				    echo   ' class="' . $fontColors[$i]['id'] . '">' . $fontColors[$i]['label'] . '</option>';
+				    echo   ' class="' . functions::xssafe($fontColors[$i]['id']) . '">' 
+				    	. functions::xssafe($fontColors[$i]['label']) . '</option>';
 				}
             ?>
         </select>
@@ -343,13 +344,13 @@ if ($folderModuleLoaded) {
 					if ($foldertypesState == false) {
 						?>
 						<option value="<?php
-						echo $_SESSION['m_admin']['foldertypes'][$i]['id'];
+						functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['id']);
 						?>" alt="<?php
-						echo $_SESSION['m_admin']['foldertypes'][$i]['label'];
+						functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['label']);
 						?>" title="<?php
-						echo $_SESSION['m_admin']['foldertypes'][$i]['label'];
+						functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['label']);
 						?>"><?php
-						echo $_SESSION['m_admin']['foldertypes'][$i]['label'];
+						functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['label']);
 						?></option>
 						<?php
 					}

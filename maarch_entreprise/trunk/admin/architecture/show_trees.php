@@ -204,24 +204,24 @@ else
                     {
                             ?>
                             {
-                                'id':'<?php echo addslashes($search_customer_results[$i]['folder_id']);?>',
-                                'txt':'<b><?php echo addslashes($search_customer_results[$i]['folder_id']);?></b>',
+                                'id':'<?php functions::xecho(addslashes($search_customer_results[$i]['folder_id']));?>',
+                                'txt':'<b><?php functions::xecho(addslashes($search_customer_results[$i]['folder_id']));?></b>',
                                 'items':[
                                             <?php
                                             for($j=0;$j<count($search_customer_results[$i]['content']);$j++)
                                             {
                                                 ?>
                                                 {
-                                                    'id':'<?php echo addslashes($search_customer_results[$i]['content'][$j]['doctypes_first_level_id']);?>',
-                                                    'txt':'<?php echo addslashes($search_customer_results[$i]['content'][$j]['doctypes_first_level_label']);?>',
+                                                    'id':'<?php functions::xecho(addslashes($search_customer_results[$i]['content'][$j]['doctypes_first_level_id']));?>',
+                                                    'txt':'<?php functions::xecho(addslashes($search_customer_results[$i]['content'][$j]['doctypes_first_level_label']));?>',
                                                     'items':[
                                                                 <?php
                                                                 for($k=0;$k<count($search_customer_results[$i]['content'][$j]['second_level']);$k++)
                                                                 {
                                                                     ?>
                                                                     {
-                                                                        'id':'<?php echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_id']);?>',
-                                                                        'txt':'<?php echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_label']);?>',
+                                                                        'id':'<?php functions::xecho(addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_id']));?>',
+                                                                        'txt':'<?php functions::xecho(addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_label']));?>',
                                                                         'items':[
                                                                                     <?php
                                                                                     for($l=0;$l<count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes']);$l++)
@@ -230,7 +230,7 @@ else
                                                                                         {
                                                                                             <?php
                                                                                             ?>
-                                                                                            'txt':'<span style="font-style:italic;"><small><small><a href="#" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types_up&id=<?php functions::xecho($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id']);?>\');"><?php echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?></a></small></small></span>',
+                                                                                            'txt':'<span style="font-style:italic;"><small><small><a href="#" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types_up&id=<?php functions::xecho($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id']);?>\');"><?php functions::xecho(addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']));?></a></small></small></span>',
                                                                                             'img':'empty.gif'
                                                                                         }
                                                                                         <?php

@@ -135,6 +135,6 @@ if (isset($_REQUEST['fromSearchContacts'])) {
     exit;
 } else {
     echo '<div class="block" style="margin-top:15px;">';
-    $contact->formaddress("up",$id, $admin);
+    functions::xssafe($contact->formaddress("up",$id, $admin));
     echo '</div>';
 }

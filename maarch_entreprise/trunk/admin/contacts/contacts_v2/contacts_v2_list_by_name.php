@@ -95,9 +95,9 @@ foreach ($listArray as $key => $what) {
     if ($authViewList >= 10) {
         $flagAuthView = true;
     }
-    echo "<li id=".$key.">".$what."</li>\n";
+    echo "<li id=".functions::xssafe($key).">".functions::xssafe($what)."</li>\n";
     if($flagAuthView) {
-        echo "<li id=".$key.">...</li>\n";
+        echo "<li id=".functions::xssafe($key).">...</li>\n";
         break;
     }
     $authViewList++;

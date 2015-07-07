@@ -368,4 +368,3 @@ for ($i = 0; $i < count($tab); $i ++) {
 //Afficher la liste
     echo '<br/>';
     $list2->showList($tab, $paramsTab, 'id');
-?>

@@ -206,7 +206,7 @@ if (isset($_REQUEST['valid'])) {
 			);
 			$res = $stmt->fetchObject();
 			?>
-				<script type="text/javascript">window.opener.$("new_id").value ="<?php echo utf8_decode($res->label);?>";window.opener.$("contact_purposes").value ='<?php functions::xecho($res->id);?>';self.close();</script> 
+				<script type="text/javascript">window.opener.$("new_id").value ="<?php functions::xecho(utf8_decode($res->label));?>";window.opener.$("contact_purposes").value ='<?php functions::xecho($res->id);?>';self.close();</script> 
 			<?php
 		} else {
 			unset($_SESSION['m_admin']);
@@ -281,7 +281,7 @@ $time = $core->get_session_time_expire();
 
 <div class="error">
 <?php
-echo $erreur;
+functions::xecho($erreur);
 $erreur = "";
 ?>
 </div>

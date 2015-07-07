@@ -53,7 +53,7 @@ foreach($listArray as $what)
 	}
     if(stripos($what, $_REQUEST['what']) === 0)
     {
-        echo "<li>".$what."</li>\n";
+        echo "<li>".functions::xssafe($what)."</li>\n";
 		if($flagAuthView)
 		{
 			echo "<li>...</li>\n";

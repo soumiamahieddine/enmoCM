@@ -62,7 +62,7 @@ try {
     }
     require_once 'core/class/StatusControler.php';
 } catch (Exception $e) {
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 $statusController = new Maarch_Core_Class_StatusControler();

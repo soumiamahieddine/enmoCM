@@ -40,18 +40,18 @@ elseif($mode == 'up' || $mode == 'add'){
             <input type="hidden" name="mode" value="<?php echo $mode;?>" />
 
             <input type="hidden" name="order" id="order" value="<?php
-                echo $_REQUEST['order'];?>" />
+                functions::xecho($_REQUEST['order']);?>" />
             <input type="hidden" name="order_field" id="order_field" value="<?php
-                echo $_REQUEST['order_field'];?>" />
+                functions::xecho($_REQUEST['order_field']);?>" />
             <input type="hidden" name="what" id="what" value="<?php
-                echo $_REQUEST['what'];?>" />
+                functions::xecho($_REQUEST['what']);?>" />
             <input type="hidden" name="start" id="start" value="<?php
-                echo $_REQUEST['start'];?>" />
+                functions::xecho($_REQUEST['start']);?>" />
 
             <p>
                 <label for="label"><?php echo _DESC;?> : </label>
                 <input name="label" type="text"  id="label" value="<?php
-                    echo functions::show_str($_SESSION['m_admin']['action']['LABEL']);?>"/>
+                    functions::xecho(functions::show_str($_SESSION['m_admin']['action']['LABEL']));?>"/>
             </p>
             <?php
             if($_SESSION['m_admin']['action']['IS_SYSTEM']  == 'Y'){
@@ -83,12 +83,12 @@ elseif($mode == 'up' || $mode == 'add'){
                     <?php
                     for($i = 0; $i < count($_SESSION['actions_pages']); $i++){
                         ?><option value="<?php
-                        echo $_SESSION['actions_pages'][$i]['ID'];?>" <?php
+                        functions::xecho($_SESSION['actions_pages'][$i]['ID']);?>" <?php
                         if($_SESSION['actions_pages'][$i]['ID']
                             == $_SESSION['m_admin']['action']['ACTION_PAGE']){
                             echo 'selected="selected"';
                         }?> ><?php
-                        echo $_SESSION['actions_pages'][$i]['LABEL'];
+                        functions::xecho($_SESSION['actions_pages'][$i]['LABEL']);
                         ?></option><?php
                     }?>
                 </select>
@@ -158,9 +158,9 @@ elseif($mode == 'up' || $mode == 'add'){
                                         if ($state_category == false) {
                                             ?>
                                             <option value="<?php
-                                                echo $catId;
+                                                functions::xecho($catId);
                                                 ?>"><?php
-                                                echo $collId . ' / ' . $catValue;
+                                                functions::xecho($collId . ' / ' . $catValue);
                                                 ?></option>
                                             <?php
                                         }
@@ -199,9 +199,9 @@ elseif($mode == 'up' || $mode == 'add'){
                                         if ($state_category == true) {
                                             ?>
                                             <option value="<?php
-                                                echo $catId;
+                                                functions::xecho($catId);
                                                 ?>" selected="selected"><?php
-                                                echo $collId . ' / ' . $catValue;
+                                                functions::xecho($collId . ' / ' . $catValue);
                                                 ?></option>
                                             <?php
                                         }

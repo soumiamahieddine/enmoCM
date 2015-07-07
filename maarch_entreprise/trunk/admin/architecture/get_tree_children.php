@@ -65,7 +65,11 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 			echo "[";
 			for($cpt_level2=0; $cpt_level2< count($children); $cpt_level2++)
 			{
-				echo "{'id':'".$children[$cpt_level2]['id']."', 'txt':'".trim(addslashes($children[$cpt_level2]['label_value']))."', 'canhavechildren' : true, '".$children[$cpt_level2]['script']."' : 'other', 'key_value' : '".trim(addslashes($children[$cpt_level2]['key_value']))."', 'onbeforeopen' : MyBeforeOpen}";
+				echo "{'id':'".functions::xssafe($children[$cpt_level2]['id'])
+				."', 'txt':'".functions::xssafe(trim(addslashes($children[$cpt_level2]['label_value'])))
+				."', 'canhavechildren' : true, '".functions::xssafe($children[$cpt_level2]['script'])
+				."' : 'other', 'key_value' : '".functions::xssafe(trim(addslashes($children[$cpt_level2]['key_value'])))
+				."', 'onbeforeopen' : MyBeforeOpen}";
 				if(isset($children[$cpt_level2+1]['id']) && !empty($children[$cpt_level2+1]['id']))
 				{
 					echo ',';
@@ -89,7 +93,11 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 			echo "[";
 			for($cpt_level3=0; $cpt_level3< count($children); $cpt_level3++)
 			{
-				echo "{'id':'".$children[$cpt_level3]['id']."', 'txt':'".trim(addslashes($children[$cpt_level3]['label_value']))."', 'canhavechildren' : false, '".$children[$cpt_level3]['script']."' : 'default', 'key_value' : '".trim(addslashes($children[$cpt_level3]['key_value']))."', 'img' : 'page.gif'}";
+				echo "{'id':'".functions::xssafe($children[$cpt_level3]['id'])."', 'txt':'"
+				.functions::xssafe(trim(addslashes($children[$cpt_level3]['label_value'])))
+				."', 'canhavechildren' : false, '".functions::xssafe($children[$cpt_level3]['script'])
+				."' : 'default', 'key_value' : '".functions::xssafe(trim(addslashes($children[$cpt_level3]['key_value'])))
+				."', 'img' : 'page.gif'}";
 				if(isset($children[$cpt_level3+1]['id']) && !empty($children[$cpt_level3+1]['id']))
 				{
 					echo ',';
@@ -99,4 +107,4 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 		}
 	}
 }
-?>
+

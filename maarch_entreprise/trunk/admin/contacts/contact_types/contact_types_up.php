@@ -261,7 +261,7 @@ $time = $core->get_session_time_expire();
 
 <div class="error">
 <?php
-echo $erreur;
+functions::xecho($erreur);
 $erreur = "";
 ?>
 </div>
@@ -295,7 +295,7 @@ if ($mode == "up") {
 	    echo _ID . ' ' . _CONTACT_TYPE;
 	    ?> :</label>
 			<input type="text" class="readonly" name="ID_contact_types" value="<?php
-		echo $_SESSION['CURRENT_ID_CONTACT_TYPE'];
+		functions::xecho($_SESSION['CURRENT_ID_CONTACT_TYPE']);
 		?>" readonly="readonly" />
 	     </p>
 	     <p>&nbsp;</p>

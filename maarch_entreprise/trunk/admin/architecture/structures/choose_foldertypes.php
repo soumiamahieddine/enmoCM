@@ -100,7 +100,7 @@ elseif(isset($_REQUEST['foldertypes']) && count($_REQUEST['foldertypes']) <= 0)
 			if($state_foldertypes == false)
 			{
 				?>
-				<option value="<?php functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['id']);?>" alt="<?php   echo $_SESSION['m_admin']['foldertypes'][$i]['label'];?>" title="<?php   echo $_SESSION['m_admin']['foldertypes'][$i]['label'];?>"><?php echo $_SESSION['m_admin']['foldertypes'][$i]['label'];?></option>
+				<option value="<?php functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['id']);?>" alt="<?php functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['label']);?>" title="<?php functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['label']);?>"><?php functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['label']);?></option>
 				<?php
 			}
 		}
@@ -133,7 +133,7 @@ elseif(isset($_REQUEST['foldertypes']) && count($_REQUEST['foldertypes']) <= 0)
 			if($state_foldertypes == true)
 			{
 				?>
-				<option value="<?php functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['id']);?>" ><?php echo $_SESSION['m_admin']['foldertypes'][$i]['label'];?></option>
+				<option value="<?php functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['id']);?>" ><?php functions::xecho($_SESSION['m_admin']['foldertypes'][$i]['label']);?></option>
 				<?php
 			}
 		}

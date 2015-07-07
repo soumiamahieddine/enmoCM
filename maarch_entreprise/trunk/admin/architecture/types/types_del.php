@@ -135,7 +135,7 @@ else
         $admin->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
         /***********************************************************/
         echo '<h1><i class="fa fa-files-o fa-2x"></i>'._DOCTYPE_DELETION.'</h1>';
-        echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
+        echo "<div class='error' id='main_error'>".functions::xssafe($_SESSION['error'])."</div>";
         $_SESSION['error'] = "";
         ?>
         <br>
@@ -147,7 +147,7 @@ else
         <br> 
         <form name="entity_del" id="entity_del" method="post" class="forms">
             <input type="hidden" value="<?php functions::xecho($s_id);?>" name="id">
-            <h2 class="tit"><?php echo _DOCTYPE_DELETION." : <i>".$label."</i>";?></h2>
+            <h2 class="tit"><?php echo _DOCTYPE_DELETION." : <i>".functions::xssafe($label)."</i>";?></h2>
             <?php
 
                 echo " - ".$stmt->rowCount()." "._DOCS_IN_DOCTYPES;
@@ -170,7 +170,7 @@ else
                     ?>
                 </select>
                  <p class="buttons">
-                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id;?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
+                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.functions::xssafe($s_id);?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
                     <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=types&order=<?php functions::xecho($_REQUEST['order']);?>&order_field=<?php functions::xecho($_REQUEST['order_field']);?>&start=<?php functions::xecho($_REQUEST['start']);?>&what=<?php functions::xecho($_REQUEST['what']);?>';"/>
                 </p>
             </form>

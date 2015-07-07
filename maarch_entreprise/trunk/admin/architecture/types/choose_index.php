@@ -113,16 +113,13 @@ if(isset($_REQUEST['valid']) && isset($_SESSION['m_admin']['doctypes']['COLL_ID'
                             <th align="center" width='100'>
                             	<?php echo _MANDATORY;?>
                             </th>
-                           <!-- <td align="center" width='100'>
-                            	<?php  // echo _ITERATIVE;?>
-                            </td>-->
                         </tr>
 					<?php
 					for($i=0;$i<count($_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']]);$i++)
 					{
 						echo "<tr>";
 						echo "<td width='150'>";
-						echo "	".$_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']][$i]['LABEL'];
+						echo "	".functions::xssafe($_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']][$i]['LABEL']);
 						echo "</td>";
 						echo "<td align='center'>";
 						?>
@@ -146,22 +143,6 @@ if(isset($_REQUEST['valid']) && isset($_SESSION['m_admin']['doctypes']['COLL_ID'
                         	/>
                         </td>
 						<?php
-					/*	if($_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']][$i]['ITERATIVE'] == "no")
-						{
-							?>
-							<td align="center" width='100'>
-								<input name="iterative"  class="check" type="checkbox"  disabled="disabled" />
-							</td>
-							<?php
-						}
-						else
-						{
-							?>
-							<td align="center" width='100'>
-								<input name="iterative" class="check" type="checkbox" checked="checked"  disabled="disabled" />
-							</td>
-							<?php
-						}*/
 						echo "</tr>";
 					}
 					?>

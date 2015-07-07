@@ -90,7 +90,7 @@ $openlink =  $_SESSION['config']['businessappurl']."index.php?display=true&page=
     var BASE_URL = '<?php echo $_SESSION['config']['businessappurl'];?>';
     function funcOpen(branch, response) {
         // Ici tu peux traiter le retour et retourner true si
-        // tu veux ins�rer les enfants, false si tu veux pas
+        // tu veux inserer les enfants, false si tu veux pas
         //MyClick(branch);
         return true;
     }
@@ -181,16 +181,16 @@ $openlink =  $_SESSION['config']['businessappurl']."index.php?display=true&page=
             {
                     ?>
                     {
-                        'id':'<?php echo addslashes($search_customer_results[$i]['contact']);?>',
-                        'txt':'<b><?php echo addslashes($search_customer_results[$i]['contact']);?></b>',
+                        'id':'<?php echo addslashes(functions::xssafe($search_customer_results[$i]['contact']));?>',
+                        'txt':'<b><?php echo addslashes(functions::xssafe($search_customer_results[$i]['contact']));?></b>',
                         'items':[
                                     <?php
                                     for($j=0;$j<count($search_customer_results[$i]['content']);$j++)
                                     {
                                         ?>
                                         {
-                                            'id':'<?php echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_id']);?>',
-                                            'txt':'<a href="#" onclick="window.top.location.href=\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php functions::xecho($search_customer_results[$i]['content'][$j]['contact_type_id']);?>\'"><?php echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?></a>',
+                                            'id':'<?php echo addslashes(functions::xssafe($search_customer_results[$i]['content'][$j]['contact_type_id']));?>',
+                                            'txt':'<a href="#" onclick="window.top.location.href=\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php functions::xecho($search_customer_results[$i]['content'][$j]['contact_type_id']);?>\'"><?php echo addslashes(functions::xssafe($search_customer_results[$i]['content'][$j]['contact_type_label']));?></a>',
                                             'onopenpopulate' : funcOpen,
                                             'openlink' : '<?php functions::xecho($openlink);?>',
                                             'canhavechildren' : true,

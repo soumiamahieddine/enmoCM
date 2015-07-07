@@ -81,7 +81,7 @@ if ($_REQUEST['valid']) {
 		unset($_SESSION['m_admin']);
 		?>
 	        <script type="text/javascript">
-	            window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contact_types&order='.$_REQUEST['order'].'&order_field='.$_REQUEST['order_field'].'&start='.$_REQUEST['start'].'&what='.$_REQUEST['what'];?>";
+	            window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contact_types&order='.functions::xssafe($_REQUEST['order']).'&order_field='.functions::xssafe($_REQUEST['order_field']).'&start='.functions::xssafe($_REQUEST['start']).'&what='.functions::xssafe($_REQUEST['what']);?>";
 	        </script>	
 	    <?php
 	} else {
@@ -91,4 +91,3 @@ if ($_REQUEST['valid']) {
 } else {
 	$contact->type_purpose_address_del($id, true, $_SESSION['tablename']['contact_types'], 'contact_type', _DELETED_CONTACT_TYPE, _WARNING_MESSAGE_DEL_CONTACT_TYPE, _CONTACT_TYPE_DEL, _CONTACT_TYPE_REAFFECT, _NEW_CONTACT_TYPE, _CHOOSE_CONTACT_TYPES, 'contact_types', 'contact_types_del', _CONTACT_TYPE);
 }
-?>

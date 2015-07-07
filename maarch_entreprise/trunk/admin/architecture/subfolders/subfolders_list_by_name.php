@@ -44,7 +44,6 @@ while($line = $stmt->fetchObject())
 }
 echo "<ul>\n";
 $authViewList = 0;
-//echo "<li>test</li>\n";
 foreach($listArray as $what)
 {
 	if($authViewList >= 10)
@@ -53,7 +52,7 @@ foreach($listArray as $what)
 	}
     if(stripos($what, $_REQUEST['what']) === 0)
     {
-        echo "<li>".$what."</li>\n";
+        echo "<li>".functions::xssafe($what)."</li>\n";
 		if($flagAuthView)
 		{
 			echo "<li>...</li>\n";

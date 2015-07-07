@@ -112,8 +112,10 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 				if ($children[$cpt_level2]['enabled'] ==  'N') {
 					$color = "style=\"color:red;\"";
 				}
-				echo "{'id':'".$children[$cpt_level2]['id']."', 
-						'txt':'<a ".$color." onmouseover=\'this.style.cursor=\"pointer\";\' onclick=\"window.top.location.href=\'". $_SESSION['config']['businessappurl']."index.php?page=contacts_v2_up&id=".$children[$cpt_level2]['id']."&fromContactTree\';\">".addslashes($children[$cpt_level2]['contact_label'])."</a>',
+				echo "{'id':'".functions::xssafe($children[$cpt_level2]['id'])."', 
+						'txt':'<a ".$color." onmouseover=\'this.style.cursor=\"pointer\";\' onclick=\"window.top.location.href=\'". $_SESSION['config']['businessappurl']."index.php?page=contacts_v2_up&id="
+							.functions::xssafe($children[$cpt_level2]['id'])."&fromContactTree\';\">"
+							.addslashes(functions::xssafe($children[$cpt_level2]['contact_label']))."</a>',
 						'onopenpopulate' : funcOpen, 
 						'openlink' : '".$openlink."', 
 						'canhavechildren' : true,
@@ -154,7 +156,7 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 				}
 				
 				echo "{'id':'".$children[$cpt_level3]['id']."', 
-						'txt':'<span ".$color.">".trim(addslashes($children[$cpt_level3]['address_label']))."</span>', 
+						'txt':'<span ".$color.">".trim(addslashes(functions::xssafe($children[$cpt_level3]['address_label'])))."</span>', 
 						'canhavechildren' : false, 
 						'img' : 'page.gif'}";
 				if(isset($children[$cpt_level3+1]['id']) && !empty($children[$cpt_level3+1]['id'])) {
@@ -165,4 +167,3 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 		}
 	}
 }
-?>

@@ -89,7 +89,9 @@ if(isset($_REQUEST['valid']))
         }
         ?>
         <script type="text/javascript">
-            window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
+            window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2&order='.functions::xssafe($_REQUEST['order'])
+                ."&order_field=".functions::xssafe($_REQUEST['order_field'])."&start=".functions::xssafe($_REQUEST['start'])
+                ."&what=".functions::xssafe($_REQUEST['what']);?>";
         </script>
         <?php
 
@@ -103,4 +105,3 @@ if(isset($_REQUEST['valid']))
 } else {
     $contact->delcontact($s_id);
 }
-?>
