@@ -10,7 +10,7 @@
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="update_users" >
       <parameter name="admin" value="users"/>
       <parameter name="page" value="users_management_controler"/>
-      <parameter name="mode" value="up"/>
+      <!--parameter name="mode" value="up"/-->>
     </requestDefinition>
   </requestDefinitions>
   <!--
