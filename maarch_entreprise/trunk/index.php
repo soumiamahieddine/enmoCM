@@ -1,6 +1,6 @@
 <?php
 /*
-*   Copyright 2008-2011 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -36,6 +36,18 @@ include_once '../../core/init.php';
 if ($_SESSION['config']['usePHPIDS'] == 'true') {
     include 'apps/maarch_entreprise/phpids_control.php';
 }
+
+include 'apps/maarch_entreprise/tools/maarchIVS/MaarchIVS.php';
+$started = MaarchIVS::start(__DIR__ . '/xml/ivs.xml', 'xml');
+$valid = MaarchIVS::run('silent');
+if (!$valid) {
+    echo '<pre>';
+    var_dump(MaarchIVS::debug());
+    echo '</pre>';
+} else {
+    //echo "Request is valid";
+}
+
 
 if (isset($_SESSION['config']['corepath'])) {
     require_once 'core/class/class_functions.php';
