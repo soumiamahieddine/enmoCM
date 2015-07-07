@@ -44,6 +44,7 @@ if (!$valid) {
     echo '<pre>';
     var_dump(MaarchIVS::debug());
     echo '</pre>';
+    exit;
 } else {
     //echo "Request is valid";
 }
