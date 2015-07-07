@@ -50,6 +50,8 @@ class XmlConfigurationHandler
 
         $this->configurationDocument->load($configurationSource);
 
+        $this->configurationDocument->xinclude();
+
         $this->configurationXPath = new DOMXPath($this->configurationDocument);
 
         return true;

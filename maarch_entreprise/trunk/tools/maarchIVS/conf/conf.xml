@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<inputValidation>
+<inputValidation xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  
   <!--
     Request definitions
     Used to identify the request and bind a validation rule set
@@ -25,6 +27,8 @@
     <validationRule name="baseExample" >
       <parameter name="param1" type="string" />
     </validationRule>
+    
+    <xi:include href="includedRules.xml"/>
   </validationRules>
   <!--
     Validation rule sets
