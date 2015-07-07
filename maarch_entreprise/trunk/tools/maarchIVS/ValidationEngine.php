@@ -232,6 +232,10 @@ class ValidationEngine
             $this->currentItemKey = null;
             $this->restrictionFacet = null;
             
+            if (empty($value)) {
+                continue;
+            }
+
             if (!isset($validationRule->parameters[$name])) {
                 switch ($validationRule->mode) {
                     case 'lax':
@@ -341,7 +345,7 @@ class ValidationEngine
         } else {
             switch($type) {
                 case 'string':
-                    return is_string($value);
+                    return true;
 
                 case 'int':
                 case 'integer':
