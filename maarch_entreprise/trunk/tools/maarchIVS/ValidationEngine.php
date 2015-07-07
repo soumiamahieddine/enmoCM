@@ -354,7 +354,7 @@ class ValidationEngine
 
                 case 'boolean':
                 case 'bool':
-                    return is_null(filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+                    return is_null(filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE));
 
                 case 'email':
                     return filter_var($value, FILTER_VALIDATE_EMAIL);
