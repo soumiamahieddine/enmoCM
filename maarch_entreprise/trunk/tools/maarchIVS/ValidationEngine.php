@@ -277,7 +277,7 @@ class ValidationEngine
         // Base type, check base + restrictions
         if (in_array($type, self::$baseTypes)) {
             // Validate base type
-            if (!$this->validateBaseType($type, $value) === false) {
+            if ($this->validateBaseType($type, $value) === false) {
                 $this->addError("Invalid value for base type");
             }
         } else {
@@ -309,7 +309,7 @@ class ValidationEngine
         // Base type, check base + restrictions
         if (in_array($dataType->base, self::$baseTypes)) {
             // Validate base type
-            if (!$this->validateBaseType($dataType->base, $value)) {
+            if ($this->validateBaseType($dataType->base, $value) === false) {
                 $this->addError("Invalid value for base type");
             } 
         } else {
