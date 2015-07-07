@@ -228,6 +228,10 @@ class ValidationEngine
     {
         foreach ($_REQUEST as $name => $value) {
             $this->currentParameterName = $name;
+            $this->currentDataTypeName = null;
+            $this->currentItemKey = null;
+            $this->restrictionFacet = null;
+            
             if (!isset($validationRule->parameters[$name])) {
                 switch ($validationRule->mode) {
                     case 'lax':
@@ -350,7 +354,7 @@ class ValidationEngine
 
                 case 'boolean':
                 case 'bool':
-                    return is_null(filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE));
+                    return is_null(filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
 
                 case 'email':
                     return filter_var($value, FILTER_VALIDATE_EMAIL);

@@ -1,5 +1,7 @@
 <?php
 
+$time = microtime(true);
+
 require_once 'MaarchIVS.php';
 
 $started = MaarchIVS::start(__DIR__ . DIRECTORY_SEPARATOR . 'conf' . DIRECTORY_SEPARATOR . 'conf.xml', 'xml');
@@ -10,3 +12,5 @@ if (!$valid) {
 } else {
     echo "Request is valid";
 }
+
+var_dump(microtime(true) - $time);
