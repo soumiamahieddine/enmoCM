@@ -273,7 +273,7 @@ class ValidationEngine
         // Base type, check base + restrictions
         if (in_array($type, self::$baseTypes)) {
             // Validate base type
-            if (!$this->validateBaseType($type, $value)) {
+            if (!$this->validateBaseType($type, $value) === false) {
                 $this->addError("Invalid value for base type");
             }
         } else {
@@ -332,7 +332,7 @@ class ValidationEngine
         if (is_array($value)) {
             foreach ($value as $key => $item) {
                 $this->currentItemKey = $key;
-                if (!$this->validateBaseType($type, $item)) {
+                if ($this->validateBaseType($type, $item) === false) {
                     return false;
                 }
             }
