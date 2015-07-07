@@ -212,12 +212,13 @@ class ValidationEngine
     public function getInfo()
     {
         return array(
+
             'requestMethod' => $_SERVER['REQUEST_METHOD'],
             'requestPath' => $_SERVER['SCRIPT_NAME'],
             'requestParameters' => $_GET,
+            'validationErrors' => $this->errors,
             'validationRules' => $this->validationRules, 
             'dataTypes' => $this->dataTypes,
-            'validationErrors' => $this->errors
         );
     }
 
