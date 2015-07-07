@@ -5,7 +5,13 @@
     Used to identify the request and bind a validation rule set
   -->
   <requestDefinitions>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="index" />
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="index" />
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="update_users" >
+      <parameter name="admin" value="users"/>
+      <parameter name="page" value="users_management_controler"/>
+      <parameter name="mode" value="up"/>
+    </requestDefinition>
   </requestDefinitions>
   <!--
     Validation rule sets
@@ -13,8 +19,32 @@
     with a type name that refers to defined types or an inline definition
   -->
   <validationRules>
-    <validationRule name="index">
+    <validationRule name="index" mode="lax">
+      <parameter name="admin" type="string" />
+      <parameter name="page" type="string" />
+      <parameter name="order" type="order" />
+      <parameter name="start" type="integer" />
+      <parameter name="display" type="boolean" />
       <parameter name="reinit" type="boolean" />
+      <parameter name="what" type="string" />
+      <parameter name="order_field" type="string" />
+    </validationRule>
+
+    <validationRule name="update_users" extends="standardForm">
+      <parameter name="user_id" type="login" />
+      <parameter name="LastName" type="personname" />
+      <parameter name="FirstName" type="string" />
+      <parameter name="Phone" type="string" />
+      <parameter name="Mail" type="email" />
+      <parameter name="thumbprint" type="string" >
+        <pattern value="/^[A-Fa-f0-9\s]+$/" />
+      </parameter>
+      <parameter name="LoginMode" type="string" />
+      <parameter name="user_submit" type="string" />
+    </validationRule>
+
+    <validationRule name="standardForm" extends="index">  
+      <parameter name="mode" type="mode" />
     </validationRule>
 
     <validationRule name="example" extends="baseExample">
@@ -34,6 +64,25 @@
     with a type name that refers to defined types or an inline definition
   -->
   <dataTypes>
+    <dataType name="login" base="graph">
+      <pattern value="/^\w+$/" />
+    </dataType>
+    <dataType name="hex" base="graph">
+      <pattern value="/^[A-Fa-f0-9]+$/" />
+    </dataType>
+    <dataType name="order" base="string">
+      <enumeration value="asc" />
+      <enumeration value="desc" />
+    </dataType>
+    <dataType name="mode" base="string">
+      <enumeration value="add" />
+      <enumeration value="up" />
+      <enumeration value="list" />
+      <enumeration value="del" />
+    </dataType>
+    <dataType name="personname" base="string">
+      <pattern value="/^[A-z\s\-\']+$/" />
+    </dataType>
     <dataType name="short_word" base="word">
       <pattern value="/^\w{1,5}$/" />
     </dataType>
