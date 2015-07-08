@@ -82,13 +82,6 @@ class security extends dbquery
     */
     public function login($s_login,$pass, $method = false, $ra_code=false)
     {
-/*
-        $inspector = FirePHP::to('page');
-        $console = $inspector->console();
-        $console->log(date('H:i:s').' Login start');
-
-*/
-
         $array = array();
         $error = '';
         $uc = new users_controler();
@@ -104,59 +97,40 @@ class security extends dbquery
         $s_login = str_replace('>', '', $s_login);
         $s_login = str_replace('<', '', $s_login);
 
-        if ($_SESSION['config']['usePDO'] == 'true') {
-            require_once 'core/class/class_db_pdo.php';
-            $database = new Database();
-            // #TODO : Not usefull anymore, loginmode field is always in users table
-            //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
-            if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) {
-                // #TODO : do evolution of the loginmethod in sql query
-                if ($method == 'activex') {
-                    $comp = " and STATUS <> 'DEL' and loginmode = 'activex'";
-                } else if ($method == 'ldap') {
-                    $comp =" and STATUS <> 'DEL'";
+        $database = new Database();
+        // #TODO : Not usefull anymore, loginmode field is always in users table
+        //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
+        if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) {
+            // #TODO : do evolution of the loginmethod in sql query
+            if ($method == 'activex') {
+                $comp = " and STATUS <> 'DEL' and loginmode = 'activex'";
+            } else if ($method == 'ldap') {
+                $comp =" and STATUS <> 'DEL'";
+            } else {
+                if ($ra_code <> false) {
+                    $comp = " and password = :password and "
+                        . "ra_code = :ra_code and ra_expiration_date >= :ra_expiration_date "
+                        . "and status <> :status "
+                        . "and (loginmode = :loginmode1 or loginmode = :loginmode2)";
+                    $params = array(
+                        'password' => $pass, 
+                        'ra_code' => md5($ra_code),
+                        'ra_expiration_date' => date('Y-m-d 00:00:00'),
+                        'status' => 'DEL',
+                        'loginmode1' => 'standard',
+                        'loginmode2' => 'sso',
+                    );
                 } else {
-                    if ($ra_code <> false) {
-                        $comp = " and password = :password and ra_code = '" 
-                          . md5($ra_code) . "' and ra_expiration_date >= '" . date('Y-m-d 00:00:00') . "' and STATUS <> 'DEL' "
-                          . "and (loginmode = 'standard' or loginmode  = 'sso')";
-                    }
-                    else {
                     $comp = " and password = :password and STATUS <> 'DEL' "
                           . "and (loginmode = 'standard' or loginmode  = 'sso')";
-                    }
                     $params = array('password' => $pass);
                 }
-            } else {
-                $comp = " and password = :password and STATUS <> 'DEL'";
-                $params = array('password' => $pass);
             }
-            $user = $uc->getWithPDO($s_login, $comp, $params);
         } else {
-            // #TODO : Not usefull anymore, loginmode field is always in users table
-            //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
-            if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) {
-                // #TODO : do evolution of the loginmethod in sql query
-                if ($method == 'activex') {
-                    $comp = " and STATUS <> 'DEL' and loginmode = 'activex'";
-                } else if ($method == 'ldap') {
-                    $comp =" and STATUS <> 'DEL'";
-                } else {
-                    if ($ra_code <> false) {
-                        $comp = " and password = '" . $pass . "' and ra_code = '" 
-                          . md5($ra_code) . "' and ra_expiration_date >= '" . date('Y-m-d 00:00:00') . "' and STATUS <> 'DEL' "
-                          . "and (loginmode = 'standard' or loginmode  = 'sso')";
-                    }
-                    else {
-                    $comp = " and password = '" . $pass . "' and STATUS <> 'DEL' "
-                          . "and (loginmode = 'standard' or loginmode  = 'sso')";
-                    }
-                }
-            } else {
-                $comp = " and password = '" . $pass . "' and STATUS <> 'DEL'";
-            }
-            $user = $uc->get($s_login, $comp);
+            $comp = " and password = :password and STATUS <> 'DEL'";
+            $params = array('password' => $pass);
         }
+        $user = $uc->getWithComp($s_login, $comp, $params);
 
         if (isset($user)) {
             if ($user->__get('enabled') == 'Y') {

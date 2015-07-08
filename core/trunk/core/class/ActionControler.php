@@ -248,7 +248,7 @@ class ActionControler
 		$prep_query = self::update_prepare($action);
 		$query="update ".self::$actions_table." set "
 					. $prep_query['QUERY']
-					." where id=?";
+					. " where id=?";
 
 		$prep_query['VALUES'][] = $action->id;
 
@@ -336,6 +336,7 @@ class ActionControler
 	private function update_prepare($action)
 	{
 		$result=array();
+		$arrayValues=array();
 		foreach($action->getArray() as $key => $value)
 		{
 			if(!empty($value))
@@ -361,6 +362,7 @@ class ActionControler
 	{
 		$columns=array();
 		$values=array();
+		$arrayValues=array();
 		foreach($action->getArray() as $key => $value)
 		{
 			//For now all fields in the actions table are strings or dates

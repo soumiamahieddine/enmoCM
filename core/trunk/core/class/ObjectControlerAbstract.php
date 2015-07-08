@@ -15,7 +15,6 @@ abstract class ObjectControler
 {
     static protected $db;
     static protected $computed_properties = array();
-    //"docserver_id","user_id","mr_owner_entity_id"
     static protected $foolish_ids = array();
     static protected $specific_id ;
 
@@ -48,21 +47,19 @@ abstract class ObjectControler
         $preparation = self::insert_prepare(
             $object, self::$computed_properties
         );
+        
         $query = "insert into $tableName (" . $preparation['properties']
                . ") values(" . $preparation['values'] . ")";
-        self::$db = new dbquery();
-        self::$db->connect();
-        try{
-            if (_DEBUG) {
-                echo "insert: " . functions::xssafe($query) . " // ";
-            }
-            self::$db->query($query);
+        self::$db = new Database();
+        
+        $stmt = self::$db->query($query, $preparation['arrayValues']);
+        
+        if ($stmt) {
             $result = true;
-        } catch (Exception $e) {
-            echo 'Impossible to insert object ' . functions::xssafe($object->toString()) . ' // ';
+        } else {
             $result = false;
-        }
-        self::$db->disconnect();
+        }    
+        
         return $result;
     }
 
@@ -82,50 +79,46 @@ abstract class ObjectControler
         $result = array();
         $properties = array();
         $values = array();
+        $arrayValues = array();
         foreach ($object->getArray() as $key => $value) {
-            if( !in_array($key,$computed_properties)) {
+            if(!in_array($key,$computed_properties)) {
                 // Adding property
                 $properties[] = $key;
                 // Adding property value
                 if (substr_compare($key, '_id', -3) == 0
                     || substr_compare($key, '_number', -7) == 0) {
                     if (in_array($key, self::$foolish_ids)) {
-                    /*
-                     * UNBELIEVABLE! THERE ARE IDS WHICH ARE NOT LONG INTEGERS!
-                     * A choice needs to be done, and if string is kept, random
-                     * generating must be implemented.
-                     */
-                        $values[] = "'" . $value . "'";
+                        //$values[] = "'" . $value . "'";
                     } else {
                         // Number
                         if (empty($value)) {
                             // Default value
                             $value = 0;
                         }
-                        $values[] = $value;
                     }
+                    $arrayValues[] = $value;
+                    $values[] = '?';
                 } elseif(substr_compare($key, "is_", 0, 3) == 0
                     || substr_compare($key, "can_", 0, 4) == 0) {
                     // Boolean
                     if ($value === true) {
-                        $values[] = "'Y'";
+                        $boolValue = "Y";
                     } elseif ($value === false) {
-                        $values[] = "'N'";
+                        $boolValue = "N";
                     } else {
-                        $values[] = "'" . $value . "'";
+                        $boolValue = $value;
                     }
+                    $values[] = '?';
+                    $arrayValues[] = $boolValue;
                 } else {
-                    // Character or date
-                    if ($value == 'CURRENT_TIMESTAMP' || $value == 'SYSDATE') {
-                        $values[] = $value;
-                    } else {
-                        $values[] = "'" . $value . "'";
-                    }
+                    $values[] = '?';
+                    $arrayValues[] = $value;
                 }
             }
         }
         $result['properties'] = implode(",", $properties);
         $result['values'] = implode(",", $values);
+        $result['arrayValues'] = $arrayValues;
         return $result;
     }
 
@@ -148,28 +141,23 @@ abstract class ObjectControler
             $table_id = self::$specific_id;
         }
 
-        if (in_array($table_id, self::$foolish_ids)) {
-            $query = "update $tableName set "
-                   . self::update_prepare($object, self::$computed_properties)
-                   . " where $table_id='".$object->$table_id."'";
-        } else {
-            $query = "update $tableName set "
-                   . self::update_prepare($object, self::$computed_properties)
-                   . " where $table_id=".$object->$table_id;
-        }
-        self::$db=new dbquery();
-        self::$db->connect();
-        try{
-            if (_DEBUG) {
-               echo "update: " . functions::xssafe($query) . " // ";
-            }
-            self::$db->query($query);
+        $prep_query = self::update_prepare($object, self::$computed_properties);
+
+        $prep_query['arrayValues'][] = $object->$table_id;
+
+        $query = "update $tableName set "
+               . $prep_query['query']
+               . " where $table_id=?";
+
+        self::$db = new Database();        
+        $stmt = self::$db->query($query, $prep_query['arrayValues']);
+        
+        if ($stmt) {
             $result = true;
-        } catch (Exception $e) {
-            echo 'Impossible to update object ' . functions::xssafe($object->toString()) . ' // ';
+        } else {
             $result = false;
-        }
-        self::$db->disconnect();
+        }  
+        
         return $result;
     }
 
@@ -182,6 +170,7 @@ abstract class ObjectControler
     private function update_prepare($object, $computed_properties)
     {
         $result = array();
+        $arrayValues=array();
         foreach ($object->getArray() as $key => $value) {
             if (!in_array($key,$computed_properties)) {
                 if($key == self::$specific_id) {
@@ -189,33 +178,38 @@ abstract class ObjectControler
                 } elseif (substr_compare($key, '_id', -3) == 0
                     || substr_compare($key, '_number', -7) == 0) {
                     if (in_array($key, self::$foolish_ids)) {
-                        $result[] = $key . "='" . $value . "'";
+                        //$result[] = $key . "='" . $value . "'";
                     } else {
                         // Number
                         if (empty($value)) {
                             // Default value
                             $value = 0;
                         }
-                        $result[] = $key . "=" . $value;
                     }
+                    $result[] = $key . "=?";
+                    $arrayValues[]=$value;
                 } elseif (substr_compare($key, 'is_', 0, 3) == 0
                     || substr_compare($key, 'can_', 0, 4) == 0) {
                     // Boolean
                     if ($value === true) {
-                        $result[] = $key . "='Y'" ;
+                        $boolValue = "Y";
                     } elseif ($value === false) {
-                        $result[] = $key . "='N'";
+                        $boolValue = "N";
                     } else {
-                        $result[] = $key . "='" . $value . "'";
+                        $boolValue = $value;
                     }
+                    $result[] = $key . "=?";
+                    $arrayValues[] = $boolValue;
                 } else {
                     // Character or date
-                    $result[] = $key . "='" . $value . "'";
+                    $result[] = $key . "=?";
+                    $arrayValues[] = $value;
                 }
             }
         }
-        // Return created string minus last ", "
-        return implode(",", $result);
+        $theResult['query'] = implode(",", $result);
+        $theResult['arrayValues'] = $arrayValues;
+        return $theResult;
     }
 
     /**
@@ -226,7 +220,7 @@ abstract class ObjectControler
      * @param string $class_name
      * @return unknown_type
      */
-    protected function advanced_get($id, $table_name, $whereComp='')
+    protected function advanced_get($id, $table_name)
     {
         if (strlen($id) == 0) {
             return null;
@@ -234,43 +228,31 @@ abstract class ObjectControler
         $object_name = $table_name;
         $table_id = $table_name . '_id';
 
-        if( isset(self::$specific_id) && !empty(self::$specific_id)) {
+        if(isset(self::$specific_id) && !empty(self::$specific_id)) {
             $table_id = self::$specific_id;
         }
-        self::$db = new dbquery();
-        self::$db->connect();
-        if (in_array($table_id, self::$foolish_ids)) {
-             $select = "select * from $table_name where $table_id='$id' ".$whereComp;
+
+        self::$db = new Database();
+        
+        $select = "select * from $table_name where $table_id=?";
+
+        $stmt = self::$db->query($select, array($id));
+        if ($stmt->rowCount() == 0) {
+            return null;
         } else {
-            $select = "select * from $table_name where $table_id=$id" .  $whereComp;
-        }
-
-        try {
-            self::$db->query($select);
-            if (self::$db->nb_result() == 0) {
-                return null;
-            } else {
-                // Constructing result
-                $object = new $object_name();
-                $queryResult = self::$db->fetch_object();
-                foreach ((array)$queryResult as $key => $value) {
-                    if (_ADVANCED_DEBUG) {
-                        echo "Getting property: " . functions::xssafe($key) 
-                            . " with value: " . functions::xssafe($value) . " // ";
-                    }
-                    if ($value == 't') {          /* BUG FROM PGSQL DRIVER! */
-                        $value = true;            /*                        */
-                    } elseif ($value == 'f') {    /*                        */
-                        $value = false;           /*                        */
-                    }                            /**************************/
-                    $object->$key = $value;
-                }
+            // Constructing result
+            $object = new $object_name();
+            $queryResult = $stmt->fetchObject();
+            foreach ((array)$queryResult as $key => $value) {
+                if ($value == 't') {          /* BUG FROM PGSQL DRIVER! */
+                    $value = true;            /*                        */
+                } elseif ($value == 'f') {    /*                        */
+                    $value = false;           /*                        */
+                }                            /**************************/
+                $object->$key = $value;
             }
-        } catch (Exception $e) {
-            echo "Impossible to get object " . functions::xssafe($id) . " // ";
         }
 
-        self::$db->disconnect();
         return $object;
     }
 
@@ -282,7 +264,7 @@ abstract class ObjectControler
      * @param string $class_name
      * @return unknown_type
      */
-    protected function advanced_getWithPDO($id, $table_name, $whereComp='', $params=array())
+    protected function advanced_getWithComp($id, $table_name, $whereComp='', $params=array())
     {
         if (strlen($id) == 0) {
             return null;
@@ -295,7 +277,6 @@ abstract class ObjectControler
             $table_id = self::$specific_id;
         }
 
-        require_once 'core/class/class_db_pdo.php';
         $database = new Database();
         $theQuery = "SELECT * FROM $table_name WHERE $table_id = :id " . $whereComp;
         $queryParams = array(':id' => $id);
@@ -317,9 +298,6 @@ abstract class ObjectControler
             
             for ($cpt=0;$cpt<count($rows);$cpt++) {
                 foreach ($rows[$cpt] as $key => $value) {
-                    if (_ADVANCED_DEBUG) {
-                        echo "Getting property: $key with value: " . functions::xssafe($value) . " // ";
-                    }
                     if ($value == 't') {          /* BUG FROM PGSQL DRIVER! */
                         $value = true;            /*                        */
                     } elseif ($value == 'f') {    /*                        */
@@ -351,30 +329,18 @@ abstract class ObjectControler
         if (isset(self::$specific_id) && !empty(self::$specific_id)) {
             $table_id = self::$specific_id;
         }
-        self::$db = new dbquery();
-        self::$db->connect();
-
-        if (isset(self::$foolish_ids)
-            && in_array($table_id, self::$foolish_ids)) {
-             $query = "delete from $table_name where $table_id='"
-                    . $object->$table_id . "'";
-        } else {
-            $query = "delete from $table_name where $table_id="
-                   . $object->$table_id;
-        }
-
-        try{
-            if (_DEBUG) {
-                echo "delete: " . functions::xssafe($query) . " // ";
-            }
-            self::$db->query($query);
+        self::$db = new Database();
+    
+        $query = "delete from $table_name where $table_id=?";
+    
+        $stmt = self::$db->query($query, array($object->$table_id));
+        
+        if ($stmt) {
             $result = true;
-        } catch (Exception $e) {
-            echo 'Impossible to delete object with id=' . functions::xssafe($object->$table_id)
-                . ' // ';
+        } else {
             $result = false;
         }
-        self::$db->disconnect();
+
         return $result;
     }
 
@@ -396,26 +362,18 @@ abstract class ObjectControler
         if (isset(self::$specific_id) && !empty(self::$specific_id)) {
             $table_id = self::$specific_id;
         }
-        self::$db = new dbquery();
-        self::$db->connect();
-        if (in_array($table_id, self::$foolish_ids) ){
-             $query = "update $table_name set enabled = 'Y' where $table_id='"
-                    . $object->$table_id . "'";
-        } else {
-            $query="update $table_name set enabled = 'Y' where $table_id=".$object->$table_id;
-        }
-        try{
-            if(_DEBUG){
-                echo "enable: " . functions::xssafe($query) . " // ";
-            }
-            self::$db->query($query);
+        self::$db = new Database();
+        
+        $query="update $table_name set enabled = 'Y' where $table_id=?";
+        
+        $stmt = self::$db->query($query, array($object->$table_id));
+        
+        if ($stmt) {
             $result = true;
-        } catch (Exception $e) {
-            echo 'Impossible to enable object with id=' . functions::xssafe($object->$table_id)
-                . ' // ';
+        } else {
             $result = false;
         }
-        self::$db->disconnect();
+        
         return $result;
     }
 
@@ -437,26 +395,18 @@ abstract class ObjectControler
         if (isset(self::$specific_id) && !empty(self::$specific_id)) {
             $table_id = self::$specific_id;
         }
-        self::$db = new dbquery();
-        self::$db->connect();
-        if (in_array($table_id, self::$foolish_ids) ){
-             $query = "update $table_name set status = 'OK' where lower($table_id)=lower('"
-                    . $object->$table_id . "')";
-        } else {
-            $query="update $table_name set status = 'OK' where lower($table_id)=lower(".$object->$table_id.")";
-        }
-        try{
-            if(_DEBUG){
-                echo "enable: " . functions::xssafe($query) . " // ";
-            }
-            self::$db->query($query);
+        self::$db = new Database();
+        
+        $query="update $table_name set status = 'OK' where lower(?)=lower(?)";
+                
+        $stmt = self::$db->query($query, array($table_id,$object->$table_id));
+        
+        if ($stmt) {
             $result = true;
-        } catch (Exception $e) {
-            echo 'Impossible to enable object with id=' . functions::xssafe($object->$table_id)
-                . ' // ';
+        } else {
             $result = false;
         }
-        self::$db->disconnect();
+
         return $result;
     }
 
@@ -478,27 +428,18 @@ abstract class ObjectControler
         if (isset(self::$specific_id) && !empty(self::$specific_id)) {
             $table_id = self::$specific_id;
         }
-        self::$db = new dbquery();
-        self::$db->connect();
-        if (in_array($table_id, self::$foolish_ids)) {
-             $query = "update $table_name set enabled = 'N' where $table_id='"
-                    . $object->$table_id . "'";
-        } else {
-            $query = "update $table_name set enabled = 'N' where $table_id="
-                   . $object->$table_id;
-        }
-        try {
-            if (_DEBUG) {
-                echo "disable: " . functions::xssafe($query) . " // ";
-            }
-            self::$db->query($query);
+        self::$db = new Database();
+        
+        $query = "update $table_name set enabled = 'N' where $table_id=?";
+        
+        $stmt = self::$db->query($query, array($object->$table_id));
+        
+        if ($stmt) {
             $result = true;
-        } catch (Exception $e) {
-            echo 'Impossible to disable object with id=' . functions::xssafe($object->$table_id)
-                . ' // ';
+        } else {
             $result = false;
         }
-        self::$db->disconnect();
+
         return $result;
     }
 }

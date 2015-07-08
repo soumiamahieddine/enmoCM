@@ -70,8 +70,7 @@ class ServiceControler
 	*/
 	public function connect()
 	{
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 
 		self::$usergroups_services_table = USERGROUPS_SERVICES_TABLE;
 		self::$db=$db;
@@ -136,13 +135,14 @@ class ServiceControler
 			}
 			$ugc = new usergroups_controler();
 			self::connect();
-			self::$db->query(
+			$stmt = self::$db->query(
 				'select distinct us.service_id from ' . USERGROUPS_SERVICES_TABLE
 				. ' us, ' . USERGROUP_CONTENT_TABLE 
-				. " uc where us.group_id = uc.group_id and uc.user_id = '". $user_id . "'"
+				. " uc where us.group_id = uc.group_id and uc.user_id = ?", 
+				array($user_id)
 			);
 			
-			while($res = self::$db->fetch_object()) {
+			while($res = $stmt->fetchObject()) {
 				$serviceId = $res->service_id;
 				if (in_array($serviceId, $tmpServices)) {
 					$services[$serviceId] = true;

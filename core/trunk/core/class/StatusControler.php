@@ -373,23 +373,17 @@ class Maarch_Core_Class_StatusControler
             return false;
         }
 
-        self::$db = new dbquery();
-        self::$db->connect();
+        self::$db = new Database();
+
         $func = new functions();
-        $query = 'select id from ' . STATUS_TABLE . " where id = '"
-               . $func->protect_string_db($status_id) . "'";
+        $query = 'select id from ' . STATUS_TABLE . " where id = ?";
 
-        try{
-            self::$db->query($query);
-        } catch (Exception $e){
-            echo _UNKNOWN . ' ' . _STATUS . ' ' . functions::xssafe($status_id) . ' // ';
-        }
+        $stmt = self::$db->query($query, array($status_id));
 
-        if (self::$db->nb_result() > 0) {
-            self::$db->disconnect();
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        self::$db->disconnect();
+
         return false;
     }
     

@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008-2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -70,20 +70,15 @@ class SecurityControler
         if (empty($securityId)) {
             return null;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
 
-        $query = "select * from " . SECURITY_TABLE . " where security_id = "
-               . $securityId;
-        try {
-            $db->query($query);
-        } catch (Exception $e){
-            echo _NO_ACCESS_WITH_ID . ' ' . functions::xssafe($securityId) . ' // ';
-        }
+        $query = "select * from " . SECURITY_TABLE . " where security_id = ?";
 
-        if ($db->nb_result() > 0) {
+        $stmt = $db->query($query, array($securityId));
+
+        if ($stmt->rowCount() > 0) {
             $access = new SecurityObj();
-            $queryResult = $db->fetch_object();
+            $queryResult = $stmt->fetchObject();
             foreach ($queryResult as $key => $value) {
                 $access->$key = $value;
             }
@@ -104,21 +99,15 @@ class SecurityControler
         if (empty($groupId)) {
             return null;
         }
-        $db = new dbquery();
-        $db->connect();
-        // Querying database
-        $query = "select * from " . SECURITY_TABLE . " where group_id = '"
-               . $groupId . "'";
+        $db = new Database();
+        
+        $query = "select * from " . SECURITY_TABLE . " where group_id = ?";
 
-        try {
-            $db->query($query);
-        } catch (Exception $e) {
-            echo _NO_GROUP_WITH_ID . ' ' . functions::xssafe($groupId) . ' // ';
-        }
+        $stmt = $db->query($query, array($groupId));
 
         $security = array();
-        if ($db->nb_result() > 0) {
-            while ($queryResult = $db->fetch_object()) {
+        if ($stmt->rowCount() > 0) {
+            while ($queryResult = $stmt->fetchObject()) {
                 $access = new SecurityObj();
                 foreach ($queryResult as $key => $value) {
                     $access->$key = $value;
@@ -138,7 +127,7 @@ class SecurityControler
     */
     public function save($security, $mode="add")
     {
-        if (! isset($security)) {
+        if (!isset($security)) {
             return false;
         }
 
@@ -159,22 +148,19 @@ class SecurityControler
     */
     private function _insert($security)
     {
-        if (! isset($security)) {
+        if (!isset($security)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
+        
         $prepQuery = $this->_insertPrepare($security);
-
+        
         $query = "insert into " . SECURITY_TABLE . " (" . $prepQuery['COLUMNS']
                . ") values (" . $prepQuery['VALUES'] . ")";
-        try {
-            $db->query($query);
-            $ok = true;
-        } catch (Exception $e) {
-            echo _CANNOT_INSERT_ACCESS . " " . functions::xssafe($security->toString()) . ' // ';
-            $ok = false;
-        }
+        
+        $stmt = $db->query($query, $prepQuery['ARRAY_VALUES']);
+        $ok = true;
+        
         return $ok;
     }
 
@@ -186,22 +172,21 @@ class SecurityControler
     */
     private function _update($security)
     {
-        if (! isset($security)) {
+        if (!isset($security)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
-        $query = "update " . SECURITY_TABLE . " set "
-               . $this->_updatePrepare($security) . " where security_id="
-               . $security->security_id;
+        $db = new Database();
 
-        try {
-            $db->query($query);
-            $ok = true;
-        } catch (Exception $e) {
-            echo _CANNOT_UPDATE_ACCESS . " " . functions::xssafe($security->toString()) . ' // ';
-            $ok = false;
-        }
+        $prep_query = $this->_updatePrepare($security);
+
+        $query = "update " . SECURITY_TABLE . " set "
+               . $prep_query['QUERY'] . " where security_id=?";
+
+        $prep_query['VALUES'][] = $security->security_id;
+    
+        $stmt = self::$db->query($query, $prep_query['VALUES']);
+        $ok = true;
+
         return $ok;
     }
 
@@ -213,20 +198,16 @@ class SecurityControler
     */
     public function delete($securityId)
     {
-        if (! isset($securityId) || empty($securityId)) {
+        if (!isset($securityId) || empty($securityId)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
-        $query = "delete from " . SECURITY_TABLE . " where security_id="
-               . $securityId;
-        try {
-            $db->query($query);
-            $ok = true;
-        } catch (Exception $e) {
-            echo _CANNOT_DELETE_SECURITY_ID . " " . functions::xssafe($securityId) . ' // ';
-            $ok = false;
-        }
+        $db = new Database();
+
+        $query = "delete from " . SECURITY_TABLE . " where security_id=?";
+
+        $db->query($query, array($securityId));
+        $ok = true;
+
         return $ok;
     }
 
@@ -238,20 +219,16 @@ class SecurityControler
     */
     public function deleteForGroup($groupId)
     {
-        if (! isset($groupId) || empty($groupId)) {
+        if (!isset($groupId) || empty($groupId)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
-        $query = "delete from " . SECURITY_TABLE . " where group_id='"
-               . $groupId . "'";
-        try {
-            $db->query($query);
-            $ok = true;
-        } catch (Exception $e) {
-            echo _CANNOT_DELETE . ' ' . _GROUP_ID . " " . functions::xssafe($groupId) . ' // ';
-            $ok = false;
-        }
+        $db = new Database();
+
+        $query = "delete from " . SECURITY_TABLE . " where group_id=?";
+
+        $db->query($query, array($groupId));
+        $ok = true;
+
         return $ok;
     }
 
@@ -264,17 +241,21 @@ class SecurityControler
     private function _updatePrepare($security)
     {
         $result = array();
+        $arrayValues=array();
         foreach ($security->getArray() as $key => $value) {
             // For now all fields in the usergroups table are strings or date
             // excepts the security_id
             if (! empty($value)) {
                 if ($key <> 'security_id') {
-                    $result[] = $key . "='" . $value . "'";
+                    $result[]=$key."=?";
+                    $arrayValues[]=$value;
                 }
             }
         }
-        // Return created string minus last ", "
-        return implode(",", $result);
+        return array(
+            'QUERY' => implode(",",$result), 
+            'VALUES' => $arrayValues,
+        );
     }
 
     /**
@@ -287,19 +268,22 @@ class SecurityControler
     {
         $columns = array();
         $values = array();
+        $arrayValues = array();
         foreach ($security->getArray() as $key => $value) {
             // For now all fields in the security table are strings
             // or date excepts the security_id
             if (! empty($value)) {
                 if ($key <> 'security_id') {
                     $columns[] = $key;
-                    $values[] = "'" . $value . "'";
+                    $values[] = "?";
+                    $arrayValues[]=$value;
                 }
             }
         }
         return array(
             'COLUMNS' => implode(",", $columns),
             'VALUES'  => implode(",", $values),
+            'ARRAY_VALUES' => $arrayValues
         );
     }
 
@@ -354,8 +338,7 @@ class SecurityControler
     */
     public function process_security_where_clause($whereClause, $userId)
     {
-        if (! empty($whereClause)) {
-
+        if (!empty($whereClause)) {
             $whereClause = str_replace("&#039;", "'", $whereClause);
             $where = ' where ' . $whereClause;
             // Process with the core vars
@@ -413,12 +396,11 @@ class SecurityControler
                 "@user", "'" . trim($userId) . "'", $whereClause
             );
         }
-        $db = new dbquery();
-        $db->connect();
-        $query = "select mail from " . USERS_TABLE . " where user_id = '"
-               . $userId . "'";
-        $db->query($query);
-        $userObj = $db->fetch_object();
+        $db = new Database();
+        
+        $query = "select mail from " . USERS_TABLE . " where user_id = ?";
+        $stmt = $db->query($query, array($userId));
+        $userObj = $stmt->fetchObject();
         if (preg_match('/@email/', $whereClause)) {
             $whereClause = str_replace(
                 "@email", "'" . trim($userObj->mail) . "'", $whereClause
@@ -440,8 +422,6 @@ class SecurityControler
         $tab['collections'] = array();
         $tab['security'] = array();
         $func = new functions();
-        $db = new dbquery();
-        $db->connect();
 
         if ($userId == "superadmin") {
             for ($i = 0; $i < count($_SESSION['collections']); $i ++) {

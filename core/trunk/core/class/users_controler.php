@@ -64,11 +64,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     *               disabled in the database (false by default)
     * @return user object with properties from the database or null
     */
-    public function get($userId, $compWhere='', $canBeDisabled=false)
+    public function get($userId)
     {
         self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
-        $user = self::advanced_get($userId, USERS_TABLE, $compWhere);
+        $user = self::advanced_get($userId, USERS_TABLE);
 
         if (isset($user)
         ) {
@@ -86,11 +86,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     *               (must begin with and or or)
     * @return user object with properties from the database or null
     */
-    public function getWithPDO($userId, $compWhere='', $params=array())
+    public function getWithComp($userId, $compWhere='', $params=array())
     {
         self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
-        $user = self::advanced_getWithPDO($userId, USERS_TABLE, $compWhere, $params);
+        $user = self::advanced_getWithComp($userId, USERS_TABLE, $compWhere, $params);
 
         if (isset($user)
             && ($user->__get('status') == 'OK' 
