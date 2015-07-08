@@ -15,9 +15,10 @@
 require_once "core/class/class_request.php";
 $db = new dbquery();
 $db->connect();
+//requete permettant de rechercher sur les dossiers qui ne sont pas en status del
 $db->query(
 	"select folder_id from " . $_SESSION['tablename']['fold_folders']
-    . " where lower(folder_id) like lower('" . $_REQUEST['Input']
+    . " where status != 'DEL' and lower(folder_id) like lower('" . $_REQUEST['Input']
     . "%') order by folder_id"
 );
 //$db->show();
