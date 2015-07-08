@@ -152,7 +152,7 @@ class graphics
 						{
 							$color = ' class="col"';
 						}?>
-                    	<tr <?php functions::xecho($color);?>>
+                    	<tr <?php echo $color;?>>
                         	<?php
 							for($j=0; $j< $nb_coll;$j++)
 							{?>
