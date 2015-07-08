@@ -386,7 +386,7 @@ function validate_tag_submit() {
 	}
 	if ($_REQUEST['tag_label'])
 	{
-  	  $new_tag_label = $func->protect_string_db($_REQUEST['tag_label']);
+  	  $new_tag_label = trim($func->protect_string_db($_REQUEST['tag_label']));
 	}
 	//$_SESSION['m_admin']['tag']['tag_label'] = $_REQUEST['tag_label_id'];
 	
@@ -394,7 +394,7 @@ function validate_tag_submit() {
 	array_push($params, $new_tag_label);
 	array_push($params, $coll_id);
 	
-	var_dump($new_tag_label);
+	// var_dump($new_tag_label);
 	if ($new_tag_label == '' || !$new_tag_label || empty($new_tag_label))
 	{
 		$_SESSION['error'] = _TAG_LABEL_IS_EMPTY;
