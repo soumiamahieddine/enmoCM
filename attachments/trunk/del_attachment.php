@@ -10,16 +10,17 @@ $core->load_lang();
 
 $func = new functions();
 
-$db = new dbquery();
-$db->connect();
+//$db = new dbquery();
+$db = new Database();
+//$db->connect();
 
 if ($_REQUEST['relation'] == 1) {
-    $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = " . $_REQUEST['id'] );
+    $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($_REQUEST['id']) );
 } else {
-    $db->query("SELECT attachment_id_master FROM res_version_attachments WHERE res_id = " . $_REQUEST['id']);
-    $res=$db->fetch_object();
-    $db->query("UPDATE res_version_attachments SET status = 'DEL' WHERE attachment_id_master = " . $res->attachment_id_master);
-    $db->query("UPDATE res_attachments SET status = 'DEL' WHERE res_id = " . $res->attachment_id_master);
+    $stmt = $db->query("SELECT attachment_id_master FROM res_version_attachments WHERE res_id = ?", array($_REQUEST['id']) );
+    $res=$stmt->fetchObject();
+    $stmt = $db->query("UPDATE res_version_attachments SET status = 'DEL' WHERE attachment_id_master = ?", array($res->attachment_id_master) );
+    $stmt = $db->query("UPDATE res_attachments SET status = 'DEL' WHERE res_id = ?", array($res->attachment_id_master));
 }
 
 if ($_SESSION['history']['attachdel'] == "true") {
@@ -32,12 +33,12 @@ if ($_SESSION['history']['attachdel'] == "true") {
     $sec = new security();
     $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
     if ($_REQUEST['relation'] == 1) {
-        $db->query("SELECT res_id_master FROM " . RES_ATTACHMENTS_TABLE . " WHERE res_id = " . $_REQUEST['id']);
+        $stmt = $db->query("SELECT res_id_master FROM " . RES_ATTACHMENTS_TABLE . " WHERE res_id = ?", array($_REQUEST['id']));
     } else {
-        $db->query("SELECT res_id_master FROM res_version_attachments WHERE res_id = " . $_REQUEST['id']);
+        $stmt = $db->query("SELECT res_id_master FROM res_version_attachments WHERE res_id = ?", array($_REQUEST['id']));
     }
 
-    $res = $db->fetch_object();
+    $res = $stmt->fetchObject();
     $resIdMaster = $res->res_id_master;
     $hist->add(
         $view, $resIdMaster, "DEL", 'attachdel', _ATTACH_DELETED . ' ' . _ON_DOC_NUM
@@ -52,22 +53,22 @@ if ($_SESSION['history']['attachdel'] == "true") {
 
 
 if ($_REQUEST['relation'] == 1) {
-    $db->query("SELECT res_id_master FROM " . RES_ATTACHMENTS_TABLE . " WHERE res_id = " . $_REQUEST['id']);
+    $stmt = $db->query("SELECT res_id_master FROM " . RES_ATTACHMENTS_TABLE . " WHERE res_id = ?",array($_REQUEST['id']));
 } else {
-    $db->query("SELECT res_id_master FROM res_version_attachments WHERE res_id = " . $_REQUEST['id']);
+    $stmt = $db->query("SELECT res_id_master FROM res_version_attachments WHERE res_id = ?", array($_REQUEST['id']));
 }
 
-$res = $db->fetch_object();
+$res = $stmt->fetchObject();
 $resIdMaster = $res->res_id_master;
-$query = "SELECT title FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' and res_id_master = " . $resIdMaster;
+$query = "SELECT title FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' and res_id_master = ?";
     if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') {
         $query .= " and (attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed')";
     } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){
         $query .= " and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed')";
     }
-$db->query($query);
-if ($db->nb_result() > 0) {
-    $new_nb_attach = $db->nb_result();
+$stmt = $db->query($query, array($resIdMaster));
+if ($stmt->rowCount() > 0) {
+    $new_nb_attach = $stmt->rowCount();
 } else {
     $new_nb_attach = 0;
 }

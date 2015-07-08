@@ -37,29 +37,22 @@ if (isset($_REQUEST['res_id_version'])) {
                     $return .= '</th>';
                 $return .= '</tr>';
 
-                $db = new dbquery();
-                $db->connect();
+                $db = new Database();
 
-                $query = "SELECT attachment_id_master, res_id_master FROM res_view_attachments WHERE res_id_version = "
-                    . $_REQUEST['res_id_version'];
-                $db->query($query);
-				$attach = $db->fetch_object();
+                $query = "SELECT attachment_id_master, res_id_master FROM res_view_attachments WHERE res_id_version = ? ";
+                $stmt = $db->query($query,array($_REQUEST['res_id_version']));
+				$attach = $stmt->fetchObject();
 
-                $query = "SELECT status, '1' as relation, creation_date, title, typist, res_id FROM res_attachments WHERE res_id = "
-                    . $attach->attachment_id_master 
-                    . " UNION ALL SELECT status, relation, creation_date, title, typist, res_id_version FROM res_view_attachments WHERE attachment_id_master = "
-                    . $attach->attachment_id_master. " AND status = 'OBS' ORDER BY relation desc";
-                $db->query($query);
+                $query = "SELECT status, '1' as relation, creation_date, title, typist, res_id FROM res_attachments WHERE res_id = ? UNION ALL SELECT status, relation, creation_date, title, typist, res_id_version FROM res_view_attachments WHERE attachment_id_master = ? AND status = 'OBS' ORDER BY relation desc";
+                $stmt = $db->query($query,array($attach->attachment_id_master,$attach->attachment_id_master));
 
-                while ($return_db = $db->fetch_object()) {
+                while ($return_db = $stmt->fetchObject()) {
                     $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $db2 = new dbquery;
-                            $db2->connect();
-                            $query = "SELECT label_status FROM status WHERE id ='".$return_db->status."'";
-                            $db2->query($query);
-                            while ($status_db = $db2->fetch_object()) {
+                            $query = "SELECT label_status FROM status WHERE id = ?";
+                            $stmt2 = $db->query($query,array($return_db->status));
+                            while ($status_db = $stmt2->fetchObject()) {
                                 $return .= functions::xssafe($status_db->label_status);
                             }
                         $return .= '</td>';

@@ -2,8 +2,7 @@
 
 require_once 'core/class/class_request.php';
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $js = "";
 
 if ((int)$_REQUEST['relation'] > 1) {
@@ -12,12 +11,12 @@ if ((int)$_REQUEST['relation'] > 1) {
     $column_res = 'res_id';
 }
 
-$db->query("SELECT relation, status 
+$stmt = $db->query("SELECT relation, status 
                 FROM res_view_attachments 
-                WHERE ".$column_res." = ".$_REQUEST['id']." and res_id_master = ".$_SESSION['doc_id']."
-                ORDER BY relation desc");
+                WHERE ".$column_res." = ? and res_id_master = ?
+                ORDER BY relation desc",array($_REQUEST['id'],$_SESSION['doc_id']));
 
-$res = $db->fetch_object();
+$res = $stmt->fetchObject();
 
 if($res->status == 'A_TRA' || $res->status == 'TRA'){
 	if ($res->status == 'A_TRA') {
@@ -32,7 +31,7 @@ if($res->status == 'A_TRA' || $res->status == 'TRA'){
 		$table = 'res_version_attachments';
 	}
 
-	$db->query("UPDATE ".$table." set status = '".$status."' WHERE res_id = ".$_REQUEST['id']);
+	$db->query("UPDATE ".$table." set status = '".$status."' WHERE res_id = ?", array($_REQUEST['id']));
 	$status_ajax = 0;
 
 } else {

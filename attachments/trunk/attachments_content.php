@@ -24,11 +24,12 @@ $core = new core_tools();
 $core->load_lang();
 $sec = new security();
 $func = new functions();
+$db = new Database();
 $req = new request();
-$req2 = new request();
+//$req2 = new request();
 $docserverControler = new docservers_controler();
 
-$req->connect();
+
 
 $_SESSION['error'] = "";
 
@@ -295,17 +296,17 @@ if (isset($_POST['add']) && $_POST['add']) {
                             $storeResult['docserver_id'], $_SESSION['data'],
                             $_SESSION['config']['databasetype']
                         );
-						
-						//copie de la version PDF de la pièce si mode de conversion sur le client
-						if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
-							$file = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
-							$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
-							
-							copy($file, $newfile);
-							$_SESSION['new_id'] = $id;
-							unset($_SESSION['upfile']['fileNamePdfOnTmp']);
-						}
-						
+                        
+                        //copie de la version PDF de la pièce si mode de conversion sur le client
+                        if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
+                            $file = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
+                            $newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
+                            
+                            copy($file, $newfile);
+                            $_SESSION['new_id'] = $id;
+                            unset($_SESSION['upfile']['fileNamePdfOnTmp']);
+                        }
+                        
                         if ($id == false) {
                             $_SESSION['error'] = $resAttach->get_error();
                         } else {
@@ -338,12 +339,11 @@ if (isset($_POST['add']) && $_POST['add']) {
             
             if ( empty($_SESSION['error']) || $_SESSION['error'] == _NEW_ATTACH_ADDED ) {
                 $new_nb_attach = 0;
-                $req->connect();
-                $req->query("select res_id from "
+                $stmt = $db->query("select res_id from "
                     . $_SESSION['tablename']['attach_res_attachments']
-                    . " where status <> 'DEL' and res_id_master = " . $_SESSION['doc_id']);
-                if ($req->nb_result() > 0) {
-                    $new_nb_attach = $req->nb_result();
+                    . " where status <> 'DEL' and res_id_master = ?", array($_SESSION['doc_id']));
+                if ($stmt->rowCount() > 0) {
+                    $new_nb_attach = $stmt->rowCount();
                 }
                 if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'create') {
                     $js .= "window.parent.top.location.reload()";
@@ -362,9 +362,9 @@ if (isset($_POST['add']) && $_POST['add']) {
         $error = $_SESSION['error'];
         $status = 1;
     }
-	if (!isset($_SESSION['new_id'])) $_SESSION['new_id'] = 0;
+    if (!isset($_SESSION['new_id'])) $_SESSION['new_id'] = 0;
     echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', majFrameId : ".functions::xssafe($_SESSION['new_id']).", exec_js : '".addslashes($js)."'}";
-	unset($_SESSION['new_id']);
+    unset($_SESSION['new_id']);
     exit();
 } else if (isset($_POST['edit']) && $_POST['edit']) {
     $title = '';
@@ -379,18 +379,17 @@ if (isset($_POST['add']) && $_POST['add']) {
 
     if ($status <> 1) {
         if ($_REQUEST['new_version'] == "yes") {
-			$isVersion = 1;
+            $isVersion = 1;
             if ((int)$_REQUEST['relation'] > 1) {
                 $column_res = 'res_id_version';
             } else {
                 $column_res = 'res_id';
             }
-
-            $req->query("SELECT attachment_type, identifier, relation, attachment_id_master 
-                            FROM res_view_attachments 
-                            WHERE ".$column_res." = ".$_REQUEST['res_id']." and res_id_master = ".$_SESSION['doc_id']."
-                            ORDER BY relation desc");
-            $previous_attachment = $req->fetch_object();
+            $stmt = $db->query("SELECT attachment_type, identifier, relation, attachment_id_master 
+                            FROM res_view_attachments
+                            WHERE ".$column_res." = ? and res_id_master = ?
+                            ORDER BY relation desc", array($_REQUEST['res_id'],$_SESSION['doc_id']));
+            $previous_attachment = $stmt->fetchObject();
 
             $fileInfos = array(
                 "tmpDir"      => $_SESSION['config']['tmppath'],
@@ -596,28 +595,28 @@ if (isset($_POST['add']) && $_POST['add']) {
                     $storeResult['docserver_id'], $_SESSION['data'],
                     $_SESSION['config']['databasetype']
                 );
-				
-				//copie de la version PDF de la pièce si mode de conversion sur le client
-				if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
-					$file = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
-					$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
-					
-					copy($file, $newfile);
-					$_SESSION['new_id'] = $id;
-					unset($_SESSION['upfile']['fileNamePdfOnTmp']);
-				}
-						
-						
-                $req->connect();
+                
+                //copie de la version PDF de la pièce si mode de conversion sur le client
+                if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
+                    $file = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
+                    $newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
+                    
+                    copy($file, $newfile);
+                    $_SESSION['new_id'] = $id;
+                    unset($_SESSION['upfile']['fileNamePdfOnTmp']);
+                }
+                        
+                        
+                
                 if ($previous_attachment->relation == 1) {
-                    $req->query("UPDATE res_attachments set status = 'OBS' WHERE res_id = ".$_REQUEST['res_id']);
+                    $stmt = $db->query("UPDATE res_attachments set status = 'OBS' WHERE res_id = ?",array($_REQUEST['res_id']));
                 } else {
-                    $req->query("UPDATE res_version_attachments set status = 'OBS' WHERE res_id = ".$_REQUEST['res_id']);
+                    $stmt = $db->query("UPDATE res_version_attachments set status = 'OBS' WHERE res_id = ?",array($_REQUEST['res_id']));
                 }
 
             }
         } else {
-			$isVersion = 0;
+            $isVersion = 0;
             $set_update = "";
             $set_update = " title = '".$title."'";
 
@@ -663,16 +662,16 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $set_update .= ", path = '".$storeResult['destination_dir']."'";
                 $set_update .= ", filename = '".$storeResult['file_destination_name']."'";
                 // $set_update .= ", docserver_id = ".$storeResult['docserver_id'];
-				
-				//copie de la version PDF de la pièce si mode de conversion sur le client
-				if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
-					$file = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
-					$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
-					
-					copy($file, $newfile);
-					$_SESSION['new_id'] = $id;
-					unset($_SESSION['upfile']['fileNamePdfOnTmp']);
-				}
+                
+                //copie de la version PDF de la pièce si mode de conversion sur le client
+                if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
+                    $file = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
+                    $newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
+                    
+                    copy($file, $newfile);
+                    $_SESSION['new_id'] = $id;
+                    unset($_SESSION['upfile']['fileNamePdfOnTmp']);
+                }
             }
 
             $set_update .= ", doc_date = ".$req->current_datetime().", updated_by = '".$_SESSION['user']['UserId']."'";
@@ -680,11 +679,10 @@ if (isset($_POST['add']) && $_POST['add']) {
             if (isset($storeResult['error']) && $storeResult['error'] <> '') {
                 $_SESSION['error'] = $storeResult['error'];
             } else {
-                $req->connect();
                 if ((int)$_REQUEST['relation'] == 1) {
-                    $req->query("UPDATE res_attachments SET " . $set_update . " WHERE res_id = ".$_REQUEST['res_id']);
+                    $stmt = $db->query("UPDATE res_attachments SET " . $set_update . " WHERE res_id = ?",array($_REQUEST['res_id']));
                 } else {
-                    $req->query("UPDATE res_version_attachments SET " . $set_update . " WHERE res_id = ".$_REQUEST['res_id']);
+                    $stmt = $db->query("UPDATE res_version_attachments SET " . $set_update . " WHERE res_id = ?",array($_REQUEST['res_id']));
                 }
             }
             
@@ -734,10 +732,10 @@ if (isset($_POST['add']) && $_POST['add']) {
         $status = 1;
     }
 
-	if (!isset($_SESSION['new_id'])) $_SESSION['new_id'] = 0;
+    if (!isset($_SESSION['new_id'])) $_SESSION['new_id'] = 0;
     echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', title : '" . addslashes($title) . "', isVersion : " . $isVersion . ", error : '" . addslashes($error) . "', majFrameId : ".$_SESSION['new_id'].", exec_js : '".addslashes($js)."'}";
-	unset($_SESSION['new_id']);
-	exit();
+    unset($_SESSION['new_id']);
+    exit();
 }
 
 if (isset($_REQUEST['id'])) {
@@ -747,14 +745,13 @@ if (isset($_REQUEST['id'])) {
     } else {
         $column_res = 'res_id';
     }
-
-    $req->connect();
-    $req->query("SELECT validation_date, title, dest_contact_id, dest_address_id, relation 
+    
+    $stmt = $db->query("SELECT validation_date, title, dest_contact_id, dest_address_id, relation 
                     FROM res_view_attachments 
-                    WHERE ".$column_res." = ".$_REQUEST['id']." and res_id_master = ".$_SESSION['doc_id']."
-                    ORDER BY relation desc");
-    $data_attachment = $req->fetch_object();
-
+                    WHERE ".$column_res." = ? and res_id_master = ?
+                    ORDER BY relation desc",array($_REQUEST['id'],$_SESSION['doc_id']));
+    $data_attachment = $stmt->fetchObject();
+    //var_dump($data_attachment);
     if ($data_attachment->relation == 1) {
         $res_table = 'res_attachments';
     } else {
@@ -774,27 +771,25 @@ if (isset($_REQUEST['id'])) {
     $_SESSION['upfile']['fileNameOnTmp'] = $fileNameOnTmp;
 
 } else {
-    $req->query("SELECT subject, exp_contact_id, address_id FROM res_view_letterbox WHERE res_id = ".$_SESSION['doc_id']);
-    $data_attachment = $req->fetch_object();
+    $stmt = $db->query("SELECT subject, exp_contact_id, address_id FROM res_view_letterbox WHERE res_id = ?",array($_SESSION['doc_id']));
+    $data_attachment = $stmt->fetchObject();
 
     unset($_SESSION['upfile']);
 }
 
 
 if ($data_attachment->dest_contact_id <> "") {
-    $req->connect();
-    $req->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
+    $stmt = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
                     FROM view_contacts 
-                    WHERE contact_id = ' . $data_attachment->dest_contact_id . ' and ca_id = ' . $data_attachment->dest_address_id);
+                    WHERE contact_id = ? and ca_id = ?', array($data_attachment->dest_contact_id,$data_attachment->dest_address_id));
 } else if ($data_attachment->exp_contact_id <> "") {
-    $req->connect();
-    $req->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
+    $stmt = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
                     FROM view_contacts 
-                    WHERE contact_id = ' . $data_attachment->exp_contact_id . ' and ca_id = ' . $data_attachment->address_id);       
+                    WHERE contact_id = ? and ca_id = ?', array($data_attachment->exp_contact_id,$data_attachment->address_id));       
 }
 
 if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id <> '') {
-    $res = $req->fetch_object();
+    $res = $stmt->fetchObject();
     if ($res->is_corporate_person == 'Y') {
         $data_contact = $res->society;
         if (!empty ($res->society_short)) {
@@ -818,17 +813,17 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
     }
 //si multicontact
 }else{
-    $req->connect();
-    $req->query("SELECT cr.address_id, c.contact_id, c.is_corporate_person, c.society, c.society_short, c.firstname, c.lastname,ca.is_private,ca.address_street, ca.address_num, ca.address_town FROM contacts_res cr, contacts_v2 c, contact_addresses ca WHERE cr.res_id = ".$_SESSION['doc_id']." and c.contact_id = cast(cr.contact_id as integer) and ca.contact_id=c.contact_id and ca.id=cr.address_id");
+    $stmt = $db->query("SELECT cr.address_id, c.contact_id, c.is_corporate_person, c.society, c.society_short, c.firstname, c.lastname,ca.is_private,ca.address_street, ca.address_num, ca.address_town 
+                        FROM contacts_res cr, contacts_v2 c, contact_addresses ca 
+                        WHERE cr.res_id = ? and c.contact_id = cast(cr.contact_id as integer) and ca.contact_id=c.contact_id and ca.id=cr.address_id",array($_SESSION['doc_id']));
     $i=0;
-    while($multi_contacts_attachment = $req->fetch_object()){
+    while($multi_contacts_attachment = $stmt->fetchObject()){
             $format_contact='';
-            $req2->connect();
-            $req2->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
+            $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
                             FROM view_contacts 
-                            WHERE contact_id = ' . $multi_contacts_attachment->contact_id . ' and ca_id = ' . $multi_contacts_attachment->address_id);
+                            WHERE contact_id = ? and ca_id = ?',array($multi_contacts_attachment->contact_id,$multi_contacts_attachment->address_id));
     
-            $res = $req2->fetch_object();
+            $res = $stmt2->fetchObject();
             if ($res->is_corporate_person == 'Y') {
                 $format_contact = $res->society;
                 if (!empty ($res->society_short)) {
@@ -948,14 +943,14 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
             $content .= '</select>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
             $content .= '<label>&nbsp;</label>';
             if(!isset($_REQUEST['id'])){
-				$content .= '<input type="button" value="';
-					$content .= _EDIT_MODEL;
-					$content .= '" name="edit" id="edit" style="display:none" class="button" '
-									.'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
-									.'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';            
-			}
-		$content .= '</p>';
-		$content .= '<br/>';
+                $content .= '<input type="button" value="';
+                    $content .= _EDIT_MODEL;
+                    $content .= '" name="edit" id="edit" style="display:none" class="button" '
+                                    .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
+                                    .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';            
+            }
+        $content .= '</p>';
+        $content .= '<br/>';
         $content .= '<p>';
             $content .= '<label>&nbsp;</label>';
             $content .=  _OR;
@@ -1055,16 +1050,16 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                 $content .= '&nbsp;';
                 $content .= '<label>&nbsp;</label>';
                 if (isset($_REQUEST['id'])) {
-						$content .= '<input type="button" value="';
-						$content .= _EDIT_MODEL;
-						$content .= '" name="edit" id="edit" class="button" onclick="window.open(\''
-										. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentUpVersion&objectId='.$_REQUEST['id'].'&objectTable=res_view_attachments&resMaster='.$_SESSION['doc_id']
-										.'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
-					} /*else {
-						$content .= '" name="edit" id="edit" style="display:none" class="button" '
-									.'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
-									.'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';            
-					}*/
+                        $content .= '<input type="button" value="';
+                        $content .= _EDIT_MODEL;
+                        $content .= '" name="edit" id="edit" class="button" onclick="window.open(\''
+                                        . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentUpVersion&objectId='.$_REQUEST['id'].'&objectTable=res_view_attachments&resMaster='.$_SESSION['doc_id']
+                                        .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
+                    } /*else {
+                        $content .= '" name="edit" id="edit" style="display:none" class="button" '
+                                    .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
+                                    .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';            
+                    }*/
         
         $content .= '</p>';
         $content .= '&nbsp;';
