@@ -30,7 +30,7 @@
 */
 
 require_once 'core/class/class_functions.php';
-require_once 'core/class/class_db.php';
+require_once 'core/class/class_db_pdo.php';
 require_once 'core/class/docservers_controler.php';
 require_once 'core/class/class_security.php';
 require_once 'core/core_tables.php';
@@ -50,8 +50,7 @@ class content_management_tools
         if (!isset($_SESSION) OR count($_SESSION) == 0)
             return null;
 
-        $this->db = new dbquery();
-        $this->db->connect();
+        $this->db = new Database();
         //TODO: PUT IT AN CONFIG FILE WITH 30
         $_SESSION['config']['content_management_reserved_time'] = 30;
         if (!is_dir('modules/content_management/tmp/')) {
@@ -87,31 +86,6 @@ class content_management_tools
         }
         return $cMFeatures;
     }
-    
-    public function get_application($userId, $format)
-    {
-        $xml_programs = DOMDocument::load($this->programs_xml_path);
-        $xp_xml_programs = new domxpath($xml_programs);
-        //Is an application definied for the format ?
-        $this->db->query("SELECT NAME, PATH
-                    FROM ".$_SESSION['tablename']['ext_applications']."
-                    WHERE USER_ID = '".$userId."'
-                    AND FORMAT = '".$format."'");
-        if ($res2 = $this->db->fetch_object()) {
-            $return = array("APP_NAME" => $res2->NAME,
-                            "APP_PATH" => $res2->PATH);
-        } else {
-            $req_prog = $xp_xml_programs->query("//APPLICATION[FORMAT='".$format."']");
-            if ($req_prog->length > 0) {
-                $return = array("APP_NAME" => $req_prog->item(0)->getAttribute("NAME"),
-                                "APP_PATH" => $req_prog->item(0)->getAttribute("PATH"));
-            } else {
-                return _NO_APPLICATION_FORMAT;
-            }
-        }
-        //print_r($return);exit;
-        return $return;
-    }
 
     /**
     * Returns who reserved the resource
@@ -124,21 +98,23 @@ class content_management_tools
     {
         $timeLimit = $this->computeTimeLimit();
         $charTofind = $this->parameter_id . '#%#' . $objectTable . '#' . $objectId;
-        $query = "select id from " . PARAM_TABLE . " where id like '"
-            . $charTofind . "' and param_value_int > " . $timeLimit;
-        //return $query;
-        $this->db->query($query);
-        if ($res = $this->db->fetch_object()) {
+
+        $query = "select id from " . PARAM_TABLE . " where id <> ? and param_value_int > ?";
+
+        $stmt = $this->db->query($query, array($charTofind, $timeLimit));
+        
+        if ($res = $stmt->fetchObject()) {
+
             $arrayUser = array();
             $arrayUser = explode("#", $res->id);
             if ($arrayUser[1] <> '') {
                 $query = "select user_id, lastname, firstname "
-                    . "from " . USERS_TABLE . " where user_id = '"
-                    . $arrayUser[1] . "' and enabled = 'Y'";
-                //return $query;
-                $this->db->query($query);
+                    . "from " . USERS_TABLE . " where user_id = ? and enabled = 'Y'";
+                
+                $stmt = $this->db->query($query, array($arrayUser[1]));
+                
                 $arrayReturn = array();
-                if ($resUser = $this->db->fetch_object()) {
+                if ($resUser = $stmt->fetchObject()) {
                     $arrayReturn['fullname'] = $resUser->firstname . ' '
                         . $resUser->lastname;
                     $arrayReturn['user_id'] = $resUser->user_id;
@@ -164,10 +140,9 @@ class content_management_tools
     */
     public function closeReservation($CMId)
     {
-        $this->db->connect();
         $query = "delete from " . PARAM_TABLE
-            . " where id = '" . $CMId . "'";
-        $this->db->query($query);
+            . " where id = ?";
+        $stmt = $this->db->query($query, array($CMId));
     }
 
     /**
@@ -184,10 +159,13 @@ class content_management_tools
         );
         $charTofind = $this->parameter_id . '#' . $userId . '%';
         $query = "update " . PARAM_TABLE
-               . " set param_value_int = " . $timeLimit
-               . " where id like '" . $charTofind . "'"
-               . " and param_value_string = '" . $CMId . "'";
-        $this->db->query($query);
+               . " set param_value_int = ? "
+               . " where id like ?"
+               . " and param_value_string = ?";
+        $stmt = $this->db->query(
+            $query, 
+            array($timeLimit, $charTofind, $CMId)
+        );
     }
 
     /**
@@ -209,12 +187,12 @@ class content_management_tools
         $charTofind = $this->parameter_id . '#' . $userId . '#' . $objectTable
                     . '#' . $objectId;
         $query = "delete from " . PARAM_TABLE
-               . " where id = '" . $charTofind . "'";
-        $this->db->query($query);
+               . " where id = ?";
+        $stmt = $this->db->query($query, array($charTofind));
         $query = "insert into " . PARAM_TABLE
                . " (id, param_value_int)"
-               . " values('" . $charTofind . "', " . $timeLimit . ")";
-        $this->db->query($query);
+               . " values(?, ?)";
+        $stmt = $this->db->query($query, array($charTofind, $timeLimit));
         return $charTofind;
     }
 
@@ -226,10 +204,10 @@ class content_management_tools
     public function deleteExpiredCM()
     {
         $timeLimit = $this->computeTimeLimit();
-        $this->db->query("delete from " . PARAM_TABLE
-            . " where param_value_int < " . $timeLimit
-            . " and id like '" . $this->parameter_id . "%'"
-        );
+        $query = "delete from " . PARAM_TABLE
+            . " where param_value_int < ? "
+            . " and id like ? ";
+        $stmt = $this->db->query($query, array($timeLimit, $this->parameter_id . '%'));
     }
     
     /**
@@ -239,9 +217,10 @@ class content_management_tools
     */
     public function deleteUserCM()
     {
-        $this->db->query("delete from " . PARAM_TABLE
-            . " where id like 'content_management_reservation#" 
-            . $_SESSION['user']['UserId'] . "%'"
+        $query = "delete from " . PARAM_TABLE
+            . " where id like ?";
+        $stmt = $this->db->query($query, array('content_management_reservation#' 
+            . $_SESSION['user']['UserId'] . '%')
         );
     }
 
@@ -277,10 +256,10 @@ class content_management_tools
         $charTofind = $this->parameter_id . '%';
         $query = "select param_value_int as time"
                . " from " . PARAM_TABLE
-               . " where id like '" . $charTofind . "'"
-               . " and param_value_string = '" . $CMId . "'";
-        $this->db->query($query);
-        if ($res = $this->db->fetch_object()) {
+               . " where id like ?"
+               . " and param_value_string = ?";
+        $stmt = $this->db->query($query, array($charTofind, $CMId));
+        if ($res = $stmt->fetchObject()) {
             $secBeforeExpiration = $res->time - $now;
             if ($secBeforeExpiration < 0)  {
                 return 0;

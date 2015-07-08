@@ -13,6 +13,7 @@ if (
 require_once 'core/class/class_portal.php';
 require_once 'core/class/class_functions.php';
 require_once 'core/class/class_db.php';
+require_once 'core/class/class_db_pdo.php';
 require_once 'core/class/class_core_tools.php';
 require_once 'core/core_tables.php';
 require_once 'core/class/class_request.php';

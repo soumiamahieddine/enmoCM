@@ -1,29 +1,27 @@
 <?php
 //case of res -> update attachment
 require_once 'modules/attachments/attachments_tables.php';
-$dbAttachment = new dbquery();
-$dbAttachment->connect();
-$dbAttachment->query("SELECT relation, docserver_id, path, filename, format 
-                        FROM res_view_attachments 
-                        WHERE (res_id = " . $objectId . " OR res_id_version = ".$objectId.") AND res_id_master = ".$_SESSION['doc_id']
-                         ." ORDER BY relation desc"
-);
+$dbAttachment = new Database();
+$query = "SELECT relation, docserver_id, path, filename, format 
+        FROM res_view_attachments 
+        WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc";
 
-if ($dbAttachment->nb_result() == 0) {
+$stmt = $dbAttachment->query($query, array($objectId, $objectId, $_SESSION['doc_id']));
+
+if ($stmt->rowCount() == 0) {
     $result = array('ERROR' => _THE_DOC . ' ' . _EXISTS_OR_RIGHT);
     createXML('ERROR', $result);
 } else {
-    $line = $dbAttachment->fetch_object();
+    $line = $stmt->fetchObject();
     $docserver = $line->docserver_id;
     $path = $line->path;
     $filename = $line->filename;
     $format = $line->format;
-    $dbAttachment->query(
-        "select path_template from " . _DOCSERVERS_TABLE_NAME
-        . " where docserver_id = '" . $docserver . "'"
-    );
+    $query = "select path_template from " . _DOCSERVERS_TABLE_NAME
+        . " where docserver_id = ?";
+    $stmt = $dbAttachment->query($query, array($docserver));
     $func = new functions();
-    $lineDoc = $dbAttachment->fetch_object();
+    $lineDoc = $stmt->fetchObject();
     $docserver = $lineDoc->path_template;
     $fileOnDs = $docserver . $path . $filename;
     $fileOnDs = str_replace('#', DIRECTORY_SEPARATOR, $fileOnDs);

@@ -1,5 +1,4 @@
 <?php
-
 //FOR ADD RES VERSIONS
 
 if ($_SESSION['cm']['resMaster'] <> '') {
@@ -36,13 +35,14 @@ if (empty($docserver)) {
         );
         createXML('ERROR', $result);
     } else {
-        $dbVersion = new dbquery();
-        $dbVersion->connect();
-        $query = "select relation, fingerprint, docserver_id from " . $versionTable 
-            . " where res_id_master = " . $resMaster 
+        $dbVersion = new Database();
+
+        $query = "select relation, fingerprint, docserver_id from " 
+            . $versionTable
+            . " where res_id_master = ?"
             . " and status <> 'DEL' order by res_id desc";
-        $dbVersion->query($query);
-        $resVer = $dbVersion->fetch_object();
+        $stmt = $dbVersion->query($query, array($resMaster));
+        $resVer = $stmt->fetchObject();
         $lastVersion = $resVer->relation;
         $lastFingerprint = $resVer->fingerprint;
         $docserverId = $resVer->docserver_id;

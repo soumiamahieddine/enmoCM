@@ -47,27 +47,43 @@ if (empty($docserver)) {
             $docserverTypeControler = new docserver_types_controler();
             $docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
             $query = "update " . RES_ATTACHMENTS_TABLE 
-                . " set docserver_id = '" . $storeResult['docserver_id'] . "'"
-                . ", path = '" . $storeResult['destination_dir'] . "'"
-                . ", filename = '" . $storeResult['file_destination_name'] . "'"
-                . ", filesize = " . filesize($_SESSION['config']['tmppath'] . $tmpFileName)
-                . ", fingerprint = '" . Ds_doFingerprint(
-                        $_SESSION['config']['tmppath'] . $tmpFileName, 
-                        $docserverTypeObject->fingerprint_mode
-                ) . "' "
-                . "where res_id = " . $objectId;
+                . " set docserver_id = ? "
+                . ", path = ? "
+                . ", filename = ? "
+                . ", filesize = ? "
+                . ", fingerprint = ? "
+                . "where res_id = ?";
 				
 			//copie de la version PDF de la pièce si mode de conversion sur le client
-			if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $tmpFilePdfName != ''){
+			if (
+                $_SESSION['modules_loaded']['attachments']['convertPdf'] == true 
+                && $tmpFilePdfName != ''
+            ) {
 				$file = $_SESSION['config']['tmppath'].$tmpFilePdfName;
-				$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
+				$newfile = $storeResult['path_template']
+                    . str_replace('#',"/",$storeResult['destination_dir'])
+                    . substr (
+                        $storeResult['file_destination_name'], 
+                        0, 
+                        strrpos($storeResult['file_destination_name'], "." )
+                    ).".pdf";
 				
 				copy($file, $newfile);
 				$_SESSION['new_id'] = $objectId;
 			}
-            $dbAttachment = new dbquery();
-            $dbAttachment->connect();
-            $dbAttachment->query($query);
+            $dbAttachment = new Database();
+            $stmt = $dbAttachment->query(
+                $query, 
+                array(
+                    $storeResult['docserver_id'],
+                    $storeResult['destination_dir'],
+                    $storeResult['file_destination_name'],
+                    filesize($_SESSION['config']['tmppath'] . $tmpFileName),
+                    Ds_doFingerprint($_SESSION['config']['tmppath'] 
+                        . $tmpFileName, $docserverTypeObject->fingerprint_mode,
+                    $objectId
+                )
+            );
             if ($_SESSION['history']['attachup'] == 'true') {
                 $hist = new history();
                 $sec = new security();
@@ -75,9 +91,9 @@ if (empty($docserver)) {
                     $collId
                 );
                 $query = "select res_id_master from " . RES_ATTACHMENTS_TABLE
-                    . " where res_id = " . $objectId;
-                $dbAttachment->query($query);
-                $lineDoc = $dbAttachment->fetch_object();
+                    . " where res_id = ?";
+                $stmt = $dbAttachment->query($query, array($objectId));
+                $lineDoc = $stmt->fetchObject();
                 $hist->add(
                     $view, $lineDoc->res_id_master, 'UP', 'attachup',
                     ucfirst(_DOC_NUM) . $objectId . ' '
