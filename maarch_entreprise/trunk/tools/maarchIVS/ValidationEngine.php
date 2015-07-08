@@ -195,7 +195,6 @@ class ValidationEngine
         $method = $_SERVER['REQUEST_METHOD'];
         $path = $_SERVER['SCRIPT_NAME'];
         $parameters = $_GET;
-
         $this->validationRules = $this->configurationHandler->getValidationRules($method, $path, $parameters);
 
         if (count($this->validationRules) == 0) {
@@ -222,6 +221,7 @@ class ValidationEngine
             'requestMethod' => $_SERVER['REQUEST_METHOD'],
             'requestPath' => $_SERVER['SCRIPT_NAME'],
             'requestParameters' => $_GET,
+            'requestBody' => $_REQUEST,
             'validationErrors' => $this->errors,
             'validationRules' => $this->validationRules, 
             'dataTypes' => $this->dataTypes,
@@ -564,8 +564,8 @@ class ValidationEngine
         if ($error->facet) {
             $errmsg .= ', facet ' . $error->facet[0];
         }
-        if ($error->value) {
-            $errmsg .= ' expected ' . implode(' or ', $error->facet[1]);
+        if ($error->facet[1]) {
+            $errmsg .= ' expected ' . implode(' or ', (array) $error->facet[1]);
         }
 
         switch ($this->errorMode) {
