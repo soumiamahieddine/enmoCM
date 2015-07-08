@@ -3,7 +3,8 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
 $row = 1;
-$handle = fopen($_SESSION['config']['businessappurl']."tools/referentiel/code_postaux_v201410.csv", "r");
+$handle = fopen($_SESSION['config']['corepath'] .
+    "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']. DIRECTORY_SEPARATOR."tools/referentiel/code_postaux_v201410.csv", "r");
 
 $request = new request();
 

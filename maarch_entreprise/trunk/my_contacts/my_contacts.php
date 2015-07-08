@@ -95,39 +95,38 @@ $contact    = new contacts_v2();
     //Where clause
     $where_tab = array();
 
+    $arrayPDO = array();
+
     //From search
     if (!empty($_SESSION['searching']['where_request']) && $_REQUEST['mode'] == 'search') {
         $where_tab[] = $_SESSION['searching']['where_request'] . ' (1=1)';
     }
 
     if ($_REQUEST['mode'] <> 'search') {
-        $where_tab[] = "(contact_user_id  = '".$_SESSION['user']['UserId']."')";
+        $where_tab[] = "(contact_user_id  = :userId)";
+        $arrayPDO = array_merge($arrayPDO, array(":userId" => $_SESSION['user']['UserId']));
     }  
 
     //Filtre alphabetique et champ de recherche
     $what = $list->getWhatSearch();
 
+
+
     if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) {
-        $where_tab[] = " contact_id = ".$_REQUEST['selectedObject'];
+        $where_tab[] = " contact_id = :contactId ";
+        $arrayPDO = array_merge($arrayPDO, array(":contactId" => $_REQUEST['selectedObject']));
     } elseif (!empty($what)) {
-        // $where_tab[] = "(lower(lastname) like lower('"
-        //                 .$request->protect_string_db($what)
-        //                 ."%') or lower(society) like lower('"
-        //                 .$request->protect_string_db($what)."%') 
-        //                     or lower(firstname) like lower('"
-        //                 .$request->protect_string_db($what)."%'))";
 
         $what = str_replace("  ", "", $request->protect_string_db($_REQUEST['what']));
         $what_table = explode(" ", $what);
 
-        foreach($what_table as $what_a){
-            $sql_lastname[] = " lower(contact_lastname) LIKE lower('".$what_a."%')";
-            // $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
-            $sql_society[] = " lower(society) LIKE lower('".$what_a."%')";
+        foreach($what_table as $key => $what_a){
+            $sql_lastname[] = " lower(contact_lastname) LIKE lower(:what_".$key.")";
+            $sql_society[] = " lower(society) LIKE lower(:what_".$key.")";
+            $arrayPDO = array_merge($arrayPDO, array(":what_".$key => $what_a."%"));
         }
 
         $where_tab[] = " (" . implode(' OR ', $sql_lastname) 
-                        // . "  or " . implode(' OR ', $sql_firstname) 
                         . "  or " . implode(' OR ', $sql_society) . ") ";
     }
     //Build where
@@ -146,8 +145,7 @@ $contact    = new contacts_v2();
     }
 
     //Request
-    $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
-    // $request->show();
+    $tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
     
     //Result array    
     for ($i=0;$i<count($tab);$i++)

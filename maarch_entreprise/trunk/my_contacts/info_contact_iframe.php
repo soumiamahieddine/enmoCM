@@ -38,6 +38,7 @@ $core_tools2->load_js();
 
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_request.php';
 $request = new request();
+$db = new Database();
 
 echo '<div class="error" id="main_error">';
 echo $_SESSION['error'];
@@ -80,11 +81,9 @@ if ((isset($_GET['contactid']) && $_GET['contactid'] <> '') && (!isset($_GET['ad
 	exit;
 }
 
-$request->connect();
-
-$query = "select * from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$_GET['contactid'];
-$request->query($query);
-$line = $request->fetch_object();
+$query = "SELECT * FROM ".$_SESSION['tablename']['contacts_v2']." WHERE contact_id = ?";
+$stmt = $db->query($query, array($_GET['contactid']));
+$line = $stmt->fetchObject();
 
 $_SESSION['m_admin']['contact'] = array();
 $_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
@@ -126,9 +125,9 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
 	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 	$contact = new contacts_v2();
 
-	$query = "select * from ".$_SESSION['tablename']['contact_addresses']." where id = ".$_GET['addressid'];
-	$request->query($query);
-	$line = $request->fetch_object();
+	$query = "SELECT * FROM ".$_SESSION['tablename']['contact_addresses']." WHERE id = ?";
+	$stmt = $db->query($query, array($_GET['addressid']));
+	$line = $stmt->fetchObject();
 
 	$_SESSION['m_admin']['address'] = array();
 	$_SESSION['m_admin']['address']['ID'] = $line->id;

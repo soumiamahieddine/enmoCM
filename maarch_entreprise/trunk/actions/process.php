@@ -1302,7 +1302,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     if (empty($values_form) || count($arr_id) < 1 || empty($coll_id)) {
         return false;
     }
-    //require_once("core/class/class_db.php");
+
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
     $sec =new security();
     $db = new dbquery();

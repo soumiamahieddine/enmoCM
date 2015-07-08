@@ -1,20 +1,50 @@
 <?php
 
-$db = new dbquery();
-$db->connect();
+/*
+*    Copyright 2014-2015 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+*
+*
+* @file
+* @author <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup apps
+*/
+
+$db = new Database();
 
 $query = "SELECT contact_id, society, firstname, lastname, is_corporate_person FROM contacts_v2 WHERE enabled = 'Y'";
+$arrayPDO = array();
 
 if ($_REQUEST['type_id'] <> "all") {
-	$query .= " AND contact_type = ".$_REQUEST['type_id'];
+	$query .= " AND contact_type = ? ";
+	$arrayPDO = array($_REQUEST['type_id']);
 }
 
 $query .= " ORDER BY is_corporate_person desc, society, lastname";
-$db->query($query);
+$stmt = $db->query($query, $arrayPDO);
 
 $contact_selected = array();
 
-while($res = $db->fetch_object()){
+while($res = $stmt->fetchObject()){
 	$contact = "";
 	if ($res->is_corporate_person == "Y") {
 		$contact = $res->society;
@@ -39,12 +69,12 @@ if ($countsContact == 0) {
 }
  
 for ($cptsContacts = 0;$cptsContacts< $countsContact;$cptsContacts++) {
-	$frmStr .= '<option value="'.$db->show_string($contact_selected[$cptsContacts]['id']).'"';
+	$frmStr .= '<option value="'.functions::show_string($contact_selected[$cptsContacts]['id']).'"';
 	if ($_REQUEST['mode'] == "view") {
 		$frmStr .= ' disabled ';
 	}
 	$frmStr .= '>'
-	.  $db->show_string($contact_selected[$cptsContacts]['name'])
+	.  functions::show_string($contact_selected[$cptsContacts]['name'])
 	. '</option>';
 }
 

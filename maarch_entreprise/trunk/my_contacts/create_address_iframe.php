@@ -44,6 +44,7 @@ require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
 
 $request = new request();
 $contact = new contacts_v2();
+$db 	 = new Database();
 
 echo '<div class="error" id="main_error">';
 echo $_SESSION['error'];
@@ -53,13 +54,13 @@ echo '<div class="info" id="main_info">';
 echo $_SESSION['info'];
 echo '</div>';
 
-$request->connect();
-$query = "select * from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$_SESSION['contact']['current_contact_id'];
 
-$request->query($query);
+$query = "SELECT * FROM ".$_SESSION['tablename']['contacts_v2']." WHERE contact_id = ?";
+
+$stmt = $db->query($query, array($_SESSION['contact']['current_contact_id']));
 
 $_SESSION['m_admin']['contact'] = array();
-$line = $request->fetch_object();
+$line = $stmt->fetchObject();
 $_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
 $_SESSION['m_admin']['contact']['TITLE'] = $request->show_string($line->title);
 $_SESSION['m_admin']['contact']['LASTNAME'] = $request->show_string($line->lastname);

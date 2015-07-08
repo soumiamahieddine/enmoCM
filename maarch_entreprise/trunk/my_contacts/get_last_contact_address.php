@@ -29,19 +29,21 @@
 */
 
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_request.php';
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
 if (isset($_GET['mode']) && $_GET['mode'] == 'up') {
-	$extra = ' AND contact_id = '.$_SESSION['contact']['current_contact_id'].' and ca_id = '.$_SESSION['contact']['current_address_id'];
+	$extra = ' AND contact_id = ? and ca_id = ? ';
+	$arrayPDO = array($_SESSION['contact']['current_contact_id'], $_SESSION['contact']['current_address_id']);
 } else if (isset($_GET['contactid']) && $_GET['contactid'] <> '' && isset($_GET['addressid']) && $_GET['addressid'] <> ''){
-	$extra = ' AND contact_id = '.$_GET['contactid'].' and ca_id = '.$_GET['addressid'];
+	$extra = ' AND contact_id = ? and ca_id = ? ';
+	$arrayPDO = array($_GET['contactid'], $_GET['addressid']);
 } 
 else {
 	$extra = ' ORDER BY ca_id DESC limit 1';
+	$arrayPDO = array();
 }
 
-$db->query("SELECT is_corporate_person, 
+$stmt = $db->query("SELECT is_corporate_person, 
 					contact_lastname, 
 					contact_firstname, 
 					society, 
@@ -59,9 +61,9 @@ $db->query("SELECT is_corporate_person,
 					departement,
 					update_date 
 			FROM view_contacts 
-			WHERE 1=1 " . $extra);
-
-$res = $db->fetch_object();
+			WHERE 1=1 " . $extra, $arrayPDO);
+// $stmt->DebugDumpParams();
+$res = $stmt->fetchObject();
 
 $address = '';
 $address = $res->address_num . ' ' . $res->address_street . ' ' . $res->address_postal_code . ' ' . strtoupper($res->address_town);
