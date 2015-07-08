@@ -68,6 +68,12 @@ class ValidationEngine
     protected $currentRestrictionFacet;
 
     /**
+     * The current restriction value
+     * @var string
+     */
+    protected $currentRestrictionValue;
+
+    /**
      * The validation rules
      * @var array 
      */
@@ -231,7 +237,8 @@ class ValidationEngine
             $this->currentParameterName = $name;
             $this->currentDataTypeName = null;
             $this->currentItemKey = null;
-            $this->restrictionFacet = null;
+            $this->currentRestrictionFacet = null;
+            $this->currentRestrictionValue = null;
             
             if (empty($value)) {
                 continue;
@@ -536,9 +543,8 @@ class ValidationEngine
         $error->parameter = $this->currentParameterName;
         $error->key = $this->currentItemKey;
         $error->type = $this->currentDataTypeName;
-        $error->facet = $this->currentRestrictionFacet;
-        $error->value = $this->currentRestrictionValue;
-        $error->data = $_REQUEST[$this->currentParameterName];
+        $error->facet = array($this->currentRestrictionFacet, $this->currentRestrictionValue);
+        $error->value = $_REQUEST[$this->currentParameterName];
 
         $this->errors[] = $error;
 
@@ -556,10 +562,10 @@ class ValidationEngine
             $errmsg .= ' for type ' . $error->type;
         }
         if ($error->facet) {
-            $errmsg .= ', facet ' . $error->facet;
+            $errmsg .= ', facet ' . $error->facet[0];
         }
         if ($error->value) {
-            $errmsg .= ' expected ' . $error->value;
+            $errmsg .= ' expected ' . implode(' or ', $error->facet[1]);
         }
 
         switch ($this->errorMode) {

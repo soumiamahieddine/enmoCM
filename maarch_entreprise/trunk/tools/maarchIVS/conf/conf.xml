@@ -24,7 +24,7 @@
       </parameter>
       <parameter name="param4" type="arrayOfStrings" />
     </validationRule>
-    <validationRule name="baseExample" >
+    <validationRule name="baseExample" extends="includedExample">
       <parameter name="param1" type="string" />
     </validationRule>
     

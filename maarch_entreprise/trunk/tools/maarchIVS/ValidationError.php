@@ -50,22 +50,16 @@ class ValidationError
     public $type;
 
     /**
-     * The name of the restriction facet
-     * @var string
+     * The name of the restriction facet and its value
+     * @var array
      */
     public $facet;
-
-    /**
-     * The value of the restriction
-     * @var string
-     */
-    public $value;
 
     /**
      * The value of the request parameter
      * @var string
      */
-    public $data;
+    public $value;
 
     /**
      * The error message
