@@ -43,20 +43,7 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 	$branch_level_id = str_replace(",", "", $branch_level_id);
 	$branch_level_id = str_replace("\"", "", $branch_level_id);
 
-	// if (file_exists('../../../../../../../core/class/class_functions.php')) {
-	// 	include_once('../../../../../../../core/class/class_functions.php');
-	// } else {
-	// 	include_once('../../../../../core/class/class_functions.php');
-	// }
-
-	// if (file_exists('../../../../../../../core/init.php')) {
-	// 	include_once('../../../../../../../core/init.php');
-	// } else {
-	// 	include_once('../../../../../core/init.php');
-	// }
-
 	require_once 'core/class/class_functions.php';
-	require_once 'core/class/class_db.php';
 	require_once 'core/class/class_core_tools.php';
 	require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 
@@ -90,21 +77,6 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 	        array_push($children, array('id' => $res->contact_id, 'contact_label' => $contact, 'enabled' => $res->enabled));
 		}
 		if(count($children) > 0) {
-			// if (file_exists(
-			//     $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-			//     . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-			//     . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-			//     . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'contacts'
-			//     . DIRECTORY_SEPARATOR . 'contact_tree' . DIRECTORY_SEPARATOR . 'get_tree_children_contact.php'
-			// )
-			// ) {
-			//     $openlink = '../../custom/'
-			//            . $_SESSION['custom_override_id']
-			//           . '/apps/' . $_SESSION['config']['app_id'] 
-			//           . '/admin/contacts/contact_tree/get_tree_children_contact.php';
-			// } else {
-			//     $openlink = 'admin/contacts/contact_tree/get_tree_children_contact.php';
-			// }
 			$openlink =  $_SESSION['config']['businessappurl']."index.php?display=true&page=get_tree_children_contact";
 			echo "[";
 			for($cpt_level2=0; $cpt_level2< count($children); $cpt_level2++) {

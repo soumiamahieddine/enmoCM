@@ -28,7 +28,6 @@
 
 // Loads the required class
 try {
-    require_once("core/class/class_db.php");
     require_once ("core/class/class_security.php");
 } catch (Exception $e){
     echo $e->getMessage().' // ';

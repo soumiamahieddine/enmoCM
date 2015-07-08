@@ -176,7 +176,7 @@ if ($mode == 'list') {
             .$mode
             ?>" >
             <div>
-            <input type="hidden" name="display" value="value" />
+            <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="groups" />
             <input type="hidden" name="page" value="usergroups_management_controler" />
             <input type="hidden" name="mode" value="<?php echo $mode;?>" />
