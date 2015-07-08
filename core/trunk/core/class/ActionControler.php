@@ -1,7 +1,7 @@
 <?php
 
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008-2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -32,7 +32,7 @@
 
 // Loads the required class
 try {
-	require_once('core/class/class_db.php');
+	require_once('core/class/class_db_pdo.php');
 	require_once('core/class/Action.php');
 	require_once('core/core_tables.php');
  // require_once('core/class/ObjectControlerIF.php');
@@ -74,20 +74,12 @@ class ActionControler
 	*/
 	public function connect()
 	{
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
+		
 		self::$actions_table = $_SESSION['tablename']['actions'];
 		self::$actions_groupbaskets_table = $_SESSION['tablename']['bask_actions_groupbaskets'];
 
 		self::$db=$db;
-	}
-
-	/**
-	* Close the database connexion
-	*/
-	public function disconnect()
-	{
-		self::$db->disconnect();
 	}
 
 	/**
@@ -104,28 +96,21 @@ class ActionControler
 		}
 
 		self::connect();
-		$query = "select * from ".self::$actions_table." where id = ".$action_id;
+		$query = "select * from ".self::$actions_table." where id = ?";
+		
+		$stmt = self::$db->query($query, array($action_id));
 
-		try{
-			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
-			self::$db->query($query);
-		} catch (Exception $e){
-		echo _NO_ACTION_WITH_ID . ' ' . functions::xssafe($action_id) . ' // ';
-		}
-
-		if(self::$db->nb_result() > 0)
+		if($stmt->rowCount() > 0)
 		{
 			$action = new Action();
-			$queryResult=self::$db->fetch_object();
+			$queryResult=$stmt->fetchObject();
 			foreach($queryResult as $key => $value){
 				$action->$key=$value;
 			}
-			self::disconnect();
 			return $action;
 		}
 		else
 		{
-			self::disconnect();
 			return null;
 		}
 	}
@@ -141,35 +126,22 @@ class ActionControler
 		self::connect();
 		$query = "select * from ".self::$actions_table;
 
-		try{
-			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
-			self::$db->query($query);
-		} catch (Exception $e){
-		echo _NO_ACTION;
-		}
+		$stmt = self::$db->query($query);
 
-		if(self::$db->nb_result() > 0)
+		if($stmt->rowCount() > 0)
 		{
 			$actions_list = array();
-			
-
-			while($queryResult=self::$db->fetch_object()){
-				
+			while($queryResult=$stmt->fetchObject()){
 				$action = new Action();
-				
 				foreach($queryResult as $key => $value){
 					$action->$key=$value;
 				}
 				array_push($actions_list, $action);
-				
 			}
-			
-			self::disconnect();
 			return $actions_list;
 		}
 		else
 		{
-			self::disconnect();
 			return null;
 		}
 	}
@@ -182,24 +154,17 @@ class ActionControler
 	public function getAllCategoriesLinkedToAction($actionId)
 	{
 		self::connect();
-		$query = "select category_id from actions_categories where action_id = " . $actionId;
+		$query = "select category_id from actions_categories where action_id = ?";
 
-		try {
-			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
-			self::$db->query($query);
-		} catch (Exception $e) {
-            echo _NO_CATEGORY;
-		}
+		$stmt = self::$db->query($query, array($actionId));
 
-		if (self::$db->nb_result() > 0) {
+		if ($stmt->rowCount() > 0) {
 			$categories_list = array();
-			while($queryResult=self::$db->fetch_object()){
+			while($queryResult=$stmt->fetchObject()){
 				array_push($categories_list, $queryResult->category_id);
 			}
-			self::disconnect();
 			return $categories_list;
 		} else {
-			self::disconnect();
 			return null;
 		}
 	}
@@ -218,7 +183,6 @@ class ActionControler
 			return false;
 		}
 		if($mode == "up") {
-			//return self::update($action);
 			return self::update($action);
             
 		}
@@ -236,10 +200,10 @@ class ActionControler
 	*/
 	public function razActionPage()
 	{
-        $dbUp = new dbquery();
-        $dbUp->connect();
+        $dbUp = new Database();
         $return = self::update($action);
-        $query="update " . self::$actions_table . " set action_page = '' where action_page = '_'";
+        $query="update " . self::$actions_table 
+        	. " set action_page = '' where action_page = '_'";
         $dbUp->query($query);
         return true;
 	}
@@ -252,26 +216,20 @@ class ActionControler
 	*/
 	private function insert($action)
 	{
-		if(!isset($action) )
+		if(!isset($action))
 			return false;
 
 		self::connect();
 		$prep_query = self::insert_prepare($action);
-
 		$query="insert into ".self::$actions_table." ("
 					.$prep_query['COLUMNS']
 					.") values("
 					.$prep_query['VALUES']
 					.")";
-		try{
-			if($_ENV['DEBUG']){ functions::xecho($query) . ' // '; }
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_INSERT_ACTION." ".functions::xssafe($action->toString()).' // ';
-			$ok = false;
-		}
-		self::disconnect();
+
+		$stmt = self::$db->query($query, $prep_query['ARRAY_VALUES']);
+		$ok = true;
+
 		return $ok;
 	}
 
@@ -287,19 +245,16 @@ class ActionControler
 			return false;
 
 		self::connect();
+		$prep_query = self::update_prepare($action);
 		$query="update ".self::$actions_table." set "
-					.self::update_prepare($action)
-					." where id=".$action->id;
+					. $prep_query['QUERY']
+					." where id=?";
 
-		try{
-			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_UPDATE_ACTION." ".functions::xssafe($action->toString()).' // ';
-			$ok = false;
-		}
-		self::disconnect();
+		$prep_query['VALUES'][] = $action->id;
+
+		$stmt = self::$db->query($query, $prep_query['VALUES']);
+		$ok = true;
+		
 		return $ok;
 	}
 
@@ -313,24 +268,18 @@ class ActionControler
 	{
 		if(!isset($action_id)|| empty($action_id) )
 			return false;
-		if(! self::actionExists($action_id))
+		if(!self::actionExists($action_id))
 			return false;
 
 		self::connect();
-		$query="delete from ".self::$actions_table." where id=".$action_id;
+		$query="delete from ".self::$actions_table." where id=?";
 
-		try{
-			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_DELETE_ACTION_ID." ".functions::xssafe($action_id).' // ';
-			$ok = false;
-		}
+		self::$db->query($query, array($action_id));
+		$ok = true;
+
 		if($ok)
 			self::cleanActionsGroupbasket($action_id);
 
-		self::disconnect();
 
 		return $ok;
 	}
@@ -347,17 +296,11 @@ class ActionControler
 			return false;
 
 		self::connect();
-		$query="delete from ".self::$actions_groupbaskets_table."  where id_action=".$action_id;
-		try{
-			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_DELETE_ACTION_ID." ".functions::xssafe($action_id).' // ';
-			$ok = false;
-		}
+		$query="delete from ".self::$actions_groupbaskets_table."  where id_action=?";
 
-		//self::disconnect();
+		$stmt = self::$db->query($query, array($action_id));
+		$ok = true;
+
 		return $ok;
 	}
 
@@ -373,21 +316,14 @@ class ActionControler
 			return false;
 
 		self::connect();
-		$query = "select id from ".self::$actions_table." where id = ".$action_id;
+		$query = "select id from ".self::$actions_table." where id = ?";
 
-		try{
-			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
-			self::$db->query($query);
-		} catch (Exception $e){
-			echo _UNKNOWN.' '._ACTION." ".functions::xssafe($action_id).' // ';
-		}
+		$stmt = self::$db->query($query, array($action_id));		
 
-		if(self::$db->nb_result() > 0)
+		if($stmt->rowCount() > 0)
 		{
-			self::disconnect();
 			return true;
 		}
-		self::disconnect();
 		return false;
 	}
 
@@ -402,14 +338,17 @@ class ActionControler
 		$result=array();
 		foreach($action->getArray() as $key => $value)
 		{
-			// For now all fields in the action table are strings or dates
 			if(!empty($value))
 			{
-				$result[]=$key."='".functions::protect_string_db($value)."'";
+				$result[]=$key."=?";
+				$arrayValues[]=$value;
 			}
 		}
-		// Return created string minus last ", "
-		return implode(",",$result);
+
+		return array(
+			'QUERY' => implode(",",$result), 
+			'VALUES' => $arrayValues,
+		);
 	}
 
 	/**
@@ -428,10 +367,15 @@ class ActionControler
 			if(!empty($value))
 			{
 				$columns[]=$key;
-				$values[]="'".functions::protect_string_db($value)."'";
+				$values[]="?";
+				$arrayValues[]=$value;
 			}
 		}
-		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
+		return array(
+			'COLUMNS' => implode(",",$columns), 
+			'VALUES' => implode(",",$values),
+			'ARRAY_VALUES' => $arrayValues
+		);
 	}
     
     /**
@@ -441,26 +385,23 @@ class ActionControler
     */
     public function getLastActionId($actionLabel)
     {
-        self::$db->connect();
         $query = "select id from " . ACTIONS_TABLE
-            . " where label_action = '" . self::$db->protect_string_db($actionLabel) . "'"
+            . " where label_action = ?"
             . " order by id desc";
-        self::$db->query($query);
-        $queryResult = self::$db->fetch_object();
+        $stmt = self::$db->query($query, array($actionLabel));
+        $queryResult = $stmt->fetchObject();
         return $queryResult->id;
     }
     
     public function saveCategoriesAssociation($actionId)
     {
-        self::$db->connect();
         self::$db->query("delete from " . ACTIONS_CATEGORIES_TABLE_NAME 
-            . " where action_id = '" . $actionId . "'"
+            . " where action_id = ?", array($actionId)
         );
         for ($i=0;$i<count($_SESSION['m_admin']['action']['categoriesSelected']);$i++) {
             self::$db->query("insert into " . ACTIONS_CATEGORIES_TABLE_NAME 
-                . " (action_id, category_id) VALUES (" 
-                . $actionId 
-                . ", '" . $_SESSION['m_admin']['action']['categoriesSelected'][$i] . "')"
+                . " (action_id, category_id) VALUES (?, ?)"
+            	, array($actionId, $_SESSION['m_admin']['action']['categoriesSelected'][$i])
             );
         }
     }

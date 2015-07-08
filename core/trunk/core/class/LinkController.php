@@ -1,6 +1,6 @@
 <?php
 /*
-*   Copyright 2008-2013 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -127,9 +127,7 @@ class LinkController
                                 } else {
                                     $return .= '\'\'';
                                 }
-
-
-                                  $return .= ');';
+                                $return .= ');';
                                 $return .= '">';
                                     $return .= '<i class="fa fa-remove fa-2x" style="cursor:pointer;"></i>';
                                 $return .= '</span>';
@@ -171,40 +169,16 @@ class LinkController
         return $return;
     }
 
-    private function getLinks($parentId, $collection)
-    {
-        $db = new dbquery;
-        $db->connect();
-        $query = "SELECT res_child FROM res_linked WHERE coll_id='" . $collection . "' AND res_parent=" . $parentId;
-        $result = $db->query($query);
-        if ($result) {
-            $i = 0;
-            $links = '';
-            while ($row = $db->fetch_assoc($result)) {
-                $links .= $row['res_child'].'||';
-                $i++;
-            }
-            if ($i > 0) {
-                $return = substr($links, 0, -2);
-            }
-        } else {
-            $return = 'Problème lors de la requête : '.$query;
-        }
-
-        return $return;
-    }
-
     private function getLinksDesc($parentId, $collection)
     {
-        $db = new dbquery;
-        $db->connect();
-        $query = "SELECT res_child FROM res_linked WHERE coll_id='" . $collection . "' AND res_parent=" . $parentId;
-        $result = $db->query($query);
-        if ($result) {
+        $db = new Database;
+        $query = "SELECT res_child FROM res_linked WHERE coll_id=? AND res_parent=?";
+        $stmt = $db->query($query, array($collection, $parentId));
+        if ($stmt) {
             $i = 0;
             $links = '';
-            while ($row = $db->fetch_assoc($result)) {
-                $links .= $row['res_child'].'||';
+            while ($row = $stmt->fetchObject()) {
+                $links .= $row->res_child.'||';
                 $i++;
             }
             if ($i > 0) {
@@ -219,15 +193,14 @@ class LinkController
 
     private function getLinksAsc($parentId, $collection)
     {
-        $db = new dbquery;
-        $db->connect();
-        $query = "SELECT res_parent FROM res_linked WHERE coll_id='" . $collection . "' AND res_child=" . $parentId;
-        $result = $db->query($query);
-        if ($result) {
+        $db = new Database;
+        $query = "SELECT res_parent FROM res_linked WHERE coll_id=? AND res_child=?";
+        $stmt = $db->query($query, array($collection, $parentId));
+        if ($stmt) {
             $i = 0;
             $links = '';
-            while ($row = $db->fetch_assoc($result)) {
-                $links .= $row['res_parent'].'||';
+            while ($row = $stmt->fetchObject()) {
+                $links .= $row->res_parent.'||';
                 $i++;
             }
             if ($i > 0) {
@@ -243,20 +216,19 @@ class LinkController
     private function getDocInfos($id, $collection)
     {
         if ($collection == 'letterbox_coll') {
-            $vue = 'res_view_letterbox';
+            $view = 'res_view_letterbox';
         } elseif ($collection == 'business_coll') {
-            $vue = 'res_view_business';
+            $view = 'res_view_business';
         } else {
-            $vue = '';
+            $view = '';
         }
-        if ($vue <> '') {
-            $db = new dbquery;
-            $db->connect();
-            $query = "SELECT * FROM ".$vue." WHERE res_id = ".$id;
-            $result = $db->query($query);
-            if ($result) {
+        if ($view <> '') {
+            $db = new Database;
+            $query = "SELECT * FROM ".$view." WHERE res_id = ?";
+            $stmt = $db->query($query, array($id));
+            if ($stmt) {
                 $i = 0;
-                while ($row = $db->fetch_assoc($result)) {
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     $return = $row;
                     $i++;
                 }
@@ -269,13 +241,12 @@ class LinkController
 
     public function getStatus($status)
     {
-        $db = new dbquery;
-        $db->connect();
-        $query = "SELECT label_status FROM status WHERE id = '" . $status . "'";
-        $result = $db->query($query);
-        if ($result) {
+        $db = new Database();
+        $query = "SELECT label_status FROM status WHERE id = ?";
+        $stmt = $db->query($query,array($status));
+        if ($stmt) {
             $i = 0;
-            while ($row = $db->fetch_assoc($result)) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $return = $row['label_status'];
                 $i++;
             }
@@ -287,23 +258,21 @@ class LinkController
     public function nbDirectLink($id, $collection, $sens)
     {
         $i = 0;
-        $db = new dbquery;
-        $db->connect();
+        $db = new Database();
         if ($sens == 'desc' || $sens == 'all') {
-            $query = "SELECT res_child FROM res_linked WHERE coll_id='" . $collection . "' AND res_parent=" . $id;
-            $result = $db->query($query);
-            if ($result) {
-                while ($row = $db->fetch_assoc($result)) {
+            $query = "SELECT res_child FROM res_linked WHERE coll_id=? AND res_parent=?";
+            $stmt = $db->query($query,array($collection,$id));
+            if ($stmt) {
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     $i++;
                 }
             }
         }
-
         if ($sens == 'asc' || $sens == 'all') {
-            $query = "SELECT res_parent FROM res_linked WHERE coll_id='" . $collection . "' AND res_child=" . $id;
-            $result = $db->query($query);
-            if ($result) {
-                while ($row = $db->fetch_assoc($result)) {
+            $query = "SELECT res_parent FROM res_linked WHERE coll_id=? AND res_child=?";
+            $stmt = $db->query($query,array($collection,$id));
+            if ($stmt) {
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     $i++;
                 }
             }
