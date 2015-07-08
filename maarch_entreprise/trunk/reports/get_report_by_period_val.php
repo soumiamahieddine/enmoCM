@@ -6,19 +6,15 @@ require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 require_once('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_graphics.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
-$db = new dbquery();
-$db->connect();
-$db2 = new dbquery();
-$db2->connect();
-$db3 = new dbquery();
-$db3->connect();
+$db = new Database();
 $req = new request();
 $list = new list_show();
 $graph = new graphics();
 $sec = new security();
 
-$entities_chosen=explode("#",$_POST['entities_chosen']);
-$entities_chosen=join(",",$entities_chosen);
+$entitiesChosen = str_replace("'", "", $_POST['entities_chosen']);
+$entities_chosen=explode("#",$entitiesChosen);
+// $entities_chosen=join(",",$entities_chosen);
 
 $status_obj = new manage_status();
 $ind_coll = $sec->get_ind_collection('letterbox_coll');
@@ -56,12 +52,15 @@ if(empty($period_type))
 }
 $default_year = date('Y');
 $where_date = '';
+$arrayPDO = array();
 $date_title = '';
 
+$arrayPDOStatus = array();
 $str_status = '(';
 	for($i=0;$i<count($search_status);$i++)
 	{
-		$str_status .= "'".$search_status[$i]['ID']."',";
+		$str_status .= "?,";
+		$arrayPDOStatus = array_merge($arrayPDOStatus, array($search_status[$i]['ID']));
 	}
 	$str_status = preg_replace('/,$/', ')', $str_status);
 	$str_status2 = "('COU','END','NEW','RET','SIG','UNS','VAL','VIS','SMART','MAQUAL','BRSAS','XML','XML_SENT','WAIT_REPLY','BAP','DAV','AVD','APP')";
@@ -83,7 +82,8 @@ $str_status = '(';
 			exit();
 		}
 		
-		$where_date = $req->extract_date('creation_date', 'year')." = '".$_REQUEST['the_year']."'";
+		$where_date = $req->extract_date('creation_date', 'year')." = :creation_date_year";
+		$arrayPDO = array_merge($arrayPDO, array(":creation_date_year" =>$_REQUEST['the_year']));
 		
 		$date_title = _FOR_YEAR.' '.$_REQUEST['the_year'];
 	}
@@ -104,7 +104,8 @@ $str_status = '(';
 			<?php
 			exit();
 		}
-		$where_date = $req->extract_date('creation_date', 'year')." = '".$default_year."' and ".$req->extract_date('creation_date', 'month')." = '".$_REQUEST['the_month']."'";
+		$where_date = $req->extract_date('creation_date', 'year')." = '".$default_year."' and ".$req->extract_date('creation_date', 'month')." = :creation_date_month";
+		$arrayPDO = array_merge($arrayPDO, array(":creation_date_month" => $_REQUEST['the_month']));
 		$month = '';
 		switch($_REQUEST['the_month'])
 		{
@@ -152,13 +153,15 @@ $str_status = '(';
 	{
 		if(isset($_REQUEST['date_start']) && $_REQUEST['date_start'] <> '')
 		{
-			$where_date  .= " AND ".$req->extract_date('creation_date')." > '".$db->format_date_db($_REQUEST['date_start'])."'";
+			$where_date  .= " AND ".$req->extract_date('creation_date')." > :date_start";
+			$arrayPDO = array_merge($arrayPDO, array(":date_start" => functions::format_date_db($_REQUEST['date_start'])));
 			$date_title .= strtolower(_SINCE).' '.$_REQUEST['date_start'].' ';
 		}
 
 		if(isset($_REQUEST['date_fin']) && $_REQUEST['date_fin'] <> '')
 		{
-			$where_date  .= " AND ".$req->extract_date('creation_date')." < '".$db->format_date_db($_REQUEST['date_fin'])."'";
+			$where_date  .= " AND ".$req->extract_date('creation_date')." < :date_fin";
+			$arrayPDO = array_merge($arrayPDO, array(":date_fin" => functions::format_date_db($_REQUEST['date_fin'])));
 			$date_title.= strtolower(_FOR).' '.$_REQUEST['date_fin'].' ';
 		}
 		if(empty($where_date))
@@ -180,20 +183,16 @@ $str_status = '(';
 
 	if($id_report == 'process_delay')
 	{
-		//$db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
 	
 		if (!$_REQUEST['entities_chosen']){
-	    $db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
+	    	$stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' order by description");
 		}else{
-		    $db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' and type_id IN (".$entities_chosen.") order by description");
+		    $stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' and type_id IN (?) order by description", array($entities_chosen));
 		}
-		//$db->show();
-
-
 
 		$doctypes = array();
 		
-		while($res = $db->fetch_object())
+		while($res = $stmt->fetchObject())
 		{
 			array_push($doctypes, array('ID' => $res->type_id, 'LABEL' => $res->description));
 		}
@@ -211,23 +210,24 @@ $str_status = '(';
 
 		$totalDocTypes = count($doctypes);
 
+
 		for($i=0; $i<count($doctypes);$i++)
 		{
-			//$db->query("SELECT doctypes_second_level_label,".$req->get_date_diff('closing_date', 'creation_date' )." AS delay FROM ".$view." WHERE  ".$where_date." AND closing_date is NOT NULL AND status in ".$str_status." and type_id = ".$doctypes[$i]['ID']."");
-			$db->query("SELECT ".$view.".doctypes_second_level_label,".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE  ".$where_date." AND ".$view.".closing_date is NOT NULL AND ".$view.".status not in ('DEL','BAD') and ".$view.".type_id = ".$doctypes[$i]['ID']."");
-			//$db->show();
+			$arrayPDO = array_merge($arrayPDO, array(":doctypeId" => $doctypes[$i]['ID']));
+			$stmt = $db->query("SELECT ".$view.".doctypes_second_level_label,".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay 
+				FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id 
+				WHERE  ".$where_date." AND ".$view.".closing_date is NOT NULL AND ".$view.".status not in ('DEL','BAD') and ".$view.".type_id = :doctypeId", $arrayPDO);
 
-
-			$db2->query( "SELECT doctypes_second_level_label FROM doctypes INNER JOIN doctypes_second_level 
+			$stmt2 = $db->query( "SELECT doctypes_second_level_label FROM doctypes INNER JOIN doctypes_second_level 
 						  ON doctypes.doctypes_second_level_id = doctypes_second_level.doctypes_second_level_id
-						  WHERE doctypes.type_id='". $doctypes[$i]['ID'] . "'");
-			$res2 = $db2->fetch_object();
+						  WHERE doctypes.type_id=?", array($doctypes[$i]['ID']));
+			$res2 = $stmt2->fetchObject();
 
-			if( $db->nb_result() > 0)
+			if( $stmt->rowCount() > 0)
 			{
 				$tmp = 0;
 				$nbDoc=0;
-				while($res = $db->fetch_object())
+				while($res = $stmt->fetchObject())
 				{
 					if($res->delay <> ""){
 						$tmp = $tmp + $res->delay;
@@ -241,7 +241,7 @@ $str_status = '(';
 				}
 				elseif($report_type == 'array')
 				{
-					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,2)));
+					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => functions::show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,2)));
 				}
 				if($tmp / $nbDoc > 0)
 				{
@@ -256,12 +256,12 @@ $str_status = '(';
 				}
 				elseif($report_type == 'array')
 				{
-					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => _UNDEFINED));
+					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => functions::show_string($doctypes[$i]['LABEL']), 'VALUE' => _UNDEFINED));
 				}
 			}
 			if($report_type == 'graph')
 			{
-				array_push($_SESSION['labels1'], utf8_decode($db->show_string($doctypes[$i]['LABEL'])));
+				array_push($_SESSION['labels1'], utf8_decode(functions::show_string($doctypes[$i]['LABEL'])));
 			}
 		}
 
@@ -360,20 +360,22 @@ $str_status = '(';
 			{
 				if (!isset($where_date) || empty($where_date)) {
 					$period = date("Y");
+					$arrayPDO = array();
 				} else {
-					$period = substr($where_date, -5, -1);
+					 $period = substr($where_date, -19);
 				}
-				
-				//$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." AND closing_date is NOT NULL AND date_part( 'month', creation_date)  = ".$i." and date_part( 'year', creation_date)  = ".$period." AND STATUS = 'END'");
-				$db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date')." from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$view.".status not in ('DEL','BAD') AND ".$view.".closing_date is NOT NULL AND date_part( 'month', ".$view.".creation_date)  = ".$i." and date_part( 'year', ".$view.".creation_date)  = ".$period);
-				//$db->show();
+				// var_dump($arrayPDO);
+				$stmt = $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date')." FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$view.".status not in ('DEL','BAD') 
+					AND ".$view.".closing_date is NOT NULL 
+					AND date_part( 'month', ".$view.".creation_date)  = ".$i." 
+					and date_part( 'year', ".$view.".creation_date)  = ".$period, $arrayPDO);
 
-				if( $db->nb_result() > 0)
+				if( $stmt->rowCount() > 0)
 				{
 					
 					$tmp = 0;
 					$nbDoc = 0;
-					while($elm = $db->fetch_array())
+					while($elm = $stmt->fetch(PDO::FETCH_ASSOC))
 					{
 						if ($elm[0] <> "") {
 							$tmp = $tmp + $elm[0];
@@ -441,16 +443,18 @@ $str_status = '(';
 			$mois = mktime( 0, 0, 0, $_REQUEST['the_month'], 1, date("Y") );
 			$max = date("t",$mois);
 			
+			$arrayPDOStatus = array_merge($arrayPDOStatus, array($_REQUEST['the_month']));
+
 			for($i=1; $i<= $max; $i++)
 			{
 				
-				$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." and date_part( 'month', creation_date)  = ".$_REQUEST['the_month']." and date_part( 'year', creation_date)  = ".date('Y')." and date_part( 'day', creation_date)  = ".$i." and ".$view.".closing_date is not null");
+				$stmt = $db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." and date_part( 'month', creation_date)  = ? and date_part( 'year', creation_date)  = ".date('Y')." and date_part( 'day', creation_date)  = ".$i." and ".$view.".closing_date is not null", $arrayPDOStatus);
 				
-				if( $db->nb_result() > 0)
+				if( $stmt->rowCount() > 0)
 				{
 					$tmp = 0;
 					$nbDoc = 0;
-					while($elm = $db->fetch_array())
+					while($elm = $stmt->fetch(PDO::FETCH_ASSOC))
 					{
 						if ($elm[0] <> "") {
 							$tmp = $tmp + $elm[0];
@@ -556,18 +560,13 @@ $str_status = '(';
 		{
 			$has_data = false;
 			$title = _MAIL_TYPOLOGY_REPORT.' '.$date_title ;
-			//$db->query("select distinct type_id, type_label from ".$view ." where status in ".$str_status." and ".$where_date." ORDER BY type_label ASC");
-			//$db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
 			
 			if (!$_REQUEST['entities_chosen']){
-		    $db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
+		    	$stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' order by description");
 			}else{
-			    $db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' and type_id IN (".$entities_chosen.") order by description");
+			    $stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' and type_id IN (?) order by description", array($entities_chosen));
 			}
 
-
-
-			//$db->show();
 			if($report_type == 'graph')
 			{
 				$vol_an = array();
@@ -583,22 +582,19 @@ $str_status = '(';
 			$totalCourrier=array();
 			$totalEntities = count($entities);
 			$z=0;
-			while($line = $db->fetch_object())
+			while($line = $stmt->fetchObject())
 			{
-				//$db2->query("select count(*) as total from ".$view." where status in ".$str_status."  and ".$where_date." and type_id = ".$line->type_id."");
-				$db2->query("select count(*) as total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where ".$where_date." and type_id = ".$line->type_id." and ".$view.".status not in ('DEL','BAD')");
-				$res = $db2->fetch_object();
-				//$db2->show();
+				$stmt2 = $db->query("SELECT count(*) as total FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$where_date." and type_id = ".$line->type_id." and ".$view.".status not in ('DEL','BAD')", $arrayPDO);
+				$res = $stmt2->fetchObject();
 
-				$db3->query( "select doctypes_second_level_label from doctypes inner join doctypes_second_level 
+				$stmt3 = $db->query( "SELECT doctypes_second_level_label FROM doctypes inner join doctypes_second_level 
 						  on doctypes.doctypes_second_level_id = doctypes_second_level.doctypes_second_level_id
-						  where doctypes.type_id='". $line->type_id . "'");
-				$res3 = $db3->fetch_object();
+						  WHERE doctypes.type_id= ? ", array($line->type_id));
+				$res3 = $stmt3->fetchObject();
 
 
 				if($report_type == 'graph')
 				{
-					//array_push($_SESSION['labels1'], (string)utf8_decode($line->type_label));
 					array_push($_SESSION['labels1'], (string)utf8_decode($line->description));
 					array_push($vol_an, $res->total);
 				}
@@ -694,12 +690,12 @@ $str_status = '(';
 			foreach(array_keys($_SESSION['coll_categories']['letterbox_coll']) as $key)
 			{
 				if($key!='default_category'){
-					$db->query("select count(*) as total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where ".$view.".status not in ('DEL','BAD')  and ".$where_date." and ".$view.".category_id = '".$key."'");
-					$res = $db->fetch_object();
-					//$db->show();
+					$stmt = $db->query("SELECT count(*) as total FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$view.".status not in ('DEL','BAD')  and ".$where_date." and ".$view.".category_id = '".$key."'", $arrayPDO);
+					$res = $stmt->fetchObject();
+
 					if($report_type == 'graph')
 					{
-						array_push($_SESSION['labels1'], utf8_decode($db->wash_html($_SESSION['coll_categories']['letterbox_coll'][$key], 'NO_ACCENT')));
+						array_push($_SESSION['labels1'], utf8_decode(functions::wash_html($_SESSION['coll_categories']['letterbox_coll'][$key], 'NO_ACCENT')));
 						array_push($vol_an, $res->total);
 					}
 					elseif($report_type == 'array')

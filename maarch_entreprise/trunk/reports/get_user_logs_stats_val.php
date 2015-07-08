@@ -4,29 +4,30 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 $req = new request();
 $list = new list_show();
 
 if(isset($_REQUEST['user']) && $_REQUEST['user'] != '')
 {
-	$db->query('select lastname, firstname from '.$_SESSION['tablename']['users']." where user_id ='".$db->protect_string_db($_REQUEST['user'])."'");
-	if($db->nb_result() == 0)
+	$stmt = $db->query('SELECT lastname, firstname FROM '.$_SESSION['tablename']['users']." WHERE user_id =?", array($_REQUEST['user']));
+	if($stmt->rowCount() == 0)
 	{
 		?>
 		<div class="error"><?php echo _USER.' '._UNKNOWN;?></div>
 		<?php
 	}
 
-	$res = $db->fetch_object();
+	$res = $stmt->fetchObject();
 	$user_name = $res->firstname.' '.$res->lastname;
 
 	$select[$_SESSION['tablename']['history']] = array();
 	array_push($select[$_SESSION['tablename']['history']],'id','event_type','event_date' );
-	$where = " (".$_SESSION['tablename']['history'].".event_type = 'LOGIN' or ".$_SESSION['tablename']['history'].".event_type = 'LOGOUT') AND ".$_SESSION['tablename']['history'].".user_id = '".$_REQUEST['user']."' ";
+	$where = " (".$_SESSION['tablename']['history'].".event_type = 'LOGIN' or ".$_SESSION['tablename']['history'].".event_type = 'LOGOUT') AND ".$_SESSION['tablename']['history'].".user_id = ? ";
+	$arrayPDO = array($_REQUEST['user']);
 	$req = new request();
-	$tab = $req->select($select, $where, " ORDER BY ".$_SESSION['tablename']['history'].".event_date DESC ", $_SESSION['config']['databasetype'], $limit="500",false);
+	$tab = $req->PDOselect($select, $where, $arrayPDO, " ORDER BY ".$_SESSION['tablename']['history'].".event_date DESC ", $_SESSION['config']['databasetype'], $limit="500",false);
 
 	if (count($tab) > 0)
 	{
@@ -66,7 +67,7 @@ if(isset($_REQUEST['user']) && $_REQUEST['user'] != '')
 						$tab[$i][$j]["valign"]="bottom";
 						$tab[$i][$j]["show"]=true;
 						//$tab[$i][$j]["value_export"] = $funct -> dateformat($tab[$i][$j]['value']);
-						$tab[$i][$j]["value"] = $db -> dateformat($tab[$i][$j]['value']);
+						$tab[$i][$j]["value"] = functions::dateformat($tab[$i][$j]['value']);
 					}
 				}
 			}

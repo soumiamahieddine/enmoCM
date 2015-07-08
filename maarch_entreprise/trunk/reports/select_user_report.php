@@ -11,6 +11,7 @@ $func = new functions();
 $what = "all";
 $where = "";
 $_SESSION['chosen_user'] = '';
+$arrayPDO = array();
 if(isset($_GET['what']) && !empty($_GET['what']))
 {
 	if($_GET['what'] == "all")
@@ -20,13 +21,11 @@ if(isset($_GET['what']) && !empty($_GET['what']))
 	}
 	else
 	{
-		$what = addslashes($func->wash($_GET['what'], "no", "", "no"));
-		$where = "(lower(".$_SESSION['tablename']['users'].".lastname) like lower('".strtolower($what)."%') "
-			. "or lower(".$_SESSION['tablename']['users'].".lastname) like lower('".strtoupper($what)."%')) ";
+		$where = "(lower(".$_SESSION['tablename']['users'].".lastname) like lower(:what) "
+			. "or lower(".$_SESSION['tablename']['users'].".lastname) like lower(:what)) ";
+ 		$arrayPDO = array(":what" => $what.'%');
 	}
 }
-	$db = new dbquery();
-	$db->connect();
 
 	$select[$_SESSION['tablename']['users']] = array();
 	array_push($select[$_SESSION['tablename']['users']],"user_id","lastname","firstname" );
@@ -47,7 +46,7 @@ if(isset($_GET['what']) && !empty($_GET['what']))
 
 	$orderstr = $list->define_order($order, $field);
 
-	$tab = $req->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], $limit="500",false);
+	$tab = $req->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit="500",false);
 
 	for ($i=0;$i<count($tab);$i++)
 	{

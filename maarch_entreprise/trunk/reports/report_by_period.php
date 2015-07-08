@@ -32,10 +32,10 @@ $content .='<div id="params">';
           $content.= _CHOOSE_ONE_ENTITY.' :<br /><br />';
           $content.='<select style="width:300px" name="entitieslist[]" id="entitieslist" size="7" ondblclick="moveclick($(entitieslist), $(entities_chosen))" multiple="multiple">';
 
-          $db = new dbquery();
-          $db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
+          $db = new Database();
+          $stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' order by description");
           
-          while($res = $db->fetch_object()){                             
+          while($res = $stmt->fetchObject()){                             
             $content.="<option value='".$res->type_id."'>".$res->description."</option>";
           }
           $content.='</select>';
