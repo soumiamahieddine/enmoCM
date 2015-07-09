@@ -22,7 +22,7 @@
  * 
  * @package Core
  */
-class Database
+class Database extends functions
 {
     /**
      * Prepared statements indexed by dsn and queryString
@@ -49,39 +49,115 @@ class Database
      */
     public function __construct()
     {
-        if (isset($_SESSION['config']['databaseserver'])) {
-            $this->server = $_SESSION['config']['databaseserver'];
-        }
-        if (isset($_SESSION['config']['databaseserverport'])) {
-            $this->port = $_SESSION['config']['databaseserverport'];
-        }
-        if (isset($_SESSION['config']['databaseuser'])) {
-            $this->user = $_SESSION['config']['databaseuser'];
-        }
-        if (isset($_SESSION['config']['databasepassword'])) {
-            $this->password = $_SESSION['config']['databasepassword'];
-        }
-        if (isset($_SESSION['config']['databasename'])) {
-            $this->database = $_SESSION['config']['databasename'];
-        }
-        if (isset($_SESSION['config']['databasetype'])) {
-            switch($_SESSION['config']['databasetype']) {
-                case 'POSTGRESQL': 
-                    $this->driver = 'pgsql';
-                    break;
-                case 'MYSQL': 
-                    $this->driver = 'mysql';
-                    break;
+        $args = func_get_args();
+        if (count($args) < 1) {
+            if (isset($_SESSION['config']['databaseserver'])) {
+                $this->server = $_SESSION['config']['databaseserver'];
+            }
+            if (isset($_SESSION['config']['databaseserverport'])) {
+                $this->port = $_SESSION['config']['databaseserverport'];
+            }
+            if (isset($_SESSION['config']['databaseuser'])) {
+                $this->user = $_SESSION['config']['databaseuser'];
+            }
+            if (isset($_SESSION['config']['databasepassword'])) {
+                $this->password = $_SESSION['config']['databasepassword'];
+            }
+            if (isset($_SESSION['config']['databasename'])) {
+                $this->database = $_SESSION['config']['databasename'];
+            }
+            if (isset($_SESSION['config']['databasetype'])) {
+                switch($_SESSION['config']['databasetype']) {
+                    case 'POSTGRESQL': 
+                        $this->driver = 'pgsql';
+                        break;
+                    case 'MYSQL': 
+                        $this->driver = 'mysql';
+                        break;
 
-                case 'ORACLE':
-                    $this->driver = 'oci';
-                    break;
+                    case 'ORACLE':
+                        $this->driver = 'oci';
+                        break;
 
-                default:
-                    print_r('DRIVER ERROR: Unknown database driver ' . $_SESSION['config']['databasetype']);
+                    default:
+                        print_r('DRIVER ERROR: Unknown database driver ' 
+                            . $_SESSION['config']['databasetype']);
+                }
+            }
+        } else {
+            $errorArgs = true;
+            if (is_array($args[0])) {
+                if (!isset($args[0]['server'])) {
+                    $this->server = '127.0.0.1';
+                } else {
+                    $this->server = $args[0]['server'];
+                }
+                switch($args[0]['databasetype']) {
+                    case 'POSTGRESQL': 
+                        $this->driver = 'pgsql';
+                        break;
+                    case 'MYSQL': 
+                        $this->driver = 'mysql';
+                        break;
+
+                    case 'ORACLE':
+                        $this->driver = 'oci';
+                        break;
+
+                    default:
+                        print_r('DRIVER ERROR: Unknown database driver ' 
+                            . $_SESSION['config']['databasetype']);
+                }
+                if (!isset($args[0]['port'])) {
+                    $this->port = '5432';
+                } else {
+                    $this->port = $args[0]['port'];
+                }
+                if (!isset($args[0]['user'])) {
+                    $this->user = 'postgres';
+                } else {
+                    $this->user = $args[0]['user'];
+                }
+                if (!isset($args[0]['password'])) {
+                    $this->password = 'postgres';
+                } else {
+                    $this->password = $args[0]['pass'];
+                }
+                if (! isset($args[0]['base'])) {
+                    $this->database = '';
+                } else {
+                    $this->database = $args[0]['base'];
+                }
+                $errorArgs = false;
+            } else if (is_string($args[0]) && file_exists($args[0])) {
+                $xmlconfig = simplexml_load_file($args[0]);
+                $config = $xmlconfig->CONFIG_BASE;
+                $this->server = (string) $config->databaseserver;
+                $this->port = (string) $config->databaseserverport;
+                $this->driver = (string) $config->databasetype;
+                switch($this->driver) {
+                    case 'POSTGRESQL': 
+                        $this->driver = 'pgsql';
+                        break;
+                    case 'MYSQL': 
+                        $this->driver = 'mysql';
+                        break;
+
+                    case 'ORACLE':
+                        $this->driver = 'oci';
+                        break;
+
+                    default:
+                        print_r('DRIVER ERROR: Unknown database driver ' 
+                            . $_SESSION['config']['databasetype']);
+                }
+                $this->database = (string) $config->databasename;
+                $this->user = (string) $config->databaseuser;
+                $this->password = (string) $config->databasepassword;
+                $errorArgs = false;
             }
         }
-        
+
         // Set DSN
         $this->dsn = $this->driver 
             . ':host=' . $this->server

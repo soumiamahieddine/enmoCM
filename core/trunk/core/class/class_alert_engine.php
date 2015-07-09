@@ -9,7 +9,7 @@
 * @license GPL
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
-class alert_engine extends dbquery
+class alert_engine extends Database
 {
     /**
     * Redefinition of the alert_engine object constructor
@@ -71,9 +71,11 @@ class alert_engine extends dbquery
             '11_11',
             '25_12'
         );
-        $this->connect();
-        $this->query("select * from parameters where id like 'alert_stop%'");
-        while ($result = $this->fetch_object()) {
+        require_once 'core/class/class_db_pdo.php';
+        
+        $db = new Database();
+        $stmt = $db->query("select * from parameters where id like 'alert_stop%'");
+        while ($result = $stmt->fetchObject()) {
             if ($result->param_value_date <> '') {
                 $compare = $this->compare_date($result->param_value_date, date("d-m-Y"));
                 //take the alert stop only if > now
@@ -86,9 +88,9 @@ class alert_engine extends dbquery
         //var_dump($Hollidays);
         
         if (function_exists ('easter_date')) {
-            $WhenEasterCelebrates = easter_date ((int)date('Y'), $Date);
+            $WhenEasterCelebrates = easter_date((int)date('Y'), $Date);
         } else {
-            $WhenEasterCelebrates = $this->getEaster ((int)date('Y'), $Date);
+            $WhenEasterCelebrates = $this->getEaster((int)date('Y'), $Date);
         }
         $Hollidays[] = date ('j_n', $WhenEasterCelebrates);
         $Hollidays[] = date ('j_n', $WhenEasterCelebrates + (86400*39));
