@@ -199,6 +199,30 @@ class Database extends functions
     }
 
     /**
+     * Retrieve last record id
+     * 
+     * @return PDOStatement
+     */
+    public function lastInsertId($sequenceName=null)
+    {
+        switch($_SESSION['config']['databasetype']) {
+        case 'MYSQL'        : return @mysqli_insert_id($this->_sqlLink);
+        case 'POSTGRESQL'   : 
+            $this->query = @pg_query("select last_value as lastinsertid from " . $sequenceName);
+            $line = @pg_fetch_object($this->query);
+            return $line->lastinsertid;
+        case 'SQLSERVER'    : return '';
+        case 'ORACLE'       : 
+            $this->query("select " . $sequenceName . ".currval as lastinsertid from dual");
+            $line = $this->fetch_object($this->query);
+            return $line->lastinsertid;
+        default             : return false;
+        }   
+    }
+
+
+
+    /**
      * Commit a transaction
      * 
      * @return bool
