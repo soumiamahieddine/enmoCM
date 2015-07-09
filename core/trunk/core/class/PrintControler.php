@@ -93,12 +93,12 @@ class PrintControler extends PrintFunctions
 				$query = $this->make_query();
 			}
             // Retrieve datas
-            $db = new dbquery();
-            $db->connect();
-            $result = $db->query($query);
+            $db = new Database();
+            
+            $stmt = $db->query($query, $_SESSION['last_select_query_parameters']);
             $i = 0;
             $this->object_print = new EmptyObject();
-            while($line = $db->fetch_object()) {
+            while($line = $stmt->fetchObject()) {
                 $this->object_print->$i = $line;
                 $i++;
             }
@@ -176,8 +176,7 @@ class PrintControler extends PrintFunctions
 		private function make_pdf()
         {
             $functions = new functions();
-			$db = new dbquery();
-			$db->connect();
+			$db = new Database();
 			
             $this->array_print = $functions->object2array($this->object_print);
 			//var_dump($this->array_print);exit;
@@ -241,16 +240,22 @@ class PrintControler extends PrintFunctions
 				//INITIATOR
 				
                 if ($this->array_print[$cpt]['initiator'] <> '') {
-                    $db->query("select entity_label from entities where entity_id = '" . $this->array_print[$cpt]['initiator'] . "'");
-                    $resultEntity = $db->fetch_object();
+                    $stmt = $db->query(
+                    	"select entity_label from entities where entity_id = ?", 
+                    	array($this->array_print[$cpt]['initiator'])
+                    );
+                    $resultEntity = $stmt->fetchObject();
                     $pdf->Cell(36,5,utf8_decode(_INITIATOR . ' : ' 
                         . $resultEntity->entity_label . " (" . $this->array_print[$cpt]['initiator'] . ")"),0,1, 'L', false);
 				} elseif($this->array_print[$cpt]['typist'] <> '') {
                     require_once "modules/entities/class/class_manage_entities.php";
                     $entity = new entity();
                     $initiator = $entity->get_primary_entity($this->array_print[$cpt]['typist']);
-                    $db->query("select entity_label from entities where entity_id = '" . $initiator['ID'] . "'");
-                    $resultEntity = $db->fetch_object();
+                    $stmt = $db->query(
+                    	"select entity_label from entities where entity_id = ?", 
+                    	array($initiator['ID'])
+                    );
+                    $resultEntity = $stmt->fetchObject();
                     $pdf->Cell(36,5,utf8_decode(_INITIATOR . ' : ' 
                         . $resultEntity->entity_label . " (" . $initiator['ID'] . ")"),0,1, 'L', false);
                 }
@@ -358,8 +363,11 @@ class PrintControler extends PrintFunctions
                     
                     $pdf->SetFont('Arial','B',11);
 				    
-				    $db->query("SELECT address_id FROM res_view_letterbox WHERE res_id = " .$this->array_print[$cpt]['res_id']);
-                    $resultAddressId = $db->fetch_object();
+				    $stmt = $db->query(
+				    	"SELECT address_id FROM res_view_letterbox WHERE res_id = ?",
+				    	array($this->array_print[$cpt]['res_id'])
+				    );
+                    $resultAddressId = $stmt->fetchObject();
 
                     $contactInfos = $this->getContactInfos($this->array_print[$cpt]['contact_id'], $resultAddressId->address_id);
                     //CONTACT
@@ -540,12 +548,11 @@ class PrintFunctions
 		
 		$contactInfos = '';
 	
-		$db = new dbquery();
-        $db->connect();
+		$db = new Database();
 		
-		$query = "select * from view_contacts where contact_id = " . $contactId . " AND ca_id = " . $addressId;
-		$db->query($query);
-        while($result = $db->fetch_object()) {
+		$query = "select * from view_contacts where contact_id = ? AND ca_id = ?";
+		$stmt = $db->query($query, array($contactId, $addressId));
+        while($result = $stmt->fetchObject()) {
         	if ($result->society <> '' || $result->society_short <> '') {
 				if ($result->society <> '') {
 					$contactInfos = $result->society . "";
@@ -618,13 +625,11 @@ class PrintFunctions
 	function getUserInfo($userId)
     {
 		if ($userId <> '') {
-			$db = new dbquery();
-			$db->connect();
-			$db->query("select firstname, lastname from users where user_id = '" . $userId . "'");
-			$resultUsers = $db->fetch_object();
+			$db = new Database();
+			$stmt = $db->query("select firstname, lastname from users where user_id = ?", array($userId));
+			$resultUsers = $stmt->fetchObject();
 			if ($resultUsers->firstname <> '' && $resultUsers->lastname <> '') {
 				return $resultUsers->firstname . ' ' . $resultUsers->lastname;
-				//return $resultUsers->firstname . ' ' . $resultUsers->lastname . ' (' . $userId . ')';
 			}
 		} else {
 			return false;
@@ -633,32 +638,29 @@ class PrintFunctions
 	
     function retrieve_multi_contacts($libelle)
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $queryContacts = "select c.firstname, c.lastname, c.society, c.contact_id, cres.address_id ";
-			$queryContacts .= "from view_contacts c, contacts_res cres  ";
-			$queryContacts .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (c.contact_id as varchar) = cres.contact_id AND ca_id = cres.address_id ";
-			$queryContacts .= "GROUP BY c.firstname, c.lastname, c.society, c.contact_id, cres.address_id";
+		$queryContacts .= "from view_contacts c, contacts_res cres  ";
+		$queryContacts .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (c.contact_id as varchar) = cres.contact_id AND ca_id = cres.address_id ";
+		$queryContacts .= "GROUP BY c.firstname, c.lastname, c.society, c.contact_id, cres.address_id";
 			
         $queryUsers = "select u.firstname, u.lastname, u.user_id ";
-                $queryUsers .= "from users u, contacts_res cres  ";
-                $queryUsers .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (u.user_id as varchar) = cres.contact_id ";
-                $queryUsers .= "GROUP BY u.firstname, u.lastname, u.user_id";
+        $queryUsers .= "from users u, contacts_res cres  ";
+        $queryUsers .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (u.user_id as varchar) = cres.contact_id ";
+        $queryUsers .= "GROUP BY u.firstname, u.lastname, u.user_id";
         
         $i = 0;
         foreach($this->object_print as $line_name => $line_value) {
             $return = false;
             $res_id = $line_value->res_id;
-            $queryContacts_tmp = str_replace('##res_id##', $res_id, $queryContacts);
-            $db->query($queryContacts_tmp);
-            //$db->show();
-            while($result = $db->fetch_object()) {
+            $queryContacts_tmp = str_replace('##res_id##', '?', $queryContacts);
+            $stmt = $db->query($queryContacts_tmp, array($res_id));
+            while($result = $stmt->fetchObject()) {
                 $return .= "Contact : " . $this->getContactInfos($result->contact_id, $result->address_id);
             }
-            $queryUsers_tmp = str_replace('##res_id##', $res_id, $queryUsers);
-            $db->query($queryUsers_tmp);
-            //$db->show();
-            while($result = $db->fetch_object()) {
+            $queryUsers_tmp = str_replace('##res_id##', '?', $queryUsers);
+            $stmt = $db->query($queryUsers_tmp, array($res_id));
+            while($result = $stmt->fetchObject()) {
                 $return .= "Utilisateur : " . $this->getUserInfo($result->user_id) . "\r\n";
             }
             if (strlen($return) > 3)
@@ -671,12 +673,7 @@ class PrintFunctions
     
     function retrieve_copies($libelle)
     {
-        $db = new dbquery();
-        $db->connect();
-        $db2 = new dbquery();
-        $db2->connect();
-		$db3 = new dbquery();
-        $db3->connect();
+        $db = new Database();
         
         $collection = $this->collection;
         
@@ -697,7 +694,7 @@ class PrintFunctions
         $query_template2 .= 'FROM ';
             $query_template2 .= 'users_entities ';
         $query_template2 .= 'WHERE ';
-                $query_template2 .= "user_id = '##item_id##' ";
+                $query_template2 .= "user_id = ##item_id## ";
             $query_template2 .= "AND ";
                 $query_template2 .= "primary_entity = 'Y'";
         
@@ -705,21 +702,27 @@ class PrintFunctions
         foreach($this->object_print as $line_name => $line_value) {
             $return = false;
             $res_id = $line_value->res_id;
-            $query = str_replace('##res_id##', $res_id, $query_template);
-            $db->query($query);
-            while($result = $db->fetch_object()) {
+            $query = str_replace('##res_id##', '?', $query_template);
+            $stmt1 = $db->query($query, array($res_id));
+            while($result = $stmt1->fetchObject()) {
                 if ($result->item_type == 'user_id') {
-                    $query = str_replace('##item_id##', $result->item_id, $query_template2);
-                    $db2->query($query);
-                    while ($result2 = $db2->fetch_object()) {
-						$db3->query("select entity_label from entities where entity_id = '" . $result2->entity_id . "'");
-						$resultEntity = $db3->fetch_object();
+                    $query = str_replace('##item_id##', '?', $query_template2);
+                    $stmt2 = $db->query($query, array($result->item_id));
+                    while ($result2 = $stmt2->fetchObject()) {
+						$stmt3 = $db->query(
+							"select entity_label from entities where entity_id = ?", 
+							array($result2->entity_id)
+						);
+						$resultEntity = $stmt3->fetchObject();
 						$userInfos = $this->getUserInfo($result->item_id);
 						$usersEntities = "- " . $resultEntity->entity_label . ' : ' . $userInfos;
                     }
                 } else {
-					$db3->query("select entity_label from entities where entity_id = '" . $result->item_id . "'");
-					$resultEntity = $db3->fetch_object();
+					$stmt3 = $db->query(
+						"select entity_label from entities where entity_id = ?", 
+						array($result->item_id)
+					);
+					$resultEntity = $stmt3->fetchObject();
                     $usersEntities = "- " . $resultEntity->entity_label . ' (' . $result->item_id . ") ";
                 }
                 $return .= $usersEntities . "\r\n";
@@ -752,10 +755,7 @@ class PrintFunctions
 	
 	function retrieve_notes($libelle)
 	{
-		$db = new dbquery();
-        $db->connect();
-		$db2 = new dbquery();
-        $db2->connect();
+		$db = new Database();
 		
 		$collection = $this->collection;
         
@@ -778,19 +778,14 @@ class PrintFunctions
         foreach($this->object_print as $line_name => $line_value) {
 			$return = false;
             $res_id = $line_value->res_id;
-            $query = str_replace('##res_id##', $res_id, $query_template);
-            $db->query($query);
-			while($result = $db->fetch_object()) {
-				/*$db2->query("select count(id) as cptprivatenote from note_entities where note_id = " . $result->id);
-				$resultPrivate = $db2->fetch_object();
-				if ($resultPrivate->cptprivatenote > 0) {
-					$result->note_text = _PRINT_PRIVATE_NOTE;
-				}*/
+            $query = str_replace('##res_id##', '?', $query_template);
+            $stmt = $db->query($query, array($res_id));
+			while($result = $stmt->fetchObject()) {
 				$userInfos = $this->getUserInfo($result->user_id);
 				$return .= "- " 
                     //. $result->id . " " 
                     . _PRINT_THE . " " 
-                    . $db->format_date_db($result->date_note, false) 
+                    . functions::format_date_db($result->date_note, false) 
                     . " " . _BY . " " . $userInfos . " : " . $result->note_text . "\r\n"
 				. "__________________________________"
 				. "__________________________________"

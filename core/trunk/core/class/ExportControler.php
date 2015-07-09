@@ -84,12 +84,12 @@ class ExportControler extends ExportFunctions
             $query = $this->make_query();
             
             // Retrieve datas
-            $db = new dbquery();
-            $db->connect();
-            $result = $db->query($query);
+            $db = new Database();
+            //echo $query;
+            $stmt = $db->query($query, $_SESSION['last_select_query_parameters']);
             $i = 0;
             $this->object_export = new EmptyObject();
-            while($line = $db->fetch_object()) {
+            while($line = $stmt->fetchObject()) {
                 if ($i == 0) {
                     $this->object_export->$i = $this->retrieve_header();
                     $i = 1;
@@ -253,11 +253,8 @@ class ExportFunctions
     ------------------------------------------------------------------------- */
     function retrieve_copies($libelle)
     {
-        $db = new dbquery();
-        $db->connect();
-        $db2 = new dbquery();
-        $db2->connect();
-        
+        $db = new Database();
+
         $collection = $this->collection;
         
         $query_template = 'SELECT ';
@@ -278,7 +275,7 @@ class ExportFunctions
         $query_template2 .= 'FROM ';
             $query_template2 .= 'users_entities ';
         $query_template2 .= 'WHERE ';
-                $query_template2 .= "user_id = '##item_id##' ";
+                $query_template2 .= "user_id = ##item_id## ";
             $query_template2 .= "AND ";
                 $query_template2 .= "primary_entity = 'Y'";
         
@@ -292,17 +289,19 @@ class ExportFunctions
             }
             $return = false;
             $res_id = $line_value->res_id;
-            $query = str_replace('##res_id##', $res_id, $query_template);
-            $db->query($query);
-            while($result = $db->fetch_object()) {
-                if ($result->item_type == 'user_id') {
-                    $query = str_replace('##item_id##', $result->item_id, $query_template2);
-                    $db2->query($query);
-                    while ($result2 = $db2->fetch_object()) {
-                        $usersEntities = $result->item_id . ' : ' . $result2->entity_id;
+            $query1 = str_replace('##res_id##', '?', $query_template);
+            $stmt = $db->query($query1, array($res_id));
+            while($result1 = $stmt->fetchObject()) {
+                $param2 = array();
+                if ($result1->item_type == 'user_id') {
+                    $param2[] = $result1->item_id;
+                    $query2 = str_replace('##item_id##', '?', $query_template2);
+                    $stmt2 = $db->query($query2, $param2);
+                    while ($result2 = $stmt2->fetchObject()) {
+                        $usersEntities = $result1->item_id . ' : ' . $result2->entity_id;
                     }
                 } else {
-                    $usersEntities = $result->item_id;
+                    $usersEntities = $result1->item_id;
                 }
                 $return .= $usersEntities . " # ";
             }
@@ -348,8 +347,7 @@ class ExportFunctions
 
         $query_priority = "SELECT priority FROM res_view_letterbox WHERE res_id = ##res_id## ";
 
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
 
         $i=0;
         foreach($this->object_export as $line_name => $line_value) {
@@ -360,10 +358,10 @@ class ExportFunctions
             }
 
             $res_id = $line_value->res_id;
-            $query = str_replace('##res_id##', $res_id, $query_priority);
-            $db->query($query);
+            $query = str_replace('##res_id##', '?', $query_priority);
+            $stmt = $db->query($query, array($res_id));
 
-            $result = $db->fetch_object();
+            $result = $stmt->fetchObject();
 
             $link_label = $_SESSION['mail_priorities'][$result->priority];
 
@@ -384,8 +382,7 @@ class ExportFunctions
 
         $query_status = "SELECT label_status FROM res_view_letterbox LEFT JOIN status on res_view_letterbox.status = status.id WHERE res_id = ##res_id## ";
 
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
 
         $i=0;
         foreach($this->object_export as $line_name => $line_value) {
@@ -396,10 +393,10 @@ class ExportFunctions
             }
 
             $res_id = $line_value->res_id;
-            $query = str_replace('##res_id##', $res_id, $query_status);
-            $db->query($query);
+            $query = str_replace('##res_id##', '?', $query_status);
+            $stmt = $db->query($query, array($res_id));
 
-            $result = $db->fetch_object();
+            $result = $stmt->fetchObject();
 
             $line_value->get_status = $result->label_status;
         }

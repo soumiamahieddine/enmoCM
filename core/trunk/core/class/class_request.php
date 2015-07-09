@@ -288,6 +288,7 @@ class request extends dbquery
 
         if (preg_match('/_view/i', $query)) {
             $_SESSION['last_select_query'] = $query;
+            $_SESSION['last_select_query_parameters'] = $parameters;
         }
 
         $res_query = $db->query($query, $parameters, $catch_error);
