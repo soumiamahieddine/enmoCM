@@ -12,7 +12,7 @@
 *
 */
 
-class manage_status extends dbquery
+class manage_status extends Database
 {
 	public $statusArr;
 
@@ -26,9 +26,10 @@ class manage_status extends dbquery
 	public function get_searchable_status()
 	{
 		$status = array();
-		$this->connect();
-		$this->query("select id, label_status from ".$_SESSION['tablename']['status']." where can_be_searched = 'Y'");
-		while($res = $this->fetch_object())
+		$stmt = $this->query("select id, label_status from "
+			. $_SESSION['tablename']['status'] 
+			. " where can_be_searched = 'Y'");
+		while($res = $stmt->fetchObject())
 		{
 			array_push($status, array('ID' => $res->id, 'LABEL' => $res->label_status));
 		}
@@ -38,9 +39,10 @@ class manage_status extends dbquery
 	public function get_not_searchable_status()
 	{
 		$status = array();
-		$this->connect();
-		$this->query("select id, label_status from ".$_SESSION['tablename']['status']." where can_be_searched = 'N'");
-		while($res = $this->fetch_object())
+		$stmt = $this->query("select id, label_status from " 
+			. $_SESSION['tablename']['status'] 
+			. " where can_be_searched = 'N'");
+		while($res = $stmt->fetchObject())
 		{
 			array_push($status, array('ID' => $res->id, 'LABEL' => $res->label_status));
 		}
@@ -49,9 +51,8 @@ class manage_status extends dbquery
 	
 	public function get_status_data_array()
 	{
-		$this->connect();
-		$this->query("select * from ".$_SESSION['tablename']['status']."");
-		while($res = $this->fetch_object())
+		$stmt = $this->query("select * from ".$_SESSION['tablename']['status']."");
+		while($res = $stmt->fetchObject())
 		{
 			$id_status = $res->id;
 			$status_txt = $this->show_string($res->label_status);
@@ -59,11 +60,6 @@ class manage_status extends dbquery
 			$img_name = $res->img_filename;
 			if(!empty($img_name))
 			{
-				//For standard
-				//$temp_explode = explode( ".", $img_name);
-				//$temp_explode[0] = $temp_explode[0].$extension;
-				//$img_name = implode(".", $temp_explode);
-				
 				//For big
 				$big_temp_explode = explode( ".", $img_name);
 				$big_temp_explode[0] = $big_temp_explode[0]."_big";
@@ -112,13 +108,14 @@ class manage_status extends dbquery
 
 	public function can_be_modified($id_status)
 	{
-		$this->connect();
-		$this->query("select can_be_modified from ".$_SESSION['tablename']['status']." where id = '".$id_status."'");
-		if($this->nb_result() == 0)
+		$stmt = $this->query("select can_be_modified from " 
+			. $_SESSION['tablename']['status'] 
+			. " where id = ?", array($id_status));
+		if($stmt->rowCount() == 0)
 		{
 			return false;
 		}
-		$res = $this->fetch_object();
+		$res = $stmt->fetchObject();
 		if($res->can_be_modified == 'N')
 		{
 			return false;

@@ -29,6 +29,8 @@
 * @ingroup core
 */
 
+require_once 'core/class/class_db_pdo.php';
+
 /**
 * @brief   Contains all the function to build a SQL query (select, insert and update)
 *
@@ -333,20 +335,21 @@ class request extends dbquery
     */
     public function insert($table, $data, $database_type)
     {
+        $db = new Database();
         $field_string = "( ";
         $value_string = "( ";
-
-        for($i=0; $i < count($data);$i++)
-        {
+        $parameters = array();
+        for ($i=0;$i<count($data);$i++) {
+            if(
+                trim(strtoupper($data[$i]['value'])) == "SYSDATE"
+                || trim(strtoupper($data[$i]['value'])) == "CURRENT_TIMESTAMP"
+            ) {
+                $value_string .= $data[$i]['value'] . ',';
+            } else {
+                $value_string .= "?,";
+                $parameters[] = $data[$i]['value'];
+            }
             $field_string .= $data[$i]['column'].",";
-            if($data[$i]['type'] == "string" || $data[$i]['type'] == "date")
-            {
-                $value_string .= "'".$data[$i]['value']."',";
-            }
-            else
-            {
-                $value_string .= $data[$i]['value'].",";
-            }
         }
         $value_string = substr($value_string, 0, -1);
         $field_string = substr($field_string, 0, -1);
@@ -355,11 +358,12 @@ class request extends dbquery
         $field_string .= ")";
 
         //Time to create the SQL Query
-        $query = "";
-        $query = "INSERT INTO ".$table." ".$field_string." VALUES ".$value_string ;
+        $query = "INSERT INTO " . $table . " " . $field_string . " VALUES " . $value_string;
+        /*echo $query . PHP_EOL;
+        var_dump($parameters);exit;*/
+        $stmt = $db->query($query, $parameters);
 
-        $this->connect();
-        return ($this->query($query, true));
+        return true;
     }
 
     /**
@@ -432,42 +436,27 @@ class request extends dbquery
     {
         $db = new Database();
         $update_string = "";
-        for($i=0; $i < count($data);$i++)
-        {
-            if($data[$i]['type'] == "string" || $data[$i]['type'] == "date")
-            {
-                if($databasetype == "POSTGRESQL" && $data[$i]['type'] == "date" && ($data[$i]['value'] == '' || $data[$i]['value'] == ' '))
-                {
+        for ($i=0; $i < count($data);$i++) {
+            if ($data[$i]['type'] == "string" || $data[$i]['type'] == "date") {
+                if ($databasetype == "POSTGRESQL" && $data[$i]['type'] == "date" && ($data[$i]['value'] == '' || $data[$i]['value'] == ' ')) {
                     $update_string .= $data[$i]['column']."=NULL,";
-                }
-                else
-                {
-                    if(trim(strtoupper($data[$i]['value'])) == "SYSDATE")
-                    {
+                } else {
+                    if (trim(strtoupper($data[$i]['value'])) == "SYSDATE") {
                         $update_string .= $data[$i]['column']."=sysdate,";
-                    }
-                    elseif(trim(strtoupper($data[$i]['value'])) == "CURRENT_TIMESTAMP")
-                    {
+                    } elseif(trim(strtoupper($data[$i]['value'])) == "CURRENT_TIMESTAMP") {
                         $update_string .= $data[$i]['column']."=CURRENT_TIMESTAMP,";
-                    }
-                    else
-                    {
+                    } else {
                         $update_string .= $data[$i]['column']."='".$data[$i]['value']."',";
                     }
                 }
-            }
-            else
-            {
+            } else {
                 $update_string .= $data[$i]['column']."=".$data[$i]['value'].",";
             }
         }
         $update_string = substr($update_string, 0, -1);
-        if ($where <> "")
-        {
+        if ($where <> "") {
             $where_string = " WHERE ".$where;
-        }
-        else
-        {
+        } else {
             $where_string = "";
         }
         //Time to create the SQL Query
@@ -475,5 +464,4 @@ class request extends dbquery
         $query = "UPDATE ".$table." SET ".$update_string.$where_string;
         return $db->query($query, $parameters, true);
     }
-
 }
