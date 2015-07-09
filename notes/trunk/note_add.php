@@ -71,15 +71,12 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
     $db->query(
         "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, date_note, "
             . "user_id, coll_id, tablename) VALUES"
-    . " (".$identifier . ", '" . $db->protect_string_db($_REQUEST['notes'])
-        . "', " . $date . ", '"
-        . $db->protect_string_db($_SESSION['user']['UserId']) . "', '"
-        . $db->protect_string_db($collId) . "', '"
-        . $db->protect_string_db($table) . "')"
+    . " (?, ?, CURRENT_TIMESTAMP, ?, ?, ?)",
+    array($identifier, $_REQUEST['notes'], $_SESSION['user']['UserId'], $collId, $table)
     );
     $sequence_name = 'notes_seq';
-    //$db->query("select nextval('" . $sequence_name . "') as lastinsertid");
-    $id = $db->last_insert_id($sequence_name);
+
+    $id = $db->lastInsertId($sequence_name);
     if (isset($_REQUEST['entities_chosen']) && !empty($_REQUEST['entities_chosen']))
     {
         $notes['copy_entities'] = array();
@@ -91,8 +88,8 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
         {   
             $db->query(
                 "INSERT INTO " . NOTE_ENTITIES_TABLE . "(note_id, item_id) VALUES"
-                . " (".$id . ", '"
-                    . $db->protect_string_db($notes['copy_entities'][$i])."')"
+                . " (?, ?)",
+                array($id, $notes['copy_entities'][$i])
             );
         }
     }
@@ -102,7 +99,7 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
         if (isset($_SESSION['origin']) && $_SESSION['origin'] == "show_folder") {
             $hist->add(
                 $table, $identifier, "UP", 'resup', _ADDITION_NOTE . _ON_FOLDER_NUM
-                . $identifier . ' (' . $id . ') : "' . substr($db->protect_string_db($_REQUEST['notes']), 0, 254) .'"',
+                . $identifier . ' (' . $id . ') : "' . substr(functions::protect_string_db($_REQUEST['notes']), 0, 254) .'"',
                 $_SESSION['config']['databasetype'], 'notes'
                 );
         } else {

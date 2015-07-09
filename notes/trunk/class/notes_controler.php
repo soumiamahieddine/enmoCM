@@ -63,34 +63,27 @@ class notes_controler
             $security = new security();
             $view = $security->retrieve_view_from_coll_id($collId);
             $table = $security->retrieve_table_from_coll($collId);
-            $db = new request();
-            $db->connect();
-            $query = "select res_id from " . $view . " where res_id = "
-                   . $resId;
-            $db->query($query);
-            if ($db->nb_result() == 0) {
+            $db = new Database();
+            $query = "SELECT res_id FROM " . $view . " WHERE res_id = ?";
+            $stmt = $db->query($query, array($resId));
+            if ($stmt->rowCount() == 0) {
                 $status = 'ko';
                 $error .= 'resId not exists';
             } else {
                 $query =
-                    "insert into " . NOTES_TABLE . "(identifier, note_text, "
+                    "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, "
                     . "date_note, user_id, coll_id, tablename) values"
-                    . " (" . $resId . ", '" . $db->protect_string_db($noteContent)
-                    . "', " . $db->current_datetime(). ", '"
-                    . $db->protect_string_db($_SESSION['user']['UserId'])
-                    . "', '" . $collId . "', '" . $table . "')";
-                if (!$db->query($query)) {
-                    $status = 'ko';
-                    $error .= 'SQL insert pb';
-                } else {
+                    . " (?, ?, CURRENT_TIMESTAMP, ?, ?, ?)";
+                    
+                    $stmt = $db->query($query, array($resId, $noteContent, $_SESSION['user']['UserId'], $collId, $table));
+
                     $hist = new history();
-                    $db->query(
-                        "select id from " . NOTES_TABLE . " where "
-                        . "identifier = " . $resId . " and user_id = '"
-                        . $_SESSION['user']['UserId']
-                        . "' and coll_id = '" . $collId . "' order by id desc"
+                    $stmt = $db->query(
+                        "SELECT id FROM " . NOTES_TABLE . " WHERE "
+                        . "identifier = ? and user_id = ? and coll_id = ? order by id desc",
+                        array($resId, $_SESSION['user']['UserId'], $collId)
                     );
-                    $res = $db->fetch_object();
+                    $res = $stmt->fetchObject();
                     $id = $res->id;
                     $hist->add(
                         $view, $resId, 'UP', 'resup', _ADDITION_NOTE
@@ -102,7 +95,7 @@ class notes_controler
                         . ' (' . $id . ') ' . _FROM_WS,
                         $_SESSION['config']['databasetype'], 'notes'
                     );
-                }
+
             }
         }
         $returnArray = array(

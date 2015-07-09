@@ -15,8 +15,7 @@ $core = new core_tools();
 $core->load_lang();
 $core->test_service('manage_notes_doc', 'notes');
 $func = new functions();
-$db = new dbquery();
-$db->connect();
+
 if (empty($_SESSION['collection_id_choice'])) {
     $_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
 }
@@ -45,12 +44,13 @@ array_push(
     $select[USERS_TABLE], "user_id", "lastname", "firstname"
 );
 
-$where = " identifier = " . $_SESSION['doc_id'];
+$where = " identifier = ?";
+$arrayPDO = array($_SESSION['doc_id']);
 
 $request = new request;
 
-$tabNotes = $request->select(
-    $select, $where, "order by " . NOTES_TABLE. ".date_note desc",
+$tabNotes = $request->PDOselect(
+    $select, $where, $arrayPDO, "order by " . NOTES_TABLE. ".date_note desc",
     $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
     "user_id"
 );

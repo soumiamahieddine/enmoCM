@@ -110,21 +110,6 @@ class notes extends dbquery
     }
     
     /**
-     * Function to get all the entities 
-     * 
-     */
-/*
-    public function getentities()
-    {
-        $entitiesOrg = array();
-        require_once 'modules/entities/class/EntityControler.php';
-        $entityControler = new EntityControler();
-        $entitiesOrg = $entityControler->getAllEntities();
-         return $entitiesOrg;
-    }
-*/
-    
-    /**
      * 
      * 
      * 
@@ -141,18 +126,15 @@ class notes extends dbquery
      */
     public function getNotesEntities($id)
     {
-        self::connect();
+        $db = new Database();
         $ent = new EntityControler();
         
-        
-        $query = "select entity_id, entity_label from ".self::$notes_entities_table." , ".self::$entities_table
-        ." WHERE item_id LIKE entity_id and note_id = " .$id;
-        
+        $query = "SELECT entity_id, entity_label FROM ".NOTE_ENTITIES_TABLE." , entities WHERE item_id LIKE entity_id and note_id = ?";
         
         try{
             if($_ENV['DEBUG'])
                 echo $query.' // ';
-            self::$db->query($query);
+            $stmt = $db->query($query, array($id));
         } catch (Exception $e){}
         
 
@@ -161,7 +143,7 @@ class notes extends dbquery
         $entitiesList = $ent->getAllEntities();
         
 
-        while($res = self::$db->fetch_object())
+        while($res = $stmt->fetchObject())
         {
             array_push($entitiesChosen, $ent->get($res->entity_id));
         }
@@ -174,19 +156,18 @@ class notes extends dbquery
     {
         $query = "SELECT id FROM notes WHERE id in ("
                   . "SELECT note_id FROM ". NOTE_ENTITIES_TABLE. " WHERE (item_id in ("
-                      ."SELECT entity_id FROM users_entities WHERE user_id = '" . $userId . "') and note_id = " . $noteId . "))"
-            . "or (id = " . $noteId . " and user_id = '" . $userId . "')";
-        $db = new dbquery();
-        $db->connect();
-        $db->query($query);
-        //$db->show();exit;
-        if ($db->nb_result() > 0) {
+                      ."SELECT entity_id FROM users_entities WHERE user_id = ?) and note_id = ?))"
+            . "or (id = ? and user_id = ?)";
+        $db = new Database();
+        $stmt = $db->query($query, array($userId, $noteId, $noteId, $userId));
+
+        if ($stmt->rowCount() > 0) {
             return true;
          } else {
             // test if public
-            $query = "select note_id from ". NOTE_ENTITIES_TABLE. " where note_id = " . $noteId;
-            $db->query($query);
-            if ($db->nb_result() == 0) {
+            $query = "SELECT note_id FROM ". NOTE_ENTITIES_TABLE. " WHERE note_id = ?";
+            $stmt = $db->query($query, array($noteId));
+            if ($stmt->rowCount() == 0) {
                 return true;
             } else {
                 return false;
@@ -196,36 +177,29 @@ class notes extends dbquery
     
     public function countUserNotes($id, $coll_id) {
         $not_nbr = 0;
-        $dbId = new dbquery();
-        $dbId->connect();
-        $db = new dbquery();
-        $db->connect();
-        $dbId->query("select id, identifier, user_id, date_note, note_text from "
+        $db = new Database();
+
+        $stmt = $db->query("SELECT id, identifier, user_id, date_note, note_text FROM "
                             . NOTES_TABLE 
-                            . " where identifier = " . $id 
-                            . " and coll_id ='"
-                            . $coll_id . "' order by date_note desc");
-        // $dbId->show(); 
-       while ($res = $dbId->fetch_object())
+                            . " WHERE identifier = ? and coll_id = ? order by date_note desc", array($id, $coll_id));
+
+       while ($res = $stmt->fetchObject())
        {
-           $dbNotesEntities = new dbquery();
-           $dbNotesEntities->connect();
-           $query = "select id from ". NOTE_ENTITIES_TABLE. " where "
-           . "note_id = " .$res->id;
+           $query = "SELECT id FROM ". NOTE_ENTITIES_TABLE. " WHERE note_id = ?";
                     
-           $dbNotesEntities->query($query);
+           $stmt2 = $db->query($query, array($res->id));
                         
-           if($dbNotesEntities->nb_result()==0)
+           if($stmt2->rowCount()==0)
             $not_nbr++;
            else
            {
-             $db->query( "SELECT id FROM notes WHERE id in ("
+             $stmt2 = $db->query( "SELECT id FROM notes WHERE id in ("
                 . "SELECT note_id FROM ". NOTE_ENTITIES_TABLE. " WHERE (item_id in ("
-                      ."SELECT entity_id FROM users_entities WHERE user_id = '" . $_SESSION['user']['UserId'] . "') and note_id = " . $res->id . "))"
-                . "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')");
-
+                      ."SELECT entity_id FROM users_entities WHERE user_id = ?) and note_id = ?))"
+                . "or (id = ? and user_id = ?)",
+                array($_SESSION['user']['UserId'], $res->id, $res->id, $_SESSION['user']['UserId']));
             
-                if($db->nb_result()<>0)
+                if($stmt2->rowCount()<>0)
                 $not_nbr++;
             }
         }
@@ -235,41 +209,35 @@ class notes extends dbquery
     
     public function getUserNotes($id, $coll_id) {
         $userNotes = array();
-        $dbId = new dbquery();
-        $dbId->connect();
-        $db = new dbquery();
-        $db->connect();
-        $dbId->query("select id, identifier, user_id, date_note, note_text from "
+        $db = new Database();
+
+        $stmt = $db->query("SELECT id, identifier, user_id, date_note, note_text FROM "
                             . NOTES_TABLE 
-                            . " where identifier = " . $id 
-                            . " and coll_id ='"
-                            . $coll_id . "' order by date_note desc");
-        // $dbId->show(); 
-       while ($res = $dbId->fetch_object())
+                            . " WHERE identifier = ? and coll_id = ? order by date_note desc",
+                            array($id, $coll_id));
+
+       while ($res = $stmt->fetchObject())
        {
-           $dbNotesEntities = new dbquery();
-           $dbNotesEntities->connect();
-           $query = "select id from ".NOTE_ENTITIES_TABLE." where "
-           . "note_id = " .$res->id;
+           $query = "SELECT id FROM ".NOTE_ENTITIES_TABLE." WHERE note_id = ?";
                     
-           $dbNotesEntities->query($query);
+           $stmt = $db->query($query, array($res->id));
                         
-            if($dbNotesEntities->nb_result()==0) {
+            if($stmt->rowCount()==0) {
                 array_push($userNotes,
                     array('id' => $res->id, //ID
-                          'label' => $this->show_string($res->note_text), //Label
+                          'label' => functions::show_string($res->note_text), //Label
                           'author' => $res->user_id, //Author 
                           'date' => $res->date_note //Date
                         )
                 );
            } else {
-             $db->query( "select id from notes where id in ("
+             $stmt = $db->query( "SELECT id FROM notes WHERE id in ("
                 . "select note_id from ". NOTE_ENTITIES_TABLE. " where (item_id in ("
-                      ."SELECT entity_id FROM users_entities WHERE user_id = '" . $_SESSION['user']['UserId'] . "') and note_id = " . $res->id . "))"
-                . "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')");
-
+                      ."SELECT entity_id FROM users_entities WHERE user_id = ?) and note_id = ?))"
+                . "or (id = ? and user_id = ?)",
+                array($_SESSION['user']['UserId'], $res->id, $res->id, $_SESSION['user']['UserId']));
             
-                if($db->nb_result()<>0) {
+                if($stmt->rowCount()<>0) {
                     array_push($userNotes,
                         array('id' => $res->id, //ID
                               'label' => $this->show_string($res->note_text), //Label
@@ -288,19 +256,18 @@ class notes extends dbquery
     {
         $query = "SELECT id FROM notes WHERE id in ("
                   . "SELECT note_id FROM note_entities WHERE (item_id in ("
-                      ."SELECT entity_id FROM users_entities WHERE user_id = '" . $userId . "') and note_id = " . $noteId . "))"
-                  . "or (id = " . $noteId . " and user_id = '" . $userId . "')";
-        $db = new dbquery();
-        $db->connect();
-        $db->query($query);
+                      ."SELECT entity_id FROM users_entities WHERE user_id = ?) and note_id = ?))"
+                  . "or (id = ? and user_id = ?)";
+        $db = new Database();
+        $stmt = $db->query($query, array($userId, $noteId, $noteId, $userId));
         //$db->show();exit;
-        if ($db->nb_result() > 0) {
+        if ($stmt->rowCount() > 0) {
             return true;
          } else {
             // test if public
-            $query = "select note_id from note_entities where note_id = " . $noteId;
-            $db->query($query);
-            if ($db->nb_result() == 0) {
+            $query = "SELECT note_id FROM note_entities WHERE note_id = ?";
+            $stmt = $db->query($query, array($noteId));
+            if ($stmt->rowCount() == 0) {
                 return true;
             } else {
                 return false;

@@ -40,6 +40,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
     
 $core_tools = new core_tools();
 $request    = new request();
+$db         = new Database();
 $sec        = new security();
 $ent        = new EntityControler();
 $notesTools = new notes();
@@ -58,7 +59,6 @@ function _parse($text) {
 }
     
 $core_tools->load_lang();
-$request->connect();
 
 $status = 0;
 $error = $content = $js = $parameters = '';
@@ -85,10 +85,10 @@ if (isset($_REQUEST['coll_id']) && ! empty($_REQUEST['coll_id'])) {
     $view = $sec->retrieve_view_from_coll_id($collId);
     $table = $sec->retrieve_table_from_coll($collId);
     //retrieve the process entity of document
-    $request->query(
-        "select destination from " . $table . " where res_id = " . $identifier
+    $stmt = $db->query(
+        "SELECT destination FROM " . $table . " WHERE res_id = ?", array($identifier)
     );
-    $resultDest = $request->fetch_object();
+    $resultDest = $stmt->fetchObject();
     $destination = $resultDest->destination;
 }
 
@@ -225,33 +225,28 @@ switch ($mode) {
             } else {
                 
                 //Add notes
-                $notes_protected1 = str_replace(";", ".", $_REQUEST['notes']);
-                $notes_protected2 = str_replace("--", "-", $notes_protected1);
-                $notes = $request->protect_string_db($notes_protected2);
-                $date = $request->current_datetime();
-                $userId = $request->protect_string_db($_SESSION['user']['UserId']);
-                $collId = $request->protect_string_db($collId);
-                $table = $request->protect_string_db($table);
+                $notes = $_REQUEST['notes'];
 
-                $request->query(
+                $userId = $_SESSION['user']['UserId'];
+
+                $db->query(
                     "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, date_note, "
-                    . "user_id, coll_id, tablename) VALUES ("
-                    . $identifier . ", '" . $notes. "', " . $date . ", '"
-                    . $userId . "', '".$collId . "', '".$table . "')"
+                    . "user_id, coll_id, tablename) VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, ?)",
+                    array($identifier, $notes, $userId, $collId, $table)
                 );
                 
                 //Last insert ID from sequence
-                $id = $request->last_insert_id('notes_seq');
+                $id = $db->lastInsertId('notes_seq');
                 
                 //Entities selected
                 if (!empty($id) && isset($_REQUEST['entities_chosen']) && !empty($_REQUEST['entities_chosen']))
                 {
                     for ($i=0; $i<count($_REQUEST['entities_chosen']); $i++) 
                     {  
-                        $request->query(
+                        $db->query(
                             "INSERT INTO " . NOTE_ENTITIES_TABLE . "(note_id, item_id) VALUES"
-                            . " (".$id . ", '"
-                            . $request->protect_string_db($_REQUEST['entities_chosen'][$i])."')"
+                            . " (?, ?)",
+                            array($id, $_REQUEST['entities_chosen'][$i])
                         );
                     }
                 }
@@ -315,24 +310,24 @@ switch ($mode) {
             
             $id = $_REQUEST['id'];
             //Check if ID exists
-            $where = "";
-            if (!empty($collId)) {
-                $where .= " and coll_id = '" . $collId . "'";
+            $arrayPDO = array();
+            if (! empty($collId)) {
+                $where = " and coll_id = :collId";
+                $arrayPDO = array_merge($arrayPDO, array(":collId" => $collId));
+            } else {
+                $where = " and tablename = :table";
+                $arrayPDO = array_merge($arrayPDO, array(":table" => $table));
             }
-            if (!empty($table)) {
-                $where .= " and tablename = '" . $table . "'";
-            }
-            $request->query(
-                "select n.identifier, n.date_note, n.user_id, n.note_text, u.lastname, "
-                . "u.firstname from " . NOTES_TABLE . " n inner join ". USERS_TABLE
-                . " u on n.user_id  = u.user_id where n.id = " . $id . " " . $where
-                // . " and user_id = '".$request->protect_string_db($_SESSION['user']['UserId'])."' " . $where
+            $arrayPDO = array_merge($arrayPDO, array(":Id" => $id));
+            $stmt = $db->query(
+                "SELECT n.identifier, n.date_note, n.user_id, n.note_text, u.lastname, "
+                . "u.firstname FROM " . NOTES_TABLE . " n inner join ". USERS_TABLE
+                . " u on n.user_id  = u.user_id WHERE n.id = :Id " . $where, $arrayPDO
             );
-            // $request->show();
             
-            if($request->nb_result() > 0) {
+            if($stmt->rowCount() > 0) {
                 
-                $line = $request->fetch_object();
+                $line = $stmt->fetchObject();
                 
                 $user = $request->show_string($line->lastname . " " . $line->firstname);
                 $notes = $line->note_text;
@@ -439,31 +434,25 @@ switch ($mode) {
                     $status = 1;
                 } else {
                     
-                    //Update note
-                    $notes_protected1 = str_replace(";", ".", $_REQUEST['notes']);
-                    $notes_protected2 = str_replace("--", "-", $notes_protected1);
-                    $notes = $request->protect_string_db($notes_protected2);
-                    // $notes = $request->protect_string_db($_REQUEST['notes']);
-                    $date = $request->current_datetime();
+                    $notes = $_REQUEST['notes'];
 
-                    $request->query(
-                        "UPDATE ".NOTES_TABLE." SET note_text = '". $notes
-                        . "', date_note = " . $date . " WHERE id = "
-                        . $id
+                    $db->query(
+                        "UPDATE ".NOTES_TABLE." SET note_text = ?, date_note = CURRENT_TIMESTAMP WHERE id = ?",
+                        array($notes, $id)
                     );
                     
                     //Entities selected
-                    $request->query(
-                            "DELETE FROM " . NOTE_ENTITIES_TABLE . " where note_id = " . $id
+                    $db->query(
+                            "DELETE FROM " . NOTE_ENTITIES_TABLE . " WHERE note_id = ?", array($id)
                         );
                     if (isset($_REQUEST['entities_chosen']) && !empty($_REQUEST['entities_chosen'])) {
                     
                         for ($i=0; $i<count($_REQUEST['entities_chosen']); $i++) 
                         {  
-                            $request->query(
+                            $db->query(
                                 "INSERT INTO " . NOTE_ENTITIES_TABLE . "(note_id, item_id) VALUES"
-                                . " (".$id . ", '"
-                                . $request->protect_string_db($_REQUEST['entities_chosen'][$i])."')"
+                                . " (?, ?)",
+                            array($id, $_REQUEST['entities_chosen'][$i])
                             );
                         }
                     }
@@ -507,9 +496,9 @@ switch ($mode) {
             $status = 1;
         } else {
             $id = $_REQUEST['id'];
-            
-            $request->query("delete from " . NOTE_ENTITIES_TABLE . " where note_id = " . $id);
-            $request->query("delete from " . NOTES_TABLE . " where id = " . $id);
+
+            $db->query("DELETE FROM " . NOTE_ENTITIES_TABLE . " WHERE note_id = ?", array($id));
+            $db->query("DELETE FROM " . NOTES_TABLE . " WHERE id = ?", array($id));
 
             if ($_SESSION['history']['notedel']) {
                 $hist = new history();

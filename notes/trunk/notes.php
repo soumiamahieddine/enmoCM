@@ -122,7 +122,8 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
     //Where clause
         $where_tab = array();
         //
-        $where_tab[] = " identifier = " . $identifier . " ";
+        $where_tab[] = " identifier = ? ";
+        $arrayPDO = array($_SESSION['doc_id']);
         //From filters
         $filterClause = $list->getFilters(); 
         if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
@@ -142,97 +143,12 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         }
     
     //Request
-        /*$tab=$request->select(
-            $select, $where, $orderstr,
-            $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
-            "user_id"
-        );*/
-		$tabNotes=$request->select(
-            $select, $where, $orderstr,
+
+		$tabNotes=$request->PDOselect(
+            $select, $where, $arrayPDO, $orderstr,
             $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
             "user_id"
         );
-        // $request->show();
-        
-    //Result Array
-        /*for ($i=0;$i<count($tab);$i++)
-        {
-            for ($j=0;$j<count($tab[$i]);$j++)
-            {
-                foreach(array_keys($tab[$i][$j]) as $value)
-                {
-                    if($tab[$i][$j][$value]=="id")
-                    {
-                        $tab[$i][$j]["id"]=$tab[$i][$j]['value'];
-                        $tab[$i][$j]["label"]='ID';
-                        $tab[$i][$j]["size"]="1";
-                        $tab[$i][$j]["label_align"]="left";
-                        $tab[$i][$j]["align"]="left";
-                        $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=true;
-                        $tab[$i][$j]["order"]='id';
-                    }
-                    if($tab[$i][$j][$value]=="date_note")
-                    {
-                        $tab[$i][$j]["value"]=$request->dateformat($tab[$i][$j]["value"]);
-                        $tab[$i][$j]["label"]=_DATE;
-                        $tab[$i][$j]["size"]="5";
-                        $tab[$i][$j]["label_align"]="left";
-                        $tab[$i][$j]["align"]="left";
-                        $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=true;
-                        $tab[$i][$j]["order"]='date_note';
-                    }
-                    if($tab[$i][$j][$value]=="user_id")
-                    {
-                        $tab[$i][$j]["label"]=_USER_ID;
-                        $tab[$i][$j]["size"]="5";
-                        $tab[$i][$j]["label_align"]="left";
-                        $tab[$i][$j]["align"]="left";
-                        $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=false;
-                        $tab[$i][$j]["order"]='user_id';
-                    }
-                    if($tab[$i][$j][$value]=="firstname")
-                    {
-                        $firstname =  $request->show_string($tab[$i][$j]["value"]);
-                    }
-                    if($tab[$i][$j][$value]=="lastname")
-                    {
-                        $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]). ' ' .$firstname ;
-                        $tab[$i][$j]["label"]=_USER;
-                        $tab[$i][$j]["size"]=$sizeUser;
-                        $tab[$i][$j]["label_align"]="left";
-                        $tab[$i][$j]["align"]="left";
-                        $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=true;
-                        $tab[$i][$j]["order"]='lastname';
-                    }
-                    if($tab[$i][$j][$value]=="note_short")
-                    {
-                        $tab[$i][$j]["value"] = $request->cut_string( $request->show_string($tab[$i][$j]["value"]), $cutString);
-                        $tab[$i][$j]["label"]=_NOTES;
-                        $tab[$i][$j]["size"]=$sizeText;
-                        $tab[$i][$j]["label_align"]="left";
-                        $tab[$i][$j]["align"]="left";
-                        $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=true;
-                        $tab[$i][$j]["order"]='note_short';
-                    }
-                    if($tab[$i][$j][$value]=="note_text")
-                    {
-                        $tab[$i][$j]["value"] = addslashes($tab[$i][$j]["value"]);
-                        $tab[$i][$j]["label"]=_NOTES;
-                        $tab[$i][$j]["size"]=$sizeText;
-                        $tab[$i][$j]["label_align"]="left";
-                        $tab[$i][$j]["align"]="left";
-                        $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=false;
-                        $tab[$i][$j]["order"]='note_text';
-                    }
-                }
-            }
-        }*/
         
 		//LGI UPDATE
 		$arrayToUnset = array();
@@ -373,15 +289,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         array_push($paramsTab['tools'],$add);   
         
         //Action icons array
-        $paramsTab['actionIcons'] = array();
-        // $preview = array(
-        //             "type"      =>  "preview",
-        //             "class"     =>  "preview",
-        //             "icon"      =>  "comment-o",
-        //             "tooltip"   =>  _NOTES,
-        //             "content"   =>  '{"identifierDetailFrame" : "@@id@@", "'._DATE.'" : "@@date_note@@", "'._USER.'" : "@@lastname@@", "'._NOTES.'" : "@@note_text@@"}'
-        //         );
-        // array_push($paramsTab['actionIcons'], $preview);        
+        $paramsTab['actionIcons'] = array();       
         
         $read = array(
             "script"        => "showNotesForm('".$_SESSION['config']['businessappurl']
