@@ -346,5 +346,21 @@ class Database extends functions
         
     }
 
+    /*************************************************************************
+    * Returns the word to get the current timestamp on a query
+    *
+    * Return
+    *   (string) timestamp word
+    *
+    *************************************************************************/
+    public function current_datetime()
+    {
+        switch ($this->driver) {
+            case 'mysql'        : return 'CURRENT_TIMESTAMP';
+            case 'pgsql'        : return 'CURRENT_TIMESTAMP';
+            case 'oci'          : return 'SYSDATE';
+            default             : return ' ';
+        }
+    }
 }
 

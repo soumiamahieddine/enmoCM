@@ -94,8 +94,12 @@ class PrintControler extends PrintFunctions
 			}
             // Retrieve datas
             $db = new Database();
+            if ($resId <> '') {
+            	$stmt = $db->query($query);
+            } else {
+            	$stmt = $db->query($query, $_SESSION['last_select_query_parameters']);
+            }
             
-            $stmt = $db->query($query, $_SESSION['last_select_query_parameters']);
             $i = 0;
             $this->object_print = new EmptyObject();
             while($line = $stmt->fetchObject()) {

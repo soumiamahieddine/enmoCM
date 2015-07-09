@@ -1,6 +1,6 @@
 <?php
 /**
-*   Copyright 2008-2012 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -63,31 +63,14 @@ if (!defined('_LOGGER_NAME_FUNC_DEFAULT'))
         'loggerFonctionnel'
     );
 
-require_once(
-    "core"
-    .DIRECTORY_SEPARATOR."class"
-    .DIRECTORY_SEPARATOR."class_functions.php"
-);
-require_once(
-    "core"
-    .DIRECTORY_SEPARATOR."class"
-    .DIRECTORY_SEPARATOR."class_db.php"
-);
-require_once(
-    "apps"
-    .DIRECTORY_SEPARATOR."maarch_entreprise"
-    .DIRECTORY_SEPARATOR."tools"
-    .DIRECTORY_SEPARATOR."log4php"
-    .DIRECTORY_SEPARATOR."Logger.php"
-);
+require_once('core/class/class_functions.php');
+require_once('core/class/class_db_pdo.php');
+require_once('apps/maarch_entreprise/tools/log4php/Logger.php');
+require_once('core/core_tables.php');
 
-require_once(
-    "core"
-    .DIRECTORY_SEPARATOR."core_tables.php"
-);
 $_SESSION['tablename']['history'] = HISTORY_TABLE;
 
-class history extends dbquery
+class history
 {
     /**
     * Inserts a record in the history table
@@ -118,6 +101,7 @@ class history extends dbquery
         $user = ''
     )
     {
+        $db = new Database();
         $remote_ip = $_SERVER['REMOTE_ADDR'];
 
         $user = '';
@@ -158,16 +142,8 @@ class history extends dbquery
             }
         }
 
-        $info = $this->protect_string_db(
-            $info,
-            $databasetype,
-            'no'
-        );
-
         if (!$isTech) {
-            $this->connect();
-            $this->query(
-                "INSERT INTO "
+            $queryHist = "INSERT INTO "
                     .$_SESSION['tablename']['history']." ("
                         ."table_name, "
                         ."record_id, "
@@ -179,19 +155,21 @@ class history extends dbquery
                         ."id_module, "
                         ."remote_ip"
                     .") "
-                ."VALUES ('"
-                    .$table_name."', "
-                    ."'".$record_id."', "
-                    ."'".$event_type."', "
-                    ."'".$event_id."', "
-                    ."'".$user."', "
-                    ."".$this->current_datetime().", "
-                    ."'".$info."', "
-                    ."'".$id_module."', "
-                    ."'".$remote_ip."'"
-                .")"
-                , false
-                , true
+                ."VALUES (?, ?, ?, ?, ?, " 
+                    . $db->current_datetime() 
+                    . ", ?, ?, ?)";
+            $db->query(
+                $queryHist,
+                array(
+                    $table_name,
+                    $record_id,
+                    $event_type,
+                    $event_id,
+                    $user,
+                    $info,
+                    $id_module,
+                    $remote_ip
+                )
             );
         } else {
             //write on a log

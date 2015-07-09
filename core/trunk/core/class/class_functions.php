@@ -723,30 +723,29 @@ class functions
     */
     public function infouser($id)
     {
-        $conn = new dbquery();
-        $conn->connect();
+        $conn = new Database();
 
-        $conn->query("select * from ".$_SESSION['tablename']['users']." where user_id = '".$id."'");
-        if($conn->nb_result() == 0)
+        $stmt = $conn->query("select * from ".$_SESSION['tablename']['users']." where user_id = ?", array($id));
+        if($stmt->rowCount() == 0)
         {
             return array("UserId" => "",
-                            "FirstName" => "",
-                            "LastName" => "",
-                            "Phone" => "",
-                            "Mail" => "",
-                            "department" => ""
-                        );
+                "FirstName" => "",
+                "LastName" => "",
+                "Phone" => "",
+                "Mail" => "",
+                "department" => ""
+            );
         }
         else
         {
-            $line = $conn->fetch_object();
+            $line = $stmt->fetchObject();
             return array("UserId" => $line->user_id,
-                            "FirstName" => $this->show_string($line->firstname),
-                            "LastName" => $this->show_string($line->lastname),
-                            "Phone" => $line->phone,
-                            "Mail" => $line->mail ,
-                            "department" => $this->show_string($line->department)
-                        );
+                "FirstName" => $line->firstname,
+                "LastName" => $line->lastname,
+                "Phone" => $line->phone,
+                "Mail" => $line->mail ,
+                "department" => $line->department
+            );
         }
     }
 

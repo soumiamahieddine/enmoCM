@@ -175,16 +175,15 @@ class core_tools extends functions
                 }
             }
         }
-        if (! $mode_batch) {
+        if (!$mode_batch) {
             //Loads logs keywords of the actions
-            $db = new dbquery();
-            $db->connect();
-            $db->query(
+            $db = new Database();
+            $stmt = $db->query(
                 "select id, label_action from "
                 . $_SESSION['tablename']['actions']
                 . " where enabled = 'Y' and history = 'Y'"
             );
-            while ($res = $db->fetch_object()) {
+            while ($res = $stmt->fetchObject()) {
                 array_push(
                     $_SESSION['history_keywords'],
                     array(
@@ -2152,10 +2151,9 @@ class core_tools extends functions
         {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
-        $db->query("select origin from ".$_SESSION['tablename']['actions']." where id = ".$action_id);
-        $res = $db->fetch_object();
+        $db = new Database();
+        $stmt = $db->query("select origin from ".$_SESSION['tablename']['actions']." where id = ?", array($action_id));
+        $res = $stmt->fetchObject();
         $origin = strtolower($res->origin);
 
         if($origin == 'apps' || $origin == 'core')
