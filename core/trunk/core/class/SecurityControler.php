@@ -306,8 +306,7 @@ class SecurityControler
             $where = '';
         }
         $where = str_replace('where', ' ', $where);
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
 
         if ($target == 'ALL' || $target == 'DOC') {
             $query = 'select res_id from ' . $view . ' where ' . $where;
@@ -317,7 +316,7 @@ class SecurityControler
                    . ' where  '. $where;
         }
 
-        $ok = $db->query($query, true);
+        $ok = $db->query($query);
         if (!$ok) {
             $res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
             return $res;
@@ -641,8 +640,8 @@ class SecurityControler
                            . $_SESSION['collections'][$ind]['view'] . " where ("
                            . $where . ') and res_id = ' . $objectId;
                 }
-                $db = new dbquery();
-                $db->connect();
+                $db = new Database();
+                
                 if (! empty($query)) {
                     $db->query($query);
                 }
