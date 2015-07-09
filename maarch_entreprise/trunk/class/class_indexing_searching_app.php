@@ -563,15 +563,6 @@ class indexing_searching_app extends dbquery
         {
             $str = $init.'<input type="hidden" name="meta[]" value="'.$id.'#'.$id.'#input_text" /><input name="'.$id.'"  id="'.$id.'" type="text" '.$param['other'].' value="" />'.$end;
         }
-        /*elseif ($field_type == 'contact')
-        {
-            $str = '<table align="center" border="0" width="100%" ><tr>';
-            $str .='<td><input type="radio"  class="check" name="type_contact_'.$id.'" id="type_contact_internal_'.$id.'" value="internal" onchange="change_contact_type(\''.$_SESSION['config']['businessappurl'].'indexing_searching/autocomplete_contacts.php\');" />'._INTERNAL.'<input type="radio"  class="check" name="type_contact_'.$id.'" id="type_contact_external_'.$id.'" value="external" onchange="change_contact_type(\''.$_SESSION['config']['businessappurl'].'indexing_searching/autocomplete_contacts.php\');"/>'._EXTERNAL.'<br/></td></tr>';
-            $str .='<tr><td><input type="text" name="contact" id="contact"  /><div id="show_contacts" class="autocomplete"></div></td>';
-            $str .= '</tr></table>';
-            $str = addslashes($str);
-            $str = $init.$str.'<input type="hidden" name="meta[]" value="'.$id.'#'.$id.'#contact" />'.$end;
-        }*/
         else if ($field_type == 'textarea')
         {
             $str = $init.'<input type="hidden" name="meta[]" value="'.$id.'#'.$id.'#textarea" /><textarea name="'.$id.'"  id="'.$id.'" '.$param['other'].' rows="2" style="display:block;width:530px;"></textarea>'.$end;

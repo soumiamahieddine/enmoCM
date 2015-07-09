@@ -1,6 +1,6 @@
 <?php
 /*
-*   Copyright 2008, 2013 Maarch
+*   Copyright 2008, 2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -30,7 +30,7 @@
 require_once('core/class/class_request.php');
 
 $req = new request();
-$req->connect();
+$db = new Database();
 
 if (empty($_REQUEST['table'])) {
     exit();
@@ -74,26 +74,25 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     //USERS
     $select = array();
     $select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
-    $where = " (lower(lastname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
-        ."or lower(firstname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
-        ."or user_id like '%".$req->protect_string_db($_REQUEST['Input'])."%') and (status = 'OK' or status = 'ABS') and enabled = 'Y'".$request_user;
+    $where = " (lower(lastname) like lower(:input) "
+        ."or lower(firstname) like lower(:input) "
+        ."or user_id like :input) and (status = 'OK' or status = 'ABS') and enabled = 'Y'".$request_user;
     $other = 'order by lastname, firstname';
-    $res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
+    $arrayPDO = array(":input" => "%".$_REQUEST['Input']."%");
+    $res = $req->PDOselect($select, $where, $arrayPDO, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
     //echo "<ul>\n";
     echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
     for ($i=0; $i< min(count($res), 10)  ;$i++) {
         echo "<li id='".$res[$i][2]['value'].", '>".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</li>\n";
     }
-    /*if (count($res) == 11) {
-            echo "<li>...</li>\n";
-    }*/
-    //echo "</ul>";
 
     //CONTACTS
     $timestart=microtime(true);
    
+   $arrayPDO = array();
    if (isset($_REQUEST['contact_type']) && $_REQUEST['contact_type'] <> '') {
-       $contactTypeRequest = " AND contact_type = '" . $_REQUEST['contact_type'] . "'";
+       $contactTypeRequest = " AND contact_type = ?";
+       $arrayPDOtype = array($_REQUEST['contact_type']);
    }
    
     $Input = $_REQUEST['Input'];
@@ -176,7 +175,6 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             ." END)"   
             . "AS address"
         . " FROM view_contacts"
-        // . " WHERE (user_id = 'superadmin' OR user_id IS NULL OR user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) "
         . " WHERE (1=1) and enabled = 'Y' "
             . $contactTypeRequest
             . " AND ("
@@ -215,8 +213,8 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         . " GROUP BY result, contact_id, address, ca_id "
         . " ORDER BY score DESC, result ASC";
     
-    $req->query($query);
-    $nb = $req->nb_result();
+    $stmt = $db->query($query, $arrayPDO);
+    $nb = $stmt->rowCount();
     
     $m = 30;
     if ($nb >= $m) $l = $m;
@@ -228,7 +226,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     $found = false;
     // echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
     for ($i=0; $i<$l; $i++) {
-        $res = $req->fetch_object();
+        $res = $stmt->fetchObject();
         $score = round($res->score / $num_args);
         if ($score > 100) {
             $score = 100;
@@ -250,11 +248,12 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     if ($table == 'users') {
         $select = array();
         $select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
-        $where = " (lower(lastname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
-            ."or lower(firstname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
-            ."or user_id like '%".$req->protect_string_db($_REQUEST['Input'])."%') and (status = 'OK' or status = 'ABS') and enabled = 'Y'";
+        $where = " (lower(lastname) like lower(:input) "
+            ."or lower(firstname) like lower(:input) "
+            ."or user_id like :input) and (status = 'OK' or status = 'ABS') and enabled = 'Y'";
         $other = 'order by lastname, firstname';
-        $res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
+        $arrayPDO = array(":input" => "%".$_REQUEST['Input']."%");
+        $res = $req->PDOselect($select, $where, $arrayPDO, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
         echo "<ul>\n";
         for ($i=0; $i< min(count($res), 10)  ;$i++) {
             echo "<li id='".$res[$i][2]['value'].", '>".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</li>\n";
@@ -265,10 +264,6 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         echo "</ul>";
     } elseif ($table == 'contacts') {
         $timestart=microtime(true);
-       
-       // if (isset($_REQUEST['contact_type']) && $_REQUEST['contact_type'] <> '') {
-       //     $contactTypeRequest = " AND contact_type = '" . $_REQUEST['contact_type'] . "'";
-       // }
        
         $Input = $_REQUEST['Input'];
         $boldInput = strtoupper($Input);
@@ -389,8 +384,8 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             . " GROUP BY result, contact_id, address, ca_id "
             . " ORDER BY score DESC, result ASC";
         
-        $req->query($query);
-        $nb = $req->nb_result();
+        $stmt = $db->query($query, $arrayPDOtype);
+        $nb = $stmt->rowCount();
         
         $m = 30;
         if ($nb >= $m) $l = $m;
@@ -402,7 +397,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         $found = false;
         echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
         for ($i=0; $i<$l; $i++) {
-            $res = $req->fetch_object();
+            $res = $stmt->fetchObject();
             $score = round($res->score / $num_args);
             if ($score > 100) {
                 $score = 100;
