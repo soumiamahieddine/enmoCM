@@ -2,11 +2,10 @@
 
 if($_SESSION['service_tag'] == 'doctype_up')
 {
-    $db = new dbquery();
-    $db->connect();
-    $db->query("select * from ".$_SESSION['tablename']['mlb_doctype_ext']." where type_id = ".$_SESSION['m_admin']['doctypes']['TYPE_ID']."");
-    //$db->show();
-    if($db->nb_result() == 0)
+    $db = new Database();
+    $stmt = $db->query("SELECT * FROM ".$_SESSION['tablename']['mlb_doctype_ext']." WHERE type_id = ?", array($_SESSION['m_admin']['doctypes']['TYPE_ID']));
+
+    if($stmt->rowCount() == 0)
     {
         $_SESSION['m_admin']['doctypes']['process_delay'] = 21;
         $_SESSION['m_admin']['doctypes']['delay1'] = 14;
@@ -14,7 +13,7 @@ if($_SESSION['service_tag'] == 'doctype_up')
     }
     else
     {
-        $line = $db->fetch_object();
+        $line = $stmt->fetchObject();
         $_SESSION['m_admin']['doctypes']['process_delay'] = $line->process_delay;
         $_SESSION['m_admin']['doctypes']['delay1'] = $line->delay1;
         $_SESSION['m_admin']['doctypes']['delay2'] = $line->delay2;
@@ -63,29 +62,29 @@ elseif($_SESSION['service_tag'] == "doctype_info")
 }
 elseif($_SESSION['service_tag'] == "doctype_updatedb")
 {
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
 
-    $db->query("select type_id from ".$_SESSION['tablename']['mlb_doctype_ext']." where type_id = ".$_SESSION['m_admin']['doctypes']['TYPE_ID']);
-    if($db->nb_result() > 0)
+    $stmt = $db->query("SELECT type_id FROM ".$_SESSION['tablename']['mlb_doctype_ext']." WHERE type_id = ?", array($_SESSION['m_admin']['doctypes']['TYPE_ID']));
+    if($stmt->rowCount() > 0)
     {
-        $db->query("update ".$_SESSION['tablename']['mlb_doctype_ext']." set process_delay = ".$_SESSION['m_admin']['doctypes']['process_delay'].", delay1 = ".$_SESSION['m_admin']['doctypes']['delay1'].", delay2 = ".$_SESSION['m_admin']['doctypes']['delay2']." where type_id = '".$_SESSION['m_admin']['doctypes']['TYPE_ID']."'");
+        $db->query("UPDATE ".$_SESSION['tablename']['mlb_doctype_ext']." SET process_delay = ?, delay1 = ?, delay2 = ? WHERE type_id = ?",
+            array($_SESSION['m_admin']['doctypes']['process_delay'], $_SESSION['m_admin']['doctypes']['delay1'], $_SESSION['m_admin']['doctypes']['delay2'], $_SESSION['m_admin']['doctypes']['TYPE_ID']));
     }
     else
     {
-        $db->query("insert into ".$_SESSION['tablename']['mlb_doctype_ext']." (type_id, process_delay, delay1, delay2) values (".$_SESSION['m_admin']['doctypes']['TYPE_ID'].", ".$_SESSION['m_admin']['doctypes']['process_delay'].", ".$_SESSION['m_admin']['doctypes']['delay1'].", ".$_SESSION['m_admin']['doctypes']['delay2'].")");
+        $db->query("INSERT INTO ".$_SESSION['tablename']['mlb_doctype_ext']." (type_id, process_delay, delay1, delay2) VALUES (?, ?, ?, ?)",
+        array($_SESSION['m_admin']['doctypes']['TYPE_ID'], $_SESSION['m_admin']['doctypes']['process_delay'], $_SESSION['m_admin']['doctypes']['delay1'], $_SESSION['m_admin']['doctypes']['delay2']));
     }
 
 }
 elseif($_SESSION['service_tag'] == "doctype_insertdb")
 {
-    $db = new dbquery();
-    $db->connect();
-    $db->query("insert into ".$_SESSION['tablename']['mlb_doctype_ext']." (type_id, process_delay, delay1, delay2) values (".$_SESSION['m_admin']['doctypes']['TYPE_ID'].", ".$_SESSION['m_admin']['doctypes']['process_delay'].", ".$_SESSION['m_admin']['doctypes']['delay1'].", ".$_SESSION['m_admin']['doctypes']['delay2'].")");
+    $db = new Database();
+    $db->query("INSERT INTO ".$_SESSION['tablename']['mlb_doctype_ext']." (type_id, process_delay, delay1, delay2) VALUES (?, ?, ?, ?)",
+            array($_SESSION['m_admin']['doctypes']['TYPE_ID'], $_SESSION['m_admin']['doctypes']['process_delay'], $_SESSION['m_admin']['doctypes']['delay1'], $_SESSION['m_admin']['doctypes']['delay2']));
 }
 elseif($_SESSION['service_tag'] == "doctype_delete")
 {
-    $db = new dbquery();
-    $db->connect();
-    $db->query("delete from ".$_SESSION['tablename']['mlb_doctype_ext']." where type_id = ".$_SESSION['m_admin']['doctypes']['TYPE_ID']."");
+    $db = new Database();
+    $db->query("DELETE FROM ".$_SESSION['tablename']['mlb_doctype_ext']." WHERE type_id = ?", array($_SESSION['m_admin']['doctypes']['TYPE_ID']));
 }

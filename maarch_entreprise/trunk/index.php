@@ -88,8 +88,7 @@ if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
     && ! empty($_SESSION['user']['UserId']) && $_GET['page'] <> 'login'
     && $_GET['page'] <> 'log' && $_GET['page'] <> 'logout'
 ) {
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     $key = md5(
         time() . '%' . $_SESSION['user']['FirstName'] . '%'
         . $_SESSION['user']['UserId'] . '%' . $_SESSION['user']['UserId']
@@ -97,10 +96,8 @@ if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
     );
 
     $db->query(
-        'update ' . $_SESSION['tablename']['users'] . " set cookie_key = '"
-        . $key . "', cookie_date = ".$db->current_datetime()." where user_id = '"
-        . $_SESSION['user']['UserId'] . "' and mail = '"
-        . $_SESSION['user']['Mail'] . "'", 1
+        'UPDATE ' . $_SESSION['tablename']['users'] . " SET cookie_key = ?, cookie_date = CURRENT_TIMESTAMP WHERE user_id = ? and mail = ?", 
+        array($key, $_SESSION['user']['UserId'], $_SESSION['user']['Mail']),1
     );
 
     /*setcookie(

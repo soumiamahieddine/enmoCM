@@ -131,7 +131,6 @@ if (! empty($_SESSION['error'])) {
         
         if ($ad -> authenticate($loginToAd, $password)) {
             //TODO: protect sql injection with PDO
-            if ($_SESSION['config']['usePDO'] == 'true') {
                 require_once 'core/class/class_db_pdo.php';
 
                 // Instantiate database.
@@ -141,19 +140,6 @@ if (! empty($_SESSION['error'])) {
                     array(':login', $login)
                 );
                 $result = $stmt->fetch();
-            } else {
-                $db = new dbquery();
-                $db->connect();
-                
-                $login = end(explode('\\', $login));
-
-                $query = 'select * from ' . USERS_TABLE
-                           . " where user_id like '"
-                           . $this->protect_string_db($login) . "' ";
-
-                $db->query($query);
-                $result= $db->fetch_object();
-            }
 
             if ($result) {
                 $_SESSION['error'] = '';

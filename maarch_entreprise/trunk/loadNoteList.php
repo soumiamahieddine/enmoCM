@@ -42,33 +42,33 @@ if (isset($_REQUEST['identifier'])) {
         $return .= '<div align="center">';
             $return .= '<table width="97%%">';
 
-                $db = new dbquery();
-                $db->connect();
+        $db = new Database();
 
-                $query = "select ";
+        $query = "SELECT ";
      $query .= "DISTINCT(notes.id), ";
      $query .= "user_id, ";
      $query .= "date_note, ";
      $query .= "note_text ";
-    $query .= "from ";
+    $query .= "FROM ";
      $query .= "notes "; 
     $query .= "left join "; 
      $query .= "note_entities "; 
     $query .= "on "; 
      $query .= "notes.id = note_entities.note_id ";
-    $query .= "where ";
-      // $query .= "tablename = 'res_letterbox' ";
-     // $query .= "AND "; 
-      $query .= "coll_id = '".$_SESSION['collection_id_choice']."' ";
+    $query .= "WHERE ";
+      $query .= "coll_id = ? ";
+      $arrayPDO = array($_SESSION['collection_id_choice']);
      $query .= "AND ";
-      $query .= "identifier = " . $_REQUEST['identifier'] . " ";
+      $query .= "identifier = ? ";
+      $arrayPDO = array_merge($arrayPDO, array($_REQUEST['identifier']));
      $query .= "AND ";
       $query .= "( ";
         $query .= "( ";
           $query .= "item_id IN (";
           
            foreach($_SESSION['user']['entities'] as $entitiestmpnote) {
-            $query .= "'" . $entitiestmpnote['ENTITY_ID'] . "', ";
+            $query .= "?, ";
+            $arrayPDO = array_merge($arrayPDO, array($entitiestmpnote['ENTITY_ID']));
            }
 
             if ($_SESSION['user']['UserId'] == 'superadmin') {
@@ -86,15 +86,13 @@ if (isset($_REQUEST['identifier'])) {
       $query .= ") ";
       $query .= " order by date_note desc";
 
-                $db->query($query);
+                $stmt = $db->query($query, $arrayPDO);
 
                 $fetch = '';
-                while ($return_db = $db->fetch_object()) {
+                while ($return_db = $stmt->fetchObject()) {
                     // get lastname and firstname for user_id
-                    $db2 = new dbquery;
-                    $db2->connect();
-                    $db2->query("SELECT lastname, firstname FROM users WHERE user_id ='" . $return_db->user_id . "'");
-                    while ($user_db = $db2->fetch_object()) {
+                    $stmt2 = $db->query("SELECT lastname, firstname FROM users WHERE user_id =?", array($return_db->user_id));
+                    while ($user_db = $stmt2->fetchObject()) {
                         $lastname = $user_db->lastname;
                         $firstname = $user_db->firstname;
                     }

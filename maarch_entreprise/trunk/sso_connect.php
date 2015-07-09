@@ -301,13 +301,10 @@ if (isset($_SESSION['error']) && $_SESSION['error'] <> '') {
 $temoinUpdate = 0;// Témoin Update pour conserver le format du password
                   //et ne pas toucher à log.php
                   
-$db = new dbquery();
-$db->connect();
-$query = "select user_id from " . USERS_TABLE 
-       . " where user_id = '" . $loginArray['UserId'] . "'";
-$db->query($query);
-
-
+$db = new Database();
+$query = "SELECT user_id FROM " . USERS_TABLE 
+       . " WHERE user_id = ?";
+$stmt = $db->query($query, array($loginArray['UserId']));
 
 /**********************************************************************/
 /**** SAVE FUNCTIONS ****/
@@ -339,7 +336,7 @@ $uc = new users_controler();
 /**********************************************************************/
 /**** UPDATE OR INSERT ?? ****/
 
-if ($db->nb_result() > 0) { 
+if ($stmt->rowCount() > 0) { 
     $userObject->password = MD5($loginArray['password']);
     
     //user exists, so update it

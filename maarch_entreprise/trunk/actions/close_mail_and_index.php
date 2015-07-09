@@ -43,26 +43,19 @@
 
 function manage_close($arr_id, $history, $id_action, $label_action, $status)
 {
-	$db = new dbquery();
-	$db->connect();
 	$result = '';
 	require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
 	require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
 	$sec = new security();
-	$req = new request();
+	$db = new Database();
+
 	$ind_coll = $sec->get_ind_collection($_POST['coll_id']);
 	$ext_table = $_SESSION['collections'][$ind_coll]['extensions'][0];
-	$current_date = $req->current_datetime();
+
 	for($i=0; $i<count($arr_id );$i++)
 	{
 		$result .= $arr_id[$i].'#';
-		$req = $db->query("update ".$ext_table. " set closing_date = ".$current_date." where res_id = ".$arr_id[$i], true);
-
-		if(!$req)
-		{
-			$_SESSION['action_error'] = _SQL_ERROR;
-			return false;
-		}
+		$db->query("UPDATE ".$ext_table. " SET closing_date = CURRENT_TIMESTAMP WHERE res_id = ?", array($arr_id[$i]));
 
 	}
     $_SESSION['indexing']['category_id'] = 'outgoing';

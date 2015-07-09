@@ -1,5 +1,24 @@
 <?php
 
+/*
+*   Copyright 2008-2015 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 require_once('core/class/class_core_tools.php');
 $Core_Tools = new core_tools;
 $Core_Tools->load_lang();
@@ -12,17 +31,16 @@ if (isset($_REQUEST['res_id'])) {
         $return .= '<div align="center">';
             $return .= '<table width="100%">';
 
-                $db = new dbquery();
-                $db->connect();
+                $db = new Database();
                       
                 $query = "SELECT c.is_corporate_person, c.is_private, c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society, c.society_short, c.contact_purpose_label, c.address_num, c.address_street, c.address_complement, c.address_town, c.address_postal_code, c.address_country ";
                         $query .= "FROM view_contacts c, contacts_res cres  ";
-                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['res_id']." AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id";
-                        
-                $db->query($query);
+                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id";
+                $arrayPDO = array($_REQUEST['res_id']);
+                $stmt = $db->query($query, $arrayPDO);
 
                 $fetch = '';
-                while ($res = $db->fetch_object()) {
+                while ($res = $stmt->fetchObject()) {
 
                     $return .= '<tr>';
                         $return .= '<td style="background: transparent; border: 0px dashed rgb(200, 200, 200);">';
@@ -63,18 +81,15 @@ if (isset($_REQUEST['res_id'])) {
                         $return .= '</td>';
                     $return .= '</tr>';
                 }
-                
-                $db = new dbquery();
-                $db->connect();
                       
                 $query = "SELECT u.firstname, u.lastname, u.user_id ";
                         $query .= "FROM users u, contacts_res cres  ";
-                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['res_id']." AND cast (u.user_id as varchar) = cres.contact_id";
-                        
-                $db->query($query);
+                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id";
+                $arrayPDO = array($_REQUEST['res_id']);
+                $stmt = $db->query($query, $arrayPDO);
 
                 $fetch = '';
-                while ($res = $db->fetch_object()) {
+                while ($res = $stmt->fetchObject()) {
 
                     $return .= '<tr>';
                         $return .= '<td style="background: transparent; border: 0px dashed rgb(200, 200, 200);">';

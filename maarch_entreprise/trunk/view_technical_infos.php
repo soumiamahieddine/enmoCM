@@ -46,8 +46,8 @@ $coreTools = new core_tools();
 $coreTools->test_user();
 $coreTools->load_lang();
 $security = new security();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
     if (!isset ($_SESSION['collection_id_choice'])
         || empty ($_SESSION['collection_id_choice'])
@@ -72,23 +72,22 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
             $adrTable = $_SESSION['collections'][$cptColl]['adr'];
         }
     }
-    $selectRes = "select * from " . $table . " where res_id = " 
-        . $_SESSION['doc_id'];
-    $db->query($selectRes);
-    $res = $db->fetch_object();
+    $selectRes = "SELECT * FROM " . $table . " WHERE res_id = ?";
+    $stmt = $db->query($selectRes, array($_SESSION['doc_id']));
+    $res = $stmt->fetchObject();
     $typist = $res->typist;
     $format = $res->format;
     $filesize = $res->filesize;
     $docserverId = $res->docserver_id;
     $path = $res->path;
     $fileName = $res->filename;
-    $creationDate = $db->format_date_db($res->creation_date, false);
+    $creationDate = functions::format_date_db($res->creation_date, false);
     $fingerprint = $res->fingerprint;
     $offsetDoc = $res->offset_doc;
     $workBatch = $res->work_batch;
     $pageCount = $res->page_count;
     $isPaper = $res->is_paper;
-    $scanDate = $db->format_date_db($res->scan_date);
+    $scanDate = functions::format_date_db($res->scan_date);
     $scanUser = $res->scan_user;
     $scanLocation = $res->scan_location;
     $scanWkstation = $res->scan_wkstation;

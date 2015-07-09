@@ -16,8 +16,7 @@ $core_tools->load_lang();
 $core_tools->load_html();
 $core_tools->load_header('', true, false);
 $func = new functions();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 if($_REQUEST['id'] == "")
 {
     echo '<script type="text/javascript">window.resizeTo(400, 300);</script>';
@@ -27,8 +26,8 @@ if($_REQUEST['id'] == "")
 }
 else
 {
-    $db->query("select * from ".$_SESSION['tablename']['users']." where user_id = '".$db->protect_string_db($_REQUEST['id'])."'");
-    if($db->nb_result() == 0)
+    $stmt = $db->query("SELECT * FROM ".$_SESSION['tablename']['users']." WHERE user_id = ?", array($_REQUEST['id']));
+    if($stmt->rowCount() == 0)
     {
         $_SESSION['error'] = _THE_USER.' '._NOT_EXISTS;
         $state = false;
@@ -36,7 +35,7 @@ else
     else
     {
         $user_data = array();
-        $line = $db->fetch_object();
+        $line = $stmt->fetchObject();
         $user_data['ID'] = $func->show_string($line->user_id);
         $user_data['LASTNAME'] = $func->show_string($line->lastname);
         $user_data['FIRSTNAME'] = $func->show_string($line->firstname);
@@ -72,7 +71,7 @@ else
             require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
             $ent = new entity();
             $entities = $ent->get_entities_of_user($_REQUEST['id']);
-            //$db->show_array($entities);
+
             ?>
             <p>
                 <label for="entities"><?php echo _ENTITIES;?></label>

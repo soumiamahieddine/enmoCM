@@ -43,40 +43,33 @@
 
 function manage_persistentOff($arr_id, $history, $id_action, $label_action, $status)
 {
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     $result = '';
     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
     $sec = new security();
-    $req = new request();
+
     $ind_coll = $sec->get_ind_collection($_POST['coll_id']);
     $ext_table = $_SESSION['collections'][$ind_coll]['extensions'][0];
-    $current_date = $req->current_datetime();
+
     for($i=0; $i<count($arr_id );$i++)
     {
         $result .= $arr_id[$i].'#';
 
         //on verifie si il y a déja une entrée dans la base pour ce res_id et cet user_id
 
-        $db->query("SELECT * FROM basket_persistent_mode WHERE res_id = ".$arr_id[$i]." AND user_id = '".$_SESSION['user']['UserId']."'", true);
+        $stmt = $db->query("SELECT * FROM basket_persistent_mode WHERE res_id = ? AND user_id = ?", array($arr_id[$i], $_SESSION['user']['UserId']));
         $lineExist = false;
-        while ($result1 = $db->fetch_object()) {
+        while ($result1 = $stmt->fetchObject()) {
             $lineExist = true;
         }
 
         if ($lineExist) {
-            $query = "UPDATE basket_persistent_mode SET is_persistent = 'N' WHERE res_id = ".$arr_id[$i]." AND user_id = '".$_SESSION['user']['UserId']."'";
-            $req = $db->query($query, true);
+            $query = "UPDATE basket_persistent_mode SET is_persistent = 'N' WHERE res_id = ? AND user_id = ?";
+            $db->query($query, array($arr_id[$i], $_SESSION['user']['UserId']));
         } else {
-            $query = "INSERT INTO basket_persistent_mode VALUES(".$arr_id[$i].", '".$_SESSION['user']['UserId']."', 'N')";
-            $req = $db->query($query, true);
-        }
-
-        if(!$req)
-        {
-            $_SESSION['action_error'] = _SQL_ERROR.' ---- '.$query;
-            return false;
+            $query = "INSERT INTO basket_persistent_mode VALUES(?, ?, 'N')";
+            $db->query($query, array($arr_id[$i], $_SESSION['user']['UserId']));
         }
 
     }

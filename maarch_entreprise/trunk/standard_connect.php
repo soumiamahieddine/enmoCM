@@ -54,15 +54,11 @@ elseif(isset($_REQUEST['confirmAskRACode']) && $_REQUEST['confirmAskRACode'] == 
     $nextWeek  = mktime(0, 0, 0, date("m"),   date("d")+$ipArray['duration'],   date("Y"));
     $expiration_date = date("Y-m-d", $nextWeek);
     
-    $db = new dbquery();
-    $db->connect();
-    $db->query("UPDATE users set ra_code = '".md5($raCodeGenerated)
-        ."' WHERE user_id = '".$_SESSION['user']['UserId']."'", false, true);
-    $db->query("UPDATE users set ra_expiration_date = '"
-        .$expiration_date."' WHERE user_id = '".$_SESSION['user']['UserId']."'", false, true);
+    $db = new Database();
+    $db->query("UPDATE users set ra_code = ? WHERE user_id = ?", array(md5($raCodeGenerated), $_SESSION['user']['UserId']), false);
+    $db->query("UPDATE users set ra_expiration_date = ? WHERE user_id = ?", array($expiration_date, $_SESSION['user']['UserId']), false);
     
-    $mailDest = $db->query("SELECT mail FROM users WHERE user_id = '"
-        .$_SESSION['user']['UserId']."' ;", false, true);
+    $mailDest = $db->query("SELECT mail FROM users WHERE user_id = ?", array($_SESSION['user']['UserId']), false);
     
     $mailToSend = '<html>';
         $mailToSend .= '<body>';
@@ -77,7 +73,6 @@ elseif(isset($_REQUEST['confirmAskRACode']) && $_REQUEST['confirmAskRACode'] == 
         $mailToSend .= '</body>';
     $mailToSend .= '</html>';
     
-    //if (!mail($_SESSION['user']['Mail'], 'Votre code de connexion Maarch', $mailToSend)) {
     if (!mail(
         $_SESSION['user']['Mail'], _CONFIRM_ASK_RA_CODE_6, $mailToSend, 
         "From: info@maarch.org\nReply-To: info@maarch.org \nContent-Type: text/html; charset=\"iso-8859-1\"\n")

@@ -132,7 +132,7 @@ else  {
 }
 
 //Request
-$tab=$request->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
+$tab=$request->PDOselect($select, $where, array(), $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
 // $request->show(); exit;
 //Templates
 $defaultTemplate = 'documents_list_copies';
@@ -150,6 +150,8 @@ if($core_tools->is_module_loaded('cases')) array_push($template_list, 'cases_lis
 //For status icon
 $extension_icon = '';
 if($selectedTemplate <> 'none') $extension_icon = "_big"; 
+
+$db = new Database();
 
 //Result Array
 for ($i=0;$i<count($tab);$i++)
@@ -171,29 +173,29 @@ for ($i=0;$i<count($tab);$i++)
                 $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
                 
                 // notes
-                $db = new dbquery();
-                $db->connect();
-                $query = "select ";
+                $query = "SELECT ";
                  $query .= "notes.id ";
-                $query .= "from ";
+                $query .= "FROM ";
                  $query .= "notes "; 
                 $query .= "left join "; 
                  $query .= "note_entities "; 
                 $query .= "on "; 
                  $query .= "notes.id = note_entities.note_id ";
-                $query .= "where ";
+                $query .= "WHERE ";
                   $query .= "tablename = 'res_letterbox' ";
                  $query .= "AND "; 
                   $query .= "coll_id = 'letterbox_coll' ";
                  $query .= "AND ";
-                  $query .= "identifier = " . $tab[$i][$j]['value'] . " ";
+                  $query .= "identifier = ? ";
+                  $arrayPDOnotes = array($tab[$i][$j]['value']);
                  $query .= "AND ";
                   $query .= "( ";
                     $query .= "( ";
                       $query .= "item_id IN (";
                       
                        foreach($_SESSION['user']['entities'] as $entitiestmpnote) {
-                        $query .= "'" . $entitiestmpnote['ENTITY_ID'] . "', ";
+                        $query .= "?, ";
+                        $arrayPDOnotes = array_merge($arrayPDOnotes, array($entitiestmpnote['ENTITY_ID']));
                        }
                        $query = substr($query, 0, -2);
                       
@@ -202,10 +204,11 @@ for ($i=0;$i<count($tab);$i++)
                       $query .= "item_id IS NULL ";
                     $query .= ") ";
                    $query .= "OR ";
-                    $query .= "user_id = '" . $_SESSION['user']['UserId'] . "' ";
+                    $query .= "user_id = ? ";
+                    $arrayPDOnotes = array_merge($arrayPDOnotes, array($_SESSION['user']['UserId']));
                   $query .= ") ";
-                $db->query($query);
-                $tab[$i][$j]['hasNotes'] = $db->fetch_object();             
+                $stmt = $db->query($query, $arrayPDOnotes);
+                $tab[$i][$j]['hasNotes'] = $stmt->fetchObject();             
                 $tab[$i][$j]['res_multi_contacts'] = $_SESSION['mlb_search_current_res_id'];
             }
             if($tab[$i][$j][$value]=="creation_date")
@@ -465,11 +468,10 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='viewed';
-                $db->query("select viewed from listinstance where res_id = " 
-                    . $_SESSION['mlb_search_current_res_id'] 
-                    . " and coll_id = '" . $_SESSION['current_basket']['coll_id'] . "'"
-                    . " and item_id = '".$_SESSION['user']['UserId']."'");
-                $lineViewed = $db->fetch_object();
+                $stmt = $db->query("SELECT viewed FROM listinstance WHERE res_id = ? and coll_id = ?"
+                    . " and item_id = ?",
+                    array($_SESSION['mlb_search_current_res_id'], $_SESSION['current_basket']['coll_id'], $_SESSION['user']['UserId']));
+                $lineViewed = $stmt->fetchObject();
                 $tab[$i][$j]['value'] = $lineViewed->viewed;
             }
         }

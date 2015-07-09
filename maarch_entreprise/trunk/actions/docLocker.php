@@ -52,10 +52,9 @@ class docLocker
         if ($this->isLocked() && $this->userLock() != $this->user_id) {
             $userlock_id = $this->userLock();
 
-            $db = new dbquery();
-            $db->connect();
-            $db->query("select firstname, lastname from users where user_id = '". $userlock_id . "'");
-            $userLock_info = $db->fetch_object();           
+            $db = new Database();
+            $stmt = $db->query("SELECT firstname, lastname FROM users WHERE user_id = ?", array($userlock_id));
+            $userLock_info = $stmt->fetchObject();           
             $_SESSION['userLock'] = $userLock_info->firstname .' '. $userLock_info->lastname;
 
             return false;
@@ -71,14 +70,15 @@ class docLocker
         $query = "UPDATE ";
             $query .= $this->table . " ";
         $query .= "SET ";
-            $query .= "locker_user_id = '" . $this->user_id . "', ";
+            $query .= "locker_user_id = ?, ";
             $query .= "locker_time = current_timestamp + interval '1 MINUTE' ";
         $query .= "WHERE ";
-            $query .= "res_id = " . $this->res_id;
+            $query .= "res_id = ?";
 
-        $db = new dbquery();
-        $db->connect();
-        $db->query($query);
+        $arrayPDO = array($this->user_id, $this->res_id);
+
+        $db = new Database();
+        $db->query($query, $arrayPDO);
 
         return true;
     }
@@ -93,11 +93,12 @@ class docLocker
             $query .= "locker_user_id = NULL, ";
             $query .= "locker_time = NULL ";
         $query .= "WHERE ";
-            $query .= "res_id = " . $this->res_id;
+            $query .= "res_id = ?";
 
-        $db = new dbquery();
-        $db->connect();
-        $db->query($query);
+        $arrayPDO = array($this->res_id);
+
+        $db = new Database();
+        $db->query($query, $arrayPDO);
 
         return true;
     }
@@ -119,15 +120,16 @@ class docLocker
         $query .= "FROM ";
             $query .= $this->table . " ";
         $query .= "WHERE ";
-                $query .= "res_id = " . $this->res_id . " ";
+                $query .= "res_id = ? ";
             $query .= "AND ";
                 $query .= "locker_time > current_timestamp";
 
-        $db = new dbquery();
-        $db->connect();
-        $db->query($query);
+        $arrayPDO = array($this->res_id);
 
-        if ($db->nb_result() > 0)
+        $db = new Database();
+        $stmt = $db->query($query, $arrayPDO);
+
+        if ($stmt->rowCount() > 0)
                 return true; 
 
         return false;
@@ -140,13 +142,14 @@ class docLocker
         $query .= "FROM ";
             $query .= $this->table . " ";
         $query .= "WHERE ";
-            $query .= "res_id = " . $this->res_id . " ";
+            $query .= "res_id = ? ";
 
-        $db = new dbquery();
-        $db->connect();
-        $db->query($query);
+        $arrayPDO = array($this->res_id);
+        
+        $db = new Database();
+        $stmt = $db->query($query, $arrayPDO);
 
-        while ($result = $db->fetch_object())
+        while ($result = $stmt->fetchObject())
             return $result->user_lock;
 
         return '';

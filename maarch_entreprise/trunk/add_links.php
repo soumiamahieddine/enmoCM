@@ -10,8 +10,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
         $Core_Tools = new core_tools;
         $Core_Tools->load_lang();
         $Class_LinkController = new LinkController();
-        $db = new dbquery;
-        $db->connect();
+        $db = new Database;
 
         $res_parent = $_REQUEST['res_id'];
 
@@ -20,27 +19,29 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
             if ($res_child == $res_parent) {
                 $self = true;
             } elseif(count($_SESSION['stockCheckbox'])==1){
-                $queryTest = "SELECT * FROM res_linked WHERE res_parent=".$res_parent." AND res_child=".$res_child." AND coll_id='".$_SESSION['collection_id_choice']."'";
-                $db->query($queryTest);
+                $queryTest = "SELECT * FROM res_linked WHERE res_parent=? AND res_child=? AND coll_id=?";
+                $arrayPDO = array($res_parent, $res_child, $_SESSION['collection_id_choice']);
+                $stmt = $db->query($queryTest, $arrayPDO);
                 $i = 0;
-                while($test = $db->fetch_object()) {
+                while($test = $stmt->fetchObject()) {
                     $i++;
                 }
             }elseif(count($_SESSION['stockCheckbox'])>1){
               for($j=0;$j<count($_SESSION['stockCheckbox']);$j++){
-                $queryTest = "SELECT * FROM res_linked WHERE res_parent=".$_SESSION['stockCheckbox'][$j]." AND res_child=".$res_child." AND coll_id='".$_SESSION['collection_id_choice']."'";
-                $db->query($queryTest);
+                $queryTest = "SELECT * FROM res_linked WHERE res_parent=? AND res_child=? AND coll_id=?";
+                $arrayPDO = array($_SESSION['stockCheckbox'][$j], $res_child, $_SESSION['collection_id_choice']);
+                $stmt = $db->query($queryTest, $arrayPDO);
                 $i = 0;
-                while($test = $db->fetch_object()) {
+                while($test = $stmt->fetchObject()) {
                     $i++;
                    }
                 }
             }
             
             if ($i == 0 && !$self && count($_SESSION['stockCheckbox'])==1) {
-                $queryAddLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $res_parent . "', '" . $res_child . "', '" . $_SESSION['collection_id_choice'] . "')";
-
-                $db->query($queryAddLink);
+                $queryAddLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES(?, ?, ?)";
+                $arrayPDO = array($res_parent, $res_child, $_SESSION['collection_id_choice']);
+                $db->query($queryAddLink, $arrayPDO);
 
                 $hist2 = new history();
                 $hist2->add(
@@ -65,9 +66,9 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                 );
             }elseif($i == 0 && !$self && count($_SESSION['stockCheckbox'])>1){
                 for($j=0;$j<count($_SESSION['stockCheckbox']);$j++){
-                $queryAddLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $_SESSION['stockCheckbox'][$j] . "', '" . $res_child . "', '" . $_SESSION['collection_id_choice'] . "')";
-
-                $db->query($queryAddLink);
+                $queryAddLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES(?, ?, ?)";
+                $arrayPDO = array($_SESSION['stockCheckbox'][$j], $res_child, $_SESSION['collection_id_choice']);
+                $db->query($queryAddLink, $arrayPDO);
 
                 $hist2 = new history();
                 $hist2->add(
@@ -94,9 +95,9 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
               }
             }
         } elseif($_REQUEST['mode'] == 'del') {
-            $queryDelLink = "DELETE FROM res_linked WHERE res_parent=".$res_parent." AND res_child=".$res_child." and coll_id='".$_SESSION['collection_id_choice']."'";
-
-            $db->query($queryDelLink);
+            $queryDelLink = "DELETE FROM res_linked WHERE res_parent=? AND res_child=? and coll_id=?";
+            $arrayPDO = array($res_parent, $res_child, $_SESSION['collection_id_choice']);
+            $db->query($queryDelLink, $arrayPDO);
 
             $hist2 = new history();
             $hist2->add(

@@ -54,15 +54,15 @@ if(!empty($_SESSION['error']))
 }
 else
 {
-	$db = new dbquery();
-	$db->connect();
+	$db = new Database();
 
-	$tmp_fn = $db->protect_string_db($_SESSION['user']['FirstName']);
-	$tmp_ln = $db->protect_string_db($_SESSION['user']['LastName']);
-	$tmp_dep = $db->protect_string_db($_SESSION['user']['department']);
+	$tmp_fn = $_SESSION['user']['FirstName'];
+	$tmp_ln = $_SESSION['user']['LastName'];
+	$tmp_dep = $_SESSION['user']['department'];
 
-	$db->query("update ".$_SESSION['tablename']['users']." set password = '".$_SESSION['user']['pass']."' ,firstname = '".$tmp_fn."', lastname = '".$tmp_ln."', phone = '".$_SESSION['user']['Phone']."', mail = '".$_SESSION['user']['Mail']."' , department = '".$tmp_dep."' , change_password = 'N' where user_id = '".$_SESSION['user']['UserId']."'");
-	//$db->show();
+	$db->query("UPDATE ".$_SESSION['tablename']['users']." SET password = ? ,firstname = ?, lastname = ?, phone = ?, mail = ? , department = ? , change_password = 'N' where user_id = ?",
+		array($_SESSION['user']['pass'], $tmp_fn, $tmp_ln, $_SESSION['user']['Phone'], $_SESSION['user']['Mail'], $tmp_dep, $_SESSION['user']['UserId']));
+
 	header("location: ".$_SESSION['config']['businessappurl']."index.php");
 	exit();
 

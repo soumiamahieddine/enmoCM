@@ -670,12 +670,9 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
     if (empty ($view)) {
         $view = $sec->retrieve_table_from_coll($coll_id);
     }
-    $db = new dbquery();
-    $db->connect();
-    $db2 = new dbquery();
-    $db2->connect();
-    $db->query('select category_id from ' . $view . ' where res_id = ' . $res_id);
-    $res = $db->fetch_object();
+    $db = new Database();
+    $stmt = $db->query('SELECT category_id FROM ' . $view . ' WHERE res_id = ?', array($res_id));
+    $res = $stmt->fetchObject();
     $cat_id = $res->category_id;
     $fields = '';
     $data = array ();
@@ -917,11 +914,9 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         $fields = preg_replace('/,$/', '', $fields);
     }
     // Query
-    $db->query("select category_id," . $fields . " from " . $view . " where res_id = " . $res_id);
-    //$db->show();
-    //$db->show_array($arr);
+    $stmt = $db->query("SELECT category_id," . $fields . " FROM " . $view . " WHERE res_id = ?", array($res_id));
 
-    $line = $db->fetch_object();
+    $line = $stmt->fetchObject();
     // We fill the array with the query result
     for ($i = 0; $i < count($arr); $i++) {
         if ($mode == 'full' || $mode == 'form') {
@@ -930,30 +925,30 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 $data[$arr[$i]]['value'] = $line-> $arr[$i];
             }
             if ($arr[$i] <> 'folder') {
-                $data[$arr[$i]]['show_value'] = $db->show_string($data[$arr[$i]]['value']);
+                $data[$arr[$i]]['show_value'] = functions::show_string($data[$arr[$i]]['value']);
             }
             if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
                 && $_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date'
             ) {
-                $data[$arr[$i]]['show_value'] = $db->format_date_db($line-> $arr[$i], false);
+                $data[$arr[$i]]['show_value'] = functions::format_date_db($line-> $arr[$i], false);
             } else if (isset($_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'])
                 && $_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'] == 'date'
             ) {
-                $data[$arr[$i]]['show_value'] = $db->format_date_db($line-> $arr[$i], false);
+                $data[$arr[$i]]['show_value'] = functions::format_date_db($line-> $arr[$i], false);
             } else if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
                 && $_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'string'
             ) {
-                $data[$arr[$i]]['show_value'] = $db->show_string($line-> $arr[$i], true, '', '', false);
+                $data[$arr[$i]]['show_value'] = functions::show_string($line-> $arr[$i], true, '', '', false);
             }
             // special cases :
             if ($arr[$i] == 'priority') {
                 $data[$arr[$i]]['show_value'] = $_SESSION['mail_priorities'][$line-> $arr[$i]];
             }
             elseif ($arr[$i] == 'destination') {
-                $db2->query('select entity_label from ' . $_SESSION['tablename']['ent_entities'] . " where entity_id = '" . $line-> $arr[$i] . "'");
-                if ($db2->nb_result() == 1) {
-                    $res2 = $db2->fetch_object();
-                    $data[$arr[$i]]['show_value'] = $db->show_string($res2->entity_label, true);
+                $stmt2 = $db->query('SELECT entity_label FROM ' . $_SESSION['tablename']['ent_entities'] . " WHERE entity_id = ?", array($line-> $arr[$i]));
+                if ($stmt2->rowCount() == 1) {
+                    $res2 = $stmt2->fetchObject();
+                    $data[$arr[$i]]['show_value'] = functions::show_string($res2->entity_label, true);
                 }
             }
             elseif ($arr[$i] == 'nature_id') {
@@ -965,13 +960,13 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 }
             }
             elseif ($arr[$i] == 'type_id') {
-                $data[$arr[$i]]['show_value'] = $db->show_string($line->type_label);
+                $data[$arr[$i]]['show_value'] = functions::show_string($line->type_label);
             }
             // Contact
             elseif ($arr[$i] == 'dest_user_id' || $arr[$i] == 'exp_user_id') {
                 if (!empty ($line-> $arr[$i])) {
-                    $db2->query('select lastname, firstname from ' . $_SESSION['tablename']['users'] . " where user_id = '" . $line-> $arr[$i] . "'");
-                    $res = $db2->fetch_object();
+                    $stmt2 = $db->query('SELECT lastname, firstname FROM ' . $_SESSION['tablename']['users'] . " WHERE user_id = ?", array($line-> $arr[$i]));
+                    $res = $stmt2->fetchObject();
                     $data[$arr[$i]]['show_value'] = $res->lastname . ' ' . $res->firstname;
                     $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=400, width=600,scrollbars=yes,resizable=yes\');" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>';
                 } else {
@@ -980,11 +975,11 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             }
             elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
                 if (!empty ($line-> $arr[$i])) {
-                    $db2->query("select address_id from mlb_coll_ext where res_id = ".$res_id);
-                    $resAddress = $db2->fetch_object();
+                    $stmt2 = $db->query("SELECT address_id FROM mlb_coll_ext WHERE res_id = ?", array($res_id));
+                    $resAddress = $stmt2->fetchObject();
                     $addressId = $resAddress->address_id;
-                    $db2->query('select is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_postal_code, address_town, lastname, firstname from view_contacts where contact_id = ' . $line-> $arr[$i] . ' and ca_id = ' . $addressId);
-                    $res = $db2->fetch_object();
+                    $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_postal_code, address_town, lastname, firstname FROM view_contacts WHERE contact_id = ? and ca_id = ?', array($line-> $arr[$i], $addressId));
+                    $res = $stmt2->fetchObject();
                     if ($res->is_corporate_person == 'Y') {
                         $data[$arr[$i]]['show_value'] = $res->society . ' ' ;
                         if (!empty ($res->society_short)) {
@@ -1016,13 +1011,13 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             }
             // Folder
             elseif ($arr[$i] == 'folder' && isset($line->folders_system_id) && $line->folders_system_id <> '') {
-                $db2->query('select folder_id, folder_name, subject, folders_system_id, parent_id from ' 
+                $stmt2 = $db->query('SELECT folder_id, folder_name, subject, folders_system_id, parent_id FROM ' 
                     . $_SESSION['tablename']['fold_folders'] 
-                    . " where status <> 'FOLDDEL' and folders_system_id = " 
-                    . $line->folders_system_id);
+                    . " WHERE status <> 'FOLDDEL' and folders_system_id = ?", 
+                     array($line->folders_system_id));
 
-                if ($db2->nb_result() > 0) {
-                    $res = $db2->fetch_object();
+                if ($stmt2->rowCount() > 0) {
+                    $res = $stmt2->fetchObject();
                     $data['folder']['show_value'] = $res->folder_id . ', ' . $res->folder_name . ' (' . $res->folders_system_id . ')';
                 }
             }
@@ -1031,21 +1026,21 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             // Normal cases
             $data[$arr[$i]] = $line-> $arr[$i];
             if ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date') {
-                $data[$arr[$i]] = $db->format_date_db($line-> $arr[$i], false);
+                $data[$arr[$i]] = functions::format_date_db($line-> $arr[$i], false);
             }
             elseif ($_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'] == 'date') {
-                $data[$arr[$i]] = $db->format_date_db($line-> $arr[$i], false);
+                $data[$arr[$i]] = functions::format_date_db($line-> $arr[$i], false);
             }
             elseif ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'string') {
-                $data[$arr[$i]] = $db->show_string($line-> $arr[$i], true, '', '', false);
+                $data[$arr[$i]] = functions::show_string($line-> $arr[$i], true, '', '', false);
             }
             // special cases :
             // Contact
             if ($arr[$i] == 'dest_user_id' || $arr[$i] == 'exp_user_id') {
                 if (!empty ($line-> $arr[$i])) {
                     $data['type_contact'] = 'internal';
-                    $db2->query('select lastname, firstname from ' . $_SESSION['tablename']['users'] . " where user_id = '" . $line-> $arr[$i] . "'");
-                    $res = $db2->fetch_object();
+                    $stmt2 = $db->query('SELECT lastname, firstname FROM ' . $_SESSION['tablename']['users'] . " WHERE user_id = ?", array($line-> $arr[$i]));
+                    $res = $stmt2->fetchObject();
                     $data['contact'] = $res->lastname . ' ' . $res->firstname;
                     $data['contactId'] = $line-> $arr[$i];
                 }
@@ -1055,11 +1050,11 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
                 if (!empty ($line-> $arr[$i])) {
                     $data['type_contact'] = 'external';
-                    $db2->query("select address_id from mlb_coll_ext where res_id = ".$res_id);
-                    $resAddress = $db2->fetch_object();
+                    $stmt2 = $db->query("SELECT address_id FROM mlb_coll_ext WHERE res_id = ?", array($res_id));
+                    $resAddress = $stmt2->fetchObject();
                     $addressId = $resAddress->address_id;
-                    $db2->query('select is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_postal_code, address_town, lastname, firstname from view_contacts where contact_id = ' . $line-> $arr[$i] . ' and ca_id = ' . $addressId);
-                    $res = $db2->fetch_object();
+                    $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_postal_code, address_town, lastname, firstname FROM view_contacts WHERE contact_id = ? and ca_id = ?', array($line-> $arr[$i], $addressId));
+                    $res = $stmt2->fetchObject();
                     if ($res->is_corporate_person == 'Y') {
                         $data['contact'] = $res->society . ' ' ;
                         if (!empty ($res->society_short)) {
@@ -1098,12 +1093,12 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
 			}
             // Folder
             elseif ($arr[$i] == 'folder' && isset($line->folders_system_id) && $line->folders_system_id <> '' ) {
-                $db2->query('select folder_id, folder_name, subject, folders_system_id, parent_id from ' 
+                $stmt2 = $db->query('SELECT folder_id, folder_name, subject, folders_system_id, parent_id FROM ' 
                 . $_SESSION['tablename']['fold_folders'] 
-                . " where status <> 'FOLDDEL' and folders_system_id = " 
-                . $line->folders_system_id);
-                //$db2->show();
-                $res = $db2->fetch_object();
+                . " WHERE status <> 'FOLDDEL' and folders_system_id = ?", 
+                    array($line->folders_system_id));
+
+                $res = $stmt2->fetchObject();
                 $data['folder'] = $res->folder_id . ', ' . $res->folder_name . ' (' . $res->folders_system_id . ')';
             }
         }

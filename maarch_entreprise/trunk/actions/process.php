@@ -77,14 +77,13 @@ function get_folder_data($coll_id, $res_id)
     if (empty($view)) {
         $view = $sec->retrieve_table_from_coll($coll_id);
     }
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     $folder = '';
-    $db->query("select folders_system_id, folder_id, folder_name, fold_parent_id, fold_subject, folder_level from "
-        . $view . " where res_id = " . $res_id);
+    $stmt = $db->query("SELECT folders_system_id, folder_id, folder_name, fold_parent_id, fold_subject, folder_level FROM "
+        . $view . " WHERE res_id = ?", array($res_id));
 
-    if ($db->nb_result() == 1) {
-        $res = $db->fetch_object();
+    if ($stmt->rowCount() == 1) {
+        $res = $stmt->fetchObject();
         if (!empty($res->folders_system_id)) {
             $folder = functions::xssafe($res->folder_id).', '.functions::xssafe($res->folder_name)
                 .' ('.functions::xssafe($res->folders_system_id).')';
@@ -161,6 +160,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $b = new basket();
     $is = new indexing_searching_app();
     $cr = new chrono();
+    $db = new Database();
     $_SESSION['save_list']['fromProcess'] = "true";
     $data = array();
     $params_data = array('show_folder' => false);
@@ -175,9 +175,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         foreach (array_keys($indexes) as $key) {
             $fields .= ','.$key;
         }
-        $b->connect();
-        $b->query("select ".$fields." from ".$table." where res_id = ".$res_id);
-        $values_fields = $b->fetch_object();
+        $stmt = $db->query("SELECT ".$fields." FROM ".$table." WHERE res_id = ?", array($res_id));
+        $values_fields = $stmt->fetchObject();
         //print_r($indexes);
     }
     if ($core_tools->is_module_loaded('entities')) {
@@ -201,16 +200,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     */
 
 //Load multicontacts
-	$query = "select c.firstname, c.lastname, c.society, c.contact_id, c.ca_id  ";
-			$query .= "from view_contacts c, contacts_res cres  ";
-			$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id ";
+	$query = "SELECT c.firstname, c.lastname, c.society, c.contact_id, c.ca_id  ";
+			$query .= "FROM view_contacts c, contacts_res cres  ";
+			$query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id ";
 			$query .= "GROUP BY c.firstname, c.lastname, c.society, c.contact_id, c.ca_id";
 			
-	$b->query($query);
+	$stmt = $db->query($query, array($res_id));
 	$nbContacts = 0;
 	$frameContacts = "";
 	$frameContacts = "{";
-	while($res = $b->fetch_object()){
+	while($res = $stmt->fetchObject()){
 		$nbContacts = $nbContacts + 1;
 		$firstname = str_replace("'","\'", $res->firstname);
 		$firstname = str_replace('"'," ", $firstname);
@@ -224,12 +223,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	}
     $query = "select u.firstname, u.lastname, u.user_id ";
 			$query .= "from users u, contacts_res cres  ";
-			$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (u.user_id as varchar) = cres.contact_id ";
+			$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id ";
 			$query .= "GROUP BY u.firstname, u.lastname, u.user_id";
 			
-	$b->query($query);
+	$stmt = $db->query($query, array($res_id));
 	
-	while($res = $b->fetch_object()){
+	while($res = $stmt->fetchObject()){
 		$nbContacts = $nbContacts + 1;
 		$firstname = str_replace("'","\'", $res->firstname);
 		$firstname = str_replace('"'," ", $firstname);
@@ -368,10 +367,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 }
             }
             //extension
-            $db = new dbquery();
-            $db->connect();
-            $db->query("select format from ".$table." where res_id = ".$res_id);
-            $formatLine = $db->fetch_object();
+            $db = new Database();
+            $stmt = $db->query("SELECT format FROM ".$table." WHERE res_id = ?", array($res_id));
+            $formatLine = $stmt->fetchObject();
             $frm_str .= '<tr>';
             $frm_str .= '<td width="50%" align="left"><span class="form_title_process">' . _FORMAT . ' :</span></td>';
             $frm_str .= '<td>';
@@ -386,11 +384,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //RESPONSE FORM
     $nb_attach = 0;
 
-    $db = new request;
-    $db->connect();
-    $db->query("select answer_type_bitmask from "
-        .$_SESSION['collections'][0]['extensions'][0]." where res_id = ".$res_id);
-    $res = $db->fetch_object();
+    $stmt = $db->query("SELECT answer_type_bitmask FROM "
+        .$_SESSION['collections'][0]['extensions'][0]." WHERE res_id = ?", array($res_id));
+    $res = $stmt->fetchObject();
     $bitmask = $res->answer_type_bitmask;
     switch ($bitmask) {
         case "000000":
@@ -419,13 +415,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
 
     if ($core_tools->is_module_loaded('attachments')) {
-        $req = new request;
-        $req->connect();
-        $req->query("select res_id from "
+        $stmt = $db->query("SELECT res_id FROM "
             . $_SESSION['tablename']['attach_res_attachments']
-            . " where status <> 'DEL' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
-        if ($req->nb_result() > 0) {
-            $nb_attach = $req->nb_result();
+            . " WHERE status <> 'DEL' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
+        if ($stmt->rowCount() > 0) {
+            $nb_attach = $stmt->rowCount();
         }
     }
 
@@ -683,14 +677,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $versionTable = $sec->retrieve_version_table_from_coll_id(
             $coll_id
         );
-        $selectVersions = "select res_id from "
-            . $versionTable . " where res_id_master = "
-            . $res_id . " and status <> 'DEL' order by res_id desc";
-        $dbVersions = new dbquery();
-        $dbVersions->connect();
-        $dbVersions->query($selectVersions);
-        $nb_versions_for_title = $dbVersions->nb_result();
-        $lineLastVersion = $dbVersions->fetch_object();
+        $selectVersions = "SELECT res_id FROM "
+            . $versionTable . " WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
+        $dbVersions = new Database();
+        $stmt = $dbVersions->query($selectVersions, array($res_id));
+        $nb_versions_for_title = $stmt->rowCount();
+        $lineLastVersion = $stmt->fetchObject();
         $lastVersion = $lineLastVersion->res_id;
         if ($lastVersion <> '') {
             $objectId = $lastVersion;
@@ -779,15 +771,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});';
                     $frm_str .= 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');';
                     $frm_str .= 'return false;">' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
-                    $req = new request;
-                    $req->connect();
-                    $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
-                        . " where (status = 'A_TRA' or status = 'TRA') and res_id_master = " 
-                        . $res_id . " and coll_id = '" . $coll_id . "'");
+                    $db = new Database;
+                    $stmt = $db->query("SELECT res_id FROM ".$_SESSION['tablename']['attach_res_attachments']
+                        . " WHERE (status = 'A_TRA' or status = 'TRA') and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
                     //$req->show();
                     $nb_attach = 0;
-                    if ($req->nb_result() > 0) {
-                        $nb_attach = $req->nb_result();
+                    if ($stmt->rowCount() > 0) {
+                        $nb_attach = $stmt->rowCount();
                     }
                     $frm_str .= '<div class="ref-unit">';
                     $frm_str .= '<center>';
@@ -1230,8 +1220,7 @@ function check_form($form_id,$values)
         }
     }
     if ($core->is_module_loaded('folder')) {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $folder_id = '';
 
         if (!empty($folder)) {
@@ -1240,8 +1229,8 @@ function check_form($form_id,$values)
                 return false;
             }
             $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
-            $db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_id);
-            if ($db->nb_result() == 0) {
+            $stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($folder_id));
+            if ($stmt->rowCount() == 0) {
                 $_SESSION['action_error'] = _FOLDER.' '.$folder_id.' '._UNKNOWN;
                 return false;
             }
@@ -1255,18 +1244,17 @@ function check_form($form_id,$values)
                 $_SESSION['action_error'] .= _COLLECTION.' '._UNKNOWN;
                 return false;
             }
-            $db->query("select type_id from ".$table." where res_id = ".$res_id);
-            $res = $db->fetch_object();
+            $stmt = $db->query("SELECT type_id FROM ".$table." WHERE res_id = ?", array($res_id));
+            $res = $stmt->fetchObject();
             $type_id = $res->type_id;
             $foldertype_id = '';
-            $db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_id);
-            $res = $db->fetch_object();
+            $stmt = $db->query("SELECT foldertype_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($folder_id));
+            $res = $stmt->fetchObject();
             $foldertype_id = $res->foldertype_id;
-            $db->query("select fdl.foldertype_id from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']
+            $stmt = $db->query("SELECT fdl.foldertype_id FROM ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']
                 ." fdl, ".$_SESSION['tablename']['doctypes']
-                ." d where d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = "
-                .$foldertype_id." and d.type_id = ".$type_id);
-            if ($db->nb_result() == 0) {
+                ." d WHERE d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = ? and d.type_id = ?", array($foldertype_id, $type_id));
+            if ($stmt->rowCount() == 0) {
                 $_SESSION['action_error'] .= _ERROR_COMPATIBILITY_FOLDER;
                 return false;
             }
@@ -1305,9 +1293,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
     $sec =new security();
-    $db = new dbquery();
+    $db = new Database();
     $core = new core_tools();
-    $db->connect();
     $res_table = $sec->retrieve_table_from_coll($coll_id);
     $ind = $sec->get_ind_collection($coll_id);
     $table = $_SESSION['collections'][$ind]['extensions'][0];
@@ -1368,9 +1355,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $folder_id = '';
         $old_folder_id = '';
         //get old folder ID
-        $db->connect();
-        $db->query("select folders_system_id from ".$res_table." where res_id = ".$arr_id[0]);
-        $res = $db->fetch_object();
+        $stmt = $db->query("SELECT folders_system_id FROM ".$res_table." WHERE res_id = ?", array($arr_id[0]));
+        $res = $stmt->fetchObject();
         $old_folder_id = $res->folders_system_id;
             
         if (!empty($folder)) {    
@@ -1385,9 +1371,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 }
             }
 
-            $db->query("update ".$res_table." set folders_system_id =".$folder_id." where res_id =".$arr_id[0]);
+            $db->query("UPDATE ".$res_table." SET folders_system_id = ? WHERE res_id = ? ", array($folder_id, $arr_id[0]));
         } else if(empty($folder) && !empty($old_folder_id)) { //Delete folder reference in res_X
-            $db->query("update ".$res_table." set folders_system_id = NULL where res_id =".$arr_id[0]);
+            $db->query("UPDATE ".$res_table." SET folders_system_id = NULL WHERE res_id = ?", array($arr_id[0]));
         }
     }
     if ($core->is_module_loaded('entities') && count($_SESSION['redirect']['diff_list']) == 0) {
@@ -1400,23 +1386,18 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     $_SESSION['redirect']['diff_list'] = array();
     unset($_SESSION['redirection']);
     unset($_SESSION['redirect']);
-    $db->query("update ".$table." set answer_type_bitmask = '".$bitmask."', process_notes = '".$db->protect_string_db($process_notes)."', other_answer_desc ='".$db->protect_string_db($other_txt)."'
-    WHERE res_id=".$arr_id[0]);
+    $db->query("UPDATE ".$table." SET answer_type_bitmask = ?, process_notes = ?, other_answer_desc = ? WHERE res_id= ?",
+    array($bitmask, $process_notes, $other_txt, $arr_id[0]));
     return array('result' => $arr_id[0].'#', 'history_msg' => '');
 }
 
 function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table)
 {
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     $result = '';
     for ($i=0; $i<count($arr_id);$i++) {
         $result .= $arr_id[$i].'#';
-        $req = $db->query("update ".$table. " set video_user = '', video_time = 0 where res_id = ".$arr_id[$i], true);
-        if (!$req) {
-            $_SESSION['action_error'] = _SQL_ERROR;
-            return false;
-        }
+        $db->query("UPDATE ".$table. " SET video_user = '', video_time = 0 WHERE res_id = ?", array($arr_id[$i]));
     }
     return array('result' => $result, 'history_msg' => '');
 }

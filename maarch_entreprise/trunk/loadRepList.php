@@ -41,15 +41,13 @@ if (isset($_REQUEST['res_id_master'])) {
                 $return .= '</tr>';
 
 
-                $db = new dbquery();
-                $db->connect();
+                $db = new Database();
 
-                $query = "SELECT * FROM res_view_attachments WHERE res_id_master = "
-                    . $_REQUEST['res_id_master']." AND status <> 'DEL' and status <> 'OBS' and coll_id = '" . $_SESSION['collection_id_choice'] . "' ORDER BY creation_date desc";
+                $query = "SELECT * FROM res_view_attachments WHERE res_id_master = ? AND status <> 'DEL' and status <> 'OBS' and coll_id = ? ORDER BY creation_date desc";
+                $arrayPDO = array($_REQUEST['res_id_master'], $_SESSION['collection_id_choice']);
+                $stmt = $db->query($query, $arrayPDO);
 
-                $db->query($query);
-
-                while ($return_db = $db->fetch_object()) {
+                while ($return_db = $stmt->fetchObject()) {
                     $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
@@ -57,11 +55,10 @@ if (isset($_REQUEST['res_id_master'])) {
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $db2 = new dbquery;
-                            $db2->connect();
-                            $query = "SELECT label_status FROM status WHERE id ='".$return_db->status."'";
-                            $db2->query($query);
-                            while ($status_db = $db2->fetch_object()) {
+                            $query = "SELECT label_status FROM status WHERE id =?";
+                            $arrayPDO = array($return_db->status);
+                            $stmt2 = $db->query($query, $arrayPDO);
+                            while ($status_db = $stmt2->fetchObject()) {
                                 $return .= functions::xssafe($status_db->label_status);
                             }
                         $return .= '</td>';

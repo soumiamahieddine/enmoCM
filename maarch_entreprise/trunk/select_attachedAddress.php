@@ -8,8 +8,7 @@
 */
 
 $contactAddresses = array();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
 	."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
@@ -20,14 +19,15 @@ $core_tools->test_user();
 $query = "SELECT ca.id, ca.lastname as ca_lastname, ca.firstname, ca.contact_purpose_id, cp.label 
 			FROM ".$_SESSION['tablename']['contact_addresses']." ca
 			LEFT JOIN contact_purposes cp on ca.contact_purpose_id = cp.id	
-			WHERE ca.contact_id = ".$_POST['contact_id'];
+			WHERE ca.contact_id = ?";
+
+$arrayPDO = array($_POST['contact_id']);
 
 $query .= " order by ca_lastname";
-$db->query($query);
-  // $db->show();
+$stmt = $db->query($query, $arrayPDO);
 
 $listArray = array();
-while($line = $db->fetch_object())
+while($line = $stmt->fetchObject())
 {
 	$contactAddress = $contact->get_label_contact(
 		$line->contact_purpose_id, $_SESSION['tablename']['contact_purposes']
@@ -53,7 +53,7 @@ $frmStr .= '<option value="">Sélectionner une adresse</option>';
 for ($cptsContacts = 0;$cptsContacts< $countsContactAddress;$cptsContacts++) {
 
     $frmStr .= '<option value="'.functions::xssafe($contactAddresses[$cptsContacts]['contact_id']).'">'
-		.  functions::xssafe($db->show_string($contactAddresses[$cptsContacts]['name']))
+		.  functions::xssafe(functions::show_string($contactAddresses[$cptsContacts]['name']))
 		. '</option>';
 }
 $frmStr .= '</select></td>';

@@ -68,21 +68,20 @@ $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 function get_file_path($res_id, $coll_id)
 {
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-    $sec =new security();
+    $sec = new security();
     $view = $sec->retrieve_view_from_coll_id($coll_id);
     if(empty($view))
     {
         $view = $sec->retrieve_table_from_coll($coll_id);
     }
-    $db = new dbquery();
-    $db->connect();
-    $db->query("select docserver_id, path, filename from ".$view." where res_id = ".$res_id);
-    $res = $db->fetch_object();
+    $db = new Database();
+    $stmt = $db->query("SELECT docserver_id, path, filename FROM ".$view." WHERE res_id = ?", array($res_id));
+    $res = $stmt->fetchObject();
     $path = preg_replace('/#/', DIRECTORY_SEPARATOR, $res->path);
     $docserver_id = $res->docserver_id;
     $filename = $res->filename;
-    $db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
-    $res = $db->fetch_object();
+    $stmt = $db->query("SELECT path_template FROM ".$_SESSION['tablename']['docservers']." WHERE docserver_id = ?", array($docserver_id));
+    $res = $stmt->fetchObject();
     $docserver_path = $res->path_template;
 
     return $docserver_path.$path.$filename;
@@ -91,20 +90,19 @@ function get_file_path($res_id, $coll_id)
 function check_category($coll_id, $res_id)
 {
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-    $sec =new security();
+    $sec = new security();
     $view = $sec->retrieve_view_from_coll_id($coll_id);
 
-    $db = new dbquery();
-    $db->connect();
-    $db->query("select category_id from ".$view." where res_id = ".$res_id);
-    $res = $db->fetch_object();
+    $db = new Database();
+    $stmt = $db->query("SELECT category_id FROM ".$view." WHERE res_id = ?", array($res_id));
+    $res = $stmt->fetchObject();
 
     if(!isset($res->category_id))
     {
         $ind_coll = $sec->get_ind_collection($coll_id);
         $table_ext = $_SESSION['collections'][$ind_coll]['extensions'][0];
-        $db->query("insert into ".$table_ext." (res_id, category_id) VALUES (".$res_id.", '".$_SESSION['coll_categories']['letterbox_coll']['default_category']."')");
-        //$db->show();
+        $db->query("INSERT INTO ".$table_ext." (res_id, category_id) VALUES (?, ?)",
+            array($res_id, $_SESSION['coll_categories']['letterbox_coll']['default_category']));
     }
 }
 
@@ -185,16 +183,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     {
         $doctypes = $type->getArrayTypes($coll_id);
     }
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     $hidden_doctypes = array();
     $tmp = $business->get_titles();
     $titles = $tmp['titles'];
     $default_title = $tmp['default_title'];
     if($core_tools->is_module_loaded('templates'))
     {
-        $db->query("select type_id from ".$_SESSION['tablename']['temp_templates_doctype_ext']." where is_generated = 'NULL!!!'");
-        while($res = $db->fetch_object())
+        $stmt = $db->query("SELECT type_id FROM ".$_SESSION['tablename']['temp_templates_doctype_ext']." WHERE is_generated = 'NULL!!!'");
+        while($res = $stmt->fetchobject())
         {
             array_push($hidden_doctypes, $res->type_id);
         }
@@ -203,16 +200,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     if ($core_tools->is_module_loaded('entities')) {
         $EntitiesIdExclusion = array();
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         if (count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']) > 0) {
-            $db->query(
-                "select entity_id from "
-                . ENT_ENTITIES . " where entity_id not in ("
+            $stmt = $db->query(
+                "SELECT entity_id FROM "
+                . ENT_ENTITIES . " WHERE entity_id not in ("
                 . $_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']
                 . ") and enabled= 'Y' order by entity_id"
             );
-            while ($res = $db->fetch_object()) {
+            while ($res = $stmt->fetchObject()) {
                 array_push($EntitiesIdExclusion, $res->entity_id);
             }
         }
@@ -226,8 +222,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         require_once('modules/entities/class/class_manage_listdiff.php');
         $diff_list = new diffusion_list();
         $load_listmodel = true;
-        $db->query("select res_id from " . $_SESSION['tablename']['ent_listinstance']." where res_id = " . $res_id);
-        if ($db->nb_result() > 0) {
+        $stmt = $db->query("SELECT res_id FROM " . $_SESSION['tablename']['ent_listinstance']." WHERE res_id = ?", array($res_id));
+        if ($stmt->rowCount() > 0) {
             $load_listmodel = false;
             $_SESSION['indexing']['diff_list'] = $diff_list->get_listinstance($res_id);
         }
@@ -235,16 +231,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	//Load Multicontacts
 	//CONTACTS
-    $query = "select c.is_corporate_person, c.is_private, c.contact_lastname, c.contact_firstname, c.society, c.society_short, c.contact_purpose_id, c.address_num, c.address_street, c.address_postal_code, c.address_town, c.lastname, c.firstname, c.contact_id, c.ca_id ";
-		$query .= "from view_contacts c, contacts_res cres ";
-		$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id";			
-	$db->query($query);
+    $query = "SELECT c.is_corporate_person, c.is_private, c.contact_lastname, c.contact_firstname, c.society, c.society_short, c.contact_purpose_id, c.address_num, c.address_street, c.address_postal_code, c.address_town, c.lastname, c.firstname, c.contact_id, c.ca_id ";
+		$query .= "FROM view_contacts c, contacts_res cres ";
+		$query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id";			
+	$stmt = $db->query($query, array($res_id));
 	
     $_SESSION['adresses']['to'] = array();
     $_SESSION['adresses']['addressid'] = array();
 	$_SESSION['adresses']['contactid'] = array();
 	
-	while($res = $db->fetch_object()){
+	while($res = $stmt->fetchObject()){
 
         if ($res->is_corporate_person == 'Y') {
             $addContact = $res->society . ' ' ;
@@ -277,12 +273,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	}
 	
     //USERS
-	$query = "select u.firstname, u.lastname, u.user_id ";
-		$query .= "from users u, contacts_res cres ";
-		$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (u.user_id as varchar) = cres.contact_id";			
-	$db->query($query);
+	$query = "SELECT u.firstname, u.lastname, u.user_id ";
+		$query .= "FROM users u, contacts_res cres ";
+		$query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id";			
+	$stmt = $db->query($query, array($res_id));
 	
-	while($res = $db->fetch_object()){
+	while($res = $stmt->fetchObject()){
 		$addContact = $res->firstname . $res->lastname;
          array_push($_SESSION['adresses']['to'], $addContact);
          array_push($_SESSION['adresses']['addressid'], 0);
@@ -715,7 +711,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                  //$frm_str .= ' style="font-weight:bold;"';
                             }
                             $frm_str .=  '>' 
-                                .  $db->show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL']) 
+                                .  functions::show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL']) 
                                 . '</option>';
                         }
                     }
@@ -761,13 +757,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         /*** Status ***/
         // Select statuses from groupbasket
         $statuses = array();
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
+
         /* Basket of ABS users */
         if($_SESSION['current_basket']['abs_basket']=='1'){
-            $query="SELECT group_id FROM usergroup_content WHERE user_id='".$_SESSION['current_basket']['basket_owner']."' AND primary_group='Y'";
-            $db->query($query);
-            $grp_status=$db->fetch_object();
+            $query="SELECT group_id FROM usergroup_content WHERE user_id= ? AND primary_group='Y'";
+            $stmt = $db->query($query, array($_SESSION['current_basket']['basket_owner']));
+            $grp_status=$stmt->fetchObject();
             $owner_usr_grp=$grp_status->group_id;
             $owner_basket_id=str_replace("_".$_SESSION['current_basket']['basket_owner'], "", $_SESSION['current_basket']['id']);
 
@@ -777,31 +773,29 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
         $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
             . " on status_id = id "
-            . " where basket_id= '" . $owner_basket_id
-            . "' and group_id = '" . $owner_usr_grp
-            . "' and action_id = " . $id_action;
-        $db->query($query);
+            . " where basket_id= ? and group_id = ? and action_id = ?";
+        $stmt = $db->query($query, array($owner_basket_id, $owner_usr_grp, $id_action));
 
-        if($db->nb_result() > 0) {
-            while($status = $db->fetch_object()) {
+        if($stmt->rowCount() > 0) {
+            while($status = $stmt->fetchObject()) {
                 $statuses[] = array(
                     'ID' => $status->status_id,
-                    'LABEL' => $db->show_string($status->label_status)
+                    'LABEL' => functions::show_string($status->label_status)
                 );
             }
         }
         $view = $sec->retrieve_view_from_coll_id($coll_id);
         if(count($statuses) > 0) {
             //load current status
-            $db->query("select status from " 
+            $stmt = $db->query("SELECT status FROM " 
                 . $view 
-                . " where res_id = " . $res_id);
-            $statusObj = $db->fetch_object();
+                . " WHERE res_id = ?", array($res_id));
+            $statusObj = $stmt->fetchObject();
             $current_status = $statusObj->status;
             if ($current_status <> '') {
-                $db->query("select label_status from " . STATUS_TABLE 
-                    . " where id = '" . $current_status . "'");
-                $statusObjLabel = $db->fetch_object();
+                $stmt = $db->query("SELECT label_status FROM " . STATUS_TABLE 
+                    . " WHERE id = ?", array($current_status));
+                $statusObjLabel = $stmt->fetchObject();
                 $current_status_label = $statusObjLabel->label_status;
             }
             $frm_str .= '<tr id="status" style="display:' . $display_value . ';">';
@@ -854,10 +848,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'id="indexing_fields" style="display:block;">';
 
         /*** Chrono number ***/
-        $db->query("select alt_identifier from " 
+        $stmt = $db->query("SELECT alt_identifier FROM " 
             . $view 
-            . " where res_id = " . $res_id);
-        $resChrono = $db->fetch_object();
+            . " WHERE res_id = ?", array($res_id));
+        $resChrono = $stmt->fetchObject();
         $chrono_number = explode('/', $resChrono->alt_identifier);
         $chrono_number = $chrono_number[1];
         $frm_str .= '<tr id="chrono_number_tr" style="display:'.$display_value.';">';
@@ -949,13 +943,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         //ATTACHMENTS
         if ($core_tools->is_module_loaded('attachments')) {
             $frm_str .= '<td>';
-            $req = new request;
-            $req->connect();
-            $req->query("select res_id from "
+            $db = new Database;
+            $stmt = $db->query("SELECT res_id FROM "
                 . $_SESSION['tablename']['attach_res_attachments']
-                . " where status <> 'DEL' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
-            if ($req->nb_result() > 0) {
-                $nb_attach = $req->nb_result();
+                . " WHERE status <> 'DEL' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
+            if ($stmt->rowCount() > 0) {
+                $nb_attach = $stmt->rowCount();
             } else {
                 $nb_attach = 0;
             }
@@ -1086,14 +1079,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});';
                     $frm_str .= 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');';
                     $frm_str .= 'return false;">' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
-                    $req = new request;
-                    $req->connect();
-                    $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
-                        . " where (status = 'A_TRA' or status = 'TRA') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
+                    $req = new Database;
+                    $stmt =$req->query("SELECT res_id FROM ".$_SESSION['tablename']['attach_res_attachments']
+                        . " WHERE (status = 'A_TRA' or status = 'TRA') and res_id_master = ? and coll_id = ?",
+                        array($res_id, $coll_id));
                     //$req->show();
                     $nb_attach = 0;
-                    if ($req->nb_result() > 0) {
-                        $nb_attach = $req->nb_result();
+                    if ($stmt->rowCount() > 0) {
+                        $nb_attach = $stmt->rowCount();
                     }
                     $frm_str .= '<div class="ref-unit">';
                     $frm_str .= '<center>';
@@ -1463,8 +1456,7 @@ function process_category_check($cat_id, $values)
     }
     if($core->is_module_loaded('folder'))
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $folder_id = '';
 
         $folder = get_value_fields($values, 'folder');
@@ -1484,8 +1476,8 @@ function process_category_check($cat_id, $values)
                 return false;
             }
             $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
-            $db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_id);
-            if($db->nb_result() == 0)
+            $stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($folder_id));
+            if($stmt->rowCount() == 0)
             {
                 $_SESSION['action_error'] = _FOLDER.' '.$folder_id.' '._UNKNOWN;
                 return false;
@@ -1495,14 +1487,14 @@ function process_category_check($cat_id, $values)
         {
             $foldertype_id = '';
 
-            $db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_id);
-            $res = $db->fetch_object();
+            $stmt = $db->query("SELECT foldertype_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($folder_id));
+            $res = $stmt->fetchObject();
             $foldertype_id = $res->foldertype_id;
-            $db->query("select fdl.foldertype_id from "
+            $stmt = $db->query("SELECT fdl.foldertype_id FROM "
                 .$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." fdl, "
-                .$_SESSION['tablename']['doctypes']." d where d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = "
-                .$foldertype_id." and d.type_id = ".$type_id);
-            if($db->nb_result() == 0)
+                .$_SESSION['tablename']['doctypes']." d WHERE d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = ? and d.type_id = ".$type_id
+                , array($foldertype_id));
+            if($stmt->rowCount() == 0)
             {
                 $_SESSION['action_error'] .= _ERROR_COMPATIBILITY_FOLDER;
                 return false;
@@ -1557,7 +1549,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_resource.php");
-    $db = new dbquery();
+    $db = new Database();
     $sec = new security();
     $core = new core_tools();
     $resource = new resource();
@@ -1575,10 +1567,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 
     $query_ext = "update ".$table_ext." set ";
     $query_res = "update ".$table." set ";
+    $arrayPDOres = array();
+    $arrayPDOext = array();
 
     $cat_id = get_value_fields($values_form, 'category_id');
 
-    $query_ext .= " category_id = '".$cat_id."' " ;
+    $query_ext .= " category_id = ? " ;
+    $arrayPDOext = array_merge($arrayPDOext, array($cat_id));
     //$query_res .= " status = 'NEW' " ;
 
 
@@ -1590,11 +1585,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         {
             if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res')
             {
-                $query_res .= ", ".$values_form[$i]['ID']." = ".$values_form[$i]['VALUE'];
+                $query_res .= ", ".$values_form[$i]['ID']." = ? ";
+                $arrayPDOres = array_merge($arrayPDOres, array($values_form[$i]['VALUE']));
             }
             else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
             {
-                $query_ext .= ", ".$values_form[$i]['ID']." = ".$values_form[$i]['VALUE'];
+                $query_ext .= ", ".$values_form[$i]['ID']." = ? ";
+                $arrayPDOext = array_merge($arrayPDOext, array($values_form[$i]['VALUE']));
             }
         }
         else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'string' && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none')
@@ -1604,22 +1601,26 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             $values_form[$i]['VALUE']=str_replace('--', '-',$values_form[$i]['VALUE']);
             if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res')
             {
-                $query_res .= ", ".$values_form[$i]['ID']." = '".$db->protect_string_db($values_form[$i]['VALUE'])."'";
+                $query_res .= ", ".$values_form[$i]['ID']." = ?";
+                $arrayPDOres = array_merge($arrayPDOres, array($values_form[$i]['VALUE']));
             }
             else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
             {
-                $query_ext .= ", ".$values_form[$i]['ID']." = '".$db->protect_string_db($values_form[$i]['VALUE'])."'";
+                $query_ext .= ", ".$values_form[$i]['ID']." = ?";
+                $arrayPDOext = array_merge($arrayPDOext, array($values_form[$i]['VALUE']));
             }
         }
         else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'date' && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none')
         {
             if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res')
             {
-                $query_res .= ", ".$values_form[$i]['ID']." = '".$db->format_date_db($values_form[$i]['VALUE'])."'";
+                $query_res .= ", ".$values_form[$i]['ID']." = ?";
+                $arrayPDOres = array_merge($arrayPDOres, array($values_form[$i]['VALUE']));
             }
             else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
             {
-                $query_ext .= ", ".$values_form[$i]['ID']." = '".$db->format_date_db($values_form[$i]['VALUE'])."'";
+                $query_ext .= ", ".$values_form[$i]['ID']." = ?";
+                $arrayPDOext = array_merge($arrayPDOext, array($values_form[$i]['VALUE']));
             }
         }
     }
@@ -1627,7 +1628,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     if (empty($status_id) || $status_id === "") {
         $status_id = 'BAD';
     } else {
-        $query_res .= ", status = '" . $status_id . "'";
+        $query_res .= ", status = ?";
+        $arrayPDOres = array_merge($arrayPDOres, array($status_id));
     }
 
     ///////////////////////// Other cases
@@ -1647,10 +1649,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     $confidentiality_yes = get_value_fields($values_form, 'confidential');
 
     if (!empty($confidentiality_yes)) {
-        $query_res .= ", confidentiality = '" . $confidentiality_yes . "'";
+        $query_res .= ", confidentiality = ?";
+        $arrayPDOres = array_merge($arrayPDOres, array($confidentiality_yes));
     } else {
         $confidentiality_no = get_value_fields($values_form, 'no_confidential');
-        $query_res .= ", confidentiality = '" . $confidentiality_no . "'";
+        $query_res .= ", confidentiality = ?";
+        $arrayPDOres = array_merge($arrayPDOres, array($confidentiality_no));
     }
 
     // Process limit Date
@@ -1659,13 +1663,15 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $process_limit_date = get_value_fields($values_form, 'process_limit_date');
         if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'res')
         {
-            $query_res .= ", process_limit_date = '".$db->format_date_db($process_limit_date)."'";
+            $query_res .= ", process_limit_date = ?";
+            $arrayPDOres = array_merge($arrayPDOres, array(functions::format_date_db($process_limit_date)));
         }
         else if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'coll_ext')
         {
             if($_SESSION['store_process_limit_date'] == "ok")
             {
-                $query_ext .= ", process_limit_date = '".$db->format_date_db($process_limit_date)."'";
+                $query_ext .= ", process_limit_date = ?";
+                $arrayPDOext = array_merge($arrayPDOext, array(functions::format_date_db($process_limit_date)));
             } else {
 				$query_ext .= ", process_limit_date = null";
 			}
@@ -1693,22 +1699,18 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		
 		
 		$nb_multi_contact = count($_SESSION['adresses']['to']);
-		$db->connect();
 
-		$db->query("DELETE FROM contacts_res where res_id = ".$res_id);
+		$db->query("DELETE FROM contacts_res where res_id = ?", array($res_id));
 		
-		$db->query("update ". $table_ext 
-			. " set exp_user_id = NULL, dest_user_id = NULL, exp_contact_id = NULL, dest_contact_id = NULL where res_id = " 
-			. $res_id);
+		$db->query("UPDATE ". $table_ext 
+			. " SET exp_user_id = NULL, dest_user_id = NULL, exp_contact_id = NULL, dest_contact_id = NULL where res_id = ?",  
+			 array($res_id));
 		if($nb_multi_contact > 0 && $contact_type == 'multi_external'){
 		
 			for($icontact = 0; $icontact<$nb_multi_contact; $icontact++){
 			
-				// $contactId = str_replace(
-				// 	')', '', substr($_SESSION['adresses']['to'][$icontact], strrpos($_SESSION['adresses']['to'][$icontact], '(') + 1)
-				// );
-			
-				$db->query("INSERT INTO contacts_res (coll_id, res_id, contact_id, address_id) VALUES ('". $coll_id ."', ". $res_id .", '". $_SESSION['adresses']['contactid'][$icontact] ."', ". $_SESSION['adresses']['addressid'][$icontact] .")");
+				$db->query("INSERT INTO contacts_res (coll_id, res_id, contact_id, address_id) VALUES (?, ?, ?, ?)",
+                    array($coll_id, $res_id, $_SESSION['adresses']['contactid'][$icontact], $_SESSION['adresses']['addressid'][$icontact]));
 
 			}
 			
@@ -1724,31 +1726,36 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			{
 				if($cat_id == 'incoming' || $cat_id == 'internal')
 				{
-					$query_ext .= ", exp_user_id = '".$db->protect_string_db($contact_id)."'";
+					$query_ext .= ", exp_user_id = ?";
+                    $arrayPDOext = array_merge($arrayPDOext, array($contact_id));
 				}
 				else if($cat_id == 'outgoing')
 				{
-					$query_ext .= ", dest_user_id = '".$db->protect_string_db($contact_id)."'";
+					$query_ext .= ", dest_user_id = ?";
+                    $arrayPDOext = array_merge($arrayPDOext, array($contact_id));
 				}
-				$db->query("DELETE FROM contacts_res where res_id = ".$res_id);
+				$db->query("DELETE FROM contacts_res where res_id = ?", array($res_id));
 				$query_ext .= ", is_multicontacts = ''";
 			}
 			elseif($contact_type == 'external')
 			{
 				if($cat_id == 'incoming')
 				{
-					$query_ext .= ", exp_contact_id = ".$contact_id."";
+					$query_ext .= ", exp_contact_id = ?";
+                    $arrayPDOext = array_merge($arrayPDOext, array($contact_id));
 				}
 				else if($cat_id == 'outgoing' || $cat_id == 'internal')
 				{
-					$query_ext .= ", dest_contact_id = ".$contact_id."";
+					$query_ext .= ", dest_contact_id = ?";
+                    $arrayPDOext = array_merge($arrayPDOext, array($contact_id));
 				}
                 $addressId = get_value_fields(
                     $values_form, 'addressid'
                 );
-                $query_ext .= ", address_id = ". $db->protect_string_db($addressId);
+                $query_ext .= ", address_id = ?";
+                $arrayPDOext = array_merge($arrayPDOext, array($addressId));
 
-				$db->query("DELETE FROM contacts_res where res_id = ".$res_id);
+				$db->query("DELETE FROM contacts_res where res_id = ?", array($res_id));
 				$query_ext .= ", is_multicontacts = ''";
 			}
 		}
@@ -1757,16 +1764,16 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     if($core->is_module_loaded('folder'))
     {
         $folder_id = '';
-        $db->connect();
-        $db->query("select folders_system_id from ".$table ." where res_id = ".$res_id);
-        $res = $db->fetch_object();
+        $stmt = $db->query("SELECT folders_system_id FROM ".$table ." WHERE res_id = ?", array($res_id));
+        $res = $stmt->fetchObject();
         $old_folder_id = $res->folders_system_id;
 
         $folder = get_value_fields($values_form, 'folder');
         $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
         
         if(!empty($folder_id)) {
-            $query_res .= ", folders_system_id = ".$folder_id."";
+            $query_res .= ", folders_system_id = ?";
+            $arrayPDOres = array_merge($arrayPDOres, array($folder_id));
         } else if(empty($folder_id) && !empty($old_folder_id)) {
             $query_res .= ", folders_system_id = NULL";
         }
@@ -1791,7 +1798,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         {
             if(!empty($_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id']) && isset($_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id']))
             {
-                $query_res .= ", dest_user = '".$db->protect_string_db($_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id'])."'";
+                $query_res .= ", dest_user = ?";
+                $arrayPDOres = array_merge($arrayPDOres, array($_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id']));
             }
             $load_list_diff = true;
         }
@@ -1799,10 +1807,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     
     $query_res = preg_replace('/set ,/', 'set ', $query_res);
     //$query_res = substr($query_res, strpos($query_string, ','));
-    $db->connect();
-    $db->query($query_res." where res_id =".$res_id);
-    $db->query($query_ext." where res_id =".$res_id);
-    //$db->show();
+
+    $arrayPDOres = array_merge($arrayPDOres, array($res_id));
+    $db->query($query_res." where res_id = ? ", $arrayPDOres);
+
+    $arrayPDOext = array_merge($arrayPDOext, array($res_id));
+    $db->query($query_ext." where res_id = ?", $arrayPDOext);
+
     if($core->is_module_loaded('entities'))
     {
         if($load_list_diff)
@@ -1827,10 +1838,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     //Create chrono number
     //######
     if ($cat_id == 'outgoing') {
-        $queryChrono = "select alt_identifier from " . $table_ext 
-            . " where res_id = " . $res_id;
-        $db->query($queryChrono);
-        $resultChrono = $db->fetch_object();
+        $queryChrono = "SELECT alt_identifier FROM " . $table_ext 
+            . " WHERE res_id = ?";
+        $stmt = $db->query($queryChrono, array($res_id));
+        $resultChrono = $stmt->fetchObject();
         if ($resultChrono->alt_identifier == '' OR $resultChrono->alt_identifier == NULL) {
         require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
             . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
@@ -1848,15 +1859,15 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         );
         $myChrono = $chronoX->generate_chrono($cat_id, $myVars, $myForm);
         if ($myChrono <> '' && $cChronoOut <> '') {
-            $db->query("update " . $table_ext ." set alt_identifier = '" 
-                . $db->protect_string_db($myChrono) . "' where res_id = " . $res_id);
+            $db->query("UPDATE " . $table_ext ." SET alt_identifier = ? WHERE res_id = ? ",
+                array($myChrono, $res_id));
         }
     }
     } elseif ($cat_id == 'incoming' || $cat_id == 'internal' ) {
-        $queryChrono = "select alt_identifier from " . $table_ext 
-            . " where res_id = " . $res_id;
-        $db->query($queryChrono);
-        $resultChrono = $db->fetch_object();
+        $queryChrono = "SELECT alt_identifier FROM " . $table_ext 
+            . " WHERE res_id = ?";
+        $stmt = $db->query($queryChrono, array($res_id));
+        $resultChrono = $stmt->fetchObject();
         if ($resultChrono->alt_identifier == '' OR $resultChrono->alt_identifier == NULL) {
             require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
                 . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
@@ -1876,8 +1887,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             );
             $myChrono = $chronoX->generate_chrono($cat_id, $myVars, $myForm);
             if ($myChrono <> '') {
-                $db->query("update " . $table_ext ." set alt_identifier = '" 
-                    . $db->protect_string_db($myChrono) . "' where res_id = " . $res_id);
+                $db->query("UPDATE " . $table_ext ." SET alt_identifier = ? where res_id = ?", array($myChrono, $res_id));
             }
         }
     }
