@@ -42,18 +42,17 @@ class attachments_controler
     //add datas to have the subject
     public function storeAttachmentResource($resId, $collId, $encodedContent, $fileFormat, $title)
     {
+        require_once 'core/class/class_db_pdo.php';
         require_once 'core/class/class_request.php';
         require_once 'core/class/class_resource.php';
         require_once 'core/class/docservers_controler.php';
         require_once 'core/class/class_security.php';
         $sec = new security();
         $table = $sec->retrieve_table_from_coll($collId);
-        $db = new request();
-        $db->connect();
-        $query = 'select res_id from ' . $table . ' where res_id = '
-               . $resId;
-        $db->query($query);
-        if ($db->nb_result() == 0) {
+        $db = new Database();
+        $query = 'select res_id from ' . $table . ' where res_id = ?';
+        $stmt = $db->query($query,array($resId));
+        if ($stmt->rowCount() == 0) {
             $returnCode = -2;
             $error .= 'res_id inexistant';
         } else {
