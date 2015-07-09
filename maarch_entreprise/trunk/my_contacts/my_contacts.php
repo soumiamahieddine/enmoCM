@@ -100,6 +100,7 @@ $contact    = new contacts_v2();
     //From search
     if (!empty($_SESSION['searching']['where_request']) && $_REQUEST['mode'] == 'search') {
         $where_tab[] = $_SESSION['searching']['where_request'] . ' (1=1)';
+        $arrayPDO = array_merge($arrayPDO, $_SESSION['searching']['where_request_parameters']);
     }
 
     if ($_REQUEST['mode'] <> 'search') {
