@@ -62,7 +62,7 @@ if($mode == "list"){
             ?>
             <div class="block">
             <form id="adminform" method="post" class="forms" style="width:400px;" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&page=lc_policies_management_controler&module=life_cycle&mode=".$mode;?>">
-                <input type="hidden" name="display" value="value" />
+                <input type="hidden" name="display" value="true" />
                 <input type="hidden" name="module" value="life_cycle" />
                 <input type="hidden" name="page" value="lc_policies_management_controler" />
                 <input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />

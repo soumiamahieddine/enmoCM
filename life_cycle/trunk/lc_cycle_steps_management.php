@@ -56,7 +56,7 @@ if ($mode == "list") {
                 ."index.php?display=true&page="
                 ."lc_cycle_steps_management_controler&module=life_cycle&mode="
                 .$mode;?>">
-                <input type="hidden" name="display" value="value" />
+                <input type="hidden" name="display" value="true" />
                 <input type="hidden" name="module" value="life_cycle" />
                 <input type="hidden" name="page" value="
                 lc_cycle_steps_management_controler" />
