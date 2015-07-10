@@ -162,7 +162,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $query = 'select uc.group_id, uc.primary_group, uc.role from '
                . USERGROUP_CONTENT_TABLE . ' uc, ' . USERGROUPS_TABLE
                . " u where uc.user_id = '"
-               . $func->protect_string_db($userId)
+               . $userId
                . "' and u.enabled = 'Y' and uc.group_id = u.group_id ";
         try{
             self::$db->query($query);
@@ -369,14 +369,10 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             $error .= _USER_ID . ' '._WRONG_FORMAT . '#';
         }
 
-        $user->user_id = $f->protect_string_db(
-            $f->wash($user->user_id, 'no', _THE_ID, 'yes', 0, 128)
-        );
+        $user->user_id = $f->wash($user->user_id, 'no', _THE_ID, 'yes', 0, 128);
 
         if ($mode == 'add') {
-            $user->password = $f->protect_string_db(
-                md5($params['userdefaultpassword'])
-            );
+            $user->password = md5($params['userdefaultpassword']);
 
             if($_SESSION['config']['ldap'] == "true"){
                 $user->change_password = "N";
@@ -392,34 +388,22 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             }
         }
 
-        $user->firstname = $f->protect_string_db(
-            $f->wash($user->firstname, 'no', _THE_FIRSTNAME, 'yes', 0, 255)
-        );
-        $user->lastname = $f->protect_string_db(
-            $f->wash($user->lastname, 'no', _THE_LASTNAME, 'yes', 0, 255)
-        );
+        $user->firstname = $f->wash($user->firstname, 'no', _THE_FIRSTNAME, 'yes', 0, 255);
+        $user->lastname = $f->wash($user->lastname, 'no', _THE_LASTNAME, 'yes', 0, 255);
 
         if (isset($user->department) && ! empty($user->department)) {
-            $user->department = $f->protect_string_db(
-                $f->wash($user->department, 'no', _DEPARTMENT, 'yes', 0, 50)
-            );
+            $user->department = $f->wash($user->department, 'no', _DEPARTMENT, 'yes', 0, 50);
         }
 
         if (isset($user->phone) && ! empty($user->phone)) {
-            $user->phone = $f->protect_string_db(
-                $f->wash($user->phone, 'no', _PHONE, 'yes', 0, 32)
-            );
+            $user->phone = $f->wash($user->phone, 'no', _PHONE, 'yes', 0, 32);
         }
 
         if (isset($user->loginmode) && ! empty($user->loginmode)) {
-            $user->loginmode  = $f->protect_string_db(
-                $f->wash($user->loginmode, 'no', _LOGIN_MODE, 'yes', 0, 50)
-            );
+            $user->loginmode  = $f->wash($user->loginmode, 'no', _LOGIN_MODE, 'yes', 0, 50);
         }
 
-        $user->mail = $f->protect_string_db(
-            $f->wash($user->mail, 'mail', _MAIL, 'yes', 0, 255)
-        );
+        $user->mail = $f->wash($user->mail, 'mail', _MAIL, 'yes', 0, 255);
 
         if ($user->user_id <> 'superadmin' && (! isset($params['manageGroups']) 
             || $params['manageGroups'] == true)
@@ -518,8 +502,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::$db->connect();
         $func = new functions();
         $query = 'update ' . USERS_TABLE . " set status = 'DEL' where user_id='"
-               . $func->protect_string_db($user->user_id) . "'";
-        // Logic deletion only , status becomes DEL to keep the user data
+               . $user->user_id . "'";
 
         try{
             self::$db->query($query);
@@ -584,7 +567,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::$db->connect();
         $func = new functions();
         $query = 'delete from ' . USERGROUP_CONTENT_TABLE . " where user_id='"
-               . $func->protect_string_db($userId) . "'";
+               . $userId . "'";
         try{
             self::$db->query($query);
             $control = array(
@@ -625,7 +608,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::$db->connect();
         $func = new functions();
         $query = "delete from users_entities where user_id='"
-               . $func->protect_string_db($userId) . "'";
+               . $userId . "'";
         try{
             self::$db->query($query);
             $control = array(
@@ -658,7 +641,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::$db->connect();
         $func = new functions();
         $query = 'select user_id from ' . USERS_TABLE . " where user_id = '"
-               . $func->protect_string_db($userId) . "' and status<>'DEL'";
+               . $userId . "' and status<>'DEL'";
 
         try{
             self::$db->query($query);
@@ -794,10 +777,10 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             if ($ok) {
                 $query = 'insert INTO ' . USERGROUP_CONTENT_TABLE
                        . " (user_id, group_id, primary_group, role) VALUES ('"
-                       . $func->protect_string_db($userId) . "', '"
-                       . $func->protect_string_db($array[$i]['GROUP_ID'])
-                       . "', '". $func->protect_string_db($array[$i]['PRIMARY'])
-                       . "', '" . $func->protect_string_db($array[$i]['ROLE'])
+                       . $userId . "', '"
+                       . $array[$i]['GROUP_ID']
+                       . "', '". $array[$i]['PRIMARY']
+                       . "', '" . $array[$i]['ROLE']
                        . "')";
                 try{
                     self::$db->query($query);
@@ -829,7 +812,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::$db->connect();
         $func = new functions();
         $query = 'update ' . USERS_TABLE. " set password = '" 
-            . $func->protect_string_db($newPassword) 
+            . $newPassword
             . "', change_password = 'Y' where user_id = '".$userId."'";
         return self::$db->query($query, true);
     }
@@ -851,7 +834,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::$db->connect();
         $func = new functions();
         $query = 'select user_id from ' . USERS_TABLE . " where lower(user_id) = lower('"
-               . $func->protect_string_db($userId) . "') and status = 'DEL'";
+               . $userId . "') and status = 'DEL'";
 
         try{
             self::$db->query($query);
@@ -905,7 +888,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $func = new functions();
 
         $queryUser = "SELECT user_id FROM users WHERE mail = "
-            . "'" . $func->protect_string_db($userMail) . "' and status = 'OK'";
+            . "'" . $userMail . "' and status = 'OK'";
         self::$db->query($queryUser);
         $userIdFound = self::$db->fetch_object();
         $UserEntities = array();
@@ -950,7 +933,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $func = new functions();
         $query = "SELECT ue.entity_id, ue.user_role, ue.primary_entity 
                     FROM users_entities ue, entities e 
-                    WHERE ue.user_id = '" . $func->protect_string_db($userId) . "' and e.enabled = 'Y' and e.entity_id = ue.entity_id
+                    WHERE ue.user_id = '" . $userId . "' and e.enabled = 'Y' and e.entity_id = ue.entity_id
                     ORDER BY primary_entity desc";
                     // set primary entity to the first row
         try{
