@@ -55,7 +55,7 @@ try {
 class ActionControler
 {
 	/**
-	* Dbquery object used to connnect to the database
+	* Database object used to connnect to the database
     */
 	private static $db;
 

@@ -638,14 +638,14 @@ class SecurityControler
                 ) {
                     $query = "select res_id from "
                            . $_SESSION['collections'][$ind]['view'] . " where ("
-                           . $where . ') and res_id = ' . $objectId;
+                           . $where . ') and res_id = ?';
                 }
                 $db = new Database();
                 
                 if (! empty($query)) {
-                    $db->query($query);
+                    $stmt = $db->query($query, array($objectId));
                 }
-                if ($db->nb_result() > 0) {
+                if ($stmt->rowCount() > 0) {
                     if ($bitmask > 0) {
                         $fullBitmask = set_right($fullBitmask, $bitmask);
                     }
@@ -664,11 +664,11 @@ class SecurityControler
         $sessionSecurity = new session_security();
         $sessionSecurity->setArray(
             array(
-                'user_id' => $func->protect_string_db($userId),
+                'user_id' => $userId,
                 'session_begin_date' => date("Y-m-d H:i"),
-                'full_where_clause' => $func->protect_string_db($fullWhere),
+                'full_where_clause' => $fullWhere,
                 'last_available_bitmask' => $fullBitmask,
-                'last_object_id' => $func->protect_string_db($objectId)
+                'last_object_id' => $objectId
             )
         ); // TO DO : calculate the session_end_date
         $ctrl = new session_security_controler();

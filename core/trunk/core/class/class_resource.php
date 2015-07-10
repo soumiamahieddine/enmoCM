@@ -167,9 +167,17 @@
             }
             else
             {
-                $this->connect();
-                $this->query("select res_id from ".$table_res." where docserver_id = '".$docserver_id."' and path = '".$path."' and filename= '".$filename."'  order by res_id desc ");
-                $res = $this->fetch_object();
+                $db2 = new Database();
+                $stmt = $db2->query(
+                    "select res_id from " . $table_res 
+                        . " where docserver_id = ? and path = ? and filename= ?  order by res_id desc ",
+                    array(
+                        $docserver_id,
+                        $path,
+                        $filename
+                    )
+                );
+                $res = $stmt->fetchObject();
                 return $res->res_id;
             }
         }
@@ -191,14 +199,14 @@
     */
     public function get_filename($id,$coll_id)
     {
-        require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+        require_once("core/class/class_security.php");
         $sec = new security();
         $resource_table = $sec->retrieve_table_from_coll($coll_id);
         if ($resource_table == '')
             echo "error with coll_id";
-        $this->connect();
-        $this->query("select filename from ".$resource_table." where res_id='".$id."'");
-        $result = $this->fetch_object();
+        $db = new Database();
+        $stmt = $db->query("select filename from ".$resource_table." where res_id=?", array($id));
+        $result = $stmt->fetchObject();
         return $result->filename;
     }
 
@@ -209,14 +217,14 @@
     */
     public function get_path($id,$coll_id)
     {
-        require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+        require_once("core/class/class_security.php");
         $sec = new security();
         $resource_table = $sec->retrieve_table_from_coll($coll_id);
         if ($resource_table == '')
             echo "error with coll_id";
-        $this->connect();
-        $this->query("select path from ".$resource_table." where res_id='".$id."'");
-        $result = $this->fetch_object();
+        $db = new Database();
+        $stmt = $db->query("select path from ".$resource_table." where res_id=?", array($id));
+        $result = $stmt->fetchObject();
         return str_replace('#', DIRECTORY_SEPARATOR, $result->path);
     }
 
@@ -239,7 +247,7 @@
     private function check_basic_fields($data)
     {
         $error = '';
-        $this->connect();
+        $db = new Database();
         $find_format = false;
         $find_typist = false;
         $find_creation_date = false;
@@ -261,17 +269,11 @@
             elseif($data[$i]['column'] == 'typist' )
             {
                 $find_typist = true;
-/*
-                if( $data[$i]['value'] <> $_SESSION['user']['UserId'])
-                {
-                    $error .= _TYPIST_ERROR.'<br/>';
-                }
-*/
             }
             elseif($data[$i]['column'] == 'creation_date')
             {
                 $find_creation_date = true;
-                if($data[$i]['value'] <> $this->current_datetime())
+                if($data[$i]['value'] <> $db->current_datetime())
                 {
                     $error .= _CREATION_DATE_ERROR.'<br/>';
                 }
@@ -279,7 +281,7 @@
             elseif($data[$i]['column'] == 'docserver_id')
             {
                 $find_docserver_id =  true;
-                if(!$this->query("select docserver_id from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$data[$i]['value']."'", true))
+                if(!$this->query("select docserver_id from ".$_SESSION['tablename']['docservers']." where docserver_id = ?", array($data[$i]['value'])))
                 {
                     $error .= _DOCSERVER_ID_ERROR.'<br/>';
                 }
@@ -405,21 +407,22 @@
             return $control;
         }
         $docserverAdr = array();
-        $this->connect();
-        $query = "select res_id, docserver_id, path, filename, format, fingerprint, offset_doc, is_multi_docservers from " . $view . " where res_id = " . $resId . " ". $whereClause;
-        $this->query($query);
-        if ($this->nb_result() > 0) {
-            $line = $this->fetch_object();
+        $db = new Database();
+        $query = "select res_id, docserver_id, path, filename, format, fingerprint, offset_doc, is_multi_docservers from " . $view 
+            . " where res_id = ? ". $whereClause;
+        $stmt = $db->query($query, array($resId));
+        if ($stmt->rowCount() > 0) {
+            $line = $stmt->fetchObject();
             $format = $line->format;
             if($line->is_multi_docservers == "Y") {
-                $query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from " . $adrTable . " where res_id = " . $resId . " order by adr_priority";
-                $this->query($query);
-                if ($this->nb_result() > 0) {
-                    while($line = $this->fetch_object()) {
+                $query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from " 
+                    . $adrTable . " where res_id = ? order by adr_priority";
+                $stmt = $db->query($query, array($resId));
+                if ($stmt->rowCount() > 0) {
+                    while($line = $stmt->fetchObject()) {
                         array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => $line->adr_priority));
                     }
                 } else {
-                    $this->disconnect();
                     $control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
                     return $control;
                 }
@@ -427,13 +430,10 @@
                 array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => ""));
             }
             $control = array("status" => "ok", $docserverAdr, "error" => "");
-            $this->disconnect();
             return $control;
         } else {
-            $this->disconnect();
             $control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
             return $control;
         }
     }
 }
-?>

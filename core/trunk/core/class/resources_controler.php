@@ -568,7 +568,6 @@ class resources_controler
         $listResult = array();
         try {
             $db = new Database();
-            $db->connect();
             $cpt = 0;
             $stmt = $db->query("select * from res_x where " . $whereClause . " ORDER BY res_id ASC");
             if ($stmt->rowCount() > 0) {

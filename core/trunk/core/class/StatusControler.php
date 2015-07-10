@@ -388,28 +388,23 @@ class Maarch_Core_Class_StatusControler
     * @return array of stauts
     */
     public function getAllInfos() {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select * from " . STATUS_TABLE . " order by label_status";
         try {
-            if ($_ENV['DEBUG'])
-                functions::xecho($query) . ' // ';
-            $db->query($query);
+            $stmt = $db->query($query);
         } catch (Exception $e) {
             echo _NO_STATUS . ' // ';
         }
-        if ($db->nb_result() > 0) {
+        if ($stmt->rowCount() > 0) {
             $result = array ();
             $cptId = 0;
-            while ($queryResult = $db->fetch_object()) {
+            while ($queryResult = $stmt->fetchObject()) {
                 $result[$cptId]['id'] = $queryResult->id;
                 $result[$cptId]['label'] = $queryResult->label_status;
                 $cptId++;
             }
-            $db->disconnect();
             return $result;
         } else {
-            $db->disconnect();
             return null;
         }
     }

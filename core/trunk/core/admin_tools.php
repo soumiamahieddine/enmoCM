@@ -77,10 +77,10 @@ function At_putInSession($type, $hashable)
  * @param object $db database request object
  * @param string $whatRequest request string
  */
-function At_showAjaxList($db, $whatRequest)
+function At_showAjaxList($stmt, $whatRequest)
 {
     $listArray = array();
-    while ($line = $db->fetch_object()) {
+    while ($line = $stmt->fetchObject()) {
         array_push($listArray, $line->tag);
     }
     echo "<ul>\n";
