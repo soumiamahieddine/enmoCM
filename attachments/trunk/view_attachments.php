@@ -21,12 +21,11 @@ array_push(
     "format"
 );
 
-$where = " res_id_master = " . $_SESSION['doc_id'] . " and coll_id ='"
-       . $_SESSION['collection_id_choice'] . "' and status <> 'DEL' ";
+$where = " res_id_master = ? and coll_id = ? and status <> 'DEL' ";
 $request = new request;
-$attachArr = $request->select(
-    $select, $where, "", $_SESSION['config']['databasetype'], "500"
-);
+$arrayPDO = array($_SESSION['doc_id'],$_SESSION['collection_id_choice']);
+$attachArr = $request->PDOselect(
+    $select, $where, $arrayPDO, "", $_SESSION['config']['databasetype'], "500");
 //$request->show();
 $indAtt1d = '';
 for ($indAtt1 = 0; $indAtt1 < count($attachArr); $indAtt1 ++) {
