@@ -153,7 +153,7 @@ if (!$return) {
 
     $request = new request;
     $tab = $request->PDOselect(
-        $select, $where, $orderstr, $arrayPDO, $_SESSION['config']['databasetype']
+        $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
     );
     // $request->show();
 
