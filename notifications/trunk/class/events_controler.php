@@ -35,6 +35,7 @@ try {
     require_once 'modules/notifications/class/events.php';
     require_once 'modules/notifications/notifications_tables_definition.php';
     require_once 'core/class/ObjectControlerAbstract.php';
+    require_once 'core/class/class_db_pdo.php';
 } catch (Exception $e) {
     echo $e->getMessage() . ' // ';
 }
@@ -74,14 +75,13 @@ class events_controler
         $query = "SELECT * "
             ."FROM " . _NOTIFICATIONS_TABLE_NAME 
             ." WHERE is_enabled = 'Y'";
-        $dbConn = new dbquery();
-        $dbConn->connect();
-        $dbConn->query($query);
-        if($dbConn->nb_result() === 0) {
+        $dbConn = new Database();
+        $stmt = $dbConn->query($query);
+        if($stmt->rowCount() === 0) {
             return;
         }
         
-        while($notification = $dbConn->fetch_object()) {
+        while($notification = $stmt->fetchObject()) {
             $event_ids = explode(',' , $notification->event_id);
             if($event_id == $notification->event_id
                 || $this->wildcard_match($notification->event_id, $event_id)
@@ -101,22 +101,23 @@ class events_controler
                         ."event_info, "
                         ."event_date"
                     .") "
-                ."VALUES("
-                    .$notification->notification_sid.", "
-                    ."'".$table_name."', "
-                    ."'".$record_id."', "
-                    ."'".$user."', "
-                    ."'".$info."', "
+                ."VALUES(?, "
+                    ."?, "
+                    ."?, "
+                    ."?, "
+                    ."?, "
                     .$dbConn->current_datetime()
                 .")",
-                false,
-                true
+                array(
+                    $notification->notification_sid,
+                    $table_name,
+                    $record_id,
+                    $user,
+                    $info
+                )
             );
-
         }
-
     }
-    
     
     public function commitEvent($eventId, $result) {
         $dbConn = new dbquery();
