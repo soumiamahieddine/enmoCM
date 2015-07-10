@@ -112,10 +112,14 @@ if (isset($_REQUEST['load'])) {
 		//Filtre alphabetique et champ de recherche
 		$what = $list->getWhatSearch();
 		if (!empty($what)) {
-			$where_tab[] = "(lower(fileplan_label) like lower('"
-							.$request->protect_string_db($what)
-							."%'))";
+			$where_tab[] = "(lower(fileplan_label) like lower(?))";
+			//array
+			$array_what = array();
+			$array_what[] = $what.'%';
 		}
+
+
+
 		//Build where
 		$where = implode(' and ', $where_tab);
 		// if (!empty($where)) $where = ' where '.$where;
@@ -143,9 +147,8 @@ if (isset($_REQUEST['load'])) {
 		if (!empty($start)) $parameters .= '&start='.$start;
 			
 	//Request
-		$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+		$tab=$request->PDOselect($select,$where,$array_what,$orderstr,$_SESSION['config']['databasetype']);
 		
-		// $request->show();
 	//Result array    
 		for ($i=0;$i<count($tab);$i++)
 		{
