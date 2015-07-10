@@ -104,7 +104,7 @@ if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) 
     $where .= " contact_id = ? ";
     $arrayPDO = array($_REQUEST['selectedObject']);
 } elseif(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
-    $what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
+    $what = $func->wash($_REQUEST['what'], "alphanum", "", "no");
 
     $what = str_replace("  ", "", $_REQUEST['what']);
     $what_table = explode(" ", $what);

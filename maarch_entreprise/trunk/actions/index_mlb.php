@@ -1550,7 +1550,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     $_SESSION['data'],
                     array(
                         'column' => $tmpId,
-                        'value' => functions::protect_string_db($formValues[$i]['VALUE']),
+                        'value' => $formValues[$i]['VALUE'],
                         'type' => 'string'
                     )
                 );
@@ -1654,10 +1654,8 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     $_SESSION['data'],
                     array(
                         'column' => 'dest_user',
-                        'value' => functions::protect_string_db(
-                            $_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id']
-                         ),
-                         'type' => 'string'
+                        'value' => $_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id'],
+                        'type' => 'string'
                     )
                 );
             }

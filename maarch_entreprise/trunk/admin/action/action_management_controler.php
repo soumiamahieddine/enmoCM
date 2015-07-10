@@ -203,8 +203,7 @@ if (isset($_REQUEST['action_submit'])) {
             $hist = new history();
             $hist->add($_SESSION['tablename']['actions'], 
                 $_SESSION['m_admin']['action']['ID'], 'UP', 'actionup', _ACTION_MODIFIED 
-                    . ' : ' . functions::protect_string_db(
-                        $_SESSION['m_admin']['action']['ID']), 
+                    . ' : ' . $_SESSION['m_admin']['action']['ID'], 
                     $_SESSION['config']['databasetype']
                 );
         }
