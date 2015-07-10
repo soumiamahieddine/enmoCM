@@ -465,21 +465,11 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         $error = "";
         $func = new functions();
 
-        $group->group_id = $func->protect_string_db(
-            $func->wash($group->group_id, 'no', _THE_GROUP, 'yes', 0, 32)
-        );
+        $group->group_id = $func->wash($group->group_id, 'no', _THE_GROUP, 'yes', 0, 32);
 
         if (isset($group->group_desc) && !empty($group->group_desc)) {
-            $group->group_desc  =  $func->protect_string_db(
-                $func->wash($group->group_desc, 'no', _GROUP_DESC, 'yes', 0, 255)
-            );
+            $group->group_desc  = $func->wash($group->group_desc, 'no', _GROUP_DESC, 'yes', 0, 255);
         }
-
-        /*if (count($security) < 1  && count($services) < 1) {
-            $func->add_error(
-                _THE_GROUP . ' ' . _NO_SECURITY_AND_NO_SERVICES, ''
-            );
-        }*/
 
         if ($mode == "add" && $this->groupExists($group->group_id)) {
             $func->add_error(

@@ -227,9 +227,7 @@ class Maarch_Core_Class_StatusControler
     {
         $error = "";
         $f = new functions();
-        $status->id = $f->protect_string_db(
-            $f->wash($status->id, 'no', _THE_ID . ' ', 'yes', 0, 10)
-        );
+        $status->id = $f->wash($status->id, 'no', _THE_ID . ' ', 'yes', 0, 10);
 
         if ($mode == 'add') {
             if (self::statusExists($status->id)) {
@@ -237,12 +235,10 @@ class Maarch_Core_Class_StatusControler
             }
         }
 
-        $status->label_status = $f->protect_string_db(
-            $f->wash($status->label_status, 'no', _DESC, 'yes', 0, 50)
-        );
-        $status->is_system = $f->protect_string_db(
-            $f->wash($status->is_system, 'no', _IS_SYSTEM)
-        );
+        $status->label_status =  $f->wash($status->label_status, 'no', _DESC, 'yes', 0, 50);
+
+        $status->is_system =  $f->wash($status->is_system, 'no', _IS_SYSTEM);
+        
         $status->img_filename = $status->img_filename;
         $status->maarch_module = 'apps';
 
