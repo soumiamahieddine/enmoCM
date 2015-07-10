@@ -84,20 +84,19 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     public function getAllUsergroups($orderStr='order by group_desc asc',
         $enabledOnly=true)
     {
-        $db = new dbquery();
-        $db->connect();
-        $query = 'select * from ' . USERGROUPS_TABLE .' ';
+        $db = new Database();
+        $query = 'select * from ' . USERGROUPS_TABLE . ' ';
         if ($enabledOnly) {
             $query .= "where enabled = 'Y'";
         }
         $query .= $orderStr;
 
-        try{
-            $db->query($query);
+        try {
+            $stmt = $db->query($query);
         } catch (Exception $e){}
 
         $groups = array();
-        while ($res = $db->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             $group = new usergroups();
             $tmpArray = array(
                 'group_id'   => $res->group_id,
@@ -107,7 +106,6 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             $group->setArray($tmpArray);
             array_push($groups, $group);
         }
-        $db->disconnect();
         return $groups;
     }
 
@@ -123,20 +121,17 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             return null;
         }
         $users = array();
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = 'select user_id from ' . USERGROUP_CONTENT_TABLE
-               . " where group_id = '" . $groupId . "'";
-        try{
-            $db->query($query);
-        } catch (Exception $e){
+               . " where group_id = ?";
+        try {
+            $stmt = $db->query($query, array($groupId));
+        } catch (Exception $e) {
             echo _NO_GROUP_WITH_ID . ' ' . functions::xssafe($groupId) . ' // ';
         }
-
-        while ($res = $db->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push($users, $res->user_id);
         }
-        $db->disconnect();
         return $users;
     }
 
@@ -152,24 +147,20 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             return null;
         }
         $users = array();
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = 'select group_id from ' . USERGROUP_CONTENT_TABLE
-               . " where user_id = '" . $userId . "' and primary_group = 'Y'";
-
+               . " where user_id = ? and primary_group = 'Y'";
         try {
-            $db->query($query);
+            $stmt = $db->query($query, array($userId));
         } catch (Exception $e){
             echo _NO_USER_WITH_ID.' '.functions::xssafe($userId).' // ';
         }
-
-        $res = $db->fetch_object();
+        $res = $stmt->fetchObject();
         if (isset($res->group_id)) {
             $groupId = $res->group_id;
         } else {
             return null;
         }
-        $db->disconnect();
         return $groupId;
     }
 
@@ -186,20 +177,17 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             return null;
         }
         $baskets = array();
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = 'select basket_id from ' . GROUPBASKET_TABLE
-               . " where group_id = '" . $groupId . "'";
-        try{
-            $db->query($query);
-        } catch (Exception $e){
+               . " where group_id = ?";
+        try {
+            $stmt = $db->query($query, array($groupId));
+        } catch (Exception $e) {
             echo _NO_GROUP_WITH_ID.' '.functions::xssafe($groupId).' // ';
         }
-
-        while ($res = $db->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push($baskets, $res->basket_id);
         }
-        $db->disconnect();
         return $baskets;
     }
 
@@ -215,21 +203,19 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         if (empty($groupId)) {
             return null;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = 'select service_id from ' . USERGROUPS_SERVICES_TABLE
-               . " where group_id = '" . $groupId . "'";
+               . " where group_id = ?";
         try {
-            $db->query($query);
+            $stmt = $db->query($query, array($groupId));
         } catch (Exception $e){
             echo _NO_GROUP_WITH_ID . ' ' . functions::xssafe($groupId) . ' // ';
         }
 
         $services = array();
-        while ($queryResult = $db->fetch_object()) {
+        while ($queryResult = $stmt->fetchObject()) {
             array_push($services, trim($queryResult->service_id));
         }
-        $db->disconnect();
         return $services;
     }
 
@@ -627,12 +613,10 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         if (!isset($groupId)|| empty($groupId)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
-        $query = 'delete from ' . USERGROUP_CONTENT_TABLE . " where group_id='"
-               . $groupId . "'";
+        $db = new Database();
+        $query = 'delete from ' . USERGROUP_CONTENT_TABLE . " where group_id=?";
         try {
-            $db->query($query);
+            $stmt = $db->query($query, array($groupId));
             $ok = true;
         } catch (Exception $e){
             echo _CANNOT_DELETE_GROUP_ID . ' ' . functions::xssafe($groupId) . ' // ';
@@ -748,22 +732,19 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             return false;
         }
 
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = 'select group_id from ' . USERGROUPS_TABLE
-               . " where group_id = '" . $groupId . "'";
+               . " where group_id = ?";
 
         try {
-            $db->query($query);
+            $stmt = $db->query($query, array($groupId));
         } catch (Exception $e) {
             echo _UNKNOWN . _GROUP . ' ' . functions::xssafe($groupId) . ' // ';
         }
 
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        $db->disconnect();
         return false;
     }
 
@@ -779,18 +760,16 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         if (!isset($groupId)|| empty($groupId)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = 'delete from ' . USERGROUPS_SERVICES_TABLE
-               . " where group_id='" . $groupId . "'";
+               . " where group_id=?";
         try {
-            $db->query($query);
+            $stmt = $db->query($query, array($groupId));
             $ok = true;
         } catch (Exception $e) {
             echo _CANNOT_DELETE_GROUP_ID . ' ' . functions::xssafe($groupId) . ' // ';
             $ok = false;
         }
-        $db->disconnect();
         return $ok;
     }
 
@@ -809,20 +788,17 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         ) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = 'insert into ' . USERGROUPS_SERVICES_TABLE
-               . " (group_id, service_id) values ('" . $groupId . "', '"
-               . $serviceId . "')";
+               . " (group_id, service_id) values (?, ?)";
         try {
-            $db->query($query);
+            $stmt = $db->query($query, array($groupId, $serviceId));
             $ok = true;
         } catch (Exception $e) {
             echo _CANNOT_INSERT . ' ' . functions::xssafe($groupId) 
                 . ' ' . functions::xssafe($serviceId) . ' // ';
             $ok = false;
         }
-        $db->disconnect();
         return $ok;
     }
 
@@ -840,21 +816,17 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         ) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = 'select user_id from ' . USERGROUP_CONTENT_TABLE
-               . " where user_id ='" . $userId . "' and group_id = '"
-               . $groupId . "'";
+               . " where user_id = ? and group_id = ?";
 
         try {
-            $db->query($query);
+            $stmt = $db->query($query, array($userId, $groupId));
         } catch (Exception $e) {
             echo _CANNOT_FIND . ' ' . functions::xssafe($groupId) 
                 . ' ' . functions::xssafe($userId) . ' // ';
         }
-        $db->disconnect();
-
-        if ($db->nb_result() > 0) {
+        if ($stmt->rowCount() > 0) {
             return true;
         } else {
             return false;
@@ -872,22 +844,17 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     public function getUsergroupsCount($enabledOnly=true)
     {
         $nb = 0;
-        $db = new dbquery();
-        $db->connect();
-
+        $db = new Database();
         $query = 'select group_id from ' . USERGROUPS_TABLE . ' ' ;
         if ($enabledOnly) {
             $query .= "where enabled ='Y'";
         }
-
         try {
-            $db->query($query);
+            $stmt = $db->query($query);
         } catch (Exception $e) {
 
         }
-
-        $nb = $db->nb_result();
-        $db->disconnect();
+        $nb = $stmt->rowCount();
         return $nb;
     }
 

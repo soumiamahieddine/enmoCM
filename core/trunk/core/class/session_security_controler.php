@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008-2010 Maarch
+*    Copyright 2008-2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -139,25 +139,20 @@ class session_security_controler extends ObjectControler implements ObjectContro
 		if(!isset($user_id) || empty($user_id))
 			return false;
 
-		$this->$db=new dbquery();
-		$this->$db->connect();
-		$query = "select user_id from ".SESSION_SECURITY_TABLE." where user_id = '".functions::protect_string_db($user_id)."'";
+		$db = new Database();
+		$query = "select user_id from ".SESSION_SECURITY_TABLE." where user_id = ?";
 
-		try{
-			if($_ENV['DEBUG']){functions::xecho($query) . ' // ';}
-			$this->$db->query($query);
+		try {
+			$stmt = $db->query($query, array($user_id));
 		} catch (Exception $e){
 			echo _UNKNOWN.' '._USER." ".functions::xssafe($user_id).' // ';
 		}
 
-		if($this->$db->nb_result() > 0)
+		if($stmt->rowCount() > 0)
 		{
-			$this->$db->disconnect();
 			return true;
 		}
-		$this->$db->disconnect();
 		return false;
 	}
 
 }
-?>

@@ -146,21 +146,20 @@ class MyRestServer extends webService
     function getUuid()
     {
         $func = new functions();
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $uuid = '';
         $reqUuid = "select param_value_string from parameters "
         . "where id = 'cmis_uuid'";
-        $db->query($reqUuid);
-        while ($reqResult = $db->fetch_object()) {
+        $stmt = $db->query($reqUuid);
+        while ($reqResult = $stmt->fetchObject()) {
             $uuid = $reqResult->param_value_string;
         }
         if (empty($uuid)) {
             $uuid = $func->gen_uuid();
             $reqInsertUuid = 
                 "insert into parameters (id, param_value_string) values "
-                . "('cmis_uuid', '" . $uuid . "')";
-            $db->query($reqInsertUuid);
+                . "('cmis_uuid', ?)";
+            $stmt = $db->query($reqInsertUuid, array($uuid));
         }
         return $uuid;
     }

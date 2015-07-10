@@ -262,7 +262,7 @@ class resources_controler
         $userPrimaryEntity = false;
         $destinationFound = false;
         $initiatorFound = false;
-        $dbQuery = new Database();
+        $db = new Database();
         for ($i=0;$i<count($data);$i++) {
             if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
                 if ($data[$i]['value'] == '') {
@@ -285,19 +285,19 @@ class resources_controler
             }
             if (strtoupper($data[$i]['column']) == strtoupper('custom_t10')) {
                 require_once 'core/class/class_db_pdo.php';
-                $dbQuery = new Database();
+                $db = new Database();
                 $mail = array();
                 $theString = str_replace(">", "", $data[$i]['value']);
                 $mail = explode("<", $theString);
                 $queryUser = "SELECT user_id FROM users WHERE mail = ? and status = 'OK'";
-                $stmt = $dbQuery->query($queryUser, array($mail[count($mail) -1]));
+                $stmt = $db->query($queryUser, array($mail[count($mail) -1]));
                 $userIdFound = $stmt->fetchObject();
                 if (!empty($userIdFound->user_id)) {
                     $toAddressFound = true;
                     $destUser = $userIdFound->user_id;
 
 	                $queryUserEntity = "SELECT entity_id FROM users_entities WHERE primary_entity = 'Y' and user_id = ?";
-	                $stmt = $dbQuery->query($queryUserEntity, array($destUser));
+	                $stmt = $db->query($queryUserEntity, array($destUser));
 	                $userEntityId = $stmt->fetchObject();
 	                if (!empty($userEntityId->entity_id)) {
 	                	$userEntity = $userEntityId->entity_id;
@@ -567,12 +567,12 @@ class resources_controler
         }
         $listResult = array();
         try {
-            $db = new dbquery();
+            $db = new Database();
             $db->connect();
             $cpt = 0;
-            $db->query("select * from res_x where " . $whereClause . " ORDER BY res_id ASC");
-            if ($db->nb_result() > 0) {
-                while ($line = $db->fetch_object()) {
+            $stmt = $db->query("select * from res_x where " . $whereClause . " ORDER BY res_id ASC");
+            if ($stmt->rowCount() > 0) {
+                while ($line = $stmt->fetchObject()) {
                     $listResult[$cpt]['resid'] = $line->res_id;
                     $listResult[$cpt]['subject'] = $line->subject;
                     $listResult[$cpt]['docdate'] = $line->doc_date;

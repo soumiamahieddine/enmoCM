@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008-2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -28,7 +28,7 @@
 * @ingroup core
 */
 
-$db = new dbquery();
+$db = new Database();
 $core = new core_tools();
 $core->load_lang();
 $res_action = array();
@@ -66,18 +66,17 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
 {
 
     $id_action = $_POST['action_id'];
-    $db->connect();
     // Gets the action informations from the database
-    $db->query("select * from ".$_SESSION['tablename']['actions']." where id = ".$id_action);
+    $stmt = $db->query("select * from ".$_SESSION['tablename']['actions']." where id = ?", array($id_action));
 
-    if($db->nb_result() < 1)
+    if($stmt->rowCount() < 1)
     {
         $_SESSION['action_error'] = _ACTION_NOT_IN_DB;
         echo "{status : 5, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
         exit();
     }
 
-    $res = $db->fetch_object();
+    $res = $stmt->fetchObject();
     $label_action = $res->label_action;
     $status = $res->id_status;
     $action_page = $res->action_page;
@@ -139,28 +138,24 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
 }
 elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values']) && !empty($_POST['new_status']) && !empty($_POST['table']))
 {
-    $db->query("select id from status where id ='" . $_POST['new_status'] . "'");
-    $lineStatus = $db->fetch_object();
+    $stmt = $db->query("select id from status where id = ?", array($_POST['new_status']));
+    $lineStatus = $stmt->fetchObject();
     if ($lineStatus->id <> '') {
         $arr_id = explode(',', $_POST['values']);
         $result = '';
-        $db->connect();
         for ($i=0; $i<count($arr_id );$i++) {
             $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
             $result .= $arr_id[$i].'#';
             if (trim($_POST['new_status']) <> '') {
                 if ($_POST['table'] == 'folders') {
-                    $query_str = "update " . $_POST['table'] .  " set status = '" 
-                        . $_POST['new_status'] . "' where folders_system_id = " . $arr_id[$i];
-                } else if ($_POST['table'] == 'rm_ios') {
-                    $query_str = "update " . $_POST['table'] .  " set status = '" 
-                        . $_POST['new_status'] . "' where io_id = " . $arr_id[$i];
+                    $query_str = "update " . $_POST['table'] 
+                        .  " set status = ? where folders_system_id = ?";
                 } else {
-                    $query_str = "update " . $_POST['table'] .  " set status = '" 
-                        . $_POST['new_status'] . "' where res_id = " . $arr_id[$i];
+                    $query_str = "update " . $_POST['table'] 
+                        . " set status = ? where res_id = ?";
                 }
-                $req = $db->query($query_str, true);
-                if (!$req) {
+                $stmt = $db->query($query_str, array($_POST['new_status'], $arr_id[$i]));
+                if (!$stmt) {
                     $_SESSION['action_error'] = _SQL_ERROR.' : '.$query_str;
                     echo "{status : 1, error_txt : '".addslashes(_ERROR_WITH_STATUS." ".functions::xssafe($query_str))."'}";
                     exit();
@@ -183,25 +178,19 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
     $_SESSION['action_error'] = $tmp._AJAX_PARAM_ERROR;
     echo "{status : 1, error_txt : '".functions::xssafe($id_action).addslashes(functions::xssafe($_SESSION['action_error']))."'}";
     exit();
-}
-
-else
-{
+} else {
     // Puts the res_id into an array
     $arr_id = explode(',', $_POST['values']);
     $id_action = $_POST['action_id'];
-    $db->connect();
     // Gets the action informations from the database
-    $db->query("select * from ".$_SESSION['tablename']['actions']." where id = ".$id_action);
-
-    if($db->nb_result() < 1)
-    {
+    $stmt = $db->query("select * from ".$_SESSION['tablename']['actions']." where id = ?", array($id_action));
+    if ($stmt->rowCount() < 1) {
         $_SESSION['action_error'] = _ACTION_NOT_IN_DB;
         echo "{status : 5, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
         exit();
     }
 
-    $res = $db->fetch_object();
+    $res = $stmt->fetchObject();
     $label_action = $res->label_action;
     $status = $res->id_status;
     $action_page = $res->action_page;
@@ -225,8 +214,8 @@ else
             echo "{status : 6, error_txt : '".functions::xssafe(addslashes($_SESSION['action_error']))."'}";
             exit();
         }
-        $db->query("select id from status where id ='" . $status . "'");
-        $lineStatus = $db->fetch_object();
+        $stmt = $db->query("select id from status where id = ?", array($status));
+        $lineStatus = $stmt->fetchObject();
         if ($lineStatus->id <> '') {
             // Update the status
             $result = '';
@@ -235,19 +224,17 @@ else
                 $result .= $arr_id[$i].'#';
                 if (trim($status) <> '') {
                     if ($_POST['table'] == 'folders') {
-                        $query_str = "update " . $_POST['table'] .  " set status = '" 
-                        . $status . "' where folders_system_id = " . $arr_id[$i];
-                    } else if ($_POST['table'] == 'rm_ios') {
-                        $query_str = "update " . $_POST['table'] .  " set status = '" 
-                            . $status . "' where io_id = " . $arr_id[$i];
+                        $query_str = "update " . $_POST['table'] 
+                            .  " set status = ? where folders_system_id = ?";
                     } else {
-                        $query_str = "update " . $_POST['table'] .  " set status = '" 
-                            . $status . "' where res_id = " . $arr_id[$i];
+                        $query_str = "update " . $_POST['table'] 
+                            .  " set status = ? where res_id = ?";
                     }
-                    $req = $db->query($query_str, true);
-                    if (!$req) {
+                    $stmt = $db->query($query_str, array($status, $arr_id[$i]));
+                    if (!$stmt) {
                         $_SESSION['action_error'] = _SQL_ERROR . ' : ' . $query_str;
-                        echo "{status : 7, error_txt : '" . addslashes(functions::xssafe($label_action) . ' : ' . functions::xssafe($_SESSION['action_error'])) . "'}";
+                        echo "{status : 7, error_txt : '" . addslashes(functions::xssafe($label_action) 
+                            . ' : ' . functions::xssafe($_SESSION['action_error'])) . "'}";
                         exit();
                     }
                 }
@@ -255,9 +242,8 @@ else
         }
         $res_action = array('result' => $result, 'history_msg' => '');
         $_SESSION['action_error'] = _ACTION_DONE.' : '.$label_action;
-        echo "{status : 0, error_txt : '".addslashes($_SESSION['action_error']).", status : ".functions::xssafe($status).", ".functions::xssafe($_POST['values'])."', page_result : ''}";
-
-
+        echo "{status : 0, error_txt : '".addslashes($_SESSION['action_error']).", status : "
+            .functions::xssafe($status).", ".functions::xssafe($_POST['values'])."', page_result : ''}";
     }
     // There is a script for the action
     else
@@ -367,7 +353,7 @@ else
     // Save action in history if needed
     if($bool_history=='Y')
     {
-		$db = new dbquery();
+		$db = new Database();
         require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
         $hist = new history();
         $arr_res = explode('#', $res_action['result']);
@@ -377,10 +363,9 @@ else
             {
                 $what = '';
                 if (isset($_SESSION['current_basket']['id']) && !empty($_SESSION['current_basket']['id'])) {
-                    $db->connect();
-                    $db->query("SELECT basket_name FROM baskets WHERE basket_id = '".$_SESSION['current_basket']['id']."'");
-                    while($data = $db->fetch_assoc()) {
-                        $what = $data['basket_name'];
+                    $stmt = $db->query("SELECT basket_name FROM baskets WHERE basket_id = ?", array($_SESSION['current_basket']['id']));
+                    while($data = $stmt->fetchObject()) {
+                        $what = $data->basket_name;
                     }
                     $what .= ' : ';
                 }
@@ -402,4 +387,3 @@ else
 
     exit();
 }
-?>

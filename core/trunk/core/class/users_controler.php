@@ -115,20 +115,18 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     public function getAllUsers($orderStr='order by user_id asc',
         $enabledOnly=true)
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = 'select * from ' . USERS_TABLE .' ';
         if ($enabledOnly) {
             $query .= "where enabled = 'Y'";
         }
         $query .= $orderStr;
-
         try{
-            $db->query($query);
+            $stmt = $db->query($query);
         } catch (Exception $e){}
 
         $users = array();
-        while ($res = $db->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             $user = new users();
             $tmpArray = array(
                 'user_id'   => $res->user_id,
@@ -138,7 +136,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             $user->setArray($tmpArray);
             array_push($users, $user);
         }
-        $db->disconnect();
+        
         return $users;
     }
     
@@ -155,22 +153,17 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         if (empty($userId)) {
             return null;
         }
-
-        self::$db = new dbquery();
-        self::$db->connect();
+        self::$db = new Database();
         $func = new functions();
         $query = 'select uc.group_id, uc.primary_group, uc.role from '
                . USERGROUP_CONTENT_TABLE . ' uc, ' . USERGROUPS_TABLE
-               . " u where uc.user_id = '"
-               . $userId
-               . "' and u.enabled = 'Y' and uc.group_id = u.group_id ";
-        try{
-            self::$db->query($query);
+               . " u where uc.user_id = ? and u.enabled = 'Y' and uc.group_id = u.group_id ";
+        try {
+            $stmt = self::$db->query($query, array($userId));
         } catch (Exception $e){
             echo _NO_USER_WITH_ID.' '.functions::xssafe($userId).' // ';
         }
-
-        while ($res = self::$db->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push(
                 $groups, 
                 array(
@@ -181,7 +174,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 )
             );
         }
-        self::$db->disconnect();
+        
         return $groups;
     }
 
@@ -498,14 +491,13 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             return $control;
         }
 
-        self::$db = new dbquery();
-        self::$db->connect();
+        self::$db = new Database();
+        
         $func = new functions();
-        $query = 'update ' . USERS_TABLE . " set status = 'DEL' where user_id='"
-               . $user->user_id . "'";
+        $query = 'update ' . USERS_TABLE . " set status = 'DEL' where user_id=?";
 
         try{
-            self::$db->query($query);
+            $stmt = self::$db->query($query, array($user->user_id));
             $ok = true;
         } catch (Exception $e){
             $control = array(
@@ -515,8 +507,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             );
             $ok = false;
         }
-
-        self::$db->disconnect();
+        
         if ($ok) {
             $control = self::cleanUsergroupContent($user->user_id);
             $control = self::cleanUserentityContent($user->user_id);
@@ -563,13 +554,12 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             return $control;
         }
 
-        self::$db = new dbquery();
-        self::$db->connect();
+        self::$db = new Database();
+        
         $func = new functions();
-        $query = 'delete from ' . USERGROUP_CONTENT_TABLE . " where user_id='"
-               . $userId . "'";
+        $query = 'delete from ' . USERGROUP_CONTENT_TABLE . " where user_id=?";
         try{
-            self::$db->query($query);
+            $stmt = self::$db->query($query, array($userId));
             $control = array(
                 'status' => 'ok',
                 'value'  => $userId,
@@ -581,7 +571,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 'error'  => _CANNOT_CLEAN_USERGROUP_CONTENT . ' ' . $userId,
             );
         }
-        self::$db->disconnect();
+        
         return $control;
     }
 
@@ -604,13 +594,12 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             return $control;
         }
 
-        self::$db = new dbquery();
-        self::$db->connect();
+        self::$db = new Database();
+        
         $func = new functions();
-        $query = "delete from users_entities where user_id='"
-               . $userId . "'";
+        $query = "delete from users_entities where user_id=?";
         try{
-            self::$db->query($query);
+            $stmt = self::$db->query($query, array($userId));
             $control = array(
                 'status' => 'ok',
                 'value'  => $userId,
@@ -622,7 +611,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 'error'  => _CANNOT_CLEAN_USERENTITY_CONTENT . ' ' . $userId,
             );
         }
-        self::$db->disconnect();
+        
         return $control;
     }
     /**
@@ -636,24 +625,18 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         if (! isset($userId) || empty($userId)) {
             return false;
         }
-
-        self::$db = new dbquery();
-        self::$db->connect();
+        self::$db = new Database();
         $func = new functions();
-        $query = 'select user_id from ' . USERS_TABLE . " where user_id = '"
-               . $userId . "' and status<>'DEL'";
-
+        $query = 'select user_id from ' . USERS_TABLE . " where user_id = ? and status<>'DEL'";
         try{
-            self::$db->query($query);
+            $stmt = self::$db->query($query, array($userId));
         } catch (Exception $e){
             echo _UNKNOWN . ' ' . _USER . ' ' . functions::xssafe($userId) . ' // ';
         }
-
-        if (self::$db->nb_result() > 0) {
-            self::$db->disconnect();
+        if ($stmt->rowCount() > 0) {   
             return true;
         }
-        self::$db->disconnect();
+        
         return false;
     }
 
@@ -769,21 +752,24 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         if (! isset($array) || count($array) == 0) {
             return false;
         }
-        self::$db = new dbquery();
-        self::$db->connect();
+        self::$db = new Database();
+        
         $func = new functions();
         $ok = true;
         for ($i = 0; $i < count($array); $i ++) {
             if ($ok) {
                 $query = 'insert INTO ' . USERGROUP_CONTENT_TABLE
-                       . " (user_id, group_id, primary_group, role) VALUES ('"
-                       . $userId . "', '"
-                       . $array[$i]['GROUP_ID']
-                       . "', '". $array[$i]['PRIMARY']
-                       . "', '" . $array[$i]['ROLE']
-                       . "')";
+                       . " (user_id, group_id, primary_group, role) VALUES (?, ?, ?, ?)";
                 try{
-                    self::$db->query($query);
+                    $stmt = self::$db->query(
+                        $query,
+                        array(
+                            $userId,
+                            $array[$i]['GROUP_ID'],
+                            $array[$i]['PRIMARY'],
+                            $array[$i]['ROLE'],
+                        )
+                    );
                     $ok = true;
                 } catch (Exception $e){
                     $ok = false;
@@ -793,11 +779,15 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             }
         }
         if($ok == true){
-            $query = "delete from ".USER_BASKETS_SECONDARY_TABLE." where system_id in (select system_id from ".USER_BASKETS_SECONDARY_TABLE." where  group_id not in 
-            (select group_id from ".USERGROUP_CONTENT_TABLE." where user_id = '".$userId."'))";
-            self::$db->query($query);  
+            $query = "delete from " . USER_BASKETS_SECONDARY_TABLE
+                . " where system_id in (select system_id from "
+                . USER_BASKETS_SECONDARY_TABLE
+                . " where group_id not in (select group_id from "
+                . USERGROUP_CONTENT_TABLE
+                . " where user_id = ?))";
+            $stmt = self::$db->query($query, array($userId));  
         }
-        self::$db->disconnect();
+        
         return $ok;
     }
     
@@ -808,15 +798,13 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         ) {
             return false;
         }
-        self::$db = new dbquery();
-        self::$db->connect();
+        self::$db = new Database();
         $func = new functions();
-        $query = 'update ' . USERS_TABLE. " set password = '" 
-            . $newPassword
-            . "', change_password = 'Y' where user_id = '".$userId."'";
-        return self::$db->query($query, true);
+        $query = 'update ' . USERS_TABLE 
+            . " set password = ?, change_password = 'Y' where user_id = ?";
+        $stmt = self::$db->query($query, array($newPassword, $userId));
+        return $stmt;
     }
-
 
     /**
     * Asserts if a given user (user_id) is deleted in the database
@@ -829,24 +817,18 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         if (! isset($userId) || empty($userId)) {
             return false;
         }
-
-        self::$db = new dbquery();
-        self::$db->connect();
+        self::$db = new Database();
         $func = new functions();
-        $query = 'select user_id from ' . USERS_TABLE . " where lower(user_id) = lower('"
-               . $userId . "') and status = 'DEL'";
-
-        try{
-            self::$db->query($query);
+        $query = 'select user_id from ' . USERS_TABLE . " where lower(user_id) = lower(?) and status = 'DEL'";
+        try {
+            $stmt = self::$db->query($query, array($userId));
         } catch (Exception $e){
             echo _UNKNOWN . ' ' . _USER . ' ' . functions::xssafe($userId) . ' // ';
         }
-
-        if (self::$db->nb_result() > 0) {
-            self::$db->disconnect();
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        self::$db->disconnect();
+        
         return false;
     }
 
@@ -861,15 +843,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $user = self::_isAUser($user);
         self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
-
         if(self::advanced_reactivate($user)){
-            self::$db = new dbquery();
-            self::$db->connect();
-            $query = "update users set user_id = '".$user->user_id."' where lower(user_id)=lower('"
-                . $user->user_id . "')";
-            self::$db->query($query);
+            self::$db = new Database();
+            $query = "update users set user_id = ? where lower(user_id)=lower(?)";
+            $stmt = self::$db->query($query, array($user->user_id, $user->user_id));
             return true;
-
         }else{
           return false;
         }
@@ -883,25 +861,18 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     */
     public function checkUserMail($userMail)
     {
-        self::$db = new dbquery();
-        self::$db->connect();
+        self::$db = new Database();
         $func = new functions();
-
-        $queryUser = "SELECT user_id FROM users WHERE mail = "
-            . "'" . $userMail . "' and status = 'OK'";
-        self::$db->query($queryUser);
-        $userIdFound = self::$db->fetch_object();
+        $queryUser = "SELECT user_id FROM users WHERE mail = ? and status = 'OK'";
+        $stmt = self::$db->query($queryUser, array($userMail));
+        $userIdFound = $stmt->fetchObject();
         $UserEntities = array();
-
         if (!empty($userIdFound->user_id)) {
             $isUser = true;
             $UserEntities = $this->getEntities($userIdFound->user_id);
         } else {
             $isUser = false;
         }
-
-        self::$db->disconnect();
-        
         $return = array();
         array_push(
             $return, 
@@ -927,22 +898,19 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         if (empty($userId)) {
             return null;
         }
-
-        self::$db = new dbquery();
-        self::$db->connect();
+        self::$db = new Database();
         $func = new functions();
         $query = "SELECT ue.entity_id, ue.user_role, ue.primary_entity 
                     FROM users_entities ue, entities e 
-                    WHERE ue.user_id = '" . $userId . "' and e.enabled = 'Y' and e.entity_id = ue.entity_id
+                    WHERE ue.user_id = ? and e.enabled = 'Y' and e.entity_id = ue.entity_id
                     ORDER BY primary_entity desc";
                     // set primary entity to the first row
-        try{
-            self::$db->query($query);
+        try {
+            $stmt = self::$db->query($query, array($userId));
         } catch (Exception $e){
             echo _NO_USER_WITH_ID.' '.functions::xssafe($userId).' // ';
         }
-
-        while ($res = self::$db->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push(
                 $entities, 
                 array(
@@ -953,8 +921,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 )
             );
         }
-        // self::$db->disconnect();
+
         return $entities;
     }
-
 }
