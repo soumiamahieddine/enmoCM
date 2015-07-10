@@ -96,7 +96,7 @@ if ($mode == "list") {
         }?>
             <div class="block">
             <form name="formdocserver" method="post" class="forms" style="width:600px;" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&page=docserver_types_management_controler&admin=docservers&mode=".$mode;?>">
-                <input type="hidden" name="display" value="value" />
+                <input type="hidden" name="display" value="true" />
                 <input type="hidden" name="admin" value="docservers" />
                 <input type="hidden" name="page" value="docserver_types_management_controler" />
                 <input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />

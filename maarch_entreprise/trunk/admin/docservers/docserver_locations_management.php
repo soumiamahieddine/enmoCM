@@ -114,7 +114,7 @@ if ($mode == "list") {
             . "&page=docserver_locations_management_controler&admin=docservers"
             . "&mode=" . $mode;
         ?>">
-            <input type="hidden" name="display" value="value" />
+            <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="docservers" />
             <input type="hidden" name="page" value="docserver_locations_management_controler" />
             <input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />
