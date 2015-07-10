@@ -61,7 +61,7 @@ if ($mode == 'list') {
                 . 'index.php?display=true&page=templates_management_controler&module=templates&mode='
                 . $mode;
             ?>">
-                <input type="hidden" name="display" value="value" />
+                <input type="hidden" name="display" value="true" />
                 <input type="hidden" name="module" value="templates" />
                 <input type="hidden" name="page" value="templates_management_controler" />
                 <input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />
