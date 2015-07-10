@@ -77,8 +77,7 @@ class resources_controler
             }
             
             $returnCode = 0;
-            $db = new dbquery();
-            $db->connect();
+            $db = new Database();
             //copy sended file on tmp 
             $fileContent = base64_decode($encodedFile);
             $random = rand();
@@ -175,8 +174,8 @@ class resources_controler
                 $data[$i]['column'] = strtolower($data[$i]['column']);
             }
             $returnCode = 0;
-            $db = new dbquery();
-            $db->connect();
+            $db = new Database();
+            
             //copy sended file on tmp 
             $fileContent = file_get_contents($fileURI);
             $random = rand();
@@ -263,7 +262,7 @@ class resources_controler
         $userPrimaryEntity = false;
         $destinationFound = false;
         $initiatorFound = false;
-        $dbQuery = new dbquery();
+        $dbQuery = new Database();
         for ($i=0;$i<count($data);$i++) {
             if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
                 if ($data[$i]['value'] == '') {
@@ -271,7 +270,7 @@ class resources_controler
                 }
             }
             if (strtoupper($data[$i]['type']) == 'STRING') {
-               $data[$i]['value'] = $dbQuery->protect_string_db($data[$i]['value']);
+               $data[$i]['value'] = $data[$i]['value'];
                $data[$i]['value'] = str_replace(";", "", $data[$i]['value']);
                $data[$i]['value'] = str_replace("--", "", $data[$i]['value']);
             }
@@ -285,23 +284,21 @@ class resources_controler
                 $typeIdFound = true;
             }
             if (strtoupper($data[$i]['column']) == strtoupper('custom_t10')) {
-                require_once 'core/class/class_db.php';
-                $dbQuery = new dbquery();
-                $dbQuery->connect();
+                require_once 'core/class/class_db_pdo.php';
+                $dbQuery = new Database();
                 $mail = array();
                 $theString = str_replace(">", "", $data[$i]['value']);
                 $mail = explode("<", $theString);
-                $queryUser = "SELECT user_id FROM users WHERE mail = "
-                    . "'" . $dbQuery->protect_string_db($mail[count($mail) -1]) . "' and status = 'OK'";
-                $dbQuery->query($queryUser);
-                $userIdFound = $dbQuery->fetch_object();
+                $queryUser = "SELECT user_id FROM users WHERE mail = ? and status = 'OK'";
+                $stmt = $dbQuery->query($queryUser, array($mail[count($mail) -1]));
+                $userIdFound = $stmt->fetchObject();
                 if (!empty($userIdFound->user_id)) {
                     $toAddressFound = true;
                     $destUser = $userIdFound->user_id;
 
-	                $queryUserEntity = "SELECT entity_id FROM users_entities WHERE primary_entity = 'Y' and user_id = '".$destUser."'";
-	                $dbQuery->query($queryUserEntity);
-	                $userEntityId = $dbQuery->fetch_object();
+	                $queryUserEntity = "SELECT entity_id FROM users_entities WHERE primary_entity = 'Y' and user_id = ?";
+	                $stmt = $dbQuery->query($queryUserEntity, array($destUser));
+	                $userEntityId = $stmt->fetchObject();
 	                if (!empty($userEntityId->entity_id)) {
 	                	$userEntity = $userEntityId->entity_id;
 	                	$userPrimaryEntity = true;
@@ -445,8 +442,9 @@ class resources_controler
 	            $data = $func->object2array($data);
 	            $queryExtFields = '(';
 	            $queryExtValues = '(';
-	            $db = new dbquery();
-	            $db->connect();
+                $queryExtValuesFinal = '('; 
+                $parameters = array();
+	            $db = new Database();
 	            for ($i=0;$i<count($data);$i++) {
 	                if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
 	                    if ($data[$i]['value'] == '') {
@@ -467,8 +465,8 @@ class resources_controler
 		            			break;
 		            		}
 		            	}
-		            	$db->query("SELECT destination, type_id FROM ".$resViewTable." WHERE res_id = " . $resId);
-		            	$resView = $db->fetch_object();
+		            	$stmt = $db->query("SELECT destination, type_id FROM ".$resViewTable." WHERE res_id = ?", array($resId));
+		            	$resView = $stmt->fetchObject();
 				        $myVars = array(
 				            'entity_id' => $resView->destination,
 				            'type_id' => $resView->type_id,
@@ -476,13 +474,13 @@ class resources_controler
 				            'folder_id' => "",
 				        );
 				        $myChrono = $chronoX->generate_chrono($categoryId, $myVars, 'false');
-				        $data[$i]['value'] = $db->protect_string_db($myChrono);		                
+				        $data[$i]['value'] = $myChrono;		                
 		            }
                     if (strtoupper($data[$i]['column']) == strtoupper('exp_contact_id') && $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
                         $theString = str_replace(">", "", $data[$i]['value']);
                         $mail = explode("<", $theString);
-                        $db->query("SELECT contact_id FROM view_contacts WHERE email = '" . $db->protect_string_db($mail[count($mail) -1]) . "' and enabled = 'Y' order by creation_date asc");
-                        $contact = $db->fetch_object();
+                        $stmt = $db->query("SELECT contact_id FROM view_contacts WHERE email = ? and enabled = 'Y' order by creation_date asc", array($mail[count($mail) -1]));
+                        $contact = $stmt->fetchObject();
 
                         if ($contact->contact_id <> "") {
                             $data[$i]['value'] = $contact->contact_id;
@@ -493,8 +491,8 @@ class resources_controler
                     if (strtoupper($data[$i]['column']) == strtoupper('address_id') && $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
                         $theString = str_replace(">", "", $data[$i]['value']);
                         $mail = explode("<", $theString);
-                        $db->query("SELECT ca_id FROM view_contacts WHERE email = '" . $db->protect_string_db($mail[count($mail) -1]) . "' and enabled = 'Y' order by creation_date asc");
-                        $contact = $db->fetch_object();
+                        $stmt = $db->query("SELECT ca_id FROM view_contacts WHERE email = ? and enabled = 'Y' order by creation_date asc", array($mail[count($mail) -1]));
+                        $contact = $stmt->fetchObject();
                         if ($contact->ca_id <> "") {
                             $data[$i]['value'] = $contact->ca_id;
                         } else {
@@ -510,15 +508,23 @@ class resources_controler
 	                } else {
 	                    $queryExtValues .= $data[$i]['value'] . ",";
 	                }
+                    $parameters[] = $data[$i]['value'];
+                    $queryExtValuesFinal .= "?,";
 	            }
 	            $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
 	            $queryExtValues = preg_replace(
 	                '/,$/', ',' . $resId . ')', $queryExtValues
 	            );
-	            $queryExt = " insert into " . $table . " " . $queryExtFields
-	                   . ' values ' . $queryExtValues ;
+                $queryExtValuesFinal = preg_replace(
+                    '/,$/', ',' . $resId . ')', $queryExtValuesFinal
+                );
+	            /*$queryExt = " insert into " . $table . " " . $queryExtFields
+	                   . ' values ' . $queryExtValues ;*/
+                $queryExt = " insert into " . $table . " " . $queryExtFields
+                       . ' values ' . $queryExtValuesFinal ;
+                //echo $queryExt;exit;
 	            $returnCode = 0;
-	            if ($db->query($queryExt)) {
+	            if ($db->query($queryExt, $parameters)) {
 	                $returnResArray = array(
 	                    'returnCode' => (int) 0,
 	                    'resId' => $resId,

@@ -723,20 +723,17 @@ class docservers_controler
             return false;
         }
         $security = new security();
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $tableName = $security->retrieve_table_from_coll($coll_id);
         if (!isset($tableName) || empty($tableName)) {
             return false;
         }
         $query = "select docserver_id from " . $tableName
-               . " where docserver_id = '" . $docserver_id . "'";
-        $db->query($query);
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+               . " where docserver_id = ?";
+        $stmt = $db->query($query, array($docserver_id));
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        $db->disconnect();
         return false;
     }
 
@@ -748,20 +745,17 @@ class docservers_controler
     public function adrxLinkExists($docserver_id, $coll_id)
     {
         $security = new security();
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $adrName = $security->retrieveAdrFromColl($coll_id);
         if (!isset($adrName) || empty($adrName)) {
             return false;
         }
         $query = "select docserver_id from " . $adrName
-               . " where docserver_id = '" . $docserver_id . "'";
-        $db->query($query);
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+               . " where docserver_id = ?";
+        $stmt = $db->query($query, array($docserver_id));
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        $db->disconnect();
     }
 
     /**
@@ -779,21 +773,21 @@ class docservers_controler
         ) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select adr_priority_number from " . _DOCSERVERS_TABLE_NAME
-               . " where adr_priority_number = "
-               . $docserver->adr_priority_number
-               . " AND docserver_type_id = '"
-               . $func->protect_string_db($docserver->docserver_type_id) . "'"
-               . " AND docserver_id <> '"
-               . $func->protect_string_db($docserver->docserver_id) . "'";
-        $db->query($query);
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+               . " where adr_priority_number = ? AND docserver_type_id = ?"
+               . " AND docserver_id <> ?";
+        $stmt = $db->query(
+            $query, 
+            array(
+                $docserver->adr_priority_number, 
+                $docserver->docserver_type_id, 
+                $docserver->docserver_id 
+            )
+        );
+        if ($stmt->rowCount() > 0) {
             return false;
         }
-        $db->disconnect();
         return true;
     }
 
@@ -812,20 +806,21 @@ class docservers_controler
         ) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select priority_number from " . _DOCSERVERS_TABLE_NAME
-               . " where priority_number = " . $docserver->priority_number
-               . " AND docserver_type_id = '"
-               . $func->protect_string_db($docserver->docserver_type_id) . "'"
-               . " AND docserver_id <> '"
-               . $func->protect_string_db($docserver->docserver_id) . "'";
-        $db->query($query);
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+               . " where priority_number = ? AND docserver_type_id = ?"
+               . " AND docserver_id <> ?";
+        $stmt = $db->query(
+            $query, 
+            array(
+                $docserver->priority_number, 
+                $docserver->docserver_type_id, 
+                $docserver->docserver_id 
+            )
+        );
+        if ($stmt->rowCount() > 0) {
             return false;
         }
-        $db->disconnect();
         return true;
     }
 
@@ -842,18 +837,16 @@ class docservers_controler
         }
         $size_limit_number = floatval($docserver->size_limit_number);
         $size_limit_number = $size_limit_number * 1000 * 1000 * 1000;
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select actual_size_number from "  . _DOCSERVERS_TABLE_NAME
-               . " where docserver_id = '" . $docserver->docserver_id . "'";
-        $db->query($query);
-        $queryResult = $db->fetch_object();
+               . " where docserver_id = ?";
+        $stmt = $db->query($query, array($docserver->docserver_id));
+        $queryResult = $stmt->fetchObject();
         if (isset($queryResult->actual_size_number)) {
             $actual_size_number = floatval($queryResult->actual_size_number);
         } else {
             $actual_size_number = 0;
         }
-        $db->disconnect();
         if ($size_limit_number < $actual_size_number) {
             return true;
         } else {
@@ -891,15 +884,12 @@ class docservers_controler
      */
     public function getDocserverToInsert($collId)
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select priority_number, docserver_id from "
                . _DOCSERVERS_TABLE_NAME . " where is_readonly = 'N' and "
-               . " enabled = 'Y' and coll_id = '" . $collId
-               . "' order by priority_number";
-        $db->query($query);
-        $queryResult = $db->fetch_object();
-        $db->disconnect();
+               . " enabled = 'Y' and coll_id = ? order by priority_number";
+        $stmt = $db->query($query, array($collId));
+        $queryResult = $stmt->fetchObject();
         if ($queryResult->docserver_id <> '') {
             $docserver = $this->get($queryResult->docserver_id);
             if (isset($docserver->docserver_id)) {
@@ -1174,14 +1164,16 @@ class docservers_controler
     */
     public function setSize($docserver, $newSize)
     {
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "update " . _DOCSERVERS_TABLE_NAME
-            . " set actual_size_number=" . $newSize . " where docserver_id='"
-            . $docserver->docserver_id . "'"
+            . " set actual_size_number = ? where docserver_id = ?",
+            array(
+                $newSize,
+                $docserver->docserver_id
+            )
         );
-        $db->disconnect();
+        
         return $newSize;
     }
 
