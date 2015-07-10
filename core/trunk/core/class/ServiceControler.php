@@ -76,15 +76,6 @@ class ServiceControler
 		self::$db=$db;
 	}
 
-
-	/**
-	* Close the database connexion
-	*/
-	public function disconnect()
-	{
-		self::$db->disconnect();
-	}
-
 	public function loadEnabledServices()
 	{
 		$_SESSION['enabled_services'] = array();

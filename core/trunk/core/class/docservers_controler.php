@@ -423,9 +423,10 @@ class docservers_controler
     private function insert($docserver)
     {
         $request = new request();
+        $db = new Database();
         //Giving automatised values
         $docserver->enabled = 'Y';
-        $docserver->creation_date = $request->current_datetime();
+        $docserver->creation_date = $db->current_datetime();
         //Inserting object
         $result = $this->advanced_insert($docserver);
         return $result;

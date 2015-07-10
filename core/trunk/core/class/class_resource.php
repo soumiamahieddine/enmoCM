@@ -136,6 +136,7 @@
         $tmp = str_replace('#',DIRECTORY_SEPARATOR,$tmp);
         $filetmp .= $tmp;
         $filetmp .= $filename;
+        $db = new Database();
         require_once 'core/class/docservers_controler.php';
         require_once 'core/class/docserver_types_controler.php';
         require_once 'core/docservers_tools.php';
@@ -149,11 +150,11 @@
         array_push($data, array('column' => "filesize", 'value' => $filesize, 'type' => "int"));
         array_push($data, array('column' => "path", 'value' => $path, 'type' => "string"));
         array_push($data, array('column' => "filename", 'value' => $filename, 'type' => "string"));
-        array_push($data, array('column' => 'creation_date', 'value' => $this->current_datetime(), 'type' => "function"));
+        array_push($data, array('column' => 'creation_date', 'value' => $db->current_datetime(), 'type' => "function"));
         if(!$this->check_basic_fields($data))
         {
             $_SESSION['error'] = $this->error;
-            functions::xecho($this->error);exit;
+            functions::xecho($this->error);
             return false;
         }
         else
