@@ -34,7 +34,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
     
 $core_tools = new core_tools();
-$request    = new request();
+$db    = new Database();
 $fileplan   = new fileplan();
 
 $core_tools->test_service('fileplan', 'fileplan');
@@ -100,7 +100,7 @@ if (count($fileplans_array) > 0)  {
 					function TafelTreeInit () {
 						<?php
 						//Get All avalaible fileplan
-						$request->connect();
+						
 						for($i=0; $i < count($fileplans_array); $i++) {
 							//Fileplan ID & LABEL
 							$fileplanId = $fileplans_array[$i]['ID'];
@@ -109,14 +109,14 @@ if (count($fileplans_array) > 0)  {
 							//Get Positions for the fileplan
 							$level_1 = array();
 							
-							$request->query(
+							$stmt = $db->query(
 								"select position_id, position_label from "
-								. FILEPLAN_VIEW." where fileplan_id = ".$fileplans_array[$i]['ID']
+								. FILEPLAN_VIEW." where fileplan_id = ?"
 								. " and parent_id is null"
-								. " and position_enabled = 'Y' order by position_label asc"
-							);
-							// $request->show();             
-							while($res = $request->fetch_object())
+								. " and position_enabled = ? order by position_label asc"
+							,array($fileplans_array[$i]['ID'],'Y'));
+						             
+							while($res = $stmt->fetchObject())
 							{
 								array_push(
 									$level_1, 
@@ -124,13 +124,13 @@ if (count($fileplans_array) > 0)  {
 										'id' => $res->position_id, 
 										'tree' => $fileplans_array[$i]['ID'], 
 										'key_value' => $res->position_id, 
-										'label_value' => $request->show_string($fileplan->truncate($res->position_label), true), 
-										'tooltip_value' => $request->show_string($res->position_label, true), 
+										'label_value' => functions::show_string($fileplan->truncate($res->position_label), true), 
+										'tooltip_value' => functions::show_string($res->position_label, true), 
 										'script' => ""
 									)
 								);
 							}
-							// $request->show_array( $level_1);
+							
 							?>
 								var struct_<?php functions::xecho($fileplans_array[$i]['ID']);?> = [
 											{
@@ -141,7 +141,7 @@ if (count($fileplans_array) > 0)  {
 													for($ii=0; $ii < count($level_1);$ii++) {
 														?>
 														{
-														'id' : '<?php functions::xecho($fileplans_array[$i]['ID']).'@@'.$level_1[$ii]['id'];?>',
+														'id' : '<?php functions::xecho($fileplans_array[$i]['ID'].'@@'.$level_1[$ii]['id']);?>',
 														'title' : '<?php echo addslashes($level_1[$ii]['tooltip_value']);?>',
 														'canhavechildren' : true,
 														'onclick' : 'view_document_list',

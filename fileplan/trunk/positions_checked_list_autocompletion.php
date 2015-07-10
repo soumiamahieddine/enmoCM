@@ -33,8 +33,8 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
 . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
 
-$db     = new dbquery();
-$fileplan = new fileplan();
+$db 		= new Database();
+$fileplan 	= new fileplan();
 
 $where = "";
 $content = "";
@@ -86,18 +86,19 @@ if (!empty($_REQUEST['fileplan_id'])) {
 		    'âãäåÁÂÃÄÅèééêëÈÉÉÊËìíîïìÌÍÎÏÌóôõöÒÓÔÕÖùúûüÙÚÛÜ',
 		    'aaaaAAAAAeeeeeEEEEEiiiiiIIIIIooooOOOOOuuuuUUUU'
 		) like translate(
-		    '%".strtolower($_REQUEST['param'])."%',
+		    ?,
 		    'âãäåÁÂÃÄÅèééêëÈÉÉÊËìíîïìÌÍÎÏÌóôõöÒÓÔÕÖùúûüÙÚÛÜ',
 		    'aaaaAAAAAeeeeeEEEEEiiiiiIIIIIooooOOOOOuuuuUUUU'
 		) ";
 		$_SESSION['origin_positions']='';
 		$fileplan_id = $_REQUEST['fileplan_id'];
-		$db->connect();
-		$db->query(
-			"select position_id, position_label, parent_id from fp_view_fileplan where fileplan_id = ".$fileplan_id.$where." and position_enabled = 'Y' order by position_label asc "
-			);
-		//$db->show();
-		while($row = $db->fetch_array()) {
+
+		$stmt = $db->query(
+			"select position_id, position_label, parent_id from fp_view_fileplan where fileplan_id = ?"
+			.$where." and position_enabled = ? order by position_label asc "
+			,array($fileplan_id,'%'.strtolower($_REQUEST['param']).'%','Y'));
+
+		while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$categories[] = array(
 				'parent_id' => $row['parent_id'],
 				'fileplan_id' => $row['position_id'],
@@ -107,14 +108,14 @@ if (!empty($_REQUEST['fileplan_id'])) {
 		foreach ($categories AS $noeud)
 		{
 			$tmp = explode('@@', $_REQUEST['res_id']);
-			$db2     = new dbquery();
-			$db2->connect();
 
 			if($multi_doc==false){
-				$db2->query(
-					"select fileplan_id, position_id from fp_res_fileplan_positions where res_id = '".$tmp[1]."' and position_id='".$noeud['fileplan_id']."'"
-					);
-				$row2 = $db2->fetch_array();
+				$stmt2 = $db->query(
+					"select fileplan_id, position_id from fp_res_fileplan_positions where"
+					." res_id = ? and position_id = ?"
+					,array($tmp[1],$noeud['fileplan_id']));
+				$row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+
 				if(!$row2){
 					$html .= "<li style='margin-left:10px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
 						."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
@@ -140,14 +141,15 @@ if (!empty($_REQUEST['fileplan_id'])) {
 	}else{
 		$_SESSION['origin_positions']='';
 		$fileplan_id = $_REQUEST['fileplan_id'];
-		$db->connect();
-		$db->query(
-			"select position_id, position_label, parent_id from fp_view_fileplan where fileplan_id = ".$fileplan_id." and position_enabled = 'Y' order by position_label asc "
-			);
+
+		$stmt = $db->query(
+			"select position_id, position_label, parent_id from fp_view_fileplan where"
+			." fileplan_id = ? and position_enabled = ? order by position_label asc "
+			,array($fileplan_id,'Y'));
 
 		$categories = array();
 
-		while($row = $db->fetch_array()) {
+		while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$categories[] = array(
 				'parent_id' => $row['parent_id'],
 				'fileplan_id' => $row['position_id'],
@@ -171,14 +173,15 @@ function afficher_arbo($parent, $niveau, $array, $multi_doc)
 		{
 			if ($niveau_precedent < $niveau) $html .= "\n<ul>\n";
 			$tmp = explode('@@', $_REQUEST['res_id']);
-			$db2     = new dbquery();
-			$db2->connect();
+
 
 			if($multi_doc==false){
-			$db2->query(
-				"select fileplan_id, position_id from fp_res_fileplan_positions where res_id = '".$tmp[1]."' and position_id='".$noeud['fileplan_id']."'"
-				);
-			$row2 = $db2->fetch_array();
+			$db = new Database();
+			$stmt2 = $db->query(
+				"select fileplan_id, position_id from fp_res_fileplan_positions"
+				." where res_id = ? and position_id= ?"
+				,array($tmp[1],$noeud['fileplan_id']));
+			$row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
 			if(!$row2){
 				$html .= "<li style='margin-left:20px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
 					."index.php?display=true&module=fileplan&page=fileplan_ajax_script"

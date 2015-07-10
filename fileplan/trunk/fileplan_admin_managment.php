@@ -133,6 +133,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 			$where_tab[] = "(lower(position_label) like lower('"
 							.$request->protect_string_db($what)
 							."%'))";
+
 		}
 		//Build where
 		$where = implode(' and ', $where_tab);
@@ -161,7 +162,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 		if (!empty($start)) $parameters .= '&start='.$start;
 			
 	//Request
-		$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+		$tab=$request->PDOselect($select,$where,$orderstr,$_SESSION['config']['databasetype']);
 		// $request->show();
 		
 	//Result array    

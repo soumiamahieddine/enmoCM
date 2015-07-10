@@ -24,37 +24,37 @@ if(
         . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
     
     $core_tools = new core_tools();
-    $request    = new request();
-    $fileplan     = new fileplan();
+    $db         = new Database();
+    $fileplan   = new fileplan();
     
     $core_tools->load_lang();
-    $request->connect();
     $childrens = array();
 
-    $request->query(
-                "select fileplan_id , position_id, position_label from "
-                . FILEPLAN_VIEW." where fileplan_id = " 
-                . $fileplan_id
-                . " and parent_id = '".$position_id
-                . "' and position_enabled = 'Y' order by position_label asc"
-                );
-    // $request->show();
+    $stmt = $db->query(
+        "select fileplan_id , position_id, position_label from "
+        . FILEPLAN_VIEW." where fileplan_id = ?" 
+        . " and parent_id = ?"
+        . " and position_enabled = ? order by position_label asc"
+        ,array($fileplan_id,$position_id,'Y'));
 
-    if($request->nb_result() > 0) {
-        while($res = $request->fetch_object()) {
+    // $db->show();
+
+    if($stmt->rowCount() > 0) {
+        while($res = $stmt->fetchObject()) {
             array_push(
                $childrens,
                array(
                     'id' => $res->fileplan_id.'@@'.$res->position_id, 
                     'tree' => '0', 
                     'key_value' => $res->position_id, 
-                    'label_value' => $request->show_string($fileplan->truncate($res->position_label), true), 
-                    'tooltip_value' => $request->show_string($res->position_label, true), 
+                    'label_value' => functions::show_string($fileplan->truncate($res->position_label), true), 
+                    'tooltip_value' => functions::show_string($res->position_label, true), 
                     'canhavechildren' => 'true'
                 )
             );
         }
     }
+    //print_r($childrens);exit;
     if(count($childrens) > 0) {
 		(isset($_POST['origin']) && $_POST['origin'] == 'admin')? $view_documents = "" : $view_documents = ", onclick : 'view_document_list'";
         echo '[';

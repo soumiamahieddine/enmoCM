@@ -33,29 +33,25 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
     
-$db     = new dbquery();
+$db       = new Database();
 $fileplan = new fileplan();
 
-$db->connect();
 if (strlen(trim($_REQUEST['what'])) > 0 && !empty($_REQUEST['fileplan_id'])) {
     $label = $_REQUEST['what'];
 
-    $db->query(
-               "select  position_id, position_label, position_enabled from "
-               . FILEPLAN_VIEW." where fileplan_id = ".$_REQUEST['fileplan_id']
-               // . " and user_id = '".$_SESSION['user']['UserId']."'"
-			   . " and position_enabled = 'Y'"
-               ." and lower(position_label) like lower('%"
-               . $label."%') order by position_label"
-               );
+    $stmt = $db->query(
+                "select  position_id, position_label, position_enabled from "
+                . FILEPLAN_VIEW." where fileplan_id = ?"
+                // . " and user_id = '".$_SESSION['user']['UserId']."'"
+		            . " and position_enabled = ?"
+                . " and lower(position_label) like lower(?) order by position_label"
+               ,array($_REQUEST['fileplan_id'],'Y','%'.$label.'%'));
                     
 }
-// $db->show();
-
 $authViewList = 0;
 $content = "";
 $content .= "<ul>\n";
-while($line = $db->fetch_object())
+while($line = $stmt->fetchObject())
 {
     if($authViewList < 10)
 	{

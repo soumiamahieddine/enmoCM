@@ -36,12 +36,11 @@ require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
     . "class_modules_tools.php";
 
 $core_tools = new core_tools();
-$request    = new request();
+$db 		= new Database();
 $hist 		= new history();
 $fileplan   = new fileplan();
 
 $core_tools->load_lang();
-$request->connect();
 
 $status = 0;
 $error = $content = $js = '';
@@ -137,7 +136,7 @@ switch ($mode) {
 						if($allEntitiesTree[$i]['DISABLED'])
 							$content .= ' disabled="disabled" class="disabled_entity"';
             
-						$content .='>'.$request->show_string($allEntitiesTree[$i]['SHORT_LABEL']).'</option>';
+						$content .='>'.$db->show_string($allEntitiesTree[$i]['SHORT_LABEL']).'</option>';
 					}
 				}
 				$content .='</select><span class="red_asterisk">*</span>';
@@ -166,8 +165,8 @@ switch ($mode) {
 	case 'saveFileplan':
 		if (strlen(trim($_REQUEST['fileplan_label'])) > 0) {
 			//Init
-            $user_id = 'NULL';
-            $entity_id = 'NULL';
+            $user_id = NULL;
+            $entity_id = NULL;
 			
 			//Get fileplan scope
 			if ($origin == "admin" 
@@ -177,27 +176,25 @@ switch ($mode) {
 				if (isset($_REQUEST['entity_id']) && !empty($_REQUEST['entity_id'])) {
 					 $entity_id = "'".$_REQUEST['entity_id']."'";
 				} else {
-					$error = $request->wash_html(_ENTITY.' '._IS_EMPTY.'!','NONE');
+					$error = functions::wash_html(_ENTITY.' '._IS_EMPTY.'!','NONE');
 					$status = 1;
 				}*/
 			} elseif ($origin == "manage") {
-				$user_id = "'".$_SESSION['user']['UserId']."'";
+				$user_id = $_SESSION['user']['UserId'];
 			}
 			
 			if ($status <> 1) {
 				//Insert data
-				$fileplan_label = $request->protect_string_db($_REQUEST['fileplan_label']);
-				$request->query("INSERT INTO ".FILEPLAN_TABLE
-					. " (fileplan_label, user_id, entity_id, is_serial_id, enabled) VALUES ('"
-					. $fileplan_label."', " . $user_id.", "
-					. $entity_id.", '".$_REQUEST['is_serial']
-					. "', 'Y')"
-				);
+				$fileplan_label = functions::protect_string_db($_REQUEST['fileplan_label']);
+				$stmt = $db->query("INSERT INTO ".FILEPLAN_TABLE
+					. " (fileplan_label, user_id, entity_id, is_serial_id, enabled)" 
+					. " VALUES (?,?,?,?,?)"
+				,array($fileplan_label,$user_id,$entity_id,$_REQUEST['is_serial'],'Y'));
 			
 				//History
 				if ($_SESSION['history']['fileplanadd']) {
 					//Last insert ID from sequence
-					$id = $request->last_insert_id('fp_fileplan_fileplan_id_seq');
+					$id = $db->lastInsertId('fp_fileplan_fileplan_id_seq');
 					//Add to history
 					$hist->add(
 						FILEPLAN_TABLE, $id, "ADD", 'fileplanadd', _FILEPLAN_ADDED 
@@ -222,7 +219,7 @@ switch ($mode) {
 				}
 			}
 		} else {
-            $error = $request->wash_html(_FILEPLAN_NAME.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_NAME.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
 	break;
@@ -270,7 +267,7 @@ switch ($mode) {
 							//Is Selected?
 							if ($fileplan_array['ENTITY'] == $allEntitiesTree[$i]['ID'])
 								$content .= ' selected="selected"';
-							$content .='>'.$request->show_string($allEntitiesTree[$i]['SHORT_LABEL']).'</option>';
+							$content .='>'.$db->show_string($allEntitiesTree[$i]['SHORT_LABEL']).'</option>';
 						}
 					}
 					$content .='</select><span class="red_asterisk">*</span>';
@@ -304,7 +301,7 @@ switch ($mode) {
 			$content .='</div">';
 			$content .= '</form>';
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
 	break;
@@ -326,7 +323,7 @@ switch ($mode) {
 					if (isset($_REQUEST['entity_id']) && !empty($_REQUEST['entity_id'])) {
 						 $entity_id = "'".$_REQUEST['entity_id']."'";
 					} else {
-						$error = $request->wash_html(_ENTITY.' '._IS_EMPTY.'!','NONE');
+						$error = functions::wash_html(_ENTITY.' '._IS_EMPTY.'!','NONE');
 						$status = 1;
 					}*/
 				} elseif ($origin == "manage") {
@@ -335,12 +332,15 @@ switch ($mode) {
 				
 				if ($status <> 1) {
 					//Update data
-					$fileplan_label = $request->protect_string_db($_REQUEST['fileplan_label']);
-					$request->query("UPDATE ".FILEPLAN_TABLE . " SET fileplan_label = '" 
-						. $fileplan_label . "', user_id = " 
-						. $user_id.", entity_id = ". $entity_id
-						. ", is_serial_id = '".$_REQUEST['is_serial']."'"
-						. " WHERE fileplan_id = ".$fileplan_id);
+					$fileplan_label = functions::protect_string_db($_REQUEST['fileplan_label']);
+					$stmt = $db->query(
+						"UPDATE ".FILEPLAN_TABLE . " SET fileplan_label = ?" 
+						. ", user_id = ?" 
+						. ", entity_id = ?"
+						. ", is_serial_id = ?"
+						. " WHERE fileplan_id = ?"
+					,array($fileplan_label,$user_id,$entity_id,$_REQUEST['is_serial'],$fileplan_id));
+
 					//History
 					if ($_SESSION['history']['fileplanup']) {
 						//Add to history
@@ -367,11 +367,11 @@ switch ($mode) {
 					}
 				}
 			} else {
-				$error = $request->wash_html(_FILEPLAN_NAME.' '._IS_EMPTY.'!','NONE');
+				$error = functions::wash_html(_FILEPLAN_NAME.' '._IS_EMPTY.'!','NONE');
 				$status = 1;
 			}
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
 	break;
@@ -416,7 +416,7 @@ switch ($mode) {
 			$content .='</div">';
 			$content .= '</form>';
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
 	break;
@@ -431,35 +431,32 @@ switch ($mode) {
             if (isset($fileplan_array['ID']) && $fileplan_id == $fileplan_array['ID']) {
 
 				//Delete linked documents                
-                $request->query(
+                $stmt = $db->query(
                     "DELETE FROM " 
-                    . FILEPLAN_RES_POSITIONS_TABLE . " WHERE fileplan_id = " 
-                    . $fileplan_array['ID']
-                );  
+                    . FILEPLAN_RES_POSITIONS_TABLE . " WHERE fileplan_id = ?" 
+                ,array($fileplan_array['ID']));  
                 //Delete position
-                $request->query(
+                $stmt = $db->query(
                     "DELETE FROM " 
-                    . FILEPLAN_POSITIONS_TABLE . " WHERE fileplan_id = " 
-                    . $fileplan_array['ID']
-                );
+                    . FILEPLAN_POSITIONS_TABLE . " WHERE fileplan_id = ?" 
+                ,array($fileplan_array['ID']));
 				//Delete fileplan
-                $request->query(
+                $stmt = $db->query(
                     "DELETE FROM " 
-                    . FILEPLAN_TABLE . " WHERE fileplan_id = " 
-                    . $fileplan_array['ID']
-                );
+                    . FILEPLAN_TABLE . " WHERE fileplan_id = ?"
+                ,array($fileplan_array['ID']));
 					
 				//History
 				if ($_SESSION['history']['fileplandel']) {
 					//Add to history
 					$hist->add(
 						FILEPLAN_TABLE, $fileplan_array['ID'], "DEL", 'fileplandel', _FILEPLAN_DELETED 
-						. ': '.$request->wash_html($fileplan_array['LABEL']).' (' . $fileplan_array['ID'] . ')',
+						. ': '.functions::wash_html($fileplan_array['LABEL']).' (' . $fileplan_array['ID'] . ')',
 						$_SESSION['config']['databasetype'], 'fileplan'
 					);
 				}
             } else {
-                $error = $request->wash_html($fileplan_id.': '._FILEPLAN_NOT_EXISTS.'!','NONE');
+                $error = functions::wash_html($fileplan_id.': '._FILEPLAN_NOT_EXISTS.'!','NONE');
                 $status = 1;
             }
 
@@ -478,7 +475,7 @@ switch ($mode) {
 					."index.php?page=fileplan&module=fileplan&reinit=true&load';";
 			}
 	} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
 	break;
@@ -494,18 +491,18 @@ switch ($mode) {
             if (isset($fileplan_array['ID']) && $fileplan_id == $fileplan_array['ID']) {
 
 				//Disable fileplan positions
-				$request->query(
+				$stmt = $db->query(
 					"UPDATE ".FILEPLAN_POSITIONS_TABLE
-					. " SET enabled = 'N' WHERE fileplan_id = "
-					. $fileplan_id . " AND enabled = 'Y'"
-				);
+					. " SET enabled = ? WHERE fileplan_id = ?"
+					. " AND enabled = ?"
+				,array('N',$fileplan_id,'Y'));
 					
 				//Disable fileplan
-                $request->query(
+                $stmt = $db->query(
                     "UPDATE " . FILEPLAN_TABLE 
-					. " SET enabled = 'N' WHERE fileplan_id = " 
-                    . $fileplan_array['ID']. " AND enabled = 'Y'"
-                );
+					. " SET enabled = ? WHERE fileplan_id = ?" 
+                    . " AND enabled = ?"
+                ,array('N',$fileplan_array['ID'],'Y'));
 				
 				//History
 				if ($_SESSION['history']['fileplandis']) {
@@ -532,11 +529,11 @@ switch ($mode) {
 						."index.php?page=fileplan_managment&module=fileplan&reinit=true&load';";
 				}
 			} else {
-                $error = $request->wash_html($fileplan_id.': '._FILEPLAN_NOT_EXISTS.'!','NONE');
+                $error = functions::wash_html($fileplan_id.': '._FILEPLAN_NOT_EXISTS.'!','NONE');
                 $status = 1;
             }
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
 		
@@ -553,18 +550,18 @@ switch ($mode) {
             if (isset($fileplan_array['ID']) && $fileplan_id == $fileplan_array['ID']) {
 
 				//Disable fileplan positions
-				$request->query(
+				$stmt = $db->query(
 					"UPDATE ".FILEPLAN_POSITIONS_TABLE
-					. " SET enabled = 'N' WHERE fileplan_id = "
-					. $fileplan_id . " AND enabled = 'Y'"
-				);
+					. " SET enabled = ? WHERE fileplan_id = ?"
+					. " AND enabled = ?"
+				,array('N',$fileplan_id,'Y'));
 					
 				//Disable fileplan
-                $request->query(
+                $stmt = $db->query(
                     "UPDATE " . FILEPLAN_TABLE 
-					. " SET enabled = 'Y' WHERE fileplan_id = " 
-                    . $fileplan_array['ID']. " AND enabled = 'N'"
-                );
+					. " SET enabled = ? WHERE fileplan_id = ?" 
+                    . " AND enabled = ?"
+                ,array('Y',$fileplan_array['ID'],'N'));
 				
 				//History
 				if ($_SESSION['history']['fileplanena']) {
@@ -591,11 +588,11 @@ switch ($mode) {
 						."index.php?page=fileplan_managment&module=fileplan&reinit=true&load';";
 				}				
 			} else {
-                $error = $request->wash_html($fileplan_id.': '._FILEPLAN_NOT_EXISTS.'!','NONE');
+                $error = functions::wash_html($fileplan_id.': '._FILEPLAN_NOT_EXISTS.'!','NONE');
                 $status = 1;
             }
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
     break;
@@ -649,7 +646,7 @@ switch ($mode) {
 			$content .='</div">';
 			$content .= '</form>';
         } else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
     break;
@@ -662,41 +659,42 @@ switch ($mode) {
 				//If is not serial fileplan
 				if ($fileplan->isSerialFileplan($fileplan_id) === false){
 					if (empty($_REQUEST['position_id'])) {
-							$error = $request->wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
+							$error = functions::wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
 							$status = 1;
 					} else {
 					   $position_id = $_REQUEST['position_id'];
 					}
 				}  else {
-					$position_id = $request->next_id('fp_fileplan_positions_position_id_seq');
+
+					$position_id = $db->lastInsertId('fp_fileplan_positions_position_id_seq');
+					$position_id = $position_id +1;
+
 					if (empty($position_id)) {
-							$error = $request->wash_html(_ERROR_DURING_POSITION_ID_GENERATION.'!','NONE');
+							$error = functions::wash_html(_ERROR_DURING_POSITION_ID_GENERATION.'!','NONE');
 							$status = 1;
 					}
 				}
 				//Nested?
 				if (empty($_REQUEST['parent_id'])) {
-						$error .= $request->wash_html(_CHOOSE_PARENT_POSITION.'!','NONE');
+						$error .= functions::wash_html(_CHOOSE_PARENT_POSITION.'!','NONE');
 						$status = 1;
 				} else {
 					($_REQUEST['parent_id'] == '##ROOT##')?
-						$parent_id = 'NULL' : $parent_id = "'".$_REQUEST['parent_id']."'";
+						$parent_id = NULL : $parent_id = $_REQUEST['parent_id'];
 				}
 
 				//Add position
 				if ( $status <> 1) {
 					//If position id already exists
 					if($fileplan->positionAlreadyExists($fileplan_id, $position_id) === true) {
-							$error = $request->wash_html(_POSITION_ALREADY_EXISTS.': '.$position_id.'!','NONE');
+							$error = functions::wash_html(_POSITION_ALREADY_EXISTS.': '.$position_id.'!','NONE');
 							$status = 1;
 					} else {
-						$position_label = $request->protect_string_db($_REQUEST['position_label']);
-						$request->query("INSERT INTO ".FILEPLAN_POSITIONS_TABLE
-							. " (position_id, position_label, parent_id, fileplan_id, enabled) VALUES ('"
-							. $position_id."', '"
-							. $position_label."', "
-							. $parent_id.", "
-							. $fileplan_id.", 'Y')");
+						$position_label = functions::protect_string_db($_REQUEST['position_label']);
+						$stmt = $db->query(
+							"INSERT INTO ".FILEPLAN_POSITIONS_TABLE
+							. " (position_label, parent_id, fileplan_id, enabled) VALUES (?,?,?,?)"
+						,array($position_label,$parent_id,$fileplan_id,'Y'));
 							
 						//History
 						if ($_SESSION['history']['fileplanadd']) {
@@ -726,11 +724,11 @@ switch ($mode) {
 					}
 				}
 			} else {
-				$error = $request->wash_html(_POSITION_NAME.' '._IS_EMPTY.'!','NONE');
+				$error = functions::wash_html(_POSITION_NAME.' '._IS_EMPTY.'!','NONE');
 				$status = 1;
 			}
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
     break;
@@ -799,15 +797,15 @@ switch ($mode) {
 					$content .= '</form>';
 
 				} else {
-					$error = $request->wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
+					$error = functions::wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
 					$status = 1;
 				}
 			} else {
-				$error = $request->wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
+				$error = functions::wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
 				$status = 1;
 			}
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
     break;
@@ -826,7 +824,7 @@ switch ($mode) {
 					//If is not serial fileplan
 					if ($fileplan->isSerialFileplan($fileplan_id) === false){
 						if (empty($_REQUEST['position_id'])) {
-								$error = $request->wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
+								$error = functions::wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
 								$status = 1;
 						} else {
 						   $position_id = $_REQUEST['position_id'];
@@ -837,11 +835,11 @@ switch ($mode) {
 					
 					//Nested?
 					if (empty($_REQUEST['parent_id'])) {
-							$error .= $request->wash_html(_CHOOSE_PARENT_POSITION.'!','NONE');
+							$error .= functions::wash_html(_CHOOSE_PARENT_POSITION.'!','NONE');
 							$status = 1;
 					} else {
 						($_REQUEST['parent_id'] == '##ROOT##')?
-							$parent_id = 'NULL' : $parent_id = "'".$_REQUEST['parent_id']."'";
+							$parent_id = NULL : $parent_id = $_REQUEST['parent_id'];
 					}
 					
 					//Update position
@@ -852,16 +850,18 @@ switch ($mode) {
 
 							//If new position id already exists
 							if($fileplan->positionAlreadyExists($fileplan_id, $position_id) && ($old_position_id <> $position_id)) {
-									$error = $request->wash_html(_POSITION_ALREADY_EXISTS.': '.$position_id.'!','NONE');
+									$error = functions::wash_html(_POSITION_ALREADY_EXISTS.': '.$position_id.'!','NONE');
 									$status = 1;
 							} else {
-								$position_label = $request->protect_string_db($_REQUEST['position_label']);
-								$request->query("UPDATE ".FILEPLAN_POSITIONS_TABLE
-									. " SET position_id = '".$position_id
-									. "', position_label = '".$position_label
-									. "', parent_id = ".$parent_id
-									. " WHERE fileplan_id = ".$fileplan_id
-									. " AND position_id = '".$old_position_id."'");
+								$position_label = functions::protect_string_db($_REQUEST['position_label']);
+								$stmt = $db->query(
+									"UPDATE ".FILEPLAN_POSITIONS_TABLE
+									. " SET position_id = ?"
+									. ", position_label = ?"
+									. ", parent_id = ?"
+									. " WHERE fileplan_id = ?"
+									. " AND position_id = ?"
+									,array($position_id,$position_label,$parent_id,$fileplan_id,$old_position_id));
 									
 								//History
 								if ($_SESSION['history']['fileplanup']) {
@@ -893,20 +893,20 @@ switch ($mode) {
 									.$_REQUEST['position_label']."';";
 							}
 						} else {
-							$error = $request->wash_html($old_position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
+							$error = functions::wash_html($old_position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
 							$status = 1;
 						}
 					}
 				} else {
-					$error = $request->wash_html(_POSITION_NAME.' '._IS_EMPTY.'!','NONE');
+					$error = functions::wash_html(_POSITION_NAME.' '._IS_EMPTY.'!','NONE');
 					$status = 1;
 				}
 			} else {
-				$error = $request->wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
+				$error = functions::wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
 				$status = 1;
 			}
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
     break;
@@ -959,15 +959,15 @@ switch ($mode) {
 					$content .= '</form>';
 
 				} else {
-					$error = $request->wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
+					$error = functions::wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
 					$status = 1;
 				}
 			} else {
-				$error = $request->wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
+				$error = functions::wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
 				$status = 1;
 			}
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
     break;
@@ -991,22 +991,20 @@ switch ($mode) {
 					$position_label = '';
 					for($i=0; $i < count($positions_array); $i++) {
 						//Kepp label
-						$position_label .= $request->wash_html($positions_array[$i]['LABEL']) .'<br/>';
+						$position_label .= functions::wash_html($positions_array[$i]['LABEL']) .'<br/>';
 						 
 						//Delete linked documents                
-						$request->query(
+						$stmt = $db->query(
 							"DELETE FROM " 
-							. FILEPLAN_RES_POSITIONS_TABLE . " WHERE fileplan_id = " 
-							. $fileplan_id." AND position_id = '"
-							. $positions_array[$i]['ID']."'"
-						);  
+							. FILEPLAN_RES_POSITIONS_TABLE . " WHERE fileplan_id = ?" 
+							. " AND position_id = ?"
+						,array($fileplan_id,$positions_array[$i]['ID']));  
 						//Delete position
-						$request->query(
+						$stmt = $db->query(
 							"DELETE FROM " 
-							. FILEPLAN_POSITIONS_TABLE . " WHERE fileplan_id = " 
-							. $fileplan_id." AND position_id = '"
-							. $positions_array[$i]['ID']."'"
-						);
+							. FILEPLAN_POSITIONS_TABLE . " WHERE fileplan_id = ?" 
+							. " AND position_id = ?"
+						,array($fileplan_id,$positions_array[$i]['ID']));
 						
 						//History
 						if ($_SESSION['history']['fileplandel']) {
@@ -1038,15 +1036,15 @@ switch ($mode) {
 					$js .= "window.top.$('main_info').innerHTML = '"._POSITION_REMOVED.': '
 						.$position_label."';";
 				} else {
-					$error = $request->wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
+					$error = functions::wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
 					$status = 1;
 				}
 			} else {
-				$error = $request->wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
+				$error = functions::wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
 				$status = 1;
 			}
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
     break;
@@ -1075,11 +1073,12 @@ switch ($mode) {
 						
 							$position_label .= $positions_array[$i]['LABEL'] .'<br/>';
 							//Query
-							$request->query("UPDATE ".FILEPLAN_POSITIONS_TABLE
-								. " SET enabled = 'N' WHERE fileplan_id = "
-								. $fileplan_id . " AND position_id = '"
-								. $positions_array[$i]['ID']
-								. "' AND enabled = 'Y'");
+							$stmt = $db->query(
+								"UPDATE ".FILEPLAN_POSITIONS_TABLE
+								. " SET enabled = ? WHERE fileplan_id = ?"
+								. " AND position_id = ?"
+								. " AND enabled = ?"
+								,array('N',$fileplan_id,$positions_array[$i]['ID'],'Y'));
 								
 							//History
 							if ($_SESSION['history']['fileplanup']) {
@@ -1110,15 +1109,15 @@ switch ($mode) {
 					$js .= "window.top.$('main_info').innerHTML = '"._POSITION_DISABLED.': '
 						.$position_label."';";
 				} else {
-					$error = $request->wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
+					$error = functions::wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
 					$status = 1;
 				}
 			} else {
-				$error = $request->wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
+				$error = functions::wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
 				$status = 1;
 			}
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
 		
@@ -1151,20 +1150,21 @@ switch ($mode) {
 					for($i=0; $i < count($positions_array); $i++) {
 						//Only if disable
 						if ($fileplan->isEnable($fileplan_id, $positions_array[$i]['ID']) === false) {
-							$position_label .= $request->wash_html($positions_array[$i]['LABEL']).'<br/>';
+							$position_label .= functions::wash_html($positions_array[$i]['LABEL']).'<br/>';
 							//Query
-							$request->query("UPDATE ".FILEPLAN_POSITIONS_TABLE
-								. " SET enabled = 'Y' WHERE fileplan_id = "
-								. $fileplan_id
-								. " AND position_id = '".$positions_array[$i]['ID']
-								. "' AND enabled = 'N'");
+							$stmt = $db->query(
+								"UPDATE ".FILEPLAN_POSITIONS_TABLE
+								. " SET enabled = ? WHERE fileplan_id = ?"
+								. " AND position_id = ?"
+								. " AND enabled = ?"
+								,array('Y',$fileplan_id,$positions_array[$i]['ID'],'N'));
 								
 							//History
 							if ($_SESSION['history']['fileplanup']) {
 								//Add to history
 								$hist->add(
 									FILEPLAN_POSITIONS_TABLE, $positions_array[$i]['ID'], "UP", 'fileplanup',
-									_POSITION_ENABLED .': '.$request->wash_html($positions_array[$i]['LABEL'])
+									_POSITION_ENABLED .': '.functions::wash_html($positions_array[$i]['LABEL'])
 									.' (' . $positions_array[$i]['ID'] . ')',
 									$_SESSION['config']['databasetype'], 'fileplan'
 								);
@@ -1188,15 +1188,15 @@ switch ($mode) {
 					$js .= "window.top.$('main_info').innerHTML = '"._POSITION_ENABLED.': '
 						.$position_label."';";
 				} else {
-					$error = $request->wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
+					$error = functions::wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
 					$status = 1;
 				}
 			} else {
-				$error = $request->wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
+				$error = functions::wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
 				$status = 1;
 			}
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
     break;
@@ -1241,7 +1241,7 @@ switch ($mode) {
 					//...and to hidden field
 					$extraContent .=  '<input type="hidden" name="actual_position_id" value="'.$_REQUEST['actual_position_id'].'" />';
 				} else {
-					$error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+					$error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
 					$status = 1;
 				}
             }
@@ -1305,7 +1305,7 @@ switch ($mode) {
                 .'fileplan&page=positions_checked_list_autocompletion'.$extraUrl
 				.'&fileplan_id=\' + document.formFileplan.fileplan_id.value);</script>';
         } else {
-            $error = $request->wash_html(_CHOOSE_ONE_DOC.'!','NONE');
+            $error = functions::wash_html(_CHOOSE_ONE_DOC.'!','NONE');
             $status = 1;
         }
     break;
@@ -1386,7 +1386,7 @@ switch ($mode) {
 								unset($_SESSION['checked_positions']);
                             }
                         } else {
-                            $error = $request->wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
+                            $error = functions::wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
                             $status = 1;
                             break;
                         }
@@ -1409,16 +1409,16 @@ switch ($mode) {
 					$js .= "window.top.$('main_info').innerHTML = '"._DOC_ADDED_TO_POSITION."';";
 
                 /*} else {
-                    $error = $request->wash_html(_CHOOSE_ONE_POSITION.'!','NONE');
+                    $error = functions::wash_html(_CHOOSE_ONE_POSITION.'!','NONE');
                     $status = 1;
                 }*/
 				
             } else {
-				$error = $request->wash_html(_CHOOSE_FILEPLAN.'!','NONE');
+				$error = functions::wash_html(_CHOOSE_FILEPLAN.'!','NONE');
 				$status = 1;
 			}
         } else {
-            $error = $request->wash_html(_CHOOSE_ONE_DOC.'!','NONE');
+            $error = functions::wash_html(_CHOOSE_ONE_DOC.'!','NONE');
             $status = 1;
         }
     break;
@@ -1464,15 +1464,15 @@ switch ($mode) {
 					$js .= "window.top.$('main_info').innerHTML = '"._DOC_REMOVED_FROM_POSITION."';";
 					
 				} else {
-					$error = $request->wash_html(_DOC.' '._IS_EMPTY.'!','NONE');
+					$error = functions::wash_html(_DOC.' '._IS_EMPTY.'!','NONE');
 					$status = 1;
 				}
 			} else {
-				$error = $request->wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
+				$error = functions::wash_html(_POSITION_ID.' '._IS_EMPTY.'!','NONE');
 				$status = 1;
 			}
 		} else {
-            $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+            $error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         }
     break;
@@ -1494,11 +1494,11 @@ switch ($mode) {
 					.'fileplan&page=positions_checked_list_autocompletion'.$extraUrl
 					.'&fileplan_id='.$_REQUEST['fileplan_id'].'\');';*/
 			} else {
-				$error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+				$error = functions::wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
 				$status = 1;
 			}
         } else {
-            $error = $request->wash_html(_UNKNOW_ERROR.'!','NONE');
+            $error = functions::wash_html(_UNKNOW_ERROR.'!','NONE');
             $status = 1;
         }
     break;

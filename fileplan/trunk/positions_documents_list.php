@@ -40,8 +40,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
          
 $security   = new security();
 $core_tools = new core_tools();
-$request    = new request();
-$request2   = new request();
+$db    		= new Database();
 $status_obj = new manage_status();
 $list       = new lists();
 $fileplan   = new fileplan();
@@ -83,36 +82,36 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 			$orderstr = "order by coll_id desc";
 		}
 		//Query
-		$request->query(
+		$stmt = $db->query(
 					"SELECT * FROM "
                     . FILEPLAN_RES_POSITIONS_TABLE
-                    . " WHERE fileplan_id = " . $fileplan_id 
-                    . " AND position_id = '" . $position_id 
-                    . "' ".$orderstr
-		);
-		// $request->show();
+                    . " WHERE fileplan_id = ?"
+                    . " AND position_id = ?"
+                    . " ".$orderstr
+		,array($fileplan_id,$position_id));
+
 		
 		$description = $fileplan->getPositionPath($fileplan_id, $position_id, true);
 		
 		$resId_array = array();
 		//
-		if($request->nb_result() > 0) {
+		if($stmt->rowCount() > 0) {
 		
 			//Build list array
 			$tab=array();
-			while($line = $request->fetch_object())
+			while($line = $stmt->fetchObject())
 			{
 				//Get view fort ressource collection
 				$view = $security->retrieve_view_from_coll_id($line->coll_id);
 				
 				//Query 
-				$request2->query(
+				$stmt2 = $db->query(
 					"SELECT res_id, res_id as right_doc, status, type_label,"
 					." category_id, subject, creation_date FROM "
-                    . $view . " WHERE res_id = " . $line->res_id
-				);
+                    . $view . " WHERE res_id = ?"
+				,array($line->res_id));
 
-				$res = $request2->fetch_array();
+				$res = $stmt2->fetch(PDO::FETCH_ASSOC);
 				$temp= array();
 				//Create list ID
 				array_push($temp, array('column'=>'list_id', 'value'=>$line->coll_id.'@@'.$line->res_id));
@@ -135,7 +134,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 				array_push($tab, $temp);
 			}
 
-			// $request->show_array($tab);
+		
 			//Result Array
 				for ($i=0;$i<count($tab);$i++)
 				{
@@ -222,7 +221,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 							}             
 							if($tab[$i][$j][$value]=="subject")
 							{
-								$tab[$i][$j]["value"] = $request->cut_string($request->show_string($tab[$i][$j]["value"]), 250);
+								$tab[$i][$j]["value"] = functions::cut_string(functions::show_string($tab[$i][$j]["value"]), 250);
 								$tab[$i][$j]["label"]=_SUBJECT;
 								$tab[$i][$j]["size"]="12";
 								$tab[$i][$j]["label_align"]="left";
@@ -245,7 +244,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 							}
 							if($tab[$i][$j][$value]=="type_label")
 							{
-								$tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+								$tab[$i][$j]["value"] = functions::show_string($tab[$i][$j]["value"]);
 								$tab[$i][$j]["label"]=_TYPE;
 								$tab[$i][$j]["size"]="10";
 								$tab[$i][$j]["label_align"]="left";

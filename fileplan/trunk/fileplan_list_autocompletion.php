@@ -33,27 +33,26 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
     
-$db     = new dbquery();
+$db       = new Database();
 $fileplan = new fileplan();
 
-$db->connect();
+
 if (strlen(trim($_REQUEST['what'])) > 0) {
     $label = $_REQUEST['what'];
 
-    $db->query(
+    $stmt = $db->query(
                "select  fileplan_id, fileplan_label from "
-               . FILEPLAN_TABLE." where enabled = 'Y'"
-               ." and lower(fileplan_label) like lower('%"
-               . $label."%') order by fileplan_label"
-               );
+               . FILEPLAN_TABLE." where enabled = ?"
+               ." and lower(fileplan_label) like lower(?) order by fileplan_label"
+              ,array('Y','%'.$label.'%'));
                     
 }
-// $db->show();
+
 
 $authViewList = 0;
 $content = "";
 $content .= "<ul>\n";
-while($line = $db->fetch_object())
+while($line = $stmt->fetchObject())
 {
     if($authViewList < 10)
 	{

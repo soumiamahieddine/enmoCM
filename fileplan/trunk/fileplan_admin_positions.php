@@ -34,7 +34,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
     
 $core_tools = new core_tools();
-$request    = new request();
+$db    = new Database();
 $fileplan   = new fileplan();
 
 $core_tools->test_service('admin_fileplan', 'fileplan');
@@ -94,15 +94,15 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 					if (!empty($fileplan_id)) {
 						//Get Positions for the actual fileplan
 						$level_1 = array();
-						$request->connect();
-						$request->query(
+
+						$stmt = $db->query(
 							"select position_id, position_label from "
-							. FILEPLAN_VIEW." where fileplan_id = ".$fileplan_id
+							. FILEPLAN_VIEW." where fileplan_id = ?"
 							. " and parent_id is null"
-							. " and position_enabled = 'Y' order by position_label asc"
-						);
-						// $request->show();                
-						while($res = $request->fetch_object())
+							. " and position_enabled = ? order by position_label asc"
+						,array($fileplan_id,'Y'));
+                
+						while($res = $stmt->fetchObject())
 						{
 							array_push(
 								$level_1, 
@@ -110,14 +110,13 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 									'id' => $res->position_id, 
 									'tree' => '0', 
 									'key_value' => $res->position_id, 
-									'label_value' => $request->show_string($fileplan->truncate($res->position_label), true), 
-									'tooltip_value' => $request->show_string($res->position_label, true), 
-									'color' => $request->show_string($res->label_color, true), 
+									'label_value' => functions::show_string($fileplan->truncate($res->position_label), true), 
+									'tooltip_value' => functions::show_string($res->position_label, true), 
+									'color' => functions::show_string($res->label_color, true), 
 									'script' => ""
 								)
 							);
 						}
-						// $request->show_array( $level_1);
 					}
 					?>
 					<script type="text/javascript">

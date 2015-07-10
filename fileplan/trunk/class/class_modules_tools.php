@@ -37,7 +37,7 @@ try {
     echo $e->getMessage().' // ';
 }
 
-class fileplan extends dbquery
+class fileplan
 {
     /**
     * Build Maarch module tables into sessions vars with a xml configuration file
@@ -81,21 +81,22 @@ class fileplan extends dbquery
     
         $fileplan = array();
         
-        $this->connect();
-        $this->query(
+        $db = new Database();
+
+        $stmt = $db->query(
             "select * from " 
             . FILEPLAN_TABLE 
-            . " where fileplan_id = " 
-            . $fileplan_id
-        );
-        if($this->nb_result() > 0) {        
-            $res = $this->fetch_object();
+            . " where fileplan_id = ?" 
+        ,array($fileplan_id));
+
+        if($stmt->rowCount() > 0) {        
+            $res = $stmt->fetchObject();
             //Root mode
             ($root_mode === true)? $id = '##ROOT##' : $id = $res->fileplan_id;
             
             $fileplan = array(
                 'ID' => $id , 
-                'LABEL' => $this->show_string($res->fileplan_label),
+                'LABEL' => functions::show_string($res->fileplan_label),
                 'USER' => $res->user_id,
                 'ENTITY' => $res->entity_id,
                 'IS_SERIAL' => $res->is_serial_id,
@@ -110,15 +111,15 @@ class fileplan extends dbquery
     *
     */
     public function isPersonnalFileplan($fileplan_id) {
-        $this->connect();
-        $this->query(
-            "select fileplan_id from " 
-            . FILEPLAN_TABLE . " where fileplan_id = "
-            . $fileplan_id." and user_id = '" 
-            . $_SESSION['user']['UserId'] . "'"
-        );
         
-        return ($this->nb_result() > 0)? true : false;
+        $db = new Database();
+
+        $stmt = $db->query(
+            "select fileplan_id from " 
+            . FILEPLAN_TABLE . " where fileplan_id = ? and user_id = ?"
+        ,array($fileplan_id,$_SESSION['user']['UserId']));
+        
+        return ($stmt->rowCount() > 0)? true : false;
     }
     /**
     *
@@ -126,14 +127,13 @@ class fileplan extends dbquery
     *
     */
     public function isSerialFileplan($fileplan_id) {
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select fileplan_id from " 
-            . FILEPLAN_TABLE . " where fileplan_id = "
-            . $fileplan_id." and is_serial_id = 'Y'"
-        );
+            . FILEPLAN_TABLE . " where fileplan_id = ? and is_serial_id = ?"
+        ,array($fileplan_id,'Y'));
         
-        return ($this->nb_result() > 0)? true : false;
+        return ($stmt->rowCount() > 0)? true : false;
     }
     /**
     *
@@ -141,14 +141,14 @@ class fileplan extends dbquery
     *
     */
     public function fileplanHasPositions($fileplan_id) {
-        $this->connect();
-        $this->query(
+
+        $db = new Database();
+        $stmt = $db->query(
             "select position_id from " 
-            . FILEPLAN_POSITIONS_TABLE . " where fileplan_id = "
-            . $fileplan_id
-        );
+            . FILEPLAN_POSITIONS_TABLE . " where fileplan_id = ?"
+        ,array($fileplan_id));
         
-        return ($this->nb_result() > 0)? true : false;
+        return ($stmt->rowCount() > 0)? true : false;
     }
     /**
     *
@@ -181,24 +181,24 @@ class fileplan extends dbquery
             // for($i=0; $i < count($_SESSION['user']['entities']); $i++) {
                 // array_push($entities, "'".$_SESSION['user']['entities'][$i]['ENTITY_ID']."'");
             // }
-            $this->connect();
+            $db = new Database();
             // $this->query(
                 // "select * from " 
                 // . FILEPLAN_TABLE . " where entity_id in(" 
                 // . join(',', $entities) . ")"
             // );
-            $this->query(
+            $stmt = $db->query(
                 "select * from " 
                 . FILEPLAN_TABLE . " where user_id is null"
             );
             
-            if($this->nb_result() > 0) {
-                while($res = $this->fetch_object()) {
+            if($stmt->rowCount() > 0) {
+                while($res = $stmt->fetchObject()) {
                     array_push(
                         $fileplan , 
                         array(
                             'ID' =>   $res->fileplan_id, 
-                            'LABEL' => $this->show_string($res->fileplan_label),
+                            'LABEL' => functions::show_string($res->fileplan_label),
                             'ENABLED' => $res->enabled
                         )
                     );
@@ -217,19 +217,19 @@ class fileplan extends dbquery
     
         $fileplan = array();
         
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select * from " 
-            . FILEPLAN_TABLE . " where user_id = '" 
-            . $_SESSION['user']['UserId'] . "'"
-        );
-        if($this->nb_result() > 0) {        
-            $res = $this->fetch_object();
+            . FILEPLAN_TABLE . " where user_id = ?"
+        ,array($_SESSION['user']['UserId']));
+
+        if($stmt->rowCount() > 0) {        
+            $res = $stmt->fetchObject();
             array_push(
                 $fileplan , 
                 array(
                     'ID' =>   $res->fileplan_id, 
-                    'LABEL' => $this->show_string($res->fileplan_label),
+                    'LABEL' => functions::show_string($res->fileplan_label),
                     'ENABLED' => $res->enabled
                 )
             );
@@ -264,15 +264,14 @@ class fileplan extends dbquery
     *
     */
     public function positionAlreadyExists($fileplan_id, $position_id) {
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select position_id from " 
             . FILEPLAN_POSITIONS_TABLE
-            . "  where position_id = '" . $position_id 
-            . "' and fileplan_id = " . $fileplan_id
-            );
+            . "  where position_id = ? and fileplan_id = ?"
+            ,array($position_id,$fileplan_id));
             
-        if($this->nb_result() > 0) {
+        if($stmt->rowCount() > 0) {
             return true;
         } else {
             return false;
@@ -284,19 +283,17 @@ class fileplan extends dbquery
     *
     */
     private function _buildPositionPath($fileplan_id, $position_array, $position_id) {
-        
+
         if (!empty($fileplan_id) && !empty($position_id)) {
-            
-            $this->query(
+            $db = new Database();
+            $stmt = $db->query(
                 "select position_label, parent_id from " 
                 . FILEPLAN_POSITIONS_TABLE 
-                . " where fileplan_id = "
-                . $fileplan_id . " and position_id = '" 
-                . $position_id . "' "
-            );
-            // $this->show();
-            $res = $this->fetch_object();
-            $position_name = $this->show_string($res->position_label);
+                . " where fileplan_id = ? and position_id = ? "
+            ,array($fileplan_id,$position_id));
+           
+            $res = $stmt->fetchObject();
+            $position_name = functions::show_string($res->position_label);
             $parent_id = $res->parent_id;
             
             if (!empty($position_name)){
@@ -341,26 +338,25 @@ class fileplan extends dbquery
     *
     */
     public function getPosition($fileplan_id, $position_id, $onlyThisField = '') {
-                
+        
         if (!empty($fileplan_id) && !empty($position_id)) {
-            $this->connect();
-            $this->query(
+            $db = new Database();
+            $stmt = $db->query(
                 "select * from " 
-                . FILEPLAN_VIEW . " where fileplan_id = "
-                . $fileplan_id . " and position_id = '" 
-                . $position_id . "' "
-                );
+                . FILEPLAN_VIEW . " where fileplan_id = ?"
+                . " and position_id = ?"
+                ,array($fileplan_id,$position_id));
              
-            $line = $this->fetch_object();
+            $line = $stmt->fetchObject();
             if(!empty($onlyThisField)){
-                return (isset($line->$onlyThisField))? $this->show_string($line->$onlyThisField) : false;
+                return (isset($line->$onlyThisField))? functions::show_string($line->$onlyThisField) : false;
             } else {
                 $positionArray = array();
                 array_push(
                 $positionArray , 
                 array(
                     'ID' => $line->position_id, 
-                    'LABEL' => $this->show_string($line->position_label), 
+                    'LABEL' => functions::show_string($line->position_label), 
                     'PARENT_ID' => $line->parent_id,
                     'COUNT_DOCUMENT' => $line->count_document
                     )
@@ -428,6 +424,7 @@ class fileplan extends dbquery
     *
     */
     public function getPositionsTree($fileplan_id, $positions, $parent='',  $tabspace = '') {
+
         if(is_array($parent)) {
             // echo 'IS_ARRAY<br/>';
             for ($i=0; $i < count($parent); $i++) {
@@ -435,7 +432,7 @@ class fileplan extends dbquery
                 array_push($positions, 
                             array(
                                 'ID' =>   $parent[$i]['ID'], 
-                                'LABEL' => $this->show_string($parent[$i]['LABEL']),
+                                'LABEL' => functions::show_string($parent[$i]['LABEL']),
                                 'PARENT_ID' => $parent[$i]['PARENT_ID'],
                                 'COUNT_DOCUMENT' => $parent[$i]['COUNT_DOCUMENT']
                                 )
@@ -456,57 +453,51 @@ class fileplan extends dbquery
     *
     */
     private function _getChildrensTree($fileplan_id, $positions, $parent = '', $tabspace = '') {
-        $this->connect();
-        if ($this->protect_string_db(trim($parent)) == '') {
 
-            $this->query(
+        $db = new Database();
+        if (functions::protect_string_db(trim($parent)) == '') {
+
+            $stmt = $db->query(
                     "select position_id, position_label, parent_id, count_document from "
                     . FILEPLAN_VIEW 
-                    . " where fileplan_id = "
-                    . $fileplan_id 
-                    // . " and user_id = '" . $_SESSION['user']['UserId'] . "'"
+                    . " where fileplan_id = ?" 
                     . " and parent_id is null" 
                     . " order by position_label asc"
-                    );
+                    ,array($fileplan_id));
         } else {
-            $this->query(
+            $stmt = $db->query(
                 "select position_id, position_label, parent_id, count_document from "
-                . FILEPLAN_VIEW." where fileplan_id = "
-                . $fileplan_id 
-                // . " and user_id = '" . $_SESSION['user']['UserId'] . "'"
-                . " and parent_id = '"
-                . trim($parent)
-                . "' order by position_label asc"
-                );
+                . FILEPLAN_VIEW." where fileplan_id = ?"
+                . " and parent_id = ?"
+                . " order by position_label asc"
+                ,array($fileplan_id,trim($parent)));
         }
-        // $this->show();
-        if($this->nb_result() > 0) {
+        if($stmt->rowCount() > 0) {
         
             $espace = $tabspace.'&emsp;';
             
-            while($line = $this->fetch_object()) {
+            while($line = $stmt->fetchObject()) {
+
                  array_push(
                         $positions, 
                         array(
                             'ID' =>$line->position_id, 
-                            'LABEL' =>  $espace.$this->show_string($line->position_label), 
+                            'LABEL' =>  $espace.functions::show_string($line->position_label), 
                             'PARENT_ID' =>$line->parent_id,
                             'COUNT_DOCUMENT' => $line->count_document
                             )
                         );       
                 if (!empty($line->position_id)) {
-                    $db = new fileplan();
-                    $db->connect();
-                    $db->query('select position_id from '
-                        . FILEPLAN_VIEW." where fileplan_id = "
-                        . $fileplan_id . " and parent_id = '"
-                        .$line->position_id."'"
-                        );
+                    $fp = new fileplan();
+                    $stmt2 = $db->query("select position_id from "
+                        . FILEPLAN_VIEW." where fileplan_id = ?"
+                        . " and parent_id = ?"
+                        ,array($fileplan_id,$line->position_id));
                     
                     $tmp = array();
-                    if($db->nb_result() > 0) {
-                        // $db->show();
-                        $tmp = $db->_getChildrensTree($fileplan_id, $tmp, $line->position_id, $espace);
+                    if($stmt2->rowCount() > 0) {
+
+                        $tmp = $fp->_getChildrensTree($fileplan_id, $tmp, $line->position_id, $espace);
                         $positions = array_merge($positions, $tmp);
                     }
                 }
@@ -522,37 +513,35 @@ class fileplan extends dbquery
     public function getParents($positions, $fileplan_id, $position_id) {
     
         if (!empty($fileplan_id) && !empty($position_id)) {
-            $this->connect();
-            $this->query(
+            $db = new Database();
+
+            $stmt = $db->query(
                     "select parent_id from "
-                    . FILEPLAN_VIEW . " where fileplan_id = "
-                    . $fileplan_id . " and position_id = '" 
-                    . $position_id."'" 
-                    );
-            $res = $this->fetch_object();
+                    . FILEPLAN_VIEW . " where fileplan_id = ?"
+                    . " and position_id = ?"
+                    ,array($fileplan_id,$position_id));
+            $res = $stmt->fetchObject();
             
             if(!empty($res->parent_id )) {
-                // $this->show();
-                $db = new fileplan();
-                $db->connect();
-                $db->query(
+ 
+                $db = new Database();
+                $stmt = $db->query(
                     "select position_id, position_label, parent_id, count_document from "
-                    . FILEPLAN_VIEW." where fileplan_id = "
-                    . $fileplan_id . " and position_id = '" 
-                    . $res->parent_id ."'" 
-                    );
+                    . FILEPLAN_VIEW." where fileplan_id = ?"
+                    . " and position_id = ?" 
+                    ,array($fileplan_id,$res->parent_id));
                     
-                $line = $db->fetch_object();
+                $line = $stmt->fetchObject();
                 array_push(
                         $positions, 
                         array(
                             'ID' => $line->position_id, 
-                            'LABEL' =>  $db->show_string($line->position_label), 
+                            'LABEL' =>  functions::show_string($line->position_label), 
                             'PARENT_ID' => $line->parent_id,
                             'COUNT_DOCUMENT' => $line->count_document
                             )
                         );
-                // $db->show();        
+        
                 if(!empty($line->parent_id )) {
                     $positions = $this->getParents($positions, $fileplan_id, $line->position_id);
                 }
@@ -566,16 +555,16 @@ class fileplan extends dbquery
     *
     */
     public function isEnable($fileplan_id, $position_id) {
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select position_id from " 
             . FILEPLAN_POSITIONS_TABLE
-            . "  where fileplan_id = "
-            . $fileplan_id . " and position_id = '" 
-            . $position_id . "' and enabled = 'Y'"
-        );
+            . "  where fileplan_id = ?"
+            . " and position_id = ?" 
+            . " and enabled = ?"
+        ,array($fileplan_id,$position_id,'Y'));
             
-        if($this->nb_result() > 0) {
+        if($stmt->rowCount() > 0) {
             return true;
         } else {
             return false;
@@ -620,27 +609,21 @@ class fileplan extends dbquery
             && !empty($res_id) 
             && !empty($coll_id) 
         ) {
-        
-            $this->connect();
-            $this->query(
+            $db = new Database();
+            $stmt = $db->query(
                     "SELECT fileplan_id FROM "
                     . FILEPLAN_RES_POSITIONS_TABLE
-                    . " WHERE fileplan_id = " . $fileplan_id 
-                    . " AND position_id = '" . $position_id 
-                    . "' AND res_id = " . $res_id 
-                    . " AND coll_id = '".$coll_id
-                    . "'"
-            );
-            // $this->show();
-            if($this->nb_result() == 0) {
-                $this->query(
+                    . " WHERE fileplan_id = ?"
+                    . " AND position_id = ?" 
+                    . " AND res_id = ?"
+                    . " AND coll_id = ?"
+            ,array($fileplan_id,$position_id,$res_id,$coll_id));
+
+            if($stmt->rowCount() == 0) {
+                $stmt = $db->query(
                     "INSERT INTO ".FILEPLAN_RES_POSITIONS_TABLE
-                    . " (fileplan_id, res_id, position_id, coll_id) VALUES ("
-                    . $fileplan_id.","
-                    . $res_id.",'"
-                    . $position_id."', '"
-                    . $coll_id."')"
-                    );
+                    . " (fileplan_id, res_id, coll_id,position_id) VALUES (?,?,?,?)"
+                    ,array($fileplan_id,$res_id,$coll_id,$position_id));
             }
         } else {
             return false;
@@ -656,18 +639,17 @@ class fileplan extends dbquery
             && !empty($position_id) 
             && count($resid_array) > 0
         ) {
-            $this->connect();
+            $db = new Database();
             for($i=0; $i < count($resid_array); $i++) {
-                $this->query(
+                $stmt = $db->query(
                     "DELETE FROM "
                     . FILEPLAN_RES_POSITIONS_TABLE
-                    . " WHERE fileplan_id = " . $fileplan_id 
-                    . " AND position_id = '" . $position_id 
-                    . "' AND res_id = " . $resid_array[$i]['RES_ID']
-                    . " AND coll_id = '".$resid_array[$i]['COLL_ID']
-                    . "'"
-                );
-                // $this->show();
+                    . " WHERE fileplan_id = ?" 
+                    . " AND position_id = ?"
+                    . " AND res_id = ?"
+                    . " AND coll_id = ?"
+                ,array($fileplan_id,$position_id,$resid_array[$i]['RES_ID'],$resid_array[$i]['COLL_ID']));
+
             }
         } else {
             return false;
@@ -687,22 +669,21 @@ class fileplan extends dbquery
             for($i=0; $i < count($authorizedFileplans); $i++) {
                 array_push($fileplans_array, $authorizedFileplans[$i]['ID']);
             }
-            $fileplans = join(',', $fileplans_array);
+            //$fileplans = join(',', $fileplans_array);
             
-            $this->connect();
-            $this->query(
+            $db = new Database();
+            $stmt = $db->query(
                     "SELECT fileplan_id, position_id FROM "
                     . FILEPLAN_RES_POSITIONS_TABLE
-                    . " WHERE fileplan_id in  (" . $fileplans 
-                    . ") AND coll_id = '" . $coll_id 
-                    . "' AND res_id = '" . $res_id 
-                    . "'"
-            );
-            // $this->show();
+                    . " WHERE fileplan_id in  (?"
+                    . ") AND coll_id = ?"
+                    . " AND res_id = ?"
+            ,array($fileplans_array,$coll_id,$res_id));
+            
             $positions = array();
-            if($this->nb_result() > 0) {
+            if($stmt->rowCount() > 0) {
                 
-                while($line = $this->fetch_object()) {
+                while($line = $stmt->fetchObject()) {
                  array_push(
                         $positions, 
                         array(
@@ -728,24 +709,23 @@ class fileplan extends dbquery
             && !empty($position_id) 
             && count($resid_array) > 0
         ) {
-            $this->connect();
+            $db = new Database();
             
             $nb_res = count($resid_array);
             $nb_match = 0;
             
             for($i=0; $i < $nb_res; $i++) {
                 
-                $this->query(
+                $stmt = $db->query(
                     "SELECT * FROM "
                     . FILEPLAN_RES_POSITIONS_TABLE
-                    . " WHERE fileplan_id = " . $fileplan_id 
-                    . " AND position_id = '" . $position_id 
-                    . "' AND res_id = " . $resid_array[$i]['RES_ID']
-                    . " AND coll_id = '".$resid_array[$i]['COLL_ID']
-                    . "'"
-                );
-                // $this->show();
-                if($this->nb_result() > 0) {
+                    . " WHERE fileplan_id = ?"
+                    . " AND position_id = ?"
+                    . " AND res_id = ?"
+                    . " AND coll_id = ?"
+                ,array($fileplan_id,$position_id,$resid_array[$i]['RES_ID'],$resid_array[$i]['COLL_ID']));
+        
+                if($stmt->rowCount() > 0) {
                     $nb_match ++;
                 }
             }
