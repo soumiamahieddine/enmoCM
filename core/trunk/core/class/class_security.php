@@ -143,13 +143,12 @@ class security extends dbquery
                     ) {
                         $_SESSION['user']['signature_path'] = $user->__get('signature_path');
                         $_SESSION['user']['signature_file_name'] = $user->__get('signature_file_name');
-                        $db = new dbquery();
-                        $db->connect();
+                        $db = new Database();
                         $query = "select path_template from " 
                             . _DOCSERVERS_TABLE_NAME 
                             . " where docserver_id = 'TEMPLATES'";
-                        $db->query($query);
-                        $resDs = $db->fetch_object();
+                        $stmt = $db->query($query);
+                        $resDs = $stmt->fetchObject();
                         $pathToDs = $resDs->path_template;
                         $_SESSION['user']['pathToSignature'] = $pathToDs . str_replace(
                                 "#", 

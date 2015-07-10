@@ -459,7 +459,6 @@ class request extends dbquery
                     $update_string .= $data[$i]['column']."=?,";
                     $parameters[] = $data[$i]['value']; 
                 }
-                
             }
         }
         $update_string = substr($update_string, 0, -1);
