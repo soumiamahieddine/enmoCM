@@ -1030,7 +1030,7 @@ if (!defined("_SALUTATION")) define("_SALUTATION","Formule de politesse");
 if (!defined("_SALUTATION_HEADER")) define("_SALUTATION_HEADER","De début de courrier");
 if (!defined("_SALUTATION_FOOTER")) define("_SALUTATION_FOOTER","De fin de courrier");
 
-if (!defined("_BACK_TO_RESULTS_LIST")) define("_BACK_TO_RESULTS_LIST","Retour à la liste de résusltats");
+if (!defined("_BACK_TO_RESULTS_LIST")) define("_BACK_TO_RESULTS_LIST","Retour à la liste de résultats");
 if (!defined("_ADD_ADDRESS_TO_CONTACT")) define("_ADD_ADDRESS_TO_CONTACT","Ajouter une nouvelle adresse à un contact existant");
 if (!defined("_ADD_ADDRESS_TO_CONTACT_DESC")) define("_ADD_ADDRESS_TO_CONTACT_DESC","Cette partie est utilisée pour ajouter une adresse à un contact qui existe déjà.");
 if (!defined("_WHICH_CONTACT")) define("_WHICH_CONTACT","A quel contact voulez-vous ajouter une adresse ?");
