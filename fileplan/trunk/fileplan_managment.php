@@ -207,14 +207,16 @@ if (empty($fileplan_id)) {
 				"count_document");
 	//Where clause
 		$where_tab = array();
+		$array_what = array();
 		//
-		$where_tab[] = "(user_id  = '".$_SESSION['user']['UserId']."')";
+		$where_tab[] = "(user_id  = ?)";
+		$array_what[] = $_SESSION['user']['UserId'];
 		//Filtre alphabetique et champ de recherche
 		$what = $list->getWhatSearch();
 		if (!empty($what)) {
-			$where_tab[] = "(lower(position_label) like lower('"
-							.$request->protect_string_db($what)
-							."%'))";
+			$where_tab[] = "(lower(position_label) like lower(?))";
+			//array
+			$array_what[] = $what.'%';
 		}
 		//Build where
 		$where = implode(' and ', $where_tab);
@@ -244,7 +246,7 @@ if (empty($fileplan_id)) {
 			
 	//Request
 
-		$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+		$tab=$request->PDOselect($select,$where,$array_what,$orderstr,$_SESSION['config']['databasetype']);
 		/*
 		$request->query
 			(
