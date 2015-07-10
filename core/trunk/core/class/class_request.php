@@ -432,13 +432,15 @@ class request extends dbquery
     * @param  $databasetype array Type of the database
     */
 
-    public function PDOupdate($table, $data, $where, $parameters = null, $databasetype)
+    public function PDOupdate($table, $data, $where, $parametersInit = null, $databasetype)
     {
         $db = new Database();
         $update_string = "";
+        $parameters = array();
         for ($i=0; $i < count($data);$i++) {
             if ($data[$i]['type'] == "string" || $data[$i]['type'] == "date") {
-                if ($databasetype == "POSTGRESQL" && $data[$i]['type'] == "date" && ($data[$i]['value'] == '' || $data[$i]['value'] == ' ')) {
+                if ($databasetype == "POSTGRESQL" && $data[$i]['type'] == "date" 
+                    && ($data[$i]['value'] == '' || $data[$i]['value'] == ' ')) {
                     $update_string .= $data[$i]['column']."=NULL,";
                 } else {
                     if (trim(strtoupper($data[$i]['value'])) == "SYSDATE") {
@@ -446,22 +448,39 @@ class request extends dbquery
                     } elseif(trim(strtoupper($data[$i]['value'])) == "CURRENT_TIMESTAMP") {
                         $update_string .= $data[$i]['column']."=CURRENT_TIMESTAMP,";
                     } else {
-                        $update_string .= $data[$i]['column']."='".$data[$i]['value']."',";
+                        $update_string .= $data[$i]['column']."=?,";
+                        $parameters[] = $data[$i]['value'];
                     }
                 }
             } else {
-                $update_string .= $data[$i]['column']."=".$data[$i]['value'].",";
+                if ($data[$i]['value'] == 'NULL') {
+                    $update_string .= $data[$i]['column']."=NULL,";   
+                } else {
+                    $update_string .= $data[$i]['column']."=?,";
+                    $parameters[] = $data[$i]['value']; 
+                }
+                
             }
         }
         $update_string = substr($update_string, 0, -1);
         if ($where <> "") {
-            $where_string = " WHERE ".$where;
+            $where_string = " WHERE " . $where;
         } else {
             $where_string = "";
         }
+        if (is_array($parametersInit)) {
+            for ($cpt=0;$cpt<count($parametersInit);$cpt++) {
+                $parameters[] = $parametersInit[$cpt];
+            }
+        }
         //Time to create the SQL Query
         $query = "";
-        $query = "UPDATE ".$table." SET ".$update_string.$where_string;
-        return $db->query($query, $parameters, true);
+        $query = "UPDATE " . $table . " SET " . $update_string . $where_string;
+        /*echo $query . '<br/>';
+        echo '<pre>';
+        var_dump($parameters);
+        echo '</pre>';*/
+        $stmt = $db->query($query, $parameters);
+        return $stmt;
     }
 }
