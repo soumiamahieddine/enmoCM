@@ -123,7 +123,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         $where_tab = array();
         //
         $where_tab[] = " identifier = ? ";
-        $arrayPDO = array($_SESSION['doc_id']);
+        $arrayPDO = array($identifier);
         //From filters
         $filterClause = $list->getFilters(); 
         if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
