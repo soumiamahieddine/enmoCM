@@ -125,14 +125,15 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 				"count_document");
 	//Where clause
 		$where_tab = array();
-		//
-		$where_tab[] = "(fileplan_id  = '".$fileplan_id."')";
+		$array_what = array();
+	
+		$where_tab[] = "(fileplan_id  = ?)";
+		$array_what[] = $fileplan_id;
 		//Filtre alphabetique et champ de recherche
 		$what = $list->getWhatSearch();
 		if (!empty($what)) {
-			$where_tab[] = "(lower(position_label) like lower('"
-							.$request->protect_string_db($what)
-							."%'))";
+			$where_tab[] = "(lower(position_label) like lower(?))";
+			$array_what[] = $what.'%';
 
 		}
 		//Build where
@@ -162,7 +163,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 		if (!empty($start)) $parameters .= '&start='.$start;
 			
 	//Request
-		$tab=$request->PDOselect($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+		$tab=$request->PDOselect($select,$where,$array_what,$orderstr,$_SESSION['config']['databasetype']);
 		// $request->show();
 		
 	//Result array    
