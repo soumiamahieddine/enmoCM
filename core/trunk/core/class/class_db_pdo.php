@@ -386,5 +386,35 @@ class Database extends functions
             default             : return ' ';
         }
     }
+
+    /**
+    * Test if the specified column exists in the database
+    *
+    * @param  $table : Name of searched table
+    * @param  $field : Name of searched field in table
+    *  ==Return : true is field is founed, false is not
+    */
+    public function test_column($table, $field)
+    {
+        switch($this->driver) {
+            case 'pgsql'   : 
+                $stmt = $this->query(
+                    "select column_name from information_schema.columns where table_name = ? and column_name = ?", 
+                    array($table, $field)
+                );
+                $res = $stmt->rowCount();
+                if ($res > 0) return true; 
+                else return false;
+            case 'oci'       : 
+                $stmt = $this->query("SELECT * from USER_TAB_COLUMNS where TABLE_NAME = ? AND COLUMN_NAME = ?", 
+                    array($table, $field)
+                );
+                $res = $stmt->rowCount();
+                if ($res > 0) return true; 
+                else return false;
+            case 'mysql'        : return true; // TO DO
+            default             : return false;
+        }
+    }
 }
 

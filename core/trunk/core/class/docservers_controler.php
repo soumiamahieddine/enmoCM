@@ -529,13 +529,11 @@ class docservers_controler
                 );
                 return $control;
             }
-            $db = new dbquery();
-            $db->connect();
+            $db = new Database();
             $query = "delete from " . _DOCSERVERS_TABLE_NAME
-                   . " where docserver_id ='"
-                   . $func->protect_string_db($docserver->docserver_id) . "'";
+                   . " where docserver_id = ?";
             try {
-                $db->query($query);
+                $stmt = $db->query($query, array($docserver->docserver_id));
             } catch (Exception $e) {
                 $control = array(
                     'status' => 'ko',
@@ -544,7 +542,6 @@ class docservers_controler
                     . ' ' . $docserver->docserver_id,
                 );
             }
-            $db->disconnect();
             $control = array(
                 'status' => 'ok',
                 'value' => $docserver->docserver_id,
@@ -701,20 +698,17 @@ class docservers_controler
         if (!isset($docserver_id) || empty($docserver_id)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select docserver_id from " . _DOCSERVERS_TABLE_NAME
-               . " where docserver_id = '" . $docserver_id . "'";
+               . " where docserver_id = ?";
         try{
-            $db->query($query);
+            $stmt = $db->query($query, array($docserver_id));
         } catch (Exception $e) {
             echo _UNKNOWN . _DOCSERVER . ' ' . functions::xssafe($docserver_id) . ' // ';
         }
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        $db->disconnect();
         return false;
     }
 

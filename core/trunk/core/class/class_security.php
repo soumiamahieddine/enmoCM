@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008-2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -41,6 +41,7 @@
 */
 
 //Requires to launch history functions
+require_once 'core/class/class_db_pdo.php';
 require_once 'core/class/class_history.php';
 require_once 'core/class/SecurityControler.php';
 require_once 'core/where_targets.php';
@@ -54,7 +55,7 @@ require_once 'core/class/ServiceControler.php';
 
 //require_once('lib/FirePHP/Init.php');
 
-class security extends dbquery
+class security extends Database
 {
     /**
     * Gets the indice of the collection in the  $_SESSION['collections'] array
@@ -298,8 +299,6 @@ class security extends dbquery
     */
     public function reopen($s_UserId,$s_key)
     {
-        $this->connect();
-
         $comp = " and cookie_key = '".$s_key."' and STATUS <> 'DEL'";
         $uc = new users_controler();
         $user = users_controler::get($s_login, $comp);
@@ -322,13 +321,12 @@ class security extends dbquery
                     ) {
                         $_SESSION['user']['signature_path'] = $user->__get('signature_path');
                         $_SESSION['user']['signature_file_name'] = $user->__get('signature_file_name');
-                        $db = new dbquery();
-                        $db->connect();
+                        $db = new Database();
                         $query = "select path_template from " 
                             . _DOCSERVERS_TABLE_NAME 
                             . " where docserver_id = 'TEMPLATES'";
-                        $db->query($query);
-                        $resDs = $db->fetch_object();
+                        $stmt = $db->query($query);
+                        $resDs = $stmt->fetchObject();
                         $pathToDs = $resDs->path_template;
                         $_SESSION['user']['pathToSignature'] = $pathToDs . str_replace(
                                 "#", 
@@ -819,13 +817,12 @@ class security extends dbquery
             $view = $this->retrieve_table_from_coll($coll_id);
         }
         $where_clause = $this->get_where_clause_from_coll_id($coll_id);
-        $query = "select res_id from " . $view . " where res_id = " . $s_id;
+        $query = "select res_id from " . $view . " where res_id = ?";
         if (!empty($where_clause)) {
             $query .= " and (" . $where_clause . ") ";
         }
-        $this->connect();
-        $this->query($query);
-        if ($this->nb_result() < 1) {
+        $stmt = $this->query($query, array($s_id));
+        if ($stmt->rowCount() < 1) {
             //NOT IN THE DOC PERIMETER SO TEST IT IN THE BASKETS
             $basketQuery = '';
             for (
@@ -851,10 +848,9 @@ class security extends dbquery
             if ($basketQuery <> '') {
                 $basketQuery = preg_replace('/^ or/', '', $basketQuery);
                 $query = "select res_id from " 
-                    . $view . " where (" . $basketQuery . ") and res_id = " . $s_id;
-                $this->connect();
-                $this->query($query);
-                if ($this->nb_result() < 1) {
+                    . $view . " where (" . $basketQuery . ") and res_id = ?";
+                $stmt = $this->query($query, array($s_id));
+                if ($stmt->rowCount() < 1) {
                     return false;
                 } else {
                     return true;

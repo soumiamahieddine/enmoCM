@@ -111,8 +111,15 @@ abstract class ObjectControler
                     $values[] = '?';
                     $arrayValues[] = $boolValue;
                 } else {
-                    $values[] = '?';
-                    $arrayValues[] = $value;
+                    if (
+                        $value == 'CURRENT_TIMESTAMP'
+                        || $value == 'SYSDATE'
+                    ) {
+                        $values[] = $value;
+                    } else {
+                        $values[] = '?';
+                        $arrayValues[] = $value;
+                    }
                 }
             }
         }
@@ -202,8 +209,15 @@ abstract class ObjectControler
                     $arrayValues[] = $boolValue;
                 } else {
                     // Character or date
-                    $result[] = $key . "=?";
-                    $arrayValues[] = $value;
+                    if (
+                        $value == 'CURRENT_TIMESTAMP'
+                        || $value == 'SYSDATE'
+                    ) {
+                    $result[] = $key . "=" . $value;
+                    } else {
+                        $result[] = $key . "=?";
+                        $arrayValues[] = $value;
+                    }
                 }
             }
         }

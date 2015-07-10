@@ -385,18 +385,11 @@ class docserver_locations_controler extends ObjectControler
             );
             return $control;
         }
-        $db=new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "delete from " . _DOCSERVER_LOCATIONS_TABLE_NAME 
-               . " where docserver_location_id = '" 
-               . $func->protect_string_db(
-                   $docserverLocation->docserver_location_id
-               ) . "'";
+               . " where docserver_location_id = ?";
         try {
-            if ($_ENV['DEBUG']) {
-                functions::xecho($query) . ' // ';
-            }
-            $db->query($query);
+            $stmt = $db->query($query, array($docserverLocation->docserver_location_id));
         } catch (Exception $e) {
             $control = array(
                 'status' => 'ko', 
@@ -405,7 +398,6 @@ class docserver_locations_controler extends ObjectControler
                 . ' ' . $docserverLocation->docserver_location_id
             );
         }
-        $db->disconnect();
         $control = array(
                 'status' => 'ok', 
                 'value' => $docserverLocation->docserver_location_id
@@ -555,26 +547,19 @@ class docserver_locations_controler extends ObjectControler
     {
         if (!isset ($docserverLocationId) || empty ($docserverLocationId))
             return false;
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select docserver_location_id from " 
                . _DOCSERVER_LOCATIONS_TABLE_NAME 
-               . " where docserver_location_id = '" . $docserverLocationId 
-               . "'";
+               . " where docserver_location_id = ?";
         try {
-            if ($_ENV['DEBUG']) {
-                functions::xecho($query) . ' // ';
-            }
-            $db->query($query);
+            $stmt = $db->query($query, array($docserverLocationId));
         } catch (Exception $e) {
             echo _UNKNOWN . _DOCSERVER_LOCATION . ' ' 
                 . functions::xssafe($docserverLocationId) . ' // ';
         }
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        $db->disconnect();
         return false;
     }
 
@@ -588,17 +573,13 @@ class docserver_locations_controler extends ObjectControler
     {
         if (!isset($docserverLocationId) || empty($docserverLocationId))
             return false;
-        $db=new dbquery();
-        $db->connect();
+        $db=new Database();
         $query = "select docserver_location_id from " . _DOCSERVERS_TABLE_NAME 
-               . " where docserver_location_id = '" . $docserverLocationId 
-               . "'";
-        $db->query($query);
-        if ($db->nb_result()>0) {
-            $db->disconnect();
+               . " where docserver_location_id = ?";
+        $stmt = $db->query($query, array($docserverLocationId));
+        if ($stmt->rowCount()>0) {
             return true;
         }
-        $db->disconnect();
     }
     
     /** 
@@ -693,24 +674,18 @@ class docserver_locations_controler extends ObjectControler
         if (empty($docserverLocationId))
             return null;
         $docservers = array();
-        $db=new dbquery();
-        $db->connect();
+        $db=new Database();
         $query = "select docserver_id from " . _DOCSERVERS_TABLE_NAME 
-               . " where docserver_location_id = '" . $docserverLocationId 
-               . "'";
+               . " where docserver_location_id = ?";
         try{
-            if ($_ENV['DEBUG']) {
-                functions::xecho($query) . ' // ';
-            }
-            $db->query($query);
+            $stmt = $db->query($query, array($docserverLocationId));
         } catch (Exception $e) {
                     echo _NO_DOCSERVER_LOCATION_WITH_ID . ' ' 
                     . functions::xssafe($docserverLocationId) . ' // ';
         }
-        while ($res = $db->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push($docservers, $res->docserver_id);
         }
-        $db->disconnect();
         return $docservers;
     }
 
@@ -720,30 +695,25 @@ class docserver_locations_controler extends ObjectControler
     */
     public function getAllId($can_be_disabled = false)
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select docserver_location_id from " 
                . _DOCSERVER_LOCATIONS_TABLE_NAME . " ";
         if (!$can_be_disabled)
             $query .= " where enabled = 'Y'";
         try {
-            if ($_ENV['DEBUG'])
-                functions::xecho($query) . ' // ';
-            $db->query($query);
+            $stmt = $db->query($query);
         } catch (Exception $e) {
             echo _NO_DOCSERVER_LOCATION . ' // ';
         }
-        if ($db->nb_result() > 0) {
+        if ($stmt->rowCount() > 0) {
             $result = array ();
             $cptId = 0;
-            while ($queryResult = $db->fetch_object()) {
+            while ($queryResult = $stmt->fetchObject()) {
                 $result[$cptId] = $queryResult->docserver_location_id;
                 $cptId++;
             }
-            $db->disconnect();
             return $result;
         } else {
-            $db->disconnect();
             return null;
         }
     }
