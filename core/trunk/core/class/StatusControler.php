@@ -376,7 +376,7 @@ class Maarch_Core_Class_StatusControler
         self::$db = new Database();
 
         $func = new functions();
-        $query = 'select id from ' . STATUS_TABLE . " where i = ?";
+        $query = 'select id from ' . STATUS_TABLE . " where id = ?";
 
         $stmt = self::$db->query($query, array($status_id));
 
