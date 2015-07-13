@@ -44,27 +44,30 @@ function getSourceResourcePath(
     $pathArray = array();
     if ($docserverToPurge <> '') {
         $query = "select res_id, docserver_id, path, filename, offset_doc "
-               . "from " . $GLOBALS['adrTable'] . " where res_id = " . $resId 
-               . " and docserver_id = '" . $docserverToPurge . "'";
+               . "from " . $GLOBALS['adrTable'] . " where res_id = ?"  
+               . " and docserver_id = ?";
+        $param = array($resId, $docserverToPurge);
     } else {
         $query = "select res_id, docserver_id, path, filename, offset_doc "
-               . "from " . $GLOBALS['adrTable'] . " where res_id = " 
-               . $resId . " order by adr_priority";
+               . "from " . $GLOBALS['adrTable'] . " where res_id = ?" 
+               . " order by adr_priority";
+        $param = array($resId);
     }
-    Bt_doQuery($GLOBALS['db'], $query);
-    if ($GLOBALS['db']->nb_result() == 0) {
+    $stmt = Bt_doQuery($GLOBALS['db'], $query, $param);
+    if ($stmt->rowCount() == 0) {
         if ($docserverToPurge <> '') {
             $query = "select res_id, docserver_id, path, filename, offset_doc "
-                   . "from " . $GLOBALS['table'] . " where res_id = " 
-                   . $resId . " and docserver_id = '" . $docserverToPurge 
-                   . "'";
+                   . "from " . $GLOBALS['table'] . " where res_id = ?" 
+                   . " and docserver_id = ?";
+            $param = array($resId, $docserverToPurge);
         } else {
             $query = "select res_id, docserver_id, path, filename, offset_doc"
-                   . " from " . $GLOBALS['table'] . " where res_id = " . $resId;
+                   . " from " . $GLOBALS['table'] . " where res_id = ?";
+            $param = array($resId);
         }
-        Bt_doQuery($GLOBALS['db'], $query);
+        $stmt = Bt_doQuery($GLOBALS['db'], $query, $param);
     }
-    $resRecordset = $GLOBALS['db']->fetch_object();
+    $resRecordset = $stmt->fetchObject();
     $resPath = '';
     $resFilename = '';
     $resDocserverId = '';
@@ -79,7 +82,8 @@ function getSourceResourcePath(
     if (isset($resRecordset->docserver_id)) {
         $resDocserverId = $resRecordset->docserver_id;
     }
-    if (isset($resRecordset->offset_doc) && $resRecordset->offset_doc <> ''
+    if (isset($resRecordset->offset_doc) 
+        && $resRecordset->offset_doc <> ''
         && $resRecordset->offset_doc <> ' '
     ) {
         //purge a container
@@ -113,37 +117,33 @@ function getSourceResourcePath(
             )
         );
     }
-    //if ($GLOBALS['docserverSourcePath'] == '') {
-        $query = "select path_template, docserver_type_id from " 
-               . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" 
-               . $resDocserverId . "'";
-        Bt_doQuery($GLOBALS['db'], $query);
-        $docserverRecordset = $GLOBALS['db']->fetch_object();
-        if (isset($docserverRecordset->docserver_type_id)) {
-            $resDocserverTypeId = $docserverRecordset->docserver_type_id;
-        }
-        $resPathTemplate = '';
-        if (isset($docserverRecordset->path_template)) {
-            $resPathTemplate = $docserverRecordset->path_template;
-        }
-        $GLOBALS['docserverSourcePath'] = $resPathTemplate;
-        $GLOBALS['logger']->write(
-            'Docserver source path:' . $GLOBALS['docserverSourcePath'], 'DEBUG'
-        );
-        $query = "select fingerprint_mode from " 
-               . _DOCSERVER_TYPES_TABLE_NAME . " where docserver_type_id = '" 
-               . $resDocserverTypeId . "'";
-        Bt_doQuery($GLOBALS['db'], $query);
-        $docserverTypeRecordset = $GLOBALS['db']->fetch_object();
-        if (isset($docserverTypeRecordset->fingerprint_mode)) {
-            $resFingerprintMode = $docserverTypeRecordset->fingerprint_mode;
-        }
-        $GLOBALS['docserverSourceFingerprint'] = $resFingerprintMode;
-        $GLOBALS['logger']->write(
-            'Docserver source fingerprint:' 
-            . $GLOBALS['docserverSourceFingerprint'], 'DEBUG'
-        );
-    //}
+    $query = "select path_template, docserver_type_id from " 
+           . _DOCSERVERS_TABLE_NAME . " where docserver_id = ?";
+    $stmt = Bt_doQuery($GLOBALS['db'], $query, array($resDocserverId));
+    $docserverRecordset = $stmt->fetchObject();
+    if (isset($docserverRecordset->docserver_type_id)) {
+        $resDocserverTypeId = $docserverRecordset->docserver_type_id;
+    }
+    $resPathTemplate = '';
+    if (isset($docserverRecordset->path_template)) {
+        $resPathTemplate = $docserverRecordset->path_template;
+    }
+    $GLOBALS['docserverSourcePath'] = $resPathTemplate;
+    $GLOBALS['logger']->write(
+        'Docserver source path:' . $GLOBALS['docserverSourcePath'], 'DEBUG'
+    );
+    $query = "select fingerprint_mode from " 
+           . _DOCSERVER_TYPES_TABLE_NAME . " where docserver_type_id = ?";
+    $stmt = Bt_doQuery($GLOBALS['db'], $query, array($resDocserverTypeId));
+    $docserverTypeRecordset = $stmt->fetchObject();
+    if (isset($docserverTypeRecordset->fingerprint_mode)) {
+        $resFingerprintMode = $docserverTypeRecordset->fingerprint_mode;
+    }
+    $GLOBALS['docserverSourceFingerprint'] = $resFingerprintMode;
+    $GLOBALS['logger']->write(
+        'Docserver source fingerprint:' 
+        . $GLOBALS['docserverSourceFingerprint'], 'DEBUG'
+    );
     $sourceFilePath = $GLOBALS['docserverSourcePath'] . $sourceFilePath;
     $sourceFilePath = str_replace('#', DIRECTORY_SEPARATOR, $sourceFilePath);
     if ($returnArray) {
@@ -163,15 +163,15 @@ function getBreakKeyValue($resId, $breakKey)
 {
     if ($resId <> '' && $breakKey <> '') {
         $query = "select " . $breakKey . " "
-               . "from " . $GLOBALS['view'] . " where res_id = " . $resId;
+               . "from " . $GLOBALS['view'] . " where res_id = ?";
     } else {
         return false;
     }
-    Bt_doQuery($GLOBALS['db'], $query);
-    if ($GLOBALS['db']->nb_result() == 0) {
+    $stmt = Bt_doQuery($GLOBALS['db'], $query, array($resId));
+    if ($stmt->rowCount() == 0) {
         return false;
     } else {
-        $resBreakKey = $GLOBALS['db']->fetch_object();
+        $resBreakKey = $stmt->fetchObject();
         $breakKeyValue = $resBreakKey->$breakKey;
     }
     return $breakKeyValue;
@@ -196,7 +196,7 @@ function updateDatabase(
     $offsetDoc='' 
 ) {
     if ($GLOBALS['databasetype'] == 'POSTGRESQL') {
-		Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
+		$stmt = Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
 	}
     if (is_array($resInContainer) && count($resInContainer) > 0) {
         for ($cptRes = 0;$cptRes < count($resInContainer);$cptRes++) {
@@ -214,9 +214,8 @@ function updateDatabase(
             );
         }
     }
-    Bt_doQuery($GLOBALS['db'], 'COMMIT');
+    $stmt = Bt_doQuery($GLOBALS['db'], 'COMMIT');
 }
-
 
 /**
  * e-signature of the resource
@@ -342,58 +341,100 @@ function esign($resId)
 function doUpdateDb($resId, $path, $fileName, $offsetDoc, $fingerprint) 
 {
     $query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where"
-           . " policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" 
-           . $GLOBALS['cycle'] . "' and cycle_step_id = '" 
-           . $GLOBALS['currentStep'] . "' and coll_id = '" 
-           . $GLOBALS['collection'] . "' and res_id = " . $resId;
-    Bt_doQuery($GLOBALS['db'], $query, true);
+           . " policy_id = ? and cycle_id = ? "
+           . " and cycle_step_id = ? and coll_id = ?"
+           . " and res_id = ?";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query,
+        array(
+            $GLOBALS['policy'],
+            $GLOBALS['cycle'],
+            $GLOBALS['currentStep'],
+            $GLOBALS['collection'],
+            $resId
+        )
+    );
     //ADD CYCLE_DATE
-    $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
-           . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y', cycle_date = " 
+    $query = "update " . $GLOBALS['table'] . " set cycle_id = ?"
+           . ", is_multi_docservers = 'Y', cycle_date = " 
            . $GLOBALS['db']->current_datetime() . " where"
-           . " res_id = " . $resId;
-    Bt_doQuery($GLOBALS['db'], $query, true);
-    $query = "select * from " . $GLOBALS['adrTable'] . " where res_id = " 
-           . $resId . " order by adr_priority";
-    Bt_doQuery($GLOBALS['db'], $query);
-    if ($GLOBALS['db']->nb_result() == 0) {
+           . " res_id = ?";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query, 
+        array(
+            $GLOBALS['cycle'],
+            $resId
+        )
+    );
+    $query = "select * from " . $GLOBALS['adrTable'] 
+        . " where res_id = ? order by adr_priority";
+    $stmt = Bt_doQuery($GLOBALS['db'], $query, array($resId));
+    if ($stmt->rowCount() == 0) {
         $query = "select docserver_id, path, filename, offset_doc, fingerprint"
-               . " from " . $GLOBALS['table'] . " where res_id = " . $resId;
-        Bt_doQuery($GLOBALS['db'], $query);
-        $recordset = $GLOBALS['db']->fetch_object();
+               . " from " . $GLOBALS['table'] . " where res_id = ?";
+        $stmt = Bt_doQuery($GLOBALS['db'], $query, array($resId));
+        $recordset = $stmt->fetchObject();
         $resDocserverId = $recordset->docserver_id;
         $resPath = $recordset->path;
         $resFilename = $recordset->filename;
         $resOffsetDoc = $recordset->offset_doc;
         $fingerprintInit = $recordset->fingerprint;
         $query = "select adr_priority_number from " . _DOCSERVERS_TABLE_NAME 
-               . " where docserver_id = '" . $resDocserverId . "'";
-        Bt_doQuery($GLOBALS['db'], $query);
-        $recordset = $GLOBALS['db']->fetch_object();
+               . " where docserver_id = ?";
+        $stmt = Bt_doQuery($GLOBALS['db'], $query, array($resDocserverId));
+        $recordset = $stmt->fetchObject();
         $query = "insert into " . $GLOBALS['adrTable'] . " (res_id, "
                . "docserver_id, path, filename, offset_doc, fingerprint, "
-               . "adr_priority) values (" . $resId . ", '" . $resDocserverId 
-               . "', '" . $resPath . "', '" . $resFilename . "', '" 
-               .  $resOffsetDoc . "', '" .  $fingerprintInit . "', " 
-               . $recordset->adr_priority_number . ")";
-        Bt_doQuery($GLOBALS['db'], $query, true);
+               . "adr_priority) values (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = Bt_doQuery(
+            $GLOBALS['db'], 
+            $query, 
+            array(
+                $resId,
+                $resDocserverId,
+                $resPath,
+                $resFilename,
+                $resOffsetDoc,
+                $fingerprintInit,
+                $recordset->adr_priority_number
+            )
+        );
     }
     $query = "insert into " . $GLOBALS['adrTable'] . " (res_id, docserver_id, "
            . "path, filename, offset_doc, fingerprint, adr_priority) values (" 
-           . $resId . ", '" . $GLOBALS['docservers'][$GLOBALS['currentStep']]
-           ['docserver']['docserver_id'] . "', '" . $path . "', '" . $fileName 
-           . "', '" .  $offsetDoc . "', '" .  $fingerprint . "', " 
-           . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
-           ['adr_priority_number'] . ")";
-    Bt_doQuery($GLOBALS['db'], $query, true);
+           . "?, ?, ?, ?, ?, ?, ?)";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query, 
+        array(
+            $resId,
+            $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['docserver_id'],
+            $path,
+            $fileName,
+            $offsetDoc,
+            $fingerprint,
+            $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['adr_priority_number']
+        )
+    );
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
-           . "event_type, user_id, event_date, info, id_module) values ('" 
-           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', " 
-           . $GLOBALS['db']->current_datetime() . ", 'process stack, policy:" 
-           . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
-           . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
-           . $GLOBALS['collection'] . "', 'life_cycle')";
-    Bt_doQuery($GLOBALS['db'], $query, true);
+           . "event_type, user_id, event_date, info, id_module) values (" 
+           . "?, ?, 'ADD', 'LC_BOT', " 
+           . $GLOBALS['db']->current_datetime() 
+           . ", ?, 'life_cycle')";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query, 
+        array(
+            $GLOBALS['table'],
+            $resId,
+            "process stack, policy:" 
+                . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
+                . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
+                . $GLOBALS['collection']
+        )
+    );
 }
 
 /**
@@ -404,24 +445,48 @@ function doUpdateDb($resId, $path, $fileName, $offsetDoc, $fingerprint)
 function doMinimalUpdate($resId)
 {
     $query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where"
-           . " policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" 
-           . $GLOBALS['cycle'] . "' and cycle_step_id = '" 
-           . $GLOBALS['currentStep'] . "' and coll_id = '" 
-           . $GLOBALS['collection'] . "' and res_id = " . $resId;
-    Bt_doQuery($GLOBALS['db'], $query, true);
-    $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
-           . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y', cycle_date = " 
+           . " policy_id = ? and cycle_id = ?" 
+           . " and cycle_step_id = ? and coll_id = ? and res_id = ?";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query,
+        array(
+            $GLOBALS['policy'],
+            $GLOBALS['cycle'],
+            $GLOBALS['currentStep'],
+            $GLOBALS['collection'],
+            $resId
+        )
+    );
+    $query = "update " . $GLOBALS['table'] . " set cycle_id = ?" 
+           . ", is_multi_docservers = 'Y', cycle_date = " 
            . $GLOBALS['db']->current_datetime() . " where "
-           . " res_id = " . $resId;
-    Bt_doQuery($GLOBALS['db'], $query, true);
+           . " res_id = ?";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query,
+        array(
+            $GLOBALS['cycle'],
+            $resId
+        )
+    );
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
-           . "event_type, user_id, event_date, info, id_module) values ('" 
-           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', " 
-           . $GLOBALS['db']->current_datetime() . ", 'process stack, policy:" 
-           . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
-           . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
-           . $GLOBALS['collection'] . "', 'life_cycle')";
-    Bt_doQuery($GLOBALS['db'], $query, true);
+           . "event_type, user_id, event_date, info, id_module) values (" 
+           . "?, ?, 'ADD', 'LC_BOT', " 
+           . $GLOBALS['db']->current_datetime() 
+           . ", ?, 'life_cycle')";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query, 
+        array(
+            $GLOBALS['table'],
+            $resId,
+            "process stack, policy:" 
+                . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
+                . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
+                . $GLOBALS['collection']
+        )
+    );
 }
 
 /**
@@ -433,34 +498,65 @@ function doMinimalUpdate($resId)
 function deleteAdrx($resId, $dsToUpdate) 
 {
     if ($GLOBALS['databasetype'] == 'POSTGRESQL') {
-		Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
+		$stmt = Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
 	}
-    $query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where "
-           . "policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" 
-           . $GLOBALS['cycle'] . "' and cycle_step_id = '" 
-           . $GLOBALS['currentStep'] . "' and coll_id = '" 
-           . $GLOBALS['collection'] . "' and res_id = " . $resId;
-    Bt_doQuery($GLOBALS['db'], $query, true);
-    $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
-           . $GLOBALS['cycle'] . "', cycle_date = " 
-           . $GLOBALS['db']->current_datetime() . " where res_id = " . $resId;
-    Bt_doQuery($GLOBALS['db'], $query, true);
+    $query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where"
+           . " policy_id = ? and cycle_id = ?" 
+           . " and cycle_step_id = ? and coll_id = ? and res_id = ?";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query,
+        array(
+            $GLOBALS['policy'],
+            $GLOBALS['cycle'],
+            $GLOBALS['currentStep'],
+            $GLOBALS['collection'],
+            $resId
+        )
+    );
+    $query = "update " . $GLOBALS['table'] . " set cycle_id = ?" 
+           . ", cycle_date = " 
+           . $GLOBALS['db']->current_datetime() . " where "
+           . " res_id = ?";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query,
+        array(
+            $GLOBALS['cycle'],
+            $resId
+        )
+    );
     //$docserverSizeToUpdate = 0;
     for ($cptDs = 0;$cptDs < count($dsToUpdate);$cptDs++) {
-        $query = "delete from " . $GLOBALS['adrTable'] . " where res_id = " 
-               . $resId . " and docserver_id = '" 
-               . $dsToUpdate[$cptDs]['docserverId'] . "'";
-        Bt_doQuery($GLOBALS['db'], $query, true);
+        $query = "delete from " . $GLOBALS['adrTable'] 
+            . " where res_id = ? and docserver_id = ?";
+        $stmt = Bt_doQuery(
+            $GLOBALS['db'], 
+            $query, 
+            array(
+                $resId,
+                $dsToUpdate[$cptDs]['docserverId']
+            )
+        );
     }
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
-           . "event_type, user_id, event_date, info, id_module) values ('" 
-           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', " 
-           . $GLOBALS['db']->current_datetime() . ", 'process stack, policy:" 
-           . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
-           . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
-           . $GLOBALS['collection'] . "', 'life_cycle')";
-    Bt_doQuery($GLOBALS['db'], $query, true);
-    Bt_doQuery($GLOBALS['db'], 'COMMIT');
+           . "event_type, user_id, event_date, info, id_module) values (" 
+           . "?, ?, 'ADD', 'LC_BOT', " 
+           . $GLOBALS['db']->current_datetime() 
+           . ", ?, 'life_cycle')";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query, 
+        array(
+            $GLOBALS['table'],
+            $resId,
+            "process stack, policy:" 
+                . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
+                . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
+                . $GLOBALS['collection']
+        )
+    );
+    $stmt = Bt_doQuery($GLOBALS['db'], 'COMMIT');
 }
 
 /**
@@ -472,27 +568,51 @@ function deleteAdrx($resId, $dsToUpdate)
 function updateOnNonePurge($resId) 
 {
     if ($GLOBALS['databasetype'] == 'POSTGRESQL') {
-		Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
+		$stmt = Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
 	}
-    $query = "update " . _LC_STACK_TABLE_NAME 
-           . " set status = 'P' where policy_id = '" . $GLOBALS['policy'] 
-           . "' and cycle_id = '" . $GLOBALS['cycle'] 
-           . "' and cycle_step_id = '" . $GLOBALS['currentStep'] 
-           . "' and coll_id = '" . $GLOBALS['collection'] . "' and res_id = " 
-           . $resId;
-    Bt_doQuery($GLOBALS['db'], $query, true);
-    $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
-           . $GLOBALS['cycle'] . "', cycle_date = " 
-           . $GLOBALS['db']->current_datetime() . " where res_id = " . $resId;
-    Bt_doQuery($GLOBALS['db'], $query, true);
+    $query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where"
+           . " policy_id = ? and cycle_id = ?" 
+           . " and cycle_step_id = ? and coll_id = ? and res_id = ?";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query,
+        array(
+            $GLOBALS['policy'],
+            $GLOBALS['cycle'],
+            $GLOBALS['currentStep'],
+            $GLOBALS['collection'],
+            $resId
+        )
+    );   
+    $query = "update " . $GLOBALS['table'] . " set cycle_id = ?" 
+           . ", cycle_date = " 
+           . $GLOBALS['db']->current_datetime() . " where "
+           . " res_id = ?";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query,
+        array(
+            $GLOBALS['cycle'],
+            $resId
+        )
+    );
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
-           . "event_type, user_id, event_date, info, id_module) values ('" 
-           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', " 
-           . $GLOBALS['db']->current_datetime() . ", 'process stack, policy:" 
-           . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
-           . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
-           . $GLOBALS['collection'] . ", No purge for the resource " . $resId 
-           . " because this is the last adr available', 'life_cycle')";
-    Bt_doQuery($GLOBALS['db'], $query, true);
-    Bt_doQuery($GLOBALS['db'], 'COMMIT');
+           . "event_type, user_id, event_date, info, id_module) values (" 
+           . "?, ?, 'ADD', 'LC_BOT', " 
+           . $GLOBALS['db']->current_datetime() 
+           . ", ?, 'life_cycle')";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query, 
+        array(
+            $GLOBALS['table'],
+            $resId,
+            "process stack, policy:" 
+                . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
+                . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
+                . $GLOBALS['collection'] . ", No purge for the resource " . $resId 
+                . " because this is the last adr available"
+        )
+    );
+    $stmt = Bt_doQuery($GLOBALS['db'], 'COMMIT');
 }

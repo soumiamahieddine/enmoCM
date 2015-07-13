@@ -101,20 +101,26 @@ while ($GLOBALS['state'] <> "END") {
         /**********************************************************************/
         case "CONTROL_STACK" :
             $query = "select * from " . _LC_STACK_TABLE_NAME 
-                   . " where policy_id = '" . $GLOBALS['policy'] 
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] 
-                   . "' and work_batch = '" . $GLOBALS['wb'] . "'";
-            Bt_doQuery($GLOBALS['db'], $query);
-            if ($GLOBALS['db']->nb_result() == 0) {
+                   . " where policy_id = ? and cycle_id = ? and work_batch = ?";
+            $stmt = Bt_doQuery(
+                $GLOBALS['db'], 
+                $query,
+                array(
+                    $GLOBALS['policy'],
+                    $GLOBALS['cycle'],
+                    $GLOBALS['wb']
+                )
+            );
+            if ($stmt->rowCount() == 0) {
                 Bt_exitBatch(107, 'stack empty for your request');
                 break;
             }
             Bt_updateWorkBatch();
-            $GLOBALS['logger']->write("Batch number:".$GLOBALS['wb'], 'INFO');
+            $GLOBALS['logger']->write("Batch number:" . $GLOBALS['wb'], 'INFO');
             $query = "update " . _LC_STACK_TABLE_NAME 
                    . " set status = 'I' where status = 'W'"
-                   . " and work_batch = '" . $GLOBALS['wb'] . "'";
-            Bt_doQuery($GLOBALS['db'], $query);
+                   . " and work_batch = ?";
+            $stmt = Bt_doQuery($GLOBALS['db'], $query, array($GLOBALS['wb']));
             $GLOBALS['state'] = "GET_STEPS";
             break;
         /**********************************************************************/
@@ -123,14 +129,20 @@ while ($GLOBALS['state'] <> "END") {
         /**********************************************************************/
         case "GET_STEPS" :
             $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME 
-                   . " where policy_id = '" . $GLOBALS['policy'] 
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            Bt_doQuery($GLOBALS['db'], $query);
-            if ($GLOBALS['db']->nb_result() == 0) {
+                   . " where policy_id = ? and cycle_id = ?";
+            $stmt = Bt_doQuery(
+                $GLOBALS['db'], 
+                $query,
+                array(
+                    $GLOBALS['policy'],
+                    $GLOBALS['cycle']
+                )
+            );
+            if ($stmt->rowCount() == 0) {
                 Bt_exitBatch(11, 'Cycle Steps not found');
                 break;
             } else {
-                while ($stepsRecordset = $GLOBALS['db']->fetch_object()) {
+                while ($stepsRecordset = $stmt->fetchObject()) {
                     $GLOBALS['steps'][$stepsRecordset->cycle_step_id] =
                         $GLOBALS['func']->object2array($stepsRecordset);
                     array_push(
@@ -140,11 +152,17 @@ while ($GLOBALS['state'] <> "END") {
                 }
                 //get the cycle break key if exists
                 $query = "select break_key from " . _LC_CYCLES_TABLE_NAME 
-                   . " where policy_id = '" . $GLOBALS['policy'] 
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-                Bt_doQuery($GLOBALS['db'], $query);
-                if ($GLOBALS['db']->nb_result() > 0) {
-                    $breakKeyRecordset = $GLOBALS['db']->fetch_object();
+                   . " where policy_id = ? and cycle_id = ?";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    $query,
+                    array(
+                        $GLOBALS['policy'],
+                        $GLOBALS['cycle']
+                    )
+                );
+                if ($stmt->rowCount() > 0) {
+                    $breakKeyRecordset = $stmt->fetchObject();
                     $GLOBALS['breakKey'] = $breakKeyRecordset->break_key;
                 }
             }
@@ -156,25 +174,34 @@ while ($GLOBALS['state'] <> "END") {
         /**********************************************************************/
         case "GET_DOCSERVERS" :
             $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME 
-                   . " where policy_id = '" . $GLOBALS['policy'] 
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            Bt_doQuery($GLOBALS['db'], $query);
+                   . " where policy_id = ? and cycle_id = ?";
+            $stmt = Bt_doQuery(
+                $GLOBALS['db'], 
+                $query,
+                array(
+                    $GLOBALS['policy'],
+                    $GLOBALS['cycle']
+                )
+            );
             $GLOBALS['state'] = "A_STEP";
-            if ($GLOBALS['db']->nb_result() == 0) {
+            if ($stmt->rowCount() == 0) {
                 Bt_exitBatch(11, 'Cycle Steps not found');
                 break;
             } else {
-                while ($stepsRecordset = $GLOBALS['db']->fetch_object()) {
+                while ($stepsRecordset = $stmt->fetchObject()) {
                     $query = "select * from " . _DOCSERVER_TYPES_TABLE_NAME 
-                           . " where docserver_type_id = '" 
-                           . $stepsRecordset->docserver_type_id . "'";
-                    Bt_doQuery($GLOBALS['db2'], $query);
-                    if ($GLOBALS['db2']->nb_result() == 0) {
+                           . " where docserver_type_id = ?";
+                    $stmt2 = Bt_doQuery(
+                        $GLOBALS['db2'], 
+                        $query, 
+                        array($stepsRecordset->docserver_type_id)
+                    );
+                    if ($stmt2->rowCount() == 0) {
                         Bt_exitBatch(12, 'Docserver type not found');
                         break;
                     } else {
                         $docserverTypesRecordset =
-                            $GLOBALS['db2']->fetch_object();
+                            $stmt2->fetchObject();
                         $GLOBALS['docservers'][$stepsRecordset->cycle_step_id] =
                             $GLOBALS['func']->object2array(
                                 $docserverTypesRecordset
@@ -182,16 +209,20 @@ while ($GLOBALS['state'] <> "END") {
                     }
                     // no need for a purge
                     $query = "select * from " . _DOCSERVERS_TABLE_NAME 
-                           . " where docserver_type_id = '" 
-                           . $stepsRecordset->docserver_type_id 
-                           . "' and coll_id = '" . $GLOBALS['collection'] 
-                           . "' order by priority_number";
-                    Bt_doQuery($GLOBALS['db2'], $query);
-                    if ($GLOBALS['db2']->nb_result() == 0) {
+                           . " where docserver_type_id = ? and coll_id = ? order by priority_number";
+                    $stmt2 = Bt_doQuery(
+                        $GLOBALS['db2'], 
+                        $query,
+                        array(
+                            $stepsRecordset->docserver_type_id,
+                            $GLOBALS['collection']
+                        )
+                    );
+                    if ($stmt2->rowCount() == 0) {
                         Bt_exitBatch(13, 'Docserver not found');
                         break;
                     } else {
-                        $docserversRecordset = $GLOBALS['db2']->fetch_object();
+                        $docserversRecordset = $stmt2->fetchObject();
                         $GLOBALS['docservers'][$stepsRecordset->cycle_step_id]
                             ['docserver'] = $GLOBALS['func']->object2array(
                                 $docserversRecordset
@@ -222,14 +253,22 @@ while ($GLOBALS['state'] <> "END") {
                     $totalSizeToAdd = 0;
                     $theLastRecordInStep = false;
                     $query = "select * from " . _LC_STACK_TABLE_NAME 
-                           . " where policy_id = '" . $GLOBALS['policy'] 
-                           . "' and cycle_id = '" . $GLOBALS['cycle'] 
-                           . "' and cycle_step_id = '".$GLOBALS['currentStep'] 
-                           . "' and status = 'I' and coll_id = '" 
-                           . $GLOBALS['collection'] . "'"
-                           . " and work_batch = '" . $GLOBALS['wb'] . "'";
-                    Bt_doQuery($GLOBALS['db'], $query);
-                    $cptRecordsTotalInStep = $GLOBALS['db']->nb_result();
+                           . " where policy_id = ? and cycle_id = ? "
+                           . " and cycle_step_id = ? and status = 'I' "
+                           . " and coll_id = ?"
+                           . " and work_batch = ?";
+                    $stmt = Bt_doQuery(
+                        $GLOBALS['db'], 
+                        $query,
+                        array(
+                            $GLOBALS['policy'],
+                            $GLOBALS['cycle'],
+                            $GLOBALS['currentStep'],
+                            $GLOBALS['collection'],
+                            $GLOBALS['wb']
+                        )
+                    );
+                    $cptRecordsTotalInStep = $stmt->rowCount();
                     $GLOBALS['logger']->write(
                         "total res in the step:" . $cptRecordsTotalInStep, 
                         'INFO'
@@ -246,17 +285,24 @@ while ($GLOBALS['state'] <> "END") {
                         // full at 95 percent)
                         $query = "select sum(filesize) as sumfilesize from " 
                                . $GLOBALS['table'] . " where res_id in (select "
-                               . "res_id from " . _LC_STACK_TABLE_NAME 
-                               . " where policy_id = '" . $GLOBALS['policy'] 
-                               . "' and cycle_id = '" . $GLOBALS['cycle'] 
-                               . "' and cycle_step_id = '" 
-                               . $GLOBALS['currentStep'] 
-                               . "' and status = 'I' and coll_id = '" 
-                               . $GLOBALS['collection'] . "'" 
-                               . " and work_batch = '" . $GLOBALS['wb'] . "')"
+                               . " res_id from " . _LC_STACK_TABLE_NAME 
+                               . " where policy_id = ? and cycle_id = ?"
+                               . " and cycle_step_id = ? "
+                               . " and status = 'I' and coll_id = ? "
+                               . " and work_batch = ?)"
                                . $GLOBALS['creationDateClause'];
-                        Bt_doQuery($GLOBALS['db'], $query);
-                        $resSum = $GLOBALS['db']->fetch_object();
+                        $stmt = Bt_doQuery(
+                            $GLOBALS['db'], 
+                            $query,
+                            array(
+                                $GLOBALS['policy'],
+                                $GLOBALS['cycle'],
+                                $GLOBALS['currentStep'],
+                                $GLOBALS['collection'],
+                                $GLOBALS['wb']
+                            )
+                        );
+                        $resSum = $stmt->fetchObject();
                         $reasonableLimitSize =
                             $GLOBALS['docservers'][$GLOBALS['currentStep']]
                             ['docserver']['size_limit_number'] * 0.95;
@@ -295,13 +341,17 @@ while ($GLOBALS['state'] <> "END") {
                         $GLOBALS['docservers'][$GLOBALS['currentStep']]
                             ['docserver'] = array();
                         $query = "select * from " . _DOCSERVERS_TABLE_NAME 
-                               . " where docserver_type_id = '" 
-                               . $GLOBALS['steps'][$GLOBALS['currentStep']]
-                               ['docserver_type_id'] . "' and coll_id = '" 
-                               . $GLOBALS['collection'] . "'";
-                        Bt_doQuery($GLOBALS['db2'], $query);
+                               . " where docserver_type_id = ? and coll_id = ?";
+                        $stmt2 = Bt_doQuery(
+                            $GLOBALS['db2'], 
+                            $query,
+                            array(
+                                $GLOBALS['steps'][$GLOBALS['currentStep']]['docserver_type_id'],
+                                $GLOBALS['collection']
+                            )
+                        );
                         while ($docserversRecordset =
-                            $GLOBALS['db2']->fetch_object()
+                            $stmt2->fetchObject()
                         ) {
                             $GLOBALS['docservers'][$GLOBALS['currentStep']]
                             ['docserver'][$nbDocserver] =
@@ -324,14 +374,22 @@ while ($GLOBALS['state'] <> "END") {
             $cptRecordsInStep++;
             $GLOBALS['totalProcessedResources']++;
             $query = "select * from " . _LC_STACK_TABLE_NAME 
-                   . " where policy_id = '" . $GLOBALS['policy'] 
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] 
-                   . "' and cycle_step_id = '" . $GLOBALS['currentStep'] 
-                   . "' and status = 'I' and coll_id = '" 
-                   . $GLOBALS['collection'] . "'"
-                   . " and work_batch = '" . $GLOBALS['wb'] . "'";
-            Bt_doQuery($GLOBALS['db'], $query);
-            if ($GLOBALS['db']->nb_result() == 0) {
+                   . " where policy_id = ? and cycle_id = ? "
+                   . " and cycle_step_id = ? "
+                   . " and status = 'I' and coll_id = ?"
+                   . " and work_batch = ?";
+            $stmt = Bt_doQuery(
+                $GLOBALS['db'], 
+                $query,
+                array(
+                    $GLOBALS['policy'],
+                    $GLOBALS['cycle'],
+                    $GLOBALS['currentStep'],
+                    $GLOBALS['collection'],
+                    $GLOBALS['wb']
+                )
+            );
+            if ($stmt->rowCount() == 0) {
                 foreach ($GLOBALS['steps'] as $key => $value) {
                     if ($key == $GLOBALS['currentStep']) {
                         $GLOBALS['steps'][$key][0] = "OK";
@@ -348,7 +406,7 @@ while ($GLOBALS['state'] <> "END") {
                     );
                     $theLastRecordInStep = true;
                 }
-                $stackRecordset = $GLOBALS['db']->fetch_object();
+                $stackRecordset = $stmt->fetchObject();
                 $currentRecordInStack = array();
                 $currentRecordInStack = $GLOBALS['func']->object2array(
                     $stackRecordset
@@ -412,9 +470,13 @@ while ($GLOBALS['state'] <> "END") {
         /**********************************************************************/
         case "CONTROL_ADR_X" :
             $query = "select res_id from " . $GLOBALS['adrTable'] 
-                   . " where res_id = " . $currentRecordInStack['res_id'];
-            Bt_doQuery($GLOBALS['db'], $query);
-            if ($GLOBALS['db']->nb_result() <= 1) {
+                   . " where res_id = ?";
+            $stmt = Bt_doQuery(
+                $GLOBALS['db'], 
+                $query, 
+                array($currentRecordInStack['res_id'])
+            );
+            if ($stmt->rowCount() <= 1) {
                 $GLOBALS['logger']->write(
                     'No purge for the resource ' 
                     . $currentRecordInStack['res_id'] 
@@ -457,15 +519,19 @@ while ($GLOBALS['state'] <> "END") {
                 ) {
                     //print_r($sourceFilePath);
                     $query = "select count(*) as cptadr from " 
-                           . $GLOBALS['adrTable'] . " where docserver_id = '" 
-                           . $sourceFilePath[0]['docserverId'] 
-                           . "' and path = '" . $sourceFilePath[0]['basePath'] 
-                           . "' and filename = '" 
-                           . $sourceFilePath[0]['fileName'] 
-                           . "' and offset_doc <> '" 
-                           . $sourceFilePath[0]['offsetDoc'] . "'";
-                    Bt_doQuery($GLOBALS['db'], $query);
-                    $line = $GLOBALS['db']->fetch_object();
+                           . $GLOBALS['adrTable'] . " where docserver_id = ?"
+                           . " and path = ? and filename = ? and offset_doc <> ?";
+                    $stmt = Bt_doQuery(
+                        $GLOBALS['db'], 
+                        $query,
+                        array(
+                            $sourceFilePath[0]['docserverId'],
+                            $sourceFilePath[0]['basePath'],
+                            $sourceFilePath[0]['fileName'],
+                            $sourceFilePath[0]['offsetDoc']
+                        )
+                    );
+                    $line = $stmt->fetchObject();
                     //if exists at least one doc on the container 
                     //we remove only the adr
                     if ($line->cptadr > 0) {
@@ -515,14 +581,6 @@ while ($GLOBALS['state'] <> "END") {
                     if (!file_exists($sourceFilePath) 
                         && $sourceFilePath <> ""
                     ) {
-                        /*Bt_exitBatch(
-                            27, 'Resource not found for purge:' 
-                            . $sourceFilePath . ' res_id:' 
-                            . $currentRecordInStack['res_id'] 
-                            . ' docserver_id:' 
-                            . $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                            ['docserver'][$cptDs]['docserver_id']
-                        );*/
                         $GLOBALS['logger']->write(
                             '27 Resource not found for purge:' 
                             . $sourceFilePath . ' res_id:' 
@@ -540,20 +598,8 @@ while ($GLOBALS['state'] <> "END") {
                         ) <> ""
                         ) {
                             // WARNING unlink file
-                            /*array_push(
-                                $dsToUpdate, 
-                                array(
-                                    "docserverId" => $GLOBALS['docservers']
-                                    [$GLOBALS['currentStep']]['docserver']
-                                    [$cptDs]['docserver_id'],
-                                )
-                            );*/
                             $currentFileSize = filesize($sourceFilePath);
                             if (!(unlink($sourceFilePath))) {
-                                /*Bt_exitBatch(
-                                    26, 'File deletion impossible:'
-                                    . $sourceFilePath
-                                );*/
                                 $GLOBALS['logger']->write(
                                     '26 File deletion impossible:'
                                     . $sourceFilePath, 'WARNING'
@@ -566,12 +612,17 @@ while ($GLOBALS['state'] <> "END") {
                                 );
                                 $query = "select actual_size_number from " 
                                        . _DOCSERVERS_TABLE_NAME 
-                                       . " where docserver_id = '" 
-                                       . $GLOBALS['docservers']
-                                       [$GLOBALS['currentStep']]['docserver']
-                                       [$cptDs]['docserver_id'] . "'";
-                                Bt_doQuery($GLOBALS['db'], $query);
-                                $docserverRec = $GLOBALS['db']->fetch_object();
+                                       . " where docserver_id = ?";
+                                $stmt = Bt_doQuery(
+                                    $GLOBALS['db'], 
+                                    $query,
+                                    array(
+                                        $GLOBALS['docservers']
+                                        [$GLOBALS['currentStep']]['docserver']
+                                        [$cptDs]['docserver_id']
+                                    )
+                                );
+                                $docserverRec = $stmt->fetchObject();
                                 setSize(
                                     $GLOBALS['docservers']
                                     [$GLOBALS['currentStep']]
@@ -670,13 +721,11 @@ while ($GLOBALS['state'] <> "END") {
             }
             if (!$dontProcessTheCurrentRecord) {
                 $cptResInContainer++;
-                //if ($GLOBALS['enableFingerprintControl']) {
-                    $fingerprintOfCurrentRecord = Ds_doFingerprint(
-                        $sourceFilePath, 
-                        $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                        ['fingerprint_mode']
-                    );
-                //}
+                $fingerprintOfCurrentRecord = Ds_doFingerprint(
+                    $sourceFilePath, 
+                    $GLOBALS['docservers'][$GLOBALS['currentStep']]
+                    ['fingerprint_mode']
+                );
                 array_push(
                     $resInContainer, 
                     array(
@@ -687,14 +736,22 @@ while ($GLOBALS['state'] <> "END") {
                 );
                 $offsetDoc = "";
                 $query = "update " . _LC_STACK_TABLE_NAME 
-                       . " set status = 'W' where policy_id = '" 
-                       . $GLOBALS['policy'] . "' and cycle_id = '" 
-                       . $GLOBALS['cycle'] . "' and cycle_step_id = '" 
-                       . $GLOBALS['currentStep'] . "' and coll_id = '" 
-                       . $GLOBALS['collection'] . "' and res_id = " 
-                       . $currentRecordInStack['res_id']
-                       . " and work_batch = '" . $GLOBALS['wb'] . "'";
-                Bt_doQuery($GLOBALS['db'], $query);
+                       . " set status = 'W' where policy_id = ? and cycle_id = ?"
+                       . " and cycle_step_id = ? "
+                       . " and coll_id = ? and res_id = ? "
+                       . " and work_batch = ?";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    $query,
+                    array(
+                        $GLOBALS['policy'],
+                        $GLOBALS['cycle'],
+                        $GLOBALS['currentStep'],
+                        $GLOBALS['collection'],
+                        $currentRecordInStack['res_id'],
+                        $GLOBALS['wb']
+                    )
+                );
                 if (
                     $cptResInContainer >= $GLOBALS['docservers']
                     [$GLOBALS['currentStep']]['container_max_number'] 
@@ -787,19 +844,35 @@ while ($GLOBALS['state'] <> "END") {
         case "EMPTY_STACK" :
             $query = "select * from " . _LC_STACK_TABLE_NAME 
                    . " where status <> 'P' and "
-                   . " policy_id = '" . $GLOBALS['policy'] 
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'"
-                   . " and work_batch = '" . $GLOBALS['wb'] . "'";
-            Bt_doQuery($GLOBALS['db'], $query);
-            if ($GLOBALS['db']->nb_result() > 0) {
+                   . " policy_id = ?"
+                   . " and cycle_id = ?"
+                   . " and work_batch = ?";
+            $stmt = Bt_doQuery(
+                $GLOBALS['db'], 
+                $query,
+                array(
+                    $GLOBALS['policy'],
+                    $GLOBALS['cycle'],
+                    $GLOBALS['wb']
+                )
+            );
+            if ($stmt->rowCount() > 0) {
                 Bt_exitBatch(108, 'There are still documents to be processed');
             }
             $query = "delete from " . _LC_STACK_TABLE_NAME 
                    . " where status = 'P' and "
-                   . " policy_id = '" . $GLOBALS['policy'] 
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'"
-                   . " and work_batch = '" . $GLOBALS['wb'] . "'";
-            Bt_doQuery($GLOBALS['db'], $query);
+                   . " policy_id = ?"
+                   . " and cycle_id = ?"
+                   . " and work_batch = ?";
+            $stmt = Bt_doQuery(
+                $GLOBALS['db'], 
+                $query,
+                array(
+                    $GLOBALS['policy'],
+                    $GLOBALS['cycle'],
+                    $GLOBALS['wb']
+                )
+            );
             $GLOBALS['state'] = "END";
             break;
     }

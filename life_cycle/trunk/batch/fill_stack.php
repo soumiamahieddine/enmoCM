@@ -90,7 +90,14 @@ while ($state <> 'END') {
         case 'GET_STEPS' :
             $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME
                    . " where policy_id = ? and cycle_id = ?";
-            $stmt = Bt_doQuery($GLOBALS['db'], $query, array($GLOBALS['policy'], $GLOBALS['cycle']));
+            $stmt = Bt_doQuery(
+                $GLOBALS['db'], 
+                $query, 
+                array(
+                    $GLOBALS['policy'], 
+                    $GLOBALS['cycle']
+                )
+            );
             if ($stmt->rowCount() == 0) {
                 Bt_exitBatch(14, 'Cycle Steps not found');
                 break;
@@ -116,7 +123,10 @@ while ($state <> 'END') {
             $stmt = Bt_doQuery(
                 $GLOBALS['db'], 
                 $query, 
-                array($GLOBALS['policy'], $GLOBALS['cycle'])
+                array(
+                    $GLOBALS['policy'], 
+                    $GLOBALS['cycle']
+                )
             );
             if ($stmt->rowCount() > 0) {
                 $cycleRecordset = $stmt->fetchObject();
@@ -132,7 +142,10 @@ while ($state <> 'END') {
             $stmt = Bt_doQuery(
                 $GLOBALS['db'], 
                 $query, 
-                array($GLOBALS['policy'], $cycleRecordset->sequence_number - 1)
+                array(
+                    $GLOBALS['policy'], 
+                    $cycleRecordset->sequence_number - 1
+                )
             );
             $prevCycleIdWhereClause = '';
             $cptPrevCycleId = 0;
@@ -186,7 +199,7 @@ while ($state <> 'END') {
                     array_push(
                         $resourcesArray,
                             array('res_id' => $resoucesRecordset->res_id)
-                        );
+                    );
                 }
             } else {
                 if ($GLOBALS['creationDateClause'] <> '') {
@@ -199,18 +212,24 @@ while ($state <> 'END') {
                     // test if we have to change the current date
                     if ($GLOBALS['currentMonthOnly'] == 'false') {
                         $queryTestDate = " select count(res_id) as totalres from " 
-                            . $GLOBALS['view'] . " where policy_id = '" . $GLOBALS['policy']
-                            . "' and " . $prevCycleIdWhereClause
+                            . $GLOBALS['view'] . " where policy_id = ? and " 
+                            . $prevCycleIdWhereClause
                             . " and " . $cycleRecordset->where_clause
                             . $GLOBALS['creationDateClause'];
-                        Bt_doQuery($GLOBALS['db'], $queryTestDate);
-                        $resultTotal = $GLOBALS['db']->fetch_object();
+                        $stmt = Bt_doQuery(
+                            $GLOBALS['db'], 
+                            $queryTestDate,
+                            array(
+                                $GLOBALS['policy']
+                            )
+                        );
+                        $resultTotal = $stmt->fetchObject();
                         if ($resultTotal->totalres == 0) {
                             Bt_computeNextMonthCurrentDate();
                             Bt_computeCreationDateClause();
                             Bt_updateCurrentDateToProcess();
-                            $where_clause = " policy_id = '" . $GLOBALS['policy']
-                                . "' and " . $prevCycleIdWhereClause
+                            $where_clause = " policy_id = ? and " 
+                                . $prevCycleIdWhereClause
                                 . " and " . $cycleRecordset->where_clause
                                 . $GLOBALS['creationDateClause']
                                 . $GLOBALS['whereRegex'];
@@ -223,10 +242,16 @@ while ($state <> 'END') {
                                 $where_clause, 
                                 $orderBy
                             );
-                            Bt_doQuery($GLOBALS['db'], $query);
+                            $stmt = Bt_doQuery(
+                                $GLOBALS['db'], 
+                                $query,
+                                array(
+                                    $GLOBALS['policy']
+                                )
+                            );
                             $resourcesArray = array();
-                            if ($GLOBALS['db']->nb_result() > 0) {
-                                while ($resoucesRecordset = $GLOBALS['db']->fetch_object()) {
+                            if ($stmt->rowCount() > 0) {
+                                while ($resoucesRecordset = $stmt->fetchObject()) {
                                     array_push(
                                         $resourcesArray,
                                             array('res_id' => $resoucesRecordset->res_id)
@@ -264,29 +289,40 @@ while ($state <> 'END') {
                 for ($cptRes = 0;$cptRes < count($resourcesArray);$cptRes++) {
                     $query = "insert into " . _LC_STACK_TABLE_NAME
                            . " (policy_id, cycle_id, cycle_step_id, coll_id, "
-                           . "res_id, status, work_batch, regex) values ('" . $GLOBALS['policy']
-                           . "', '" . $GLOBALS['cycle'] . "', '"
-                           . $GLOBALS['steps'][$cptSteps]['cycle_step_id']
-                           . "', '" . $GLOBALS['collection'] . "', "
-                           . $resourcesArray[$cptRes]["res_id"] 
-                           . ", 'I', " . $GLOBALS['wb'] 
-                           . ", '" . $GLOBALS['regExResId'] . "')";
-                    Bt_doQuery($GLOBALS['db'], $query);
+                           . "res_id, status, work_batch, regex) "
+                           . "values (?, ?, ?, ?, ?, 'I', ?, ?)";
+                    $stmt = Bt_doQuery(
+                        $GLOBALS['db'], 
+                        $query, 
+                        array(
+                            $GLOBALS['policy'],
+                            $GLOBALS['cycle'],
+                            $GLOBALS['steps'][$cptSteps]['cycle_step_id'],
+                            $GLOBALS['collection'],
+                            $resourcesArray[$cptRes]["res_id"],
+                            $GLOBALS['wb'],
+                            $GLOBALS['regExResId']
+                        )
+                    );
                     //history
                     if ($GLOBALS['enableHistory']) {
                         $query = "insert into " . HISTORY_TABLE
                                . " (table_name, record_id, event_type, user_id, "
-                               . "event_date, info, id_module) values ('"
-                               . $GLOBALS['view'] . "', '"
-                               . $resourcesArray[$cptRes]["res_id"]
-                               . "', 'ADD', 'LC_BOT', "
+                               . "event_date, info, id_module) values (?, ?, 'ADD', 'LC_BOT', "
                                . $GLOBALS['db']->current_datetime()
-                               . ", 'fill stack, policy:" . $GLOBALS['policy']
-                               . ", cycle:" . $GLOBALS['cycle'] . ", cycle step:"
-                               . $GLOBALS['steps'][$cptSteps]['cycle_step_id']
-                               . ", collection:" . $GLOBALS['collection']
-                               . "', 'life_cycle')";
-                        Bt_doQuery($GLOBALS['db'], $query);
+                               . ", ?, 'life_cycle')";
+                        $stmt = Bt_doQuery(
+                            $GLOBALS['db'], 
+                            $query,
+                            array(
+                                $GLOBALS['view'],
+                                $resourcesArray[$cptRes]["res_id"],
+                                "fill stack, policy:" . $GLOBALS['policy']
+                                    . ", cycle:" . $GLOBALS['cycle'] . ", cycle step:"
+                                    . $GLOBALS['steps'][$cptSteps]['cycle_step_id']
+                                    . "collection:" . $GLOBALS['collection']
+                            )
+                        );
                     }
                     $GLOBALS['totalProcessedResources']++;
                 }
@@ -295,7 +331,6 @@ while ($state <> 'END') {
             break;
     }
 }
-//unlink($GLOBALS['lckFile']);
 $GLOBALS['logger']->write('End of process fill stack', 'INFO');
 include('process_stack.php');
 exit($GLOBALS['exitCode']);

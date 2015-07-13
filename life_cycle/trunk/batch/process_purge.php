@@ -84,22 +84,28 @@ while ($GLOBALS['state'] <> "END") {
                 $limit = ' LIMIT ' . $GLOBALS['stackSizeLimit'];
             }
             $where_clause = $GLOBALS['whereClause'];
-            $query = "select res_id, docserver_id, path, filename, fingerprint from " . $GLOBALS['table'] 
+            $query = "select res_id, docserver_id, path, filename, fingerprint from " 
+                . $GLOBALS['table'] 
                 . " where " . $where_clause . " " 
                 . $limit . " " . $orderBy;
-            Bt_doQuery($GLOBALS['db'], $query);
+            $stmt = Bt_doQuery($GLOBALS['db'], $query);
             $GLOBALS['logger']->write('select res query:' . $query, 'INFO');
             $resourcesArray = array();
-            if ($GLOBALS['db']->nb_result() > 0) {
-                while ($resoucesRecordset = $GLOBALS['db']->fetch_object()) {
+            if ($stmt->rowCount() > 0) {
+                while ($resoucesRecordset = $stmt->fetchObject()) {
                     $queryDs = "select path_template from docservers " 
-                       . " where docserver_id = '" . $resoucesRecordset->docserver_id . "' ";
-                    Bt_doQuery($GLOBALS['db2'], $queryDs);
-                    if ($GLOBALS['db2']->nb_result() == 0) {
-                        Bt_exitBatch(13, 'Docserver:' . $resoucesRecordset->docserver_id . ' not found');
+                       . " where docserver_id = ?";
+                    $stmt2 = Bt_doQuery(
+                        $GLOBALS['db2'], 
+                        $queryDs, 
+                        array($resoucesRecordset->docserver_id)
+                    );
+                    if ($stmt2->rowCount() == 0) {
+                        Bt_exitBatch(13, 'Docserver:' 
+                            . $resoucesRecordset->docserver_id . ' not found');
                         break;
                     } else {
-                        $dsRecordset = $GLOBALS['db2']->fetch_object();
+                        $dsRecordset = $stmt2->fetchObject();
                         $dsPath = $dsRecordset->path_template;
                     }
                     array_push(
@@ -108,7 +114,8 @@ while ($GLOBALS['state'] <> "END") {
                             'res_id' => $resoucesRecordset->res_id,
                             'docserver_id' => $resoucesRecordset->docserver_id,
                             'path_template' => $dsPath,
-                            'path' =>  str_replace('#', DIRECTORY_SEPARATOR, $resoucesRecordset->path),
+                            'path' =>  str_replace('#', DIRECTORY_SEPARATOR, 
+                                $resoucesRecordset->path),
                             'filename' => $resoucesRecordset->filename,
                             'fingerprint' => $resoucesRecordset->fingerprint,
                             'adr' => array(),
@@ -128,26 +135,36 @@ while ($GLOBALS['state'] <> "END") {
             for ($cptRes = 0;$cptRes < $countRA;$cptRes++) {
                 $queryAip = "select res_id, docserver_id, path, filename, fingerprint from " 
                     . $GLOBALS['adrTable']
-                    . " where res_id = " . $resourcesArray[$cptRes]["res_id"];
-                Bt_doQuery($GLOBALS['db'], $queryAip);
+                    . " where res_id = ?";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    $queryAip,
+                    array($resourcesArray[$cptRes]["res_id"])
+                );
                 $aipArray = array();
-                if ($GLOBALS['db']->nb_result() > 0) {
-                    while ($resoucesRecordsetAdr = $GLOBALS['db']->fetch_object()) {
+                if ($stmt->rowCount() > 0) {
+                    while ($resoucesRecordsetAdr = $stmt->fetchObject()) {
                         $queryDs = "select path_template from docservers " 
-                           . " where docserver_id = '" . $resoucesRecordsetAdr->docserver_id . "' ";
-                        Bt_doQuery($GLOBALS['db2'], $queryDs);
-                        if ($GLOBALS['db2']->nb_result() == 0) {
-                            Bt_exitBatch(13, 'Docserver:' . $resoucesRecordsetAdr->docserver_id . ' not found');
+                           . " where docserver_id = ?";
+                        $stmt2 = Bt_doQuery(
+                            $GLOBALS['db2'], 
+                            $queryDs,
+                            array($resoucesRecordsetAdr->docserver_id)
+                        );
+                        if ($stmt2->rowCount() == 0) {
+                            Bt_exitBatch(13, 'Docserver:' 
+                                . $resoucesRecordsetAdr->docserver_id . ' not found');
                             break;
                         } else {
-                            $dsRecordset = $GLOBALS['db2']->fetch_object();
+                            $dsRecordset = $stmt2->fetchObject();
                             $dsPath = $dsRecordset->path_template;
                         }
                         array_push($resourcesArray[$cptRes]['adr'], array(
                                 'res_id' => $resoucesRecordsetAdr->res_id,
                                 'docserver_id' => $resoucesRecordsetAdr->docserver_id,
                                 'path_template' => $dsPath,
-                                'path' => str_replace('#', DIRECTORY_SEPARATOR, $resoucesRecordsetAdr->path),
+                                'path' => str_replace('#', DIRECTORY_SEPARATOR, 
+                                    $resoucesRecordsetAdr->path),
                                 'filename' => $resoucesRecordsetAdr->filename,
                                 'fingerprint' => $resoucesRecordsetAdr->fingerprint,
                             )
@@ -157,17 +174,21 @@ while ($GLOBALS['state'] <> "END") {
                 //history
                 $query = "insert into " . HISTORY_TABLE
                        . " (table_name, record_id, event_type, user_id, "
-                       . "event_date, info, id_module) values ('"
-                       . $GLOBALS['table'] . "', '"
-                       . $resourcesArray[$cptRes]["res_id"]
-                       . "', 'ADD', 'PURGE_BOT', '"
+                       . "event_date, info, id_module) values (?, ?, 'ADD', 'PURGE_BOT', '"
                        . date("d") . "/" . date("m") . "/" . date("Y") . " " . date("H") 
                        . ":" . date("i") . ":" . date("s")
-                       . "', 'purge, where clause:" 
-                       . str_replace("'", "''", $GLOBALS['whereClause'])
-                       . ", collection:" . $GLOBALS['collection']
-                       . "', 'life_cyle')";
-                Bt_doQuery($GLOBALS['db'], $query);
+                       . "', ?, 'life_cyle')";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    $query,
+                    array(
+                        $GLOBALS['table'],
+                        $resourcesArray[$cptRes]["res_id"],
+                        "purge, where clause:" 
+                            . str_replace("'", "''", $GLOBALS['whereClause'])
+                            . ", collection:" . $GLOBALS['collection']
+                    )
+                );
                 $GLOBALS['totalProcessedResources']++;
             }
             //print_r($resourcesArray);
@@ -239,18 +260,29 @@ while ($GLOBALS['state'] <> "END") {
             $DeletedFiles = fopen($chemin, 'w+');
 
             fprintf($DeletedFiles, chr(0xEF).chr(0xBB).chr(0xBF));
-            fputcsv($DeletedFiles, array("Res id", "Num Chrono", "Type de document", "Service destinataire", "Objet"), $delimiteur);
+            fputcsv(
+                $DeletedFiles, 
+                array(
+                    "Res id", 
+                    "Num Chrono", 
+                    "Type de document", 
+                    "Service destinataire", 
+                    "Objet"
+                ), 
+                $delimiteur
+            );
 
             for ($cptRes = 0;$cptRes < $countRA;$cptRes++) {
 
                 $queryDestination = "SELECT destination FROM " . $GLOBALS['table'] 
-                   . " WHERE res_id = " . $resourcesArray[$cptRes]["res_id"];
-                Bt_doQuery($GLOBALS['db2'], $queryDestination);
-
-                if ($GLOBALS['db2']->nb_result() > 0) {
-
-                    $destinationRes = $GLOBALS['db2']->fetch_object();
-
+                   . " WHERE res_id = ?";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db2'], 
+                    $queryDestination,
+                    array($resourcesArray[$cptRes]["res_id"])
+                );
+                if ($stmt->rowCount() > 0) {
+                    $destinationRes = $stmt->fetchObject();
                     if (!in_array($destinationRes->destination, $arrayEntityId)) {
                         array_push($arrayEntityId, $destinationRes->destination);
                         array_push($arrayEntityNbDocs, 1);
@@ -259,120 +291,181 @@ while ($GLOBALS['state'] <> "END") {
                         $arrayEntityNbDocs[$keyEntity]++;
                     }
                 }
-
                 $deleteResQuery = '';
                 $deleteAdrQuery = '';
                 $deleteNotesQuery = '';
                 $GLOBALS['logger']->write('Prepare sql deletion for res_id:' 
                     . $resourcesArray[$cptRes]["res_id"], 'INFO');
+                $queryDeletedFile = "SELECT res_id, alt_identifier, "
+                                    . "dt.description as \"type_id_label\", entity_label, subject 
+                                    FROM " . $GLOBALS['view'] . " r 
+                                    LEFT JOIN doctypes dt ON r.type_id = dt.type_id 
+                                    WHERE res_id = ?";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db2'], 
+                    $queryDeletedFile,
+                    array($resourcesArray[$cptRes]["res_id"])
+                );
+                $DataDeletedFile = $stmt->fetchObject();
 
-                $queryDeletedFile = "SELECT res_id, alt_identifier, dt.description as \"type_id_label\", entity_label, subject 
-                                        FROM " . $GLOBALS['view'] . " r 
-                                        LEFT JOIN doctypes dt ON r.type_id = dt.type_id 
-                                        WHERE res_id = " . $resourcesArray[$cptRes]["res_id"];
-                Bt_doQuery($GLOBALS['db2'], $queryDeletedFile);
-                $DataDeletedFile = $GLOBALS['db2']->fetch_object();
-
-                fputcsv($DeletedFiles, array($DataDeletedFile->res_id, $DataDeletedFile->alt_identifier, $DataDeletedFile->type_id_label, $DataDeletedFile->entity_label, $DataDeletedFile->subject), $delimiteur);
+                fputcsv(
+                    $DeletedFiles, 
+                    array(
+                        $DataDeletedFile->res_id, 
+                        $DataDeletedFile->alt_identifier, 
+                        $DataDeletedFile->type_id_label, 
+                        $DataDeletedFile->entity_label, 
+                        $DataDeletedFile->subject
+                    ), 
+                    $delimiteur
+                );
 
                 $deleteResQuery = "DELETE FROM " . $GLOBALS['table']
-                   . " WHERE res_id = " . $resourcesArray[$cptRes]["res_id"];
-                //echo $deleteResQuery . PHP_EOL;
-                 Bt_doQuery($GLOBALS['db'], $deleteResQuery);
+                   . " WHERE res_id = ?";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    $deleteResQuery,
+                    array($resourcesArray[$cptRes]["res_id"])
+                );
 
                 if ($GLOBALS['extensionTable'] <> "") {
                     $deleteExtQuery = "DELETE FROM " . $GLOBALS['extensionTable']
-                       . " WHERE res_id = " . $resourcesArray[$cptRes]["res_id"];
-                    //echo $deleteExtQuery . PHP_EOL;
-                    Bt_doQuery($GLOBALS['db'], $deleteExtQuery);
+                       . " WHERE res_id = ?";
+                    $stmt = Bt_doQuery(
+                        $GLOBALS['db'], 
+                        $deleteExtQuery,
+                        array($resourcesArray[$cptRes]["res_id"])
+                    );
                 }
 
                 if ($GLOBALS['versionTable'] <> "") {
                     $deleteVersionQuery = "DELETE FROM " . $GLOBALS['versionTable']
-                       . " WHERE res_id_master = " . $resourcesArray[$cptRes]["res_id"];
-                    //echo $deleteVersionQuery . PHP_EOL;
-                    Bt_doQuery($GLOBALS['db'], $deleteVersionQuery);
+                       . " WHERE res_id_master = ?";
+                    $stmt = Bt_doQuery(
+                        $GLOBALS['db'], 
+                        $deleteVersionQuery,
+                        array($resourcesArray[$cptRes]["res_id"])
+                    );
                 }
 
                 if ($GLOBALS['adrTable'] <> "") {
                     $deleteAdrQuery = "DELETE FROM " . $GLOBALS['adrTable']
-                       . " WHERE res_id = " . $resourcesArray[$cptRes]["res_id"];
-                    //echo $deleteAdrQuery . PHP_EOL;
-                    Bt_doQuery($GLOBALS['db'], $deleteAdrQuery);
+                       . " WHERE res_id = ?";
+                    $stmt = Bt_doQuery(
+                        $GLOBALS['db'], 
+                        $deleteAdrQuery,
+                        array($resourcesArray[$cptRes]["res_id"])
+                    );
                 }
 
                 $deleteNotesQuery = "DELETE FROM notes "
-                   . " WHERE coll_id = '" . $GLOBALS['collection'] . "' "
-                   . " and identifier = '" . $resourcesArray[$cptRes]["res_id"] . "'";
-                //echo $deleteNotesQuery . PHP_EOL;
-                Bt_doQuery($GLOBALS['db'], $deleteNotesQuery);
+                   . " WHERE coll_id = ? "
+                   . " and identifier = ?";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    $deleteNotesQuery, 
+                    array(
+                        $GLOBALS['collection'], 
+                        $resourcesArray[$cptRes]["res_id"]
+                    )
+                );
 
                 $deleteLinkedQuery = "DELETE FROM res_linked "
-                   . " WHERE coll_id = '" . $GLOBALS['collection'] . "' "
-                   . " and (res_child = '" . $resourcesArray[$cptRes]["res_id"] . "' or res_parent = '" . $resourcesArray[$cptRes]["res_id"] . "')";
-                //echo $deleteLinkedQuery . PHP_EOL;
-                Bt_doQuery($GLOBALS['db'], $deleteLinkedQuery);
+                   . " WHERE coll_id = ? "
+                   . " and (res_child = ? or res_parent = ?)";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    $deleteLinkedQuery, 
+                    array(
+                        $GLOBALS['collection'],
+                        $resourcesArray[$cptRes]["res_id"],
+                        $resourcesArray[$cptRes]["res_id"]
+                    )
+                );
 
                 $deleteTagsQuery = "DELETE FROM tags "
-                   . " WHERE coll_id = '" . $GLOBALS['collection'] . "' "
-                   . " and res_id = '" . $resourcesArray[$cptRes]["res_id"] . "'";
-                //echo $deleteTagsQuery . PHP_EOL;
-                Bt_doQuery($GLOBALS['db'], $deleteTagsQuery);
+                   . " WHERE coll_id = ? "
+                   . " and res_id = ?";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    $deleteTagsQuery, 
+                    array(
+                        $GLOBALS['collection'],
+                        $resourcesArray[$cptRes]["res_id"]
+                    )
+                );
 
                 $deleteAttachmentsQuery = "DELETE FROM res_attachments "
-                   . " WHERE coll_id = '" . $GLOBALS['collection'] . "' "
-                   . " and res_id_master = '" . $resourcesArray[$cptRes]["res_id"] . "'";
-                //echo $deleteAttachmentsQuery . PHP_EOL;
-                Bt_doQuery($GLOBALS['db'], $deleteAttachmentsQuery);
+                   . " WHERE coll_id = ? "
+                   . " and res_id_master = ?";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    $deleteAttachmentsQuery, 
+                    array(
+                        $GLOBALS['collection'],
+                        $resourcesArray[$cptRes]["res_id"]
+                    )
+                );
 
                 $deleteCasesQuery = "DELETE FROM cases_res "
-                   . " WHERE res_id = '" . $resourcesArray[$cptRes]["res_id"] . "' ";
-                //echo $deleteCasesQuery . PHP_EOL;
-                Bt_doQuery($GLOBALS['db'], $deleteCasesQuery);
-
+                   . " WHERE res_id = ? ";
+                $stmt = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    $deleteCasesQuery, 
+                    array($resourcesArray[$cptRes]["res_id"]);
             }
 
             fclose($DeletedFiles);
 
-            $chemin = $GLOBALS['exportFolder'].'DocumentsSupprimesParEntites-'.$repertoiredujour.'.csv';
+            $chemin = $GLOBALS['exportFolder'].'DocumentsSupprimesParEntites-'
+                . $repertoiredujour . '.csv';
 
             $fichier_csv = fopen($chemin, 'w+');
 
             fprintf($fichier_csv, chr(0xEF).chr(0xBB).chr(0xBF));
 
-            foreach($arrayEntityId as $key => $value){
+            foreach ($arrayEntityId as $key => $value) {
                 if ($key > 0) {
                     $subEntities_tmp = array();
                     $subEntities = array();
                     $subEntities_tmp = getEntityChildrenTree($subEntities_tmp, $value);
-
-                    for($iSubEntities=0;$iSubEntities<count($subEntities_tmp);$iSubEntities++){
+                    for ($iSubEntities=0;$iSubEntities<count($subEntities_tmp);$iSubEntities++) {
                         if (in_array($subEntities_tmp[$iSubEntities]['ID'], $arrayEntityId)) {
                             array_push($subEntities, $subEntities_tmp[$iSubEntities]['ID']);
                         }
                     }
                     array_push($subEntities, $value);
-
                     $nbDocsSubEntities = 0;
-
                     foreach ($subEntities as $value2) {
                         $SubEntitiesKeys = array_search($value2, $arrayEntityId);
                         $nbDocsSubEntities = $nbDocsSubEntities + $arrayEntityNbDocs[$SubEntitiesKeys];
                     }
-
-                    $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id = '" . $value."'";
-                    Bt_doQuery($GLOBALS['db2'], $queryEntityLabel);
-                    $EntityDB = $GLOBALS['db2']->fetch_object();
-
-                    fputcsv($fichier_csv, array($EntityDB->entity_label, $arrayEntityNbDocs[$key], $nbDocsSubEntities), $delimiteur);
+                    $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id = ?";
+                    $stmt = Bt_doQuery($GLOBALS['db2'], $queryEntityLabel, array($value));
+                    $EntityDB = $stmt->fetchObject();
+                    fputcsv(
+                        $fichier_csv, 
+                        array(
+                            $EntityDB->entity_label, 
+                            $arrayEntityNbDocs[$key], 
+                            $nbDocsSubEntities
+                        ), 
+                        $delimiteur
+                    );
                 } else {
-                    fputcsv($fichier_csv, array($value, $arrayEntityNbDocs[$key], $arraySubEntitiesNbDocs[$key]), $delimiteur);
+                    fputcsv(
+                        $fichier_csv, 
+                        array(
+                            $value, 
+                            $arrayEntityNbDocs[$key], 
+                            $arraySubEntitiesNbDocs[$key]
+                        ), 
+                        $delimiteur
+                    );
                 }
                 
             }
-
             fclose($fichier_csv);
-
             $state = 'END';
             break;
     }

@@ -227,10 +227,13 @@ function controlIntegrityOfSource($currentRecordInStack)
 {
     $sourceFilePath = getSourceResourcePath($currentRecordInStack);
     $query = "select fingerprint from " . $GLOBALS['table'] 
-           . " where res_id = " . $currentRecordInStack
-           . $GLOBALS['creationDateClause'];
-    Bt_doQuery($GLOBALS['db'], $query);
-    $resRecordset = $GLOBALS['db']->fetch_object();
+           . " where res_id = ?";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query,
+        array($currentRecordInStack . $GLOBALS['creationDateClause'])
+    );
+    $resRecordset = $stmt->fetchObject();
     if (Ds_doFingerprint(
         $sourceFilePath, $GLOBALS['docserverSourceFingerprint']
     ) <> $resRecordset->fingerprint
@@ -251,7 +254,14 @@ function controlIntegrityOfSource($currentRecordInStack)
  */
 function setSize($docserverId, $newSize) 
 {
-    $query = "update " . _DOCSERVERS_TABLE_NAME . " set actual_size_number=" 
-           . $newSize . " where docserver_id='" . $docserverId . "'";
-    Bt_doQuery($GLOBALS['db'], $query);
+    $query = "update " . _DOCSERVERS_TABLE_NAME 
+        . " set actual_size_number=? where docserver_id=?";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db'], 
+        $query,
+        array(
+            $newSize,
+            $docserverId
+        )
+    );
 }

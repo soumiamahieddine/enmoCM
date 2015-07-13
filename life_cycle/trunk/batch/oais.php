@@ -218,13 +218,20 @@ function createPDIHistory($resInContainer)
             new DOMAttr('RES_ID', $resInContainer[$cptRes]['res_id'])
         );
         $root->appendChild($pdiHistory);
-        $query = "select * from history where record_id = '" 
-               . $resInContainer[$cptRes]['res_id'] . "' and (table_name = '" 
-               . $GLOBALS['table'] . "' or table_name = '" 
-               . $GLOBALS['adrTable'] . "' or table_name = '" 
-               . $GLOBALS['view'] . "') order by event_date";
-        Bt_doQuery($GLOBALS['db3'], $query);
-        while ($historyRecordset = $GLOBALS['db3']->fetch_object()) {
+        $query = "select * from history where record_id = ? "
+               . " and (table_name = ? or table_name = ? or table_name = ?) "
+               . " order by event_date";
+        $stmt = Bt_doQuery(
+            $GLOBALS['db3'], 
+            $query,
+            array(
+                $resInContainer[$cptRes]['res_id'],
+                $GLOBALS['table'],
+                $GLOBALS['adrTable'],
+                $GLOBALS['view'],
+            )
+        );
+        while ($historyRecordset = $stmt->fetchObject()) {
             //an event
             $event = $docXML->createElement('EVENT');
             $pdiHistory->appendChild($event);

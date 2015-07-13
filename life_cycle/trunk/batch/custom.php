@@ -51,10 +51,13 @@ function createPDI($resInContainer)
     //access rights
     $accessRights = $docXML->createElement('ACCESS_RIGHTS');
     $root->appendChild($accessRights);
-    $query = "select * from security where coll_id = '" 
-           . $GLOBALS['collection'] . "'";
-    Bt_doQuery($GLOBALS['db3'], $query);
-    while ($securityRecordset = $GLOBALS['db3']->fetch_object()) {
+    $query = "select * from security where coll_id = ?";
+    $stmt = Bt_doQuery(
+        $GLOBALS['db3'], 
+        $query, 
+        array($GLOBALS['collection'])
+    );
+    while ($securityRecordset = $stmt->fetchObject()) {
         //an access right
         $accessRight = $docXML->createElement('ACCESS_RIGHT');
         $accessRights->appendChild($accessRight);
@@ -99,10 +102,14 @@ function createPDI($resInContainer)
             new DOMAttr('RES_ID', $resInContainer[$cptRes]['res_id'])
         );
         $query = "select * from " . $GLOBALS['view'] 
-               . " where res_id = ".$resInContainer[$cptRes]['res_id'] 
+               . " where res_id = ? " 
                . $GLOBALS['creationDateClause'];
-        Bt_doQuery($GLOBALS['db3'], $query);
-        while ($resRecordset = $GLOBALS['db3']->fetch_object()) {
+        $stmt = Bt_doQuery(
+            $GLOBALS['db3'], 
+            $query, 
+            array($resInContainer[$cptRes]['res_id'])
+        );
+        while ($resRecordset = $stmt->fetchObject()) {
             //a record
             //a provenance
             $provenance = $docXML->createElement('PROVENANCE');
