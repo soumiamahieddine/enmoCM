@@ -282,7 +282,8 @@
             elseif($data[$i]['column'] == 'docserver_id')
             {
                 $find_docserver_id =  true;
-                if(!$this->query("select docserver_id from ".$_SESSION['tablename']['docservers']." where docserver_id = ?", array($data[$i]['value'])))
+                $db = new Database();
+                if(!$db->query("select docserver_id from ".$_SESSION['tablename']['docservers']." where docserver_id = ?", array($data[$i]['value'])))
                 {
                     $error .= _DOCSERVER_ID_ERROR.'<br/>';
                 }
