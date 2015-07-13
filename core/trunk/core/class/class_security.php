@@ -183,7 +183,7 @@ class security extends Database
                     time() . '%' . $array['FirstName'] . '%' . $array['UserId']
                     . '%' . $array['UserId'] . '%' . date('dmYHmi') . '%'
                 );
-                $user->__set('cookie_key', functions::protect_string_db($key));
+                $user->__set('cookie_key', $key);
                 if ($_SESSION['config']['databasetype'] == 'ORACLE') {
                     $user->__set('cookie_date', 'SYSDATE');
                 } else {
@@ -341,7 +341,7 @@ class security extends Database
                 /*setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$line->cookie_key,time()-3600000, 0, 0, $_SERVER["HTTPS"], 1);*/
                 $key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
 
-                $user->__set('cookie_key', functions::protect_string_db($key));
+                $user->__set('cookie_key', $key);
                 if ($_SESSION['config']['databasetype'] == "ORACLE")
                     $user->__set('cookie_date', 'SYSDATE');
                 else

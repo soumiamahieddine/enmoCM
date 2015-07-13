@@ -126,50 +126,50 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
         $error = "";
         if (isset($docserver_types->docserver_type_id) && !empty($docserver_types->docserver_type_id)) {
             // Update, so values exist
-            $docserver_types->docserver_type_id=$f->protect_string_db($f->wash($docserver_types->docserver_type_id, "nick", _DOCSERVER_TYPE_ID." ", "yes", 0, 32));
+            $docserver_types->docserver_type_id=$f->wash($docserver_types->docserver_type_id, "nick", _DOCSERVER_TYPE_ID." ", "yes", 0, 32);
         } else {
             $error .= _DOCSERVER_TYPE_ID . " " . _IS_EMPTY . "#";
         }
-        $docserver_types->docserver_type_label=$f->protect_string_db($f->wash($docserver_types->docserver_type_label, "no", _DOCSERVER_TYPE_LABEL." ", 'yes', 0, 255));
-        $docserver_types->is_container=$f->protect_string_db($f->wash($docserver_types->is_container, "no", _IS_CONTAINER." ", 'yes', 0, '5'));
+        $docserver_types->docserver_type_label=$f->wash($docserver_types->docserver_type_label, "no", _DOCSERVER_TYPE_LABEL." ", 'yes', 0, 255);
+        $docserver_types->is_container=$f->wash($docserver_types->is_container, "no", _IS_CONTAINER." ", 'yes', 0, '5');
         if ($docserver_types->is_container == "false" || $docserver_types->is_container == "N") {
             $docserver_types->is_container=false;
             $docserver_types->container_max_number = 0;
         } else {
             $docserver_types->is_container=true;
-            $docserver_types->container_max_number=$f->protect_string_db($f->wash($docserver_types->container_max_number, "no", _CONTAINER_MAX_NUMBER." ", 'yes', 0, 6));
+            $docserver_types->container_max_number=$f->wash($docserver_types->container_max_number, "no", _CONTAINER_MAX_NUMBER." ", 'yes', 0, 6);
         }
-        $docserver_types->is_compressed=$f->protect_string_db($f->wash($docserver_types->is_compressed, "no", _IS_COMPRESSED." ", 'yes', 0, '5'));
+        $docserver_types->is_compressed=$f->wash($docserver_types->is_compressed, "no", _IS_COMPRESSED." ", 'yes', 0, '5');
         if ($docserver_types->is_compressed == "false" || $docserver_types->is_compressed == "N") {
             $docserver_types->is_compressed=false;
             $docserver_types->compression_mode = "NONE";
         } else {
             $docserver_types->is_compressed=true;
-            $docserver_types->compression_mode=$f->protect_string_db($f->wash($docserver_types->compression_mode, "no", _COMPRESSION_MODE." ", 'yes', 0, 32));
+            $docserver_types->compression_mode=$f->wash($docserver_types->compression_mode, "no", _COMPRESSION_MODE." ", 'yes', 0, 32);
         }
-        $docserver_types->is_meta=$f->protect_string_db($f->wash($docserver_types->is_meta, "no", _IS_META." ", 'yes', 0, '5'));
+        $docserver_types->is_meta=$f->wash($docserver_types->is_meta, "no", _IS_META." ", 'yes', 0, '5');
         if ($docserver_types->is_meta == "false" || $docserver_types->is_meta == "N") {
             $docserver_types->is_meta=false;
             $docserver_types->meta_template = "NONE";
         } else {
             $docserver_types->is_meta=true;
-            $docserver_types->meta_template=$f->protect_string_db($f->wash($docserver_types->meta_template, "no", _META_TEMPLATE." ", 'yes', 0, 32));
+            $docserver_types->meta_template=$f->wash($docserver_types->meta_template, "no", _META_TEMPLATE." ", 'yes', 0, 32);
         }
-        $docserver_types->is_logged=$f->protect_string_db($f->wash($docserver_types->is_logged, "no", _IS_LOGGED." ", 'yes', 0, '5'));
+        $docserver_types->is_logged=$f->wash($docserver_types->is_logged, "no", _IS_LOGGED." ", 'yes', 0, '5');
         if ($docserver_types->is_logged == "false" || $docserver_types->is_logged == "N") {
             $docserver_types->is_logged=false;
             $docserver_types->log_template = "NONE";
         } else {
             $docserver_types->is_logged=true;
-            $docserver_types->log_template=$f->protect_string_db($f->wash($docserver_types->log_template, "no", _LOG_TEMPLATE." ", 'yes', 0, 32));
+            $docserver_types->log_template=$f->wash($docserver_types->log_template, "no", _LOG_TEMPLATE." ", 'yes', 0, 32);
         }
-        $docserver_types->is_signed=$f->protect_string_db($f->wash($docserver_types->is_signed, "no", _IS_SIGNED." ", 'yes', 0, '5'));
+        $docserver_types->is_signed=$f->wash($docserver_types->is_signed, "no", _IS_SIGNED." ", 'yes', 0, '5');
         if ($docserver_types->is_signed == "false" || $docserver_types->is_signed == "N") {
             $docserver_types->is_signed=false;
             $docserver_types->fingerprint_mode = "NONE";
         } else {
             $docserver_types->is_signed=true;
-            $docserver_types->fingerprint_mode=$f->protect_string_db($f->wash($docserver_types->fingerprint_mode, "no", _FINGERPRINT_MODE." ", 'yes', 0, 32));
+            $docserver_types->fingerprint_mode=$f->wash($docserver_types->fingerprint_mode, "no", _FINGERPRINT_MODE." ", 'yes', 0, 32);
         }
         if ($mode == "add" && $this->docserverTypeExists($docserver_types->docserver_type_id)) {
             $error .= $docserver_types->docserver_type_id." "._ALREADY_EXISTS."#";

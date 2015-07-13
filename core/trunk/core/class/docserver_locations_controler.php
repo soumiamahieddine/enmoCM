@@ -167,25 +167,21 @@ class docserver_locations_controler extends ObjectControler
             && !empty($docserverLocations->docserver_location_id)) {
             // Update, so values exist
             $docserverLocations->docserver_location_id = 
-                $f->protect_string_db(
-                    $f->wash(
-                        $docserverLocations->docserver_location_id, 
-                        'nick', _DOCSERVER_LOCATION_ID . ' ', 
-                        'yes', 0, 32
-                    )
+                $f->wash(
+                    $docserverLocations->docserver_location_id, 
+                    'nick', _DOCSERVER_LOCATION_ID . ' ', 
+                    'yes', 0, 32
                 );
         } else {
             $error .= _DOCSERVER_LOCATION_ID . ' ' . _IS_EMPTY . '#';
         }
         $docserverLocations->ipv4 = 
-            $f->protect_string_db(
-                $f->wash(
-                    $docserverLocations->ipv4, 
-                    'no', _IPV4 . ' ', 
-                    'yes', 
-                    0, 
-                    255
-                )
+            $f->wash(
+                $docserverLocations->ipv4, 
+                'no', _IPV4 . ' ', 
+                'yes', 
+                0, 
+                255
             );
         if (!$this->ipv4Control($docserverLocations->ipv4)) {    
             $error .= _IP_V4_FORMAT_NOT_VALID . '#';
@@ -195,54 +191,46 @@ class docserver_locations_controler extends ObjectControler
                 $error .= _IP_V4_ADRESS_NOT_VALID . '#';
         }*/
         $docserverLocations->ipv6 = 
-            $f->protect_string_db(
-                $f->wash(
-                    $docserverLocations->ipv6, 
-                    'no', 
-                    _IPV6 . ' ', 
-                    'no', 
-                    0, 
-                    255
-                )
+            $f->wash(
+                $docserverLocations->ipv6, 
+                'no', 
+                _IPV6 . ' ', 
+                'no', 
+                0, 
+                255
             );
         if (!$this->ipv6Control($docserverLocations->ipv6)) {    
             $error .= _IP_V6_NOT_VALID . '#';
         }
         $docserverLocations->net_domain = 
-            $f->protect_string_db(
-                $f->wash(
-                    $docserverLocations->net_domain, 
-                    'no', 
-                    _NET_DOMAIN . ' ', 
-                    'no', 
-                    0, 
-                    32
-                )
+            $f->wash(
+                $docserverLocations->net_domain, 
+                'no', 
+                _NET_DOMAIN . ' ', 
+                'no', 
+                0, 
+                32
             );
         $docserverLocations->mask = 
-            $f->protect_string_db(
-                $f->wash(
-                    $docserverLocations->mask, 
-                    'no', 
-                    _MASK . ' ', 
-                    'no', 
-                    0, 
-                    255
-                )
+            $f->wash(
+                $docserverLocations->mask, 
+                'no', 
+                _MASK . ' ', 
+                'no', 
+                0, 
+                255
             );
         if (!$this->maskControl($docserverLocations->mask)) {    
             $error .= _MASK_NOT_VALID . '#';
         }
         $docserverLocations->net_link = 
-            $f->protect_string_db(
-                $f->wash(
-                    $docserverLocations->net_link, 
-                    'no', 
-                    _NET_LINK . ' ', 
-                    'no', 
-                    0, 
-                    255
-                )
+            $f->wash(
+                $docserverLocations->net_link, 
+                'no', 
+                _NET_LINK . ' ', 
+                'no', 
+                0, 
+                255
             );
         if ($mode == 'add' 
             && $this->docserverLocationExists(

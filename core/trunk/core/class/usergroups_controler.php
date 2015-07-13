@@ -318,19 +318,11 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
                 if ($security[$i] <> "") {
                     $values = array(
                         'group_id'       => $group->group_id,
-                        'coll_id'        => $func->protect_string_db(
-                            $security[$i]['COLL_ID']
-                        ),
-                        'where_clause'   => $func->protect_string_db(
-                            $security[$i]['WHERE_CLAUSE']
-                        ),
-                        'maarch_comment' => $func->protect_string_db(
-                            $security[$i]['COMMENT']
-                        ),
-                        'where_target'   => $func->protect_string_db(
-                            $security[$i]['WHERE_TARGET']
-                        )
-                    );
+                        'coll_id'        => $security[$i]['COLL_ID'],
+                        'where_clause'   => $security[$i]['WHERE_CLAUSE'],
+                        'maarch_comment' => $security[$i]['COMMENT'],
+                        'where_target'   => $security[$i]['WHERE_TARGET']
+                        );
 
                     $bitmask = '0';
                     if (isset($security[$i]['RIGHTS_BITMASK'])

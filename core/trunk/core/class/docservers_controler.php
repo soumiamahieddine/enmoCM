@@ -164,19 +164,18 @@ class docservers_controler
             if (isset($docserver->docserver_id)
                 && $docserver->docserver_id <> ''
             ) {
-                $docserver->docserver_id = $f->protect_string_db(
+                $docserver->docserver_id = 
                     $f->wash(
                         $docserver->docserver_id,
                         'nick',
                         _DOCSERVER_ID . ' ',
                         'yes', 0, 32
-                    )
-                );
+                    );
             } else {
                 $error .= _DOCSERVER_ID . ' ' . _IS_EMPTY . '#';
             }
         }
-        $docserver->docserver_type_id = $f->protect_string_db(
+        $docserver->docserver_type_id = 
             $f->wash(
                 $docserver->docserver_type_id,
                 'no',
@@ -184,9 +183,8 @@ class docservers_controler
                 'yes',
                 0,
                 32
-            )
-        );
-        $docserver->device_label = $f->protect_string_db(
+            );
+        $docserver->device_label = 
             $f->wash(
                 $docserver->device_label,
                 'no',
@@ -194,12 +192,11 @@ class docservers_controler
                 'yes',
                 0,
                 255
-            )
-        );
+            );
         if ($docserver->is_readonly == '') {
             $docserver->is_readonly = 'false';
         }
-        $docserver->is_readonly = $f->protect_string_db(
+        $docserver->is_readonly = 
             $f->wash(
                 $docserver->is_readonly,
                 'no',
@@ -207,8 +204,7 @@ class docservers_controler
                 'yes',
                 0,
                 5
-            )
-        );
+            );
         if ($docserver->is_readonly == 'false') {
             $docserver->is_readonly = false;
         } else {
@@ -217,7 +213,7 @@ class docservers_controler
         if (isset($docserver->size_limit_number)
             && !empty($docserver->size_limit_number)
         ) {
-            $docserver->size_limit_number = $f->protect_string_db(
+            $docserver->size_limit_number = 
                 $f->wash(
                     $docserver->size_limit_number,
                     'no',
@@ -225,8 +221,7 @@ class docservers_controler
                     'yes',
                     0,
                     255
-                )
-            );
+                );
             if ($docserver->size_limit_number == 0) {
                 $error .= _SIZE_LIMIT . ' ' . _IS_EMPTY . '#';
             }
@@ -239,7 +234,7 @@ class docservers_controler
         } else {
             $error .= _SIZE_LIMIT . ' ' . _IS_EMPTY . '#';
         }
-        $docserver->path_template = $f->protect_string_db(
+        $docserver->path_template = 
             $f->wash(
                 $docserver->path_template,
                 'no',
@@ -247,8 +242,7 @@ class docservers_controler
                 'yes',
                 0,
                 255
-            )
-        );
+            );
         if (!is_dir($docserver->path_template)) {
             $error .= _PATH_OF_DOCSERVER_UNAPPROACHABLE . '#';
         } else {
@@ -259,7 +253,7 @@ class docservers_controler
                 $error .= _THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
             }
         }
-        $docserver->coll_id = $f->protect_string_db(
+        $docserver->coll_id = 
             $f->wash(
                 $docserver->coll_id,
                 'no',
@@ -267,9 +261,8 @@ class docservers_controler
                 'yes',
                 0,
                 32
-            )
-        );
-        $docserver->priority_number = $f->protect_string_db(
+            );
+        $docserver->priority_number = 
             $f->wash(
                 $docserver->priority_number,
                 'num',
@@ -277,9 +270,8 @@ class docservers_controler
                 'yes',
                 0,
                 6
-            )
-        );
-        $docserver->docserver_location_id = $f->protect_string_db(
+            );
+        $docserver->docserver_location_id = 
             $f->wash(
                 $docserver->docserver_location_id,
                 'no',
@@ -287,9 +279,8 @@ class docservers_controler
                 'yes',
                 0,
                 32
-            )
-        );
-        $docserver->adr_priority_number = $f->protect_string_db(
+            );
+        $docserver->adr_priority_number = 
             $f->wash(
                 $docserver->adr_priority_number,
                 'num',
@@ -297,8 +288,7 @@ class docservers_controler
                 'yes',
                 0,
                 6
-            )
-        );
+            );
         if ($mode == 'add'
             && $this->docserversExists($docserver->docserver_id)
         ) {
