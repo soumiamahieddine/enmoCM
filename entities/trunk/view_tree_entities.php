@@ -36,7 +36,6 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
 $_SESSION['tree_entities'] = array();
-//$db->query("select distinct foldertype_id, foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." order by foldertype_label");
 
 $db->query("select entity_id, entity_label from ".ENT_ENTITIES." where parent_entity_id = '' or parent_entity_id is null order by entity_label");
 while($res = $db->fetch_object())
