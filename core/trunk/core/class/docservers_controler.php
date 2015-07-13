@@ -412,7 +412,6 @@ class docservers_controler
     */
     private function insert($docserver)
     {
-        $request = new request();
         $db = new Database();
         //Giving automatised values
         $docserver->enabled = 'Y';

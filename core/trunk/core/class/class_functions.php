@@ -953,6 +953,9 @@ class functions
             $var = str_replace("&acute;","",$var);
             $var = str_replace("&deg;","o",$var);
             $var = str_replace("&rsquo;", "'",$var);
+
+            // AT LAST
+            $var = str_replace("&", " et ",$var);
         }
         else
         {
