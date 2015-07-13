@@ -151,7 +151,7 @@ if ($admin->is_module_loaded('folder') == true) {
             $_SESSION['m_admin']['foldertypes'],
             array(
             	'id' => $res->foldertype_id,
-            	'label' => functions::show_string($res->foldertype_label)
+            	'label' => $res->foldertype_label
             )
         );
     }

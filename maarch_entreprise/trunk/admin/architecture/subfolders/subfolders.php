@@ -117,7 +117,7 @@ $_SESSION['m_admin']['structures'] = array();
 $stmt= $db->query("SELECT * FROM ".$_SESSION['tablename']['doctypes_first_level']." WHERE enabled = 'Y'");
 while($res = $stmt->fetchObject())
 {
-    array_push($_SESSION['m_admin']['structures'], array('ID' => $res->doctypes_first_level_id, 'LABEL'=> $request->show_string($res->doctypes_first_level_label)));
+    array_push($_SESSION['m_admin']['structures'], array('ID' => $res->doctypes_first_level_id, 'LABEL'=> $res->doctypes_first_level_label));
 }
 $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&page=subfolders_list_by_name";

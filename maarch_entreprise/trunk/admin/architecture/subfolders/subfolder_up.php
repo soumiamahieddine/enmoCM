@@ -49,7 +49,7 @@ if (isset($_GET['id']) && ! empty($_GET['id'])) {
 	);
 
 	$res = $stmt->fetchObject();
-	$desc = functions::show_string($res->doctypes_second_level_label);
+	$desc = $res->doctypes_second_level_label;
 	if (isset($res->css_style)) {
         $cssStyle = functions::show_string($res->css_style);
 	}
