@@ -1,4 +1,25 @@
 <?php
+
+/*
+*
+*    Copyright 2008,2015 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /**
 * File : folders_list_by_name.php
 *
@@ -13,14 +34,12 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
-$db->query("select folder_id, folder_name, folders_system_id from ".$_SESSION['tablename']['fold_folders']." where lower(folder_name) like lower('".$_REQUEST['folder']."%') order by folder_name");
+$stmt = $db->query("SELECT folder_id, folder_name, folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE lower(folder_name) like lower(?) order by folder_name", array($_REQUEST['folder'].'%'));
 
-//$db->show();
 $folders = array();
-while($line = $db->fetch_object())
+while($line = $stmt->fetchobject())
 {
 	array_push($folders, $line->folder_name." (".$line->folder_id.")");
 }

@@ -30,17 +30,14 @@ $request        = new request;
 $func           = new functions();
 $hist           = new history();
 $sec            = new security();
-
-$hist->connect();
+$db             = new Database();
 
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
     $s_id = addslashes($func->wash($_REQUEST['id'], 'num', _THE_FOLDER));
 }
 
-$db = new dbquery;
-$db->connect();
-$db->query("select folder_id from folders where folders_system_id=" . $s_id);
-$res_folder_id = $db->fetch_object();
+$stmt = $db->query("SELECT folder_id FROM folders WHERE folders_system_id= ?", array($s_id));
+$res_folder_id = $stmt->fetchObject();
 $folder_id = $res_folder_id->folder_id;
 
 if(isset($folder_id) && !empty($folder_id)) {
@@ -319,9 +316,8 @@ if (isset($_POST['delete_folder'])) {
                 $select2[$view] = array();
                 $tab2 = array();
                 array_push($select2[$view], "res_id", "type_label");
-                $tab2 = $request->select(
-                    $select2, "folders_system_id = '" . $_SESSION['current_folder_id']
-                    . "' and status <> 'DEL'", " order by type_label ",
+                $tab2 = $request->PDOselect(
+                    $select2, "folders_system_id = ? and status <> 'DEL'", array($_SESSION['current_folder_id']), " order by type_label ",
                     $_SESSION['config']['databasetype'], "500", false
                 );
                 for ($i = 0; $i < count($tab2); $i ++) {

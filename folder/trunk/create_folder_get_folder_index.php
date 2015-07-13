@@ -104,17 +104,16 @@ if (count($indexes) > 0) {
 	}
 }
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
-$db->query(
-	"select folders_system_id, folder_id, folder_name from "
+$stmt = $db->query(
+	"SELECT folders_system_id, folder_id, folder_name FROM "
     . $_SESSION['tablename']['fold_folders']
-    . " where folder_level = 1 and status <> 'DEL'"
+    . " WHERE folder_level = 1 and status <> 'DEL'"
 );
 
 $folders = array();
-while ($res = $db->fetch_object()) {
+while ($res = $stmt->fetchObject()) {
 	array_push(
 	    $folders,
 	    array(

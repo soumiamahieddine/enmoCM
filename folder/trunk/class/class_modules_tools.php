@@ -215,9 +215,9 @@ class folder extends request
 	function load_folder($id, $table)
 	{
 		$ft = new foldertype();
-		$this->connect();
-		$this->query("select foldertype_id from ".$table." where folders_system_id = ".$id."");
-		$res = $this->fetch_object();
+		$db = new Database();
+		$stmt = $db->query("SELECT foldertype_id FROM ".$table." WHERE folders_system_id = ?", array($id));
+		$res = $stmt->fetchObject();
 		$this->foldertype_id = $res->foldertype_id;
 		$this->system_id = $id;
 		$tab_index = $ft->get_indexes($this->foldertype_id);
@@ -230,24 +230,24 @@ class folder extends request
 		{
 			$fields .= ", ".$key;
 		}
-		$this->query("select ".$fields." from ".FOLD_FOLDERS_TABLE." where folders_system_id = ".$id."");
+		$stmt = $db->query("SELECT ".$fields." FROM ".FOLD_FOLDERS_TABLE." WHERE folders_system_id = ?", array($id));
 		//$this->show();
-		$res = $this->fetch_object();
+		$res = $stmt->fetchObject();
 
-		$this->folder_id = $this->show_string($res->folder_id);
-		$this->folder_name = $this->show_string($res->folder_name);
+		$this->folder_id = functions::show_string($res->folder_id);
+		$this->folder_name = $res->folder_name;
 		$this->parent_id = $res->parent_id;
-		$this->typist = $this->show_string($res->typist);
+		$this->typist = functions::show_string($res->typist);
 		$this->status = $res->status;
 		$this->level = $res->folder_level;
-		$this->creation_date = $this->format_date_db($res->creation_date, true);
+		$this->creation_date = functions::format_date_db($res->creation_date, true);
 		$this->folder_out_id = $res->folder_out_id;
 		$this->complete = $res->is_complete;
 		$this->desarchive = $res->is_folder_out;
 		$this->is_frozen = $res->is_frozen;
 		$this->destination = $res->destination;
 		$this->dest_user = $res->dest_user;
-		$this->last_modified_date = $this->format_date_db($res->last_modified_date, true);
+		$this->last_modified_date = functions::format_date_db($res->last_modified_date, true);
 
 		foreach(array_keys($tab_index) as $key)
 		{
@@ -270,16 +270,16 @@ class folder extends request
 			}
 			elseif($tab_index[$key]['type'] == 'string')
 			{
-				$tab_index[$key]['show_value'] = $this->show_string($tab_index[$key]['value']);
+				$tab_index[$key]['show_value'] = functions::show_string($tab_index[$key]['value']);
 			}
 		}
 		$this->index = array();
 		$this->index = $tab_index;
 
-		$this->query("select foldertype_label, coll_id from ".$_SESSION['tablename']['fold_foldertypes']." where foldertype_id = ".$this->foldertype_id);
-		$res = $this->fetch_object();
-		$this->foldertype_label = $this->show_string($res->foldertype_label);
-		$this->coll_id = $this->show_string($res->coll_id);
+		$stmt = $db->query("SELECT foldertype_label, coll_id FROM ".$_SESSION['tablename']['fold_foldertypes']." WHERE foldertype_id = ?", array($this->foldertype_id));
+		$res = $stmt->fetchObject();
+		$this->foldertype_label = $res->foldertype_label;
+		$this->coll_id = functions::show_string($res->coll_id);
 
 	}
 
@@ -288,6 +288,7 @@ class folder extends request
 	*/
 	public function create_folder()
 	{
+		$db = new Database();
 		$this->checks_folder_data();
 		if (! empty($_SESSION['error'])) {
 			header(
@@ -304,13 +305,12 @@ class folder extends request
 				);
 				exit();
 		}else{
-			$this->connect();
-			$this->query(
-				"select folder_id from " . FOLD_FOLDERS_TABLE
-			    . " where folder_id= '"
-			    . $_SESSION['m_admin']['folder']['folder_id'] . "' and status != 'DEL'"
+			$stmt = $db->query(
+				"SELECT folder_id FROM " . FOLD_FOLDERS_TABLE
+			    . " WHERE folder_id= ? and status != 'DEL'",
+			    array($_SESSION['m_admin']['folder']['folder_id'])
 			);
-			if ($this->nb_result() > 0) {
+			if ($stmt->rowCount() > 0) {
 				$_SESSION['error'] = $_SESSION['m_admin']['folder']['folder_id']
 				    . " " . _ALREADY_EXISTS . "<br />";
 				header(
@@ -319,29 +319,17 @@ class folder extends request
 				);
 				exit();
 			} else {
-				$this->connect();
-				$this->query(
+				$db->query(
 					"INSERT INTO " . FOLD_FOLDERS_TABLE
 				    . " (folder_id, folder_name, foldertype_id, creation_date, "
-				    . "typist, last_modified_date, parent_id,folder_level) VALUES ('"
-				    . $this->protect_string_db(
-				        $_SESSION['m_admin']['folder']['folder_id']
-				    ) . "', '" . $this->protect_string_db(
-				        $_SESSION['m_admin']['folder']['folder_name']
-				    ) . "'," . $_SESSION['m_admin']['folder']['foldertype_id']
-				    . ",  " . $this->current_datetime() . ", '"
-				    . $_SESSION['user']['UserId'] . "', "
-				    . $this->current_datetime() . ", "
-				    . $_SESSION['m_admin']['folder']['folder_parent'] . ", "
-				    . $_SESSION['m_admin']['folder']['folder_level'] . " )"
+				    . "typist, last_modified_date, parent_id,folder_level) VALUES (?, ?, ?,  CURRENT_TIMESTAMP, ?, CURRENT_TIMESTAMP, ?, ? )",
+				array($_SESSION['m_admin']['folder']['folder_id'], $_SESSION['m_admin']['folder']['folder_name'], $_SESSION['m_admin']['folder']['foldertype_id'], $_SESSION['user']['UserId'], $_SESSION['m_admin']['folder']['folder_parent'], $_SESSION['m_admin']['folder']['folder_level'])
 				);
-				$this->query(
-					'select folders_system_id from ' . FOLD_FOLDERS_TABLE
-				    . " where folder_id = '" . $this->protect_string_db(
-				        $_SESSION['m_admin']['folder']['folder_id']
-				    ) . "'"
+				$stmt = $db->query(
+					'SELECT folders_system_id FROM ' . FOLD_FOLDERS_TABLE
+				    . " WHERE folder_id = ?", array($_SESSION['m_admin']['folder']['folder_id'])
 				);
-				$res = $this->fetch_object();
+				$res = $stmt->fetchObject();
 				$id = $res->folders_system_id;
 
 				$foldertype = new foldertype();
@@ -352,9 +340,9 @@ class folder extends request
 				);
 				if (! empty($query)) {
 					$query = preg_replace('/^,/', '', $query);
-					$query = "update  " .FOLD_FOLDERS_TABLE . " set " . $query
-					    . " where folders_system_id = " . $id;
-					$this->query($query);
+					$query = "UPDATE  " .FOLD_FOLDERS_TABLE . " SET " . $query
+					    . " WHERE folders_system_id = ?";
+					$db->query($query, array($id));
 				}
 				if ($_SESSION['history']['folderadd'] == "true") {
 					$hist = new history();
@@ -457,7 +445,6 @@ class folder extends request
 		$folder['foldertype_label'] = $this->foldertype_label ;
 		$folder['folder_id'] = $this->folder_id ;
 		$folder['parent_id'] = $this->parent_id ;
-		$folder['folder_name'] = $this->folder_name;
 		$folder['typist'] = $this->typist ;
 		$folder['status'] = $this->status;
 		$folder['level'] = $this->level ;
@@ -564,18 +551,18 @@ class folder extends request
 	*/
 	public function missing_res($table_res,  $table_foldertypes_doc, $table_doctypes, $id, $foldertype_id)
 	{
-		$this->connect();
+		$db = new Database();
 		$indexed_types = array();
-		$this->query("select distinct type_id as type from ".$table_res." where status <> 'DEL' and folders_system_id = ".$id);
-		while($res = $this->fetch_object())
+		$stmt = $db->query("SELECT distinct type_id as type FROM ".$table_res." WHERE status <> 'DEL' and folders_system_id = ?", array($id));
+		while($res = $stmt->fetchObject())
 		{
 			array_push($indexed_types, $res->type );
 		}
 
 		$waited_types = array();
-		$this->query("select doctype_id from ".$table_foldertypes_doc." where foldertype_id = ".$foldertype_id);
-		//$this->show();
-		while($res = $this->fetch_object())
+		$stmt = $db->query("SELECT doctype_id FROM ".$table_foldertypes_doc." WHERE foldertype_id = ?", array($foldertype_id));
+
+		while($res = $stmt->fetchObject())
 		{
 			array_push($waited_types, $res->doctype_id );
 		}
@@ -585,12 +572,12 @@ class folder extends request
 		$missing_res = array();
 		for($i=0; $i < count($temp); $i++)
 		{
-			$this->query("select type_id, description from ".$table_doctypes." where type_id = ".$temp[$i]);
+			$stmt = $db->query("SELECT type_id, description FROM ".$table_doctypes." WHERE type_id = ?", array($temp[$i]));
 			//$this->show();
-			$res = $this->fetch_object();
+			$res = $stmt->fetchObject();
 			if($res->type_id <> "")
 			{
-				array_push($missing_res, array('ID' => $res->type_id, 'LABEL' => $this->show_string($res->description)));
+				array_push($missing_res, array('ID' => $res->type_id, 'LABEL' => functions::show_string($res->description)));
 			}
 		}
 		return $missing_res ;
@@ -607,38 +594,38 @@ class folder extends request
 	*/
 	public function missing_res2($table_res,  $table_foldertypes_doc, $table_doctypes, $id, $foldertype_id)
 	{
-		$this->connect();
+		$db = new Database();
 		$indexed_types = array();
-		$this->query("select distinct type_id as type from ".$table_res." where status <> 'DEL' and folders_system_id = ".$id);
+		$stmt = $db->query("SELECT distinct type_id as type FROM ".$table_res." WHERE status <> 'DEL' and folders_system_id = ?", array($id));
 
-		while($res = $this->fetch_object())
+		while($res = $stmt->fetchObject())
 		{
 			array_push($indexed_types, $res->type );
 		}
 		$waited_types = array();
-		$this->query("select doctype_id from ".$table_foldertypes_doc." where foldertype_id = ".$foldertype_id);
-		while($res = $this->fetch_object())
+		$stmt = $db->query("SELECT doctype_id FROM ".$table_foldertypes_doc." WHERE foldertype_id = ?", array($foldertype_id));
+		while($res = $stmt->fetchObject())
 		{
 			array_push($waited_types, $res->doctype_id );
 		}
 		$html_tab = "<table width=\"100%\" border=\"1\" align=\"center\"><tr><td>"._PIECE_TYPE."</td><td>"._MISSING."</td></tr>";
 		for($i=0; $i < count($waited_types); $i++)
 		{
-			$this->query("select type_id, description from ".$table_doctypes." where type_id = ".$waited_types[$i]);
-			$res = $this->fetch_object();
+			$stmt = $db->query("SELECT type_id, description FROM ".$table_doctypes." WHERE type_id = ?", array($waited_types[$i]));
+			$res = $stmt->fetchObject();
 			if($res->type_id <> "")
 			{
-				$this->query("select type_id as type from ".$table_res." where status <> 'DEL' and folders_system_id = ".$id." and type_id = '".$waited_types[$i]."'");
-				$res2 = $this->fetch_object();
+				$stmt = $db->query("SELECT type_id as type FROM ".$table_res." WHERE status <> 'DEL' and folders_system_id = ? and type_id = ?", array($id, $waited_types[$i]));
+				$res2 = $stmt->fetchObject();
 				if($waited_types[$i] <> $res2->type)
 				{
-					$html_tab .= "<tr><td><b>". $this->show_string($res->description)."</b></td><td>";
+					$html_tab .= "<tr><td><b>". functions::show_string($res->description)."</b></td><td>";
 					$html_tab .= "<b>X</b>";
 					//echo $waited_types[$i]." X\n";
 				}
 				else
 				{
-					$html_tab .= "<tr><td>".$this->show_string($res->description)."</td><td>";
+					$html_tab .= "<tr><td>".functions::show_string($res->description)."</td><td>";
 					$html_tab .= "&nbsp;";
 				}
 			}
@@ -679,15 +666,18 @@ class folder extends request
 	*/
 	public function get_history()
 	{
-		$this->connect();
+		$db = new Database();
 
 		$history = array();
 
-		$this->query("select h.event_date, h.info, h.user_id, u.lastname, u.firstname from ".$_SESSION['tablename']['history']." h, ".$_SESSION['tablename']['users']." u where h.table_name = '".$_SESSION['tablename']['fold_folders']."' and h.record_id = '".$this->system_id."' and h.event_type <> 'UP_CONTRACT' and h.user_id = u.user_id order by h.event_date desc ");
+		$stmt = $db->query("SELECT h.event_date, h.info, h.user_id, u.lastname, u.firstname 
+							FROM ".$_SESSION['tablename']['history']." h, ".$_SESSION['tablename']['users']." u 
+							WHERE h.table_name = ? and h.record_id = ? and h.event_type <> 'UP_CONTRACT' and h.user_id = u.user_id order by h.event_date desc ",
+							array($_SESSION['tablename']['fold_folders'], $this->system_id));
 		//$this->show();
-		while($res = $this->fetch_object())
+		while($res = $stmt->fetchObject())
 		{
-			array_push($history, array( 'DATE' => $res->event_date, 'EVENT' => $this->show_string($res->info), 'USER' => $this->show_string($res->lastname.' '.$res->firstname) ));
+			array_push($history, array( 'DATE' => $res->event_date, 'EVENT' => functions::show_string($res->info), 'USER' => functions::show_string($res->lastname.' '.$res->firstname) ));
 		}
 
 		return $history;
@@ -703,8 +693,8 @@ class folder extends request
 	*/
 	public function modify_default_folder_in_db($id, $user_id, $table)
 	{
-		$this->connect();
-		$this->query('update '.$table." set custom_t1 = '".$id."' where user_id = '".$user_id."'");
+		$db = new Database();
+		$db->query('UPDATE '.$table." SET custom_t1 = ? WHERE user_id = ?", array($id, $user_id));
 	}
 
 	public function update_folder($values, $id_to_update)
@@ -738,12 +728,13 @@ class folder extends request
 
 		if(empty($_SESSION['error']))
 		{
-			$where = " folders_system_id = ".$id_to_update;
-			array_push($data, array('column' => 'folder_name', 		  'value' =>$this->protect_string_db($values['folder_name']),		   'type' =>"string"));
+			$where = " folders_system_id = ?";
+			$arrayPDO = array($id_to_update);
+			array_push($data, array('column' => 'folder_name', 		  'value' =>functions::protect_string_db($values['folder_name']),		   'type' =>"string"));
 			array_push($data, array('column' => 'last_modified_date', 'value' => $request->current_datetime(), 'type' => "date"));
 			
-			$request->update($_SESSION['tablename']['fold_folders'], $data, $where, $_SESSION['config']['databasetype']);
-			//$request->show();
+			$request->PDOupdate($_SESSION['tablename']['fold_folders'], $data, $where, $arrayPDO, $_SESSION['config']['databasetype']);
+
 			//$_SESSION['error'] = _FOLDER_INDEX_UPDATED." (".$values['folder_id'].")";
 			$_SESSION['error'] = _FOLDER_UPDATED." (".$values['folder_id'].")";
 			if($_SESSION['history']['folderup'])
@@ -771,10 +762,10 @@ class folder extends request
 	    if (empty($folderId)) {
 	         return false;
 	    }
-	    $this->connect();
-	    $this->query(
-	    	"update " . FOLD_FOLDERS_TABLE . " set status = 'END' "
-	        . "where folders_system_id = " . $folderId
+	    $db = new Database();
+	    $db->query(
+	    	"UPDATE " . FOLD_FOLDERS_TABLE . " SET status = 'END' "
+	        . "WHERE folders_system_id = ?", array($folderId)
 	    );
 	    if ($_SESSION['history']['folderup']) {
 			$hist = new history();
@@ -790,10 +781,10 @@ class folder extends request
 	 	if (empty($folderId)) {
 	         return false;
 	    }
-	    $this->connect();
-	    $this->query(
-	    	"update " . FOLD_FOLDERS_TABLE . " set is_frozen = 'Y' "
-	        . "where folders_system_id = " . $folderId
+	    $db = new Database();
+	    $db->query(
+	    	"UPDATE " . FOLD_FOLDERS_TABLE . " SET is_frozen = 'Y' "
+	        . "WHERE folders_system_id = ?", array($folderId)
 	    );
 	 	if ($_SESSION['history']['folderup']) {
 			$hist = new history();
@@ -811,10 +802,10 @@ class folder extends request
 	 	if (empty($folderId)) {
 	         return false;
 	    }
-	    $this->connect();
-	    $this->query(
-	    	"update " . FOLD_FOLDERS_TABLE . " set is_frozen = 'N' "
-	        . "where folders_system_id = " . $folderId
+	    $db = new Database();
+	    $db->query(
+	    	"UPDATE " . FOLD_FOLDERS_TABLE . " SET is_frozen = 'N' "
+	        . "WHERE folders_system_id = ?", array($folderId)
 	    );
 	 	if ($_SESSION['history']['folderup']) {
 			$hist = new history();
@@ -828,9 +819,9 @@ class folder extends request
 
 	public function delete_folder($folder_sys_id, $foldertype)
 	{
-		$this->connect();
-		$this->query("select coll_id from ".$_SESSION['tablename']['fold_foldertypes']." where foldertype_id = ".$foldertype);
-		$res = $this->fetch_object();
+		$db = new Database();
+		$stmt = $db->query("SELECT coll_id FROM ".$_SESSION['tablename']['fold_foldertypes']." WHERE foldertype_id = ?", array($foldertype));
+		$res = $stmt->fetchObject();
 		$coll_id = $res->coll_id;
 		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
 		$sec = new security();
@@ -838,25 +829,27 @@ class folder extends request
 
 		if(!empty($table) && !empty($folder_sys_id))
 		{
-			$this->query("select folder_level, folder_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_sys_id);
-			$res = $this->fetch_object();
+			$stmt = $db->query("SELECT folder_level, folder_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($folder_sys_id));
+			$res = $stmt->fetchObject();
 			$level = $res->folder_level;
 			$fold_id = $res->folder_id;
 			$where = '';
 
+			$arrayPDO = array($folder_sys_id);
 			if($level == 1)
 			{
-				$this->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where parent_id = ".$folder_sys_id." and folder_level = 2");
-				if($this->nb_result() > 0)
+				$stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE parent_id = ? and folder_level = 2", array($folder_sys_id));
+				if($stmt->rowCount() > 0)
 				{
-					while($res = $this->fetch_object())
+					while($res = $stmt->fetchObject())
 					{
-						$where .= " or folders_system_id = ".$res->folders_system_id;
+						$where .= " or folders_system_id = ?";
+						$arrayPDO = array_merge($arrayPDO, array($res->folders_system_id));
 					}
 				}
 			}
-			$this->query("update ".$table." set status = 'DEL' where folders_system_id = ".$folder_sys_id.$where);
-			$this->query("update ".$_SESSION['tablename']['fold_folders']." set status = 'DEL' where folders_system_id = ".$folder_sys_id.$where);
+			$db->query("UPDATE ".$table." SET status = 'DEL' WHERE folders_system_id = ? ".$where, $arrayPDO);
+			$db->query("UPDATE ".$_SESSION['tablename']['fold_folders']." SET status = 'DEL' WHERE folders_system_id = ? ".$where, $arrayPDO);
 			$_SESSION['error'] = _FOLDER_DELETED." (".$fold_id.")";
 		}
 	}
@@ -865,9 +858,9 @@ class folder extends request
 	{
 		if($folder_system_id <> "")
 		{
-			$this->connect();
-			$this->query("select folder_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_system_id);
-			$res = $this->fetch_object();
+			$db = new Database();
+			$stmt = $db->query("SELECT folder_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($folder_system_id));
+			$res = $stmt->fetchObject();
 			if($res->folder_id <> "")
 			{
 				$find = true;
@@ -892,10 +885,10 @@ class folder extends request
 	*/
 	public function is_folder_empty($table_res, $id)
 	{
-		$this->connect();
+		$db = new Database();
 		$indexed_types = array();
-		$this->query("select * from ".$table_res." where status <> 'DEL' and folders_system_id = ".$id);
-		if($this->nb_result() > 0)
+		$stmt = $db->query("SELECT * FROM ".$table_res." WHERE status <> 'DEL' and folders_system_id = ?", array($id));
+		if($stmt->rowCount() > 0)
 		{
 			$empty = false;
 		}
@@ -910,10 +903,10 @@ class folder extends request
 	{
 		$foldertypes = array();
         if($type_id <> "") {
-            $this->connect();
-            $this->query("select foldertype_id from ".$_SESSION['tablename']['fold_foldertypes_doctypes']." where doctype_id = ".$type_id);
+            $db = new Database();
+            $stmt = $db->query("SELECT foldertype_id FROM ".$_SESSION['tablename']['fold_foldertypes_doctypes']." WHERE doctype_id = ?", array($type_id));
             //$this->show();
-            while($res = $this->fetch_object())
+            while($res = $stmt->fetchObject())
             {
                 array_push($foldertypes, $res->foldertype_id );
             }

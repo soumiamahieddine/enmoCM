@@ -38,18 +38,8 @@ $core = new core_tools();
 $core->load_lang();
 $sec = new security();
 $func = new functions();
-$db = new dbquery();
-$db->connect();
-$dbTmp = new dbquery();
-$dbTmp->connect();
-$db1 = new dbquery();
-$db1->connect();
-$db2 = new dbquery();
-$db2->connect();
-$db3 = new dbquery();
-$db3->connect();
-$db4 = new dbquery();
-$db4->connect();
+$db = new Database();
+
 $whereClause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 ?>
 <script type="text/javascript">
@@ -64,7 +54,7 @@ $whereClause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choi
 </script>
 <style type="text/css">.link_open{border-left:dashed 1px #FFC200;}li{cursor: pointer;}li.folder{list-style-image: url('static.php?filename=folder.gif');list-style-position: inside;margin-top: 10px;white-space: pre;}li.folder span:hover{background-color: #BAD1E2;padding:5px;border-radius:2px;}li.folder span{padding:5px;}ul.doc a{padding:5px;}ul.doc a:hover{background-color: #BAD1E2;border-radius:2px;}</style>
 <?php
-$db->connect();
+
 $subject = $_REQUEST['project'];
 $pattern = '/\([0-9]*\)/';
 preg_match($pattern, substr($subject,3), $matches, PREG_OFFSET_CAPTURE);
@@ -73,28 +63,27 @@ $fold_id=str_replace(")", "", $fold_id);
 //print_r($fold_id);
 
 if($matches[0] != ''){
-	$db->query(
-		"select folders_system_id, folder_name, parent_id from folders WHERE foldertype_id not in (100) AND folders_system_id IN (".$fold_id.") AND status NOT IN ('DEL') order by folder_id asc "
+	$stmt = $db->query(
+		"SELECT folders_system_id, folder_name, parent_id FROM folders WHERE foldertype_id not in (100) AND folders_system_id IN (?) AND status NOT IN ('DEL') order by folder_id asc ", array($fold_id)
 		);
 
 }else{
-	$db->query(
-		"select folders_system_id, folder_name, parent_id from folders WHERE foldertype_id not in (100) AND parent_id=0 AND status NOT IN ('DEL') order by folder_id asc "
+	$stmt = $db->query(
+		"SELECT folders_system_id, folder_name, parent_id FROM folders WHERE foldertype_id not in (100) AND parent_id=0 AND status NOT IN ('DEL') order by folder_id asc "
 		);
 }
 
-
 $categories = array();
 $html.="<ul class='folder' id='folder_tree_content'>";
-while($row = $db->fetch_array()) {
-	$db2->query(
-		"select count(*) as total from res_view_letterbox WHERE folders_system_id in ('".$row['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
+while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+	$stmt2 = $db->query(
+		"SELECT count(*) as total FROM res_view_letterbox WHERE folders_system_id in ('".$row['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
 		);
-	$row2 = $db2->fetch_array();
-	$db3->query(
-		"select count(*) as total from folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].") AND status NOT IN ('DEL')"
+	$row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+	$stmt3 = $db->query(
+		"SELECT count(*) as total FROM folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].") AND status NOT IN ('DEL')"
 		);
-	$row3 = $db3->fetch_array();
+	$row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
 
 	$folders_system_id=$row['folders_system_id'];
 	$html.="<li id='".$row['folders_system_id']."' class='folder'>";

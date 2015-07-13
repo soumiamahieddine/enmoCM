@@ -49,7 +49,7 @@ $core_tools->load_header();
 	array_push($select[$_SESSION['tablename']['fold_folders']],"folders_system_id", "folder_id");
 	$where = $_SESSION['current_basket']['table'].".folder_system_id = ".$_SESSION['tablename']['fold_folders'].".folders_system_id and ".$_SESSION['current_basket']['clause'];
 	$request= new request;
-	$tab=$request->select($select,$where,"",$_SESSION['config']['databasetype']);
+	$tab=$request->PDOselect($select,$where,array(), "",$_SESSION['config']['databasetype']);
 
 	for ($i=0;$i<count($tab);$i++)
 	{

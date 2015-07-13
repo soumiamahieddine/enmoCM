@@ -23,8 +23,13 @@ $_SESSION['error_page'] = '';
 
 //Where
     $where_tab = array();
+    $arrayPDO = array();
+
     //From search
-    if (!empty($_SESSION['searching']['where_request'])) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
+    if (!empty($_SESSION['searching']['where_request'])) {
+        $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
+        $arrayPDO = array_merge($arrayPDO, $_SESSION['searching']['where_request_parameters']);
+    }
     //Add on
     $where_tab[] = "status <> 'DEL' ";
     //Build where
@@ -43,7 +48,7 @@ $_SESSION['error_page'] = '';
     }
     
 //Query 
-    $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+    $tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype']);
     // $request->show();
     // echo $_SESSION['last_select_query'];
 //Result Array
@@ -184,9 +189,7 @@ $_SESSION['error_page'] = '';
     }
     else
     {
-        $func->echo_error(_ADV_SEARCH_FOLDER_TITLE,"<p class=\"error\"><i class=\"fa fa-remove fa-2x\"></i><br />"
-            ._NO_RESULTS."</p>", 'title',  $_SESSION['config']['businessappurl']
-            ."static.php?module=folder&filename=picto_search_b.gif");
+        $func->echo_error(_ADV_SEARCH_FOLDER_TITLE,_NO_RESULTS, 'title', "");
     }
 
 ?>

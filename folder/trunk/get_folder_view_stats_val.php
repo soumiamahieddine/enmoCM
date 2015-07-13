@@ -4,28 +4,30 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $req = new request();
 $list = new list_show();
 if(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'foldertype')
 {
-	$db->query("select distinct record_id from ".$_SESSION['tablename']['history']." where event_type = 'VIEW' AND table_name = '".$_SESSION['tablename']['fold_folders']."' ");
-	if($db->nb_result() > 0)
+	$stmt = $db->query("SELECT DISTINCT record_id FROM ".$_SESSION['tablename']['history']." WHERE event_type = 'VIEW' AND table_name = ? ", array($_SESSION['tablename']['fold_folders']));
+	if($stmt->rowCount() > 0)
 	{
 		$where = ' f.folders_system_id in (';
-		while($res = $db->fetch_object())
+			$arrayPDO = array();
+		while($res = $stmt->fetchObject())
 		{
             if(!empty($res->record_id)) {
-                $where .= $res->record_id.',';
+                $where .= '?,';
+                $arrayPDO = array_merge($arrayPDO, array($res->record_id));
             }
 		}
 		$where = preg_replace('/,$/', ')', $where);
-		$db-> query("select  ft.foldertype_id, ft.foldertype_label, count(f.folders_system_id) as nbr from  ".$_SESSION['tablename']['fold_folders']." f,  ".$_SESSION['tablename']['fold_foldertypes']." ft where f.foldertype_id = ft.foldertype_id and ".$where." group by ft.foldertype_label, ft.foldertype_id");
-		//$db->show();
+		$stmt = $db->query("SELECT ft.foldertype_id, ft.foldertype_label, count(f.folders_system_id) as nbr 
+							FROM  ".$_SESSION['tablename']['fold_folders']." f,  ".$_SESSION['tablename']['fold_foldertypes']." ft 
+							WHERE f.foldertype_id = ft.foldertype_id and ".$where." group by ft.foldertype_label, ft.foldertype_id", $arrayPDO);
 	}
 	$tab=array();
-	while($line = $db->fetch_array())
+	while($line = $stmt->fetch(PDO::FETCH_ASSOC))
 	{
 		$temp= array();
 		foreach (array_keys($line) as $resval)
@@ -86,10 +88,13 @@ if(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'foldertype')
 } // FIN 
 elseif(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'usergroup')
 {
-	$db->query("SELECT g.group_id AS id, g.group_desc AS label, (SELECT COUNT(DISTINCT h.record_id) FROM ".$_SESSION['tablename']['history']." h INNER JOIN ".$_SESSION['tablename']['usergroup_content']." u ON h.user_id = u.user_id WHERE h.event_type = 'VIEW' AND h.table_name = '".$_SESSION['tablename']['fold_folders']."' AND u.group_id = g.group_id ) AS nbr FROM ".$_SESSION['tablename']['usergroups']." g");
+	$stmt = $db->query("SELECT g.group_id AS id, g.group_desc AS label, (SELECT COUNT(DISTINCT h.record_id) 
+						FROM ".$_SESSION['tablename']['history']." h INNER JOIN ".$_SESSION['tablename']['usergroup_content']." u ON h.user_id = u.user_id 
+						WHERE h.event_type = 'VIEW' AND h.table_name = ? AND u.group_id = g.group_id ) AS nbr 
+						FROM ".$_SESSION['tablename']['usergroups']." g", array($_SESSION['tablename']['fold_folders']));
 
 	$tab=array();
-	while($line = $db->fetch_array())
+	while($line = $stmt->fetch(PDO::FETCH_ASSOC))
 	{
 		$temp= array();
 
@@ -123,7 +128,7 @@ elseif(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'usergroup
 					}
 					if($tab[$i][$j][$value]=="label")
 					{
-						$tab[$i][$j]["label"]=strtoupper(_LABEL);
+						$tab[$i][$j]["label"]=strtoupper(_GROUP);
 						$tab[$i][$j]["size"]="60";
 						$tab[$i][$j]["label_align"]="left";
 						$tab[$i][$j]["align"]="left";
@@ -157,8 +162,8 @@ elseif(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'user')
 	$whereUser = "AND u.user_id = ''";
 	if(isset($_REQUEST['user']) && $_REQUEST['user'] != '')
 	{
-		$db->query("select user_id from ".$_SESSION['tablename']['users']." where user_id = '".$db->protect_string_db($_REQUEST['user'])."'");
-		if($db->nb_result() == 0)
+		$stmt = $db->query("SELECT user_id FROM ".$_SESSION['tablename']['users']." WHERE user_id = ?", array($_REQUEST['user']));
+		if($stmt->rowCount() == 0)
 		{
 			?>
 			<div class="error"><?php echo _USER.' '._UNKNOWN;?></div>
@@ -166,11 +171,15 @@ elseif(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'user')
 		}
 		else
 		{
-			$whereUser = "AND u.user_id = '".$db->protect_string_db($_REQUEST['user'])."'";
-			$db->query("SELECT u.user_id, u.lastname ,u.firstname, (SELECT COUNT(DISTINCT h.record_id) FROM ".$_SESSION['tablename']['history']." h INNER JOIN ".$_SESSION['tablename']['users']." u ON h.user_id = u.user_id WHERE h.event_type = 'VIEW' AND h.table_name = '".$_SESSION['tablename']['fold_folders']."' ".$whereUser.") AS nbr FROM ".$_SESSION['tablename']['users']." u WHERE u.enabled = 'Y' ".$whereUser);
+			$whereUser = "AND u.user_id = :User";
+			$arrayPDO = array(":foldFolder" => $_SESSION['tablename']['fold_folders'], ":User" => $_REQUEST['user']);
+			$stmt = $db->query("SELECT u.user_id, u.lastname ,u.firstname, (SELECT COUNT(DISTINCT h.record_id) 
+								FROM ".$_SESSION['tablename']['history']." h INNER JOIN ".$_SESSION['tablename']['users']." u ON h.user_id = u.user_id 
+								WHERE h.event_type = 'VIEW' AND h.table_name = :foldFolder ".$whereUser.") AS nbr 
+								FROM ".$_SESSION['tablename']['users']." u WHERE u.enabled = 'Y' ".$whereUser, $arrayPDO);
 
 			$tab=array();
-			while($line = $db->fetch_array())
+			while($line = $stmt->fetch(PDO::FETCH_ASSOC))
 			{
 				$temp= array();
 				foreach (array_keys($line) as $resval)
@@ -256,22 +265,27 @@ elseif(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'period')
 	$requestdate = '';
 	$periodTitle = '';
 	$periodTitle2 = '';
+	$arrayPDO = array();
 	if(isset($_REQUEST['date_start']) && $_REQUEST['date_start'] <> ''){
-		$requestdate  .= " AND ".$req->extract_date('event_date')." > '".$db->format_date_db($_REQUEST['date_start'])."'";
+		$requestdate  .= " AND ".$req->extract_date('event_date')." > :dateStart";
+		$arrayPDO = array_merge($arrayPDO, array(":dateStart" => functions::format_date_db($_REQUEST['date_start'])));
 		$periodTitle.= _TITLE_STATS_DU.' '.$_REQUEST['date_start'].' ';
 		$periodTitle2.= strtolower(_SINCE).' '.$_REQUEST['date_start'].' ';
 	}
 
 	if(isset($_REQUEST['date_fin']) && $_REQUEST['date_fin'] <> ''){
-		$requestdate  .= " AND ".$req->extract_date('event_date')." < '".$db->format_date_db($_REQUEST['date_fin'])."'";
+		$requestdate  .= " AND ".$req->extract_date('event_date')." < :dateFin";
+		$arrayPDO = array_merge($arrayPDO, array(":dateFin" => functions::format_date_db($_REQUEST['date_start'])));
 		$periodTitle.= _TITLE_STATS_DU.' '.$_REQUEST['date_fin'].' ';
 		$periodTitle2.= strtolower(_FOR).' '.$_REQUEST['date_fin'].' ';
 	}
 
-	$db->query("SELECT COUNT(DISTINCT record_id) AS nbr FROM ".$_SESSION['tablename']['history']." WHERE event_type = 'VIEW' AND table_name = '".$_SESSION['tablename']['fold_folders']."' ".$requestdate );
-	//$db->show();
+	$arrayPDO = array_merge($arrayPDO, array(":foldFolder" => $_SESSION['tablename']['fold_folders']));
+	$stmt = $db->query("SELECT COUNT(DISTINCT record_id) AS nbr 
+						FROM ".$_SESSION['tablename']['history']." 
+						WHERE event_type = 'VIEW' AND table_name = :foldFolder ".$requestdate, $arrayPDO );
 
-	$line = $db->fetch_array();
+	$line = $stmt->fetch(PDO::FETCH_ASSOC);
 
 	if($line['nbr'] > 0)
 	{

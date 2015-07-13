@@ -75,7 +75,7 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
     }
 
 //Query
-	$tab = $request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'], '1000');
+	$tab = $request->PDOselect($select,$where,array(),$orderstr,$_SESSION['config']['databasetype'], '1000');
 	// $request->show();
 
 //Result Array

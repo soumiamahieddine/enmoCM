@@ -1,4 +1,22 @@
 <?php
+/*
+ * Copyright (C) 2008-2015 Maarch
+ *
+ * This file is part of Maarch.
+ *
+ * Maarch is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Maarch is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Maarch.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /**
 * File : ajax_get_project.php
 *
@@ -11,12 +29,8 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-$db = new dbquery();
-$db->connect();
-$db2 = new dbquery();
-$db2->connect();
-$db3 = new dbquery();
-$db3->connect();
+$db = new Database();
+
 $core = new core_tools();
 $core->load_lang();
 require_once "core/class/class_security.php";
@@ -24,17 +38,17 @@ $sec = new security();
 $whereClause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 if($_POST['FOLDER_TREE']){
 	$folders = array();
-	$db->query('select folders_system_id, folder_name, parent_id, folder_level from folders WHERE foldertype_id not in (100) AND parent_id='.$_POST["folders_system_id"].' AND status NOT IN (\'DEL\') order by folder_id asc');
-	while($row=$db->fetch_array()){
+	$stmt = $db->query('SELECT folders_system_id, folder_name, parent_id, folder_level FROM folders WHERE foldertype_id not in (100) AND parent_id=? AND status NOT IN (\'DEL\') order by folder_id asc', array($_POST["folders_system_id"]));
+	while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 	
-		$db2->query(
-				"select count(*) as total from res_view_letterbox WHERE folders_system_id in ('".$row['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
+		$stmt2 = $db->query(
+				"SELECT count(*) as total FROM res_view_letterbox WHERE folders_system_id in ('".$row['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
 				);
-		$row2 = $db2->fetch_array();
-		$db3->query(
-		"select count(*) as total from folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].") AND status NOT IN ('DEL')"
+		$row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+		$stmt3 = $db->query(
+		"SELECT count(*) as total FROM folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].") AND status NOT IN ('DEL')"
 		);
-		$row3 = $db3->fetch_array();
+		$row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
 		$folders[] = array(
 			'parent_id' => $row['parent_id'],
 			'folders_system_id' => $row['folders_system_id'],
@@ -48,16 +62,16 @@ if($_POST['FOLDER_TREE']){
 	exit();
 }else if($_POST['FOLDER_TREE_RESET']){
 	$folders = array();
-	$db->query('select folders_system_id, folder_name, parent_id, folder_level from folders WHERE foldertype_id not in (100) AND folders_system_id='.$_POST["folders_system_id"].' AND status NOT IN (\'DEL\') order by folder_id asc');
-	while($row=$db->fetch_array()){
-		$db2->query(
-				"select count(*) as total from res_view_letterbox WHERE folders_system_id in ('".$_POST['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
+	$stmt = $db->query('SELECT folders_system_id, folder_name, parent_id, folder_level FROM folders WHERE foldertype_id not in (100) AND folders_system_id=? AND status NOT IN (\'DEL\') order by folder_id asc', array($_POST["folders_system_id"]));
+	while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
+		$stmt2 = $db->query(
+				"SELECT count(*) as total FROM res_view_letterbox WHERE folders_system_id in (?) AND (".$whereClause.") AND status NOT IN ('DEL')", array($_POST['folders_system_id'])
 				);
-		$row2 = $db2->fetch_array();
-		$db3->query(
-		"select count(*) as total from folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].")  AND status NOT IN ('DEL')"
+		$row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+		$stmt3 = $db->query(
+			"SELECT count(*) as total FROM folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].")  AND status NOT IN ('DEL')"
 		);
-		$row3 = $db3->fetch_array();
+		$row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
 		$folders[] = array(
 			'parent_id' => $row['parent_id'],
 			'folders_system_id' => $row['folders_system_id'],
@@ -71,8 +85,8 @@ if($_POST['FOLDER_TREE']){
 	exit();
 }else if($_POST['FOLDER_TREE_DOCS']){
 	$docs = array();
-	$db->query("select res_id, type_label, subject,doctypes_first_level_label,doctypes_second_level_label, folder_level from res_view_letterbox WHERE folders_system_id in ('".$_POST['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')");
-	while($row=$db->fetch_array()){
+	$stmt = $db->query("SELECT res_id, type_label, subject,doctypes_first_level_label,doctypes_second_level_label, folder_level FROM res_view_letterbox WHERE folders_system_id in (?) AND (".$whereClause.") AND status NOT IN ('DEL')", array($_POST['folders_system_id']));
+	while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 		
 		$docs[] = array(
 			'res_id' => $row['res_id'],
@@ -110,14 +124,17 @@ if($_POST['FOLDER_TREE']){
 	$level = $_POST['folder_level'];
 	$level=$level-1;
 	$level_comp=$level-1;
+	$arrayPDO = array();
 	foreach($xml->tree as $tree) {
 		if($tree->id == $_POST['id']){
 			$view = $sec->retrieve_view_from_coll_id($tree->coll_id);
 				for ($i=0; $i < $level ; $i++) { 
 					if($i<>0){
-						$where .= " AND (".$tree->nodes->node[$i]->target_column[0]." = '".$path_folder[$i+1]."')";
+						$where .= " AND (".$tree->nodes->node[$i]->target_column[0]." = ?)";
+						$arrayPDO = array_merge($arrayPDO, array("path_".$i => $path_folder[$i+1]));
 					}else{
-						$where = "WHERE (".$tree->nodes->node[$i]->target_column[0]." = '".$path_folder[$i+1]."')";
+						$where = "WHERE (".$tree->nodes->node[$i]->target_column[0]." = ?)";
+						$arrayPDO = array_merge($arrayPDO, array("path_".$i => $path_folder[$i+1]));
 					}
 				}
 				$select=$tree->nodes->node[$level]->target_column[0];
@@ -141,10 +158,9 @@ if($_POST['FOLDER_TREE']){
 	if($level<>0){
 		$order="ORDER BY ".$select." ASC";
 	}
-	$db->query('select DISTINCT ('.$select.') as libelle FROM '.$view.' '.$where.' '.$order);
-	
+	$stmt = $db->query('SELECT DISTINCT ('.$select.') as libelle FROM '.$view.' '.$where.' '.$order, $arrayPDO);
 
-	while($row=$db->fetch_array()){
+	while($row=$stmt->fetch(PDO::ASSOC)){
 		$folders[] = array(
 			'libelle' => $row['libelle'],
 			'folder_level' => $level + 2,
@@ -159,14 +175,17 @@ if($_POST['FOLDER_TREE']){
 	$path_folder = explode(";", $_POST['path_folder']);
 	//print_r($path_folder);
 	$docs = array();
+	$arrayPDO = array();
 	foreach($xml->tree as $tree) {
 		if($tree->id == $_POST['id']){
 			$view = $sec->retrieve_view_from_coll_id($tree->coll_id);
 			for ($i=0; $i <= $tree->nodes->node->count()-1 ; $i++) { 
 				if($i<>0){
-					$where .= " AND (".$tree->nodes->node[$i]->target_column[0]." = '".$path_folder[$i+1]."')";
+					$where .= " AND (".$tree->nodes->node[$i]->target_column[0]." = ?)";
+					$arrayPDO = array_merge($arrayPDO, array("path_".$i => $path_folder[$i+1]));
 				}else{
-					$where = "WHERE (".$tree->nodes->node[$i]->target_column[0]." = '".$path_folder[$i+1]."')";
+					$where = "WHERE (".$tree->nodes->node[$i]->target_column[0]." = ?)";
+					$arrayPDO = array_merge($arrayPDO, array("path_".$i => $path_folder[$i+1]));
 				}
 			}
 			
@@ -180,10 +199,9 @@ if($_POST['FOLDER_TREE']){
 		$where= 'WHERE ('.$whereClause.')';
 	}
 	//echo "requete where: ".$where;exit();
-	$db->query('select res_id, type_label, subject,doctypes_first_level_label,doctypes_second_level_label, folder_level FROM '.$view.' '.$where);
-	//$db->show();
+	$stmt = $db->query('SELECT res_id, type_label, subject,doctypes_first_level_label,doctypes_second_level_label, folder_level FROM '.$view.' '.$where, $arrayPDO);
 
-	while($row=$db->fetch_array()){
+	while($row=$stmt->fetch(PDO::ASSOC)){
 		$docs[] = array(
 			'res_id' => $row['res_id'],
 			'type_label' => $row['type_label'],
@@ -203,26 +221,26 @@ if(!isset($_REQUEST['id_subfolder']) || empty($_REQUEST['id_subfolder']))
 	echo "{status : 1, error_txt : '".addslashes( _SUBFOLDER.' '._IS_EMPTY)."'}";
 	exit();
 }
-$db->query('select parent_id from '.$_SESSION['tablename']['fold_folders'].' where folders_system_id = '.$_REQUEST['id_subfolder']. ' AND status NOT IN (\'DEL\')');
+$stmt = $db->query('SELECT parent_id FROM '.$_SESSION['tablename']['fold_folders'].' where folders_system_id = ? AND status NOT IN (\'DEL\')', array($_REQUEST['id_subfolder']));
 
-if($db->nb_result() < 1)
+if($stmt->rowCount() < 1)
 {
 	//$_SESSION['error'] = _NO_SUBFOLDER;
 	echo "{status : 1, error_txt : '".addslashes(_NO_SUBFOLDER)."'}";
 	exit();
 }
-$res = $db->fetch_object();
+$res = $stmt->fetchObject();
 $parent_id = $res->parent_id;
-$db->query('select folder_name, subject, folders_system_id from '.$_SESSION['tablename']['fold_folders'].' where folders_system_id = '.$parent_id. '  AND status NOT IN (\'DEL\')');
+$stmt = $db->query('SELECT folder_name, subject, folders_system_id FROM '.$_SESSION['tablename']['fold_folders'].' where folders_system_id = ? AND status NOT IN (\'DEL\')', array($parent_id));
 
-if($db->nb_result() < 1)
+if($stmt->rowCount() < 1)
 {
 	//$_SESSION['error'] =_NO_FOLDER;
 	echo "{status : 1, error_txt : '".addslashes(_NO_FOLDER)."'}";
 	exit();
 }
-$res = $db->fetch_object();
-echo "{status : 0, value : '".$db->show_string($res->folder_name).', '.$db->show_string($res->subject).' ('.$db->show_string($res->folders_system_id).')'."'}";
+$res = $stmt->fetchObject();
+echo "{status : 0, value : '".functions::show_string($res->folder_name).', '.functions::show_string($res->subject).' ('.functions::show_string($res->folders_system_id).')'."'}";
 exit();
 }
 ?>

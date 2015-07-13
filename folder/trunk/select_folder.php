@@ -78,9 +78,10 @@ if($_SESSION['origin'] == "qualify")
 	{
 		$select[$col] = array();
 		array_push($select[$col],"folders_system_id");
-		$where = "res_id = ".$_SESSION['res_id_to_qualify'];
+		$where = "res_id = ? ".$_SESSION['res_id_to_qualify'];
+		$arrayPDO = array($_SESSION['res_id_to_qualify']);
 		$request = new request();
-		$tab = $request->select($select, $where, "", $_SESSION['config']['databasetype']);
+		$tab = $request->PDOselect($select, $where, $arrayPDO, "", $_SESSION['config']['databasetype']);
 		//print_r($tab);
 		for ($i=0;$i<count($tab);$i++)
 		{

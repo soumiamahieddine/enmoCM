@@ -50,11 +50,11 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_secur
 $security = new security();
 $hist = new history();
 $func = new functions();
-$connexion = new dbquery();
-$connexion->connect();
+
 $folder_show=new folders_show();
 $folder_object=new folder();
 $is = new indexing_searching();
+$db = new Database();
 $_SESSION["unique_res_id"] = "";
 $_SESSION['origin'] = 'view_folder';
 $_SESSION['current_foldertype'] = '';
@@ -87,10 +87,6 @@ if(trim($_REQUEST['field']) <> "")
 }
 elseif(isset($_SESSION['current_folder_id']) && $_SESSION['current_folder_id']<> " " && !empty($_SESSION['current_folder_id']) && (!isset($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM']) || empty($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'])) && (!isset($_SESSION['FOLDER']['SEARCH']['FOLDER_CUSTOM_T1']) || empty($_SESSION['FOLDER']['SEARCH']['FOLDER_CUSTOM_T1']))&& empty($_SESSION['FOLDER']['SEARCH']['FOLDER_ID'] ) && $_SESSION['FOLDER']['SEARCH']['FOLDER_ID'] <> " " )
 {
-    //$folder_object->connect();
-    //$folder_object->query("select folder_id from ".$_SESSION['tablename']['fold_folders']." where ".$_SESSION['tablename']['fold_folders'].".folders_system_id = ".$_SESSION['current_folder_id']." and ".$_SESSION['tablename']['fold_folders'].".status <> 'IMP' and ".$_SESSION['tablename']['fold_folders'].".status <> 'DEL'");
-    //$folder_object->show();
-    //$res = $folder_object->fetch_object();
     $_SESSION['FOLDER']['SEARCH']['FOLDER_ID'] = $_SESSION['current_folder_id'];
 }
 if(trim($_GET['type_id'])<>"")
@@ -109,18 +105,20 @@ array_push($select[$_SESSION['tablename']['fold_folders']],"folders_system_id","
 $select[$_SESSION['tablename']['society']]= array();
 array_push($select[$_SESSION['tablename']['society']],"society_label");
 $where = " ".$_SESSION['tablename']['fold_folders'].".custom_t10 = ".$_SESSION['tablename']['society'].".society_sysinfo_id  and ".$_SESSION['tablename']['fold_folders'].".status <> 'DEL' ";
-
+$arrayPDO = array();
 if(trim($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'])<>"")
 {
-    $where .= " and lower(".$_SESSION['tablename']['fold_folders'].".folder_id) like lower('%".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'],$_SESSION['config']['databasetype'])."%') ";
+    $where .= " and lower(".$_SESSION['tablename']['fold_folders'].".folder_id) like lower(?) ";
+    $arrayPDO = array_merge($arrayPDO, array("%".$_SESSION['FOLDER']['SEARCH']['FOLDER_NUM']."%"));
 }
 if($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1']<>"")
 {
-    $where .= " and lower(custom_t1) like lower('".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1'],$_SESSION['config']['databasetype'])."%') ";
+    $where .= " and lower(custom_t1) like lower(?) ";
+    $arrayPDO = array_merge($arrayPDO, array($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1']."%"));
 }
 if(trim($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'])<>"" || $_SESSION['FOLDER']['SEARCH']['CUSTOM_T1']<>"")
 {
-$tab=$request->select($select,$where ," order by custom_t1 ",$_SESSION['config']['databasetype'],"10");
+$tab=$request->PDOselect($select,$where, $arrayPDO ," order by custom_t1 ",$_SESSION['config']['databasetype'],"10");
     //$request->show();
     //$_SESSION['current_folder_id'] = $_REQUEST['folder_id'];
     for ($i=0;$i<count($tab);$i++)
@@ -235,12 +233,12 @@ if($_REQUEST['folder_index'] == "true")
     if(isset($_REQUEST['custom_t4']) && !empty($_REQUEST['custom_t4']))
     {
         $tmp_contrat = $folder_object->get_field('custom_t4', true);
-        $hist->query('select contract_label from '.$_SESSION['tablename']['contracts']." where contract_id = ".$tmp_contrat);
-        $res = $hist->fetch_object();
+        $stmt = $db->query('SELECT contract_label FROM '.$_SESSION['tablename']['contracts']." WHERE contract_id = ?", array($tmp_contrat));
+        $res = $stmt->fetchObject();
         $old_contract = $res->contract_label;
         $contrat_label = '';
-        $hist->query("select contract_label as label from ".$_SESSION['tablename']['contracts']." where contract_id = ".$_REQUEST['custom_t4']);
-        $res = $hist->fetch_object();
+        $stmt = $db->query("SELECT contract_label as label FROM ".$_SESSION['tablename']['contracts']." WHERE contract_id = ?", array($_REQUEST['custom_t4']));
+        $res = $stmt->fetchObject();
         $contrat_label = $res->label;
         if($tmp_contrat <> $_REQUEST['custom_t4'])
         {
@@ -248,8 +246,8 @@ if($_REQUEST['folder_index'] == "true")
             $hist->add($_SESSION['tablename']['fold_folders'],$folder_object->get_field('folders_system_id')  ,"UP", 'folderup',_MODIF_CONTRACT." : ".$old_contrat." -> ".$contrat_label, $_SESSION['config']['databasetype'], 'folder');
         }
     }
-    $where = "folders_system_id = ".$_SESSION['FOLDER']['SEARCH']['FOLDER_ID']."";
-    $request->update($_SESSION['tablename']['fold_folders'], $data,$where, $_SESSION['config']['databasetpe']);
+    $where = "folders_system_id = ?";
+    $request->PDOupdate($_SESSION['tablename']['fold_folders'], $data,$where, array($_SESSION['FOLDER']['SEARCH']['FOLDER_ID']), $_SESSION['config']['databasetpe']);
     if($_SESSION['history']['folderup'] == 'true')
     {
         $hist->add($_SESSION['tablename']['fold_folders'],$tmp_id ,"UP", 'folderup',_FOLDER_INDEX_MODIF, $_SESSION['config']['databasetype'],'folder');
@@ -264,52 +262,28 @@ else
 }
 if(isset($_REQUEST['submit_index_doc']))
 {
-    $db_type = new dbquery();
-    $db_type->connect();
-    $db_res = new dbquery();
-    $db_res->connect();
-    $db_res->query("select type_id  from ".$_SESSION['collection_choice']." where res_id = ".$_SESSION["unique_res_id"]."");
-    $res_type_id = $db_res->fetch_array();
+    $stmt = $db->query("SELECT type_id FROM ".$_SESSION['collection_choice']." WHERE res_id = ?", array($_SESSION["unique_res_id"]));
+    $res_type_id = $stmt->fetch(PDO::FETCH_ASSOC);
     $type_id = $res_type_id['type_id'];
     $_SESSION['type'] = $type_id;
-    $db_type->query("select * from ".$_SESSION['tablename']['doctypes']." where type_id = ".$type_id);
-    $res_type = $db_type->fetch_array();
+    $stmt = $db->query("SELECT * FROM ".$_SESSION['tablename']['doctypes']." WHERE type_id = ?", array($type_id));
+    $res_type = $db_type->fetch(PDO::FETCH_ASSOC);
     $type_id = $res_type['type_id'];
-    /*$is_master_type = $res_type['is_master'];
-    if($is_master_type == "Y")
-    {
-        $is_master_type = true;
-    }
-    else
-    {
-        $is_master_type = false;
-    }*/
+
     $indexing = new indexing_searching();
     $indexing->update_doc($_REQUEST, "POST", $_SESSION["unique_res_id"], $_SESSION['collection_choice']);
 }
 //delete the doctype
 if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
 {
-    $db_type = new dbquery();
-    $db_type->connect();
-    $db_res = new dbquery();
-    $db_res->connect();
-    $db_res->query("select type_id  from ".$_SESSION['collection_choice']." where res_id = ".$_SESSION["unique_res_id"]."");
-    $res_type_id = $db_res->fetch_array();
+    $stmt = $db->query("SELECT type_id FROM ".$_SESSION['collection_choice']." WHERE res_id = ?", array($_SESSION["unique_res_id"].""));
+    $res_type_id = $stmt->fetch(PDO::FETCH_ASSOC);
     $type_id = $res_type_id['type_id'];
     $_SESSION['type'] = $type_id;
-    $db_type->query("select * from ".$_SESSION['tablename']['doctypes']." where type_id = ".$type_id);
-    $res_type = $db_type->fetch_array();
+    $stmt = $db->query("SELECT * FROM ".$_SESSION['tablename']['doctypes']." WHERE type_id = ?", array($type_id));
+    $res_type = $stmt->fetch(PDO::FETCH_ASSOC);
     $type_id = $res_type['type_id'];
-    /*$is_master_type = $res_type['is_master'];
-    if($is_master_type == "Y")
-    {
-        $is_master_type = true;
-    }
-    else
-    {
-        $is_master_type = false;
-    }*/
+
     $indexing = new indexing_searching();
     $indexing->delete_doc( $_SESSION["unique_res_id"], $_SESSION['collection_choice']);
     ?>
@@ -400,7 +374,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                             $view = $security->retrieve_view_from_table($_SESSION['collection_choice']);
                             $select2[$view]= array();
                             array_push($select2[$view],"res_id","type_label","creation_date");
-                            $tab = $request->select($select2, "folders_system_id = ".$_SESSION['current_folder_id']." and type_id = ".$_SESSION['FOLDER']['SEARCH']['TYPE_ID']." and status <> 'DEL' ", "", $_SESSION['config']['databasetype'],"10");
+                            $tab = $request->PDOselect($select2, "folders_system_id = ? and type_id = ? and status <> 'DEL' ", array($_SESSION['current_folder_id'], $_SESSION['FOLDER']['SEARCH']['TYPE_ID']), "", $_SESSION['config']['databasetype'],"10");
                         }
                         else
                         {
@@ -408,7 +382,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                             $select2[$view]= array();
                             //echo 'test '.$_SESSION['unique_res_id']." ".$view;
                             array_push($select2[$view],"res_id","type_label","creation_date");
-                            $tab = $request->select($select2, " res_id = ".$_SESSION['unique_res_id'], "", $_SESSION['config']['databasetype'],"10");
+                            $tab = $request->PDOselect($select2, " res_id = ?", array($_SESSION['unique_res_id']), "", $_SESSION['config']['databasetype'],"10");
                         }
                         for ($i=0;$i<count($tab);$i++)
                         {
@@ -458,16 +432,11 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                 $type_id = $_SESSION['FOLDER']['SEARCH']['TYPE_ID'];
                                 if($type_id <> "0" && $type_id <> "")
                                 {
-                                    $connexion->query("select * from ".$_SESSION['tablename']['doctypes']." where type_id = ".$type_id);
-                                    $res = $connexion->fetch_array();
+                                    $stmt = $db->query("SELECT * FROM ".$_SESSION['tablename']['doctypes']." WHERE type_id = ?", array($type_id));
+                                    $res = $stmt->fetch(PDO::FETCH_ARRAY);
                                     $desc = str_replace("\\","",$res['description']);
                                     $type_id = $res['type_id'];
-                                /*    $is_master = $res['is_master'];
-                                    if($is_master == "Y")
-                                    {
-                                        $doctypes_second_level_id = $res['doctypes_second_level_id'];
-                                        $_SESSION['multidoc'] = true;
-                                    }*/
+
                                     $indexing_searching = new indexing_searching();
                                     $indexing_searching->retrieve_index($res);
                                     //$func->show_array($_SESSION['index_to_use']);
@@ -479,15 +448,14 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                         <input type="text" readonly="readonly" class="readonly" value="<?php functions::xecho($desc);?>" />
                                     </p>
                                     <?php
-                                    $db = new dbquery();
-                                    $db->connect();
+                                    $db = new Database();
 
                                         for($i=0;$i<=count($_SESSION['index_to_use']);$i++)
                                         {
                                             if($_SESSION['index_to_use'][$i]['label'] <> "")
                                             {
-                                                $connexion->query("select ".$_SESSION['index_to_use'][$i]['column']." from ".$_SESSION['collection_choice']." where res_id = ".$_SESSION['unique_res_id']);
-                                                $res_mastertype = $connexion->fetch_array();
+                                                $stmt = $db->query("SELECT ".$_SESSION['index_to_use'][$i]['column']." FROM ".$_SESSION['collection_choice']." WHERE res_id = ?", array($_SESSION['unique_res_id']));
+                                                $res_mastertype = $stmt->fetch(PDO::FETCH_ARRAY);
                                                 $_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] = $res_mastertype[$_SESSION['index_to_use'][$i]['column']];
                                                 if($_SESSION['index_to_use'][$i]['date'])
                                                 {
@@ -523,20 +491,20 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                                         }
                                                         else
                                                         {
-                                                            $query = "select ".$_SESSION['index_to_use'][$i]['foreign_key'].", ".$_SESSION['index_to_use'][$i]['foreign_label']." from ".$_SESSION['index_to_use'][$i]['tablename'];
+                                                            $query = "SELECT ".$_SESSION['index_to_use'][$i]['foreign_key'].", ".$_SESSION['index_to_use'][$i]['foreign_label']." FROM ".$_SESSION['index_to_use'][$i]['tablename'];
                                                             if(isset($_SESSION['index_to_use'][$i]['where']) && !empty($_SESSION['index_to_use'][$i]['where']))
                                                             {
-                                                                $query .= " where ".$_SESSION['index_to_use'][$i]['where'];
+                                                                $query .= " WHERE ".$_SESSION['index_to_use'][$i]['where'];
                                                             }
                                                             if(isset($_SESSION['index_to_use'][$i]['order']) && !empty($_SESSION['index_to_use'][$i]['order']))
                                                             {
                                                                 $query .= ' '.$_SESSION['index_to_use'][$i]['order'];
                                                             }
-                                                            $db->query($query);
-                                                            while($res = $db->fetch_object())
+                                                            $stmt = $db->query($query);
+                                                            while($res = $stmt->fetchObject())
                                                             {
                                                                 ?>
-                                                                <option value="<?php functions::xecho($res->$_SESSION['index_to_use'][$i]['foreign_key']);?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] == $res->$_SESSION['index_to_use'][$i]['foreign_key']){ echo 'selected="selected"'; } ?>><?php functions::xecho($db->show_string($res->$_SESSION['index_to_use'][$i]['foreign_label']));?></option>
+                                                                <option value="<?php functions::xecho($res->$_SESSION['index_to_use'][$i]['foreign_key']);?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] == $res->$_SESSION['index_to_use'][$i]['foreign_key']){ echo 'selected="selected"'; } ?>><?php functions::xecho(functions::show_string($res->$_SESSION['index_to_use'][$i]['foreign_label']));?></option>
                                                                 <?php
                                                             }
                                                         }

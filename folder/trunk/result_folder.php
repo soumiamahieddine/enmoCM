@@ -32,10 +32,11 @@ if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 	array_push($select[$_SESSION['tablename']['fold_foldertypes']],"foldertype_label");
 
 	$where = " ".$_SESSION['tablename']['fold_folders'].".foldertype_id = ".$_SESSION['tablename']['fold_foldertypes'].".foldertype_id ";
-	$where .= " and (lower(folder_id) like lower('%".$_SESSION['stringSearch']."%') or lower(folder_name) like lower('%".$_SESSION['stringSearch']."%') or lower(subject) like lower('%".$_SESSION['stringSearch']."%')) and status <> 'DEL'";
-		
+	$where .= " and (lower(folder_id) like lower(:stringSearch) or lower(folder_name) like lower(:stringSearch) or lower(subject) like lower(:stringSearch)) and status <> 'DEL'";
+	$arrayPDO = array(":stringSearch" => '%'.$_SESSION['stringSearch'].'%');
+
 	$request= new request;
-	$tab=$request->select($select,$where," order by folder_name ",$_SESSION['config']['databasetype']);
+	$tab=$request->PDOselect($select, $where, $arrayPDO, " order by folder_name ",$_SESSION['config']['databasetype']);
 	//$request->show();
 	$folder_tmp = new folder();
 	for ($i=0;$i<count($tab);$i++)

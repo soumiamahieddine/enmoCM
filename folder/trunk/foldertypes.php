@@ -27,10 +27,12 @@ $select[$_SESSION['tablename']['fold_foldertypes']] = array();
 array_push($select[$_SESSION['tablename']['fold_foldertypes']],"foldertype_id","foldertype_label" );
 $what = "";
 $where ="";
+$arrayPDO = array();
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-    $what = $func->protect_string_db($_REQUEST['what']);
-    $where = "lower(foldertype_label) like lower('".$what."%') ";
+    $what = $_REQUEST['what'];
+    $where = "lower(foldertype_label) like lower(?) ";
+    $arrayPDO = array_merge($arrayPDO, array($what.'%'));
 }
 $list = new list_show();
 $order = 'asc';
@@ -47,7 +49,7 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 $orderstr = $list->define_order($order, $field);
 
 $request= new request;
-$tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype']);
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
 
 for($i=0;$i<count($tab);$i++)
 {

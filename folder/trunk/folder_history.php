@@ -34,7 +34,7 @@ require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
             ."class".DIRECTORY_SEPARATOR."class_lists.php";
             
 $core_tools = new core_tools();
-$request    = new request();
+$db    = new Database();
 $list       = new lists();
 
 if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
@@ -86,17 +86,17 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
         if (!empty($filterClause)) $where = ' and '.$filterClause;//Filter clause
         
         //Query
-            $request->query("select h.event_date, ".$_SESSION['tablename']['users'].".user_id, "
+            $stmt = $db->query("SELECT h.event_date, ".$_SESSION['tablename']['users'].".user_id, "
                 .$_SESSION['tablename']['users'].".firstname, ".$_SESSION['tablename']['users']
-                .".lastname, h.info from "
+                .".lastname, h.info FROM "
                 .$_SESSION['tablename']['history']." h, ".$_SESSION['tablename']['users']
-                ." where h.table_name = '".$_SESSION['tablename']['fold_folders']
-                ."' and h.record_id = '".$id."' and h.user_id = "
-                .$_SESSION['tablename']['users'].".user_id".$where." ".$orderstr);
+                ." WHERE h.table_name = ? and h.record_id = ? and h.user_id = "
+                .$_SESSION['tablename']['users'].".user_id".$where." ".$orderstr,
+                array($_SESSION['tablename']['fold_folders'], $id));
             // $request->show();
             
             $tab=array();
-            while($line = $request->fetch_array())
+            while($line = $stmt->fetch(PDO::FETCH_ASSOC))
             {
                 $temp= array();
                 foreach (array_keys($line) as $resval)
@@ -129,7 +129,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
                         }
                         if($tab[$i][$j][$value]=="event_date")
                         {
-                            $tab[$i][$j]["value"]=$request->dateformat($tab[$i][$j]["value"]);
+                            $tab[$i][$j]["value"]=functions::dateformat($tab[$i][$j]["value"]);
                             $tab[$i][$j]["label"]=_DATE;
                             $tab[$i][$j]["size"]="15";
                             $tab[$i][$j]["label_align"]="left";
@@ -140,11 +140,11 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
                         }
                         if($tab[$i][$j][$value]=="firstname")
                         {
-                            $firstname =  $request->show_string($tab[$i][$j]["value"]);
+                            $firstname =  functions::show_string($tab[$i][$j]["value"]);
                         }
                         if($tab[$i][$j][$value]=="lastname")
                         {
-                            $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]). ' ' .$firstname ;
+                            $tab[$i][$j]["value"] = functions::show_string($tab[$i][$j]["value"]). ' ' .$firstname ;
                             $tab[$i][$j]["label"]=_USER;
                             $tab[$i][$j]["size"]="15";
                             $tab[$i][$j]["label_align"]="left";
@@ -155,7 +155,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
                         }
                         if($tab[$i][$j][$value]=="info")
                         {
-                            $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+                            $tab[$i][$j]["value"] = functions::show_string($tab[$i][$j]["value"]);
                             $tab[$i][$j]["label"]=_EVENT;
                             $tab[$i][$j]["size"]="30";
                             $tab[$i][$j]["label_align"]="left";

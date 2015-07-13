@@ -71,7 +71,8 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id']))
     }
 //Where clause
     $where_tab = array();
-    $where_tab[] = 'folders_system_id = '.$_SESSION['folderId'];
+    $where_tab[] = 'folders_system_id = ? ';
+    $arrayPDO = array($_SESSION['folderId']);
     //Build where
     $where = implode(' and ', $where_tab);
 //Order
@@ -87,7 +88,7 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id']))
     }
     
 //Query    
-    $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
+    $tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
     // $request->show();
     
 //Result Array

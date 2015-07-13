@@ -56,17 +56,17 @@ $core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 
 $foldertypes = array();
 $chooseColl = true;
-$db = new dbquery;
-$db->connect();
+$db = new Database();
+
 if (count($_SESSION['user']['collections']) == 1 ) {
     $chooseColl = false;
 
-    $db->query(
-    	"select foldertype_id, foldertype_label from "
-        . $_SESSION['tablename']['fold_foldertypes'] . " where coll_id = '"
-        . $_SESSION['user']['collections'][0] . "' order by foldertype_label"
+    $stmt = $db->query(
+    	"SELECT foldertype_id, foldertype_label FROM "
+        . $_SESSION['tablename']['fold_foldertypes'] . " WHERE coll_id = ? order by foldertype_label",
+        array($_SESSION['user']['collections'][0])
     );
-    while ($res = $db->fetch_object()) {
+    while ($res = $stmt->fetchObject()) {
         array_push(
             $foldertypes,
             array(

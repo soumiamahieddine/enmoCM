@@ -332,4 +332,5 @@ if (!defined("_CHOOSE_ONE_FOLDER"))
     define("_CHOOSE_ONE_FOLDER", "Choisissez au moins un dossier");
 if (!defined("_MUST_CHOOSE_DEP_OR_USER"))           
     define("_MUST_CHOOSE_DEP_OR_USER", "Vous devez sélectionner un service ou un utilisateur!");
-
+if (!defined('_LABEL'))
+    define("_LABEL", "libellé");

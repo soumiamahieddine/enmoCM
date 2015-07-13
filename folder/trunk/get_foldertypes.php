@@ -28,13 +28,12 @@ if(!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id']))
 	exit();
 }
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
-$db->query("select foldertype_id,foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." where coll_id = '".$_REQUEST['coll_id']."' order by foldertype_label ASC");
+$stmt = $db->query("SELECT foldertype_id,foldertype_label FROM ".$_SESSION['tablename']['fold_foldertypes']." WHERE coll_id = ? order by foldertype_label ASC", array($_REQUEST['coll_id']));
 
 $content = '<option value="">'._CHOOSE_FOLDERTYPE.'</option>';
-while($res = $db->fetch_object())
+while($res = $stmt->fetchObject())
 {
 	$content .= '<option value="'.$res->foldertype_id.'">'.$res->foldertype_label.'</option>';
 }

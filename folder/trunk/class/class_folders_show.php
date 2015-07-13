@@ -59,13 +59,15 @@ class folders_show extends functions
 						if($_GET['second_level'] == $result[$i]['level2']['second_level_id'][$second_level])
 						{
 							?><span class="selected">
-							<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php functions::xecho($link);?>"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=dir_open.gif" border="0" align='middle' alt="" /> 		<?php functions::xecho($result[$i]['level2']['second_level_label'][$second_level]);?></a><br/>
+							<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php functions::xecho($link);?>"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=dir_open.gif" border="0" align='middle' alt="" /> 		
+							<?php functions::xecho($result[$i]['level2']['second_level_label'][$second_level]);?></a><br/>
 							</span>
 							<div class='dir_third_level'>
 							<?php  for($k=0;$k<count($result[$i]['level2'][$second_level]['level3']['type_id']);$k++)
 							{
 								?>
-								<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php functions::xecho($link);?>&amp;type_id=<?php functions::xecho($result[$i]['level2'][$second_level]['level3']['type_id'][$third_level]);?>&amp;second_level=<?php functions::xecho($result[$i]['level2']['second_level_id'][$second_level]);?>&amp;coll_id=<?php functions::xecho($result[$i]['level2'][$second_level]['level3']['coll_id'][$third_level] ?>"><img src="<?php echo $_SESSION['config']['businessappurl']);?>static.php?filename=arrow_primary.gif" border="0" align="middle" alt="" /> <?php functions::xecho($result[$i]['level2'][$second_level]['level3']['type_label'][$third_level]);?></a><br/> <?php
+								<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php functions::xecho($link);?>&amp;type_id=<?php functions::xecho($result[$i]['level2'][$second_level]['level3']['type_id'][$third_level]);?>&amp;second_level=<?php functions::xecho($result[$i]['level2']['second_level_id'][$second_level]);?>&amp;coll_id=<?php functions::xecho($result[$i]['level2'][$second_level]['level3']['coll_id'][$third_level]); ?>"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_primary.gif" border="0" align="middle" alt="" /> 
+								<?php functions::xecho($result[$i]['level2'][$second_level]['level3']['type_label'][$third_level]);?></a><br/> <?php
 								$third_level++;
 							}
 							$second_level++;
@@ -95,44 +97,40 @@ class folders_show extends functions
 	public function construct_tree()
 	{
 		$sun= new functions();
-		$conn = new dbquery();
-		$conn->connect();
-		$conn2 = new dbquery();
-		$conn2->connect();
+		$conn = new Database();
 
-		$query="select ".$_SESSION['tablename']['doctypes'].".coll_id, ".$_SESSION['tablename']['doctypes'].".type_id as type_id, ".$_SESSION['tablename']['doctypes'].".description as type_description, ".$_SESSION['tablename']['doctypes'].".doctypes_first_level_id as first_level_id, ".$_SESSION['tablename']['doctypes'].".doctypes_second_level_id as second_level_id,
+		$query="SELECT ".$_SESSION['tablename']['doctypes'].".coll_id, ".$_SESSION['tablename']['doctypes'].".type_id as type_id, ".$_SESSION['tablename']['doctypes'].".description as type_description, ".$_SESSION['tablename']['doctypes'].".doctypes_first_level_id as first_level_id, ".$_SESSION['tablename']['doctypes'].".doctypes_second_level_id as second_level_id,
 		".$_SESSION['tablename']['doctypes_first_level'].".doctypes_first_level_label as first_level_label, ".$_SESSION['tablename']['doctypes_second_level'].".doctypes_second_level_label as second_level_label
-		from ".$_SESSION['tablename']['doctypes']."
+		FROM ".$_SESSION['tablename']['doctypes']."
 		left join ".$_SESSION['tablename']['doctypes_first_level']." on ".$_SESSION['tablename']['doctypes'].".doctypes_first_level_id = ".$_SESSION['tablename']['doctypes_first_level'].".doctypes_first_level_id
 		left join ".$_SESSION['tablename']['doctypes_second_level']." on ".$_SESSION['tablename']['doctypes'].".doctypes_second_level_id = ".$_SESSION['tablename']['doctypes_second_level'].".doctypes_second_level_id
-		where ".$_SESSION['tablename']['doctypes'].".enabled = 'Y' and ".$_SESSION['tablename']['doctypes_second_level'].".enabled = 'Y' and ".$_SESSION['tablename']['doctypes_first_level'].".enabled = 'Y' order by ".$_SESSION['tablename']['doctypes'].".doctypes_first_level_id, ".$_SESSION['tablename']['doctypes'].".doctypes_second_level_id, ".$_SESSION['tablename']['doctypes'].".description";
+		WHERE ".$_SESSION['tablename']['doctypes'].".enabled = 'Y' and ".$_SESSION['tablename']['doctypes_second_level'].".enabled = 'Y' and ".$_SESSION['tablename']['doctypes_first_level'].".enabled = 'Y' order by ".$_SESSION['tablename']['doctypes'].".doctypes_first_level_id, ".$_SESSION['tablename']['doctypes'].".doctypes_second_level_id, ".$_SESSION['tablename']['doctypes'].".description";
 
-		$conn->query($query);
-		//$conn->show();
+		$stmt = $conn->query($query);
 
 		$tab_result = array();
 		$tab_tree = array();
 		$i=0;
-		while ($value = $conn->fetch_object())
+		while ($value = $stmt->fetchObject())
 		{
 			//echo $value->type_description."<br/>";
 			$tab_result[$i]['type_id'] = $value->type_id;
 
-			$tab_result[$i]['type_description'] = $this->show_string($value->type_description);
+			$tab_result[$i]['type_description'] = functions::show_string($value->type_description);
 			$tab_result[$i]['first_level_id'] = $value->first_level_id;
-			$tab_result[$i]['first_level_label'] = $this->show_string($value->first_level_label);
+			$tab_result[$i]['first_level_label'] = functions::show_string($value->first_level_label);
 			$tab_result[$i]['second_level_id'] = $value->second_level_id;
-			$tab_result[$i]['second_level_label'] = $this->show_string($value->second_level_label);
+			$tab_result[$i]['second_level_label'] = functions::show_string($value->second_level_label);
 			$i++;
 		}
 
-		$query="select doctypes_first_level_id, doctypes_first_level_label from ".$_SESSION['tablename']['doctypes_first_level']." where enabled = 'Y' order by doctypes_first_level_label";
-		$conn->query($query);
+		$query="SELECT doctypes_first_level_id, doctypes_first_level_label FROM ".$_SESSION['tablename']['doctypes_first_level']." WHERE enabled = 'Y' order by doctypes_first_level_label";
+		$stmt = $conn->query($query);
 		$i=0;
-		while ($value = $conn->fetch_object())
+		while ($value = $stmt->fetchObject())
 		{
 			$tab_tree[$i]['first_level_id'] = $value->doctypes_first_level_id;
-			$tab_tree[$i]['first_level_label'] = $this->show_string($value->doctypes_first_level_label);
+			$tab_tree[$i]['first_level_label'] = functions::show_string($value->doctypes_first_level_label);
 			$tab_tree[$i]['level2']=array();
 			$i++;
 		}
@@ -144,19 +142,21 @@ class folders_show extends functions
 			{
 				if($value == "first_level_id")
 				{
-					$query="select doctypes_second_level_id, doctypes_second_level_label from ".$_SESSION['tablename']['doctypes_second_level']." where doctypes_first_level_id =".$tab_tree[$i]['first_level_id']." and enabled = 'Y' order by doctypes_second_level_label";
-					$conn->query($query);
-					while ($val = $conn->fetch_object())
+					$query="SELECT doctypes_second_level_id, doctypes_second_level_label FROM ".$_SESSION['tablename']['doctypes_second_level']." WHERE doctypes_first_level_id = ? and enabled = 'Y' order by doctypes_second_level_label";
+					$arrayPDO = array($tab_tree[$i]['first_level_id']);
+					$stmt = $conn->query($query, $arrayPDO);
+					while ($val = $stmt->fetchObject())
 					{
 						$tab_tree[$i]['level2']['second_level_id'][$j]=$val->doctypes_second_level_id;
-						$tab_tree[$i]['level2']['second_level_label'][$j]=$this->show_string($val->doctypes_second_level_label);
+						$tab_tree[$i]['level2']['second_level_label'][$j]=functions::show_string($val->doctypes_second_level_label);
 						$tab_tree[$i]['level2'][$j]['level3']=array();
-						$query2="select type_id, description, coll_id from ".$_SESSION['tablename']['doctypes']." where doctypes_first_level_id =".$tab_tree[$i]['first_level_id']." and doctypes_second_level_id=".$tab_tree[$i]['level2']['second_level_id'][$j]." and enabled = 'Y' order by description";
-						$conn2->query($query2);
-						while ($val2 = $conn2->fetch_object())
+						$query2="SELECT type_id, description, coll_id FROM ".$_SESSION['tablename']['doctypes']." WHERE doctypes_first_level_id = ? and doctypes_second_level_id= ? and enabled = 'Y' order by description";
+						$stmt2 = $conn->query($query2, array($tab_tree[$i]['first_level_id'], $tab_tree[$i]['level2']['second_level_id'][$j]));
+						while ($val2 = $stmt2->fetchObject())
 						{
-							$tab_tree[$i]['level2'][$j]['level3']['type_id'][$k]=$val2->type_id;							$tab_tree[$i]['level2'][$j]['level3']['coll_id'][$k]=$val2->coll_id;
-							$tab_tree[$i]['level2'][$j]['level3']['type_label'][$k]=$this->show_string($val2->description);
+							$tab_tree[$i]['level2'][$j]['level3']['type_id'][$k]=$val2->type_id;							
+							$tab_tree[$i]['level2'][$j]['level3']['coll_id'][$k]=$val2->coll_id;
+							$tab_tree[$i]['level2'][$j]['level3']['type_label'][$k]=functions::show_string($val2->description);
 							$k++;
 						}
 						$j++;
@@ -187,8 +187,7 @@ class folders_show extends functions
 		 {
 		 	$up=false;
 		 }
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 		 ?>
          	<form name="view_folder_detail" method='post' action='<?php functions::xecho($link);?>' class="folder_forms" ><?php
 		if($up)
@@ -280,20 +279,22 @@ class folders_show extends functions
 						}
 						else
 						{
-							$query = "select ".$folder_array['index'][$i]['foreign_key'].", ".$folder_array['index'][$i]['foreign_label']." from ".$folder_array['index'][$i]['tablename'];
+							$query = "SELECT ".$folder_array['index'][$i]['foreign_key'].", ".$folder_array['index'][$i]['foreign_label']." FROM ".$folder_array['index'][$i]['tablename'];
 
+							$arrayPDO = array();
 							if(isset($folder_array['index'][$i]['where']) && !empty($folder_array['index'][$i]['where']))
 							{
-								$query .= " where ".$folder_array['index'][$i]['where'];
+								$query .= " WHERE ? ";
+								$arrayPDO = array_merge($arrayPDO, array($folder_array['index'][$i]['where']));
 							}
 							if(isset($folder_array['index'][$i]['order']) && !empty($folder_array['index'][$i]['order']))
 							{
 								$query .= ' '.$folder_array['index'][$i]['order'];
 							}
 
-							$db->query($query);
+							$stmt = $db->query($query, $arrayPDO);
 
-							while($res = $db->fetch_object())
+							while($res = $stmt->fetchObject())
 							{
 							?>
                             <option value="<?php functions::xecho($res->$folder_array['index'][$i]['foreign_key']);?>" <?php  if($res->$folder_array['index'][$i]['foreign_key'] == $folder_array['index'][$i]['value']){ echo 'selected="selected"';}?>><?php functions::xecho($res->$folder_array['index'][$i]['foreign_label']);?></option>
@@ -307,17 +308,20 @@ class folders_show extends functions
 					else
 					{
 						?>
-						<input type="text" name="<?php functions::xecho($folder_array['index'][$i]['column']);?>" id="<?php functions::xecho($folder_array['index'][$i]['column']);?>" <?php  if($_SESSION['field_error'][$folder_array['index'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?> <?php  if($folder_array['index'][$i]['date'])
+						<input type="text" name="<?php functions::xecho($folder_array['index'][$i]['column']);?>" id="<?php functions::xecho($folder_array['index'][$i]['column']);?>" 
+						<?php  if($_SESSION['field_error'][$folder_array['index'][$i]['column']]){?>style="background-color:#FF0000" <?php } 
+						if($folder_array['index'][$i]['date'])
 						{ echo 'class="medium"'; } ?> value="<?php
 						if($folder_array['index'][$i]['date'])
 						{
-							echo $this->format_date_db($folder_array['index'][$i]['value']);
+							echo functions::format_date_db($folder_array['index'][$i]['value']);
 						}
 						else
 						{
 							echo $folder_array['index'][$i]['value'];
 						}
-						echo '"';
+						?> "
+						<?php
 						if($folder_array['index'][$i]['date'])
 						{
 						?>
@@ -373,108 +377,5 @@ class folders_show extends functions
          </div>
 		</form><?php
 	}
-
-	/**
-	* Show the folder info (used in the view_folder_out page)
-	*
-	* @param array $folder_array array containing folder data
-	* @param string $link link to the form result
-	* @param string $path_trombi path to the photo
-	*/
-/*	public function view_folder_out($folder_array,$link,$path_trombi = '')
-	{
-		$db = new dbquery();
-		$db->connect();
-		?>
-        <div id="folder_out_form">
-        <form class="forms2" method="post" action="<?php functions::xecho($link);?>" name="view_folder_out">
-		<div class="leftpart2" >
-			<p><?php
-			 if(!empty($path_trombi))
-			{
-			if(file_exists($path_trombi.$folder_array['PHOTO']))
-			{
-				$file_trombi = $path_trombi.$folder_array['PHOTO'];
-			}
-			else
-			{
-				$file_trombi = $path_trombi."standard.bmp";
-			}
-			?><img src='".$file_trombi."' alt="" />
-        <?php  } ?>
-            <label><?php echo _MATRICULE;?></label><span class="colon">: </span>
-            <input type="text" readonly="readonly" name="matricule" class="readonly" value="<?php functions::xecho($folder_array['FOLDER_ID']);?>" />
-			</p>
-
-        </div>
-        <div class="leftpart">
-        	<p>
-                <label><?php echo _LASTNAME;?> </label><span class="colon">: </span>
-                <input type='text' name='ins_last_name' value="<?php functions::xecho($folder_array['NOM']);?>" readonly="readonly" class="readonly" />
-                <input type='hidden' name='flag_ins' value='true' />
-                            <input type='hidden' name='ins_folder_system_id' value="<?php functions::xecho($folder_array['SYSTEM_ID']);?>" />
-                            <input type='hidden' name='ins_folder_id' value="<?php functions::xecho($folder_array['FOLDER_ID']);?>"/>
-			</p>
-
-        </div>
-
-        <div class="rightpart">
-            <p>
-                <label><?php echo _FIRSTNAME;?></label><span class="colon">: </span>
-                 <input type='text' name='ins_first_name' value="<?php functions::xecho($folder_array['PRENOM']);?>" readonly="readonly" class="readonly" />
-            </p>
-        </div>
-		<p><em><?php echo _FOLDER_OUT_PERSON;?></em></p>
-
- 		<div class="leftpart">
-            <p >
-                <label><?php echo _LASTNAME;?></label><span class="colon">: </span>
-                 <input type='text' name='ins_last_name_in' />
-            </p>
-             <p>
-                <label><?php echo _FILE_OUT_DATE2;?></label><span class="colon">: </span>
-                 <img src="<?php functions::xecho($_SESSION['config']['img']);?>/calendar.jpg" alt='' name='for_date' id='for_ins_retrait_date' onclick='showCalender(this);' />&nbsp;<input type='text' name='ins_retrait_date' size='15' id='ins_retrait_date' />
-            </p>
-
-
-        </div>
-          <div class="rightpart">
-            <p>
-                <label><?php echo _FIRSTNAME;?></label><span class="colon">: </span>
-                 <input type='text' name='ins_first_name_in' />
-            </p>
-            <p>
-                <label><?php echo _FOLDER_OUT_RETURN_DATE;?></label><span class="colon">: </span>
-                 <img src="<?php functions::xecho($_SESSION['config']['img']);?>/calendar.jpg" alt='' name='for_date' id='for_ins_restitution_date' onclick='showCalender(this);' />&nbsp;<input type='text' name='ins_restitution_date' size='15' id='ins_restitution_date' />
-            </p>
-        </div>
-        <div class="leftpart2" >
-         <p>
-                <label><?php echo _FOLDER_OUT_MOTIVE;?> :</label>
-                <table border="0">
-                	<tr align="left">
-                    	<td><input type='radio' name='ins_motif' value='1' class="radiobutton" /><?php echo _MOTIVE1;?></td>
-                    </tr>
-                    <tr align="left">
-                    	<td><input type='radio' name='ins_motif' value='2' class="radiobutton"  /><?php echo _MOTIVE2;?></td>
-                    </tr>
-                    <tr align="left">
-                    	<td><input type='radio' name='ins_motif' value='3' class="radiobutton"  /><?php echo _MOTIVE3;?></td>
-                    </tr>
-                </table>
-                 <br />
-                            	<br/>
-                                <br />
-            </p>
-        </div>
-          <p class="buttons">
-          	<input type='submit' value='<?php echo _SAVE_SHEET;?>' class="button" />
-          </p>
-
-
-   </form>
-   </div><?php
-	}
-	*/
 }
 ?>

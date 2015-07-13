@@ -38,10 +38,8 @@ $core->load_header('', true, false);
 
 <?php
 $_SESSION['array_struct_final'] = array();
-$db = new dbquery();
-$db2 = new dbquery();
-$db2->connect();
-$db->connect();
+$db = new Database();
+
 $arrayStruct = array();
 
 $list = new list_show();
@@ -59,20 +57,20 @@ if (empty($collIdTest)) {
 	if ($whereClause <> "") {
 		$whereClause = " and (".$whereClause.")";
 	}
-	$db->query(
-		"select distinct doctypes_first_level_id, doctypes_first_level_label, "
+	$stmt = $db->query(
+		"SELECT DISTINCT doctypes_first_level_id, doctypes_first_level_label, "
 		. "doctype_first_level_style, doctypes_second_level_id, "
 		. "doctypes_second_level_label, doctype_second_level_style, type_id, "
-		. "type_label, res_id, subject from  " . $view
-		. " where folders_system_id = '" . $_SESSION['current_folder_id']
+		. "type_label, res_id, subject FROM  " . $view
+		. " WHERE folders_system_id = '" . $_SESSION['current_folder_id']
 		. "' and type_id <> 0 and doctypes_first_level_id <> 0 "
 		. "and doctypes_second_level_id <> 0 and status<>'DEL' " . $whereClause
 		. " order by doctypes_first_level_label, doctypes_second_level_label, "
 		. "type_label, res_id "
 	);
-	// $db->show();
+
 	$countDoc = 0;
-	while ($res = $db->fetch_object()) {
+	while ($res = $stmt->fetchObject()) {
 	    if (isset($res->doctype_first_level_style)) {
 	        $level1Style = $func->show_string($res->doctype_first_level_style);
 	    } else {

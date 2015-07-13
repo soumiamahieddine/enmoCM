@@ -19,8 +19,8 @@ require("modules/entities/entities_tables.php");
     $multipleEntities = false; 
     
     $services = array();
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
+
     //print_r($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']);
     preg_match("'^ ,'",$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'], $out);
     if(count($out[0]) == 1) {
@@ -34,24 +34,24 @@ require("modules/entities/entities_tables.php");
     //print_r($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']);
     if(!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']))
     {
-        $db->query("select entity_id, entity_label from ".ENT_ENTITIES." where entity_id in ("
+        $stmt = $db->query("SELECT entity_id, entity_label FROM ".ENT_ENTITIES." WHERE entity_id in ("
             .$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'].") 
             and enabled= 'Y' order by entity_label");
-        while($res = $db->fetch_object())
+        while($res = $stmt->fetchObject())
         {
-            array_push($services, array( 'ID' => $res->entity_id, 'LABEL' => $db->show_string($res->entity_label)));
+            array_push($services, array( 'ID' => $res->entity_id, 'LABEL' => functions::show_string($res->entity_label)));
         }
     }
     $users = array();
     if(!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['users_entities']) )
     {
-        $db->query("select distinct ue.user_id, u.lastname, u.firstname from ".ENT_USERS_ENTITIES." ue, "
-            .$_SESSION['tablename']['users']." u where ue.entity_id in ("
+        $stmt = $db->query("SELECT distinct ue.user_id, u.lastname, u.firstname FROM ".ENT_USERS_ENTITIES." ue, "
+            .$_SESSION['tablename']['users']." u WHERE ue.entity_id in ("
             .$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['users_entities'].") 
             and u.user_id = ue.user_id and (u.status = 'OK' or u.status = 'ABS') order by u.lastname asc");
-        while($res = $db->fetch_object())
+        while($res = $stmt->fetchObject())
         {
-            array_push($users, array( 'ID' => $res->user_id, 'NOM' => $db->show_string($res->lastname), "PRENOM" => $db->show_string($res->firstname)));
+            array_push($users, array( 'ID' => $res->user_id, 'NOM' => functions::show_string($res->lastname), "PRENOM" => functions::show_string($res->firstname)));
         }
     }
 
@@ -93,7 +93,7 @@ require("modules/entities/entities_tables.php");
             $frm_str .='onChange="document.getElementById(\'redirect_dep\').checked=true;" ';
             $frm_str .='ondblclick="moveclick($(entitieslist), $(entities_chosen));" multiple="multiple" >'; 
             for($i=0; $i < count($services); $i++) {
-                $frm_str .='<option value="'.$services[$i]['ID'].'" >'.$db->show_string($services[$i]['LABEL']).'</option>';
+                $frm_str .='<option value="'.$services[$i]['ID'].'" >'.functions::show_string($services[$i]['LABEL']).'</option>';
             }
             $frm_str .='</select>'; 
             $frm_str .='<br/>';
@@ -119,7 +119,7 @@ require("modules/entities/entities_tables.php");
             $frm_str .= '<select name="department" id="department" onChange="document.getElementById(\'redirect_dep\').checked=true;">';
             $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
             for($i=0; $i < count($services); $i++) {
-                 $frm_str .='<option value="'.$services[$i]['ID'].'" >'.$db->show_string($services[$i]['LABEL']).'</option>';
+                 $frm_str .='<option value="'.$services[$i]['ID'].'" >'.functions::show_string($services[$i]['LABEL']).'</option>';
             }
             $frm_str .='</select>';
             $frm_str .='</p>';
@@ -211,25 +211,23 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     $redirect_doc = _documents_are_redirected($values_form);
     $target = _redirection_target($values_form);
     
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
 
     $arr_list = '';
-    //$db->show_array($arr_id);
-    // $db->show_array($values_form);
+
     for($j=0; $j<count($values_form); $j++)
     {
         if($values_form[$j]['ID'] == "department" && $values_form[$j]['ID'] ==  $target)
         {
             //Get entity for history info
-            $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id='".$values_form[$j]['VALUE']."'";
-            $db->query($queryEntityLabel);
-            while ($entityLabel = $db->fetch_object()) {
+            $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id=?";
+            $stmt = $db->query($queryEntityLabel, array($values_form[$j]['VALUE']));
+            while ($entityLabel = $stmt->fetchObject()) {
                 $zeEntityLabel = $entityLabel->entity_label;
             }
             
-            $msg = _TO." : ".$db->protect_string_db($zeEntityLabel)." ("
-                .$db->protect_string_db($values_form[$j]['VALUE']).")";
+            $msg = _TO." : ".functions::protect_string_db($zeEntityLabel)." ("
+                .functions::protect_string_db($values_form[$j]['VALUE']).")";
                 
             //Get the model list used by default
             require_once 'modules' . DIRECTORY_SEPARATOR . 'entities' . DIRECTORY_SEPARATOR
@@ -245,9 +243,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 $arr_list .= $arr_id[$i].'#';
 
                 //Destination
-                $db->query("update ".$table." set destination = '"
-                    .$db->protect_string_db($values_form[$j]['VALUE'])
-                    ."' where folders_system_id = ".$arr_id[$i]);
+                $db->query("UPDATE ".$table." SET destination = ? WHERE folders_system_id = ? ", array($values_form[$j]['VALUE'], $arr_id[$i]));
                 
                 //Redirect all documents
                 if ($redirect_doc === true) {
@@ -257,9 +253,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 //Dest user
                 if(isset($_SESSION['redirect']['diff_list']['dest']['user_id']) && !empty($_SESSION['redirect']['diff_list']['dest']['user_id']))
                 {
-                    $db->query("update ".$table." set dest_user = '"
-                        .$db->protect_string_db($_SESSION['redirect']['diff_list']['dest']['user_id'])
-                        ."' where folders_system_id = ".$arr_id[$i]);
+                    $db->query("UPDATE ".$table." SET dest_user = ? WHERE folders_system_id = ? ", array($_SESSION['redirect']['diff_list']['dest']['user_id'], $arr_id[$i]));
                 
                     //Redirect all documents
                     if ($redirect_doc === true) {
@@ -275,16 +269,14 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         elseif($values_form[$j]['ID'] == "user" && $values_form[$j]['ID'] ==  $target)
         {
             $msg = _TO." : "._USER." ("
-                .$db->protect_string_db($values_form[$j]['VALUE']).")";
+                .functions::protect_string_db($values_form[$j]['VALUE']).")";
                 
             for($i=0;$i<count($arr_id);$i++)
             {
                 $arr_list .= $arr_id[$i].'#';
                 
                 // Update dest_user in folders table
-                $db->query("update ".$table." set dest_user = '"
-                    .$db->protect_string_db($values_form[$j]['VALUE'])
-                    ."' where folders_system_id = ".$arr_id[$i]);
+                $db->query("UPDATE ".$table." SET dest_user = ? WHERE folders_system_id = ?", array($values_form[$j]['VALUE'], $arr_id[$i]));
   
                 //Redirect all documents in res table
                 if ($redirect_doc === true) {
@@ -332,33 +324,27 @@ function _documents_are_redirected($values_form) {
 
 function redirect_documents($id, $field, $value, $coll_id, $history_msg='') {
 
-    $db = new dbquery();
-    $db2 = new dbquery();
-    $db->connect();
-    $db2->connect();
+    $db = new Database();
     
     $id_action = '1';
     
     // Gets the action informations from the database
-    $db->query("select * from ".$_SESSION['tablename']['actions']." where id = ".$id_action);
-    $res = $db->fetch_object();
+    $stmt = $db->query("SELECT * FROM ".$_SESSION['tablename']['actions']." WHERE id = ?", array($id_action));
+    $res = $stmt->fetchObject();
     $label_action = $res->label_action;
     
     //Get table collection
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
     $sec = new security();
     $table = $sec->retrieve_table_from_coll($coll_id);
-    $db->query("select res_id from ".$table." where folders_system_id = ".$id." and status <> 'FOLDDEL'");
+    $stmt = $db->query("SELECT res_id FROM ".$table." WHERE folders_system_id = ? and status <> 'FOLDDEL'", array($id));
     
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
     $hist = new history();
         
-    while($res = $db->fetch_object()) {
+    while($res = $stmt->fetchObject()) {
     
-        $db2->query("update ".$table." set ".$field." = '"
-            .$db2->protect_string_db($value)
-            ."' where res_id = ".$res->res_id);
-        // $db2->show();
+        $db->query("UPDATE ".$table." SET ".$field." = ? WHERE res_id = ?", array($value, $res->res_id));
         
         $what = '';
         if (isset($_SESSION['current_basket']['id']) && !empty($_SESSION['current_basket']['id'])) {
@@ -375,17 +361,12 @@ function redirect_documents($id, $field, $value, $coll_id, $history_msg='') {
             
 function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table)
 {
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
+
     for($i=0; $i<count($arr_id );$i++)
     {
-        $req = $db->query("update ".$table. " set video_user = '', video_time = 0 where folders_system_id = ".$arr_id[$i], true);
+        $db->query("UPDATE ".$table. " SET video_user = '', video_time = 0 WHERE folders_system_id = ?", array($arr_id[$i]));
 
-        if(!$req)
-        {
-            $_SESSION['action_error'] = _SQL_ERROR;
-            return false;
-        }
     }
     return true;
  }

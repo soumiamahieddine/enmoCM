@@ -1,7 +1,28 @@
 <?php
+
+/*
+ * Copyright (C) 2008-2015 Maarch
+ *
+ * This file is part of Maarch.
+ *
+ * Maarch is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Maarch is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Maarch.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 require_once "core/class/class_security.php";
 require_once "core/class/class_history.php";
-class foldertype extends dbquery
+
+class foldertype
 {
     /**
     * Load data from the foldertypes_doctypes table in the session 
@@ -12,14 +33,14 @@ class foldertype extends dbquery
 
     private function load_doctypes($id)
     {
-        $this->connect();
+        $db = new Database();
         $_SESSION['m_admin']['foldertype']['structures'] = array();
-        $this->query(
-        	"select doctypes_first_level_id from "
+        $stmt = $db->query(
+        	"SELECT doctypes_first_level_id FROM "
         	. $_SESSION['tablename']['fold_foldertypes_doctypes_level1']
-        	. " where foldertype_id = " . $id
+        	. " WHERE foldertype_id = ?", array($id)
         );
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push(
             	$_SESSION['m_admin']['foldertype']['structures'], 
             	$res->doctypes_first_level_id
@@ -31,13 +52,13 @@ class foldertype extends dbquery
         ); $i ++
         ) {
             $tmp = array();
-            $this->query(
-            	"select d.description, d.type_id from "
+            $stmt = $db->query(
+            	"SELECT d.description, d.type_id FROM "
             	. $_SESSION['tablename']['doctypes'] 
-            	. " d where d.doctypes_first_level_id = "
-            	. $_SESSION['m_admin']['foldertype']['structures'][$i]
+            	. " d WHERE d.doctypes_first_level_id = ?",
+            	array($_SESSION['m_admin']['foldertype']['structures'][$i])
             );
-            while ($res = $this->fetch_object()) {
+            while ($res = $stmt->fetchObject()) {
                 $typeId = $res->type_id;
                 if (! in_array($typeId, $tmp)) {
                     array_push($tmp, $typeId);
@@ -45,7 +66,7 @@ class foldertype extends dbquery
                     	$_SESSION['m_admin']['doctypes'], 
                     	array(
                     		'ID' => $typeId, 
-                    		'COMMENT' => $this->show_string($res->description)
+                    		'COMMENT' => functions::show_string($res->description)
                     	)
                     );
                 }
@@ -53,14 +74,13 @@ class foldertype extends dbquery
         }
 
         $_SESSION['m_admin']['foldertype']['doctypes'] = array();
-        $this->query(
-        	"select d.description, fd.doctype_id from "
+        $stmt = $db->query(
+        	"SELECT d.description, fd.doctype_id FROM "
         	. $_SESSION['tablename']['fold_foldertypes_doctypes'] . " fd, "
         	. $_SESSION['tablename']['doctypes'] 
-        	. " d where d.type_id = fd.doctype_id and fd.foldertype_id = " . $id
-        	. " order by d.description "
+        	. " d WHERE d.type_id = fd.doctype_id and fd.foldertype_id = ? order by d.description ", array($id)
         );
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push(
             	$_SESSION['m_admin']['foldertype']['doctypes'], 
             	$res->doctype_id
@@ -79,6 +99,7 @@ class foldertype extends dbquery
     public function formfoldertype($mode, $id = "")
     {
         $func = new functions();
+        $db = new Database();
         $state = true;
        
         $sec = new security();
@@ -86,24 +107,20 @@ class foldertype extends dbquery
         if ($mode == "up") {
             $_SESSION['m_admin']['mode'] = "up";
             if (empty($_SESSION['error'])) {
-                $this->connect();
-                $this->query(
-                	"select * from " 
+                $stmt = $db->query(
+                	"SELECT * FROM " 
                 	. $_SESSION['tablename']['fold_foldertypes']
-                	. " where foldertype_id = " . $id
+                	. " WHERE foldertype_id = ?", array($id)
                 );
-                if ($this->nb_result() == 0) {
+                if ($stmt->rowCount() == 0) {
                     $_SESSION['error'] = _FOLDERTYPE_MISSING;
                     $state = false;
                 } else {
                     $_SESSION['m_admin']['foldertype']['foldertypeId'] = $id;
-                    $line = $this->fetch_object();
-                    $_SESSION['m_admin']['foldertype']['desc'] = $this->show_string(
-                    	$line->foldertype_label
-                    );
-                    $_SESSION['m_admin']['foldertype']['comment'] = $this->show_string(
-                    	$line->maarch_comment
-                    );
+                    $line = $stmt->fetchObject();
+
+                    $_SESSION['m_admin']['foldertype']['desc'] =  $line->foldertype_label;
+                    $_SESSION['m_admin']['foldertype']['comment'] = $line->maarch_comment;
 
                     $_SESSION['m_admin']['foldertype']['indexes'] = $this->get_indexes(
                     	$id, 'minimal'
@@ -121,13 +138,13 @@ class foldertype extends dbquery
                     $table_view = $sec->retrieve_view_from_coll_id(
                     	$_SESSION['m_admin']['foldertype']['COLL_ID']
                     );
-                    $res = $this->query(
-                    	"select count(*) as total_doc from " . $table_view
-                    	. " where foldertype_id = "
-                    	. $_SESSION['m_admin']['foldertype']['foldertypeId'], 1
+                    $res = $db->query(
+                    	"SELECT count(*) as total_doc FROM " . $table_view
+                    	. " WHERE foldertype_id = ?",
+                    	array($_SESSION['m_admin']['foldertype']['foldertypeId'])
                     );
                     if ($res) {
-	                    $line = $this->fetch_object();
+	                    $line = $res->fetchObject();
     	                $totalDoc = $line->total_doc;
                     }
                 }
@@ -151,11 +168,6 @@ class foldertype extends dbquery
         	echo "<br /><br /><br /><br />" . _FOLDERTYPE . ' ' . _UNKNOWN
         		. "<br /><br /><br /><br />";
         } else {
-        	$this->connect();
-            $db2 = new dbquery();
-            $db2->connect();
-            $db3 = new dbquery();
-            $db3->connect();
             ?>
             <div class="block">
             <form name="formfoldertype" id="formfoldertype" method="post" action="<?php  
@@ -296,15 +308,11 @@ class foldertype extends dbquery
             ?>
             <p style="width: 400px;margin: auto;">
             	<label><?php echo _DESC;?> : </label>
-                <input name="desc"  type="text" id="desc" value="<?php  
-            echo $func->show_str($_SESSION['m_admin']['foldertype']['desc']); 
-            ?>" />
+                <input name="desc"  type="text" id="desc" value="<?php functions::xecho($_SESSION['m_admin']['foldertype']['desc']);?>" />
             </p>
             <p style="width: 400px;margin: auto;">
             	<label><?php echo _COMMENTS;?> : </label>
-                <textarea  cols="30" rows="4"  name="comment"  id="comment" ><?php  
-            echo $func->show_str($_SESSION['m_admin']['foldertype']['comment']); 
-            ?></textarea>
+                <textarea  cols="30" rows="4"  name="comment"  id="comment" ><?php functions::xecho($_SESSION['m_admin']['foldertype']['comment']); ?></textarea>
             </p>
             <div id="opt_index"></div>
 			<!-- <div align="center">
@@ -414,6 +422,7 @@ class foldertype extends dbquery
         $orderField = $_SESSION['m_admin']['foldertype']['order_field'];
         $what = $_SESSION['m_admin']['foldertype']['what'];
         $start = $_SESSION['m_admin']['foldertype']['start'];
+        $db = new Database();
 
         if (! empty($_SESSION['error'])) {
             if ($mode == "up") {
@@ -443,16 +452,12 @@ class foldertype extends dbquery
             }
         } else {
             if ($mode == "add") {
-                $this->connect();
-                $this->query(
-                	"select foldertype_label from " 
+                $stmt = $db->query(
+                	"SELECT foldertype_label FROM " 
                 	. $_SESSION['tablename']['fold_foldertypes']
-                	. " where foldertype_label= '"
-                	. $this->protect_string_db(
-                		$_SESSION['m_admin']['foldertype']['desc']
-                	) . "'"
+                	. " WHERE foldertype_label= ? ", array($_SESSION['m_admin']['foldertype']['desc'])
                 );
-                if ($this->nb_result() > 0) {
+                if ($stmt->rowCount() > 0) {
                     $_SESSION['error'] = $_SESSION['m_admin']['foldertype']['desc'] 
                     	. " " . _ALREADY_EXISTS . "<br />";
                     header(
@@ -461,30 +466,19 @@ class foldertype extends dbquery
                     );
                     exit();
                 } else {
-                    $this->connect();
-                    $this->query(
+                    $db->query(
                     	"INSERT INTO " 
                     	. $_SESSION['tablename']['fold_foldertypes']
-                    	. " (foldertype_label, maarch_comment, coll_id) VALUES ('"
-                    	. $this->protect_string_db(
-                    		$_SESSION['m_admin']['foldertype']['desc']
-                    	) . "', '" . $this->protect_string_db(
-                    		$_SESSION['m_admin']['foldertype']['comment']
-                    	) . "',  '" 
-                    	. $_SESSION['m_admin']['foldertype']['COLL_ID'] . "')"
+                    	. " (foldertype_label, maarch_comment, coll_id) VALUES (?, ?, ?)",
+                        array($_SESSION['m_admin']['foldertype']['desc'], $_SESSION['m_admin']['foldertype']['comment'], $_SESSION['m_admin']['foldertype']['COLL_ID'])
                     );
-                    $this->query(
-                    	'select foldertype_id from '
+                    $stmt = $db->query(
+                    	'SELECT foldertype_id FROM '
                     	. $_SESSION['tablename']['fold_foldertypes']
-                    	. " where foldertype_label = '" 
-                    	. $this->protect_string_db(
-                    		$_SESSION['m_admin']['foldertype']['desc']
-                    	) . "' and maarch_comment = '"
-                    	. $this->protect_string_db(
-                    		$_SESSION['m_admin']['foldertype']['comment']
-                    	) . "'"
+                    	. " WHERE foldertype_label = ? and maarch_comment = ?",
+                        array($_SESSION['m_admin']['foldertype']['desc'], $_SESSION['m_admin']['foldertype']['comment'])
                     );
-                    $res = $this->fetch_object();
+                    $res = $stmt->fetchObject();
                     $_SESSION['m_admin']['foldertype']['foldertypeId'] = $res->foldertype_id;
                     $this->load_db();
 
@@ -500,14 +494,11 @@ class foldertype extends dbquery
                         ) {
                             $mandatory = 'Y';
                         }
-                        $this->query(
-                        	"insert into " 
+                        $stmt = $db->query(
+                        	"INSERT INTO " 
                         	. $_SESSION['tablename']['fold_foldertypes_indexes']
-                        	. " (foldertype_id, field_name, mandatory) values("
-                        	. $_SESSION['m_admin']['foldertype']['foldertypeId']
-                        	. ", '"
-                        	. $_SESSION['m_admin']['foldertype']['indexes'][$i]
-                        	. "', '" . $mandatory . "')"
+                        	. " (foldertype_id, field_name, mandatory) values(?, ?, ?)",
+                            array($_SESSION['m_admin']['foldertype']['foldertypeId'], $_SESSION['m_admin']['foldertype']['indexes'][$i], $mandatory)
                         );
                     }
 
@@ -533,27 +524,18 @@ class foldertype extends dbquery
                     exit();
                 }
             } else if ($mode == "up") {
-                $this->connect();
-                $this->query(
+                $db->query(
                 	"UPDATE " . $_SESSION['tablename']['fold_foldertypes']
-                	. " set foldertype_label = '"
-                	. $this->protect_string_db(
-                		$_SESSION['m_admin']['foldertype']['desc']
-                	) . "' , maarch_comment = '"
-                	. $this->protect_string_db(
-                		$_SESSION['m_admin']['foldertype']['comment']
-                	) . "' , coll_id = '" 
-                	. $_SESSION['m_admin']['foldertype']['COLL_ID']
-                	. "' where foldertype_id= '"
-                	. $_SESSION['m_admin']['foldertype']['foldertypeId'] . "'"
+                	. " SET foldertype_label = ? , maarch_comment = ? , coll_id = ? where foldertype_id= ?",
+                    array($_SESSION['m_admin']['foldertype']['desc'], $_SESSION['m_admin']['foldertype']['comment'], $_SESSION['m_admin']['foldertype']['COLL_ID'], $_SESSION['m_admin']['foldertype']['foldertypeId'])
                 );
                 $this->load_db();
 
-                $this->query(
-                	"delete from " 
+                $db->query(
+                	"DELETE FROM " 
                 	. $_SESSION['tablename']['fold_foldertypes_indexes']
-                	. " where foldertype_id = "
-                	. $_SESSION['m_admin']['foldertype']['foldertypeId']
+                	. " WHERE foldertype_id = ?",
+                	array($_SESSION['m_admin']['foldertype']['foldertypeId'])
                 );
 
                 for ($i = 0; $i < count(
@@ -568,14 +550,11 @@ class foldertype extends dbquery
                     ) {
                         $mandatory = 'Y';
                     }
-                    $this->query(
-                    	"insert into "
+                    $db->query(
+                    	"INSERT INTO "
                     	. $_SESSION['tablename']['fold_foldertypes_indexes']
-                    	. " ( foldertype_id, field_name, mandatory) values( "
-                    	. $_SESSION['m_admin']['foldertype']['foldertypeId']
-                    	. ", '" 
-                    	. $_SESSION['m_admin']['foldertype']['indexes'][$i]
-                    	. "', '" . $mandatory . "')"
+                    	. " ( foldertype_id, field_name, mandatory) values(?, ?, ?)",
+                    array($_SESSION['m_admin']['foldertype']['foldertypeId'], $_SESSION['m_admin']['foldertype']['indexes'][$i], $mandatory)
                     );
                 }
                 if ($_SESSION['history']['foldertypeup'] == "true") {
@@ -615,23 +594,22 @@ class foldertype extends dbquery
     */
     private function load_db()
     {
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $db->query(
         	"DELETE FROM " . $_SESSION['tablename']['fold_foldertypes_doctypes'] 
-        	. " where foldertype_id= "
-        	. $_SESSION['m_admin']['foldertype']['foldertypeId'] 
+        	. " WHERE foldertype_id= ?",
+        	array($_SESSION['m_admin']['foldertype']['foldertypeId']) 
         );
-        //$this->show();
+
         for ($i = 0; $i < count(
         	$_SESSION['m_admin']['foldertype']['doctypes'] 
         ); $i ++
         ) {
-            $this->query(
-            	"insert into " 
+            $db->query(
+            	"INSERT INTO " 
             	. $_SESSION['tablename']['fold_foldertypes_doctypes']
-            	. " values (" . $_SESSION['m_admin']['foldertype']['foldertypeId']
-            	. ", " . $_SESSION['m_admin']['foldertype']['doctypes'][$i]
-            	. ")"
+            	. " values (?, ?)",
+                array($_SESSION['m_admin']['foldertype']['foldertypeId'], $_SESSION['m_admin']['foldertype']['doctypes'][$i])
             );
         }
     }
@@ -648,6 +626,7 @@ class foldertype extends dbquery
         $orderField = $_REQUEST['order_field'];
         $start = $_REQUEST['start'];
         $what = $_REQUEST['what'];
+        $db = new Database();
         if (! empty($_SESSION['error'])) {
             header(
             	"location: " . $_SESSION['config']['businessappurl']
@@ -657,13 +636,12 @@ class foldertype extends dbquery
             );
             exit();
         } else {
-            $this->connect();
-            $this->query(
-            	"select foldertype_id from "
+            $stmt = $db->query(
+            	"SELECT foldertype_id FROM "
             	. $_SESSION['tablename']['fold_foldertypes']
-            	. " where foldertype_id= " . $id
+            	. " WHERE foldertype_id= ?", array($id)
             );
-            if ($this->nb_result() == 0) {
+            if ($stmt->rowCount() == 0) {
                 $_SESSION['error'] = _FOLDERTYPE_MISSING;
                 header(
                 	"location: " . $_SESSION['config']['businessappurl']
@@ -673,22 +651,22 @@ class foldertype extends dbquery
                 );
                 exit();
             } else {
-                $info = $this->fetch_object();
+                $info = $stmt->fetchObject();
                 if ($mode == "del") {
-                    $this->query(
-                    	"delete from " 
+                    $db->query(
+                    	"DELETE FROM " 
                     	. $_SESSION['tablename']['fold_foldertypes']
-                    	. "  where foldertype_id = " . $id 
+                    	. "  WHERE foldertype_id = ?", array($id) 
                     );
-                    $this->query(
-                    	"delete from "
+                    $db->query(
+                    	"DELETE FROM "
                     	. $_SESSION['tablename']['fold_foldertypes_doctypes']
-                    	. "  where foldertype_id = " . $id
+                    	. "  WHERE foldertype_id = ?", array($id)
                     );
-                    $this->query(
-                    	"delete from " 
+                    $db->query(
+                    	"DELETE FROM " 
                     	. $_SESSION['tablename']['fold_foldertypes_indexes']
-                    	. "  where foldertype_id = " . $id
+                    	. "  WHERE foldertype_id = ?", array($id)
                     );
 
                     if ($_SESSION['history']['foldertypedel'] == "true") {
@@ -780,8 +758,6 @@ class foldertype extends dbquery
                     array_push(
                         $values,
                         array(
-
-
                             'id' => (string) $val->id,
                             'label' => $labelVal,
                         )
@@ -808,17 +784,17 @@ class foldertype extends dbquery
                 $foreignLabel = (string) $tableXml->foreign_label;
                 $whereClause = (string) $tableXml->where_clause;
                 $order = (string) $tableXml->order;
-                $query = "select " . $foreignKey . ", " . $foreignLabel
-                       . " from " . $tableName;
+                $query = "SELECT " . $foreignKey . ", " . $foreignLabel
+                       . " FROM " . $tableName;
                 if (isset($whereClause) && ! empty($whereClause)) {
-                    $query .= " where " . $whereClause;
+                    $query .= " WHERE " . $whereClause;
                 }
                 if (isset($order) && ! empty($order)) {
                     $query .= ' '.$order;
                 }
-                $this->connect();
-                $this->query($query);
-                while ($res = $this->fetch_array()) {
+
+                $stmt = $db->query($query);
+                while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
                      array_push(
                          $values,
                          array(
@@ -872,15 +848,14 @@ class foldertype extends dbquery
     public function get_indexes($foldertypeId, $mode= 'full')
     {
         $fields = array();
-        $this->connect();
-        $this->query(
-        	"select field_name from "
+        $db = new Database();
+        $stmt = $db->query(
+        	"SELECT field_name FROM "
         	. $_SESSION['tablename']['fold_foldertypes_indexes']
-        	. " where  foldertype_id = " . $foldertypeId
+        	. " WHERE  foldertype_id = ?", array($foldertypeId)
         );
-        //$this->show();
 
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push($fields, $res->field_name);
         }
         if ($mode == 'minimal') {
@@ -963,17 +938,16 @@ class foldertype extends dbquery
                     $foreignLabel = (string) $tableXml->foreign_label;
                     $whereClause = (string) $tableXml->where_clause;
                     $order = (string) $tableXml->order;
-                    $query = "select " . $foreignKey . ", " . $foreignLabel
-                           . " from " . $tableName;
+                    $query = "SELECT " . $foreignKey . ", " . $foreignLabel
+                           . " FROM " . $tableName;
                     if (isset($whereClause) && ! empty($whereClause)) {
                         $query .= " where " . $whereClause;
                     }
                     if (isset($order) && ! empty($order)) {
                         $query .= ' '.$order;
                     }
-                    $this->connect();
-                    $this->query($query);
-                    while ($res = $this->fetch_object()) {
+                    $stmt = $db->query($query);
+                    while ($res = $stmt->fetchObject()) {
                          array_push(
                              $values,
                              array(
@@ -1015,15 +989,14 @@ class foldertype extends dbquery
     public function get_mandatory_indexes($foldertypeId)
     {
         $fields = array();
-        $this->connect();
-        $this->query(
-        	"select field_name from " 
+        $db = new Database();
+        $stmt = $db->query(
+        	"SELECT field_name FROM " 
         	. $_SESSION['tablename']['fold_foldertypes_indexes']
-        	. " where foldertype_id = " . $foldertypeId 
-        	. " and mandatory = 'Y'"
+        	. " WHERE foldertype_id = ? and mandatory = 'Y'", array($foldertypeId)
         );
 
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push($fields, $res->field_name);
         }
         return $fields;
@@ -1069,19 +1042,19 @@ class foldertype extends dbquery
             } else if ($indexes[$key]['type'] == 'string'  
             	&& ! empty($values[$key])
             ) {
-                $fieldValue = $this->wash(
+                $fieldValue = functions::wash(
                 	$values[$key], "no", $indexes[$key]['label']
                 );
             } else if ($indexes[$key]['type'] == 'float' 
             	&& ! empty($values[$key]) 
             ) {
-                $fieldValue = $this->wash(
+                $fieldValue = functions::wash(
                 	$values[$key], "float", $indexes[$key]['label']
                 );
             } else if ($indexes[$key]['type'] == 'integer' 
             	&& ! empty($values[$key]) 
             ) {
-                $fieldValue = $this->wash(
+                $fieldValue = functions::wash(
                 	$values[$key], "num", $indexes[$key]['label']
                 );
             }
@@ -1122,12 +1095,12 @@ class foldertype extends dbquery
         foreach (array_keys($values) as $key) {
             if ($indexes[$key]['type'] == 'date' && ! empty($values[$key])) {
                 $req .= ", " . $key . " = '" 
-                	. $this->format_date_db($values[$key]) . "'";
+                	. functions::format_date_db($values[$key]) . "'";
             } else if ($indexes[$key]['type'] == 'string' 
             	&& ! empty($values[$key])
             ) {
                 $req .= ", " . $key . " = '"
-                	. $this->protect_string_db($values[$key]) . "'";
+                	. functions::protect_string_db($values[$key]) . "'";
             } else if ($indexes[$key]['type'] == 'float' 
             	&& ! empty($values[$key])
             ) {
@@ -1159,7 +1132,7 @@ class foldertype extends dbquery
                 	$data, 
                 	array(
                 		'column' => $key, 
-                		'value' => $this->format_date_db($values[$key]), 
+                		'value' => functions::format_date_db($values[$key]), 
                 		'type' => "date"
                 	)
                 );
@@ -1170,7 +1143,7 @@ class foldertype extends dbquery
                 	$data, 
                 	array(
                 		'column' => $key, 
-                		'value' => $this->protect_string_db($values[$key]), 
+                		'value' => functions::protect_string_db($values[$key]), 
                 		'type' => "string"
                 	)
                 );
@@ -1209,16 +1182,17 @@ class foldertype extends dbquery
     public function inits_opt_indexes($folderSysId)
     {
         $indexes = $this->get_all_indexes( );
-        $query = "update " . $_SESSION['tablename']['fold_folders'] . " set ";
+        $query = "UPDATE " . $_SESSION['tablename']['fold_folders'] . " SET ";
         for ($i = 0; $i < count($indexes); $i ++) {
             $query .= $indexes[$i]['column'] . " = NULL, ";
         }
         $query = preg_replace(
-        	'/, $/', ' where folders_system_id = ' . $folderSysId, $query
+        	'/, $/', ' WHERE folders_system_id = ?', $query
         );
+        $arrayPDO = array($folderSysId);
 
-        $this->connect();
-        $this->query($query);
+        $db = new Database();
+        $db->query($query, $arrayPDO);
     }
 
 
@@ -1233,7 +1207,7 @@ class foldertype extends dbquery
                 if (!empty($val)) {
                     $whereRequest .= " lower(" . $table_or_view
                         . "." . $key . ") like lower('%" 
-                        . $this->protect_string_db($val) . "%') and ";
+                        . functions::protect_string_db($val) . "%') and ";
                 }
                 break;
             } else if ($key.'_from' == $fieldName || $key.'_to' == $fieldName) { 
@@ -1242,7 +1216,7 @@ class foldertype extends dbquery
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT . ' : ' . $val;
                 } else {
                     $whereRequest .= " (" . $table_or_view
-                    	. "." . $key . " >= '" . $this->format_date_db($val)
+                    	. "." . $key . " >= '" . functions::format_date_db($val)
                     	. "') and ";
                 }
                 break;
@@ -1253,11 +1227,11 @@ class foldertype extends dbquery
                 	|| $indexes[$key]['type'] == 'float'
                 ) {
                     if ($indexes[$key]['type'] == 'integer') {
-                        $checkedVal = $this->wash(
+                        $checkedVal = functions::wash(
                         	$val, "num", $indexes[$key]['label'], "no"
                         );
                     } else {
-                        $checkedVal = $this->wash(
+                        $checkedVal = functions::wash(
                         	$val, "float", $indexes[$key]['label'], "no"
                         );
                     }

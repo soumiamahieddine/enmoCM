@@ -52,20 +52,20 @@ $core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 $core->load_html();
 
-$db = new dbquery();
-$db->connect();
-$db->query(
-	"select foldertype_id, foldertype_label from "
+$db = new Database();
+
+$stmt = $db->query(
+	"SELECT foldertype_id, foldertype_label FROM "
     . $_SESSION['tablename']['fold_foldertypes'] . " order by foldertype_label"
 );
 
 $foldertypes = array();
-while ($res = $db->fetch_object()) {
+while ($res = $stmt->fetchObject()) {
     array_push(
         $foldertypes,
         array(
         	'id' => $res->foldertype_id,
-        	'label' => $db->show_string($res->foldertype_label),
+        	'label' => $res->foldertype_label,
         )
     );
 }
@@ -102,7 +102,7 @@ for ($i = 0; $i < count($foldertypes); $i ++) {
         echo 'selected="selected"';
     }
     ?>><?php
-    echo $foldertypes[$i]['label'];
+    functions::xecho($foldertypes[$i]['label']);
     ?></option>
     <?php
     }
@@ -121,7 +121,7 @@ if (isset($_SESSION['m_admin']['folder']['folder_id'])) {
             <label for="folder_name"><?php echo _FOLDERNAME;?></label>
             <input name="folder_name" id="folder_name" value="<?php
 if (isset($_SESSION['m_admin']['folder']['folder_name'])) {
-    echo $_SESSION['m_admin']['folder']['folder_name'];
+    functions::xecho($_SESSION['m_admin']['folder']['folder_name']);
 }
 ?>" /> <i class="red_asterisk fa fa-asterisk mCyellow"></i>
         </p>

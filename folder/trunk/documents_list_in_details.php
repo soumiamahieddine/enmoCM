@@ -54,7 +54,8 @@ if(isset($_REQUEST['listid']) && $_REQUEST['listid'] <> "") {
     //Where clause
         $where_tab = array();
         //From tree
-        $where_tab[] = 'res_id in ('. $_REQUEST['listid'].')';
+        $where_tab[] = 'res_id in (?)';
+        $arrayPDO = array($_REQUEST['listid']);
         //From security
         foreach (array_keys($_SESSION['user']['security']) as $collId) {
             if($collId == $_SESSION['current_foldertype_coll_id']) {
@@ -78,7 +79,7 @@ if(isset($_REQUEST['listid']) && $_REQUEST['listid'] <> "") {
         }
         
     //Query    
-        $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", true);
+        $tab=$request->PDOselect($select,$where, $arrayPDO, $orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", true);
         // $request->show();
         
     //Result Array
