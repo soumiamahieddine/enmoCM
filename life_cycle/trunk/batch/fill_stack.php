@@ -68,11 +68,13 @@ while ($state <> 'END') {
         /**********************************************************************/
         case 'CONTROL_STACK' :
             $query = "select * from " . _LC_STACK_TABLE_NAME
-                   . " where policy_id = '" . $GLOBALS['policy']
-                   . "' and cycle_id = '" . $GLOBALS['cycle']
-                   . "' and regex = '" . $GLOBALS['regExResId'] . "'";
-            Bt_doQuery($GLOBALS['db'], $query);
-            if ($GLOBALS['db']->nb_result() > 0) {
+                   . " where policy_id = ? and cycle_id = ? and regex = ?";
+            $stmt = Bt_doQuery(
+                $GLOBALS['db'], 
+                $query, 
+                array($GLOBALS['policy'], $GLOBALS['cycle'], $GLOBALS['regExResId'])
+            );
+            if ($stmt->rowCount() > 0) {
                 Bt_exitBatch(107, 'WARNING stack is full for policy:'
                              . $GLOBALS['policy'] . ', cycle:'
                              . $GLOBALS['cycle'] . ', regex:'
@@ -87,14 +89,13 @@ while ($state <> 'END') {
         /**********************************************************************/
         case 'GET_STEPS' :
             $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME
-                   . " where policy_id = '" . $GLOBALS['policy']
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            Bt_doQuery($GLOBALS['db'], $query);
-            if ($GLOBALS['db']->nb_result() == 0) {
+                   . " where policy_id = ? and cycle_id = ?";
+            $stmt = Bt_doQuery($GLOBALS['db'], $query, array($GLOBALS['policy'], $GLOBALS['cycle']));
+            if ($stmt->rowCount() == 0) {
                 Bt_exitBatch(14, 'Cycle Steps not found');
                 break;
             } else {
-                while ($stepsRecordset = $GLOBALS['db']->fetch_object()) {
+                while ($stepsRecordset = $stmt->fetchObject()) {
                     array_push(
                         $GLOBALS['steps'],
                         array('cycle_step_id' => $stepsRecordset->cycle_step_id)
@@ -111,11 +112,14 @@ while ($state <> 'END') {
             $orderBy = '';
             // get the where clause of the cycle
             $query = "select * from " . _LC_CYCLES_TABLE_NAME
-                   . " where policy_id = '" . $GLOBALS['policy']
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            Bt_doQuery($GLOBALS['db'], $query);
-            if ($GLOBALS['db']->nb_result() > 0) {
-                $cycleRecordset = $GLOBALS['db']->fetch_object();
+                   . " where policy_id = ? and cycle_id = ?";
+            $stmt = Bt_doQuery(
+                $GLOBALS['db'], 
+                $query, 
+                array($GLOBALS['policy'], $GLOBALS['cycle'])
+            );
+            if ($stmt->rowCount() > 0) {
+                $cycleRecordset = $stmt->fetchObject();
             } else {
                 Bt_exitBatch(11, 'cycle not found for policy:'
                              . $GLOBALS['policy'] . ', cycle:'
@@ -124,14 +128,16 @@ while ($state <> 'END') {
             }
             // compute the previous step
             $query = "select * from " . _LC_CYCLES_TABLE_NAME
-                   . " where policy_id = '" . $GLOBALS['policy']
-                   . "' and sequence_number = "
-                   . ($cycleRecordset->sequence_number - 1);
-            Bt_doQuery($GLOBALS['db'], $query);
+                   . " where policy_id = ? and sequence_number = ?";
+            $stmt = Bt_doQuery(
+                $GLOBALS['db'], 
+                $query, 
+                array($GLOBALS['policy'], $cycleRecordset->sequence_number - 1)
+            );
             $prevCycleIdWhereClause = '';
             $cptPrevCycleId = 0;
-            if ($GLOBALS['db']->nb_result() > 0) {
-                while ($cyclePreviousRecordset = $GLOBALS['db']->fetch_object()) {
+            if ($stmt->rowCount() > 0) {
+                while ($cyclePreviousRecordset = $stmt->fetchObject()) {
                     if ($cptPrevCycleId == 0) {
                         $prevCycleIdWhereClause .= "(cycle_id = '" . $cyclePreviousRecordset->cycle_id . "'";
                     } else {
@@ -172,11 +178,11 @@ while ($state <> 'END') {
                 $orderBy
             );
 
-            Bt_doQuery($GLOBALS['db'], $query);
+            $stmt = Bt_doQuery($GLOBALS['db'], $query);
             $resourcesArray = array();
 
-            if ($GLOBALS['db']->nb_result() > 0) {
-                while ($resoucesRecordset = $GLOBALS['db']->fetch_object()) {
+            if ($stmt->rowCount() > 0) {
+                while ($resoucesRecordset = $stmt->fetchObject()) {
                     array_push(
                         $resourcesArray,
                             array('res_id' => $resoucesRecordset->res_id)

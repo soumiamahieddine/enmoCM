@@ -37,21 +37,22 @@
  * @param boolean $transaction for rollback if error
  * @return true if ok, exit if ko and rollback if necessary
  */
-function Bt_doQuery($dbConn, $queryTxt, $transaction=false)
+function Bt_doQuery($dbConn, $queryTxt, $param=array(), $transaction=false)
 {
-    $res = $dbConn->query($queryTxt, true);
-    if (!$res) {
+    if (count($param) > 0) {
+        $stmt = $dbConn->query($queryTxt, $param);
+    } else {
+        $stmt = $dbConn->query($queryTxt);
+    }
+    if (!$stmt) {
         if ($transaction) {
             $GLOBALS['logger']->write('ROLLBACK', 'INFO');
-            $dbConn->query('ROLLBACK', true);
+            $dbConn->query('ROLLBACK');
         }
-        /*Bt_exitBatch(
-            104, 'SQL Query error:' . $queryTxt
-        );*/
         $GLOBALS['logger']->write('SQL query error:' . $queryTxt, 'WARNING');
     }
     $GLOBALS['logger']->write('SQL query:' . $queryTxt, 'DEBUG');
-    return true;
+    return $stmt;
 }
 
 /**
@@ -99,14 +100,19 @@ function Bt_exitBatch($returnCode, $message='')
 */
 function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
 {
-
     $query = "insert into history_batch(module_name, batch_id, event_date, "
-           . "total_processed, total_errors, info) values('"
-           . $GLOBALS['batchName'] . "', " . $GLOBALS['wb'] . ", "
-           . $GLOBALS['db']->current_datetime() . ", " . $totalProcessed . ", " . $totalErrors . ", '"
-           . substr(str_replace('\\', '\\\\', str_replace("'", "`", $info)), 0, 999) . "')";
-    $GLOBALS['dbLog']->query($query);
-    //Bt_doQuery($GLOBALS['db'], $query);
+           . "total_processed, total_errors, info) values(?, ?, "
+           . $GLOBALS['db']->current_datetime() . ", ?, ?, ?)";
+    $stmt = $GLOBALS['dbLog']->query(
+        $query, 
+        array(
+            $GLOBALS['batchName'],
+            $GLOBALS['wb'],
+            $totalProcessed,
+            $totalErrors,
+            substr(str_replace('\\', '\\\\', str_replace("'", "`", $info)), 0, 999)
+        )
+    );
 }
 
 /**
@@ -116,16 +122,15 @@ function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
  */
 function Bt_getWorkBatch()
 {
-    $req = "select param_value_int from parameters where id = "
-         . "'". $GLOBALS['batchName'] . "_id'";
-    $GLOBALS['db']->query($req);
-    while ($reqResult = $GLOBALS['db']->fetch_array()) {
-        $GLOBALS['wbCompute'] = $reqResult[0] + 1;
+    $req = "select param_value_int from parameters where id = ?";
+    $stmt = $GLOBALS['db']->query($req, array($GLOBALS['batchName'] . "_id"));
+    while ($reqResult = $stmt->fetchObject()) {
+        $GLOBALS['wbCompute'] = $reqResult->param_value_int + 1;
     }
     if ($GLOBALS['wbCompute'] == '') {
         $req = "insert into parameters(id, param_value_int) values "
-             . "('" . $GLOBALS['batchName'] . "_id', 1)";
-        $GLOBALS['db']->query($req);
+             . "(?, 1)";
+        $stmt = $GLOBALS['db']->query($req, array($GLOBALS['batchName'] . "_id"));
         $GLOBALS['wbCompute'] = 1;
     }
 }
@@ -137,9 +142,8 @@ function Bt_getWorkBatch()
  */
 function Bt_updateWorkBatch()
 {
-    $req = "update parameters set param_value_int  = " . $GLOBALS['wbCompute'] . " "
-         . "where id = '" . $GLOBALS['batchName'] . "_id'";
-    $GLOBALS['db']->query($req);
+    $req = "update parameters set param_value_int = ? where id = ?";
+    $stmt = $GLOBALS['db']->query($req, array($GLOBALS['wbCompute'], $GLOBALS['batchName'] . "_id"));
 }
 
 /**
@@ -164,17 +168,23 @@ function Bt_myInclude($file)
  */
 function Bt_getCurrentDateToProcess()
 {
-    $req = "select param_value_date from parameters where id = "
-         . "'". $GLOBALS['batchName'] . "_" . $GLOBALS['policy'] 
-         . "_" . $GLOBALS['cycle'] . "_current_date'";
-    $GLOBALS['db']->query($req);
-    $reqResult = $GLOBALS['db']->fetch_object();
+    $req = "select param_value_date from parameters where id = ?";
+    $stmt = $GLOBALS['db']->query(
+        $req, 
+        array(
+            $GLOBALS['batchName'] . "_" . $GLOBALS['policy'] . "_" . $GLOBALS['cycle'] . "_current_date"
+        )
+    );
+    $reqResult = $stmt->fetchObject();
     if ($reqResult->param_value_date == '') {
-        $req = "insert into parameters(id, param_value_date) values "
-             . "('" . $GLOBALS['batchName'] . "_" . $GLOBALS['policy'] 
-             . "_" . $GLOBALS['cycle'] . "_current_date', '" 
-             . $GLOBALS['startDateRecovery'] . "')";
-        $GLOBALS['db']->query($req);
+        $req = "insert into parameters(id, param_value_date) values (?, ?)";
+        $stmt = $GLOBALS['db']->query(
+            $req, 
+            array(
+                $GLOBALS['batchName'] . "_" . $GLOBALS['policy'] . "_" . $GLOBALS['cycle'] . "_current_date",
+                $GLOBALS['startDateRecovery']
+            )
+        );
         $GLOBALS['currentDate'] = $GLOBALS['startDateRecovery'];
     } else {
         $resultDate = formatDateFromDb($reqResult->param_value_date);
@@ -198,10 +208,14 @@ function Bt_getCurrentDateToProcess()
  */
 function Bt_updateCurrentDateToProcess()
 {
-    $req = "update parameters set param_value_date  = '" . $GLOBALS['currentDate'] . "' "
-         . "where id = '" . $GLOBALS['batchName'] . "_" . $GLOBALS['policy'] 
-         . "_" . $GLOBALS['cycle'] . "_current_date'";
-    $GLOBALS['db']->query($req);
+    $req = "update parameters set param_value_date  = ? where id = ?";
+    $stmt = $GLOBALS['db']->query(
+        $req,
+        array(
+            $GLOBALS['currentDate'], 
+            $GLOBALS['batchName'] . "_" . $GLOBALS['policy'] . "_" . $GLOBALS['cycle'] . "_current_date"
+        )
+    );
 }
 
 /**

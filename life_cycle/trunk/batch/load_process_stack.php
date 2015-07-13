@@ -345,9 +345,9 @@ try {
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
                  . 'class' . DIRECTORY_SEPARATOR . 'class_functions.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-                 . 'class' . DIRECTORY_SEPARATOR . 'class_db_pdo.php');
+                 . 'class' . DIRECTORY_SEPARATOR . 'class_db.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-                 . 'class' . DIRECTORY_SEPARATOR . 'class_request.php');
+                 . 'class' . DIRECTORY_SEPARATOR . 'class_db_pdo.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
                  . 'class' . DIRECTORY_SEPARATOR . 'class_core_tools.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
