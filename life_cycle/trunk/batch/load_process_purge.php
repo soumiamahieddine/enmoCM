@@ -323,26 +323,28 @@ $GLOBALS['logger']->write('Batch number:' . $GLOBALS['wb'], 'INFO');
 function getEntityChildrenTree($entities, $parent = '', $tabspace = '', $except = array(), $where = '')
 {
     if(trim($parent) == "") {
-        $query = "SELECT entity_id FROM entities WHERE enabled = 'Y' and (parent_entity_id ='' or parent_entity_id is null) ".$where;
-        Bt_doQuery($GLOBALS['db2'], $query);
+        $query = "SELECT entity_id FROM entities WHERE enabled = 'Y' "
+            . " and (parent_entity_id ='' or parent_entity_id is null) " 
+            . $where;
+        $stmt = Bt_doQuery($GLOBALS['db2'], $query);
     } else {
         $query = "SELECT entity_id FROM entities WHERE enabled = 'Y' and parent_entity_id = '" 
             . trim($parent)."'".$where;
-        Bt_doQuery($GLOBALS['db2'], $query);
+        $stmt = Bt_doQuery($GLOBALS['db2'], $query);
     }
 
-    if($GLOBALS['db2']->nb_result() > 0) {
+    if($stmt->rowCount() > 0) {
         $espace = $tabspace.'&emsp;';
 
-        while($line = $GLOBALS['db2']->fetch_object()) {
+        while($line = $stmt->fetchObject()) {
             if (!in_array($line->entity_id, $except)) {
                  array_push($entities, array('ID' =>$line->entity_id, 'KEYWORD' => false));
 
                 $query2 ="select entity_id from entities where enabled = 'Y' and parent_entity_id = '" 
                     . trim($line->entity_id)."'".$where;
-                Bt_doQuery($GLOBALS['db'], $query2);
+                $stmt2 = Bt_doQuery($GLOBALS['db'], $query2);
                 $tmp = array();
-                if($GLOBALS['db']->nb_result() > 0) {
+                if($stmt2->rowCount() > 0) {
                     $tmp = getEntityChildrenTree($tmp,$line->entity_id,  $espace, $except);
                     $entities = array_merge($entities, $tmp);
                 }
