@@ -808,10 +808,6 @@ $GLOBALS['logger']->write('End of process', 'INFO');
 Bt_logInDataBase(
     $GLOBALS['totalProcessedResources'], 0, 'process without error'
 );
-$GLOBALS['db']->disconnect();
-$GLOBALS['db2']->disconnect();
-$GLOBALS['db3']->disconnect();
-$GLOBALS['dbLog']->disconnect();
 Ds_washTmp($GLOBALS['tmpDirectory']);
 unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);

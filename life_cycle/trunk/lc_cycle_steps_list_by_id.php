@@ -32,10 +32,9 @@
 
 require_once ("modules/life_cycle/life_cycle_tables_definition.php");
 require_once('core/admin_tools.php');
-$db = new dbquery();
-$db->connect();
-$db->query("select cycle_step_id as tag from " 
-	. _LC_CYCLE_STEPS_TABLE_NAME . " where lower(cycle_step_id) like lower('" 
-	. $_REQUEST['what'] . "%') order by cycle_step_id");
+$db = new Database();
+$stmt = $db->query("select cycle_step_id as tag from " 
+	. _LC_CYCLE_STEPS_TABLE_NAME . " where lower(cycle_step_id) like lower(?) order by cycle_step_id", 
+	array($_REQUEST['what'] . "%"));
 }
 At_showAjaxList($db, $_REQUEST['what']);

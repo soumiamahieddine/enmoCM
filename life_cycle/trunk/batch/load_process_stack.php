@@ -345,7 +345,7 @@ try {
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
                  . 'class' . DIRECTORY_SEPARATOR . 'class_functions.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-                 . 'class' . DIRECTORY_SEPARATOR . 'class_db.php');
+                 . 'class' . DIRECTORY_SEPARATOR . 'class_db_pdo.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
                  . 'class' . DIRECTORY_SEPARATOR . 'class_request.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
@@ -405,14 +405,10 @@ $coreTools->load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);
 session_start();
 $_SESSION['modules_loaded'] = array();
 $GLOBALS['func'] = new functions();
-$GLOBALS['db'] = new dbquery($GLOBALS['configFile']);
-$GLOBALS['db2'] = new dbquery($GLOBALS['configFile']);
-$GLOBALS['db3'] = new dbquery($GLOBALS['configFile']);
-$GLOBALS['dbLog'] = new dbquery($GLOBALS['configFile']);
-$GLOBALS['db']->connect();
-$GLOBALS['db2']->connect();
-$GLOBALS['db3']->connect();
-$GLOBALS['dbLog']->connect();
+$GLOBALS['db'] = new Database($GLOBALS['configFile']);
+$GLOBALS['db2'] = new Database($GLOBALS['configFile']);
+$GLOBALS['db3'] = new Database($GLOBALS['configFile']);
+$GLOBALS['dbLog'] = new Database($GLOBALS['configFile']);
 $GLOBALS['docserverControler'] = new docservers_controler();
 $configFileName = basename($GLOBALS['configFile'], '.xml');
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 

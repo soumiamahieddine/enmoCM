@@ -261,7 +261,7 @@ try {
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
                  . 'class' . DIRECTORY_SEPARATOR . 'class_functions.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-                 . 'class' . DIRECTORY_SEPARATOR . 'class_db.php');
+                 . 'class' . DIRECTORY_SEPARATOR . 'class_db_pdo.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
                  . 'class' . DIRECTORY_SEPARATOR . 'class_request.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
@@ -288,12 +288,9 @@ $coreTools->load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);
 session_start();
 $_SESSION['modules_loaded'] = array();
 $GLOBALS['func'] = new functions();
-$GLOBALS['db'] = new dbquery($GLOBALS['configFile']);
-$GLOBALS['db2'] = new dbquery($GLOBALS['configFile']);
-$GLOBALS['dbLog'] = new dbquery($GLOBALS['configFile']);
-$GLOBALS['db']->connect();
-$GLOBALS['db2']->connect();
-$GLOBALS['dbLog']->connect();
+$GLOBALS['db'] = new Database($GLOBALS['configFile']);
+$GLOBALS['db2'] = new Database($GLOBALS['configFile']);
+$GLOBALS['dbLog'] = new Database($GLOBALS['configFile']);
 $GLOBALS['docserverControler'] = new docservers_controler();
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
                          . $GLOBALS['batchName'] . '_' . $GLOBALS['collection'] 
@@ -327,12 +324,12 @@ $GLOBALS['logger']->write('Batch number:' . $GLOBALS['wb'], 'INFO');
 
 function getEntityChildrenTree($entities, $parent = '', $tabspace = '', $except = array(), $where = '')
 {
-    if($GLOBALS['db2']->protect_string_db(trim($parent)) == "") {
-
+    if(trim($parent) == "") {
         $query = "SELECT entity_id FROM entities WHERE enabled = 'Y' and (parent_entity_id ='' or parent_entity_id is null) ".$where;
         Bt_doQuery($GLOBALS['db2'], $query);
     } else {
-        $query = "SELECT entity_id FROM entities WHERE enabled = 'Y' and parent_entity_id = '".$GLOBALS['db2']->protect_string_db(trim($parent))."'".$where;
+        $query = "SELECT entity_id FROM entities WHERE enabled = 'Y' and parent_entity_id = '" 
+            . trim($parent)."'".$where;
         Bt_doQuery($GLOBALS['db2'], $query);
     }
 
@@ -343,7 +340,8 @@ function getEntityChildrenTree($entities, $parent = '', $tabspace = '', $except 
             if (!in_array($line->entity_id, $except)) {
                  array_push($entities, array('ID' =>$line->entity_id, 'KEYWORD' => false));
 
-                $query2 ="select entity_id from entities where enabled = 'Y' and parent_entity_id = '".$GLOBALS['db2']->protect_string_db(trim($line->entity_id))."'".$where;
+                $query2 ="select entity_id from entities where enabled = 'Y' and parent_entity_id = '" 
+                    . trim($line->entity_id)."'".$where;
                 Bt_doQuery($GLOBALS['db'], $query2);
                 $tmp = array();
                 if($GLOBALS['db']->nb_result() > 0) {

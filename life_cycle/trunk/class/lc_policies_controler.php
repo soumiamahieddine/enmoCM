@@ -137,9 +137,9 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
         $f = new functions();
         $error = "";
         // Update, so values exist
-        $policy->policy_id=$f->protect_string_db($f->wash($policy->policy_id, "nick", _LC_POLICY_ID." ", 'yes', 0, 32));
-        $policy->policy_name=$f->protect_string_db($f->wash($policy->policy_name, "no", _POLICY_NAME." ", 'yes', 0, 255));
-        $policy->policy_desc=$f->protect_string_db($f->wash($policy->policy_desc, "no", _POLICY_DESC." ", 'yes', 0, 255));
+        $policy->policy_id=$f->wash($policy->policy_id, "nick", _LC_POLICY_ID." ", 'yes', 0, 32);
+        $policy->policy_name=$f->wash($policy->policy_name, "no", _POLICY_NAME." ", 'yes', 0, 255);
+        $policy->policy_desc=$f->wash($policy->policy_desc, "no", _POLICY_DESC." ", 'yes', 0, 255);
         if ($mode == "add" && $this->policyExists($policy->policy_id)) {    
             $error .= $policy->policy_id." "._ALREADY_EXISTS."#";
         }
@@ -233,18 +233,15 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
             $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
             return $control;
         }
-        $db=new dbquery();
-        $db->connect();
-        $query="delete from "._LC_POLICIES_TABLE_NAME." where policy_id ='".$db->protect_string_db($policy->policy_id)."'";
+        $db=new Database();
+        $query="delete from "._LC_POLICIES_TABLE_NAME." where policy_id = ?";
         try {
-            if ($_ENV['DEBUG']) {echo $query.' // ';}
-            $db->query($query);
+            $stmt = $db->query($query, array($policy->policy_id));
             $ok = true;
         } catch (Exception $e) {
             $control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_POLICY_ID." ".$policy->policy_id);
             $ok = false;
         }
-        $db->disconnect();
         $control = array("status" => "ok", "value" => $policy->policy_id);
         if ($_SESSION['history']['lcdel'] == "true") {
             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
@@ -311,22 +308,17 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
     public function policyExists($policy_id) {
         if (!isset ($policy_id) || empty ($policy_id))
             return false;
-        $db = new dbquery();
-        $db->connect();
-        $query = "select policy_id from " . _LC_POLICIES_TABLE_NAME . " where policy_id = '" . $policy_id . "'";
+        $db = new Database();
+        $query = "select policy_id from " . _LC_POLICIES_TABLE_NAME 
+            . " where policy_id = ?";
         try {
-            if ($_ENV['DEBUG']) {
-                echo $query . ' // ';
-            }
-            $db->query($query);
+            $stmt = $db->query($query, array($policy_id));
         } catch (Exception $e) {
             echo _UNKNOWN . _LC_POLICY . " " . $policy_id . ' // ';
         }
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        $db->disconnect();
         return false;
     }
 
@@ -339,40 +331,22 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
     public function linkExists($policy_id) {
         if (!isset($policy_id) || empty($policy_id))
             return false;
-        $db=new dbquery();
-        $db->connect();
-        
-        $query = "select policy_id from "._LC_STACK_TABLE_NAME." where policy_id = '".$policy_id."'";
-        $db->query($query);
-        if ($db->nb_result()>0) {
-            $db->disconnect();
+        $db = new Database();
+        $query = "select policy_id from "._LC_STACK_TABLE_NAME." where policy_id = ?";
+        $stmt = $db->query($query, array($policy_id));
+        if ($stmt->rowCount()>0) {
             return true;
         }
-        $query = "select policy_id from "._LC_CYCLE_STEPS_TABLE_NAME." where policy_id = '".$policy_id."'";
-        $db->query($query);
-        if ($db->nb_result()>0) {
-            $db->disconnect();
+        $query = "select policy_id from "._LC_CYCLE_STEPS_TABLE_NAME." where policy_id = ?";
+        $stmt = $db->query($query, array($policy_id));
+        if ($stmt->rowCount()>0) {
             return true;
         }
-        /*$query = "select policy_id from "._LC_RES_X_TABLE_NAME." where policy_id = '".$policy_id."'";
-        $db->query($query);
-        if ($db->nb_result()>0) {
-            $db->disconnect();
+        $query = "select policy_id from "._LC_CYCLES_TABLE_NAME." where policy_id = ?";
+        $stmt = $db->query($query, array($policy_id));
+        if ($stmt->rowCount()>0) {
             return true;
         }
-        $query = "select policy_id from "._LC_ADR_X_TABLE_NAME." where policy_id = '".$policy_id."'";
-        $db->query($query);
-        if ($db->nb_result()>0) {
-            $db->disconnect();
-            return true;
-        }*/
-        $query = "select policy_id from "._LC_CYCLES_TABLE_NAME." where policy_id = '".$policy_id."'";
-        $db->query($query);
-        if ($db->nb_result()>0) {
-            $db->disconnect();
-            return true;
-        }
-        $db->disconnect();
     }
 
     /**
@@ -381,27 +355,22 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
     * @return array of policies
     */
     public function getAllId() {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select policy_id from " . _LC_POLICIES_TABLE_NAME . " ";
         try {
-            if ($_ENV['DEBUG'])
-                echo $query . ' // ';
-            $db->query($query);
+            $stmt = $db->query($query);
         } catch (Exception $e) {
             echo _NO_LC_POLICY_LOCATION . ' // ';
         }
-        if ($db->nb_result() > 0) {
+        if ($stmt->rowCount() > 0) {
             $result = array ();
             $cptId = 0;
-            while ($queryResult = $db->fetch_object()) {
+            while ($queryResult = $stmt->fetchObject()) {
                 $result[$cptId] = $queryResult->policy_id;
                 $cptId++;
             }
-            $db->disconnect();
             return $result;
         } else {
-            $db->disconnect();
             return null;
         }
     }
@@ -417,17 +386,15 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
         if (!isset($policyId) || empty($policyId)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
-        $dbBis = new dbquery();
-        $dbBis->connect();
+        $db = new Database();
+        $dbBis = new Database();
         $result = array();
         $query = "select * from " . _LC_CYCLES_TABLE_NAME 
-            . " where policy_id = '".$policyId."' order by sequence_number";
-        $db->query($query);
+            . " where policy_id = ? order by sequence_number";
+        $stmt = $db->query($query, array($policyId));
         $cptCycles = 0;
-        if ($db->nb_result() > 0) {
-            while ($cycleLine = $db->fetch_object()) {
+        if ($stmt->rowCount() > 0) {
+            while ($cycleLine = $stmt->fetchObject()) {
                 $cptSteps = 0;
                 $result['cycles'][$cptCycles]['cycle_id'] = 
                     $cycleLine->cycle_id;
@@ -440,11 +407,10 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
                 $result['cycles'][$cptCycles]['break_key'] = 
                     $cycleLine->break_key;
                 $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME 
-                    . " where cycle_id = '" . $cycleLine->cycle_id 
-                    . "' order by sequence_number";
-                $dbBis->query($query);
-                if ($dbBis->nb_result() > 0) {
-                    while ($stepLine = $dbBis->fetch_object()) {
+                    . " where cycle_id = ? order by sequence_number";
+                $stmtBis = $dbBis->query($query, array($cycleLine->cycle_id));
+                if ($stmtBis->rowCount() > 0) {
+                    while ($stepLine = $stmtBis->fetchObject()) {
                         $result['cycles'][$cptCycles]['steps'][$cptSteps]
                             ['cycle_step_id'] = $stepLine->cycle_step_id;
                         $result['cycles'][$cptCycles]['steps'][$cptSteps]

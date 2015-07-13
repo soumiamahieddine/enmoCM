@@ -161,82 +161,46 @@ class lc_cycle_steps_controler
             && !empty($lc_cycle_steps->cycle_step_id)
         ) {
             // Update, so values exist
-            $lc_cycle_steps->cycle_step_id = $f->protect_string_db(
+            $lc_cycle_steps->cycle_step_id = 
                 $f->wash(
                     $lc_cycle_steps->cycle_step_id, "nick", 
                     _LC_CYCLE_STEP_ID." ", "yes", 0, 32
-                )
-            );
+                );
         }
-        $lc_cycle_steps->policy_id = $f->protect_string_db(
+        $lc_cycle_steps->policy_id = 
             $f->wash(
                 $lc_cycle_steps->policy_id, "no", _POLICY_ID." ", 'yes', 0, 32
-            )
-        );
+            );
         if (isset($lc_cycle_steps->cycle_id) 
             && !empty($lc_cycle_steps->cycle_id)
         ) {
-            $lc_cycle_steps->cycle_id = $f->protect_string_db(
-                $f->wash(
-                    $lc_cycle_steps->cycle_id, "no", _LC_CYCLE_ID." ", 
-                    'yes', 0, 32
-                )
+            $lc_cycle_steps->cycle_id = $f->wash(
+                $lc_cycle_steps->cycle_id, "no", _LC_CYCLE_ID." ", 
+                'yes', 0, 32
             );
         } else {
             $lc_cycle_steps->policy_id = '';
             $error .= _LC_CYCLE_ID . ' ' . _MANDATORY;
         }
         $lc_cycle_steps->docserver_type_id =
-            $f->protect_string_db(
-                $f->wash(
-                    $lc_cycle_steps->docserver_type_id, "no", 
-                    _DOCSERVER_TYPE_ID." ", 'yes', 0, 32
-                )
+            $f->wash(
+                $lc_cycle_steps->docserver_type_id, "no", 
+                _DOCSERVER_TYPE_ID." ", 'yes', 0, 32
             );    
         $lc_cycle_steps->cycle_step_desc =
-            $f->protect_string_db(
-                $f->wash(
-                    $lc_cycle_steps->cycle_step_desc, "no", 
-                    _CYCLE_STEP_DESC." ", 'yes', 0, 255
-                )
+            $f->wash(
+                $lc_cycle_steps->cycle_step_desc, "no", 
+                _CYCLE_STEP_DESC." ", 'yes', 0, 255
             );
         $lc_cycle_steps->sequence_number =
-            $f->protect_string_db(
-                $f->wash(
-                    $lc_cycle_steps->sequence_number, "num", 
-                    _SEQUENCE_NUMBER." ", 'yes', 0, 255
-                )
+            $f->wash(
+                $lc_cycle_steps->sequence_number, "num", 
+                _SEQUENCE_NUMBER." ", 'yes', 0, 255
             );
-        /*$lc_cycle_steps->is_allow_failure =
-         *     $f->protect_string_db(
-         *         $f->wash(
-         *             $lc_cycle_steps->is_allow_failure, "no", 
-         *             _IS_ALLOW_FAILURE." ", 'yes', 0, '5'
-         *         )
-         *     );
-        if ($lc_cycle_steps->is_allow_failure == "false") {
-            $lc_cycle_steps->is_allow_failure = false;    
-        } else {
-            $lc_cycle_steps->is_allow_failure = true;
-        }*/
-        /*$lc_cycle_steps->is_must_complete =
-         *     $f->protect_string_db(
-         *         $f->wash(
-         *             $lc_cycle_steps->is_must_complete, "no", 
-         *             _IS_MUST_COMPLETE." ", 'yes', 0, '5'
-         *         )
-         *     );
-        if ($lc_cycle_steps->is_must_complete == "false") {
-            $lc_cycle_steps->is_must_complete = false;    
-        } else {
-            $lc_cycle_steps->is_must_complete = true;
-        }*/
         $lc_cycle_steps->step_operation =
-            $f->protect_string_db(
-                $f->wash(
-                    $lc_cycle_steps->step_operation, 
-                    "no", _STEP_OPERATION." ", 'yes', 0, 32
-                )
+            $f->wash(
+                $lc_cycle_steps->step_operation, 
+                "no", _STEP_OPERATION." ", 'yes', 0, 32
             );
         if ($mode == "add" 
             && $this->cycleStepExists($lc_cycle_steps->cycle_step_id)
@@ -383,16 +347,11 @@ class lc_cycle_steps_controler
             );
             return $control;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "delete from "._LC_CYCLE_STEPS_TABLE_NAME
-              ." where cycle_step_id ='"
-              .$db->protect_string_db($cycle->cycle_step_id)."'";
+              ." where cycle_step_id = ?";
         try {
-            if ($_ENV['DEBUG']) {
-                echo $query.' // ';
-            }
-            $db->query($query);
+            $stmt = $db->query($query, array($cycle->cycle_step_id));
             $ok = true;
         } catch (Exception $e) {
             $control = array(
@@ -403,7 +362,6 @@ class lc_cycle_steps_controler
                 );
             $ok = false;
         }
-        $db->disconnect();
         $control = array(
             "status" => "ok", 
             "value" => $cycle->cycle_step_id,
@@ -478,24 +436,18 @@ class lc_cycle_steps_controler
         if (!isset ($cycle_step_id) || empty ($cycle_step_id)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select cycle_step_id from " . _LC_CYCLE_STEPS_TABLE_NAME 
-               . " where cycle_step_id = '" . $cycle_step_id . "'";
+               . " where cycle_step_id = ?";
         try {
-            if ($_ENV['DEBUG']) {
-                echo $query . ' // ';
-            }
-            $db->query($query);
+            $stmt = $db->query($query, array($cycle_step_id));
         } catch (Exception $e) {
             echo _UNKNOWN . _LC_CYCLE_STEP . " " . $cycle_step_id . ' // ';
         }
 
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        $db->disconnect();
         return false;
     }
 
@@ -514,26 +466,13 @@ class lc_cycle_steps_controler
         if (!isset($cycle_step_id) || empty($cycle_step_id)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select cycle_step_id from "._LC_STACK_TABLE_NAME
-            ." where cycle_step_id = '".$cycle_step_id."' and policy_id = '"
-            .$policy_id."'";
-        $db->query($query);
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+            ." where cycle_step_id = ? and policy_id = ?";
+        $stmt = $db->query($query, array($cycle_step_id, $policy_id));
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        
-        /*$query = "select cycle_step_id from "._LC_ADR_X_TABLE_NAME
-         *    ." where cycle_step_id = '".$cycle_step_id
-         *    ."' and policy_id = '".$policy_id."'";
-        $db->query($query);
-        if ($db->nb_result()>0) {
-            $db->disconnect();
-            return true;
-        }*/
-        $db->disconnect();
     }
     
     /**
@@ -543,29 +482,23 @@ class lc_cycle_steps_controler
     */
     public function getAllId($policy_id)
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME 
-            . " where policy_id = '" .$policy_id. "'";
+            . " where policy_id = ?";
         try {
-            if ($_ENV['DEBUG']) {
-                echo $query . ' // ';
-            }
-            $db->query($query);
+            $stmt = $db->query($query, array($policy_id));
         } catch (Exception $e) {
             echo _NO_CYCLE_ID . ' // ';
         }
-        if ($db->nb_result() > 0) {
+        if ($stmt->rowCount() > 0) {
             $result = array();
             $cptId = 0;
-            while ($queryResult = $db->fetch_object()) {
+            while ($queryResult = $stmt->fetchObject()) {
                 $result[$cptId] = $queryResult->cycle_id;
                 $cptId++;
             }
-            $db->disconnect();
             return $result;
         } else {
-            $db->disconnect();
             return null;
         }
     }

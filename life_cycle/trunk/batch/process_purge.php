@@ -381,8 +381,5 @@ $GLOBALS['logger']->write('End of process', 'INFO');
 Bt_logInDataBase(
     $GLOBALS['totalProcessedResources'], 0, 'process without error'
 );
-$GLOBALS['db']->disconnect();
-$GLOBALS['db2']->disconnect();
-$GLOBALS['dbLog']->disconnect();
 unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);

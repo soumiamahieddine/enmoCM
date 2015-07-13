@@ -47,7 +47,7 @@
 *
 * @ingroup life_cycle
 */
-class life_cycle extends dbquery
+class life_cycle extends Database
 {
     function __construct()
     {

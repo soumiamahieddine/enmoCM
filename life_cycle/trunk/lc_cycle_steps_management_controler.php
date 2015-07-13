@@ -307,7 +307,7 @@ function display_list()
     $what = "";
     $where = "";
     if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
-        $what = $func->protect_string_db($_REQUEST['what']);
+        $what = $_REQUEST['what'];
         $where = "lower(".$idName.") like lower('".$what."%') ";
     }
 

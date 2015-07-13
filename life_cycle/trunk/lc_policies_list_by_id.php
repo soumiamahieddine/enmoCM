@@ -32,9 +32,7 @@
 
 require_once ("modules/life_cycle/life_cycle_tables_definition.php");
 require_once('core/admin_tools.php');
-$db = new dbquery();
-$db->connect();
-$db->query("select policy_id as tag from " . _LC_POLICIES_TABLE_NAME 
-	. " where lower(policy_id) like lower('" . $_REQUEST['what'] 
-	. "%') order by policy_id");
+$db = new Database();
+$stmt = $db->query("select policy_id as tag from " . _LC_POLICIES_TABLE_NAME 
+	. " where lower(policy_id) like lower(?) order by policy_id", array($_REQUEST['what'] . "%"));
 At_showAjaxList($db, $_REQUEST['what']);
