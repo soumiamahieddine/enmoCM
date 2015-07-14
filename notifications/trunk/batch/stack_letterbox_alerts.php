@@ -19,14 +19,14 @@ while ($state <> 'END') {
         $query = "SELECT notification_sid, event_id FROM " 
         . _NOTIFICATIONS_TABLE_NAME 
         . " WHERE event_id IN ('alert1', 'alert2') ";
-        Bt_doQuery($db, $query);
-        $totalAlertsToProcess = $GLOBALS['db']->nb_result();
+        $stmt = Bt_doQuery($db, $query);
+        $totalAlertsToProcess = $stmt->rowCount();
         if ($totalAlertsToProcess === 0) {
             Bt_exitBatch(0, 'No alert parametered');
         }
         $logger->write($totalAlertsToProcess . " notifications parametered for mail alerts", 'INFO');
         $GLOBALS['alert_notifs'] = array();
-        while ($alertRecordset = $GLOBALS['db']->fetch_object()) {
+        while ($alertRecordset = $stmt->fetchObject()) {
             $GLOBALS['alert_notifs'][$alertRecordset->event_id][] = $alertRecordset->notification_sid;
         }
     
@@ -39,10 +39,10 @@ while ($state <> 'END') {
     /**********************************************************************/
     case 'LOAD_DOCTYPES' :
         $query = "SELECT * FROM " . $collDoctypeExt;
-        Bt_doQuery($db, $query);
-        $totalDocTypes = $GLOBALS['db']->nb_result();
+        $stmt = Bt_doQuery($db, $query);
+        $totalDocTypes = $stmt->rowCount();
         $GLOBALS['doctypes'] = array();
-        while ($doctypeRecordset = $GLOBALS['db']->fetch_object()) {
+        while ($doctypeRecordset = $stmt->fetchObject()) {
             $GLOBALS['doctypes'][$doctypeRecordset->type_id] = $doctypeRecordset;
         }
         $logger->write($totalDocTypes . " document types parametered", 'INFO');
@@ -59,15 +59,15 @@ while ($state <> 'END') {
             . " AND status NOT IN ('CLO', 'DEL', 'END')"
             . " AND (flag_alarm1 = 'N' OR flag_alarm2 = 'N')"
             . " AND process_limit_date IS NOT NULL";
-        Bt_doQuery($GLOBALS['db'], $query);
-        $totalDocsToProcess = $GLOBALS['db']->nb_result();
+        $stmt = Bt_doQuery($GLOBALS['db'], $query);
+        $totalDocsToProcess = $stmt->rowCount();
         $currentDoc = 0;
         if ($totalDocsToProcess === 0) {
             Bt_exitBatch(0, 'No document to process');
         }
         $logger->write($totalDocsToProcess . " documents to process (i.e. not closed, at least one alert to send)", 'INFO');
         $GLOBALS['docs'] = array();
-        while ($DocRecordset = $GLOBALS['db']->fetch_object()) {
+        while ($DocRecordset = $stmt->fetchObject()) {
             $GLOBALS['docs'][] = $DocRecordset;
         }
         $state = 'A_DOC';

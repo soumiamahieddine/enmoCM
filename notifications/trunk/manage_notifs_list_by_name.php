@@ -31,17 +31,15 @@
 
 require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
              . 'class_request.php');
-$db = new dbquery();
-$db->connect();
-$db->query(
-        'select description as tag from notifications' .
-        " where lower(description) like lower('"
-        . $db->protect_string_db($_REQUEST['what'])."%') or  lower(notification_id) like lower('"
-        . $db->protect_string_db($_REQUEST['what'])."%') order by description"
-    );
+$db = new Database();
+$stmt = $db->query(
+        'SELECT description as tag FROM notifications' .
+        " WHERE lower(description) like lower(:what) or lower(notification_id) like lower(:what) order by description",
+        array(":what" => $_REQUEST['what'] . "%")
+        );
 
 $listArray = array();
-while ($line = $db->fetch_object()) {
+while ($line = $stmt->fetchObject()) {
     array_push($listArray, $line->tag);
 }
 echo '<ul>';

@@ -50,12 +50,11 @@ class events_controler
     {
         $query = "SELECT * FROM " . _NOTIF_EVENT_STACK_TABLE_NAME
             . " WHERE exec_date is NULL "
-            . " AND notification_sid = " . $notification_sid ;
-        $dbConn = new dbquery();
-        $dbConn->connect();
-        $dbConn->query($query);
+            . " AND notification_sid = ?";
+        $dbConn = new Database();
+        $stmt = $dbConn->query($query, array($notification_sid));
         $events = array();
-        while ($eventRecordset = $dbConn->fetch_object()) {
+        while ($eventRecordset = $stmt->fetchObject()) {
             $events[] = $eventRecordset;
         }
         return $events;
@@ -105,9 +104,7 @@ class events_controler
                     ."?, "
                     ."?, "
                     ."?, "
-                    ."?, "
-                    .$dbConn->current_datetime()
-                .")",
+                    ."?, CURRENT_TIMESTAMP)",
                 array(
                     $notification->notification_sid,
                     $table_name,
@@ -120,15 +117,12 @@ class events_controler
     }
     
     public function commitEvent($eventId, $result) {
-        $dbConn = new dbquery();
-        $dbConn->connect();
+        $dbConn = new Database();
         $query = "UPDATE " . _NOTIF_EVENT_STACK_TABLE_NAME 
-            . " SET exec_date = ".$dbConn->current_datetime().", exec_result = '".$result."'" 
-            . " WHERE event_stack_sid = ".$eventId;
-        $dbConn->query($query);
+            . " SET exec_date = CURRENT_TIMESTAMP, exec_result = ?" 
+            . " WHERE event_stack_sid = ?";
+        $dbConn->query($query, array($result, $eventId));
     }
     
     
-    
 }
-

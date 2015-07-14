@@ -72,12 +72,10 @@ class notifications_controler extends ObjectControler implements ObjectControler
     }
 
     public function getByNotificationId($notificationId) {
-        $query = "select * from " . _NOTIFICATIONS_TABLE_NAME 
-            . " where notification_id = '".$notificationId."'"; 
-        $dbConn = new dbquery();
-        $dbConn->connect();
-        $dbConn->query($query);
-        $notifObj = $dbConn->fetch_object();
+        $query = "SELECT * FROM " . _NOTIFICATIONS_TABLE_NAME . " WHERE notification_id = ?"; 
+        $dbConn = new Database();
+        $stmt = $dbConn->query($query, array($notificationId));
+        $notifObj = $stmt->fetchObject();
         return $notifObj;
     }
     
@@ -195,10 +193,9 @@ class notifications_controler extends ObjectControler implements ObjectControler
                 }
             } else { //mode == add
                 if ($this->insert($notification)) {
-                    $dbConn = new dbquery();
-                    $dbConn->connect();
-                    $dbConn->query("SELECT notification_sid FROM notifications ORDER BY notification_sid DESC limit 1");
-                    $result_sid = $dbConn->fetch_object(); 
+                    $dbConn = new Database();
+                    $stmt = $dbConn->query("SELECT notification_sid FROM notifications ORDER BY notification_sid DESC limit 1");
+                    $result_sid = $stmt->fetchObject(); 
                     $control = array('status' => 'ok',
                                      'value'  => $result_sid->notification_sid);
                     //log
@@ -249,9 +246,8 @@ class notifications_controler extends ObjectControler implements ObjectControler
         $notification->notification_id = $f->protect_string_db(
             $f->wash($notification->notification_id, 'no', _ID, 'yes', 0, 50)
         );
-        $notification->description = $f->protect_string_db(
-            $f->wash($notification->description, 'no', _DESC, 'yes', 0, 255)
-        );
+        $notification->description = $f->wash($notification->description, 'no', _DESC, 'yes', 0, 255);
+        
         if ($notification->is_enabled == 'false') {
             $notification->is_enabled = false;
         } else {

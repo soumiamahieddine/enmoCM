@@ -42,8 +42,8 @@ $select[STATUS_TABLE] = array();
 $request = new request();
 $where = '';
     $what = '';
-    $tab = $request->select(
-        $select, $where, $orderstr, $_SESSION['config']['databasetype']
+    $tab = $request->PDOselect(
+        $select, $where, array(), $orderstr, $_SESSION['config']['databasetype']
     );
 $status_list = $tab;
 
@@ -189,15 +189,14 @@ function display_list() {
     );
     $where = '';
     $what = '';
+    $arrayPDO = array();
+
     if (isset($_REQUEST['what'])) {
         //$what = $func->protect_string_db($_REQUEST['what']);
         $what = $_REQUEST['what'];
     }
-    $where .= " (lower(description) like lower('"
-				. $func->protect_string_db($what, $_SESSION['config']['databasetype'])
-				. "%') or lower(notification_id) like lower('"
-				. $func->protect_string_db($what, $_SESSION['config']['databasetype'])
-				. "%')) ";
+    $where .= " (lower(description) like lower(:what) or lower(notification_id) like lower(:what)) ";
+    $arrayPDO = array(":what" => $what."%");
 
     // Checking order and order_field values
     $order = 'asc';
@@ -212,8 +211,8 @@ function display_list() {
 
     $orderstr = $list->define_order($order, $field);
     $request = new request();
-    $tab = $request->select(
-        $select, $where, $orderstr, $_SESSION['config']['databasetype']
+    $tab = $request->PDOselect(
+        $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
     );
 	//$request->show();
 	

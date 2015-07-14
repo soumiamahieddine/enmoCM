@@ -179,7 +179,7 @@ try {
     );
     Bt_myInclude(
         $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
-        . DIRECTORY_SEPARATOR . 'class_db.php'
+        . DIRECTORY_SEPARATOR . 'class_db_pdo.php'
     );
     Bt_myInclude(
         $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
@@ -208,8 +208,8 @@ $coreTools->load_lang($lang, $maarchDirectory, $maarchApps);
 
 $func = new functions();
 
-$db = new dbquery($GLOBALS['configFile']);
-$db->connect();
+$db = new Database($GLOBALS['configFile']);
+
 $databasetype = (string)$xmlconfig->CONFIG_BASE->databasetype;
 
 $alert_engine = new alert_engine($GLOBALS['configFile']);

@@ -18,15 +18,15 @@ while ($state <> 'END') {
     case 'LOAD_EMAILS' :
         $query = "SELECT * FROM " . _NOTIF_EMAIL_STACK_TABLE_NAME
             . " WHERE exec_date is NULL";
-        Bt_doQuery($GLOBALS['db'], $query);
-        $totalEmailsToProcess = $GLOBALS['db']->nb_result();
+        $stmt = Bt_doQuery($GLOBALS['db'], $query, array());
+        $totalEmailsToProcess = $stmt->rowCount();
         $currentEmail = 0;
         if ($totalEmailsToProcess === 0) {
             Bt_exitBatch(0, 'No e-mail to process');
         }
         $GLOBALS['logger']->write($totalEmailsToProcess . ' e-mails to proceed.', 'INFO');
         $GLOBALS['emails'] = array();
-        while ($emailRecordset = $GLOBALS['db']->fetch_object()) {
+        while ($emailRecordset = $stmt->fetchObject()) {
             $GLOBALS['emails'][] = $emailRecordset;
         }
         $state = 'SEND_AN_EMAIL';
@@ -87,10 +87,9 @@ while ($state <> 'END') {
                 $GLOBALS['exitCode'] = 108;
             }   
             $query = "UPDATE " . _NOTIF_EMAIL_STACK_TABLE_NAME 
-                . " SET exec_date = " . $GLOBALS['db']->current_datetime()
-                . ", exec_result = '".$exec_result."' "
-                . " WHERE email_stack_sid = ".$email->email_stack_sid;
-            Bt_doQuery($GLOBALS['db'], $query);
+                . " SET exec_date = CURRENT_TIMESTAMP, exec_result = ? "
+                . " WHERE email_stack_sid = ?";
+            Bt_doQuery($GLOBALS['db'], $query, array($exec_result, $email->email_stack_sid));
             $currentEmail++;
             $state = 'SEND_AN_EMAIL';
         } else {
@@ -104,7 +103,7 @@ $GLOBALS['logger']->write('End of process', 'INFO');
 Bt_logInDataBase(
     $totalEmailsToProcess, 0, 'process without error'
 );
-$GLOBALS['db']->disconnect();
+
 //unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);
 ?>

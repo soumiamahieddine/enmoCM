@@ -170,7 +170,7 @@ try {
     );
     Bt_myInclude(
         $GLOBALS['maarchDirectory'] . 'core' . DIRECTORY_SEPARATOR . 'class' 
-        . DIRECTORY_SEPARATOR . 'class_db.php'
+        . DIRECTORY_SEPARATOR . 'class_db_pdo.php'
     );
     Bt_myInclude(
         $GLOBALS['maarchDirectory'] . 'core' . DIRECTORY_SEPARATOR . 'class' 
@@ -198,8 +198,7 @@ $coreTools->load_lang($lang, $GLOBALS['maarchDirectory'], $maarchApps);
 
 $GLOBALS['func'] = new functions();
 
-$GLOBALS['db'] = new dbquery($GLOBALS['configFile']);
-$GLOBALS['db']->connect();
+$GLOBALS['db'] = new Database($GLOBALS['configFile']);
 
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
                          . $GLOBALS['batchName'] . '_error.lck';

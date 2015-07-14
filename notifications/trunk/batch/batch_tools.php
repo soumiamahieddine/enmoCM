@@ -1,7 +1,7 @@
 <?php
 
 /*
- *   Copyright 2008-2011 Maarch
+ *   Copyright 2008-2015 Maarch
  *
  *   This file is part of Maarch Framework.
  *
@@ -37,20 +37,25 @@
  * @param boolean $transaction for rollback if error
  * @return true if ok, exit if ko and rollback if necessary
  */
-function Bt_doQuery($dbConn, $queryTxt, $transaction=false)
+function Bt_doQuery($dbConn, $queryTxt, $param=array(), $transaction=false)
 {
-    $res = $dbConn->query($queryTxt, true);
-    if (!$res) {
+    if (count($param) > 0) {
+        $stmt = $dbConn->query($queryTxt, $param);
+    } else {
+        $stmt = $dbConn->query($queryTxt);
+    }
+
+    if (!$stmt) {
         if ($transaction) {
             $GLOBALS['logger']->write('ROLLBACK', 'INFO');
-            $dbConn->query('ROLLBACK', true);
+            $dbConn->query('ROLLBACK');
         }
         Bt_exitBatch(
             104, 'SQL Query error:' . $queryTxt
         );
     }
     $GLOBALS['logger']->write('SQL query:' . $queryTxt, 'DEBUG');
-    return true;
+    return $stmt;
 }
 
 /**
@@ -98,16 +103,9 @@ function Bt_exitBatch($returnCode, $message='')
 */
 function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
 {
-    $query = "insert into history_batch (module_name, batch_id, event_date, "
-           . "total_processed, total_errors, info) values('"
-           . $GLOBALS['batchName'] . "', " . $GLOBALS['wb'] . ", "
-           . $GLOBALS['db']->current_datetime() . ", " . $totalProcessed . ", " . $totalErrors . ", '"
-           . $GLOBALS['func']->protect_string_db(substr(str_replace('\\', '\\\\', str_replace("'", "`", $info)), 0, 999)) . "')";
-           //. $GLOBALS['func']->protect_string_db(substr($info, 0, 999)) . "')";
-    /*$dbLog = new dbquery();
-    $dbLog->connect();
-    $dbLog->query($query);*/
-    //Bt_doQuery($GLOBALS['db'], $query);
+    $query = "INSERT INTO history_batch (module_name, batch_id, event_date, "
+           . "total_processed, total_errors, info) values(?, ?, CURRENT_TIMESTAMP, ?, ?, ?)";
+    $arrayPDO = array($GLOBALS['batchName'], $GLOBALS['wb'], $totalProcessed, $totalErrors, substr(str_replace('\\', '\\\\', str_replace("'", "`", $info)), 0, 999));
 }
 
 /**
@@ -117,16 +115,14 @@ function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
  */
 function Bt_getWorkBatch() 
 {
-    $req = "select param_value_int from parameters where id = "
-         . "'". $GLOBALS['batchName'] . "_id'";
-    $GLOBALS['db']->query($req);
-    while ($reqResult = $GLOBALS['db']->fetch_array()) {
+    $req = "SELECT param_value_int FROM parameters WHERE id = ? ";
+    $stmt = $GLOBALS['db']->query($req, array($GLOBALS['batchName']."_id"));
+    while ($reqResult = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $GLOBALS['wb'] = $reqResult[0] + 1;
     }
     if ($GLOBALS['wb'] == '') {
-        $req = "insert into parameters(id, param_value_int) values "
-             . "('" . $GLOBALS['batchName'] . "_id', 1)";
-        $GLOBALS['db']->query($req);
+        $req = "INSERT INTO parameters(id, param_value_int) VALUES (?, 1)";
+        $GLOBALS['db']->query($req, array($GLOBALS['batchName']."_id"));
         $GLOBALS['wb'] = 1;
     }
 }
@@ -138,9 +134,8 @@ function Bt_getWorkBatch()
  */
 function Bt_updateWorkBatch()
 {
-    $req = "update parameters set param_value_int  = " . $GLOBALS['wb'] . " "
-         . "where id = '" . $GLOBALS['batchName'] . "_id'";
-    $GLOBALS['db']->query($req);
+    $req = "UPDATE parameters SET param_value_int = ? WHERE id = ?";
+    $GLOBALS['db']->query($req, array($GLOBALS['wb'], $GLOBALS['batchName']."_id"));
 }
 
 /**

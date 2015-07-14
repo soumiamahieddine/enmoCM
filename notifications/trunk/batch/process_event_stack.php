@@ -94,14 +94,13 @@ while ($state <> 'END') {
                 if($recipient->status == 'ABS') {
                     $logger->write($user_id .' is absent, routing to replacent', 'INFO');
                     unset($recipients[$i]);
-                    $query = "select us.* FROM users us"
+                    $query = "SELECT us.* FROM users us"
                         . " JOIN user_abs abs ON us.user_id = abs.new_user "
-                        . " WHERE abs.user_abs = '".$user_id."' AND us.enabled='Y'";
-                    $dbAbs = new dbquery();
-                    $dbAbs->connect();
-                    $dbAbs->query($query);
-                    if($dbAbs->nb_result() > 0) {
-                        $recipient = $dbAbs->fetch_object();
+                        . " WHERE abs.user_abs = ? AND us.enabled='Y'";
+                    $dbAbs = new Database();
+                    $stmt = $dbAbs->query($query, array($user_id));
+                    if($stmt->rowCount() > 0) {
+                        $recipient = $dbAbs->fetchObject($user_id);
                         $user_id = $recipient->user_id;
                         $logger->write($user_id .' is the replacent', 'INFO');
                         $recipients[] = $recipient;
@@ -165,9 +164,9 @@ while ($state <> 'END') {
             }
             
             // Prepare e-mail for stack
-            $sender = $func->protect_string_db((string)$mailerParams->mailfrom);
+            $sender = (string)$mailerParams->mailfrom;
             $recipient_mail = $tmpNotif['recipient']->mail;
-            $subject = $func->protect_string_db($notification->description);
+            $subject = $notification->description;
             $html = $func->protect_string_db($html, '', 'no');
             $html = str_replace('&amp;', '&', $html);
             $html = str_replace('&', '#and#', $html);
@@ -184,9 +183,9 @@ while ($state <> 'END') {
                             . "mlb.path, "
                             . "mlb.filename " 
                             . "FROM ".$coll_view." mlb LEFT JOIN docservers ds ON mlb.docserver_id = ds.docserver_id "
-                            . "WHERE mlb.res_id = " . $event->res_id;
-                        Bt_doQuery($db, $query);
-                        $path_parts = $db->fetch_object();
+                            . "WHERE mlb.res_id = ?";
+                        $stmt = Bt_doQuery($db, $query, array($event->res_id));
+                        $path_parts = $stmt->fetchObject();
                         $path = $path_parts->path_template . str_replace('#', '/', $path_parts->path) . $path_parts->filename;
                         $path = str_replace('//', '/', $path);
                         $path = str_replace('\\', '/', $path);
@@ -199,34 +198,31 @@ while ($state <> 'END') {
             $logger->write('Adding e-mail to email stack', 'INFO');
             if ($_SESSION['config']['databasetype'] == 'ORACLE') {
                 $query = "DECLARE
-  vString notif_email_stack.html_body%type;
-BEGIN
-  vString := '" . $html ."';
-  INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME . "
-  (sender, recipient, subject, html_body, charset, attachments, module) 
-  VALUES ('".$sender."', 
-  '".$recipient_mail."', 
-  '".$subject."', 
-  vString,  
-  '".(string)$mailerParams->charset."', 
-  '".implode(',', $attachments)."', 
-  'notifications');
-END;";
+                              vString notif_email_stack.html_body%type;
+                            BEGIN
+                              vString := '" . $html ."';
+                              INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME . "
+                              (sender, recipient, subject, html_body, charset, attachments, module) 
+                              VALUES (?, ?, ?, vString, ?, '".implode(',', $attachments)."', 'notifications');
+                            END;";
+                $arrayPDO = array($sender, $recipient_mail, $subject, $mailerParams->charset);
             } else {
-                $query = "INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME 
+
+                if(count($attachments) > 0) {
+                    $query = "INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME 
                         . " (sender, recipient, subject, html_body, charset, attachments, module) "
-                        . "VALUES ('".$sender."', "
-                        . "'".$recipient_mail."', "
-                        . "'".$subject."', "
-                        . "'" . $html . "', " 
-                        . "'".(string)$mailerParams->charset."', "
-                        . "'".implode(',', $attachments)."', "
-                        . "'notifications')";
+                        . "VALUES (?, ?, ?, ?, ?, '".implode(',', $attachments)."', 'notifications')";
+                } else {
+                    $query = "INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME 
+                        . " (sender, recipient, subject, html_body, charset, module) "
+                        . "VALUES (?, ?, ?, ?, ?, 'notifications')";  
+                }
+                $arrayPDO = array($sender, $recipient_mail, $subject, $html, $mailerParams->charset);
+                
             }
             //$logger->write('SQL query:' . $query, 'DEBUG');
-            $db2 = new dbquery();
-            $db2->connect();
-            $db2->query($query, false, true);
+            $db2 = new Database();
+            $db2->query($query, $arrayPDO);
             
             foreach($tmpNotif['events'] as $event) {
                 $events_controler->commitEvent($event->event_stack_sid, "SUCCESS");
@@ -251,13 +247,10 @@ END;";
                 // Inser into stack
                 $query = "INSERT INTO " . _NOTIF_RSS_STACK_TABLE_NAME 
                     . " (rss_user_id, rss_event_stack_sid, rss_event_url) "
-                    . "VALUES ('".$user_id."', "
-                    . "".$event->event_stack_sid.", "
-                    . "'".$url."')";
+                    . "VALUES (?, ?, ?)";
                 //$logger->write('SQL query:' . $query, 'DEBUG');
-                $db2 = new dbquery();
-                $db2->connect();
-                $db2->query($query, false, true);
+                $db2 = new Database();
+                $db2->query($query, array($user_id, $event->event_stack_sid, $url));
                 $events_controler->commitEvent($event->event_stack_sid, "SUCCESS");
             }
             
@@ -273,7 +266,6 @@ $logger->write('End of process', 'INFO');
 Bt_logInDataBase(
     $totalEventsToProcess, 0, 'process without error'
 );  
-//$db->disconnect();
 //unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);
 ?>

@@ -28,7 +28,6 @@ if (empty($_REQUEST['origin'])) {
 }
 //--------------------------------------------------
 
-$db = new dbquery();
 $core = new core_tools();
 $core->load_lang();
 $dType = new diffusion_type_controler();

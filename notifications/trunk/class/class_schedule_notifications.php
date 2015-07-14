@@ -86,13 +86,11 @@ class ScheduleNotifications{
 
 	function getAuthorizedNotifications (){
 		require_once ("core/class/class_request.php");
-		$db = new dbquery();
-		$db->connect();
-		$db->query("SELECT notification_sid, description FROM notifications WHERE is_enabled = 'Y'");
+		$db = new Database();
+		$stmt = $db->query("SELECT notification_sid, description FROM notifications WHERE is_enabled = 'Y'");
 		$notificationsArray = array();
 
-
-		while($result = $db->fetch_object()){
+		while($result = $stmt->fetchObject()){
             $filename = "notification";
             if (isset($_SESSION['custom_override_id']) && $_SESSION['custom_override_id']<>"") {
                 $filename.="_".str_replace(" ", "", $_SESSION['custom_override_id']);

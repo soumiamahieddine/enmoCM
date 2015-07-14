@@ -1,5 +1,24 @@
 <?php
 
+/*
+*    Copyright 2008-2015 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 require_once 'core/core_tables.php';
 require_once 'core/class/class_request.php';
 require_once 'modules/entities/class/EntityControler.php';
@@ -7,7 +26,6 @@ require_once 'modules/entities/class/EntityControler.php';
 switch($request) {
 case 'form_content':
 	$entities = new EntityControler();
-	$entities->connect();
 	$entitylist = $entities->getAllEntities();
 		
 	$form_content .= '<input type="hidden" name="'.$formId.'" id="'.$formId.'" value="entity">';
@@ -44,11 +62,10 @@ case 'recipients':
 		. " FROM users_entities ue "
 		. " LEFT JOIN users us ON us.user_id = ue.user_id "
 		. " WHERE ue.entity_id in (".$entities.")";
-	$dbRecipients = new dbquery();
-	$dbRecipients->connect();
-	$dbRecipients->query($query);
+	$dbRecipients = new Database();
+	$stmt = $dbRecipients->query($query);
 	$recipients = array();
-	while($recipient = $dbRecipients->fetch_object()) {
+	while($recipient = $stmt->fetchObject()) {
 		$recipients[] = $recipient;
 	}
 	break;
@@ -58,12 +75,11 @@ case 'attach':
 	$query = "SELECT user_id" 
 		. " FROM users_entities"
 		. " WHERE entity_id in (".$entities.")"
-		. " AND user_id = '".$user_id."'";
+		. " AND user_id = ?";
 	$attach = false;
-	$dbAttach = new dbquery();
-	$dbAttach->connect();
-	$dbAttach->query($query);
-	if($dbAttach->nb_result() > 0) {
+	$dbAttach = new Database();
+	$stmt = $dbAttach->query($query, array($user_id));
+	if($stmt->rowCount() > 0) {
 		$attach = true;
 	}
 	break;

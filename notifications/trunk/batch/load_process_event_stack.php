@@ -198,7 +198,7 @@ try {
     );
     Bt_myInclude(
         'core' . DIRECTORY_SEPARATOR . 'class' 
-        . DIRECTORY_SEPARATOR . 'class_db.php'
+        . DIRECTORY_SEPARATOR . 'class_db_pdo.php'
     );
 	Bt_myInclude(
         'core' . DIRECTORY_SEPARATOR . 'class' 
@@ -257,8 +257,7 @@ $diffusion_type_controler = new diffusion_type_controler();
 $events_controler = new events_controler();
 $templates_controler = new templates_controler();
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
 $databasetype = (string)$xmlconfig->CONFIG_BASE->databasetype;
 
