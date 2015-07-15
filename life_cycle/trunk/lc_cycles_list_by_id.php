@@ -30,9 +30,9 @@
 * @ingroup life_cycle
 */
 
-require_once ("modules/life_cycle/life_cycle_tables_definition.php");
+require_once ('modules/life_cycle/life_cycle_tables_definition.php');
 require_once('core/admin_tools.php');
 $db = new Database();
 $stmt = $db->query("select cycle_id as tag from " . _LC_CYCLES_TABLE_NAME 
     . " where lower(cycle_id) like lower(?) order by cycle_id", array($_REQUEST['what'] . "%"));
-At_showAjaxList($db, $_REQUEST['what']);
+At_showAjaxList($stmt, $_REQUEST['what']);

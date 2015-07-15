@@ -281,7 +281,7 @@ function display_list()
     $_SESSION['m_admin']['init'] = true;
     $result['title'] = _LC_POLICIES_LIST." : ".count($tab)." "._LC_POLICIES;
     $result['autoCompletionArray'] = array();
-    $result['autoCompletionArray']["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&module=life_cycle&page=lc_policies_list_by_id";
+    $result['autoCompletionArray']["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=false&module=life_cycle&page=lc_policies_list_by_id";
     $result['autoCompletionArray']["number_to_begin"] = 1;
     return $result;
 }

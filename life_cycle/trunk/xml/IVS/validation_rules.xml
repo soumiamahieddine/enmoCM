@@ -4,7 +4,8 @@
     	<parameter name="id" type="identifier" />
 		<parameter name="policy_name" type="safetext" />
 		<parameter name="policy_desc" type="safetext" />
-		<parameter name="submit" type="identifier" />
+		<parameter name="submit" type="safetext" />
+		<parameter name="Submit" type="safetext" />
     </validationRule>
     <validationRule name="lc_manage_cycles" extends="standardForm" mode="error">
     	<parameter name="module" type="identifier" />
@@ -15,6 +16,27 @@
 		<parameter name="where_clause" type="string" />
 		<parameter name="break_key" type="identifier" />
 		<parameter name="validation_mode" type="identifier" />
-		<parameter name="submit" type="identifier" />
+		<parameter name="submit" type="safetext" />
+		<parameter name="Submit" type="safetext" />
+    </validationRule>
+    <validationRule name="lc_manage_steps" extends="standardForm" mode="error">
+    	<parameter name="module" type="identifier" />
+    	<parameter name="policy_id" type="identifier" />
+    	<parameter name="cycle_id" type="identifier" />
+    	<parameter name="id" type="identifier" />
+		<parameter name="cycle_step_desc" type="safetext" />
+		<parameter name="docserver_type_id" type="identifier" />
+		<parameter name="step_operation" type="identifier" />
+		<parameter name="sequence_number" type="integer" />
+		<parameter name="submit" type="safetext" />
+		<parameter name="Submit" type="safetext" />
+    </validationRule>
+    <validationRule name="lc_ajax_search" extends="standardForm" mode="error">
+    	<parameter name="what" type="safetext" />
+    	<parameter name="module" type="identifier" />
+    </validationRule>
+    <validationRule name="lc_ajax_cycle_list" extends="standardForm" mode="error">
+    	<parameter name="policy_id" type="identifier" />
+    	<parameter name="module" type="identifier" />
     </validationRule>
 </validationRules>

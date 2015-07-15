@@ -35,4 +35,4 @@ require_once('core/admin_tools.php');
 $db = new Database();
 $stmt = $db->query("select policy_id as tag from " . _LC_POLICIES_TABLE_NAME 
 	. " where lower(policy_id) like lower(?) order by policy_id", array($_REQUEST['what'] . "%"));
-At_showAjaxList($db, $_REQUEST['what']);
+At_showAjaxList($stmt, $_REQUEST['what']);

@@ -376,7 +376,7 @@ function display_list()
     $result['autoCompletionArray'] = array();
     $result['autoCompletionArray']["list_script_url"] =
         $_SESSION['config']['businessappurl']
-            ."index.php?display=true&module=life_cycle&page=lc_cycle_steps_list_by_id";
+            ."index.php?display=false&module=life_cycle&page=lc_cycle_steps_list_by_id";
     $result['autoCompletionArray']["number_to_begin"] = 1;
     return $result;
 }
