@@ -12,7 +12,7 @@
 *
 */
 
-class reports  extends dbquery
+class reports  extends Database
 {
 
 	/**
