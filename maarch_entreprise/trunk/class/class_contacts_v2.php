@@ -268,11 +268,11 @@ class contacts_v2 extends dbquery
                     $id = $res->contact_id;
                     if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y')
                     {
-                        $msg =  _CONTACT_ADDED.' : '.$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY']);
+                        $msg =  _CONTACT_ADDED.' : '.functions::protect_string_db($_SESSION['m_admin']['contact']['SOCIETY']);
                     }
                     else
                     {
-                        $msg =  _CONTACT_ADDED.' : '.$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'].' '.$_SESSION['m_admin']['contact']['FIRSTNAME']);
+                        $msg =  _CONTACT_ADDED.' : '.functions::protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'].' '.$_SESSION['m_admin']['contact']['FIRSTNAME']);
                     }
                     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                     $hist = new history();
@@ -304,11 +304,11 @@ class contacts_v2 extends dbquery
                 {
                     if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y')
                     {
-                        $msg =  _CONTACT_MODIFIED.' : '.$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY']);
+                        $msg =  _CONTACT_MODIFIED.' : '.functions::protect_string_db($_SESSION['m_admin']['contact']['SOCIETY']);
                     }
                     else
                     {
-                        $msg =  _CONTACT_MODIFIED.' : '.$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'].' '.$_SESSION['m_admin']['contact']['FIRSTNAME']);
+                        $msg =  _CONTACT_MODIFIED.' : '.functions::protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'].' '.$_SESSION['m_admin']['contact']['FIRSTNAME']);
                     }
                     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                     $hist = new history();
@@ -375,14 +375,14 @@ class contacts_v2 extends dbquery
                 $_SESSION['m_admin']['contact'] = array();
                 $line = $stmt->fetchObject();
                 $_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
-                $_SESSION['m_admin']['contact']['TITLE'] = $this->show_string($line->title);
-                $_SESSION['m_admin']['contact']['LASTNAME'] = $this->show_string($line->lastname);
-                $_SESSION['m_admin']['contact']['FIRSTNAME'] = $this->show_string($line->firstname);
-                $_SESSION['m_admin']['contact']['SOCIETY'] = $this->show_string($line->society);
-                $_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = $this->show_string($line->society_short);
-                $_SESSION['m_admin']['contact']['FUNCTION'] = $this->show_string($line->function);
-                $_SESSION['m_admin']['contact']['OTHER_DATA'] = $this->show_string($line->other_data);
-                $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $this->show_string($line->is_corporate_person);
+                $_SESSION['m_admin']['contact']['TITLE'] = functions::show_string($line->title);
+                $_SESSION['m_admin']['contact']['LASTNAME'] = functions::show_string($line->lastname);
+                $_SESSION['m_admin']['contact']['FIRSTNAME'] = functions::show_string($line->firstname);
+                $_SESSION['m_admin']['contact']['SOCIETY'] = functions::show_string($line->society);
+                $_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = functions::show_string($line->society_short);
+                $_SESSION['m_admin']['contact']['FUNCTION'] = functions::show_string($line->function);
+                $_SESSION['m_admin']['contact']['OTHER_DATA'] = functions::show_string($line->other_data);
+                $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = functions::show_string($line->is_corporate_person);
                 $_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
                 $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
                 if($admin && !empty($_SESSION['m_admin']['contact']['OWNER']))
@@ -407,7 +407,7 @@ class contacts_v2 extends dbquery
 
         $stmt = $db->query("SELECT id, label FROM ".$_SESSION['tablename']['contact_types']." ORDER BY label");
         while($res = $stmt->fetchObject()){
-            $contact_types[$res->id] = $this->show_string($res->label); 
+            $contact_types[$res->id] = functions::show_string($res->label); 
         }
 
         ?>
@@ -972,27 +972,27 @@ class contacts_v2 extends dbquery
                     $line = $stmt->fetchObject();
                     $_SESSION['m_admin']['address']['ID'] = $line->id;
                     $_SESSION['m_admin']['address']['CONTACT_ID'] = $line->contact_id;
-                    $_SESSION['m_admin']['address']['TITLE'] = $this->show_string($line->title);
-                    $_SESSION['m_admin']['address']['LASTNAME'] = $this->show_string($line->lastname);
-                    $_SESSION['m_admin']['address']['FIRSTNAME'] = $this->show_string($line->firstname);
-                    $_SESSION['m_admin']['address']['FUNCTION'] = $this->show_string($line->function);
-                    $_SESSION['m_admin']['address']['OTHER_DATA'] = $this->show_string($line->other_data);
+                    $_SESSION['m_admin']['address']['TITLE'] = functions::show_string($line->title);
+                    $_SESSION['m_admin']['address']['LASTNAME'] = functions::show_string($line->lastname);
+                    $_SESSION['m_admin']['address']['FIRSTNAME'] = functions::show_string($line->firstname);
+                    $_SESSION['m_admin']['address']['FUNCTION'] = functions::show_string($line->function);
+                    $_SESSION['m_admin']['address']['OTHER_DATA'] = functions::show_string($line->other_data);
                     $_SESSION['m_admin']['address']['OWNER'] = $line->user_id;
-                    $_SESSION['m_admin']['address']['DEPARTEMENT'] = $this->show_string($line->departement);
+                    $_SESSION['m_admin']['address']['DEPARTEMENT'] = functions::show_string($line->departement);
                     $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $line->contact_purpose_id;
-                    $_SESSION['m_admin']['address']['OCCUPANCY'] = $this->show_string($line->occupancy);
-                    $_SESSION['m_admin']['address']['ADD_NUM'] = $this->show_string($line->address_num);
-                    $_SESSION['m_admin']['address']['ADD_STREET'] = $this->show_string($line->address_street);
-                    $_SESSION['m_admin']['address']['ADD_COMP'] = $this->show_string($line->address_complement);
-                    $_SESSION['m_admin']['address']['ADD_TOWN'] = $this->show_string($line->address_town);
-                    $_SESSION['m_admin']['address']['ADD_CP'] = $this->show_string($line->address_postal_code);
-                    $_SESSION['m_admin']['address']['ADD_COUNTRY'] = $this->show_string($line->address_country);
-                    $_SESSION['m_admin']['address']['PHONE'] = $this->show_string($line->phone);
-                    $_SESSION['m_admin']['address']['MAIL'] = $this->show_string($line->email);
-                    $_SESSION['m_admin']['address']['WEBSITE'] = $this->show_string($line->website);
-                    $_SESSION['m_admin']['address']['IS_PRIVATE'] = $this->show_string($line->is_private);
-                    $_SESSION['m_admin']['address']['SALUTATION_HEADER'] = $this->show_string($line->salutation_header);
-                    $_SESSION['m_admin']['address']['SALUTATION_FOOTER'] = $this->show_string($line->salutation_footer);
+                    $_SESSION['m_admin']['address']['OCCUPANCY'] = functions::show_string($line->occupancy);
+                    $_SESSION['m_admin']['address']['ADD_NUM'] = functions::show_string($line->address_num);
+                    $_SESSION['m_admin']['address']['ADD_STREET'] = functions::show_string($line->address_street);
+                    $_SESSION['m_admin']['address']['ADD_COMP'] = functions::show_string($line->address_complement);
+                    $_SESSION['m_admin']['address']['ADD_TOWN'] = functions::show_string($line->address_town);
+                    $_SESSION['m_admin']['address']['ADD_CP'] = functions::show_string($line->address_postal_code);
+                    $_SESSION['m_admin']['address']['ADD_COUNTRY'] = functions::show_string($line->address_country);
+                    $_SESSION['m_admin']['address']['PHONE'] = functions::show_string($line->phone);
+                    $_SESSION['m_admin']['address']['MAIL'] = functions::show_string($line->email);
+                    $_SESSION['m_admin']['address']['WEBSITE'] = functions::show_string($line->website);
+                    $_SESSION['m_admin']['address']['IS_PRIVATE'] = functions::show_string($line->is_private);
+                    $_SESSION['m_admin']['address']['SALUTATION_HEADER'] = functions::show_string($line->salutation_header);
+                    $_SESSION['m_admin']['address']['SALUTATION_FOOTER'] = functions::show_string($line->salutation_footer);
                 } else {
                     unset($_SESSION['address_up_error']);
                 }
@@ -1017,7 +1017,7 @@ class contacts_v2 extends dbquery
 
         $stmt = $db->query("SELECT id, label FROM ".$_SESSION['tablename']['contact_purposes']);
         while($res = $stmt->fetchObject()){
-            $contact_purposes[$res->id] = $this->show_string($res->label); 
+            $contact_purposes[$res->id] = functions::show_string($res->label); 
         }
 
         ?>
@@ -1510,11 +1510,11 @@ class contacts_v2 extends dbquery
                     $id = $res->contact_id;
                     if($_SESSION['m_admin']['address']['IS_CORPORATE_PERSON'] == 'Y')
                     {
-                        $msg =  _ADDRESS_ADDED.' : '.$this->protect_string_db($_SESSION['m_admin']['address']['SOCIETY']);
+                        $msg =  _ADDRESS_ADDED.' : '.functions::protect_string_db($_SESSION['m_admin']['address']['SOCIETY']);
                     }
                     else
                     {
-                        $msg =  _ADDRESS_ADDED.' : '.$this->protect_string_db($_SESSION['m_admin']['address']['LASTNAME'].' '.$_SESSION['m_admin']['address']['FIRSTNAME']);
+                        $msg =  _ADDRESS_ADDED.' : '.functions::protect_string_db($_SESSION['m_admin']['address']['LASTNAME'].' '.$_SESSION['m_admin']['address']['FIRSTNAME']);
                     }
                     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                     $hist = new history();
@@ -1567,7 +1567,7 @@ class contacts_v2 extends dbquery
                 $db->query($query, $arrayPDO);
                 if($_SESSION['history']['contactup'])
                 {
-                    $msg =  _ADDRESS_EDITED.' : '.$this->protect_string_db($_SESSION['m_admin']['address']['SOCIETY']).' '.$this->protect_string_db($_SESSION['m_admin']['address']['LASTNAME'].' '.$_SESSION['m_admin']['address']['FIRSTNAME']);
+                    $msg =  _ADDRESS_EDITED.' : '.functions::protect_string_db($_SESSION['m_admin']['address']['SOCIETY']).' '.functions::protect_string_db($_SESSION['m_admin']['address']['LASTNAME'].' '.$_SESSION['m_admin']['address']['FIRSTNAME']);
                     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                     $hist = new history();
                     $hist->add($_SESSION['tablename']['contacts_v2'], $_SESSION['m_admin']['address']['ID'],"UP",'contacts_v2_up',$msg, $_SESSION['config']['databasetype']);
@@ -1773,7 +1773,7 @@ class contacts_v2 extends dbquery
         $db = new Database();
         $stmt = $db->query('SELECT label FROM '.$table . ' WHERE id = ?',array($contact_type_id));
         $res = $stmt->fetchObject();
-        return $this->show_string($res->label);
+        return functions::show_string($res->label);
     }
 
     public function get_civility_contact($title){
@@ -1808,7 +1808,7 @@ class contacts_v2 extends dbquery
                 }
             }
         }
-        return $this->show_string($title_value);
+        return functions::show_string($title_value);
     }
 
     public function type_purpose_address_del($id, $admin = true, $tablename, $mode='contact_type', $deleted_sentence, $warning_sentence, $title, $reaffect_sentence, $new_sentence, $choose_sentence, $page_return, $page_del, $name){
@@ -1840,7 +1840,7 @@ class contacts_v2 extends dbquery
             }
             
             if($stmt->rowCount() > 0)$nb_elements = $nb_elements + $stmt->rowCount();
-            // $this->show(); 
+
             if ($mode == 'contact_address'){
                 $stmt = $db->query("SELECT address_id FROM contacts_res WHERE address_id = ?", array($id));
                 if($stmt->rowCount() > 0)$nb_elements = $nb_elements + $stmt->rowCount();
@@ -1917,7 +1917,7 @@ class contacts_v2 extends dbquery
                                 {
                                     $CurrentContact = $this->get_label_contact($line->contact_type, $_SESSION['tablename']['contact_types']) . ' : ';
                                     if($line->is_corporate_person == 'N'){
-                                        $CurrentContact = $this->show_string($line->lastname)." ".$this->show_string($line->firstname);
+                                        $CurrentContact = functions::show_string($line->lastname)." ".functions::show_string($line->firstname);
                                         if($line->society <> ''){
                                             $CurrentContact .= ' ('.$line->society.')';
                                         }
@@ -1978,7 +1978,7 @@ class contacts_v2 extends dbquery
                                 $stmt = $db->query("SELECT id, label FROM ".$tablename." WHERE id <> ?", array($id));
 
                                 while ($res = $stmt->fetchObject()) {
-                                    $array[$res->id] = $this->protect_string_db($res->label);
+                                    $array[$res->id] = functions::protect_string_db($res->label);
                                 }
                             ?>
                                 <select name="new" id="new">

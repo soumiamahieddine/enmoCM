@@ -236,7 +236,10 @@ if($mode == 'normal') {
     $where_tab = array();
     $arrayPDO = array();
     //From search
-    if (!empty($_SESSION['searching']['where_request'])) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
+    if (!empty($_SESSION['searching']['where_request'])) {
+        $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
+        $arrayPDO = array_merge($arrayPDO, $_SESSION['searching']['where_request_parameters']);
+    }
     
     if (isset($_REQUEST['exclude'])) {
         $_SESSION['excludeId'] = $_REQUEST['exclude'];
@@ -247,7 +250,7 @@ if($mode == 'normal') {
         $where_tab[] = 'res_id <> :excludeId and '
                         . '(res_id not in (SELECT res_parent FROM res_linked WHERE res_child = :excludeId) and '
                         . 'res_id not in (SELECT res_child FROM res_linked WHERE res_parent = :excludeId))';
-        $arrayPDO = array(":excludeId" => $_SESSION['excludeId']);
+        $arrayPDO = array_merge($arrayPDO, array(":excludeId" => $_SESSION['excludeId']));
         unset($_SESSION['excludeId']);
     }
 

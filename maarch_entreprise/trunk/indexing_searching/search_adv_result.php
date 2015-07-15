@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2008 - 2012 Maarch
+*   Copyright 2008 - 2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -70,6 +70,7 @@ if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'frame') {
     $core_tools->test_service('adv_search_mlb', 'apps');
 }
 $where_request = "";
+$arrayPDO = array();
 $case_view = false;
  $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 $json_txt = '{';
@@ -113,42 +114,43 @@ if (count($_REQUEST['meta']) > 0) {
             // ENTITIES
             if ($tab_id_fields[$j] == 'services_chosen' && isset($_REQUEST['services_chosen'])) {
                 $json_txt .= " 'services_chosen' : [";
-                $srv_chosen_tmp = " (";
+
                 for ($get_i = 0; $get_i <count($_REQUEST['services_chosen']); $get_i++) {
-                    $srv_chosen_tmp .= "'".$func->protect_string_db($_REQUEST['services_chosen'][$get_i])."',";
+
                     $json_txt .= "'".$_REQUEST['services_chosen'][$get_i]."',";
                 }
-                $srv_chosen_tmp = substr($srv_chosen_tmp, 0, -1);
                 $json_txt = substr($json_txt, 0, -1);
-                $srv_chosen_tmp .= ") ";
 
-                $where_request .= " destination IN  ".$srv_chosen_tmp." ";
+                $where_request .= " destination IN  (:serviceChosen) ";
                 $where_request .=" and  ";
+                $arrayPDO = array_merge($arrayPDO, array(":serviceChosen" => $_REQUEST['services_chosen']));
                 $json_txt .= '],';
             } elseif ($tab_id_fields[$j] == 'multifield' && !empty($_REQUEST['multifield'])) {
                 // MULTIFIELD : subject, title, doc_custom_t1, process notes
                 $json_txt .= "'multifield' : ['".addslashes(trim($_REQUEST['multifield']))."'],";
-                $where_request .= "(lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-                    ."or lower(alt_identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-                    ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-                    ."or lower(doc_custom_t1) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') ";
+                $where_request .= "(lower(subject) LIKE lower(:multifield) "
+                    ."or lower(alt_identifier) LIKE lower(:multifield) "
+                    ."or lower(title) LIKE lower(:multifield) "
+                    ."or lower(doc_custom_t1) LIKE lower(:multifield) ";
                     
                 if (is_numeric($_REQUEST['multifield']))
                 {
-                    $where_request .= "or res_id = '".$func->protect_string_db($_REQUEST['multifield'])."' "
-                    ."or lower(process_notes) like lower('%".$func->protect_string_db($_REQUEST['multifield'])."%')) ";
+                    $where_request .= "or res_id = :multifield2 "
+                    ."or lower(process_notes) like lower(:multifield)) ";
+                    $arrayPDO = array_merge($arrayPDO, array(":multifield2" => $_REQUEST['multifield'])); 
                 }else{
-                    $where_request .= "or lower(process_notes) like lower('%".$func->protect_string_db($_REQUEST['multifield'])."%')) ";
+                    $where_request .= "or lower(process_notes) like lower(:multifield)) ";
                 }
                 
-                    
+                $arrayPDO = array_merge($arrayPDO, array(":multifield" => "%".$_REQUEST['multifield']."%")); 
                 
                 $where_request .=" and  ";
             } elseif ($tab_id_fields[$j] == 'numcase' && !empty($_REQUEST['numcase'])) {
                 // CASE_NUMBER
                 $json_txt .= "'numcase' : ['".addslashes(trim($_REQUEST['numcase']))."'],";
                 //$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
-                $where_request .= " ".$_SESSION['collections'][0]['view'].".case_id = ". $_REQUEST['numcase'] ." and ";
+                $where_request .= " ".$_SESSION['collections'][0]['view'].".case_id = :numCase and ";
+                $arrayPDO = array_merge($arrayPDO, array(":numCase" => $_REQUEST['numcase']));
                 $case_view=true;
 
                 if (!is_numeric($_REQUEST['numcase'])) {
@@ -159,34 +161,40 @@ if (count($_REQUEST['meta']) > 0) {
                 // CASE_LABEL
                 $json_txt .= "'labelcase' : ['".addslashes(trim($_REQUEST['labelcase']))."'],";
                 //$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
-                $where_request .= " lower(".$_SESSION['collections'][0]['view'].".case_label) like lower('%".$func->wash($_REQUEST['labelcase'], "no", _CASE_LABEL,"no")."%') and ";
+                $where_request .= " lower(".$_SESSION['collections'][0]['view'].".case_label) like lower(:labelCase) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":labelCase" => "%".$func->wash($_REQUEST['labelcase'], "no", _CASE_LABEL,"no")."%"));
                 $case_view=true;
             } elseif ($tab_id_fields[$j] == 'descriptioncase' && !empty($_REQUEST['descriptioncase'])) {
                 // CASE_DESCRIPTION
                 $json_txt .= "'descriptioncase' : ['".addslashes(trim($_REQUEST['descriptioncase']))."'],";
                 //$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
-                $where_request .= " lower(".$_SESSION['collections'][0]['view'].".case_description) like lower('%".$func->wash($_REQUEST['descriptioncase'], "no", _CASE_DESCRIPTION,"no")."%') and ";
+                $where_request .= " lower(".$_SESSION['collections'][0]['view'].".case_description) like lower(:descriptionCase) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":descriptionCase" => "%".$func->wash($_REQUEST['descriptioncase'], "no", _CASE_DESCRIPTION,"no")."%"));
                 $case_view=true;
             } elseif ($tab_id_fields[$j] == 'chrono' && !empty($_REQUEST['chrono'])) {
                 $json_txt .= " 'chrono' : ['".addslashes(trim($_REQUEST['chrono']))."'],";
                 $chrono = $func->wash($_REQUEST['chrono'],"no",_CHRONO_NUMBER,"no");
-                $where_request .= " (lower(alt_identifier) like lower('%".$chrono."%') or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE coll_id = 'letterbox_coll' AND lower(identifier) like lower('%".$chrono."%') )))";
+                $where_request .= " (lower(alt_identifier) like lower(:chrono) or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE coll_id = 'letterbox_coll' AND lower(identifier) like lower(:chrono) )))";
+                $arrayPDO = array_merge($arrayPDO, array(":chrono" => "%".$chrono."%"));
                 $where_request .=" and  ";
             } 
             // PRIORITY
-            elseif ($tab_id_fields[$j] == 'priority' && !empty($_REQUEST['priority']))
+            elseif ($tab_id_fields[$j] == 'priority' && is_numeric($_REQUEST['priority']) && $_REQUEST['priority']>=0)
             {
                 $json_txt .= " 'priority' : ['".addslashes(trim($_REQUEST['priority']))."'],";
                 $prio = $func->wash($_REQUEST['priority'],"num",_THE_PRIORITY,"no");
-                $where_request .= " priority = ".$prio." ";
+                $where_request .= " priority = :priority ";
+                $arrayPDO = array_merge($arrayPDO, array(":priority" => $prio));
+
                 $where_request .=" and  ";
             }
             // SIGNATORY GROUP
             elseif ($tab_id_fields[$j] == 'signatory_group' && !empty($_REQUEST['signatory_group']))
             {
                 $json_txt .= " 'signatory_group' : ['".addslashes(trim($_REQUEST['signatory_group']))."'],";
-                $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from usergroup_content where group_id = '".$_REQUEST['signatory_group']."') "
+                $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from usergroup_content where group_id = :signatoryGroup) "
                         ."and coll_id = '" . $coll_id . "' and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) ";
+                $arrayPDO = array_merge($arrayPDO, array(":signatoryGroup" => $_REQUEST['signatory_group']));
                 $where_request .=" and  ";
             }
 
@@ -194,7 +202,8 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'attachment_types' && !empty($_REQUEST['attachment_types']))
             {
                 $json_txt .= " 'attachment_types' : ['".addslashes(trim($_REQUEST['attachment_types']))."'],";
-                $where_request .= " (res_id in (SELECT res_id_master FROM res_view_attachments WHERE attachment_type = '".$_REQUEST['attachment_types']."') )";
+                $where_request .= " (res_id in (SELECT res_id_master FROM res_view_attachments WHERE attachment_type = :attachmentTypes) )";
+                $arrayPDO = array_merge($arrayPDO, array(":attachmentTypes" => $_REQUEST['attachment_types']));
                 $where_request .=" and  ";
             }
 
@@ -203,51 +212,59 @@ if (count($_REQUEST['meta']) > 0) {
             {
                 $json_txt .= " 'process_notes' : ['".addslashes(trim($_REQUEST['process_notes']))."'],";
                 $s_process_notes = $func->wash($_REQUEST['process_notes'], "no", _PROCESS_NOTES,"no");
-                $where_request .= " (lower(process_notes) LIKE lower('%".$func->protect_string_db($s_process_notes)."%') ) and ";
+                $where_request .= " (lower(process_notes) LIKE lower(:processNotes) ) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":processNotes" => "%".$s_process_notes."%"));
             }
             // IDENTIFIER
             elseif ($tab_id_fields[$j] == 'identifier' && !empty($_REQUEST['identifier'])) {
                 $json_txt .= "'identifier' : ['".addslashes(trim($_REQUEST['identifier']))."'],";
-                $where_request .=" (lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['identifier'])."%') ) and ";
+                $where_request .=" (lower(identifier) LIKE lower(:identifier) ) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":identifier" => "%".$_REQUEST['identifier']."%"));
             }
             // DESCRIPTION
             elseif ($tab_id_fields[$j] == 'description' && !empty($_REQUEST['description'])) {
                 $json_txt .= "'description' : ['".addslashes(trim($_REQUEST['description']))."'],";
-                $where_request .=" (lower(description) LIKE lower('%".$func->protect_string_db($_REQUEST['description'])."%') ) and ";
+                $where_request .=" (lower(description) LIKE lower(:description) ) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":description" => "%".$_REQUEST['description']."%"));
             }
             // REFERENCE NUMBER
             elseif ($tab_id_fields[$j] == 'reference_number' && !empty($_REQUEST['reference_number'])) {
                 $json_txt .= "'reference_number' : ['".addslashes(trim($_REQUEST['reference_number']))."'],";
-                $where_request .=" (lower(reference_number) LIKE lower('%".$func->protect_string_db($_REQUEST['reference_number'])."%') ) and ";
+                $where_request .=" (lower(reference_number) LIKE lower(:referenceNumber) ) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$_REQUEST['reference_number']."%"));
             }
             // NOTES
             elseif ($tab_id_fields[$j] == 'doc_notes' && !empty($_REQUEST['doc_notes']))
             {
                 $json_txt .= " 'doc_notes' : ['".addslashes(trim($_REQUEST['doc_notes']))."'],";
                 $s_doc_notes = $func->wash($_REQUEST['doc_notes'], "no", _NOTES,"no");
-                $where_request .= " res_id in(select identifier from ".$_SESSION['tablename']['not_notes']." where lower(note_text) LIKE lower('%".$func->protect_string_db($s_doc_notes)."%')) and ";
+                $where_request .= " res_id in(select identifier from ".$_SESSION['tablename']['not_notes']." where lower(note_text) LIKE lower(:referenceNumber)) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$s_doc_notes."%"));
             }
             // FOLDER : MARKET
             elseif ($tab_id_fields[$j] == 'market' && !empty($_REQUEST['market']))
             {
                 $json_txt .= " 'market' : ['".addslashes(trim($_REQUEST['market']))."'],";
                 $market = $func->wash($_REQUEST['market'], "no", _MARKET,"no");
-                $where_request .= " (lower(folder_name) like lower('%".$func->protect_string_db($market)."%') or folder_id like '%".$func->protect_string_db($market)."%' ) and ";
+                $where_request .= " (lower(folder_name) like lower(:referenceNumber) or folder_id like :referenceNumber ) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$market."%"));
             }
             // FOLDER : PROJECT
             elseif ($tab_id_fields[$j] == 'project' && !empty($_REQUEST['project']))
             {
                 $json_txt .= " 'project' : ['".addslashes(trim($_REQUEST['project']))."'],";
                 $project = $func->wash($_REQUEST['project'], "no", _MARKET,"no");
-                $where_request .= " (lower(folder_name) like lower('%".$func->protect_string_db($project)."%') or folder_id like '%".$func->protect_string_db($project)."%' "
-                    ."or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where lower(folder_name) like lower('".$func->protect_string_db($project)."%') or folder_id like '%".$func->protect_string_db($project)."%')) and ";
+                $where_request .= " (lower(folder_name) like lower(:project) or folder_id like :project "
+                    ."or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where lower(folder_name) like lower(:project) or folder_id like :project)) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":project" => "%".$project."%"));
             }
 
             elseif ($tab_id_fields[$j] == 'folder_name' && !empty($_REQUEST['folder_name']))
             {
                 $json_txt .= " 'folder_name' : ['".addslashes(trim($_REQUEST['folder_name']))."'],";
                 $folder_name = $func->wash($_REQUEST['folder_name'], "no", _FOLDER_NAME,"no");
-                 $where_request .= " (lower(folder_name) like lower('%".$func->protect_string_db($folder_name)."%') and ";
+                 $where_request .= " (lower(folder_name) like lower(:folderName) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":folderName" => "%".$folder_name."%"));
             }
             // GED NUM
             elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged']))
@@ -259,7 +276,8 @@ if (count($_REQUEST['meta']) > 0) {
                 if ($view <> '') {
                     $view .= '.';
                 }
-                $where_request .= $view . "res_id = ". $_REQUEST['numged'] ." and ";
+                $where_request .= $view . "res_id = :numGed and ";
+                $arrayPDO = array_merge($arrayPDO, array(":numGed" => $_REQUEST['numged']));
 
                 if (!is_numeric($_REQUEST['numged'])) {
                     $_SESSION['error_search'] = _NUMERO_GED;
@@ -269,18 +287,17 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'destinataire_chosen' && !empty($_REQUEST['destinataire_chosen']))
             {
                 $json_txt .= " 'destinataire_chosen' : [";
-                $destinataire_chosen_tmp = " (";
+
                 for ($get_i = 0; $get_i <count($_REQUEST['destinataire_chosen']); $get_i++)
                 {
-                    $destinataire_chosen_tmp .= "'".$func->protect_string_db($_REQUEST['destinataire_chosen'][$get_i])."',";
                     $json_txt .= "'".$_REQUEST['destinataire_chosen'][$get_i]."',";
                 }
-                $destinataire_chosen_tmp = substr($destinataire_chosen_tmp, 0, -1);
-                $json_txt = substr($json_txt, 0, -1);
-                $destinataire_chosen_tmp .= ") ";
 
-                $where_request .= " (dest_user IN  ".$destinataire_chosen_tmp." or res_id in (select res_id from ".$_SESSION['tablename']['ent_listinstance']." where item_id in ".$destinataire_chosen_tmp." and item_mode = 'dest')) ";
+                $json_txt = substr($json_txt, 0, -1);
+
+                $where_request .= " (dest_user IN  (:destinataireChosen) or res_id in (select res_id from ".$_SESSION['tablename']['ent_listinstance']." where item_id in (:destinataireChosen) and item_mode = 'dest')) ";
                 $where_request .=" and  ";
+                $arrayPDO = array_merge($arrayPDO, array(":destinataireChosen" => $_REQUEST['destinataire_chosen']));
                 //echo $where_request;exit;
                 $json_txt .= '],';
             }
@@ -288,8 +305,9 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'subject' && !empty($_REQUEST['subject']))
             {
                 $json_txt .= " 'subject' : ['".addslashes(trim($_REQUEST['subject']))."'],";
-                $where_request .= " (lower(subject) like lower('%".$func->protect_string_db($_REQUEST['subject'])."%') "
-                    ."or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE coll_id = 'letterbox_coll' AND lower(title) like lower('%".$func->protect_string_db($_REQUEST['subject'])."%') ))) and ";
+                $where_request .= " (lower(subject) like lower(:subject) "
+                    ."or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE coll_id = 'letterbox_coll' AND lower(title) like lower(:subject) ))) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":subject" => "%".$_REQUEST['subject']."%"));
             } elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
             ) {
 
@@ -362,12 +380,14 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= "'multifield' : ['".addslashes(trim($welcome))."'],";
                 if (is_numeric($_REQUEST['welcome']))
                 {
-                    $where_multifield_request .= "(res_id = ".$func->protect_string_db($_REQUEST['welcome'].") or ");
+                    $where_multifield_request .= "(res_id = :resIdWelcome) or ";
+                    $arrayPDO = array_merge($arrayPDO, array(":resIdWelcome" => $_REQUEST['welcome']));
                 }
-                $where_multifield_request .= "( lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
-                    ."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
-                    ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) "
-                    ."or contact_id in (select contact_id from view_contacts where society ilike '%".$_REQUEST['welcome']."%' or contact_firstname ilike '%".$_REQUEST['welcome']."%' or contact_lastname ilike '%".$_REQUEST['welcome']."%') or (exp_user_id in (select user_id from users where firstname ilike '%".$_REQUEST['welcome']."%' or lastname ilike '%".$_REQUEST['welcome']."%' ))";
+                $where_multifield_request .= "( lower(subject) LIKE lower(:multifieldWelcome) "
+                    ."or lower(identifier) LIKE lower(:multifieldWelcome) "
+                    ."or lower(title) LIKE lower(:multifieldWelcome)) "
+                    ."or contact_id in (select contact_id from view_contacts where society ilike :multifieldWelcome or contact_firstname ilike :multifieldWelcome or contact_lastname ilike :multifieldWelcome) or (exp_user_id in (select user_id from users where firstname ilike :multifieldWelcome or lastname ilike :multifieldWelcome ))";
+                $arrayPDO = array_merge($arrayPDO, array(":multifieldWelcome" => "%".$_REQUEST['welcome']."%"));
                 $welcome = $_REQUEST['welcome'];
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
                     . $_SESSION['config']['app_id'] 
@@ -419,34 +439,29 @@ if (count($_REQUEST['meta']) > 0) {
                     }
                 }
             }
-            // PRIORITY
-            elseif ($tab_id_fields[$j] == 'priority' && ($_REQUEST['priority'] <> ""))
-            {
-                $json_txt .= " 'priority' : ['".addslashes(trim($_REQUEST['priority']))."'],";
-                $where_request .= " priority  = ".$_REQUEST['priority']." and ";
-            }
+
             // CONFIDENTIALITY
             elseif ($tab_id_fields[$j] == 'confidentiality' && ($_REQUEST['confidentiality'] <> ""))
             {
                 $json_txt .= " 'confidentiality' : ['".addslashes(trim($_REQUEST['confidentiality']))."'],";
-                $where_request .= " confidentiality  = '".$_REQUEST['confidentiality']."' and ";
+                $where_request .= " confidentiality  = :confidentiality and ";
+                $arrayPDO = array_merge($arrayPDO, array(":confidentiality" => $_REQUEST['confidentiality']));
             }
             // DOCTYPES
             elseif ($tab_id_fields[$j] == 'doctypes_chosen' && !empty($_REQUEST['doctypes_chosen']))
             {
                 $json_txt .= " 'doctypes_chosen' : [";
-                $doctypes_chosen_tmp = " (";
+
                 for ($get_i = 0; $get_i <count($_REQUEST['doctypes_chosen']); $get_i++)
                 {
-                    $doctypes_chosen_tmp .= "'".$func->protect_string_db($_REQUEST['doctypes_chosen'][$get_i])."',";
                     $json_txt .= "'".$_REQUEST['doctypes_chosen'][$get_i]."',";
                 }
-                $doctypes_chosen_tmp = substr($doctypes_chosen_tmp, 0, -1);
-                $json_txt = substr($json_txt, 0, -1);
-                $doctypes_chosen_tmp .= ") ";
 
-                $where_request .= " type_id IN  ".$doctypes_chosen_tmp." ";
+                $json_txt = substr($json_txt, 0, -1);
+
+                $where_request .= " type_id IN  (:doctypesChosen) ";
                 $where_request .=" and  ";
+                $arrayPDO = array_merge($arrayPDO, array(":doctypesChosen" => $_REQUEST['doctypes_chosen']));
                 $json_txt .= '],';
             }
 
@@ -454,7 +469,8 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'mail_nature' && !empty($_REQUEST['mail_nature']))
             {
                 $json_txt .= "'mail_nature' : ['".addslashes(trim($_REQUEST['mail_nature']))."'],";
-                $where_request .= " nature_id = '".$func->protect_string_db($_REQUEST['mail_nature'])."' and ";
+                $where_request .= " nature_id = :mailNature and ";
+                $arrayPDO = array_merge($arrayPDO, array(":mailNature" => $_REQUEST['mail_nature']));
             }
             // CREATION DATE PJ : FROM
             elseif ($tab_id_fields[$j] == 'creation_date_pj_from' && !empty($_REQUEST['creation_date_pj_from']))
@@ -465,7 +481,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " res_id in (SELECT res_id_master FROM res_view_attachments WHERE (".$req->extract_date("creation_date")." >= '".$func->format_date_db($_REQUEST['creation_date_pj_from'])."') ) and ";
+                    $where_request .= " res_id in (SELECT res_id_master FROM res_view_attachments WHERE (".$req->extract_date("creation_date")." >= :creationDatePjFrom) ) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":creationDatePjFrom" => $func->format_date_db($_REQUEST['creation_date_pj_from'])));
                     $json_txt .= " 'creation_date_pj_from' : ['".trim($_REQUEST['creation_date_pj_from'])."'],";
                 }
             }
@@ -478,7 +495,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " res_id in (SELECT res_id_master FROM res_view_attachments WHERE (".$req->extract_date("creation_date")." <= '".$func->format_date_db($_REQUEST['creation_date_pj_to'])."') )and ";
+                    $where_request .= " res_id in (SELECT res_id_master FROM res_view_attachments WHERE (".$req->extract_date("creation_date")." <= :creationDatePjTo) )and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":creationDatePjTo" => $func->format_date_db($_REQUEST['creation_date_pj_to'])));
                     $json_txt .= " 'creation_date_pj_to' : ['".trim($_REQUEST['creation_date_pj_to'])."'],";
                 }
             }
@@ -491,7 +509,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " (".$req->extract_date("creation_date")." >= '".$func->format_date_db($_REQUEST['creation_date_from'])."') and ";
+                    $where_request .= " (".$req->extract_date("creation_date")." >= :creationDateFrom) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":creationDateFrom" => $func->format_date_db($_REQUEST['creation_date_from'])));
                     $json_txt .= " 'creation_date_from' : ['".trim($_REQUEST['creation_date_from'])."'],";
                 }
             }
@@ -504,7 +523,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " (".$req->extract_date("creation_date")." <= '".$func->format_date_db($_REQUEST['creation_date_to'])."') and ";
+                    $where_request .= " (".$req->extract_date("creation_date")." <= :creationDateTo) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":creationDateTo" => $func->format_date_db($_REQUEST['creation_date_to'])));
                     $json_txt .= " 'creation_date_to' : ['".trim($_REQUEST['creation_date_to'])."'],";
                 }
             }
@@ -517,7 +537,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " (".$req->extract_date("closing_date")." >= '".$func->format_date_db($_REQUEST['closing_date_from'])."') and ";
+                    $where_request .= " (".$req->extract_date("closing_date")." >= :closingDateFrom) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":closingDateFrom" => $func->format_date_db($_REQUEST['closing_date_from'])));
                     $json_txt .= "'closing_date_from' : ['".trim($_REQUEST['closing_date_from'])."'],";
                 }
             }
@@ -530,7 +551,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " (".$req->extract_date("closing_date")." <= '".$func->format_date_db($_REQUEST['closing_date_to'])."') and ";
+                    $where_request .= " (".$req->extract_date("closing_date")." <= :closingDateTo) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":closingDateTo" => $func->format_date_db($_REQUEST['closing_date_to'])));
                     $json_txt .= "'closing_date_to' : ['".trim($_REQUEST['closing_date_to'])."'],";
                 }
             }
@@ -543,7 +565,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " (".$req->extract_date("process_limit_date")." >= '".$func->format_date_db($_REQUEST['process_limit_date_from'])."') and ";
+                    $where_request .= " (".$req->extract_date("process_limit_date")." >= :processLimitDateFrom) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":processLimitDateFrom" => $func->format_date_db($_REQUEST['process_limit_date_from'])));
                     $json_txt .= "'process_limit_date_from' : ['".trim($_REQUEST['process_limit_date_from'])."'],";
                 }
             }
@@ -556,7 +579,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " (".$req->extract_date("process_limit_date")." <= '".$func->format_date_db($_REQUEST['process_limit_date_to'])."') and ";
+                    $where_request .= " (".$req->extract_date("process_limit_date")." <= :processLimitDateTo) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":processLimitDateTo" => $func->format_date_db($_REQUEST['process_limit_date_to'])));
                     $json_txt .= "'process_limit_date_to' : ['".trim($_REQUEST['process_limit_date_to'])."'],";
                 }
             }
@@ -570,7 +594,7 @@ if (count($_REQUEST['meta']) > 0) {
                     $json_txt .= "'".$_REQUEST['status_chosen'][$get_i]."',";
                     if ($_REQUEST['status_chosen'][$get_i]=="REL1")
                     {
-                        $where_request .="( ".$req->extract_date('alarm1_date')." <= ".$req->current_datetime()." and ".$req->extract_date('alarm2_date')." > ".$req->current_datetime()." and status <> 'END') or ";
+                        $where_request .="( ".$req->extract_date('alarm1_date')." <= CURRENT_TIMESTAMP and ".$req->extract_date('alarm2_date')." > CURRENT_TIMESTAMP and status <> 'END') or ";
                     }
                     else
                     {
@@ -584,7 +608,8 @@ if (count($_REQUEST['meta']) > 0) {
                         }
                         else
                         {
-                            $where_request .= " ( status = '".$func->protect_string_db($_REQUEST['status_chosen'][$get_i])."') or ";
+                            $where_request .= " ( status = :statusChosen) or ";
+                            $arrayPDO = array_merge($arrayPDO, array(":statusChosen" => $_REQUEST['status_chosen']));
                         }
                     }
                 }
@@ -642,7 +667,8 @@ if (count($_REQUEST['meta']) > 0) {
             // MAIL CATEGORY
             elseif ($tab_id_fields[$j] == 'category' && !empty($_REQUEST['category']))
             {
-                $where_request .= " category_id = '".$func->protect_string_db($_REQUEST['category'])."' AND ";
+                $where_request .= " category_id = :category AND ";
+                $arrayPDO = array_merge($arrayPDO, array(":category" => $_REQUEST['category']));
                 $json_txt .= "'category' : ['".addslashes($_REQUEST['category'])."'],";
             } 
             // ADMISSION DATE : FROM
@@ -654,7 +680,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " (".$req->extract_date("admission_date")." >= '".$func->format_date_db($_REQUEST['admission_date_from'])."') and ";
+                    $where_request .= " (".$req->extract_date("admission_date")." >= :admissionDateFrom) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":admissionDateFrom" => $func->format_date_db($_REQUEST['admission_date_from'])));
                     $json_txt .= " 'admission_date_from' : ['".trim($_REQUEST['admission_date_from'])."'],";
                 }
             }
@@ -667,7 +694,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " (".$req->extract_date("admission_date")." <= '".$func->format_date_db($_REQUEST['admission_date_to'])."') and ";
+                    $where_request .= " (".$req->extract_date("admission_date")." <= :admissionDateTo) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":admissionDateTo" => $func->format_date_db($_REQUEST['admission_date_to'])));
                     $json_txt .= " 'admission_date_to' : ['".trim($_REQUEST['admission_date_to'])."'],";
                 }
             }
@@ -680,7 +708,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " (".$req->extract_date("doc_date")." >= '".$func->format_date_db($_REQUEST['doc_date_from'])."') and ";
+                    $where_request .= " (".$req->extract_date("doc_date")." >= :docDateFrom) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":docDateFrom" => $func->format_date_db($_REQUEST['doc_date_from'])));
                     $json_txt .= " 'doc_date_from' : ['".trim($_REQUEST['doc_date_from'])."'],";
                 }
             }
@@ -693,7 +722,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-                    $where_request .= " (".$req->extract_date("doc_date")." <= '".$func->format_date_db($_REQUEST['doc_date_to'])."') and ";
+                    $where_request .= " (".$req->extract_date("doc_date")." <= :docDateTo) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":docDateTo" => $func->format_date_db($_REQUEST['doc_date_to'])));
                     $json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
                 }
             }
@@ -702,30 +732,34 @@ if (count($_REQUEST['meta']) > 0) {
             {
                 $json_txt .= " 'contactid_external' : ['".addslashes(trim($_REQUEST['contactid_external']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
                     $contact_id = $_REQUEST['contactid_external'];
-					$where_request .= " (res_id in (select res_id from contacts_res where contact_id = '".$contact_id."' and coll_id = '" . $coll_id . "') or ";
+					$where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactIdExternal and coll_id = '" . $coll_id . "') or ";
                     $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_contact_id = ".$contact_id.") )) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":contactIdExternal" => $contact_id));
             }
             //recherche sur les contacts externes en fonction de ce que la personne a saisi
             elseif ($tab_id_fields[$j] == 'contactid' && empty($_REQUEST['contactid_external']) && !empty($_REQUEST['contactid']))
             {
                 $json_txt .= " 'contactid_external' : ['".addslashes(trim($_REQUEST['contactid_external']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
-                    $contact_id = pg_escape_string($_REQUEST['contactid']);
-                    $where_request .= " (contact_id in (select contact_id from view_contacts where society ilike '%".$contact_id."%' or contact_firstname ilike '%".$contact_id."%' or contact_lastname ilike '%".$contact_id."%') ".
-                        " or res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_contact_id in (select contact_id from view_contacts where society ilike '%".$contact_id."%' or contact_firstname ilike '%".$contact_id."%' or contact_lastname ilike '%".$contact_id."%') ) ) and ";
+                    $contact_id = $_REQUEST['contactid'];
+                    $where_request .= " (contact_id in (select contact_id from view_contacts where society ilike :contactId or contact_firstname ilike :contactId or contact_lastname ilike :contactId) ".
+                        " or res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_contact_id in (select contact_id from view_contacts where society ilike :contactId or contact_firstname ilike :contactId or contact_lastname ilike :contactId) ) ) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":contactId" => "%".$contact_id."%"));
             }
             elseif ($tab_id_fields[$j] == 'addresses_id' && !empty($_REQUEST['addresses_id']))
             {
                 $json_txt .= " 'addresses_id' : ['".addslashes(trim($_REQUEST['addresses_id']))."'], 'addresses_id' : ['".addslashes(trim($_REQUEST['addresses_id']))."'],";
                     $addresses_id = $_REQUEST['addresses_id'];
-                    $where_request .= " address_id in (select ca_id from view_contacts where lastname ilike '%".$addresses_id."%' or firstname ilike '%".$addresses_id."%' ) and ";
+                    $where_request .= " address_id in (select ca_id from view_contacts where lastname ilike :addressId or firstname ilike :addressId ) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":addressId" => "%".$addresses_id."%"));
             }
             // CONTACTS INTERNAL
             elseif ($tab_id_fields[$j] == 'contactid_internal' && !empty($_REQUEST['contact_internal_id']))
             {
                 $json_txt .= " 'contactid_internal' : ['".addslashes(trim($_REQUEST['contactid_internal']))."'], 'contact_internal_id' : ['".addslashes(trim($_REQUEST['contact_internal_id']))."']";
                 	$contact_id = $_REQUEST['contact_internal_id'];
-                    $where_request .= " ((exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') or ";
-                    $where_request .= " (res_id in (select res_id from contacts_res where contact_id = '".$contact_id."' and coll_id = '" . $coll_id . "'))) and ";
+                    $where_request .= " ((exp_user_id = :contactInternalId or dest_user_id = :contactInternalId) or ";
+                    $where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactInternalId and coll_id = '" . $coll_id . "'))) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":contactInternalId" => $contact_id));
             }
             //recherche sur les contacts internes en fonction de ce que la personne a saisi
             elseif ($tab_id_fields[$j] == 'contactid_internal' && empty($_REQUEST['contact_internal_id']) && !empty($_REQUEST['contactid_internal']))
@@ -733,14 +767,16 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= " 'contactid_internal' : ['".addslashes(trim($_REQUEST['contactid_internal']))."'], 'contact_internal_id' : ['".addslashes(trim($_REQUEST['contactid_internal']))."']";
                     $contactid_internal = pg_escape_string($_REQUEST['contactid_internal']);
                     //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
-                    $where_request .= " (exp_user_id in (select user_id from users where firstname ilike '%".$contactid_internal."%' or lastname ilike '%".$contactid_internal."%' )) and ";
+                    $where_request .= " (exp_user_id in (select user_id from users where firstname ilike :contactIdInternal or lastname ilike :contactIdInternal )) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":contactIdInternal" => "%".$contactid_internal."%"));
             }
             // Nom du signataire
             elseif ($tab_id_fields[$j] == 'signatory_name' && !empty($_REQUEST['signatory_name_id']))
             {
                 $json_txt .= " 'signatory_name' : ['".addslashes(trim($_REQUEST['signatory_name']))."'], 'signatory_name_id' : ['".addslashes(trim($_REQUEST['signatory_name_id']))."']";
                     $signatory_name = $_REQUEST['signatory_name_id'];
-                    $where_request .= " (res_id in (select res_id from listinstance where item_id = '".$signatory_name."' and coll_id = '" . $coll_id . "' and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) and ";
+                    $where_request .= " (res_id in (select res_id from listinstance where item_id = :signatoryNameId and coll_id = '" . $coll_id . "' and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":signatoryNameId" => $signatory_name));
             }
             //recherche sur les signataires en fonction de ce que la personne a saisi
             elseif ($tab_id_fields[$j] == 'signatory_name' && empty($_REQUEST['signatory_name_id']) && !empty($_REQUEST['signatory_name']))
@@ -748,8 +784,9 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= " 'signatory_name' : ['".addslashes(trim($_REQUEST['signatory_name']))."']";
                     $signatory_name = pg_escape_string($_REQUEST['signatory_name']);
                     //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
-                    $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from users where firstname ilike '%".$signatory_name."%' or lastname ilike '%".$signatory_name."%') "
+                    $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from users where firstname ilike :signatoryName or lastname ilike :signatoryName) "
                         ."and coll_id = '" . $coll_id . "' and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":signatoryName" => "%".$signatory_name."%"));
             }
             // SEARCH IN BASKETS
             else if ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {
@@ -795,39 +832,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= $tmp['where'];
             }
         }
-        // SEARCH IN BASKETS
-        /*if ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {
-                //$func->show_array($_REQUEST);exit;
-                switch($_REQUEST['baskets_clause']) {
-                case 'false':
-                    $baskets_clause = "false";
-                    $json_txt .= "'baskets_clause' : ['false'],";
-                    break;
-                    
-                case 'true':
-                    for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                        if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == 'letterbox_coll') {
-                            if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
-                                $_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
-                            }
-                         }
-                    }
-                    $_SESSION['searching']['comp_query'] = preg_replace('/^ or/', '', $_SESSION['searching']['comp_query']);
-                    $baskets_clause = ($_REQUEST['baskets_clause']);
-                    $json_txt .= " 'baskets_clause' : ['true'],";
-                    break;
-                
-                default:
-                    
-                    for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                        if($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
-                            if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
-                                $where_request .= ' ' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ' and ' ;
-                            } 
-                        }
-                    }
-                }
-            }*/
+
         $json_txt = preg_replace('/,$/', '', $json_txt);
         $json_txt .= "}},";
     }
@@ -841,7 +846,6 @@ echo $json_txt;
 echo '<br/>'.$where_request;
 exit();
 */
-
 
 
 $_SESSION['current_search_query'] = $json_txt;
@@ -864,6 +868,7 @@ if (!empty($_SESSION['error_search'])) {
     }
     $where_request = trim($where_request);
     $_SESSION['searching']['where_request'] = $where_request;
+    $_SESSION['searching']['where_request_parameters'] = $arrayPDO;
 }
 if (isset($_REQUEST['specific_case'])
     && $_REQUEST['specific_case'] == "attach_to_case"

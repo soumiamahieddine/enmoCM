@@ -101,6 +101,7 @@ if($core_tools->is_module_loaded("cases") == true) {
     array_push($select[$table], "case_id", "case_label", "case_description");
 }
 
+$arrayPDO = array();
 //Where clause
 $where_tab = array();
     //From basket
@@ -112,7 +113,10 @@ $where_tab = array();
         if (
             (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') 
             && !empty($_SESSION['searching']['where_request'])
-        ) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)'; 
+        ) {
+            $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
+            $arrayPDO = array_merge($arrayPDO, $_SESSION['searching']['where_request_parameters']);
+        } 
     //Build where
         $where = implode(' and ', $where_tab);
 
@@ -132,7 +136,7 @@ else  {
 }
 
 //Request
-$tab=$request->PDOselect($select, $where, array(), $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
+$tab=$request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
 // $request->show(); exit;
 //Templates
 $defaultTemplate = 'documents_list_with_attachments';
@@ -295,18 +299,6 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='subject';
             }
-            /*if($tab[$i][$j][$value]=="category_id")
-            {
-                $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]["value"];
-                $tab[$i][$j]["value"] = $_SESSION['mail_categories'][$tab[$i][$j]["value"]];
-                $tab[$i][$j]["label"]=_CATEGORY;
-                $tab[$i][$j]["size"]="10";
-                $tab[$i][$j]["label_align"]="left";
-                $tab[$i][$j]["align"]="left";
-                $tab[$i][$j]["valign"]="bottom";
-                $tab[$i][$j]["show"]=true;
-                $tab[$i][$j]["order"]='category_id';
-            }*/
             if($tab[$i][$j][$value]=="contact_firstname")
             {
                 $contact_firstname = $tab[$i][$j]["value"];

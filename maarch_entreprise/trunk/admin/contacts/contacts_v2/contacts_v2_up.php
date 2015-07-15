@@ -103,11 +103,6 @@ if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) 
     $where .= " and ca_id = :selectedObject ";
     $arrayPDO = array_merge($arrayPDO, array(":selectedObject" => $_REQUEST['selectedObject']));
 } elseif (isset($_REQUEST['what2']) && ! empty($_REQUEST['what2'])) {
-    $what = $func->protect_string_db($_REQUEST['what2']);
-    // $where .= " and (lower(lastname) like lower('" . $what. "%') 
-    //                 or lower(firstname) like lower('" . $what. "%') 
-    //                 or lower(departement) like lower('" . $what. "%'))";
-
 
     $what = str_replace("  ", "", $_REQUEST['what2']);
     $what_table = explode(" ", $what);

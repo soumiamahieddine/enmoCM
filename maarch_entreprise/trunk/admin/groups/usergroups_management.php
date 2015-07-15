@@ -66,7 +66,7 @@ if ($mode == 'list') {
                         $color = ' class="col"';
                     }
                      ?>
-                             <tr <?php functions::xecho($color);?> >
+                             <tr <?php echo $color;?> >
                                        <td style="width:25%;"><?php
                                            echo $users[$i]->__get('lastname');
                                         ?></td>
@@ -127,7 +127,7 @@ if ($mode == 'list') {
                         $color = ' class="col"';
                     }
                        ?>
-                             <tr <?php functions::xecho($color);?> >
+                             <tr <?php echo $color;?> >
                                        <td style="width:30%;"><?php
                                        echo $baskets[$i]->__get('basket_name');
                                        ?></td>

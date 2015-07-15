@@ -75,7 +75,7 @@ if ($mode == "list") {
                                     $color = ' class="col"';
                                 }
                                 ?>
-                                 <tr <?php functions::xecho($color);?> >
+                                 <tr <?php echo $color;?> >
                                             <td style="width:25%;"><?php functions::xecho($docservers[$i]->__get('docserver_id'));?></td>
                                             <td style="width:25%;"><?php functions::xecho($docservers[$i]->__get('device_label'));?></td>
                                             <td style="width:25%;"><?php functions::xecho($docservers[$i]->__get('docserver_location_id'));?></td>

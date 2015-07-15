@@ -71,7 +71,7 @@ if ($mode == "list") {
                         $color = ' class="col"';
                     }
                     ?>
-                    <tr <?php functions::xecho($color);?> >
+                    <tr <?php echo $color;?> >
                         <td style="width:25%;"><?php
                     echo $docservers[$i]->__get('docserver_id');
                     ?></td>

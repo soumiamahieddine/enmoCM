@@ -25,6 +25,34 @@ function load_query(valeurs, loaded_query, id_form, ie_browser, error_ie_txt)
 }
 
 /**
+ * Fills inputs fields of text type in the search form whith value
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_input_text(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        tmp_elem.value = values[key];
+    }
+}
+
+/**
+ * Fills date range in the search form whith value
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_date_range(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        tmp_elem.value = values[key][0];
+    }
+}
+
+/**
  * Selects items in a mutiple list (html select object with multiple) in the search form
  *
  * @param values Array Values of the search criteria which must be displayed
@@ -67,6 +95,29 @@ function fill_field_select_multiple(values)
             }
             if (available) {
                 Move_ext(available, key);
+            }
+        }
+    }
+}
+
+/**
+ * Selects an item in a simple list (html select object) in the search form
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_select_simple(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        for(var j=0; j <values[key].length;j++)
+        {
+            for(var i=0; i<tmp_elem.options.length;i++)
+            {
+                if(values[key][j] == tmp_elem.options[i].value)
+                {
+                    tmp_elem.options[i].selected='selected';
+                }
             }
         }
     }
