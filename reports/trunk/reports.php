@@ -29,8 +29,8 @@
 */
 
 $rep = new core_tools();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+//$db->connect();
 /****************Management of the location bar  ************/
 $init = false;
 if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
@@ -49,22 +49,22 @@ $pageLabel = _REPORTS;
 $pageId = "reports";
 $rep->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
-$db->query(
-	"select count(*) as total from " . $_SESSION['collections'][0]['view']
-    . " inner join mlb_coll_ext on " . $_SESSION['collections'][0]['view']
-    . ".res_id = mlb_coll_ext.res_id where " . $_SESSION['collections'][0]['view']
-    . ".status not in ('DEL','BAD')"
+$stmt = $db->query(
+			"select count(*) as total from " . $_SESSION['collections'][0]['view']
+			. " inner join mlb_coll_ext on " . $_SESSION['collections'][0]['view']
+			. ".res_id = mlb_coll_ext.res_id where " . $_SESSION['collections'][0]['view']
+			. ".status not in ('DEL','BAD')"
 );
 
 //$db->show();
 
-$countPiece = $db->fetch_object();
+$countPiece = $stmt->fetchObject();
 if ($rep->is_module_loaded('folder')) {
-    $db->query(
-    	"SELECT count(*) as total from " 
-    	. $_SESSION['tablename']['fold_folders'] . " where status not in ('DEL','FOLDDEL')"
-    );
-    $countFolder = $db->fetch_object();
+    $stmt2 = $db->query(
+				"SELECT count(*) as total from " 
+				. $_SESSION['tablename']['fold_folders'] . " where status not in ('DEL','FOLDDEL')"
+		);
+    $countFolder = $stmt2->fetchObject();
 }
 //$db->show();
 ?>
