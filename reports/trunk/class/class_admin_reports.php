@@ -64,11 +64,14 @@ class admin_reports extends Database
     */
     public function load_reports_db($reports, $group)
     {
-        $this->connect();
-        $this->query("delete from ".$_SESSION['tablename']['usergroups_reports']." where group_id = '".$group."'");
+        $db = new Database();
+        
+        $stmt = $db->query("delete from ".$_SESSION['tablename']['usergroups_reports']." where group_id = ? ", array($group));
         for($i=0; $i<count($reports);$i++)
         {
-            $this->query("insert into ".$_SESSION['tablename']['usergroups_reports']." values ('".$group."', '".$reports[$i]."')");
+            $stmt = $db->query("insert into ".$_SESSION['tablename']['usergroups_reports']." values (?, ?)", 
+					array($group, $reports[$i])
+            );
         }
 
         if($_SESSION['history']['usergroupsreportsadd'] == "true")
@@ -109,7 +112,7 @@ class admin_reports extends Database
     */
     public function load_user_reports($user_id, $from)
     {
-        $db = new dbquery();
+        $db = new Database();
         $reports = array();
         if($user_id == "superadmin")
         {
