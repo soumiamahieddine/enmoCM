@@ -70,7 +70,8 @@ foreach ($tag_resid_return as $finaltagsearch) {
     $tag_resid_in .= "'".$finaltagsearch."',";
 }
 $tag_resid_in = substr($tag_resid_in, 0, -1);
-$where_request .= " res_id in (".$tag_resid_in.") and ";
+$where_request .= " res_id in (:tags) and ";
+$arrayPDO = array_merge($arrayPDO, array(":tags" => $tag_resid_return));
 
 $json_txt = substr($json_txt, 0, -1);
 $json_txt .= '],';
