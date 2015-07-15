@@ -1,6 +1,6 @@
 <requestDefinitions>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="update_users" >
-      <parameter name="module" value="life_cycle"/>
-      <parameter name="page" value="users_management_controler"/>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="lc_manage_policies" >
+    	<parameter name="page" value="lc_policies_management_controler"/>
+      	<parameter name="module" value="life_cycle"/>
     </requestDefinition>
 </requestDefinitions>

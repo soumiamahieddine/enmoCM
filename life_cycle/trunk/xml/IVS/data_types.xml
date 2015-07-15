@@ -1,5 +1,5 @@
 <dataTypes>
-    <dataType name="test_lc" base="graph">
+    <dataType name="sample_lc" base="graph">
       <pattern value="/^\w+$/" />
     </dataType>
 </dataTypes>

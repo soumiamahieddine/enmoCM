@@ -1,10 +1,7 @@
-    <validationRule name="testLC" mode="lax">
-      <parameter name="admin" type="string" />
-      <parameter name="page" type="string" />
-      <parameter name="order" type="order" />
-      <parameter name="start" type="integer" />
-      <parameter name="display" type="boolean" />
-      <parameter name="reinit" type="boolean" />
-      <parameter name="what" type="string" />
-      <parameter name="order_field" type="string" />
+    <validationRule name="lc_manage_policies" extends="standardForm" mode="error">
+    	<parameter name="module" type="identifier" />
+    	<parameter name="id" type="identifier" />
+		<parameter name="policy_name" type="safetext" />
+		<parameter name="policy_desc" type="safetext" />
+		<parameter name="submit" type="identifier" />
     </validationRule>
