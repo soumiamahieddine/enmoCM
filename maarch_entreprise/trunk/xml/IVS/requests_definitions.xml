@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<inputValidation xmlns:xi="http://www.w3.org/2001/XInclude">
+  <!--
+    Request definitions
+    Used to identify the request and bind a validation rule set
+  -->
+  <requestDefinitions>
+    <!-- APPS PART  -->
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="index" />
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="index" />
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="update_users" >
+      <parameter name="admin" value="users"/>
+      <parameter name="page" value="users_management_controler"/>
+      <!--parameter name="mode" value="up"/-->>
+    </requestDefinition>
+    <!-- MODULES PART  -->
+    <!-- life_cycle -->
+    <xi:include href="../../../../modules/life_cycle/xml/IVS/requests_definitions.xml"/>
+  </requestDefinitions>
+  <!--
+    Validation rule sets
+    Each gives a set of request parameters that can be checked
+    with a type name that refers to defined types or an inline definition
+  -->
+  <validationRules>
+    <!-- APPS PART  -->
+    <xi:include href="validation_rules.xml"/>
+    <!-- MODULES PART  -->
+    <!-- life_cycle -->
+    <xi:include href="../../../../modules/life_cycle/xml/IVS/validation_rules.xml"/>
+  </validationRules>
+  <!--
+    Validation rule sets
+    Each gives a set of request parameters that can be checked
+    with a type name that refers to defined types or an inline definition
+  -->
+  <dataTypes>
+    <!-- APPS PART  -->
+    <xi:include href="data_types.xml"/>
+    <!-- MODULES PART  -->
+    <!-- life_cycle -->
+    <xi:include href="../../../../modules/life_cycle/xml/IVS/data_types.xml"/>
+  </dataTypes>
+</inputValidation>

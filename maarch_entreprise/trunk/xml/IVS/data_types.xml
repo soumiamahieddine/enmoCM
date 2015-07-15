@@ -1,0 +1,28 @@
+  <dataTypes>
+    <dataType name="login" base="graph">
+      <pattern value="/^\w+$/" />
+    </dataType>
+    <dataType name="hex" base="graph">
+      <pattern value="/^[A-Fa-f0-9]+$/" />
+    </dataType>
+    <dataType name="order" base="string">
+      <enumeration value="asc" />
+      <enumeration value="desc" />
+    </dataType>
+    <dataType name="mode" base="string">
+      <enumeration value="add" />
+      <enumeration value="up" />
+      <enumeration value="list" />
+      <enumeration value="del" />
+    </dataType>
+    <dataType name="personname" base="string">
+      <pattern value="/^[A-z\s\-\']+$/" />
+    </dataType>
+    <dataType name="short_word" base="word">
+      <pattern value="/^\w{1,5}$/" />
+    </dataType>
+    <dataType name="word" base="string">
+      <pattern value="/^\w+$/" />
+    </dataType>
+    <dataType name="arrayOfStrings" base="name" />
+  </dataTypes>

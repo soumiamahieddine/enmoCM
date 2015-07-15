@@ -38,7 +38,7 @@ if ($_SESSION['config']['usePHPIDS'] == 'true') {
 }
 
 include 'apps/maarch_entreprise/tools/maarchIVS/MaarchIVS.php';
-$started = MaarchIVS::start(__DIR__ . '/xml/ivs.xml', 'xml');
+$started = MaarchIVS::start(__DIR__ . '/xml/IVS/requests_definitions.xml', 'xml');
 $valid = MaarchIVS::run('silent');
 if (!$valid) {
     echo '<pre>';
