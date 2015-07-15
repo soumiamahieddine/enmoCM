@@ -41,10 +41,21 @@ include 'apps/maarch_entreprise/tools/maarchIVS/MaarchIVS.php';
 $started = MaarchIVS::start(__DIR__ . '/xml/IVS/requests_definitions.xml', 'xml');
 $valid = MaarchIVS::run('silent');
 if (!$valid) {
-    echo '<pre>';
-    var_dump(MaarchIVS::debug());
-    echo '</pre>';
-    exit;
+    $validOutpout = MaarchIVS::debug();
+    /*echo '<pre>';
+    var_dump($validOutpout);
+    echo '</pre>';*/
+    $cptValid = count($validOutpout['validationErrors']);
+    //echo "count : " . $cptValid . PHP_EOL;
+    for ($cptV=0;$cptV<=count($cptValid);$cptV++) {
+        /*echo '<pre>';
+        var_dump($validOutpout['validationErrors'][$cptV]);
+        echo '</pre>';*/
+        $_SESSION['error'] .= $validOutpout['validationErrors'][$cptV]->message . PHP_EOL;
+        $_SESSION['error'] .= $validOutpout['validationErrors'][$cptV]->parameter . PHP_EOL;
+        $_SESSION['error'] .= $validOutpout['validationErrors'][$cptV]->value . PHP_EOL;
+    }
+    //exit;
 } else {
     //echo "Request is valid";
 }

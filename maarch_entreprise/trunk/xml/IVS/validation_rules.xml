@@ -13,14 +13,14 @@
     <validationRule name="update_users" extends="standardForm">
       <parameter name="user_id" type="login" />
       <parameter name="LastName" type="personname" />
-      <parameter name="FirstName" type="string" />
-      <parameter name="Phone" type="string" />
+      <parameter name="FirstName" type="safetext" />
+      <parameter name="Phone" type="phone" />
       <parameter name="Mail" type="email" />
       <parameter name="thumbprint" type="string" >
         <pattern value="/^[A-Fa-f0-9\s]+$/" />
       </parameter>
-      <parameter name="LoginMode" type="string" />
-      <parameter name="user_submit" type="string" />
+      <parameter name="LoginMode" type="safetext" />
+      <parameter name="user_submit" type="identifier" />
     </validationRule>
 
     <validationRule name="standardForm" extends="index">  

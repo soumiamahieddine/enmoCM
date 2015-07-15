@@ -1,6 +1,12 @@
   <dataTypes>
+    <dataType name="identifier" base="graph">
+      <pattern value="/^\w+$/" />
+    </dataType>
     <dataType name="login" base="graph">
       <pattern value="/^\w+$/" />
+    </dataType>
+    <dataType name="safetext" base="string">
+      <pattern value="/^[a-zA-Z0-9~@'&quot;;^*()_+[\]{}|\\,.?: -]*$/" />
     </dataType>
     <dataType name="hex" base="graph">
       <pattern value="/^[A-Fa-f0-9]+$/" />
@@ -25,4 +31,7 @@
       <pattern value="/^\w+$/" />
     </dataType>
     <dataType name="arrayOfStrings" base="name" />
+    <dataType name="phone" base="graph">
+      <pattern value="/^[0-9\-\+ ]{9,15}$/" />
+    </dataType>
   </dataTypes>
