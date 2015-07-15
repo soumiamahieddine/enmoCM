@@ -30,7 +30,7 @@
 * @ingroup reports
 */
 
-class admin_reports extends dbquery
+class admin_reports extends Database
 {
 
     /**
@@ -40,14 +40,14 @@ class admin_reports extends dbquery
     */
     public function load_reports_group($group_id)
     {
+		$db = new Database();
         $_SESSION['m_admin']['reports']['groups']=array();
 
-        $this->connect();
-        $this->query("select report_id from ".$_SESSION['tablename']['usergroups_reports'] ." where group_id = '".$group_id."'");
+        $stmt = $db->query("select report_id from ".$_SESSION['tablename']['usergroups_reports']." where group_id = ?", array($group_id));
         //$this->show();
-        if($this->nb_result() != 0)
+        if($stmt->rowCount() != 0)
         {
-            while($value = $this->fetch_object())
+            while($value = $stmt->fetchObject())
             {
                 array_push($_SESSION['m_admin']['reports']['groups'],$value->report_id);
             }
@@ -126,11 +126,10 @@ class admin_reports extends dbquery
 
             foreach(array_keys($enabled_reports)as $key)
             {
-                $db->connect();
-                $db->query("select group_id from ".$_SESSION['tablename']['usergroups_reports']." where report_id = '".$key."'");
+                $stmt = $db->query("select group_id from ".$_SESSION['tablename']['usergroups_reports']." where report_id = ? ", array($key));
                 $find = false;
                 $res = false;
-                while($res=$db->fetch_object())
+                while($res=$stmt->fetchObject())
                 {
                     if(usergroups_controler::inGroup($user_id, $res->group_id) == true)
                     {
@@ -186,17 +185,17 @@ class admin_reports extends dbquery
         //$this->show_array($users);exit;
         if(empty($_SESSION['error']))
         {
-            $this->connect();
-            $this->query("select * from ".$_SESSION['tablename']['usergroups']." where group_id = '".$id."' and enabled = 'Y'");
+			$db = new Database();
+            $stmt = $db->query("select * from ".$_SESSION['tablename']['usergroups']." where group_id = ? and enabled = 'Y'", array($id));
 
-            if($this->nb_result() == 0)
+            if($stmt->rowCount() == 0)
             {
                 $_SESSION['error'] = _GROUP.' '._UNKNOWN;
                 $state = false;
             }
             else
             {
-                $line = $this->fetch_object();
+                $line = $stmt->fetchObject();
                 $_SESSION['m_admin']['reports']['GroupId'] = $line->group_id;
                 $_SESSION['m_admin']['reports']['desc'] = $this->show_string($line->group_desc);
             }
