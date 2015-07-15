@@ -51,10 +51,10 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 $_SESSION['m_admin']['load_groups']  = true;
 $_SESSION['m_admin']['all_groups'] = array();
 
-$db = new dbquery();
-$db->connect();
-$db->query("select group_id, group_desc from ".$_SESSION['tablename']['usergroups']." where enabled ='Y' order by group_desc");
-while($res = $db->fetch_object())
+$db = new Databse();
+//$db->connect();
+$stmt = $db->query("select group_id, group_desc from ".$_SESSION['tablename']['usergroups']." where enabled ='Y' order by group_desc");
+while($res = $stmt->fetchObject())
 {
     array_push($_SESSION['m_admin']['all_groups'], array('id'=> $res->group_id, 'label' => $res->group_desc));
 }
