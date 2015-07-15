@@ -113,11 +113,13 @@ if(!$searchOnCases) {
     $select = array ();
     $select[$view] = array ();
     $where_request = $_SESSION['searching']['where_request'];
+    $arrayPDO = $_SESSION['searching']['where_request_parameters'];
     array_push($select[$view], "res_id", "status", "subject", "category_id as category_img", "contact_firstname", "contact_lastname", "contact_society", "user_lastname", "user_firstname", "dest_user", "type_label", "creation_date", "destination", "category_id, exp_user_id");
     $status = $status_obj->get_not_searchable_status();
     $status_str = '';
     for ($i = 0; $i < count($status); $i++) {
-        $status_str .= "'" . $status[$i]['ID'] . "',";
+        $status_str .= ":" . $status[$i]['ID'] . ",";
+        $arrayPDO = array_merge($arrayPDO, array(":".$status[$i]['ID'] => $status[$i]['ID']));
     }
    
     if ($status_str <> '') {
@@ -127,8 +129,7 @@ if(!$searchOnCases) {
     } else {
         $where_request .= " 1=1 ";
     }
-    //$status_str = preg_replace('/,$/', '', $status_str);
-    //$where_request .= "  status not in (" . $status_str . ") ";
+
     if ($core_tools->is_module_loaded("cases") == true) {
         array_push($select[$view], "case_id", "case_label", "case_description");
     }
@@ -157,11 +158,13 @@ if(!$searchOnCases) {
     $where_request = str_replace("and ()", "", $where_request);
 } else {
     $where_request = $_SESSION['searching']['where_request'];
+    $arrayPDO = $_SESSION['searching']['where_request_parameters'];
     $where_request = str_replace($_SESSION['collections'][0]['view'], $_SESSION['tablename']['cases'], $where_request);
     if ($_GET['searched_item'] == "res_id" || $_GET['searched_item'] == "res_id_in_process") {
         $case_id_in_res = $cases->get_case_id($_GET['searched_value']);
         if ($case_id_in_res <> '') {
-            $tmp1 = "  " . $_SESSION['tablename']['cases'] . ".case_id <> '" . $case_id_in_res . "' ";
+            $tmp1 = "  " . $_SESSION['tablename']['cases'] . ".case_id <> :caseIdInRes ";
+            $arrayPDO = array_merge($arrayPDO, array(":caseIdInRes" => $case_id_in_res));
         } else {
             $tmp1 = "  " . $_SESSION['tablename']['cases'] . ".case_id <> 0 ";
         }
@@ -189,22 +192,15 @@ $list = new list_show();
 $orderstr = $list->define_order($order, $field);
 
 if (($_REQUEST['template'] == 'group_case') && ($core_tools->is_module_loaded('cases'))) {
-    /*unset ($select);
-    $select = array ();
-    $select[$_SESSION['tablename']['cases']] = array ();
-    array_push($select[$_SESSION['tablename']['cases']], "case_id", "case_label", "case_description", "case_typist", "case_creation_date", "case_closing_date");*/
-    //$where = " " . $_SESSION['tablename']['cases'] . ".case_id = " . $view . ".case_id  and ";
 
-    //$where = "cases.case_closing_date is null and";
     $where .= "cases.case_closing_date is null and ";
-    //$cond= $where . $where_request;
-    //var_dump($cond);
+
     $request = new request();
-    $tab = $request->select($select, $where . $where_request, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
-    //$tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+    $tab = $request->PDOselect($select, $where . $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+
 } else {
     $request = new request();
-    $tab = $request->select($select, $where_request, $orderstr, $_SESSION['config']['databasetype']);
+    $tab = $request->PDOselect($select, $where_request, $arrayPDO,  $orderstr, $_SESSION['config']['databasetype']);
 }
 //$request->show();
 $_SESSION['error_page'] = '';

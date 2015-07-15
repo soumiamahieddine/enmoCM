@@ -530,7 +530,7 @@ $core->load_js();
 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>
 <script type="text/javascript">
 <!--
-var valeurs = { <?php functions::xecho($tab[1]);?>};
+var valeurs = { <?php echo $tab[1];?>};
 var loaded_query = <?php if(isset($_SESSION['current_search_query']) && !empty($_SESSION['current_search_query']))
 { echo $_SESSION['current_search_query'];}else{ echo '{}';}?>;
 
@@ -792,7 +792,7 @@ function del_query_confirm()
         </div>
 
         <script type="text/javascript">
-        load_query(valeurs, loaded_query, 'frmsearch2', '<?php functions::xecho($ieBrowser);?>, <?php echo _ERROR_IE_SEARCH;?>');
+        load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $ieBrowser;?>', '<?php echo _ERROR_IE_SEARCH;?>');
         </script>
 
     </dd>

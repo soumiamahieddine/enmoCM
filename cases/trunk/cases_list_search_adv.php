@@ -57,6 +57,7 @@ $list       = new lists();
  $_SESSION['collection_id_choice'] = 'letterbox_coll';
  $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice'] );
 
+$arrayPDO = array();
 
 //Table or view
     $select = array();
@@ -72,7 +73,10 @@ $list       = new lists();
     $where_tab[] = $_SESSION['tablename']['cases'] . ".case_id = " . $view . ".case_id";
 
     //From search
-    if (!empty($_SESSION['searching']['where_request'])) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
+    if (!empty($_SESSION['searching']['where_request'])) {
+        $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
+        $arrayPDO = array_merge($arrayPDO, $_SESSION['searching']['where_request_parameters']);
+    }
     
     //From searching comp query
     if(isset($_SESSION['searching']['comp_query']) && trim($_SESSION['searching']['comp_query']) <> '') {
@@ -94,7 +98,8 @@ $list       = new lists();
             $status_tab = array();
             $status_str = '';
             for($i=0; $i<count($status);$i++){
-                    array_push($status_tab, "'".$status[$i]['ID']."'");
+                array_push($status_tab, ":".$status[$i]['ID']);
+                $arrayPDO = array_merge($arrayPDO, array(":".$status[$i]['ID'] => $status[$i]['ID']));
             }
             $status_str = implode(' ,', $status_tab);
             $where_tab[] = "status not in (".$status_str.")";
@@ -117,7 +122,7 @@ $list       = new lists();
     }
     
 //Query       
-    $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", $add_security, false, true);
+    $tab=$request->PDOselect($select,$where_request, $arrayPDO, $orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", $add_security, false, true);
     //$request->show();
 //Result
     for ($i=0;$i<count($tab);$i++)
