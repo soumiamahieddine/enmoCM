@@ -3,4 +3,8 @@
     	<parameter name="page" value="lc_policies_management_controler"/>
       	<parameter name="module" value="life_cycle"/>
     </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="lc_manage_cycles" >
+    	<parameter name="page" value="lc_cycles_management_controler"/>
+      	<parameter name="module" value="life_cycle"/>
+    </requestDefinition>
 </requestDefinitions>
