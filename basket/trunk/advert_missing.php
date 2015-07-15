@@ -31,10 +31,8 @@
 
 if (isset($_POST['value']) && $_POST['value'] == "submit")
 {
-	$db = new dbquery();
-	$db->connect();
-	$db2 = new dbquery();
-	$db2->connect();
+	
+	$db = new Database();
 	require_once('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 
 	$bask = new basket();
@@ -45,9 +43,8 @@ if (isset($_POST['value']) && $_POST['value'] == "submit")
 	{
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 		$history = new history();
-		$history->connect();
-		$history->query("select firstname, lastname from ".$_SESSION['tablename']['users']." where user_id = '".$this_user."'");
-		$res = $history->fetch_object();
+		$stmt = $db->query("select firstname, lastname from ".$_SESSION['tablename']['users']." where user_id = ?",array($this_user));
+		$res = $stmt->fetchObject();
 		$history->add($_SESSION['tablename']['users'],$this_user,"RET",'userabs', $res->firstname." ".$res->lastname.' '._BACK_FROM_VACATION, $_SESSION['config']['databasetype']);
 	}
 	?>

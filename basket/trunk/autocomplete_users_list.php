@@ -33,17 +33,20 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 $req = new request();
 $req->connect();
 
+$db = new Database();
+
 $select = array();
 $select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
 
 $UserInput = str_replace("&#039;", "'", $_REQUEST['UserInput']);
 $BasketOwner = str_replace("&#039;", "'", $_REQUEST['baskets_owner']);
 
-$where = " (lower(lastname) like lower('".$req->protect_string_db($UserInput)."%') or lower(firstname) like lower('".$req->protect_string_db($UserInput)."%') or user_id like '".$req->protect_string_db($UserInput)."%')  and user_id <> '".$req->protect_string_db($BasketOwner)."' and (status = 'OK' ) and enabled = 'Y'";
+$where = " (lower(lastname) like lower(?) or lower(firstname) like lower(?) or user_id like ?)  and user_id <> ? and (status = 'OK' ) and enabled = 'Y'";
+$arrayPDO = array($req->protect_string_db($UserInput).'%',$req->protect_string_db($UserInput).'%',$req->protect_string_db($UserInput).'%',$req->protect_string_db($BasketOwner));
 
 $other = 'order by lastname';
 
-$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
+$res = $req->PDOselect($select, $where, $arrayPDO, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
 
 echo "<ul>\n";
 for($i=0; $i< min(count($res), 10)  ;$i++)

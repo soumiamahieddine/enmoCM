@@ -33,7 +33,7 @@ $_SESSION['error'] = "";
 $core_tools = new core_tools();
 $core_tools->load_lang();
 require_once('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
-
+$db = new Database();
 $bask = new basket();
 $res = array();
 //print_r($_REQUEST);
@@ -41,7 +41,6 @@ if(isset($_REQUEST['baskets_owner']) && !empty($_REQUEST['baskets_owner']))
 {
 	$baskets_owner = trim($_REQUEST['baskets_owner']);
 	$nb_baskets = $bask->get_numbers_of_baskets($baskets_owner);
-	$bask->connect();
 	//echo 'nb_baskets '.$nb_baskets."<br/>";
 	for($i=0; $i< $nb_baskets ;$i++)
 	{
@@ -51,9 +50,9 @@ if(isset($_REQUEST['baskets_owner']) && !empty($_REQUEST['baskets_owner']))
 			$user_id = substr($tmp, strpos($tmp, '(') +1);
 
 			$user_id = str_replace(')', '', $user_id);
-			$bask->query("select user_id from ".$_SESSION['tablename']['users']." where user_id = '".addslashes($user_id)."'  and enabled = 'Y'"); //and status = 'OK'
+			$stmt = $db->query("select user_id from ".$_SESSION['tablename']['users']." where user_id = ?  and enabled = 'Y'",array($user_id)); //and status = 'OK'
 			
-			if($bask->nb_result() == 1)
+			if($stmt->rowCount() == 1)
 			{
 				if(isset($_REQUEST['basket_'.$i]) && !empty($_REQUEST['basket_'.$i]))
 				{
@@ -106,16 +105,15 @@ else
 {
 	for($i=0; $i<count($res);$i++)
 	{
-		$bask->query("INSERT into ".$_SESSION['tablename']['bask_users_abs']." (user_abs, new_user, basket_id, is_virtual, basket_owner) VALUES ('".$baskets_owner."', '".$res[$i]['user_id']."', '".$res[$i]['basket_id']."', '".$res[$i]['is_virtual']."', '".$res[$i]['basket_owner']."')");
+		$stmt = $db->query("INSERT into ".$_SESSION['tablename']['bask_users_abs']." (user_abs, new_user, basket_id, is_virtual, basket_owner) VALUES (?, ?, ?, ?, ?)",array($baskets_owner,$res[$i]['user_id'],$res[$i]['basket_id'],$res[$i]['is_virtual'],$res[$i]['basket_owner']));
 	}
-	$bask->query("update ".$_SESSION['tablename']['users']." set status = 'ABS' where user_id = '".$baskets_owner."'");
+	$stmt = $db->query("UPDATE ".$_SESSION['tablename']['users']." set status = 'ABS' where user_id = ?",array($baskets_owner));
 	if($_SESSION['history']['userabs'] == "true")
 	{
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 		$history = new history();
-		$history->connect();
-		$history->query("select firstname, lastname from ".$_SESSION['tablename']['users']." where user_id = '".$baskets_owner."'");
-		$res = $history->fetch_object();
+		$stmt = $db->query("select firstname, lastname from ".$_SESSION['tablename']['users']." where user_id = ?",array($baskets_owner));
+		$res = $stmt->fetchObject();
 		$history->add($_SESSION['tablename']['users'],$baskets_owner,"ABS",'userabs', _ABS_USER.' : '.$res->firstname.' '.$res->lastname, $_SESSION['config']['databasetype']);
 	}
 	if($baskets_owner == $_SESSION['user']['UserId'])

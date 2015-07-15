@@ -67,22 +67,20 @@ class BasketControler
 		if (! isset($basketId) || empty($basketId)) {
 			return null;
 		}
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 
-		$query = "select * from " . BASKET_TABLE . " where basket_id = '"
-		       . $basketId . "'";
+		$query = "select * from " . BASKET_TABLE . " where basket_id = ?";
 		if (! $canBeDisabled) {
 			$query .= " and enabled = 'Y'";
 		}
 		try {
-		    $db->query($query);
+		    $stmt = $db->query($query,array($basketId));
 		} catch (Exception $e) {
 			echo _NO_BASKET_WITH_ID . ' ' . functions::xssafe($basketId) . ' // ';
 		}
-		if ($db->nb_result() > 0) {
+		if ($stmt->rowCount() > 0) {
 			$basket = new Basket_obj();
-			$queryResult = $db->fetch_object();
+			$queryResult = $stmt->fetchObject();
 			foreach ($queryResult as $key => $value) {
 				$basket->$key = $value;
 			}
@@ -123,13 +121,12 @@ class BasketControler
 		if (! isset($basket)) {
 			return false;
 		}
-		$this->connect();
 		$prepQuery = $this->_insertPrepare($basket);
-
+		$db = new Database();
 		$query = "insert into " . BASKET_TABLE . " (" . $prepQuery['COLUMNS']
-			   . ") values(" . $prepQuery['VALUES'] . ")";
+			   . ") values(?)";
 		try {
-			$db->query($query);
+			$stmt = $db->query($query,array($prepQuery['VALUES']));
 			$ok = true;
 		} catch (Exception $e) {
 			echo _CANNOT_INSERT_BASKET . " " . functions::xssafe($basket->toString()) . ' // ';
@@ -150,14 +147,12 @@ class BasketControler
 		if (! isset($basket)) {
 			return false;
 		}
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 		$query = "update " . BASKET_TABLE . " set "
-		       . $this->_updatePrepare($basket) . " where basket_id='"
-		       . $basket->basket_id . "'";
+		       . $this->_updatePrepare($basket) . " where basket_id=?";
 
 		try {
-			$db->query($query);
+			$stmt = $db->query($query,array($basket->basket_id));
 			$ok = true;
 		} catch (Exception $e) {
 			echo _CANNOT_UPDATE_BASKET . " " . functions::xssafe($basket->toString()) . ' // ';
@@ -181,12 +176,10 @@ class BasketControler
 		if (! $this->basketExists($basketId)) {
 			return false;
 		}
-		$db = new dbquery();
-		$db->connect();
-		$query = "delete from " . BASKET_TABLE . " where basket_id='"
-		       . $basketId . "'";
+		$db = new Database();
+		$query = "delete from " . BASKET_TABLE . " where basket_id=?";
 		try {
-			$db->query($query);
+			$stmt = $db->query($query,array($basketId));
 			$ok = true;
 		} catch (Exception $e) {
 			echo _CANNOT_DELETE_BASKET_ID . " " . functions::xssafe($basketId) . ' // ';
@@ -234,12 +227,10 @@ class BasketControler
 		if (! isset($id) || empty($id) || ! isset($field) || empty($field)) {
 			return false;
 		}
-		$db = new dbquery();
-		$db->connect();
-		$query = "delete from " . GROUPBASKET_TABLE . " where " . $field . "='"
-		       . $id . "'";
+		$db = new Database();
+		$query = "delete from " . GROUPBASKET_TABLE . " where " . $field . "=?";
 		try {
-			$db->query($query);
+			$stmt = $db->query($query,array($id));
 			$ok = true;
 		} catch (Exception $e) {
 			echo _CANNOT_DELETE . ' ' . functions::xssafe($field) . ' ' . functions::xssafe($id) . ' // ';
@@ -261,12 +252,11 @@ class BasketControler
 		if (! isset($id) || empty($id) || !isset($field) || empty($field)) {
 			return false;
 		}
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 		$query = "delete from " . ACTIONS_GROUPBASKET_TABLE . " where " . $field
-		       . "='" . $basketId . "'";
+		       . "=?";
 		try {
-			$db->query($query);
+			$stmt = $db->query($query,array($basketId));
 			$ok = true;
 		} catch (Exception $e) {
 			echo _CANNOT_DELETE . ' ' . functions::xssafe($field) . ' ' . functions::xssafe($id) . ' // ';
@@ -332,13 +322,12 @@ class BasketControler
 		if (! $this->basketExists($basketId)) {
 			return false;
 		}
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 		$query = "update " . BASKET_TABLE . " set enabled = 'N' "
-		       . "where basket_id='" . $basketId . "'";
+		       . "where basket_id=?";
 
 		try {
-			$db->query($query);
+			$db->query($query,array($basketId));
 			$ok = true;
 		} catch (Exception $e) {
 			echo _CANNOT_DISABLE_BASKET . " " . functions::xssafe($basketId) . ' // ';
@@ -363,13 +352,12 @@ class BasketControler
 			return false;
 		}
 
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 		$query = "update " . BASKET_TABLE . " set enabled = 'Y' "
-		       . "where basket_id='" . $basketId . "'";
+		       . "where basket_id=?";
 
 		try {
-			$db->query($query);
+			$stmt = $db->query($query,array($basketId));
 			$ok = true;
 		} catch (Exception $e) {
 			echo _CANNOT_ENABLE_BASKET . " " . functions::xssafe($basketId) . ' // ';
@@ -390,13 +378,11 @@ class BasketControler
 		if (! isset($basketId) || empty($basketId)) {
 			return false;
 		}
-		$db = new dbquery();
-		$db->connect();
-		$query = "select basket from " . BASKET_TABLE . " where basket_id = '"
-		       . $basketId . "'";
+		$db = new Database();
+		$query = "select basket from " . BASKET_TABLE . " where basket_id = ?";
 
 		try {
-			$db->query($query);
+			$stmt = $db->query($query,array($basketId));
 		} catch (Exception $e) {
 			echo _UNKNOWN . ' ' . _BASKET . " " . functions::xssafe($basketId) . ' // ';
 		}

@@ -46,8 +46,7 @@ if(isset($_REQUEST['cancel']))
 $groupe = "";
 $bask = new admin_basket();
 $func = new functions();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $_SESSION['m_admin']['basket_popup'] = array();
 if(isset($_REQUEST['group']) && !empty($_REQUEST['group']))
 {
@@ -91,8 +90,8 @@ else
 		$old_group = $_REQUEST['old_group'];
 	}
 
-	$db->query("select max(sequence) as seq from ".$_SESSION['tablename']['bask_groupbasket']." where group_id = '".$groupe."'");
-	$line = $db->fetch_object();
+	$stmt = $db->query("select max(sequence) as seq from ".$_SESSION['tablename']['bask_groupbasket']." where group_id = ?",array($groupe));
+	$line = $stmt->fetchObject();
 	$seq = $line->seq +1;
 
 	$actions = array();
@@ -107,8 +106,8 @@ else
 			{
 				$where = $_REQUEST['whereclause_'.$_REQUEST['actions'][$i]];
 			}
-			$db->query("select label_action from ".$_SESSION['tablename']['actions']." where id = ".$_REQUEST['actions'][$i]);
-			$res = $db->fetch_object();
+			$stmt = $db->query("select label_action from ".$_SESSION['tablename']['actions']." where id = ?",array($_REQUEST['actions'][$i]));
+			$res = $stmt->fetchObject();
 			$syntax =  $bask->where_test($where);
 
 			if($syntax['status'] <> true)
@@ -151,8 +150,8 @@ else
 	}
 	if(empty($_SESSION['error']))
 	{
-		$db->query("select group_desc from ".$_SESSION['tablename']['usergroups']." where group_id = '".$groupe."'");
-		$res = $db->fetch_object();
+		$stmt = $db->query("select group_desc from ".$_SESSION['tablename']['usergroups']." where group_id = ?",array($groupe));
+		$res = $stmt->fetchObject();
 		$tab = array(
                 "GROUP_ID"          => $groupe, 
                 "GROUP_LABEL"       => $res->group_desc, 

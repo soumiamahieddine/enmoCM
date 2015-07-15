@@ -34,8 +34,7 @@ $core_tools->load_lang();
 
 if(isset($_REQUEST['submit']))
 {
-	$db = new dbquery();
-	$db->connect();
+	$db = new Database();
 	require_once('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$bask = new basket();
 	$bask->cancel_abs($_SESSION['m_admin']['users']['user_id']);

@@ -30,16 +30,15 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $listArray = array();
-$db->query("select basket_name from baskets where (lower(coll_id) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') "
-	."or lower(basket_id) like lower('".$db->protect_string_db($_REQUEST['what'])."%') "
-	."or lower(basket_name) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')) and enabled <> 'N'");
+$stmt = $db->query("select basket_name from baskets where (lower(coll_id) like lower(?) "
+	."or lower(basket_id) like lower(?) "
+	."or lower(basket_name) like lower(?)) and enabled <> 'N'",array('%'.$_REQUEST['what'].'%',$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%'));
 
 //$db->show();
-while ($line = $db->fetch_object()) {
-	array_push($listArray, $db->show_string($line->basket_name));
+while ($line = $stmt->fetchObject()) {
+	array_push($listArray, functions::show_string($line->basket_name));
 }
 echo "<ul>\n";
 $basketViewList = 0;

@@ -124,15 +124,13 @@ class basket extends dbquery
             
         }
         //secondary baskets
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $checkedBasket = false;
         $query = "select ubs.group_id, ubs.basket_id, ug.group_desc"
                . " from user_baskets_secondary ubs, usergroups ug"
-               . " where ubs.group_id = ug.group_id and ubs.user_id = '" 
-               . $userData['UserId'] . "' order by ug.group_desc";
-        $db->query($query);
-        while($resQuery = $db->fetch_object()) {
+               . " where ubs.group_id = ug.group_id and ubs.user_id = ? order by ug.group_desc";
+        $stmt = $db->query($query, array($userData['UserId']));
+        while($resQuery = $stmt->fetchObject()) {
             array_push($_SESSION['user']['baskets'], $this->loadBasketSecondary(
                     $userData['UserId'], $resQuery->group_id, $resQuery->basket_id
                 )
@@ -293,17 +291,14 @@ class basket extends dbquery
      *
      */
     public function load_basket($primaryGroup, $userId)
-    {
+    { 
         $arr = array();
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select gb.basket_id from " . GROUPBASKET_TABLE . " gb, "
-            . BASKET_TABLE . " b where gb.group_id = '" . $primaryGroup
-            . "' and gb.basket_id = b.basket_id order by b.basket_name "
-        );
+            . BASKET_TABLE . " b where gb.group_id = ? and gb.basket_id = b.basket_id order by b.basket_name ",array($primaryGroup));
         // $db->show();
-        while ($res = $db->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             $tmp = $this->get_baskets_data(
                 $res->basket_id, $userId, $primaryGroup
             );
@@ -328,16 +323,14 @@ class basket extends dbquery
     }
 
     public function load_basket_abs($userId)
-    {
-        $db = new dbquery();
-        $db->connect();
+    { 
+        $db = new Database();
         $arr = array();
-        $db->query(
+        $stmt = $db->query(
             "select system_id, basket_id from " . USER_ABS_TABLE
-            . " where new_user = '" . $userId . "' "
-        );
+            . " where new_user = ?",array($userId));
         //$db->show();
-        while ($res = $db->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push(
                 $arr ,
                 $this->get_abs_baskets_data(
@@ -360,23 +353,21 @@ class basket extends dbquery
     private function _getActionsFromGroupbaket($basketId, $groupId, $userId = '')
     {
         $actions = array();
-        $this->connect();
+        $db = new Database();
 
-        $this->query(
+        $stmt = $db->query(
             "select agb.id_action, agb.where_clause, agb.used_in_basketlist, "
             . "agb.used_in_action_page, a.label_action, a.id_status, "
             . "a.action_page, a.is_folder_action from " . ACTIONS_TABLE . " a, "
             . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action and "
-            . "agb.group_id = '" . $groupId . "' and agb.basket_id = '"
-            . $basketId . "' and a.enabled = 'Y' and "
-            . "agb.default_action_list ='N'"
-        );
+            . "agb.group_id = ? and agb.basket_id = ? and a.enabled = 'Y' and "
+            . "agb.default_action_list ='N'",array($groupId,$basketId));
         require_once('core/class/ActionControler.php');
         $actionControler = new actionControler();
         $sec = new security();
         $secCtrl = new SecurityControler();
 
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             if ($res->where_clause <> '') {
                 $whereClause = $secCtrl->process_security_where_clause(
                     $res->where_clause, $userId
@@ -414,19 +405,17 @@ class basket extends dbquery
      */
     private function _getDefaultAction($basketId, $groupId)
     {
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select agb.id_action from " . ACTIONS_TABLE . " a, "
             . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action "
-            . "and agb.group_id = '" . $groupId . "' and agb.basket_id = '"
-            . $basketId . "' and a.enabled = 'Y' "
-            . "and agb.default_action_list ='Y'"
-        );
+            . "and agb.group_id = ? and agb.basket_id = ? and a.enabled = 'Y' "
+            . "and agb.default_action_list ='Y'",array($groupId,$basketId));
 
-        if ($this->nb_result() < 1) {
+        if ($stmt->rowCount() < 1) {
             return '';
         } else {
-            $res = $this->fetch_object();
+            $res = $stmt->fetchObject();
             return $res->id_action;
         }
     }
@@ -479,12 +468,10 @@ class basket extends dbquery
     private function _loadActivityUser($userId)
     {
         if ( isset($userId) ) {
-            $this->connect();
-            $this->query(
-                "SELECT status from " . USERS_TABLE . " where user_id='"
-                . $userId . "'"
-            );
-            $line = $this-> fetch_object();
+            $db = new Database();
+            $stmt = $db->query(
+                "SELECT status from " . USERS_TABLE . " where user_id=?",array($userId));
+            $line = $stmt-> fetchObject();
 
             if ($line->status == 'ABS') {
                 $_SESSION['abs_user_status'] = true;
@@ -650,7 +637,7 @@ class basket extends dbquery
             return $arr;
         } else {
             $sec = new security();
-            $this->connect();
+            $db = new Database();
             $table = $sec->retrieve_view_from_coll_id($collId);
             if (empty($table)) {
                 $table = $sec->retrieve_table_from_coll_id($collId);
@@ -663,11 +650,10 @@ class basket extends dbquery
             // If mode "PAGE_USE", add the action 'end_action' to validate
             // the current action
             if ($mode == 'PAGE_USE') {
-                $this->connect();
-                $this->query(
-                    "SELECT label_action FROM actions WHERE id=".$_SESSION['current_basket']['default_action']
-                );
-                $label_action = $this->fetch_object();
+                $db = new Database();
+                $stmt = $db->query(
+                    "SELECT label_action FROM actions WHERE id= ?",array($_SESSION['current_basket']['default_action']));
+                $label_action = $stmt->fetchObject();
                 array_push(
                     $arr,
                     array(
@@ -708,8 +694,8 @@ class basket extends dbquery
                             . $_SESSION['current_basket']['actions'][$i]
                             ['WHERE'];
                         }
-                        $this->query('select res_id from ' . $table . ' ' . $where);
-                        if ($this->nb_result() > 0) {
+                        $stmt = $db->query('select res_id from ' . $table . ' ' . $where);
+                        if ($stmt->rowCount() > 0) {
                             array_push(
                                 $arr,
                                 array(
@@ -759,20 +745,18 @@ class basket extends dbquery
      * @param  $userId string Owner of the baskets (identifier)
      */
     public function get_baskets($userId)
-    {
-        $this->connect();
-        $this->query(
+    {   
+        $db = new Database();
+        $stmt = $db->query(
             "select b.basket_id, b.basket_name from " . BASKET_TABLE . " b, "
             . USERGROUP_CONTENT_TABLE . " uc, " . GROUPBASKET_TABLE . " gb, "
-            . USERGROUPS_TABLE . " u where uc.user_id = '" . $userId
-            . "' and uc.primary_group = 'Y' and gb.group_id = uc.group_id "
+            . USERGROUPS_TABLE . " u where uc.user_id = ? and uc.primary_group = 'Y' and gb.group_id = uc.group_id "
             . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id "
-            . "and u.enabled = 'Y' "
-        );
+            . "and u.enabled = 'Y' ",array($userId));
 
         //$this->show();
         $arr = array();
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push(
                 $arr,
                 array(
@@ -797,31 +781,26 @@ class basket extends dbquery
      * @param  $userId string Owner of the baskets (identifier)
      */
     public function get_abs_baskets($userId)
-    {
-        $this->connect();
-        $this->query(
+    {var_dump('get_abs_baskets');exit;
+        $db = new Database();
+        $stmt = $db->query(
             "select basket_id, is_virtual, basket_owner from "
-            . USER_ABS_TABLE . " mu where user_abs = '" . $userId . "'"
-        );
-        $db = new dbquery();
-        $db->connect();
+            . USER_ABS_TABLE . " mu where user_abs = ?",array($userId));
         $arr = array();
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             $basketId = $res->basket_id;
             $basketOwner = $res->basket_owner;
             $isVirtual = $res->is_virtual;
-            $db->query(
+            $stmt2 = $db->query(
                 "select basket_name from " . BASKET_TABLE
-                . " where basket_id ='" . $basketId . "'"
-            );
-            $res2 = $db->fetch_object();
+                . " where basket_id = ?",array($basketId));
+            $res2 = $stmt2->fetchObject();
             $basketName = $res2->basket_name;
             if ($isVirtual == 'Y' && $basketOwner <> '') {
-                $db->query(
+                $stmt3 = $db->query(
                     "select firstname, lastname from " . USERS_TABLE
-                    ." where user_id = '" . $basketOwner . "'"
-                );
-                $res2 = $db->fetch_object();
+                    ." where user_id = ?", array($basketOwner));
+                $res2 = $stmt3->fetchObject();
                 $userName = $res2->firstname . ' ' . $res2->lastname;
                 $basketName .= "(".$userName.")";
             } else {
@@ -851,17 +830,15 @@ class basket extends dbquery
     public function get_baskets_data($basketId, $userId, $groupId, $isSecondary = false)
     {
         $tab = array();
-        $this->connect();
+        $db = new Database();
 
         $sec = new security();
         $secCtrl = new SecurityControler();
-        $this->query(
+        $stmt = $db->query(
             "select basket_id, coll_id, basket_name, basket_desc, "
             . "basket_clause, is_visible, is_generic, is_folder_basket from "
-            . BASKET_TABLE . " where basket_id = '" . $this->protect_string_db(
-            $basketId) . "' and enabled = 'Y'"
-        );
-        $res = $this->fetch_object();
+            . BASKET_TABLE . " where basket_id = ? and enabled = 'Y'",array($basketId));
+        $res = $stmt->fetchObject();
         $tab['id'] = $res->basket_id;
         $tab['coll_id'] = $res->coll_id;
         $core = new core_tools();
@@ -883,22 +860,19 @@ class basket extends dbquery
         $absBasket = false;
 
         if (!$isSecondary) {
-            $this->query(
+            $stmt = $db->query(
                 "select group_id from "
                 . $_SESSION['tablename']['usergroup_content']
-                . " where primary_group = 'Y' and user_id = '".$userId."'"
-            );
-            $res = $this->fetch_object();
+                . " where primary_group = 'Y' and user_id = ?",array($userId));
+            $res = $stmt->fetchObject();
             $groupId = $res->group_id;
         }
-        $this->query(
+        $stmt = $db->query(
             "select sequence, can_redirect, can_delete, can_insert, "
             . "result_page, list_lock_clause, sublist_lock_clause, "
             ."redirect_basketlist, redirect_grouplist from "
-            . GROUPBASKET_TABLE . " where group_id = '" . $groupId
-            . "' and basket_id = '" . $basketId . "' "
-        );
-        $res = $this->fetch_object();
+            . GROUPBASKET_TABLE . " where group_id = ? and basket_id = ?",array($groupId,$basketId));
+        $res = $stmt->fetchObject();
 
         $basketIdPage = $res->result_page;
         $tab['id_page'] = $basketIdPage;
@@ -943,14 +917,12 @@ class basket extends dbquery
         
 		$tab['lock_sublist'] = str_replace('where', '', $tab['lock_sublist']);
 
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select group_desc from "
             . USERGROUPS_TABLE
-            . " where group_id = '" . $groupId . "'"
-        );
-        $res = $db->fetch_object();
+            . " where group_id = ?",array($groupId));
+        $res = $stmt->fetchObject();
         $groupDesc = $res->group_desc;
 
         $tab['group_id'] = $groupId;
@@ -972,16 +944,14 @@ class basket extends dbquery
     public function get_abs_baskets_data($basketId, $userId, $systemId)
     {
         $tab = array();
-        $this->connect();
+        $db = new Database();
         $sec = new security();
         $secCtrl = new SecurityControler();
-        $this->query(
+        $stmt = $db->query(
             "select basket_id, coll_id, basket_name, basket_desc, basket_clause, is_visible"
-            . ", is_folder_basket from " . BASKET_TABLE . " where basket_id = '" . $basketId
-            . "' and enabled = 'Y'"
-        );
+            . ", is_folder_basket from " . BASKET_TABLE . " where basket_id = ? and enabled = 'Y'",array($basketId));
 
-        $res = $this->fetch_object();
+        $res = $stmt->fetchObject();
         $tab['id'] = $res->basket_id;
         $tab['coll_id'] = $res->coll_id;
         $tab['table'] = $sec->retrieve_table_from_coll($tab['coll_id']);
@@ -997,14 +967,12 @@ class basket extends dbquery
         $tab['clause'] = $res->basket_clause;
         $tab['is_visible'] = $res->is_visible;
         $tab['is_folder_basket'] = $res->is_folder_basket;
-        $this->query(
+        $stmt = $db->query(
             "select user_abs, is_virtual, basket_owner from " . USER_ABS_TABLE
-            . " where basket_id = '" . $basketId . "' and new_user = '"
-            . $userId . "' and system_id = " . $systemId
-        );
+            . " where basket_id = ? and new_user = ? and system_id = ?", array($basketId,$userId,$systemId));
 
         $absBasket = true;
-        $res = $this->fetch_object();
+        $res = $stmt->fetchObject();
         $isVirtual = $res->is_virtual;
         $basketOwner = $res->basket_owner;
         $userAbs = $res->user_abs;
@@ -1014,22 +982,20 @@ class basket extends dbquery
         }
         if ($isVirtual == 'N') {
             $tmpUser = $userAbs;
-            $this->query(
+            $stmt = $db->query(
                 "select firstname, lastname from " . USERS_TABLE
-                . " where user_id ='" . $userAbs . "'"
-            );
-            $res = $this->fetch_object();
+                . " where user_id = ? ",array($userAbs));
+            $res = $stmt->fetchObject();
             $nameUserAbs = $res->firstname . ' ' . $res->lastname;
             $tab['name'] .= " (" . $nameUserAbs . ")";
             $tab['desc'] .= " (" . $nameUserAbs . ")";
             $tab['id'] .= "_" . $userAbs;
         } else {
             $tmpUser = $basketOwner;  /// TO DO : test if basket_owner empty
-            $this->query(
+            $stmt = $db->query(
                 "select firstname, lastname from " . USERS_TABLE
-                ." where user_id ='" . $basketOwner . "'"
-            );
-            $res = $this->fetch_object();
+                ." where user_id = ?",array($basketOwner));
+            $res = $stmt->fetchObject();
             $nameBasketOwner = $res->firstname . ' ' . $res->lastname;
             $tab['name'] .= " (" . $nameBasketOwner . ")";
             $tab['desc'] .= " (" . $nameBasketOwner . ")";
@@ -1041,25 +1007,22 @@ class basket extends dbquery
             && $tmpUser <> $_SESSION['user']['UserId'])
             || (!isset($_SESSION['user']['UserId']))
         ) {
-            $this->query(
+            $stmt = $db->query(
                 "select group_id from " . USERGROUP_CONTENT_TABLE
-                . " where primary_group = 'Y' and user_id = '" . $tmpUser . "'"
-            );
+                . " where primary_group = 'Y' and user_id = ?",array($tmpUser));
 
-            $res = $this->fetch_object();
+            $res = $stmt->fetchObject();
             $primaryGroup = $res->group_id;
         } else {
             $primaryGroup = $_SESSION['user']['primarygroup'];
         }
-        $this->query(
+        $stmt = $db->query(
             "select  sequence, can_redirect, can_delete, can_insert, "
             . "result_page, redirect_basketlist, list_lock_clause, "
             ."sublist_lock_clause, redirect_grouplist from "
-            . GROUPBASKET_TABLE . " where group_id = '" . $primaryGroup
-            . "' and basket_id = '" . $basketId . "' "
-        );
+            . GROUPBASKET_TABLE . " where group_id = ? and basket_id = ? ",array($primaryGroup,$basketId));
 
-        $res = $this->fetch_object();
+        $res = $stmt->fetchObject();
 
         $basketIdPage = $res->result_page;
         $tab['id_page'] = $basketIdPage;
@@ -1118,19 +1081,16 @@ class basket extends dbquery
         if ($userId == $_SESSION['user']['UserId']) {
             return count($_SESSION['user']['baskets']);
         } else {
-            $this->connect();
-            $this->query(
+            $db = new Database();
+            $stmt = $db->query(
                 "SELECT gb.basket_id  FROM " . USERGROUP_CONTENT_TABLE . " uc, "
-                . GROUPBASKET_TABLE . " gb WHERE uc.user_id = '" . $userId
-                . "' AND uc.primary_group = 'Y' AND uc.group_id = gb.group_id"
-            );
-            $nb = $this->nb_result();
-            $this->query(
+                . GROUPBASKET_TABLE . " gb WHERE uc.user_id = ? AND uc.primary_group = 'Y' AND uc.group_id = gb.group_id",array($userId));
+            $nb = $stmt->rowCount();
+            $stmt = $db->query(
                 "select basket_id from " . USER_ABS_TABLE
-                . " mu where new_user = '" . $userId . "'"
-            );
+                . " mu where new_user = ?",array($userId));
 
-            return $nb + $this->nb_result();
+            return $nb + $stmt->rowCount();
         }
     }
 
@@ -1217,54 +1177,41 @@ class basket extends dbquery
     public function cancel_abs($userId)
     {
         $this->connect();
-        $db = new dbquery();
-        $db->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
             "delete from " . USER_ABS_TABLE . " where is_virtual = 'Y' "
-            . "and basket_owner = '" . $this->protect_string_db($userId) . "'"
-        );
+            . "and basket_owner = ?",array($userId));
         //Then we search all the virtual baskets assigned to the user
-        $this->query(
+        $stmt = $db->query(
             "select basket_owner, basket_id from " . USER_ABS_TABLE
-            . " where is_virtual='Y' and user_abs = '"
-            . $this->protect_string_db($userId) . "'"
-        );
+            . " where is_virtual='Y' and user_abs = ?",array($userId));
         // and delete this baskets if they were reassigned to someone else
         $i = 0;
-        while ($res = $this->fetch_object()) {
-            $db->query(
+        while ($res = $stmt->fetchObject()) {
+            $stmt2 = $db->query(
                 "delete from " . USER_ABS_TABLE . " where is_virtual ='Y' "
-                . " and basket_id = '"
-                . $this->protect_string_db($res->basket_id)
-                . "' and basket_owner = '"
-                . $this->protect_string_db($res->basket_owner) . "'"
-            );
+                . " and basket_id = ? and basket_owner = ? ",array($res->basket_id,$res->basket_owner));
             //$this->show();
             $i ++;
         }
         // then we delete all baskets where the user was the missing user
-        $this->query(
-            "DELETE  from " . USER_ABS_TABLE . " WHERE user_abs='"
-            . $this->protect_string_db($userId) . "'"
+        $stmt = $db->query(
+            "DELETE  from " . USER_ABS_TABLE . " WHERE user_abs=?",array($userId)
         );
-        $this->query(
-            "update " . USERS_TABLE . " set status = 'OK' where user_id = '"
-            . $userId . "'"
-        );
+        $stmt = $db->query(
+            "update " . USERS_TABLE . " set status = 'OK' where user_id = ?",array($userId));
     }
 
     public function check_reserved_time($resId, $collId)
     {
         $sec = new security();
         $table = $sec->retrieve_table_from_coll($collId);
-        $db = new dbquery();
+        $db = new Database();
         if (! empty($table) && ! empty($resId)) {
-            $db->connect();
-            $db->query(
+            $stmt = $db->query(
                 "select video_time, video_user, destination from " . $table
-                . " where res_id = " . $resId
-            );
-            $res = $db->fetch_object();
+                . " where res_id = ?",array($resId));
+            $res = $stmt->fetchObject();
             $timestamp = $res->video_time;
             $videoUser = $res-> video_user;
             $dest = $res->destination;
@@ -1277,9 +1224,7 @@ class basket extends dbquery
             )
             ) {
                 $db->query(
-                    "update " . $table . " set video_user = '' where res_id = "
-                    . $resId
-                );
+                    "update " . $table . " set video_user = '' where res_id = ?",array($resId));
                 return false;
             } else { // Reserved time not yet expired
                 if ($videoUser == $_SESSION['user']['UserId']
@@ -1305,16 +1250,14 @@ class basket extends dbquery
         if (empty($table)) {
             return false;
         }
-        $this->connect();
-        $this->query(
-            "select video_user, video_time from " . $table . " where res_id = "
-            . $resId
-        );
+        $db = new Database();
+        $stmt = $db->query(
+            "select video_user, video_time from " . $table . " where res_id = ?", array($resId));
 
-        if ($this->nb_result() == 0) {
+        if ($stmt->rowCount() == 0) {
             return false;
         }
-        $res = $this->fetch_object();
+        $res = $stmt->fetchObject();
         $user = $res->video_user;
 
         if ($delay > 1) {
@@ -1328,23 +1271,19 @@ class basket extends dbquery
         if ($user <> $userId && ! empty($user)) {
             return false;
         } else {
-            $this->query(
-                "update " . $table . " set video_time = " . strtotime($delayStr)
-                . ", video_user = '" . $userId . "' where res_id = " . $resId
-            );
+            $stmt = $db->query(
+                "update " . $table . " set video_time = ?, video_user = ? where res_id = ?", array(strtotime($delayStr),$userId,$resId));
             return true;
         }
     }
     
     public function is_redirect_to_action_basket($basketId, $groupId) 
     {
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
                 "select result_page from " . GROUPBASKET_TABLE 
-                . " where group_id = '" . $groupId
-                . "' and basket_id = '" . $basketId . "' "
-            );
-        $res = $this->fetch_object();
+                . " where group_id = ? and basket_id = ?",array($groupId,$basketId));
+        $res = $stmt->fetchObject();
 
         $basketIdPage = $res->result_page;
         if ($basketIdPage == 'redirect_to_action') {
@@ -1387,19 +1326,15 @@ class basket extends dbquery
         if ($role <> '') {
             $itemMode = " and item_mode = '" . $role . "'";
         }
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select res_id from " . ENT_LISTINSTANCE 
-            . " where coll_id = '" . $collId . "'"
-            . " and res_id = " . $resId
-            . " and item_id = '" . $userId . "'"
+            . " where coll_id = ? and res_id = ? and item_id = "
             . " and item_mode <> 'dest'"
-            . " and item_mode <> 'cc'"
-            . $itemMode
-            . " and visible = 'Y'"
+            . " and item_mode <> 'cc' ?"
+            . " and visible = 'Y'",array($collId,$resId,$userId,$itemMode)
         );
-        $line = $db->fetch_object();
+        $line = $stmt->fetchObject();
         if ($line->res_id <> '') {
             return true;
         } else {
@@ -1418,16 +1353,14 @@ class basket extends dbquery
     public function whatAreMyRoleInTheWF($userId, $resId, $collId)
     {
         $roles = array();
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select item_mode from " . ENT_LISTINSTANCE 
-            . " where coll_id = '" . $collId . "'"
-            . " and res_id = " . $resId
-            . " and item_id = '" . $userId . "'"
-            . " and visible = 'Y'"
+            . " where coll_id = ?"
+            . " and res_id = ? and item_id = ?"
+            . " and visible = 'Y'",array($collId,$resId,$userId)
         );
-        while ($line = $db->fetch_object()) {
+        while ($line = $stmt->fetchObject()) {
             array_push($roles, $line->item_mode);
         }
         return $roles;
@@ -1444,16 +1377,14 @@ class basket extends dbquery
      */
     public function whatIsMySequenceForMyRole($userId, $resId, $collId, $role)
     {
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select sequence from " . ENT_LISTINSTANCE 
-            . " where coll_id = '" . $collId . "'"
-            . " and res_id = " . $resId
-            . " and item_id = '" . $userId . "'"
-            . " and item_mode = '" . $role . "'"
-        );
-        $line = $db->fetch_object();
+            . " where coll_id = ?"
+            . " and res_id = ?"
+            . " and item_id = ?"
+            . " and item_mode = ?",array($collId,$resId,$userId,$role));
+        $line = $stmt->fetchObject();
         if ($line->sequence <> '') {
             return $line->sequence;
         } else {
@@ -1472,17 +1403,15 @@ class basket extends dbquery
      */
     public function isThereSomeoneBeforeMeInTheWF($resId, $collId, $role, $sequence)
     {
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select res_id from " . ENT_LISTINSTANCE 
-            . " where coll_id = '" . $collId . "'"
-            . " and res_id = " . $resId
-            . " and item_mode = '" . $role . "'"
-            . " and sequence < " . $sequence
-            . " and (visible = 'N' or visible = '' or visible is null)"
-        );
-        $line = $db->fetch_object();
+            . " where coll_id = ?"
+            . " and res_id = ?"
+            . " and item_mode = ?"
+            . " and sequence < ?"
+            . " and (visible = 'N' or visible = '' or visible is null)",array($collId,$resId,$role,$sequence));
+        $line = $stmt->fetchObject();
         if ($line->res_id <> '') {
             return true;
         } else {
@@ -1501,17 +1430,15 @@ class basket extends dbquery
      */
     public function isThereSomeoneAfterMeInTheWF($resId, $collId, $role, $sequence)
     {
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select res_id from " . ENT_LISTINSTANCE 
-            . " where coll_id = '" . $collId . "'"
-            . " and res_id = " . $resId
-            . " and item_mode = '" . $role . "'"
-            . " and sequence > " . $sequence
-            . " and (visible = 'N' or visible = '' or visible is null)"
-        );
-        $line = $db->fetch_object();
+            . " where coll_id = ?"
+            . " and res_id = ?"
+            . " and item_mode = ?"
+            . " and sequence > ?"
+            . " and (visible = 'N' or visible = '' or visible is null)",array($collId,$resId,$role,$sequence));
+        $line = $stmt->fetchObject();
         if ($line->res_id <> '') {
             return true;
         } else {
@@ -1530,17 +1457,15 @@ class basket extends dbquery
      */
     public function whoseTheNextInTheWF($resId, $collId, $role, $sequence)
     {
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select item_id, sequence from " . ENT_LISTINSTANCE 
-            . " where coll_id = '" . $collId . "'"
-            . " and res_id = " . $resId
-            . " and item_mode = '" . $role . "'"
-            . " and sequence > " . $sequence
-            . " and (visible = 'N' or visible = '' or visible is null) order by sequence"
-        );
-        $line = $db->fetch_object();
+            . " where coll_id = ?"
+            . " and res_id = ?"
+            . " and item_mode = ?"
+            . " and sequence > ?"
+            . " and (visible = 'N' or visible = '' or visible is null) order by sequence",array($collId,$resId,$role,$sequence));
+        $line = $stmt->fetchObject();
         if ($line->item_id <> '') {
             return $line->item_id;
         } else {
@@ -1559,17 +1484,15 @@ class basket extends dbquery
      */
     public function whoseThePreviousInTheWF($resId, $collId, $role, $sequence)
     {
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select item_id, sequence from " . ENT_LISTINSTANCE
-            . " where coll_id = '" . $collId . "'"
-            . " and res_id = " . $resId
-            . " and item_mode = '" . $role . "'"
-            . " and sequence < " . $sequence
-            . " and (visible = 'N' or visible = '' or visible is null) order by sequence desc"
-        );
-        $line = $db->fetch_object();
+            . " where coll_id = ?"
+            . " and res_id = ?"
+            . " and item_mode = ?"
+            . " and sequence < ?"
+            . " and (visible = 'N' or visible = '' or visible is null) order by sequence desc",array($collId,$resId,$role,$sequence));
+        $line = $stmt->fetchObject();
         if ($line->item_id <> '') {
             return $line->item_id;
         } else {
@@ -1597,53 +1520,48 @@ class basket extends dbquery
             $oppositeWay = '>';
             $order = ' desc';
         }
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select item_id from " . ENT_LISTINSTANCE 
-            . " where coll_id = '" . $collId . "'"
-            . " and res_id = " . $resId
-            . " and item_mode = '" . $role . "'"
+            . " where coll_id = ?"
+            . " and res_id = ?"
+            . " and item_mode = ?"
             . " and (visible = 'N' or visible = '' or visible is null) "
-            . " and sequence " . $way . " ("
+            . " and sequence ? ("
                 . " select sequence from " . ENT_LISTINSTANCE 
-                . " where coll_id = '" . $collId . "'"
-                . " and res_id = " . $resId
-                . " and item_mode = '" . $role . "'"
-                . " and item_id = '" . $userId . "')"
-            . " order by sequence" . $order
-        );
+                . " where coll_id = ?"
+                . " and res_id = ?"
+                . " and item_mode = ?"
+                . " and item_id = ?)"
+            . " order by sequence ?", array($collId,$resId,$role,$way,$collId,$resId,$role,$userId,$order));
         //$db->show();exit;
-        $line = $db->fetch_object();
+        $line = $stmt->fetchObject();
         if ($line->item_id <> '') {
-            $db->query(
+            $stmt2 = $db->query(
                 "update " . ENT_LISTINSTANCE . " set visible = 'Y'" 
-                . " where coll_id = '" . $collId . "'"
-                . " and res_id = " . $resId
-                . " and item_mode = '" . $role . "'"
-                . " and item_id = '" . $line->item_id . "'"
-            );
+                . " where coll_id = ?"
+                . " and res_id = ?"
+                . " and item_mode = ?"
+                . " and item_id = ?",array($collId,$resId,$role,$line->item_id));
         }
-        $db->query(
+        $stmt = $db->query(
             "update " . ENT_LISTINSTANCE . " set visible = 'N'" 
-            . " where coll_id = '" . $collId . "'"
-            . " and res_id = " . $resId
-            . " and item_mode = '" . $role . "'"
-            . " and item_id = '" . $userId . "'"
-        );
+            . " where coll_id = ?"
+            . " and res_id = ?"
+            . " and item_mode = ?"
+            . " and item_id = ?",array($collId,$resId,$role,$userId));
         //update to visible N everyone before or after me
-        $db->query(
+        $stmt = $db->query(
             "update " . ENT_LISTINSTANCE . " set visible = 'N'" 
-            . " where coll_id = '" . $collId . "'"
-            . " and res_id = " . $resId
-            . " and item_mode = '" . $role . "'"
-            . " and sequence " . $oppositeWay . " ("
+            . " where coll_id = ?"
+            . " and res_id = ?"
+            . " and item_mode = ?"
+            . " and sequence ? ("
                 . " select sequence from " . ENT_LISTINSTANCE 
-                . " where coll_id = '" . $collId . "'"
-                . " and res_id = " . $resId
-                . " and item_mode = '" . $role . "'"
-                . " and item_id = '" . $userId . "')"
-        );
+                . " where coll_id = ?"
+                . " and res_id = ?"
+                . " and item_mode = ?"
+                . " and item_id = ?)",array($collId,$resId,$role,$oppositeWay,$collId,$resId,$role,$userId));
         //$db->show();exit;
     }
 
@@ -1656,31 +1574,26 @@ class basket extends dbquery
     public function getBasketsOfSecondaryProfiles($userId)
     {
         $this->connect();
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select b.basket_id, b.basket_name, u.group_desc, u.group_id from " . BASKET_TABLE . " b, "
                 . USERGROUP_CONTENT_TABLE . " uc, " . GROUPBASKET_TABLE . " gb, "
-                . USERGROUPS_TABLE . " u where uc.user_id = '" . $userId
-                . "' and uc.primary_group <> 'Y' and gb.group_id = uc.group_id "
+                . USERGROUPS_TABLE . " u where uc.user_id = ? and uc.primary_group <> 'Y' and gb.group_id = uc.group_id "
                 . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id "
                 . "and u.enabled = 'Y' "
                 . "and b.basket_id not in ("
                 . "select b.basket_id from " . BASKET_TABLE . " b, "
                 . USERGROUP_CONTENT_TABLE . " uc, " . GROUPBASKET_TABLE . " gb, "
-                . USERGROUPS_TABLE . " u where uc.user_id = '" . $userId
-                . "' and uc.primary_group = 'Y' and gb.group_id = uc.group_id "
+                . USERGROUPS_TABLE . " u where uc.user_id = ? and uc.primary_group = 'Y' and gb.group_id = uc.group_id "
                 . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id "
                 . "and u.enabled = 'Y')";
-        $this->query($query);
+        $stmt = $db->query($query,array($userId,$userId));
         //$this->show();
         $arr = array();
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             $checkedBasket = false;
-            $query = "select count(system_id) as result from user_baskets_secondary where user_id = '" 
-                . $userId . "' and group_id = '" . $res->group_id 
-                . "' and basket_id = '" . $res->basket_id . "'";
-            $db->query($query);
-            $resQuery = $db->fetch_object();
+            $query = "select count(system_id) as result from user_baskets_secondary where user_id = ? and group_id = ? and basket_id = ?";
+            $stmt2 = $db->query($query,array($userId,$res->group_id,$res->basket_id));
+            $resQuery = $stmt2->fetchObject();
             if ($resQuery->result == 1) {
                 $checkedBasket = true;
             }

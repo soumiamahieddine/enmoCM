@@ -20,8 +20,7 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $basketId = trim(str_replace(
     'nb_', 
     '',
@@ -32,10 +31,10 @@ for ($i=0;$i<count($_SESSION['user']['baskets']);$i++) {
     if ($_SESSION['user']['baskets'][$i]['id'] == $basketId) {
         if (!empty($_SESSION['user']['baskets'][$i]['table'])) {
             if (trim($_SESSION['user']['baskets'][$i]['clause']) <> '') {
-                $db->query('select * from '
+                $stmt = $db->query('select * from '
                     . $_SESSION['user']['baskets'][$i]['view']
-                    . ' where ' . $_SESSION['user']['baskets'][$i]['clause'], true);
-                $nb = $db->nb_result();
+                    . ' where ' . $_SESSION['user']['baskets'][$i]['clause']);
+                $nb = $stmt->rowCount();
             }
         }
     }

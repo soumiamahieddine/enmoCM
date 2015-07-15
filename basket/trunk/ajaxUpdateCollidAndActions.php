@@ -1,7 +1,6 @@
 <?php
 $core_tools = new core_tools();
-$dbActions= new dbquery();
-$dbActions->connect();
+$db = new Database();
 require_once('modules/basket/class/class_admin_basket.php');
 $adminBasket = new admin_basket();
 
@@ -12,11 +11,11 @@ $_SESSION['m_admin']['basket']['all_actions'] = array();
 if ($_REQUEST['is_reload_groups'] == 'true') {
     $_SESSION['m_admin']['basket']['groups'] = array();
 }
-$dbActions->query("select id, label_action, keyword, create_id, action_page from " 
+$stmt = $db->query("select id, label_action, keyword, create_id, action_page from " 
     . $_SESSION['tablename']['actions'] . " where enabled = 'Y' order by label_action"
 );
 
-while ($line = $dbActions->fetch_object()) {
+while ($line = $stmt->fetchObject()) {
     if ($core_tools->is_action_defined($line->id) && $line->action_page == '') {
         array_push(
             $_SESSION['m_admin']['basket']['all_actions'] ,

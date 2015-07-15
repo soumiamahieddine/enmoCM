@@ -64,7 +64,8 @@ if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
     //$what = addslashes($func->wash($_REQUEST['what'], "nick", "", "no"));
     $what = addslashes($func->wash($_REQUEST['what']));
     //$where .= " lower(basket_id) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
-    $where .= " lower(basket_name) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
+    $where .= " lower(basket_name) like lower(?) ";
+    $arrayPDO = array($what.'%');
 }
 $list = new list_show();
 $order = 'asc';
@@ -81,8 +82,7 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 $orderstr = $list->define_order($order, $field);
 
 $request= new request;
-$tab=$request->select($select,$where,$orderstr ,$_SESSION['config']['databasetype']);
-
+$tab=$request->PDOselect($select,$where, $arrayPDO, $orderstr ,$_SESSION['config']['databasetype']);
 for ($i=0;$i<count($tab);$i++)
 {
     for ($j=0;$j<count($tab[$i]);$j++)
@@ -102,7 +102,7 @@ for ($i=0;$i<count($tab);$i++)
             }
             if($tab[$i][$j][$value]=="basket_name")
             {
-                $tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["value"]=functions::show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["basket_name"]=$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]=_BASKET;
                 $tab[$i][$j]["size"]="35";
@@ -114,7 +114,7 @@ for ($i=0;$i<count($tab);$i++)
             }
             if($tab[$i][$j][$value]=="basket_desc")
             {
-                $tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["value"]=functions::show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["basket_desc"]=$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]=_DESC;
                 $tab[$i][$j]["size"]="25";
@@ -178,17 +178,18 @@ $_SESSION['m_admin']['basket']['nbdays'] ="";
 $_SESSION['m_admin']['basket']['groups'] = array();
 $_SESSION['m_admin']['non_generic_basket'] = array();
 
-$request->query("select basket_id, basket_name from ".$_SESSION['tablename']['bask_baskets']." where is_generic = 'N' ");
-while($line = $request->fetch_object())
+$db = new Database();
+$stmt = $db->query("select basket_id, basket_name from ".$_SESSION['tablename']['bask_baskets']." where is_generic = 'N' ");
+while($line = $stmt->fetchObject())
 {
     array_push($_SESSION['m_admin']['non_generic_basket'], array("BASKET_ID" => $line->basket_id, "BASKET_NAME" => $request->show_string($line->basket_name)));
 }
-$request->query("select group_id from ".$_SESSION['tablename']['usergroups']." where enabled = 'Y' order by group_desc");
+$stmt = $db->query("select group_id from ".$_SESSION['tablename']['usergroups']." where enabled = 'Y' order by group_desc");
 
 $_SESSION['groups'] = array();
 $line = "";
 
-while($line = $request->fetch_object())
+while($line = $stmt->fetchObject())
 {
     array_push($_SESSION['groups'],  $line->group_id);
 }
@@ -218,8 +219,8 @@ while ($line = $request->fetch_object()) {
 
 $_SESSION['m_admin']['basket']['all_statuses'] = array();
 
-$request->query("select id, label_status from ".$_SESSION['tablename']['status']." where maarch_module = 'apps' order by label_status");
-while($line = $request->fetch_object()) {
+$stmt = $db->query("select id, label_status from ".$_SESSION['tablename']['status']." where maarch_module = 'apps' order by label_status");
+while($line = $stmt->fetchObject()) {
     array_push($_SESSION['m_admin']['basket']['all_statuses'] ,array('ID' => $line->id, 'LABEL' => $line->label_status));
 }
 

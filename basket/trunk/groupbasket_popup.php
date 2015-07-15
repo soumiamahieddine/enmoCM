@@ -31,8 +31,7 @@
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $group ="";
 $tab1 = array();
 $tab2 = array();
@@ -42,9 +41,9 @@ $_SESSION['service_tag'] = 'group_basket';
 if(isset($_GET['id']) && !empty($_GET['id']))
 {
     $group = trim($_GET['id']);
-    $db->query("select group_desc from ".$_SESSION['tablename']['usergroups']." where group_id = '".$group."' ");
-    $res = $db->fetch_object();
-    array_push($tab2, array('ID' =>$group, 'LABEL' => $db->show_string($res->group_desc)));
+    $stmt = $db->query("select group_desc from ".$_SESSION['tablename']['usergroups']." where group_id = ?",array($group));
+    $res = $stmt->fetchObject();
+    array_push($tab2, array('ID' =>$group, 'LABEL' => functions::show_string($res->group_desc)));
 }
 $_SESSION['m_admin']['basket']['ind_group'] = 0;
 $found = false;
@@ -62,9 +61,9 @@ for($i=0;$i<count($_SESSION['groups']);$i++)
 {
     if(!in_array($_SESSION['groups'][$i], $tab1))
     {
-        $db->query("select group_desc from ".$_SESSION['tablename']['usergroups']." where group_id = '".$_SESSION['groups'][$i]."'");
-        $res = $db->fetch_object();
-        array_push($tab2, array('ID' =>$_SESSION['groups'][$i], 'LABEL' => $db->show_string($res->group_desc)));
+        $stmt = $db->query("select group_desc from ".$_SESSION['tablename']['usergroups']." where group_id = ?",array($_SESSION['groups'][$i]));
+        $res = $stmt->fetchObject();
+        array_push($tab2, array('ID' =>$_SESSION['groups'][$i], 'LABEL' => functions::show_string($res->group_desc)));
     }
 }
 $core_tools->load_html();

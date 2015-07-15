@@ -34,7 +34,7 @@ $_SESSION['error'] = "";
 $core_tools = new core_tools();
 $core_tools->load_lang();
 require_once('modules/basket/class/class_modules_tools.php');
-
+$db = new Database();
 $bask = new basket();
 $res = array();
 //print_r($_REQUEST);
@@ -68,13 +68,9 @@ if(
 if (!empty($_SESSION['error'])) {
 	functions::xecho( $_SESSION['error']);
 } else {
-	$bask->query("delete from user_baskets_secondary where user_id = '" . $basketOwner . "'");	
+	$stmt = $db->query("delete from user_baskets_secondary where user_id = ?",array($basketOwner));	
 	for ($i=0;$i<count($arrayOfBaskets);$i++) {
-		$bask->query("insert into user_baskets_secondary (user_id, group_id, basket_id) VALUES ('" 
-			. $basketOwner . "', '" 
-			. $arrayOfBaskets[$i]['groupId'] . "', '"
-			. $arrayOfBaskets[$i]['basketId'] . "')"
-		);
+		$stmt = $db->query("insert into user_baskets_secondary (user_id, group_id, basket_id) VALUES (?,?,?)",array($basketOwner,$arrayOfBaskets[$i]['groupId'],$arrayOfBaskets[$i]['basketId']));
 	}	
 	?>
 	<script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users_management_controler&admin=users&mode=list';</script>

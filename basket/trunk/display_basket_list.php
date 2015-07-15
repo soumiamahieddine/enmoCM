@@ -43,8 +43,7 @@ if (!isset($_REQUEST['noinit'])) {
 }
 /************/
 $bask = new basket();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
 ?>
 <!--<div id="welcome_box_right">-->
@@ -109,11 +108,11 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                             preg_match('/^CopyMailBasket/', $_SESSION['user']['baskets'][$i]['id'])
                             && !empty($_SESSION['user']['baskets'][$i]['view'])
                         ) {
-                            $db->query('select res_id from '
+                            $stmt = $db->query('select res_id from '
                                 . $_SESSION['user']['baskets'][$i]['view']
                                 . ' where ' . $_SESSION['user']['baskets'][$i]['clause']
                             );
-                            $nb = $db->nb_result();
+                            $nb = $stmt->rowCount();
                         }
                         if ($nb <> 0) {
                             $nb = '(' . $nb . ')';
