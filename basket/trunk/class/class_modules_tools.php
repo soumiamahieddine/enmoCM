@@ -781,7 +781,7 @@ class basket extends dbquery
      * @param  $userId string Owner of the baskets (identifier)
      */
     public function get_abs_baskets($userId)
-    {var_dump('get_abs_baskets');exit;
+    {//var_dump('get_abs_baskets');exit;
         $db = new Database();
         $stmt = $db->query(
             "select basket_id, is_virtual, basket_owner from "
