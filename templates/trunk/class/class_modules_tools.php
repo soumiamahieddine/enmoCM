@@ -12,7 +12,7 @@
 *
 */
 
-class templates extends dbquery
+class templates extends Database
 {
     function __construct()
     {
@@ -48,12 +48,12 @@ class templates extends dbquery
 
     public function getAllTemplates()
     {
+			$db = new Database();
             $return = array();
+              
+            $stmt = $db->query("select * from ".$_SESSION['tablename']['temp_templates']);
             
-            $this->connect();   
-            $this->query("select * from ".$_SESSION['tablename']['temp_templates']);
-            
-            while ($result = $this->fetch_object())
+            while ($result = $stmt->fetchObject())
             {
                 $this_template = array();
                 $this_template['id'] = $result->id;
@@ -69,25 +69,29 @@ class templates extends dbquery
     
     public function getAllItemsLinkedToModel($template_id, $field ='')
     {
+		$db = new Database();
         $items = array();
         if(empty($template_id))
         {
             return $items;
         }
-        $this->connect();
 
         if(empty($field))
         {
-            $this->query("select distinct what from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ".$template_id);
-            while($res = $this->fetch_object())
+            $stmt = $db->query("select distinct what from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ? ", 
+							array($template_id)
+					);
+            while($res = $stmt->fetchObject())
             {
                 $items[$res->what] = array();
             }
             foreach(array_keys($items) as $key)
             {
-                $this->query("select value_field from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ".$template_id." and what = '".$key."'");
+                $stmt2 = $db->query("select value_field from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ? and what = ? ", 
+									array($template_id,$key)
+						);
                 $items[$key] = array();
-                while($res = $this->fetch_object())
+                while($res = $stmt2->fetchOject())
                 {
                     array_push($items[$key], $res->value_field);
                 }
@@ -96,8 +100,10 @@ class templates extends dbquery
         else
         {
             $items[$field] = array();
-            $this->query("select value_field from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ".$template_id." and what = '".$field."'");
-            while($res = $this->fetch_object())
+            $stmt = $db->query("select value_field from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ? and what = ? ", 
+							array($template_id,$field)
+					);
+            while($res = $stmt->fetchObject())
             {
                 array_push($items[$field], $res->value_field);
             }

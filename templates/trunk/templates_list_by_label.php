@@ -32,15 +32,16 @@
 
 require_once 'modules/templates/templates_tables_definition.php';
 require_once 'core/admin_tools.php';
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-    $db->query("select template_label as tag from " 
-               . _TEMPLATES_TABLE_NAME . " where template_label ilike '" 
-               . $db->protect_string_db($_REQUEST['what']) . "%' order by template_label");
+    $stmt = $db->query("select template_label as tag from " 
+               . _TEMPLATES_TABLE_NAME . " where template_label ilike ? order by template_label", 
+               array('%'.$_REQUEST['what']).'%')
+            );
 } else {
-    $db->query("select template_label as tag from " 
-               . _TEMPLATES_TABLE_NAME . " where template_label like '" 
-               . $_REQUEST['what'] . "%' order by template_label");
+    $stmt = $db->query("select template_label as tag from " 
+               . _TEMPLATES_TABLE_NAME . " where template_label like ? order by template_label",
+               array($_REQUEST['what'] . '%')
+            );
 }
-At_showAjaxList($db, $_REQUEST['what']);
+At_showAjaxList($stmt, $_REQUEST['what']);

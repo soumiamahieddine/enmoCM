@@ -24,8 +24,7 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
     header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment_html&template=".$_REQUEST['template_id']);
     exit;
 } else {
-    $conn = new dbquery();
-    $conn->connect();
+    $conn = new Database();
     if (empty($_REQUEST['template_content']) || !isset($_REQUEST['template_content'])) {
         $_SESSION['error'] .= _NO_CONTENT.'.<br/>';
         if ($_REQUEST['mode'] == 'add') {
@@ -133,8 +132,10 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
                 header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment_html&template=".$_REQUEST['template_id']);
                 exit;
             } else {
-                $conn->query("select docserver_id, path, filename from ".$_SESSION['tablename']['attach_res_attachments']." where res_id = ".$_REQUEST['id']);
-                if ($conn->nb_result() == 0) {
+                $stmt = $conn->query("select docserver_id, path, filename from ".$_SESSION['tablename']['attach_res_attachments']." where res_id = ? ", 
+									array($_REQUEST['id'])
+						);
+                if ($stmt->rowCount() == 0) {
                     $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS."...";
                     ?>
                     <script  type="text/javascript">
@@ -145,12 +146,14 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
                     <?php
                     exit;
                 } else {
-                    $line = $conn->fetch_object();
+                    $line = $stmt->fetchObject();
                     $docserver = $line->docserver_id;
                     $path = $line->path;
                     $filename = $line->filename;
-                    $conn->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver."'");
-                    $line_doc = $conn->fetch_object();
+                    $stmt = $conn->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = ? ", 
+									array($docserver)
+								);
+                    $line_doc = $stmt->fetchObject();
                     $docserver = $line_doc->path_template;
                     $file = $docserver.$path.strtolower($filename);
                     $file = str_replace("#",DIRECTORY_SEPARATOR,$file);
@@ -162,7 +165,9 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
                     }
                     fwrite($myfile, $_REQUEST['template_content']);
                     fclose($myfile);
-                    $conn->query("update ".$_SESSION['tablename']['attach_res_attachments']." set title = '".$func->protect_string_db($_REQUEST['answer_title'])."' where res_id = ".$_REQUEST['id']);
+                    $stmt = $conn->query("update ".$_SESSION['tablename']['attach_res_attachments']." set title = ? where res_id = ? ", 
+									array($func->protect_string_db($_REQUEST['answer_title'], $_REQUEST['id'])
+									);
                     if ($_SESSION['history']['attachup'] == "true") {
                         require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
                         $hist = new history();

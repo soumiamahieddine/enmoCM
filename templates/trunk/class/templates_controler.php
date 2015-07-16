@@ -363,15 +363,14 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             );
             return $control;
         }
-        $db = new dbquery();
-        $db->connect();
-        $query = "delete from "._TEMPLATES_TABLE_NAME." where template_id ='"
-            .$db->protect_string_db($template->template_id)."'";
+        $db = new Database();
+        $query = "delete from "._TEMPLATES_TABLE_NAME." where template_id = ? " ;
+            
         try {
             if ($_ENV['DEBUG']) {
                 echo $query.' // ';
             }
-            $db->query($query);
+            $stmt = $db->query($query, array($template->template_id));
             $ok = true;
         } catch (Exception $e) {
             $control = array(
@@ -381,7 +380,6 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             );
             $ok = false;
         }
-        $db->disconnect();
         $control = array(
             'status' => 'ok', 
             'value' => $template->template_id,
@@ -453,23 +451,21 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         if (!isset ($template_id) || empty ($template_id)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
+        
         $query = "select template_id from " . _TEMPLATES_TABLE_NAME 
-            . " where template_id = '" . $template_id . "'";
+            . " where template_id = ? ";
         try {
             if ($_ENV['DEBUG']) {
                 echo $query . ' // ';
             }
-            $db->query($query);
+            $stmt = $db->query($query, array($template_id));
         } catch (Exception $e) {
             echo _UNKNOWN . _TEMPLATES . ' ' . $template_id . ' // ';
         }
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        $db->disconnect();
         return false;
     }
 
@@ -484,8 +480,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         if (!isset($template_id) || empty($template_id)) {
             return false;
         }
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         /*$query = "select template_id from " . _TEMPLATES_ASSOCIATION_TABLE_NAME
             . " where template_id = '" . $template_id . "'";
         $db->query($query);
@@ -494,13 +489,11 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             return true;
         }*/
         $query = "select template_id from " . _TEMPLATES_DOCTYPES_EXT_TABLE_NAME
-            . " where template_id = '" . $template_id . "'";
-        $db->query($query);
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
+            . " where template_id = ? ";
+        $stmt = $db->query($query, array($template_id));
+        if ($stmt->rowCount() > 0) {
             return true;
         }
-        $db->disconnect();
     }
     
     /**
@@ -510,13 +503,12 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
     */
     public function getLastTemplateId($templateLabel)
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select template_id from " . _TEMPLATES_TABLE_NAME
-            . " where template_label = '" . $templateLabel . "'"
+            . " where template_label = ? "
             . " order by template_id desc";
-        $db->query($query);
-        $queryResult = $db->fetch_object();
+        $stmt = $db->query($query, array($templateLabel));
+        $queryResult = $stmt->fetchObject();
         return $queryResult->template_id;
     }
 
@@ -527,8 +519,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
     */
     public function getAllId($can_be_disabled = false) 
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $query = "select template_id from " . _TEMPLATES_TABLE_NAME . " ";
         if (!$can_be_disabled) {
             $query .= " where enabled = 'Y'";
@@ -537,21 +528,19 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             if ($_ENV['DEBUG']) {
                 echo $query . ' // ';
             }
-            $db->query($query);
+            $stmt = $db->query($query);
         } catch (Exception $e) {
             echo _NO_TEMPLATES . ' // ';
         }
-        if ($db->nb_result() > 0) {
+        if ($db->rowCount() > 0) {
             $result = array();
             $cptId = 0;
-            while ($queryResult = $db->fetch_object()) {
+            while ($queryResult = $stmt->fetchObject()) {
                 $result[$cptId] = $queryResult->template_id;
                 $cptId++;
             }
-            $db->disconnect();
             return $result;
         } else {
-            $db->disconnect();
             return null;
         }
     }
@@ -564,11 +553,10 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
     public function getAllTemplatesForSelect() {
         $return = array();
         
-        $db = new dbquery();
-        $db->connect();
-        $db->query("select * from " . _TEMPLATES_TABLE_NAME . " ");
+        $db = new Database();
+        $stmt = $db->query("select * from " . _TEMPLATES_TABLE_NAME . " ");
         
-        while ($result = $db->fetch_object()) {
+        while ($result = $stmt->fetchObject()) {
             $this_template = array();
             $this_template['ID'] = $result->template_id;
             $this_template['LABEL'] = $result->template_label;
@@ -589,17 +577,15 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
     */
     public function getAllTemplatesForProcess($entityId) 
     {
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select * from " 
             . _TEMPLATES_TABLE_NAME . " t, " 
             . _TEMPLATES_ASSOCIATION_TABLE_NAME . " ta where "
-            . "t.template_id = ta.template_id and ta.what = 'destination' and ta.value_field = '" 
-            . $entityId . "'"
+            . "t.template_id = ta.template_id and ta.what = 'destination' and ta.value_field = ? ", array($entityId)
         );
         $templates = array();
-        while ($res = $db->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push(
                 $templates, array(
                     'ID' => $res->template_id, 
@@ -615,56 +601,53 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
     
     public function updateTemplateEntityAssociation($templateId)
     {
-        $db = new dbquery();
-        $db->connect();
+		
+        $db = new Database();
         $db->query("delete from " . _TEMPLATES_ASSOCIATION_TABLE_NAME 
-            . " where template_id = '" . $templateId . "' and what = 'destination'"
+            . " where template_id = ? and what = 'destination' ", array($templateId)
         );
+       
         for ($i=0;$i<count($_SESSION['m_admin']['templatesEntitiesSelected']);$i++) {
             $db->query("insert into " . _TEMPLATES_ASSOCIATION_TABLE_NAME 
-                . " (template_id, what, value_field, maarch_module) VALUES (" 
-                . $templateId . ", 'destination', '" 
-                . $_SESSION['m_admin']['templatesEntitiesSelected'][$i] 
-                . "', 'entities')"
-            );
+                . " (template_id, what, value_field, maarch_module) VALUES (?, 'destination', ? , 'entities')", 
+                array($templateId, $_SESSION['m_admin']['templatesEntitiesSelected'][$i])
+                
+            ); 
         }
     }
     
     public function getAllItemsLinkedToModel($templateId, $field ='')
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         $items = array();
         if (empty($templateId)) {
             return $items;
         }
-        $db->connect();
         if (empty($field)) {
-            $db->query("select distinct what from " 
+            $stmt = $db->query("select distinct what from " 
                 . _TEMPLATES_ASSOCIATION_TABLE_NAME
-                . " where template_id = " .$templateId
+                . " where template_id = ", array($templateId)
             );
-            while ($res = $db->fetch_object()) {
+            while ($res = $stmt->fetchObject()) {
                 $items[$res->what] = array();
             }
             foreach (array_keys($items) as $key) {
-                $db->query("select value_field from " 
+                $stmt = $db->query("select value_field from " 
                     . _TEMPLATES_ASSOCIATION_TABLE_NAME 
-                    . " where template_id = " . $templateId 
-                    . " and what = '" . $key . "'");
+                    . " where template_id = ? and what = ? ", array($templateId, $key)
+                    );
                 $items[$key] = array();
-                while ($res = $db->fetch_object()) {
+                while ($res = $stmt->fetchObject()) {
                     array_push($items[$key], $res->value_field);
                 }
             }
         } else {
             $items[$field] = array();
-            $db->query("select value_field from " 
+            $stmt = $db->query("select value_field from " 
                 . _TEMPLATES_ASSOCIATION_TABLE_NAME 
-                . " where template_id = " . $templateId . " and what = '" 
-                . $field . "'"
+                . " where template_id = ? and what = ? ", array($templateId, $field)
             );
-            while ($res = $db->fetch_object()) {
+            while ($res = $stmt->fetchObject()) {
                 array_push($items[$field], $res->value_field);
             }
         }
@@ -877,12 +860,11 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             fclose($handle);
             return $fileNameOnTmp;
         } else {
-            $dbTemplate = new dbquery();
-            $dbTemplate->connect();
+            $dbTemplate = new Database();
             $query = "select path_template from " . _DOCSERVERS_TABLE_NAME 
                 . " where docserver_id = 'TEMPLATES'";
-            $dbTemplate->query($query);
-            $resDs = $dbTemplate->fetch_object();
+            $stmt = $dbTemplate->query($query);
+            $resDs = $stmt->fetchObject();
             $pathToDs = $resDs->path_template;
             $pathToTemplateOnDs = $pathToDs . str_replace(
                     "#", 

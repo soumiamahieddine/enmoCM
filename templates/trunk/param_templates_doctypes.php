@@ -1,15 +1,17 @@
 <?php
 
 if ($_SESSION['service_tag'] == 'doctype_up') {
-    $db = new dbquery();
-    $db->connect();
-    $db->query("select * from ".$_SESSION['tablename']['temp_templates_doctype_ext']." where type_id = ".$_SESSION['m_admin']['doctypes']['TYPE_ID']."");
+    $db = new Database();
+    $stmt = $db->query("select * from ".$_SESSION['tablename']['temp_templates_doctype_ext']." where type_id = ? ",
+				array($_SESSION['m_admin']['doctypes']['TYPE_ID'])
+			);
+			
     //$db->show();
-    if ($db->nb_result() == 0) {
+    if ($stmt->rowCount() == 0) {
         $_SESSION['m_admin']['doctypes']['is_generated'] = 'N';
         $_SESSION['m_admin']['doctypes']['template_id'] = '';
     } else {
-        $line = $db->fetch_object();
+        $line = $stmt->fetchObject();
         $_SESSION['m_admin']['doctypes']['is_generated'] = $line->is_generated;
         $_SESSION['m_admin']['doctypes']['template_id'] = $line->template_id;
     }
@@ -17,13 +19,12 @@ if ($_SESSION['service_tag'] == 'doctype_up') {
     $_SESSION['m_admin']['doctypes']['is_generated'] = 'N';
     $_SESSION['m_admin']['doctypes']['template_id'] = '';
 } elseif ($_SESSION['service_tag'] == 'frm_doctype') {
-    $db = new dbquery();
-    $db->connect();
-    $db->query("select template_id, template_label from "
+    $db = new Database();
+    $stmt = $db->query("select template_id, template_label from "
         . $_SESSION['tablename']['temp_templates'] . " where template_type = 'HTML' and (template_target = 'doctypes' or template_target = '')"
     );
     $templates = array();
-    while ($res = $db->fetch_object()) {
+    while ($res = $stmt->fetch0bject()) {
         array_push($templates, array('id' => $res->template_id, 'label' => $res->template_label));
     }
     ?>
@@ -57,26 +58,36 @@ if ($_SESSION['service_tag'] == 'doctype_up') {
     $_SESSION['m_admin']['doctypes']['template_id'] = $_REQUEST['templates'];
 
 } elseif ($_SESSION['service_tag'] == "doctype_updatedb") {
-    $db = new dbquery();
-    $db->connect();
-    $db->query("delete from ".$_SESSION['tablename']['temp_templates_doctype_ext']." where type_id = ".$_SESSION['m_admin']['doctypes']['TYPE_ID']."");
+    $db = new Database();
+    $stmt = $db->query("delete from ".$_SESSION['tablename']['temp_templates_doctype_ext']." where type_id = ? ",
+				array($_SESSION['m_admin']['doctypes']['TYPE_ID'])
+				);
+				
     if (!empty($_SESSION['m_admin']['doctypes']['template_id']) && isset($_SESSION['m_admin']['doctypes']['template_id'])) {
-        $db->query("insert into ".$_SESSION['tablename']['temp_templates_doctype_ext']." (type_id, is_generated, template_id) values (".$_SESSION['m_admin']['doctypes']['TYPE_ID'].", '".$_SESSION['m_admin']['doctypes']['is_generated']."', ".$_SESSION['m_admin']['doctypes']['template_id'].")");
+        $stmt = $db->query("insert into ".$_SESSION['tablename']['temp_templates_doctype_ext']." (type_id, is_generated, template_id) values (?, ?, ?) ",
+					array($_SESSION['m_admin']['doctypes']['TYPE_ID'], $_SESSION['m_admin']['doctypes']['is_generated'], $_SESSION['m_admin']['doctypes']['template_id'])
+				);
     } else {
-        $db->query("insert into ".$_SESSION['tablename']['temp_templates_doctype_ext']." (type_id, is_generated) values (".$_SESSION['m_admin']['doctypes']['TYPE_ID'].", '".$_SESSION['m_admin']['doctypes']['is_generated']."')");
+        $stmt = $db->query("insert into ".$_SESSION['tablename']['temp_templates_doctype_ext']." (type_id, is_generated) values (?, ?) ",
+					array($_SESSION['m_admin']['doctypes']['TYPE_ID'], $_SESSION['m_admin']['doctypes']['is_generated'])
+				);
     }
     //$db->show();
     //exit();
 } elseif ($_SESSION['service_tag'] == "doctype_insertdb") {
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     if (!empty($_SESSION['m_admin']['doctypes']['template_id']) && isset($_SESSION['m_admin']['doctypes']['template_id'])) {
-        $db->query("insert into ".$_SESSION['tablename']['temp_templates_doctype_ext']." (type_id, is_generated, template_id) values (".$_SESSION['m_admin']['doctypes']['TYPE_ID'].", '".$_SESSION['m_admin']['doctypes']['is_generated']."', ".$_SESSION['m_admin']['doctypes']['template_id'].")");
+        $stmt = $db->query("insert into ".$_SESSION['tablename']['temp_templates_doctype_ext']." (type_id, is_generated, template_id) values (?, ?, ?) ",
+					array($_SESSION['m_admin']['doctypes']['TYPE_ID'], $_SESSION['m_admin']['doctypes']['is_generated'], $_SESSION['m_admin']['doctypes']['template_id'])
+				);
     } else {
-        $db->query("insert into ".$_SESSION['tablename']['temp_templates_doctype_ext']." (type_id, is_generated) values (".$_SESSION['m_admin']['doctypes']['TYPE_ID'].", '".$_SESSION['m_admin']['doctypes']['is_generated']."')");
+        $stmt = $db->query("insert into ".$_SESSION['tablename']['temp_templates_doctype_ext']." (type_id, is_generated) values (?, ?) ",
+					array($_SESSION['m_admin']['doctypes']['TYPE_ID'], $_SESSION['m_admin']['doctypes']['is_generated'])
+				);
     }
 } elseif ($_SESSION['service_tag'] == "doctype_delete") {
-    $db = new dbquery();
-    $db->connect();
-    $db->query("delete from ".$_SESSION['tablename']['temp_templates_doctype_ext']." where type_id = ".$_SESSION['m_admin']['doctypes']['TYPE_ID']."");
+    $db = new Database();
+    $stmt = $db->query("delete from ".$_SESSION['tablename']['temp_templates_doctype_ext']." where type_id = ? ",
+				 array($_SESSION['m_admin']['doctypes']['TYPE_ID'])
+			);
 }

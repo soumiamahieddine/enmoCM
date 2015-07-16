@@ -3,7 +3,7 @@ require_once 'modules/templates/class/templates_controler.php';
 require_once 'modules/templates/templates_tables_definition.php';
 require_once 'modules/attachments/attachments_tables.php';
 $templates_controler = new templates_controler();
-$db = new dbquery();
+$db = new Database();
 $core = new core_tools();
 $core->load_lang();
 $_SESSION['template_content'] = '';

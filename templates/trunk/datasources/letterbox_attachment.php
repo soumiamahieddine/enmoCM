@@ -3,8 +3,7 @@
 ** Get aditionnal data to merge template
 **
 *********************************************************************************/
-$dbDatasource = new dbquery();
-$dbDatasource->connect();
+$dbDatasource = new Database();
 
 require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
@@ -13,8 +12,8 @@ $contacts = new contacts_v2();
 
 // Main document resource from view
 $datasources['res_letterbox'] = array();
-$dbDatasource->query("SELECT * FROM " . $res_view . " WHERE res_id = " . $res_id . "");
-$doc = $dbDatasource->fetch_array();
+$stmt = $dbDatasource->query("SELECT * FROM " . $res_view . " WHERE res_id = ? ", array($res_id));
+$doc = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $date = new DateTime($doc['doc_date']);
 $doc['doc_date']=$date->format('d/m/Y');
@@ -36,12 +35,12 @@ $datasources['res_letterbox'][] = $doc;
 
 
 //multicontact
-$dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = " . $res_id . " AND contact_id ='".$res_contact_id."'");
-$datasources['res_letterbox_contact'][] = $dbDatasource->fetch_assoc();
+$stmt = $dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = ? AND contact_id = ? ", array($res_id, $res_contact_id));
+$datasources['res_letterbox_contact'][] = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
     $datasources['contact'] = array();
-    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$datasources['res_letterbox_contact'][0]['contact_id']." and ca_id = ".$datasources['res_letterbox_contact'][0]['address_id']);
-    $myContact = $dbDatasource->fetch_array();
+    $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($datasources['res_letterbox_contact'][0]['contact_id'], $datasources['res_letterbox_contact'][0]['address_id']));
+    $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
     $myContact['contact_type'] = $contacts->get_label_contact($myContact['contact_type'], $_SESSION['tablename']['contact_types']);
     $myContact['contact_purpose_id'] = $contacts->get_label_contact($myContact['contact_purpose_id'], $_SESSION['tablename']['contact_purposes']);
     $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
@@ -51,8 +50,8 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
 }else if (isset($datasources['res_letterbox'][0]['contact_id']) && isset($datasources['res_letterbox'][0]['address_id'])) {
 
     $datasources['contact'] = array();
-    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['contact_id']." and ca_id = ".$datasources['res_letterbox'][0]['address_id']);
-    $myContact = $dbDatasource->fetch_array();
+    $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($datasources['res_letterbox'][0]['contact_id'], $datasources['res_letterbox'][0]['address_id']));
+    $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
     $myContact['contact_type'] = $contacts->get_label_contact($myContact['contact_type'], $_SESSION['tablename']['contact_types']);
     $myContact['contact_purpose_id'] = $contacts->get_label_contact($myContact['contact_purpose_id'], $_SESSION['tablename']['contact_purposes']);
     $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
@@ -60,13 +59,13 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
     $datasources['contact'][] = $myContact;
 } else {
     $datasources['contact'] = array();
-    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = 0");
-    $myContact = $dbDatasource->fetch_array();
+    $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = 0");
+    $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
     $datasources['contact'][] = $myContact;
 }
 // Notes
 $datasources['notes'] = array();
-$dbDatasource->query("SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.user_id WHERE coll_id = '".$coll_id."' AND identifier = ".$res_id."");
+$stmt = $dbDatasource->query("SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.user_id WHERE coll_id = ? AND identifier = ? ", array($coll_id, $res_id));
 while($note = $dbDatasource->fetch_array()) {
     $datasources['notes'][] = $note;
 }

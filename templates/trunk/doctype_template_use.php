@@ -1,5 +1,5 @@
 <?php
-$db = new dbquery();
+$db = new Database();
 $core = new core_tools();
 $core->load_lang();
 
@@ -8,14 +8,15 @@ if(empty($_SESSION['indexing_type_id']) || !isset($_SESSION['indexing_type_id'])
 	// ERREUR
 	exit();
 }
-
-$db->connect();
-$db->query("select is_generated, template_id from ".$_SESSION['tablename']['temp_templates_doctype_ext']." where type_id = ".$_SESSION['indexing_type_id']);
+ 
+$stmt = $db->query("select is_generated, template_id from ".$_SESSION['tablename']['temp_templates_doctype_ext']." where type_id = ? ", 
+					array($_SESSION['indexing_type_id'])
+		);
 $is_generated = 'N';
 $template = '';
-if($db->nb_result() > 0)
+if($stmt->rowCount() > 0)
 {
-	$res = $db->fetch_object();
+	$res = $stmt->fetchObject();
 	$is_generated = $res->is_generated;
 	$template = $res->template_id;
 }

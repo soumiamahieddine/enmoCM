@@ -11,8 +11,7 @@
 	[notes] = detail of notes added
 */
 
-$dbDatasource = new dbquery();
-$dbDatasource->connect();
+$dbDatasource = new Database();
 
 $datasources['recipient'][0] = (array)$recipient;
 
@@ -28,8 +27,8 @@ foreach($events as $event) {
             . "FROM " . $res_view . " mlb "
             . "JOIN notes on notes.identifier = mlb.res_id "
             . "JOIN users on users.user_id = notes.user_id "
-            . "WHERE notes.coll_id = '" . $coll_id . "' "
-            . "AND notes.id = " . $event->record_id;
+            . "WHERE notes.coll_id = ? "
+            . "AND notes.id = ? ", array($coll_id, $event->record_id);
         break;
     
     case "res_letterbox" :
@@ -40,11 +39,11 @@ foreach($events as $event) {
             . "FROM listinstance li JOIN " . $res_view . " mlb ON mlb.res_id = li.res_id "
             . "JOIN notes on li.coll_id=notes.coll_id AND notes.identifier = li.res_id "
             . "JOIN users on users.user_id = notes.user_id "
-            . "WHERE li.coll_id = '" . $coll_id . "' "
-            . "AND li.item_id = '" . $recipient->user_id . "' "
+            . "WHERE li.coll_id = ? "
+            . "AND li.item_id = ? "
             . "AND li.item_mode = 'dest' "
             . "AND li.item_type = 'user_id' "
-            . "AND li.res_id = " . $event->record_id;
+            . "AND li.res_id = ? " , array($coll_id, $recipient->user_id, $event->record_id);
         break;
     }
     
@@ -52,8 +51,8 @@ foreach($events as $event) {
         $GLOBALS['logger']->write($query , 'DEBUG');
     }
     
-	$dbDatasource->query($query);
-	$note = $dbDatasource->fetch_assoc();
+	$stmt = $dbDatasource->query($query);
+	$note = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // Lien vers la page détail
     $urlToApp = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/index.php?');

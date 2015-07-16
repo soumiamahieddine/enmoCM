@@ -35,8 +35,7 @@ require_once 'core/class/class_security.php';
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $templates_controler = new templates_controler();
 $answer= array();
 $answer['TITLE'] = "";
@@ -65,10 +64,10 @@ if (isset($_GET['template']) && !empty($_GET['template'])) {
 }
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $id = trim($_GET['id']);
-    $db->query("select title from " 
+    $stmt = $db->query("select title from " 
         . $_SESSION['tablename']['attach_res_attachments'] 
-        . " where res_id = ".$id);
-    $res = $db->fetch_object();
+        . " where res_id = ? ", array($id));
+    $res = $stmt->fetchObject();
     $answer['TITLE'] = $func->show_string($res->title);
 }
 if (!empty($answer['TEMPLATE_ID']) &&  $mode == 'add') {
@@ -77,7 +76,7 @@ if (!empty($answer['TEMPLATE_ID']) &&  $mode == 'add') {
     if ($template->template_id == '') {
         $_SESSION['error'] .= _TEMPLATE.' '._UNKNOWN."<br/>";
     } else {
-        $line = $db->fetch_object();
+        $line = $stmt->fetchObject();
         $answer['TEMPLATE_ID'] = $template->template_id;
         $answer['MODEL_LABEL'] = $func->show_string($template->template_label);
         $answer['TITLE'] = $_SESSION['courrier']['res_id'] . '_' 
@@ -94,20 +93,20 @@ if (!empty($answer['TEMPLATE_ID']) &&  $mode == 'add') {
 		$answer['CONTENT'] = $templates_controler->merge($template->template_id, $params, 'content');
     }
 } elseif (!empty($id) && $mode == 'up') {
-    $db->query("select title, res_id, path, docserver_id, filename from " 
-        . $_SESSION['tablename']['attach_res_attachments'] . " where res_id = " . $id);
+    $stmt = $db->query("select title, res_id, path, docserver_id, filename from " 
+        . $_SESSION['tablename']['attach_res_attachments'] . " where res_id = ? ", array($id));
 
-    if ($db->nb_result() < 1) {
+    if ($stmt->rowCount() < 1) {
         $_SESSION['error'] .= _FILE.' '._UNKNOWN.".<br/>";
     } else {
-        $line = $db->fetch_object();
+        $line = $stmt->fetchObject();
         $docserver = $line->docserver_id;
         $path = $line->path;
         $filename = $line->filename;
         $answer['TITLE'] = $func->show_string($line->title);
-        $db->query("select path_template from " . $_SESSION['tablename']['docservers'] 
-            . " where docserver_id = '" . $docserver . "'");
-        $line_doc = $db->fetch_object();
+        $stmt = $db->query("select path_template from " . $_SESSION['tablename']['docservers'] 
+            . " where docserver_id = ?", array($docserver));
+        $line_doc = $stmt->fetchObject();
         $docserver = $line_doc->path_template;
         $file = $docserver.$path.strtolower($filename);
         $file = str_replace('#', DIRECTORY_SEPARATOR, $file);

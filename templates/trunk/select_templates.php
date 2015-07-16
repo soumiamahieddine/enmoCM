@@ -1,11 +1,11 @@
 <?php
 require 'modules/templates/class/templates_controler.php';
 require_once 'core/class/class_db.php';
-$db = new dbquery();
-$db->connect();
-$db->query("select destination from ".RES_VIEW_LETTERBOX." where res_id = " .$_SESSION['doc_id']);
-if ($db->nb_result() > 0) {
-        $res = $db->fetch_object();
+require_once 'core/class/class_db_pdo.php';
+$db = new Database();
+$stmt = $db->query("select destination from ".RES_VIEW_LETTERBOX." where res_id = ? ", array($_SESSION['doc_id']));
+if ($stmt->rowCount() > 0) {
+        $res = $stmt->fetchObject();
         $destination_entity = $res->destination;
 }
 $templatesControler = new templates_controler();

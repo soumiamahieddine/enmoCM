@@ -58,21 +58,19 @@ if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])) {
     exit();
 }
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
-$db->query(
+$stmt = $db->query(
     "select * from " 
     . _TEMPLATES_TABLE_NAME . " t, " 
     . _TEMPLATES_ASSOCIATION_TABLE_NAME . " ta where "
-    . "t.template_id = ta.template_id and ta.what = 'destination' and ta.value_field = '" 
-    . $_REQUEST['entity'] . "'"
+    . "t.template_id = ta.template_id and ta.what = 'destination' and ta.value_field = ? ", array($_REQUEST['entity'])
 );
 
 
 $templates = array();
 
-while($res = $db->fetch_object())
+while($res = $stmt->fetchObject())
 {
     array_push(
         $templates, array(

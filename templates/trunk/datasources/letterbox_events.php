@@ -31,15 +31,14 @@
     [res_letterbox] = record of view + link to detail/doc page
 */
 
-$dbDatasource = new dbquery();
-$dbDatasource->connect();
-
+$dbDatasource = new Database();
 $contacts = new contacts_v2();
 
 $datasources['recipient'][0] = (array)$recipient;
 
 $datasources['res_letterbox'] = array();
 $datasources['contact'] = array();
+$arrayPDO = array();
 
 foreach($events as $event) {
     $res = array();
@@ -51,18 +50,21 @@ foreach($events as $event) {
     switch($event->table_name) {
     case 'notes':
         $from .= " JOIN notes ON notes.identifier = lb.res_id";
-        $where .= " notes.id = " . $event->record_id;
+        $where .= " notes.id = ? ";
+        $arrayPDO = array_merge($arrayPDO,array($event->record_id));
         break;
     
     case 'listinstance':
         $from .= " JOIN listinstance li ON lb.res_id = li.res_id";
-        $where .= " li.coll_id = '".$coll_id."'   AND listinstance_id = " . $event->record_id;
+        $where .= " li.coll_id = ? AND listinstance_id = ? ";
+        $arrayPDO = array_merge($arrayPDO, array($coll_id, $event->record_id));
         break;
         
     case 'res_letterbox':
     case 'res_view_letterbox':
     default:
-        $where .= " lb.res_id = " . $event->record_id;
+        $where .= " lb.res_id = ? ";
+        $arrayPDO = array_merge($arrayPDO, array($event->record_id));
     }
 
     $query = $select . $from . $where;
@@ -72,8 +74,8 @@ foreach($events as $event) {
     }
     
     // Main document resource from view
-    $dbDatasource->query($query);
-    $res = $dbDatasource->fetch_assoc();
+    $stmt = $dbDatasource->query($query, $arrayPDO);
+    $res = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // Lien vers la page détail
     $urlToApp = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/index.php?');
@@ -85,25 +87,25 @@ foreach($events as $event) {
     $datasources['res_letterbox'][] = $res;
     
 	//multicontact
-	$dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = " . $res['res_id'] . " AND contact_id ='".$res['contact_id']."'");
-	$datasources['res_letterbox_contact'][] = $dbDatasource->fetch_assoc();
+	$stmt = $dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = ? AND contact_id = ? ", array($res['res_id'], $res['contact_id']));
+	$datasources['res_letterbox_contact'][] = $stmt->fetch(PDO::FETCH_ASSOC);
 	if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
 	    // $datasources['contact'] = array();
-	    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$datasources['res_letterbox_contact'][0]['contact_id']." and ca_id = ".$datasources['res_letterbox_contact'][0]['address_id']);
-	    $myContact = $dbDatasource->fetch_array();
+	    $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($datasources['res_letterbox_contact'][0]['contact_id'], $datasources['res_letterbox_contact'][0]['address_id']));
+	    $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
 		$myContact['contact_title'] = $contacts->get_civility_contact($myContact->contact_title);
 	    $datasources['contact'][] = $myContact;
 
 	// single Contact
 	}else if (isset($res['contact_id']) && isset($res['address_id'])) {
-	    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$res['contact_id']." and ca_id = ".$res['address_id']);
-	    $myContact = $dbDatasource->fetch_array();
+	    $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($res['contact_id'], $res['address_id']));
+	    $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
 	    $myContact['contact_title'] = $contacts->get_civility_contact($myContact->contact_title);
 	    $datasources['contact'][] = $myContact;
         
 	} else {
-        $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = 0");
-        $myContact = $dbDatasource->fetch_array();
+        $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = 0");
+        $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
         $datasources['contact'][] = $myContact;
     }
 }
