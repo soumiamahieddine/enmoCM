@@ -10,7 +10,7 @@
       <parameter name="order_field" type="string" />
     </validationRule>
 
-    <validationRule name="update_users" extends="standardForm">
+    <validationRule name="admin_users_update" extends="standardForm" mode="error">
       <parameter name="user_id" type="login" />
       <parameter name="LastName" type="personname" />
       <parameter name="FirstName" type="safetext" />
@@ -21,6 +21,22 @@
       </parameter>
       <parameter name="LoginMode" type="safetext" />
       <parameter name="user_submit" type="identifier" />
+      <parameter name="Submit" type="safetext" />
+    </validationRule>
+
+    <validationRule name="ajax_form_values" extends="standardForm" mode="error">
+      <parameter name="form_values" type="safetext" />
+    </validationRule>
+
+    <validationRule name="ajax_usergroups_ids" mode="error">
+      <parameter name="usergroups" type="ajax_ids" />
+      <parameter name="display" type="identifier" />
+      <parameter name="admin" type="identifier" />
+      <parameter name="page" type="identifier" />
+    </validationRule>
+
+    <validationRule name="admin_ajax_search" extends="standardForm" mode="error">
+      <parameter name="what" type="safetext" />
     </validationRule>
 
     <validationRule name="standardForm" extends="index">  

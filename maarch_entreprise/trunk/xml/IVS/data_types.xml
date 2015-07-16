@@ -6,7 +6,10 @@
       <pattern value="/^\w+$/" />
     </dataType>
     <dataType name="safetext" base="string">
-      <pattern value="/^[a-zA-Z0-9~@'&quot;;^*\s()_+[\]{}|\\,.?: -]*$/" />
+      <pattern value="/^[\w~@'&quot;;^*\s()+[\]{}|\\,.?: -àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]*$/" />
+    </dataType>
+    <dataType name="ajax_ids" base="graph">
+      <pattern value="/^[\w#]+$/" />
     </dataType>
     <dataType name="hex" base="graph">
       <pattern value="/^[A-Fa-f0-9]+$/" />

@@ -8,9 +8,39 @@
     <!-- APPS PART  -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="index" />
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="index" />
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="update_users" >
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_users_update" >
       <parameter name="admin" value="users"/>
       <parameter name="page" value="users_management_controler"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_form_values" >
+      <parameter name="admin" value="users"/>
+      <parameter name="page" value="check_group"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_form_values" >
+      <parameter name="admin" value="users"/>
+      <parameter name="page" value="manage_group"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_usergroups_ids" >
+      <parameter name="admin" value="users"/>
+      <parameter name="page" value="remove_group"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_usergroups_ids" >
+      <parameter name="admin" value="users"/>
+      <parameter name="page" value="set_primary_group"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="admin" value="users"/>
+      <parameter name="page" value="users_list_by_name"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="admin" value="users"/>
+      <parameter name="page" value="users_list_by_name_search"/>
+      <parameter name="display" value="true"/>
     </requestDefinition>
     <!-- MODULES PART  -->
     <!-- life_cycle -->
