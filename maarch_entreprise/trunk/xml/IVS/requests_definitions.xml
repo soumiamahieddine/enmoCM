@@ -81,8 +81,24 @@
     <!-- CORE PART  -->
     <xi:include href="../../../../core/xml/IVS/requests_definitions.xml"/>
     <!-- MODULES PART  -->
-    <!-- life_cycle -->
+    <xi:include href="../../../../modules/attachments/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/basket/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/cases/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/content_management/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/entities/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/fileplan/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/folder/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/full_text/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/ldap/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/life_cycle/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/notes/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/notifications/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/reports/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/sendmail/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/tags/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/templates/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/thumbnails/xml/IVS/requests_definitions.xml"/>
+    <xi:include href="../../../../modules/visa/xml/IVS/requests_definitions.xml"/>
   </requestDefinitions>
   <!--
     Validation rule sets
@@ -95,8 +111,24 @@
     <!-- CORE PART  -->
     <xi:include href="../../../../core/xml/IVS/validation_rules.xml"/>
     <!-- MODULES PART  -->
-    <!-- life_cycle -->
+    <xi:include href="../../../../modules/attachments/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/basket/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/cases/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/content_management/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/entities/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/fileplan/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/folder/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/full_text/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/ldap/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/life_cycle/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/notes/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/notifications/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/reports/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/sendmail/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/tags/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/templates/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/thumbnails/xml/IVS/validation_rules.xml"/>
+    <xi:include href="../../../../modules/visa/xml/IVS/validation_rules.xml"/>
   </validationRules>
   <!--
     Validation rule sets
@@ -109,7 +141,23 @@
     <!-- CORE PART  -->
     <xi:include href="../../../../core/xml/IVS/data_types.xml"/>
     <!-- MODULES PART  -->
-    <!-- life_cycle -->
+    <xi:include href="../../../../modules/attachments/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/basket/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/cases/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/content_management/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/entities/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/fileplan/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/folder/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/full_text/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/ldap/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/life_cycle/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/notes/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/notifications/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/reports/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/sendmail/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/tags/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/templates/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/thumbnails/xml/IVS/data_types.xml"/>
+    <xi:include href="../../../../modules/visa/xml/IVS/data_types.xml"/>
   </dataTypes>
 </inputValidation>
