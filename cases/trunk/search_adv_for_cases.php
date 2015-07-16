@@ -66,18 +66,18 @@ $core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 
 $func = new functions();
-$conn = new dbquery();
-$conn->connect();
+$db = new Database();
 $searchObj = new indexing_searching_app();
 $statusObj = new manage_status();
 $sec = new security();
 // load saved queries for the current user in an array
-$conn->query(
-	"select query_id, query_name from " . SAVED_QUERIES . " where user_id = '"
-    . $_SESSION['user']['UserId'] . "' order by query_name"
+$stmt = $db->query(
+	"SELECT query_id, query_name FROM " . SAVED_QUERIES 
+    . " WHERE user_id = ? order by query_name"
+    ,array($_SESSION['user']['UserId'])
 );
 $queries = array();
-while ($res = $conn->fetch_object()) {
+while ($res = $stmt->fetchObject()) {
     array_push(
         $queries,
         array(
@@ -87,18 +87,19 @@ while ($res = $conn->fetch_object()) {
     );
 }
 
-$conn->query(
-	"select user_id, firstname, lastname, status from " . USERS_TABLE
-    . " where enabled = 'Y' and status <> 'DEL' order by lastname asc"
+$stmt = $db->query(
+	"SELECT user_id, firstname, lastname, status FROM " . USERS_TABLE
+    . " WHERE enabled = ? and status <> ? order by lastname asc"
+    ,array('Y','DEL')
 );
 $usersList = array();
-while ($res = $conn->fetch_object()) {
+while ($res = $stmt->fetchObject()) {
     array_push(
         $usersList,
         array(
-        	'ID' => $conn->show_string($res->user_id),
-        	'NOM' => $conn->show_string($res->lastname),
-        	'PRENOM' => $conn->show_string($res->firstname),
+        	'ID' => $db->show_string($res->user_id),
+        	'NOM' => $db->show_string($res->lastname),
+        	'PRENOM' => $db->show_string($res->firstname),
         	'STATUT' => $res->status,
         )
     );
@@ -300,14 +301,14 @@ if ($core->is_module_loaded('entities')) {
     if (! empty($where)) {
         $where = ' and ' . $where;
     }
-    $conn->query(
+    $stmt = $db->query(
     	"select distinct destination, e.short_label from " . $table . " join "
         . $_SESSION['tablename']['ent_entities']
         . " e on e.entity_id = destination " . $where
         . " group by e.short_label, destination "
     );
     $arrTmp = array();
-    while ($res = $conn->fetch_object()) {
+    while ($res = $stmt->fetchObject()) {
         array_push(
             $arrTmp,
             array(
@@ -406,17 +407,18 @@ $arrTmp2 = array(
 $param['status'] = $arrTmp2;
 
 //doc_type
-$conn->query(
-	"select type_id, description from  " . $_SESSION['tablename']['doctypes']
-    . " where enabled = 'Y' order by description asc"
+$stmt = $db->query(
+	"SELECT type_id, description FROM  " . $_SESSION['tablename']['doctypes']
+    . " where enabled = ? order by description asc"
+    ,array('Y')
 );
 $arrTmp = array();
-while ($res = $conn->fetch_object()) {
+while ($res = $stmt->fetchObject()) {
     array_push(
         $arrTmp,
         array(
         	'VALUE' => $res->type_id,
-        	'LABEL' => $conn->show_string($res->description)
+        	'LABEL' => $db->show_string($res->description)
         )
     );
 }
@@ -517,8 +519,8 @@ function cmp($a, $b)
 uasort($param, "cmp");
 
 $tab = $searchObj->send_criteria_data($param);
-//$conn->show_array($param);
-//$conn->show_array($tab);
+//$db->show_array($param);
+//$db->show_array($tab);
 
 // criteria list options
 $srcTab = $tab[0];

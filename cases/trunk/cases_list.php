@@ -98,9 +98,9 @@ if($core_tools->is_module_loaded('cases')) array_push($template_list, 'cases_lis
 
 //Request  
     if(!empty($_SESSION['current_basket'])){
-        $tab = $request->select($select, $where . $where_concat, 'order by case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", false, false, true);
+        $tab = $request->PDOselect($select, $where . $where_concat, 'order by case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", false, false, true);
     }else{
-        $tab = $request->select($select, $where . $where_concat, 'order by case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+        $tab = $request->PDOselect($select, $where . $where_concat, 'order by case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
 
     }
     //$request->show();

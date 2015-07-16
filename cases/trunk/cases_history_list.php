@@ -43,27 +43,30 @@ $cases = new cases();
 
 <body id="hist_courrier_frame">
 <?php
-$func = new functions();
-$db_hist = new dbquery();
-$db_hist->connect();
-$db_hist2 = new dbquery();
-$db_hist2->connect();
+
+$db = new Database();
+
+$array_what = array();
 $couleur=0;
 if(isset($_SESSION['collection_id_choice']) && !empty($_SESSION['collection_id_choice']))
 {
 	$table = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
 	$view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
+    $array_what[] = $table;
+    $array_what[] = $view;
 }
 else
 {
 	$table = $_SESSION['collections'][0]['table'];
 	$view = $_SESSION['collections'][0]['view'];
+    $array_what[] = $table;
+    $array_what[] = $view;
 }
 
 //Listing only document in this case...
 
 //Get the case information
-$case_limitation = " and record_id = '".$_SESSION['cases']['actual_case_id']."' ";
+$case_limitation = " and record_id = ? ";
 
 //Get the entire doc library
 $docs_library = $cases->get_res_id($_SESSION['cases']['actual_case_id']);
@@ -73,20 +76,26 @@ if(count($docs_library) >1)
 {
 	foreach($docs_library as $tmp_implode)
 	{
-		$docs_limitation .= '\''.$tmp_implode.'\',';
+		$docs_limitation .= '?,';
+        $array_what[] = $tmp_implode;
 	}
-	$docs_limitation = substr($docs_limitation, 0,-1);
+	//$docs_limitation = substr($docs_limitation, 0,-1);
 }
 else
-$docs_limitation .= '\''.$docs_library[0].'\'';
+$docs_limitation .= '?';
+$array_what[] = $docs_library[0];
 $docs_limitation .= ' ) ';
 
+$array_what[] = $_SESSION['tablename']['cases'];
 
+$array_what[] = $_SESSION['cases']['actual_case_id'];
 
-$query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE (table_name in ('".$table."', '".$view."') ".$docs_limitation.") OR (table_name= '".$_SESSION['tablename']['cases']."' ".$case_limitation.") ORDER  BY event_date desc";
+$stmt = $db->query(
+    "select info, event_date, user_id  from ".$_SESSION['tablename']['history']
+    . " WHERE (table_name in (?, ?) ".$docs_limitation.")"
+    . " OR (table_name= ? ".$case_limitation.") ORDER  BY event_date desc"
+    ,$array_what);
 
-$db_hist->query($query);
-//$db_hist->show();
 ?>
 <table cellpadding="0" cellspacing="0" border="0" class="listing">
     <thead>
@@ -99,7 +108,7 @@ $db_hist->query($query);
     <tbody>
         <?php
         $color = ' class="col"';
-        while($res_hist=$db_hist->fetch_object())
+        while($res_hist=$stmt->fetchObject())
         {
             if($color == ' class="col"')
             {
@@ -109,13 +118,18 @@ $db_hist->query($query);
             {
                 $color = ' class="col"';
             }
-            $db_hist2->query("select lastname, firstname from ".$_SESSION['tablename']['users']." where user_id = '".$res_hist->user_id."'");
-            $res_hist2 = $db_hist2->fetch_object();
+
+            $stmt2 = $db->query(
+                "select lastname, firstname from ".$_SESSION['tablename']['users']
+                . " where user_id = ?"
+                ,array($res_hist->user_id));
+
+            $res_hist2 = $stmt2->fetchObject();
             $nom = $res_hist2->lastname;
             $prenom = $res_hist2->firstname;
             ?>
             <tr <?php echo $color;?>>
-                <td><span><?php functions::xecho($func->dateformat($res_hist->event_date));?></span></td>
+                <td><span><?php functions::xecho(functions::dateformat($res_hist->event_date));?></span></td>
                 <td><span><?php functions::xecho($prenom." ".$nom." ");?></span></td>
                 <td><span><?php functions::xecho($res_hist->info);?></span></td>
             </tr>

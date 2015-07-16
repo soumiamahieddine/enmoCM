@@ -64,8 +64,10 @@ array_push($select[$view], "res_id", "status", "subject", "category_id as catego
 $status = $status_obj->get_not_searchable_status();
 
 $status_str = '';
+$where_what = array();
 for ($i=0; $i<count($status);$i++) {
-	$status_str .=	"'".$status[$i]['ID']."',";
+	$status_str .=	"?,";
+	$where_what[] = $status[$i]['ID'];
 }
 if ($status_str <> '') {
     $status_str = preg_replace('/,$/', '', $status_str);
@@ -138,7 +140,7 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 $orderstr = $list->define_order($order, $field);
 
 $request = new request();
-$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default",false,"","","",false,false,false);
+$tab=$request->PDOselect($select,$where_request,$where_what,$orderstr,$_SESSION['config']['databasetype'],"default",false,"","","",false,false,false);
 //$request->show();
 $_SESSION['error_page'] = '';
 

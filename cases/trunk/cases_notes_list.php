@@ -41,9 +41,11 @@ if (isset($_SESSION['searching']['cases_request'])) {
 
 $status = $status_obj->get_not_searchable_status();
 $status_str = '';
+$where_what = array();
 for($i=0; $i<count($status);$i++)
 {
-	$status_str .=	"'".$status[$i]['ID']."',";
+	$status_str .=	"?,";
+	$where_what[] = $status[$i]['ID'];
 }
 if ($status_str <> '') {
     $status_str = preg_replace('/,$/', '', $status_str);
@@ -110,7 +112,7 @@ $docs_limitation .= ' ) ';
 
 
 
-$tabNotes=$request->select($select,$where_request.$docs_limitation,"order by ".$view.".res_id",$_SESSION['config']['databasetype'], "500", false );
+$tabNotes=$request->PDOselect($select,$where_request.$docs_limitation,$where_what,"order by ".$view.".res_id",$_SESSION['config']['databasetype'], "500", false );
 $ind_notes1d = '';
 
 

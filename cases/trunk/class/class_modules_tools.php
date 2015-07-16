@@ -100,11 +100,13 @@ class cases extends dbquery
 			$request->show();
 			echo "create_case:: sql index error<br/>";
 		}
-		$db = new dbquery();
-		$db -> connect();
-		$db->query("SELECT max(case_id) as case_id FROM ".$_SESSION['tablename']['cases']." WHERE  CASE_TYPIST = '".$_SESSION['user']['UserId']."' ");
+		$db = new Database();
+		$stmt = $db->query(
+			"SELECT max(case_id) as case_id FROM ".$_SESSION['tablename']['cases']
+			. " WHERE  CASE_TYPIST = ? "
+			,array($_SESSION['user']['UserId']));
 
-		$res = $db->fetch_object();
+		$res = $stmt->fetchObject();
 		$caseId = $res->case_id;
 
 
@@ -156,10 +158,12 @@ class cases extends dbquery
 			echo "update_case ::arg2 error!</br>";
 		}
 		$replaceValues = array();
+		$array_what = array();
 
 		$request = new request();
 		$table = $_SESSION['tablename']['cases'];
-		$where = 'case_id = ' . $caseId;
+		$where = 'case_id = ?';
+		$array_what[] = $caseId;
 
 		$allowedFields = array(
 			'case_id', 'case_label', 'case_description', 'case_type',
@@ -187,7 +191,7 @@ class cases extends dbquery
 		    }
 		}
 
-		$request->update($table, $replaceValues, $where, $_SESSION['config']['databasetype']);
+		$request->PDOupdate($table, $replaceValues, $where, $array_what, $_SESSION['config']['databasetype']);
 		$this->change_last_update($caseId);
 
 	}
@@ -207,10 +211,12 @@ class cases extends dbquery
 		// -------
 
 
-		$db = new dbquery();
-		$db -> connect();
-		$db->query("SELECT res_id  FROM ".$_SESSION['tablename']['cases_res']." WHERE  CASE_ID = '".$caseId."' AND RES_ID = '".$res_id."' ");
-		if ($db->nb_result() > 0)
+		$db = new Database();
+		$stmt = $db->query(
+			"SELECT res_id  FROM ".$_SESSION['tablename']['cases_res']
+			." WHERE  CASE_ID = ? AND RES_ID = ? "
+			,array($caseId,$res_id));
+		if ($stmt->rowCount() > 0)
 		{
 			return false;
 		}
@@ -257,11 +263,14 @@ class cases extends dbquery
 
 		if ((!empty($res_id)) && (!empty($caseId)))
 		{
-			$db = new dbquery();
-			$db->connect();
+			$db = new Database();
+			
+			$stmt = $db->query(
+				"DELETE FROM ".$_SESSION['tablename']['cases_res']." WHERE  "
+				. " RES_ID = ? AND CASE_ID = ? "
+				,array($res_id,$caseId));
 
-			$query = " DELETE FROM ".$_SESSION['tablename']['cases_res']." WHERE  RES_ID = '".$res_id."' AND CASE_ID = '".$caseId."' ";
-			if(!$db->query($query))
+			if(!$stmt)
 				echo "detach_case:: sql error<br/>";
 
 			if ($_SESSION['history']['casesunlink'] == "true")
@@ -284,19 +293,19 @@ class cases extends dbquery
 		if (empty($caseId))
 			echo "get_case_id ::arg1 error!</br>";
 
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 
 		$my_return = array();
 		$request = new request();
 
 		//$query = " select case_id, case_label, case_description, date(case_creation_date) as ccd, case_typist, case_parent, case_custom_t1, case_custom_t2, case_custom_t3, case_custom_t4, case_type, date(case_closing_date) as clo, date(case_last_update_date)	as cud   FROM ".$_SESSION['tablename']['cases']." WHERE  CASE_ID = '".$caseId."' ";
-		$query = " select case_id, case_label, case_description, "
-			.$request->extract_date('case_creation_date', 'date')
-			." as ccd, case_typist, case_parent, case_custom_t1, case_custom_t2, case_custom_t3, case_custom_t4, case_type, ".$request->extract_date('case_closing_date', 'date')." as clo, ".$request->extract_date('case_last_update_date', 'date')." as cud   FROM ".$_SESSION['tablename']['cases']." WHERE  CASE_ID = '".$caseId."' ";
-
-		$db->query($query);
-		$res = $db->fetch_object();
+		$stmt = $db->query(
+			" select case_id, case_label, case_description, "
+			. $request->extract_date('case_creation_date', 'date')
+			. " as ccd, case_typist, case_parent, case_custom_t1, case_custom_t2, case_custom_t3, case_custom_t4, case_type, ".$request->extract_date('case_closing_date', 'date')." as clo, ".$request->extract_date('case_last_update_date', 'date')." as cud   FROM ".$_SESSION['tablename']['cases']
+			. " WHERE  CASE_ID = ? "
+			,array($caseId));
+		$res = $stmt->fetchObject();
 
 		$my_return['case_id'] = functions::xssafe($res->case_id);
 		$my_return['case_label'] = functions::xssafe($db->show_string($res->case_label));
@@ -320,15 +329,16 @@ class cases extends dbquery
 		if (empty($caseId))
 			echo "get_res_id ::arg1 error!</br>";
 
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 
 		$my_return = array();
 
-		$query = " select res_id FROM ".$_SESSION['tablename']['cases_res']." WHERE  case_id = '".$caseId."' ";
-		$db->query($query);
+		$stmt = $db->query(
+			"SELECT res_id FROM ".$_SESSION['tablename']['cases_res']
+			. " WHERE  case_id = ? "
+			,array($caseId));
 
-		while ($res = $db->fetch_object())
+		while ($res = $stmt->fetchObject())
 		{
 			array_push($my_return, $res->res_id);
 		}
@@ -340,26 +350,30 @@ class cases extends dbquery
 	//Return array with number of each status for this case
 	public function get_ressources_status($caseId)
 	{
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 
 		$coll_id = $_SESSION['collections'][0]['id'];
 		$table = $_SESSION['collections'][0]['view'];
+
+		$where_what = array();
 
 		$ressources = $this->get_res_id($caseId);
 		$where_limitation = " res_id in(";
 		foreach ($ressources as $i)
 		{
-			$where_limitation .= $i.",";
+			$where_limitation .= "?,";
+			$where_what[] = $i;
 		}
 		$where_limitation = substr($where_limitation, 0,-1);
 		$where_limitation .= ")";
 
-		$query="SELECT count(res_id) as nb, status from ".$table." where ".$where_limitation." group by status";
-		$db->query($query);
+		$stmt = $db->query(
+			"SELECT count(res_id) as nb, status from ".$table
+			. " WHERE ".$where_limitation." group by status"
+			,array($where_what));
 
 		$my_return = array();
-		while ($result=$db->fetch_object())
+		while ($result=$stmt->fetchObject())
 		{
 			array_push($my_return,array( "status"=>$result->status, "nb_docs"=>$result->nb));
 		}
@@ -369,12 +383,14 @@ class cases extends dbquery
 	private function change_last_update($caseId)
 	{
 		$table = $_SESSION['tablename']['cases'];
-		$request = new request();
-		$current_date = $request->current_datetime();
+		$db = new Database();
+		$current_date = $db->current_datetime();
+		$where_what = array();
 		$data = array();
-		$where = "case_id = ".$caseId;
+		$where = "case_id = ?";
+		$where_what[] = $caseId;
 		array_push($data, array('column' => "case_last_update_date", 'value' => $current_date, "type" => ""));
-		$request->update($table, $data, $where, $_SESSION['config']['databasetype']);
+		$request->PDOupdate($table, $data, $where, $where_what, $_SESSION['config']['databasetype']);
 
 	}
 
@@ -384,15 +400,17 @@ class cases extends dbquery
 		if (empty($caseId))
 			echo "close_case ::arg1 error!</br>";
 
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 
-		$req = new request();
-		$current_date = $req->current_datetime();
+		$current_date = $db->current_datetime();
 
-		$query="UPDATE ".$_SESSION['tablename']['cases']." SET case_closing_date = ".$current_date." where case_id = ".$caseId." ";
+		$stmt = $db->query(
+			"UPDATE ".$_SESSION['tablename']['cases']
+			. " SET case_closing_date = ?"
+			. " where case_id = ?"
+			,array($current_date,$caseId));
 
-		if ($db->query($query))
+		if ($stmt)
 			return true;
 		else
 			return false;
@@ -400,11 +418,12 @@ class cases extends dbquery
 
 	protected function detach_all_from_cases($res_id,$caseId)
 	{
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 
-		$query="DELETE FROM ".$_SESSION['tablename']['cases_res']." WHERE res_id = '".$res_id."' and case_id <> '".$caseId."' ";
-		$db->query($query);
+		$stmt = $db->query(
+			"DELETE FROM ".$_SESSION['tablename']['cases_res']
+			. " WHERE res_id = ? and case_id <> ? "
+			,array($res_id,$caseId));
 	}
 
 	public function get_case_id($res_id, $coll_id = "")
@@ -412,13 +431,14 @@ class cases extends dbquery
 		if (empty($res_id))
 			echo "get_case_id ::arg1 error!<br/>";
 
-		$db = new dbquery();
-		$db->connect();
-		$query="select  case_id from  ".$_SESSION['collections'][0]['view']." where res_id = ".$res_id." ";
-		$db->query($query);
-		if($db->nb_result() >0)
+		$db = new Database();
+		$stmt = $db->query(
+			"SELECT case_id FROM  ".$_SESSION['collections'][0]['view']
+			. " WHERE res_id = ? "
+			,array($res_id));
+		if($stmt->rowCount() >0)
 		{
-			$res = $db->fetch_object();
+			$res = $stmt->fetchObject();
 			return $res->case_id;
 		}
 		else
