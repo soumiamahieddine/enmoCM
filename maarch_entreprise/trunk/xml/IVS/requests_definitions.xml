@@ -8,6 +8,7 @@
     <!-- APPS PART  -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="index" />
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="index" />
+    <!-- admin  -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_users_update" >
       <parameter name="admin" value="users"/>
       <parameter name="page" value="users_management_controler"/>
@@ -42,6 +43,43 @@
       <parameter name="page" value="users_list_by_name_search"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
+    <!-- indexing_searching  -->
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ix_change_category" >
+      <parameter name="dir" value="indexing_searching"/>
+      <parameter name="page" value="change_category"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ix_change_category_actions" >
+      <parameter name="dir" value="indexing_searching"/>
+      <parameter name="page" value="change_category_actions"/>
+      <parameter name="display" value="true"/>
+      <parameter name="resId"/>
+      <parameter name="collId"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ix_change_doctype" >
+      <parameter name="dir" value="indexing_searching"/>
+      <parameter name="page" value="change_doctype"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <!-- search_adv -->
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="search_adv_result" >
+      <parameter name="dir" value="indexing_searching"/>
+      <parameter name="page" value="search_adv_result"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="view_resource" >
+      <parameter name="dir" value="indexing_searching"/>
+      <parameter name="page" value="view_resource_controler"/>
+      <parameter name="display" value="true"/>
+      <parameter name="id" />
+    </requestDefinition>
+    <!-- login  -->
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="login" >
+      <parameter name="page" value="log"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <!-- CORE PART  -->
+    <xi:include href="../../../../core/xml/IVS/requests_definitions.xml"/>
     <!-- MODULES PART  -->
     <!-- life_cycle -->
     <xi:include href="../../../../modules/life_cycle/xml/IVS/requests_definitions.xml"/>
@@ -54,6 +92,8 @@
   <validationRules>
     <!-- APPS PART  -->
     <xi:include href="validation_rules.xml"/>
+    <!-- CORE PART  -->
+    <xi:include href="../../../../core/xml/IVS/validation_rules.xml"/>
     <!-- MODULES PART  -->
     <!-- life_cycle -->
     <xi:include href="../../../../modules/life_cycle/xml/IVS/validation_rules.xml"/>
@@ -66,6 +106,8 @@
   <dataTypes>
     <!-- APPS PART  -->
     <xi:include href="data_types.xml"/>
+    <!-- CORE PART  -->
+    <xi:include href="../../../../core/xml/IVS/data_types.xml"/>
     <!-- MODULES PART  -->
     <!-- life_cycle -->
     <xi:include href="../../../../modules/life_cycle/xml/IVS/data_types.xml"/>

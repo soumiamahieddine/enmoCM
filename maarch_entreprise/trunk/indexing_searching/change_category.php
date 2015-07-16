@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008-2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -61,4 +61,3 @@ unset($_SESSION['indexing_category_id']);
 unset($_SESSION['indexing_services_cat']);
 echo "{status : 0,  services : ".$services."}";
 exit();
-?>

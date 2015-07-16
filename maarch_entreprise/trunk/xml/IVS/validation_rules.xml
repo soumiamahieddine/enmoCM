@@ -25,7 +25,7 @@
     </validationRule>
 
     <validationRule name="ajax_form_values" extends="standardForm" mode="error">
-      <parameter name="form_values" type="safetext" />
+      <parameter name="form_values" type="integer" />
     </validationRule>
 
     <validationRule name="ajax_usergroups_ids" mode="error">
@@ -37,6 +37,129 @@
 
     <validationRule name="admin_ajax_search" extends="standardForm" mode="error">
       <parameter name="what" type="safetext" />
+    </validationRule>
+
+    <validationRule name="login" mode="error">
+      <parameter name="login" type="login" />
+      <parameter name="pass" type="string" />
+      <parameter name="ra_code" type="integer" />
+      <parameter name="display" type="identifier" />
+      <parameter name="page" type="identifier" />
+      <parameter name="submit" type="safetext" />
+    </validationRule>
+
+    <validationRule name="ix_change_category" extends="standardForm" mode="error">
+      <parameter name="category_id" type="identifier" />
+      <parameter name="dir" type="identifier" />
+    </validationRule>
+
+    <validationRule name="ix_change_category_actions" extends="standardForm" mode="error">
+      <parameter name="category_id" type="identifier" />
+      <parameter name="dir" type="identifier" />
+      <parameter name="resId" type="identifier" />
+      <parameter name="collId" type="collection_list" />
+    </validationRule>
+
+    <validationRule name="ix_change_doctype" extends="standardForm" mode="error">
+      <parameter name="type_id" type="integer" />
+      <parameter name="admission_date" type="datefr" />
+      <parameter name="id_action" type="identifier" />
+      <parameter name="priority_id" type="integer" />
+      <parameter name="dir" type="identifier" />
+      <parameter name="res_id" type="identifier" />
+      <parameter name="coll_id" type="collection_list" />
+    </validationRule>
+
+    <validationRule name="search_adv_result" extends="standardForm" mode="error">
+      <parameter name="baskets_clause" type="identifier" />
+      <parameter name="contact_internal_id" type="identifier" />
+      <parameter name="contactid" type="identifier" />
+      <parameter name="contactid_external" type="identifier" />
+      <parameter name="contactid_internal" type="identifier" />
+      <parameter name="descriptioncase" type="safetext" />
+      <parameter name="dir" type="identifier" />
+      <parameter name="fulltext" type="safetext" />
+      <parameter name="labelcase" type="safetext" />
+      <parameter name="meta" type="safetext" />
+      <parameter name="multifield" type="safetext" />
+      <parameter name="numcase" type="identifier" />
+      <parameter name="numged" type="integer" />
+      <parameter name="page" type="identifier" />
+      <parameter name="select_criteria" type="safetext" />
+      <parameter name="subject" type="safetext" />
+      <parameter name="creation_date_pj_from" type="safetext" />
+      <parameter name="creation_date_pj_to" type="safetext" />
+      <parameter name="attachment_types" type="identifier" />
+      <parameter name="addresses_id" type="identifier" />
+      <parameter name="description" type="safetext" />
+      <parameter name="category" type="identifier" />
+      <parameter name="confidentiality" type="YN" />
+      <parameter name="admission_date_from" type="safetext" />
+      <parameter name="admission_date_to" type="safetext" />
+      <parameter name="creation_date_from" type="safetext" />
+      <parameter name="creation_date_to" type="safetext" />
+      <parameter name="closing_date_from" type="safetext" />
+      <parameter name="closing_date_to" type="safetext" />
+      <parameter name="doc_date_from" type="safetext" />
+      <parameter name="doc_date_to" type="safetext" />
+      <parameter name="process_limit_date_from" type="safetext" />
+      <parameter name="process_limit_date_to" type="safetext" />
+      <parameter name="destinataire_chosen" type="identifier" />
+      <parameter name="destinataire_available" type="identifier" />
+      <parameter name="project" type="safetext" />
+      <parameter name="doc_custom_t1" type="safetext" />
+      <parameter name="doc_custom_t2" type="safetext" />
+      <parameter name="doc_custom_t3" type="safetext" />
+      <parameter name="doc_custom_t4" type="safetext" />
+      <parameter name="doc_custom_t5" type="safetext" />
+      <parameter name="doc_custom_t6" type="safetext" />
+      <parameter name="doc_custom_t7" type="safetext" />
+      <parameter name="doc_custom_t8" type="safetext" />
+      <parameter name="doc_custom_t9" type="safetext" />
+      <parameter name="doc_custom_t10" type="safetext" />
+      <parameter name="doc_custom_t11" type="safetext" />
+      <parameter name="doc_custom_t12" type="safetext" />
+      <parameter name="doc_custom_t13" type="safetext" />
+      <parameter name="doc_custom_t14" type="safetext" />
+      <parameter name="doc_custom_t15" type="safetext" />
+      <parameter name="signatory_group" type="identifier" />
+      <parameter name="tags_chosen" type="safetext" />
+      <parameter name="tags_available" type="safetext" />
+      <parameter name="mail_nature" type="identifier" />
+      <parameter name="signatory_name" type="safetext" />
+      <parameter name="doc_notes" type="safetext" />
+      <parameter name="process_notes" type="safetext" />
+      <parameter name="chrono" type="safetext" />
+      <parameter name="reference_number" type="identifier" />
+      <parameter name="identifier" type="identifier" />
+      <parameter name="services_chosen" type="identifier" />
+      <parameter name="services_available" type="identifier" />
+      <parameter name="market" type="safetext" />
+      <parameter name="status_chosen" type="identifier" />
+      <parameter name="status_available" type="identifier" />
+      <parameter name="doctypes_chosen" type="identifier" />
+      <parameter name="doctypes_available" type="identifier" />
+      <parameter name="simple_mail" type="boolean" />
+      <parameter name="AR" type="boolean" />
+      <parameter name="fax" type="boolean" />
+      <parameter name="courriel" type="boolean" />
+      <parameter name="direct" type="boolean" />
+      <parameter name="autre" type="boolean" />
+      <parameter name="norep" type="boolean" />
+      <parameter name="specific_case" type="identifier" />
+      <parameter name="searched_item" type="identifier" />
+      <parameter name="action_form" type="identifier" />
+      <parameter name="modulename" type="identifier" />
+      <parameter name="nodetails" type="boolean" />
+    </validationRule>
+
+    <validationRule name="view_resource" extends="index">  
+      <parameter name="id" type="integer" />
+      <parameter name="resIdMaster" type="integer" />
+      <parameter name="collid" type="collection_list" />
+      <parameter name="original" type="boolean" />
+      <parameter name="aVersion" type="boolean" />
+      <parameter name="dir" type="identifier" />
     </validationRule>
 
     <validationRule name="standardForm" extends="index">  

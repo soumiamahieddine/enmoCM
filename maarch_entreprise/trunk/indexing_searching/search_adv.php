@@ -485,7 +485,15 @@ function del_query_confirm()
 </div>
 </form>
 <?php } ?>
-<form name="frmsearch2" method="get" action="<?php if($mode == 'normal') {echo $_SESSION['config']['businessappurl'].'index.php'; } elseif($mode == 'frame' || $mode == 'popup'){ echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_result';}?>"  id="frmsearch2" class="<?php functions::xecho($class_for_form);?>">
+<form name="frmsearch2" method="post" action="<?php 
+    if($mode == 'normal') {
+        //echo $_SESSION['config']['businessappurl'] . 'index.php';
+        echo $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&dir=indexing_searching&page=search_adv_result'; 
+    } elseif ($mode == 'frame' || $mode == 'popup'){ 
+        echo $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&dir=indexing_searching&page=search_adv_result';
+    }?>"  id="frmsearch2" class="<?php functions::xecho($class_for_form);?>">
 <input type="hidden" name="dir" value="indexing_searching" />
     <input type="hidden" name="page" value="search_adv_result" />
 <input type="hidden" name="mode" value="<?php echo $mode;?>" />
