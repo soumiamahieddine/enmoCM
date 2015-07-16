@@ -1443,7 +1443,7 @@ class lists extends dbquery
     public function tmplt_showDefaultAction($parameter) 
     {
         $db = new Database();
-        
+        if($_SESSION['current_basket']['default_action'] != ""){
         //Load action name   
         $stmt = $db->query(
             "SELECT label_action FROM actions WHERE id = ?", array($_SESSION['current_basket']['default_action'])
@@ -1451,6 +1451,7 @@ class lists extends dbquery
         $res = $stmt->fetchObject();
 
         return $res->label_action;
+        }
     }
     
     private function _tmplt_loadVarSys($parameter, $resultTheLine=array(), $listKey='', $lineIsDisabled=false) {
