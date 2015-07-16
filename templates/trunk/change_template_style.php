@@ -1,5 +1,5 @@
 <?php 
-include_once '../../core/init.php';
+include_once 'core/init.php';
 if (isset($_REQUEST['template_style']) && !empty($_REQUEST['template_style'])) {
     for (
         $cptStyle = 0;
