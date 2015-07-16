@@ -1644,8 +1644,8 @@ class basket extends dbquery
                 ?></td><td><?php
                 functions::xecho($result[$theline]['group_desc']);
                 ?></td><td><input type="checkbox" value="<?php
-                functions::xecho($result[$theline]['id']) . "##" 
-                    . $result[$theline]['group_id'];
+                functions::xecho(($result[$theline]['id']) . "##" 
+                    . $result[$theline]['group_id']);
                 ?>" name="basketId[]" <?php
                 if ($result[$theline]['checked_basket']) { 
                     echo 'checked="checked"';
