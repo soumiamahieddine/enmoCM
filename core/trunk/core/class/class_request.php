@@ -482,4 +482,62 @@ class request extends dbquery
         $stmt = $db->query($query, $parameters);
         return $stmt;
     }
+
+        /*************************************************************************
+    * Returns instruction to get date or part of the date
+    *
+    * Parameters
+    *   (string) date string
+    *   (string) date part name {year | month | day | hour | minute | second}
+    *
+    * Return
+    *   (string) date instruction
+    *
+    *************************************************************************/
+    public function extract_date($date_field, $arg = '')
+    {
+        switch ($_SESSION['config']['databasetype'])
+        {
+        case "SQLSERVER":
+            return '';
+        
+        case "MYSQL":
+            switch($arg) 
+            {
+            case 'year'     : return ' date_format('.$date_field.', %Y)';
+            case 'month'    : return ' date_format('.$date_field.', %m)';
+            case 'day'      : return ' date_format('.$date_field.', %d)';
+            case 'hour'     : return ' date_format('.$date_field.', %k)';
+            case 'minute'   : return ' date_format('.$date_field.', %i)';
+            case 'second'   : return ' date_format('.$date_field.', %s)';
+            default         : return ' date('.$date_field.')';
+            }
+        
+        case "POSTGRESQL":
+            switch($arg) 
+            {
+            case 'year'     : return " date_part( 'year', ".$date_field.")";
+            case 'month'    : return " date_part( 'month', ".$date_field.")";
+            case 'day'      : return " date_part( 'day', ".$date_field.")";
+            case 'hour'     : return " date_part( 'hour', ".$date_field.")";
+            case 'minute'   : return " date_part( 'minute', ".$date_field.")";
+            case 'second'   : return " date_part( 'second', ".$date_field.")";
+            default         : return ' date('.$date_field.')';
+            }
+        
+        case "ORACLE":
+            switch($arg) 
+            {
+            case 'year'     : return " to_char(".$date_field.", 'YYYY')";
+            case 'month'    : return " to_char(".$date_field.", 'MM')";
+            case 'day'      : return " to_char(".$date_field.", 'DD')";
+            case 'hour'     : return " to_char(".$date_field.", 'HH24')";
+            case 'minute'   : return " to_char(".$date_field.", 'MI')";
+            case 'second'   : return " to_char(".$date_field.", 'SS')";
+            //default         : return " to_char(".$date_field.", 'DD/MM/YYYY')";
+            default         : return $date_field;
+            }
+    
+        }
+    }
 }
