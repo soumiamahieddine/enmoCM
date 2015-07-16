@@ -66,16 +66,12 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
 // Notes
 $datasources['notes'] = array();
 $stmt = $dbDatasource->query("SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.user_id WHERE coll_id = ? AND identifier = ? ", array($coll_id, $res_id));
-while($note = $dbDatasource->fetch_array()) {
+while($note = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $datasources['notes'][] = $note;
 }
 
 // Attachments
 $datasources['attachments'] = array();
-/*$dbDatasource->query("SELECT *, (res_id + 1) as chrono FROM res_attachments WHERE coll_id = '".$coll_id."' AND res_id_master = ".$res_id." order by res_id desc");
-while ($attachment = $dbDatasource->fetch_array()) {
-    $datasources['attachments'][] = $attachment;
-}*/
 $myAttachment['chrono'] = $chronoAttachment;
 
 $img_file_name = $_SESSION['config']['tmppath'].$_SESSION['user']['UserId'].time().rand()."_barcode_attachment.png";
