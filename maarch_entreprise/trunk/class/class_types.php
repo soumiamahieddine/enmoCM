@@ -25,7 +25,7 @@ require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
 * @package Maarch LetterBox 1.0
 * @version 1.1
 */
-class types extends dbquery
+class types extends database
 {
 
     /**

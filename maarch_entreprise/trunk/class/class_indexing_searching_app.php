@@ -33,7 +33,7 @@
 *
 */
 
-class indexing_searching_app extends dbquery
+class indexing_searching_app extends Database
 {
     function __construct()
     {

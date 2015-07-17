@@ -124,7 +124,7 @@
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
 . 'class_security.php';
 
-class lists extends dbquery
+class lists extends Database
 {
     private $countResult;
     private $countTd;

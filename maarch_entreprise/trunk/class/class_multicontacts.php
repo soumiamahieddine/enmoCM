@@ -33,7 +33,7 @@ try {
     echo $e->getMessage().' // ';
 }
 
-class multicontacts extends dbquery
+class multicontacts extends Dabase
 {
     public function updateContactsInputField($ajaxPath, $contactsArray, $inputField, $readOnly=false) 
 	{

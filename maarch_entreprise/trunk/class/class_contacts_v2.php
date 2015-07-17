@@ -20,7 +20,7 @@
 * @version 2.0
 */
 
-class contacts_v2 extends dbquery
+class contacts_v2 extends Database
 {
     /**
     * Return the contacts data in sessions vars

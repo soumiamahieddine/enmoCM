@@ -23,7 +23,7 @@
 
 require_once 'core/core_tables.php';
 
-class class_users extends dbquery
+class class_users extends Database
 {
     /**
     * Redefinition of the user object constructor : configure the SQL argument

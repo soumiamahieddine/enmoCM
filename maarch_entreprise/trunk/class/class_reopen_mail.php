@@ -22,7 +22,7 @@
 */
 
 
-class ReopenMail extends dbquery
+class ReopenMail extends Database
 {
 
     /**
