@@ -31,7 +31,6 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
 $req = new request();
-$req->connect();
 
 $db = new Database();
 
@@ -42,7 +41,7 @@ $UserInput = str_replace("&#039;", "'", $_REQUEST['UserInput']);
 $BasketOwner = str_replace("&#039;", "'", $_REQUEST['baskets_owner']);
 
 $where = " (lower(lastname) like lower(?) or lower(firstname) like lower(?) or user_id like ?)  and user_id <> ? and (status = 'OK' ) and enabled = 'Y'";
-$arrayPDO = array($req->protect_string_db($UserInput).'%',$req->protect_string_db($UserInput).'%',$req->protect_string_db($UserInput).'%',$req->protect_string_db($BasketOwner));
+$arrayPDO = array($UserInput.'%',$UserInput.'%',$UserInput.'%',$BasketOwner);
 
 $other = 'order by lastname';
 

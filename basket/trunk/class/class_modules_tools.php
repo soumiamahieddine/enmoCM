@@ -57,7 +57,7 @@ require_once 'modules/entities/entities_tables.php';
  *
  * @ingroup basket
  */
-class basket extends dbquery
+class basket extends Database
 {
     /**
      * Loads basket  tables into sessions vars from the basket/xml/config.xml
@@ -754,7 +754,6 @@ class basket extends dbquery
             . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id "
             . "and u.enabled = 'Y' ",array($userId));
 
-        //$this->show();
         $arr = array();
         while ($res = $stmt->fetchObject()) {
             array_push(
@@ -1176,7 +1175,6 @@ class basket extends dbquery
      */
     public function cancel_abs($userId)
     {
-        $this->connect();
         $db = new Database();
         $stmt = $db->query(
             "delete from " . USER_ABS_TABLE . " where is_virtual = 'Y' "
@@ -1191,7 +1189,6 @@ class basket extends dbquery
             $stmt2 = $db->query(
                 "delete from " . USER_ABS_TABLE . " where is_virtual ='Y' "
                 . " and basket_id = ? and basket_owner = ? ",array($res->basket_id,$res->basket_owner));
-            //$this->show();
             $i ++;
         }
         // then we delete all baskets where the user was the missing user
@@ -1573,7 +1570,6 @@ class basket extends dbquery
      */
     public function getBasketsOfSecondaryProfiles($userId)
     {
-        $this->connect();
         $db = new Database();
         $query = "select b.basket_id, b.basket_name, u.group_desc, u.group_id from " . BASKET_TABLE . " b, "
                 . USERGROUP_CONTENT_TABLE . " uc, " . GROUPBASKET_TABLE . " gb, "
@@ -1587,7 +1583,6 @@ class basket extends dbquery
                 . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id "
                 . "and u.enabled = 'Y')";
         $stmt = $db->query($query,array($userId,$userId));
-        //$this->show();
         $arr = array();
         while ($res = $stmt->fetchObject()) {
             $checkedBasket = false;

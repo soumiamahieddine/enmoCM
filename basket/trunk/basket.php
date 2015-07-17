@@ -63,7 +63,6 @@ if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     //$what = addslashes($func->wash($_REQUEST['what'], "nick", "", "no"));
     $what = addslashes($func->wash($_REQUEST['what']));
-    //$where .= " lower(basket_id) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
     $where .= " lower(basket_name) like lower(?) ";
     $arrayPDO = array($what.'%');
 }
@@ -195,28 +194,6 @@ while($line = $stmt->fetchObject())
 }
 $_SESSION['m_admin']['load_groupbasket'] = true;
 
-//SELECT ACTIONS
-/*
-$_SESSION['m_admin']['basket']['all_actions'] = array();
-$request->query("select id, label_action, keyword, create_id, action_page from " 
-    . $_SESSION['tablename']['actions'] . " where enabled = 'Y' order by label_action"
-);
-
-while ($line = $request->fetch_object()) {
-    if ($admin->is_action_defined($line->id)) {
-        array_push(
-            $_SESSION['m_admin']['basket']['all_actions'] ,
-            array(
-                'ID' => $line->id, 
-                'LABEL' => $line->label_action, 
-                'KEYWORD' => $line->keyword, 
-                'CREATE_ID' => $line->create_id
-            )
-        );
-    }
-}
-*/
-
 $_SESSION['m_admin']['basket']['all_statuses'] = array();
 
 $stmt = $db->query("select id, label_status from ".$_SESSION['tablename']['status']." where maarch_module = 'apps' order by label_status");
@@ -231,5 +208,3 @@ $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl'].
 $autoCompletionArray["number_to_begin"] = 1;
 
 $list->admin_list($tab, $i, $title, 'basket_id','basket','basket','basket_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_BASKETS, _BASKET,'inbox', TRUE ,true, false, true, $what, true, $autoCompletionArray);
-
-?>

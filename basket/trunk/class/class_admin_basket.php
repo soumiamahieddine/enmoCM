@@ -38,7 +38,7 @@
 *
 * @ingroup basket
 */
-class admin_basket extends dbquery
+class admin_basket extends Database
 {
    /**
     * Loads data from the groupbasket table in the session ( $_SESSION['m_admin']['basket']['groups']  array)
@@ -135,7 +135,6 @@ class admin_basket extends dbquery
     {
         $state = true;
         $core_tools = new core_tools();
-        $this->connect();
         
         $db = new Database();
         
@@ -371,10 +370,6 @@ class admin_basket extends dbquery
             && ! empty($_REQUEST['basketclause'])) {
             $_SESSION['m_admin']['basket']['clause'] = trim($_REQUEST['basketclause']);
         }
-        /*if (isset($_SESSION['m_admin']['basket']['groups'])
-            && count($_SESSION['m_admin']['basket']['groups']) < 1) {
-            $this->add_error(_BELONGS_TO_NO_GROUP, "");
-        }*/
         if ( isset($_REQUEST['is_visible']) && !empty($_REQUEST['is_visible'])) {
             $_SESSION['m_admin']['basket']['is_visible'] = $_REQUEST['is_visible'];
         } else {
@@ -479,15 +474,6 @@ class admin_basket extends dbquery
             // Up Mode
             elseif($mode == "up")
             {
-                //$clause = "";
-                //$tmp = '';
-                //if($_SESSION['m_admin']['basket']['clause'] <> "")
-                //{
-                    //$tmp =  $_SESSION['m_admin']['basket']['clause'];
-                    // $tmp =  $this->protect_string_db($_SESSION['m_admin']['basket']['clause']);
-                    // $desc = $this->protect_string_db($_SESSION['m_admin']['basket']['desc']);
-                    // $basket = $this->protect_string_db($_SESSION['m_admin']['basket']['name']);
-
                 
                 $tmp =  $_SESSION['m_admin']['basket']['clause'];
                 if($tmp == NULL){$tmp = "";} 
@@ -606,7 +592,7 @@ class admin_basket extends dbquery
                 $db = new Database();
                 $stmt = $db->query(
                     "select count(*) from " . $_SESSION['collections'][$ind]['view']
-                    . " " . $where, true
+                    . " " . $where, array(), true
                 );
             }
             if (!isset($stmt) || !$stmt) {
