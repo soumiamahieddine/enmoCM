@@ -272,10 +272,10 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
             }
             $db = new Database();
             
-            $stmt = $query="delete from " . _DOCSERVER_TYPES_TABLE_NAME 
+				$query="delete from " . _DOCSERVER_TYPES_TABLE_NAME 
                 . " where docserver_type_id =?";
             try {
-                $db->query($query, array($docserver_type->docserver_type_id));
+                 $stmt = $db->query($query, array($docserver_type->docserver_type_id));
                 $ok = true;
             } catch (Exception $e) {
                 $control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_DOCSERVER_TYPE_ID." ".$docserver_type->docserver_type_id);
