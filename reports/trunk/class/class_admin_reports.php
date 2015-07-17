@@ -123,7 +123,6 @@ class admin_reports extends Database
             require_once('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
             $rep = new reports();
             $enabled_reports = $rep->get_reports_from_xml();
-            //$this->connect();
             //$_SESSION['user']['reports'] = array();
             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."usergroups_controler.php");
 

@@ -30,7 +30,6 @@
 
 $rep = new core_tools();
 $db = new Database();
-//$db->connect();
 /****************Management of the location bar  ************/
 $init = false;
 if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
