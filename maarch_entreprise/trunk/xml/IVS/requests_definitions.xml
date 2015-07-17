@@ -43,6 +43,11 @@
       <parameter name="page" value="users_list_by_name_search"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
+    <!-- Admin status -->
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_status" >
+      <parameter name="admin" value="status"/>
+      <parameter name="page" value="status_management_controler"/>
+    </requestDefinition>
     <!-- indexing_searching  -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ix_change_category" >
       <parameter name="dir" value="indexing_searching"/>

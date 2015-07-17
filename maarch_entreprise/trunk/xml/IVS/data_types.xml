@@ -60,4 +60,7 @@
     <dataType name="phone" base="graph">
       <pattern value="/^[0-9\-\+ ]{9,15}$/" />
     </dataType>
+    <dataType name="filename" base="graph">
+      <pattern value="/^[\w-]+$/" />
+    </dataType>
   </dataTypes>

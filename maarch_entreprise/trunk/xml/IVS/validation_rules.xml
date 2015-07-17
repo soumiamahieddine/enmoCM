@@ -39,6 +39,19 @@
       <parameter name="what" type="safetext" />
     </validationRule>
 
+    <validationRule name="admin_status" extends="standardForm" mode="error">
+      <parameter name="can_be_modified" type="YN" />
+      <parameter name="can_be_searched" type="YN" />
+      <parameter name="img_filename" type="filename" />
+      <parameter name="img_related" type="filename" />
+      <parameter name="is_folder_status" type="YN" />
+      <parameter name="is_system" type="YN" />
+      <parameter name="label" type="safetext" />
+      <parameter name="status_id" type="identifier" />
+      <parameter name="status_submit" type="safetext" />
+      <parameter name="what" type="safetext" />
+    </validationRule>
+
     <validationRule name="login" mode="error">
       <parameter name="login" type="login" />
       <parameter name="pass" type="string" />
