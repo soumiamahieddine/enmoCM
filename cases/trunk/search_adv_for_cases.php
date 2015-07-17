@@ -97,9 +97,9 @@ while ($res = $stmt->fetchObject()) {
     array_push(
         $usersList,
         array(
-        	'ID' => $db->show_string($res->user_id),
-        	'NOM' => $db->show_string($res->lastname),
-        	'PRENOM' => $db->show_string($res->firstname),
+        	'ID' => functions::show_string($res->user_id),
+        	'NOM' => functions::show_string($res->lastname),
+        	'PRENOM' => functions::show_string($res->firstname),
         	'STATUT' => $res->status,
         )
     );
@@ -519,8 +519,6 @@ function cmp($a, $b)
 uasort($param, "cmp");
 
 $tab = $searchObj->send_criteria_data($param);
-//$db->show_array($param);
-//$db->show_array($tab);
 
 // criteria list options
 $srcTab = $tab[0];

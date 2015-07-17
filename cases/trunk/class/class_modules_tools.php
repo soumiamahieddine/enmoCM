@@ -307,19 +307,19 @@ class cases extends dbquery
 			,array($caseId));
 		$res = $stmt->fetchObject();
 
-		$my_return['case_id'] = functions::xssafe($res->case_id);
-		$my_return['case_label'] = functions::xssafe($db->show_string($res->case_label));
-		$my_return['case_description'] = functions::xssafe($db->show_string($res->case_description));
-		$my_return['case_creation_date'] = functions::xssafe($db->show_string($res->ccd));
-		$my_return['case_typist'] = functions::xssafe($db->show_string($res->case_typist));
-		$my_return['case_parent'] = functions::xssafe($db->show_string($res->case_parent));
-		$my_return['case_custom_t1'] = functions::xssafe($db->show_string($res->case_custom_t1));
-		$my_return['case_custom_t2'] = functions::xssafe($db->show_string($res->case_custom_t2));
-		$my_return['case_custom_t3'] = functions::xssafe($db->show_string($res->case_custom_t3));
-		$my_return['case_custom_t4'] = functions::xssafe($db->show_string($res->case_custom_t4));
-		$my_return['case_type'] = functions::xssafe($db->show_string($res->case_type));
-		$my_return['case_closing_date'] = functions::xssafe($db->show_string($res->clo));
-		$my_return['case_last_update_date'] = functions::xssafe($db->show_string($res->cud));
+		$my_return['case_id'] = $res->case_id;
+		$my_return['case_label'] = functions::show_string($res->case_label);
+		$my_return['case_description'] = functions::show_string($res->case_description);
+		$my_return['case_creation_date'] = functions::show_string($res->ccd);
+		$my_return['case_typist'] = functions::show_string($res->case_typist);
+		$my_return['case_parent'] = functions::show_string($res->case_parent);
+		$my_return['case_custom_t1'] = functions::show_string($res->case_custom_t1);
+		$my_return['case_custom_t2'] = functions::show_string($res->case_custom_t2);
+		$my_return['case_custom_t3'] = functions::show_string($res->case_custom_t3);
+		$my_return['case_custom_t4'] = functions::show_string($res->case_custom_t4);
+		$my_return['case_type'] = functions::show_string($res->case_type);
+		$my_return['case_closing_date'] = functions::show_string($res->clo);
+		$my_return['case_last_update_date'] = $db->show_string($res->cud);
 
 		return $my_return;
 	}
@@ -370,7 +370,7 @@ class cases extends dbquery
 		$stmt = $db->query(
 			"SELECT count(res_id) as nb, status from ".$table
 			. " WHERE ".$where_limitation." group by status"
-			,array($where_what));
+			,$where_what);
 
 		$my_return = array();
 		while ($result=$stmt->fetchObject())
@@ -384,12 +384,13 @@ class cases extends dbquery
 	{
 		$table = $_SESSION['tablename']['cases'];
 		$db = new Database();
+		$request = new request();
 		$current_date = $db->current_datetime();
 		$where_what = array();
 		$data = array();
 		$where = "case_id = ?";
 		$where_what[] = $caseId;
-		array_push($data, array('column' => "case_last_update_date", 'value' => $current_date, "type" => ""));
+		array_push($data, array('column' => "case_last_update_date", 'value' => $current_date, "type" => "date"));
 		$request->PDOupdate($table, $data, $where, $where_what, $_SESSION['config']['databasetype']);
 
 	}
@@ -402,13 +403,11 @@ class cases extends dbquery
 
 		$db = new Database();
 
-		$current_date = $db->current_datetime();
-
 		$stmt = $db->query(
 			"UPDATE ".$_SESSION['tablename']['cases']
-			. " SET case_closing_date = ?"
+			. " SET case_closing_date = CURRENT_TIMESTAMP"
 			. " where case_id = ?"
-			,array($current_date,$caseId));
+			,array($caseId));
 
 		if ($stmt)
 			return true;

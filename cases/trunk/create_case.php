@@ -23,7 +23,7 @@ $core_tools->load_html();
 $core_tools->load_header('', true, false);
 $sec = new security();
 $cases = new cases();
-$db = new dbquery();
+
 $status_obj = new manage_status();
 if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_tools->test_service('join_res_case_in_process', 'cases', false) == 1))
 {

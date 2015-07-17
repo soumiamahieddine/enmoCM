@@ -72,18 +72,17 @@ $case_limitation = " and record_id = ? ";
 $docs_library = $cases->get_res_id($_SESSION['cases']['actual_case_id']);
 $docs_limitation = ' and record_id in( ';
 
-if(count($docs_library) >1)
-{
+if(count($docs_library) >1) {
 	foreach($docs_library as $tmp_implode)
 	{
 		$docs_limitation .= '?,';
         $array_what[] = $tmp_implode;
 	}
-	//$docs_limitation = substr($docs_limitation, 0,-1);
+	$docs_limitation = substr($docs_limitation, 0,-1);
+} else{
+    $docs_limitation .= '?';
+    $array_what[] = $docs_library[0];
 }
-else
-$docs_limitation .= '?';
-$array_what[] = $docs_library[0];
 $docs_limitation .= ' ) ';
 
 $array_what[] = $_SESSION['tablename']['cases'];
