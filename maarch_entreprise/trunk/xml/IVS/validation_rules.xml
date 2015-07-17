@@ -25,7 +25,7 @@
     </validationRule>
 
     <validationRule name="ajax_form_values" extends="standardForm" mode="error">
-      <parameter name="form_values" type="integer" />
+      <parameter name="form_values" type="safetext" />
     </validationRule>
 
     <validationRule name="ajax_usergroups_ids" mode="error">
