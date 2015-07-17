@@ -1447,7 +1447,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         ?><div align="center">
                             <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if ($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php functions::xecho($s_id);?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/>
                             <?php if ($res->case_id<>''){ ?>
-                                <input type="button" class="button" name="unlink_case" id="unlink_case" value="<?php echo _UNLINK_CASE;?>" onclick="if(confirm('<?php echo _UNLINK_CASE;?> ?')){unlink_case('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=unlink_case','<?php functions::xecho($res->case_id);?>','<?php functions::xecho($res->res_id);?>');}"/>
+                                <input type="button" class="button" name="unlink_case" id="unlink_case" value="<?php echo _UNLINK_CASE;?>" onclick="if(confirm('<?php echo addslashes(_UNLINK_CASE);?> ?')){unlink_case('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=unlink_case','<?php functions::xecho($res->case_id);?>','<?php functions::xecho($res->res_id);?>');}"/>
 
                             <?php } ?>
                             </div>
