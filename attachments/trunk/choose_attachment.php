@@ -30,8 +30,6 @@
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $func = new functions();
-$db = new dbquery();
-$db->connect();
 $core_tools->load_html();
 $core_tools->load_header('', true, false);
 $upFileOK = false;

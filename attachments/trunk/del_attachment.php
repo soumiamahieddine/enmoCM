@@ -10,9 +10,7 @@ $core->load_lang();
 
 $func = new functions();
 
-//$db = new dbquery();
 $db = new Database();
-//$db->connect();
 
 if ($_REQUEST['relation'] == 1) {
     $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($_REQUEST['id']) );
