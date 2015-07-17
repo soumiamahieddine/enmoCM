@@ -52,7 +52,6 @@ $_SESSION['m_admin']['load_groups']  = true;
 $_SESSION['m_admin']['all_groups'] = array();
 
 $db = new Database();
-//$db->connect();
 $stmt = $db->query("select group_id, group_desc from ".$_SESSION['tablename']['usergroups']." where enabled ='Y' order by group_desc");
 while($res = $stmt->fetchObject())
 {
