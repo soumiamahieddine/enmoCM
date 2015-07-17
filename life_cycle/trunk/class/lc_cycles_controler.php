@@ -492,7 +492,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF
         if (!empty($where_clause)) {
             $stmt = $db->query("select res_id from "
                       . $_SESSION['collections'][0]['view']." where "
-                      . $where_clause
+                      . $where_clause, array(), true
             );
         }
         if (!$stmt) {
