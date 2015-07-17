@@ -42,12 +42,12 @@ if($_POST['FOLDER_TREE']){
 	while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 	
 		$stmt2 = $db->query(
-				"SELECT count(*) as total FROM res_view_letterbox WHERE folders_system_id in ('".$row['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
-				);
+				"SELECT count(*) as total FROM res_view_letterbox WHERE folders_system_id in (?) AND (".$whereClause.") AND status NOT IN ('DEL')"
+				,array($row['folders_system_id']));
 		$row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
 		$stmt3 = $db->query(
-		"SELECT count(*) as total FROM folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].") AND status NOT IN ('DEL')"
-		);
+		"SELECT count(*) as total FROM folders WHERE foldertype_id not in (100) AND parent_id IN (?) AND status NOT IN ('DEL')"
+		,array($row['folders_system_id']));
 		$row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
 		$folders[] = array(
 			'parent_id' => $row['parent_id'],
