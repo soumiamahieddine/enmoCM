@@ -4,7 +4,7 @@
 
 
 
-class tags extends dbquery
+class tags
 {
 	public function build_modules_tables()
 	{

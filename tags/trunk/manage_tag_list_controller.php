@@ -213,27 +213,21 @@ function display_list() {
         $select[TAGS], 'tag_label', 'coll_id'
     );
     $where = '';
+    $where_what = array();
     $what = '';
     if (isset($_REQUEST['what'])) {
         $what = $func->protect_string_db($_REQUEST['what']);
+
     }
     if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-        $where .= " (tag_label ilike '". $func->protect_string_db(
-            $what, $_SESSION['config']['databasetype']
-        )
-               . "%'  or tag_label ilike '" . $func->protect_string_db(
-                   $what, $_SESSION['config']['databasetype']
-               )
-               . "%' ) ";
+        $where .= " (tag_label ilike ? or tag_label ilike ? ) ";
+        $where_what[] = $what.'%';
+        $where_what[] = $what.'%';
+
     } else {
-        $where .= " (tag_label like '"
-               . $func->protect_string_db(
-                   $what, $_SESSION['config']['databasetype']
-               )
-               . "%'  or tag_label like '" . $func->protect_string_db(
-                   $what, $_SESSION['config']['databasetype']
-               )
-               . "%' ) ";
+        $where .= " (tag_label like ?  or tag_label like ? ) ";
+        $where_what[] = $what.'%';
+        $where_what[] = $what.'%';
     }
 
     // Checking order and order_field values
@@ -249,8 +243,8 @@ function display_list() {
 
     $orderstr = $list->define_order($order, $field);
     $request = new request();
-    $tab = $request->select(
-        $select, $where, $orderstr, $_SESSION['config']['databasetype'], 
+    $tab = $request->PDOselect(
+        $select, $where, $where_what, $orderstr, $_SESSION['config']['databasetype'], 
         "default", false, "", "", "", true, false, true
     );
 	//$request->show();

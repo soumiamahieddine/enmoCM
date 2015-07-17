@@ -45,10 +45,6 @@ try{
 }
 
 
-
-
-$db = new dbquery();
-$db->connect();
 $core = new core_tools();
 $core->load_lang();
 $tag = new tag_controler;

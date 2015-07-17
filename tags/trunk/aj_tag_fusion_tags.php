@@ -39,8 +39,8 @@ try{
 }
 
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 $core = new core_tools();
 $core->load_lang();
 $tag = new tag_controler;
@@ -81,17 +81,13 @@ $a_new_tag_label = $a_new_tag_arr[0];
 $a_new_tag_coll = trim($a_new_tag_arr[1]);
 
 
-$db=new dbquery();
-$db->connect();
+$stmt = $db->query(
+	"SELECT DISTINCT res_id from "._TAG_TABLE_NAME
+	. " WHERE tag_label = ? and coll_id = ? "
+	,array($a_search_tag_label,$a_search_tag_coll));
 
-$db2=new dbquery();
-$db2->connect();
-
-$db->query("select distinct res_id from "._TAG_TABLE_NAME.
-		   " where tag_label = '".$db->protect_string_db($a_search_tag_label)."' and coll_id = '".$a_search_tag_coll."' ");
-
-while ($result = $db->fetch_object()) {
-	$tag -> delete_this_tag($result->res_id,$a_search_tag_coll,$db->protect_string_db($a_search_tag_label));
+while ($result = $stmt->fetchObject()) {
+	$tag -> delete_this_tag($result->res_id,$a_search_tag_coll,functions::protect_string_db($a_search_tag_label));
 	$tag -> add_this_tag($result->res_id,$a_new_tag_coll,$a_new_tag_label);
 }
 

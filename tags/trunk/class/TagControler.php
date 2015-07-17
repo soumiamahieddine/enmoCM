@@ -71,22 +71,25 @@ class tag_controler
          */
           
         $return = array();
-       
+        $where_what = array();
+
         if ($coll_id <> '') {
-            $whereClause = " where coll_id = '" . $coll_id . "' ";
+            $whereClause = " where coll_id = ? ";
+            $where_what[] = $coll_id;
         }
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
-            'select distinct tag_label, coll_id from ' 
-                . _TAG_TABLE_NAME 
-                . $whereClause
-                . ' order by tag_label asc ');
+
+        $db = new Database(); 
+        $stmt = $db->query(
+            'SELECT DISTINCT tag_label, coll_id FROM ' 
+            . _TAG_TABLE_NAME 
+            . $whereClause
+            . ' ORDER BY tag_label ASC '
+            ,$where_what);
   
         self::set_specific_id('tag_label');
       
-        if($db->nb_result() > 0){
-            while($tag=$db->fetch_object()){
+        if($stmt->rowCount() > 0){
+            while($tag=$stmt->fetchObject()){
                 $tougue['tag_label'] = $tag->tag_label;
                 $tougue['coll_id'] = $tag->coll_id;
                 array_push($return, $tougue);
@@ -109,15 +112,16 @@ class tag_controler
             return null;
         }
 
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
-            'select tag_label, coll_id from '._TAG_TABLE_NAME.' where tag_label=\''.$tag_label.'\' and'.
-                ' coll_id = \''.$coll_id.'\'');
+        $db = new Database();
+        $stmt = $db->query(
+            'SELECT tag_label, coll_id FROM '._TAG_TABLE_NAME
+            . ' WHERE tag_label = ? AND'
+            . ' coll_id = ?'
+            ,array($tag_label,$coll_id));
   
         self::set_specific_id('tag_label');
       
-        $tag=$db->fetch_object();
+        $tag=$stmt->fetchObject();
 
         if (isset($tag)) {
             return $tag;
@@ -152,17 +156,16 @@ class tag_controler
          * Searching tags by a ressources
          * @Return : list of tags for one ressource
          */
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
-            "select tag_label from " ._TAG_TABLE_NAME
-            . " where res_id = '" . $res_id . "' and coll_id = '".$coll_id."' "
-        );
+        $db = new Database();
+        $stmt = $db->query(
+            "SELECT tag_label FROM " ._TAG_TABLE_NAME
+            . " WHERE res_id = ? AND coll_id = ?"
+        ,array($res_id,$coll_id));
         //$db->show();
         
         
         $return = array();
-        while ($res = $db->fetch_object()){
+        while ($res = $stmt->fetchObject()){
             array_push($return, $res->tag_label);
         }
         if ($return) return $return;
@@ -174,23 +177,23 @@ class tag_controler
         /*
          * Deleting a tag for a ressource
          */
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
-            "select tag_label from " ._TAG_TABLE_NAME
-            . " where res_id = '" . $res_id . "' and coll_id = '".$coll_id."' and tag_label = '".$tag_label."' "
-        );
-        if ($db->nb_result()>0){
+        $db = new Database();
+        $stmt = $db->query(
+            "SELECT tag_label FROM " ._TAG_TABLE_NAME
+            . " WHERE res_id = ? AND coll_id = ? AND tag_label = ?"
+        ,array($res_id,$coll_id,$tag_label));
+
+        if ($stmt->rowCount()>0){
             //Lancement de la suppression de l'occurence
-            $fin =$db->query(
-                "delete from " ._TAG_TABLE_NAME
-                . " where res_id = '" . $res_id . "' and coll_id = '".$coll_id."' and tag_label = '".$tag_label."' "
-            );
-            if ($fin){ 
+            $stmt = $db->query(
+                "DELETE FROM " ._TAG_TABLE_NAME
+                . " WHERE res_id = ? AND coll_id = ? AND tag_label = ? "
+            ,array($res_id,$coll_id,$tag_label));
+            if ($stmt){ 
                 $hist = new history();
                 $hist->add(
                     _TAG_TABLE_NAME, $tag_label, "DEL", 'tagdel', _TAG_DELETED.' : "'.
-                    substr($db->protect_string_db($tag_label), 0, 254) .'"',
+                    substr(functions::protect_string_db($tag_label), 0, 254) .'"',
                     $_SESSION['config']['databasetype'], 'tags'
                 );
                 return true; }
@@ -205,15 +208,14 @@ class tag_controler
          * Count ressources for one tag : used by tags administration
          */
          
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
-                "select count(res_id) as bump from " ._TAG_TABLE_NAME
-                . " where tag_label = '" . $tag_label . "' and coll_id = '".$coll_id."' ".
-                " and res_id <> 0"
-        );
+        $db = new Database();
+        $stmt = $db->query(
+                "SELECT count(res_id) AS bump FROM " ._TAG_TABLE_NAME
+                . " WHERE tag_label = ? AND coll_id = ?"
+                . " AND res_id <> 0"
+        ,array($tag_label,$coll_id));
         
-        $result = $db->fetch_object();
+        $result = $stmt->fetchObject();
         $return = 0; 
         
         if ($result)
@@ -232,13 +234,12 @@ class tag_controler
     public function getresarray_byLabel($tag_label, $coll_id){
         $array = array();
         
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
-                "select res_id as bump from " ._TAG_TABLE_NAME
-                . " where tag_label = '" . $tag_label . "' and coll_id = '".$coll_id."' ".
-                " and res_id <> 0"
-        );
+        $db = new Database();
+        $stmt = $db->query(
+                "SELECT res_id AS bump FROM " ._TAG_TABLE_NAME
+                . " WHERE tag_label = ? AND coll_id = ?"
+                . " AND res_id <> 0"
+        ,array($tag_label,$coll_id));
         //$db->show();
         
         while ($result = $db->fetch_object())
@@ -261,16 +262,15 @@ class tag_controler
          * Searching a tag by label
          * @If tag exists, return this value, else, return false
          */
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
-                "delete from " ._TAG_TABLE_NAME
-                . " where res_id = '" . $res_id . "' and coll_id = '".$coll_id."' "
-        );
+        $db = new Database();
+        $stmt = $db->query(
+                "DELETE FROM " ._TAG_TABLE_NAME
+                . " WHERE res_id = ? and coll_id = ? "
+        ,array($res_id,$coll_id));
         /*$hist = new history();
         $hist->add(
             'res_view_letterbox', $res_id, "DEL", 'tagdel', _ALL_TAG_DELETED_FOR_RES_ID.' : "'.
-            substr($db->protect_string_db($res_id), 0, 254) .'"',
+            substr(functions::protect_string_db($res_id), 0, 254) .'"',
             $_SESSION['config']['databasetype'], 'tags'
         );*/
         //$db->show();
@@ -282,17 +282,16 @@ class tag_controler
         /*
          * Deleting  [REALLY] a tag for a ressource
          */
-        $db = new dbquery();
-        $db->connect();
-        $del = $db->query(
-                "delete from " ._TAG_TABLE_NAME
-                . " where tag_label = '" . $tag_label . "' and coll_id = '".$coll_id."' "
-        );
-        if ($del){
+        $db = new Database();
+        $stmt = $db->query(
+                "DELETE FROM " ._TAG_TABLE_NAME
+                . " WHERE tag_label = ? AND coll_id = ?"
+        ,array($tag_label,$coll_id));
+        if ($stmt){
             $hist = new history();
             $hist->add(
                 _TAG_TABLE_NAME, $tag_label, "DEL", 'tagdel', _TAG_DELETED.' : "'.
-                substr($db->protect_string_db($tag_label), 0, 254) .'"',
+                substr(functions::protect_string_db($tag_label), 0, 254) .'"',
                 $_SESSION['config']['databasetype'], 'tags'
             );
             return true; 
@@ -306,7 +305,6 @@ class tag_controler
         /*
          * Store into the database a tag for a ressource
          */
-        $db = new dbquery();
         
         if ($mode=='add'){
             $new_tag_label = $params[0];
@@ -316,7 +314,7 @@ class tag_controler
             /*$hist = new history();
             $hist->add(
                 _TAG_TABLE_NAME, $new_tag_label, "ADD", 'tagadd', _TAG_ADDED.' : "'.
-                substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
+                substr(functions::protect_string_db($new_tag_label), 0, 254) .'"',
                 $_SESSION['config']['databasetype'], 'tags'
             );*/
             return true;
@@ -325,11 +323,11 @@ class tag_controler
             
             $new_tag_label = $params[0];
             $coll_id = $params[1];
-            $this->update_tag_label($new_tag_label, $db->protect_string_db($tag_label), $coll_id);  
+            $this->update_tag_label($new_tag_label, functions::protect_string_db($tag_label), $coll_id);  
             /*$hist = new history();
             $hist->add(
                 _TAG_TABLE_NAME, $new_tag_label, "ADD", 'tagup', _TAG_ADDED.' : "'.
-                substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
+                substr(functions::protect_string_db($new_tag_label), 0, 254) .'"',
                 $_SESSION['config']['databasetype'], 'tags'
             );*/
             return true;
@@ -347,22 +345,22 @@ class tag_controler
          */
         $new_tag_label = $this->control_label($new_tag_label);
         
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
-            "select tag_label from " ._TAG_TABLE_NAME
-            . " where  coll_id = '".$coll_id."' and tag_label = '".$new_tag_label."'  "
-        );
-        if ($db->nb_result() == 0)
+        $db = new Database();
+        $stmt = $db->query(
+            "SELECT tag_label FROM " ._TAG_TABLE_NAME
+            . " WHERE  coll_id = ? and tag_label = ?  "
+        ,array($coll_id,$new_tag_label));
+        if ($stmt->rowCount() == 0)
         {
-            $db->query(
-                "update " ._TAG_TABLE_NAME
-                . " set tag_label = '".$new_tag_label."' where coll_id = '".$coll_id."' and tag_label = '".$old_taglabel."'  "
-            );
+            $stmt = $db->query(
+                "UPDATE " ._TAG_TABLE_NAME
+                . " SET tag_label = ?"
+                . " WHERE coll_id = ? AND tag_label = ?"
+            ,array($new_tag_label,$coll_id,$old_taglabel));
             $hist = new history();
             $hist->add(
                 _TAG_TABLE_NAME, $new_tag_label, "UP", 'tagup', _TAG_UPDATED.' : "'.
-                substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
+                substr(functions::protect_string_db($new_tag_label), 0, 254) .'"',
                 $_SESSION['config']['databasetype'], 'tags'
             );
         }
@@ -380,25 +378,24 @@ class tag_controler
          */
         $new_tag_label = $this->control_label($new_tag_label);
         
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         
         //Primo, test de l'existance du mot clé en base.
-        $db->query(
-            "select tag_label from " ._TAG_TABLE_NAME
-            . " where  coll_id = '".$coll_id."' and tag_label = '".$new_tag_label."'  "
-        );
+        $stmt = $db->query(
+            "SELECT tag_label FROM " ._TAG_TABLE_NAME
+            . " WHERE  coll_id = ? AND tag_label = ?"
+        ,array($coll_id,$new_tag_label));
         //$db->show();exit();
-        if ($db->nb_result() == 0)
+        if ($stmt->rowCount() == 0)
         {
-             $db->query(
-            "insert into " ._TAG_TABLE_NAME
-            . " values ('".$new_tag_label."', '".$coll_id."', 0)"
-              );
+             $stmt = $db->query(
+                "INSERT INTO " ._TAG_TABLE_NAME
+                . " VALUES (?, ?, 0)"
+              ,array($new_tag_label,$coll_id));
             /*$hist = new history();
             $hist->add(
 				_TAG_TABLE_NAME, $new_tag_label, "ADD", 'tagadd', _TAG_ADDED.' : "'.
-				substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
+				substr(functions::protect_string_db($new_tag_label), 0, 254) .'"',
 				$_SESSION['config']['databasetype'], 'tags'
 			);*/
         }
@@ -411,27 +408,26 @@ class tag_controler
         /*
          * Adding  [REALLY] a tag for a ressource
          */
-        $db = new dbquery();       
+        $db = new Database();      
         $tag_label = $this->control_label($tag_label);
         
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
-            "select tag_label from " ._TAG_TABLE_NAME
-            . " where res_id = '" . $res_id . "' and coll_id = '".$coll_id."' and tag_label = '".$db->protect_string_db($tag_label)."'  "
-        );
-        if ($db->nb_result()==0){
+        $stmt = $db->query(
+            "SELECT tag_label FROM " ._TAG_TABLE_NAME
+            . " WHERE res_id = ? AND coll_id = ? AND tag_label = ?"
+        ,array($res_id,$coll_id,$tag_label));
+        if ($stmt->rowCount()==0){
             //Lancement de la suppression de l'occurence
-            $fin =$db->query(
-                "insert into " ._TAG_TABLE_NAME
-                . " (tag_label, res_id, coll_id) values ('".$db->protect_string_db($tag_label)."', '" . $res_id . "','".$coll_id."')  "
-            );
-            if ($fin){ 
+            $stmt = $db->query(
+                "INSERT INTO " ._TAG_TABLE_NAME
+                . " (tag_label, res_id, coll_id)"
+                . " VALUES (?,?,?)  "
+            ,array($tag_label,$res_id,$coll_id));
+            if ($stmt){ 
                 
                 /*$hist = new history();
                 $hist->add(
                     'res_view_letterbox', $res_id, "ADD", 'tagadd', _TAG_ADDED.' : "'.
-                    substr($db->protect_string_db($tag_label), 0, 254) .'"',
+                    substr(functions::protect_string_db($tag_label), 0, 254) .'"',
                     $_SESSION['config']['databasetype'], 'tags'
                 );*/
                 return true; }

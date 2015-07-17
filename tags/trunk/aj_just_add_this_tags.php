@@ -47,8 +47,7 @@ try{
 
 
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $core = new core_tools();
 $core->load_lang();
 $tag = new tag_controler;
@@ -76,16 +75,17 @@ $new_tags = explode(',',$p_input_value);
 
 
 foreach($new_tags as $new_tag){
-	$db->query(
-    "SELECT tag_label as label from tags where tag_label = '".$new_tag."'");
-	//print_r("SELECT tag_label as label from tags where tag_label = '".$new_tag."'");
 
-	 $line = $db->fetch_object();
+	$stmt = $db->query(
+    "SELECT tag_label as label FROM tags"
+    . " WHERE tag_label = ?"
+    ,array($new_tag));
+
+	 $line = $stmt->fetchObject();
 	 $label = $line->label; 
-	 //print_r('ok');  
-	 //print_r($label);
+
 	if($label != null){
-		 //print_r('in function');  
+ 
 		if (trim($new_tag) <> '')
 		{
 			$result = $tag->add_this_tags_in_session($new_tag);

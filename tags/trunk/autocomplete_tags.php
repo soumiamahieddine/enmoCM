@@ -34,37 +34,41 @@ require_once("modules/tags/tags_tables_definition.php");
 
 $table = _TAG_TABLE_NAME;
 
-
+$where_what = array();
 
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 {
-	$where .= " (tag_label ilike '%".$this->protect_string_db(addslashes($_REQUEST['Input']))."%' or tag_label ilike '%".$this->protect_string_db(addslashes($_REQUEST['Input']))."%' ) ";
+	$where .= " (tag_label ilike ? or tag_label ilike ? ) ";
 	$limit = " limit 10";
+	$where_what[] = '%'.$_REQUEST['Input'].'%';
+	$where_what[] = '%'.$_REQUEST['Input'].'%';
 }
 else
 {
-	$where .= " (tag_label like '%".addslashes($_REQUEST['Input'])."%' or tag_label like '%".addslashes($_REQUEST['Input'])."%' ) ";
+	$where .= " (tag_label like ? or tag_label like ? ) ";
+	$where_what[] = '%'.$_REQUEST['Input'].'%';
+	$where_what[] = '%'.$_REQUEST['Input'].'%';
 	$limit = "";
 }
 $other = 'order by tag_label';
 
-$db = new dbquery();
-$db->connect();
-$db->query(
-    	"select distinct tag_label as label from " ._TAG_TABLE_NAME
+$db = new Database(); 
+$stmt = $db->query(
+    	"SELECT DISTINCT tag_label as label from " ._TAG_TABLE_NAME
         . " where ".$where." ".
         $other." ".$limit
-	);
+	,array($where_what));
 
-echo "<ul>\n";
+$list = "<ul>\n";
 $imax = 0;
-while($result=$db->fetch_object())
+while($result=$stmt->fetchObject())
 {
 	$imax++;
 	if ($imax > 9){
-		echo "<li>...</li>\n";
+		$list .= "<li>...</li>\n";
 		break;
 	}
-	echo "<li>".$db->show_string($result->label)."</li>\n";
+	$list .= "<li>".functions::show_string($result->label)."</li>\n";
 }
-echo "</ul>";
+$list .= "</ul>";
+echo $list;

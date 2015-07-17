@@ -42,10 +42,6 @@ try{
 }
 
 
-
-
-$db = new dbquery();
-$db->connect();
 $core = new core_tools();
 $core->load_lang();
 
