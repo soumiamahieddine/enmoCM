@@ -170,6 +170,7 @@
       <parameter name="id" type="integer" />
       <parameter name="resIdMaster" type="integer" />
       <parameter name="collid" type="collection_list" />
+      <parameter name="coll_id" type="collection_list" />
       <parameter name="original" type="boolean" />
       <parameter name="aVersion" type="boolean" />
       <parameter name="dir" type="identifier" />
