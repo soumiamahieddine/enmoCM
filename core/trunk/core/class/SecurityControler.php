@@ -316,7 +316,7 @@ class SecurityControler
                    . ' where  '. $where;
         }
 
-        $ok = $db->query($query);
+        $ok = $db->query($query, array(), true);
         if (!$ok) {
             $res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
             return $res;
