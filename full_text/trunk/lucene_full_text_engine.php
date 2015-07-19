@@ -64,14 +64,6 @@ $_ENV['log'] = "";
 * User exit of the program, contains 1 if any problem appears
 */
 $_ENV['ErrorLevel'] = 0;
-/**
-* Connection object to database 1
-*/
-$_ENV['db'] = "";
-/**
-* Connection object to database 2
-*/
-$_ENV['db2'] = "";
 
 /**
 * Creation of the log file
@@ -299,12 +291,6 @@ foreach ($xmlconfig->CONFIG as $CONFIG) {
     $base_directory = $CONFIG->BASE_DIRECTORY;
     $_ENV['base_directory'] = $base_directory;
     $indexFileDirectory = $CONFIG->INDEX_FILE_DIRECTORY;
-    $_ENV['databaseserver'] = $CONFIG->LOCATION;
-    $_ENV['databaseport'] = $CONFIG->DATABASE_PORT;
-    $_ENV['database'] = $CONFIG ->DATABASE;
-    $_ENV['databasetype'] = $CONFIG->DATABASETYPE;
-    $_ENV['databaseuser'] = $CONFIG -> USER_NAME;
-    $_ENV['databasepwd'] = $CONFIG->PASSWORD;
     $_ENV['tablename'] = $CONFIG->TABLE_NAME;
     $fulltextColumnName = $CONFIG->FULLTEXT_COLUMN_NAME;
     $_ENV['maarch_tools_path'] = $CONFIG->MAARCH_TOOLS_PATH;
@@ -322,27 +308,28 @@ writeLog("Launch of Lucene full text engine");
 writeLog("Loading the xml config file");
 writeLog("Config name : " . $_ENV['config_name']);
 writeLog("Full text engine launched for table : " . $_ENV['tablename']);
-require("class_db.php");
-$_ENV['db'] = new dbquery();
-$_ENV['db']->connect();
-$_ENV['db2'] = new dbquery();
-$_ENV['db2']->connect();
+require("../../core/class/class_functions.php");
+require("../../core/class/class_db_pdo.php");
+$_ENV['db'] = new Database($conf);
+
 writeLog("connection on the DB server OK !");
-$docServers = "select docserver_id, path_template from docservers";
-$_ENV['db']->query($docServers);
+$docServers = "SELECT docserver_id, path_template FROM docservers";
+
+$stmt = $_ENV['db']->query($docServers);
+
 writeLog("docServers found : ");
-while ($queryResult=$_ENV['db']->fetch_array()) {
+while ($queryResult=$stmt->fetch(PDO::FETCH_NUM)) {
   $pathToDocServer[$queryResult[0]] = $queryResult[1];
   writeLog($queryResult[1]);
 }
-$queryIndexFullText = "select res_id, docserver_id, path, filename, format from "
-    . $_ENV['tablename'] . " where " . $fulltextColumnName . " = '0' or "
+$queryIndexFullText = "SELECT res_id, docserver_id, path, filename, format FROM "
+    . $_ENV['tablename'] . " WHERE " . $fulltextColumnName . " = '0' or "
     . $fulltextColumnName . " = '' or " . $fulltextColumnName . " is null ";
 writeLog("query to found document with no full text : ".$queryIndexFullText);
-$_ENV['db']->query($queryIndexFullText);
+$stmt = $_ENV['db']->query($queryIndexFullText);
 $cpt_batch_size=0;
 writeLog("max_batch_size : ".$_ENV['max_batch_size']);
-while ($queryResult=$_ENV['db']->fetch_array()) {
+while ($queryResult=$stmt->fetch(PDO::FETCH_NUM)) {
     if ($_ENV['max_batch_size'] >= $cpt_batch_size) {
         $pathToFile = $pathToDocServer[$queryResult[1]]
             . str_replace("#", DIRECTORY_SEPARATOR, $queryResult[2])
@@ -356,10 +343,9 @@ while ($queryResult=$_ENV['db']->fetch_array()) {
         );
         writeLog("Result of processing : " . $result);
         echo "Result of processing : " . $result . "\r\n";
-        $updateDoc = "update " . $_ENV['tablename'] . " SET "
-            . $fulltextColumnName . " = '" . $result . "' where res_id = "
-            . $queryResult[0];
-        $queryUpdate = $_ENV['db2']->query($updateDoc);
+        $updateDoc = "UPDATE " . $_ENV['tablename'] . " SET "
+            . $fulltextColumnName . " = ? WHERE res_id = ?";
+        $_ENV['db']->query($updateDoc, array($result, $queryResult[0]));
     } else {
     writeLog("Max batch size ! Stop processing !");
     echo "\r\nMax batch size ! Stop processing !";
