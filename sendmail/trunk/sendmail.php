@@ -89,7 +89,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         $target = $_SESSION['config']['businessappurl']
             .'index.php?module=sendmail&page=sendmail&identifier='
             .$identifier.'&origin='.$origin.$parameters;
-        
+            
         $listContent = $list->loadList($target);
         echo $listContent;
     } else {
@@ -97,6 +97,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
     }
     ?><div id="container" style="width:100%;min-height:0px;height:0px;"></div></body></html><?php
 } else {
+	
     //If size is full change some parameters
     if (isset($_REQUEST['size']) 
         && ($_REQUEST['size'] == "full")
@@ -153,7 +154,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
     
     //Request
         $tab=$request->PDOselect(
-            $select, $where, $orderstr,
+            $select, $where, array(), $orderstr,
             $_SESSION['config']['databasetype'], "500", true, EMAILS_TABLE, USERS_TABLE,
             "user_id"
         );

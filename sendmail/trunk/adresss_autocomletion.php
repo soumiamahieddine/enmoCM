@@ -77,7 +77,7 @@ $db = new Database();
                 . " OR LOWER(firstname) LIKE LOWER('%s')"
         . " OR LOWER(email) LIKE LOWER('%s')"
             .")"
-        ."and (is_private = 'N' or ( user_id = ? and is_private = 'Y'))";
+        ."and (is_private = 'N' or ( user_id = '".$_SESSION['user']['UserId']."' and is_private = 'Y'))";
 
 
 
@@ -106,7 +106,7 @@ for($i=1;$i<3;$i++){
         . " GROUP BY result "
         . " ORDER BY score DESC, result ASC";
     
-    $stmt = $db->query($query, array($_SESSION['user']['UserId']));
+    $stmt = $db->query($query);
     $nb = $stmt->rowCount();
     $m = 30;
     if($nb >= $m) $l = $m;

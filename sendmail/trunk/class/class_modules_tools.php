@@ -166,17 +166,14 @@ class sendmail extends Database
 			//Have version table
 			if ($versionTable <> '') {
 				$stmt = $db->query("select res_id from " 
-							. $versionTable . " where res_id_master = ? and status <> 'DEL' order by res_id desc", 
-							array($id)
-					);
+							. $versionTable . " where res_id_master = ? and status <> 'DEL' order by res_id desc", array($id));
 				$line = $stmt->fetchObject();
 				$lastVersion = $line->res_id;
 				//Have new version
 				if ($lastVersion <> '') {
 					$stmt = $db->query(
 						"select res_id, description, subject, title, format, filesize, relation from "
-						. $versionTable . " where res_id = ? and status <> 'DEL'",
-						array($lastVersion)
+						. $versionTable . " where res_id = ? and status <> 'DEL'",array($lastVersion)
 					);
 					// $db->show();
 					//Get infos
@@ -205,16 +202,14 @@ class sendmail extends Database
 			
             $stmt = $db->query(
                 "select res_id, description, subject, title, format, filesize, relation from "
-                . $table . " where res_id = ? and status <> 'DEL'", 
-                array($id )
+                . $table . " where res_id = ? and status <> 'DEL'", array($id )
                 );
         } else {
 			require_once 'modules/attachments/attachments_tables.php';
             $stmt = $db->query(
                 "select res_id, description, subject, title, format, filesize, res_id_master from " 
-                .  RES_ATTACHMENTS_TABLE . " where res_id_master = ? " 
-				. $id . " and coll_id = ? and status <> 'DEL'",
-				array($coll_id)
+                .  RES_ATTACHMENTS_TABLE . " where res_id_master = ? and coll_id = ? and status <> 'DEL'",
+				array($id, $coll_id)
 				);
         }
         // $db->show(); 

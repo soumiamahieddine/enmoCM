@@ -30,6 +30,7 @@
 */
 
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php";
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db_pdo.php";
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php";
 require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
@@ -44,6 +45,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
     
 $core_tools     = new core_tools();
 $request        = new request();
+$db        		= new Database();
 $sec            = new security();
 $is             = new indexing_searching_app();
 $users_tools    = new class_users();
@@ -225,16 +227,17 @@ switch ($mode) {
                                 } else if ($_REQUEST['for'] == 'send'){
                                     $email_status = 'W';
                                 }
-                                
+                          
                                 //Query                 
-                                $stmt = $request->query(
+                                $stmt = $db->query(
                                     "INSERT INTO " . EMAILS_TABLE . "(coll_id, res_id, user_id, to_list, cc_list,
                                     cci_list, email_object, email_body, is_res_master_attached, res_version_id_list, 
-                                    res_attachment_id_list, note_id_list, is_html, email_status, creation_date) VALUES (
-                                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                                    , array($collId, $identifier, $userId, $to, $cc, $cci, $object, $body, $res_master_attached, $version_list, $attachment_list,
-                                     $note_list, $isHtml, $email_status, $date)
+                                    res_attachment_id_list, note_id_list, is_html, email_status, creation_date) 
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
+									array($collId, $identifier, $userId, $to, $cc, $cci, $object, $body, $res_master_attached, 
+									$version_list, $attachment_list, $note_list, $isHtml, $email_status)
                                 );
+                               
                                 
                                 //Last insert ID from sequence
                                 $id = $request->last_insert_id('sendmail_email_id_seq');
@@ -334,13 +337,13 @@ switch ($mode) {
                                         $note_list = join(',', $_REQUEST['notes']);
                                     }
                                     $date = $request->current_datetime();
-                                    $userId = $request->protect_string_db($_SESSION['user']['UserId']);
+                                    $userId = $_SESSION['user']['UserId'];
                                     (!empty($_REQUEST['is_html']) && $_REQUEST['is_html'] == 'Y')? $isHtml = 'Y' : $isHtml = 'N';
                                     //Body content
                                     if ($isHtml == 'Y') {
-                                        $body = $request->protect_string_db($sendmail_tools->cleanHtml($_REQUEST['body_from_html']));
+                                        $body = $sendmail_tools->cleanHtml($_REQUEST['body_from_html']);
                                     } else {
-                                         $body = $request->protect_string_db($_REQUEST['body_from_raw']);
+                                         $body = $_REQUEST['body_from_raw'];
                                     }
                                     //Status
                                     if ($_REQUEST['for'] == 'save') {
@@ -350,7 +353,7 @@ switch ($mode) {
                                     }
                                     
                                     //Query                 
-                                    $request->query(
+                                    $db->query(
                                         "UPDATE " . EMAILS_TABLE . " SET to_list = ?, cc_list = ?, cci_list = ?, email_object = ?, 
 												email_body = ?, is_res_master_attached = ?, res_version_id_list = ?, 
 												res_attachment_id_list = ?, note_id_list = ?, 

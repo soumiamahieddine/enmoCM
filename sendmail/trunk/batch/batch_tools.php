@@ -39,8 +39,8 @@
  */
 function Bt_doQuery($dbConn, $queryTxt, $param=array(), $transaction=false)
 {
-    $res = $dbConn->query($queryTxt, true);
-    if (!$res) {
+    $stmt = $dbConn->query($queryTxt, true);
+    if (!$stmt) {
         if ($transaction) {
             $GLOBALS['logger']->write('ROLLBACK', 'INFO');
             $dbConn->query('ROLLBACK', true);
@@ -50,7 +50,7 @@ function Bt_doQuery($dbConn, $queryTxt, $param=array(), $transaction=false)
         );
     }
     $GLOBALS['logger']->write('SQL query:' . $queryTxt, 'DEBUG');
-    return true;
+    return $stmt;
 }
 
 /**
@@ -117,7 +117,7 @@ function Bt_getWorkBatch()
     $req = "select param_value_int from parameters where id = "
          . "'". $GLOBALS['batchName'] . "_id'";
     $stmt = $GLOBALS['db']->query($req);
-    while ($reqResult = $GLOBALS['db']->fetch_array()) {
+    while ($reqResult = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $GLOBALS['wb'] = $reqResult[0] + 1;
     }
     if ($GLOBALS['wb'] == '') {

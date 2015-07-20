@@ -48,7 +48,7 @@ $sec            = new security();
 $is             = new indexing_searching_app();
 $users_tools    = new class_users();
 $sendmail_tools = new sendmail();
-$db             = new dbquery();
+$db             = new Database();
 
 $parameters = '';
 
@@ -149,26 +149,26 @@ if ($mode == 'add') {
                 or dest_contact_id is not null 
                 or exp_user_id is not null 
                 or dest_user_id is not null) 
-                and  res_id = ".$_SESSION['doc_id'].")");
+                and  res_id = ?)", array($_SESSION['doc_id']));
     $res = $stmt->fetchObject();
     
     $address_id = $res->address_id;
     $exp_user_id = $res->exp_user_id;
     $dest_user_id = $res->dest_user_id;
-
+	
     if($address_id != null){
         $db = new Database();
-        $stmt = $db->query("select email from contact_addresses where id = ".$address_id);
+        $stmt = $db->query("select email from contact_addresses where id = ?", array($address_id));
         $adr = $stmt->fetchObject();
         $adress_mail = $adr->email;
     }elseif($exp_user_id != null){
         $db = new Database();
-        $stmt = $db->query("select mail from users where user_id = '".$exp_user_id."'");
+        $stmt = $db->query("select mail from users where user_id = ?", array($exp_user_id));
         $adr = $stmt->fetchObject();
         $adress_mail = $adr->mail;
     }elseif($dest_user_id != null){
         $db = new Database();
-        $stmt = $db->query("select mail from users where user_id = '".$dest_user_id."'");
+        $stmt = $db->query("select mail from users where user_id = ?", array($dest_user_id));
         $adr = $stmt->fetchObject();
         $adress_mail = $adr->mail;
     }
@@ -256,7 +256,7 @@ if ($mode == 'add') {
     }
     
     //Attachments
-    if ($core_tools->is_module_loaded('attachments')) {
+    if ($core_tools->is_module_loaded('attachments')) { 
         $attachment_files = $sendmail_tools->getJoinedFiles($collId, $table, $identifier, true);
         if (count($attachment_files) >0) {
             $content .='<br/>';
@@ -312,6 +312,7 @@ if ($mode == 'add') {
             // $all_joined_files .= _NOTES.": notes_".$identifier."_".date(dmY).".html\n";
         }
     }
+    
     $content .= '</div>';
     $content .='<hr />';
     $content .= '<tr>';
