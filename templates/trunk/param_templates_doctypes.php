@@ -24,7 +24,7 @@ if ($_SESSION['service_tag'] == 'doctype_up') {
         . $_SESSION['tablename']['temp_templates'] . " where template_type = 'HTML' and (template_target = 'doctypes' or template_target = '')"
     );
     $templates = array();
-    while ($res = $stmt->fetch0bject()) {
+    while ($res = $stmt->fetchObject()) {
         array_push($templates, array('id' => $res->template_id, 'label' => $res->template_label));
     }
     ?>
