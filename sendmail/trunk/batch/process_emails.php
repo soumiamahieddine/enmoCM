@@ -20,15 +20,15 @@ while ($state <> 'END') {
     case 'LOAD_EMAILS' :
 		$query = "SELECT * FROM " . EMAILS_TABLE
 			. " WHERE email_status = 'W' and send_date is NULL";
-		Bt_doQuery($GLOBALS['db'], $query);
-		$totalEmailsToProcess = $GLOBALS['db']->nb_result();
+		$stmt = Bt_doQuery($GLOBALS['db'], $query);
+		$totalEmailsToProcess = $stmt->rowCount();
 		$currentEmail = 0;
 		if ($totalEmailsToProcess === 0) {
 			Bt_exitBatch(0, 'No e-mails to process');
         }
 		$GLOBALS['logger']->write($totalEmailsToProcess . ' e-mails to proceed.', 'INFO');
 		$GLOBALS['emails'] = array();
-		while ($emailRecordset = $GLOBALS['db']->fetch_object()) {
+		while ($emailRecordset = $stmt->fetchObject()) {
 			$GLOBALS['emails'][] = $emailRecordset;
 		}
 		$state = 'SEND_AN_EMAIL';
@@ -188,11 +188,10 @@ while ($state <> 'END') {
 			}
 			//Update emails table
 			$query = "UPDATE " . EMAILS_TABLE 
-				. " SET send_date = " . $GLOBALS['db']->current_datetime()
-				. ", email_status = '".$exec_result."' "
-				. " WHERE email_id = ".$email->email_id;
-			$GLOBALS['db']->connect();
-			Bt_doQuery($GLOBALS['db'], $query);
+				. " SET send_date = ? "
+				. ", email_status = ? "
+				. " WHERE email_id = ? ";
+			$stmt = Bt_doQuery($GLOBALS['db'], $query, array($GLOBALS['db']->current_datetime(), $exec_result, $email->email_id));
 			$currentEmail++;
 			$state = 'SEND_AN_EMAIL';
 		} else {

@@ -234,8 +234,7 @@ $sendmail_tools = new sendmail();
 $users = new class_users();		
 $GLOBALS['func'] = new functions();
 
-$GLOBALS['db'] = new dbquery($GLOBALS['configFile']);
-$GLOBALS['db']->connect();
+$GLOBALS['db'] = new Database($GLOBALS['configFile']);
 
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
 	. $GLOBALS['batchName'] .'_error.lck';

@@ -192,11 +192,8 @@ switch ($mode) {
                             if (empty($error)) {
                             
                                 //Data
-                                $collId = $request->protect_string_db($_REQUEST['coll_id']);
-                                $to =  $request->protect_string_db($to);
-                                $cc = $request->protect_string_db($cc);
-                                $cci = $request->protect_string_db($cci);
-                                $object = $request->protect_string_db($_REQUEST['object']);
+                                $collId = $_REQUEST['coll_id'];
+                                $object = $_REQUEST['object'];
                                 (isset($_REQUEST['join_file']) 
                                     && count($_REQUEST['join_file']) > 0
                                 )? $res_master_attached = 'Y' : $res_master_attached = 'N';
@@ -213,13 +210,13 @@ switch ($mode) {
                                     $note_list = join(',', $_REQUEST['notes']);
                                 }
                                 $date = $request->current_datetime();
-                                $userId = $request->protect_string_db($_SESSION['user']['UserId']);
+                                $userId = $_SESSION['user']['UserId'];
                                 (!empty($_REQUEST['is_html']) && $_REQUEST['is_html'] == 'Y')? $isHtml = 'Y' : $isHtml = 'N';
                                 //Body content
                                 if ($isHtml == 'Y') {
-                                    $body = $request->protect_string_db($sendmail_tools->cleanHtml($_REQUEST['body_from_html']));
+                                    $body = $sendmail_tools->cleanHtml($_REQUEST['body_from_html']);
                                 } else {
-                                     $body = $request->protect_string_db($_REQUEST['body_from_raw']);
+                                     $body = $_REQUEST['body_from_raw'];
                                 }
                                 
                                 //Status
@@ -230,13 +227,13 @@ switch ($mode) {
                                 }
                                 
                                 //Query                 
-                                $request->query(
+                                $stmt = $request->query(
                                     "INSERT INTO " . EMAILS_TABLE . "(coll_id, res_id, user_id, to_list, cc_list,
                                     cci_list, email_object, email_body, is_res_master_attached, res_version_id_list, 
                                     res_attachment_id_list, note_id_list, is_html, email_status, creation_date) VALUES (
-                                    '" . $collId. "', '" .$identifier. "', '" .$userId. "', '" .$to. "', '" .$cc. "',
-                                    '" .$cci . "', '" .$object. "', '" .$body. "', '" .$res_master_attached . "', '".$version_list."', 
-                                    '" . $attachment_list . "', '" . $note_list . "', '" . $isHtml . "', '" . $email_status . "', " . $date . ")"
+                                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                                    , array($collId, $identifier, $userId, $to, $cc, $cci, $object, $body, $res_master_attached, $version_list, $attachment_list,
+                                     $note_list, $isHtml, $email_status, $date)
                                 );
                                 
                                 //Last insert ID from sequence
@@ -322,11 +319,8 @@ switch ($mode) {
                                 if (empty($error)) {
                                 
                                     //Data
-                                    $collId = $request->protect_string_db($_REQUEST['coll_id']);
-                                    $to =  $request->protect_string_db($to);
-                                    $cc = $request->protect_string_db($cc);
-                                    $cci = $request->protect_string_db($cci);
-                                    $object = $request->protect_string_db($_REQUEST['object']);
+                                    $collId = $_REQUEST['coll_id'];
+                                    $object = $_REQUEST['object'];
                                     (isset($_REQUEST['join_file']) 
                                         && count($_REQUEST['join_file']) > 0
                                     )? $res_master_attached = 'Y' : $res_master_attached = 'N';
@@ -357,14 +351,13 @@ switch ($mode) {
                                     
                                     //Query                 
                                     $request->query(
-                                        "UPDATE " . EMAILS_TABLE . " SET to_list = '" . $to . "', cc_list = '" 
-                                            . $cc . "', cci_list = '" . $cci . "', email_object = '" 
-                                            . $object . "', email_body = '" . $body . "', is_res_master_attached = '" 
-                                            . $res_master_attached . "', res_version_id_list = '".$version_list."', "
-                                            . "res_attachment_id_list = '".$attachment_list . "', note_id_list = '" . $note_list 
-                                            . "', is_html = '" . $isHtml . "', email_status = '" 
-                                            . $email_status . "' where email_id = ". $id 
-                                            ." and res_id =  '" . $identifier . "' and user_id = '" . $userId . "'"
+                                        "UPDATE " . EMAILS_TABLE . " SET to_list = ?, cc_list = ?, cci_list = ?, email_object = ?, 
+												email_body = ?, is_res_master_attached = ?, res_version_id_list = ?, 
+												res_attachment_id_list = ?, note_id_list = ?, 
+												is_html = ?, email_status = ? where email_id = ? "
+                                            ." and res_id =  ? and user_id = ?",
+                                            array($to, $cc, $cci, $object, $body, $res_master_attached, $version_list, $attachment_list, $note_list, $isHtml,
+												$email_status, $id, $identifier, $userId )
                                     );
                                     
                                     //History

@@ -40,7 +40,7 @@ try {
 }
 
 
-class sendmail extends dbquery
+class sendmail extends Database
 {
 	/**
 	* Build Maarch module tables into sessions vars with a xml configuration
@@ -97,20 +97,20 @@ class sendmail extends dbquery
 	
     public function countUserEmails($id, $coll_id, $owner=false) {
         $nbr = 0;
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
 		if ( $owner=== true) {
-            $where = " and user_id = '" . $_SESSION['user']['UserId'] . "'";
+            $where = " and user_id = ? ";
+            $arrayPDO = array($_SESSION['user']['UserId']); 
         } else {
             $where = "";
         }
-        $db->query("select email_id from "
+        $stmt = $db->query("select email_id from "
                 . EMAILS_TABLE 
-                . " where res_id = " . $id 
-                . " and coll_id ='"
-                . $coll_id . "'". $where);
+                . " where res_id = ? and coll_id = ? ",
+				array($coll_id, $where)
+                );
         // $db->show(); 
-        $nbr = $db->nb_result(); 
+        $nbr = $stmt->rowCount(); 
          
         return $nbr;
     }
@@ -135,17 +135,15 @@ class sendmail extends dbquery
     
     public function haveJoinedFiles($id) {
     
-        $db = new dbquery();
-        $db->connect();
-        $db->query("select email_id from "
+        $db = new Database();
+        $stmt = $db->query("select email_id from "
                 . EMAILS_TABLE 
-                . " where email_id = " . $id 
-                . " and (is_res_master_attached ='Y' or"
+                . " where email_id = ? and (is_res_master_attached ='Y' or"
                 . " res_attachment_id_list <> '' or" 
                 . " res_version_id_list <> '' or" 
-                . " note_id_list <> '')");
+                . " note_id_list <> '')", array($id ));
         // $db->show(); 
-        if ($db->nb_result() > 0)
+        if ($stmt->rowCount() > 0)
             return true;
         else
             return false;
@@ -153,8 +151,7 @@ class sendmail extends dbquery
 	
     public function getJoinedFiles($coll_id, $table, $id, $from_res_attachment=false) {
         $joinedFiles = array();
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         if ($from_res_attachment === false) {
 			require_once('core/class/class_security.php');
 			$sec = new security();	
@@ -164,20 +161,22 @@ class sendmail extends dbquery
 			
 			//Have version table
 			if ($versionTable <> '') {
-				$db->query("select res_id from " 
-					. $versionTable . " where res_id_master = " 
-					. $id . " and status <> 'DEL' order by res_id desc");
-				$line = $db->fetch_object();
+				$stmt = $db->query("select res_id from " 
+							. $versionTable . " where res_id_master = ? and status <> 'DEL' order by res_id desc", 
+							array($id)
+					);
+				$line = $stmt->fetchObject();
 				$lastVersion = $line->res_id;
 				//Have new version
 				if ($lastVersion <> '') {
-					$db->query(
+					$stmt = $db->query(
 						"select res_id, description, subject, title, format, filesize, relation from "
-						. $versionTable . " where res_id = " . $lastVersion	. " and status <> 'DEL'"
+						. $versionTable . " where res_id = ? and status <> 'DEL'",
+						array($lastVersion)
 					);
 					// $db->show();
 					//Get infos
-					while($res = $db->fetch_object()) {
+					while($res = $stmt->fetchObject()) {
 						$label = '';
 						//Tile, or subject or description
 						if (strlen(trim($res->title)) > 0)
@@ -200,20 +199,23 @@ class sendmail extends dbquery
 				}
 			}
 			
-            $db->query(
+            $stmt = $db->query(
                 "select res_id, description, subject, title, format, filesize, relation from "
-                . $table . " where res_id = " . $id 
-                . " and status <> 'DEL'");
+                . $table . " where res_id = ? and status <> 'DEL'", 
+                array($id )
+                );
         } else {
 			require_once 'modules/attachments/attachments_tables.php';
-            $db->query(
+            $stmt = $db->query(
                 "select res_id, description, subject, title, format, filesize, res_id_master from " 
-                .  RES_ATTACHMENTS_TABLE . " where res_id_master = " 
-				. $id . " and coll_id ='" . $coll_id . "' and status <> 'DEL'");
+                .  RES_ATTACHMENTS_TABLE . " where res_id_master = ? " 
+				. $id . " and coll_id = ? and status <> 'DEL'",
+				array($coll_id)
+				);
         }
         // $db->show(); 
         
-        while($res = $db->fetch_object()) {
+        while($res = $stmt->fetchObject()) {
             $label = '';
             //Tile, or subject or description
             if (strlen(trim($res->title)) > 0)
@@ -278,20 +280,20 @@ class sendmail extends dbquery
     public function getEmail($id, $owner=true) {
         $email = array();
         if (!empty($id)) {
-            $this->connect();
+			$db = new Database();
             if ( $owner=== true) {
-                $where = " and user_id = '" . $_SESSION['user']['UserId'] . "'";
+                $where = " and user_id = ? ";
+                $arrayPDO = array($_SESSION['user']['UserId']);
             } else {
                 $where = "";
             }
             
-            $this->query("select * from "
+            $stmt = $db->query("select * from "
                 . EMAILS_TABLE 
-                . " where email_id = " . $id
-                . $where);
+                . " where email_id = ? " . $where, array_merge($arrayPDO, $id));
             //
-            if ($this->nb_result() > 0) {
-                $res = $this->fetch_object();
+            if ($stmt->rowCount() > 0) {
+                $res = $tstmt->fetchObject();
                 $email['id'] = $res->email_id;
                 $email['collId'] = $res->coll_id;
                 $email['resId'] = $res->res_id;
@@ -397,13 +399,11 @@ class sendmail extends dbquery
 			) {
 				$viewResourceArr['mime_type'] = "text/html";
 			}
-			$db = new dbquery();
-			$db->connect();
-			$db->query(
+			$db = new Database();
+			$stmt = $db->query(
                 "select res_id, description, subject, title, format, filesize from "
-                . $table . " where res_id = " . $res_id 
-                . " and status <> 'DEL'");
-			$res = $db->fetch_object();
+                . $table . " where res_id = ? and status <> 'DEL'", array($res_id));
+			$res = $stmt->fetchObject();
             $label = '';
             //Tile, or subject or description
             if (strlen(trim($res->title)) > 0)
@@ -430,15 +430,14 @@ class sendmail extends dbquery
 
 		$viewAttachmentArr = array();
 
-		$db = new dbquery();
-        $db->connect();
-		$db->query(
+		$db = new Database();
+		$stmt = $db->query(
             "select description, subject, title, docserver_id, path, filename, format from "
-            . RES_ATTACHMENTS_TABLE . " where res_id = " . $res_attachment 
-			. " and coll_id = '".$coll_id."' and res_id_master = ".$res_id_master
+            . RES_ATTACHMENTS_TABLE . " where res_id = ? and coll_id = ? and res_id_master = ? ", 
+			array($res_attachment, $coll_id, $res_id_master)
         );
-		if ($db->nb_result() > 0) {
-			$line = $db->fetch_object();
+		if ($stmt->rowCount() > 0) {
+			$line = $stmt->fetchObject();
 			//Tile, or subject or description
             if (strlen(trim($line->title)) > 0)
                 $label = $line->title;
@@ -451,12 +450,13 @@ class sendmail extends dbquery
             $path = $line->path;
             $filename = $line->filename;
             $format = $line->format;
-            $db->query(
+            $stmt = $db->query(
                 "select path_template from " . _DOCSERVERS_TABLE_NAME
-                . " where docserver_id = '" . $docserver . "'"
+                . " where docserver_id = ? ", 
+                array($docserver)
             );
             //$db->show();
-            $lineDoc = $db->fetch_object();
+            $lineDoc = $stmt->fetchObject();
             $docserver = $lineDoc->path_template;
             $file = $docserver . $path . $filename;
             $file = str_replace("#", DIRECTORY_SEPARATOR, $file);
@@ -534,18 +534,17 @@ class sendmail extends dbquery
 
 		//Have version table
 		if ($versionTable <> '') {
-			$db = new dbquery();
-			$db->connect();
-			
-			$db->query("select res_id, description, subject, title, docserver_id, "
+			$db = new Database();
+			$stmt = $db->query("select res_id, description, subject, title, docserver_id, "
 				. "path, filename,format, filesize, relation from " 
-				. $versionTable . " where res_id = " . $res_version	. " and res_id_master = " 
-				. $res_id_master . " and status <> 'DEL'");
+				. $versionTable . " where res_id = ? and res_id_master = ? and status <> 'DEL'", 
+				array($res_version, $res_id_master)
+				);
 			//$db->show();
 			//Have new version
-			if ($db->nb_result() > 0) {
+			if ($stmt->rowCount() > 0) {
 
-				$line = $db->fetch_object();
+				$line = $stmt->fetchObject();
 				//Tile, or subject or description
 				if (strlen(trim($line->title)) > 0)
 					$label = $line->title;
@@ -562,12 +561,12 @@ class sendmail extends dbquery
 				$path = $line->path;
 				$filename = $line->filename;
 				$format = $line->format;
-				$db->query(
+				$stmt = $db->query(
 					"select path_template from " . _DOCSERVERS_TABLE_NAME
-					. " where docserver_id = '" . $docserver . "'"
+					. " where docserver_id = ? ", array($docserver)
 				);
 				//$db->show();
-				$lineDoc = $db->fetch_object();
+				$lineDoc = $stmt->fetchObject();
 				$docserver = $lineDoc->path_template;
 				$file = $docserver . $path . $filename;
 				$file = str_replace("#", DIRECTORY_SEPARATOR, $file);
@@ -695,18 +694,19 @@ class sendmail extends dbquery
             $content .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
 
 			for($i=0; $i < count($notesArray); $i++) {
-				$db->query("select n.date_note, n.note_text, u.lastname, "
+				$stmt = $db->query("select n.date_note, n.note_text, u.lastname, "
 					. "u.firstname from " . NOTES_TABLE . " n inner join ". USERS_TABLE
-					. " u on n.user_id  = u.user_id where n.id = " . $notesArray[$i] ." and identifier = " . $id 
-					. " and coll_id ='" . $coll_id . "' order by date_note desc");
+					. " u on n.user_id  = u.user_id where n.id = ? and identifier = ? and coll_id = ? order by date_note desc",
+					array($notesArray[$i], $id, $coll_id)
+					);
 					
-				if($db->nb_result() > 0) {
+				if($stmt->rowCount() > 0) {
             
-					$line = $db->fetch_object();
+					$line = $stmt->fetchObject();
 				
-					$user = $db->show_string($line->firstname . " " . $line->lastname);
-					$notes = $db->show_string($line->note_text);
-					$date = $db->dateformat($line->date_note);
+					$user = functions::show_string($line->firstname . " " . $line->lastname);
+					$notes = functions::show_string($line->note_text);
+					$date = $stmt->dateformat($line->date_note);
 					
 					$content .= "<tr height='130px'>";
 					$content .= "<td width='15%'>";

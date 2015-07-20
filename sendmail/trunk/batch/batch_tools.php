@@ -37,7 +37,7 @@
  * @param boolean $transaction for rollback if error
  * @return true if ok, exit if ko and rollback if necessary
  */
-function Bt_doQuery($dbConn, $queryTxt, $transaction=false)
+function Bt_doQuery($dbConn, $queryTxt, $param=array(), $transaction=false)
 {
     $res = $dbConn->query($queryTxt, true);
     if (!$res) {
@@ -104,7 +104,7 @@ function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
            . $GLOBALS['db']->current_datetime() . ", " . $totalProcessed . ", " . $totalErrors . ", '"
            . $GLOBALS['func']->protect_string_db(substr(str_replace('\\', '\\\\', str_replace("'", "`", $info)), 0, 999)) . "')";
            //. $GLOBALS['func']->protect_string_db(substr($info, 0, 999)) . "')";
-    Bt_doQuery($GLOBALS['db'], $query);
+    $stmt = Bt_doQuery($GLOBALS['db'], $query);
 }
 
 /**
@@ -116,14 +116,14 @@ function Bt_getWorkBatch()
 {
     $req = "select param_value_int from parameters where id = "
          . "'". $GLOBALS['batchName'] . "_id'";
-    $GLOBALS['db']->query($req);
+    $stmt = $GLOBALS['db']->query($req);
     while ($reqResult = $GLOBALS['db']->fetch_array()) {
         $GLOBALS['wb'] = $reqResult[0] + 1;
     }
     if ($GLOBALS['wb'] == '') {
         $req = "insert into parameters(id, param_value_int) values "
              . "('" . $GLOBALS['batchName'] . "_id', 1)";
-        $GLOBALS['db']->query($req);
+        $stmt = $GLOBALS['db']->query($req);
         $GLOBALS['wb'] = 1;
     }
 }

@@ -29,8 +29,7 @@
 * @ingroup  sendmail
 */
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
     $timestart=microtime(true);
    
@@ -78,14 +77,13 @@ $db->connect();
                 . " OR LOWER(firstname) LIKE LOWER('%s')"
         . " OR LOWER(email) LIKE LOWER('%s')"
             .")"
-        ."and (is_private = 'N' or ( user_id = '".$db->protect_string_db($_SESSION['user']['UserId'])."' and is_private = 'Y'))";
+        ."and (is_private = 'N' or ( user_id = ? and is_private = 'Y'))";
 
 
 
     $queryParts = array();
 for($i=1;$i<3;$i++){
     foreach($args as $arg) {
-        $arg = $db->protect_string_db($arg);
         if(strlen($arg) == 0) continue;
         # Full match of one given arg
         $expr = $arg;
@@ -108,8 +106,8 @@ for($i=1;$i<3;$i++){
         . " GROUP BY result "
         . " ORDER BY score DESC, result ASC";
     
-    $db->query($query);
-    $nb = $db->nb_result();
+    $stmt = $db->query($query, array($_SESSION['user']['UserId']));
+    $nb = $stmt->rowCount();
     $m = 30;
     if($nb >= $m) $l = $m;
     else $l = $nb;
@@ -120,7 +118,7 @@ for($i=1;$i<3;$i++){
     $found = false;
     echo "<ul title='$l contacts found in " . $time."sec'>";
     for($i=0; $i<$l; $i++) {
-        $res = $db->fetch_object();
+        $res = $stmt->fetchObject();
         $score = round($res->score / $num_args);
         if($i%2==1) $color = 'LightYellow';
         else $color = 'white';

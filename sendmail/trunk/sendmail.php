@@ -152,7 +152,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         }
     
     //Request
-        $tab=$request->select(
+        $tab=$request->PDOselect(
             $select, $where, $orderstr,
             $_SESSION['config']['databasetype'], "500", true, EMAILS_TABLE, USERS_TABLE,
             "user_id"
@@ -285,10 +285,9 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     }
                     if($tab[$i][$j][$value]=="email_expediteur")
                     {
-                        $db = new dbquery();
-                        $db->connect();
-                        $db->query("select mail from users where user_id = '".$request->show_string($tab[$i][$j]["value"])."'");
-                        $line = $db->fetch_object();
+                        $db = new Database();
+                        $stmt = $db->query("select mail from users where user_id = '".$request->show_string($tab[$i][$j]["value"])."'");
+                        $line = $stmt->fetchObject();
                         $email_expediteur = $line->mail;
                         $tab[$i][$j]["value"] = $email_expediteur;
                         $tab[$i][$j]["label"]=_SENDER;

@@ -142,38 +142,34 @@ if ($mode == 'add') {
     $exp_user_id = null;
     $dest_user_id = null;
     $adresse_mail = null;
-    $db = new dbquery();
-    $db->connect();
-    $db->query("select address_id, exp_user_id, dest_user_id
+    $db = new Database();
+    $stmt = $db->query("select address_id, exp_user_id, dest_user_id
                 from mlb_coll_ext 
                 where (( exp_contact_id is not null 
                 or dest_contact_id is not null 
                 or exp_user_id is not null 
                 or dest_user_id is not null) 
                 and  res_id = ".$_SESSION['doc_id'].")");
-    $res = $db->fetch_object();
+    $res = $stmt->fetchObject();
     
     $address_id = $res->address_id;
     $exp_user_id = $res->exp_user_id;
     $dest_user_id = $res->dest_user_id;
 
     if($address_id != null){
-        $db = new dbquery();
-        $db->connect();
-        $db->query("select email from contact_addresses where id = ".$address_id);
-        $adr = $db->fetch_object();
+        $db = new Database();
+        $stmt = $db->query("select email from contact_addresses where id = ".$address_id);
+        $adr = $stmt->fetchObject();
         $adress_mail = $adr->email;
     }elseif($exp_user_id != null){
-        $db = new dbquery();
-        $db->connect();
-        $db->query("select mail from users where user_id = '".$exp_user_id."'");
-        $adr = $db->fetch_object();
+        $db = new Database();
+        $stmt = $db->query("select mail from users where user_id = '".$exp_user_id."'");
+        $adr = $stmt->fetchObject();
         $adress_mail = $adr->mail;
     }elseif($dest_user_id != null){
-        $db = new dbquery();
-        $db->connect();
-        $db->query("select mail from users where user_id = '".$dest_user_id."'");
-        $adr = $db->fetch_object();
+        $db = new Database();
+        $stmt = $db->query("select mail from users where user_id = '".$dest_user_id."'");
+        $adr = $stmt->fetchObject();
         $adress_mail = $adr->mail;
     }
     if($adress_mail != null and ($_SESSION['user']['UserId'] != $exp_user_id and $_SESSION['user']['UserId'] != $dest_user_id)){
@@ -326,9 +322,9 @@ if ($mode == 'add') {
                             . '&module=templates&page=templates_ajax_content_for_mails&id=' . $_REQUEST['identifier'] . '\');">';
 
     $content .= '<option value="">' . _ADD_TEMPLATE_MAIL . '</option>';
-    $db->connect();
-    $db->query("select template_id, template_label, template_content from templates where template_target = 'sendmail'");
-    while ( $result=$db->fetch_object()) {
+    
+    $stmt = $db->query("select template_id, template_label, template_content from templates where template_target = 'sendmail'");
+    while ( $result=$stmt->fetchObject()) {
         $content .= "<option value='" . $result->template_id ."'>" . $result->template_label . "</option>";
     }
     $content .='</select>';
@@ -590,9 +586,9 @@ if ($mode == 'add') {
                                     . '&module=templates&page=templates_ajax_content_for_mails&id=' . $_REQUEST['identifier'] . '\');">';
 
             $content .= '<option value="">' . _ADD_TEMPLATE_MAIL . '</option>';
-            $db->connect();
-            $db->query("select template_id, template_label, template_content from templates where template_target = 'sendmail'");
-            while ( $result=$db->fetch_object()) {
+            
+            $stmt = $db->query("select template_id, template_label, template_content from templates where template_target = 'sendmail'");
+            while ( $result=$stmt->fetchObject()) {
                 $content .= "<option value='" . $result->template_id ."'>" . $result->template_label . "</option>";
             }
             $content .='</select>';
