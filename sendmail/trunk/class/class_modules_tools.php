@@ -98,16 +98,20 @@ class sendmail extends Database
     public function countUserEmails($id, $coll_id, $owner=false) {
         $nbr = 0;
         $db = new Database();
+        $arrayPDO = array();
 		if ( $owner=== true) {
-            $where = " and user_id = ? ";
-            $arrayPDO = array($_SESSION['user']['UserId']); 
+            $where = " and user_id = :user_id ";
+            $arrayPDO = array(":user_id" => $_SESSION['user']['UserId']); 
         } else {
             $where = "";
         }
+
+        $arrayPDO = array_merge($arrayPDO, array(":res_id" => $id));
+        $arrayPDO = array_merge($arrayPDO, array(":coll_id" => $coll_id));  
         $stmt = $db->query("select email_id from "
                 . EMAILS_TABLE 
-                . " where res_id = ? and coll_id = ? ",
-				array($coll_id, $where)
+                . " where res_id = :res_id and coll_id = :coll_id ".$where,
+				$arrayPDO
                 );
         // $db->show(); 
         $nbr = $stmt->rowCount(); 
