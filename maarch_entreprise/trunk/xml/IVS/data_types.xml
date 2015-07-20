@@ -47,6 +47,11 @@
       <enumeration value="mlb_coll_ext" />
       <enumeration value="business_coll_ext" />
     </dataType>
+    <dataType name="category_list" base="string">
+      <enumeration value="incoming" />
+      <enumeration value="outgoing" />
+      <enumeration value="internal" />
+    </dataType>
     <dataType name="personname" base="string">
       <pattern value="/^[A-z\s\-\']+$/" />
     </dataType>
@@ -58,9 +63,12 @@
     </dataType>
     <dataType name="arrayOfStrings" base="safetext" />
     <dataType name="phone" base="graph">
-      <pattern value="/^[0-9\-\+ ]{9,15}$/" />
+      <pattern value="/^[0-9\-\+ ]{9,20}$/" />
     </dataType>
     <dataType name="filename" base="graph">
       <pattern value="/^[\w-]+$/" />
+    </dataType>
+    <dataType name="keyword_id" base="string">
+      <pattern value="/^[\w ]+$/" />
     </dataType>
   </dataTypes>
