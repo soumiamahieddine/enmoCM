@@ -51,18 +51,18 @@ class diffusion_list extends dbquery
         $objectType='entity_id'
     ) {
         $listmodels = array();
-        $this->connect();
+        $db = new Database();
         
         $query = 
             "SELECT distinct object_type, object_id, description, title"
             . " FROM " . ENT_LISTMODELS
-            . " WHERE object_type = '".$objectType."'" 
+            . " WHERE object_type = ?" 
             . " GROUP BY object_type, object_id, description, title  " 
             . " ORDER BY object_type ASC, object_id ASC";
 
-        $this->query($query);
+        $stmt = $db->query($query,array($objectType));
         
-        while ($listmodel = $this->fetch_array()) {
+        while ($listmodel = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if($listmodel['title'] == '')
                 $listmodel['title'] = $listmodel['object_id'];
                 
@@ -98,10 +98,10 @@ class diffusion_list extends dbquery
         $objectType='entity_id', 
         $objectId
     ) {
-        $objectId = $this->protect_string_db($objectId);
-        $objectType = $this->protect_string_db($objectType);
+        $objectId = $objectId;
+        $objectType = $objectType;
         
-        $this->connect();
+        $db = new Database();
         $roles = $this->list_difflist_roles();
         $listmodel = array();
         
@@ -112,13 +112,12 @@ class diffusion_list extends dbquery
         $query = 
             "SELECT distinct object_type, object_id,  description, title"
             . " FROM " . ENT_LISTMODELS
-            . " WHERE object_type = '".$objectType."'" 
-                . "and object_id = '" . $objectId . "'"
+            . " WHERE object_type = ?" 
+                . "and object_id = ?"
             . " GROUP BY object_type, object_id,  description, title";
-
-        $this->query($query);
+        $stmt = $db->query($query,array($objectType,$objectId));
         
-        $listmodel = $this->fetch_assoc();
+        $listmodel = $stmt->fetch(PDO::FETCH_ASSOC);
         
         # Load list
         foreach($roles as $role_id => $role_label) {
@@ -128,7 +127,7 @@ class diffusion_list extends dbquery
                 $item_mode = $role_id;
             
             # Users
-            $this->query(
+            $stmt = $db->query(
                 "SELECT l.item_id, l.item_mode, u.firstname, u.lastname, e.entity_id, e.entity_label, l.visible, l.process_comment "
                 . " FROM " . ENT_LISTMODELS . " l "
                     . " JOIN " . USERS_TABLE . " u ON l.item_id = u.user_id " 
@@ -136,14 +135,13 @@ class diffusion_list extends dbquery
                     . " JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id"
                 . " WHERE "
                     . "ue.primary_entity = 'Y' "
-                    . "and l.item_mode = '".$item_mode."' "
+                    . "and l.item_mode = ? "
                     . "and l.item_type = 'user_id' " 
-                    . "and l.object_type = '". $objectType ."' "
-                    . "and l.object_id = '" . $objectId . "'"
-                . "ORDER BY l.sequence"
-            );
+                    . "and l.object_type = ? "
+                    . "and l.object_id = ?"
+                . "ORDER BY l.sequence",array($item_mode,$objectType,$objectId));
 
-            while ($user = $this->fetch_object()) {
+            while ($user = $stmt->fetchObject()) {
                 if(!isset($listmodel[$role_id]))
                     $listmodel[$role_id] = array();
                 if(!isset($listmodel[$role_id]['users']))
@@ -152,11 +150,11 @@ class diffusion_list extends dbquery
                 array_push(
                     $listmodel[$role_id]['users'],
                     array(
-                        'user_id' => $this->show_string($user->item_id),
-                        'lastname' => $this->show_string($user->lastname),
-                        'firstname' => $this->show_string($user->firstname),
-                        'entity_id' => $this->show_string($user->entity_id),
-                        'entity_label' => $this->show_string($user->entity_label),
+                        'user_id' => functions::show_string($user->item_id),
+                        'lastname' => functions::show_string($user->lastname),
+                        'firstname' => functions::show_string($user->firstname),
+                        'entity_id' => functions::show_string($user->entity_id),
+                        'entity_label' => functions::show_string($user->entity_label),
                         'visible' => $user->visible,
                         'process_comment' => $user->process_comment
                     )
@@ -164,19 +162,19 @@ class diffusion_list extends dbquery
             }
             
             # Entities
-            $this->query(
+            $stmt = $db->query(
                 "SELECT l.item_id, e.entity_label, l.item_mode, l.visible "
                 . "FROM " . ENT_LISTMODELS . " l "
                     . "JOIN " . ENT_ENTITIES . " e ON l.item_id = e.entity_id "
                 . "WHERE "
-                    . " l.item_mode = '".$item_mode."' "
+                    . " l.item_mode = ? "
                     . "and l.item_type = 'entity_id' "
-                    . "and l.object_type = '" . $objectType . "' "
-                    . "and l.object_id = '" . $objectId . "' "
-                . "ORDER BY l.sequence "
+                    . "and l.object_type = ? "
+                    . "and l.object_id = ? "
+                . "ORDER BY l.sequence ",array($item_mode,$objectType,$objectId)
             );
 
-            while ($entity = $this->fetch_object()) {
+            while ($entity = $stmt->fetchObject()) {
                 if(!isset($listmodel[$role_id]))
                     $listmodel[$role_id] = array();
                 if(!isset($listmodel[$role_id]['entities']))
@@ -185,8 +183,8 @@ class diffusion_list extends dbquery
                 array_push(
                     $listmodel[$role_id]['entities'],
                     array(
-                        'entity_id' => $this->show_string($entity->item_id),
-                        'entity_label' => $this->show_string($entity->entity_label),
+                        'entity_id' => functions::show_string($entity->item_id),
+                        'entity_label' => functions::show_string($entity->entity_label),
                         'visible' => $entity->visible
                     )
                 );
@@ -202,7 +200,7 @@ class diffusion_list extends dbquery
         $title = false,
         $description = false
     ) {
-        $this->connect();
+        $db = new Database();
         $roles = $this->list_difflist_roles();
         
         require_once 'core/class/class_history.php';
@@ -210,18 +208,18 @@ class diffusion_list extends dbquery
         
         //echo "bug"; print_r($description); exit;
 
-        $objectType = $this->protect_string_db(trim($objectType));
-        $objectId = $this->protect_string_db(trim($objectId));
-        $title = $this->protect_string_db(trim($title));
-        $description = $this->protect_string_db(trim($description));
+        $objectType = trim($objectType);
+        $objectId = trim($objectId);
+        $title = trim($title);
+        $description = trim($description);
         
         # Delete all and replace full list
         #**********************************************************************
-        $this->query(
+        $stmt = $db->query(
             "delete from " . ENT_LISTMODELS 
             . " where "
-                . "object_type = '" . $objectType . "' "
-                . "and object_id = '" . $objectId . "' "
+                . "object_type = ? "
+                . "and object_id = ? ",array($objectType,$objectId)
         );
         foreach($roles as $role_id => $role_label) {
             if($role_id == 'copy')
@@ -237,23 +235,22 @@ class diffusion_list extends dbquery
             ) {
                 $user = $diffList[$role_id]['users'][$i];
             //print_r($description); exit;
-                $this->query(
+                $stmt = $db->query(
                     "insert into " . ENT_LISTMODELS
                         . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, title, visible, process_comment ) "
                     . " values ("
                         . "'any', "
-                        . "'" . $objectId . "' , " 
-                        . "'" . $objectType . "', "
-                        . $i . ", "
-                        . "'" . $user['user_id'] . "', "
+                        . "? , " 
+                        . "?, ?, "
+                        . "?, "
                         . "'user_id', "
-                        . "'".$item_mode."', "
+                        . "?, "
                         . "null, "
-                        . "'" . $description . "',"
-                        . "'" . $title . "',"
-                        . "'" . $user['visible']. "',"
-                        . "'" . $user['process_comment']. "'"
-                    . ")"
+                        . "?,"
+                        . "?,"
+                        . "?,"
+                        . "?"
+                    . ")",array($objectId,$objectType,$i,$user['user_id'],$item_mode,$description,$title,$user['visible'],$user['process_comment'])
                 );
             }
             # Entities
@@ -261,22 +258,21 @@ class diffusion_list extends dbquery
             for ($i=0, $l=count($diffList[$role_id]['entities']); $i<$l ; $i++) {
                 $entity = $diffList[$role_id]['entities'][$i];
                 //print_r($description); exit;
-                $this->query(
+                $stmt = $db->query(
                     "insert into " . ENT_LISTMODELS
                         . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, title, visible ) "
                     . " values ("
                         . "'any', "
-                        . "'" . $objectId . "' , " 
-                        . "'" . $objectType . "', "
-                        . $i . ", "
-                        . "'" . $entity['entity_id'] . "', "
+                        . "? , " 
+                        . "?, ?, "
+                        . "?, "
                         . "'entity_id', "
-                        . "'".$item_mode."', "
+                        . "?, "
                         . "null, "
-                        . "'" . $description . "', "
-                        . "'" . $title . "',"
-                        . "'" . $entity['visible'] . "'"
-                    . ")"
+                        . "?, "
+                        . "?,"
+                        . "?"
+                    . ")",array($objectId,$objectType,$i,$entity['entity_id'],$item_mode,$description,$title,$entity['visible'])
                 );
             }
         }
@@ -286,19 +282,18 @@ class diffusion_list extends dbquery
         $objectType = 'entity_id',
         $objectId
     ) {
-        $this->connect();
+        $db = new Database();
        
-        $objectType = $this->protect_string_db(trim($objectType));
-        $objectId = $this->protect_string_db(trim($objectId));
+        $objectType = trim($objectType);
+        $objectId = trim($objectId);
 
         # Delete all and replace full list
         #**********************************************************************
-        $this->query(
+        $stmt = $db->query(
             "delete from " . ENT_LISTMODELS 
             . " where "
-                . "object_type = '" . $objectType . "' "
-                . "and object_id = '" . $objectId . "' "
-        );
+                . "object_type = ? "
+                . "and object_id = ? ",array($objectType,$objectId));
     
     }
     
@@ -313,21 +308,21 @@ class diffusion_list extends dbquery
         $listType = 'DOC', 
         $objectType = 'entity_id'
     ) {
-        $collId = $this->protect_string_db(trim($params['coll_id']));
+        $collId = trim($params['coll_id']);
         $resId = $params['res_id'];
         
         if (isset($params['user_id']) && ! empty($params['user_id'])) {
             require_once 'modules/entities/class/class_manage_entities.php';
             $ent = new entity();
-            $creatorUser = $this->protect_string_db(trim($params['user_id']));
+            $creatorUser = trim($params['user_id']);
             $primary = $ent->get_primary_entity($creatorUser);
-            $creatorEntity = $this->protect_string_db(trim($primary['ID']));
+            $creatorEntity = trim($primary['ID']);
         } else {
             $creatorUser = '';
             $creatorEntity = '';
         }
         
-        $objectType = $this->protect_string_db(trim($objectType));
+        $objectType = trim($objectType);
         
         if (isset($params['fromQualif']) && $params['fromQualif'] == true) {
             $fromQualif = true;
@@ -367,15 +362,15 @@ class diffusion_list extends dbquery
         $hist = new history();
 
         $roles = $this->list_difflist_roles();
-
-        $this->query("SELECT listinstance_id FROM listinstance WHERE res_id = " . $resId . " and coll_id = '". $collId . "' and difflist_type = '" . $difflistType."'");
+        $db = new Database();
+        $stmt = $db->query("SELECT listinstance_id FROM listinstance WHERE res_id = ? and coll_id = ? and difflist_type = ?",array($resId,$collId,$difflistType));
 
         $diffUser = false;
         $diffCopyUsers = false;
         $diffCopyEntities = false;
 
         foreach($roles as $role_id => $role_label) {
-            if ($this->nb_result() > 0 && (isset($oldListInst[$role_id]) || isset($diffList[$role_id]) )) {
+            if ($stmt->rowCount() > 0 && (isset($oldListInst[$role_id]) || isset($diffList[$role_id]) )) {
 
                 //compare old and new difflist
                 for($iOld=0; $iOld<count($oldListInst['users']); $iOld++){
@@ -433,10 +428,10 @@ class diffusion_list extends dbquery
         }
 
         # Delete previous listinstance
-        $this->query(
+        $stmt = $db->query(
             "DELETE FROM " . ENT_LISTINSTANCE
-            . " WHERE coll_id = '" . $collId . "'"
-                . " AND res_id = " . $resId . " AND difflist_type = '". $difflistType."'"
+            . " WHERE coll_id = ?"
+                . " AND res_id = ? AND difflist_type = ?",array($collId,$resId,$difflistType)
         );
         
         $roles = $this->list_difflist_roles();
@@ -451,9 +446,9 @@ class diffusion_list extends dbquery
             $cptUsers = count($diffList[$role_id]['users']);
             for ($i=0;$i<$cptUsers;$i++) {
                 $userFound = false;
-                $userId = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['user_id']));
-                $processComment = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['process_comment']));
-                $processDate = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['process_date']));
+                $userId = trim($diffList[$role_id]['users'][$i]['user_id']);
+                $processComment = trim($diffList[$role_id]['users'][$i]['process_comment']);
+                $processDate = trim($diffList[$role_id]['users'][$i]['process_date']);
                 $visible = $diffList[$role_id]['users'][$i]['visible'];
                 $viewed = (integer)$diffList[$role_id]['users'][$i]['viewed'];
                 $cptOldUsers = count($oldListInst[$role_id]['users']);
@@ -469,49 +464,43 @@ class diffusion_list extends dbquery
                 }
                 //Modification du dest_user dans la table res_letterbox
                 if($role_id == 'dest' && $collId == 'letterbox_coll')
-					$this->query("update ".RES_LETTERBOX." set dest_user = '".$userId."' where res_id = ".$resId);
+					$stmt = $db->query("update ".RES_LETTERBOX." set dest_user = ? where res_id = ?",array($userId,$resId));
 				
 				if ($processDate != ''){
-					$this->query(
+					$stmt = $db->query(
 						"insert into " . ENT_LISTINSTANCE
 							. " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment, process_date) "
 						. "values ("
-							. "'" . $collId . "', "
-							. $resId . ", "
-							. "'DOC', "
-							. $i . ", "
-							. "'" . $userId . "', " 
+							. "?, ?, "
+							. "'DOC', ?, "
+							. "?, " 
 							. "'user_id' , "
-							. "'".$item_mode."', "
-							. "'" . $creatorUser . "', "
-							. "'" . $creatorEntity. "', "
-							. "'" . $visible . "', "
-							. $viewed . ", "
-							. "'" . $difflistType . "', "
-							. "'" . $processComment . "', "
-							. "'" . $processDate . "'"
-						. " )"
+							. "?, "
+							. "?, "
+							. "?, "
+							. "?, ?, "
+							. "?, "
+							. "?, "
+							. "?"
+						. " )",array($collId,$resId,$i,$userId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType,$processComment,$processDate)
 					);
 				}
 				else {
-					$this->query(
+					$stmt = $db->query(
 						"insert into " . ENT_LISTINSTANCE
 							. " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment) "
 						. "values ("
-							. "'" . $collId . "', "
-							. $resId . ", "
-							. "'DOC', "
-							. $i . ", "
-							. "'" . $userId . "', " 
+							. "?, ?, "
+							. "'DOC', ?, "
+							. "?, " 
 							. "'user_id' , "
-							. "'".$item_mode."', "
-							. "'" . $creatorUser . "', "
-							. "'" . $creatorEntity. "', "
-							. "'" . $visible . "', "
-							. $viewed . ", "
-							. "'" . $difflistType . "', "
-							. "'" . $processComment . "'"
-						. " )"
+							. "?, "
+							. "?, "
+							. "?, "
+							. "?, ?, "
+							. "?, "
+							. "?"
+						. " )",array($collId,$resId,$i,$userId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType,$processComment)
 					);
 				}
 					
@@ -549,23 +538,20 @@ class diffusion_list extends dbquery
                     }
                 }
                 
-                $this->query(
+                $stmt = $db->query(
                     "INSERT INTO " . ENT_LISTINSTANCE
                         . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type) "
                     . "VALUES ("
-                        . "'" . $collId . "', "
-                        . $resId . ", "
-                        . "'DOC', "
-                        . $j . ", "
-                        . "'" . $entityId . "', " 
+                        . "?, ?, "
+                        . "'DOC', ?, "
+                        . "?, " 
                         . "'entity_id' , "
-                        . "'".$item_mode."', "
-                        . "'" . $creatorUser . "', "
-                        . "'" . $creatorEntity . "', "
-                        . "'" . $visible . "',"
-                        . $viewed. ", "
-                        . "'" . $difflistType . "'"
-                    . " )"
+                        . "?, "
+                        . "?, "
+                        . "?, "
+                        . "?,?, "
+                        . "?"
+                    . " )",array($collId,$resId,$j,$entityId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType)
                 );
                 
                 if (!$entityFound || $fromQualif) {
@@ -587,33 +573,29 @@ class diffusion_list extends dbquery
 
     function save_listinstance_history($coll_id, $res_id, $difflistType){
 
-        $dbListinstance = new dbquery();
-        $dbListinstance->connect();
-
-        $this->query("INSERT INTO listinstance_history (coll_id, res_id, updated_by_user, updated_date) VALUES ('" . $coll_id . "', " . $res_id . ", '".$_SESSION['user']['UserId']."', current_timestamp)");
-        $listinstance_history_id = $this->last_insert_id('listinstance_history_id_seq'); 
-
-        $this->query("SELECT * FROM listinstance WHERE res_id = " . $res_id . " and coll_id = '". $coll_id . "' and difflist_type = '" . $difflistType."'");
-        // $this->show();
-        while ($resListinstance = $this->fetch_object()){
-            $dbListinstance->query(
+        //$dbListinstance = new dbquery();
+        //$dbListinstance->connect();
+        $db = new Database();
+        $db->query("INSERT INTO listinstance_history (coll_id, res_id, updated_by_user, updated_date) VALUES (?, ?, ?, current_timestamp)",array($coll_id,$res_id,$_SESSION['user']['UserId']));
+        $listinstance_history_id = $db->lastInsertId('listinstance_history_id_seq'); 
+        
+        $stmt = $db->query("SELECT * FROM listinstance WHERE res_id = ? and coll_id = ? and difflist_type = ?",array($res_id,$coll_id,$difflistType));
+        
+        while ($resListinstance = $stmt->fetchObject()){
+            $stmt2 = $db->query(
                 "INSERT INTO listinstance_history_details 
                     (listinstance_history_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment) "
-                . "VALUES ('".$listinstance_history_id."',"
-                    . "'" . $resListinstance->coll_id . "', "
-                    . $res_id . ", "
-                    . "'DOC', "
-                    . $resListinstance->sequence . ", "
-                    . "'" . $resListinstance->item_id . "', " 
-                    . "'".$resListinstance->item_type."' , "
-                    . "'".$resListinstance->item_mode."', "
-                    . "'" . $resListinstance->added_by_user . "', "
-                    . "'" . $resListinstance->added_by_entity . "', "
-                    . "'" . $resListinstance->visible . "',"
-                    . $resListinstance->viewed. ", "
-                    . "'" . $resListinstance->difflist_type . "', "
-                    . "'" . $resListinstance->process_comment . "'"
-                . " )"
+                . "VALUES (?,?, ?, "
+                    . "'DOC', ?, "
+                    . "?, " 
+                    . "? , "
+                    . "?, "
+                    . "?, "
+                    . "?, "
+                    . "?,?, "
+                    . "?, "
+                    . "?"
+                . " )",array($listinstance_history_id,$resListinstance->coll_id,$res_id,$resListinstance->sequence,$resListinstance->item_id,$resListinstance->item_type,$resListinstance->item_mode,$resListinstance->added_by_user,$resListinstance->added_by_entity,$resListinstance->visible,$resListinstance->viewed,$resListinstance->difflist_type,$resListinstance->process_comment)
             );
         }
     }
@@ -646,7 +628,7 @@ class diffusion_list extends dbquery
         $collId = 'letterbox_coll',
         $typeList = 'entity_id'
     ) {
-        $this->connect();
+        $db = new Database();
         $roles = $this->list_difflist_roles();
         
         $listinstance = array();       
@@ -659,13 +641,11 @@ class diffusion_list extends dbquery
         $query = 
             "SELECT distinct coll_id, res_id, difflist_type"
             . " FROM " . ENT_LISTINSTANCE
-            . " WHERE coll_id = '" . $collId . "' "
-                . "and res_id = " . $resId
-            . " GROUP BY coll_id, res_id, difflist_type";
+            . " WHERE coll_id = ? "
+                . "and res_id = ? GROUP BY coll_id, res_id, difflist_type";
+                $stmt = $db->query($query,array($collId,$resId));
 
-        $this->query($query);
-
-        $listinstance = $this->fetch_assoc();
+        $listinstance = $stmt->fetch(PDO::FETCH_ASSOC);
         if($listinstance['difflist_type'] == "")
             $listinstance['difflist_type'] = 'entity_id';
         
@@ -699,7 +679,7 @@ class diffusion_list extends dbquery
         
         # OTHER ROLES USERS
         #**********************************************************************
-        $this->query(
+        $stmt = $db->query(
             "select l.item_id, u.firstname, u.lastname, e.entity_id, "
             . "e.entity_label, l.visible, l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment  from "
             . ENT_LISTINSTANCE . " l, " . USERS_TABLE
@@ -707,11 +687,10 @@ class diffusion_list extends dbquery
             . " ue where l.coll_id = '" . $collId . "' "
             . " and l.item_type = 'user_id' and l.item_id = u.user_id "
             . " and l.item_id = ue.user_id and ue.user_id=u.user_id "
-            . " and e.entity_id = ue.entity_id and l.difflist_type = '" . $typeList . "' and l.res_id = " . $resId
-            . " and ue.primary_entity = 'Y' order by l.sequence "
+            . " and e.entity_id = ue.entity_id and l.difflist_type = ? and l.res_id = ? and ue.primary_entity = 'Y' order by l.sequence ",array($typeList,$resId)
         );
         //$this->show();
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             if($res->item_mode == 'cc') 
                 $role_id = 'copy';
             else 
@@ -722,30 +701,30 @@ class diffusion_list extends dbquery
             array_push(
                 $listinstance[$role_id]['users'],
                 array(
-                    'user_id' => $this->show_string($res->item_id),
-                    'lastname' => $this->show_string($res->lastname),
-                    'firstname' => $this->show_string($res->firstname),
-                    'entity_id' => $this->show_string($res->entity_id),
-                    'entity_label' => $this->show_string($res->entity_label),
-                    'visible' => $this->show_string($res->visible),
-                    'viewed' => $this->show_string($res->viewed),
-                    'difflist_type' => $this->show_string($res->difflist_type),
-                    'process_date' => $this->show_string($res->process_date),
-                    'process_comment' => $this->show_string($res->process_comment)
+                    'user_id' => functions::show_string($res->item_id),
+                    'lastname' => functions::show_string($res->lastname),
+                    'firstname' => functions::show_string($res->firstname),
+                    'entity_id' => functions::show_string($res->entity_id),
+                    'entity_label' => functions::show_string($res->entity_label),
+                    'visible' => functions::show_string($res->visible),
+                    'viewed' => functions::show_string($res->viewed),
+                    'difflist_type' => functions::show_string($res->difflist_type),
+                    'process_date' => functions::show_string($res->process_date),
+                    'process_comment' => functions::show_string($res->process_comment)
                 )
             );
         }
 
         # OTHER ROLES ENTITIES
         #**********************************************************************
-        $this->query(
+        $stmt = $db->query(
             "select l.item_id,  e.entity_label, l.visible, l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment  from " . ENT_LISTINSTANCE
-            . " l, " . ENT_ENTITIES . " e where l.coll_id =  '" . $collId . "' "
+            . " l, " . ENT_ENTITIES . " e where l.coll_id =  ? "
             . "and l.item_type = 'entity_id' and l.item_id = e.entity_id "
-            . "and l.res_id = " . $resId . " order by l.sequence "
+            . "and l.res_id = ? order by l.sequence ",array($collId,$resId)
         );
 
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             if($res->item_mode == 'cc') 
                 $role_id = 'copy';
             else 
@@ -756,13 +735,13 @@ class diffusion_list extends dbquery
             array_push(
                 $listinstance[$role_id]['entities'],
                 array(
-                    'entity_id' => $this->show_string($res->item_id),
-                    'entity_label' => $this->show_string($res->entity_label),
-                    'visible' => $this->show_string($res->visible),
-                    'viewed' => $this->show_string($res->viewed),
-                    'difflist_type' => $this->show_string($res->difflist_type),
-					 'process_date' => $this->show_string($res->process_date),
-                    'process_comment' => $this->show_string($res->process_comment)
+                    'entity_id' => functions::show_string($res->item_id),
+                    'entity_label' => functions::show_string($res->entity_label),
+                    'visible' => functions::show_string($res->visible),
+                    'viewed' => functions::show_string($res->viewed),
+                    'difflist_type' => functions::show_string($res->difflist_type),
+					 'process_date' => functions::show_string($res->process_date),
+                    'process_comment' => functions::show_string($res->process_comment)
                 )
             );
         }
@@ -778,33 +757,19 @@ class diffusion_list extends dbquery
         $itemType = 'user_id', 
         $viewed
     ) {
-        $this->connect();
-        $this->query(
-            "select item_id from " . ENT_LISTINSTANCE . " where res_id = "
-            . $resId." and coll_id = '" . $this->protect_string_db($collId)
-            . "' and sequence = 0 and item_type = '"
-            . $this->protect_string_db($itemType) . "' and item_mode = 'dest'"
+        $db = new Database();
+        $stmt = $db->query(
+            "select item_id from " . ENT_LISTINSTANCE . " where res_id = ? and coll_id = ? and sequence = 0 and item_type = ? and item_mode = 'dest'",array($resId,$collId,$itemType)
         );
-        if ($this->nb_result() == 1) {
-            $this->query(
-                "update " . ENT_LISTINSTANCE . " set item_id = '"
-                . $this->protect_string_db($dest) . "', viewed = " . $viewed
-                . " where res_id = " . $resId . " and coll_id = '"
-                . $this->protect_string_db($collId)
-                . "' and sequence = 0 and item_type = '"
-                . $this->protect_string_db($itemType)
-                . "' and item_mode = 'dest'"
+        if ($stmt->rowCount() == 1) {
+            $stmt = $db->query(
+                "update " . ENT_LISTINSTANCE . " set item_id = ?, viewed = ? where res_id = ? and coll_id = ? and sequence = 0 and item_type = ? and item_mode = 'dest'",array($dest,$viewed,$resId,$collId,$itemType)
             );
         } else {
-            $this->query(
+            $stmt = $db->query(
                 "insert into " . ENT_LISTINSTANCE . " (coll_id, res_id, "
                 . "item_id, item_type, item_mode, sequence, "
-                . "added_by_user, added_by_entity, viewed) values ('"
-                . $this->protect_string_db($collId) . "', " . $resId . ", '"
-                . $this->protect_string_db($dest) . "', '"
-                . $this->protect_string_db($itemType) . "', 'dest', 0, '"
-                . $_SESSION['user']['UserId'] . "','"
-                . $_SESSION['primaryentity']['id'] . "', " . $viewed . ")"
+                . "added_by_user, added_by_entity, viewed) values (?, ?, ?, ?, 'dest', 0, ?,?, ?)",array($collId,$resId,$dest,$itemType,$_SESSION['user']['UserId'],$_SESSION['primaryentity']['id'],$viewed)
             );
         }
     }
@@ -828,13 +793,13 @@ class diffusion_list extends dbquery
             . " WHERE ug.enabled = 'Y'";
         
         if($user_id)
-            $query .= " AND ugc.user_id = '".$user_id."'";
+            $query .= " AND ugc.user_id = ?";
         
         $query .= " GROUP BY ug.group_id, ug.group_desc";
         $query .= " ORDER BY ug.group_desc ASC";
         
-        $this->connect();
-        $this->query($query);
+        $db = new Database();
+        $stmt = $db->query($query,array($user_id));
         
         $roles['dest'] = _DEST_USER;
         $roles['copy'] = _TO_CC;
@@ -844,7 +809,7 @@ class diffusion_list extends dbquery
         $roles['sign'] = _TO_SIGN;
         /*******************************************/
 		
-        while($usergroup = $this->fetch_object()) {
+        while($usergroup = $stmt->fetchObject()) {
             $group_id = $usergroup->group_id;
             $roles[$group_id] = $usergroup->group_desc;
         }
@@ -859,12 +824,12 @@ class diffusion_list extends dbquery
     #  Get list of available list types / labels
     public function list_difflist_types()
     {
-        $this->connect();
-        $this->query('select * from ' . ENT_DIFFLIST_TYPES);
+        $db = new Database();
+        $stmt = $db->query('select * from ' . ENT_DIFFLIST_TYPES);
         //$this->show();
         $types = array();
                         
-        while ($type = $this->fetch_object()) { 
+        while ($type = $stmt->fetchObject()) { 
             $types[(string) $type->difflist_type_id] = $type->difflist_type_label;
         }
         return $types;
@@ -874,13 +839,13 @@ class diffusion_list extends dbquery
     public function get_difflist_type(
         $difflist_type_id
     ) {       
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
             'SELECT * FROM ' . ENT_DIFFLIST_TYPES
-            . " WHERE difflist_type_id = '".$difflist_type_id."'" 
+            . " WHERE difflist_type_id = ?",array($difflist_type_id) 
         );
         
-        $difflist_type = $this->fetch_object();
+        $difflist_type = $stmt->fetchObject();
        
         return $difflist_type;
     }
@@ -890,7 +855,7 @@ class diffusion_list extends dbquery
     ) {
         $roles = array();
         
-        $this->connect();
+        $db = new Database();
         
         $role_ids = explode(' ', $difflist_type->difflist_type_roles);
 
@@ -908,11 +873,11 @@ class diffusion_list extends dbquery
                 break;
                 
             default:
-                $this->query(
+                $stmt = $db->query(
                     "SELECT group_desc FROM " . USERGROUPS_TABLE
-                    . " WHERE group_id = '" . $role_id . "'"
+                    . " WHERE group_id = ?",array($role_id)
                 );
-                $group = $this->fetch_object();
+                $group = $stmt->fetchObject();
                 $role_label = $group->group_desc;
             }
             $roles[$role_id] = $role_label;
@@ -927,16 +892,16 @@ class diffusion_list extends dbquery
         $difflist_type_roles,
         $allow_entities
     ) {
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
             "insert into " . ENT_DIFFLIST_TYPES
                 . " (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities)"
                 . " values (" 
-                    . "'" . $difflist_type_id . "',"
-                    . "'" . $difflist_type_label .  "',"
-                    . "'" . $difflist_type_roles . "',"
-                    . "'" . $allow_entities . "'"
-                    . ")"
+                    . "?,"
+                    . "?,"
+                    . "?,"
+                    . "?"
+                    . ")",array($difflist_type_id,$difflist_type_label,$difflist_type_roles,$allow_entities)
         );
     }
     
@@ -946,24 +911,24 @@ class diffusion_list extends dbquery
         $difflist_type_roles,
         $allow_entities
     ) {
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
             "update " . ENT_DIFFLIST_TYPES 
                 . " set "
-                    . " difflist_type_label = '" . $difflist_type_label . "',"
-                    . " difflist_type_roles = '" . $difflist_type_roles . "',"
-                    . " allow_entities = '" . $allow_entities . "'"
-                . " where difflist_type_id = '" . $difflist_type_id . "'"
+                    . " difflist_type_label = ?,"
+                    . " difflist_type_roles = ?,"
+                    . " allow_entities = ?"
+                . " where difflist_type_id = ?",array($difflist_type_label,$difflist_type_roles,$allow_entities,$difflist_type_id)
         );
     }
     
     public function delete_difflist_type(
         $difflist_type_id
     ) {
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
             'DELETE FROM ' . ENT_DIFFLIST_TYPES
-            . " WHERE difflist_type_id = '".$difflist_type_id."'" 
+            . " WHERE difflist_type_id = ?",array($difflist_type_id) 
         );
     }
         
@@ -978,17 +943,17 @@ class diffusion_list extends dbquery
         $action_id
     ) {
         $types = array();
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
             "select difflist_type_id from " . ENT_GROUPBASKET_DIFFLIST_TYPES
-            . " where group_id = '".$group_id."'" 
-                . " and basket_id = '".$basket_id."'"
-                . " and action_id = ".$action_id
+            . " where group_id = ?" 
+                . " and basket_id = ?"
+                . " and action_id = ?",array($group_id,$basket_id,$action_id)
         );
         
         $types = array();
                 
-        while ($type = $this->fetch_object()) { 
+        while ($type = $stmt->fetchObject()) { 
             $types[] = (string) $type->difflist_type_id;
         }
         return $types;

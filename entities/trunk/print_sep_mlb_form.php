@@ -18,8 +18,8 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.ph
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
 $func = new functions();
-$conn = new dbquery();
-$conn->connect();
+
+$db = new Database();
 $core_tools = new core_tools();
 /****************Management of the location bar  ************/
 $init = false;
@@ -38,8 +38,8 @@ $page_id = "print_sep_mlb_form";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 $_SESSION['entities'] = array();
-$conn->query("select entity_id, entity_label from ".$_SESSION['tablename']['ent_entities']." where ENABLED = 'Y' order by entity_label");
-while($line = $conn->fetch_object())
+$stmt = $db->query("select entity_id, entity_label from ".$_SESSION['tablename']['ent_entities']." where ENABLED = 'Y' order by entity_label");
+while($line = $stmt->fetchObject())
 {
     array_push($_SESSION['entities'], array("ID"=>$line->entity_id, "LABEL" => $func->show_str($line->entity_label)));
 }

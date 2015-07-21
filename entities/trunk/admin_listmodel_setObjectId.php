@@ -66,10 +66,9 @@ case 'entity_id':
 case 'type_id':
     require_once 'core/class/class_db.php';
     require_once 'core/core_tables.php';
-    $db = new dbquery();
-    $db->connect();
-    $db->query("SELECT type_id, description FROM  " . DOCTYPES_TABLE);
-    while($doctype = $db->fetch_object()) {
+    $db = new Datbase();
+    $stmt = $db->query("SELECT type_id, description FROM  " . DOCTYPES_TABLE);
+    while($doctype = $stmt->fetchObject()) {
         $type_id = $doctype->type_id;
         $existinglist = 
             $difflist->get_listmodel(
@@ -90,10 +89,9 @@ case 'type_id':
 case 'foldertype_id':
     require_once 'core/class/class_db.php';
     require_once 'modules/folder/folder_tables.php';
-    $db = new dbquery();
-    $db->connect();
-    $db->query("SELECT foldertype_id, foldertype_label FROM  " . FOLD_FOLDERTYPES_TABLE);
-    while($foldertype = $db->fetch_object()) {
+    $db = new Database();
+    $stmt = $db->query("SELECT foldertype_id, foldertype_label FROM  " . FOLD_FOLDERTYPES_TABLE);
+    while($foldertype = $stmt->fetchObject()) {
         $foldertype_id = $foldertype->foldertype_id;
         $existinglist = 
             $difflist->get_listmodel(

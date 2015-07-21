@@ -8,13 +8,14 @@ if (isset($_POST['branch_id'])) {
     $ent = new entity();
     $ent->connect();
     $children = array();
+    $db = new Database();
     
-    $ent->query("select u.user_id, u.lastname, u.firstname, ue.entity_id as entity_id from " . ENT_USERS_ENTITIES 
+    $stmt = $db->query("select u.user_id, u.lastname, u.firstname, ue.entity_id as entity_id from " . ENT_USERS_ENTITIES 
         . " ue," . ENT_ENTITIES . " e, " . $_SESSION['tablename']['users'] 
-        . " u where e.parent_entity_id = '" . $_POST['branch_id'] 
-        . "' and e.parent_entity_id = ue.entity_id and u.user_id = ue.user_id and u.status <> 'DEL' order by u.lastname, u.firstname");
-    if ($ent->nb_result() > 0) {
-        while ($res = $ent->fetch_object()) {
+        . " u where e.parent_entity_id = ?" 
+        . " and e.parent_entity_id = ue.entity_id and u.user_id = ue.user_id and u.status <> 'DEL' order by u.lastname, u.firstname",array($_POST['branch_id']));
+    if ($stmt->rowCount() > 0) {
+        while ($res = $stmt->fetchObject()) {
             $canhavechildren = 'canhavechildren:false, ';
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
                 $labelValue = '<span class="entity_tree_element_ok">' . $ent->show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
@@ -34,10 +35,10 @@ if (isset($_POST['branch_id'])) {
             );
         }
     } else {
-        $ent->query("select u.user_id, u.lastname, u.firstname, ue.entity_id as entity_id  from " 
+        $stmt = $db->query("select u.user_id, u.lastname, u.firstname, ue.entity_id as entity_id  from " 
             . ENT_USERS_ENTITIES . " ue, " . $_SESSION['tablename']['users'] 
-            . " u where ue.entity_id = '" . $_POST['branch_id'] 
-            . "'  and u.user_id = ue.user_id and u.status <> 'DEL' order by u.lastname, u.firstname");
+            . " u where ue.entity_id = ?" 
+            . "  and u.user_id = ue.user_id and u.status <> 'DEL' order by u.lastname, u.firstname",array($_POST['branch_id']));
         //$ent->show();
         if ($ent->nb_result() > 0) {
             while ($res = $ent->fetch_object()) {
@@ -62,19 +63,18 @@ if (isset($_POST['branch_id'])) {
             }
         }
     }
-    $ent->query("select entity_id, entity_label from " 
-        . ENT_ENTITIES . " where parent_entity_id = '" 
-        . $_POST['branch_id'] . "' order by entity_label");
+    $stmt = $db->query("select entity_id, entity_label from " 
+        . ENT_ENTITIES . " where parent_entity_id = ? order by entity_label",array($_POST['branch_id']));
     //$ent->show();
-    if ($ent->nb_result() > 0) {
-        while ($res = $ent->fetch_object()) {
+    if ($stmt->rowCount() > 0) {
+        while ($res = $stmt->fetch_object()) {
             $canhavechildren = '';
             $canhavechildren = 'canhavechildren:true, ';
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
                 $labelValue = '<span class="entity_tree_element_ok"><a href="index.php?page=entity_up&module=entities&id=' 
                             . $res->entity_id . '" target="_top">' . $ent->show_string($res->entity_label, true) . '</a></span>';
             } else {
-                $labelValue = '<small><i>' . $ent->show_string($res->entity_label, true) . '</i></small>';
+                $labelValue = '<small><i>' . functions::show_string($res->entity_label, true) . '</i></small>';
             }
             array_push(
                 $children, 
@@ -82,7 +82,7 @@ if (isset($_POST['branch_id'])) {
                     'id' => $res->entity_id, 
                     'tree' => $_SESSION['entities_chosen_tree'], 
                     'key_value' => $res->entity_id, 
-                    'label_value' => $ent->show_string($res->entity_id, true) . ' - ' . $labelValue, 
+                    'label_value' => functions::show_string($res->entity_id, true) . ' - ' . $labelValue, 
                     'canhavechildren' => $canhavechildren, 
                     'is_entity' => 'true'
                 )

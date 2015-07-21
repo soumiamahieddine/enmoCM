@@ -20,8 +20,7 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
 $func = new functions();
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
 $difflist = new diffusion_list();
 $usergroups_controler = new usergroups_controler();
@@ -145,10 +144,12 @@ if (isset($_SESSION['current_basket']) && count($_SESSION['current_basket']) > 0
         $redirect_groupbasket = current($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']]);
     
         if(empty($redirect_groupbasket['entities'])) {
-            $redirect_groupbasket['entities'] = $db->empty_list();
+            $redirect_groupbasket['entities'] = '';
+            //$redirect_groupbasket['entities'] = $db->empty_list();
         }
         if(empty($redirect_groupbasket['users_entities'])) {
-            $redirect_groupbasket['users_entities'] = $db->empty_list();
+            $redirect_groupbasket['users_entities'] = '';
+            //$redirect_groupbasket['users_entities'] = $db->empty_list();
         }
     }
 }
@@ -164,8 +165,7 @@ if (isset($_REQUEST['no_delete'])) {
 if (isset($_GET['what_users']) 
     && ! empty($_GET['what_users']) 
 ) {
-    $what_users = $func->protect_string_db(
-        $func->wash($_GET['what_users'], 'no', '', 'no'));
+    $what_users = functions::wash($_GET['what_users'], 'no', '', 'no');
     $user_expr = 
         " and ( "
             . "lower(u.lastname) like lower('%" . $what_users . "%') "
@@ -177,9 +177,9 @@ if (isset($_GET['what_services'])
     && ! empty($_GET['what_services'])
 ) {
     $what_services = addslashes(
-        $func->wash($_GET['what_services'], 'no', '', 'no')
+        functions::wash($_GET['what_services'], 'no', '', 'no')
     );
-    $what_services = $db->protect_string_db($what_services);
+    //$what_services = $what_services;
     $entity_expr = 
         " and ("
             . " lower(e.entity_label) like lower('%" . $what_services . "%') "
@@ -192,22 +192,22 @@ $users_query =
     . "FROM " . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
     . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' and"
     . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
-    . " e.enabled = 'Y' and ue.primary_entity='Y' " . $user_expr . $entity_expr
+    . " e.enabled = 'Y' and ue.primary_entity='Y' " . $user_expr . $entity_expr 
     . " order by u.lastname asc, u.firstname asc, u.user_id asc, e.entity_label asc";
 
 if ($user_expr == '' && $entity_expr == '') {
     //no query
 } else {
-    $db->query($users_query);
-    while ($line = $db->fetch_object()) {
+    $stmt = $db->query($users_query);
+    while ($line = $stmt->fetchObject()) {
         array_push(
             $users,
             array(
-                'ID'     => $db->show_string($line->user_id),
-                'PRENOM' => $db->show_string($line->firstname),
-                'NOM'    => $db->show_string($line->lastname),
-                'DEP_ID' => $db->show_string($line->entity_id),
-                'DEP'    => $db->show_string($line->entity_label)
+                'ID'     => functions::show_string($line->user_id),
+                'PRENOM' => functions::show_string($line->firstname),
+                'NOM'    => functions::show_string($line->lastname),
+                'DEP_ID' => functions::show_string($line->entity_id),
+                'DEP'    => functions::show_string($line->entity_label)
             )
         );
     }
@@ -218,19 +218,19 @@ $entity_query =
         . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
         . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y'"
         . "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and "
-        . "e.enabled = 'Y' " . $user_expr . $entity_expr
+        . "e.enabled = 'Y' " . $user_expr . $entity_expr 
         . " group by e.entity_id, e.entity_label order by e.entity_label asc";
 
 if ($user_expr == '' && $entity_expr == '') {
     //no query
 } else {
-    $db->query($entity_query);
-    while ($line = $db->fetch_object()) {
+    $stmt = $db->query($entity_query);
+    while ($line = $stmt->fetchObject()) {
         array_push(
             $entities,
             array(
-                'ID' => $db->show_string($line->entity_id),
-                'DEP' =>$db->show_string($line->entity_label)
+                'ID' => functions::show_string($line->entity_id),
+                'DEP' =>functions::show_string($line->entity_label)
             )
         );
     }
@@ -250,14 +250,14 @@ switch($action) {
 //***************************************************************************************
 // Add USER AS dest/copy/custom mode
 case "add_user":
-    $db->query(
+    $stmt = $db->query(
         "SELECT u.firstname, u.lastname, e.entity_id, e.entity_label "
         . " FROM " . USERS_TABLE . " u "
         . " LEFT JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id "
         . " LEFT JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id" 
-        . " WHERE u.user_id='" . $db->protect_string_db($id) . "' and ue.primary_entity = 'Y'"
+        . " WHERE u.user_id= ? and ue.primary_entity = 'Y'",array($id)
     );
-    $line = $db->fetch_object();
+    $line = $stmt->fetchObject();
     
     $visible = 'Y';
     if(!isset($_SESSION[$origin]['diff_list'][$role_id]['users'])) {
@@ -295,11 +295,11 @@ case "add_user":
     array_push(
         $_SESSION[$origin]['diff_list'][$role_id]['users'],
         array(
-            'user_id' => $db->show_string($id),
-            'firstname' => $db->show_string($line->firstname),
-            'lastname' => $db->show_string($line->lastname),
-            'entity_id' => $db->show_string($line->entity_id),
-            'entity_label' => $db->show_string($line->entity_label),
+            'user_id' => functions::show_string($id),
+            'firstname' => functions::show_string($line->firstname),
+            'lastname' => functions::show_string($line->lastname),
+            'entity_id' => functions::show_string($line->entity_id),
+            'entity_label' => functions::show_string($line->entity_label),
             'visible' => $visible,
         )
     ); 
@@ -312,9 +312,9 @@ case "add_user":
 case 'add_entity':
     $db->query(
         "SELECT entity_id, entity_label FROM " . ENT_ENTITIES
-        . " WHERE entity_id = '" . $db->protect_string_db($id) . "'"
+        . " WHERE entity_id = ?",array($id)
     );
-    $line = $db->fetch_object();
+    $line = $stmt->fetchObject();
     $visible = 'Y';
     if(!isset($_SESSION[$origin]['diff_list'][$role_id]['entities'])) {
             $_SESSION[$origin]['diff_list'][$role_id]['entities'] = array();
@@ -325,8 +325,8 @@ case 'add_entity':
     array_push(
         $_SESSION[$origin]['diff_list'][$role_id]['entities'],
         array(
-            'entity_id'    => $db->show_string($id),
-            'entity_label' => $db->show_string($line->entity_label),
+            'entity_id'    => functions::show_string($id),
+            'entity_label' => functions::show_string($line->entity_label),
             'visible' => $visible,
         )
     );

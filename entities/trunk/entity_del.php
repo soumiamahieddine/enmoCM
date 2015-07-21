@@ -36,8 +36,7 @@ require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class
 require("modules/entities/entities_tables.php");
 $admin = new core_tools();
 $ent = new entity();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 $admin->load_lang();
 $admin->test_admin('manage_entities', 'entities');
 $entities = $ent->getShortEntityTree(array());
@@ -65,38 +64,37 @@ if(isset($_REQUEST['valid']))
             // Skip this test if view doesn't have a column named res_id or destination
             if(!$db->test_column($_SESSION['collections'][$i]['view'], 'res_id')) continue;
             if(!$db->test_column($_SESSION['collections'][$i]['view'], 'destination')) continue;
-            $db->connect();
+            $db = new Database();
             if(isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['table']))
             {
                 if ($_SESSION['collections'][$i]['view'] == 'rm_documents_view') {
-                    $db->query("update rm_organizations set entity_id = '".$db->protect_string_db($_REQUEST['doc_entity_id'])."' where entity_id = '".$db->protect_string_db($s_id)."'");
+                    $stmt = $db->query("update rm_organizations set entity_id = ? where entity_id = ?",array($_REQUEST['doc_entity_id'],$s_id));
                 } else {
-                    $db->query("update ".$_SESSION['collections'][$i]['table']." set destination = '".$db->protect_string_db($_REQUEST['doc_entity_id'])."' where destination = '".$db->protect_string_db($s_id)."' and status <> 'DEL'");
+                    $stmt = $db->query("update ".$_SESSION['collections'][$i]['table']." set destination = ? where destination = ? and status <> 'DEL'",array($_REQUEST['doc_entity_id'],$s_id));
                 }
                 //$db->show();
             }
         }
-        $db->query("update ".ENT_USERS_ENTITIES." set entity_id = '".$db->protect_string_db($_REQUEST['doc_entity_id'])
-            ."' where entity_id = '".$db->protect_string_db($s_id)."' and user_id not in (select distinct(user_id) from " . ENT_USERS_ENTITIES 
-            . " where entity_id = '" . $db->protect_string_db($_REQUEST['doc_entity_id']) . "')");
+        $stmt = $db->query("update ".ENT_USERS_ENTITIES." set entity_id = ?"
+            ."' where entity_id = ? and user_id not in (select distinct(user_id) from " . ENT_USERS_ENTITIES 
+            . " where entity_id = ?)",array($_REQUEST['doc_entity_id'],$s_id,$_REQUEST['doc_entity_id']));
         //$db->show();
-        $db->query("delete from " . ENT_USERS_ENTITIES . " where entity_id = '".$db->protect_string_db($s_id) ."'");
-        $db->query("select entity_id from ".ENT_ENTITIES." where parent_entity_id = '".$db->protect_string_db($s_id)."'");
-        $db2 = new dbquery();
-        $db2->connect();
-        while($lineEnt=$db->fetch_object())
+        $stmt = $db->query("delete from " . ENT_USERS_ENTITIES . " where entity_id = ?",array($s_id));
+        $stmt = $db->query("select entity_id from ".ENT_ENTITIES." where parent_entity_id = ?",array($s_id));
+        $db = new Database();
+        while($lineEnt=$stmt->fetchObject())
         {
             //si la nouvelle entité (l'entité remplaçante) est une entité fille de l'entité à supprimer alors l'entité remplaçante récupère l'entité mère de l'entité à supprimer
-            if($lineEnt->entity_id == $db2->protect_string_db($_REQUEST['doc_entity_id']))
+            if($lineEnt->entity_id == $_REQUEST['doc_entity_id'])
             {
-                $db2->query("select parent_entity_id from ".ENT_ENTITIES." where entity_id = '".$db2->protect_string_db($s_id)."'");
-                $lineParentEnt = $db2->fetch_object();
-                $db2->query("update ".ENT_ENTITIES." set parent_entity_id = '".$db2->protect_string_db($lineParentEnt->parent_entity_id)."' where entity_id = '".$lineEnt->entity_id."'");
+                $stmt2 = $db->query("select parent_entity_id from ".ENT_ENTITIES." where entity_id = ?", array($s_id));
+                $lineParentEnt = $stmt2->fetchObject();
+                $stmt2 = $db->query("update ".ENT_ENTITIES." set parent_entity_id = ? where entity_id = ?",array($lineParentEnt->parent_entity_id,$lineEnt->entity_id));
                 //$db2->show();
             }
             else
             {
-                $db2->query("update ".ENT_ENTITIES." set parent_entity_id = '".$db2->protect_string_db($_REQUEST['doc_entity_id'])."' where entity_id = '".$lineEnt->entity_id."'");
+                $stmt2 = $db->query("update ".ENT_ENTITIES." set parent_entity_id = ? where entity_id = ?",array($_REQUEST['doc_entity_id'],$lineEnt->entity_id));
                 //$db2->show();
             }
         }
@@ -116,19 +114,19 @@ if(isset($_REQUEST['valid']))
         if($admin->is_module_loaded('baskets'))
         {
             //groupbasket_redirect
-            $db->query("update ".$_SESSION['tablename']['ent_groupbasket_redirect']." set entity_id = '".$db->protect_string_db($entity_id_up)."' where entity_id = '".$db->protect_string_db($s_id)."'");
+            $stmt = $db->query("update ".$_SESSION['tablename']['ent_groupbasket_redirect']." set entity_id = ? where entity_id = ?",array($entity_id_up,$s_id));
              //listinstance
-            $db->query("update ".$_SESSION['tablename']['ent_listinstance']." set item_id = '".$db->protect_string_db($entity_id_up)."' where item_id = '".$db->protect_string_db($s_id)."' and item_type = 'entity_id'");
+            $stmt = $db->query("update ".$_SESSION['tablename']['ent_listinstance']." set item_id = ? where item_id = ? and item_type = 'entity_id'",array($entity_id_up,$s_id));
             //$db->show();
             //listmodels
-            $db->query("delete from ".$_SESSION['tablename']['ent_listmodels']." where object_id = '".$db->protect_string_db($s_id)."'");
+            $stmt = $db->query("delete from ".$_SESSION['tablename']['ent_listmodels']." where object_id = ?",array($s_id));
             //$db->show();
         }
         //$db->show();
         if($admin->is_module_loaded('templates'))
         {
             //templates_association
-            $db->query("update ".$_SESSION['tablename']['temp_templates_association']." set value_field = '".$db->protect_string_db($entity_id_up)."' where value_field = '".$db->protect_string_db($s_id)."' and what = 'destination'");
+            $stmt = $db->query("update ".$_SESSION['tablename']['temp_templates_association']." set value_field = ? where value_field = ? and what = 'destination'",array($entity_id_up,$s_id));
             //$db->show();
         }
         

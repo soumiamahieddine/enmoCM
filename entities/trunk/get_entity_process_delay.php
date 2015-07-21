@@ -10,9 +10,8 @@ $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 $graph = new graphics();
 $req = new request();
-$db = new dbquery();
 $sec = new security();
-
+$db = new Database();
 $entities_chosen=explode("#",$_POST['entities_chosen']);
 $entities_chosen=join(",",$entities_chosen);
 
@@ -125,17 +124,17 @@ else
 
 
 $title = _ENTITY_PROCESS_DELAY.' '.$date_title ;
-$db = new dbquery();
+$db = new Database();
 
 //Récupération de l'ensemble des types de documents
 if (!$_REQUEST['entities_chosen']){
-    $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+    $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
 }else{
-    $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label");
+    $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (?) order by short_label";array($entities_chosen));
 }
 
 $doctypes = array();
-while($res = $db->fetch_object())
+while($res = $stmt->fetchObject())
 {
     array_push($doctypes, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
 }
@@ -175,16 +174,16 @@ for($i=0; $i<count($doctypes);$i++)
     if ($valid == 'true' || $_SESSION['user']['UserId'] == "superadmin")
     {
 
-        $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay, res_view_letterbox.creation_date
+        $stmt = $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay, res_view_letterbox.creation_date
                     FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id 
-                    WHERE ".$view.".destination = '".$doctypes[$i]['ID']."' ".$where_date." and ".$view.".status not in ('DEL','BAD')");
+                    WHERE ?.destination = ? ? and ?.status not in ('DEL','BAD')",array($view,$doctypes[$i]['ID'],$where_date,$view));
         //$db->show();
 
-        if( $db->nb_result() > 0)
+        if( $stmt->rowCount() > 0)
         {
             $tmp = 0;
             $nbDoc=0;
-            while($res = $db->fetch_object())
+            while($res = $stmt->fetchObject())
             {
                 if ($res->delay <> "") {
                     $tmp = $tmp + $res->delay;

@@ -217,8 +217,8 @@ elseif($_SESSION['service_tag'] == 'load_basket_db')
 }
 else if($_SESSION['service_tag'] == 'del_basket' && !empty($_SESSION['temp_basket_id']))
 {
-    $db = new dbquery();
-    $db->query("delete from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where basket_id = '".$_SESSION['temp_basket_id']."'");
+    $db = new Database();
+    $stmt = $db->query("delete from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where basket_id = ?",array($_SESSION['temp_basket_id']));
     unset($_SESSION['temp_basket_id']);
 }
 ?>

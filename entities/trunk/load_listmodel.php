@@ -13,7 +13,7 @@
 */
 require_once 'modules/entities/class/class_manage_listdiff.php';
 
-$db = new dbquery();
+$db = new Database();
 $core = new core_tools();
 $core->load_lang();
 $diffList = new diffusion_list();
@@ -28,9 +28,9 @@ $_SESSION[$origin]['difflist_type'] = $diffList->get_difflist_type($objectType);
 if ($objectId <> '') {
     $_SESSION[$origin]['difflist_object']['object_id'] = $objectId;
     if ($objectType == 'entity_id') {
-        $query = "select entity_label from entities where entity_id = '" . $objectId . "'";
-        $db->query($query);
-        $res = $db->fetch_object();
+        $query = "select entity_label from entities where entity_id = ?";
+        $stmt = $db->query($query,array($objectId));
+        $res = $stmt->fetchObject();
         if ($res->entity_label <> '') {
             $_SESSION[$origin]['difflist_object']['object_label'] = $res->entity_label;
         }

@@ -32,7 +32,7 @@ if($_REQUEST['print_generic']) {
     $_REQUEST['entitieslist'][0] = 'COURRIER';
 }
 if(isset($_REQUEST['entitieslist']) && !empty($_REQUEST['entitieslist'])) {
-    $connexion = new dbquery();
+    $db = new Database();
     $connexion -> connect();
     $pdf= new fpdi();//create a new document PDF
     $cab_pdf= new barcocdeFPDF();//create a new document PDF
@@ -43,11 +43,11 @@ if(isset($_REQUEST['entitieslist']) && !empty($_REQUEST['entitieslist'])) {
         //Entity ID
         $entity = $_REQUEST['entitieslist'][$i];
         //Label
-        $connexion->query("select entity_label FROM " 
+        $stmt = $db->query("select entity_label FROM " 
             . $_SESSION['tablename']['ent_entities'] 
-            . " WHERE entity_id ='" . $entity . "' "
+            . " WHERE entity_id =?",array($entity)
         );
-        $res = $connexion->fetch_object();
+        $res = $stmt->fetchObject();
         $entity_label = html_entity_decode($res->entity_label);
         //Ingoing
         if ($_REQUEST['typeBarcode'] == 'C39') {

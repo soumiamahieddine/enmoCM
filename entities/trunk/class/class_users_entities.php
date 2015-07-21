@@ -17,9 +17,9 @@ class users_entities extends dbquery
 
     public function service_load_entities($mode)
     {
-        $this->connect();
-        $this->query("select count(*) as total from ".ENT_ENTITIES." where enabled ='Y'");
-        $nb_total_1 = $this->fetch_object();
+        $db = new Database();
+        $stmt = $db->query("select count(*) as total from ".ENT_ENTITIES." where enabled ='Y'");
+        $nb_total_1 = $stmt->fetchObject();
         $_SESSION['m_admin']['nbentities']  = $nb_total_1->total;
 
         if($mode == 'up')
@@ -42,18 +42,18 @@ class users_entities extends dbquery
     */
     public function load_entities_session($user_id)
     {
-        $this->connect();
-        $this->query("select  ue.entity_id, ue.primary_entity, ue.user_role, e.entity_label, e.short_label from ".ENT_USERS_ENTITIES." ue, ".ENT_ENTITIES." e where ue.user_id = '".$this->protect_string_db(trim($user_id))."' and ue.entity_id = e.entity_id");
-        if($this->nb_result() == 0)
+        $db = new Database();
+        $stmt = $db->query("select  ue.entity_id, ue.primary_entity, ue.user_role, e.entity_label, e.short_label from ".ENT_USERS_ENTITIES." ue, ".ENT_ENTITIES." e where ue.user_id = ? and ue.entity_id = e.entity_id",array(trim($user_id)));
+        if($stmt->rowCount() == 0)
         {
             $_SESSION['m_admin']['entity']['entities'] = array();
         }
         else
         {
             $entitytab = array();
-            while($res = $this->fetch_object())
+            while($res = $stmt->fetchObject())
             {
-                array_push($entitytab, array("USER_ID" => $user_id,"ENTITY_ID" => $res->entity_id, "LABEL" => $this->show_string($res->entity_label),"SHORT_LABEL" => $this->show_string($res->short_label), "PRIMARY" => $res->primary_entity, "ROLE" => $this->show_string($res->user_role) ));
+                array_push($entitytab, array("USER_ID" => $user_id,"ENTITY_ID" => $res->entity_id, "LABEL" => functions::show_string($res->entity_label),"SHORT_LABEL" => functions::show_string($res->short_label), "PRIMARY" => $res->primary_entity, "ROLE" => functions::show_string($res->user_role) ));
             }
             $_SESSION['m_admin']['entity']['entities'] = $entitytab;
 
@@ -123,7 +123,7 @@ class users_entities extends dbquery
     public function add_usertmp_to_entity_session($entity_id, $role = "", $label)
     {
         $tab = array();
-        $tab = array("USER_ID" => "", "ENTITY_ID" => $entity_id , "LABEL" => $this->show_string($label), "PRIMARY" => 'N', "ROLE" => $this->show_string($role) );
+        $tab = array("USER_ID" => "", "ENTITY_ID" => $entity_id , "LABEL" => functions::show_string($label), "PRIMARY" => 'N', "ROLE" => functions::show_string($role) );
         array_push($_SESSION['m_admin']['entity']['entities'], $tab);
     }
 
@@ -136,21 +136,21 @@ class users_entities extends dbquery
     */
     public function getEntityChildren($entity_id)
     {
-        $this->connect();
+        $db = new Database();
         static $tmparray = array();
 
-        $this->query('select entity_id from '.ENT_ENTITIES." where parent_entity_id = '".$this->protect_string_db(trim($entity_id))."'");
-        if($this->nb_result() > 0)
+        $stmt = $db->query('select entity_id from '.ENT_ENTITIES." where parent_entity_id = ?",array(trim($entity_id)));
+        if($stmt->rowCount() > 0)
         {
-            while($line = $this->fetch_object())
+            while($line = $stmt->fetchObject())
             {
                 array_push($tmparray, $line->entity_id);
                 $userEnt = new users_entities();
-                $userEnt->connect();
-                $userEnt->query('select entity_id from '.ENT_ENTITIES." where parent_entity_id = '".$this->protect_string_db(trim($line->entity_id))."'");
-                if($userEnt->nb_result() > 0)
+                $db = new Database();
+                $stmt2 = $db->query('select entity_id from '.ENT_ENTITIES." where parent_entity_id = ?",array(trim($line->entity_id)));
+                if($stmt2->rowCount > 0)
                 {
-                    $userEnt->getEntityChildren($line->entity_id, $tmparray);
+                    $stmt2->getEntityChildren($line->entity_id, $tmparray);
                 }
             }
         }
@@ -172,9 +172,9 @@ class users_entities extends dbquery
         $state = true;
         if(empty($_SESSION['error']))
         {
-            $this->connect();
-            $this->query("select count(*) as total from ".ENT_ENTITIES." where enabled ='Y'");
-            $nb_total_1 = $this->fetch_object();
+            $db = new Database();
+            $stmt = $db->query("select count(*) as total from ".ENT_ENTITIES." where enabled ='Y'");
+            $nb_total_1 = $stmt->fetchObject();
             $_SESSION['m_admin']['nbentities']  = $nb_total_1->total;
         }
         if($mode == "up")
@@ -182,17 +182,17 @@ class users_entities extends dbquery
             $_SESSION['m_admin']['mode'] = "up";
             if(empty($_SESSION['error']))
             {
-                $this->connect();
-                $this->query("select * from ".$_SESSION['tablename']['users']." where user_id = '".$this->protect_string_db(trim($id))."'");
+                $db = new Database();
+                $stmt = $db->query("select * from ".$_SESSION['tablename']['users']." where user_id = ?",array(trim($id)));
 
-                if($this->nb_result() == 0)
+                if($stmt->rowCount() == 0)
                 {
                     $_SESSION['error'] = _USER.' '._UNKNOWN;
                     $state = false;
                 }
                 else
                 {
-                    $line = $this->fetch_object();
+                    $line = $stmt->fetchObject();
 
                     $_SESSION['m_admin']['entity']['user_UserId'] = $line->user_id;
                     $_SESSION['m_admin']['entity']['user_FirstName'] = $this->show_string($line->firstname);
@@ -281,26 +281,26 @@ class users_entities extends dbquery
     */
     public function load_db($from_module_entities_page = true)
     {
-        $this->connect();
+        $db = new Database();
 
         if(!$from_module_entities_page)
         {
-            $this->query("DELETE FROM ".ENT_USERS_ENTITIES ." where user_id = '".$this->protect_string_db(trim($_SESSION['m_admin']['users']['user_id']))."'");
+            $stmt = $db->query("DELETE FROM ".ENT_USERS_ENTITIES ." where user_id = ?",array(trim($_SESSION['m_admin']['users']['user_id'])));
         }
         else
         {
-            $this->query("DELETE FROM ".ENT_USERS_ENTITIES ." where user_id = '".$this->protect_string_db(tim($_SESSION['m_admin']['entity']['user_UserId']))."'");
+            $stmt = $db->query("DELETE FROM ".ENT_USERS_ENTITIES ." where user_id = ?",array(trim($_SESSION['m_admin']['entity']['user_UserId'])));
         }
         for($i=0; $i < count($_SESSION['m_admin']['entity']['entities'] ); $i++)
         {
-            $tmp_r = $this->protect_string_db($_SESSION['m_admin']['entity']['entities'][$i]['ROLE']);
+            $tmp_r = $_SESSION['m_admin']['entity']['entities'][$i]['ROLE'];
             if(!$from_module_entities_page)
             {
-                $this->query("INSERT INTO ".ENT_USERS_ENTITIES." VALUES ('".$_SESSION['m_admin']['users']['user_id']."', '".$_SESSION['m_admin']['entity']['entities'][$i]['ENTITY_ID']."', '".$tmp_r."', '".$_SESSION['m_admin']['entity']['entities'][$i]['PRIMARY']."')");
+                $stmt = $db->query("INSERT INTO ".ENT_USERS_ENTITIES." VALUES (?, ?, ?, ?)",array($_SESSION['m_admin']['users']['user_id'],$_SESSION['m_admin']['entity']['entities'][$i]['ENTITY_ID'],$tmp_r,$_SESSION['m_admin']['entity']['entities'][$i]['PRIMARY']));
             }
             else
             {
-                $this->query("INSERT INTO ".ENT_USERS_ENTITIES." VALUES ('".$_SESSION['m_admin']['entity']['user_UserId']."', '".$_SESSION['m_admin']['entity']['entities'][$i]['ENTITY_ID']."', '".$tmp_r."', '".$_SESSION['m_admin']['entity']['entities'][$i]['PRIMARY']."')");
+                $this->query("INSERT INTO ".ENT_USERS_ENTITIES." VALUES (?, ?, ?, ?)",array($_SESSION['m_admin']['entity']['user_UserId'],$_SESSION['m_admin']['entity']['entities'][$i]['ENTITY_ID'],$tmp_r,$_SESSION['m_admin']['entity']['entities'][$i]['PRIMARY']));
             }
         }
 
@@ -418,13 +418,12 @@ class users_entities extends dbquery
             return $control;
         }
 
-        $this->connect();
+        $db = new Database();
         $func = new functions();
-        $query = 'delete from ' . LISTMODELS_CONTENT_TABLE . " where item_id='"
-               . $func->protect_string_db($userId) . "'";
+        $query = 'delete from ' . LISTMODELS_CONTENT_TABLE . " where item_id = ?";
         
         try{
-            $this->query($query);
+            $this->query($query,array($userId));
             $control = array(
                 'status' => 'ok',
                 'value'  => $userId,

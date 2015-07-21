@@ -15,6 +15,7 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 require_once("modules/entities/entities_tables.php");
 $ent = new entity();
+$db = new Database();
 
 $select = "select entity_label from ".ENT_ENTITIES;
 $where = " where (lower(entity_label) like lower('".$_REQUEST['what']."%') ";
@@ -31,11 +32,11 @@ if($_SESSION['user']['UserId'] != 'superadmin')
 
 $sql = $select.$where." order by entity_id";
 $ent->connect();
-$ent->query($sql);
+$stmt = $db->query($sql,array($_REQUEST['what']."%",$_REQUEST['what']."%"));
 // $ent->show();
 
 $entities = array();
-while($line = $ent->fetch_object())
+while($line = $stmt->fetchObject())
 {
     array_push($entities, $line->entity_label);
 }

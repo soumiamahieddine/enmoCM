@@ -80,24 +80,12 @@ class EntityControler
     /**
     * Opens a database connexion and values the tables variables
     */
-    public function connect()
-    {
-        $db = new dbquery();
-        $db->connect();
-        self::$entities_table = ENT_ENTITIES;
-        self::$users_entities_table = ENT_USERS_ENTITIES;
-        self::$groupbasket_redirect_table = $_SESSION['tablename']['ent_groupbasket_redirect'];
 
-        self::$db=$db;
-    }
 
     /**
     * Close the database connexion
     */
-    public function disconnect()
-    {
-        self::$db->disconnect();
-    }
+
 
     /**
     * Returns an Entity Object based on a entity identifier
@@ -111,31 +99,31 @@ class EntityControler
         if(empty($entity_id))
             return null;
 
-        self::connect();
+        $db = new database();
 
-        $query = "select * from ".self::$entities_table." where entity_id = '".$entity_id."'";
+        $query = "select * from ".ENT_ENTITIES." where entity_id = ?";
         if(!$can_be_disabled)
             $query .= " and enabled = 'Y'";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+            $stmt = $db->query($query,array($entity_id));
         } catch (Exception $e){
             echo _NO_ENTITY_WITH_ID.' '.$entity_id.' // ';
         }
-        if(self::$db->nb_result() > 0)
+        if($stmt->rowCount() > 0)
         {
             $entity = new EntityObj();
-            $queryResult=self::$db->fetch_object();
+            $queryResult=$stmt->fetchObject();
             foreach($queryResult as $key => $value){
                 $entity->$key=$value;
             }
-            self::disconnect();
+            
             return $entity;
         }
         else
         {
-            self::disconnect();
+            
             return null;
         }
     }
@@ -149,8 +137,8 @@ class EntityControler
     */
     public function getAllEntities($order_str = "order by short_label asc", $enabled_only = true)
     {
-        self::connect();
-        $query = "select * from ".self::$entities_table." ";
+        $db = new database();
+        $query = "select * from ".ENT_ENTITIES." ";
         if($enabled_only)
             $query .= "where enabled = 'Y'";
 
@@ -159,11 +147,11 @@ class EntityControler
         try{
             if($_ENV['DEBUG'])
                 echo $query.' // ';
-            self::$db->query($query);
+            $stmt = $db->query($query);
         } catch (Exception $e){}
 
         $entities = array();
-        while($res = self::$db->fetch_object())
+        while($res = $stmt->fetchObject())
         {
             $ent=new EntityObj();
             foreach($res as $key => $value)
@@ -172,7 +160,7 @@ class EntityControler
             $ent->setArray($tmp_array);
             array_push($entities, $ent);
         }
-        self::disconnect();
+        
         return $entities;
     }
 
@@ -185,23 +173,21 @@ class EntityControler
     */
     public function getEntitiesUser($entity_id)
     {
-        self::connect();
+        $db = new database();
 
         $entities=self::getEntityArbo($entity_id);
 
-        self::disconnect();
 
         return $entities;
     }
     
     public function getEntityArbo($parent)
     {
-       $db = new dbquery();
-       $db->connect();
+       $db = new Database();
        $entities=array();
 
-       $db->query("Select * from entities WHERE parent_entity_id='".$parent."' and enabled = 'Y'");
-       while($res = $db->fetch_object())
+       $stmt = $db->query("SELECT * from entities WHERE parent_entity_id = ? and enabled = 'Y'",array($parent));
+       while($res = $stmt->fetchObject())
        {   
            $ent=new EntityObj();
            foreach($res as $key => $value)
@@ -218,12 +204,11 @@ class EntityControler
     {
         $entities = array();
         if ($entityId <> '') {
-            $db = new dbquery();
-            $db->connect();
+            $db = new Database();
            
 
-            $db->query("Select parent_entity_id from entities WHERE entity_id='" . $entityId . "' and enabled = 'Y'");
-            while ($res = $db->fetch_object()) {
+            $stmt = $db->query("SELECT parent_entity_id from entities WHERE entity_id = ? and enabled = 'Y'",array($entityId));
+            while ($res = $stmt->fetchObject()) {
                 $ent=new EntityObj();
                 foreach($res as $key => $value)
                     $tmp_array[$key] = $value;
@@ -252,11 +237,11 @@ class EntityControler
         }
         $tmp_entities=join(',',$arr);   
 
-        self::connect();
+        $db = new Database();
         $arr=array();
-        $query="Select * from ".self::$entities_table." WHERE entity_id IN (".$tmp_entities.") order by short_label asc";
-        self::$db->query($query);
-        while($res = self::$db->fetch_object())
+        $query="Select * from ".self::$entities_table." WHERE entity_id IN (?) order by short_label asc";
+        $stmt = $db->query($query,array($tmp_entities));
+        while($res = $stmt->fetchObject())
         {
             $ent=new EntityObj();
             foreach($res as $key => $value)
@@ -279,22 +264,22 @@ class EntityControler
         if(empty($user_id))
             return null;
 
-        self::connect();
+        $db = new Database();
         $func = new functions();
-        $query = "select ue.entity_id, ue.user_role, ue.primary_entity from ".self::$users_entities_table." ue, ".self::$entities_table." u where ue.user_id = '".$func->protect_string_db($user_id)."' and ue.entity_id = u.entity_id and u.enabled = 'Y'";
+        $query = "SELECT ue.entity_id, ue.user_role, ue.primary_entity from ".self::$users_entities_table." ue, ".self::$entities_table." u where ue.user_id = ? and ue.entity_id = u.entity_id and u.enabled = 'Y'";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+            $stmt = $db->query($query,array($user_id));
         } catch (Exception $e){
             echo _NO_USER_WITH_ID.' '.$user_id.' // ';
         }
         $entities = array();
-        while($res=self::$db->fetch_object())
+        while($res= $stmt->fetchObject())
         {
             array_push($entities, array('USER_ID' => $user_id, 'ENTITY_ID' => $res->entity_id, 'PRIMARY' => $res->primary_entity, 'ROLE' => $res->user_role));
         }
-        self::disconnect();
+
         return $entities;
     }
 
@@ -329,23 +314,19 @@ class EntityControler
         if(!isset($entity) )
             return false;
 
-        self::connect();
+        $db = new Database();
         $prep_query = self::insert_prepare($entity);
 
-        $query="insert into ".self::$entities_table." ("
-                    .$prep_query['COLUMNS']
-                    .") values("
-                    .$prep_query['VALUES']
-                    .")";
+        $query="insert into ".ENT_ENTITIES." (?) values(?)";
         try{
             if($_ENV['DEBUG']){ echo $query.' // '; }
-            self::$db->query($query);
+            $stmt = $db->query($query,array($prep_query['COLUMNS'],$prep_query['VALUES']));
             $ok = true;
         } catch (Exception $e){
             echo _CANNOT_INSERT_ENTITY." ".$entity->toString().' // ';
             $ok = false;
         }
-        self::disconnect();
+        
         return $ok;
     }
 
@@ -360,20 +341,18 @@ class EntityControler
         if(!isset($entity) )
             return false;
 
-        self::connect();
-        $query="update ".self::$entities_table." set "
+        $query="update ".ENT_ENTITIES." set "
                     .self::update_prepare($entity)
-                    ." where entity_id='".$entity->entity_id."'";
+                    ." where entity_id= ?";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+            $stmt = $db->query(array($entity->entity_id));
             $ok = true;
         } catch (Exception $e){
             echo _CANNOT_UPDATE_ENTITY." ".$entity->toString().' // ';
             $ok = false;
         }
-        self::disconnect();
         return $ok;
     }
 
@@ -391,11 +370,11 @@ class EntityControler
             return false;
 
         self::connect();
-        $query="delete from ".self::$entities_table."  where entity_id='".$entity_id."'";
+        $query="delete from ".ENT_ENTITIES."  where entity_id= ?";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+            $stmt = $db->query($query,array($entity_id));
             $ok = true;
         } catch (Exception $e){
             echo _CANNOT_DELETE_ENTITY_ID." ".$entity_id.' // ';
@@ -408,7 +387,6 @@ class EntityControler
         if($ok)
             $ok = cleanUsersentities($entity_id);
 
-        self::disconnect();
         return $ok;
     }
 
@@ -424,20 +402,19 @@ class EntityControler
         if(!isset($id)|| empty($id) )
             return false;
 
-        self::connect();
-        $query="delete from ".self::$users_entities_table." where ".$field."='".$id."'";
+        $db = new Database();
+        $query="delete from ".ENT_USERS_ENTITIES." where ".$field."= ?";
 
         try{
             if($_ENV['DEBUG'])
                 echo $query.' // ';
-            self::$db->query($query);
+            $stmt = $db->query($query,array($id));
             $ok = true;
         } catch (Exception $e){
             echo _CANNOT_DELETE.' '.$field." ".$id.' // ';
             $ok = false;
         }
 
-        self::disconnect();
         return $ok;
     }
 
@@ -453,19 +430,18 @@ class EntityControler
         if(!isset($id)|| empty($id) )
             return false;
 
-        self::connect();
-        $query="delete from ".self::$groupbasket_redirect_table." where ".$field."='".$id."'";
+        $db = new Database();
+        $query="delete from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where ".$field."= ?";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+            $stmt = $db->query($query,array($id));
             $ok = true;
         } catch (Exception $e){
             echo _CANNOT_DELETE.' '.$field." ".$id.' // ';
             $ok = false;
         }
 
-        self::disconnect();
         return $ok;
     }
 
@@ -480,22 +456,21 @@ class EntityControler
         if(!isset($entity_id) || empty($entity_id))
             return false;
 
-        self::connect();
-        $query = "select entity_id from ".self::$entities_table." where entity_id = '".$entity_id."'";
+        $query = "select entity_id from ".self::$entities_table." where entity_id = ?";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+            $stmt = $db->query($query,array($entity_id));
         } catch (Exception $e){
             echo _UNKNOWN.' '._ENTITY." ".$entity_id.' // ';
         }
 
-        if(self::$db->nb_result() > 0)
+        if($stmt->rowCount() > 0)
         {
-            self::disconnect();
+            
             return true;
         }
-        self::disconnect();
+        
         return false;
     }
 
@@ -555,18 +530,17 @@ class EntityControler
         if(! self::entityExists($entity_id))
             return false;
 
-        self::connect();
-        $query="update ".self::$entities_table." set enabled = 'N' where entity_id='".$entity_id."'";
+        $db = new Database();
+        $query="update ".ENT_ENTITIES." set enabled = 'N' where entity_id= ?";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+            $stmt = $db->query($query,$entity_id);
             $ok = true;
         } catch (Exception $e){
             echo _CANNOT_DISABLE_ENTITY." ".$entity_id.' // ';
             $ok = false;
         }
-        self::disconnect();
         return $ok;
     }
 
@@ -588,13 +562,12 @@ class EntityControler
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+            $stmt = $db->query($query,array($entity_id));
             $ok = true;
         } catch (Exception $e){
             echo _CANNOT_ENABLE_ENTITY." ".$entity_id.' // ';
             $ok = false;
         }
-        self::disconnect();
         return $ok;
     }
 
@@ -607,19 +580,18 @@ class EntityControler
     public function getEntitiesCount($enabled_only = true)
     {
         $nb = 0;
-        self::connect();
+        $db = new Database();
 
-        $query = "select entity_id  from ".self::$entities_table." " ;
+        $query = "select entity_id  from ".ENT_ENTITIES." " ;
         if($enabled_only)
             $query .= "where enabled ='Y'";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+            $stmt = $db->query($query);
         } catch (Exception $e){}
 
-        $nb = self::$db->nb_result();
-        self::disconnect();
+        $nb = $stmt->rowCount();
         return $nb;
     }
 
@@ -637,18 +609,17 @@ class EntityControler
         if(!isset($array) || count($array) == 0)
             return false;
 
-        self::connect();
         $ok = true;
         $func = new functions();
         for($i=0; $i < count($array ); $i++)
         {
             if($ok)
             {
-                $query = "INSERT INTO ".self::$users_entities_table." (user_id, entity_id, primary_entity, user_role) VALUES ('".$func->protect_string_db($user_id)."', '".$func->protect_string_db($array[$i]['ENTITY_ID'])."', '".$func->protect_string_db($array[$i]['PRIMARY'])."', '".$func->protect_string_db($array[$i]['ROLE'])."')";
+                $query = "INSERT INTO ".self::$users_entities_table." (user_id, entity_id, primary_entity, user_role) VALUES (?, ?, ?, ?)";
                 try{
                     if($_ENV['DEBUG'])
                         echo $query.' // ';
-                    self::$db->query($query);
+                    $stmt = $db->query($query,array($user_id,$array[$i]['ENTITY_ID'],$array[$i]['PRIMARY'],$array[$i]['ROLE']));
                     $ok = true;
                 } catch (Exception $e){
                     $ok = false;
@@ -657,7 +628,6 @@ class EntityControler
             else
                 break;
         }
-        self::disconnect();
         return $ok;
     }
 }

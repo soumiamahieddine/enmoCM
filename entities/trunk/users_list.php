@@ -41,6 +41,7 @@ $my_tab_entities_id = array();
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($_REQUEST['what']);
+    $arrayPDO = array();
     $where = " lower(lastname) like lower('".$what."%') ";
 }
 
@@ -56,7 +57,8 @@ if($_SESSION['user']['UserId'] != 'superadmin')
 
         //we need all users who aren't releated with an entity
         // and all users who are releated with all entities that are managed by connected user
-        $where.= '('.$_SESSION['tablename']['users'].'.user_id not in (select distinct user_id from '.ENT_USERS_ENTITIES.') or '.$_SESSION['tablename']['ent_users_entities'].'.entity_id in ('.join(',', $my_tab_entities_id).'))';
+        $where.= '('.$_SESSION['tablename']['users'].'.user_id not in (select distinct user_id from '.ENT_USERS_ENTITIES.') or ?.entity_id in (?))';
+        $arrayPDO = array($_SESSION['tablename']['ent_users_entities'],join(',', $my_tab_entities_id));
     }
 }
 
@@ -68,7 +70,7 @@ $limit = 10;
 $select[$_SESSION['tablename']['users']] = array();
 array_push($select[$_SESSION['tablename']['users']],"user_id","lastname","firstname","enabled","mail");
 $request= new request;
-$tab = $request->select($select, $where, "order by lastname asc",$_SESSION['config']['databasetype'], $limit, true, $first_join_table, $second_join_table, $join_key);
+$tab = $request->PDOselect($select, $where, $arrayPDO, "order by lastname asc",$_SESSION['config']['databasetype'], $limit, true, $first_join_table, $second_join_table, $join_key);
 //$request->show();
 
 for ($i=0;$i<count($tab);$i++)
@@ -89,7 +91,7 @@ for ($i=0;$i<count($tab);$i++)
             }
             if($tab[$i][$j][$value]=="lastname")
             {
-                $tab[$i][$j]['value']= $request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]['value']= functions::show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["lastname"]=$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]=_LASTNAME;
                 $tab[$i][$j]["size"]="15";
@@ -100,7 +102,7 @@ for ($i=0;$i<count($tab);$i++)
             }
             if($tab[$i][$j][$value]=="firstname")
             {
-                $tab[$i][$j]['value']= $request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]['value']= functions::show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["firstname"]= $tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]=_FIRSTNAME;
                 $tab[$i][$j]["size"]="15";

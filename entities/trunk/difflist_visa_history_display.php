@@ -76,9 +76,9 @@ $urlParameters = '';
 
 //Where clause
     $where_tab = array(); 
-    $where_tab[] = "res_id = ".$s_id;
-    $where_tab[] = "coll_id = '".$coll_id."'";
-	
+    $where_tab[] = "res_id = ?";
+    $where_tab[] = "coll_id = ?";
+	$arrayPDO = array();
 	
 	if (isset($diffListType)) {
 			$where_tab[] = "listinstance_history_id IN (SELECT DISTINCT listinstance_history_id from listinstance_history_details where difflist_type = '$diffListType')"; 
@@ -86,7 +86,7 @@ $urlParameters = '';
 
 //From searching comp query
     $where_request = implode(' and ', $where_tab);
-    
+    $arrayPDO = array($s_id,$coll_id);
 //Order
     $order = $order_field = '';
     $order = $list->getOrder();
@@ -110,7 +110,7 @@ $urlParameters = '';
     // $_SESSION['save_list']['start'] = $start;
 
 //Query
-    $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
+    $tab=$request->PDOselect($select,$where_request,$arrayPDO,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
     // $request->show();
     
 //Result array
@@ -123,7 +123,7 @@ $urlParameters = '';
                 if($tab[$i][$j][$value]=="listinstance_history_id")
                 {
                     $tab[$i][$j]["label"]=_TYPE_ID_HISTORY;
-                    $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                    $tab[$i][$j]['value'] = functions::show_string($tab[$i][$j]['value']);
                     $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
@@ -136,7 +136,7 @@ $urlParameters = '';
                 if($tab[$i][$j][$value]=="res_id")
                 {
                     $tab[$i][$j]["label"]=_RES_ID;
-                    $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                    $tab[$i][$j]['value'] = functions::show_string($tab[$i][$j]['value']);
                     $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
@@ -149,11 +149,10 @@ $urlParameters = '';
                 if($tab[$i][$j][$value]=="updated_by_user")
                 {
                     $tab[$i][$j]["label"]=_UPDATED_BY_USER;
-                    $db = new dbquery();
-                    $db->connect();
-                    $db->query("SELECT firstname, lastname FROM users WHERE user_id = '".$tab[$i][$j]['value']."'");
-                    $user = $db->fetch_object();
-                    $tab[$i][$j]['value'] =  ucwords($user->lastname) . " " . $request->show_string(ucfirst($user->firstname));
+                    $db = new Database();
+                    $stmt = $db->query("SELECT firstname, lastname FROM users WHERE user_id = ?",array($tab[$i][$j]['value']));
+                    $user = $stmt->fetchObject();
+                    $tab[$i][$j]['value'] =  ucwords($user->lastname) . " " . functions::show_string(ucfirst($user->firstname));
                     $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";

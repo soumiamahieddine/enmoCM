@@ -74,10 +74,11 @@ elseif($_SESSION['service_tag'] == 'load_template_session')
     $entities = $template->getAllItemsLinkedToModel($_SESSION['m_admin']['template']['ID'], 'destination');
     $_SESSION['m_admin']['template']['ENTITIES_LIST'] = array();
     $template->connect();
+    $db = new Database();
     for($i=0; $i<count($entities['destination']);$i++)
     {
-        $template->query("select entity_label from ".ENT_ENTITIES." where entity_id = '".$entities['destination'][$i]."'" );
-        $res = $template->fetch_array();
+        $stmt = $db->query("select entity_label from ".ENT_ENTITIES." where entity_id = ?",array($entities['destination'][$i]) );
+        $res = $stmt->fetch_array();
         array_push($_SESSION['m_admin']['template']['ENTITIES_LIST'], array('ID' => $entities['destination'][$i], 'LABEL' => $res->label));
     }
 
@@ -100,13 +101,12 @@ elseif($_SESSION['service_tag'] == 'template_info')
 }
 elseif($_SESSION['service_tag'] == 'load_template_db')
 {
-    $db = new dbquery();
-    $db->connect();
-    $db->query("Delete from ".$_SESSION['tablename']['temp_templates_association']." where template_id = '".$_SESSION['m_admin']['template']['ID']."' and what = 'destination'");
+    $db = new Database();
+    $stmt = $db->query("Delete from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ? and what = 'destination'",array($_SESSION['m_admin']['template']['ID']));
 
     for($i=0; $i < count($_SESSION['m_admin']['template']['ENTITIES']);$i++)
     {
-        $db->query("insert into ".$_SESSION['tablename']['temp_templates_association']." ( template_id, what, value_field, maarch_module  ) VALUES (  ".$_SESSION['m_admin']['template']['ID'].", 'destination', '".$_SESSION['m_admin']['template']['ENTITIES'][$i]['ID']."', 'entities')");
+        $stmt = $db->query("insert into ".$_SESSION['tablename']['temp_templates_association']." ( template_id, what, value_field, maarch_module  ) VALUES (  ? , 'destination', ?, 'entities')",array($_SESSION['m_admin']['template']['ID'],$_SESSION['m_admin']['template']['ENTITIES'][$i]['ID']));
     }
     $_SESSION['service_tag'] = '';
 }

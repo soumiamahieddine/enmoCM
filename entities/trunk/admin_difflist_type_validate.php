@@ -12,6 +12,7 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once("modules/entities/entities_tables.php");
 $request = new request();
 $request->connect();
+$db = new Database();
 
 $difflist_type_id    = $request->protect_string_db($_REQUEST['difflist_type_id']); 
 $difflist_type_label = $request->protect_string_db($_REQUEST['difflist_type_label']);
@@ -21,11 +22,10 @@ $allow_entities      = $request->protect_string_db($_REQUEST['allow_entities']);
 # Controls
 $errors = false;
 if(!empty($difflist_type_id)) {
-    $request->query(
+    $stmt = $db->query(
         "select count(1) as nb from " . ENT_DIFFLIST_TYPES
-            . " where difflist_type_id = '" . $difflist_type_id . "'"
-    );
-    $res = $request->fetch_object();
+            . " where difflist_type_id = ?",array($difflist_type_id));
+    $res = $stmt->fetchObject();
     $nb = $res->nb;
     if($_REQUEST['mode'] == 'add' && $nb == 1)
         $errors .= "<br/>" . _DIFFLIST_TYPE_ID_ALREADY_USED;

@@ -18,7 +18,7 @@ if (count($_SESSION['tree_entities']) < 1) {
 } else {
     if (isset($_SESSION['entities_chosen_tree']) && !empty($_SESSION['entities_chosen_tree'])) {
         $ent = new entity();
-        $ent->connect();
+        $db = new Database();
         $_SESSION['EntitiesIdExclusion'] = array();
         $whereExclusion = ' and (1=1)';
         if ($_SESSION['user']['UserId'] != 'superadmin') {
@@ -29,14 +29,12 @@ if (count($_SESSION['tree_entities']) < 1) {
             //var_dump($my_tab_entities_id);
             if (count($my_tab_entities_id) > 0) {
                 $listOfMyEntities = implode(',', $my_tab_entities_id);
-                $ent->query(
+                $stmt = $db->query(
                     "select entity_id from "
-                    . ENT_ENTITIES . " where entity_id not in ("
-                    . $listOfMyEntities
-                    . ") and enabled= 'Y' order by entity_id"
+                    . ENT_ENTITIES . " where entity_id not in (?) and enabled= 'Y' order by entity_id",array($listOfMyEntities)
                 );
                 //$ent->show();
-                while ($res = $ent->fetch_object()) {
+                while ($res = $db->fetchObject()) {
                     array_push($_SESSION['EntitiesIdExclusion'], "'". $res->entity_id . "'");
                 }
             }
@@ -47,32 +45,32 @@ if (count($_SESSION['tree_entities']) < 1) {
         <?php
         //$where = "";
         $level1 = array();
-        $ent->query("select u.user_id, u.lastname, u.firstname from  " . ENT_USERS_ENTITIES . " ue, " 
-            . $_SESSION['tablename']['users'] . " u where ue.entity_id  = '" 
-            . $_SESSION['entities_chosen_tree'] . "' and ue.user_id = u.user_id and u.status <> 'DEL' " 
-            . $whereExclusionUE . " order by u.lastname, u.firstname");
+        $stmt = $db->query("select u.user_id, u.lastname, u.firstname from  " . ENT_USERS_ENTITIES . " ue, " 
+            . $_SESSION['tablename']['users'] . " u where ue.entity_id  = ? and ue.user_id = u.user_id and u.status <> 'DEL' " 
+            . $whereExclusionUE . " order by u.lastname, u.firstname",array($_SESSION['entities_chosen_tree']));
+        
+
         //$ent->show();
-        while ($res = $ent->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             array_push(
                 $level1, array(
                     'id' => $res->user_id, 
                     'tree' => $_SESSION['entities_chosen_tree'], 
                     'key_value' => $res->user_id, 
-                    'label_value' => $ent->show_string($res->lastname.' '.$res->firstname, true), 
+                    'label_value' => functions::show_string($res->lastname.' '.$res->firstname, true), 
                     'is_entity' => false
                 )
             );
         }
-        $ent->query("select entity_id, entity_label from " . ENT_ENTITIES . " where parent_entity_id = '" 
-            . $_SESSION['entities_chosen_tree'] . "' and enabled ='Y' order by entity_label");
+        $stmt = $db->query("select entity_id, entity_label from " . ENT_ENTITIES . " where parent_entity_id = ? and enabled ='Y' order by entity_label",array($_SESSION['entities_chosen_tree']));
         //$ent->show();
         $level1 = array();
-        while ($res = $ent->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
                 $labelValue = '<span class="entity_tree_element_ok"><a href="index.php?page=entity_up&module=entities&id=' 
-                            . $res->entity_id . '" target="_top">' . $ent->show_string($res->entity_label, true) . '</a></span>';
+                            . $res->entity_id . '" target="_top">' . functions::show_string($res->entity_label, true) . '</a></span>';
             } else {
-                $labelValue = '<small><i>' . $ent->show_string($res->entity_label, true) . '</i></small>';
+                $labelValue = '<small><i>' . functions::show_string($res->entity_label, true) . '</i></small>';
             }
             array_push(
                 $level1, 
@@ -97,16 +95,15 @@ if (count($_SESSION['tree_entities']) < 1) {
                 }
             }
         }
-        $ent->query("select u.user_id, u.lastname, u.firstname, ue.entity_id as entity_id from  " 
+        $stmt = $db->query("select u.user_id, u.lastname, u.firstname, ue.entity_id as entity_id from  " 
             . ENT_USERS_ENTITIES . " ue, " . $_SESSION['tablename']['users'] 
-            . " u where ue.entity_id  = '" . $_SESSION['entities_chosen_tree'] 
-            . "' and ue.user_id = u.user_id and u.status <> 'DEL' order by u.lastname, u.firstname");
-        while ($res = $ent->fetch_object()) {
+            . " u where ue.entity_id  = ? and ue.user_id = u.user_id and u.status <> 'DEL' order by u.lastname, u.firstname",array($_SESSION['entities_chosen_tree']));
+        while ($res = $stmt->fetchObject()) {
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
-                $labelValue = '<span class="entity_tree_element_ok">' . $ent->show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
+                $labelValue = '<span class="entity_tree_element_ok">' . functions::show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
                             . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>';
             } else {
-                $labelValue = '<small><i>' . $ent->show_string($res->lastname . ' ' . $res->firstname, true) . '</i></small>';
+                $labelValue = '<small><i>' . functions::show_string($res->lastname . ' ' . $res->firstname, true) . '</i></small>';
             }
             array_push(
                 $level1, 
@@ -131,7 +128,7 @@ if (count($_SESSION['tree_entities']) < 1) {
             function TafelTreeInit () {
                 var struct = [
                                 {
-                                'id':'<?php functions::xecho($_SESSION['entities_chosen_tree']);?>',
+                                'id':'<?php echo $_SESSION['entities_chosen_tree'] ;?>',
                                 'txt':'<?php echo addslashes($label);?>',
                                 'items':[
                                 <?php

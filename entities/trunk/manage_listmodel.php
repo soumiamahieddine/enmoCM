@@ -20,8 +20,7 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
 $func = new functions();
 
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 
 $difflist = new diffusion_list();
 $usergroups_controler = new usergroups_controler();
@@ -148,16 +147,16 @@ $users_query =
 if ($user_expr == '' && $entity_expr == '') {
     //no query
 } else {
-    $db->query($users_query);
-    while ($line = $db->fetch_object()) {
+    $stmt = $db->query($users_query,array($user_expr, $entity_expr));
+    while ($line = $stmt->fetchObject()) {
         array_push(
             $users,
             array(
-                'ID'     => $db->show_string($line->user_id),
-                'PRENOM' => $db->show_string($line->firstname),
-                'NOM'    => $db->show_string($line->lastname),
-                'DEP_ID' => $db->show_string($line->entity_id),
-                'DEP'    => $db->show_string($line->entity_label)
+                'ID'     => functions::show_string($line->user_id),
+                'PRENOM' => functions::show_string($line->firstname),
+                'NOM'    => functions::show_string($line->lastname),
+                'DEP_ID' => functions::show_string($line->entity_id),
+                'DEP'    => functions::show_string($line->entity_label)
             )
         );
     }
@@ -174,13 +173,13 @@ $entity_query =
 if ($user_expr == '' && $entity_expr == '') {
     //no query
 } else {
-    $db->query($entity_query);
-    while ($line = $db->fetch_object()) {
+    $stmt = $db->query($entity_query,array($user_expr , $entity_expr));
+    while ($line = $stmt->fetchObject()) {
         array_push(
             $entities,
             array(
-                'ID' => $db->show_string($line->entity_id),
-                'DEP' =>$db->show_string($line->entity_label)
+                'ID' => functions::show_string($line->entity_id),
+                'DEP' =>functions::show_string($line->entity_label)
             )
         );
     }
@@ -205,14 +204,14 @@ switch($action) {
 //***************************************************************************************
 // Add USER AS dest/copy/custom mode
 case "add_user":
-    $db->query(
+    $stmt = $db->query(
         "SELECT u.firstname, u.lastname, e.entity_id, e.entity_label "
         . " FROM " . USERS_TABLE . " u "
         . " LEFT JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id "
         . " LEFT JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id" 
-        . " WHERE u.user_id='" . $db->protect_string_db($id) . "' and ue.primary_entity = 'Y'"
+        . " WHERE u.user_id= ? and ue.primary_entity = 'Y'",array($id)
     );
-    $line = $db->fetch_object();
+    $line = $stmt->fetchObject();
     
     $visible = 'Y';
     if(!isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'])) {
@@ -247,11 +246,11 @@ case "add_user":
     array_push(
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'],
         array(
-            'user_id' => $db->show_string($id),
-            'firstname' => $db->show_string($line->firstname),
-            'lastname' => $db->show_string($line->lastname),
-            'entity_id' => $db->show_string($line->entity_id),
-            'entity_label' => $db->show_string($line->entity_label),
+            'user_id' => functions::show_string($id),
+            'firstname' => functions::show_string($line->firstname),
+            'lastname' => functions::show_string($line->lastname),
+            'entity_id' => functions::show_string($line->entity_id),
+            'entity_label' => functions::show_string($line->entity_label),
             'visible' => $visible,
         )
     ); 
@@ -262,11 +261,11 @@ case "add_user":
 
 // ADD ENTITY AS copy/custom mode
 case 'add_entity':
-    $db->query(
+    $stmt = $db->query(
         "SELECT entity_id, entity_label FROM " . ENT_ENTITIES
-        . " WHERE entity_id = '" . $db->protect_string_db($id) . "'"
+        . " WHERE entity_id = ?",array($id)
     );
-    $line = $db->fetch_object();
+    $line = $stmt->fetchObject();
     $visible = 'Y';
     if(! isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'])) {
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'] = array();

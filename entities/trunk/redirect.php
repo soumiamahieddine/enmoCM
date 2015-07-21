@@ -14,13 +14,12 @@ require_once('modules/entities/class/class_manage_entities.php');;
     $entity_ctrl = new EntityControler();
     $services = array();
     $servicesCompare = array();
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     $labelAction = '';
     if ($id_action <> '') {
-        $db->query("select label_action from actions where id = " . $id_action);
-        $resAction = $db->fetch_object();
-        $labelAction = $db->show_string($resAction->label_action);
+        $stmt = $db->query("select label_action from actions where id = ?",array($id_action));
+        $resAction = $stmt->fetchObject();
+        $labelAction = functions::show_string($resAction->label_action);
     }
     
     //print_r($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']);
@@ -31,8 +30,8 @@ require_once('modules/entities/class/class_manage_entities.php');;
     //print_r($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']);
     if(!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']))
     {
-        $db->query("select entity_id, entity_label from ".ENT_ENTITIES." where entity_id in (".$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'].") and enabled= 'Y' order by entity_label");
-        while($res = $db->fetch_object())
+        $stmt = $db->query("select entity_id, entity_label from ".ENT_ENTITIES." where entity_id in (?) and enabled= 'Y' order by entity_label",array($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']));
+        while($res = $stmt->fetchObject())
         {
             array_push($services, array( 'ID' => $res->entity_id, 'LABEL' => $db->show_string($res->entity_label)));
             array_push($servicesCompare, $res->entity_id);
@@ -41,10 +40,10 @@ require_once('modules/entities/class/class_manage_entities.php');;
     $users = array();
     if(!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['users_entities']) )
     {
-        $db->query("select distinct ue.user_id, u.lastname, u.firstname from ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id in (".$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['users_entities'].") and u.user_id = ue.user_id and (u.status = 'OK' or u.status = 'ABS') order by u.lastname asc");
-        while($res = $db->fetch_object())
+        $stmt = $db->query("select distinct ue.user_id, u.lastname, u.firstname from ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id in (?) and u.user_id = ue.user_id and (u.status = 'OK' or u.status = 'ABS') order by u.lastname asc",array($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['users_entities']));
+        while($res = $stmt->fetchObject())
         {
-            array_push($users, array( 'ID' => $res->user_id, 'NOM' => $db->show_string($res->lastname), "PRENOM" => $db->show_string($res->firstname)));
+            array_push($users, array( 'ID' => $res->user_id, 'NOM' => functions::show_string($res->lastname), "PRENOM" => functions::show_string($res->firstname)));
         }
     }
 
@@ -260,8 +259,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     require_once('modules/entities/class/class_manage_listdiff.php');
     $diffList = new diffusion_list();
     
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     
     $formValues = array();
     for($i=0; $i<count($values_form); $i++) {
@@ -278,14 +276,14 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $userId = $formValues['user'];
 
         # Select new_dest user info
-        $db->query(
+        $stmt = $db->query(
             "select u.user_id, u.firstname, u.lastname, e.entity_id, e.entity_label "
             . "FROM " . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
             . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' and"
             . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
-            . " e.enabled = 'Y' and ue.primary_entity='Y' and u.user_id = '" . $userId . "'"
+            . " e.enabled = 'Y' and ue.primary_entity='Y' and u.user_id = ?",array($userId)
         );
-        $user = $db->fetch_object();
+        $user = $stmt->fetchObject();
         
         # Create new listinstance
         $_SESSION['redirect']['diff_list'] = array();
@@ -309,8 +307,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $entityId = $formValues['department'];
         //$message = _REDIRECT_TO_DEP_OK . " " . $entityId;
 
-        $db->query("SELECT entity_label FROM entities WHERE entity_id ='".$entityId."'");
-        $list = $db->fetch_object();
+        $stmt = $db->query("SELECT entity_label FROM entities WHERE entity_id = ?,"array($entityId));
+        $list = $stmt->fetchObject();
         $entity_label = $list->entity_label;
         $message = _REDIRECT_TO_DEP_OK . " " . $entity_label;
 
@@ -334,23 +332,23 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $content_note = $formValues['note_content_to_user'];
                 $content_note = str_replace(";", ".", $content_note);
                 $content_note = str_replace("--", "-", $content_note);
-                $content_note = $db->protect_string_db($content_note);
+                $content_note = $content_note;
                 $date = $db->current_datetime();
                 
-                $db->query(
+                $stmt $db->query(
                     "INSERT INTO notes (identifier, tablename, user_id, "
-                            . "date_note, note_text, coll_id ) VALUES ('" . $res_id . "','" . $table . "','" . $userIdTypist . "'," . $date . ",'" . $content_note . "','" . $coll_id . "')"
+                            . "date_note, note_text, coll_id ) VALUES (?,?,?,?,?,?)",array($res_id,$table,$userIdTypist,$date,$content_note,$coll_id)
                 );
             }
             
-            $db->query("update ".$table." set dest_user = '".$new_dest."' where res_id = ".$res_id);
+            $stmt = $db->query("update ".$table." set dest_user = ? where res_id = ?",array($new_dest,$res_id));
             # If new dest was in other roles, get number of views
-            $db->query(
+            $stmt = $db->query(
                 "select viewed"
                 . " from " . $_SESSION['tablename']['ent_listinstance'] 
-                . " where coll_id = '". $coll_id ."' and res_id = " . $res_id . " and item_type = 'user_id' and item_id = '" . $new_dest . "'"
+                . " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_id = ?",array($coll_id,$res_id,$new_dest)
             );
-            $res = $db->fetch_object();
+            $res = $stmt->fetchObject();
             $viewed = $res->viewed;
             $new_difflist['dest']['users'][0]['viewed'] = (integer)$viewed;
         }
@@ -366,20 +364,20 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $content_note = $db->protect_string_db($content_note);
                 $date = $db->current_datetime();
                 
-                $db->query(
+                $stmt = $db->query(
                     "INSERT INTO notes (identifier, tablename, user_id, "
-                            . "date_note, note_text, coll_id ) VALUES ('" . $res_id . "','" . $table . "','" . $userIdTypist . "'," . $date . ",'" . $content_note . "','" . $coll_id . "')"
+                            . "date_note, note_text, coll_id ) VALUES (?,?,?,?,?,?)",array($res_id,$table,$userIdTypist,$date,$content_note,$coll_id)
                 );
             }
-            $db->query("update ".$table." set destination = '".$entityId."' where res_id = ".$res_id); 
+            $stmt = $db->query("update ".$table." set destination = ? where res_id = ?",array($entityId,$res_id)); 
         }
 		
 		# Put all existing copies in copy
 		# Get old copies for users
-		$db->query(
+		$stmt = $db->query(
 			"select * "
 			. " from " . $_SESSION['tablename']['ent_listinstance'] 
-			. " where coll_id = '". $coll_id ."' and res_id = ".$res_id." and item_type = 'user_id' and item_mode = 'cc'"
+			. " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'cc'",array($coll_id,$res_id)
 		);
 		if (!is_array($new_difflist['copy'])) {
 			$new_difflist['copy'] = array();
@@ -390,7 +388,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 		if (!is_array($new_difflist['copy']['entities'])) {
 			$new_difflist['copy']['entities'] = array();
 		}
-		while ($old_copiesU = $db->fetch_object()) {
+		while ($old_copiesU = $stmt->fetchObject()) {
 			$found = false;
 			for ($cptU=0;$cptU<count($new_difflist['copy']['users']);$cptU++) {
 				if ($new_difflist['copy']['users'][$cptU]['user_id'] == $old_copiesU->item_id) {
@@ -414,12 +412,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 			}
 		}
 		# Get old copies for entities
-		$db->query(
+		$stmt = $db->query(
 			"select * "
 			. " from " . $_SESSION['tablename']['ent_listinstance'] 
-			. " where coll_id = '". $coll_id ."' and res_id = " . $res_id . " and item_type = 'entity_id' and item_mode = 'cc'"
+			. " where coll_id = ? and res_id = ? and item_type = 'entity_id' and item_mode = 'cc'",array($coll_id,$res_id)
 		);
-		while ($old_copiesE = $db->fetch_object()) {
+		while ($old_copiesE = $stmt->fetchObject()) {
 			$found = false;
 			for ($cptE=0;$cptE<count($new_difflist['copy']['entities']);$cptE++) {
 				if ($new_difflist['copy']['entities'][$cptE]['entity_id'] == $old_copiesE->item_id) {
@@ -442,14 +440,14 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         # If feature activated, put old dest in copy
         if($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
             # Get old dest
-            $db->query(
+            $stmt = $db->query(
                 "select * "
                 . " from " . $_SESSION['tablename']['ent_listinstance'] 
-                . " where coll_id = '". $coll_id ."' and res_id = " . $res_id . " and item_type = 'user_id' and item_mode = 'dest'"
+                . " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'",array($coll_id,$res_id)
             );
             //$db->show();
             //exit();
-            $old_dest = $db->fetch_object();
+            $old_dest = $stmt->fetchObject();
             
             if($old_dest && isset($new_difflist['copy']['users'])) {
                 # try to find old dest in copies already
@@ -522,29 +520,28 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
     for($j=0; $j<count($values_form); $j++)
     {
-        $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id='".$values_form[$j]['VALUE']."'";
-        $db->query($queryEntityLabel);
-        while ($entityLabel = $db->fetch_object()) {
+        $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id=?";
+        $stmt = $db->query($queryEntityLabel,array($values_form[$j]['VALUE']));
+        while ($entityLabel = $stmt->fetchObject()) {
             $zeEntityLabel = $entityLabel->entity_label;
         }
-        $msg = _TO." : ".$db->protect_string_db($zeEntityLabel)." (".$db->protect_string_db($values_form[$j]['VALUE']).")";
+        $msg = _TO." : ".$zeEntityLabel." (".$values_form[$j]['VALUE'].")";
         if($values_form[$j]['ID'] == "department")
         {
             for($i=0; $i < count($arr_id); $i++)
             {
                 $arr_list .= $arr_id[$i].'#';
-                $db2 = new dbquery();
-                $db2->connect();
-                $db->query("update ".$table." set destination = '".$db->protect_string_db($values_form[$j]['VALUE'])."' where res_id = ".$arr_id[$i]);
+                $db2 = new Database(); /* $db2 sert à quoi ???*/
+                $stmt = $db->query("update ".$table." set destination = ? where res_id = ?",array($values_form[$j]['VALUE'],$arr_id[$i]));
                 if(isset($_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id']) && !empty($_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id']))
                 {
-                    $db->query("update ".$table." set dest_user = '".$db->protect_string_db($_SESSION['redirect']['diff_list']['dest']['user_id'])."' where res_id = ".$arr_id[$i]);
+                    $stmt = $db->query("update ".$table." set dest_user = ? where res_id = ?",array($_SESSION['redirect']['diff_list']['dest']['user_id'],$arr_id[$i]));
                 }
                 $newDestViewed = 0;
                 // Récupère le nombre de fois où le futur destinataire principal a vu le document
-                $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_id = '".$_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id']."'");
+                $stmt = $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = ? and res_id = ? and item_type = 'user_id' and item_id = ?",array($coll_id,$arr_id[$i],$_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id']));
                 //$db->show();
-                $res = $db->fetch_object();
+                $res = $stmt->fetchObject();
                 if($res->viewed <> "")
                 {
                     $_SESSION['redirect']['diff_list']['dest']['users'][0]['viewed'] = $res->viewed;
@@ -554,9 +551,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 {
                     $lastDestViewed = 0;
                     // Récupère le nombre de fois où l'ancien destinataire principal a vu le document
-                    $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_mode = 'dest'");
+                    $stmt = $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'",array($coll_id,$arr_id[$i]));
                     //$db->show();
-                    $res = $db->fetch_object();
+                    $res = $stmt->fetchObject();
                     if($res->viewed <> "")
                     {
                         $lastDestViewed = $res->viewed;
@@ -590,9 +587,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $difflist['dest']['users'][0]['user_id'] = $values_form[$j]['VALUE'];
                 $arr_list .= $arr_id[$i].'#';
                 // Récupère le nombre de fois où le futur destinataire principal a vu le document
-                $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_id = '".$difflist['dest']['users'][0]['user_id']."'");
+                $stmt = $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = ? and res_id = ? and item_type = 'user_id' and item_id = ?",array($coll_id,$arr_id[$i],$difflist['dest']['users'][0]['user_id']));
                 //$db->show();
-                $res = $db->fetch_object();
+                $res = $stmt->fetchObject();
                 $newDestViewed = 0;
                 if($res->viewed <> "")
                 {
@@ -600,16 +597,16 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     $newDestViewed = $res->viewed;
                 }
                 // Récupère le nombre de fois où l'ancien destinataire principal a vu le document
-                $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_mode = 'dest'");
+                $stmt = $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'",array($coll_id,$arr_id[$i]));
                 //$db->show();
-                $res = $db->fetch_object();
+                $res = $stmt->fetchObject();
                 $lastDestViewed = 0;
                 if($res->viewed <> "")
                 {
                     $lastDestViewed = $res->viewed;
                 }
                 // Update dest_user in res table
-                $db->query("update ".$table." set dest_user = '".$db->protect_string_db($values_form[$j]['VALUE'])."' where res_id = ".$arr_id[$i]);
+                $stmt = $db->query("update ".$table." set dest_user = ? where res_id = ?",array($values_form[$j]['VALUE'],$arr_id[$i]));
                 $list->set_main_dest($values_form[$j]['VALUE'], $coll_id, $arr_id[$i], 'DOC', 'user_id', $newDestViewed);
                 if($_SESSION['features']['dest_to_copy_during_redirection'] == 'true')
                 {
@@ -627,11 +624,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
 function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table)
 {
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     for($i=0; $i<count($arr_id );$i++)
     {
-        $req = $db->query("update ".$table. " set video_user = '', video_time = 0 where res_id = ".$arr_id[$i], true);
+        $req = $db->query("update ".$table. " set video_user = '', video_time = 0 where res_id = ?",array($arr_id[$i]));
 
         if(!$req)
         {

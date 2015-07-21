@@ -11,7 +11,7 @@ $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 $graph = new graphics();
 $req = new request();
-$db = new dbquery();
+$db = new Database();
 $sec = new security();
 
 
@@ -38,18 +38,18 @@ for($i=0;$i<count($search_status);$i++)
 $str_status = preg_replace('/,$/', ')', $str_status);
 
 $title = _ENTITY_LATE_MAIL.' '.$date_title ;
-$db = new dbquery();
+$db = new Database();
 
 //Récupération de l'ensemble des types de documents
 if (!$_REQUEST['entities_chosen']){
-    $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+    $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
 }else{
-    $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label");
+    $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label");
 }
 //$db->show();
 
 $entities = array();
-while($res = $db->fetch_object())
+while($res = $stmt->fetchObject())
 {
     array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
 }
@@ -90,15 +90,15 @@ for($i=0; $i<count($entities);$i++)
 /*
     $this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_alarm1 = 'N' and (r.status = 'NEW' or r.status = 'COU') and date(r.alarm1_date) =date(now()) and l.item_mode = 'dest' and item_type='user_id'");
 */
-        $db->query("SELECT count(*) AS total FROM ".$view
+        $stmt = $db->query("SELECT count(*) AS total FROM ".$view
                     ." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id 
-                    WHERE destination = '".$entities[$i]['ID']."' and ".$view.".status not in ('DEL','BAD') and date(".$view.".process_limit_date) <= date(now()) and ".$view.".closing_date is null");
+                    WHERE destination = ? and ?.status not in ('DEL','BAD') and date(?.process_limit_date) <= date(now()) and ?.closing_date is null",array($entities[$i]['ID'],$view,$view,$view));
         //$db->show();
 
-		if( $db->nb_result() > 0)
+		if( $stmt->rowCount() > 0)
         {
             $tmp = 0;
-            $res = $db->fetch_object();
+            $res = $stmt->fetchObject();
 
             if($report_type == 'graph')
             {
@@ -129,7 +129,7 @@ for($i=0; $i<count($entities);$i++)
         }
         if($report_type == 'graph')
         {
-            array_push($_SESSION['labels1'], $db->wash_html($entities[$i]['LABEL'], 'NO_ACCENT'));
+            array_push($_SESSION['labels1'], functions::wash_html($entities[$i]['LABEL'], 'NO_ACCENT'));
         }
     }
 }

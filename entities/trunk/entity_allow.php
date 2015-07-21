@@ -20,11 +20,12 @@ $path = 'modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIR
 
 require($path);
 
-$func = new functions();
+//$func = new functions();
+$db = new Database();
 
 if(isset($_GET['id']))
 {
-	$s_id = addslashes($func->wash($_GET['id'], "alphanum", _ENTITY));
+	$s_id = addslashes(functions::wash($_GET['id'], "alphanum", _ENTITY));
 }
 else
 {

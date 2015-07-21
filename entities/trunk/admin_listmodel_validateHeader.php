@@ -10,6 +10,7 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once("modules/entities/entities_tables.php");
 $request = new request();
 $request->connect();
+$db = new Database();
 
 $mode = $_REQUEST['mode'];
 $objectType = $_REQUEST['objectType'];
@@ -28,12 +29,12 @@ if($title == '')
     $return .= _ENTER_TITLE . "<br/>";
     
 if($mode == 'add' && $objectId && $objectType && $collId) {
-    $request->query(
+    $stmt = $db->query(
         "select count(1) as nb from " . ENT_LISTMODELS
-        . " where object_type = '" . $objectType . "'"
-        . " and object_id = '" . $objectId . "'"
+        . " where object_type = ?"
+        . " and object_id = ?",array($objectType,$objectId)
     );
-    $res = $request->fetch_object();
+    $res = $stmt->fetchObject();
     if($res->nb > 0)
         $return .= _LISTMODEL_ID_ALREADY_USED . "<br/>";
 }

@@ -177,21 +177,18 @@ class entities extends dbquery
         $tmpArr = array();
         // We must create a new object because the object connexion can already
         // be used
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
         require_once 'modules' . DIRECTORY_SEPARATOR . 'entities'
             . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
             . 'class_manage_entities.php';
         $obj = new entity();
         if (preg_match('/@my_entities/', $where)) {
             $entities = '';
-            $db->query(
+            $stmt = $db->query(
             	"select entity_id from " . ENT_USERS_ENTITIES
-                . " where user_id = '" . $this->protect_string_db(
-                    trim($userId)
-                ) . "'"
+                . " where user_id = ? ",array(trim($userId))
             );
-            while ($res = $db->fetch_object()) {
+            while ($res = $stmt->fetchObject()) {
                 $entities .= "'"  . $res->entity_id . "', ";
             }
 
@@ -204,10 +201,10 @@ class entities extends dbquery
         }
         if (preg_match('/@all_entities/', $where)) {
             $entities = '';
-            $db->query(
+            $stmt = $db->query(
             	"select entity_id from " . ENT_ENTITIES . " where enabled ='Y'"
             );
-            while ($res = $db->fetch_object()) {
+            while ($res = $stmt->fetchObject()) {
                 $entities .= "'" . $res->entity_id . "', ";
             }
             $entities = preg_replace("|, $|", '', $entities);
@@ -222,14 +219,12 @@ class entities extends dbquery
                 $primEntity = "'" . $_SESSION['user']['primary_entity']['id']
                             . "'";
             } else {
-                $db->query(
+                $stmt = $db->query(
                 	"select entity_id from " . ENT_USERS_ENTITIES
-                    . " where user_id = '" . $this->protect_string_db(
-                        trim($userId)
-                    ) . "' and primary_entity = 'Y'"
+                    . " where user_id = ? and primary_entity = 'Y'",array(trim($userId))
                 );
                 //$db->show();
-                $res = $db->fetch_object();
+                $res = $stmt->fetchObject();
                 if (isset($res->entity_id)) {
                     $primEntity = "'" . $res->entity_id . "'";
                 }
@@ -398,12 +393,10 @@ class entities extends dbquery
         $actionId, $entities = array(), $usersEntities = array()
     ) {
         //$this->show_array($usersEntities);
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
         	"DELETE FROM " . ENT_GROUPBASKET_REDIRECT
-            . " where basket_id= '" . $this->protect_string_db(trim($basketId))
-            . "' and group_id = '" . $this->protect_string_db(trim($groupId))
-            . "' and action_id = " . $actionId
+            . " where basket_id= ? and group_id = ? and action_id = ?",array(trim($basketId),trim($groupId),$actionId)
         );
         $redirectMode = 'ENTITY';
         for ($i = 0; $i < count($entities); $i ++) {
@@ -415,15 +408,10 @@ class entities extends dbquery
                 $keyword = '';
                 $entityId = $entities[$i]['ID'];
             }
-            $this->query(
+            $stmt = $db->query(
             	"INSERT INTO " . ENT_GROUPBASKET_REDIRECT
                 . " (group_id, basket_id, action_id, entity_id, keyword,"
-                . " redirect_mode ) values ( '" . $this->protect_string_db(
-                    trim($groupId)
-                ) . "', '" . $this->protect_string_db(trim($basketId)) . "', "
-                . $actionId . ", '" . $this->protect_string_db(trim($entityId))
-                . "', '" . $this->protect_string_db(trim($keyword)) . "', '"
-                . $redirectMode . "')"
+                . " redirect_mode ) values ( ?, ?, ?, ?, ?, ?)",array(trim($groupId),trim($basketId),trim($entityId),trim($keyword),$redirectMode)
             );
         }
 
@@ -436,14 +424,10 @@ class entities extends dbquery
                 $keyword = '';
                 $entityId = $usersEntities[$i]['ID'];
             }
-            $this->query(
+            $stmt = $db->query(
             	"INSERT INTO " . ENT_GROUPBASKET_REDIRECT . " (group_id, "
                 . "basket_id, action_id, entity_id, keyword, redirect_mode ) "
-                . "values ( '" . $this->protect_string_db(trim($groupId))
-                . "', '" . $this->protect_string_db(trim($basketId)) . "', "
-                . $actionId . ", '" . $this->protect_string_db(trim($entityId))
-                . "', '" . $this->protect_string_db(trim($keyword)) . "', '"
-                . $redirectMode . "')"
+                . "values ( ?, ?, ?, ?, ?, ?)",array(trim($groupId),trim($basketId),trim($entityId),trim($keyword),$redirectMode)
             );
         }
     }
@@ -451,28 +435,25 @@ class entities extends dbquery
     public function get_values_redirect_groupbasket_db(
         $groupId, $basketId, $actionId
     ) {
-        $db = new dbquery();
-        $this->connect();
-        $db->connect();
+        $db = new Database();
+        
+        
 
         $arr['ENTITY'] = array();
-        $this->query(
+        $stmt = $db->query(
         	"select entity_id, keyword from " . ENT_GROUPBASKET_REDIRECT
-            . "  where  group_id = '" . $groupId . "' and basket_id = '"
-            . $this->protect_string_db(trim($basketId)) . "' and redirect_mode "
-            . "= 'ENTITY' and action_id = " . $actionId
+            . "  where  group_id = ? and basket_id = ? and redirect_mode "
+            . "= 'ENTITY' and action_id = ?",array($groupId,trim($basketId),$actionId)
         );
 
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             if ($res->entity_id <> '') {
-                $db->query(
+                $stmt2 = $db->query(
                 	"select entity_label from " . ENT_ENTITIES
-                    . " where entity_id = '" . $this->protect_string_db(
-                        trim($res->entity_id)
-                    ) . "'"
+                    . " where entity_id = ? ",array(trim($res->entity_id))
                 );
-                $line = $db->fetch_object();
-                $label = $db->show_string($line->entity_label);
+                $line = $stmt2->fetchObject();
+                $label = functions::show_string($line->entity_label);
                 $tab = array(
                 	'ID' => $res->entity_id,
                 	'LABEL' => $label,
@@ -503,24 +484,20 @@ class entities extends dbquery
         }
 
         $arr['USERS'] = array();
-        $this->query(
+        $stmt = $db->query(
         	"select entity_id, keyword from " . ENT_GROUPBASKET_REDIRECT
-            . "  where  group_id = '" . $this->protect_string_db(trim($groupId))
-            . "' and basket_id = '" . $this->protect_string_db(trim($basketId))
-            . "' and redirect_mode = 'USERS' and action_id = " . $actionId
+            . "  where  group_id = ? and basket_id = ? and redirect_mode = 'USERS' and action_id = ?",array(trim($groupId),trim($basketId),$actionId)
         );
 
 
-        while ($res = $this->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             if ($res->entity_id <> '') {
-                $db->query(
+                $stmt2 = $db->query(
                 	"select entity_label from " . ENT_ENTITIES
-                    . " where entity_id = '" . $this->protect_string_db(
-                        trim($res->entity_id)
-                    ) . "'"
+                    . " where entity_id = ?",array(trim($res->entity_id))
                 );
-                $line = $db->fetch_object();
-                $label = $db->show_string($line->entity_label);
+                $line = $stmt2->fetchObject();
+                $label = functions::show_string($line->entity_label);
                 $tab = array(
                 	'ID'      => $res->entity_id,
                 	'LABEL'   => $label,
@@ -575,29 +552,22 @@ class entities extends dbquery
     public function load_redirect_groupbasket_session($primaryGroup, $userId)
     {
         $arr = array();
-        $this->connect();
-        $this->query(
+        $db = new Database();
+        $stmt = $db->query(
         	'select distinct basket_id from ' . ENT_GROUPBASKET_REDIRECT
-            . " where group_id = '" . $this->protect_string_db(
-                trim($primaryGroup)
-            ) . "'"
+            . " where group_id = ?",array(trim($primaryGroup))
         );
 
-        $db = new dbquery();
-        $db->connect();
-        while ($res = $this->fetch_object()) {
+     
+        while ($res = $stmt->fetchObject()) {
             $basketId = $res->basket_id;
             $arr[$basketId] = array();
 
-            $db->query(
+            $stmt2 = $db->query(
             	"select distinct action_id from " . ENT_GROUPBASKET_REDIRECT
-                . " where group_id = '" . $this->protect_string_db(
-                    trim($primaryGroup)
-                ) . "' and basket_id = '" . $this->protect_string_db(
-                    trim($basketId)
-                ) . "'"
+                . " where group_id = ? and basket_id = ?",array(trim($primaryGroup),trim($basketId))
             );
-            while ($line = $db->fetch_object()) {
+            while ($line = $stmt2->fetchObject()) {
                 $actionId = $line->action_id;
                 $arr[$basketId][$actionId]['entities'] = '';
                 $arr[$basketId][$actionId]['users_entities'] = '';
@@ -614,21 +584,16 @@ class entities extends dbquery
     public function load_redirect_groupbasket_secondary_session($basketId, $groupId, $userId)
     {
         $arr = array();
-        $this->connect();
+        $db = new Database();
 
-        $db = new dbquery();
-        $db->connect();
+        
         $arr[$basketId] = array();
 
-        $db->query(
+        $stmt = $db->query(
             "select distinct action_id from " . ENT_GROUPBASKET_REDIRECT
-            . " where group_id = '" . $this->protect_string_db(
-                trim($groupId)
-            ) . "' and basket_id = '" . $this->protect_string_db(
-                trim($basketId)
-            ) . "'"
+            . " where group_id = ? and basket_id = ?",array(trim($groupId),trim($basketId))
         );
-        while ($line = $db->fetch_object()) {
+        while ($line = $stmt->fetchObject()) {
             $actionId = $line->action_id;
             $arr[$basketId][$actionId]['entities'] = '';
             $arr[$basketId][$actionId]['users_entities'] = '';
@@ -645,8 +610,7 @@ class entities extends dbquery
     public function load_redirect_groupbasket_session_for_abs($userId)
     {
         $arr = array();
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
 
         if (! isset($_SESSION['user']['baskets'])) {
             require_once('modules/basket/class/class_modules_tools.php');
@@ -657,30 +621,25 @@ class entities extends dbquery
         }
         for ($i = 0; $i < count($baskAbs); $i ++) {
             if ($baskAbs[$i]['abs_basket']) {
-                $db->query(
+                $stmt = $db->query(
                 	"select uc.group_id from " . USERGROUP_CONTENT_TABLE
-                    . " uc , " . USERGROUPS_TABLE . " u where uc.user_id ='"
-                    . $baskAbs[$i]['basket_owner'] . "' and u.group_id = "
+                    . " uc , " . USERGROUPS_TABLE . " u where uc.user_id = ? and u.group_id = "
                     . "uc.group_id and u.enabled= 'Y' and "
-                    . "uc.primary_group = 'Y'"
+                    . "uc.primary_group = 'Y'",array($baskAbs[$i]['basket_owner'])
                 );
                 //$db->show();
-                $res = $db->fetch_object();
+                $res = $stmt->fetchObject();
                 $primaryGroup = $res->group_id;
                 $tmpBasketId = preg_replace(
                 	'/_' . $baskAbs[$i]['basket_owner'] . '$/', '',
                     $baskAbs[$i]['id']
                 );
-                $db->query(
+                $stmt = $db->query(
                 	"select distinct action_id from " . ENT_GROUPBASKET_REDIRECT
-                    . " where group_id = '" . $this->protect_string_db(
-                        trim($primaryGroup)
-                    ) . "' and basket_id = '" . $this->protect_string_db(
-                        trim($tmpBasketId)
-                    ) . "'"
+                    . " where group_id = ? and basket_id = ?",array(trim($primaryGroup),trim($tmpBasketId))
                 );
                 //$db->show();
-                while ($line = $db->fetch_object()) {
+                while ($line = $stmt->fetchObject()) {
                     $actionId = $line->action_id;
                     $arr[$baskAbs[$i]['id']][$actionId]['entities'] = '';
                     $arr[$baskAbs[$i]['id']][$actionId]['users_entities'] = '';
@@ -703,17 +662,14 @@ class entities extends dbquery
     public function get_redirect_groupbasket($groupId, $basketId, $userId, $actionId)
     {
         $arr = array();
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
+        $db = new Database();
+        $stmt = $db->query(
         	"select entity_id, keyword from " . ENT_GROUPBASKET_REDIRECT
-            . " where basket_id = '" . $this->protect_string_db(trim($basketId))
-            . "' and group_id = '" . $this->protect_string_db(trim($groupId))
-            . "' and redirect_mode = 'ENTITY' and action_id = " . $actionId
+            . " where basket_id = ? and group_id = ? and redirect_mode = 'ENTITY' and action_id = ?",array(trim($basketId),trim($groupId),$actionId)
         );
-        //$db->show();
+        
         $entities = '';
-        while ($line = $db->fetch_object()) {
+        while ($line = $stmt->fetchObject()) {
             if (empty($line->keyword)) {
                 $entities .= "'" . $line->entity_id . "', ";
             } else {
@@ -731,15 +687,13 @@ class entities extends dbquery
         $entities = preg_replace("/, ,/", ',', $entities);
         $entities = preg_replace("/, $/", '', $entities);
 
-        $db->query(
+        $stmt = $db->query(
         	"select entity_id, keyword from " . ENT_GROUPBASKET_REDIRECT
-            . " where basket_id = '" . $this->protect_string_db(trim($basketId))
-            . "' and group_id = '" . $this->protect_string_db(trim($groupId))
-            . "' and redirect_mode = 'USERS' and action_id = " . $actionId
+            . " where basket_id = ? and group_id = ? and redirect_mode = 'USERS' and action_id = ?",array(trim($basketId),trim($groupId),$actionId)
         );
         //$db->show();
         $users = '';
-        while ($line = $db->fetch_object()) {
+        while ($line = $stmt->fetchObject()) {
             if (empty($line->keyword)) {
                 $users .= "'" . $line->entity_id . "', ";
             } else {

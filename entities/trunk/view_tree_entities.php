@@ -14,8 +14,7 @@
 require_once("modules/entities/entities_tables.php");
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
-$db = new dbquery();
-$db->connect();
+$db = new Database();
 /****************Management of the location bar  ************/
 $init = false;
 if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
@@ -37,8 +36,8 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 unset($_SESSION['m_admin']);
 $_SESSION['tree_entities'] = array();
 
-$db->query("select entity_id, entity_label from ".ENT_ENTITIES." where parent_entity_id = '' or parent_entity_id is null order by entity_label");
-while($res = $db->fetch_object())
+$stmt = $db->query("select entity_id, entity_label from ".ENT_ENTITIES." where parent_entity_id = '' or parent_entity_id is null order by entity_label");
+while($res = $stmt->fetchObject())
 {
     array_push($_SESSION['tree_entities'], array("ID" => $res->entity_id, "LABEL" => $res->entity_label));
 }
