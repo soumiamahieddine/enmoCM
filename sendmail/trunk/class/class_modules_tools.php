@@ -281,18 +281,26 @@ class sendmail extends Database
         if (!empty($id)) {
 			$db = new Database();
             if ( $owner=== true) {
+				
                 $where = " and user_id = ? ";
                 $arrayPDO = array($_SESSION['user']['UserId']);
+                 $stmt = $db->query("select * from "
+                . EMAILS_TABLE 
+                . " where email_id = ? " . $where, array( $id, $_SESSION['user']['UserId']));
             } else {
                 $where = "";
-            }
-            
-            $stmt = $db->query("select * from "
+                $stmt = $db->query("select * from "
                 . EMAILS_TABLE 
-                . " where email_id = ? " . $where, array_merge($arrayPDO, $id));
+                . " where email_id = ? " . $where, array($id));
+            }
+   
+            /*$stmt = $db->query("select * from "
+                . EMAILS_TABLE 
+                . " where email_id = ? " . $where, array_merge($arrayPDO, $id));*/
+               
             //
             if ($stmt->rowCount() > 0) {
-                $res = $tstmt->fetchObject();
+                $res = $stmt->fetchObject();
                 $email['id'] = $res->email_id;
                 $email['collId'] = $res->coll_id;
                 $email['resId'] = $res->res_id;

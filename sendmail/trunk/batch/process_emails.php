@@ -188,10 +188,10 @@ while ($state <> 'END') {
 			}
 			//Update emails table
 			$query = "UPDATE " . EMAILS_TABLE 
-				. " SET send_date = ? "
+				. " SET send_date = CURRENT_TIMESTAMP "
 				. ", email_status = ? "
 				. " WHERE email_id = ? ";
-			$stmt = Bt_doQuery($GLOBALS['db'], $query, array($GLOBALS['db']->current_datetime(), $exec_result, $email->email_id));
+			$stmt = Bt_doQuery($GLOBALS['db'], $query, array($exec_result, $email->email_id));
 			$currentEmail++;
 			$state = 'SEND_AN_EMAIL';
 		} else {
@@ -205,7 +205,7 @@ $GLOBALS['logger']->write('End of process', 'INFO');
 Bt_logInDataBase(
     $totalEmailsToProcess, 0, 'process without error'
 );
-$GLOBALS['db']->disconnect();
+
 //unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);
 ?>

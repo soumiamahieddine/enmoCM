@@ -39,7 +39,8 @@
  */
 function Bt_doQuery($dbConn, $queryTxt, $param=array(), $transaction=false)
 {
-    $stmt = $dbConn->query($queryTxt, true);
+    $stmt = $dbConn->query($queryTxt, $param, true);
+    //$stmt = $dbConn->query($queryTxt);
     if (!$stmt) {
         if ($transaction) {
             $GLOBALS['logger']->write('ROLLBACK', 'INFO');
