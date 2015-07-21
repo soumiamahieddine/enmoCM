@@ -11,7 +11,7 @@ $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 $graph = new graphics();
 $req = new request();
-$db = new dbquery();
+$db = new Database();
 $sec = new security();
 
 $entities_chosen=explode("#",$_POST['entities_chosen']);
@@ -39,14 +39,14 @@ $str_status = preg_replace('/,$/', ')', $str_status);
 
 //Récupération de l'ensemble des types de documents
 if (!$_REQUEST['entities_chosen']){
-	$db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
 }else{
-	$db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label");
+	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (?) order by short_label",array($entities_chosen));
 }
 
-//	$db->show();
+
 $entities = array();
-while($res = $db->fetch_object())
+while($res = $stmt->fetchObject())
 {
     array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
 }
@@ -181,7 +181,8 @@ else
 
 $has_data = false;
 $title = _MAIL_VOL_BY_ENT_REPORT.' '.$date_title ;
-$db = new dbquery();
+$db = new Database();
+
 
 if($report_type == 'graph')
 {
@@ -205,9 +206,9 @@ $totalEntities = count($entities);
 	
 for($i=0; $i<count($entities);$i++)
 {
-	$db->query("select count(*) as total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where destination = '".$entities[$i]['ID']."' and ".$view.".status not in ('DEL','BAD') ".$where_date);
+	$stmt = $db->query("select count(*) as total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where destination = ? and ?.status not in ('DEL','BAD') ?",array($entities[$i]['ID'],$view,$where_date));
 	//$db->show();
-	$res = $db->fetch_object();
+	$res = $stmt->fetchObject();
 	/*
 		$db->query("select count(*) as total from ".$view." where status in ".$str_status."   ".$where_date." and category_id = '".$key."'");
 	*/
