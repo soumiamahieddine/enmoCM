@@ -162,16 +162,18 @@ if (isset($_REQUEST['no_delete'])) {
     $noDelete = true;
 }
 
+$PDOarray = array();
 if (isset($_GET['what_users']) 
     && ! empty($_GET['what_users']) 
 ) {
-    $what_users = functions::wash($_GET['what_users'], 'no', '', 'no');
+    $what_users = $func->wash($_GET['what_users'], 'no', '', 'no');
     $user_expr = 
         " and ( "
-            . "lower(u.lastname) like lower('%" . $what_users . "%') "
-            . " or lower(u.firstname) like lower('%" . $what_users . "%') "
-            . " or lower(u.user_id) like lower('%" . $what_users . "%')"
+            . "lower(u.lastname) like lower(:whatUser) "
+            . " or lower(u.firstname) like lower(:whatUser) "
+            . " or lower(u.user_id) like lower(:whatUser)"
         . ")";
+    $PDOarray = array_merge($PDOarray, array(":whatUser" => "%" . $what_users . "%"));
 }
 if (isset($_GET['what_services']) 
     && ! empty($_GET['what_services'])
@@ -182,9 +184,10 @@ if (isset($_GET['what_services'])
     //$what_services = $what_services;
     $entity_expr = 
         " and ("
-            . " lower(e.entity_label) like lower('%" . $what_services . "%') "
-            . " or lower(e.entity_id) like lower('%" . $what_services . "%')"
+            . " lower(e.entity_label) like lower(:whatEntity) "
+            . " or lower(e.entity_id) like lower(:whatEntity)"
         .")";
+    $PDOarray = array_merge($PDOarray, array(":whatEntity" => "%" . $what_services . "%"));
     
 }
 $users_query = 
@@ -198,7 +201,7 @@ $users_query =
 if ($user_expr == '' && $entity_expr == '') {
     //no query
 } else {
-    $stmt = $db->query($users_query);
+    $stmt = $db->query($users_query, $PDOarray);
     while ($line = $stmt->fetchObject()) {
         array_push(
             $users,
@@ -224,7 +227,7 @@ $entity_query =
 if ($user_expr == '' && $entity_expr == '') {
     //no query
 } else {
-    $stmt = $db->query($entity_query);
+    $stmt = $db->query($entity_query, $PDOarray);
     while ($line = $stmt->fetchObject()) {
         array_push(
             $entities,
