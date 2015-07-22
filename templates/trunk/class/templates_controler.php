@@ -94,7 +94,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
                 }
                 //var_dump($this);exit;
                 //Update existing template
-                if ($this->PDOupdate($template)) {
+                if ($this->update($template)) {
                     $control = array(
                         'status' => 'ok', 
                         'value' => $template->template_id,
