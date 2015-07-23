@@ -220,11 +220,12 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 function load_listmodel_visa(
 	selectedOption,
 	objectType,
-	diff_list_id
+	diff_list_id,
+	save_auto = false
 ) {
     var div_id = diff_list_id || 'tab_visaSetWorkflow';
 	
-	var objectId = selectedOption.value;
+	var objectId = selectedOption.value || selectedOption;
 	
 	var diff_list_div = $(div_id);
 	new Ajax.Request(
@@ -241,6 +242,11 @@ function load_listmodel_visa(
                 if(response.status == 0 ) {
 					//console.log("Recup liste");
 					diff_list_div.innerHTML = response.div_content;
+					if (save_auto){
+						var res_id = $('values').value;
+						var coll_id = $('coll_id').value;
+						saveVisaWorkflow(res_id, coll_id, diff_list_id);
+					}
                 }
                 else {
 					diff_list_div.innerHTML = '';
@@ -331,7 +337,7 @@ function loadNewId(path_update,newId, collId){
 	
 	
 	//Modification de l'affichage du document
-	$('viewframevalidDoc').setAttribute('src','index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='+newId+'&coll_id='+collId);
+	//$('viewframevalidDoc').setAttribute('src','index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='+newId+'&coll_id='+collId);
 	
 	//Modification des autres zones
 	new Ajax.Request(path_update,
@@ -347,27 +353,22 @@ function loadNewId(path_update,newId, collId){
 				eval("response = "+answer.responseText);
 				//console.log(response);
 				if (response.status == 1){ //page de visa
-					//console.log("MAJ Avancement");
-					$('page_avancement').innerHTML = response.avancement;
-					//console.log("MAJ circuit");
-					$('page_circuit').innerHTML = response.circuit;
-					//console.log("MAJ Notes");
-					$('onglet_notes').innerHTML = response.notes_dt;
-					$('page_notes').innerHTML = response.notes_dd;
-					//console.log("MAJ Partie droite");
+					$('tabricatorLeft').innerHTML = response.left_html;
 					$('tabricatorRight').innerHTML = response.right_html;
 					//console.log("Modification bouton action");
 					$("send_action").setAttribute('onclick',response.valid_button);
+					
 					updateFunctionModifRep(response.id_rep, 1, response.is_vers_rep);
 					
 					//console.log("Initialisation onglets de la partie droite");
+					var tabricatorLeft = new Tabricator('tabricatorLeft', 'DT');
 					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
 				}
 				
 				if (response.status == 2){ //page préparation circuit
-					$('page_avancement').innerHTML = response.avancement;
+					/*$('page_avancement').innerHTML = response.avancement;
 					$('onglet_notes').innerHTML = response.notes_dt;
-					$('page_notes').innerHTML = response.notes_dd;
+					$('page_notes').innerHTML = response.notes_dd;*/
 					$('tabricatorRight').innerHTML = response.right_html;
 					//console.log("'"+response.valid_button+"'");
 					$("send_action").setAttribute('onclick',response.valid_button);
@@ -376,11 +377,11 @@ function loadNewId(path_update,newId, collId){
 				}
 				
 				if (response.status == 3){ //page envoi mail
-					$('page_avancement').innerHTML = response.avancement;
+					/*$('page_avancement').innerHTML = response.avancement;
 					$('onglet_notes').innerHTML = response.notes_dt;
 					$('page_notes').innerHTML = response.notes_dd;
 					$('onglet_pj').innerHTML = response.pj_dt;
-					$('page_pj').innerHTML = response.pj_dd;
+					$('page_pj').innerHTML = response.pj_dd;*/
 					$('tabricatorRight').innerHTML = response.right_html;
 					$("send_action").setAttribute('onclick',response.valid_button);
 					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
@@ -389,11 +390,11 @@ function loadNewId(path_update,newId, collId){
 				}
 				
 				if (response.status == 4){ //page impression dossier
-					$('page_avancement').innerHTML = response.avancement;
+					/*$('page_avancement').innerHTML = response.avancement;
 					$('onglet_notes').innerHTML = response.notes_dt;
 					$('page_notes').innerHTML = response.notes_dd;
 					$('onglet_pj').innerHTML = response.pj_dt;
-					$('page_pj').innerHTML = response.pj_dd;
+					$('page_pj').innerHTML = response.pj_dd;*/
 					//console.log(response.right_html);
 					$('tabricatorRight').innerHTML = response.right_html;
 					//console.log("'"+response.valid_button+"'");
@@ -463,12 +464,9 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 				}
 				if (document.getElementById("update_rep_link")) {
 					document.getElementById("update_rep_link").style.display = '';
-					/*if (is_version == 0) document.getElementById("update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	
-					else document.getElementById("update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'&isVersion\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	*/
-					
-					//modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=1&fromDetail=\',\'98%\',\'auto\');
-					//console.log(is_version);
-					if (is_version == 0) document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=1&fromDetail=\',\'98%\',\'auto\');');	
+					console.log("is_version = "+is_version);
+					/*if (is_version == 2) document.getElementById("update_rep_link").style.display = 'none';
+					else */if (is_version != 1) document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=1&fromDetail=\',\'98%\',\'auto\');');	
 					else document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=2&fromDetail=\',\'98%\',\'auto\');');	
 					
 				}
@@ -526,12 +524,14 @@ function signFile(res_id,isVersion, mode, pinCode){
 			if (response.status == 1){
 				$('badPin').style.display = 'none';
 				if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
-				else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				else if (isVersion == 1) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				else if (isVersion == 2) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isOutgoing&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
 			}
 			else if (response.status == 0){
 				if (mode == 1){
 					if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
-					else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+					else if (isVersion == 1) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+					else if (isVersion == 2) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isOutgoing&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
 				}
 				
 				else {
