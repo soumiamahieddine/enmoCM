@@ -240,9 +240,8 @@ class tag_controler
                 . " WHERE tag_label = ? AND coll_id = ?"
                 . " AND res_id <> 0"
         ,array($tag_label,$coll_id));
-        //$db->show();
         
-        while ($result = $db->fetch_object())
+        while ($result = $stmt->fetchObject())
         {
             array_push($array, $result->bump);
         }
