@@ -55,15 +55,12 @@
 	$sec = new security();
 	$table = $sec->retrieve_table_from_coll($coll_id);
 	
-	$db = new dbquery();
-	$db->connect();
-	$up_request = "UPDATE listinstance SET process_date = CURRENT_TIMESTAMP WHERE res_id = $res_id AND item_id='".$_SESSION['user']['UserId']."' AND difflist_type = 'VISA_CIRCUIT'";
-	$db->query($up_request);
+	$db = new Database();
+	$stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP WHERE res_id = ? AND item_id= ? AND difflist_type = ?", array($res_id, $_SESSION['user']['UserId'], 'VISA_CIRCUIT'));
 	
 	$circuit_visa = new visa();
 	if ($circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $circuit_visa->nbVisa($res_id, $coll_id)){
-		$up_request = "UPDATE res_letterbox SET status='ESIG' WHERE res_id = $res_id";
-		$db->query($up_request);
+		$stmt = $db->query("UPDATE res_letterbox SET status='ESIG' WHERE res_id = ? ", array($res_id));
 	}
 	
 	return array('result' => $res_id.'#', 'history_msg' => '');

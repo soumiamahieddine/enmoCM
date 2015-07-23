@@ -77,6 +77,82 @@ class visa extends dbquery
 		$_SESSION['modules_loaded']['visa']['routing_template'] = $routing_template;
 	}
 	
+	public function getDocsBasket(){
+		require_once 'core/class/class_request.php';
+		$request    = new request();
+		$table = $_SESSION['current_basket']['view'];
+		$select[$table]= array(); 
+		array_push($select[$table],'res_id','creation_date');
+		$where_tab = array();
+		//From basket
+		if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
+		//Order
+		$orderstr = "order by creation_date desc";
+		if (isset($_SESSION['last_order_basket'])) $orderstr = $_SESSION['last_order_basket'];
+		//Request
+		$where = implode(' and ', $where_tab);
+		$tab=$request->PDOselect($select, $where, array(), $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
+			
+		$tab_docs = array();
+		foreach($tab as $doc){
+			array_push($tab_docs,$doc[0]['value']);
+		}
+		return $tab_docs;
+	}
+	
+	public function get_rep_path($res_id, $coll_id)
+	{
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
+		$docserverControler = new docservers_controler();
+		$sec =new security();
+		$view = $sec->retrieve_view_from_coll_id($coll_id);
+		if(empty($view))
+		{
+			$view = $sec->retrieve_table_from_coll($coll_id);
+		}
+		
+		$db = new Database();
+		$stmt = $db->query("select docserver_id from res_view_attachments where res_id_master = ?  order by res_id desc", array($res_id));
+		while ($res = $stmt->fetchObject()){
+			$docserver_id = $res->docserver_id;
+			break;
+		}
+		
+		$stmt = $db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = ?", array($docserver_id));
+		
+		$res = $stmt->fetchObject();
+		$docserver_path = $res->path_template;
+		
+		$stmt = $db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response','outgoing_mail') order by creation_date asc", array($res_id));
+		
+		$array_reponses = array();
+		$cpt_rep = 0;
+		while ($res2 = $stmt->fetchObject()){
+			$filename=$res2->filename;
+			$path = preg_replace('/#/', DIRECTORY_SEPARATOR, $res2->path);
+			$filename_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);
+			if (file_exists($docserver_path.$path.$filename_pdf)){
+				$array_reponses[$cpt_rep]['path'] = $docserver_path.$path.$filename_pdf;
+				$array_reponses[$cpt_rep]['title'] = $res2->title;
+				$array_reponses[$cpt_rep]['attachment_type'] = $res2->attachment_type;
+				if ($res2->res_id_version == 0){
+					$array_reponses[$cpt_rep]['res_id'] = $res2->res_id;
+					$array_reponses[$cpt_rep]['is_version'] = 0;
+				}
+				else{
+					$array_reponses[$cpt_rep]['res_id'] = $res2->res_id_version;
+					$array_reponses[$cpt_rep]['is_version'] = 1;
+				}
+				if ($array_reponses[$cpt_rep]['attachment_type'] == 'outgoing_mail'){
+					$array_reponses[$cpt_rep]['is_version'] = 2;
+				}
+				$cpt_rep++;
+			}
+		}
+		return $array_reponses;
+	}
+	
 	public function getWorkflow($res_id, $coll_id, $typeList){
 		require_once('modules/entities/class/class_manage_listdiff.php');
         $listdiff = new diffusion_list();
@@ -89,7 +165,6 @@ class visa extends dbquery
 	public function saveWorkflow($res_id, $coll_id, $workflow, $typeList){
 		require_once('modules/entities/class/class_manage_listdiff.php');
 		$diff_list = new diffusion_list();
-
 		
 		$diff_list->save_listinstance(
             $workflow, 
@@ -116,22 +191,20 @@ class visa extends dbquery
 	}
 	
 	public function deleteWorkflow($res_id, $coll_id){
-		$this->connect();
-		$this->query("DELETE FROM visa_circuit WHERE res_id=$res_id AND coll_id='$coll_id'");
+		$db = new Database();
+		$stmt = $db->query("DELETE FROM visa_circuit WHERE res_id= ? AND coll_id= ?",array($res_id, $coll_id));
 	}
 	
 	public function nbVisa($res_id, $coll_id){
-		$this->connect();
-		$this->query("SELECT listinstance_id from listinstance WHERE res_id=$res_id and coll_id = '$coll_id' and item_mode = 'visa'");
-		return $this->nb_result();
+		$db = new Database();
+		$stmt = $db->query("SELECT listinstance_id from listinstance WHERE res_id= ? and coll_id = ? and item_mode = ?", array($res_id, $coll_id, 'visa'));
+		return $stmt->rowCount();
 	}
 	
 	public function getCurrentStep($res_id, $coll_id, $listDiffType){
-		$this->connect();
-		
-		$this->query("SELECT sequence, item_mode from listinstance WHERE res_id=$res_id and coll_id = '$coll_id' and difflist_type = '$listDiffType' and process_date ISNULL ORDER BY listinstance_id ASC LIMIT 1");
-		
-		$res=$this->fetch_object();
+		$db = new Database();
+		$stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and process_date ISNULL ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, $listDiffType));
+		$res = $stmt->fetchObject();
 		if ($res->item_mode == 'sign'){
 			return $this->nbVisa($res_id, $coll_id);
 		}
@@ -139,11 +212,10 @@ class visa extends dbquery
 	}
 	
 	public function myPosVisa($res_id, $coll_id, $listDiffType){
-		$this->connect();
+		$db = new Database();
+		$stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
 		
-		$this->query("SELECT sequence, item_mode from listinstance WHERE res_id=$res_id and coll_id = '$coll_id' and difflist_type = '$listDiffType' and item_id = '".$_SESSION['user']['UserId']."' ORDER BY listinstance_id ASC LIMIT 1");
-		
-		$res=$this->fetch_object();
+		$res = $stmt->fetchObject();
 		if ($res->item_mode == 'sign'){
 			return $this->nbVisa($res_id, $coll_id);
 		}
@@ -151,14 +223,14 @@ class visa extends dbquery
 	}
 	
 	public function getUsersVis(){
-		$requete_users = "SELECT users.user_id, users.firstname, users.lastname from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = 'visa_documents') ORDER BY users.lastname";
-		$db_users = new dbquery();
-		$db_users->connect();
-		$db_users->query($requete_users);
+		$db = new Database();
+		
+		$stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)", array('visa_documents'));
+		
 		$tab_users = array();
 		
 		
-		while($res = $db_users->fetch_object()){
+		while($res = $stmt->fetchObject()){
 			array_push($tab_users,array('id'=>$res->user_id, 'firstname'=>$res->firstname,'lastname'=>$res->lastname));
 		}
 		return $tab_users;
@@ -173,7 +245,6 @@ class visa extends dbquery
 				}
 			}
 		}
-		
 		return true;
 	}
 	
@@ -292,7 +363,7 @@ class visa extends dbquery
 							$str .= '<td>';
 							$tab_users = $this->getUsersVis();
 							
-							if ($isVisaStep && $myPosVisa >= $seq) $disabled = ' disabled ';
+							if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '') $disabled = ' disabled ';
 							else $disabled = '';
 						
 						
@@ -310,9 +381,9 @@ class visa extends dbquery
 							$up = ' style="visibility:visible"';
 							$displayCB = ' style="visibility:hidden"';
 							$checkCB = '';
-							if ($isVisaStep && $myPosVisa >= $seq) $down = ' style="visibility:hidden"';
+							if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '') $down = ' style="visibility:hidden"';
 							else $down = ' style="visibility:visible"';
-							if ($isVisaStep && $myPosVisa >= $seq) $del = ' style="visibility:hidden"';
+							if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '') $del = ' style="visibility:hidden"';
 							else $del = ' style="visibility:visible"';
 							if (empty($circuit['sign']['users']) && $seq == count ($circuit['visa']['users'])-1){
 								$add = ' style="visibility:visible"';
@@ -323,9 +394,9 @@ class visa extends dbquery
 							else{
 								$add = ' style="visibility:hidden"';
 							}
-							if ($isVisaStep && $myPosVisa >= $seq) $displayCB = ' style="visibility:hidden"';
+							if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '') $displayCB = ' style="visibility:hidden"';
 							
-							if ($seq == 0 || ($isVisaStep && $myPosVisa+1 >= $seq)){
+							if ($seq == 0 || ($isVisaStep && $myPosVisa+1 >= $seq) || $circuit['visa']['users'][$seq-1]['process_date'] != ''){
 								$up = ' style="visibility:hidden"';
 							}
 							$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
@@ -432,6 +503,8 @@ class visa extends dbquery
 		return $str;
 	}
 }
+
+
 
 /* EXEMPLE TAB VISA_CIRCUIT
 

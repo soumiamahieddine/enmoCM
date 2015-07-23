@@ -104,6 +104,15 @@ echo 'objectTable : ' . $objectTable . '<br>';
 echo 'objectId : ' . $objectId . '<br>';
 */
 
+$cookieKey = '';
+$cptCook = 0;
+foreach ($_COOKIE as $key => $value) {
+    if ($cptCook == 0) {
+        $cookieKey = $key . '=' . $value;
+    }
+    $cptCook++;
+}
+
 //init error session
 $_SESSION['error'] = '';
 
@@ -123,7 +132,6 @@ $_SESSION['error'] = '';
         <param name="objectType" value="<?php functions::xecho($objectType);?>">
         <param name="objectTable" value="<?php functions::xecho($objectTable);?>">
         <param name="objectId" value="<?php functions::xecho($objectId);?>">
-        
 		
 		<!--mis en commentaires par agnes 17 04 2015 -->
         <!--param name="userMaarch" value="<!--?php 
@@ -146,6 +154,7 @@ $_SESSION['error'] = '';
 		
 		<param name="exeSign" value="<?php functions::xecho($_SESSION['modules_loaded']['visa']['exeSign']);?>">
 		<param name="mode" value="<?php echo $modeSign;?>">
+		<param name="cookie" value="<?php echo $cookieKey;?>">
 		
     </applet>
 </div>

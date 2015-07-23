@@ -7,8 +7,7 @@ require_once 'modules/attachments/attachments_tables.php';
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
-$db = new dbquery();
-$db->connect();
+
 
 $tabKey = array(                        // Tableau contenant les 20 clé de cyptages
 			"4A3GdU+0v91aT9nm",
@@ -78,16 +77,20 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId']) && isset($_REQUEST['m
     $id = $_REQUEST['id'];
     $modeSign = $_REQUEST['modeSign'];
 	$tableName = 'res_view_attachments';
-    if (!isset($_REQUEST['isVersion'])) $db->query("select res_id, format, res_id_master, title, identifier from ".$tableName." where attachment_type = 'response_project' and res_id = " . $id);
-    else $db->query("select res_id_version, format, res_id_master, title, identifier from ".$tableName." where attachment_type = 'response_project' and res_id_version = " . $id);
+	$db = new Database();
+    if (isset($_REQUEST['isVersion'])) $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id from ".$tableName." where attachment_type = ? and res_id_version = ?", array('response_project', $id));
+    else if (isset($_REQUEST['isOutgoing'])) $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id from ".$tableName." where attachment_type = ? and res_id = ?", array('outgoing_mail', $id));
+    else $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id from ".$tableName." where attachment_type = ? and res_id = ?", array('response_project', $id));
 	
-    if ($db->nb_result() < 1) {
+    if ($stmt->rowCount() < 1) {
         echo _FILE . ' ' . _UNKNOWN.".<br/>";
     } else {
-        $line = $db->fetch_object();
+        $line = $stmt->fetchObject();
 		$_SESSION['visa']['last_resId_signed']['res_id'] = $line->res_id_master;
 		$_SESSION['visa']['last_resId_signed']['title'] = $line->title;
 		$_SESSION['visa']['last_resId_signed']['identifier'] = $line->identifier;
+		$_SESSION['visa']['last_resId_signed']['type_id'] = $line->type_id;
+		
             $core_tools->load_html();
             $core_tools->load_header();
             //$core_tools->load_js();

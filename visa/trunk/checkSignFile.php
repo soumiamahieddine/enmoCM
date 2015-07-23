@@ -6,10 +6,9 @@
 		
 	require_once 'modules/attachments/attachments_tables.php';
 	
-	$db = new dbquery();
-	$db->connect();
-	$db->query("SELECT attachment_type from ".RES_ATTACHMENTS_TABLE." where res_id = ".$_REQUEST['res_id']);
-	$type = $db->fetch_object()->attachment_type;
+	$db = new Database();
+	$stmt = $db->query("SELECT attachment_type from ".RES_ATTACHMENTS_TABLE." where res_id = ?", array($_REQUEST['res_id']));
+	$type = $stmt->fetchObject->attachment_type;
 	if ($type == 'signed_response'){
 		echo "{status:1}";		
 	}

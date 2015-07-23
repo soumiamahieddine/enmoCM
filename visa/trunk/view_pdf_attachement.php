@@ -32,16 +32,14 @@ if (! empty($_SESSION['error'])) {
     header("location: " . $_SESSION['config']['businessappurl'] . "index.php");
     exit();
 } else {
-    $db = new dbquery();
-    $db->connect();
-
-    $db->query(
+    $db = new Database();
+	
+    $stmt = $db->query(
         "SELECT coll_id, res_id_master 
             FROM res_view_attachments 
-            WHERE (res_id = " . $sId . " OR res_id_version = ".$sId.") AND res_id_master = ".$_REQUEST['res_id_master']
-            ." ORDER BY relation desc"
+            WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc",array($sId, $sId, $_REQUEST['res_id_master'])
     );
-    $res = $db->fetch_object();
+    $res = $stmt->fetchObject();
     $collId = $res->coll_id;
     $resIdMaster = $res->res_id_master;
 
@@ -54,25 +52,24 @@ if (! empty($_SESSION['error'])) {
     }
 
     $table = $sec->retrieve_table_from_coll($collId);
-    $db->query(
-        "SELECT res_id FROM " . $table . " WHERE res_id = " . $resIdMaster
+    $stmt = $db->query(
+        "SELECT res_id FROM $table WHERE res_id = ?", array($resIdMaster)
     );
     //$db->show();
-    if ($db->nb_result() == 0) {
+    if ($stmt->rowCount() == 0) {
         $_SESSION['error'] = _THE_DOC . " " . _EXISTS_OR_RIGHT . "&hellip;";
         header(
             "location: " . $_SESSION['config']['businessappurl'] . "index.php"
         );
         exit();
     } else {
-        $db->query(
+        $stmt = $db->query(
             "SELECT docserver_id, path, filename, format 
                 FROM res_view_attachments 
-                WHERE (res_id = " . $sId . " OR res_id_version = ".$sId.") AND res_id_master = ".$_REQUEST['res_id_master']
-                        ." ORDER BY relation desc"
+                WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc", array($sId, $sId, $_REQUEST['res_id_master'])
         );
 
-        if ($db->nb_result() == 0) {
+        if ($stmt->rowCount() == 0) {
             $_SESSION['error'] = _THE_DOC . " " . _EXISTS_OR_RIGHT . "&hellip;";
             header(
                 "location: " . $_SESSION['config']['businessappurl']
@@ -80,17 +77,17 @@ if (! empty($_SESSION['error'])) {
             );
             exit();
         } else {
-            $line = $db->fetch_object();
+            $line = $stmt->fetchObject();
             $docserver = $line->docserver_id;
             $path = $line->path;
             $filename = $line->filename;
             $format = "pdf";
-            $db->query(
+           $stmt = $db->query(
                 "select path_template from " . _DOCSERVERS_TABLE_NAME
-                . " where docserver_id = '" . $docserver . "'"
+                . " where docserver_id = ?",array($docserver)
             );
             //$db->show();
-            $lineDoc = $db->fetch_object();
+            $lineDoc = $stmt->fetchObject();
             $docserver = $lineDoc->path_template;
             $file = $docserver . $path . $filename;
             $file = str_replace("#", DIRECTORY_SEPARATOR, $file);

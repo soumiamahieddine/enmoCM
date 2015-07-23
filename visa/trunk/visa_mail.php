@@ -53,120 +53,26 @@ function writeLogIndex($EventInfo)
 }
 
 
-
-
-/**
- * Gets the path of the file to displays
- *
- * @param $res_id String Resource identifier
- * @param $coll_id String Collection identifier
- * @return String File path
- **/
-function get_file_path($res_id, $coll_id)
-{
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-    $sec =new security();
-    $view = $sec->retrieve_view_from_coll_id($coll_id);
-    if(empty($view))
-    {
-        $view = $sec->retrieve_table_from_coll($coll_id);
-    }
-    $db = new dbquery();
-    $db->connect();
-    $db->query("select docserver_id, path, filename from ".$view." where res_id = ".$res_id);
-    $res = $db->fetch_object();
-    $path = preg_replace('/#/', DIRECTORY_SEPARATOR, $res->path);
-    $docserver_id = $res->docserver_id;
-    $filename = $res->filename;
-    $db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
-    $res = $db->fetch_object();
-    $docserver_path = $res->path_template;
-
-    return $docserver_path.$path.$filename;
-}
-
 function check_category($coll_id, $res_id)
 {
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-    $sec =new security();
+    $sec = new security();
     $view = $sec->retrieve_view_from_coll_id($coll_id);
 
-    $db = new dbquery();
-    $db->connect();
-    $db->query("select category_id from ".$view." where res_id = ".$res_id);
-    $res = $db->fetch_object();
+    $db = new Database();
+    $stmt = $db->query("SELECT category_id FROM ".$view." WHERE res_id = ?", array($res_id));
+    $res = $stmt->fetchObject();
 
     if(!isset($res->category_id))
     {
         $ind_coll = $sec->get_ind_collection($coll_id);
         $table_ext = $_SESSION['collections'][$ind_coll]['extensions'][0];
-        $db->query("insert into ".$table_ext." (res_id, category_id) VALUES (".$res_id.", '".$_SESSION['coll_categories']['letterbox_coll']['default_category']."')");
-        //$db->show();
+        $db->query("INSERT INTO ".$table_ext." (res_id, category_id) VALUES (?, ?)",
+            array($res_id, $_SESSION['coll_categories']['letterbox_coll']['default_category']));
     }
 }
 
-function get_rep_path($res_id, $coll_id)
-{
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
-	$docserverControler = new docservers_controler();
-    $sec =new security();
-    $view = $sec->retrieve_view_from_coll_id($coll_id);
-    if(empty($view))
-    {
-        $view = $sec->retrieve_table_from_coll($coll_id);
-    }
-    $db = new dbquery();
-    $db->connect();
 
-    //$db->query("select docserver_id, path, filename from ".$view." where res_id = ".$res_id);
-    $db->query("select docserver_id from res_view_attachments where res_id_master = " . $res_id . " order by res_id desc");
-    while ($res = $db->fetch_object()) {
-        $docserver_id = $res->docserver_id;
-        break;
-    }
-
-    $db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
-    $res = $db->fetch_object();
-    $docserver_path = $res->path_template;
-	$db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response') order by creation_date asc");
-	$array_reponses = array();
-	$cpt_rep = 0;
-	while ($res2 = $db->fetch_object()){
-		$filename=$res2->filename;
-		$path = preg_replace('/#/', DIRECTORY_SEPARATOR, $res2->path);
-		$filename_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);
-		if (file_exists($docserver_path.$path.$filename_pdf)){
-			$array_reponses[$cpt_rep]['path'] = $docserver_path.$path.$filename_pdf;
-			$array_reponses[$cpt_rep]['title'] = $res2->title;
-			$array_reponses[$cpt_rep]['attachment_type'] = $res2->attachment_type;
-			if ($res2->res_id_version == 0){
-				$array_reponses[$cpt_rep]['res_id'] = $res2->res_id;
-				$array_reponses[$cpt_rep]['is_version'] = 0;
-			}
-			else{
-				$array_reponses[$cpt_rep]['res_id'] = $res2->res_id_version;
-				$array_reponses[$cpt_rep]['is_version'] = 1;
-			}
-			$cpt_rep++;
-		}
-	}
-    return $array_reponses;
-}
-
-function getDocsBasket(){
-	$db = new dbquery();
-	$db->connect();
-	$orderstr = "order by creation_date desc";
-	if (isset($_SESSION['last_order_basket'])) $orderstr = $_SESSION['last_order_basket'];
-	$requete = "select res_id from ".$_SESSION['current_basket']['view']." where " . $_SESSION['current_basket']['clause'] . " $orderstr";
-	$db->query($requete, true);
-	$tab_docs = array();
-	while($res = $db->fetch_object()){
-		array_push($tab_docs,$res->res_id);
-	}
-	return $tab_docs;
-}
 
 function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
 {
@@ -222,7 +128,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $b = new basket();
     $type = new types();
     $business = new business_app_tools();
-	
+	$visa = new visa();
 	/*check_category($coll_id, $res_id);
     $data = get_general_data($coll_id, $res_id, 'minimal');*/
 /*
@@ -230,13 +136,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     print_r($data);
     echo '</pre>';exit;
 */
-	$db = new dbquery();
-    $db->connect();
+	$db = new Database();
 	$view = $sec->retrieve_view_from_coll_id($coll_id);
-	$db->query("select alt_identifier, status from " 
+	$stmt = $db->query("select alt_identifier, status from " 
 		. $view 
-		. " where res_id = " . $res_id);
-	$resChrono = $db->fetch_object();
+		. " where res_id = ?", array($res_id));
+	$resChrono = $stmt->fetchObject();
 	$chrono_number = $resChrono->alt_identifier;
 	$currentStatus = $resChrono->status;
     $frm_str .= '<h2 class="tit" id="action_title">'._VISA_MAIL.' '._NUM.'<span id="numIdDocPage">'.$res_id.'</span>';
@@ -244,21 +149,21 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	$frm_str .= '<div id="visa_listDoc">';
 	$frm_str .= '<div class="listDocsBasket">';
-	$tab_docs = getDocsBasket();
+	$tab_docs = $visa->getDocsBasket();
 	//$frm_str .= '<pre>'.print_r($tab_docs,true).'</pre>';
 	//$selectedCat = '';
 	$list_docs = '';
 	foreach($tab_docs as $num=>$res_id_doc){
 		
-		$db->query("select alt_identifier, status from " 
+		$stmt = $db->query("select alt_identifier, status from " 
 		. $view 
-		. " where res_id = " . $res_id_doc);
-		$resChrono_doc = $db->fetch_object();
+		. " where res_id = ?" , array($res_id_doc));
+		$resChrono_doc = $stmt->fetchObject();
 		$chrono_number_doc = $resChrono_doc->alt_identifier;
 		
 		$allAnsSigned = true;
-		$db->query("SELECT status from res_view_attachments where attachment_type='response_project' and res_id_master = ".$res_id_doc);
-		while($line = $db->fetch_object()){
+		$stmt = $db->query("SELECT status from res_view_attachments where (attachment_type='response_project' OR attachment_type='outgoing_mail') and res_id_master = ?", array($res_id_doc));
+		while($line = $stmt->fetchObject()){
 			if ($line->status == 'TRA' || $line->status == 'A_TRA' ){
 				$allAnsSigned = false;		
 			}
@@ -347,11 +252,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<dl id="tabricatorLeft" >';
 	
 	//Onglet document
-	$frm_str .= '<dt id="onglet_entrant">'._INCOMING.'</dt><dd style="overflow-y: hidden;">';
-	$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='. $res_id.'&coll_id='.$coll_id.'" name="viewframevalidDoc" id="viewframevalidDoc"  scrolling="auto" frameborder="0"  style="width:100%;height:100%;" ></iframe></dd>';
-	
-	$frm_str .= '</dd>';
-	
+	if ($selectedCat != 'outgoing'){
+		$frm_str .= '<dt id="onglet_entrant">'._INCOMING.'</dt><dd style="overflow-y: hidden;">';
+		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='. $res_id.'&collid='.$coll_id.'" name="viewframevalidDoc" id="viewframevalidDoc"  scrolling="auto" frameborder="0"  style="width:100%;height:100%;" ></iframe></dd>';
+		
+		$frm_str .= '</dd>';
+	}
 	//Onglet Avancement 
 	
 	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
@@ -376,7 +282,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($core->test_service('config_visa_workflow', 'visa', false)) {
         $modifVisaWorkflow = true;
     }
-	$visa = new visa();
+	
 	
 	$frm_str .= '<div class="error" id="divError" name="divError"></div>';
 	$frm_str .= '<div style="text-align:center;">';
@@ -421,9 +327,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</dl>';
 	$frm_str .= '</div>';
 	
+	$db = new Database();
 	$frm_str .= '<div id="visa_right">';
 	$frm_str .= '<dl id="tabricatorRight" >';
-	$tab_path_rep_file = get_rep_path($res_id, $coll_id);
+	$tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
 	for ($i=0; $i<count($tab_path_rep_file);$i++){
 		$num_rep = $i+1;
 		if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
@@ -432,13 +339,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master='.$res_id.'&id='.$tab_path_rep_file[$i]['res_id'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
 		 $frm_str .= '</dd>';
 	}
-	
-		$countAttachments = "select res_id from res_view_attachments where status NOT IN ('DEL','OBS') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'";
-		$dbAttach = new dbquery();
-		$dbAttach->query($countAttachments);
-		if ($dbAttach->nb_result() > 0) {
-			$nb_attach = ' (' . ($dbAttach->nb_result()). ')';
-		}
+		$stmt = $db->query("SELECT res_id FROM "
+            . $_SESSION['tablename']['attach_res_attachments']
+            . " WHERE status <> 'DEL' and attachment_type <> 'converted_pdf' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
+		if ($stmt->rowCount() > 0) {
+            $nb_attach = " (".$stmt->rowCount().")";
+        }
 	
 		$frm_str .= '<dt id="onglet_pj" onclick="$(\'cur_idAffich\').value=0;">'. _ATTACHED_DOC .$nb_attach.'</dt><dd id="page_pj">';
 		
@@ -453,14 +359,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<div class="block" style="margin-top:-2px;">';
                 $frm_str .= '<div id="processframe" name="processframe">';
                     $frm_str .= '<center><h2>' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
-                    $req = new request;
-                    $req->connect();
-                    $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
-                        . " where (status = 'A_TRA' or status = 'TRA' or status = 'SIGN') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
+                   
+                    $stmt = $db->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
+                        . " where (status = 'A_TRA' or status = 'TRA' or status = 'SIGN') and res_id_master = ? and coll_id = ?", array($res_id,$coll_id));
                     //$req->show();
                     $nb_attach = 0;
-                    if ($req->nb_result() > 0) {
-                        $nb_attach = $req->nb_result();
+                    if ($stmt->rowCount() > 0) {
+                        $nb_attach = $stmt->rowCount();
                     }
                     $frm_str .= '<div class="ref-unit">';
                     
@@ -473,7 +378,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     }
                     $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load" '
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf" '
                     . 'frameborder="0" width="900px" scrolling="yes" height="600px" scrolling="yes" ></iframe>';
                     $frm_str .= '</div>';
                 $frm_str .= '</div>';
@@ -486,7 +391,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</dd>';
 					
 	/* AJOUT DE LA PARTIE DES VERSIONS POUR LE COURRIER SPONTANE */
-	if ( $core->is_module_loaded('content_management') && $selectedCat == 'outgoing') {
+	/*if ( $core->is_module_loaded('content_management') && $selectedCat == 'outgoing') {
         $versionTable = $sec->retrieve_version_table_from_coll_id(
             $coll_id
         );
@@ -515,7 +420,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $extend_title_for_versions = $nb_versions_for_title;
         }
         $_SESSION['cm']['resMaster'] = '';
-		$frm_str .= '<dt>' . _VERSIONS .' -'.$data['category_id']['value']. ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)</dt><dd>';
+		$frm_str .= '<dt>' . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)</dt><dd>';
 		$frm_str .= '<h2>';
 			$frm_str .= '<center>' . _VERSIONS . '</center>';
 		$frm_str .= '</h2>';
@@ -531,19 +436,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				$frm_str .= 'static.php?filename=picto_dld.gif" border="0" alt="" />';
 				$frm_str .= _VIEW_ORIGINAL . ' | ';
 			$frm_str .= '</a>';
-			if ($core->test_service('add_new_version_init', 'apps', false)) {
+			if ($core->test_service('add_new_version', 'apps', false)) {
 				$_SESSION['cm']['objectTable'] = $objectTable;
 				$frm_str .= '<div id="createVersion" style="display: inline;"></div>';
 			}
 			$frm_str .= '<div id="loadVersions"></div>';
-            $frm_str .= '<script language="javascript">';
-                $frm_str .= 'showDiv("loadVersions", "nbVersions", "createVersion", "';
-                    $frm_str .= $_SESSION['config']['businessappurl'];
-                    $frm_str .= 'index.php?display=false&module=content_management&page=list_versions")';
-            $frm_str .= '</script>';
+			$frm_str .= '<script language="javascript">';
+				$frm_str .= 'showDiv("loadVersions", "nbVersions", "createVersion", "';
+					$frm_str .= $_SESSION['urltomodules'];
+					$frm_str .= 'content_management/list_versions.php")';
+			$frm_str .= '</script>';
 		$frm_str .= '</div><br>';
 		$frm_str .= '</dd>';
-    }
+    }*/
 	$frm_str .= '</dl>';
 	$frm_str .= '<div class="toolbar">';
 	$frm_str .= '<table style="width:90%;">';	
@@ -594,7 +499,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</form>';
 		$frm_str .= '</td>';
 		$frm_str .= '<td style="width:25%";">';	
-		//modifier en fonction du statut URGENT
 		if ($core->test_service('sign_document', 'visa', false) && $currentStatus == 'ESIG') {
 			$color = ' style="" ';
 			if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response') $color = ' style="color:green" ';
@@ -612,7 +516,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$displayModif = ' style="display:none;" ';
 		
 		$frm_str .= ' <a href="javascript://" id="update_rep_link" '.$displayModif.'onclick="';
-		if ($tab_path_rep_file[0]['is_version'] == 0) $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=1&fromDetail=\',\'98%\',\'auto\');';
+		
+		/*if ($tab_path_rep_file[0]['attachment_type'] == 'outgoing_mail'){
+			$frm_str .= 'window.open(\''
+		. $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+		. '&module=content_management&page=applet_popup_launcher&objectType=resourceEdit'
+		. '&objectId='
+		. $tab_path_rep_file[0]['res_id']
+		. '&objectTable='
+		. $table
+		. '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');';
+		}
+		else*/ if ($tab_path_rep_file[0]['is_version'] == 0) $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=1&fromDetail=\',\'98%\',\'auto\');';
 		else  $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=2&fromDetail=\',\'98%\',\'auto\');';
 		$frm_str .= '"><i class="fa fa-pencil-square-o fa-3x" title="Modifier la réponse"></i></a>';
 		
@@ -702,9 +617,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	
 	if ($act_chosen == "end_action"){
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 		$sec = new security();
-		$table = $sec->retrieve_table_from_coll($coll_id);
 		
+		/*
 		$db = new dbquery();
 		$db->connect();
 		$up_request = "UPDATE listinstance SET process_date = CURRENT_TIMESTAMP WHERE res_id = $res_id AND item_id='".$_SESSION['user']['UserId']."' AND difflist_type = 'VISA_CIRCUIT'";
@@ -714,6 +630,45 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		if ($circuit_visa->allUserVised($res_id, $coll_id, 'VISA_CIRCUIT')){
 			$up_request = "UPDATE res_letterbox SET status='ESIG' WHERE res_id = $res_id";
 			$db->query($up_request);
+		}*/
+		$replaceValues = array();
+		array_push(
+			$replaceValues,
+			array(
+				'column' => 'process_date',
+				'value' => 'CURRENT_TIMESTAMP',
+				'type' => 'date',
+			)
+		);
+		$where = 'res_id = ? and item_id = ? and difflist_type = ?';
+		$array_what[] = $res_id;
+		$array_what[] = $_SESSION['user']['UserId'];
+		$array_what[] = 'VISA_CIRCUIT';
+		
+		$request = new request();
+		$table = 'listinstance';
+		$request->PDOupdate($table, $replaceValues, $where, $array_what, $_SESSION['config']['databasetype']);
+		
+		$circuit_visa = new visa();
+		if ($circuit_visa->allUserVised($res_id, $coll_id, 'VISA_CIRCUIT')){
+			$up_request = "UPDATE res_letterbox SET status='ESIG' WHERE res_id = $res_id";
+			$db = new Database();
+			$db->query("UPDATE res_letterbox SET status='ESIG' WHERE res_id = ?", array($res_id));
+			//$table = $sec->retrieve_table_from_coll($coll_id);
+			/*$replaceValues2 = array();
+			array_push(
+				$replaceValues2,
+				array(
+					'column' => 'status',
+					'value' => 'ESIG',
+					'type' => 'string',
+				)
+			);
+			$where2 = 'res_id = ?';
+			$array_what2[] = $res_id;
+			$request2 = new request();
+			$request2->PDOupdate($table, $replaceValues2, $where2, $array_what2, $_SESSION['config']['databasetype']);*/
+			
 		}
 	}
     return array('result' => $res_id.'#', 'history_msg' => '');

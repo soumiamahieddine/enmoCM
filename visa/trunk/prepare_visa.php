@@ -104,69 +104,6 @@ function check_category($coll_id, $res_id)
     }
 }
 
-function get_rep_path($res_id, $coll_id)
-{
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
-	$docserverControler = new docservers_controler();
-    $sec =new security();
-    $view = $sec->retrieve_view_from_coll_id($coll_id);
-    if(empty($view))
-    {
-        $view = $sec->retrieve_table_from_coll($coll_id);
-    }
-    $db = new dbquery();
-    $db->connect();
-
-    //$db->query("select docserver_id, path, filename from ".$view." where res_id = ".$res_id);
-    $db->query("select docserver_id from res_view_attachments where res_id_master = " . $res_id . " order by res_id desc");
-    while ($res = $db->fetch_object()) {
-        $docserver_id = $res->docserver_id;
-        break;
-    }
-
-    $db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
-    $res = $db->fetch_object();
-    $docserver_path = $res->path_template;
-	$db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response') order by creation_date asc");
-	$array_reponses = array();
-	$cpt_rep = 0;
-	while ($res2 = $db->fetch_object()){
-		$filename=$res2->filename;
-		$path = preg_replace('/#/', DIRECTORY_SEPARATOR, $res2->path);
-		$filename_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);
-		if (file_exists($docserver_path.$path.$filename_pdf)){
-			$array_reponses[$cpt_rep]['path'] = $docserver_path.$path.$filename_pdf;
-			$array_reponses[$cpt_rep]['title'] = $res2->title;
-			$array_reponses[$cpt_rep]['attachment_type'] = $res2->attachment_type;
-			if ($res2->res_id_version == 0){
-				$array_reponses[$cpt_rep]['res_id'] = $res2->res_id;
-				$array_reponses[$cpt_rep]['is_version'] = 0;
-			}
-			else{
-				$array_reponses[$cpt_rep]['res_id'] = $res2->res_id_version;
-				$array_reponses[$cpt_rep]['is_version'] = 1;
-			}
-			$cpt_rep++;
-		}
-	}
-    return $array_reponses;
-}
-
-function getDocsBasket(){
-	$db = new dbquery();
-	$db->connect();
-	
-	$orderstr = "order by creation_date desc";
-	if (isset($_SESSION['last_order_basket'])) $orderstr = $_SESSION['last_order_basket'];
-	$requete = "select res_id from ".$_SESSION['current_basket']['view']." where " . $_SESSION['current_basket']['clause'] . " $orderstr";
-	$db->query($requete, true);
-	$tab_docs = array();
-	while($res = $db->fetch_object()){
-		array_push($tab_docs,$res->res_id);
-	}
-	return $tab_docs;
-}
 
 function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
 {
@@ -222,7 +159,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $b = new basket();
     $type = new types();
     $business = new business_app_tools();
-	
+	$visa = new visa();
 	/*check_category($coll_id, $res_id);
     $data = get_general_data($coll_id, $res_id, 'minimal');*/
 /*
@@ -243,7 +180,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	$frm_str .= '<div id="visa_listDoc">';
 	$frm_str .= '<div class="listDocsBasket">';
-	$tab_docs = getDocsBasket();
+	$tab_docs = $visa->getDocsBasket();
 	$list_docs = '';
 	foreach($tab_docs as $num=>$res_id_doc){
 		$list_docs .= $res_id_doc."#";
@@ -325,11 +262,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<dl id="tabricatorLeft" >';
 	
 	//Onglet document
-	$frm_str .= '<dt id="onglet_entrant">'._INCOMING.'</dt><dd style="overflow-y: hidden;">';
-	$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='. $res_id.'&coll_id='.$coll_id.'" name="viewframevalidDoc" id="viewframevalidDoc"  scrolling="auto" frameborder="0"  style="width:100%;height:100%;" ></iframe></dd>';
-	
-	$frm_str .= '</dd>';
-	
+	if ($selectedCat != 'outgoing'){
+		$frm_str .= '<dt id="onglet_entrant">'._INCOMING.'</dt><dd style="overflow-y: hidden;">';
+		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='. $res_id.'&coll_id='.$coll_id.'" name="viewframevalidDoc" id="viewframevalidDoc"  scrolling="auto" frameborder="0"  style="width:100%;height:100%;" ></iframe></dd>';
+		
+		$frm_str .= '</dd>';
+	}
 	//Onglet Avancement 
 	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
 	$frm_str .= '<h2>'. _WF .'</h2>';
@@ -375,7 +313,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($core->test_service('config_visa_workflow', 'visa', false)) {
         $modifVisaWorkflow = true;
     }
-	$visa = new visa();
+	
 	
 	$frm_str .= '<div class="error" id="divError" name="divError"></div>';
 	$frm_str .= '<div style="text-align:center;">';
@@ -401,7 +339,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</dd>';
 	
 	
-	$tab_path_rep_file = get_rep_path($res_id, $coll_id);
+	$tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
 	for ($i=0; $i<count($tab_path_rep_file);$i++){
 		$num_rep = $i+1;
 		if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
@@ -451,7 +389,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     }
                     $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load" '
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf" '
                     . 'frameborder="0" width="100%" height="600px"></iframe>';
                     $frm_str .= '</div>';
                 $frm_str .= '</div>';
