@@ -19,10 +19,6 @@ $_ENV['ErrorLevel'] = 0;
 * Connection object to database 1
 */
 $_ENV['db'] = "";
-/**
-* Connection object to database 2
-*/
-$_ENV['db2'] = "";
 
 // Class to manage files includes errors
 class IncludeFileError extends Exception
@@ -144,38 +140,11 @@ writeLog("Loading the xml config file");
 writeLog("Config name : " . $_ENV['config_name']);
 writeLog("Conversion launched for table : " . $_ENV['tablename']);
 
-/*set_include_path(get_include_path() . PATH_SEPARATOR . $maarchDirectory);
-try {
-	MyInclude(
-		$maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class'
-		. DIRECTORY_SEPARATOR . 'class_functions.php'
-	);
-	MyInclude(
-		$maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class'
-		. DIRECTORY_SEPARATOR . 'class_db.php'
-	);
-	
-	
-} catch(IncludeFileError $e) {
-	writeLog(
-		'Problem with the php include path : ' . get_include_path()
-	);
-	exit();
-}
-	*/
-//require('class_db.php');
 writeLog("Conversion launched for table : " . $_ENV['tablename']);
 
 require($_ENV['core_path']."class/class_functions.php");
 require($_ENV['core_path']."class/class_db_pdo.php");
 	
-/*	
-$_ENV['db'] = new dbquery();
-$_ENV['db']->connect();
-$_ENV['db2'] = new dbquery();
-$_ENV['db2']->connect();
-writeLog("connection on the DB server OK !");
-*/
 $_ENV['db'] = new Database($conf);
 
 $query = "select priority_number, docserver_id from docservers where is_readonly = 'N' and "
@@ -189,15 +158,11 @@ writeLog($docserverId);
 $docServers = "select docserver_id, path_template from docservers";
 $stmt1 = $_ENV['db']->query($docServers);
 writeLog("docServers found : ");
-/*while ($queryResult=$_ENV['db']->fetch_array()) {
-  $pathToDocServer[$queryResult[0]] = $queryResult[1];
-  writeLog($queryResult[0]. '-' .$queryResult[1]);
-}*/
+
 while ($queryResult = $stmt1->fetchObject()) {
   $pathToDocServer[$queryResult->docserver_id] = $queryResult->path_template;
   writeLog($queryResult->docserver_id. '-' .$queryResult->path_template);
 }
-
 
 if (is_dir($pathToDocServer[(string)$docserverId])){
 	$pathOutput = $pathToDocServer[(string)$docserverId];
