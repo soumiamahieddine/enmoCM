@@ -64,10 +64,10 @@ $content .='<div id="params">';
           $content.= _CHOOSE_ONE_ENTITY.' :<br /><br />';
           $content.='<select style="width:300px" name="entitieslist[]" id="entitieslist" size="7" ondblclick="moveclick($(entitieslist), $(entities_chosen))" multiple="multiple">';
 
-          $db = new dbquery();
-          $db->query("select entity_id, short_label from entities where enabled = 'Y' order by short_label");
+          $db = new Database();
+          $stmt = $db->query("select entity_id, short_label from entities where enabled = 'Y' order by short_label");
           
-          while($res = $db->fetch_object()){                             
+          while($res = $stmt->fetchObject()){                             
             $content.="<option value='".$res->entity_id."'>".$res->short_label."</option>";
           }
           $content.='</select>';

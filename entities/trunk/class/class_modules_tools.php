@@ -69,19 +69,18 @@ class entities extends dbquery
         $_SESSION['user']['primaryentity'] = array();
         if (isset($userData['UserId'])) {
             $type = 'root';
-            $this->connect();
-            $this->query(
-            	'select ue.entity_id, ue.user_role, ue.primary_entity, '
-                . 'e.entity_label, e.short_label, e.entity_type from '
+            $db = new Database();
+            $stmt = $db->query(
+            	'SELECT ue.entity_id, ue.user_role, ue.primary_entity, '
+                . 'e.entity_label, e.short_label, e.entity_type FROM '
                 . ENT_USERS_ENTITIES . ' ue, ' . $_SESSION['tablename']['users']
-                . ' u,'. ENT_ENTITIES ." e where ue.user_id = u.user_id and "
+                . ' u,'. ENT_ENTITIES ." e WHERE ue.user_id = u.user_id and "
                 . " ue.entity_id = e.entity_id and e.enabled = 'Y' "
-                . " and ue.user_id = '" . $this->protect_string_db(
-                    trim($userData['UserId'])
-                ) . "'"
+                . " and ue.user_id = ? ",
+                array(trim($userData['UserId']))
             );
         }
-        while ($line = $this->fetch_object()) {
+        while ($line = $stmt->fetchObject()) {
             array_push(
                 $_SESSION['user']['entities'],
                 array(

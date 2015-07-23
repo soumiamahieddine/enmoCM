@@ -651,7 +651,7 @@ class diffusion_list extends dbquery
         
         # DEST USER
         /*if (! $modeCc) {
-            $this->query(
+            $stmt = $db->query(
                 "select l.item_id, u.firstname, u.lastname, e.entity_id, "
                 . "e.entity_label, l.visible, l.viewed from " . ENT_LISTINSTANCE . " l, "
                 . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
@@ -664,7 +664,7 @@ class diffusion_list extends dbquery
                 . "and l.res_id = " . $resId
             );
 
-            $res = $this->fetch_object();
+            $res = $stmt->fetchObject();
            
             $listinstance['dest'] = array(
                 'user_id' => $this->show_string($res->item_id),

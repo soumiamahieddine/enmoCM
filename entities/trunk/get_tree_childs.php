@@ -39,9 +39,9 @@ if (isset($_POST['branch_id'])) {
             . ENT_USERS_ENTITIES . " ue, " . $_SESSION['tablename']['users'] 
             . " u where ue.entity_id = ?" 
             . "  and u.user_id = ue.user_id and u.status <> 'DEL' order by u.lastname, u.firstname",array($_POST['branch_id']));
-        //$ent->show();
-        if ($ent->nb_result() > 0) {
-            while ($res = $ent->fetch_object()) {
+
+        if ($stmt->rowCount() > 0) {
+            while ($res = $stmt->fetchObject()) {
                 $canhavechildren = 'canhavechildren:false, ';
                 if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
                     $labelValue = '<span class="entity_tree_element_ok">' . $ent->show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
@@ -67,7 +67,7 @@ if (isset($_POST['branch_id'])) {
         . ENT_ENTITIES . " where parent_entity_id = ? order by entity_label",array($_POST['branch_id']));
     //$ent->show();
     if ($stmt->rowCount() > 0) {
-        while ($res = $stmt->fetch_object()) {
+        while ($res = $stmt->fetchObject()) {
             $canhavechildren = '';
             $canhavechildren = 'canhavechildren:true, ';
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
