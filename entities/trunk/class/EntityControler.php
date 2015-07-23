@@ -239,7 +239,7 @@ class EntityControler
 
         $db = new Database();
         $arr=array();
-        $query="Select * from ".self::$entities_table." WHERE entity_id IN (?) order by short_label asc";
+        $query="Select * from ".ENT_ENTITIES." WHERE entity_id IN (?) order by short_label asc";
         $stmt = $db->query($query,array($tmp_entities));
         while($res = $stmt->fetchObject())
         {
@@ -266,7 +266,7 @@ class EntityControler
 
         $db = new Database();
         $func = new functions();
-        $query = "SELECT ue.entity_id, ue.user_role, ue.primary_entity from ".self::$users_entities_table." ue, ".self::$entities_table." u where ue.user_id = ? and ue.entity_id = u.entity_id and u.enabled = 'Y'";
+        $query = "SELECT ue.entity_id, ue.user_role, ue.primary_entity from ". ENT_USERS_ENTITIES." ue, ".ENT_ENTITIES." u where ue.user_id = ? and ue.entity_id = u.entity_id and u.enabled = 'Y'";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
@@ -456,7 +456,7 @@ class EntityControler
         if(!isset($entity_id) || empty($entity_id))
             return false;
 
-        $query = "select entity_id from ".self::$entities_table." where entity_id = ?";
+        $query = "select entity_id from ".ENT_ENTITIES." where entity_id = ?";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
@@ -558,7 +558,7 @@ class EntityControler
             return false;
 
         self::connect();
-        $query="update ".self::$entities_table." set enabled = 'Y' where entity_id='".$entity_id."'";
+        $query="update ".ENT_ENTITIES." set enabled = 'Y' where entity_id='".$entity_id."'";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
@@ -615,7 +615,7 @@ class EntityControler
         {
             if($ok)
             {
-                $query = "INSERT INTO ".self::$users_entities_table." (user_id, entity_id, primary_entity, user_role) VALUES (?, ?, ?, ?)";
+                $query = "INSERT INTO ".ENT_USERS_ENTITIES." (user_id, entity_id, primary_entity, user_role) VALUES (?, ?, ?, ?)";
                 try{
                     if($_ENV['DEBUG'])
                         echo $query.' // ';
