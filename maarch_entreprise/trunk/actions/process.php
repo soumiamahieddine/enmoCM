@@ -417,7 +417,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($core_tools->is_module_loaded('attachments')) {
         $stmt = $db->query("SELECT res_id FROM "
             . $_SESSION['tablename']['attach_res_attachments']
-            . " WHERE status <> 'DEL' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
+            . " WHERE status <> 'DEL' and attachment_type <> 'converted_pdf' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
         if ($stmt->rowCount() > 0) {
             $nb_attach = $stmt->rowCount();
         }
@@ -773,7 +773,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= 'return false;">' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
                     $db = new Database;
                     $stmt = $db->query("SELECT res_id FROM ".$_SESSION['tablename']['attach_res_attachments']
-                        . " WHERE (status = 'A_TRA' or status = 'TRA') and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
+                        . " WHERE (status = 'A_TRA' or status = 'TRA') and attachment_type <> 'converted_pdf' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
                     //$req->show();
                     $nb_attach = 0;
                     if ($stmt->rowCount() > 0) {
@@ -791,7 +791,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     }
                     $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load" '
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf" '
                     . 'frameborder="0" width="100%" height="600px"></iframe>';
                     $frm_str .= '</div>';
                 $frm_str .= '</div>';
@@ -1146,6 +1146,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //SCRIPT
     $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'
         . $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
+	$curr_visa_wf = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
+	if (count($circuit['visa']) == 0 && count($circuit['sign']) == 0){
+		$frm_str .= 'load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);';
+	}
 
 	// DocLocker constantly	
 	$frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';
