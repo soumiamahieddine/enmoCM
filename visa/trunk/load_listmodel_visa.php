@@ -17,7 +17,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 			. "class_modules_tools.php";
 
 
-$db = new dbquery();
+$db = new Database();
 $core = new core_tools();
 $core->load_lang();
 $diffList = new diffusion_list();
@@ -32,9 +32,8 @@ $_SESSION[$origin]['difflist_type'] = $diffList->get_difflist_type($objectType);
 if ($objectId <> '') {
     $_SESSION[$origin]['difflist_object']['object_id'] = $objectId;
     if ($objectType == 'entity_id') {
-        $query = "select entity_label from entities where entity_id = '" . $objectId . "'";
-        $db->query($query);
-        $res = $db->fetch_object();
+        $stmt = $db->query("select entity_label from entities where entity_id = ?",array($objectId));
+        $res = $stmt->fetchObject();
         if ($res->entity_label <> '') {
             $_SESSION[$origin]['difflist_object']['object_label'] = $res->entity_label;
         }
@@ -46,7 +45,10 @@ $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel($objectType, $objectI
 $_SESSION[$origin]['diff_list']['difflist_type'] = $_SESSION[$origin]['diff_list']['object_type'];
 $roles = $diffList->list_difflist_roles();
 $circuit = $_SESSION[$origin]['diff_list'];
-
+if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users'])){
+	echo "{status : 1, error_txt : 'Modèle inexistant'}";
+	exit();
+}
 if ( $circuit['object_type'] == 'VISA_CIRCUIT'){
 	$id_tab="tab_visaSetWorkflow";
 	$id_form="form_visaSetWorkflow";
