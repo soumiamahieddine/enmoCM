@@ -123,22 +123,15 @@ $conf = $argv[1];
 $xmlconfig = simplexml_load_file($conf);
 foreach ($xmlconfig->CONFIG as $CONFIG) {
     $_ENV['config_name'] = $CONFIG->CONFIG_NAME;
-    $_ENV['databaseserver'] = $CONFIG->LOCATION;
-    $_ENV['databaseport'] = $CONFIG->DATABASE_PORT;
-    $_ENV['database'] = $CONFIG ->DATABASE;
-    $_ENV['databasetype'] = $CONFIG->DATABASETYPE;
-    $_ENV['databaseuser'] = $CONFIG -> USER_NAME;
-    $_ENV['databasepwd'] = $CONFIG->PASSWORD;
+   
     $_ENV['tablename'] = $CONFIG->TABLE_NAME;
     $_ENV['collection'] = $CONFIG->COLLECTION;
-    /*$path_column_name = $CONFIG->PATH_COLUMN_NAME;
-    $filename_column_name = $CONFIG->FILENAME_COLUMN_NAME;*/
-    //$_ENV['input_ds'] = $CONFIG->INPUT_DOCSERVER;
-   // $_ENV['output_ds'] = $CONFIG->OUTPUT_DOCSERVER;
+	
 	$_ENV['max_batch_size'] = $CONFIG->MAX_BATCH_SIZE;
 	$maarchDirectory = (string) $CONFIG->MaarchDirectory;
 	$_ENV['core_path'] = $maarchDirectory . 'core' . DIRECTORY_SEPARATOR;
 }
+$_ENV['databasetype'] = $xmlconfig->CONFIG_BASE->databasetype;
 if (DIRECTORY_SEPARATOR == "/") {
     $_ENV['osname'] = "UNIX";
 } else {
@@ -170,32 +163,41 @@ try {
 	exit();
 }
 	*/
-require('class_db.php');
+//require('class_db.php');
+writeLog("Conversion launched for table : " . $_ENV['tablename']);
+
+require($_ENV['core_path']."class/class_functions.php");
+require($_ENV['core_path']."class/class_db_pdo.php");
 	
-	
-	
+/*	
 $_ENV['db'] = new dbquery();
 $_ENV['db']->connect();
 $_ENV['db2'] = new dbquery();
 $_ENV['db2']->connect();
 writeLog("connection on the DB server OK !");
-
+*/
+$_ENV['db'] = new Database($conf);
 
 $query = "select priority_number, docserver_id from docservers where is_readonly = 'N' and "
-	   . " enabled = 'Y' and coll_id = '".$_ENV['collection']."' and docserver_type_id = 'TNL' order by priority_number";
+	   . " enabled = 'Y' and coll_id = ? and docserver_type_id = 'TNL' order by priority_number";
 	   
-$_ENV['db']->query($query);
-$docserverId = $_ENV['db']->fetch_object()->docserver_id;
+$stmt1 = $_ENV['db']->query($query, array($_ENV['collection']));
+$docserverId = $stmt1->fetchObject()->docserver_id;
 
 writeLog($query);
 writeLog($docserverId);
 $docServers = "select docserver_id, path_template from docservers";
-$_ENV['db']->query($docServers);
+$stmt1 = $_ENV['db']->query($docServers);
 writeLog("docServers found : ");
-while ($queryResult=$_ENV['db']->fetch_array()) {
+/*while ($queryResult=$_ENV['db']->fetch_array()) {
   $pathToDocServer[$queryResult[0]] = $queryResult[1];
   writeLog($queryResult[0]. '-' .$queryResult[1]);
+}*/
+while ($queryResult = $stmt1->fetchObject()) {
+  $pathToDocServer[$queryResult->docserver_id] = $queryResult->path_template;
+  writeLog($queryResult->docserver_id. '-' .$queryResult->path_template);
 }
+
 
 if (is_dir($pathToDocServer[(string)$docserverId])){
 	$pathOutput = $pathToDocServer[(string)$docserverId];
@@ -210,29 +212,30 @@ $cpt_batch_size=0;
 $queryMakeThumbnails = "select res_id, docserver_id, path, filename, format from "
     . $_ENV['tablename'] . " where tnl_filename = '' or tnl_filename is null ";
 writeLog("query to found document with no thumbnail : ".$queryMakeThumbnails);
-$_ENV['db']->query($queryMakeThumbnails);
-while ($queryResult=$_ENV['db']->fetch_array()) {
+$stmt1 = $_ENV['db']->query($queryMakeThumbnails);
+while ($queryResult=$stmt1->fetchObject()) {
 	if ($_ENV['max_batch_size'] >= $cpt_batch_size) {
-			$pathToFile = $pathToDocServer[$queryResult['docserver_id']] . str_replace("#", DIRECTORY_SEPARATOR, $queryResult['path'])
-            . $queryResult['filename'];
-			$outputPathFile  = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult['path']) . str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult['filename']);
+			$pathToFile = $pathToDocServer[$queryResult->docserver_id] . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path)
+            . $queryResult->filename;
+			$outputPathFile  = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path) . str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename);
 			
 			
 			writeLog("processing of document : " . $pathToFile . " | res_id : "
-            . $queryResult['res_id']);
+            . $queryResult->res_id);
 			echo "processing of document : " . $pathToFile . " \r\n res_id : "
-            . $queryResult['res_id'] . "\n";
+            . $queryResult->res_id . "\n";
 			
 			
 			
-			$racineOut = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult['path']);
+			$racineOut = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path);
 			if (!is_dir($racineOut)){
 				r_mkdir($racineOut,0777);
 				writeLog("Create $racineOut directory ");
 			}
 			
 			exec("convert -thumbnail x300 -background white -alpha remove ".$pathToFile."[0] $outputPathFile");
-			$_ENV['db2']->query("UPDATE ".$_ENV['tablename']." SET tnl_path = '".$queryResult['path']."', tnl_filename = '".str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult['filename'])."' WHERE res_id = ".$queryResult['res_id']);
+			$stmt2 = $_ENV['db']->query("UPDATE ".$_ENV['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename), $queryResult->res_id));
+			
 		
 	} else {
     writeLog("Max batch size ! Stop processing !");
