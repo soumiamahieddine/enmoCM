@@ -17,6 +17,9 @@
     <dataType name="hex" base="graph">
       <pattern value="/^[A-Fa-f0-9]+$/" />
     </dataType>
+    <dataType name="ipv6" base="graph">
+      <pattern value="/^[A-Fa-f0-9:]+$/" />
+    </dataType>
     <dataType name="order" base="string">
       <enumeration value="asc" />
       <enumeration value="desc" />
@@ -33,6 +36,8 @@
       <enumeration value="page" />
       <enumeration value="normal" />
       <enumeration value="popup" />
+      <enumeration value="ban" />
+      <enumeration value="allow" />
     </dataType>
     <dataType name="collection_list" base="string">
       <enumeration value="letterbox_coll" />
@@ -62,7 +67,7 @@
       <pattern value="/^\w+$/" />
     </dataType>
     <dataType name="arrayOfStrings" base="safetext" />
-    <dataType name="phone" base="graph">
+    <dataType name="phone" base="string">
       <pattern value="/^[0-9\-\+ ]{9,20}$/" />
     </dataType>
     <dataType name="filename" base="graph">
@@ -70,5 +75,8 @@
     </dataType>
     <dataType name="keyword_id" base="string">
       <pattern value="/^[\w ]+$/" />
+    </dataType>
+    <dataType name="alnumSpace" base="string">
+      <pattern value="/^[A-z0-9 ]+$/" />
     </dataType>
   </dataTypes>

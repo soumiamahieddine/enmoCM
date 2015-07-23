@@ -8,7 +8,8 @@
     <!-- APPS PART  -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="index" />
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="index" />
-    <!-- admin  -->
+
+    <!-- Admin user  -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_users_update" >
       <parameter name="admin" value="users"/>
       <parameter name="page" value="users_management_controler"/>
@@ -43,11 +44,225 @@
       <parameter name="page" value="users_list_by_name_search"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
+
+    <!-- Admin action -->
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="admin" value="action"/>
+      <parameter name="page" value="action_list_by_name"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_action" >
+      <parameter name="admin" value="action"/>
+      <parameter name="page" value="action_management_controler"/>
+      <parameter name="id" />
+    </requestDefinition>
+
+    <!-- Admin architecture -->
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_architecture" >
+      <parameter name="admin" value="architecture"/>
+      <parameter name="page" value="choose_tree"/>
+      <parameter name="display" value="true"/>
+      <parameter name="tree_id"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_structure" >
+      <parameter name="page" value="structure_up"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id" >
+      <parameter name="page" value="structure_del"/>
+      <parameter name="display" value="true"/>
+      <parameter name="id"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_structures" >
+      <parameter name="page" value="structures"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="page" value="structures_list_by_name"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_subfolder_up" >
+      <parameter name="page" value="subfolder_up"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id" >
+      <parameter name="page" value="subfolder_del"/>
+      <parameter name="display" value="true"/>
+      <parameter name="id"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_structures" >
+      <parameter name="page" value="subfolders"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="page" value="subfolders_list_by_name"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="only_collection" >
+      <parameter name="page" value="get_index"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="page" value="types_list_by_name"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id" >
+      <parameter name="page" value="types_up"/>
+      <parameter name="id"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id" >
+      <parameter name="page" value="types_del"/>
+      <parameter name="id"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_types_up_db" >
+      <parameter name="page" value="types_up_db"/>
+    </requestDefinition>
+
+    <!-- Admin contact -->
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="contact_id" >
+      <parameter name="page" value="ajaxLoadDocList"/>
+      <parameter name="admin" value="contacts"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajaxLoadDeleteContact" >
+      <parameter name="page" value="ajaxLoadDeleteContactDiv"/>
+      <parameter name="admin" value="contacts"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajaxDeleteContact" >
+      <parameter name="page" value="ajaxDeleteContact"/>
+      <parameter name="admin" value="contacts"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="contactAddressesUpDb" >
+      <parameter name="page" value="contact_addresses_up_db"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id" >
+      <parameter name="page" value="contact_addresses_del"/>
+      <parameter name="id"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="contactAddressDel" >
+      <parameter name="page" value="contact_addresses_del"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id" >
+      <parameter name="page" value="contact_addresses_status"/>
+      <parameter name="id"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="contactAddressUp" >
+      <parameter name="page" value="contact_addresses_up"/>
+      <parameter name="id"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="page" value="contact_addresses_list_by_name"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="contactPurposesDel" >
+      <parameter name="page" value="contact_purposes_del"/>
+      <parameter name="id"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="contactPurposesDel" >
+      <parameter name="page" value="contact_purposes_del"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="page" value="contact_purposes_list_by_name"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="contactPurposesUp" >
+      <parameter name="page" value="contact_purposes_up"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="getTreeChildrenContact" >
+      <parameter name="page" value="get_tree_children_contact"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="contactPurposesDel" >
+      <parameter name="page" value="contact_types_del"/>
+      <parameter name="id"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="contactPurposesDel" >
+      <parameter name="page" value="contact_types_del"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="page" value="contact_types_list_by_name"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="contactTypesUp" >
+      <parameter name="page" value="contact_types_up"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id" >
+      <parameter name="page" value="contacts_v2_del"/>
+      <parameter name="id"/>
+    </requestDefinition>
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="contacts_v2_up_db" >
+      <parameter name="page" value="contacts_v2_up_db"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id" >
+      <parameter name="page" value="contacts_v2_up"/>
+      <parameter name="id"/>
+    </requestDefinition>
+
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="contactConfirm" >
+      <parameter name="page" value="contacts_v2_confirm"/>
+      <parameter name="mycontact"/>
+    </requestDefinition>
+
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="listContactId" >
+      <parameter name="page" value="contacts_v2_list_by_name"/>
+      <parameter name="display" value="true"/>
+      <parameter name="my_contact"/>
+      <parameter name="id"/>
+    </requestDefinition>
+
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id" >
+      <parameter name="page" value="contacts_v2_status"/>
+      <parameter name="id"/>
+    </requestDefinition>
+
+    <!-- Admin docserver -->
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="admin" value="docservers"/>
+      <parameter name="page" value="docserver_locations_list_by_id"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_docserver_location" >
+      <parameter name="admin" value="docservers"/>
+      <parameter name="page" value="docserver_locations_management_controler"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id_string" >
+      <parameter name="admin" value="docservers"/>
+      <parameter name="page" value="docserver_locations_management_controler"/>
+      <parameter name="display" value="true"/>
+      <parameter name="id" />
+    </requestDefinition>
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="admin" value="docservers"/>
+      <parameter name="page" value="docserver_types_list_by_id"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+
     <!-- Admin status -->
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
+      <parameter name="admin" value="status"/>
+      <parameter name="page" value="status_list_by_name"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_status" >
       <parameter name="admin" value="status"/>
       <parameter name="page" value="status_management_controler"/>
     </requestDefinition>
+
     <!-- indexing_searching  -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ix_change_category" >
       <parameter name="dir" value="indexing_searching"/>
@@ -66,6 +281,7 @@
       <parameter name="page" value="change_doctype"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
+
     <!-- search_adv -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="search_adv_result" >
       <parameter name="dir" value="indexing_searching"/>
@@ -78,11 +294,13 @@
       <parameter name="display" value="true"/>
       <parameter name="id" />
     </requestDefinition>
+
     <!-- login  -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="login" >
       <parameter name="page" value="log"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
+
     <!-- CORE PART  -->
     <xi:include href="../../../../core/xml/IVS/requests_definitions.xml"/>
     <!-- MODULES PART  -->

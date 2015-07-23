@@ -39,6 +39,123 @@
       <parameter name="what" type="safetext" />
     </validationRule>
 
+    <validationRule name="contact_id" extends="standardForm" mode="error">
+      <parameter name="contact_id" type="integer" />
+    </validationRule>
+
+    <validationRule name="ajaxLoadDeleteContact" extends="standardForm" mode="error">
+      <parameter name="contact_id" type="integer" />
+      <parameter name="name" type="safetext" />
+      <parameter name="society_label" type="safetext" />
+    </validationRule>
+
+    <validationRule name="ajaxDeleteContact" extends="standardForm" mode="error">
+      <parameter name="contactId" type="integer" />
+      <parameter name="replacedAddressId" type="string" />
+      <parameter name="replacedContactId" type="string" />
+    </validationRule>
+
+    <validationRule name="admin_types_up_db" extends="standardForm" mode="error">
+      <parameter name="Submit" type="safetext" />
+      <parameter name="collection" type="collection_list" />
+      <parameter name="delay1" type="integer" />
+      <parameter name="delay2" type="integer" />
+      <parameter name="e_file" type="YN" />
+      <parameter name="id" type="integer" />
+      <parameter name="idbis" type="integer" />
+      <parameter name="label" type="safetext" />
+      <parameter name="process_delay" type="integer" />
+      <parameter name="sous_dossier" type="integer" />
+      <parameter name="template" type="string" />
+    </validationRule>
+
+    <validationRule name="admin_docserver_location" extends="standardForm" mode="error">
+      <parameter name="id" type="identifier" />
+      <parameter name="ipv4" type="ip" />
+      <parameter name="ipv6" type="ipv6" />
+      <parameter name="mask" type="ip" />
+      <parameter name="net_domain" type="safetext" />
+      <parameter name="net_link" type="url" />
+      <parameter name="submit" type="safetext" />
+    </validationRule>
+
+    <validationRule name="contactAddressesUpDb" extends="standardForm" mode="error">
+      <parameter name="Submit" type="safetext" />
+      <parameter name="add_comp" type="safetext" />
+      <parameter name="comp_data" type="safetext" />
+      <parameter name="contact_purposes" type="safetext" />
+      <parameter name="country" type="safetext" />
+      <parameter name="cp" type="alnum" />
+      <parameter name="departement" type="safetext" />
+      <parameter name="firstname" type="safetext" />
+      <parameter name="function" type="safetext" />
+      <parameter name="is_private" type="YN" />
+      <parameter name="lastname" type="personname" />
+      <parameter name="mail" type="email" />
+      <parameter name="new_id" type="safetext" />
+      <parameter name="num" type="alnumSpace" />
+      <parameter name="occupancy" type="safetext" />
+      <parameter name="phone" type="phone" />
+      <parameter name="salutation_footer" type="safetext" />
+      <parameter name="salutation_header" type="safetext" />
+      <parameter name="street" type="safetext" />
+      <parameter name="title" type="identifier" />
+      <parameter name="town" type="safetext" />
+      <parameter name="website" type="safetext" />
+    </validationRule>
+
+    <validationRule name="admin_action" extends="standardForm" mode="error">
+      <parameter name="action_page" type="identifier" />
+      <parameter name="action_submit" type="safetext" />
+      <parameter name="categories_chosen" type="category_list" />
+      <parameter name="history" type="YN" />
+      <parameter name="is_folder_action" type="YN" />
+      <parameter name="keyword" type="keyword_id" />
+      <parameter name="label" type="safetext" />
+      <parameter name="status" type="identifier" />
+      <parameter name="what" type="safetext" />
+      <parameter name="Submit" type="safetext" />
+      <parameter name="id" type="integer" />
+    </validationRule>
+
+    <validationRule name="admin_architecture" extends="standardForm" mode="error">
+      <parameter name="tree_id" type="integer" />
+    </validationRule>
+
+    <validationRule name="only_id" extends="standardForm" mode="error">
+      <parameter name="id" type="integer" />
+    </validationRule>
+
+    <validationRule name="only_id_string" extends="standardForm" mode="error">
+      <parameter name="id" type="identifier" />
+    </validationRule>
+
+    <validationRule name="admin_structures" extends="standardForm" mode="error">
+      <parameter name="what" type="safetext" />
+      <parameter name="Submit" type="safetext" />
+      <parameter name="selectedObject" type="safetext" />
+    </validationRule>
+
+    <validationRule name="admin_structure" extends="standardForm" mode="error">
+      <parameter name="ID_structure" type="integer" />
+      <parameter name="css_style" type="identifier" />
+      <parameter name="desc_structure" type="safetext" />
+      <parameter name="foldertypes" type="integer" />
+      <parameter name="valid" type="safetext" />
+    </validationRule>
+
+    <validationRule name="admin_subfolder_up" extends="standardForm" mode="error">
+      <parameter name="ID_sd" type="integer" />
+      <parameter name="desc_sd" type="safetext" />
+      <parameter name="css_style" type="identifier" />
+      <parameter name="structure" type="integer" />
+      <parameter name="valid" type="safetext" />
+    </validationRule>
+
+    <validationRule name="only_collection" extends="standardForm" mode="error">
+      <parameter name="coll_id" type="collection_list" />
+    </validationRule>
+
     <validationRule name="admin_status" extends="standardForm" mode="error">
       <parameter name="can_be_modified" type="YN" />
       <parameter name="can_be_searched" type="YN" />
@@ -49,7 +166,68 @@
       <parameter name="label" type="safetext" />
       <parameter name="status_id" type="identifier" />
       <parameter name="status_submit" type="safetext" />
+      <parameter name="Submit" type="safetext" />
       <parameter name="what" type="safetext" />
+    </validationRule>
+
+    <validationRule name="contactAddressDel" extends="standardForm" mode="error">
+      <parameter name="id" type="integer" />
+      <parameter name="move" type="safetext" />
+      <parameter name="delete" type="safetext" />
+      <parameter name="new_contact_id_reaffect" type="integer" />
+      <parameter name="new_contact_reaffect" type="safetext" />
+    </validationRule>
+
+    <validationRule name="contactAddressUp" extends="standardForm" mode="error">
+      <parameter name="id" type="integer" />
+      <parameter name="mycontact" type="integer" />
+      <parameter name="fromSearchContacts" type="safetext" />
+    </validationRule>
+
+    <validationRule name="contactPurposesDel" extends="standardForm" mode="error">
+      <parameter name="valid" type="safetext" />
+      <parameter name="id" type="integer" />
+      <parameter name="new" type="integer" />
+      <parameter name="new_id" type="safetext" />
+    </validationRule>
+
+    <validationRule name="contactPurposesUp" extends="standardForm" mode="error">
+      <parameter name="ID_contact_purposes" type="integer" />
+      <parameter name="desc_contact_purposes" type="safetext" />
+      <parameter name="valid" type="safetext" />
+    </validationRule>
+
+    <validationRule name="contactTypesUp" extends="standardForm" mode="error">
+      <parameter name="ID_contact_types" type="integer" />
+      <parameter name="desc_contact_types" type="safetext" />
+      <parameter name="valid" type="safetext" />
+    </validationRule>
+
+    <validationRule name="getTreeChildrenContact" extends="standardForm" mode="error">
+      <parameter name="branch" type="string" />
+      <parameter name="branch_id" type="integer" />
+      <parameter name="tree_id" type="identifier" />
+    </validationRule>
+
+    <validationRule name="contacts_v2_up_db" extends="standardForm" mode="error">
+      <parameter name="Submit" type="safetext" />
+      <parameter name="comp_data" type="safetext" />
+      <parameter name="contact_type" type="integer" />
+      <parameter name="firstname" type="safetext" />
+      <parameter name="function" type="safetext" />
+      <parameter name="is_corporate" type="YN" />
+      <parameter name="lastname" type="personname" />
+      <parameter name="society" type="safetext" />
+      <parameter name="society_short" type="safetext" />
+      <parameter name="title" type="safetext" />
+    </validationRule>
+
+    <validationRule name="contactConfirm" extends="standardForm" mode="error">
+      <parameter name="mycontact" type="safetext" />
+    </validationRule>
+
+    <validationRule name="listContactId" extends="standardForm" mode="error">
+      <parameter name="id" type="integer" />
     </validationRule>
 
     <validationRule name="login" mode="error">
