@@ -51,22 +51,20 @@ class thumbnails extends dbquery
 		}
 		
 		
-		$db = new dbquery();
-		$db->connect();
+		$db = new Database();
 		
 		$query = "select priority_number, docserver_id from "
 			   . _DOCSERVERS_TABLE_NAME . " where is_readonly = 'N' and "
-			   . " enabled = 'Y' and coll_id = '" . $coll_id
-			   . "' and docserver_type_id = 'TNL' order by priority_number";
+			   . " enabled = 'Y' and coll_id = ? and docserver_type_id = 'TNL' order by priority_number";
 			   
-		$db->query($query);
-		$docserverId = $db->fetch_object()->docserver_id;
+		$stmt = $db->query($query, array($coll_id));
+		$docserverId = $stmt->fetchObject()->docserver_id;
 				
 		$docserver = $docserversControler->get($docserverId);
 		
 		
-		$db->query("SELECT tnl_path, tnl_filename FROM $table WHERE res_id = $res_id");
-		$data = $db->fetch_object();
+		$stmt = $db->query("SELECT tnl_path, tnl_filename FROM $table WHERE res_id = ?", array($res_id));
+		$data = $stmt->fetchObject();
 		
 		$tnlPath = str_replace("#", DIRECTORY_SEPARATOR , $data->tnl_path);
 		$tnlFilename = $data->tnl_filename;
