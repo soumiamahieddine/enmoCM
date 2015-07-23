@@ -77,6 +77,12 @@ if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0])
     $dest_is_set = true;
 else
     $dest_is_set = false;
+
+if(isset($_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]) 
+    && !empty($_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]))
+    $sign_is_set = true;
+else
+    $sign_is_set = false;
     
 // 1.4 create indexed array of existing diffusion to search for users/entities easily
 $user_roles = array();
@@ -244,6 +250,28 @@ case "add_user":
         }
         unset($_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]);
     }
+	
+	# If sign is set && role is sign, move current sign to visa (legacy)
+    if ($role_id == 'sign' && $sign_is_set) {
+        if(!isset($_SESSION['m_admin']['entity']['listmodel']['visa']['users']))
+            $_SESSION['m_admin']['entity']['listmodel']['visa']['users'] = array();
+        
+        $old_dest = $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['user_id'];
+        if(!in_array('visa', $user_roles[$old_dest])) {
+            array_push(
+                $_SESSION['m_admin']['entity']['listmodel']['visa']['users'],
+                array(
+                    'user_id' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['user_id'],
+                    'firstname' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['firstname'],
+                    'lastname' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['lastname'],
+                    'entity_id' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['entity_id'],
+                    'entity_label' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['entity_label'],
+                    'visible' => 'Y',
+                )
+            );
+        }
+        unset($_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]);
+    }
     
     array_push(
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'],
@@ -300,6 +328,7 @@ case 'remove_user':
         if(isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]))
             $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['visible'] = $visible;
         if($role_id == 'dest') $dest_is_set = false;
+        if($role_id == 'sign') $sign_is_set = false;
     }
     break;
 
@@ -386,7 +415,72 @@ case 'copy_to_dest':
         $dest_is_set = true;
     }
     break;    
-
+case 'sign_to_visa':
+    if ($sign_is_set) {
+        if(! isset($_SESSION['m_admin']['entity']['listmodel']['visa']['users']))
+            $_SESSION['m_admin']['entity']['listmodel']['visa']['users'] = array();
+        
+        $old_dest = $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['user_id'];
+        if(!in_array('visa', $user_roles[$old_dest])) {
+            array_push(
+                $_SESSION['m_admin']['entity']['listmodel']['visa']['users'],
+                array(
+                    'user_id' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['user_id'],
+                    'firstname' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['firstname'],
+                    'lastname' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['lastname'],
+                    'entity_id' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['entity_id'],
+                    'entity_label' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['entity_label'],
+                    'visible' => 'Y',
+                )
+            );
+        }
+        unset($_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]);
+        $_SESSION['m_admin']['entity']['listmodel']['sign']['users'] = array_values(
+            $_SESSION['m_admin']['entity']['listmodel']['sign']['users']
+        );
+        $sign_is_set = false;
+    }
+    break;
+	
+case 'visa_to_sign':
+    if ($sign_is_set) {
+        if(! isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']))
+            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'] = array();
+        $old_sign = $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['user_id'];
+        if(!in_array('visa', $user_roles[$old_sign])) {
+            array_push(
+                $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'],
+                array(
+                    'user_id' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['user_id'],
+                    'firstname' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['firstname'],
+                    'lastname' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['lastname'],
+                    'entity_id' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['entity_id'],
+                    'entity_label' => $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['entity_label'],
+                    'visible' => 'Y',
+                )
+            );
+        }
+        unset($_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]);
+        $_SESSION['m_admin']['entity']['listmodel']['sign']['users'] = array_values(
+            $_SESSION['m_admin']['entity']['listmodel']['sign']['users']
+        );
+    }
+    if (isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['user_id'])
+        && !empty($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['user_id'])
+    ) {
+        $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['user_id'] = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['user_id'];
+        $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['firstname'] = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['firstname'];
+        $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['lastname'] = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['lastname'];
+        $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['entity_id'] = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['entity_id'];
+        $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['entity_label'] = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['entity_label'];
+        $_SESSION['m_admin']['entity']['listmodel']['sign']['users'][0]['visible'] = 'Y';
+        unset( $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]);
+        $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'] = array_values(
+            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']
+        );
+        $sign_is_set = true;
+    }
+    break; 
 case 'move_user_down':
     $downUser = 
         array_splice(
@@ -648,8 +742,12 @@ $linkwithwhat =
                         <td class="action_entities"><!-- Switch copy to dest --><?php
                         if($role_id == 'dest'  && isset($roles['copy']) ) { ?>
                             <a href="<?php functions::xecho($linkwithwhat);?>&action=dest_to_copy&role=copy" ><i class="fa fa-arrow-down"></i><?php echo _TO_CC;?></a><?php
+                        } elseif($role_id == 'sign'  && isset($roles['visa']) ) { ?>
+                            <a href="<?php functions::xecho($linkwithwhat);?>&action=sign_to_visa&role=visa" ><i class="fa fa-arrow-up"></i><?php echo _VISA_USER;?></a><?php
                         } elseif($role_id == 'copy' && isset($roles['dest'])) { ?>
                             <a href="<?php functions::xecho($linkwithwhat);?>&action=copy_to_dest&role=copy&rank=<?php functions::xecho($i);?>" ><i class="fa fa-arrow-up"></i><?php echo _TO_DEST;?></a><?php
+                        } elseif($role_id == 'visa' && isset($roles['sign'])) { ?>
+                            <a href="<?php functions::xecho($linkwithwhat);?>&action=visa_to_sign&role=visa&rank=<?php functions::xecho($i);?>" ><i class="fa fa-arrow-down"></i><?php echo _TO_SIGN;?></a><?php
                         } else echo '&nbsp;'?>
                         </td>
                         <td class="action_entities"><!-- Move up in list --><?php 
@@ -724,6 +822,7 @@ $linkwithwhat =
         </form>
         <br/>
         <br/><?php
+		
         #******************************************************************************
         # LIST OF AVAILABLE ENTITIES / USERS
         #******************************************************************************?>
@@ -795,12 +894,14 @@ $linkwithwhat =
 									&& (in_array($role_id, $user_roles[$user_id]) 
 										|| in_array('dest', $user_roles[$user_id]) 
 										|| in_array('copy', $user_roles[$user_id])
+										|| in_array('visa', $user_roles[$user_id]) 
+										|| in_array('sign', $user_roles[$user_id])
 										)
 								)
 							{
 								continue;
 							}
-                            if($role_id == 'copy' || $role_id == 'dest'
+                            if($role_id == 'copy' || $role_id == 'dest' || $role_id == 'visa' || $role_id == 'sign'
                                     || $usergroups_controler->inGroup($users[$j]['ID'], $role_id))
                                 $possible_roles[$role_id] = $role_label;
                         } 

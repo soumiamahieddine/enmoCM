@@ -871,6 +871,12 @@ class diffusion_list extends dbquery
             case 'copy' :
                 $role_label = _TO_CC;
                 break;
+			case 'sign' :
+                $role_label = _TO_SIGN;
+                break;
+            case 'visa' :
+                $role_label = _VISA_USER;
+                break;
                 
             default:
                 $stmt = $db->query(
