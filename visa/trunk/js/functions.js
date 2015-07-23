@@ -248,7 +248,7 @@ function load_listmodel_visa(
 						saveVisaWorkflow(res_id, coll_id, diff_list_id);
 					}
                 }
-                else {
+                else if (response.status != 1 ){
 					diff_list_div.innerHTML = '';
                     try{
                         $('frm_error').innerHTML = response.error_txt;
