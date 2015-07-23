@@ -428,6 +428,7 @@ class business_app_tools extends dbquery
             foreach ($attachmentTypes->type as $type ) {
                 $label = (string) $type->label;
                 $with_chrono = (string) $type['with_chrono'];
+                $get_chrono = (string) $type['get_chrono'];
                 $show_attachment_type = (string) $type['show'];
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
@@ -437,6 +438,7 @@ class business_app_tools extends dbquery
                 $_SESSION['attachment_types'][(string) $type->id] = $label;
                 $_SESSION['attachment_types_with_chrono'][(string) $type->id] = $with_chrono;
                 $_SESSION['attachment_types_show'][(string) $type->id] = $show_attachment_type;
+                $_SESSION['attachment_types_get_chrono'][(string) $type->id] = $get_chrono;
             }
         }
         

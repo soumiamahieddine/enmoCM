@@ -52,7 +52,7 @@
             <id>simple_attachment</id>
             <label>_A_PJ</label>
         </type>
-        <type show="true" with_chrono="true">
+        <type show="true" with_chrono="true" get_chrono="response_project">
             <id>waybill</id>
             <label>_WAYBILL</label>
         </type>

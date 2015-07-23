@@ -1532,7 +1532,8 @@ function affiche_chrono(){
     
     var type_id = document.getElementById('attachment_types').options[document.getElementById('attachment_types').selectedIndex];
 
-    if (type_id.getAttribute('with_chrono') == 'true') {      
+    if (type_id.getAttribute('with_chrono') == 'true') { 
+        $('get_chrono_display').setStyle({display: 'none'});     
         $('chrono_label').setStyle({display: 'inline'});
         $('chrono_display').setStyle({display: 'inline'});
             new Ajax.Request('index.php?display=true&module=attachments&page=get_chrono_attachment',
@@ -1548,11 +1549,57 @@ function affiche_chrono(){
                         $('chrono').value=response.chronoNB;
                     }
                 });
+    } else if (type_id.getAttribute('get_chrono') != '') {
+        $('chrono_display').setStyle({display: 'none'});
+        $('chrono_display').value='';     
+        $('chrono_label').setStyle({display: 'inline'});
+        $('get_chrono_display').setStyle({display: 'inline'});
+        $('chrono').value='';
+            new Ajax.Request('index.php?display=true&module=attachments&page=get_other_chrono_attachment',
+                {
+                    method:'post',
+                    parameters:
+                    {
+                        type_id : type_id.value
+                    },
+                     onSuccess: function(answer){
+                        eval("response = "+answer.responseText);
+                        $('get_chrono_display').innerHTML=response.chronoList;
+                    }
+                });
     } else {
         $('chrono_label').setStyle({display: 'none'});
+        $('get_chrono_display').setStyle({display: 'none'});
         $('chrono_display').setStyle({display: 'none'});
         $('chrono_display').value='';
         $('chrono').value='';
+    }
+}
+
+function affiche_get_chrono(){
+    
+    var type_id = document.getElementById('attachment_types').options[document.getElementById('attachment_types').selectedIndex];
+
+    if (type_id.getAttribute('get_chrono') == 'true') {      
+        $('get_chrono_label').setStyle({display: 'inline'});
+        $('get_chrono_display').setStyle({display: 'inline'});
+            new Ajax.Request('index.php?display=true&module=attachments&page=get_other_chrono_attachment',
+                {
+                    method:'post',
+                    parameters:
+                    {
+                        type_id : type_id
+                    },
+                     onSuccess: function(answer){
+                        eval("response = "+answer.responseText);
+                        $('get_chrono_display').innerHTML=response.chronoList;
+                    }
+                });
+    } else {
+        $('get_chrono_label').setStyle({display: 'none'});
+        $('get_chrono_display').setStyle({display: 'none'});
+        $('get_chrono_display').value='';
+        $('get_chrono').value='';
     }
 }
 
