@@ -910,11 +910,11 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
             $content .= '<label>' . _ATTACHMENT_TYPES . '</label>';
             $content .= '<select name="attachment_types" id="attachment_types" onchange="affiche_chrono();select_template(\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&module=templates&page='
-                . 'select_templates\', this.options[this.selectedIndex].value)"/>';
+                . 'select_templates\', this.options[this.selectedIndex].value);"/>';
                 $content .= '<option value="">' . _CHOOSE_ATTACHMENT_TYPE . '</option>';
                     foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
                         if($_SESSION['attachment_types_show'][$attachmentType] == "true"){
-                            $content .= '<option value="' . $attachmentType . '" with_chrono = "'. $_SESSION['attachment_types_with_chrono'][$attachmentType].'">';
+                            $content .= '<option value="' . $attachmentType . '" with_chrono = "'. $_SESSION['attachment_types_with_chrono'][$attachmentType].'" get_chrono = "'. $_SESSION['attachment_types_get_chrono'][$attachmentType].'">';
                                 $content .= $_SESSION['attachment_types'][$attachmentType];
                             $content .= '</option>';
                         }
@@ -926,6 +926,7 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
         $content .= '<p>';
             $content .= '<label id="chrono_label" style="display:none">'. _CHRONO_NUMBER.'</label>';
             $content .= '<input type="text" name="chrono_display" id="chrono_display" style="display:none" disabled class="readonly"/>';
+            $content .= '<select name="get_chrono_display" id="get_chrono_display" style="display:none" onchange="$(\'chrono\').value=this.options[this.selectedIndex].value"/>';
             $content .= '<input type="hidden" name="chrono" id="chrono" />';
         $content .= '</p>';
         $content .= '<br/>';
