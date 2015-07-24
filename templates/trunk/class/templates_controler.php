@@ -481,13 +481,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             return false;
         }
         $db = new Database();
-        /*$query = "select template_id from " . _TEMPLATES_ASSOCIATION_TABLE_NAME
-            . " where template_id = '" . $template_id . "'";
-        $db->query($query);
-        if ($db->nb_result() > 0) {
-            $db->disconnect();
-            return true;
-        }*/
+
         $query = "select template_id from " . _TEMPLATES_DOCTYPES_EXT_TABLE_NAME
             . " where template_id = ? ";
         $stmt = $db->query($query, array($template_id));
