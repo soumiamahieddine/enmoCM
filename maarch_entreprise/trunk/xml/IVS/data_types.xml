@@ -88,4 +88,7 @@
     <dataType name="alnumSpace" base="string">
       <pattern value="/^[A-z0-9 ]+$/" />
     </dataType>
+    <dataType name="identifierPoint" base="graph">
+      <pattern value="/^[\w.]+$/" />
+    </dataType>
   </dataTypes>

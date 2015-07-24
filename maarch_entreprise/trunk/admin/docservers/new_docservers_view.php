@@ -310,7 +310,7 @@
             document.body ? document.body.scrollTop : 0
         );
         
-        var listHeight = $('<?php functions::xecho($params['objectName'] ?>_list')).getHeight();
+        var listHeight = $('<?php functions::xecho($params['objectName']); ?>_list').getHeight();
         
         var innerHeight = window.innerHeight;
         var innerWidth  = window.innerWidth;

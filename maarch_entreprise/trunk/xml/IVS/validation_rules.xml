@@ -80,6 +80,40 @@
       <parameter name="submit" type="safetext" />
     </validationRule>
 
+    <validationRule name="admin_docserver_type" extends="standardForm" mode="error">
+      <parameter name="docserver_type_label" type="safetext" />
+      <parameter name="compression_mode" type="alnum" />
+      <parameter name="container_max_number" type="digit" />
+      <parameter name="fingerprint_mode" type="alnum" />
+      <parameter name="id" type="identifier" />
+      <parameter name="is_compressed" type="boolean" />
+      <parameter name="is_container" type="boolean" />
+      <parameter name="is_logged" type="boolean" />
+      <parameter name="is_meta" type="boolean" />
+      <parameter name="is_signed" type="boolean" />
+      <parameter name="log_template" type="identifierPoint" />
+      <parameter name="meta_template" type="identifierPoint" />
+      <parameter name="submit" type="safetext" />
+    </validationRule>
+
+    <validationRule name="admin_docservers" extends="standardForm" mode="error">
+      <parameter name="actual_size_hidden" type="safetext" />
+      <parameter name="adr_priority_number" type="digit" />
+      <parameter name="coll_id" type="collection_list" />
+      <parameter name="device_label" type="safetext" />
+      <parameter name="docserver_location_id" type="identifier" />
+      <parameter name="docserver_type_id" type="identifier" />
+      <parameter name="id" type="identifier" />
+      <parameter name="is_readonly" type="boolean" />
+      <parameter name="path_template" type="safetext" />
+      <parameter name="priority_number" type="digit" />
+      <parameter name="size_format" type="alpha" />
+      <parameter name="size_limit_hidden" type="digit" />
+      <parameter name="size_limit_number" type="digit" />
+      <parameter name="submit" type="safetext" />
+      <parameter name="percentage_full" type="safetext" />
+    </validationRule>
+
     <validationRule name="contactAddressesUpDb" extends="standardForm" mode="error">
       <parameter name="Submit" type="safetext" />
       <parameter name="add_comp" type="safetext" />
