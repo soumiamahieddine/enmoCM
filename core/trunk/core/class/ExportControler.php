@@ -3,7 +3,6 @@
 - Require needed classes
 ------------------------------------------------------------------------------*/
 require_once('core/class/class_functions.php');
-require_once('core/class/class_db.php');
 require_once('core/class/class_history.php');
 
 class EmptyObject {

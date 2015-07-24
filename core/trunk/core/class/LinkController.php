@@ -31,7 +31,6 @@
 
 //Loads the require class
 try {
-    require_once('core/class/class_db.php');
     require_once('core/class/class_history.php');
 } catch (Exception $e) {
     functions::xecho($e->getMessage()) . ' // ';
