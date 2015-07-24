@@ -37,7 +37,7 @@
 require_once("core/class/class_request.php");
 require_once("core/class/class_functions.php");
 require_once("core/class/class_history.php");
-class cases extends dbquery
+class cases
 {
 
 	public function build_modules_tables()
