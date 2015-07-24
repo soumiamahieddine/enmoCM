@@ -148,7 +148,7 @@ if (count($_SESSION['tree_entities']) < 1) {
                                             echo $level1[$i]['id'].'_'.$_SESSION['entities_chosen_tree'];
                                         }
                                         ?>',
-                                        <?php functions::xecho($canhavechildren);?>
+                                        <?php echo $canhavechildren;?>
                                         'txt':'<?php echo addslashes($level1[$i]['id'].' - '.$level1[$i]['label_value']);?>',
                                         'is_entity' : true
                                     },
@@ -168,7 +168,7 @@ if (count($_SESSION['tree_entities']) < 1) {
                                         echo $level1[$i]['id'].'_'.$_SESSION['entities_chosen_tree'];
                                     }
                                     ?>',
-                                    <?php functions::xecho($canhavechildren);?>
+                                    <?php echo $canhavechildren;?>
                                     'txt':'<?php echo addslashes($level1[$i]['id'].' - '.$level1[$i]['label_value']);?>',
                                     'is_entity' : true
                                 }
