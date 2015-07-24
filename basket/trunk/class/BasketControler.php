@@ -387,7 +387,7 @@ class BasketControler
 			echo _UNKNOWN . ' ' . _BASKET . " " . functions::xssafe($basketId) . ' // ';
 		}
 
-		if ($db->nb_result() > 0) {
+		if ($stmt->rowCount() > 0) {
 			return true;
 		}
 
