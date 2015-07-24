@@ -230,7 +230,7 @@ class entity extends dbquery
                                         } ?> value="<?php functions::xecho($entities[$i]['ID']);?>" <?php 
                                         if (isset($_SESSION['m_admin']['entity']['parent']) && $entities[$i]['ID'] == $_SESSION['m_admin']['entity']['parent']) {
                                             echo 'selected="selected"';
-                                        } ?> ><?php functions::xecho($entities[$i]['LABEL']);?></option><?php
+                                        } ?> ><?php echo $entities[$i]['LABEL'];?></option><?php
                                     }
                             }
                             ?>
