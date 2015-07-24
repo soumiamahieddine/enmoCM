@@ -355,8 +355,6 @@ class diffusion_list extends dbquery
         var_dump($oldListInst);
         echo 'new<br/>';
         var_dump($diffList);*/
-        
-        $this->connect();
 
         require_once 'core/class/class_history.php';
         $hist = new history();
@@ -573,8 +571,6 @@ class diffusion_list extends dbquery
 
     function save_listinstance_history($coll_id, $res_id, $difflistType){
 
-        //$dbListinstance = new dbquery();
-        //$dbListinstance->connect();
         $db = new Database();
         $db->query("INSERT INTO listinstance_history (coll_id, res_id, updated_by_user, updated_date) VALUES (?, ?, ?, current_timestamp)",array($coll_id,$res_id,$_SESSION['user']['UserId']));
         $listinstance_history_id = $db->lastInsertId('listinstance_history_id_seq'); 

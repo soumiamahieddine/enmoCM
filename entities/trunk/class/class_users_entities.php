@@ -372,7 +372,6 @@ class users_entities extends dbquery
         }
         else
         {
-            $this->connect();
 
             if($mode == "up")
             {

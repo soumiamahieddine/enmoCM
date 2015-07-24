@@ -52,11 +52,13 @@ $what = '';
 $where = '';
 
 $list = new list_show();
+$arrayPDO = array();
 
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($_REQUEST['what']);
-	$where = " lower(difflist_type_label) like lower('".$what."%')";
+	$where = " lower(difflist_type_label) like lower(?)";
+    $arrayPDO = array_merge($arrayPDO, array($what."%"));
 }
 
 $order = 'asc';
@@ -75,8 +77,7 @@ $orderstr = $list->define_order($order, $field);
 $select[ENT_DIFFLIST_TYPES] = array();
 array_push($select[ENT_DIFFLIST_TYPES], "difflist_type_id", "difflist_type_label", 'is_system');
 
-$tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype']);
-//$request->show();
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
 
 for ($i=0;$i<count($tab);$i++)
 {

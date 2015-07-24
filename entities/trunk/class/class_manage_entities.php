@@ -1356,7 +1356,7 @@ class entity extends dbquery
     public function formDeleteEntity($s_id, $label, $entities, $admin)
     {
         echo '<h1><i class="fa fa-sitemap fa-2x"></i> '._ENTITY_DELETION.'</h1>';
-        $this->connect();
+
         $element_found = false;
         $haveChild = false;
         $tables = array();

@@ -58,7 +58,7 @@ try {
 class EntityControler
 {
     /**
-    * Dbquery object used to connnect to the database
+    * Db query object used to connnect to the database
     */
     private static $db;
 

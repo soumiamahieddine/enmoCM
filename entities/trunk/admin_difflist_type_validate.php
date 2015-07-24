@@ -10,14 +10,13 @@ $difflist = new diffusion_list();
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("modules/entities/entities_tables.php");
-$request = new request();
-$request->connect();
+
 $db = new Database();
 
-$difflist_type_id    = $request->protect_string_db($_REQUEST['difflist_type_id']); 
-$difflist_type_label = $request->protect_string_db($_REQUEST['difflist_type_label']);
-$difflist_type_roles = $request->protect_string_db($_REQUEST['difflist_type_roles']);
-$allow_entities      = $request->protect_string_db($_REQUEST['allow_entities']);
+$difflist_type_id    = functions::protect_string_db($_REQUEST['difflist_type_id']); 
+$difflist_type_label = functions::protect_string_db($_REQUEST['difflist_type_label']);
+$difflist_type_roles = functions::protect_string_db($_REQUEST['difflist_type_roles']);
+$allow_entities      = functions::protect_string_db($_REQUEST['allow_entities']);
 
 # Controls
 $errors = false;

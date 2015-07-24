@@ -31,9 +31,8 @@ if($_SESSION['user']['UserId'] != 'superadmin')
 }
 
 $sql = $select.$where." order by entity_id";
-$ent->connect();
+
 $stmt = $db->query($sql,array($_REQUEST['what']."%",$_REQUEST['what']."%"));
-// $ent->show();
 
 $entities = array();
 while($line = $stmt->fetchObject())

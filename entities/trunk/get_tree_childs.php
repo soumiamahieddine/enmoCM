@@ -5,8 +5,7 @@ if (isset($_POST['branch_id'])) {
     require("modules/entities/entities_tables.php");
     $core_tools = new core_tools();
     $core_tools->load_lang();
-    $ent = new entity();
-    $ent->connect();
+
     $children = array();
     $db = new Database();
     
@@ -18,10 +17,10 @@ if (isset($_POST['branch_id'])) {
         while ($res = $stmt->fetchObject()) {
             $canhavechildren = 'canhavechildren:false, ';
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
-                $labelValue = '<span class="entity_tree_element_ok">' . $ent->show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
+                $labelValue = '<span class="entity_tree_element_ok">' . functions::show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
                             . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>';
             } else {
-                $labelValue = '<small><i>' . $ent->show_string($res->lastname . ' ' . $res->firstname, true) . '</i></small>';
+                $labelValue = '<small><i>' . functions::show_string($res->lastname . ' ' . $res->firstname, true) . '</i></small>';
             }
             array_push(
                 $children, 
@@ -44,10 +43,10 @@ if (isset($_POST['branch_id'])) {
             while ($res = $stmt->fetchObject()) {
                 $canhavechildren = 'canhavechildren:false, ';
                 if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
-                    $labelValue = '<span class="entity_tree_element_ok">' . $ent->show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
+                    $labelValue = '<span class="entity_tree_element_ok">' . functions::show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
                                 . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>';
                 } else {
-                    $labelValue = '<small><i>' . $ent->show_string($res->lastname . ' ' . $res->firstname, true) . '</i></small>';
+                    $labelValue = '<small><i>' . functions::show_string($res->lastname . ' ' . $res->firstname, true) . '</i></small>';
                 }
                 array_push(
                     $children, 
@@ -65,14 +64,14 @@ if (isset($_POST['branch_id'])) {
     }
     $stmt = $db->query("select entity_id, entity_label from " 
         . ENT_ENTITIES . " where parent_entity_id = ? order by entity_label",array($_POST['branch_id']));
-    //$ent->show();
+
     if ($stmt->rowCount() > 0) {
         while ($res = $stmt->fetchObject()) {
             $canhavechildren = '';
             $canhavechildren = 'canhavechildren:true, ';
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
                 $labelValue = '<span class="entity_tree_element_ok"><a href="index.php?page=entity_up&module=entities&id=' 
-                            . $res->entity_id . '" target="_top">' . $ent->show_string($res->entity_label, true) . '</a></span>';
+                            . $res->entity_id . '" target="_top">' . functions::show_string($res->entity_label, true) . '</a></span>';
             } else {
                 $labelValue = '<small><i>' . functions::show_string($res->entity_label, true) . '</i></small>';
             }

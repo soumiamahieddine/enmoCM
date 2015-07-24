@@ -53,11 +53,13 @@ $request = new request;
 
 $what = '';
 $where = '';
+$arrayPDO = array();
 
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($_REQUEST['what']);
-	$where = " lower(entity_label) like lower('".$what."%') ";
+	$where = " lower(entity_label) like lower(?) ";
+    $arrayPDO = array_merge($arrayPDO, array($what."%"));
 }
 
 if($_SESSION['user']['UserId'] != 'superadmin')
@@ -92,7 +94,7 @@ $orderstr = $list->define_order($order, $field);
 $select[ENT_ENTITIES] = array();
 array_push($select[ENT_ENTITIES], "entity_id", "entity_label", "entity_type", "enabled");
 
-$tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype']);
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
 //$request->show();
 
 for ($i=0;$i<count($tab);$i++)

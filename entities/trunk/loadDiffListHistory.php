@@ -8,7 +8,6 @@ require_once('modules/entities/class/class_manage_listdiff.php');
 $diff_list = new diffusion_list();
 $db = new Database();
 
-     $diff_list->connect();
       $roles = $diff_list->list_difflist_roles();
       
       $listinstance = array();
@@ -20,7 +19,7 @@ $db = new Database();
 
       $stmt = $db->query($query,array($_REQUEST['listinstance_history_id']));
 
-      $listinstance = $stmt->fetch_assoc();
+      $listinstance = $stmt->fetch();
       if($listinstance['difflist_type'] == "")
           $listinstance['difflist_type'] = 'entity_id';
       

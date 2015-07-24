@@ -8,8 +8,7 @@ $core->load_lang();
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("modules/entities/entities_tables.php");
-$request = new request();
-$request->connect();
+
 $db = new Database();
 
 $mode = $_REQUEST['mode'];

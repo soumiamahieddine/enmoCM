@@ -58,11 +58,13 @@ $what = '';
 $where = '';
 
 $list = new list_show();
+$arrayPDO = array();
 
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($_REQUEST['what']);
-	$where = " lower(object_id) like lower('".$what."%') and ";
+	$where = " lower(object_id) like lower(?) and ";
+    $arrayPDO = array_merge($arrayPDO, array($what."%"));
 }
 
 if($_SESSION['user']['UserId'] != 'superadmin') {
@@ -90,8 +92,7 @@ $select[ENT_LISTMODELS] = array();
 array_push($select[ENT_LISTMODELS], "object_type || '|' || object_id as list_id", 'object_type', 'object_id', 'title', 'description');
 
 $where .= ' 1=1 group by object_type, object_id, title, description';
-$tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype']);
-//$request->show();
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
 
 for ($i=0;$i<count($tab);$i++)
 {

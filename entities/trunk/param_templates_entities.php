@@ -73,12 +73,12 @@ elseif($_SESSION['service_tag'] == 'load_template_session')
     $template = new templates();
     $entities = $template->getAllItemsLinkedToModel($_SESSION['m_admin']['template']['ID'], 'destination');
     $_SESSION['m_admin']['template']['ENTITIES_LIST'] = array();
-    $template->connect();
+
     $db = new Database();
     for($i=0; $i<count($entities['destination']);$i++)
     {
         $stmt = $db->query("select entity_label from ".ENT_ENTITIES." where entity_id = ?",array($entities['destination'][$i]) );
-        $res = $stmt->fetch_array();
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
         array_push($_SESSION['m_admin']['template']['ENTITIES_LIST'], array('ID' => $entities['destination'][$i], 'LABEL' => $res->label));
     }
 
