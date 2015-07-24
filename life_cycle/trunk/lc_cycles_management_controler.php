@@ -232,9 +232,11 @@ function display_list() {
     $what = "";
     $where ="";
     $func = new functions();
+    $arrayPDO = array();
     if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
         $what = $_REQUEST['what'];
-        $where = "lower(".$idName.") like lower('".$what."%') ";
+        $where = "lower(".$idName.") like lower(?) ";
+        $arrayPDO = array_merge($arrayPDO, array($what.'%'));
     }
 
     // Checking order and order_field values
@@ -249,7 +251,7 @@ function display_list() {
     $listShow = new list_show();
     $orderstr = $listShow->define_order($order, 'lc_cycles.' . $field);
     $request = new request();
-    $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+    $tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype']);
     //$request->show();
     for ($i=0;$i<count($tab);$i++) {
         foreach($tab[$i] as &$item) {
