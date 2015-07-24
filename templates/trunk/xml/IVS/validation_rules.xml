@@ -1,3 +1,34 @@
 <validationRules>
+	<!--validationRule name="template_manage_list" extends="standardForm" mode="error">
+		<parameter name="what" type="safetext" />
+	</validationRule-->
+	<validationRule name="template_manage_add" extends="standardForm" mode="error">
+		<parameter name="id" type="identifier" />
+		<parameter name="module" type="identifier" />
+		<parameter name="what" type="safetext" />
+		<parameter name="template_label" type="safetext" />
+		<parameter name="template_comment" type="safetext" />
+		<parameter name="template_target" type="identifier" />
+		<parameter name="template_attachment_type" type="identifier" />
+		<parameter name="template_type" type="identifier" />
+		<parameter name="template_datasource" type="identifier" />
+		<parameter name="template_content" type="safetext" />
+		<parameter name="template_content_txt" type="safetext" />
+		<parameter name="template_style" type="safetext" />
+		<parameter name="template_content" type="safetext" />
+		<parameter name="entities_chosen" type="identifier" />
+		<parameter name="submit" type="identifier" />
+		<parameter name="Submit" type="safetext" />
+	</validationRule>
+	<validationRule name="template_ajax_content_for_mails" extends="standardForm" mode="error">
+		<parameter name="templateId" type="identifier" />
+	</validationRule>
+	<validationRule name="template_ajax_content_for_notes" extends="standardForm" mode="error">
+		<parameter name="templateId" type="identifier" />
+	</validationRule>
+	<validationRule name="select_templates" extends="standardForm" mode="error">
+		<parameter name="attachment_type" type="identifier" />
+	</validationRule>
+	
 
 </validationRules>
