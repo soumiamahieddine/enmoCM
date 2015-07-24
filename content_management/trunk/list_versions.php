@@ -22,12 +22,12 @@ array_push(
     'typist',
     'creation_date'
 );
-$whereClause = " res_id_master = " . $_SESSION['doc_id']
-    . " and status <> 'DEL'";
+$whereClause = " res_id_master = ? and status <> 'DEL'";
 $requestVersions = new request();
-$tabVersions = $requestVersions->select(
+$tabVersions = $requestVersions->PDOselect(
     $selectVersions,
     $whereClause,
+    array($_SESSION['doc_id']),
     ' order by res_id desc',
     $_SESSION['config']['databasetype'],
     '500',

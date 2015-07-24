@@ -47,11 +47,11 @@
 *
 * @ingroup content_management
 */
-class content_management extends dbquery
+class content_management
 {
     function __construct()
     {
-        parent::__construct();
+        // parent::__construct();
         $this->index = array();
     }
 
