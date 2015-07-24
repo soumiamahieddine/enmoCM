@@ -25,8 +25,8 @@ $notes_mod_tools = new notes();
 //here we loading the lang vars
 $core->load_lang();
 $func = new functions();
-$db = new dbquery();
-$db->connect();
+$db = new Database();
+
 $core->load_html();
 //here we building the header
 $core->load_header(_ADD_NOTE, true, false);
@@ -66,7 +66,6 @@ if (isset($_REQUEST['table']) && ! empty($_REQUEST['table'])) {
 <?php
 
 if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
-    $date = $db->current_datetime();
 
     $db->query(
         "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, date_note, "

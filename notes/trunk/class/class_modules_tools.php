@@ -25,11 +25,11 @@ try {
     echo $e->getMessage().' // ';
 }
 
-class notes extends dbquery
+class notes
 {
 
     /**
-    * Dbquery object used to connnect to the database
+    * Db query object used to connnect to the database
     */
     private static $db;
     
@@ -52,28 +52,6 @@ class notes extends dbquery
     * Entities table
     */
     public static $entities_table ;
-    
-     /**
-    * Opens a database connexion and values the tables variables
-    */
-    public function connect()
-    {
-        $db = new dbquery();
-        $db->connect();
-        self::$notes_table = NOTES_TABLE;
-        self::$notes_entities_table = NOTE_ENTITIES_TABLE;
-        self::$entities_table = 'entities';
-
-        self::$db=$db;
-    }
-
-    /**
-    * Close the database connexion
-    */
-    public function disconnect()
-    {
-        self::$db->disconnect();
-    }
     
     /**
     * Build Maarch module tables into sessions vars with a xml configuration
