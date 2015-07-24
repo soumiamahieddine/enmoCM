@@ -1,6 +1,6 @@
 <?php
 
-class thumbnails extends dbquery
+class thumbnails
 {
 	/*function __construct()
 	{
@@ -49,7 +49,6 @@ class thumbnails extends dbquery
 		} else {
 			$table = $_SESSION['collections'][0]['table'];
 		}
-		
 		
 		$db = new Database();
 		
