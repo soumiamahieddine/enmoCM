@@ -247,40 +247,7 @@ if (empty($fileplan_id)) {
 	//Request
 
 		$tab=$request->PDOselect($select,$where,$array_what,$orderstr,$_SESSION['config']['databasetype']);
-		/*
-		$request->query
-			(
-				" with recursive detailed_position as (
-				select fileplan_id, fileplan_label, position_id, position_label, parent_id, user_id, 
-					cast(position_label as character varying(512)) as position_path, position_enabled 
-				from ".FILEPLAN_VIEW."
-				where parent_id is null 
-				union all
-					select l.fileplan_id, l.fileplan_label, l.position_id, l.position_label, l.parent_id, l.user_id, 
-						cast(p.position_path || '/' || l.position_label as  character varying(512)) as position_path , l.position_enabled 
-					from ".FILEPLAN_VIEW." l 
-					join detailed_position as p on l.parent_id = p.position_id	
-				)
-				select user_id, fileplan_id, fileplan_label, position_id, position_label, parent_id, position_path, position_enabled from detailed_position;"
-				. $where." ".$orderstr
-			);
-		
-		
-		$tab=array();
-		while($line = $request->fetch_array())
-		{
-			$temp= array();
-			foreach (array_keys($line) as $resval)
-			{
-				if (!is_int($resval))
-				{
-					array_push($temp,array('column'=>$resval,'value'=>$line[$resval]));
-				}
-			}
-			array_push($tab, $temp);
-		}
-		*/   
-		// $request->show();
+
 	//Result array    
 		for ($i=0;$i<count($tab);$i++)
 		{
