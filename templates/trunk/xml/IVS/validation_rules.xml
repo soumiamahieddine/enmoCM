@@ -28,6 +28,7 @@
 	</validationRule>
 	<validationRule name="select_templates" extends="standardForm" mode="error">
 		<parameter name="attachment_type" type="identifier" />
+		<parameter name="module" type="identifier" />
 	</validationRule>
 	
 
