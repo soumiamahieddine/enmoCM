@@ -76,6 +76,15 @@
     <dataType name="keyword_id" base="string">
       <pattern value="/^[\w ]+$/" />
     </dataType>
+    <dataType name="document_id" base="string">
+      <pattern value="/^[\w: ]+$/" />
+    </dataType>
+    <dataType name="docserver_file" base="string">
+      <pattern value="/^[A-z0-9.]+$/" />
+    </dataType>
+    <dataType name="docserver_path" base="string">
+      <pattern value="/^[0-9#]+$/" />
+    </dataType>
     <dataType name="alnumSpace" base="string">
       <pattern value="/^[A-z0-9 ]+$/" />
     </dataType>
