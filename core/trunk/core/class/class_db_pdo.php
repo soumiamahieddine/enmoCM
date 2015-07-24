@@ -208,14 +208,14 @@ class Database extends functions
         switch($_SESSION['config']['databasetype']) {
         case 'MYSQL'        : return @mysqli_insert_id($this->_sqlLink);
         case 'POSTGRESQL'   : 
-            $this->query = @pg_query("select last_value as lastinsertid from " . $sequenceName);
-            $line = @pg_fetch_object($this->query);
-            return $line->lastinsertid;
+            $stmt_last_insert = $this->query("SELECT last_value as lastinsertid FROM " . $sequenceName);
+            $resultat_last = $stmt_last_insert->fetchObject();
+            return $resultat_last->lastinsertid;
         case 'SQLSERVER'    : return '';
         case 'ORACLE'       : 
-            $this->query("select " . $sequenceName . ".currval as lastinsertid from dual");
-            $line = $this->fetch_object($this->query);
-            return $line->lastinsertid;
+            $stmt_last_insert = $this->query("SELECT " . $sequenceName . ".currval as lastinsertid FROM dual");
+            $resultat_last = $stmt_last_insert->fetchObject();
+            return $resultat_last->lastinsertid;
         default             : return false;
         }   
     }
