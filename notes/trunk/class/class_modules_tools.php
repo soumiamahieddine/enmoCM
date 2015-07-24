@@ -218,7 +218,7 @@ class notes
                 if($stmt->rowCount()<>0) {
                     array_push($userNotes,
                         array('id' => $res->id, //ID
-                              'label' => $this->show_string($res->note_text), //Label
+                              'label' => functions::show_string($res->note_text), //Label
                               'author' => $res->user_id, //Author 
                               'date' => $res->date_note //Date
                             )
