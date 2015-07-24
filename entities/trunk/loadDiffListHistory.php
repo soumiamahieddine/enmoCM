@@ -64,8 +64,8 @@ $db = new Database();
       $stmt = $db->query(
           "select l.item_id,  e.entity_label, l.visible, l.viewed, l.item_mode, l.difflist_type from listinstance_history_details l, " 
           . ENT_ENTITIES . " e where l.listinstance_history_id =  ?"
-          . " and l.item_type = 'entity_id' and l.item_id = e.entity_id ",array($_REQUEST['listinstance_history_id'])
-          . "order by l.sequence "
+          . " and l.item_type = 'entity_id' and l.item_id = e.entity_id "
+          . "order by l.sequence ",array($_REQUEST['listinstance_history_id'])
       );
 
       while ($res = $stmt->fetchObject()) {
