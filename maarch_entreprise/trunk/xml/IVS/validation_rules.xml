@@ -67,6 +67,7 @@
       <parameter name="process_delay" type="integer" />
       <parameter name="sous_dossier" type="integer" />
       <parameter name="template" type="string" />
+      <parameter name="templates" type="integer" />
     </validationRule>
 
     <validationRule name="admin_docserver_location" extends="standardForm" mode="error">
