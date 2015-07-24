@@ -34,8 +34,6 @@ require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
 require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
     . 'class_functions.php');
 require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
-    . 'class_db.php');
-require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
     . 'class_security.php');
 require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
     . 'class_resource.php');

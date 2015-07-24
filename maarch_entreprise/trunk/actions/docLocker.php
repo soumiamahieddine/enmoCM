@@ -34,16 +34,6 @@ class docLocker
         $appId            = $_SESSION['config']['app_id'];
         $customOverrideId = $_SESSION['custom_override_id'];
 
-        // // class_db
-        $classDBCustomPath = $corePath . 'custom/' . $customOverrideId . '/core/class/class_db.php';
-        $classDBPath       = $corePath . 'core/class/class_db.php';
-
-        if (is_file($classDBCustomPath))
-            require_once $classDBCustomPath;
-        else if (is_file($classDBPath))
-            require_once $classDBPath;
-        else
-            exit("can't find class_db");
     }
 
     public function canOpen()

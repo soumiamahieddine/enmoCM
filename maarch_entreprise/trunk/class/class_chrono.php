@@ -11,8 +11,7 @@
 * @author  Loïc Vinet  <dev@maarch.org>
 *
 */
-require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'class_db.php';
+
 require_once 'core/core_tables.php';
 
 class chrono
