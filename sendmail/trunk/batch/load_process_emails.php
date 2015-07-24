@@ -174,7 +174,7 @@ try {
     );
     Bt_myInclude(
         $GLOBALS['maarchDirectory'] . 'core' . DIRECTORY_SEPARATOR . 'class' 
-        . DIRECTORY_SEPARATOR . 'class_db.php'
+        . DIRECTORY_SEPARATOR . 'class_db_pdo.php'
     );
     Bt_myInclude(
         $GLOBALS['maarchDirectory'] . 'core' . DIRECTORY_SEPARATOR . 'class' 
