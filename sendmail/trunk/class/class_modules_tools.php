@@ -663,10 +663,9 @@ class sendmail extends Database
 		require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
             . "class" . DIRECTORY_SEPARATOR
             . "class_modules_tools.php";
-        $notes_tools    = new notes();
+        $notes_tools = new notes();
 		
-		$db = new dbquery();
-        $db->connect();
+		$db = new Database();
 				
         if (count($notesArray) > 0) {
 			//Format

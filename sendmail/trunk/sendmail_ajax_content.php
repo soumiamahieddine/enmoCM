@@ -67,7 +67,6 @@ function _parse_error($text) {
 }
     
 $core_tools->load_lang();
-$request->connect();
 
 $status = 0;
 $error = $content = $js = $parameters = '';
