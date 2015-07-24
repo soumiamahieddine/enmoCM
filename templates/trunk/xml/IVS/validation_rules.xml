@@ -19,15 +19,25 @@
 		<parameter name="entities_chosen" type="identifier" />
 		<parameter name="submit" type="identifier" />
 		<parameter name="Submit" type="safetext" />
+		<parameter name="template_file_name" type="docserver_file" />
+		<parameter name="template_path" type="docserver_path" />
 	</validationRule>
+	
 	<validationRule name="template_ajax_content_for_mails" extends="standardForm" mode="error">
 		<parameter name="templateId" type="identifier" />
 	</validationRule>
+
 	<validationRule name="template_ajax_content_for_notes" extends="standardForm" mode="error">
 		<parameter name="templateId" type="identifier" />
 	</validationRule>
+
 	<validationRule name="select_templates" extends="standardForm" mode="error">
 		<parameter name="attachment_type" type="identifier" />
+		<parameter name="module" type="identifier" />
+	</validationRule>
+
+	<validationRule name="admin_change_templates" extends="standardForm" mode="error">
+		<parameter name="template_style" type="document_id" />
 		<parameter name="module" type="identifier" />
 	</validationRule>
 	

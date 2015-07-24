@@ -23,5 +23,10 @@
         <parameter name="module" value="templates"/>
         <parameter name="display" value="true"/>
     </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_change_templates" >
+        <parameter name="page" value="change_template_style"/>
+        <parameter name="module" value="templates"/>
+        <parameter name="display" value="false"/>
+    </requestDefinition>
 
 </requestDefinitions>
