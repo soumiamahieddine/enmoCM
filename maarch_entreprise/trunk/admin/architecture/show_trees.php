@@ -120,11 +120,7 @@ else
             }
 
             function myClick(branch) {
-                //window.top.frames['view'].location.href='<?php echo $_SESSION['urltomodules']."indexing_searching/view_type_folder.php?id=";?>'+branch.getId());;
-                //window.top.frames['view'].location.href='<?php echo $_SESSION['urltomodules']."indexing_searching/view_type_folder.php?id=";?>'+branch.getId());
-                //window.top.frames['view'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/little_details_invoices.php?id='+branch.getId();
-                //alert(branch.getId());
-                //branch.setText('<b>'+branch.getText()+'</b>');
+
             }
 
             function MyOpen(branch)
