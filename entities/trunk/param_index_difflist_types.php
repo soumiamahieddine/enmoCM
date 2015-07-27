@@ -197,9 +197,7 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
         {
             $query = "SELECT lmt.difflist_type_id, lmt.difflist_type_label FROM " . ENT_GROUPBASKET_DIFFLIST_TYPES . " gblmt left join " . ENT_DIFFLIST_TYPES 
                 . " lmt on lmt.difflist_type_id = gblmt.difflist_type_id "
-                . " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
-                . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']))
-                . "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'];
+                . " where basket_id= ? and group_id = ? and action_id = ?";
             $stmt = $db->query($query,array(trim($_SESSION['m_admin']['basket']['basketId']),trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']),$_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION']));
             $difflist_types = array();
             while($difflist_type = $stmt->fetchObject()) {
@@ -212,9 +210,7 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
             
             $query = "SELECT lmt.difflist_type_id, lmt.difflist_type_label FROM " . ENT_GROUPBASKET_DIFFLIST_TYPES . " gblmt left join " . ENT_DIFFLIST_TYPES 
                 . " lmt on lmt.difflist_type_id = gblmt.difflist_type_id "
-                . " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
-                . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']))
-                . "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'];
+                . " where basket_id= ? and group_id = ? and action_id = ?";
             $stmt = $db->query($query,array(trim($_SESSION['m_admin']['basket']['basketId']),trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']),$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION']));
             $difflist_types = array();
             while($difflist_type = $stmt->fetchObject()) {
@@ -244,9 +240,9 @@ elseif($_SESSION['service_tag'] == 'load_basket_db')
             //$ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'],$_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['difflist_types']);
             $stmt = $db->query(
             "DELETE FROM " . ENT_GROUPBASKET_DIFFLIST_TYPES
-            . " where basket_id= ? "
-            . "' and group_id = ? "
-            . "' and action_id = ? ",array(trim($_SESSION['m_admin']['basket']['basketId']),trim($GroupBasket['GROUP_ID']),$GroupBasket['DEFAULT_ACTION']));
+            . " where basket_id = ? "
+            . " and group_id = ? "
+            . " and action_id = ? ",array(trim($_SESSION['m_admin']['basket']['basketId']),trim($GroupBasket['GROUP_ID']),$GroupBasket['DEFAULT_ACTION']));
             
             for ($k = 0; $k < count($GroupBasket['PARAM_DEFAULT_ACTION']['difflist_types']); $k++) {
                 $difflist_type = $GroupBasket['PARAM_DEFAULT_ACTION']['difflist_types'][$k];
@@ -281,7 +277,7 @@ elseif($_SESSION['service_tag'] == 'load_basket_db')
 else if($_SESSION['service_tag'] == 'del_basket' && !empty($_SESSION['temp_basket_id']))
 {
     $db = new Database();
-    $stmt = $db->query("delete from ".ENT_GROUPBASKET_DIFFLIST_TYPES." where basket_id = ?",array($_SESSION['temp_basket_id']));
+    $stmt = $db->query("DELETE FROM ".ENT_GROUPBASKET_DIFFLIST_TYPES." WHERE basket_id = ?",array($_SESSION['temp_basket_id']));
     unset($_SESSION['temp_basket_id']);
 }
 ?>
