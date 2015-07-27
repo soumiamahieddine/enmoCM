@@ -109,7 +109,7 @@ function locationBarManagement($mode)
     	'list' => 'groups_list',
     );
     $init = false;
-    if (isset($_REQUEST['reini$ctt']) && $_REQUEST['reinit'] == 'true') {
+    if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
         $init = true;
     }
     $level = '';

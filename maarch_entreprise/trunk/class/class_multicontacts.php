@@ -33,7 +33,7 @@ try {
     echo $e->getMessage().' // ';
 }
 
-class multicontacts extends Dabase
+class multicontacts extends Database
 {
     public function updateContactsInputField($ajaxPath, $contactsArray, $inputField, $readOnly=false) 
 	{
@@ -53,7 +53,7 @@ class multicontacts extends Dabase
                     if ($readOnly === false) {
                         $content .= '&nbsp;<div class="email_delete_button" id="'.$key.'"'
                             . 'onclick="updateMultiContacts(\''.$ajaxPath
-                            .'&mode=adress\', \'del\', \''.$contacts.'\', \''
+                            .'&mode=adress\', \'del\', \''.addslashes($contacts).'\', \''
                             .$inputField.'\', this.id, \''.$contactsArray['addressid'][$key].'\', \''.$contactsArray['contactid'][$key].'\');" alt="'._DELETE.'" title="'
                             ._DELETE.'">x</div>';
                     }

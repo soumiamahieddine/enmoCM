@@ -64,23 +64,6 @@ while($res1 = $stmt->fetchObject())
 
 array_push($search_customer_results, array('contact' => _VIEW_TREE_CONTACTS . ' ' . _TREE_INFO, 'content' => $f_level));
 
-//$core_tools->show_array($search_customer_results);
-
-// if (file_exists(
-//     $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-//     . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-//     . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-//     . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'contacts'
-//     . DIRECTORY_SEPARATOR . 'contact_tree' . DIRECTORY_SEPARATOR . 'get_tree_children_contact.php'
-// )
-// ) {
-//     $openlink = '../../custom/'
-//            . $_SESSION['custom_override_id']
-//           . '/apps/' . $_SESSION['config']['app_id'] 
-//           . '/admin/contacts/contact_tree/get_tree_children_contact.php';
-// } else {
-//     $openlink = 'admin/contacts/contact_tree/get_tree_children_contact.php';
-// }
 
 $openlink =  $_SESSION['config']['businessappurl']."index.php?display=true&page=get_tree_children_contact";
 
@@ -96,11 +79,7 @@ $openlink =  $_SESSION['config']['businessappurl']."index.php?display=true&page=
     }
 
     function myClick(branch) {
-        //window.top.frames['view'].location.href='<?php echo $_SESSION['urltomodules']."indexing_searching/view_type_folder.php?id=";?>'+branch.getId());;
-        //window.top.frames['view'].location.href='<?php echo $_SESSION['urltomodules']."indexing_searching/view_type_folder.php?id=";?>'+branch.getId());
-        //window.top.frames['view'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/little_details_invoices.php?id='+branch.getId();
-        //alert(branch.getId());
-        //branch.setText('<b>'+branch.getText()+'</b>');
+
     }
 
     function MyOpen(branch)

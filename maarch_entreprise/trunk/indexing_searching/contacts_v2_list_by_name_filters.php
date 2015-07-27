@@ -82,7 +82,7 @@ $query = "SELECT lastname, firstname, user_id FROM users WHERE (lower(lastname) 
 
 $arrayPDO = array(":what" => '%'.$_REQUEST['what'].'%');
 
-$stmt = $db->query($query);
+$stmt = $db->query($query, $arrayPDO);
 
 while ($line = $stmt->fetchObject()) {
     $listArray[$line->user_id] .= $line->firstname . " " . $line->lastname;

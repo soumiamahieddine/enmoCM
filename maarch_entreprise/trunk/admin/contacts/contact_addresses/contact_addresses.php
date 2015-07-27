@@ -283,8 +283,7 @@ for ($i = 0; $i < count($tab); $i ++) {
     } else {
         $paramsTab['urlParameters'] = '&dir=my_contacts&letters&display=true';                                   //parametre d'url supplementaire        
     }
-//    $paramsTab['pagePicto'] = $_SESSION['config']['businessappurl']
-//            ."static.php?filename=manage_contact_b.gif";                                //Image (pictogramme) de la page
+
     $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
     $paramsTab['bool_showSearchTools'] = true;                                          //Afficle le filtre alphabetique et le champ de recherche
     $paramsTab['bool_showSearchBox'] = false;

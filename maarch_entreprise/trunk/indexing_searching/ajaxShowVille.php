@@ -16,8 +16,8 @@ while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
     for ($c=0; $c < $num; $c++) {
     	$pos = stripos($data[2], $_POST['what']);
     	if ($pos === 0) {
-    	echo '<li id="'. $data[2].','. $request->show_string(trim($data[3])).'">'.$data[2].' - '.$request->show_string(trim($data[3])).'</li>';
-    	break;
+    	    echo '<li id="'. $data[2].','. $request->show_string(trim($data[3])) .'">'.$data[2].' - '.$request->show_string(trim($data[3])).'</li>';
+    	    break;
 		}
     }
     $row++;

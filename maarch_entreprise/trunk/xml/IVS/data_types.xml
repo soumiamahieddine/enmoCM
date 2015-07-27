@@ -28,6 +28,10 @@
       <enumeration value="Y" />
       <enumeration value="N" />
     </dataType>
+    <dataType name="YesNO" base="string">
+      <enumeration value="yes" />
+      <enumeration value="no" />
+    </dataType>
     <dataType name="mode" base="string">
       <enumeration value="add" />
       <enumeration value="up" />
@@ -38,6 +42,8 @@
       <enumeration value="popup" />
       <enumeration value="ban" />
       <enumeration value="allow" />
+      <enumeration value="adress" />
+      <enumeration value="view" />
     </dataType>
     <dataType name="collection_list" base="string">
       <enumeration value="letterbox_coll" />
@@ -52,10 +58,18 @@
       <enumeration value="mlb_coll_ext" />
       <enumeration value="business_coll_ext" />
     </dataType>
+    <dataType name="res_view_table_list" base="string">
+      <enumeration value="res_view_letterbox" />
+    </dataType>
     <dataType name="category_list" base="string">
       <enumeration value="incoming" />
       <enumeration value="outgoing" />
       <enumeration value="internal" />
+    </dataType>
+    <dataType name="contact_user_list" base="string">
+      <enumeration value="contacts" />
+      <enumeration value="users" />
+      <enumeration value="multi" />
     </dataType>
     <dataType name="personname" base="string">
       <pattern value="/^[A-z\s\-\']+$/" />
@@ -71,7 +85,7 @@
       <pattern value="/^[0-9\-\+ ]{9,20}$/" />
     </dataType>
     <dataType name="filename" base="graph">
-      <pattern value="/^[\w-]+$/" />
+      <pattern value="/^[\w-.]+$/" />
     </dataType>
     <dataType name="keyword_id" base="string">
       <pattern value="/^[\w ]+$/" />
@@ -87,6 +101,9 @@
     </dataType>
     <dataType name="alnumSpace" base="string">
       <pattern value="/^[A-z0-9 ]+$/" />
+    </dataType>
+    <dataType name="NumComma" base="string">
+      <pattern value="/^[0-9,]+$/" />
     </dataType>
     <dataType name="identifierPoint" base="graph">
       <pattern value="/^[\w.]+$/" />
