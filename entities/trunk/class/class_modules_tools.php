@@ -395,7 +395,7 @@ class entities extends dbquery
         $db = new Database();
         $stmt = $db->query(
         	"DELETE FROM " . ENT_GROUPBASKET_REDIRECT
-            . " where basket_id= ? and group_id = ? and action_id = ?",array(trim($basketId),trim($groupId),$actionId)
+            . " where basket_id= ? and group_id = ? and action_id = ?",array(trim($basketId), trim($groupId), $actionId)
         );
         $redirectMode = 'ENTITY';
         for ($i = 0; $i < count($entities); $i ++) {
@@ -410,7 +410,7 @@ class entities extends dbquery
             $stmt = $db->query(
             	"INSERT INTO " . ENT_GROUPBASKET_REDIRECT
                 . " (group_id, basket_id, action_id, entity_id, keyword,"
-                . " redirect_mode ) values ( ?, ?, ?, ?, ?, ?)",array(trim($groupId),trim($basketId),trim($entityId),trim($keyword),$redirectMode)
+                . " redirect_mode ) values ( ?, ?, ?, ?, ?, ?)",array(trim($groupId), trim($basketId), $actionId, trim($entityId), trim($keyword), $redirectMode)
             );
         }
 
@@ -426,7 +426,7 @@ class entities extends dbquery
             $stmt = $db->query(
             	"INSERT INTO " . ENT_GROUPBASKET_REDIRECT . " (group_id, "
                 . "basket_id, action_id, entity_id, keyword, redirect_mode ) "
-                . "values ( ?, ?, ?, ?, ?, ?)",array(trim($groupId),trim($basketId),trim($entityId),trim($keyword),$redirectMode)
+                . "values ( ?, ?, ?, ?, ?, ?)",array(trim($groupId), trim($basketId), $actionId, trim($entityId), trim($keyword), $redirectMode)
             );
         }
     }
