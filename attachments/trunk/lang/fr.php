@@ -89,6 +89,10 @@ if (!defined("_ROUTING"))
     define( "_ROUTING", "Fiche de circulation");
 if (!defined("_OUTGOING_MAIL_SIGNED"))
     define( "_OUTGOING_MAIL_SIGNED", "Courrier départ signé");
+if (!defined("_CONVERTED_PDF"))
+    define( "_CONVERTED_PDF", "PDF converti par la solution");
+if (!defined("_OUTGOING_MAIL"))
+    define( "_OUTGOING_MAIL", "Courrier départ spontané");
 if (!defined("_A_PJ"))
     define( "_A_PJ", "Pièce jointe");
 if (!defined("_CHOOSE_ATTACHMENT_TYPE"))
