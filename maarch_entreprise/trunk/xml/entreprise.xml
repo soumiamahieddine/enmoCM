@@ -60,6 +60,14 @@
             <id>routing</id>
             <label>_ROUTING</label>
         </type>
+		<type show="true" with_chrono="true">
+            <id>outgoing_mail</id>
+            <label>_OUTGOING_MAIL</label>
+        </type>
+		<type show="false" with_chrono="false">
+            <id>converted_pdf</id>
+            <label>_CONVERTED_PDF</label>
+        </type>
     </attachment_types>
     <priorities>
         <priority with_delay="2">_VERY_HIGH</priority> <!-- 0 -->

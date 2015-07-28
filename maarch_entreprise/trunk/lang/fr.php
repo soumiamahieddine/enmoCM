@@ -1696,6 +1696,7 @@ if (!defined("_VISA_MAIL"))    define("_VISA_MAIL", "Viser le courrier");
 if (!defined("_SEND_SIGNED_DOCS"))    define("_SEND_SIGNED_DOCS", "Transmettre réponses signées");
 if (!defined("_PREPARE_VISA"))    define("_PREPARE_VISA", "Préparer le circuit de visa");
 if (!defined("_REDIRECTION_VISA_SIGN"))    define("_REDIRECTION_VISA_SIGN", "Redirection pour signature");
+if (!defined('_SEND_TO_VISA'))    define( '_SEND_TO_VISA', 'Envoi pour visa');
 
 if (!defined("_MAIL_WILL_DISAPPEAR"))    define("_MAIL_WILL_DISAPPEAR", "Ce courrier sort de votre périmètre. Vous ne pourrez plus y accéder ensuite.");
 

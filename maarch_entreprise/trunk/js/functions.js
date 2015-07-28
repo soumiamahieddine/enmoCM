@@ -1554,7 +1554,10 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                     }
                     else if(do_nothing == false)
                     {
-                        window.top.location.reload();
+						var cur_url = window.top.location.href;
+						if (cur_url.indexOf("&directLinkToAction") != -1)
+							window.top.location = cur_url.replace("&directLinkToAction","");
+						else window.top.location.reload();
                     }
                     
                     // fix for Chrome and firefox

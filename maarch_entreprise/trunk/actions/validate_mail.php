@@ -946,7 +946,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $db = new Database;
             $stmt = $db->query("SELECT res_id FROM "
                 . $_SESSION['tablename']['attach_res_attachments']
-                . " WHERE status <> 'DEL' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
+                . " WHERE status <> 'DEL'  and attachment_type <> 'converted_pdf' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
             if ($stmt->rowCount() > 0) {
                 $nb_attach = $stmt->rowCount();
             } else {
@@ -1101,7 +1101,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     }
                     $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load" '
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf" '
                     . 'frameborder="0" width="100%" height="600px"></iframe>';
                     $frm_str .= '</div>';
                 $frm_str .= '</div>';
@@ -1175,7 +1175,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         
         //DOCUMENT VIEWER
         $path_file = get_file_path($res_id, $coll_id);
-        $frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
+		
+        if ($data['category_id']['value'] == 'outgoing'){
+		$req2 = new request;
+        $req2->connect();
+        $req2->query("select res_id from "
+            . $_SESSION['tablename']['attach_res_attachments']
+            . " where status <> 'DEL' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "' and attachment_type = 'converted_pdf' and type_id = 1");
+		$res_att = $req2->fetch_object();
+		$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
+        . 'index.php?display=true&module=attachments&page=view_attachment&res_id_master='
+        . $res_id . '&id='.$res_att->res_id.'"name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" style="width:100% !important;" onmouseover="this.focus()"></iframe>';
+		
+		}
+		else $frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
             . $res_id.'&coll_id='.$coll_id.'" name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" style="width:100% !important;" onmouseover="this.focus()"></iframe>';
             
         //END RIGHT DIV
