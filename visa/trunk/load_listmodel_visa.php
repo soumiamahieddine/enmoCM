@@ -75,7 +75,7 @@ $content .= '<th style="width:0%;" align="center" valign="bottom"></th>';
 $content .= '</tr></thead>';
 $content .= '<tbody>';
 $color = "";
-		
+$visa = new visa();
 if (isset($circuit['visa']['users'])){
 	foreach($circuit['visa']['users'] as $seq=>$step){
 		if($color == ' class="col"') {
@@ -86,7 +86,7 @@ if (isset($circuit['visa']['users'])){
 		
 		$content .= '<tr ' . $color . '>';
 			$content .= '<td>';
-			$visa = new visa();
+			
 			$tab_users = $visa->getUsersVis();
 			$content .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
 			$content .= '<option value="" >S&eacute;lectionnez un utilisateur</option>';

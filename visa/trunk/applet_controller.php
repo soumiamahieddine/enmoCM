@@ -96,15 +96,6 @@ if (
 		$encodedContent = base64_encode($content);
         $fileContent = $encodedContent;
 		
-		/* RECUPERATION IMAGE SIGNATURE */
-		/*$dbAttachment->query(
-			"select path_template from " . _DOCSERVERS_TABLE_NAME
-			. " where docserver_id = 'TEMPLATES'"
-			);
-		$lineDoc = $dbAttachment->fetch_object();
-		$docserver_sign = $lineDoc->path_template;
-		$signfileOnDs = $docserver_sign . $_SESSION['user']['signature_path'] . $_SESSION['user']['signature_file_name'];
-		$signfileOnDs = str_replace('#', DIRECTORY_SEPARATOR, $signfileOnDs);*/
 		
 		$signfileOnDs = $_SESSION['user']['pathToSignature'];
 		

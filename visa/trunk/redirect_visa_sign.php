@@ -15,24 +15,23 @@ require_once('modules/visa/class/class_modules_tools.php');
     $entity_ctrl = new EntityControler();
     $services = array();
     $servicesCompare = array();
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     $labelAction = '';
     if ($id_action <> '') {
-        $db->query("select label_action from actions where id = " . $id_action);
-        $resAction = $db->fetch_object();
+        $stmt = $db->query("select label_action from actions where id = ?", array($id_action));
+        $resAction = $stmt->fetchObject();
         $labelAction = $db->show_string($resAction->label_action);
     }
 
     $users = array();
-    $db->query("SELECT distinct uc.user_id, u.lastname, u.firstname 
+    $stmt = $db->query("SELECT distinct uc.user_id, u.lastname, u.firstname 
                 FROM usergroup_content uc 
                 LEFT JOIN usergroups_services us on us.group_id = uc.group_id 
                 LEFT JOIN users u on u.user_id = uc.user_id 
                 WHERE us.service_id = 'sign_document'
                 ORDER BY lastname asc");
 
-    while($res = $db->fetch_object())
+    while($res = $stmt->fetchObject())
     {
         array_push($users, array( 'ID' => $res->user_id, 'NOM' => $db->show_string($res->lastname), "PRENOM" => $db->show_string($res->firstname)));
     }
@@ -159,8 +158,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $visa = new visa();
     $content_note = "";
     
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     
     $formValues = array();
     for($i=0; $i<count($values_form); $i++) {
@@ -192,7 +190,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 
                 $db->query(
                     "INSERT INTO notes (identifier, tablename, user_id, "
-                            . "date_note, note_text, coll_id ) VALUES ('" . $res_id . "','" . $table . "','" . $userIdTypist . "'," . $date . ",'" . $content_note . "','" . $coll_id . "')"
+                            . "date_note, note_text, coll_id ) VALUES (?,?,?,?,?,?)",
+					array($res_id, $table, $userIdTypist, $date, $content_note, $coll_id)
                 );
             }
         }
@@ -243,11 +242,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
 function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table)
 {
-    $db = new dbquery();
-    $db->connect();
+    $db = new Database();
     for($i=0; $i<count($arr_id );$i++)
     {
-        $req = $db->query("update ".$table. " set video_user = '', video_time = 0 where res_id = ".$arr_id[$i], true);
+        $req = $db->query("update ".$table. " set video_user = '', video_time = 0 where res_id = ?", array($arr_id[$i]));
 
         if(!$req)
         {

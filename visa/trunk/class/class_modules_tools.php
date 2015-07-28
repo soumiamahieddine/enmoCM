@@ -28,7 +28,7 @@
 * @ingroup visa
 */
 
-class visa extends dbquery
+class visa
 {
 	/***
 	* Build Maarch module tables into sessions vars with a xml configuration file
@@ -82,7 +82,12 @@ class visa extends dbquery
 		$request    = new request();
 		$table = $_SESSION['current_basket']['view'];
 		$select[$table]= array(); 
-		array_push($select[$table],'res_id','creation_date');
+		array_push($select[$table],"res_id", "status", "category_id as category_img", 
+                        "contact_firstname", "contact_lastname", "contact_society", "user_lastname", 
+                        "user_firstname", "priority", "creation_date", "admission_date", "subject", 
+                        "process_limit_date", "entity_label", "dest_user", "category_id", "type_label", 
+                        "exp_user_id", "count_attachment", "alt_identifier","is_multicontacts", "locker_user_id", "locker_time");
+						
 		$where_tab = array();
 		//From basket
 		if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause

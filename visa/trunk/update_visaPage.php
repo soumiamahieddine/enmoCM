@@ -29,7 +29,7 @@ if ($data['category_id']['value'] != 'outgoing'){
 // AVANCEMENT
 $left_html .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
 $left_html .= '<h2>'. _WF .'</h2>';
-$left_html .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_workflow_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full&small=true" name="workflow_history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>';
+$left_html .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_workflow_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="workflow_history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>';
 $left_html .= '<br/>';
 $left_html .= '<br/>';
 
@@ -38,7 +38,7 @@ $left_html .= '<span id="divStatus_all_history_div" style="color:#1C99C5;"><<</s
 $left_html .= '<b>&nbsp;'. _ALL_HISTORY .'</b>';
 $left_html .= '</span>';
 
-$left_html .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full&small=true" name="history_document" width="100%" height="620px;" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>';
+$left_html .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="history_document" width="100%" height="620px;" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>';
 $left_html .= '</dd>';
 
 
@@ -148,64 +148,7 @@ $tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
 	
 		$right_html .= '</dd>';
 					
-		/*if ( $core->is_module_loaded('content_management') && $data['category_id']['value'] == 'outgoing') {
-        $versionTable = $sec->retrieve_version_table_from_coll_id(
-            $coll_id
-        );
-        $selectVersions = "select res_id from "
-            . $versionTable . " where res_id_master = "
-            . $res_id . " and status <> 'DEL' order by res_id desc";
-        $dbVersions = new dbquery();
-        $dbVersions->connect();
-        $dbVersions->query($selectVersions);
-        $nb_versions_for_title = $dbVersions->nb_result();
-        $lineLastVersion = $dbVersions->fetch_object();
-        $lastVersion = $lineLastVersion->res_id;
-        if ($lastVersion <> '') {
-            $objectId = $lastVersion;
-            $objectTable = $versionTable;
-        } else {
-            $objectTable = $sec->retrieve_table_from_coll(
-                $coll_id
-            );
-            $objectId = $res_id;
-            $_SESSION['cm']['objectId4List'] = $res_id;
-        }
-        if ($nb_versions_for_title == 0) {
-            $extend_title_for_versions = '0';
-        } else {
-            $extend_title_for_versions = $nb_versions_for_title;
-        }
-        $_SESSION['cm']['resMaster'] = '';
-		$right_html .= '<dt>' . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)</dt><dd>';
-		$right_html .= '<h2>';
-			$right_html .= '<center>' . _VERSIONS . '</center>';
-		$right_html .= '</h2>';
-		$right_html .= '<div class="error" id="divError" name="divError"></div>';
-		$right_html .= '<div style="text-align:center;">';
-			$right_html .= '<a href="';
-				$right_html .=  $_SESSION['config']['businessappurl'];
-				$right_html .= 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&original&id=';
-				$right_html .= $res_id;
-				$right_html .= '" target="_blank">';
-				$right_html .= '<img alt="' . _VIEW_ORIGINAL . '" src="';
-				$right_html .= $_SESSION['config']['businessappurl'];
-				$right_html .= 'static.php?filename=picto_dld.gif" border="0" alt="" />';
-				$right_html .= _VIEW_ORIGINAL . ' | ';
-			$right_html .= '</a>';
-			if ($core->test_service('add_new_version_init', 'apps', false)) {
-				$_SESSION['cm']['objectTable'] = $objectTable;
-				$right_html .= '<div id="createVersion" style="display: inline;"></div>';
-			}
-			$right_html .= '<div id="loadVersions"></div>';
-			$right_html .= '<script language="javascript">';
-				$right_html .= 'showDiv("loadVersions", "nbVersions", "createVersion", "';
-					$right_html .= $_SESSION['urltomodules'];
-					$right_html .= 'content_management/list_versions.php")';
-			$right_html .= '</script>';
-		$right_html .= '</div><br>';
-		$right_html .= '</dd>';
-    }*/
+		
 
 	$valid_but = 'valid_action_form( \'index_file\', \'index.php?display=true&page=manage_action&module=core\', \''.$_REQUEST['action'].'\', \''.$res_id.'\', \'res_letterbox\', \'null\', \''.$coll_id.'\', \'page\');';
 //echo "{status : 1,avancement:'".$avancement_html."',circuit:'".$circuit_html."',notes_dt:'".$notes_html_dt."',notes_dd:'".$notes_html_dd."'}";

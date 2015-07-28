@@ -162,8 +162,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$chrono_number_doc = $resChrono_doc->alt_identifier;
 		
 		$allAnsSigned = true;
-		$stmt = $db->query("SELECT status from res_view_attachments where (attachment_type='response_project' OR attachment_type='outgoing_mail') and res_id_master = ?", array($res_id_doc));
-		while($line = $stmt->fetchObject()){
+		$stmt2 = $db->query("SELECT status from res_view_attachments where (attachment_type='response_project' OR attachment_type='outgoing_mail') and res_id_master = ?", array($res_id_doc));
+		while($line = $stmt2->fetchObject()){
 			if ($line->status == 'TRA' || $line->status == 'A_TRA' ){
 				$allAnsSigned = false;		
 			}
@@ -262,7 +262,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
 	$frm_str .= '<h2>'. _WF .'</h2>';
-	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_workflow_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full&small=true" name="workflow_history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>';
+	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_workflow_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="workflow_history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>';
 	$frm_str .= '<br/>';
 	$frm_str .= '<br/>';
 	
@@ -270,7 +270,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<span id="divStatus_all_history_div" style="color:#1C99C5;"><<</span>';
 	$frm_str .= '<b>&nbsp;'. _ALL_HISTORY .'</b>';
 	$frm_str .= '</span>';
-	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full&small=true" name="history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>';
+	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>';
 
 	$frm_str .= '</dd>';
 	
@@ -389,66 +389,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	
 		$frm_str .= '</dd>';
-					
-	/* AJOUT DE LA PARTIE DES VERSIONS POUR LE COURRIER SPONTANE */
-	/*if ( $core->is_module_loaded('content_management') && $selectedCat == 'outgoing') {
-        $versionTable = $sec->retrieve_version_table_from_coll_id(
-            $coll_id
-        );
-        $selectVersions = "select res_id from "
-            . $versionTable . " where res_id_master = "
-            . $res_id . " and status <> 'DEL' order by res_id desc";
-        $dbVersions = new dbquery();
-        $dbVersions->connect();
-        $dbVersions->query($selectVersions);
-        $nb_versions_for_title = $dbVersions->nb_result();
-        $lineLastVersion = $dbVersions->fetch_object();
-        $lastVersion = $lineLastVersion->res_id;
-        if ($lastVersion <> '') {
-            $objectId = $lastVersion;
-            $objectTable = $versionTable;
-        } else {
-            $objectTable = $sec->retrieve_table_from_coll(
-                $coll_id
-            );
-            $objectId = $res_id;
-            $_SESSION['cm']['objectId4List'] = $res_id;
-        }
-        if ($nb_versions_for_title == 0) {
-            $extend_title_for_versions = '0';
-        } else {
-            $extend_title_for_versions = $nb_versions_for_title;
-        }
-        $_SESSION['cm']['resMaster'] = '';
-		$frm_str .= '<dt>' . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)</dt><dd>';
-		$frm_str .= '<h2>';
-			$frm_str .= '<center>' . _VERSIONS . '</center>';
-		$frm_str .= '</h2>';
-		$frm_str .= '<div class="error" id="divError" name="divError"></div>';
-		$frm_str .= '<div style="text-align:center;">';
-			$frm_str .= '<a href="';
-				$frm_str .=  $_SESSION['config']['businessappurl'];
-				$frm_str .= 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&original&id=';
-				$frm_str .= $res_id;
-				$frm_str .= '" target="_blank">';
-				$frm_str .= '<img alt="' . _VIEW_ORIGINAL . '" src="';
-				$frm_str .= $_SESSION['config']['businessappurl'];
-				$frm_str .= 'static.php?filename=picto_dld.gif" border="0" alt="" />';
-				$frm_str .= _VIEW_ORIGINAL . ' | ';
-			$frm_str .= '</a>';
-			if ($core->test_service('add_new_version', 'apps', false)) {
-				$_SESSION['cm']['objectTable'] = $objectTable;
-				$frm_str .= '<div id="createVersion" style="display: inline;"></div>';
-			}
-			$frm_str .= '<div id="loadVersions"></div>';
-			$frm_str .= '<script language="javascript">';
-				$frm_str .= 'showDiv("loadVersions", "nbVersions", "createVersion", "';
-					$frm_str .= $_SESSION['urltomodules'];
-					$frm_str .= 'content_management/list_versions.php")';
-			$frm_str .= '</script>';
-		$frm_str .= '</div><br>';
-		$frm_str .= '</dd>';
-    }*/
+	
+	
 	$frm_str .= '</dl>';
 	$frm_str .= '<div class="toolbar">';
 	$frm_str .= '<table style="width:90%;">';	
@@ -620,17 +562,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 		$sec = new security();
 		
-		/*
-		$db = new dbquery();
-		$db->connect();
-		$up_request = "UPDATE listinstance SET process_date = CURRENT_TIMESTAMP WHERE res_id = $res_id AND item_id='".$_SESSION['user']['UserId']."' AND difflist_type = 'VISA_CIRCUIT'";
-		$db->query($up_request);
 		
-		$circuit_visa = new visa();
-		if ($circuit_visa->allUserVised($res_id, $coll_id, 'VISA_CIRCUIT')){
-			$up_request = "UPDATE res_letterbox SET status='ESIG' WHERE res_id = $res_id";
-			$db->query($up_request);
-		}*/
 		$replaceValues = array();
 		array_push(
 			$replaceValues,
