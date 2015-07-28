@@ -70,6 +70,9 @@ if (isset($_REQUEST['objectType'])) {
 } else {
     $objectType = '';
 }
+if (isset($_REQUEST['attachType']) && $_REQUEST['attachType'] == "outgoing_mail"){
+	$objectType = 'outgoingMail';
+}
 
 if ($objectType == 'templateStyle') {
     $_REQUEST['objectId'] = $_SESSION['m_admin']['templates']['current_style'];

@@ -5,6 +5,10 @@ $core_tools->load_html();
 $core_tools->load_header();
 $core_tools->load_js();
 
+if (isset($_REQUEST['attachType']) && $_REQUEST['attachType'] == 'outgoing_mail'){
+	$objType = 'outgoingMail';
+}
+else $objType = $_REQUEST['objectType'];
 if (
     file_exists(
         $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
@@ -29,7 +33,7 @@ if (
                     ?>?objectType=attachment&objectId=<?php 
                     echo $_REQUEST['objectId'];
                     ?>&objectType=<?php
-                    echo $_REQUEST['objectType'];
+                    echo $objType;
                     ?>&objectTable=<?php
                     echo $_REQUEST['objectTable'];
                     ?>&resMaster=<?php

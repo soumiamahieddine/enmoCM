@@ -96,6 +96,7 @@ if (
             && $objectType <> 'attachmentFromTemplate'
             && $objectType <> 'attachment'
             && $objectType <> 'attachmentVersion'
+            && $objectType <> 'outgoingMail'
             && $objectType <> 'attachmentUpVersion'
         ) {
             //case of res -> master or version
@@ -214,7 +215,7 @@ if (
             fclose($inF);
 			
 			//Récupération de la version pdf du document
-			if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true" && ($objectType == 'attachmentFromTemplate' || $objectType == 'attachment' || $objectType == 'attachmentUpVersion' || $objectType == 'attachmentVersion') && isset($_REQUEST['pdfContent'])){
+			if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true" && ($objectType == 'attachmentFromTemplate' || $objectType == 'attachment' || $objectType == 'attachmentUpVersion' || $objectType == 'attachmentVersion' || $objectType == 'outgoingMail' || $objectType == 'resourceEdit') && isset($_REQUEST['pdfContent'])){
 				$pdfEncodedContent = str_replace(
 					' ',
 					'+',
@@ -243,6 +244,8 @@ if (
                 //depending on the type of object, the action is not the same
                 if ($objectType == 'resource') {
                     include 'modules/content_management/save_new_version_from_cm.php';
+                }if ($objectType == 'resourceEdit') {
+                    include 'modules/content_management/save_editRes_from_cm.php';
                 } elseif ($objectType == 'attachmentFromTemplate') {
                     include 'modules/content_management/save_attach_res_from_cm.php';
                 } elseif ($objectType == 'attachment') {
@@ -251,6 +254,8 @@ if (
                     include 'modules/content_management/save_template_from_cm.php';
                 }  elseif ($objectType == 'attachmentVersion' || $objectType == 'attachmentUpVersion') {
                     include 'modules/content_management/save_attachment_from_cm.php';
+                }	elseif ($objectType == 'outgoingMail') {
+                    include 'modules/content_management/save_outmail_from_cm.php';
                 }
                 //THE RETURN
                 if (!empty($_SESSION['error'])) {

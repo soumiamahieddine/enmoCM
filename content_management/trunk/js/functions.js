@@ -31,6 +31,8 @@ function endOfApplet(objectType, theMsg)
         endAttachmentFromTemplate();
     } else if (objectType == 'attachment') {
         endAttachment();
+    } else if (objectType == 'outgoingMail') {
+        endAttachmentOutgoing();
     } 
     //destroyModal('CMApplet');
 }
@@ -60,6 +62,15 @@ function endTemplate()
 {
     //window.alert('template ?');
     window.close();
+}
+
+function endAttachmentOutgoing()
+{
+    console.log('Fin nouveau spontane');
+	
+	
+    window.close();
+	
 }
 
 //reload the list div and the document if necessary

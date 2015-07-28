@@ -17,7 +17,7 @@ if ($objectType == 'templateStyle') {
         );
         createXML('ERROR', $result);
     }
-} elseif ($objectType == 'template' || $objectType == 'attachmentFromTemplate' || $objectType == 'attachmentVersion') {
+} elseif ($objectType == 'template' || $objectType == 'attachmentFromTemplate' || $objectType == 'attachmentVersion' || $objectType == 'outgoingMail') {
     if ($_SESSION['m_admin']['templates']['current_style'] <> '') {
         // edition in progress
         $fileExtension = $func->extractFileExt(
@@ -43,7 +43,7 @@ if ($objectType == 'templateStyle') {
             'res_contact_id' => $_SESSION['cm']['contact_id'],
             'chronoAttachment' => $_SESSION['cm']['chronoAttachment']
             );
-        if ($objectType == 'attachmentFromTemplate' || $objectType == 'attachmentVersion') {
+        if ($objectType == 'attachmentFromTemplate' || $objectType == 'attachmentVersion' || $objectType == 'outgoingMail') {
             $filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
             $templateObj = $templateCtrl->get($objectId);
             $_SESSION['cm']['templateStyle'] = $templateObj->template_style;
