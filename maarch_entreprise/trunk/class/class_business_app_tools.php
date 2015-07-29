@@ -429,6 +429,7 @@ class business_app_tools extends dbquery
                 $label = (string) $type->label;
                 $with_chrono = (string) $type['with_chrono'];
                 $get_chrono = (string) $type['get_chrono'];
+                $attach_in_mail = (string) $type['attach_in_mail'];
                 $show_attachment_type = (string) $type['show'];
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
@@ -439,6 +440,7 @@ class business_app_tools extends dbquery
                 $_SESSION['attachment_types_with_chrono'][(string) $type->id] = $with_chrono;
                 $_SESSION['attachment_types_show'][(string) $type->id] = $show_attachment_type;
                 $_SESSION['attachment_types_get_chrono'][(string) $type->id] = $get_chrono;
+                $_SESSION['attachment_types_attach_in_mail'][(string) $type->id] = $attach_in_mail;
             }
         }
         

@@ -36,11 +36,11 @@
         <default_nature>simple_mail</default_nature>
     </mail_natures>
     <attachment_types>
-        <type show="true" with_chrono="true">
+        <type show="true" with_chrono="true" attach_in_mail="true">
             <id>response_project</id>
             <label>_RESPONSE_PROJECT</label>
         </type>
-		<type show="true" with_chrono="true">
+		<type show="true" with_chrono="true" attach_in_mail="true">
             <id>signed_response</id>
             <label>_SIGNED_RESPONSE</label>
         </type>
