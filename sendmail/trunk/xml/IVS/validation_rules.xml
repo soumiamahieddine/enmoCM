@@ -22,6 +22,7 @@
 		<parameter name="notes" type="identifier" />
 		<parameter name="object" type="safetext" />
 		<parameter name="valid" type="safetext" />
+		<parameter name="sender_email" type="email" />
 	</validationRule>
 
 	<validationRule name="mail_form" extends="standardForm" mode="error">
