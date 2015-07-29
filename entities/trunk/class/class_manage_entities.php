@@ -369,7 +369,7 @@ class entity extends dbquery
         }
         else
         {
-            $stmt = $db->query('select entity_id, entity_label, short_label from '.ENT_ENTITIES." where enabled = 'Y' and parent_entity_id = ?".$where,array(trim($parent)));
+            $stmt = $db->query('select entity_id, entity_label, short_label from '.ENT_ENTITIES." where enabled = 'Y' and parent_entity_id = '".trim($parent)."' ".$where);
         }
        
         if($stmt->rowCount() > 0)
@@ -421,7 +421,7 @@ class entity extends dbquery
         } else {
             $stmt = $db->query('select entity_id, entity_label, short_label from ' 
             . ENT_ENTITIES . " where enabled = 'Y' and parent_entity_id = '" 
-            . functions::protect_string_db(trim($parent)) . "' " . $where . " order by short_label",array());
+            . trim($parent) . "' " . $where . " order by short_label");
         }
    
         //var_dump($stmt->rowCount());
@@ -621,7 +621,6 @@ class entity extends dbquery
         {
             while($line = $stmt->fetchObject())
             {
-               // echo "entité : ".$this->protect_string_db(trim($line->entity_id))."<br>";
                 $tab_children_id[] = "'".trim($line->entity_id)."'";
 
                 if($immediate_children_only == false)
