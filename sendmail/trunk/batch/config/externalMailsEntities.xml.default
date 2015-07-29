@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ROOT>
+	<externalEntityMail>
+		<targetEntityId>COU</targetEntityId>
+		<EntityMail>service.courrier@gmail.com</EntityMail>
+	</externalEntityMail>
+<!-- 	<externalEntityMail>
+		<targetEntityId>BEP</targetEntityId>
+		<EntityMail>mivili.bibibubeb@laposte.net</EntityMail>
+	</externalEntityMail> -->
+<!--	<externalEntityMail>
+		<targetEntityId>PJS</targetEntityId>
+		<EntityMail>nom.prenom@maarch.org</EntityMail>
+	</externalEntityMail>	-->
+</ROOT>
