@@ -60,6 +60,7 @@ FROM
   AND (h.table_name='res_letterbox' OR h.table_name='res_view_letterbox')
   AND h.record_id <> 'none'
   AND CAST(h.record_id AS INT) = r.res_id
+  AND r.status <> 'DEL'
   ORDER BY h.record_id, h.event_date desc) AS ir
 ORDER BY ir.event_date desc 
 LIMIT 5", array($_SESSION['user']['UserId']));
