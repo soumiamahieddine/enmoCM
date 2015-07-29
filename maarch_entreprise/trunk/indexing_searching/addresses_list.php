@@ -106,7 +106,7 @@ if (!$return) {
         $where .= " ca_id = ? ";
         $arrayPDO = array_merge($arrayPDO, array($_REQUEST['selectedObject']));
     } elseif (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
-        $what = $request->protect_string_db($_REQUEST['what']);
+        $what = $_REQUEST['what'];
 
         $what = str_replace("  ", "", $_REQUEST['what']);
         $what_table = explode(" ", $what);

@@ -118,7 +118,7 @@ $contact    = new contacts_v2();
         $arrayPDO = array_merge($arrayPDO, array(":contactId" => $_REQUEST['selectedObject']));
     } elseif (!empty($what)) {
 
-        $what = str_replace("  ", "", $request->protect_string_db($_REQUEST['what']));
+        $what = str_replace("  ", "", $_REQUEST['what']);
         $what_table = explode(" ", $what);
 
         foreach($what_table as $key => $what_a){

@@ -168,8 +168,8 @@ switch ($mode) {
                                 if (isset($_REQUEST['notes']) && count($_REQUEST['notes']) > 0) {
                                     $note_list = join(',', $_REQUEST['notes']);
                                 }
-                                $date = $request->current_datetime();
-                                $userId = $request->protect_string_db($_SESSION['user']['UserId']);
+
+                                $userId = $_SESSION['user']['UserId'];
                                 (!empty($_REQUEST['is_html']) && $_REQUEST['is_html'] == 'Y')? $isHtml = 'Y' : $isHtml = 'N';
                                 //Body content
                                 if ($isHtml == 'Y') {
@@ -190,9 +190,9 @@ switch ($mode) {
                                     "INSERT INTO " . EMAILS_TABLE . "(coll_id, res_id, user_id, to_list, cc_list,
                                     cci_list, email_object, email_body, is_res_master_attached, res_version_id_list, 
                                     res_attachment_id_list, note_id_list, is_html, email_status, creation_date) VALUES (
-                                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
                                 array($collId, $identifier, $userId, $to, $cc, $cci, $object, $body, $res_master_attached, $version_list,
-                                    $attachment_list, $note_list, $isHtml, $email_status, $date)
+                                    $attachment_list, $note_list, $isHtml, $email_status)
                                 );
                                 
                                 //Last insert ID from sequence
@@ -279,10 +279,10 @@ switch ($mode) {
                                 
                                     //Data
                                     $collId = $request->protect_string_db($_REQUEST['coll_id']);
-                                    $to =  $request->protect_string_db($to);
-                                    $cc = $request->protect_string_db($cc);
-                                    $cci = $request->protect_string_db($cci);
-                                    $object = $request->protect_string_db($_REQUEST['object']);
+                                    $to =  $to;
+                                    $cc = $cc;
+                                    $cci = $cci;
+                                    $object = $_REQUEST['object'];
                                     (isset($_REQUEST['join_file']) 
                                         && count($_REQUEST['join_file']) > 0
                                     )? $res_master_attached = 'Y' : $res_master_attached = 'N';
@@ -295,14 +295,14 @@ switch ($mode) {
                                     if (isset($_REQUEST['notes']) && count($_REQUEST['notes']) > 0) {
                                         $note_list = join(',', $_REQUEST['notes']);
                                     }
-                                    $date = $request->current_datetime();
+
                                     $userId = $request->protect_string_db($_SESSION['user']['UserId']);
                                     (!empty($_REQUEST['is_html']) && $_REQUEST['is_html'] == 'Y')? $isHtml = 'Y' : $isHtml = 'N';
                                     //Body content
                                     if ($isHtml == 'Y') {
-                                        $body = $request->protect_string_db($sendmail_tools->cleanHtml($_REQUEST['body_from_html']));
+                                        $body = $sendmail_tools->cleanHtml($_REQUEST['body_from_html']);
                                     } else {
-                                         $body = $request->protect_string_db($_REQUEST['body_from_raw']);
+                                         $body = $_REQUEST['body_from_raw'];
                                     }
                                     //Status
                                     if ($_REQUEST['for'] == 'save') {
