@@ -166,7 +166,7 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
                     fwrite($myfile, $_REQUEST['template_content']);
                     fclose($myfile);
                     $stmt = $conn->query("update ".$_SESSION['tablename']['attach_res_attachments']." set title = ? where res_id = ? ", 
-									array($func->protect_string_db($_REQUEST['answer_title'], $_REQUEST['id'])
+									array($_REQUEST['answer_title'], $_REQUEST['id'])
 									);
                     if ($_SESSION['history']['attachup'] == "true") {
                         require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");

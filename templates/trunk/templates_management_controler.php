@@ -374,7 +374,7 @@ function display_list()
     $arrayPDO = array();
     if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
         $func = new functions();
-        $what = $func->protect_string_db($_REQUEST['what']);
+        $what = $_REQUEST['what'];
         if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
             $where = "template_label ilike ? ";
         } else {
