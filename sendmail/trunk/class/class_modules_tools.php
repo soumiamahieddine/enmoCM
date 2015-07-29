@@ -207,8 +207,7 @@ class sendmail extends Database
         } else {
 			require_once 'modules/attachments/attachments_tables.php';
             $stmt = $db->query(
-                "select res_id, description, subject, title, format, filesize, res_id_master from " 
-                .  RES_ATTACHMENTS_TABLE . " where res_id_master = ? and coll_id = ? and status <> 'DEL'",
+                "SELECT res_id, description, subject, title, format, filesize, res_id_master, attachment_type FROM res_view_attachments WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and status <> 'OBS'",
 				array($id, $coll_id)
 				);
         }
@@ -230,7 +229,8 @@ class sendmail extends Database
                               'format' => $res->format, //Format 
                               'filesize' => $res->filesize, //Filesize
                               'is_version' => false, //
-                              'version' => '' //
+                              'version' => '', //
+                              'attachment_type' => $res->attachment_type
                             )
             );
         }
@@ -293,12 +293,7 @@ class sendmail extends Database
                 . EMAILS_TABLE 
                 . " where email_id = ? " . $where, array($id));
             }
-   
-            /*$stmt = $db->query("select * from "
-                . EMAILS_TABLE 
-                . " where email_id = ? " . $where, array_merge($arrayPDO, $id));*/
                
-            //
             if ($stmt->rowCount() > 0) {
                 $res = $stmt->fetchObject();
                 $email['id'] = $res->email_id;
@@ -338,6 +333,7 @@ class sendmail extends Database
                 $email['status'] = $res->email_status;
                 $email['creationDate'] = $this->format_date_db($res->creation_date);
                 $email['sendDate'] = $this->format_date_db($res->send_date);
+                $email['sender_email'] = $res->sender_email;
             }
         }
         
@@ -754,5 +750,83 @@ class sendmail extends Database
             return false;
         }
     }
+
+    public function getAttachedEntitiesMails($user_id) {
+        $db = new Database;
+        $arrayEntitiesMails = array();
+
+        $stmt = $db->query("SELECT e.short_label, e.email FROM ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e
+                            WHERE ue.user_id = ? and ue.entity_id = e.entity_id order by e.short_label", array($user_id));
+
+        $numberMailEntities = array();
+        while ($res = $stmt->fetchObject()) {
+            if ($res->email <> "") {
+                $arrayEntitiesMails[$res->short_label] = $res->email;
+                $numberMailEntities[$res->short_label] = 1;
+            } else {
+                $numberMailEntities[$res->short_label] = 0;                
+            }
+
+        }
+
+        $getXml = false;
+
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+            . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
+            . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml'
+        )
+        ) {
+            $path = 'custom' . DIRECTORY_SEPARATOR
+                . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+                . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
+                . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml';
+            $getXml = true;
+        } else if (file_exists($_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
+                . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml')) {
+            $path = 'modules' . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
+                . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml';
+            $getXml = true;
+        }
+
+        if ($getXml) {
+            $xml = simplexml_load_file($path);
+
+            if ($xml <> false) {
+                require_once("modules/entities/class/class_manage_entities.php");
+                $entities = new entity();
+
+                foreach ($xml->externalEntityMail as $EntityMail) {
+                    $shortLabelEntity = $entities->getentityshortlabel((string)$EntityMail->targetEntityId);
+                    if (in_array($shortLabelEntity, array_keys($numberMailEntities))) {
+                        $numberMailEntities[$shortLabelEntity]++;
+                        $arrayEntitiesMails[$shortLabelEntity . ' ' .$numberMailEntities[$shortLabelEntity]] = (string)$EntityMail->EntityMail;
+                    }    
+                }
+            }
+        }
+        ksort($arrayEntitiesMails);
+
+        return $arrayEntitiesMails;
+    }
+
+    public function checkAttachedEntitiesMails(){
+        $db = new Database;
+        $core_tools = new core_tools();
+
+        $entitiesMails = array();
+        if ($core_tools->test_service('use_mail_services', 'sendmail', false)) {
+            $entitiesMails = $this->getAttachedEntitiesMails($_SESSION['user']['UserId']);
+        }
+
+        $stmt = $db->query("SELECT mail FROM users WHERE user_id = ? ", array($_SESSION['user']['UserId']));
+        $res = $stmt->fetchObject();
+
+        $entitiesMails[$user_id] = $res->mail;
+
+        return $entitiesMails;
+    }
+
 }
 

@@ -108,10 +108,21 @@ if ($mode == 'add') {
     $content .= '<input type="hidden" value="Y" name="is_html" id="is_html">';
     $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
     $content .= '<tr>';
-    $content .= '<td colspan="3" nowrap><b>'._NEW_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
-        .functions::xecho($_SESSION['user']['FirstName']).' '
-        .functions::xecho($_SESSION['user']['LastName'])
-        .' ('.$_SESSION['user']['Mail'].')<br/></td>';
+    $content .= '<td colspan="3" nowrap><b>'._NEW_EMAIL.' '.strtolower(_FROM_SHORT).' : </b>';
+
+    $userEntitiesMails = array();
+
+    if ($core_tools->test_service('use_mail_services', 'sendmail', false)) {
+        $userEntitiesMails = $sendmail_tools->getAttachedEntitiesMails($_SESSION['user']['UserId']);
+    }
+
+    $content .='<select name="sender_email" id="sender_email">
+                    <option value="'.$_SESSION['user']['Mail'].'" selected="selected">'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . ' (' . $_SESSION['user']['Mail'] . ')</option>';
+    foreach ($userEntitiesMails as $key => $value) {
+        $content .= '<option value="'.$value.'" >'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . '  (' . $value . ')</option>';
+    }
+    $content .='</select>';
+    $content .='</td>';
     $content .= '</tr>';
     $content .= '<tr>';
     $content .= '<td>'._EMAIL.'</label></td>';
@@ -135,17 +146,15 @@ if ($mode == 'add') {
     $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'
         ._SEND_TO_SHORT.'</label></td>';
 
-
-
     $exp_contact_id = null;
     $dest_contact_id = null;
     $exp_user_id = null;
     $dest_user_id = null;
     $adresse_mail = null;
     $db = new Database();
-    $stmt = $db->query("select address_id, exp_user_id, dest_user_id
-                from mlb_coll_ext 
-                where (( exp_contact_id is not null 
+    $stmt = $db->query("SELECT address_id, exp_user_id, dest_user_id, admission_date
+                FROM mlb_coll_ext 
+                WHERE (( exp_contact_id is not null 
                 or dest_contact_id is not null 
                 or exp_user_id is not null 
                 or dest_user_id is not null) 
@@ -155,20 +164,18 @@ if ($mode == 'add') {
     $address_id = $res->address_id;
     $exp_user_id = $res->exp_user_id;
     $dest_user_id = $res->dest_user_id;
+    $admission_date = $res->admission_date;
 	
     if($address_id != null){
-        $db = new Database();
-        $stmt = $db->query("select email from contact_addresses where id = ?", array($address_id));
+        $stmt = $db->query("SELECT email FROM contact_addresses WHERE id = ?", array($address_id));
         $adr = $stmt->fetchObject();
         $adress_mail = $adr->email;
     }elseif($exp_user_id != null){
-        $db = new Database();
-        $stmt = $db->query("select mail from users where user_id = ?", array($exp_user_id));
+        $stmt = $db->query("SELECT mail FROM users WHERE user_id = ?", array($exp_user_id));
         $adr = $stmt->fetchObject();
         $adress_mail = $adr->mail;
     }elseif($dest_user_id != null){
-        $db = new Database();
-        $stmt = $db->query("select mail from users where user_id = ?", array($dest_user_id));
+        $stmt = $db->query("SELECT mail FROM users WHERE user_id = ?", array($dest_user_id));
         $adr = $stmt->fetchObject();
         $adress_mail = $adr->mail;
     }
@@ -181,8 +188,6 @@ if ($mode == 'add') {
     $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">'
         .'<div id="loading_to" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></div></div></td>';
              }
-
-
 
     $content .= '</tr>';
     $content .= '<tr><td colspan="3"><a href="javascript://" '
@@ -201,7 +206,8 @@ if ($mode == 'add') {
     $content .= '</tr>';
     $content .= '<tr>';
     $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'._EMAIL_OBJECT.' </label></td>';
-    $content .= '<td colspan="2"><input name="object" id="object" class="emailInput" type="text" value="" /></td>';
+
+    $content .= '<td colspan="2"><input name="object" id="object" class="emailInput" type="text" value="'._EMAIL_OBJECT_ANSWER. ' ' . functions::format_date_db($admission_date).'" /></td>';
     $content .= '</tr>';
     $content .= '</table><br />';
     $content .='<hr />';
@@ -239,14 +245,14 @@ if ($mode == 'add') {
 					. "\"><input type=\"checkbox\" id=\"join_file_".$id
 					. "_V".$joined_files[$i]['version']."\" name=\"join_version[]\""
 					. " class=\"check\" value=\""
-					. $id."\" checked=\"checked\">"
+					. $id."\" >"
 					. $description." <em>(".$mime_type.")</em> ".$filesize.$version."</li>";
 			} else {
 				$content .= "<li alt=\"".$description
 					. "\" title=\"".$description
 					. "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_file[]\""
 					. " class=\"check\" value=\""
-					. $id."\" checked=\"checked\">"
+					. $id."\" >"
 					. $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
             }
 
@@ -266,15 +272,22 @@ if ($mode == 'add') {
                 $id = $attachment_files[$i]['id']; 
                 $description = $attachment_files[$i]['label'];
                 $format = $attachment_files[$i]['format'];
-                $mime_type = $is->get_mime_type($joined_files[$i]['format']);
+                $mime_type = $is->get_mime_type($attachment_files[$i]['format']);
                 $filesize = $attachment_files[$i]['filesize']/1024;
+                $attachment_type = $attachment_files[$i]['attachment_type'];
                 ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
                 
                 $content .= "<li alt=\"".$description
                     . "\" title=\"".$description
                     . "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_attachment[]\""
                     . " class=\"check\" value=\""
-                    . $id."\">"
+                    . $id."\"";
+                
+                    if ($_SESSION['attachment_types_attach_in_mail'][$attachment_type]) {
+                        $content .= " checked=\"checked\" ";
+                    }
+
+                $content .= ">"
                    . $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
                    
 				$filename = $sendmail_tools->createFilename($description, $format);
@@ -282,7 +295,7 @@ if ($mode == 'add') {
             }
         }
     }
-    
+
     //Notes            
     if ($core_tools->is_module_loaded('notes')) {
         require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
@@ -389,10 +402,33 @@ if ($mode == 'add') {
             $content .= '<input type="hidden" value="'.$emailArray['isHtml'].'" name="is_html" id="is_html">';
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
-			$content .= '<td colspan="3" nowrap><b>'._EDIT_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
-                .functions::xecho($_SESSION['user']['FirstName']).' '
-                .functions::xecho($_SESSION['user']['LastName'])
-                .' ('.$_SESSION['user']['Mail'].')<br/></td>';
+			$content .= '<td colspan="3" nowrap><b>'._EDIT_EMAIL.' '.strtolower(_FROM_SHORT).' : </b>';
+
+            $userEntitiesMails = array();
+
+            if ($core_tools->test_service('use_mail_services', 'sendmail', false)) {
+                $userEntitiesMails = $sendmail_tools->getAttachedEntitiesMails($_SESSION['user']['UserId']);
+            }
+
+            $content .='<select name="sender_email" id="sender_email">
+                            <option value="'.$_SESSION['user']['Mail'].'" ';
+
+            if ($emailArray['sender_email'] == $_SESSION['user']['Mail']) {
+                $content .= ' selected="selected" ';
+            }
+
+            $content .= '>'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . ' (' . $_SESSION['user']['Mail'] . ')</option>';
+            foreach ($userEntitiesMails as $key => $value) {
+                $content .= '<option value="'.$value.'" ';
+
+                if ($emailArray['sender_email'] == $value) {
+                    $content .= ' selected="selected" ';
+                }
+                $content .= '>'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . '  (' . $value . ')</option>';
+            }
+            $content .='</select>';
+            $content .='</td>';
+
             $content .= '</tr>';
             $content .= '<tr>';
             $content .= '<td>'._EMAIL.'</label></td>';
@@ -684,7 +720,7 @@ if ($mode == 'add') {
 
 			$content .= '<td colspan="3" nowrap><b>'._READ_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
                 .$usermailArray['firstname'].' '.$usermailArray['lastname']
-                .' ('.$usermailArray['mail'].')<br/></td>';
+                .' ('.$emailArray['sender_email'].')<br/></td>';
             $content .= '</tr>';
             //To
             if (count($emailArray['to']) > 0) {

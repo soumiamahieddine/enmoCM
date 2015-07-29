@@ -164,8 +164,15 @@ switch ($mode) {
     break;
         
     case 'added':
+        $userEntitiesMails = array();
+        if ($core_tools->test_service('use_mail_services', 'sendmail', false)) {
+            $userEntitiesMails = $sendmail_tools->checkAttachedEntitiesMails($_SESSION['user']['UserId']);
+        }
         if (empty($identifier)) {
             $error = $request->wash_html(_IDENTIFIER.' '._IS_EMPTY.'!','NONE');
+            $status = 1;
+        } else if (!in_array($_REQUEST['sender_email'], $userEntitiesMails) && $core_tools->test_service('use_mail_services', 'sendmail', false)) {
+            $error = $request->wash_html(_INCORRECT_SENDER,'NONE');
             $status = 1;
         } else {
             if (isset($_SESSION['adresses']['to']) && count($_SESSION['adresses']['to']) > 0 ) {
@@ -195,6 +202,7 @@ switch ($mode) {
                                 //Data
                                 $collId = $_REQUEST['coll_id'];
                                 $object = $_REQUEST['object'];
+                                $senderEmail = $_REQUEST['sender_email'];
                                 (isset($_REQUEST['join_file']) 
                                     && count($_REQUEST['join_file']) > 0
                                 )? $res_master_attached = 'Y' : $res_master_attached = 'N';
@@ -210,7 +218,7 @@ switch ($mode) {
                                 if (isset($_REQUEST['notes']) && count($_REQUEST['notes']) > 0) {
                                     $note_list = join(',', $_REQUEST['notes']);
                                 }
-                                $date = $request->current_datetime();
+
                                 $userId = $_SESSION['user']['UserId'];
                                 (!empty($_REQUEST['is_html']) && $_REQUEST['is_html'] == 'Y')? $isHtml = 'Y' : $isHtml = 'N';
                                 //Body content
@@ -231,10 +239,10 @@ switch ($mode) {
                                 $stmt = $db->query(
                                     "INSERT INTO " . EMAILS_TABLE . "(coll_id, res_id, user_id, to_list, cc_list,
                                     cci_list, email_object, email_body, is_res_master_attached, res_version_id_list, 
-                                    res_attachment_id_list, note_id_list, is_html, email_status, creation_date) 
-                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
+                                    res_attachment_id_list, note_id_list, is_html, email_status, creation_date, sender_email) 
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?)",
 									array($collId, $identifier, $userId, $to, $cc, $cci, $object, $body, $res_master_attached, 
-									$version_list, $attachment_list, $note_list, $isHtml, $email_status)
+									$version_list, $attachment_list, $note_list, $isHtml, $email_status, $senderEmail)
                                 );
                                
                                 
@@ -290,10 +298,16 @@ switch ($mode) {
         if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
             //Email ID
             $id = $_REQUEST['id'];
-            
+            $userEntitiesMails = array();
+            if ($core_tools->test_service('use_mail_services', 'sendmail', false)) {
+                $userEntitiesMails = $sendmail_tools->checkAttachedEntitiesMails($_SESSION['user']['UserId']);
+            }
             //Res ID
             if (empty($identifier)) {
                 $error = $request->wash_html(_IDENTIFIER.' '._IS_EMPTY.'!','NONE');
+                $status = 1;
+            } else if (!in_array($_REQUEST['sender_email'], $userEntitiesMails) && $core_tools->test_service('use_mail_services', 'sendmail', false)) {
+                $error = $request->wash_html(_INCORRECT_SENDER,'NONE');
                 $status = 1;
             } else {
                 if (isset($_SESSION['adresses']['to']) && count($_SESSION['adresses']['to']) > 0 ) {
@@ -323,6 +337,7 @@ switch ($mode) {
                                     //Data
                                     $collId = $_REQUEST['coll_id'];
                                     $object = $_REQUEST['object'];
+                                    $senderEmail = $_REQUEST['sender_email'];
                                     (isset($_REQUEST['join_file']) 
                                         && count($_REQUEST['join_file']) > 0
                                     )? $res_master_attached = 'Y' : $res_master_attached = 'N';
@@ -356,10 +371,10 @@ switch ($mode) {
                                         "UPDATE " . EMAILS_TABLE . " SET to_list = ?, cc_list = ?, cci_list = ?, email_object = ?, 
 												email_body = ?, is_res_master_attached = ?, res_version_id_list = ?, 
 												res_attachment_id_list = ?, note_id_list = ?, 
-												is_html = ?, email_status = ? where email_id = ? "
+												is_html = ?, email_status = ?, sender_email = ? where email_id = ? "
                                             ." and res_id =  ? and user_id = ?",
                                             array($to, $cc, $cci, $object, $body, $res_master_attached, $version_list, $attachment_list, $note_list, $isHtml,
-												$email_status, $id, $identifier, $userId )
+												$email_status, $senderEmail, $id, $identifier, $userId )
                                     );
                                     
                                     //History

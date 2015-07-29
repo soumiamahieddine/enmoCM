@@ -55,10 +55,10 @@ while ($state <> 'END') {
 			$userInfo = $users->get_user($email->user_id);
 						$GLOBALS['logger']->write("Sending e-mail from : " 
 				. '"' . $userInfo['firstname'].' ' .$userInfo['lastname'] 
-				. '" <'.$userInfo['mail'].'>', 'INFO');
+				. '" <'.$email->sender_email.'>', 'INFO');
 				
                         $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
-				. $userInfo['lastname'].' <'.$userInfo['mail'].'> ');
+				. $userInfo['lastname'].' <'.$email->sender_email.'> ');
 
 			//
 			$GLOBALS['logger']->write("Sending e-mail to : " . $email->to_list, 'INFO');

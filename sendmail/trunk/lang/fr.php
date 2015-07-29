@@ -130,3 +130,12 @@ if (!defined("_Label_ADD_TEMPLATE_MAIL"))
     define("_Label_ADD_TEMPLATE_MAIL", "Modèle de courriel");
 if (!defined("_ADD_TEMPLATE_MAIL"))
     define("_ADD_TEMPLATE_MAIL", "Sélectionnez le modèle désiré");
+
+if (!defined("_EMAIL_OBJECT_ANSWER"))
+    define("_EMAIL_OBJECT_ANSWER", "Réponse à votre courrier du");
+if (!defined("_USE_MAIL_SERVICES"))
+    define("_USE_MAIL_SERVICES", "Utiliser les courriels de ses services en tant qu'expéditeur");
+if (!defined("_USE_MAIL_SERVICES_DESC"))
+    define("_USE_MAIL_SERVICES_DESC", "Utiliser les courriels de ses services en tant qu'expéditeur");
+if (!defined("_INCORRECT_SENDER"))
+    define("_INCORRECT_SENDER", "Expéditeur inccorect");
