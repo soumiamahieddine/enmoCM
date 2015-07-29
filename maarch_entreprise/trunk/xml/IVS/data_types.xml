@@ -44,6 +44,13 @@
       <enumeration value="allow" />
       <enumeration value="adress" />
       <enumeration value="view" />
+      <enumeration value="read" />
+      <enumeration value="added" />
+      <enumeration value="transfer" />
+    </dataType>
+    <dataType name="size" base="string">
+      <enumeration value="full" />
+      <enumeration value="medium" />
     </dataType>
     <dataType name="collection_list" base="string">
       <enumeration value="letterbox_coll" />
