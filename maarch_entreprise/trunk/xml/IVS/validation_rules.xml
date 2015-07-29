@@ -127,6 +127,7 @@
       <parameter name="group_id" type="identifier" />
       <parameter name="group_submit" type="safetext" />
       <parameter name="id" type="identifier" />
+      <parameter name="services" type="string" />
     </validationRule>
 
     <validationRule name="admin_history" extends="standardForm" mode="error">
