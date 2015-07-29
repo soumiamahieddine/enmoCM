@@ -308,6 +308,7 @@
       <parameter name="society_short" type="safetext" />
       <parameter name="title" type="safetext" />
       <parameter name="dir" type="identifier" />
+      <parameter name="mycontact" type="identifier" />
     </validationRule>
 
     <validationRule name="contactConfirm" extends="standardForm" mode="error">
