@@ -185,7 +185,7 @@ switch ($mode) {
 			
 			if ($status <> 1) {
 				//Insert data
-				$fileplan_label = functions::protect_string_db($_REQUEST['fileplan_label']);
+				$fileplan_label = $_REQUEST['fileplan_label'];
 				$stmt = $db->query("INSERT INTO ".FILEPLAN_TABLE
 					. " (fileplan_label, user_id, entity_id, is_serial_id, enabled)" 
 					. " VALUES (?,?,?,?,?)"
@@ -198,7 +198,7 @@ switch ($mode) {
 					//Add to history
 					$hist->add(
 						FILEPLAN_TABLE, $id, "ADD", 'fileplanadd', _FILEPLAN_ADDED 
-						. ': '.$fileplan_label.' (' . $id . ')',
+						. ": ".$fileplan_label." (" . $id . ")",
 						$_SESSION['config']['databasetype'], 'fileplan'
 					);
 				}
@@ -332,7 +332,7 @@ switch ($mode) {
 				
 				if ($status <> 1) {
 					//Update data
-					$fileplan_label = functions::protect_string_db($_REQUEST['fileplan_label']);
+					$fileplan_label = $_REQUEST['fileplan_label'];
 					$stmt = $db->query(
 						"UPDATE ".FILEPLAN_TABLE . " SET fileplan_label = ?" 
 						. ", user_id = ?" 
@@ -346,7 +346,7 @@ switch ($mode) {
 						//Add to history
 						$hist->add(
 							FILEPLAN_TABLE, $fileplan_id, "UP", 'fileplanup', 
-							_FILEPLAN_UPDATED . ': '.$fileplan_label.' (' . $fileplan_id . ')',
+							_FILEPLAN_UPDATED . ": ".$fileplan_label." (" . $fileplan_id . ")",
 							$_SESSION['config']['databasetype'], 'fileplan'
 						);
 					}
@@ -690,7 +690,7 @@ switch ($mode) {
 							$error = functions::wash_html(_POSITION_ALREADY_EXISTS.': '.$position_id.'!','NONE');
 							$status = 1;
 					} else {
-						$position_label = functions::protect_string_db($_REQUEST['position_label']);
+						$position_label = $_REQUEST['position_label'];
 						$stmt = $db->query(
 							"INSERT INTO ".FILEPLAN_POSITIONS_TABLE
 							. " (position_label, parent_id, fileplan_id, enabled) VALUES (?,?,?,?)"
@@ -853,7 +853,7 @@ switch ($mode) {
 									$error = functions::wash_html(_POSITION_ALREADY_EXISTS.': '.$position_id.'!','NONE');
 									$status = 1;
 							} else {
-								$position_label = functions::protect_string_db($_REQUEST['position_label']);
+								$position_label = $_REQUEST['position_label'];
 								$stmt = $db->query(
 									"UPDATE ".FILEPLAN_POSITIONS_TABLE
 									. " SET position_id = ?"
