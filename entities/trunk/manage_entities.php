@@ -57,7 +57,7 @@ $arrayPDO = array();
 
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-    $what = $func->protect_string_db($_REQUEST['what']);
+    $what = $_REQUEST['what'];
 	$where = " lower(entity_label) like lower(?) ";
     $arrayPDO = array_merge($arrayPDO, array($what."%"));
 }

@@ -522,7 +522,7 @@ class diffusion_list extends dbquery
             $cptEntities=count($diffList[$role_id]['entities']);
             for ($j=0;$j<$cptEntities;$j++) {
                 $entityFound = false;
-                $entityId = $this->protect_string_db(trim($diffList[$role_id]['entities'][$j]['entity_id']));
+                $entityId = trim($diffList[$role_id]['entities'][$j]['entity_id']);
                 $visible = $diffList[$role_id]['entities'][$j]['visible'];
                 $viewed = (integer)$diffList[$role_id]['entities'][$j]['viewed'];
                 $cptOldEntities = count($oldListInst[$role_id]['entities']);

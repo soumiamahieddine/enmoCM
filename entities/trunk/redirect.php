@@ -307,7 +307,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $entityId = $formValues['department'];
         //$message = _REDIRECT_TO_DEP_OK . " " . $entityId;
 
-        $stmt = $db->query("SELECT entity_label FROM entities WHERE entity_id = ?,"array($entityId));
+        $stmt = $db->query("SELECT entity_label FROM entities WHERE entity_id = ?", array($entityId));
         $list = $stmt->fetchObject();
         $entity_label = $list->entity_label;
         $message = _REDIRECT_TO_DEP_OK . " " . $entity_label;
@@ -335,7 +335,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $content_note = $content_note;
                 $date = $db->current_datetime();
                 
-                $stmt $db->query(
+                $stmt = $db->query(
                     "INSERT INTO notes (identifier, tablename, user_id, "
                             . "date_note, note_text, coll_id ) VALUES (?,?,?,?,?,?)",array($res_id,$table,$userIdTypist,$date,$content_note,$coll_id)
                 );
@@ -361,12 +361,11 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $content_note = $formValues['note_content_to_dep'];
                 $content_note = str_replace(";", ".", $content_note);
                 $content_note = str_replace("--", "-", $content_note);
-                $content_note = $db->protect_string_db($content_note);
-                $date = $db->current_datetime();
+                $content_note = $content_note;
                 
                 $stmt = $db->query(
                     "INSERT INTO notes (identifier, tablename, user_id, "
-                            . "date_note, note_text, coll_id ) VALUES (?,?,?,?,?,?)",array($res_id,$table,$userIdTypist,$date,$content_note,$coll_id)
+                            . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)",array($res_id,$table,$userIdTypist,$content_note,$coll_id)
                 );
             }
             $stmt = $db->query("update ".$table." set destination = ? where res_id = ?",array($entityId,$res_id)); 
