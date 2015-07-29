@@ -53,7 +53,7 @@ if (isset($_REQUEST['modify'])) {
     if (empty($_REQUEST['notes'])) {
         $error = _NOTES . ' ' . _EMPTY;
     } else if (empty($error)) {
-        $text = $func->protect_string_db($_REQUEST['notes']);
+        $text = $_REQUEST['notes'];
         $db->query(
             "UPDATE ".NOTES_TABLE." SET note_text = ?, date_note = CURRENT_TIMESTAMP WHERE id = ?",
             array($text, $id)
