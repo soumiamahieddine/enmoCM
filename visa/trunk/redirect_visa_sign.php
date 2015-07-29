@@ -185,7 +185,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $content_note = $formValues['note_content_to_user'];
                 $content_note = str_replace(";", ".", $content_note);
                 $content_note = str_replace("--", "-", $content_note);
-                $content_note = $db->protect_string_db($content_note);
+                $content_note = $content_note;
                 $date = $db->current_datetime();
                 
                 $db->query(
