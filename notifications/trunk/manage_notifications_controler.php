@@ -192,7 +192,6 @@ function display_list() {
     $arrayPDO = array();
 
     if (isset($_REQUEST['what'])) {
-        //$what = $func->protect_string_db($_REQUEST['what']);
         $what = $_REQUEST['what'];
     }
     $where .= " (lower(description) like lower(:what) or lower(notification_id) like lower(:what)) ";
