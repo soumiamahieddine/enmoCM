@@ -18,7 +18,7 @@ $actions_json = $bask->translates_actions_to_json($_SESSION['current_basket']['a
 <body>
 <script type="text/javascript">
 
-	var arr_actions = <?php functions::xecho($actions_json);?>;
+	var arr_actions = <?php echo $actions_json;?>;
 	//alert(arr_actions);
 	var arr_msg_error = {'confirm_title' : '<?php echo addslashes(_ACTION_CONFIRM);?>',
 							'validate' : '<?php echo addslashes(_VALIDATE);?>',
