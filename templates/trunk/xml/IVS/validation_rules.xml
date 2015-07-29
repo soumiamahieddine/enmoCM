@@ -1,7 +1,7 @@
 <validationRules>
-	<!--validationRule name="template_manage_list" extends="standardForm" mode="error">
+	<!-- validationRule name="template_manage_list" extends="standardForm" mode="error">
 		<parameter name="what" type="safetext" />
-	</validationRule-->
+	</validationRule -->
 	<validationRule name="template_manage_add" extends="standardForm" mode="error">
 		<parameter name="id" type="identifier" />
 		<parameter name="module" type="identifier" />
@@ -41,5 +41,21 @@
 		<parameter name="module" type="identifier" />
 	</validationRule>
 	
+	<validationRule name="template_list" extends="standardForm" mode="error">
+    	<parameter name="template_id" type="document_id" />
+    	<parameter name="module" type="identifier" />
+    </validationRule>
+	
+	<validationRule name="generate_attachment_html" extends="standardForm" mode="error">
+    	<parameter name="coll_id" type="identifier" />
+    	<parameter name="res_id" type="identifier" />
+    	<parameter name="module" type="identifier" />
+    </validationRule>
+    
+    <validationRule name="param_templates_doctypes" extends="standardForm" mode="error">
+    	<parameter name="templates" type="identifier" />
+    	<parameter name="e_file" type="YN" />
+    	<parameter name="module" type="identifier" />
+    </validationRule>
 
 </validationRules>
