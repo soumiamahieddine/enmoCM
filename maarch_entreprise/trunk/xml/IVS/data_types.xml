@@ -46,6 +46,7 @@
       <enumeration value="view" />
       <enumeration value="read" />
       <enumeration value="added" />
+      <enumeration value="updated" />
       <enumeration value="transfer" />
     </dataType>
     <dataType name="size" base="string">
