@@ -3420,6 +3420,7 @@ CREATE TABLE sendmail
   email_status character varying(1) NOT NULL DEFAULT 'D',
   creation_date timestamp without time zone NOT NULL,
   send_date timestamp without time zone DEFAULT NULL,
+  sender_email character varying(255) DEFAULT NULL,
   CONSTRAINT sendmail_pkey PRIMARY KEY (email_id )
  );
 

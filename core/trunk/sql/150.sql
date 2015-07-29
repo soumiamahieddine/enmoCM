@@ -246,6 +246,9 @@ ALTER TABLE listinstance ADD process_date timestamp without time zone;
 ALTER TABLE listmodels DROP COLUMN IF EXISTS title;
 ALTER TABLE listmodels ADD COLUMN title varchar(255);
 
+ALTER TABLE sendmail DROP COLUMN IF EXISTS sender_email;
+ALTER TABLE sendmail ADD COLUMN sender_email varchar(255);
+
 -- ALTER TABLE listmodels DROP COLUMN IF EXISTS description;
 -- ALTER TABLE listmodels ADD COLUMN description varchar(255);
 
