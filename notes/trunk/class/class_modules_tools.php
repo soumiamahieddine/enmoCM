@@ -198,9 +198,9 @@ class notes
        {
            $query = "SELECT id FROM ".NOTE_ENTITIES_TABLE." WHERE note_id = ?";
                     
-           $stmt = $db->query($query, array($res->id));
+           $stmt2 = $db->query($query, array($res->id));
                         
-            if($stmt->rowCount()==0) {
+            if($stmt2->rowCount()==0) {
                 array_push($userNotes,
                     array('id' => $res->id, //ID
                           'label' => functions::show_string($res->note_text), //Label
@@ -209,13 +209,13 @@ class notes
                         )
                 );
            } else {
-             $stmt = $db->query( "SELECT id FROM notes WHERE id in ("
+             $stmt2 = $db->query( "SELECT id FROM notes WHERE id in ("
                 . "select note_id from ". NOTE_ENTITIES_TABLE. " where (item_id in ("
                       ."SELECT entity_id FROM users_entities WHERE user_id = ?) and note_id = ?))"
                 . "or (id = ? and user_id = ?)",
                 array($_SESSION['user']['UserId'], $res->id, $res->id, $_SESSION['user']['UserId']));
             
-                if($stmt->rowCount()<>0) {
+                if($stmt2->rowCount()<>0) {
                     array_push($userNotes,
                         array('id' => $res->id, //ID
                               'label' => functions::show_string($res->note_text), //Label
