@@ -680,6 +680,7 @@
 
     <validationRule name="url_path" extends="standardForm" mode="error">  
       <parameter name="url" type="url" />
+      <parameter name="baskets" type="identifier" />
     </validationRule>
 
     <validationRule name="standardForm" extends="index">  
