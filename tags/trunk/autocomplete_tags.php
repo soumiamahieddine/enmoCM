@@ -38,16 +38,20 @@ $where_what = array();
 
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 {
-	$where .= " (tag_label ilike ? or tag_label ilike ? ) ";
+	// Pourquoi il y a deux tag_label sur la même chose?
+	//$where .= " (tag_label ilike ? or tag_label ilike ? ) ";
+	$where .= " (tag_label ilike ? ) ";
 	$limit = " limit 10";
 	$where_what[] = '%'.$_REQUEST['Input'].'%';
-	$where_what[] = '%'.$_REQUEST['Input'].'%';
+	//$where_what[] = '%'.$_REQUEST['Input'].'%';
 }
 else
 {
-	$where .= " (tag_label like ? or tag_label like ? ) ";
+	// Pourquoi il y a deux tag_label sur la même chose?
+	//$where .= " (tag_label like ? or tag_label like ? ) ";
+	$where .= " (tag_label like ? ) ";
 	$where_what[] = '%'.$_REQUEST['Input'].'%';
-	$where_what[] = '%'.$_REQUEST['Input'].'%';
+	//$where_what[] = '%'.$_REQUEST['Input'].'%';
 	$limit = "";
 }
 $other = 'order by tag_label';
@@ -57,7 +61,7 @@ $stmt = $db->query(
     	"SELECT DISTINCT tag_label as label from " ._TAG_TABLE_NAME
         . " where ".$where." ".
         $other." ".$limit
-	,array($where_what));
+	,$where_what);
 
 $list = "<ul>\n";
 $imax = 0;

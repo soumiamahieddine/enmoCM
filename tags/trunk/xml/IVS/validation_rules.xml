@@ -1,3 +1,40 @@
 <validationRules>
+	<validationRule name="tag_manage_add" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="id" type="safetext" />
+		<parameter name="tag_label" type="safetext" />
+		<parameter name="tag_submit" type="safetext" />
+		<parameter name="tagfusion" type="safetext" />
+		<parameter name="what" type="safetext" />
+		<parameter name="mode" type="mode" />
+		<parameter name="collection" type="collection_list" />
+	</validationRule>
+
+	<validationRule name="tag_fusion_tag" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="a_search_tag" type="safetext" />
+		<parameter name="a_new_tag" type="safetext" />
+	</validationRule>
+
+	<validationRule name="aj_add_this_tags" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="p_input_value" type="safetext" />
+	</validationRule>
+
+	<validationRule name="aj_delete_this_tag" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="p_tag_label" type="safetext" />
+	</validationRule>
+
+	<validationRule name="autocomplete_tags" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="Input" type="safetext" />
+	</validationRule>
+
+	<validationRule name="templates_tag_ui" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="p_res_id" type="integer" />
+	</validationRule>
 
 </validationRules>
+
