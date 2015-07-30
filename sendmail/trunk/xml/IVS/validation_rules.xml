@@ -4,7 +4,7 @@
 		<parameter name="id" type="identifier" />
 		<parameter name="identifier" type="identifier" />
 		<parameter name="origin" type="identifier" />
-		<parameter name="coll_id" type="identifier" />
+		<parameter name="coll_id" type="collection_list" />
 		<parameter name="size" type="size" />
 		<parameter name="url" type="url" />
 		<parameter name="for" type="identifier" />
@@ -29,7 +29,7 @@
 		<parameter name="module" type="identifier" />
 		<parameter name="identifier" type="identifier" />
 		<parameter name="origin" type="identifier" />
-		<parameter name="coll_id" type="identifier" />
+		<parameter name="coll_id" type="collection_list" />
 		<parameter name="id" type="identifier" />
 		<parameter name="size" type="size" />
 	</validationRule>
