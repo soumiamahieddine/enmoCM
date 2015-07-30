@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ROOT>
 	<externalEntityMail>
+		<targetEntityId></targetEntityId>  <!-- laisser vide pour que l'adresse soit utilisable par tout le monde -->
+		<EntityMail>service.prefecture@gmail.com</EntityMail>
+	</externalEntityMail>
+	<externalEntityMail>
 		<targetEntityId>COU</targetEntityId>
 		<EntityMail>service.courrier@gmail.com</EntityMail>
 	</externalEntityMail>

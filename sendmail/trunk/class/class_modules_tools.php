@@ -796,13 +796,17 @@ class sendmail extends Database
             if ($xml <> false) {
                 require_once("modules/entities/class/class_manage_entities.php");
                 $entities = new entity();
+                $allEntities=0;
 
                 foreach ($xml->externalEntityMail as $EntityMail) {
                     $shortLabelEntity = $entities->getentityshortlabel((string)$EntityMail->targetEntityId);
                     if (in_array($shortLabelEntity, array_keys($numberMailEntities))) {
                         $numberMailEntities[$shortLabelEntity]++;
                         $arrayEntitiesMails[$shortLabelEntity . ' ' .$numberMailEntities[$shortLabelEntity]] = (string)$EntityMail->EntityMail;
-                    }    
+                    } else if ((string)$EntityMail->targetEntityId == '') {
+                        $allEntities++;
+                        $arrayEntitiesMails[_ALL . ' ' .$allEntities] = (string)$EntityMail->EntityMail;
+                    }
                 }
             }
         }
