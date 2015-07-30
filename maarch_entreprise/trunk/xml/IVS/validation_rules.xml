@@ -529,6 +529,7 @@
     <validationRule name="document_list_indexing" extends="standardForm" mode="error">  
       <parameter name="url" type="url" />
       <parameter name="dir" type="identifier" />
+      <parameter name="template" type="identifier" />
       <parameter name="modulename" type="identifier" />
       <parameter name="action_form" type="identifier" />
       <parameter name="exclude" type="integer" />
