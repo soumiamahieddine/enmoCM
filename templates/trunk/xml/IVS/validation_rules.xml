@@ -30,7 +30,7 @@
 
 	<validationRule name="templates_ajax_content_for_notes" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
-		<parameter name="templateId" type="identifier" />
+		<parameter name="templateId" type="integer" />
 	</validationRule>
 
 	<validationRule name="select_templates" extends="standardForm" mode="error">
