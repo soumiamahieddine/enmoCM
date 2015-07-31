@@ -29,7 +29,6 @@
 * @version $Revision$
 * @ingroup templates
 */
-exit ("toto");
 require_once 'modules/templates/templates_tables_definition.php';
 require_once 'core/admin_tools.php';
 $db = new Database();
