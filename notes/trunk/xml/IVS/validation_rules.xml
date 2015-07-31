@@ -22,7 +22,7 @@
 		<parameter name="value" type="safetext" />
 		<parameter name="origin" type="identifier" />
 		<parameter name="size" type="size" />
-		<parameter name="url" type="url" />
+		<parameter name="url" type="safetext" />
 	</validationRule>
 	<validationRule name="note_add" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
