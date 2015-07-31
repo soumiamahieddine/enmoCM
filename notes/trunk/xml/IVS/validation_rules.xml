@@ -12,7 +12,7 @@
 		<parameter name="templateNotes" type="identifier" />
 		<parameter name="valid" type="safetext" />
 		<parameter name="url" type="url" />
-		<parameter name="id" type="identifier" />
+		<parameter name="id" type="integer" />
 	</validationRule>
 	<validationRule name="notes" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
