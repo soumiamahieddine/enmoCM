@@ -24,10 +24,12 @@
 	</validationRule>
 	
 	<validationRule name="template_ajax_content_for_mails" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
 		<parameter name="templateId" type="identifier" />
 	</validationRule>
 
 	<validationRule name="templates_ajax_content_for_notes" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
 		<parameter name="templateId" type="identifier" />
 	</validationRule>
 
