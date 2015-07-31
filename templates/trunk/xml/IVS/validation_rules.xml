@@ -23,9 +23,9 @@
 		<parameter name="template_path" type="docserver_path" />
 	</validationRule>
 	
-	<validationRule name="template_ajax_content_for_mails" extends="standardForm" mode="error">
+	<validationRule name="templates_ajax_content_for_mails" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
-		<parameter name="templateId" type="identifier" />
+		<parameter name="templateId" type="integer" />
 	</validationRule>
 
 	<validationRule name="templates_ajax_content_for_notes" extends="standardForm" mode="error">
