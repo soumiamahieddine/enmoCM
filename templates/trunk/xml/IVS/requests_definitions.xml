@@ -13,8 +13,8 @@
         <parameter name="module" value="templates"/>
         <parameter name="display" value="true"/>
     </requestDefinition>
-	<requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="template_ajax_content_for_notes" >
-        <parameter name="page" value="template_ajax_content_for_notes"/>
+	<requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="templates_ajax_content_for_notes" >
+        <parameter name="page" value="templates_ajax_content_for_notes"/>
         <parameter name="module" value="templates"/>
         <parameter name="display" value="true"/>
     </requestDefinition>

@@ -27,7 +27,7 @@
 		<parameter name="templateId" type="identifier" />
 	</validationRule>
 
-	<validationRule name="template_ajax_content_for_notes" extends="standardForm" mode="error">
+	<validationRule name="templates_ajax_content_for_notes" extends="standardForm" mode="error">
 		<parameter name="templateId" type="identifier" />
 	</validationRule>
 
