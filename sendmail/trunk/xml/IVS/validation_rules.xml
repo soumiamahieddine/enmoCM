@@ -2,7 +2,7 @@
 	<validationRule name="sendmail_ajax_content" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="id" type="identifier" />
-		<parameter name="identifier" type="identifier" />
+		<parameter name="identifier" type="integer" />
 		<parameter name="origin" type="identifier" />
 		<parameter name="coll_id" type="collection_list" />
 		<parameter name="size" type="size" />
@@ -23,11 +23,12 @@
 		<parameter name="object" type="safetext" />
 		<parameter name="valid" type="safetext" />
 		<parameter name="sender_email" type="email" />
+		<parameter name="templateMail" type="integer" />
 	</validationRule>
 
 	<validationRule name="mail_form" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
-		<parameter name="identifier" type="identifier" />
+		<parameter name="identifier" type="integer" />
 		<parameter name="origin" type="identifier" />
 		<parameter name="coll_id" type="collection_list" />
 		<parameter name="id" type="identifier" />
@@ -37,10 +38,11 @@
 	<validationRule name="sendmail" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="coll_id" type="collection_list" />
-		<parameter name="identifier" type="identifier" />
-		<parameter name="load" type="identifier" />
+		<parameter name="identifier" type="integer" />
+		<!--parameter name="load" type="identifier" /-->
 		<parameter name="origin" type="identifier" />
 		<parameter name="size" type="size" />
+		<parameter name="url" type="url" />
 	</validationRule>
 	
 	<validationRule name="adress_autocomletion" extends="standardForm" mode="error">
