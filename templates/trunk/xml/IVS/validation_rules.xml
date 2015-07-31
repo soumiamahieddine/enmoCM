@@ -3,7 +3,7 @@
 		<parameter name="what" type="safetext" />
 	</validationRule -->
 	<validationRule name="template_manage_add" extends="standardForm" mode="error">
-		<parameter name="id" type="identifier" />
+		<parameter name="id" type="integer" />
 		<parameter name="module" type="identifier" />
 		<parameter name="what" type="safetext" />
 		<parameter name="template_label" type="safetext" />
