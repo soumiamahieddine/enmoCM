@@ -412,7 +412,7 @@ while ($GLOBALS['state'] <> "END") {
                 $stmt = Bt_doQuery(
                     $GLOBALS['db'], 
                     $deleteCasesQuery, 
-                    array($resourcesArray[$cptRes]["res_id"]);
+                    array($resourcesArray[$cptRes]["res_id"]));
             }
 
             fclose($DeletedFiles);
