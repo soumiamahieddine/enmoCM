@@ -29,14 +29,15 @@
 * @version $Revision$
 * @ingroup templates
 */
-
+exit ("toto");
 require_once 'modules/templates/templates_tables_definition.php';
 require_once 'core/admin_tools.php';
 $db = new Database();
 if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
+	
     $stmt = $db->query("select template_label as tag from " 
                . _TEMPLATES_TABLE_NAME . " where template_label ilike ? order by template_label", 
-               array('%'.$_REQUEST['what']).'%')
+               array('%' . $_REQUEST['what'].'%')
             );
 } else {
     $stmt = $db->query("select template_label as tag from " 
