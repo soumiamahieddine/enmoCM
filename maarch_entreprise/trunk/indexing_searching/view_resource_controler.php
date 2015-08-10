@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2008-2011 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -182,6 +182,112 @@ if ($s_id == '') {
         ) {
             $viewResourceArr['mime_type'] = "text/html";
         }
+
+        //WATERMARK
+        if (strtoupper($viewResourceArr['ext']) == 'PDF') {
+            require_once 'apps/maarch_entreprise/class/class_pdf.php';
+            if ($_SESSION['features']['watermark']['enabled'] == 'true') {
+                $filePathOnTmp = $viewResourceArr['file_path'];
+                $filePathOnTmpResult = $viewResourceArr['file_path'];
+                if (
+                    $_SESSION['features']['watermark']['column_name'] == ''
+                    && $_SESSION['features']['watermark']['default_text'] == ''
+                ) {
+                    $watermark = 'watermark by ' . $_SESSION['user']['UserId'];
+                } elseif ($_SESSION['features']['watermark']['column_name'] <> '') {
+                    $dbView = new Database();
+                    $query = " select " . $_SESSION['features']['watermark']['column_name'] 
+                        . " as thecolumn from res_view_letterbox where res_id = ?";
+                    $stmt = $dbView->query($query, array($s_id));
+                    $returnQuery = $stmt->fetchObject();
+                    $watermark = $returnQuery->thecolumn;
+                } elseif ($_SESSION['features']['watermark']['default_text'] <> '') {
+                    $watermark = $_SESSION['features']['watermark']['default_text'];
+                }
+                $positionDefault = array();
+                $position = array();
+                $positionDefault['X'] = 50;
+                $positionDefault['Y'] = 450;
+                $positionDefault['angle'] = 30;
+                $positionDefault['opacity'] = 0.5;
+                if ($_SESSION['features']['watermark']['position'] == '') {
+                    $position = $positionDefault;
+                } else {
+                    $arrayPos = explode(',', $_SESSION['features']['watermark']['position']);
+                    if (count($arrayPos) == 4) {
+                        $position['X'] = trim($arrayPos[0]);
+                        $position['Y'] = trim($arrayPos[1]);
+                        $position['angle'] = trim($arrayPos[2]);
+                        $position['opacity'] = trim($arrayPos[3]);
+                    } else {
+                        $position = $positionDefault;
+                    }
+                }
+                $fontDefault = array();
+                $font = array();
+                $fontDefault['fontName'] = 'helvetica';
+                $fontDefault['fontSize'] = '10';
+                if ($_SESSION['features']['watermark']['font'] == '') {
+                    $font = $fontDefault;
+                } else {
+                    $arrayFont = explode(',', $_SESSION['features']['watermark']['font']);
+                    
+                    if (count($arrayFont) == 2) {
+                        $font['fontName'] = trim($arrayFont[0]);
+                        $font['fontSize'] = trim($arrayFont[1]);
+                    } else {
+                        $font = $fontDefault;
+                    }
+                }
+                $colorDefault = array();
+                $color = array();
+                $colorDefault['color1'] = '192';
+                $colorDefault['color2'] = '192';
+                $colorDefault['color3'] = '192';
+                if ($_SESSION['features']['watermark']['text_color'] == '') {
+                    $color = $colorDefault;
+                } else {
+                    $arrayColor = explode(',', $_SESSION['features']['watermark']['text_color']);
+                    if (count($arrayColor) == 3) {
+                        $color['color1'] = trim($arrayColor[0]);
+                        $color['color2'] = trim($arrayColor[1]);
+                        $color['color3'] = trim($arrayColor[2]);
+                    } else {
+                        $color = $colorDefault;
+                    }
+                }
+                // Create a PDF object and set up the properties
+                $pdf = new PDF("p", "pt", "A4");
+                $pdf->SetAuthor("MAARCH");
+                $pdf->SetTitle("Watermarking by MAARCH");
+                $pdf->SetTextColor($color['color1'],$color['color2'],$color['color3']);
+
+                $pdf->SetFont($font['fontName'], '', $font['fontSize']);
+                //$stringWatermark = substr($watermark, 0, 11);
+                $stringWatermark = $watermark;
+                // Load the base PDF into template
+                $nbPages = $pdf->setSourceFile($filePathOnTmp);
+                //For each pages add the watermark
+                for ($cpt=1;$cpt<=$nbPages;$cpt++) {
+                    $tplidx = $pdf->ImportPage($cpt);
+                    $specs = $pdf->getTemplateSize($tplidx);
+                     //Add new page & use the base PDF as template
+                    $pdf->addPage($specs['h'] > $specs['w'] ? 'P' : 'L');
+                    $pdf->useTemplate($tplidx);
+                    //Set opacity
+                    $pdf->SetAlpha($position['opacity']);
+                    //Add Watermark
+                    $pdf->TextWithRotation(
+                        $position['X'], 
+                        $position['Y'], 
+                        $stringWatermark, 
+                        $position['angle']
+                    );
+                }
+                $pdf->Output($filePathOnTmpResult, "F");
+            }
+        }
+
         if ($viewResourceArr['called_by_ws']) {
             $fileContent = base64_decode($viewResourceArr['file_content']);
             $fileNameOnTmp = 'tmp_file_' . rand() . '_' 

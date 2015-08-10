@@ -543,6 +543,8 @@ class business_app_tools extends dbquery
         $_SESSION['features']['search_notes'] = "false";
         $_SESSION['features']['dest_to_copy_during_redirection'] = "false";
         $_SESSION['features']['show_types_tree'] = "false";
+        $_SESSION['features']['watermark'] = array();
+        $_SESSION['features']['watermark']['enabled'] = "false";
         if (file_exists(
             $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
             . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
@@ -562,6 +564,13 @@ class business_app_tools extends dbquery
             $_SESSION['features']['search_notes'] = (string) $feats->search_notes;
             $_SESSION['features']['dest_to_copy_during_redirection'] = (string) $feats->dest_to_copy_during_redirection;
             $_SESSION['features']['show_types_tree'] = (string) $feats->show_types_tree;
+            $watermark = $feats->watermark;
+            $_SESSION['features']['watermark']['enabled'] = (string) $watermark->enabled;
+            $_SESSION['features']['watermark']['column_name'] = (string) $watermark->column_name;
+            $_SESSION['features']['watermark']['default_text'] = (string) $watermark->default_text;
+            $_SESSION['features']['watermark']['position'] = (string) $watermark->position;
+            $_SESSION['features']['watermark']['font'] = (string) $watermark->font;
+            $_SESSION['features']['watermark']['text_color'] = (string) $watermark->text_color;
         }
     }
 
