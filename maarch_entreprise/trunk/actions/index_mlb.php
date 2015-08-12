@@ -1175,8 +1175,11 @@ function process_category_check($catId, $values)
         if ($processLimitDateUseYes == 'yes') {
             $_SESSION['store_process_limit_date'] = "ok";
             $processLimitDate = get_value_fields($values, 'process_limit_date');
-            if (trim($processLimitDate) == ""
-                || preg_match($_ENV['date_pattern'], $processLimitDate) == 0
+            if(trim($processLimitDate) == ""){
+                $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['process_limit_date']['label']
+                    . " " . _IS_EMPTY;
+                return false;
+            }else if (preg_match($_ENV['date_pattern'], $processLimitDate) == 0
             ) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['process_limit_date']['label']
                     . " " . _WRONG_FORMAT;
