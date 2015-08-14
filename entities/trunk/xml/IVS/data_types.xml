@@ -1,3 +1,5 @@
 <dataTypes>
-
+	<dataType name="entities_table_list" base="string">
+		<enumeration value="listinstance" />
+    </dataType>
 </dataTypes>

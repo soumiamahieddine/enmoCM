@@ -1,3 +1,43 @@
 <validationRules>
+	<validationRule name="users_list" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="what" type="safetext" />
+    </validationRule>
+    <validationRule name="users_entities_up" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="id" type="identifier" />
+    </validationRule>
+    <validationRule name="set_primary_entity" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="entities" type="ajax_ids" />
+    </validationRule>
+    <validationRule name="select_listmodels" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="objectType" type="safetext" />
+		<parameter name="returnElementType" type="safetext" />
+    </validationRule>
+    <validationRule name="save_list_diff" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="mode" type="entities_table_list" />
+		<parameter name="table" type="entities_table_list" />
+		<parameter name="collId" type="collection_list" />
+		<parameter name="resId" type="integer" />
+		<parameter name="concatList" type="integer" />
+		<parameter name="onlyCC" type="boolean" />
+		<parameter name="userId" type="login" />
+		<parameter name="opt" type="identifier" />
+    </validationRule>
+    <validationRule name="remove_user_entities" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="entities" type="ajax_ids" />
+    </validationRule>
+    <validationRule name="print_sep_mlb" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="entitieslist" type="arrayOfStrings" />
+		<parameter name="typeBarcode" type="identifier" />
+		<parameter name="submit" type="safetext" />
+		<parameter name="try" type="safetext" />
+		<parameter name="print_generic" type="safetext" />
+    </validationRule>
 
 </validationRules>

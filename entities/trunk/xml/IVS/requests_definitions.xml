@@ -1,3 +1,37 @@
 <requestDefinitions>
-
+	<requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="users_list" >
+		<parameter name="page" value="users_list"/>
+		<parameter name="display" value="true"/>
+		<parameter name="module" value="entities"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="users_entities_up" >
+		<parameter name="page" value="users_entities_up"/>
+		<parameter name="display" value="true"/>
+		<parameter name="module" value="entities"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="set_primary_entity" >
+		<parameter name="page" value="set_primary_entity"/>
+		<parameter name="display" value="true"/>
+		<parameter name="module" value="entities"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="select_listmodels" >
+		<parameter name="page" value="select_listmodels"/>
+		<parameter name="display" value="true"/>
+		<parameter name="module" value="entities"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="save_list_diff" >
+		<parameter name="page" value="save_list_diff"/>
+		<parameter name="display" value="true"/>
+		<parameter name="module" value="entities"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="remove_user_entities" >
+		<parameter name="page" value="remove_user_entities"/>
+		<parameter name="display" value="true"/>
+		<parameter name="module" value="entities"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="print_sep_mlb" >
+		<parameter name="page" value="print_sep_mlb"/>
+		<parameter name="display" value="true"/>
+		<parameter name="module" value="entities"/>
+    </requestDefinition>
 </requestDefinitions>
