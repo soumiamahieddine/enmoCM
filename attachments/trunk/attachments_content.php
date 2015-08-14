@@ -466,7 +466,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $new_nb_attach = 0;
                 $stmt = $db->query("select res_id from "
                     . $_SESSION['tablename']['attach_res_attachments']
-                    . " where status <> 'DEL' and res_id_master = ?", array($_SESSION['doc_id']));
+                    . " where status <> 'DEL' and attachment_type <> 'converted_pdf' and res_id_master = ?", array($_SESSION['doc_id']));
                 if ($stmt->rowCount() > 0) {
                     $new_nb_attach = $stmt->rowCount();
                 }
