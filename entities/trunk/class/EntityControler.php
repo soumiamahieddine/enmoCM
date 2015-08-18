@@ -617,8 +617,7 @@ class EntityControler
             {
                 $query = "INSERT INTO ".ENT_USERS_ENTITIES." (user_id, entity_id, primary_entity, user_role) VALUES (?, ?, ?, ?)";
                 try{
-                    if($_ENV['DEBUG'])
-                        echo $query.' // ';
+                    $db = new database();
                     $stmt = $db->query($query,array($user_id,$array[$i]['ENTITY_ID'],$array[$i]['PRIMARY'],$array[$i]['ROLE']));
                     $ok = true;
                 } catch (Exception $e){
