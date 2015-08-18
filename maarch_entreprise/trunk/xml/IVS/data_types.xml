@@ -57,6 +57,7 @@
       <enumeration value="letterbox_coll" />
       <enumeration value="business_coll" />
       <enumeration value="res_coll" />
+      <enumeration value="apa_coll" />
     </dataType>
     <dataType name="res_table_list" base="string">
       <enumeration value="res_letterbox" />

@@ -8,6 +8,8 @@
       <parameter name="reinit" type="boolean" />
       <parameter name="what" type="string" />
       <parameter name="order_field" type="string" />
+      <parameter name="module" type="identifier" />
+      <parameter name="level" type="identifier" />
     </validationRule>
 
     <validationRule name="admin_users_update" extends="standardForm" mode="error">
@@ -684,6 +686,7 @@
     <validationRule name="url_path" extends="standardForm" mode="error">  
       <parameter name="url" type="url" />
       <parameter name="baskets" type="identifier" />
+      <parameter name="origin" type="identifier" />
     </validationRule>
 
     <validationRule name="standardForm" extends="index">  
