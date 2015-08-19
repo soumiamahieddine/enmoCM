@@ -48,7 +48,7 @@
     <validationRule name="bk_manage_cancel_abs" extends="standardForm" mode="error">
       <parameter name="submit" type="safetext" />
     </validationRule>
-    <validationRule name="bk_manage_group_basket" extends="standardForm" mode="lax">
+    <validationRule name="bk_manage_group_basket" extends="standardForm" mode="error">
       <parameter name="default_action_page" type="identifier" />
       <parameter name="group" type="identifier" />
       <parameter name="list_whrere_clause" type="string" />
@@ -56,6 +56,10 @@
       <parameter name="sublist_whrere_clause" type="string" />
       <parameter name="basketclause" type="string" />
       <parameter name="Submit" type="safetext" />
+      <parameter name="old_group" type="identifier" />
+      <parameter name="actions" type="integer" />
+      <parameter name="action_*_page_use" type="YN" />
+      <parameter name="whereclause_*" type="string" />
     </validationRule>
     <validationRule name="bk_manage_redirect_my_basket" extends="standardForm" mode="lax">
       <parameter name="baskets_owner" type="login" />
