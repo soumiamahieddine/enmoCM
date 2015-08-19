@@ -126,7 +126,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         
     //Fields
         array_push($select[EMAILS_TABLE], "email_id", "res_id", "creation_date", "user_id", 
-            "email_object", "email_object as email_object_short", "sender_email", "user_id as email_expediteur", "to_list as email_destinataire",  "email_id as id", 
+            "email_object", "email_object as email_object_short", "user_id as email_expediteur", "to_list as email_destinataire",  "email_id as id", 
             "coll_id", "email_status", "email_status as status_img", "email_status as status_label");    //Emails
         array_push($select[USERS_TABLE], "user_id", "firstname", "lastname","mail");  //Users
         
@@ -284,8 +284,14 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                         $tab[$i][$j]["show"]=false;
                         $tab[$i][$j]["order"]='sender';
                     }
-                    if($tab[$i][$j][$value]=="sender_email")
+                    if($tab[$i][$j][$value]=="email_expediteur")
                     {
+                        $db = new Database();
+                        $stmt = $db->query("select mail from users where user_id = ?",array($tab[$i][$j]["value"]));
+                        $line = $stmt->fetchObject();
+                        $email_expediteur = $line->mail;
+                        $tab[$i][$j]["value"] = $email_expediteur;
+
                         $tab[$i][$j]["label"]=_SENDER;
                         $tab[$i][$j]["size"]="20";
                         $tab[$i][$j]["label_align"]="left";
