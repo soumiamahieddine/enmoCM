@@ -566,8 +566,7 @@ class business_app_tools extends dbquery
             $_SESSION['features']['show_types_tree'] = (string) $feats->show_types_tree;
             $watermark = $feats->watermark;
             $_SESSION['features']['watermark']['enabled'] = (string) $watermark->enabled;
-            $_SESSION['features']['watermark']['column_name'] = (string) $watermark->column_name;
-            $_SESSION['features']['watermark']['default_text'] = (string) $watermark->default_text;
+            $_SESSION['features']['watermark']['text'] = (string) $watermark->text;
             $_SESSION['features']['watermark']['position'] = (string) $watermark->position;
             $_SESSION['features']['watermark']['font'] = (string) $watermark->font;
             $_SESSION['features']['watermark']['text_color'] = (string) $watermark->text_color;
