@@ -1,3 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<inputValidation xmlns:xi="http://www.w3.org/2001/XInclude">
 <validationRules>
 
+	<validationRule name="attachments_content" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="fromDetail" type="identifier" />
+		<parameter name="url" type="safetext" />
+		<parameter name="id" type="integer" />
+		<parameter name="relation" type="identifier" />
+		<parameter name="add" type="safetext" />
+		<parameter name="addressidAttach" type="identifier" />
+		<parameter name="attachment_types" type="safetext" />
+		<parameter name="back_date" type="datefr" />
+		<parameter name="cancel" type="safetext" />
+		<parameter name="chrono" type="safetext" />
+		<parameter name="contact_attach" type="safetext" />
+		<parameter name="contactidAttach" type="identifier" />
+		<parameter name="edit" type="safetext" />
+		<parameter name="fromDetail" type="safetext" />
+		<parameter name="templateOffice" type="safetext" />
+		<parameter name="title" type="safetext" />
+		<parameter name="new_version" type="YesNO" />
+		<parameter name="relation" type="integer" />
+		<parameter name="res_id" type="identifier" />
+	</validationRule>
+
+	<validationRule name="get_chrono_attachment" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+	</validationRule>
+
+	<validationRule name="frame_list_attachments" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="fromDetail" type="identifier" />
+		<parameter name="attach_type" type="safetext" />
+		<parameter name="url" type="safetext" />
+		<parameter name="attach_type_exclude" type="safetext" />
+		<parameter name="load" type="safetext" />
+		<parameter name="resId" type="identifier" />
+		<parameter name="view_only" type="safetext" />
+	</validationRule>
+
+	<validationRule name="choose_attachment" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="dir" type="safetext" />
+		<parameter name="file" type="YN" />
+	</validationRule>
+
+	<validationRule name="previous_attachments" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="res_id_version" type="identifier" />
+	</validationRule>
+
+	<validationRule name="del_attachment" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="fromDetail" type="identifier" />
+		<parameter name="id" type="identifier" />
+		<parameter name="relation" type="identifier" />
+	</validationRule>
+
+	<validationRule name="get_other_chrono_attachment" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="type_id" type="identifier" />
+	</validationRule>
+
+	<validationRule name="setFinalVersion" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="fromDetail" type="identifier" />
+		<parameter name="id" type="integer" />
+		<parameter name="page" type="identifier" />
+		<parameter name="relation" type="integer" />
+	</validationRule>
+
+	<validationRule name="view_attachment" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="res_id_master" type="integer" />
+		<parameter name="id" type="identifier" />
+	</validationRule>
+
 </validationRules>
+</inputValidation>
