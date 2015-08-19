@@ -244,7 +244,20 @@ class ValidationEngine
                 continue;
             }
 
-            if (!isset($validationRule->parameters[$name])) {
+            $currentValidationParameter = null;
+            foreach ($validationRule->parameters as $parameterName => $validationParameter) {
+                if ($name === $parameterName) {
+                    $currentValidationParameter = $validationParameter;
+                    break;
+                } 
+
+                if (fnmatch($parameterName, $name)) {
+                    $currentValidationParameter = $validationParameter;
+                    break;
+                }
+            }
+
+            if (!isset($currentValidationParameter)) {
                 switch ($validationRule->mode) {
                     case 'lax':
                         break;
@@ -261,7 +274,7 @@ class ValidationEngine
                 continue;
             }
 
-            $this->validateParameter($validationRule->parameters[$name], $value);
+            $this->validateParameter($currentValidationParameter, $value);
         }
     }
 
