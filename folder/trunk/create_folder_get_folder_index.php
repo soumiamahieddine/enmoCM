@@ -69,9 +69,7 @@ if (count($indexes) > 0) {
 				if (! empty($_SESSION['m_admin']['folder']['indexes'][$key])) {
 					$content .= $_SESSION['m_admin']['folder']['indexes'][$key];
 				} else if ($indexes[$key]['default_value'] <> false) {
-					$content .= $foldertype->protect_string_db(
-					    $indexes[$key]['default_value'], true
-					);
+					$content .= $indexes[$key]['default_value'];
 				}
 				$content .= '"  />';
 			}
