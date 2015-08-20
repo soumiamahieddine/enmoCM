@@ -67,6 +67,10 @@
       <parameter name="module" value="basket"/>
       <parameter name="page" value="manage_group_basket"/>
     </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="bk_manage_redirect_my_basket" >
+      <parameter name="module" value="basket"/>
+      <parameter name="page" value="manage_redirect_my_basket"/>
+    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="bk_manage_user_baskets_secondary" >
       <parameter name="module" value="basket"/>
       <parameter name="page" value="manage_user_baskets_secondary"/>

@@ -59,10 +59,23 @@
       <parameter name="old_group" type="identifier" />
       <parameter name="actions" type="integer" />
       <parameter name="action_*_page_use" type="YN" />
+      <parameter name="action_*_mass_use" type="YN" />
+      <parameter name="*_entitieslist" type="identifier" />
+      <parameter name="*_entities_chosen" type="identifier" />
+      <parameter name="*_usersentities_chosen" type="identifier" />
+      <parameter name="*_difflist_types_chosen" type="identifier" />
+      <parameter name="*_difflist_typeslist" type="identifier" />
+      <parameter name="*_statuseslist" type="identifier" />
+      <parameter name="*_statuses_chosen" type="identifier" />
       <parameter name="whereclause_*" type="string" />
+      <parameter name="cancel" type="string" />
     </validationRule>
-    <validationRule name="bk_manage_redirect_my_basket" extends="standardForm" mode="lax">
+    <validationRule name="bk_manage_redirect_my_basket" extends="standardForm" mode="error">
       <parameter name="baskets_owner" type="login" />
+      <parameter name="basket_*" type="identifier" />
+      <parameter name="originalowner_*" type="login" />
+      <parameter name="user_*" type="string" />
+      <parameter name="virtual_*" type="YN" />
     </validationRule>
     <validationRule name="bk_manage_user_baskets_secondary" extends="standardForm" mode="error">
       <parameter name="baskets_owner" type="login" />
