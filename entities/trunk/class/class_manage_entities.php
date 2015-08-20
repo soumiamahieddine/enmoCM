@@ -1019,7 +1019,7 @@ class entity extends dbquery
             $db = new Database();
             if($mode == 'add')
             {
-                $stmt->query('select entity_id from '.ENT_ENTITIES." where entity_id = ?",array(trim($_SESSION['m_admin']['entity']['entityId'])));
+                $stmt= $db->query('select entity_id from '.ENT_ENTITIES.' where entity_id = ?',array(trim($_SESSION['m_admin']['entity']['entityId'])));
                 if($stmt->rowCount() > 0)
                 {
                     $_SESSION['error'] = $_SESSION['m_admin']['entity']['entityId'] .' '._ALREADY_EXISTS.'<br />';
