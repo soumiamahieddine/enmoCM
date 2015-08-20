@@ -8,6 +8,10 @@
         <parameter name="page" value="fileplan_admin_managment"/>
         <parameter name="module" value="fileplan"/>
     </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="fileplan_admin_managment" >
+        <parameter name="page" value="fileplan_admin_managment"/>
+        <parameter name="module" value="fileplan"/>
+    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="fileplan_ajax_script" >
         <parameter name="page" value="fileplan_ajax_script"/>
         <parameter name="module" value="fileplan"/>
@@ -27,5 +31,9 @@
         <parameter name="page" value="positions_documents_list"/>
         <parameter name="module" value="fileplan"/>
         <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="fileplan_admin_positions" >
+        <parameter name="page" value="fileplan_admin_positions"/>
+        <parameter name="module" value="fileplan"/>
     </requestDefinition>
 </requestDefinitions>
