@@ -3448,7 +3448,7 @@ CREATE TABLE fp_fileplan
 DROP TABLE IF EXISTS fp_fileplan_positions;
 CREATE TABLE fp_fileplan_positions 
 (
-  position_id character varying(32) NOT NULL,
+  position_id integer NOT NULL DEFAULT nextval('fp_fileplan_positions_position_id_seq'::regclass),
   position_label character varying(255),
   parent_id character varying(32) DEFAULT NULL,
   fileplan_id bigint NOT NULL,
