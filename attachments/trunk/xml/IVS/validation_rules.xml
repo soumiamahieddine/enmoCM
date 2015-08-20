@@ -5,24 +5,24 @@
 	<validationRule name="attachments_content" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="fromDetail" type="identifier" />
-		<parameter name="url" type="safetext" />
+		<parameter name="url" type="url" />
 		<parameter name="id" type="integer" />
 		<parameter name="relation" type="identifier" />
-		<parameter name="add" type="safetext" />
+		<parameter name="add" type="string" />
 		<parameter name="addressidAttach" type="identifier" />
-		<parameter name="attachment_types" type="safetext" />
+		<parameter name="attachment_types" type="identifier" />
 		<parameter name="back_date" type="datefr" />
-		<parameter name="cancel" type="safetext" />
-		<parameter name="chrono" type="safetext" />
-		<parameter name="contact_attach" type="safetext" />
+		<parameter name="cancel" type="string" />
+		<parameter name="chrono" type="string" />
+		<parameter name="contact_attach" type="string" />
 		<parameter name="contactidAttach" type="identifier" />
 		<parameter name="edit" type="safetext" />
-		<parameter name="fromDetail" type="safetext" />
-		<parameter name="templateOffice" type="safetext" />
-		<parameter name="title" type="safetext" />
+		<parameter name="fromDetail" type="string" />
+		<parameter name="templateOffice" type="string" />
+		<parameter name="title" type="string" />
 		<parameter name="new_version" type="YesNO" />
 		<parameter name="relation" type="integer" />
-		<parameter name="res_id" type="identifier" />
+		<parameter name="res_id" type="integer" />
 	</validationRule>
 
 	<validationRule name="get_chrono_attachment" extends="standardForm" mode="error">
@@ -32,12 +32,12 @@
 	<validationRule name="frame_list_attachments" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="fromDetail" type="identifier" />
-		<parameter name="attach_type" type="safetext" />
-		<parameter name="url" type="safetext" />
-		<parameter name="attach_type_exclude" type="safetext" />
-		<parameter name="load" type="safetext" />
+		<parameter name="attach_type" type="string" />
+		<parameter name="url" type="url" />
+		<parameter name="attach_type_exclude" type="string" />
+		<parameter name="load" type="string" />
 		<parameter name="resId" type="identifier" />
-		<parameter name="view_only" type="safetext" />
+		<parameter name="view_only" type="string" />
 	</validationRule>
 
 	<validationRule name="choose_attachment" extends="standardForm" mode="error">
@@ -48,14 +48,14 @@
 
 	<validationRule name="previous_attachments" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
-		<parameter name="res_id_version" type="identifier" />
+		<parameter name="res_id_version" type="integer" />
 	</validationRule>
 
 	<validationRule name="del_attachment" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="fromDetail" type="identifier" />
-		<parameter name="id" type="identifier" />
-		<parameter name="relation" type="identifier" />
+		<parameter name="id" type="integer" />
+		<parameter name="relation" type="integer" />
 	</validationRule>
 
 	<validationRule name="get_other_chrono_attachment" extends="standardForm" mode="error">
