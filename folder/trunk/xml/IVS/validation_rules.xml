@@ -123,10 +123,4 @@
       <parameter name="update_folder" type="string" />
       <parameter name="delete_folder" type="string" />
     </validationRule>
-
-
-
-
-
-
 </validationRules>
