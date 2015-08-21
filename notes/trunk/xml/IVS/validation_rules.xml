@@ -3,14 +3,13 @@
 		<parameter name="module" type="identifier" />
 		<parameter name="coll_id" type="collection_list" />
 		<parameter name="identifier" type="integer" />
-		<parameter name="mode" type="mode" />
 		<parameter name="origin" type="identifier" />
 		<parameter name="size" type="size" />
 		<parameter name="cancel" type="identifier" />
 		<parameter name="entities_chosen" type="identifier" />
-		<parameter name="notes" type="safetext" />
+		<parameter name="notes" type="string" />
 		<parameter name="templateNotes" type="identifier" />
-		<parameter name="valid" type="safetext" />
+		<parameter name="valid" type="string" />
 		<parameter name="url" type="url" />
 		<parameter name="id" type="integer" />
 	</validationRule>
@@ -19,33 +18,17 @@
 		<parameter name="coll_id" type="collection_list" />
 		<parameter name="identifier" type="integer" />
 		<parameter name="filter" type="identifier" />
-		<parameter name="value" type="safetext" />
+		<parameter name="value" type="string" />
 		<parameter name="origin" type="identifier" />
 		<parameter name="size" type="size" />
-		<parameter name="url" type="safetext" />
-	</validationRule>
-	<validationRule name="note_add" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="identifier" type="integer" />
-		<parameter name="coll_id" type="collection_list" />
-		<parameter name="notes" type="safetext" />
-		<parameter name="size" type="size" />
-		<parameter name="entities_chosen" type="identifier" />
-		<parameter name="origin" type="identifier" />
+		<parameter name="url" type="url" />
 	</validationRule>
 	<validationRule name="note_details" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="coll_id" type="collection_list" />
 		<parameter name="modify" type="identifier" />
 		<parameter name="id" type="identifier" />
-		<parameter name="notes" type="safetext" />
-		<parameter name="entities_chosen" type="identifier" />
-		<parameter name="delete" type="identifier" />
-		<parameter name="identifier" type="integer" />
+		<parameter name="resid" type="integer" />
+		<parameter name="size" type="identifier" />
 	</validationRule>
-	<validationRule name="load_attchmentforproperties_formcontent" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="id_type" type="integer" />
-	</validationRule>
-
 </validationRules>

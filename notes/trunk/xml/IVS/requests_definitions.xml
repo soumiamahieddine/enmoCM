@@ -19,20 +19,9 @@
         <parameter name="module" value="notes"/>
         <parameter name="display" value="true" />
     </requestDefinition>
-	<requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="note_add" >
-        <parameter name="page" value="note_add"/>
-        <parameter name="module" value="notes"/>
-        <parameter name="display" value="true"/>
-    </requestDefinition>
-	<requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="note_details" >
+	<requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="note_details" >
         <parameter name="page" value="note_details"/>
         <parameter name="module" value="notes"/>
         <parameter name="display" value="true"/>
     </requestDefinition>
-	<requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="load_attchmentforproperties_formcontent" >
-        <parameter name="page" value="load_attchmentforproperties_formcontent"/>
-        <parameter name="module" value="notes"/>
-    </requestDefinition>
-    
-
 </requestDefinitions>
