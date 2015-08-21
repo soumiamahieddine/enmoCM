@@ -3462,7 +3462,7 @@ CREATE TABLE fp_res_fileplan_positions
   res_id bigint NOT NULL,
   coll_id character varying(32) NOT NULL,
   fileplan_id bigint NOT NULL,
-  position_id character varying(32) NOT NULL,
+  position_id integer NOT NULL,
   CONSTRAINT fp_res_fileplan_positions_pkey PRIMARY KEY (res_id, coll_id, fileplan_id, position_id)
 );
 
