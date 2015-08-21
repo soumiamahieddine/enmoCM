@@ -12,16 +12,16 @@
 		<parameter name="field" type="identifier" />
 		<parameter name="index" type="boolean" />
 		<parameter name="is_html" type="YN" />
-		<parameter name="add" type="safetext" />
+		<parameter name="add" type="string" />
 		<parameter name="target" type="identifier" />
-		<parameter name="body_from_html" type="safetext" />
-		<parameter name="body_from_raw" type="safetext" />
+		<parameter name="body_from_html" type="string" />
+		<parameter name="body_from_raw" type="string" />
 		<parameter name="cancel" type="identifier" />
 		<parameter name="join_attachment" type="identifier" />
 		<parameter name="join_file" type="identifier" />
-		<parameter name="notes" type="identifier" />
-		<parameter name="object" type="safetext" />
-		<parameter name="valid" type="safetext" />
+		<parameter name="notes" type="string" />
+		<parameter name="object" type="string" />
+		<parameter name="valid" type="string" />
 		<parameter name="sender_email" type="email" />
 		<parameter name="templateMail" type="integer" />
 	</validationRule>
@@ -45,7 +45,7 @@
 	</validationRule>
 	
 	<validationRule name="adress_autocomletion" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
+
 	</validationRule>
 
 </validationRules>
