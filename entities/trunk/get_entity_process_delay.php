@@ -130,7 +130,7 @@ $db = new Database();
 if (!$_REQUEST['entities_chosen']){
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
 }else{
-    $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (?) order by short_label";array($entities_chosen));
+    $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (?) order by short_label",array($entities_chosen));
 }
 
 $doctypes = array();
@@ -173,10 +173,16 @@ for($i=0; $i<count($doctypes);$i++)
     }
     if ($valid == 'true' || $_SESSION['user']['UserId'] == "superadmin")
     {
-
+// var_dump("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay, res_view_letterbox.creation_date
+//                     FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id 
+//                     WHERE ?.destination = ? ? and ?.status not in ('DEL','BAD')");
+// var_dump($view);
+// var_dump($doctypes[$i]['ID']);
+// var_dump($where_date);
+// var_dump($view);
         $stmt = $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay, res_view_letterbox.creation_date
                     FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id 
-                    WHERE ?.destination = ? ? and ?.status not in ('DEL','BAD')",array($view,$doctypes[$i]['ID'],$where_date,$view));
+                    WHERE ".$view.".destination = ? ".$where_date." and ".$view.".status not in ('DEL','BAD')",array($doctypes[$i]['ID']));
         //$db->show();
 
         if( $stmt->rowCount() > 0)
