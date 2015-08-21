@@ -206,7 +206,7 @@ $totalEntities = count($entities);
 	
 for($i=0; $i<count($entities);$i++)
 {
-	$stmt = $db->query("select count(*) as total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where destination = ? and ?.status not in ('DEL','BAD') ?",array($entities[$i]['ID'],$view,$where_date));
+	$stmt = $db->query("select count(*) as total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where destination = ? and ".$view.".status not in ('DEL','BAD') ".$where_date." ",array($entities[$i]['ID']));
 	//$db->show();
 	$res = $stmt->fetchObject();
 	/*
