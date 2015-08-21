@@ -92,7 +92,7 @@ for($i=0; $i<count($entities);$i++)
 */
         $stmt = $db->query("SELECT count(*) AS total FROM ".$view
                     ." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id 
-                    WHERE destination = ? and ?.status not in ('DEL','BAD') and date(?.process_limit_date) <= date(now()) and ?.closing_date is null",array($entities[$i]['ID'],$view,$view,$view));
+                    WHERE destination = ? and ".$view.".status not in ('DEL','BAD') and date(".$view.".process_limit_date) <= date(now()) and ".$view.".closing_date is null",array($entities[$i]['ID']));
         //$db->show();
 
 		if( $stmt->rowCount() > 0)
