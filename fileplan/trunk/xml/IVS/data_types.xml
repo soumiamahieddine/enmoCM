@@ -3,6 +3,6 @@
 		<pattern value="/(^[0-9 ]+$)|(##ROOT##)/" />
     </dataType>
     <dataType name="identifierAt" base="graph">
-      <pattern value="/^[\w@]+$/" />
+      <pattern value="/^[\w@,]+$/" />
     </dataType>
 </dataTypes>

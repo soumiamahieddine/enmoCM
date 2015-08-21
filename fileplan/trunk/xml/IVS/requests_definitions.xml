@@ -36,4 +36,14 @@
         <parameter name="page" value="fileplan_admin_positions"/>
         <parameter name="module" value="fileplan"/>
     </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="fileplan_list_autocompletion" >
+        <parameter name="page" value="fileplan_list_autocompletion"/>
+        <parameter name="module" value="fileplan"/>
+        <parameter name="display" value="true"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="positions_tree_childs" >
+        <parameter name="page" value="positions_tree_childs"/>
+        <parameter name="module" value="fileplan"/>
+        <parameter name="display" value="true"/>
+    </requestDefinition>
 </requestDefinitions>
