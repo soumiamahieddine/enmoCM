@@ -515,7 +515,7 @@ class entity extends dbquery
                 {
                     if ($root)
                     {
-                        array_push($entities, array('ID' =>$parent[$i]['ENTITY_ID'], 'LABEL' => functions::show_string($parent[$i]['ENTITY_LABEL']),'SHORT_LABEL' => funcstions::show_string($parent[$i]['SHORT_LABEL']), 'KEYWORD' => false));
+                        array_push($entities, array('ID' =>$parent[$i]['ENTITY_ID'], 'LABEL' => functions::show_string($parent[$i]['ENTITY_LABEL']),'SHORT_LABEL' => functions::show_string($parent[$i]['SHORT_LABEL']), 'KEYWORD' => false));
                     }
 
                     $tmp = $this->getEntityChildrenTree($tmp, $parent[$i]['ENTITY_ID'], $tabspace, $except, $where);

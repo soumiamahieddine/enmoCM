@@ -34,7 +34,7 @@ if (count($_SESSION['tree_entities']) < 1) {
                     . ENT_ENTITIES . " where entity_id not in (?) and enabled= 'Y' order by entity_id",array($listOfMyEntities)
                 );
                 //$ent->show();
-                while ($res = $db->fetchObject()) {
+                while ($res = $stmt->fetchObject()) {
                     array_push($_SESSION['EntitiesIdExclusion'], "'". $res->entity_id . "'");
                 }
             }
