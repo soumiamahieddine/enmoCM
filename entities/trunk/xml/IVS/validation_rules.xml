@@ -39,5 +39,214 @@
 		<parameter name="try" type="safetext" />
 		<parameter name="print_generic" type="safetext" />
     </validationRule>
+    <validationRule name="entity_ban" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="id" type="identifier" />
+    </validationRule>
+    <validationRule name="manage_entities" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+    </validationRule>
+    <validationRule name="entity_allow" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="id" type="identifier" />
+    </validationRule>
+    <validationRule name="entity_up_db" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="id" type="identifier" />
+		<parameter name="Submit" type="identifier" />
+		<parameter name="adrs1" type="safetext" />
+		<parameter name="adrs2" type="safetext" />
+		<parameter name="adrs3" type="safetext" />
+		<parameter name="business" type="safetext" />
+		<parameter name="city" type="safetext" />
+		<parameter name="country" type="safetext" />
+		<parameter name="adrs3" type="safetext" />
+		<parameter name="email" type="safetext" />
+		<parameter name="entityId" type="identifier" />
+		<parameter name="id" type="safetext" />
+		<parameter name="label" type="safetext" />
+		<parameter name="mode" type="mode" />
+		<parameter name="parententity" type="identifier" />
+		<parameter name="short_label" type="safetext" />
+		<parameter name="type" type="safetext" />
+    </validationRule>
+    <validationRule name="entity_del" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="id" type="identifier" />
+		<parameter name="valid" type="identifier" />
+		<parameter name="doc_entity_id" type="safetext" />
+    </validationRule>
+    <validationRule name="choose_tree" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="tree_id" type="safetext" />
+    </validationRule>
+    <validationRule name="get_tree_childs" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="branch" type="safetext" />
+		<parameter name="branch_id" type="safetext" />
+		<parameter name="tree_id" type="safetext" />
+    </validationRule>
+    <validationRule name="admin_difflist_types" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="id" type="safetext" />
+		<parameter name="mode" type="mode" />
+    </validationRule>
+    <validationRule name="admin_difflist_type_validate" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="difflist_type_id" type="safetext" />
+		<parameter name="difflist_type_label" type="safetext" />
+		<parameter name="difflist_type_roles" type="safetext" />
+		<parameter name="allow_entities" type="safetext" />
+		<parameter name="mode" type="mode" />
+    </validationRule>
+    <validationRule name="admin_listmodels" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+    </validationRule>
+    <validationRule name="admin_listmodel" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="id" type="safetext" />
+		<parameter name="mode" type="mode" />
+    </validationRule>
+    <validationRule name="admin_listmodel_setObjectId" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="objectId" type="safetext" />
+		<parameter name="objectType" type="safetext" />
+		<parameter name="mode" type="mode" />
+    </validationRule>
+    <validationRule name="admin_listmodel_save" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="objectId" type="safetext" />
+		<parameter name="objectType" type="safetext" />
+		<parameter name="description" type="safetext" />
+		<parameter name="title" type="safetext" />
+    </validationRule>
+    <validationRule name="admin_listmodel_setObjectType" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="objectType" type="safetext" />
+    </validationRule>
+    <validationRule name="load_listmodel" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="objectType" type="safetext" />
+		<parameter name="objectId" type="safetext" />
+		<parameter name="origin" type="identifier" />
+    </validationRule>
+    <validationRule name="check_user_entities" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="form_values" type="safetext" />
+    </validationRule>
+    <validationRule name="choose_entity" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="entityid" type="identifier" />
+    </validationRule>
+    <validationRule name="entity_late_mail" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="arguments" type="ajax_ids_2" />
+    </validationRule>
+    <validationRule name="entity_process_delay" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="arguments" type="ajax_ids_2" />
+    </validationRule>
+    <validationRule name="get_entity_process_delay" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="date_fin" type="datefr" />
+		<parameter name="date_start" type="datefr" />
+		<parameter name="entities_chosen" type="safetext" />
+		<parameter name="id_report" type="safetext" />
+		<parameter name="period_type" type="identifier" />
+		<parameter name="report_type" type="identifier" />
+		<parameter name="the_month" type="mois" />
+		<parameter name="the_year" type="annee" />
+    </validationRule>
+    <validationRule name="get_entity_vol" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="date_fin" type="datefr" />
+		<parameter name="date_start" type="datefr" />
+		<parameter name="entities_chosen" type="safetext" />
+		<parameter name="id_report" type="safetext" />
+		<parameter name="period_type" type="identifier" />
+		<parameter name="report_type" type="identifier" />
+		<parameter name="the_month" type="mois" />
+		<parameter name="the_year" type="annee" />
+    </validationRule>
+    <validationRule name="get_entity_late_mail" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="entities_chosen" type="safetext" />
+		<parameter name="report_type" type="safetext" />
+    </validationRule>
+    <validationRule name="entity_vol_stat" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="arguments" type="ajax_ids_2" />
+    </validationRule>
+    <validationRule name="entity_late_mail" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="arguments" type="ajax_ids_2" />
+    </validationRule>
+    <validationRule name="entity_up" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="id" type="identifier" />
+    </validationRule>
+
+    <validationRule name="manage_listinstance" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="origin" type="identifier" />
+		<parameter name="what_services" type="safetext" />
+		<parameter name="what_users" type="safetext" />
+		<parameter name="action" type="safetext" />
+		<parameter name="id" type="identifier" />
+		<parameter name="role" type="identifier" />
+    </validationRule>
+
+    <validationRule name="loadDiffList" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="res_id" type="integer" />
+    </validationRule>
+
+    <validationRule name="listinstance_history_id" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="listinstance_history_id" type="integer" />
+    </validationRule>
+    <validationRule name="load_listinstance" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="origin" type="safetext" />
+		<parameter name="objectType" type="safetext" />
+		<parameter name="load_from_model" type="safetext" />
+		<parameter name="mandatory" type="safetext" />
+    </validationRule>
+
+    <validationRule name="load_listmodel" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="origin" type="safetext" />
+		<parameter name="objectType" type="safetext" />
+		<parameter name="objectId" type="identifier" />
+
+    </validationRule>
+
+    <validationRule name="manage_listmodel" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="origin" type="integer" />
+		<parameter name="action" type="identifier" />
+		<parameter name="rank" type="integer" />
+		<parameter name="role" type="identifier" />
+		<parameter name="what_services" type="identifier" />
+		<parameter name="what_users" type="identifier" />
+		<parameter name="id" type="identifier" />
+		<parameter name="valid" type="identifier" />
+    </validationRule>
+
+    <validationRule name="manage_user_entities" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="form_values" type="safetext" />
+    </validationRule>
+
+    <validationRule name="param_index_difflist_types" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="group" type="identifier" />
+		<parameter name="old_group" type="identifier" />
+    </validationRule>
+
+    <validationRule name="param_templates_entities" extends="standardForm" mode="error">
+		<parameter name="module" type="identifier" />
+		<parameter name="entities_chosen" type="identifier" />
+    </validationRule>
 
 </validationRules>
