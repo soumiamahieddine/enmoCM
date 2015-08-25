@@ -615,7 +615,7 @@ class entity extends dbquery
 
         $db = new Database();
 
-        $stmt = $db->query('select entity_id from '.ENT_ENTITIES." where parent_entity_id = ?".$where,array(trim($parent)));
+        $stmt = $db->query('SELECT entity_id FROM '.ENT_ENTITIES." WHERE parent_entity_id = '".trim($parent)."'".$where);
         //$this->show();
         if($stmt->rowCount() > 0)
         {
@@ -627,7 +627,7 @@ class entity extends dbquery
                 {
                     $db2 = new entity();
                     $db = new Database();
-                    $stmt2 = $db->query('select entity_id from '.ENT_ENTITIES." where parent_entity_id = ?".$where,array(trim($line->entity_id)));
+                    $stmt2 = $db->query('SELECT entity_id FROM '.ENT_ENTITIES." WHERE parent_entity_id = '".trim($line->entity_id)."'".$where);
                     /*echo "<br>";
                     $db2->show();
                     echo "<br>";*/
