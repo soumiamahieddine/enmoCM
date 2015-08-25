@@ -482,6 +482,7 @@
       <parameter name="Input" type="safetext" />
       <parameter name="table" type="contact_user_list" />
       <parameter name="dir" type="identifier" />
+      <parameter name="contact_type" type="safetext" />
     </validationRule>
     
     <validationRule name="autocomplete_contacts_prepare_multi" extends="standardForm" mode="error">  
