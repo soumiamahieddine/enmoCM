@@ -401,4 +401,185 @@ class ExportFunctions
         }
     }
 
+    function get_tags($libelle)
+    {
+
+        $collection = $this->collection;
+
+        $query_status = "SELECT tag_label FROM tags WHERE coll_id = '".$collection."' and res_id = ##res_id## ";
+
+        $db = new Database();
+
+        $i=0;
+        foreach($this->object_export as $line_name => $line_value) {
+            if ($i == 0) {
+                $line_value->get_tags = $libelle;
+                $i++;
+                continue;
+            }
+
+            $res_id = $line_value->res_id;
+            $query = str_replace('##res_id##', '?', $query_status);
+            $stmt = $db->query($query, array($res_id));
+
+            $return = "";
+            while ($result = $stmt->fetchObject()) {
+                $return .= $result->tag_label . " ## ";
+            }
+
+
+            $line_value->get_tags = $return;
+        }
+    }
+
+    function get_contact_type($libelle)
+    {
+
+        $query_status = "SELECT ct.label FROM res_view_letterbox r LEFT JOIN contacts_v2 c ON c.contact_id = r.contact_id LEFT JOIN contact_types ct ON ct.id = c.contact_type WHERE r.res_id = ##res_id## ";
+
+        $db = new Database();
+
+        $i=0;
+        foreach($this->object_export as $line_name => $line_value) {
+            if ($i == 0) {
+                $line_value->get_contact_type = $libelle;
+                $i++;
+                continue;
+            }
+
+            $res_id = $line_value->res_id;
+            $query = str_replace('##res_id##', '?', $query_status);
+            $stmt = $db->query($query, array($res_id));
+
+            $result = $stmt->fetchObject();
+
+            $line_value->get_contact_type = $result->label;
+        }
+    }
+
+    function get_contact_civility($libelle)
+    {
+
+        $query_status = "SELECT c.title FROM res_view_letterbox r LEFT JOIN contacts_v2 c ON c.contact_id = r.contact_id WHERE r.res_id = ##res_id## ";
+
+        $db = new Database();
+
+        $i=0;
+        foreach($this->object_export as $line_name => $line_value) {
+            if ($i == 0) {
+                $line_value->get_contact_civility = $libelle;
+                $i++;
+                continue;
+            }
+
+            $res_id = $line_value->res_id;
+            $query = str_replace('##res_id##', '?', $query_status);
+            $stmt = $db->query($query, array($res_id));
+
+            $result = $stmt->fetchObject();
+
+            $line_value->get_contact_civility = $_SESSION['mail_titles'][$result->title];
+        }
+    }
+
+    function get_entity_dest_short_label($libelle)
+    {
+
+        $query_status = "SELECT destination FROM res_view_letterbox r WHERE r.res_id = ##res_id## ";
+
+        $db = new Database();
+
+        require_once("modules/entities/class/class_manage_entities.php");
+        $entities = new entity();
+
+        $i=0;
+        foreach($this->object_export as $line_name => $line_value) {
+            if ($i == 0) {
+                $line_value->get_entity_dest_short_label = $libelle;
+                $i++;
+                continue;
+            }
+
+            $res_id = $line_value->res_id;
+            $query = str_replace('##res_id##', '?', $query_status);
+            $stmt = $db->query($query, array($res_id));
+
+            $result = $stmt->fetchObject();
+
+            $line_value->get_entity_dest_short_label = $entities->getentityshortlabel($result->destination);
+        }
+    }
+
+    function get_signatory_name($libelle)
+    {
+
+        $query_status = "SELECT DISTINCT u.lastname, u.firstname FROM res_view_attachments r LEFT JOIN users u ON u.user_id = r.typist WHERE r.attachment_type = 'signed_response' and r.status = 'TRA' and r.res_id_master = ##res_id## ";
+
+        $db = new Database();
+
+        $i=0;
+        foreach($this->object_export as $line_name => $line_value) {
+            if ($i == 0) {
+                $line_value->get_signatory_name = $libelle;
+                $i++;
+                continue;
+            }
+
+            $res_id = $line_value->res_id;
+            $query = str_replace('##res_id##', '?', $query_status);
+            $stmt = $db->query($query, array($res_id));
+
+            $j = 0;
+            $return = "";
+            
+            while($result = $stmt->fetchObject()){
+                if ($j > 0) {
+                    $return .= ", ";
+                }
+                $return .= strtoupper($result->lastname) . ' ' . ucfirst($result->firstname);
+                $j++;
+
+            }
+
+            $line_value->get_signatory_name = $return;
+        }
+    }
+
+    function get_signatory_date($libelle)
+    {
+
+        $query_status = "SELECT creation_date FROM res_view_attachments r WHERE r.attachment_type = 'signed_response' and r.status = 'TRA' and r.res_id_master = ##res_id## ";
+
+        $db = new Database();
+
+        $i=0;
+        foreach($this->object_export as $line_name => $line_value) {
+            if ($i == 0) {
+                $line_value->get_signatory_date = $libelle;
+                $i++;
+                continue;
+            }
+
+            $res_id = $line_value->res_id;
+            $query = str_replace('##res_id##', '?', $query_status);
+            $stmt = $db->query($query, array($res_id));
+
+            $j = 0;
+            $return = "";
+
+            while($result = $stmt->fetchObject()){
+
+                if ($j > 0) {
+                    $return .= ", ";
+                }
+
+                $return .= functions::format_date_db($result->creation_date);
+                $j++;
+                
+            }
+
+            $line_value->get_signatory_date = $return;
+        }
+    }
+
 }
