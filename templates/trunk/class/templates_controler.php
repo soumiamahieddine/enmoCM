@@ -620,7 +620,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         if (empty($field)) {
             $stmt = $db->query("select distinct what from " 
                 . _TEMPLATES_ASSOCIATION_TABLE_NAME
-                . " where template_id = ", array($templateId)
+                . " where template_id = ? ", array($templateId)
             );
             while ($res = $stmt->fetchObject()) {
                 $items[$res->what] = array();
