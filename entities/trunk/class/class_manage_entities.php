@@ -736,7 +736,7 @@ class entity extends dbquery
             $action  = 'Y';
             $histKey = 'VAL';
             $histLabel = _ENTITY_AUTORIZATION;
-            $hist = 'entityval';
+            $histKeyDetails = 'entityval';
             $msgError = _ENTITY_AUTORIZED;
         }
         $order = $_REQUEST['order'];
@@ -747,7 +747,7 @@ class entity extends dbquery
         $db = new Database();
         $stmt = $db->query('Update '.ENT_ENTITIES." set enabled = ? where entity_id = ?",array(trim($action),trim($id)));
 
-        if($_SESSION['history'][$hist] == "true")
+        if($_SESSION['history'][$histKeyDetails] == "true")
         {
             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
             $hist = new history();
@@ -764,7 +764,8 @@ class entity extends dbquery
                 $db = new Database();
 
                 $stmt2 = $db->query('Update '.ENT_ENTITIES." set enabled = ? where entity_id = ?",array(trim($action),trim($line->entity_id)));
-                if($_SESSION['history'][$hist] == "true")
+                
+                if($_SESSION['history'][$histKeyDetails] == "true")
                 {
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
                     $hist = new history();

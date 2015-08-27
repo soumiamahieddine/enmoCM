@@ -34,7 +34,7 @@
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="entity_up" >
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="entity_form" >
 		<parameter name="page" value="entity_up"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
@@ -46,20 +46,25 @@
 		<parameter name="page" value="manage_entities"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="manage_entities" >
+		<parameter name="page" value="manage_entities"/>
+		<parameter name="module" value="entities"/>
+    </requestDefinition>
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="entity_allow" >
 		<parameter name="page" value="entity_allow"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="entity_add" >
-		<parameter name="page" value="entity_allow"/>
+		<parameter name="page" value="entity_add"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="entity_add_db" >
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="entity_form" >
 		<parameter name="page" value="entity_add_db"/>
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="entity_up_db" >
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="entity_form" >
 		<parameter name="page" value="entity_up_db"/>
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
@@ -77,11 +82,7 @@
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="show_trees" >
-		<parameter name="page" value="show_trees"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
+
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="get_tree_childs" >
 		<parameter name="page" value="get_tree_childs"/>
 		<parameter name="display" value="true"/>
@@ -89,6 +90,10 @@
     </requestDefinition>
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_difflist_types" >
 		<parameter name="page" value="admin_difflist_types"/>
+		<parameter name="module" value="entities"/>
+    </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_difflist_types" >
+		<parameter name="page" value="admin_difflist_type"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_difflist_type_validate" >
@@ -137,11 +142,6 @@
     </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_listmodel_setObjectType">
 		<parameter name="page" value="admin_listmodel_setObjectType"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="load_listmodel">
-		<parameter name="page" value="load_listmodel"/>
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
@@ -197,15 +197,6 @@
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="entity_late_mail">
-		<parameter name="page" value="entity_late_mail"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="entity_late_mail">
-		<parameter name="page" value="entity_late_mail"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="manage_listinstance">
 		<parameter name="page" value="manage_listinstance"/>
 		<parameter name="display" value="true"/>
@@ -244,9 +235,9 @@
 		<parameter name="module" value="entities"/>
     </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="load_listmodel">
-		<parameter name="page" value="load_listmodel"/>
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
+		<parameter name="page" value="load_listmodel"/>
     </requestDefinition>
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="load_listmodel">
 		<parameter name="page" value="load_listmodel"/>
@@ -330,7 +321,11 @@
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition-->
-
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="entities_list_by_label">
+		<parameter name="page" value="entities_list_by_label"/>
+		<parameter name="display" value="true"/>
+		<parameter name="module" value="entities"/>
+    </requestDefinition>
 
 
 </requestDefinitions>

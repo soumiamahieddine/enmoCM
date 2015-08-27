@@ -45,23 +45,25 @@
     </validationRule>
     <validationRule name="manage_entities" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
+		<parameter name="Submit" type="string" />
+		<parameter name="selectedObject" type="identifier" />
     </validationRule>
     <validationRule name="entity_allow" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="id" type="identifier" />
     </validationRule>
-    <validationRule name="entity_up_db" extends="standardForm" mode="error">
+    <validationRule name="entity_form" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="id" type="identifier" />
 		<parameter name="Submit" type="identifier" />
 		<parameter name="adrs1" type="string" />
 		<parameter name="adrs2" type="string" />
 		<parameter name="adrs3" type="string" />
+		<parameter name="zcode" type="integer" />
 		<parameter name="business" type="string" />
 		<parameter name="city" type="string" />
 		<parameter name="country" type="string" />
-		<parameter name="adrs3" type="string" />
-		<parameter name="email" type="string" />
+		<parameter name="email" type="email" />
 		<parameter name="entityId" type="identifier" />
 		<parameter name="id" type="string" />
 		<parameter name="label" type="string" />
@@ -78,22 +80,22 @@
     </validationRule>
     <validationRule name="choose_tree" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
-		<parameter name="tree_id" type="string" />
+		<parameter name="tree_id" type="identifier" />
     </validationRule>
     <validationRule name="get_tree_childs" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="branch" type="string" />
-		<parameter name="branch_id" type="string" />
-		<parameter name="tree_id" type="string" />
+		<parameter name="branch_id" type="identifier" />
+		<parameter name="tree_id" type="identifier" />
     </validationRule>
     <validationRule name="admin_difflist_types" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
-		<parameter name="id" type="string" />
+		<parameter name="id" type="identifier" />
 		<parameter name="mode" type="mode" />
     </validationRule>
     <validationRule name="admin_difflist_type_validate" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
-		<parameter name="difflist_type_id" type="string" />
+		<parameter name="difflist_type_id" type="identifier" />
 		<parameter name="difflist_type_label" type="string" />
 		<parameter name="difflist_type_roles" type="string" />
 		<parameter name="allow_entities" type="string" />
@@ -113,6 +115,12 @@
 		<parameter name="objectType" type="string" />
 		<parameter name="mode" type="mode" />
     </validationRule>
+    <validationRule name="admin_listmodel_validateHeader" extends="standardForm" mode="error">
+		<parameter name="description" type="string" />
+		<parameter name="objectId" type="string" />
+		<parameter name="objectType" type="string" />
+		<parameter name="title" type="string" />
+    </validationRule>
     <validationRule name="admin_listmodel_save" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="objectId" type="string" />
@@ -122,7 +130,7 @@
     </validationRule>
     <validationRule name="admin_listmodel_setObjectType" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
-		<parameter name="objectType" type="string" />
+		<parameter name="objectType" type="identifier" />
     </validationRule>
     <validationRule name="load_listmodel" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
@@ -145,6 +153,7 @@
     <validationRule name="entity_process_delay" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="arguments" type="ajax_ids_2" />
+		<parameter name="period_type" type="identifier" />
     </validationRule>
     <validationRule name="get_entity_process_delay" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
@@ -171,13 +180,11 @@
     <validationRule name="get_entity_late_mail" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="entities_chosen" type="string" />
-		<parameter name="report_type" type="string" />
+		<parameter name="report_type" type="identifier" />
+		<parameter name="period_type" type="identifier" />
+		
     </validationRule>
     <validationRule name="entity_vol_stat" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="arguments" type="ajax_ids_2" />
-    </validationRule>
-    <validationRule name="entity_late_mail" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="arguments" type="ajax_ids_2" />
     </validationRule>
@@ -194,6 +201,7 @@
 		<parameter name="action" type="string" />
 		<parameter name="id" type="identifier" />
 		<parameter name="role" type="identifier" />
+		<parameter name="no_filter" type="string" />
     </validationRule>
 
     <validationRule name="loadDiffList" extends="standardForm" mode="error">
@@ -201,7 +209,7 @@
 		<parameter name="res_id" type="integer" />
     </validationRule>
 
-    <validationRule name="listinstance_history_id" extends="standardForm" mode="error">
+    <validationRule name="loadDiffListHistory" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="listinstance_history_id" type="integer" />
     </validationRule>
@@ -218,9 +226,8 @@
     <validationRule name="load_listmodel" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="origin" type="string" />
-		<parameter name="objectType" type="string" />
+		<parameter name="objectType" type="identifier" />
 		<parameter name="objectId" type="identifier" />
-
     </validationRule>
 
     <validationRule name="manage_listmodel" extends="standardForm" mode="error">
@@ -233,6 +240,9 @@
 		<parameter name="what_users" type="identifier" />
 		<parameter name="id" type="identifier" />
 		<parameter name="valid" type="identifier" />
+		<parameter name="no_filter" type="string" />
+		<parameter name="objectType" type="identifier" />
+		<parameter name="objectId" type="identifier" />
     </validationRule>
 
     <validationRule name="manage_user_entities" extends="standardForm" mode="error">
@@ -250,5 +260,9 @@
 		<parameter name="module" type="identifier" />
 		<parameter name="entities_chosen" type="identifier" />
     </validationRule>
+
+    <validationRule name="entities_list_by_label" extends="standardForm" mode="error"/>
+
+    <validationRule name="entity_add" extends="standardForm" mode="error" />
 
 </validationRules>

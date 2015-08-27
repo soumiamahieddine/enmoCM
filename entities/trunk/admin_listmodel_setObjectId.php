@@ -89,9 +89,9 @@ case 'VISA_CIRCUIT':
     break;
     
 case 'type_id':
-    require_once 'core/class/class_db.php';
+    require_once 'core/class/class_db_pdo.php';
     require_once 'core/core_tables.php';
-    $db = new Datbase();
+    $db = new Database();
     $stmt = $db->query("SELECT type_id, description FROM  " . DOCTYPES_TABLE);
     while($doctype = $stmt->fetchObject()) {
         $type_id = $doctype->type_id;

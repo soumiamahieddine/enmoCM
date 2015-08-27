@@ -18,8 +18,8 @@ $ent = new entity();
 $db = new Database();
 
 $select = "select entity_label from ".ENT_ENTITIES;
-$where = " where (lower(entity_label) like lower('".$_REQUEST['what']."%') ";
-$where .= " or lower(short_label) like lower('".$_REQUEST['what']."%')) ";
+$where = " where (lower(entity_label) like lower(?) ";
+$where .= " or lower(short_label) like lower(?)) ";
 
 if($_SESSION['user']['UserId'] != 'superadmin')
 {
@@ -39,6 +39,7 @@ while($line = $stmt->fetchObject())
 {
     array_push($entities, $line->entity_label);
 }
+
 echo "<ul>\n";
 $authViewList = 0;
 foreach($entities as $entity)

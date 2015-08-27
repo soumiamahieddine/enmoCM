@@ -33,7 +33,6 @@ if($_REQUEST['print_generic']) {
 }
 if(isset($_REQUEST['entitieslist']) && !empty($_REQUEST['entitieslist'])) {
     $db = new Database();
-    $connexion -> connect();
     $pdf= new fpdi();//create a new document PDF
     $cab_pdf= new barcocdeFPDF();//create a new document PDF
     //$pdf->DisplayPreferences('HideMenubar,HideToolbar,HideWindowUI');
