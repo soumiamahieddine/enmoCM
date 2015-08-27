@@ -197,6 +197,18 @@ $GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->databasetype;
 $GLOBALS['whereClause'] = (string) $CONFIG->WhereClause;
 $GLOBALS['exportFolder'] = (string) $CONFIG->ExportFolder;
 
+if ((string) $CONFIG->CleanContactsMoral) {
+    $GLOBALS['CleanContactsMoral'] = (string) $CONFIG->CleanContactsMoral;
+} else {
+    $GLOBALS['CleanContactsMoral'] = "false";
+}
+
+if ((string) $CONFIG->CleanContactsNonMoral) {
+    $GLOBALS['CleanContactsNonMoral'] = (string) $CONFIG->CleanContactsNonMoral;
+} else {
+    $GLOBALS['CleanContactsNonMoral'] = "false";
+}
+
 if (empty($GLOBALS['whereClause'])) {
     $GLOBALS['logger']->write('whereClause is empty', 'ERROR', 1);
     exit(105);
@@ -262,6 +274,8 @@ try {
                  . 'class' . DIRECTORY_SEPARATOR . 'class_functions.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
                  . 'class' . DIRECTORY_SEPARATOR . 'class_db_pdo.php');
+    Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
+                 . 'class' . DIRECTORY_SEPARATOR . 'class_db.php'); // Utile tant que request etend dbquery
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
                  . 'class' . DIRECTORY_SEPARATOR . 'class_core_tools.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 

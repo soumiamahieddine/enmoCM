@@ -9,6 +9,8 @@
         <StackSizeLimit>10000</StackSizeLimit> <!-- on doc -->
         <WhereClause>status = 'PUR' and current_date &gt;= custom_d1</WhereClause>
         <ExportFolder>c:\xampp\htdocs\mep12\modules\</ExportFolder>
+        <CleanContactsMoral>false</CleanContactsMoral> <!-- if true, remove useless moral contacts and addresses -->
+        <CleanContactsNonMoral>false</CleanContactsNonMoral> <!-- if true, remove useless non moral contacts and addresses -->
     </CONFIG>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>
