@@ -140,8 +140,6 @@ writeLog("Loading the xml config file");
 writeLog("Config name : " . $_ENV['config_name']);
 writeLog("Conversion launched for table : " . $_ENV['tablename']);
 
-writeLog("Conversion launched for table : " . $_ENV['tablename']);
-
 require($_ENV['core_path']."class/class_functions.php");
 require($_ENV['core_path']."class/class_db_pdo.php");
 	
