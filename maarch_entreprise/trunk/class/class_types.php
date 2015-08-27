@@ -251,7 +251,6 @@ class types extends database
             <?php
          }
          ?>
-        </div>
     <?php
     }
 
