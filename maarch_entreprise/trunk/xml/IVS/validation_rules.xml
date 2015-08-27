@@ -102,6 +102,7 @@
 
     <validationRule name="admin_docservers" extends="standardForm" mode="error">
       <parameter name="actual_size_hidden" type="safetext" />
+      <parameter name="actual_size_number" type="filename" />
       <parameter name="adr_priority_number" type="digit" />
       <parameter name="coll_id" type="collection_list" />
       <parameter name="device_label" type="safetext" />
@@ -225,6 +226,7 @@
       <parameter name="what" type="safetext" />
       <parameter name="Submit" type="safetext" />
       <parameter name="selectedObject" type="safetext" />
+      <parameter name="foldertypeslist" type="safetext" />
     </validationRule>
 
     <validationRule name="admin_structure" extends="standardForm" mode="error">
