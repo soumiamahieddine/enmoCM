@@ -108,7 +108,7 @@ if ($mode == 'add') {
     $content .= '<input type="hidden" value="Y" name="is_html" id="is_html">';
     $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
     $content .= '<tr>';
-    $content .= '<td colspan="3" nowrap><b>'._NEW_EMAIL.' '.strtolower(_FROM_SHORT).' : </b>';
+    $content .= '<td align="right" nowrap width="10%"><b>'.ucfirst(_FROM_SHORT).' </b></td><td>';
 
     $userEntitiesMails = array();
 
@@ -125,13 +125,13 @@ if ($mode == 'add') {
     $content .='</td>';
     $content .= '</tr>';
     $content .= '<tr>';
-    $content .= '<td>'._EMAIL.'</label></td>';
+    $content .= '<td align="right" >'._EMAIL.'</label></td>';
     $content .= '<td colspan="2"><input type="text" name="email" id="email" value="" class="emailSelect" />';
     $content .= '<div id="adressList" class="autocomplete"></div>';
     $content .= '<script type="text/javascript">addEmailAdress(\'email\', \'adressList\', \''
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&module=sendmail&page=adresss_autocomletion\', \'what\', \'2\');</script>';
-    $content .= '<select name="target" id="target">'
+    $content .= ' <select name="target" id="target">'
         .'<option id="target_target_to" value="to">'._SEND_TO_SHORT.'</option>'
         .'<option id="target_cc" value="cc">'._COPY_TO_SHORT.'</option>'
         .'<option id="target_cci" value="cci">'._COPY_TO_INVISIBLE_SHORT.'</option>'
@@ -143,7 +143,7 @@ if ($mode == 'add') {
     $content .= '</td>';
     $content .= '</tr>';
     $content .= '<tr>';
-    $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'
+    $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span> <label>'
         ._SEND_TO_SHORT.'</label></td>';
 
     $exp_contact_id = null;
@@ -205,7 +205,7 @@ if ($mode == 'add') {
         .'<div id="loading_cci" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></div></div></td>';
     $content .= '</tr>';
     $content .= '<tr>';
-    $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'._EMAIL_OBJECT.' </label></td>';
+    $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span><label> '._EMAIL_OBJECT.' </label></td>';
 
     $content .= '<td colspan="2"><input name="object" id="object" class="emailInput" type="text" value="'._EMAIL_OBJECT_ANSWER. ' ' . functions::format_date_db($admission_date).'" /></td>';
     $content .= '</tr>';
@@ -402,7 +402,7 @@ if ($mode == 'add') {
             $content .= '<input type="hidden" value="'.$emailArray['isHtml'].'" name="is_html" id="is_html">';
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
-			$content .= '<td colspan="3" nowrap><b>'._EDIT_EMAIL.' '.strtolower(_FROM_SHORT).' : </b>';
+			$content .= '<td align="right" nowrap width="10%"><b>'.ucfirst(_FROM_SHORT).' </b></td><td>';
 
             $userEntitiesMails = array();
 
@@ -431,12 +431,12 @@ if ($mode == 'add') {
 
             $content .= '</tr>';
             $content .= '<tr>';
-            $content .= '<td>'._EMAIL.'</label></td>';
+            $content .= '<td align="right">'._EMAIL.'</label></td>';
             $content .= '<td colspan="2"><input type="text" name="email" id="email" value="" class="emailSelect" />';
             $content .= '<div id="adressList" class="autocomplete"></div>';
             $content .= '<script type="text/javascript">addEmailAdress(\'email\', \'adressList\', \''
                 .$_SESSION['config']['businessappurl']
-                .'index.php?display=true&module=sendmail&page=adresss_autocomletion\', \'what\', \'2\');</script>';
+                .'index.php?display=true&module=sendmail&page=adresss_autocomletion\', \'what\', \'2\');</script> ';
             $content .= '<select name="target" id="target">'
                 .'<option id="target_target_to" value="to">'._SEND_TO_SHORT.'</option>'
                 .'<option id="target_cc" value="cc">'._COPY_TO_SHORT.'</option>'
@@ -454,7 +454,7 @@ if ($mode == 'add') {
                 $_SESSION['adresses']['to'] = $emailArray['to'];
             }
             $content .= '<tr>';
-            $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'
+            $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span> <label>'
                 ._SEND_TO_SHORT.'</label></td>';
             $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">';
             $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'to');
@@ -488,7 +488,7 @@ if ($mode == 'add') {
             $content .= '</tr>';
             //Object
             $content .= '<tr>';
-            $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'._EMAIL_OBJECT.' </label></td>';
+            $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span> <label>'._EMAIL_OBJECT.' </label></td>';
             $content .= '<td colspan="2"><input name="object" id="object" class="emailInput" type="text" value="'
                 .(($mode == 'transfer')? 'Fw: '.$emailArray['object'] : $emailArray['object']).'" /></td>';
             $content .= '</tr>';
@@ -718,7 +718,7 @@ if ($mode == 'add') {
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
 
-			$content .= '<td colspan="3" nowrap><b>'._READ_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
+			$content .= '<td width="10%" align="right" nowrap><b>'.ucfirst(_FROM_SHORT).' </b></td><td width="90%" colspan="2">'
                 .$usermailArray['firstname'].' '.$usermailArray['lastname']
                 .' ('.$emailArray['sender_email'].')<br/></td>';
             $content .= '</tr>';
@@ -728,7 +728,7 @@ if ($mode == 'add') {
                 $_SESSION['adresses']['to'] = $emailArray['to'];
             }
             $content .= '<tr>';
-            $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'
+            $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span> <label>'
                 ._SEND_TO_SHORT.'</label></td>';
             $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">';
             $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'to', true);
@@ -758,7 +758,7 @@ if ($mode == 'add') {
             $content .= '</tr>';   
             //Object
             $content .= '<tr>';
-            $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'._EMAIL_OBJECT.' </label></td>';
+            $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span> <label>'._EMAIL_OBJECT.' </label></td>';
             $content .= '<td colspan="2"><div name="object" id="object" class="emailInput">'
                 .$emailArray['object'].'</div></td>';
             $content .= '</tr>';
