@@ -31,7 +31,7 @@
 
 	<validationRule name="list_reports" extends="standardForm" mode="error">
 	<parameter name="module" type="identifier" />
-	<parameter name="group" type="safetext" />
+	<parameter name="group" type="identifier" />
 	</validationRule>
 
 	<validationRule name="groupreports_up_db" extends="standardForm" mode="error">
