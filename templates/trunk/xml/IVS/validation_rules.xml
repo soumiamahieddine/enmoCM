@@ -15,7 +15,6 @@
 		<parameter name="template_content" type="safetext" />
 		<parameter name="template_content_txt" type="safetext" />
 		<parameter name="template_style" type="document_id" />
-		<parameter name="template_content" type="safetext" />
 		<parameter name="entities_chosen" type="identifier" />
 		<parameter name="submit" type="identifier" />
 		<parameter name="Submit" type="safetext" />
