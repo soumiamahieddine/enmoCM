@@ -70,6 +70,8 @@
       <parameter name="sous_dossier" type="integer" />
       <parameter name="template" type="string" />
       <parameter name="templates" type="integer" />
+      <parameter name="fields" type="identifier" />
+      <parameter name="mandatory_fields" type="identifier" />
     </validationRule>
 
     <validationRule name="admin_docserver_location" extends="standardForm" mode="error">
