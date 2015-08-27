@@ -181,11 +181,12 @@ class Database extends functions
         } catch (PDOException $PDOException) {
             $this->error = $PDOException->getMessage();
         }
-
-        if ($this->error && $_SESSION['config']['debug'] == 'true') {
+        
+        if ($this->error && strstr($this->error, '08006') <> '') {
+            $this->xecho('Database connection failed');
+        } elseif ($this->error && $_SESSION['config']['debug'] == 'true') {
             print_r('SQL ERROR:' . $this->error);
         }
-        
     }
 
     /**
