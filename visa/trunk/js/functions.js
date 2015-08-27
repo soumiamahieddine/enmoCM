@@ -221,8 +221,11 @@ function load_listmodel_visa(
 	selectedOption,
 	objectType,
 	diff_list_id,
-	save_auto = false
+	save_auto
 ) {
+	if (save_auto == undefined || save_auto == '') {
+		save_auto = false;
+	}
     var div_id = diff_list_id || 'tab_visaSetWorkflow';
 	
 	var objectId = selectedOption.value || selectedOption;
