@@ -99,7 +99,7 @@ if (!defined("_DELETED"))    define("_DELETED", "Supprimé");
 if (!defined("_CONTINUE"))    define("_CONTINUE", "Continuer");
 if (!defined("_VIEW"))    define("_VIEW","Visualisation");
 if (!defined("_CHOOSE_ACTION"))    define("_CHOOSE_ACTION", "Choisissez une action");
-if (!defined("_ACTIONS"))    define("_ACTIONS", "Actions");
+if (!defined("_ACTIONS"))    define("_ACTIONS", "Action(s)");
 if (!defined("_ACTION_PAGE"))    define("_ACTION_PAGE", "Page de résultat de l'action");
 if (!defined("_DO_NOT_MODIFY_UNLESS_EXPERT"))    define("_DO_NOT_MODIFY_UNLESS_EXPERT", " Ne pas modifier cette section à moins de savoir ce que vous faites. Un mauvais paramètrage peut entrainer des dysfonctionnements de l'application!");
 if (!defined("_INFOS_ACTIONS"))    define("_INFOS_ACTIONS", "Vous devez choisir au moins un statut et / ou un script.");
@@ -208,7 +208,7 @@ if (!defined("_HELP")) define("_HELP", "Aide");
 if (!defined("_SEARCH_ADV_SHORT")) define("_SEARCH_ADV_SHORT", "Recherche Avancée");
 if (!defined("_SEARCH_SCOPE")) define("_SEARCH_SCOPE", "Portée de la recherche");
 if (!defined("_SEARCH_SCOPE_HELP")) define("_SEARCH_SCOPE_HELP", "Etend la recherche aux corbeilles; autorise les actions si une corbeille particulière est sélectionnée");
-if (!defined("_RESULTS")) define("_RESULTS", "Résultats");
+if (!defined("_RESULTS")) define("_RESULTS", "Résultat(s)");
 if (!defined("_USERS_LIST_SHORT")) define("_USERS_LIST_SHORT", "Liste utilisateurs");
 if (!defined("_MODELS_LIST_SHORT")) define("_MODELS_LIST_SHORT", "Liste modèles");
 if (!defined("_GROUPS_LIST_SHORT")) define("_GROUPS_LIST_SHORT", "Liste groupes");
@@ -240,15 +240,15 @@ if (!defined("_MENU")) define("_MENU", "Menu");
 if (!defined("_ADMIN")) define("_ADMIN", "Administration");
 if (!defined("_SUMMARY")) define("_SUMMARY", "Sommaire");
 if (!defined("_MANAGE_REL_MODEL")) define("_MANAGE_REL_MODEL", "Gérer le modèle de relance");
-if (!defined("_MANAGE_DOCTYPES")) define("_MANAGE_DOCTYPES", "Gérer les types de documents");
-if (!defined("_MANAGE_DOCTYPES_DESC")) define("_MANAGE_DOCTYPES_DESC", "Administrer les types de documents. Les types de documents sont rattachés à une collection documentaire. Pour chaque type, vous pouvez définir les index à saisir et ceux qui sont obligatoires.");
+if (!defined("_MANAGE_DOCTYPES")) define("_MANAGE_DOCTYPES", "Gérer les types de document");
+if (!defined("_MANAGE_DOCTYPES_DESC")) define("_MANAGE_DOCTYPES_DESC", "Administrer les types de document. Les types de document sont rattachés à une collection documentaire. Pour chaque type, vous pouvez définir les index à saisir et ceux qui sont obligatoires.");
 if (!defined("_VIEW_HISTORY2")) define("_VIEW_HISTORY2", "Visualisation de l'historique");
 if (!defined("_VIEW_HISTORY_BATCH2")) define("_VIEW_HISTORY_BATCH2", "Visualisation de l'historique des batchs");
 if (!defined("_INDEX_FILE")) define("_INDEX_FILE", "Indexer un fichier");
 if (!defined("_WORDING")) define("_WORDING", "Libellé");
 if (!defined("_COLLECTION")) define("_COLLECTION", "Collection");
 if (!defined("_VIEW_TREE_DOCTYPES")) define("_VIEW_TREE_DOCTYPES", "Arborescence du plan de classement");
-if (!defined("_VIEW_TREE_DOCTYPES_DESC")) define("_VIEW_TREE_DOCTYPES_DESC", "Voir l'arborescence du plan de classement (types de dossiers, chemises, sous-chemises et types de documents)");
+if (!defined("_VIEW_TREE_DOCTYPES_DESC")) define("_VIEW_TREE_DOCTYPES_DESC", "Voir l'arborescence du plan de classement (types de dossiers, chemises, sous-chemises et types de document)");
 
 /************************* Administration ***********************************/
 
@@ -366,7 +366,7 @@ if (!defined("_END_DATE_MISSION")) define("_END_DATE_MISSION", "Date de fin de m
 if (!defined("_EVENT_DATE")) define("_EVENT_DATE", "Date de l'événement");
 if (!defined("_VISIT_DATE")) define("_VISIT_DATE", "Date de la visite");
 if (!defined("_CHANGE_DATE")) define("_CHANGE_DATE", "Date du changement ");
-if (!defined("_DOCTYPES_LIST2")) define("_DOCTYPES_LIST2", "Liste des types de pièce");
+if (!defined("_DOCTYPES_LIST2")) define("_DOCTYPES_LIST2", "Liste des types de document");
 
 if (!defined("_INDEX_FOR_DOCTYPES")) define("_INDEX_FOR_DOCTYPES", "Index possibles pour les types de document");
 if (!defined("_FIELD")) define("_FIELD", "Champ");
@@ -427,7 +427,7 @@ if (!defined("_THE_SUBFOLDER")) define("_THE_SUBFOLDER", "La sous-chemise");
 if (!defined("_SUBFOLDER_MODIF")) define("_SUBFOLDER_MODIF", "Modification de la sous-chemise");
 if (!defined("_SUBFOLDER_CREATION")) define("_SUBFOLDER_CREATION", "Création de la sous-chemise");
 if (!defined("_SUBFOLDER_ID_PB")) define("_SUBFOLDER_ID_PB", "Il y a un probleme avec l'identifiant de la sous-chemise");
-if (!defined("_SUBFOLDER_ADDED")) define("_SUBFOLDER_ADDED", "Ajout d'unen nouvelle sous-chemise");
+if (!defined("_SUBFOLDER_ADDED")) define("_SUBFOLDER_ADDED", "Ajout d'une nouvelle sous-chemise");
 if (!defined("_NEW_SUBFOLDER")) define("_NEW_SUBFOLDER", "Nouvelle sous-chemise");
 if (!defined("_STRUCTURE_MANDATORY")) define("_STRUCTURE_MANDATORY", "La chemise est obligatoire");
 if (!defined("_SUBFOLDER_DESC_MISSING")) define("_SUBFOLDER_DESC_MISSING", "Il manque la description de la sous-chemise");
@@ -1407,8 +1407,8 @@ if (!defined("_FINGERPRINT"))  define("_FINGERPRINT", "Empreinte numérique");
 if (!defined("_OFFSET"))  define("_OFFSET", "Offset");
 if (!defined("_SETUP"))  define("_SETUP", "Configurer");
 
-if (!defined("_PARAM_MLB_DOCTYPES"))    define("_PARAM_MLB_DOCTYPES", "Paramétrage des types de documents ");
-if (!defined("_PARAM_MLB_DOCTYPES_DESC"))    define("_PARAM_MLB_DOCTYPES_DESC", "Paramétrage des types de documents ");
+if (!defined("_PARAM_MLB_DOCTYPES"))    define("_PARAM_MLB_DOCTYPES", "Paramétrage des types de document ");
+if (!defined("_PARAM_MLB_DOCTYPES_DESC"))    define("_PARAM_MLB_DOCTYPES_DESC", "Paramétrage des types de document ");
 if (!defined("_WELCOME_TEXT_LOAD"))    define("_WELCOME_TEXT_LOAD", "Chargement texte page d'accueil");
 if (!defined("_REOPEN_MAIL_DESC"))    define("_REOPEN_MAIL_DESC", "Réouverture de courrier");
 if (!defined("_WRONG_FUNCTION_OR_WRONG_PARAMETERS"))    define("_WRONG_FUNCTION_OR_WRONG_PARAMETERS", "Mauvais appel ou mauvaus paramètre");
