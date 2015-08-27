@@ -33,7 +33,7 @@ if (!defined("_ADMIN_ARCHITECTURE"))    define("_ADMIN_ARCHITECTURE", "Plan de c
 if (!defined("_ADMIN_ARCHITECTURE_DESC"))    define("_ADMIN_ARCHITECTURE_DESC", "Définir la structure interne d'un dossier (chemise / sous-chemise / type de document). Définir pour chaque pièce la liste des index à saisir, et leur caractère obligatoire pour la complétude du dossier.");
 if (!defined("_VIEW_HISTORY"))    define("_VIEW_HISTORY", "Historique");
 if (!defined("_VIEW_HISTORY_BATCH"))    define("_VIEW_HISTORY_BATCH", "Historique des batchs");
-if (!defined("_VIEW_HISTORY_DESC"))    define("_VIEW_HISTORY_DESC", "Consulter l'historique des évènements relatifs à l'utilisation de la GED Maarch.");
+if (!defined("_VIEW_HISTORY_DESC"))    define("_VIEW_HISTORY_DESC", "Consulter l'historique des événements relatifs à l'utilisation de la GED Maarch.");
 if (!defined("_VIEW_HISTORY_BATCH_DESC"))    define("_VIEW_HISTORY_BATCH_DESC", "Consulter l'historique des batchs");
 if (!defined("_ADMIN_MODULES"))    define("_ADMIN_MODULES", "Gérer les modules");
 if (!defined("_ADMIN_SERVICE"))    define("_ADMIN_SERVICE", "Service d'administration");
@@ -363,7 +363,7 @@ if (!defined("_START_DATE_TRIAL")) define("_START_DATE_TRIAL", "Date de début d
 if (!defined("_START_DATE_MISSION")) define("_START_DATE_MISSION", "Date de début de mission");
 if (!defined("_END_DATE_TRIAL")) define("_END_DATE_TRIAL", "Date de fin de période d'essai");
 if (!defined("_END_DATE_MISSION")) define("_END_DATE_MISSION", "Date de fin de mission");
-if (!defined("_EVENT_DATE")) define("_EVENT_DATE", "Date de l'évènement");
+if (!defined("_EVENT_DATE")) define("_EVENT_DATE", "Date de l'événement");
 if (!defined("_VISIT_DATE")) define("_VISIT_DATE", "Date de la visite");
 if (!defined("_CHANGE_DATE")) define("_CHANGE_DATE", "Date du changement ");
 if (!defined("_DOCTYPES_LIST2")) define("_DOCTYPES_LIST2", "Liste des types de pièce");
@@ -487,8 +487,8 @@ if (!defined("_ADMIN_ACTIONS")) define("_ADMIN_ACTIONS", "Actions");
 
 
 /************** Historique**************/
-if (!defined("_HISTORY_TITLE")) define("_HISTORY_TITLE", "Historique des évènements");
-if (!defined("_HISTORY_BATCH_TITLE")) define("_HISTORY_BATCH_TITLE", "Historique des évènements des batchs");
+if (!defined("_HISTORY_TITLE")) define("_HISTORY_TITLE", "Historique des événements");
+if (!defined("_HISTORY_BATCH_TITLE")) define("_HISTORY_BATCH_TITLE", "Historique des événements des batchs");
 if (!defined("_HISTORY")) define("_HISTORY", "Historique");
 if (!defined("_HISTORY_BATCH")) define("_HISTORY_BATCH", "Historique du batch");
 if (!defined("_BATCH_NAME")) define("_BATCH_NAME", "Nom batch");
