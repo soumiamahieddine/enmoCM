@@ -9,6 +9,7 @@
         <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <StackSizeLimit>10000</StackSizeLimit> <!-- on doc -->
         <ExportFolder>c:\xampp\htdocs\maarch_trunk\modules\life_cycle\batch\</ExportFolder>
+		<FromDate>18 months</FromDate> <!-- ex : 18 months, 20 days, ... -->
     </CONFIG>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>
