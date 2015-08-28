@@ -16,13 +16,17 @@ if (count($actions) > 0) {
 
     $frmStr .= '<option value="">' . _CHOOSE_ACTION . '</option>';
     
-    
     for ($indAct = 0; $indAct < count($actions); $indAct ++) {
-        $frmStr .= '<option value="' . $actions[$indAct]['VALUE'] . '"';
-        if ($indAct == 0) {
-            $frmStr .= 'selected="selected"';
+        if ($indAct == 0 && $_SESSION['current_basket']['id'] == 'IndexingBasket' && count($actions) > 1) {
+
+        } else {
+            $frmStr .= '<option value="' . $actions[$indAct]['VALUE'] . '"';
+            if ($indAct == 0) {
+                $frmStr .= 'selected="selected"';
+            }
+            $frmStr .= '>' . $actions[$indAct]['LABEL'] . '</option>';            
         }
-        $frmStr .= '>' . $actions[$indAct]['LABEL'] . '</option>';
+
     }
     
     $frmStr .= '</select> ';
