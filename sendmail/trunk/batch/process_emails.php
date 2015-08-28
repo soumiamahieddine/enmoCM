@@ -53,12 +53,20 @@ while ($state <> 'END') {
 		//Composing email	
 			//--> Set from
 			$userInfo = $users->get_user($email->user_id);
-						$GLOBALS['logger']->write("Sending e-mail from : " 
-				. '"' . $userInfo['firstname'].' ' .$userInfo['lastname'] 
-				. '" <'.$email->sender_email.'>', 'INFO');
-				
-                        $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
-				. $userInfo['lastname'].' <'.$email->sender_email.'> ');
+			
+			if ($userInfo->mail == $email->sender_email) {
+				$GLOBALS['logger']->write("Sending e-mail from : " 
+					. '"' . $userInfo['firstname'].' ' .$userInfo['lastname'] 
+					. '" <'.$email->sender_email.'>', 'INFO');
+					
+	            $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
+					. $userInfo['lastname'].' <'.$email->sender_email.'> ');
+			} else {
+				$GLOBALS['logger']->write("Sending e-mail from : " 
+					. ' <'.$email->sender_email.'>', 'INFO');
+					
+	            $GLOBALS['mailer']->setFrom(' <'.$email->sender_email.'> ');				
+			}
 
 			//
 			$GLOBALS['logger']->write("Sending e-mail to : " . $email->to_list, 'INFO');

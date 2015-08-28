@@ -119,7 +119,7 @@ if ($mode == 'add') {
     $content .='<select name="sender_email" id="sender_email">
                     <option value="'.$_SESSION['user']['Mail'].'" selected="selected">'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . ' (' . $_SESSION['user']['Mail'] . ')</option>';
     foreach ($userEntitiesMails as $key => $value) {
-        $content .= '<option value="'.$value.'" >'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . '  (' . $value . ')</option>';
+        $content .= '<option value="'.$value.'" >' . $value . '</option>';
     }
     $content .='</select>';
     $content .='</td>';
@@ -424,7 +424,7 @@ if ($mode == 'add') {
                 if ($emailArray['sender_email'] == $value) {
                     $content .= ' selected="selected" ';
                 }
-                $content .= '>'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . '  (' . $value . ')</option>';
+                $content .= '>' . $value . '</option>';
             }
             $content .='</select>';
             $content .='</td>';
@@ -718,9 +718,16 @@ if ($mode == 'add') {
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
 
-			$content .= '<td width="10%" align="right" nowrap><b>'.ucfirst(_FROM_SHORT).' </b></td><td width="90%" colspan="2">'
-                .$usermailArray['firstname'].' '.$usermailArray['lastname']
-                .' ('.$emailArray['sender_email'].')<br/></td>';
+			$content .= '<td width="10%" align="right" nowrap><b>'.ucfirst(_FROM_SHORT).' </b></td><td width="90%" colspan="2">';
+
+            if ($emailArray['sender_email'] == $usermailArray['mail']) {
+                $content .= $usermailArray['firstname'].' '.$usermailArray['lastname']
+                    .' ('.$emailArray['sender_email'].')'; 
+            } else {
+                $content .= $emailArray['sender_email'];                 
+            }
+
+            $content .= '<br/></td>';
             $content .= '</tr>';
             //To
             if (count($emailArray['to']) > 0) {
