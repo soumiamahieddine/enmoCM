@@ -591,4 +591,101 @@ class resources_controler
         );
         return $return;
     }
+
+    #####################################
+    ## Web Service to retrieve attachment from an identifier
+    #####################################
+    public function retrieveMasterResByChrono($identifier, $collId)
+    {
+        try {
+            $db = new Database();
+            $resultArr = array();
+            
+            if ($identifier == '') {
+                $resultArr = array(
+                    'returnCode' => (int) -2,
+                    'resId' => '',
+                    'title' => '',
+                    'identifier' => '',
+                    'status' => '',
+                    'attachment_type' => '',
+                    'dest_contact_id' => '',
+                    'dest_address_id' => '',
+                    'error' => 'param identifier empty',
+                );
+                return $resultArr;
+            }
+
+            if ($collId == '') {
+                $resultArr = array(
+                    'returnCode' => (int) -2,
+                    'resId' => '',
+                    'title' => '',
+                    'identifier' => '',
+                    'status' => '',
+                    'attachment_type' => '',
+                    'dest_contact_id' => '',
+                    'dest_address_id' => '',
+                    'error' => 'param collId empty',
+                );
+                return $resultArr;
+            }
+
+            $queryAttachments = "select * from res_attachments where "
+                . "identifier = ? and coll_id = ? order by res_id";
+            $stmt = $db->query(
+                $queryAttachments, 
+                array($identifier, $collId)
+            );
+
+            $line = $stmt->fetchObject();
+
+            //var_dump($line);
+
+            if ($line->res_id_master == '') {
+                $resultArr = array(
+                    'returnCode' => (int) -3,
+                    'resId' => '',
+                    'title' => '',
+                    'identifier' => '',
+                    'status' => '',
+                    'attachment_type' => '',
+                    'dest_contact_id' => '',
+                    'dest_address_id' => '',
+                    'error' => 'resource not found : ' 
+                        . $identifier . ' ' . $collId,
+                );
+                return $resultArr;
+            } else {
+                $resultArr = array(
+                    'returnCode' => (int) 0,
+                    'resId' => $line->res_id_master,
+                    'title' => $line->title,
+                    'identifier' => $line->identifier,
+                    'status' => $line->status,
+                    'attachment_type' => $line->attachment_type,
+                    'dest_contact_id' => $line->dest_contact_id,
+                    'dest_address_id' => $line->dest_address_id,
+                    'error' => '',
+                );
+                return $resultArr;
+            }
+            
+            return $resultArr;
+        } catch (Exception $e) {
+            $resultArr = array(
+                'returnCode' => (int) -1,
+                'resId' => '',
+                'title' => '',
+                'identifier' => '',
+                'status' => '',
+                'attachment_type' => '',
+                'dest_contact_id' => '',
+                'dest_address_id' => '',
+                'error' => 'unknown error : ' 
+                    . $e->getMessage(),
+            );
+            return $resultArr;
+        }
+    }
 }

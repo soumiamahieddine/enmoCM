@@ -288,3 +288,24 @@ $SOAP_dispatch_map['Demo_searchResources'] = array(
     ),
     'method' => "core#resources::Demo_searchResources",
 );
+
+$SOAP_typedef['returnRetrieveMasterResByChrono'] = array(
+    'returnCode'=> 'int',
+    'resId' => 'string',
+    'title' => 'string',
+    'identifier' => 'string',
+    'status' => 'string',
+    'attachment_type' => 'string',
+    'dest_contact_id' => 'long',
+    'dest_address_id' => 'long',
+    'error' => 'string'
+);
+
+$SOAP_dispatch_map['retrieveMasterResByChrono'] = array(
+    'in'  => array(
+        'identifier' => 'sring',
+        'collId' => 'string',
+    ),
+    'out' => array('return' => '{urn:MaarchSoapServer}returnRetrieveMasterResByChrono'),
+    'method' => "core#resources::retrieveMasterResByChrono",
+);
