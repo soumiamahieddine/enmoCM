@@ -657,7 +657,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 										$detailsExport .= $data[$key]['label'];
 										echo $data[$key]['label'];
 										
-									?> :
+									?>
 									
 								</td>
 								<?php
@@ -854,7 +854,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <i class = "fm <?php functions::xecho($res_status['IMG_SRC']);?> fm-2x" alt = "<?php functions::xecho($res_status['LABEL']);?>" title = "<?php functions::xecho($res_status['LABEL']);?>"></i>
                             </th>
                             <td align="left" width="200px">
-                                <?php echo _STATUS;?> :
+                                <?php echo _STATUS;?>
                             </td>
                             <td>
                                 <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($res_status['LABEL']);?>" size="40"  />
@@ -865,7 +865,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <i class="fa fa-compass fa-2x" title="<?php echo _CHRONO_NUMBER;?>" ></i>
                             </th>
                             <td align="left" width="200px">
-                                <?php echo _CHRONO_NUMBER;?> :
+                                <?php echo _CHRONO_NUMBER;?>
                             </td>
                             <td>
                                 <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($chrono_number);?>" size="40" title="<?php functions::xecho($chrono_number);?>" alt="<?php functions::xecho($chrono_number);?>" />
@@ -876,7 +876,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <i class="fa fa-sitemap fa-2x" title="<?php echo _INITIATOR;?>" ></i>
                             </th>
                             <td align="left" width="200px">
-                                <?php echo _INITIATOR;?> :
+                                <?php echo _INITIATOR;?>
                             </td>
                             <td>
                                 <textarea rows="2" style="width: 200px; max-width: 200px;" class="readonly" readonly="readonly"><?php functions::xecho($entities);?></textarea>
@@ -886,7 +886,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <i class="fa fa-user fa-2x"></i>
                             </th>
                             <td align="left" width="200px">
-                                <?php echo _TYPIST;?> :
+                                <?php echo _TYPIST;?>
                             </td>
                             <td>
                                 <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($typistLabel); 
