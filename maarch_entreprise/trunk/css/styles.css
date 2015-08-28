@@ -2883,7 +2883,7 @@ hr{
 }
 
 .admin_item:hover {
-    opacity: 0.5;
+    color: #009DC5;
 }
 
 .admin_item  div
