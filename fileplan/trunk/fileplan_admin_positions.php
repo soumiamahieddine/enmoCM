@@ -79,7 +79,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 				&nbsp;/&nbsp;
 				<a href="<?php echo $_SESSION['config']['businessappurl'];
 				?>index.php?page=fileplan_admin_managment&module=fileplan&fileplan_id=<?php
-				echo $fileplan_id;?>&load" class="back">
+				functions::xecho($fileplan_id);?>&load" class="back">
 				<?php echo _MANAGE_FILEPLAN;?></a>                
 			</h2>
 			&nbsp;
@@ -132,7 +132,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 							var id = branch.getId();
 							loadList('<?php echo $_SESSION['config']['businessappurl'];
 									?>index.php?display=true&module=fileplan&page=positions_documents_list&fileplan_id=<?php 
-									echo $fileplan_id;?>&id='+id, 'list_doc', true);
+									functions::xecho($fileplan_id);?>&id='+id, 'list_doc', true);
 						}
 						
 						function TafelTreeInit () {
@@ -168,7 +168,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 								"defaultImgCloseSelected" : "position_on.gif",
 								'onOpenPopulate' : [funcOpen, '<?php echo $_SESSION['config']['businessappurl'];
 												?>index.php?display=true&module=fileplan&page=positions_tree_childs&origin=admin&fileplan_id=<?php 
-												echo $fileplan_id;?>']
+												functions::xecho($fileplan_id);?>']
 							});
 						}
 					</script>

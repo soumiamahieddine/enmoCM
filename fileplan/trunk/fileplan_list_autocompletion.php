@@ -56,7 +56,7 @@ while($line = $stmt->fetchObject())
 {
     if($authViewList < 10)
 	{
-        $content .= "<li>".$line->fileplan_label."</li>\n";
+        $content .= "<li>".functions::xecho($line->fileplan_label)."</li>\n";
         
 	} else  {
         $content .= "<li>...</li>\n";

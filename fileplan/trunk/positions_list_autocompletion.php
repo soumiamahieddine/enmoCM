@@ -55,7 +55,7 @@ while($line = $stmt->fetchObject())
 {
     if($authViewList < 10)
 	{
-        $content .= "<li>".$line->position_label."</li>\n";
+        $content .= "<li>".functions::xecho($line->position_label)."</li>\n";
         
 	} else  {
         $content .= "<li>...</li>\n";

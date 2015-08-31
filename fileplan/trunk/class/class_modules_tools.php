@@ -34,7 +34,7 @@
 try {
     require_once("modules/fileplan/fileplan_tables.php");
 } catch (Exception $e){
-    echo $e->getMessage().' // ';
+    functions::xecho($e->getMessage()).' // ';
 }
 
 class fileplan
@@ -704,7 +704,6 @@ class fileplan
     *
     */
     public function getPositionState($fileplan_id, $position_id, $resid_array) {
-        // echo $fileplan_id.'/'.$position_id.'/'.count($resid_array).'<br/>';
         if (!empty($fileplan_id) 
             && !empty($position_id) 
             && count($resid_array) > 0

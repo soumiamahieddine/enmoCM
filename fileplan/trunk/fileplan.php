@@ -166,7 +166,7 @@ if (count($fileplans_array) > 0)  {
 									"defaultImgCloseSelected" : "position.gif",
 									'onOpenPopulate' : [funcOpen, '<?php echo $_SESSION['config']['businessappurl'];
 													?>index.php?display=true&module=fileplan&page=positions_tree_childs&fileplan_id=<?php 
-													echo $fileplanId;?>']
+													functions::xecho($fileplanId);?>']
 								});
 							<?php
 							}
