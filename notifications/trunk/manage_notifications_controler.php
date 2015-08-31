@@ -29,7 +29,7 @@ try{
         require_once 'core/class/class_request.php' ;
     }
 } catch (Exception $e) {
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 //Get list of aff availables actions

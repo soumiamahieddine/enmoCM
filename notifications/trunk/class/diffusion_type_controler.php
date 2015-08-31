@@ -35,7 +35,7 @@ try {
     require_once 'modules/notifications/class/diffusion_type.php';
     require_once 'core/class/ObjectControlerAbstract.php';
 } catch (Exception $e) {
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 /**

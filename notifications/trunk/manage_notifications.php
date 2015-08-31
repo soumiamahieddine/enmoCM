@@ -52,18 +52,18 @@ if ($mode == 'list') {
         <input type="hidden" name="display" value="true" />
         <input type="hidden" name="admin" value="notifications" />
         <input type="hidden" name="page" value="manage_notifications_controler" />
-        <input type="hidden" name="mode" value="<?php echo $mode;?>" />
+        <input type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
 
         <input type="hidden" name="notification_sid" id="notification_sid" value="<?php functions::xecho($_SESSION['m_admin']['notification']['notification_sid']);?>" />
 
         <input type="hidden" name="order" id="order" value="<?php
-            echo $_REQUEST['order'];?>" />
+            functions::xecho($_REQUEST['order']);?>" />
         <input type="hidden" name="order_field" id="order_field" value="<?php
-            echo $_REQUEST['order_field'];?>" />
+            functions::xecho($_REQUEST['order_field']);?>" />
         <input type="hidden" name="what" id="what" value="<?php
-            echo $_REQUEST['what'];?>" />
+            functions::xecho($_REQUEST['what']);?>" />
         <input type="hidden" name="start" id="start" value="<?php
-            echo $_REQUEST['start'];?>" />
+            functions::xecho($_REQUEST['start']);?>" />
 
 
         <p>
