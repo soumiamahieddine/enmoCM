@@ -81,7 +81,7 @@ if(count($userReports) > 0)
 	{
 	?>
 		<h5 onmouseover="" style="cursor: pointer;" onclick="new Effect.toggle('div_<?php functions::xecho($authorized_reports_sort_by_parent[$value][0]['module_label']);?>', 'blind', {delay:0.2});return false;"  >
-			<i class="fa fa-plus fa-2x"></i>&nbsp;<b><?php echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?></b>
+			<i class="fa fa-plus fa-2x"></i>&nbsp;<b><?php functions::xecho($authorized_reports_sort_by_parent[$value][0]['module_label']);?></b>
 		</h5>
 		<br/>
 		<div class="block_light" id="div_<?php functions::xecho($authorized_reports_sort_by_parent[$value][0]['module_label']);?>"  style="display:none">
@@ -95,7 +95,7 @@ if(count($userReports) > 0)
 						<tr>
 							<!--<td nowrap align="left" title="<?php functions::xecho($authorized_reports_sort_by_parent[$value][$i]['desc']);?>">-->
 							<td nowrap align="left">
-								<li><a class="printlink" href="#" onclick="fill_report_result('<?php functions::xecho($authorized_reports_sort_by_parent[$value][$i]['url']);?>');return false;"><?php echo $authorized_reports_sort_by_parent[$value][$i]['label'];?> </a></li>
+								<li><a class="printlink" href="#" onclick="fill_report_result('<?php functions::xecho($authorized_reports_sort_by_parent[$value][$i]['url']);?>');return false;"><?php functions::xecho($authorized_reports_sort_by_parent[$value][$i]['label']);?> </a></li>
 
 							</td>
 

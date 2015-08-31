@@ -247,10 +247,10 @@ class admin_reports extends Database
                             ?>
                             <tr <?php functions::xecho($color);?> >
                                <td style="width:25%;"><?php
-                                   echo $users[$i]->__get('lastname');
+                                   functions::xecho($users[$i]->__get('lastname'));
                                 ?></td>
                                 <td style="width:25%;"><?php
-                                    echo $users[$i]->__get('firstname');
+                                    functions::xecho($users[$i]->__get('firstname'));
                                 ?></td>
                                <td></td>
                             </tr>
