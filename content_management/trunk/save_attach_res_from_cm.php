@@ -148,7 +148,6 @@ if (empty($docserver)) {
             );
             if ($id == false) {
                 $_SESSION['error'] = $resAttach->get_error();
-                //echo $resource->get_error();
                 //$resource->show();
                 //exit();
             } else {

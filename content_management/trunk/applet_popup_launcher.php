@@ -31,19 +31,19 @@ if (
                 loadApplet('<?php 
                     echo $_SESSION['config']['coreurl'] .''.$path;
                     ?>?objectType=attachment&objectId=<?php 
-                    echo $_REQUEST['objectId'];
+                    functions::xecho($_REQUEST['objectId']);
                     ?>&objectType=<?php
-                    echo $objType;
+                    functions::xecho($objType);
                     ?>&objectTable=<?php
-                    echo $_REQUEST['objectTable'];
+                    functions::xecho($_REQUEST['objectTable']);
                     ?>&resMaster=<?php
-                    echo $_REQUEST['resMaster'];
+                    functions::xecho($_REQUEST['resMaster']);
                     ?>&contactId=<?php
-                    echo $_REQUEST['contactId'];
+                    functions::xecho($_REQUEST['contactId']);
                     ?>&chronoAttachment=<?php
-                    echo $_REQUEST['chronoAttachment'];
+                    functions::xecho($_REQUEST['chronoAttachment']);
                     ?>&custom_override_id=<?php 
-                    echo $_SESSION['custom_override_id'];
+                    functions::xecho($_SESSION['custom_override_id']);
                     ?>');
             </script>
             <style type="text/css">#CMApplet{top:5% !important;left:3% !important;}</style>
