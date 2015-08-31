@@ -1176,17 +1176,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         //DOCUMENT VIEWER
         $path_file = get_file_path($res_id, $coll_id);
 		
-        if ($data['category_id']['value'] == 'outgoing'){
-		$stmt = $db->query("select res_id from "
-            . $_SESSION['tablename']['attach_res_attachments']
-            . " where status <> 'DEL' and res_id_master = ? and coll_id = ? and ((attachment_type = 'converted_pdf' and type_id = 1) OR (attachment_type = 'outgoing_mail' and format = 'pdf'))", array($res_id, $coll_id));
-		$res_att = $stmt->fetchObject();
-		$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
-        . 'index.php?display=true&module=attachments&page=view_attachment&res_id_master='
-        . $res_id . '&id='.$res_att->res_id.'"name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" style="width:100% !important;" onmouseover="this.focus()"></iframe>';
-		
-		}
-		else $frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
+        $frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
             . $res_id.'&coll_id='.$coll_id.'" name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" style="width:100% !important;" onmouseover="this.focus()"></iframe>';
             
         //END RIGHT DIV
