@@ -97,10 +97,10 @@ $core_tools->load_header(_CHOOSE_TEMPLATE, true, false);
     <input type="hidden" name="module"  value="templates" />
     <input type="hidden" name="page"  value="choose_template" />
     <input type="hidden" name="res_id" id="res_id" value="<?php 
-        echo $_REQUEST['res_id'];
+        functions::xecho($_REQUEST['res_id']);
         ?>" />
     <input type="hidden" name="coll_id" id="coll_id" value="<?php 
-        echo $_REQUEST['coll_id'];
+        functions::xecho($_REQUEST['coll_id']);
         ?>" />
     <p><label><?php echo _PLEASE_SELECT_TEMPLATE;?> :</label></p>
     <br/>
@@ -111,10 +111,10 @@ $core_tools->load_header(_CHOOSE_TEMPLATE, true, false);
                 for ($i=0;$i<count($templates);$i++) {
                     ?>
                         <option value="<?php 
-                            echo $templates[$i]['ID'];
+                            functions::xecho($templates[$i]['ID']);
                             ?>"><?php 
-                            echo $templates[$i]['TYPE'] . ' : ' 
-                            . $templates[$i]['LABEL'];
+                            functions::xecho($templates[$i]['TYPE'] . ' : ' 
+                            . $templates[$i]['LABEL']);
                         ?></option>
                     <?php
                 }

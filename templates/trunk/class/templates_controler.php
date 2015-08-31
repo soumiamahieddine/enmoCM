@@ -42,7 +42,7 @@ try {
     require_once ('core/class/ObjectControlerIF.php');
     require_once ('core/class/SecurityControler.php');
 } catch (Exception $e) {
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 /**
@@ -367,9 +367,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         $query = "delete from "._TEMPLATES_TABLE_NAME." where template_id = ? " ;
             
         try {
-            if ($_ENV['DEBUG']) {
-                echo $query.' // ';
-            }
+            //
             $stmt = $db->query($query, array($template->template_id));
             $ok = true;
         } catch (Exception $e) {
@@ -456,9 +454,6 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         $query = "select template_id from " . _TEMPLATES_TABLE_NAME 
             . " where template_id = ? ";
         try {
-            if ($_ENV['DEBUG']) {
-                echo $query . ' // ';
-            }
             $stmt = $db->query($query, array($template_id));
         } catch (Exception $e) {
             echo _UNKNOWN . _TEMPLATES . ' ' . $template_id . ' // ';
@@ -519,9 +514,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             $query .= " where enabled = 'Y'";
         }
         try {
-            if ($_ENV['DEBUG']) {
-                echo $query . ' // ';
-            }
+            //
             $stmt = $db->query($query);
         } catch (Exception $e) {
             echo _NO_TEMPLATES . ' // ';
@@ -757,7 +750,6 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
     
     function storeTemplateFile() {
         if (!$_SESSION['m_admin']['templates']['applet']) {
-            //echo $_SESSION['m_admin']['templates']['current_style'] . '<br>';exit;
             $tmpFileName = 'cm_tmp_file_' . $_SESSION['user']['UserId']
                 . '_' . rand() . '.' 
                 . strtolower(
@@ -776,7 +768,6 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             } else {
                 $_SESSION['m_admin']['templates']['current_style'] = $tmpFilePath;
             }
-            //echo $_SESSION['m_admin']['templates']['current_style'];exit;
         }
         if ($_SESSION['m_admin']['templates']['current_style'] == '') {
             $_SESSION['error'] = _SELECT_A_TEMPLATE_STYLE;

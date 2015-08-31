@@ -64,18 +64,18 @@ if ($mode == 'list') {
                 <input type="hidden" name="display" value="true" />
                 <input type="hidden" name="module" value="templates" />
                 <input type="hidden" name="page" value="templates_management_controler" />
-                <input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />
+                <input type="hidden" name="mode" id="mode" value="<?php functions::xecho($mode);?>" />
                 <input type="hidden" name="order" id="order" value="<?php
-                    if (isset($_REQUEST['order'])) echo $_REQUEST['order'];
+                    if (isset($_REQUEST['order'])) functions::xecho($_REQUEST['order']);
                 ?>" />
                 <input type="hidden" name="order_field" id="order_field" value="<?php
-                    if (isset($_REQUEST['order_field'])) echo $_REQUEST['order_field'];
+                    if (isset($_REQUEST['order_field'])) functions::xecho($_REQUEST['order_field']);
                 ?>" />
                 <input type="hidden" name="what" id="what" value="<?php
-                    if (isset($_REQUEST['what'])) echo $_REQUEST['what'];
+                    if (isset($_REQUEST['what'])) functions::xecho($_REQUEST['what']);
                 ?>" />
                 <input type="hidden" name="start" id="start" value="<?php
-                    if (isset($_REQUEST['start'])) echo $_REQUEST['start'];
+                    if (isset($_REQUEST['start'])) functions::xecho($_REQUEST['start']);
                 ?>" />
                 <?php
                 if (
@@ -97,7 +97,7 @@ if ($mode == 'list') {
                         <label for="id"><?php echo _TEMPLATE_ID;?> : </label>
                         <input name="id" type="text" id="id" value="<?php
                             if (isset($_SESSION['m_admin']['templates']['template_id'])) {
-                                echo $func->show_str($_SESSION['m_admin']['templates']['template_id']);
+                                echo functions::xecho($func->show_str($_SESSION['m_admin']['templates']['template_id']));
                             }
                             ?>" readonly='readonly' class='readonly'/>
                     </p>
@@ -108,7 +108,7 @@ if ($mode == 'list') {
                     <label for="template_label"><?php echo _TEMPLATE_LABEL;?> : </label>
                     <input name="template_label" type="text" id="template_label" value="<?php
                         if (isset($_SESSION['m_admin']['templates']['template_label'])) {
-                            echo $func->show_str($_SESSION['m_admin']['templates']['template_label']);
+                            functions::xecho($func->show_str($_SESSION['m_admin']['templates']['template_label']));
                         }
                         ?>" />
                 </p>
@@ -116,11 +116,11 @@ if ($mode == 'list') {
                     <label for="template_comment"><?php echo _TEMPLATE_COMMENT;?> : </label>
                     <textarea name="template_comment" type="text"  id="template_comment" value="<?php
                         if (isset($_SESSION['m_admin']['templates']['template_comment'])) {
-                            echo $func->show_str($_SESSION['m_admin']['templates']['template_comment']);
+                            functions::xecho($func->show_str($_SESSION['m_admin']['templates']['template_comment']));
                         }
                         ?>" /><?php
                         if (isset($_SESSION['m_admin']['templates']['template_comment'])) {
-                            echo $_SESSION['m_admin']['templates']['template_comment'];
+                            functions::xecho($_SESSION['m_admin']['templates']['template_comment']);
                         }
                     ?></textarea>
                 </p>
@@ -143,7 +143,7 @@ if ($mode == 'list') {
                                 echo 'selected="selected"';
                             }
                             ?> ><?php
-                                echo $_SESSION['m_admin']['templatesTargets'][$cptTarget]['label'];
+                                functions::xecho($_SESSION['m_admin']['templatesTargets'][$cptTarget]['label']);
                             ?></option><?php
                         }
                         ?>
@@ -203,7 +203,7 @@ if ($mode == 'list') {
                                 echo 'selected="selected"';
                             }
                             ?> ><?php
-                                echo $_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['label'];
+                                functions::xecho($_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['label']);
                             ?></option><?php
                         }
                         ?>
@@ -220,7 +220,7 @@ if ($mode == 'list') {
                             }
                             ?>" /><?php
                             if (isset($_SESSION['m_admin']['templates']['template_content'])) {
-                                echo $_SESSION['m_admin']['templates']['template_content'];
+                                functions::xecho($_SESSION['m_admin']['templates']['template_content']);
                             }
                         ?></textarea>
                     </p>
@@ -233,7 +233,7 @@ if ($mode == 'list') {
                             ?>
                             <input name="template_style" type="text" id="template_style" value="<?php
                                 if (isset($_SESSION['m_admin']['templates']['template_style'])) {
-                                    echo $func->show_str($_SESSION['m_admin']['templates']['template_style']);
+                                    functions::xecho($func->show_str($_SESSION['m_admin']['templates']['template_style']));
                                 }
                                 ?>" readonly='readonly' class='readonly' />
                             <?php
@@ -254,8 +254,8 @@ if ($mode == 'list') {
                                 ) {
                                     ?>
                                     <option value="<?php
-                                        echo $_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt'] . ': ';
-                                        echo $_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileName'];
+                                        functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt']) . ': ';
+                                        functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileName']);
                                     ?>" <?php
                                     if (isset($_SESSION['m_admin']['templates']['template_style'])
                                         && $_SESSION['m_admin']['templates']['template_style']
@@ -264,8 +264,8 @@ if ($mode == 'list') {
                                         echo 'selected="selected"';
                                     }
                                     ?>><?php
-                                        echo $_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt'] . ': ';
-                                        echo $_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileName'];
+                                        functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt']) . ': ';
+                                        functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileName']);
                                     ?></option>
                                     <?php
                                 }
@@ -287,15 +287,6 @@ if ($mode == 'list') {
                     <p>
                         <label><?php echo _EDIT_TEMPLATE;?> :</label>
                         <div style="text-align:center;">
-                            <!--<a href="#" onClick="loadApplet('<?php
-                                echo $_SESSION['config']['coreurl'];
-                                ?>modules/content_management/applet_launcher.php?objectType=<?php
-                                    echo $objectType;
-                                ?>&objectId=<?php
-                                    echo $objectId;
-                                ?>&objectTable=<?php
-                                    echo $objectTable;
-                                ?>');">-->
                                 <?php
                                 $strAction .= 'window.open(\''
                                     . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
@@ -322,11 +313,11 @@ if ($mode == 'list') {
                         </label><br/><br/>
                         <textarea name="template_content_txt" style="width:100%" rows="15" cols="60" id="template_content_txt" value="<?php
                             if (isset($_SESSION['m_admin']['templates']['template_content'])) {
-                                echo $func->show_str($_SESSION['m_admin']['templates']['template_content']);
+                                functions::xecho($func->show_str($_SESSION['m_admin']['templates']['template_content']));
                             }
                             ?>" /><?php
                             if (isset($_SESSION['m_admin']['templates']['template_content'])) {
-                                echo $_SESSION['m_admin']['templates']['template_content'];
+                                functions::xecho($_SESSION['m_admin']['templates']['template_content']);
                             }
                         ?></textarea>
                     </p>
@@ -353,9 +344,9 @@ if ($mode == 'list') {
                                 if ($state_entity == false) {
                                     ?>
                                     <option value="<?php
-                                        echo $_SESSION['m_admin']['templatesEntitiesOrg'][$i]->entity_id;
+                                        functions::xecho($_SESSION['m_admin']['templatesEntitiesOrg'][$i]->entity_id);
                                         ?>"><?php
-                                        echo $_SESSION['m_admin']['templatesEntitiesOrg'][$i]->entity_label;
+                                        functions::xecho($_SESSION['m_admin']['templatesEntitiesOrg'][$i]->entity_label);
                                         ?></option>
                                     <?php
                                 }
@@ -394,9 +385,9 @@ if ($mode == 'list') {
                                 if ($state_entity == true) {
                                     ?>
                                     <option value="<?php
-                                        echo $_SESSION['m_admin']['templatesEntitiesOrg'][$i]->entity_id;
+                                        functions::xecho($_SESSION['m_admin']['templatesEntitiesOrg'][$i]->entity_id);
                                         ?>" selected="selected" ><?php
-                                        echo $_SESSION['m_admin']['templatesEntitiesOrg'][$i]->entity_label;
+                                        functions::xecho($_SESSION['m_admin']['templatesEntitiesOrg'][$i]->entity_label);
                                         ?></option>
                                     <?php
                                 }

@@ -152,13 +152,13 @@ include('modules/templates/load_editor.php');?>
     }
     ?>
     <input type="hidden" name="res_id" id="res_id" value="<?php 
-        echo $res_id;?>" />
+        functions::xecho($res_id);?>" />
     <input type="hidden" name="coll_id" id="coll_id" value="<?php 
-        echo $coll_id;?>" />
+        functions::xecho($coll_id);?>" />
     <input type="hidden" name="template_id" id="template_id" value="<?php 
-        echo $answer['TEMPLATE_ID'];?>" />
+        functions::xecho($answer['TEMPLATE_ID']);?>" />
     <input type="hidden" name="template_label" id="template_label" value="<?php 
-        echo $answer['MODEL_LABEL'];?>" />
+        functions::xecho($answer['MODEL_LABEL']);?>" />
      <textarea name="template_content" style="width:100%" rows="50">
         <?php functions::xecho($answer['CONTENT']);?>
     </textarea>
@@ -166,7 +166,7 @@ include('modules/templates/load_editor.php');?>
     <p>
         <label><?php echo _ANSWER_TITLE;?> :</label>
         <input type="text" name="answer_title" id="answer_title" value="<?php 
-            echo $answer['TITLE']?>" style="width: 250px;" />
+            functions::xecho($answer['TITLE']);?>" style="width: 250px;" />
     </p>
     <p>
     <input type="submit" name="submit" id="submit" value="<?php 
