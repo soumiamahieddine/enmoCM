@@ -36,7 +36,7 @@ try {
     require_once ("core/class/class_security.php");
     require_once("modules/sendmail/sendmail_tables.php");
 } catch (Exception $e){
-    echo $e->getMessage().' // ';
+    functions::xecho($e->getMessage()).' // ';
 }
 
 
