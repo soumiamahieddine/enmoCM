@@ -238,18 +238,18 @@ if (! $canModify) {
     ?>readonly="readonly" class="readonly" <?php
 }
 ?>style="width:380px" cols="70" rows="10"  name="notes"  id="notes"><?php
-echo $text;
+functions::xecho($text);
 ?></textarea>
 
         <input type="hidden" name="id" id="id" value="<?php functions::xecho($sId);?>"/>
         <input type="hidden" name="identifier" id="identifier" value="<?php
-echo $identifier;
+functions::xecho($identifier);
 ?>"/>
         <input type="hidden" name="table" id="table" value="<?php
-echo $table;
+functions::xecho($table);
 ?>"/>
         <input type="hidden" name="coll_id" id="coll_id" value="<?php
-echo $collId;
+functions::xecho($collId);
 ?>"/>
        <br/>
        <p class="buttons">

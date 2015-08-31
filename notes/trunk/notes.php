@@ -165,7 +165,6 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
 						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
 						$indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
-						//echo $tabNotes[$indNotes1][$indNotes2]['value'] . '<br>';
 						if (!$notes_tools->isUserNote(
 							$tabNotes[$indNotes1][$indNotes2]['value'], 
 							$_SESSION['user']['UserId'], 

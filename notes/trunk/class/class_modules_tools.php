@@ -22,7 +22,7 @@ try {
     require_once ("modules/notes/class/class_modules_tools.php");
     require_once "modules/entities/class/EntityControler.php";
 } catch (Exception $e){
-    echo $e->getMessage().' // ';
+    functions::xecho($e->getMessage()).' // ';
 }
 
 class notes
@@ -110,8 +110,6 @@ class notes
         $query = "SELECT entity_id, entity_label FROM ".NOTE_ENTITIES_TABLE." , entities WHERE item_id LIKE entity_id and note_id = ?";
         
         try{
-            if($_ENV['DEBUG'])
-                echo $query.' // ';
             $stmt = $db->query($query, array($id));
         } catch (Exception $e){}
         
