@@ -91,11 +91,6 @@ $page_id = "search_adv_result_mlb";
 $core_tools->manage_location_bar($pagePath, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
-/*echo "<pre>";
-print_r($_REQUEST);
-echo $_SESSION['searching']['where_request'];
-echo "</pre>";*/
-
 $string = $_SESSION['searching']['where_request'];
 $search1="'case'";
 /*preg_match($search1, $string, $out);
