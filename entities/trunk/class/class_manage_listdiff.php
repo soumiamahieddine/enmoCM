@@ -434,8 +434,7 @@ class diffusion_list extends dbquery
         
         $roles = $this->list_difflist_roles();
         foreach($roles as $role_id => $role_label) {
-            //echo $role_id . "<br/>";
-            # Special value 'copy', item_mode = cc
+            // Special value 'copy', item_mode = cc
             if($role_id == 'copy')
                 $item_mode = 'cc';
             else 
@@ -451,13 +450,11 @@ class diffusion_list extends dbquery
                 $viewed = (integer)$diffList[$role_id]['users'][$i]['viewed'];
                 $cptOldUsers = count($oldListInst[$role_id]['users']);
                 for ($h=0;$h<$cptOldUsers;$h++) {
-                    //echo $userId . " ? " . $oldListInst[$role_id]['users'][$h]['user_id'] . "<br/>";
                     if ($userId == $oldListInst[$role_id]['users'][$h]['user_id']) {
-                        //echo $userId . " already exists in old list<br/>";
                         $userFound = true;
                         break;
                     } else {
-                        //echo $userId . " New in the list !<br/>";
+                        //else
                     }
                 }
                 //Modification du dest_user dans la table res_letterbox
@@ -528,11 +525,10 @@ class diffusion_list extends dbquery
                 $cptOldEntities = count($oldListInst[$role_id]['entities']);
                 for ($g=0;$g<$cptOldEntities;$g++) {
                     if ($entityId == $oldListInst[$role_id]['entities'][$g]['entity_id']) {
-                        //echo $entityId . " already exists in old list<br/>";
                         $entityFound = true;
                         break;
                     } else {
-                        //echo $entityId . " New in the list !<br/>";
+                        //else
                     }
                 }
                 

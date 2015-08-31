@@ -667,7 +667,7 @@ $linkwithwhat =
     <div id="diff_list" class="block" align="center">
         <h2><?php 
             echo _DIFFUSION_LIST . ' - ';
-            echo $description;
+            functions::xecho($description);
         ?></h2><?php 
         #**************************************************************************
         # DEST USER

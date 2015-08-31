@@ -42,7 +42,7 @@ try {
     require_once("modules/entities/class/Entity.php");
     require_once("modules/entities/entities_tables.php");
 } catch (Exception $e){
-    echo $e->getMessage().' // ';
+    functions::xecho($e->getMessage()).' // ';
 }
 
 /**
@@ -106,7 +106,6 @@ class EntityControler
             $query .= " and enabled = 'Y'";
 
         try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
             $stmt = $db->query($query,array($entity_id));
         } catch (Exception $e){
             echo _NO_ENTITY_WITH_ID.' '.$entity_id.' // ';
@@ -145,8 +144,6 @@ class EntityControler
         $query.= $order_str;
 
         try{
-            if($_ENV['DEBUG'])
-                echo $query.' // ';
             $stmt = $db->query($query);
         } catch (Exception $e){}
 
@@ -269,7 +266,6 @@ class EntityControler
         $query = "SELECT ue.entity_id, ue.user_role, ue.primary_entity from ". ENT_USERS_ENTITIES." ue, ".ENT_ENTITIES." u where ue.user_id = ? and ue.entity_id = u.entity_id and u.enabled = 'Y'";
 
         try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
             $stmt = $db->query($query,array($user_id));
         } catch (Exception $e){
             echo _NO_USER_WITH_ID.' '.$user_id.' // ';
@@ -319,7 +315,6 @@ class EntityControler
 
         $query="insert into ".ENT_ENTITIES." (?) values(?)";
         try{
-            if($_ENV['DEBUG']){ echo $query.' // '; }
             $stmt = $db->query($query,array($prep_query['COLUMNS'],$prep_query['VALUES']));
             $ok = true;
         } catch (Exception $e){
@@ -346,7 +341,6 @@ class EntityControler
                     ." where entity_id= ?";
 
         try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
             $stmt = $db->query(array($entity->entity_id));
             $ok = true;
         } catch (Exception $e){
@@ -373,7 +367,6 @@ class EntityControler
         $query="delete from ".ENT_ENTITIES."  where entity_id= ?";
 
         try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
             $stmt = $db->query($query,array($entity_id));
             $ok = true;
         } catch (Exception $e){
@@ -406,8 +399,6 @@ class EntityControler
         $query="delete from ".ENT_USERS_ENTITIES." where ".$field."= ?";
 
         try{
-            if($_ENV['DEBUG'])
-                echo $query.' // ';
             $stmt = $db->query($query,array($id));
             $ok = true;
         } catch (Exception $e){
@@ -434,7 +425,6 @@ class EntityControler
         $query="delete from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where ".$field."= ?";
 
         try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
             $stmt = $db->query($query,array($id));
             $ok = true;
         } catch (Exception $e){
@@ -459,7 +449,6 @@ class EntityControler
         $query = "select entity_id from ".ENT_ENTITIES." where entity_id = ?";
 
         try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
             $stmt = $db->query($query,array($entity_id));
         } catch (Exception $e){
             echo _UNKNOWN.' '._ENTITY." ".$entity_id.' // ';
@@ -534,7 +523,6 @@ class EntityControler
         $query="update ".ENT_ENTITIES." set enabled = 'N' where entity_id= ?";
 
         try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
             $stmt = $db->query($query,$entity_id);
             $ok = true;
         } catch (Exception $e){
@@ -561,7 +549,6 @@ class EntityControler
         $query="update ".ENT_ENTITIES." set enabled = 'Y' where entity_id='".$entity_id."'";
 
         try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
             $stmt = $db->query($query,array($entity_id));
             $ok = true;
         } catch (Exception $e){
@@ -587,7 +574,6 @@ class EntityControler
             $query .= "where enabled ='Y'";
 
         try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
             $stmt = $db->query($query);
         } catch (Exception $e){}
 

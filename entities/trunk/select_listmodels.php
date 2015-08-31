@@ -19,14 +19,16 @@ switch($returnElementType) {
 case 'select':
     for($i=0; $i<$l; $i++) {
         $listmodel = $listmodels[$i];
-        $return .= "<option value='".$listmodel['object_id']."' >".$listmodel['description']."</option>";
+        $return .= "<option value='".functions::xecho($listmodel['object_id'])."' >"
+            . functions::xecho($listmodel['description']) ."</option>";
     }
     break;
     
 case 'list':
     for($i=0; $i<$l; $i++) {
         $listmodel = $listmodels[$i];
-        $return .= "<li id='".$listmodel['object_id']."'>".$listmodel['description']."</li>";
+        $return .= "<li id='" . functions::xecho($listmodel['object_id']) 
+            ."'>" . functions::xecho($listmodel['description']) . "</li>";
     }
     break;
 }

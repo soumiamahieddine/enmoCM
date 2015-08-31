@@ -13,7 +13,7 @@
 try{
     require_once("modules/entities/class/EntityControler.php");
 } catch (Exception $e){
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 core_tools::load_lang();
 //core_tools::test_admin('manage_entities', 'entities');
@@ -45,7 +45,6 @@ if ($_SESSION['user']['UserId'] != 'superadmin') {
             //$result = array_search("'" . $entities[$cptAllEnt]->__get('entity_id') . "'", $my_tab_entities_id);
             //var_dump($result);
             if (!is_integer(array_search("'" . $entities[$cptAllEnt]->__get('entity_id') . "'", $my_tab_entities_id))) {
-                //echo "UNSET " . $entities[$cptAllEnt]->__get('entity_id') . "<br>";
                 array_push($EntitiesIdExclusion, $entities[$cptAllEnt]->__get('entity_id'));
                 unset($entities[$cptAllEnt]);
             }
@@ -62,35 +61,6 @@ $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
 );
 //var_dump($allEntitiesTree);
 
-//echo 'STOOOOOOOOOOOOOOOOOOOP <br />';
-//var_dump($entities);
-
-/*if($_SESSION['user']['UserId'] == 'superadmin')
-{
-
-    $entities = $entity_ctrl->getAllEntities();
-}
-else
-{
-    $entities = $entity_ctrl->getEntitiesUser($_SESSION['user']['primaryentity']['id']);
-	if(empty($entities)){
-		echo "Vous ne pouvez plus associer d'entit&eacute;s &agrave; cet utilisateur!";	
-
-	}else{
-    		$entities = $entity_ctrl->sortentities($entities);
-	}
-
-}*/
-/*
-if($_SESSION['user']['UserId'] == 'superadmin')
-{
-
-    $entities = $ent->getShortEntityTree($entities,'all', '', $except);
-}
-else
-{
-    $entities = $ent->getShortEntityTree($entities,$_SESSION['user']['entities'],  '' , $except);
-}*/
 function in_session_array($entity_id)
 {
     for($i=0; $i<count($_SESSION['m_admin']['entity']['entities']);$i++)
@@ -100,34 +70,7 @@ function in_session_array($entity_id)
     }
     return false;
 }
-/*{
 
-$tab2 = array();
-if ( count($_SESSION['m_admin']['entity']['entities']) > 0 )
-{
-    for($i=0; $i < count($_SESSION['m_admin']['entity']['entities']); $i++)
-    {
-        array_push($tab2, array('ID'=> $_SESSION['m_admin']['entity']['entities'][$i]['ENTITY_ID'], 'LABEL' => $_SESSION['m_admin']['entity']['entities'][$i]['LABEL']));
-    }
-}
-$res = $entities;
-for($j=0; $j < count($entities); $j++)
-{
-    for($k=0; $k < count($tab2); $k++)
-    {
-    
-        if($entities[$j]->__get('entity_id') ==  $tab2[$k]['ID'])
-        {
-            unset($res[$j]);
-            break;
-        }
-    }
-}
-$res = array_values($res);
-unset($tab2);
-unset($entities);
-
-}*/
 ?>
 <div class="popup_content">
 <h2 class="tit"><?php echo USER_ADD_ENTITY;?></h2>
@@ -136,26 +79,12 @@ unset($entities);
     <label for="entity_id"> <?php echo _CHOOSE_ENTITY;?> : </label>
     <select name="entity_id" id="entity_id" size="30" style="width: auto" >
     <?php
-        /*for($i=0; $i<count($entities);$i++)
-        {
-            $short_label = $entities[$i]->__get('short_label');
-            $entity_id = $entities[$i]->__get('entity_id');
-
-                //if(in_session_array($entity_id))
-                //{
-                //$i++;
-                //    $short_label = $entities[$i]->__get('short_label');
-                //    $entity_id = $entities[$i]->__get('entity_id');
-                //}
-            ?>
-                <option value="<?php functions::xecho($entity_id);?>" ><?php  if(isset($short_label) && !empty($short_label)){ echo $short_label;}else{echo $entities[$i]->__get('entity_label');}?></option><?php
-
-        }*/
 		
         $countAllEntities = count($allEntitiesTree);
         for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
             if (!$allEntitiesTree[$cptEntities]['KEYWORD']) {
-                $optionStr .= '<option data-object_type="entity_id" value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
+                $optionStr .= '<option data-object_type="entity_id" value="' 
+                    . $allEntitiesTree[$cptEntities]['ID'] . '"';
                 if ($allEntitiesTree[$cptEntities]['DISABLED']) {
                     $optionStr .= ' disabled="disabled" class="disabled_entity"';
                 } else {
@@ -167,16 +96,7 @@ unset($entities);
             }
         }
         echo $optionStr;
-		/*for($j=0; $j<count($res); $j++)
-		{
-			$desc = $res[$j]->__get('short_label');
-			if(isset($res[$j]) && !empty($desc))
-			{
-		?>
-			<option value="<?php functions::xecho($res[$j]->__get('entity_id') ?>"><?php   echo $res[$j]->__get('short_label'));?></option>
-		<?php
-			}
-		}*/
+		
 		
     ?>
     </select>

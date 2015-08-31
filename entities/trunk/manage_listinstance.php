@@ -31,10 +31,6 @@ $usergroups_controler = new usergroups_controler();
 // Origin
 $origin = $_REQUEST['origin'];
 
-/*echo '<pre>';
-print_r($_SESSION[$origin]);
-echo '</pre>';*/
-
 // Action ?
 if (isset($_GET['action']))
     $action = $_GET['action'];
@@ -669,7 +665,7 @@ $linkwithwhat =
 		<h2><?php 
 			echo _DIFFUSION_LIST . '&nbsp;';
             if ($_SESSION[$origin]['difflist_object']['object_label'] <> '') {
-                echo $_SESSION[$origin]['difflist_object']['object_label'];
+                functions::xecho($_SESSION[$origin]['difflist_object']['object_label']);
             }
 			/*if ($difflistType->difflist_type_label != '') {
 				echo "<br /><small><small><small> (" . $difflistType->difflist_type_label . ")</small></small></small>";
@@ -871,7 +867,7 @@ $linkwithwhat =
                             if ($_SESSION[$origin]['difflist_object']['object_label'] <> '') {
                                 ?>
                                 <input class="button" name="auto_filter" id="auto_filter" type="button" onclick="$('what_services').value='<?php 
-                                    echo $_SESSION[$origin]['difflist_object']['object_label'];?>';$('what_users').value='';" value="<?php echo _AUTO_FILTER;?>"/>
+                                    functions::xecho($_SESSION[$origin]['difflist_object']['object_label']);?>';$('what_users').value='';" value="<?php echo _AUTO_FILTER;?>"/>
                                 <?php
                             }
                             ?>

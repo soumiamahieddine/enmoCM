@@ -384,7 +384,6 @@ class entities extends dbquery
         
         $where = str_ireplace("DESTINATION in ()", "1=2", $where);
         $where = str_ireplace("initiator in ()", "1=2", $where);
-        //echo $where;exit;
         return $where;
     }
 
@@ -678,8 +677,6 @@ class entities extends dbquery
         }
 
         $entities = preg_replace("/, $/", '', $entities);
-        //echo $entities."<br>";
-        //echo $userId."<br>";
         $entities = $this->process_where_clause($entities, $userId);
         $entities = preg_replace("/^,/", '', $entities);
         $entities = preg_replace("/^ ,/", '', $entities);

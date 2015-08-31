@@ -391,14 +391,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 			$found = false;
 			for ($cptU=0;$cptU<count($new_difflist['copy']['users']);$cptU++) {
 				if ($new_difflist['copy']['users'][$cptU]['user_id'] == $old_copiesU->item_id) {
-					//echo $_SESSION['redirect']['diff_list']['copy']['users'][$cptU]['user_id'] . " found" . PHP_EOL;
 					$found = true;
 					break;
 				}
 			}
 			//if not found, add the old copy in the new diff list
 			if (!$found) {
-				//echo $old_copiesU->item_id . " not found" . PHP_EOL;
 				array_push(
 					$new_difflist['copy']['users'], 
 					array(

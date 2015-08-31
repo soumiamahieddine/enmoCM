@@ -38,7 +38,7 @@ if(!isset($_REQUEST['form_values']) || empty($_REQUEST['form_values']))
 try{
     require_once("modules/entities/class/EntityControler.php");
 } catch (Exception $e){
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 $entity_ctrl = new EntityControler();

@@ -82,7 +82,7 @@ if(isset($_REQUEST['entitieslist']) && !empty($_REQUEST['entitieslist'])) {
         <iframe src="<?php 
             echo $_SESSION['config']['businessappurl'];
         ?>index.php?display=true&module=entities&page=print_my_sep&try=<?php 
-            echo $_REQUEST['try']; 
+            functions::xecho($_REQUEST['try']); 
         ?>" name="print_my_sep" id="print_my_sep" frameborder="1" width="600" height="800"></iframe>
         <br>
         <?php //echo _PRINT_SEP_WILL_BE_START;?>
