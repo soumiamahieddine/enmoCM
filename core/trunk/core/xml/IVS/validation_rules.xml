@@ -5,8 +5,8 @@
         <parameter name="module" type="identifier" />
         <parameter name="req" type="identifier" />
         <parameter name="table" type="res_table_list" />
-        <parameter name="form_values" type="safetext" />
-        <parameter name="values" type="safetext" />
+        <parameter name="form_values" type="string" />
+        <parameter name="values" type="string" />
         <parameter name="form_to_check" type="identifier" />
         <parameter name="new_status" type="identifier" />
     </validationRule>
