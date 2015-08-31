@@ -86,15 +86,15 @@ try {
             "Nature", 
             "Département",  //5
             "Mots clés", 
-            "Classement", 
             "Thème", 
             "Sous Thème", 
-            "Civilité de l'expéditeur", //10 
+            "Classement",
+            "Nombre d'expéditeur",//10
+            "Civilité de l'expéditeur", 
             "Prénom de l'expéditeur", 
             "Nom de l'expéditeur", 
             "Organisme de l'expéditeur", 
-            "Type de contact", 
-            "Nombre d'expéditeur",//15
+            "Type de contact",  //15
             "Prénom tiers bénéficiaire",
             "Nom tiers bénéficiaire",
             "Destinataire", 
@@ -380,15 +380,15 @@ try {
                 $GLOBALS['mail_natures'][$selectedFile->nature_id],
                 $department_name,  //5
                 $labelTags,
-                $selectedFile->doc_custom_t2,
                 $selectedFile->folder_name, 
                 "",//"Sous Thème", 
-                $GLOBALS['mail_titles'][$contact_title],//"Civilité de l'expéditeur", //10 
+                $selectedFile->doc_custom_t2,
+                $Nb_contact, //nombre d'expéditeur   //10
+                $GLOBALS['mail_titles'][$contact_title],//"Civilité de l'expéditeur"
                 $contact_firstname,
                 $contact_lastname, 
                 $contact_society,
-                $contact_type,
-                $Nb_contact, //nombre d'expéditeur
+                $contact_type,  //15
                 "", //prenom tiers benef
                 "", //nom tiers benef
                 $userName,
