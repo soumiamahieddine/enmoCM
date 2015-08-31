@@ -84,7 +84,7 @@ class ExportControler extends ExportFunctions
             
             // Retrieve datas
             $db = new Database();
-            //echo $query;
+
             $stmt = $db->query($query, $_SESSION['last_select_query_parameters']);
             $i = 0;
             $this->object_export = new EmptyObject();

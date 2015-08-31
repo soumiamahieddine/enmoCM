@@ -35,7 +35,7 @@ try {
     require_once 'core/class/class_db.php';
     require_once 'install/class/Class_Merge.php';
 } catch (Exception $e) {
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 class Install extends functions
