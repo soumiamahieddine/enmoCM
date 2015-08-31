@@ -117,6 +117,8 @@
       <parameter name="size_limit_number" type="digit" />
       <parameter name="submit" type="safetext" />
       <parameter name="percentage_full" type="safetext" />
+      <parameter name="docserver_type_id_txt" type="identifier" />
+      <parameter name="coll_id_txt" type="string" />
     </validationRule>
 
     <validationRule name="val_integer" extends="standardForm" mode="error">

@@ -8,7 +8,6 @@ $return = '';
 $status = 0;
 if (isset($_REQUEST['contactId'])) {
     $deleteContactQuery = "DELETE FROM contacts_v2 WHERE contact_id = ? ";
-    //echo $_REQUEST['contactId'] . ' ' . $_REQUEST['replacedContactId'];
     if ($_REQUEST['replacedContactId'] == '') {
         $status = 1;
     } elseif ($_REQUEST['replacedAddressId'] == '') {

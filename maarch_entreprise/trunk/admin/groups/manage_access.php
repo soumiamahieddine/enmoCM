@@ -40,7 +40,7 @@ try {
     include 'core/manage_bitmask.php';
     include 'core/class/class_security.php';
 } catch (Exception $e) {
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 $values = getValuesInArray($_REQUEST['form_values']);

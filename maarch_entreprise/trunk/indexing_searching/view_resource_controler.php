@@ -49,7 +49,7 @@ try {
     require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
         . 'docservers_controler.php');
 } catch (Exception $e) {
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 $core_tools = new core_tools();
 $core_tools->test_user();

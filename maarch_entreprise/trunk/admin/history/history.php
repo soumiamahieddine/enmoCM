@@ -305,7 +305,7 @@ $list->admin_list($tab, $nb, '&nbsp;', 'id','history','history','id', true, '', 
             </td>
             <td style="width:33%;">
                 <div> <label><?php echo _USER;?> :</label>
-                    <input type="text" name="user" id="user" value="<?php if (isset($history_user)){ echo $history_user;}?>"  /><div id="show_user" class="autocomplete"></div>
+                    <input type="text" name="user" id="user" value="<?php if (isset($history_user)){ functions::xecho($history_user);}?>"  /><div id="show_user" class="autocomplete"></div>
                 </div>
             </td>
         </tr>
@@ -313,12 +313,12 @@ $list->admin_list($tab, $nb, '&nbsp;', 'id','history','history','id', true, '', 
     <table border="0" width="99%" class="forms" summary="">
     <tr>
     <td>
-        <p><span><?php echo _SINCE;?> :</span> <input name="datestart" type="text" id="datestart" onclick='showCalender(this);' value="<?php if (isset($history_datestart)){echo $history_datestart;}?>" />
+        <p><span><?php echo _SINCE;?> :</span> <input name="datestart" type="text" id="datestart" onclick='showCalender(this);' value="<?php if (isset($history_datestart)){functions::xecho($history_datestart);}?>" />
         </p>
     </td>
     <td colspan="2">
         <p>
-        <span ><?php echo _FOR;?> :</span> <input name="datefin" type="text" id="datefin"  onclick="showCalender(this);" value="<?php if (isset($history_datefin)){echo $history_datefin;}?>"  />
+        <span ><?php echo _FOR;?> :</span> <input name="datefin" type="text" id="datefin"  onclick="showCalender(this);" value="<?php if (isset($history_datefin)){functions::xecho($history_datefin);}?>"  />
     </p>
     </td>
     </tr>

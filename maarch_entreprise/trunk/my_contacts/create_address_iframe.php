@@ -47,11 +47,11 @@ $contact = new contacts_v2();
 $db 	 = new Database();
 
 echo '<div class="error" id="main_error">';
-echo $_SESSION['error'];
+functions::xecho($_SESSION['error']);
 echo '</div>';
 
 echo '<div class="info" id="main_info">';
-echo $_SESSION['info'];
+functions::xecho($_SESSION['info']);
 echo '</div>';
 
 

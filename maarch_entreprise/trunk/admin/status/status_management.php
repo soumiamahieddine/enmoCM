@@ -87,18 +87,18 @@ if ($mode == 'list') {
         <input type="hidden" name="display" value="true" />
         <input type="hidden" name="admin" value="status" />
         <input type="hidden" name="page" value="status_management_controler" />
-        <input type="hidden" name="mode" value="<?php echo $mode;?>" />
+        <input type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
 
         <input type="hidden" name="order" id="order" value="<?php
-        echo $_REQUEST['order'];?>" />
+        functions::xecho($_REQUEST['order']);?>" />
         <input type="hidden" name="order_field" id="order_field" value="<?php
-        echo $_REQUEST['order_field'];?>" />
+        functions::xecho($_REQUEST['order_field']);?>" />
         <input type="hidden" name="what" id="what" value="<?php
-        echo $_REQUEST['what'];?>" />
+        functions::xecho($_REQUEST['what']);?>" />
         <input type="hidden" name="start" id="start" value="<?php
-        echo $_REQUEST['start'];?>" />
+        functions::xecho($_REQUEST['start']);?>" />
         <input type="hidden" name="is_system" id="is_system" value="<?php
-        echo $_SESSION['m_admin']['status']['is_system'];?>" />
+        functions::xecho($_SESSION['m_admin']['status']['is_system']);?>" />
         <p>
             <label for="status_id"><?php echo _ID;?> : </label>
             <input name="status_id" type="text"  id="status_id" value="<?php

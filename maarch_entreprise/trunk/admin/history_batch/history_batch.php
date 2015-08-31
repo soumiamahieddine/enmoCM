@@ -258,7 +258,7 @@ $list->admin_list(
                 {
                     ?>
                     <option value="<?php functions::xecho($modules[$i]['id']);?>"><?php
-                        echo $modules[$i]['label'];?></option>
+                        functions::xecho($modules[$i]['label']);?></option>
                     <?php
                 }
                 ?>

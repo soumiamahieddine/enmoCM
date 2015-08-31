@@ -5,7 +5,7 @@ try{
     require_once "core/class/users_controler.php";
     require_once 'core/core_tables.php';
 } catch (Exception $e){
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 $core = new core_tools();
 $core->load_lang();

@@ -87,7 +87,6 @@ if (count($_REQUEST['meta']) > 0) {
     $opt_indexes = array();
     $_SESSION['meta_search'] = $_REQUEST['meta'];
     for ($i=0;$i<count($_REQUEST['meta']);$i++) {
-        //echo $_REQUEST['meta'][$i]."<br>";
         $tab = explode('#', $_REQUEST['meta'][$i]);
 
         $id_val = $tab[0];
@@ -95,7 +94,6 @@ if (count($_REQUEST['meta']) > 0) {
         $tab_id_fields = explode(',', $tab[1]);
         //$func->show_array($tab_id_fields);
         for ($j=0; $j<count($tab_id_fields);$j++) {
-            //echo $tab_id_fields[$j]."<br>";
 
             // CONTACT TYPE
             if ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type']))
@@ -148,7 +146,6 @@ if (count($_REQUEST['meta']) > 0) {
             }
             else  // opt indexes check
             {
-                //echo $tab_id_fields[$j].' : '.$_REQUEST[$tab_id_fields[$j]].'<br/>';
                 $tmp = $type->search_checks($indexes, $tab_id_fields[$j], $_REQUEST[$tab_id_fields[$j]] );
                 //$func->show_array($tmp);
                 $json_txt .= $tmp['json_txt'];
@@ -160,14 +157,8 @@ if (count($_REQUEST['meta']) > 0) {
     }
     $json_txt = preg_replace('/,$/', '', $json_txt);
 }
-//echo $where_request;exit;
 $json_txt = preg_replace("/,$/", "", $json_txt);
 $json_txt .= '}';
-/*
-echo $json_txt;
-echo '<br/>'.$where_request;
-exit();
-*/
 
 $_SESSION['current_search_query'] = $json_txt;
 if (!empty($_SESSION['error'])) {

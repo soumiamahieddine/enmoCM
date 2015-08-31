@@ -27,7 +27,7 @@ try{
     }
 
 } catch (Exception $e){
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){

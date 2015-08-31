@@ -347,7 +347,7 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
     <i class="fa fa-info-circle fa-2x"></i>&nbsp;<?php
         echo _DETAILS . " : " . _DOC . ' ' . strtolower(_NUM);
         ?><?php
-        echo $s_id;
+        functions::xecho($s_id);
         ?> <span>(<?php
         echo  $security->retrieve_coll_label_from_coll_id($coll_id);
         ?>)</span>
@@ -361,7 +361,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
         <br />
         <br />
         <br />
-        <?php echo $_SESSION['error'];  $_SESSION['error'] = "";?>
+        <?php 
+        functions::xecho($_SESSION['error']);
+        $_SESSION['error'] = "";
+        ?>
         <br />
         <br />
         <br />
@@ -382,7 +385,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
         } else {
             ?>
             <div id="info_detail" class="info" onclick="this.hide();">
-                <?php echo $_SESSION['info'] ;?>
+                <?php functions::xecho($_SESSION['info']);?>
                 <br />
                 <br />
             </div>
@@ -553,13 +556,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <!--<a href="<?php
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction&resid=<?php
-                        echo $s_id;
+                        functions::xecho($s_id);
                         ?>" target="_blank"><i class="fa fa-gears fa-2x" title="<?php 
                         echo _PROCESS;?>"></i></a>&nbsp;-->
                     <a href="<?php
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
-                        echo $s_id;
+                        functions::xecho($s_id);
                         ?>" target="_blank"><i class="fa fa-download fa-2x" title="<?php
                         echo _VIEW_DOC;
                         ?>"></i></a>&nbsp;&nbsp;&nbsp;
@@ -655,7 +658,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 								<td align="left" width="200px">
 									<?php									
 										$detailsExport .= $data[$key]['label'];
-										echo $data[$key]['label'];
+										functions::xecho($data[$key]['label']);
 										
 									?>
 									
@@ -802,7 +805,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     if ($key == 'folder')
                                     {
                                     ?>  
-                                        <input type="text" name="folder" id="folder" onblur="" value="<?php echo $data['folder']['show_value']; 
+                                        <input type="text" name="folder" id="folder" onblur="" value="<?php functions::xecho($data['folder']['show_value']); 
                                         ?>" /><div id="show_folder" class="autocomplete"></div>
                                         <script type="text/javascript">initList('folder', 'show_folder','<?php echo $_SESSION['config']['businessappurl'];
                                         ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder',  'Input', '2');</script>
@@ -951,7 +954,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <td align="left" width="200px">
                                     <?php
                                     $detailsExport .= $indexes[$key]['label'];
-                                    echo $indexes[$key]['label'];?> :
+                                    functions::xecho($indexes[$key]['label']);?> :
                                 </td>
                                 <?php
                                 $detailsExport .=  "</td>";
@@ -1172,10 +1175,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         <br />
                         <div>
                             <input type="button" class="button" onClick="saveListDiff('listinstance', '<?php 
-                                echo $_SESSION['tablename']['ent_listinstance'];?>', '<?php 
-                                echo $coll_id;?>', '<?php 
-                                echo $s_id;?>','<?php 
-                                echo $_SESSION['user']['UserId'];?>', '<?php 
+                                functions::xecho($_SESSION['tablename']['ent_listinstance']);?>', '<?php 
+                                functions::xecho($coll_id);?>', '<?php 
+                                functions::xecho($s_id);?>','<?php 
+                                functions::xecho($_SESSION['user']['UserId']);?>', '<?php 
                                 echo true;?>','<?php 
                                 echo false;?>');$('div_diff_list_message').show();" value="<?php 
                                 echo _STORE_DIFF_LIST;?>" />
@@ -1395,7 +1398,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <h2><?php echo _WF ;?></h2>
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=<?php
-                    echo $s_id;?>&coll_id=<?php functions::xecho($coll_id);?>&load&size=full" name="workflow_history_document" width="100%" 
+                    functions::xecho($s_id);?>&coll_id=<?php functions::xecho($coll_id);?>&load&size=full" name="workflow_history_document" width="100%" 
                     height="530px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>
                     <br/> 
                     <br/> 
@@ -1406,7 +1409,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </span>
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&dir=indexing_searching&page=document_history&id=<?php
-                    echo $s_id;?>&coll_id=<?php functions::xecho($coll_id);?>&load&size=full" name="history_document" width="100%" 
+                    functions::xecho($s_id);?>&coll_id=<?php functions::xecho($coll_id);?>&load&size=full" name="history_document" width="100%" 
                     height="620px" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>
                 </dd>
                 <?php
@@ -1429,7 +1432,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         <iframe name="list_notes_doc" id="list_notes_doc" src="<?php
                             echo $_SESSION['config']['businessappurl'];
                             ?>index.php?display=true&module=notes&page=notes&identifier=<?php 
-                            echo $s_id;?>&origin=document&coll_id=<?php functions::xecho($coll_id);?>&load&size=full" 
+                            functions::xecho($s_id);?>&origin=document&coll_id=<?php functions::xecho($coll_id);?>&load&size=full" 
                             frameborder="0" scrolling="yes" width="99%" height="570px"></iframe>
                     </dd> 
                     <?php
@@ -1521,7 +1524,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         <a href="<?php
                             echo $_SESSION['config']['businessappurl'];
                             ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
-                            echo $s_id;
+                            functions::xecho($s_id);
                             ?>&original" target="_blank">
                             <i class="fa fa-download fa-2x" title="<?php
                                 echo _VIEW_ORIGINAL;

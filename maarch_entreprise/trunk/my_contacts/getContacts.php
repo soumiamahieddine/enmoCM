@@ -69,12 +69,12 @@ if ($countsContact == 0) {
 }
  
 for ($cptsContacts = 0;$cptsContacts< $countsContact;$cptsContacts++) {
-	$frmStr .= '<option value="'.functions::show_string($contact_selected[$cptsContacts]['id']).'"';
+	$frmStr .= '<option value="'.functions::xecho($contact_selected[$cptsContacts]['id']).'"';
 	if ($_REQUEST['mode'] == "view") {
 		$frmStr .= ' disabled ';
 	}
 	$frmStr .= '>'
-	.  functions::show_string($contact_selected[$cptsContacts]['name'])
+	.  functions::xecho($contact_selected[$cptsContacts]['name'])
 	. '</option>';
 }
 

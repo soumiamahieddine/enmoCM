@@ -146,7 +146,7 @@ $profilArray = array();
 foreach ($headers as $k => $v) 
 {   
     //DEBUG
-    echo "$k = ".base64_decode($v)."<br/>\n" ;    
+    //echo "$k = ".base64_decode($v)."<br/>\n" ;    
     
     switch ($k) {
         case "USER_UID":
@@ -286,7 +286,6 @@ if (isset($_SESSION['error']) && $_SESSION['error'] <> '') {
                 true);
                 
     
-    //echo $_SESSION['error'];
     header("location: " . $loginRequestArray['WEB_SSO_URL']
          . "index.php?errorId=" . $errorId 
          . "&errorMsg=" . $_SESSION['error']);  
@@ -536,7 +535,6 @@ function fillGroupArray($loginArray,$recordProfils)
             $primaryGroup = 'N';
         }
         
-        //echo $tmp[$cpt] . '<br>';
         array_push(
             $groupArray,
             array(

@@ -179,7 +179,6 @@ $str_status = '(';
 	}
 
 	$where_date = preg_replace('/^ AND/', '', $where_date);
-//echo $where_date ;
 
 	if($id_report == 'process_delay')
 	{
@@ -736,7 +735,7 @@ $str_status = '(';
 			{
 				array_unshift($data, array('LABEL' => _CATEGORY, 'VALUE' => _NB_MAILS1));
 			}
-	//echo $src1;
+	
 			if($has_data)
 			{
 				if($report_type == 'graph')

@@ -38,7 +38,7 @@ try {
     }
 
 } catch (Exception $e){
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 $core->load_lang();

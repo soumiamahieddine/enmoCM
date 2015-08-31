@@ -118,19 +118,19 @@ class types extends database
             echo $_SESSION['config']['businessappurl'];
             ?>index.php?page=types_up_db" class="forms">
             <input type="hidden" name="order" id="order" value="<?php
-            echo $_REQUEST['order'];
+            functions::xecho($_REQUEST['order']);
             ?>" />
             <input type="hidden" name="order_field" id="order_field" value="<?php
-            echo $_REQUEST['order_field'];
+            functions::xecho($_REQUEST['order_field']);
             ?>" />
             <input type="hidden" name="what" id="what" value="<?php
-            echo $_REQUEST['what'];
+            functions::xecho($_REQUEST['what']);
             ?>" />
             <input type="hidden" name="start" id="start" value="<?php
-            echo $_REQUEST['start'];
+            functions::xecho($_REQUEST['start']);
             ?>" />
             <div class="block">
-                <input  type="hidden" name="mode" value="<?php echo $mode;?>" />
+                <input  type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
                 <p>
                 <label><?php echo _ATTACH_SUBFOLDER;?> : </label>
                 <select name="sous_dossier" id="sous_dossier" class="listext" onchange="">
@@ -139,7 +139,7 @@ class types extends database
             for ($i = 0; $i < count($_SESSION['sous_dossiers']); $i ++) {
                 ?>
                 <option value="<?php
-                echo $_SESSION['sous_dossiers'][$i]['ID'];
+                functions::xecho($_SESSION['sous_dossiers'][$i]['ID']);
                 ?>" <?php
                 if (isset($_SESSION['m_admin']['doctypes']['SUB_FOLDER'])
                     && $_SESSION['sous_dossiers'][$i]['ID'] == $_SESSION['m_admin']['doctypes']['SUB_FOLDER']
@@ -148,7 +148,7 @@ class types extends database
                 }
                 echo 'class="' . $_SESSION['sous_dossiers'][$i]['STYLE'] . '"';
                 ?>><?php
-                echo $_SESSION['sous_dossiers'][$i]['LABEL'];
+                functions::xecho($_SESSION['sous_dossiers'][$i]['LABEL']);
                 ?></option>
                 <?php
             }
@@ -165,7 +165,7 @@ class types extends database
             for ($i = 0; $i < count($arrayColl); $i ++) {
                 ?>
                 <option value="<?php
-                echo $arrayColl[$i]['id'];
+                functions::xecho($arrayColl[$i]['id']);
                 ?>" <?php
                 if (isset($_SESSION['m_admin']['doctypes']['COLL_ID'])
                     && $_SESSION['m_admin']['doctypes']['COLL_ID'] == $arrayColl[$i]['id']
@@ -184,7 +184,7 @@ class types extends database
                 <p>
                     <label for="id"><?php echo _ID;?> : </label>
                     <input type="text" class="readonly" name="idbis" value="<?php
-                echo $id;
+                functions::xecho($id);
                 ?>" readonly="readonly" />
                     <input type="hidden" name="id" value="<?php functions::xecho($id);?>" />
                 </p>
@@ -195,7 +195,7 @@ class types extends database
                 <label for="label"><?php echo _WORDING;?> : </label>
                 <input name="label" type="text" class="textbox" id="label" value="<?php
             if (isset($_SESSION['m_admin']['doctypes']['LABEL'])) {
-                echo $func->show_str($_SESSION['m_admin']['doctypes']['LABEL']);
+                functions::xecho($func->show_str($_SESSION['m_admin']['doctypes']['LABEL']));
             }
             ?>"/>
             </p>

@@ -56,10 +56,10 @@ if (!$valid) {
         $_SESSION['error'] .= $validOutpout['validationErrors'][$cptV]->value . PHP_EOL;
     }
     if ($_REQUEST['display'] == "false") {
-        echo $_SESSION['error'];
+        functions::xecho($_SESSION['error']);
         exit;   
     }
-    echo $_SESSION['error'];
+    functions::xecho($_SESSION['error']);
     exit;
 } else {
     //echo "Request is valid";

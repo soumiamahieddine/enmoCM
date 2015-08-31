@@ -99,18 +99,18 @@ if ($mode == "list") {
                 <input type="hidden" name="display" value="true" />
                 <input type="hidden" name="admin" value="docservers" />
                 <input type="hidden" name="page" value="docserver_types_management_controler" />
-                <input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />
-                <input type="hidden" name="order" id="order" value="<?php if (isset($_REQUEST['order'])) echo $_REQUEST['order'];?>" />
-                <input type="hidden" name="order_field" id="order_field" value="<?php if (isset($_REQUEST['order_field'])) echo $_REQUEST['order_field'];?>" />
-                <input type="hidden" name="what" id="what" value="<?php if (isset($_REQUEST['what'])) echo $_REQUEST['what'];?>" />
-                <input type="hidden" name="start" id="start" value="<?php if (isset($_REQUEST['start'])) echo $_REQUEST['start'];?>" />
+                <input type="hidden" name="mode" id="mode" value="<?php functions::xecho($mode);?>" />
+                <input type="hidden" name="order" id="order" value="<?php if (isset($_REQUEST['order'])) functions::xecho($_REQUEST['order']);?>" />
+                <input type="hidden" name="order_field" id="order_field" value="<?php if (isset($_REQUEST['order_field'])) functions::xecho($_REQUEST['order_field']);?>" />
+                <input type="hidden" name="what" id="what" value="<?php if (isset($_REQUEST['what'])) functions::xecho($_REQUEST['what']);?>" />
+                <input type="hidden" name="start" id="start" value="<?php if (isset($_REQUEST['start'])) functions::xecho($_REQUEST['start']);?>" />
                 <p>
                     <label for="id"><?php echo _DOCSERVER_TYPE_ID;?> : </label>
-                    <input name="id" type="text"  id="id" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['docserver_type_id'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['docserver_type_id']);?>" <?php if ($mode == "up") echo " readonly='readonly' class='readonly'";?> style="margin-left:6px;"/><i class="fa fa-star red_asterisk"></i> 
+                    <input name="id" type="text"  id="id" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['docserver_type_id'])) functions::xecho($_SESSION['m_admin']['docserver_types']['docserver_type_id']);?>" <?php if ($mode == "up") echo " readonly='readonly' class='readonly'";?> style="margin-left:6px;"/><i class="fa fa-star red_asterisk"></i> 
                 </p>
                 <p>
                     <label for="docserver_type_label"><?php echo _DOCSERVER_TYPE_LABEL;?> : </label>
-                    <input name="docserver_type_label" type="text"  id="docserver_type_label" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['docserver_type_label'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['docserver_type_label']);?>" style="margin-left:6px;"/><i class="fa fa-star red_asterisk"></i>  
+                    <input name="docserver_type_label" type="text"  id="docserver_type_label" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['docserver_type_label'])) functions::xecho($_SESSION['m_admin']['docserver_types']['docserver_type_label']);?>" style="margin-left:6px;"/><i class="fa fa-star red_asterisk"></i>  
                 </p>
                 <?php
                 if ($_SESSION['m_admin']['docserver_types']['link_exists']) {
@@ -124,12 +124,12 @@ if ($mode == "list") {
                         }
                         ?>
                         <label for="is_container_txt"><?php echo _IS_CONTAINER;?> : </label>
-                        <input name="is_container_txt" type="text"  id="is_container_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_container'])) echo $rep;?>" readonly class="readonly"/>
+                        <input name="is_container_txt" type="text"  id="is_container_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_container'])) functions::xecho($rep);?>" readonly class="readonly"/>
                         <input type="hidden" name="is_container" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['is_container']);?>" />
                     </p>
                     <p>
                         <label for="container_max_number_txt"><?php echo _CONTAINER_MAX_NUMBER;?> : </label>
-                        <input name="container_max_number_txt" type="text"  id="container_max_number_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['container_max_number'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['container_max_number']);?>" readonly class="readonly"/>
+                        <input name="container_max_number_txt" type="text"  id="container_max_number_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['container_max_number'])) functions::xecho($_SESSION['m_admin']['docserver_types']['container_max_number']);?>" readonly class="readonly"/>
                         <input type="hidden" name="container_max_number" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['container_max_number']);?>" />
                     </p>
                     <p>
@@ -141,12 +141,12 @@ if ($mode == "list") {
                         }
                         ?>
                         <label for="is_compressed_txt"><?php echo _IS_COMPRESSED;?> : </label>
-                        <input name="is_compressed_txt" type="text"  id="is_compressed_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_compressed'])) echo $rep;?>" readonly class="readonly"/>
+                        <input name="is_compressed_txt" type="text"  id="is_compressed_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_compressed'])) functions::xecho($rep);?>" readonly class="readonly"/>
                         <input type="hidden" name="is_compressed" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['is_compressed']);?>" />
                     </p>
                     <p>
                         <label for="compression_mode_txt"><?php echo _COMPRESS_MODE;?> : </label>
-                        <input name="compression_mode_txt" type="text"  id="compression_mode_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['compression_mode'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['compression_mode']);?>" readonly class="readonly"/>
+                        <input name="compression_mode_txt" type="text"  id="compression_mode_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['compression_mode'])) functions::xecho($_SESSION['m_admin']['docserver_types']['compression_mode']);?>" readonly class="readonly"/>
                         <input type="hidden" name="compression_mode" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['compression_mode']);?>" />
                     </p>
                     <p>
@@ -158,12 +158,12 @@ if ($mode == "list") {
                         }
                         ?>
                         <label for="is_meta_txt"><?php echo _IS_META;?> : </label>
-                        <input name="is_meta_txt" type="text"  id="is_meta_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_meta'])) echo $rep;?>" readonly class="readonly"/>
+                        <input name="is_meta_txt" type="text"  id="is_meta_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_meta'])) functions::xecho($rep);?>" readonly class="readonly"/>
                         <input type="hidden" name="is_meta" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['is_meta']);?>" />
                     </p>
                     <p>
                         <label for="meta_template_txt"><?php echo _META_TEMPLATE;?> : </label>
-                        <input name="meta_template_txt" type="text"  id="meta_template_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['meta_template'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['meta_template']);?>" readonly class="readonly"/>
+                        <input name="meta_template_txt" type="text"  id="meta_template_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['meta_template'])) functions::xecho($_SESSION['m_admin']['docserver_types']['meta_template']);?>" readonly class="readonly"/>
                         <input type="hidden" name="meta_template" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['meta_template']);?>" />
                     </p>
                     <p>
@@ -175,12 +175,12 @@ if ($mode == "list") {
                         }
                         ?>
                         <label for="is_logged_txt"><?php echo _IS_LOGGED;?> : </label>
-                        <input name="is_logged_txt" type="text"  id="is_logged_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_logged'])) echo $rep;?>" readonly class="readonly"/>
+                        <input name="is_logged_txt" type="text"  id="is_logged_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_logged'])) functions::xecho($rep);?>" readonly class="readonly"/>
                         <input type="hidden" name="is_logged" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['is_logged']);?>" />
                     </p>
                     <p>
                         <label for="log_template_txt"><?php echo _LOG_TEMPLATE;?> : </label>
-                        <input name="log_template_txt" type="text"  id="log_template_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['log_template'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['log_template']);?>" readonly class="readonly"/>
+                        <input name="log_template_txt" type="text"  id="log_template_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['log_template'])) functions::xecho($_SESSION['m_admin']['docserver_types']['log_template']);?>" readonly class="readonly"/>
                         <input type="hidden" name="log_template" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['log_template']);?>" />
                     </p>
                     <p>
@@ -192,12 +192,12 @@ if ($mode == "list") {
                         }
                         ?>
                         <label for="is_signed_txt"><?php echo _IS_SIGNED;?> : </label>
-                        <input name="is_signed_txt" type="text"  id="is_signed_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_signed'])) echo $rep;?>" readonly class="readonly"/>
+                        <input name="is_signed_txt" type="text"  id="is_signed_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_signed'])) functions::xecho($rep);?>" readonly class="readonly"/>
                         <input type="hidden" name="is_signed" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['is_signed']);?>" />
                     </p>
                     <p>
                         <label for="fingerprint_mode_txt"><?php echo _FINGERPRINT_MODE;?> : </label>
-                        <input name="fingerprint_mode_txt" type="text"  id="fingerprint_mode_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['fingerprint_mode'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['fingerprint_mode']);?>" readonly class="readonly"/>
+                        <input name="fingerprint_mode_txt" type="text"  id="fingerprint_mode_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['fingerprint_mode'])) functions::xecho($_SESSION['m_admin']['docserver_types']['fingerprint_mode']);?>" readonly class="readonly"/>
                         <input type="hidden" name="fingerprint_mode" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['fingerprint_mode']);?>" />
                     </p>
                     <?php
@@ -212,7 +212,7 @@ if ($mode == "list") {
                     <div class ="container_max_number" id="container_max_number">
                     <p>
                         <label for="container_max_number"><?php echo _CONTAINER_MAX_NUMBER;?> : </label>
-                        <input name="container_max_number" type="text"  id="container_max_number" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['container_max_number'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['container_max_number']);?>"/>
+                        <input name="container_max_number" type="text"  id="container_max_number" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['container_max_number'])) functions::xecho($_SESSION['m_admin']['docserver_types']['container_max_number']);?>"/>
                     </p>
                     </div>
                     <p>

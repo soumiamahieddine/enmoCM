@@ -30,7 +30,7 @@
 try {
     require_once ("core/class/class_security.php");
 } catch (Exception $e){
-    echo $e->getMessage().' // ';
+    functions::xecho($e->getMessage()).' // ';
 }
 
 class multicontacts extends Database

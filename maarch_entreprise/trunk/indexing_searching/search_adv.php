@@ -443,7 +443,6 @@ $src_tab = $tab[0];
 
 $core_tools->load_js();
 ?>
-<?php // echo $_SESSION['current_search_query'];?>
 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>
 <script type="text/javascript">
 <!--
@@ -496,7 +495,7 @@ function del_query_confirm()
     }?>"  id="frmsearch2" class="<?php functions::xecho($class_for_form);?>">
 <input type="hidden" name="dir" value="indexing_searching" />
     <input type="hidden" name="page" value="search_adv_result" />
-<input type="hidden" name="mode" value="<?php echo $mode;?>" />
+<input type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
 <?php if($mode == 'frame' || $mode == 'popup'){?>
     <input type="hidden" name="display" value="true" />
     <input type="hidden" name="action_form" value="<?php functions::xecho($_REQUEST['action_form']);?>" />
@@ -556,11 +555,11 @@ if(isset($_REQUEST['nodetails']))
                                                 && $_SESSION['user']['baskets'][$i]['id'] <> 'QualificationBasket'
                                             ) {
                                                 ?><option id="<?php 
-                                                    echo $_SESSION['user']['baskets'][$i]['id'];
+                                                    functions::xecho($_SESSION['user']['baskets'][$i]['id']);
                                                     ?>" value="<?php 
-                                                    echo $_SESSION['user']['baskets'][$i]['id'];
+                                                    functions::xecho($_SESSION['user']['baskets'][$i]['id']);
                                                     ?>" ><?php 
-                                                    echo $_SESSION['user']['baskets'][$i]['desc'];
+                                                    functions::xecho($_SESSION['user']['baskets'][$i]['desc']);
                                                 ?></option>
                                                 <?php
                                             }

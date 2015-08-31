@@ -73,13 +73,13 @@ if ($mode == "list") {
                     ?>
                     <tr <?php echo $color;?> >
                         <td style="width:25%;"><?php
-                    echo $docservers[$i]->__get('docserver_id');
+                    functions::xecho($docservers[$i]->__get('docserver_id'));
                     ?></td>
                     <td style="width:25%;"><?php
-                    echo $docservers[$i]->__get('device_label');
+                    functions::xecho($docservers[$i]->__get('device_label'));
                     ?></td>
                     <td style="width:25%;"><?php
-                    echo $docservers[$i]->__get('docserver_type_id');
+                    functions::xecho($docservers[$i]->__get('docserver_type_id'));
                     ?></td>
                     <td ><?php
                     if ($coreTools->test_service('admin_docservers', 'apps', false)
@@ -117,25 +117,25 @@ if ($mode == "list") {
             <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="docservers" />
             <input type="hidden" name="page" value="docserver_locations_management_controler" />
-            <input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />
+            <input type="hidden" name="mode" id="mode" value="<?php functions::xecho($mode);?>" />
             <input type="hidden" name="order" id="order" value="<?php
         if (isset($_REQUEST['order'])) {
-            echo $_REQUEST['order'];
+            functions::xecho($_REQUEST['order']);
         }
         ?>" />
             <input type="hidden" name="order_field" id="order_field" value="<?php
         if (isset($_REQUEST['order_field'])) {
-            echo $_REQUEST['order_field'];
+            functions::xecho($_REQUEST['order_field']);
         }
         ?>" />
             <input type="hidden" name="what" id="what" value="<?php
         if (isset($_REQUEST['what'])) {
-            echo $_REQUEST['what'];
+            functions::xecho($_REQUEST['what']);
         }
         ?>" />
             <input type="hidden" name="start" id="start" value="<?php
         if (isset($_REQUEST['start'])) {
-            echo $_REQUEST['start'];
+            functions::xecho($_REQUEST['start']);
         }
         ?>" />
         <p>
@@ -145,7 +145,7 @@ if ($mode == "list") {
             $_SESSION['m_admin']['docserver_locations']['docserver_location_id']
         )
         ) {
-            echo $func->show_str(
+            functions::xecho(
                 $_SESSION['m_admin']['docserver_locations']['docserver_location_id']
             );
         }
@@ -159,7 +159,7 @@ if ($mode == "list") {
             <label for="ipv4"><?php echo _IPV4;?> <small>(e.g: 127.0.0.1)</small> : </label>
             <input name="ipv4" type="text"  id="ipv4" value="<?php
         if (isset($_SESSION['m_admin']['docserver_locations']['ipv4'])) {
-            echo $func->show_str(
+            functions::xecho(
                 $_SESSION['m_admin']['docserver_locations']['ipv4']
             );
         }
@@ -171,7 +171,7 @@ if ($mode == "list") {
             <label for="ipv6"><?php echo _IPV6;?> <small>(e.g: 2001:db8:0:85a3::ac1f:8001)</small> : </label>
             <input name="ipv6" type="text"  id="ipv6" value="<?php
         if (isset($_SESSION['m_admin']['docserver_locations']['ipv6'])) {
-            echo $func->show_str(
+            functions::xecho(
                 $_SESSION['m_admin']['docserver_locations']['ipv6']
             );
         }
@@ -182,7 +182,7 @@ if ($mode == "list") {
             <label for="net_domain"><?php echo _NET_DOMAIN;?> : </label>
             <input name="net_domain" type="text"  id="net_domain" value="<?php
         if (isset($_SESSION['m_admin']['docserver_locations']['net_domain'])) {
-            echo $func->show_str(
+            functions::xecho(
                 $_SESSION['m_admin']['docserver_locations']['net_domain']
             );
         }
@@ -193,7 +193,7 @@ if ($mode == "list") {
             <label for="mask"><?php echo _MASK;?> <small>(e.g: 255.255.255.0)</small> : </label>
             <input name="mask" type="text"  id="mask" value="<?php
         if (isset($_SESSION['m_admin']['docserver_locations']['mask'])) {
-            echo $func->show_str(
+            functions::xecho(
                 $_SESSION['m_admin']['docserver_locations']['mask']
             );
         }
@@ -204,7 +204,7 @@ if ($mode == "list") {
             <label for="net_link"><?php echo _NET_LINK;?> : </label>
             <input name="net_link" type="text"  id="net_link" value="<?php
         if (isset($_SESSION['m_admin']['docserver_locations']['net_link'])) {
-            echo $func->show_str(
+            functions::xecho(
                 $_SESSION['m_admin']['docserver_locations']['net_link']
             );
         }

@@ -38,7 +38,7 @@ if(!isset($_REQUEST['form_values']) || empty($_REQUEST['form_values']))
 try{
     require_once("core/class/usergroups_controler.php");
 } catch (Exception $e){
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 $ugc = new usergroups_controler();
 $values = get_values_in_array($_REQUEST['form_values']);

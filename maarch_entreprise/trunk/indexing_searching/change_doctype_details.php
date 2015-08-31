@@ -70,7 +70,6 @@ if(count($indexes) > 0)
 	$i=0;
 	foreach(array_keys($indexes) as $key)
 	{
-		//echo $key.' ';
 		$mandatory = false;
 		if(in_array($key, $mandatory_indexes))
 		{

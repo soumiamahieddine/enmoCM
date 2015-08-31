@@ -68,10 +68,10 @@ if ($mode == 'list') {
                      ?>
                              <tr <?php echo $color;?> >
                                        <td style="width:25%;"><?php
-                                           echo $users[$i]->__get('lastname');
+                                           functions::xecho($users[$i]->__get('lastname'));
                                         ?></td>
                                         <td style="width:25%;"><?php
-                                            echo $users[$i]->__get('firstname');
+                                            functions::xecho($users[$i]->__get('firstname'));
                                         ?></td>
                                        <td ><?php
                     if ($core->test_service('admin_users', 'apps', false)) {
@@ -129,10 +129,10 @@ if ($mode == 'list') {
                        ?>
                              <tr <?php echo $color;?> >
                                        <td style="width:30%;"><?php
-                                       echo $baskets[$i]->__get('basket_name');
+                                       functions::xecho($baskets[$i]->__get('basket_name'));
                                        ?></td>
                                       <td style="width:50%;"><?php
-                                      echo $baskets[$i]->__get('basket_desc');
+                                      functions::xecho($baskets[$i]->__get('basket_desc'));
                                       ?></td>
                                        <td >
                     <?php
@@ -179,26 +179,26 @@ if ($mode == 'list') {
             <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="groups" />
             <input type="hidden" name="page" value="usergroups_management_controler" />
-            <input type="hidden" name="mode" value="<?php echo $mode;?>" />
+            <input type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
 
             <input type="hidden" name="order" id="order" value="<?php
         if (isset($_REQUEST['order'])) {
-            echo $_REQUEST['order'];
+            functions::xecho($_REQUEST['order']);
         }
             ?>" />
             <input type="hidden" name="order_field" id="order_field" value="<?php
         if (isset($_REQUEST['order_field'])) {
-            echo $_REQUEST['order_field'];
+            functions::xecho($_REQUEST['order_field']);
         }
             ?>" />
             <input type="hidden" name="what" id="what" value="<?php
         if (isset($_REQUEST['what'])) {
-            echo $_REQUEST['what'];
+            functions::xecho($_REQUEST['what']);
         }
             ?>" />
             <input type="hidden" name="start" id="start" value="<?php
         if (isset($_REQUEST['start'])) {
-            echo $_REQUEST['start'];
+            functions::xecho($_REQUEST['start']);
         }
         ?>" />
 
@@ -210,7 +210,7 @@ if ($mode == 'list') {
                         <td align="left">
                             <?php
         if ($mode == 'up') {
-            echo $func->show_str($_SESSION['m_admin']['groups']['group_id']);
+            functions::xecho($_SESSION['m_admin']['groups']['group_id']);
         }
         ?>
                             <input name="group_id" type="<?php
@@ -220,11 +220,11 @@ if ($mode == 'list') {
             ?>text<?php
         }
         ?>" id="group_id" value="<?php
-        echo $_SESSION['m_admin']['groups']['group_id'];
+        functions::xecho($_SESSION['m_admin']['groups']['group_id']);
         ?>" />
              <input type="hidden"  name="id" value="<?php
         if (isset($groupId)) {
-            echo $groupId;
+            functions::xecho($groupId);
         }
         ?>" />
         </td>
@@ -236,15 +236,15 @@ if ($mode == 'list') {
            <td align="left">
             <input name="desc" id="desc" class="text" type="text" value="<?php
         if (isset($_SESSION['m_admin']['groups']['group_desc'])) {
-            echo $_SESSION['m_admin']['groups']['group_desc'];
+            functions::xecho($_SESSION['m_admin']['groups']['group_desc']);
         }
         ?>"  alt="<?php
         if (isset($_SESSION['m_admin']['groups']['group_desc'])) {
-            echo $_SESSION['m_admin']['groups']['group_desc'];
+            functions::xecho($_SESSION['m_admin']['groups']['group_desc']);
         }
         ?>" title="<?php
         if (isset($_SESSION['m_admin']['groups']['group_desc'])) {
-            echo $_SESSION['m_admin']['groups']['group_desc'];
+            functions::xecho($_SESSION['m_admin']['groups']['group_desc']);
         }
         ?>"/>
             </td>
@@ -290,12 +290,12 @@ if ($mode == 'list') {
                   <img src="<?php
                  echo $_SESSION['config']['businessappurl'];
                  ?>static.php?filename=plus.png" alt="" />&nbsp;<b><?php
-                 echo $label ;
+                 functions::xecho($label);
                  ?></b>
                 <span class="lb1-details">&nbsp;</span>
                 </h5><br/>
                 <div class="desc block_light admin" id="desc<?php
-                 echo $_SESSION['cpt'];
+                 functions::xecho($_SESSION['cpt']);
                  ?>" style="display:none">
                 <div class="ref-unit">
                 <table summary="">
@@ -310,10 +310,10 @@ if ($mode == 'list') {
                         ?>
                         <tr>
                         <td style="width:800px;" align="right" title="<?php
-                        echo $enabledServicesSortByParent[$value][$i]['comment'];
+                        functions::xecho($enabledServicesSortByParent[$value][$i]['comment']);
                         ?>">
                         <?php
-                        echo $enabledServicesSortByParent[$value][$i]['label'];
+                        functions::xecho($enabledServicesSortByParent[$value][$i]['label']);
                         if ($enabledServicesSortByParent[$value][$i]['type'] == "admin") {
                             ?> (<?php
                             echo _ADMIN;
@@ -327,7 +327,7 @@ if ($mode == 'list') {
                         </td>
                         <td style="width:50px;" align="left">
                         <input type="checkbox"  class="check" name="services[]" value="<?php
-                        echo $enabledServicesSortByParent[$value][$i]['id'];?>" <?php
+                        functions::xecho($enabledServicesSortByParent[$value][$i]['id']);?>" <?php
                         if (in_array(
                             trim(
                                 $enabledServicesSortByParent[$value][$i]['id']

@@ -56,17 +56,17 @@ elseif($mode == "up" || $mode == "add")
         <form  id="frmuser" class="block" method="post" enctype="multipart/form-data" action="<?php 
             echo $_SESSION['config']['businessappurl']; 
             ?>index.php?display=true&amp;admin=users&amp;page=users_management_controler&amp;mode=<?php 
-            echo $mode;?>" class="forms addforms" style="width:55%;height:auto;">
+            functions::xecho($mode);?>" class="forms addforms" style="width:55%;height:auto;">
             <div class="content" style="width:400px;margin:auto;">
             <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="users" />
             <input type="hidden" name="page" value="users_management_controler" />
-            <input type="hidden" name="mode" value="<?php echo $mode;?>" />
+            <input type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
 
-            <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){echo $_REQUEST['order'];}?>" />
-            <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){echo $_REQUEST['order_field'];}?>" />
-            <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){echo $_REQUEST['what'];}?>" />
-            <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){ echo $_REQUEST['start'];}?>" />
+            <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){functions::xecho($_REQUEST['order']);}?>" />
+            <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){functions::xecho($_REQUEST['order_field']);}?>" />
+            <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){functions::xecho($_REQUEST['what']);}?>" />
+            <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){ functions::xecho($_REQUEST['start']);}?>" />
             <p>
                 <label for="user_id"><?php echo _ID;?> :</label>
                     <?php  if($mode == "up" && isset($_SESSION['m_admin']['users']['user_id'])) { echo functions::show_string($_SESSION['m_admin']['users']['user_id']); }else{ echo '<br/>'; } ?><input name="user_id"  type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="user_id" value="<?php  if(isset($_SESSION['m_admin']['users']['user_id'])) {echo functions::show_string($_SESSION['m_admin']['users']['user_id']);} ?>" />
@@ -85,11 +85,11 @@ elseif($mode == "up" || $mode == "add")
             </p>
             <p>
                 <?php echo _PHONE_NUMBER;?> :<br/>
-                <input name="Phone" id="Phone" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['phone'])){ echo $_SESSION['m_admin']['users']['phone']; }?>" />
+                <input name="Phone" id="Phone" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['phone'])){ functions::xecho($_SESSION['m_admin']['users']['phone']); }?>" />
             </p>
             <p>
                 <label for="Mail"><?php echo _MAIL;?> :</label><br/>
-                <input name="Mail" id="Mail" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ echo $_SESSION['m_admin']['users']['mail']; }?>" />
+                <input name="Mail" id="Mail" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ functions::xecho($_SESSION['m_admin']['users']['mail']); }?>" />
                 <span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
 			
@@ -100,7 +100,7 @@ elseif($mode == "up" || $mode == "add")
 			  <label for="thumbprint"><?php echo _THUMBPRINT;  ?> : </label><br/>
 				<textarea name="thumbprint" id="thumbprint" style="width: 95%;" ><?php 
                     if(isset($_SESSION['m_admin']['users']['thumbprint'])) { 
-                        echo $_SESSION['m_admin']['users']['thumbprint']; 
+                        functions::xecho($_SESSION['m_admin']['users']['thumbprint']);
                     }?></textarea>
 			  </p>
               <p>

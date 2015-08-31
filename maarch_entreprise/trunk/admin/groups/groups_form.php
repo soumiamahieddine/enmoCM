@@ -37,7 +37,7 @@ try{
     include('core/where_targets.php');
     include('core/manage_bitmask.php');
 } catch (Exception $e){
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 function cmp($a, $b)
@@ -80,7 +80,7 @@ $func = new functions();
                                 </div>
                                 <div align="left" style="margin-left:5%;">
 
-                                    <span ><?php echo _COLLECTION;?> : </span><span><?php if(isset($_SESSION['collections'][$_SESSION['m_admin']['groups']['security'][$i]['IND_COLL_SESSION']]['label'])){echo $_SESSION['collections'][$_SESSION['m_admin']['groups']['security'][$i]['IND_COLL_SESSION']]['label']; }?></span>
+                                    <span ><?php echo _COLLECTION;?> : </span><span><?php if(isset($_SESSION['collections'][$_SESSION['m_admin']['groups']['security'][$i]['IND_COLL_SESSION']]['label'])){functions::xecho($_SESSION['collections'][$_SESSION['m_admin']['groups']['security'][$i]['IND_COLL_SESSION']]['label']); }?></span>
                                 </div>
                                 <div style="margin-left:5%;">
                                     <span >
@@ -104,7 +104,7 @@ $func = new functions();
                                         <?php echo _WHERE_CLAUSE_TARGET.' : ';
                                         if(isset($_ENV['targets'][$_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET']] ))
                                         {
-                                            echo $_ENV['targets'][$_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET']] ;
+                                            functions::xecho($_ENV['targets'][$_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET']]);
                                         }
                                         else
                                         {
@@ -129,7 +129,7 @@ $func = new functions();
                                                         echo 'remove';
                                                     }
                                                     echo ' fa-2x"></i>&nbsp;';
-                                                    echo $_ENV['security_bitmask'][$k]['LABEL'].'</div>';
+                                                    functions::xecho($_ENV['security_bitmask'][$k]['LABEL']).'</div>';
                                                 } ?>
 
                                         </div>

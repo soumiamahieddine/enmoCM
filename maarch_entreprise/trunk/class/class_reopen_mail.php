@@ -172,9 +172,9 @@ class ReopenMail extends Database
           <form name="form1" method="post" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=reopen_mail&page=reopen_mail_db";?>" >
           <p>
             <?php echo _ENTER_REF_ID;?> : 
-                <input type="text" name="ref_id" id="ref_id" value="<?php if(isset($_SESSION['m_admin']['reopen_mail']['REF_ID'])){ echo $_SESSION['m_admin']['reopen_mail']['REF_ID'];}?>" />
+                <input type="text" name="ref_id" id="ref_id" value="<?php if(isset($_SESSION['m_admin']['reopen_mail']['REF_ID'])){ functions::xecho($_SESSION['m_admin']['reopen_mail']['REF_ID']);}?>" />
             <?php echo _ENTER_DOC_ID;?> :  
-                <input type="text" name="id" id="id" value="<?php if(isset($_SESSION['m_admin']['reopen_mail']['ID'])){ echo $_SESSION['m_admin']['reopen_mail']['ID'];}?>" />
+                <input type="text" name="id" id="id" value="<?php if(isset($_SESSION['m_admin']['reopen_mail']['ID'])){ functions::xecho($_SESSION['m_admin']['reopen_mail']['ID']);}?>" />
           </p>
           <?php echo _CHOOSE_STATUS;?> : 
                                         <SELECT NAME='status_id'>

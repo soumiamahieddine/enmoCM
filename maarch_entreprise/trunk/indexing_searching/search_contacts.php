@@ -100,7 +100,6 @@ $src_tab = $tab[0];
 
 $core_tools->load_js();
 ?>
-<?php // echo $_SESSION['current_search_query'];?>
 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>
 <script type="text/javascript">
 <!--
@@ -117,7 +116,7 @@ $core_tools->load_js();
 <form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_contacts_result';?>"  id="frmsearch2" class="<?php functions::xecho($class_for_form);?>">
     <input type="hidden" name="dir" value="indexing_searching" />
     <input type="hidden" name="page" value="search_contacts_result" />
-    <input type="hidden" name="mode" value="<?php echo $mode;?>" />
+    <input type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
     <?php
     $contact_types = array();
 
@@ -191,19 +190,6 @@ $core_tools->load_js();
                         </td>
                         <td><em><?php echo "";?></em></td>
                     </tr>
-<!--                     <tr>
-                        <td width="70%"><label for="contact_purpose" class="bold"><?php echo _CONTACT_PURPOSE;?> :</label>
-                            <input type="text" name="contact_purpose" id="contact_purpose" onkeyup="erase_contact_external_id('contact_purpose', 'contact_purposes_id');"/>
-                            <input type="hidden" name="meta[]" value="contact_purpose#contact_purpose#input_text" />
-                            <div id="show_contact" class="autocomplete">
-                                <script type="text/javascript">
-                                    initList_hidden_input('contact_purpose', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_purposes_list_by_name&id=<?php functions::xecho($id);?>', 'what', '2', 'contact_purposes_id');
-                                </script>
-                            </div>
-                            <input type="hidden" id="contact_purposes_id" name="contact_purposes_id" />
-                        </td>
-                        <td><em><?php echo "";?></em></td>
-                    </tr> -->
                 </table>
                 </div>
                 <div class="block_end" style="margin-top:-20px">&nbsp;</div>

@@ -33,7 +33,7 @@ try{
     include_once('core/manage_bitmask.php');
     include_once('core/where_targets.php');
 } catch (Exception $e){
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 $target_all = false;
@@ -101,7 +101,7 @@ else
 <td>
 <div class="popup_content">
 <form name="addGrantForm" id="addGrantForm" method="post" action="#" class="forms">
-    <input type="hidden"  id="mode" value="<?php echo $mode;?>" />
+    <input type="hidden"  id="mode" value="<?php functions::xecho($mode);?>" />
     <p>
         <label><?php echo _COLLECTION;?> :</label>
         <select name="coll_id" id="coll_id" >
@@ -110,7 +110,7 @@ else
                 for($i=0; $i < count($_SESSION['collections']); $i++)
                 {
                     ?>
-                    <option value="<?php functions::xecho($_SESSION['collections'][$i]['id']);?>" <?php  if ($coll_id == $_SESSION['collections'][$i]['id']) {echo 'selected="selected"'; }?>><?php echo $_SESSION['collections'][$i]['label'];?></option>
+                    <option value="<?php functions::xecho($_SESSION['collections'][$i]['id']);?>" <?php  if ($coll_id == $_SESSION['collections'][$i]['id']) {echo 'selected="selected"'; }?>><?php functions::xecho($_SESSION['collections'][$i]['label']);?></option>
                     <?php
                 }
                 ?>

@@ -99,7 +99,6 @@ if (count($_REQUEST['meta']) > 0) {
     $opt_indexes = array();
     $_SESSION['meta_search'] = $_REQUEST['meta'];
     for ($i=0;$i<count($_REQUEST['meta']);$i++) {
-        //echo $_REQUEST['meta'][$i]."<br>";
         $tab = explode('#', $_REQUEST['meta'][$i]);
         if ($tab[0] == 'welcome') {
             $tab[0] = 'multifield';
@@ -110,7 +109,6 @@ if (count($_REQUEST['meta']) > 0) {
         $tab_id_fields = explode(',', $tab[1]);
         //$func->show_array($tab_id_fields);
         for ($j=0; $j<count($tab_id_fields);$j++) {
-            //echo $tab_id_fields[$j]."<br>";
             // ENTITIES
             if ($tab_id_fields[$j] == 'services_chosen' && isset($_REQUEST['services_chosen'])) {
                 $json_txt .= " 'services_chosen' : [";
@@ -298,7 +296,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " (dest_user IN  (:destinataireChosen) or res_id in (select res_id from ".$_SESSION['tablename']['ent_listinstance']." where item_id in (:destinataireChosen) and item_mode = 'dest')) ";
                 $where_request .=" and  ";
                 $arrayPDO = array_merge($arrayPDO, array(":destinataireChosen" => $_REQUEST['destinataire_chosen']));
-                //echo $where_request;exit;
                 $json_txt .= '],';
             }
             // SUBJECT
@@ -825,7 +822,6 @@ if (count($_REQUEST['meta']) > 0) {
             }
             else  // opt indexes check
             {
-                //echo $tab_id_fields[$j].' : '.$_REQUEST[$tab_id_fields[$j]].'<br/>';
                 $tmp = $type->search_checks($indexes, $tab_id_fields[$j], $_REQUEST[$tab_id_fields[$j]] );
                 //$func->show_array($tmp);
                 $json_txt .= $tmp['json_txt'];
@@ -838,14 +834,8 @@ if (count($_REQUEST['meta']) > 0) {
     }
     $json_txt = preg_replace('/,$/', '', $json_txt);
 }
-//echo $where_request;exit;
 $json_txt = preg_replace("/,$/", "", $json_txt);
 $json_txt .= '}';
-/*
-echo $json_txt;
-echo '<br/>'.$where_request;
-exit();
-*/
 
 
 $_SESSION['current_search_query'] = $json_txt;

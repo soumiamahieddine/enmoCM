@@ -32,7 +32,7 @@
 try{
     require_once("core/class/usergroups_controler.php");
 } catch (Exception $e){
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 core_tools::load_lang();
 core_tools::test_admin('admin_users', 'apps');

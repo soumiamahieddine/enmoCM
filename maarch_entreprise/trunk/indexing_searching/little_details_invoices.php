@@ -142,7 +142,7 @@ if (! empty($_SESSION['error']) ) {
             <br />
             <br />
             <?php
-    echo $_SESSION['error'];
+    functions::xecho($_SESSION['error']);
     $_SESSION['error'] = "";
     ?>
             <br />
@@ -274,7 +274,7 @@ if (! empty($_SESSION['error']) ) {
                     <a href="<?php
          echo $_SESSION['config']['businessappurl'];
          ?>index.php?display=true&page=view_resource_controler&id=<?php
-         echo $resId;
+         functions::xecho($resId);
          ?>&dir=indexing_searching" target="_blank"><b><?php
          echo _VIEW_DOC_FULL;?></b> </a>
                                         |
@@ -282,13 +282,13 @@ if (! empty($_SESSION['error']) ) {
 		 <a href="javascript://"  onClick="window.top.location.href='<?php
              echo $_SESSION['config']['businessappurl'];
              ?>index.php?page=details_business&dir=indexing_searching&id=<?php
-             echo $resId;
+             functions::xecho($resId);
              ?>';"><b><?php echo _DETAILS_DOC_FULL;?> </b></a>
 	<?php }else{ ?>
  <a href="javascript://"  onClick="window.top.location.href='<?php
              echo $_SESSION['config']['businessappurl'];
              ?>index.php?page=details&dir=indexing_searching&id=<?php
-             echo $resId;
+             functions::xecho($resId);
              ?>';"><b><?php echo _DETAILS_DOC_FULL;?> </b></a>
 	<?php } ?>
         
@@ -323,41 +323,41 @@ if (! empty($_SESSION['error']) ) {
                         . $folderId . "'>";
                     ?>
                      <img alt="<?php
-                     echo $data[$key]['label'];
+                     functions::xecho($data[$key]['label']);
                      ?>" title="<?php
-                     echo $data[$key]['label'];
+                     functions::xecho($data[$key]['label']);
                      ?>" src="<?php functions::xecho($data[$key]['img']);?>"  /></a>
                      <?php
                 } else {
                     ?>
                     <img alt="<?php functions::xecho($data[$key]['label']);?>" title="<?php
-                    echo $data[$key]['label'];
+                    functions::xecho($data[$key]['label']);
                     ?>" src="<?php functions::xecho($data[$key]['img']);?>" /></a>
                     <?php
                 }
             }
-                echo $data[$key]['label'];?> :</label><?php
+                functions::xecho($data[$key]['label']);?> :</label><?php
             if (! isset($data[$key]['readonly'])
                 || $data[$key]['readonly'] == true
             ) {
                 if ($data[$key]['display'] == 'textinput') {
                     ?>
                     <input type="text" name="<?php functions::xecho($key);?>" id="<?php
-                    echo $key;
+                    functions::xecho($key);
                     ?>" value="<?php
-                    echo $data[$key]['show_value'];
+                    functions::xecho($data[$key]['show_value']);
                     ?>" readonly="readonly" class="readonly" size="40" title="<?php
-                    echo $data[$key]['show_value'];
+                    functions::xecho($data[$key]['show_value']);
                     ?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" />
                     <?php
                 } else {
                      ?>
                      <input type="text" name="<?php functions::xecho($key);?>" id="<?php
-                     echo $key;
+                     functions::xecho($key);
                      ?>" value="<?php
-                     echo $data[$key]['show_value'];
+                     functions::xecho($data[$key]['show_value']);
                      ?>" readonly="readonly" class="readonly" size="40" title="<?php
-                     echo $data[$key]['show_value'];
+                     functions::xecho($data[$key]['show_value']);
                      ?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" />
                      <?php
                 }
@@ -365,29 +365,29 @@ if (! empty($_SESSION['error']) ) {
                 if ($data[$key]['field_type'] == 'textfield') {
                     ?>
                     <input type="text" name="<?php functions::xecho($key);?>" id="<?php
-                    echo $key;
+                    functions::xecho($key);
                     ?>" value="<?php
-                    echo $data[$key]['show_value'];
+                    functions::xecho($data[$key]['show_value']);
                     ?>" size="40"  title="<?php
-                    echo $data[$key]['show_value'];
+                    functions::xecho($data[$key]['show_value']);
                     ?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" />
                     <?php
                 } else if ($data[$key]['field_type'] == 'date') {
                     ?>
                     <input type="text" name="<?php functions::xecho($key);?>" id="<?php
-                    echo $key;
+                    functions::xecho($key);
                     ?>" value="<?php
-                    echo $data[$key]['show_value'];
+                    functions::xecho($data[$key]['show_value']);
                     ?>" size="40"  title="<?php
-                    echo $data[$key]['show_value'];
+                    functions::xecho($data[$key]['show_value']);
                     ?>" alt="<?php
-                    echo $data[$key]['show_value'];
+                    functions::xecho($data[$key]['show_value']);
                     ?>" onclick="showCalender(this);" />
                     <?php
                 } else if ($data[$key]['field_type'] == 'select') {
                     ?>
                     <select id="<?php functions::xecho($key);?>" name="<?php
-                    echo $key;
+                    functions::xecho($key);
                     ?>" <?php
                     if ($key == 'type_id') {
                         echo 'onchange="change_doctype_details'
@@ -405,14 +405,14 @@ if (! empty($_SESSION['error']) ) {
                                 $k ++
                             ) {
                                 ?><option value="" class="doctype_level1"><?php
-                                echo $data[$key]['select'][$k]['label'];
+                                functions::xecho($data[$key]['select'][$k]['label']);
                                 ?></option><?php
                                 for ($j = 0; $j < count(
                                     $data[$key]['select'][$k]['level2']
                                 ); $j ++
                                 ) {
                                     ?><option value="" class="doctype_level2">&nbsp;&nbsp;<?php
-                                    echo $data[$key]['select'][$k]['level2'][$j]['label'];
+                                    functions::xecho($data[$key]['select'][$k]['level2'][$j]['label']);
                                     ?></option><?php
                                     for ($l = 0; $l < count(
                                         $data[$key]['select'][$k]['level2'][$j]['types']
@@ -423,7 +423,7 @@ if (! empty($_SESSION['error']) ) {
                                             echo 'selected="selected"';
                                         }
                                         ?> value="<?php
-                                        echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['id'];
+                                        functions::xecho($data[$key]['select'][$k]['level2'][$j]['types'][$l]['id']);
                                         ?>" >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo
                                         $data[$key]['select'][$k]['level2'][$j]['types'][$l]['label'];
                                         ?></option><?php
@@ -439,22 +439,22 @@ if (! empty($_SESSION['error']) ) {
                                     echo 'selected="selected"';
                                 }
                                 ?> value="<?php
-                                echo $data[$key]['select'][$k]['ID'];
+                                functions::xecho($data[$key]['select'][$k]['ID']);
                                 ?>" ><?php
-                                echo $data[$key]['select'][$k]['LABEL'];
+                                functions::xecho($data[$key]['select'][$k]['LABEL']);
                                 ?></option><?php
                             }
                         }
                     } else {
                         for ($k = 0; $k < count($data[$key]['select']); $k ++) {
                             ?><option value="<?php
-                            echo $data[$key]['select'][$k]['ID'];
+                            functions::xecho($data[$key]['select'][$k]['ID']);
                             ?>" <?php
                             if ($data[$key]['value'] == $data[$key]['select'][$k]['ID']) {
                                 echo 'selected="selected"';
                             }
                             ?>><?php
-                            echo $data[$key]['select'][$k]['LABEL'];
+                            functions::xecho($data[$key]['select'][$k]['LABEL']);
                             ?></option><?php
                         }
                     }
@@ -465,7 +465,7 @@ if (! empty($_SESSION['error']) ) {
                     if ($key == 'project') {
                         //$('market').value='';return false;
                         ?><input type="text" name="project" id="project"  value="<?php
-                        echo $data['project']['show_value'];
+                        functions::xecho($data['project']['show_value']);
                         ?>" /><div id="show_project" class="autocomplete"></div><script type="text/javascript">launch_autocompleter_folders('<?php
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');</script>
@@ -496,7 +496,7 @@ if (! empty($_SESSION['error']) ) {
             if ($indexes[$key]['type_field'] == 'input') {
                 ?>
                 <input type="text" name="<?php functions::xecho($key);?>" id="<?php
-                echo $key;
+                functions::xecho($key);
                 ?>" value="<?php functions::xecho($indexes[$key]['show_value']);?>" <?php
                 if (! isset($indexes[$key]['readonly'])
                     || $indexes[$key]['readonly'] == true
@@ -506,7 +506,7 @@ if (! empty($_SESSION['error']) ) {
                     echo 'onclick="showCalender(this);"';
                 }
                 ?> size="40"  title="<?php
-                echo $indexes[$key]['show_value'];
+                functions::xecho($indexes[$key]['show_value']);
                 ?>" alt="<?php functions::xecho($indexes[$key]['show_value']);?>"   />
                 <?php
             } else {
@@ -517,13 +517,13 @@ if (! empty($_SESSION['error']) ) {
                 for ($i = 0; $i < count($indexes[$key]['values']); $i ++) {
                     ?>
                     <option value="<?php
-                    echo $indexes[$key]['values'][$i]['id'];
+                    functions::xecho($indexes[$key]['values'][$i]['id']);
                     ?>" <?php
                     if ($indexes[$key]['values'][$i]['id'] == $indexes[$key]['value']) {
                         echo 'selected="selected"';
                     }
                     ?>><?php
-                    echo $indexes[$key]['values'][$i]['label'];
+                    functions::xecho($indexes[$key]['values'][$i]['label']);
                     ?></option><?php
                 }
                 ?>

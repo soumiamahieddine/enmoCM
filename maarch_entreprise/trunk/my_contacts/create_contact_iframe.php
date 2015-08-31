@@ -39,11 +39,11 @@ require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 $contact = new contacts_v2();
 
 echo '<div class="error" id="main_error">';
-echo $_SESSION['error'];
+functions::xecho($_SESSION['error']);
 echo '</div>';
 
 echo '<div class="info" id="main_info">';
-echo $_SESSION['info'];
+functions::xecho($_SESSION['info']);
 echo '</div>';
 
 $_SESSION['error'] = '';
