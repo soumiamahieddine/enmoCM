@@ -58,7 +58,7 @@ try{
         require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
     }
 } catch (Exception $e) {
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 if (isset($_REQUEST['submit'])) {

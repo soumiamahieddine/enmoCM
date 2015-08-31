@@ -65,22 +65,22 @@ if($mode == "list"){
                 <input type="hidden" name="display" value="true" />
                 <input type="hidden" name="module" value="life_cycle" />
                 <input type="hidden" name="page" value="lc_policies_management_controler" />
-                <input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />
-                <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])) echo $_REQUEST['order'];?>" />
-                <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])) echo $_REQUEST['order_field'];?>" />
-                <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])) echo $_REQUEST['what'];?>" />
-                <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])) echo $_REQUEST['start'];?>" />
+                <input type="hidden" name="mode" id="mode" value="<?php functions::xecho($mode);?>" />
+                <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])) functions::xecho($_REQUEST['order']);?>" />
+                <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])) functions::xecho($_REQUEST['order_field']);?>" />
+                <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])) functions::xecho($_REQUEST['what']);?>" />
+                <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])) functions::xecho($_REQUEST['start']);?>" />
                 <p>
                     <label for="id"><?php echo _LC_POLICY_ID;?> : </label>
-                    <input name="id" type="text"  id="id" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_id'])) echo $func->show_str($_SESSION['m_admin']['lc_policies']['policy_id']);?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+                    <input name="id" type="text"  id="id" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_id'])) functions::xecho($func->show_str($_SESSION['m_admin']['lc_policies']['policy_id']));?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
                 </p>
                 <p>
                     <label for="policy_name"><?php echo _LC_POLICY_NAME;?> : </label>
-                    <input name="policy_name" type="text"  id="policy_name" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_name'])) echo $func->show_str($_SESSION['m_admin']['lc_policies']['policy_name']);?>" />
+                    <input name="policy_name" type="text"  id="policy_name" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_name'])) functions::xecho($func->show_str($_SESSION['m_admin']['lc_policies']['policy_name']));?>" />
                 </p>
                 <p>
                     <label for="policy_desc"><?php echo _POLICY_DESC;?> : </label>
-                    <textarea name="policy_desc" type="text"  id="policy_desc" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_desc'])) echo $func->show_str($_SESSION['m_admin']['lc_policies']['policy_desc']);?>" /><?php if(isset($_SESSION['m_admin']['lc_policies']['policy_desc'])) echo $_SESSION['m_admin']['lc_policies']['policy_desc'] ?></textarea>
+                    <textarea name="policy_desc" type="text"  id="policy_desc" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_desc'])) functions::xecho($func->show_str($_SESSION['m_admin']['lc_policies']['policy_desc']));?>" /><?php if(isset($_SESSION['m_admin']['lc_policies']['policy_desc'])) echo $_SESSION['m_admin']['lc_policies']['policy_desc'] ?></textarea>
                 </p>
                 <p class="buttons">
                     <?php

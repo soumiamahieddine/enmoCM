@@ -62,7 +62,7 @@ try {
             ."class_list_show.php");
     }
 } catch (Exception $e) {
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 $lcPoliciesControler = new lc_policies_controler();

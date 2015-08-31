@@ -41,7 +41,7 @@ try {
     require_once ("core/class/ObjectControlerAbstract.php");
     require_once ("core/class/ObjectControlerIF.php");
 } catch (Exception $e) {
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 /**

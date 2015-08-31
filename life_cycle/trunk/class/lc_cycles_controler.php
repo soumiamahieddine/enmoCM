@@ -43,7 +43,7 @@ try {
     require_once ("core/class/ObjectControlerIF.php");
     require_once ("core/class/SecurityControler.php");
 } catch (Exception $e) {
-    echo $e->getMessage() . ' // ';
+    functions::xecho($e->getMessage()) . ' // ';
 }
 
 /**

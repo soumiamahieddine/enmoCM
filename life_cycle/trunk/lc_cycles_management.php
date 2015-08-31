@@ -53,11 +53,11 @@ if ($mode == "list") {
                 <input type="hidden" name="display" value="true" />
                 <input type="hidden" name="module" value="life_cycle" />
                 <input type="hidden" name="page" value="lc_cycles_management_controler" />
-                <input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />
-                <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])) echo $_REQUEST['order'];?>" />
-                <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])) echo $_REQUEST['order_field'];?>" />
-                <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])) echo $_REQUEST['what'];?>" />
-                <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])) echo $_REQUEST['start'];?>" />
+                <input type="hidden" name="mode" id="mode" value="<?php functions::xecho($mode);?>" />
+                <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])) functions::xecho($_REQUEST['order']);?>" />
+                <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])) functions::xecho($_REQUEST['order_field']);?>" />
+                <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])) functions::xecho($_REQUEST['what']);?>" />
+                <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])) functions::xecho($_REQUEST['start']);?>" />
                 <?php
                 if ($mode == "up") {
                     echo '<p><a href="' . $_SESSION['config']['businessappurl']
@@ -68,7 +68,7 @@ if ($mode == "list") {
                     ?>
                     <p>
                         <label for="policy_id"><?php echo _POLICY_ID;?> : </label>
-                        <input name="policy_id" type="text"  id="policy_id" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['policy_id'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['policy_id']);?>" readonly='readonly' class='readonly'/>
+                        <input name="policy_id" type="text"  id="policy_id" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['policy_id'])) functions::xecho($func->show_str($_SESSION['m_admin']['lc_cycles']['policy_id']));?>" readonly='readonly' class='readonly'/>
                     </p>
                     <?php
                 } else {
@@ -80,7 +80,7 @@ if ($mode == "list") {
                             <?php
                             for ($cptPolicies=0;$cptPolicies<count($policiesArray);$cptPolicies++) {
                                 ?>
-                                <option value="<?php functions::xecho($policiesArray[$cptPolicies]);?>" <?php if (isset($_SESSION['m_admin']['lc_cycles']['policy_id']) && $_SESSION['m_admin']['lc_cycles']['policy_id'] == $policiesArray[$cptPolicies]) { echo 'selected="selected"';}?>><?php if (isset($policiesArray[$cptPolicies])) echo $policiesArray[$cptPolicies];?></option>
+                                <option value="<?php functions::xecho($policiesArray[$cptPolicies]);?>" <?php if (isset($_SESSION['m_admin']['lc_cycles']['policy_id']) && $_SESSION['m_admin']['lc_cycles']['policy_id'] == $policiesArray[$cptPolicies]) { echo 'selected="selected"';}?>><?php if (isset($policiesArray[$cptPolicies])) functions::xecho($policiesArray[$cptPolicies]);?></option>
                                 <?php
                             }
                             ?>
@@ -91,29 +91,25 @@ if ($mode == "list") {
                 ?>
                 <p>
                     <label for="id"><?php echo _CYCLE_ID;?> : </label>
-                    <input name="id" type="text"  id="id" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['cycle_id'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['cycle_id']);?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+                    <input name="id" type="text"  id="id" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['cycle_id'])) functions::xecho($func->show_str($_SESSION['m_admin']['lc_cycles']['cycle_id']));?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
                 </p>
                 <p>
                     <label for="cycle_desc"><?php echo _CYCLE_DESC;?> : </label>
-                    <textarea name="cycle_desc" type="text"  id="cycle_desc" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['cycle_desc'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['cycle_desc']);?>" /><?php if (isset($_SESSION['m_admin']['lc_cycles']['cycle_desc'])) echo $_SESSION['m_admin']['lc_cycles']['cycle_desc'] ?></textarea>
+                    <textarea name="cycle_desc" type="text"  id="cycle_desc" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['cycle_desc'])) functions::xecho($func->show_str($_SESSION['m_admin']['lc_cycles']['cycle_desc']));?>" /><?php if (isset($_SESSION['m_admin']['lc_cycles']['cycle_desc'])) echo $_SESSION['m_admin']['lc_cycles']['cycle_desc'] ?></textarea>
                 </p>
                 <p>
                     <label for="sequence_number"><?php echo _SEQUENCE_NUMBER;?> : </label>
-                    <input name="sequence_number" type="text"  id="sequence_number" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['sequence_number'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['sequence_number']);?>" />
+                    <input name="sequence_number" type="text"  id="sequence_number" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['sequence_number'])) functions::xecho($func->show_str($_SESSION['m_admin']['lc_cycles']['sequence_number']));?>" />
                 </p>
                 <p>
                     <label for="where_clause"><?php echo _WHERE_CLAUSE;?> : </label>
-                    <textarea name="where_clause" type="text"  id="where_clause" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['where_clause'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['where_clause']);?>" /><?php if (isset($_SESSION['m_admin']['lc_cycles']['where_clause'])) echo $_SESSION['m_admin']['lc_cycles']['where_clause'] ?></textarea>
+                    <textarea name="where_clause" type="text"  id="where_clause" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['where_clause'])) functions::xecho($func->show_str($_SESSION['m_admin']['lc_cycles']['where_clause']));?>" /><?php if (isset($_SESSION['m_admin']['lc_cycles']['where_clause'])) echo $_SESSION['m_admin']['lc_cycles']['where_clause'] ?></textarea>
                 </p>
                 <p>
                     <label for="break_key"><?php echo _BREAK_KEY;?> : </label>
-                    <input name="break_key" type="text"  id="break_key" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['break_key'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['break_key']);?>" />
+                    <input name="break_key" type="text"  id="break_key" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['break_key'])) functions::xecho($func->show_str($_SESSION['m_admin']['lc_cycles']['break_key']));?>" />
                 </p>
                 <input type="hidden" name="validation_mode" value="AUTO" />
-                <!--<p>
-                    <label for="validation_mode"><?php echo _VALIDATION_MODE;?> : </label>
-                    <input name="validation_mode" type="text"  id="validation_mode" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['validation_mode'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['validation_mode']);?>" />
-                </p>-->
                 <p class="buttons">
                     <?php
                     if($mode == "up"){
