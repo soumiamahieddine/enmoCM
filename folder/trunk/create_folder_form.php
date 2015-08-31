@@ -91,7 +91,7 @@ echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
                 <?php
 for ($i = 0; $i < count($foldertypes); $i ++) {
     ?><option value="<?php
-    echo $foldertypes[$i]['id'];
+    functions::xecho($foldertypes[$i]['id']);
     ?>" <?php
     if (isset($_SESSION['m_admin']['folder']['foldertype_id'])
         && $_SESSION['m_admin']['folder']['foldertype_id'] == $foldertypes[$i]['id']
@@ -113,7 +113,7 @@ for ($i = 0; $i < count($foldertypes); $i ++) {
             <label for="folder_id"><?php echo _ID;?></label>
             <input name="folder_id" id="folder_id" value="<?php
 if (isset($_SESSION['m_admin']['folder']['folder_id'])) {
-    echo $_SESSION['m_admin']['folder']['folder_id'];
+    functions::xecho($_SESSION['m_admin']['folder']['folder_id']);
 }
 ?>" /> <i class="red_asterisk fa fa-asterisk mCyellow"></i>
         </p>

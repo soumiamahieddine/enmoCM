@@ -621,7 +621,6 @@ class folder extends request
 				{
 					$html_tab .= "<tr><td><b>". functions::show_string($res->description)."</b></td><td>";
 					$html_tab .= "<b>X</b>";
-					//echo $waited_types[$i]." X\n";
 				}
 				else
 				{

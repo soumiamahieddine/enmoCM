@@ -194,22 +194,22 @@ class foldertype
             ?>
                <input type="hidden" name="order" id="order" value="<?php 
             if (isset($_REQUEST['order'])) {
-            	echo $_REQUEST['order'];
+            	functions::xecho($_REQUEST['order']);
             }
             ?>" />
                <input type="hidden" name="order_field" id="order_field" value="<?php 
             if (isset($_REQUEST['order_field'])) {
-            	echo $_REQUEST['order_field'];
+            	functions::xecho($_REQUEST['order_field']);
         	}
         	?>" />
                <input type="hidden" name="what" id="what" value="<?php 
             if (isset($_REQUEST['what'])) {
-            	echo $_REQUEST['what'];
+            	functions::xecho($_REQUEST['what']);
         	}
         	?>" />
                <input type="hidden" name="start" id="start" value="<?php 
             if (isset($_REQUEST['start'])) {
-            	echo $_REQUEST['start'];
+            	functions::xecho($_REQUEST['start']);
         	}
         	?>" />
             <?php
@@ -218,7 +218,7 @@ class foldertype
                 <p style="width: 400px;margin: auto;">
                 	<label><?php echo _ID;?> : </label>
                     <input name="foldertypeId" id="foldertypeId" type="text" value="<?php  
-                echo $func->show_str(
+                functions::xecho(
                 	$_SESSION['m_admin']['foldertype']['foldertypeId']
                 ); 
                 ?>" <?php  
@@ -227,7 +227,7 @@ class foldertype
                 } 
                 ?> />
                     <input type="hidden"  name="id" value="<?php functions::xecho($id);?>" />
-                    <input type="hidden"  name="mode" value="<?php echo $mode;?>" />
+                    <input type="hidden"  name="mode" value="<?php functions::xecho($mode);?>" />
                 </p>
                 <?php
             }
@@ -238,14 +238,14 @@ class foldertype
                     <p style="width: 400px;margin: auto;">
                     	<label><?php echo _COLLECTION;?> : </label>
                         <input name="collection_show" id="collection_show" type="text" value="<?php  
-                    echo $func->show_str(
+                    functions::xecho(
                     	$sec->retrieve_coll_label_from_coll_id(
                     		$_SESSION['m_admin']['foldertype']['COLL_ID']
                     	)
                     ); 
                     ?>" readonly="readonly" class="readonly" />
                     	<input name="collection" id="collection" type="hidden" value="<?php  
-                    echo $_SESSION['m_admin']['foldertype']['COLL_ID']; 
+                    functions::xecho($_SESSION['m_admin']['foldertype']['COLL_ID']);
                     ?>" />
                      </p>
                      <p align="center">
@@ -265,13 +265,13 @@ class foldertype
                     for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
                     	?>
                         <option value="<?php  
-                        echo $_SESSION['collections'][$i]['id'];
+                        functions::xecho($_SESSION['collections'][$i]['id']);
                         ?>" <?php  
                         if ($_SESSION['m_admin']['foldertype']['COLL_ID'] == $_SESSION['collections'][$i]['id']) { 
                         	echo 'selected="selected"';
                         }
                         ?> ><?php  
-                        echo $_SESSION['collections'][$i]['label'];
+                        functions::xecho($_SESSION['collections'][$i]['label']);
                         ?></option>
                         <?php
                     }
@@ -290,13 +290,13 @@ class foldertype
                 for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
                 	?>
                     <option value="<?php  
-                    echo $_SESSION['collections'][$i]['id'];
+                    functions::xecho($_SESSION['collections'][$i]['id']);
                     ?>" <?php  
                     if ($_SESSION['m_admin']['foldertype']['COLL_ID'] == $_SESSION['collections'][$i]['id']) { 
                     	echo 'selected="selected"';
                     }
                     ?> ><?php  
-                    echo $_SESSION['collections'][$i]['label'];
+                    functions::xecho($_SESSION['collections'][$i]['label']);
                     ?></option>
                     <?php
                 }
@@ -315,15 +315,6 @@ class foldertype
                 <textarea  cols="30" rows="4"  name="comment"  id="comment" ><?php functions::xecho($_SESSION['m_admin']['foldertype']['comment']); ?></textarea>
             </p>
             <div id="opt_index"></div>
-			<!-- <div align="center">
-            	<p>
-            		<h3><?php echo _MANDATORY_DOCTYPES_COMP;?> : </h3>
-            	</p>
-            	<br/>
-                <iframe name="doctypes_frame" src="<?php  
-                echo $_SESSION['config']['businessappurl'];
-                ?>index.php?display=true&module=folder&page=choose_doctypes" frameborder="0" width="900px" height="250px" scrolling="no"></iframe>
-                    </div> -->
                 <p class="buttons" style="text-align:center;">
                 	<input type="submit" name="Submit" value="<?php echo _VALIDATE;?>" class="button" />
                     <input type="button" name="cancel" value="<?php echo _CANCEL;?>" class="button"  onclick="javascript:window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=foldertypes&amp;module=folder';"/>

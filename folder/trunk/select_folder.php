@@ -55,14 +55,13 @@ elseif( isset($_REQUEST['nom']) and !empty($_REQUEST['nom']))
 	$_SESSION['res_folder'] = "nom";
 	$_SESSION['search_res_folder'] = $_REQUEST['nom'];
 }
-//echo $_SESSION['stringSearch'];
+
 $core_tools->load_html();
 //here we building the header
 $core_tools->load_header(_SELECT_FOLDER_TITLE, true, false);
 $time = $core_tools->get_session_time_expire();
 if($_SESSION['origin'] == "qualify")
 {
-	//echo $_SESSION['res_id_to_qualify'];
 	$tab = array();
 	$select = array();
 	$col ="";

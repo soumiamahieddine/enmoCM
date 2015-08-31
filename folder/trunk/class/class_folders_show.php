@@ -41,7 +41,6 @@ class folders_show extends functions
 		$third_level=0;
 
 		echo "<div  >";
-		//echo $_GET['second_level'];
 		for ($i=0;$i<count($result);$i++)
 		{
 			foreach(array_keys($result[$i]) as $value)
@@ -113,7 +112,6 @@ class folders_show extends functions
 		$i=0;
 		while ($value = $stmt->fetchObject())
 		{
-			//echo $value->type_description."<br/>";
 			$tab_result[$i]['type_id'] = $value->type_id;
 
 			$tab_result[$i]['type_description'] = functions::show_string($value->type_description);
@@ -252,7 +250,7 @@ class folders_show extends functions
 						}
 						else
 						{
-							echo $folder_array['index'][$i]['label']." : ";
+							functions::xecho($folder_array['index'][$i]['label'])." : ";
 						}
 						?>
                     </span>
@@ -318,7 +316,7 @@ class folders_show extends functions
 						}
 						else
 						{
-							echo $folder_array['index'][$i]['value'];
+							functions::xecho($folder_array['index'][$i]['value']);
 						}
 						?> "
 						<?php

@@ -106,7 +106,6 @@ if($_POST['FOLDER_TREE']){
 	$autofolders = array();
 
 	foreach($xml->tree as $tree) {
-		//echo $tree->id;
 		$autofolders[] = array(
 			'id' => $tree->id,
 			'desc' => $tree->desc,

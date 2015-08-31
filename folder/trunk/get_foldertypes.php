@@ -35,7 +35,8 @@ $stmt = $db->query("SELECT foldertype_id,foldertype_label FROM ".$_SESSION['tabl
 $content = '<option value="">'._CHOOSE_FOLDERTYPE.'</option>';
 while($res = $stmt->fetchObject())
 {
-	$content .= '<option value="'.$res->foldertype_id.'">'.$res->foldertype_label.'</option>';
+	$content .= '<option value="'.functions::xecho($res->foldertype_id)
+		.'">'.functions::xecho($res->foldertype_label).'</option>';
 }
 
 echo $content;

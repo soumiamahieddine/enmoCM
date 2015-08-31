@@ -96,7 +96,7 @@ if (isset($_POST['delete_folder'])) {
         <i class="fa fa-info-circle fa-2x"></i> <?php
             echo _DETAILS . " : " . _FOLDER . ' "';
             ?><?php
-            echo $folder_id . '"';
+            functions::xecho($folder_id) . '"';
             ?> 
     </h1>
     <div id="inner_content" class="clearfix">

@@ -125,7 +125,7 @@ if ($chooseColl) {
                     <?php
                     foreach (array_keys($_SESSION['user']['security']) as $coll) {
                         ?><option value="<?php functions::xecho($coll);?>"><?php
-                        echo $_SESSION['user']['security'][$coll]['DOC']['label_coll'];
+                        functions::xecho($_SESSION['user']['security'][$coll]['DOC']['label_coll']);
                         ?></option><?php
                     }
                     ?>
@@ -142,7 +142,7 @@ if ($chooseColl) {
     <input type="hidden" name="coll_id" id="coll_id" 
         value="<?php
             if (isset($_SESSION['user']['security'][0]['coll_id'])) {
-                echo $_SESSION['user']['security'][0]['coll_id'];
+                functions::xecho($_SESSION['user']['security'][0]['coll_id']);
             }
         ?>" />
 <?php
@@ -181,7 +181,7 @@ if ($chooseColl) {
                 <td width="24%">
                     <input type="text" name="folder_id" id="folder_id" value="<?php
                         if (isset($_SESSION['folder_search']['folder_id'])) {
-                            echo $_SESSION['folder_search']['folder_id'];
+                            functions::xecho($_SESSION['folder_search']['folder_id']);
                         }
                         ?>" />
                     <div id="foldersListById" class="autocomplete"></div>
@@ -201,7 +201,7 @@ if ($chooseColl) {
                     <input name="creation_date_start" type="text" id="creation_date_start" 
                     value="<?php
                     if (isset($_SESSION['folder_search']['creation_date_start'])) {
-                        echo $_SESSION['folder_search']['creation_date_start'] ;
+                        functions::xecho($_SESSION['folder_search']['creation_date_start']);
                     }
                     ?>" onclick='showCalender(this)'/>
                 </td>
@@ -213,7 +213,7 @@ if ($chooseColl) {
                     <input name="creation_date_end" type="text" id="creation_date_end" 
                     value="<?php
                     if (isset($_SESSION['folder_search']['creation_date_end'])) {
-                        echo $_SESSION['folder_search']['creation_date_end'] ;
+                        functions::xecho($_SESSION['folder_search']['creation_date_end']);
                     }
                     ?>" onclick='showCalender(this)'/>
                 </td>
@@ -224,16 +224,9 @@ if ($chooseColl) {
                     <input name="folder_name" type="text" id="folder_name" 
                     value="<?php
                     if (isset($_SESSION['folder_search']['folder_name'])) {
-                        echo $_SESSION['folder_search']['folder_name'];
+                        functions::xecho($_SESSION['folder_search']['folder_name']);
                     }
                     ?>" />
-                    <!--<div id="folderListByName" class="autocomplete"></div>
-                    <script type="text/javascript">
-                        initList('folder_name', 
-                            'folderListByName', 
-                            '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=folders_list_by_name', 
-                            'folder', '2');
-                    </script>-->
                 </td>
             </tr>
         </table>

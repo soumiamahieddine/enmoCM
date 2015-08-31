@@ -50,7 +50,6 @@ $_SESSION['error_page'] = '';
 //Query 
     $tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype']);
     // $request->show();
-    // echo $_SESSION['last_select_query'];
 //Result Array
     if (count($tab) > 0)
     {

@@ -184,7 +184,6 @@ if (empty($collIdTest)) {
 									}
 								}
 							}
-							//echo $res_id_list;
 							?>
 							<div onclick="change2(<?php functions::xecho($level2);?>)" id="h2<?php functions::xecho($level2);?>" class="categorie">
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php
