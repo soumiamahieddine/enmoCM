@@ -164,7 +164,7 @@ if (
                 $query = "select res_id from " 
                     . $_SESSION['user']['baskets'][$ind_bask]['view']
                     . " where (" . $basketQuery . ") and res_id = ?";
-                //echo $query;exit;
+                
                 $db = new Database();
                 $stmt = $db->query($query,array($_REQUEST['resid']));
                 if ($stmt->rowCount() < 1) {

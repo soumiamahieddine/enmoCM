@@ -37,7 +37,7 @@ try {
 	require_once 'modules/basket/class/Basket.php';
 	require_once 'modules/basket/basket_tables.php';
 } catch (Exception $e){
-	echo $e->getMessage().' // ';
+	functions::xecho($e->getMessage()).' // ';
 }
 
 /**

@@ -111,7 +111,6 @@ class admin_basket extends Database
     {
         $cpt = count($_SESSION['basket_page']);
         for ($i=0;$i<$cpt;$i++) {
-            //echo $_SESSION['basket_page'][$i]['ID'];
             if ($basketPage == $_SESSION['basket_page'][$i]['ID']) {
                 for ($j=0;$j<count($_SESSION['basket_page'][$i]['COLLECTIONS']);$j++) {
                     if ($_SESSION['basket_page'][$i]['COLLECTIONS'][$j] == $collId 
@@ -236,7 +235,7 @@ class admin_basket extends Database
                         <?php 
                         for($i=0; $i<count($_SESSION['collections']);$i++) {
                             ?>
-                            <option value="<?php functions::xecho($_SESSION['collections'][$i]['id']);?>" <?php if(count($_SESSION['collections']) == 1 || $_SESSION['collections'][$i]['id'] == $_SESSION['m_admin']['basket']['coll_id']) { echo 'selected="selected"';}?>><?php echo $_SESSION['collections'][$i]['label'];?></option>
+                            <option value="<?php functions::xecho($_SESSION['collections'][$i]['id']);?>" <?php if(count($_SESSION['collections']) == 1 || $_SESSION['collections'][$i]['id'] == $_SESSION['m_admin']['basket']['coll_id']) { echo 'selected="selected"';}?>><?php functions::xecho($_SESSION['collections'][$i]['label']);?></option>
                             <?php
                         }
                         ?>
