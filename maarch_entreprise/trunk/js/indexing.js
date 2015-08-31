@@ -235,11 +235,11 @@ function checkRealLimitDate(arg) {
         if ($('process_limit_date')) {
             process_limit_date = $('process_limit_date').value;
             var date1 = new Date();
-            date1.setFullYear(process_limit_date.substr(6,4));
-            date1.setMonth(process_limit_date.substr(3,2));
-            date1.setDate(process_limit_date.substr(0,2));
-            date1.setHours(0);
-            date1.setMinutes(0);
+            date1.setFullYear(process_limit_date.substr(6,4),process_limit_date.substr(3,2)-1,process_limit_date.substr(0,2));
+            //date1.setMonth(process_limit_date.substr(3,2)-1,process_limit_date.substr(0,2));
+            // date1.setDate(process_limit_date.substr(0,2));
+            // date1.setHours(0);
+            // date1.setMinutes(0);
 
             var d1_process_limit_date=date1.getTime();
         }
@@ -247,11 +247,11 @@ function checkRealLimitDate(arg) {
         if($('admission_date')) {
             admission_date = $('admission_date').value;
             var date2 = new Date();
-            date2.setFullYear(admission_date.substr(6,4));
-            date2.setMonth(admission_date.substr(3,2));
-            date2.setDate(admission_date.substr(0,2));
-            date2.setHours(0);
-            date2.setMinutes(0);
+            date2.setFullYear(admission_date.substr(6,4),admission_date.substr(3,2)-1,admission_date.substr(0,2));
+        //date2.setMonth(admission_date.substr(3,2)-1,admission_date.substr(0,2));
+        // date2.setDate(admission_date.substr(0,2));
+        // date2.setHours(0);
+        // date2.setMinutes(0);
             var d2_admission_date=date2.getTime();
         }
 
