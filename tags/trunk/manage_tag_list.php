@@ -84,18 +84,18 @@ if ($mode == 'list') {
             <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="tags" />
             <input type="hidden" name="page" value="manage_tag_list_controler" />
-            <input type="hidden" name="mode" value="<?php echo $mode;?>" />
+            <input type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
 
             <input type="hidden" name="tag_label" id="tag_label" value="<?php functions::xecho($_SESSION['m_admin']['tag']['tag_label']);?>" />
 
             <input type="hidden" name="order" id="order" value="<?php
-                echo $_REQUEST['order'];?>" />
+                functions::xecho($_REQUEST['order']);?>" />
             <input type="hidden" name="order_field" id="order_field" value="<?php
-                echo $_REQUEST['order_field'];?>" />
+                functions::xecho($_REQUEST['order_field']);?>" />
             <input type="hidden" name="what" id="what" value="<?php
-                echo $_REQUEST['what'];?>" />
+                functions::xecho($_REQUEST['what']);?>" />
             <input type="hidden" name="start" id="start" value="<?php
-                echo $_REQUEST['start'];?>" />
+                functions::xecho($_REQUEST['start']);?>" />
 
             <p>
                 <label for="label"><?php echo _NAME_TAGS;?> : </label>
@@ -127,7 +127,7 @@ if ($mode == 'list') {
                     for ($i = 0; $i < count($arrayColl); $i ++) {
                         ?>
                         <option  value="<?php
-                        echo $arrayColl[$i]['id'];
+                        functions::xecho($arrayColl[$i]['id']);
                         ?>" <?php
                         if (isset($_SESSION['m_admin']['doctypes']['COLL_ID'])
                             && $_SESSION['m_admin']['doctypes']['COLL_ID'] == $arrayColl[$i]['id']

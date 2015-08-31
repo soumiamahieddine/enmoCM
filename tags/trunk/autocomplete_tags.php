@@ -72,7 +72,7 @@ while($result=$stmt->fetchObject())
 		$list .= "<li>...</li>\n";
 		break;
 	}
-	$list .= "<li>".functions::show_string($result->label)."</li>\n";
+	$list .= "<li>".functions::xecho($result->label)."</li>\n";
 }
 $list .= "</ul>";
 echo $list;

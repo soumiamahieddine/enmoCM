@@ -59,7 +59,7 @@ try{
                      . 'class' . DIRECTORY_SEPARATOR . 'class_list_show.php' ;
     }
 } catch (Exception $e) {
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 //Get list of aff availables actions

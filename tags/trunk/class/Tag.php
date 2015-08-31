@@ -35,7 +35,7 @@
 try {
 	require_once("core/class/BaseObject.php");
 } catch (Exception $e){
-	echo $e->getMessage().' // ';
+	functions::xecho($e->getMessage()).' // ';
 }
 
 /**

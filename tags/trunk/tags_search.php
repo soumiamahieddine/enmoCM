@@ -36,7 +36,7 @@ try{
     require_once 'core/class/class_request.php' ;
     require_once 'modules/tags/class/TagControler.php' ;
 } catch (Exception $e) {
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 include_once 'modules/tags/route.php';

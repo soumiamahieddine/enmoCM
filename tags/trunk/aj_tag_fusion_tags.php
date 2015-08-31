@@ -35,7 +35,7 @@ try{
    	require_once 'modules/tags/class/TagControler.php' ;
 	require_once 'modules/tags/tags_tables_definition.php';
 } catch (Exception $e) {
-    echo $e->getMessage();
+    functions::xecho($e->getMessage());
 }
 
 
