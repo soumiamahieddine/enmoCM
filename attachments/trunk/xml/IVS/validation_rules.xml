@@ -5,7 +5,7 @@
 	<validationRule name="attachments_content" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="fromDetail" type="identifier" />
-		<parameter name="url" type="url" />
+		<parameter name="url" type="string" />
 		<parameter name="id" type="integer" />
 		<parameter name="relation" type="identifier" />
 		<parameter name="add" type="string" />
