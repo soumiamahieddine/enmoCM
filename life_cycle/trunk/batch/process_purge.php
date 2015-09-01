@@ -68,7 +68,13 @@ try {
 
 /******************************************************************************/
 /* beginning */
-$GLOBALS['state'] = "SELECT_RES";
+
+if ($GLOBALS['PurgeMode'] == "contacts") {
+    $GLOBALS['state'] = "DELETE_CONTACTS_ON_DB";
+} else {
+    $GLOBALS['state'] = "SELECT_RES";
+}
+
 while ($GLOBALS['state'] <> "END") {
     if (isset($GLOBALS['logger'])) {
         $GLOBALS['logger']->write("STATE:" . $GLOBALS['state'], 'DEBUG');
@@ -123,9 +129,16 @@ while ($GLOBALS['state'] <> "END") {
                     );
                 }
             } else {
-                Bt_exitBatch(111, 'no resource found for collection:'
-                    . $GLOBALS['collection'] . ', where clause:' 
-                    . str_replace("'", "''", $GLOBALS['whereClause']));
+                if ($GLOBALS['PurgeMode'] == 'both') {
+                    $GLOBALS['logger']->write('no resource found for collection:'
+                        . $GLOBALS['collection'] . ', where clause:' 
+                        . str_replace("'", "''", $GLOBALS['whereClause']), 'INFO');
+                    $state = 'DELETE_CONTACTS_ON_DB';
+                } else {
+                    Bt_exitBatch(111, 'no resource found for collection:'
+                        . $GLOBALS['collection'] . ', where clause:' 
+                        . str_replace("'", "''", $GLOBALS['whereClause']));                    
+                }
                 break;
             }
             //var_dump($resourcesArray);
@@ -424,8 +437,73 @@ while ($GLOBALS['state'] <> "END") {
 
             fclose($DeletedFiles);
 
-            ###### Clean contacts #########
+            $chemin = $GLOBALS['exportFolder'].'DocumentsSupprimesParEntites-'
+                . $repertoiredujour . '.csv';
+
+            $fichier_csv = fopen($chemin, 'w+');
+
+            fprintf($fichier_csv, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            foreach ($arrayEntityId as $key => $value) {
+                if ($key > 0) {
+                    $subEntities_tmp = array();
+                    $subEntities = array();
+                    $subEntities_tmp = getEntityChildrenTree($subEntities_tmp, $value);
+                    for ($iSubEntities=0;$iSubEntities<count($subEntities_tmp);$iSubEntities++) {
+                        if (in_array($subEntities_tmp[$iSubEntities]['ID'], $arrayEntityId)) {
+                            array_push($subEntities, $subEntities_tmp[$iSubEntities]['ID']);
+                        }
+                    }
+                    array_push($subEntities, $value);
+                    $nbDocsSubEntities = 0;
+                    foreach ($subEntities as $value2) {
+                        $SubEntitiesKeys = array_search($value2, $arrayEntityId);
+                        $nbDocsSubEntities = $nbDocsSubEntities + $arrayEntityNbDocs[$SubEntitiesKeys];
+                    }
+                    $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id = ?";
+                    $stmt = Bt_doQuery($GLOBALS['db2'], $queryEntityLabel, array($value));
+                    $EntityDB = $stmt->fetchObject();
+                    fputcsv(
+                        $fichier_csv, 
+                        array(
+                            $EntityDB->entity_label, 
+                            $arrayEntityNbDocs[$key], 
+                            $nbDocsSubEntities
+                        ), 
+                        $delimiteur
+                    );
+                } else {
+                    fputcsv(
+                        $fichier_csv, 
+                        array(
+                            $value, 
+                            $arrayEntityNbDocs[$key], 
+                            $arraySubEntitiesNbDocs[$key]
+                        ), 
+                        $delimiteur
+                    );
+                }
+                
+            }
+            fclose($fichier_csv);
+
+            if ($GLOBALS['PurgeMode'] == "both") {
+                $state = 'DELETE_CONTACTS_ON_DB';
+            } else {
+                $state = 'END';
+            }
+            
+            break;
+
+        /**********************************************************************/
+        /*                          DELETE_CONTACTS_ON_DB                     */
+        /*                                                                    */
+        /**********************************************************************/
+        case "DELETE_CONTACTS_ON_DB" :
+
             if ($GLOBALS['CleanContactsMoral'] == "true" || $GLOBALS['CleanContactsNonMoral'] == "true") {
+
+                $GLOBALS['logger']->write('Clean contacts case', 'INFO');
 
                 if ($GLOBALS['CleanContactsMoral'] == "true"){
                     $GLOBALS['logger']->write('Clean Moral Contacts', 'INFO');
@@ -476,58 +554,11 @@ while ($GLOBALS['state'] <> "END") {
 
             }
 
-            $chemin = $GLOBALS['exportFolder'].'DocumentsSupprimesParEntites-'
-                . $repertoiredujour . '.csv';
-
-            $fichier_csv = fopen($chemin, 'w+');
-
-            fprintf($fichier_csv, chr(0xEF).chr(0xBB).chr(0xBF));
-
-            foreach ($arrayEntityId as $key => $value) {
-                if ($key > 0) {
-                    $subEntities_tmp = array();
-                    $subEntities = array();
-                    $subEntities_tmp = getEntityChildrenTree($subEntities_tmp, $value);
-                    for ($iSubEntities=0;$iSubEntities<count($subEntities_tmp);$iSubEntities++) {
-                        if (in_array($subEntities_tmp[$iSubEntities]['ID'], $arrayEntityId)) {
-                            array_push($subEntities, $subEntities_tmp[$iSubEntities]['ID']);
-                        }
-                    }
-                    array_push($subEntities, $value);
-                    $nbDocsSubEntities = 0;
-                    foreach ($subEntities as $value2) {
-                        $SubEntitiesKeys = array_search($value2, $arrayEntityId);
-                        $nbDocsSubEntities = $nbDocsSubEntities + $arrayEntityNbDocs[$SubEntitiesKeys];
-                    }
-                    $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id = ?";
-                    $stmt = Bt_doQuery($GLOBALS['db2'], $queryEntityLabel, array($value));
-                    $EntityDB = $stmt->fetchObject();
-                    fputcsv(
-                        $fichier_csv, 
-                        array(
-                            $EntityDB->entity_label, 
-                            $arrayEntityNbDocs[$key], 
-                            $nbDocsSubEntities
-                        ), 
-                        $delimiteur
-                    );
-                } else {
-                    fputcsv(
-                        $fichier_csv, 
-                        array(
-                            $value, 
-                            $arrayEntityNbDocs[$key], 
-                            $arraySubEntitiesNbDocs[$key]
-                        ), 
-                        $delimiteur
-                    );
-                }
-                
-            }
-            fclose($fichier_csv);
             $state = 'END';
             break;
+
     }
+
 }
 $GLOBALS['logger']->write('End of process', 'INFO');
 Bt_logInDataBase(

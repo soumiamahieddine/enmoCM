@@ -209,6 +209,12 @@ if ((string) $CONFIG->CleanContactsNonMoral) {
     $GLOBALS['CleanContactsNonMoral'] = "false";
 }
 
+if ((string) $CONFIG->PurgeMode) {
+    $GLOBALS['PurgeMode'] = (string) $CONFIG->PurgeMode;
+} else {
+    $GLOBALS['PurgeMode'] = "both";
+}
+
 if (empty($GLOBALS['whereClause'])) {
     $GLOBALS['logger']->write('whereClause is empty', 'ERROR', 1);
     exit(105);
