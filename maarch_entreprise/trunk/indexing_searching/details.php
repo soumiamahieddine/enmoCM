@@ -655,7 +655,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 								<td align="left" width="200px">
 									<?php									
 										$detailsExport .= $data[$key]['label'];
-										functions::xecho($data[$key]['label']);
+										echo $data[$key]['label'];
 										
 									?>
 									
@@ -802,7 +802,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     if ($key == 'folder')
                                     {
                                     ?>  
-                                        <input type="text" name="folder" id="folder" onblur="" value="<?php functions::xecho($data['folder']['show_value']); 
+                                        <input type="text" name="folder" id="folder" onblur="" value="<?php echo $data['folder']['show_value']; 
                                         ?>" /><div id="show_folder" class="autocomplete"></div>
                                         <script type="text/javascript">initList('folder', 'show_folder','<?php echo $_SESSION['config']['businessappurl'];
                                         ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder',  'Input', '2');</script>
