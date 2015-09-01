@@ -21,8 +21,8 @@ for ($i=0;$i<count($templates);$i++) {
     if ($templates[$i]['TYPE'] == 'OFFICE' 
     	&& ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '') 
     	&& ($templates[$i]['ATTACHMENT_TYPE'] == $_REQUEST['attachment_type'] || $templates[$i]['ATTACHMENT_TYPE'] == 'all')) {
-	       	$frmStr .= '<option value="'. functions::xecho($templates[$i]['ID']).'">';
-	        $frmStr .= functions::xecho($templates[$i]['LABEL']);
+	       	$frmStr .= '<option value="'. functions::xssafe($templates[$i]['ID']).'">';
+	        $frmStr .= functions::xssafe($templates[$i]['LABEL']);
 	        	$frmStr .= '</option>';
     }
 }
