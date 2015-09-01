@@ -126,16 +126,14 @@ if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
 
 
 // CV 31 oct 2014 : clean request
-//var_dump($_REQUEST);
-foreach ($_REQUEST as $name => $value) {
+// foreach ($_REQUEST as $name => $value) {
     //if (is_string($value) && strpos($value, "<") !== false) {
         //$value = preg_replace('/(<\/?script[^>]*>|<\w+[\s\n\r]*on[^>]*>|<\?php|<\?[\s|\n|\r])/i', "", $value);
         // $value = functions::xssafe($value);
-        $_REQUEST[$name] = $value;
+        // $_REQUEST[$name] = $value;
     //}
-}
-//var_dump($_REQUEST);
-//exit;
+// }
+
 if (! isset($_SESSION['user']['UserId']) && $_REQUEST['page'] <> 'login' && $_REQUEST['page'] <> 'log' ) {
 
     $_SESSION['HTTP_REFERER'] = Url::requestUri();
