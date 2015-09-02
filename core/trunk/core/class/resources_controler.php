@@ -445,6 +445,26 @@ class resources_controler
                 $queryExtValuesFinal = '('; 
                 $parameters = array();
 	            $db = new Database();
+                if ($table == 'mlb_coll_ext') {
+        		$processLimitDate = $this->retrieveProcessLimitDate($resId);
+        		//echo $processLimitDate;
+        		}
+        		for ($i=0;$i<count($data);$i++) {
+            		if ($data[$i]['column'] == 'process_limit_date') {
+            		    $findProcessLimitDate = true;
+            		}
+            	}
+        		if (!$findProcessLimitDate && $processLimitDate <> '') {
+            		array_push(
+            		    $data,
+            		    array(
+            			'column' => 'process_limit_date',
+            			'value' => $processLimitDate,
+            			'type' => 'date',
+            		    )
+            		);
+        		}
+		        //var_dump($data);
 	            for ($i=0;$i<count($data);$i++) {
 	                if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
 	                    if ($data[$i]['value'] == '') {
@@ -554,6 +574,52 @@ class resources_controler
             );
             return $returnResArray;
         }
+    }
+
+    #####################################
+    ## Retrieve process_limit_date for resource in extension table if mlb
+    #####################################
+    public function retrieveProcessLimitDate($resId)
+    {
+        $processLimitDate = '';
+        if ($resId <> '') {
+            $db = new Database();
+            $stmt = $db->query("select creation_date, admission_date, "
+                . "type_id from res_view_letterbox where res_id = ?"
+		        , array($resId)
+            );
+            $line = $stmt->fetchObject();
+            if ($line->type_id <> '') {
+                $typeId = $line->type_id;
+                $admissionDate = $line->admission_date;
+                $creationDate = $line->creation_date;
+                $stmtDelay = $db->query("select process_delay from mlb_doctype_ext where type_id = ?" 
+                    , array($line->type_id)
+                );
+                $lineDelay = $stmtDelay->fetchObject();
+                $delay = $lineDelay->process_delay;
+            }
+            if ($admissionDate == '') {
+                $dateToCompute = $creationDate;
+            } else {
+                $dateToCompute = $admissionDate;
+            }
+            if ($delay == 0) {
+                $delay = 5;
+            }
+            require_once('core/class/class_alert_engine.php');
+            $alert_engine = new alert_engine();
+            if (isset($dateToCompute) && !empty($dateToCompute)) {
+                $convertedDate = $alert_engine->dateFR2Time(
+                    str_replace("-", "/", $db->format_date_db($dateToCompute))
+                );
+                $date = $alert_engine->WhenOpenDay($convertedDate, $delay);
+            } else {
+                $date = $alert_engine->date_max_treatment($delay, false);
+            }
+            $processLimitDate = $db->dateformat($date, '-');
+        }
+        return $processLimitDate;
     }
     
     function Demo_searchResources($searchParams)
