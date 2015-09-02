@@ -183,15 +183,14 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 //Add notes
                 $userIdTypist = $_SESSION['user']['UserId'];
                 $content_note = $formValues['note_content_to_user'];
-                $content_note = str_replace(";", ".", $content_note);
-                $content_note = str_replace("--", "-", $content_note);
-                $content_note = $content_note;
-                $date = $db->current_datetime();
+                // $content_note = str_replace(";", ".", $content_note);
+                // $content_note = str_replace("--", "-", $content_note);
+                // $content_note = $content_note;
                 
                 $db->query(
                     "INSERT INTO notes (identifier, tablename, user_id, "
-                            . "date_note, note_text, coll_id ) VALUES (?,?,?,?,?,?)",
-					array($res_id, $table, $userIdTypist, $date, $content_note, $coll_id)
+                            . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)",
+					array($res_id, $table, $userIdTypist, $content_note, $coll_id)
                 );
             }
         }
