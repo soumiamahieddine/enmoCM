@@ -28,10 +28,22 @@
 * @version $Revision$
 * @ingroup basket
 */
+
+$_SESSION['count_view_baskets']++;
+
  $urlParameters = '';
 
-    if($_SESSION['save_list']['fromDetail'] == "true" || $_SESSION['save_list']['fromValidateMail'] == "true" || $_SESSION['save_list']['fromProcess'] == "true") {
+    if(preg_match('/MSIE/i',$_SERVER["HTTP_USER_AGENT"]) && !preg_match('/Opera/i',$_SERVER["HTTP_USER_AGENT"])) { 
+        $ub = "MSIE"; 
+    } 
+    elseif(preg_match('/Firefox/i',$_SERVER["HTTP_USER_AGENT"])) { 
+        $ub = "Firefox"; 
+    } else {
+        $ub = "";
+    }
 
+if(($_SESSION['save_list']['fromDetail'] == "true" || $_SESSION['save_list']['fromValidateMail'] == "true" || $_SESSION['save_list']['fromProcess'] == "true") && ( ($_SESSION['count_view_baskets'] > 1 && $ub == "Firefox") || $ub != "Firefox" )) {
+    if($_SESSION['save_list']['fromDetail'] == "true" || $_SESSION['save_list']['fromValidateMail'] == "true" || $_SESSION['save_list']['fromProcess'] == "true") {
         $urlParameters .= '&start='.$_SESSION['save_list']['start'];
         $urlParameters .= '&lines='.$_SESSION['save_list']['lines'];
         $urlParameters .= '&order='.$_SESSION['save_list']['order'];
@@ -49,9 +61,10 @@
     $_SESSION['save_list']['order'] = "";
     $_SESSION['save_list']['order_field'] = "";
     $_SESSION['save_list']['template'] = "";  
+}
 
+$_SESSION['stockCheckbox']= '';
 
- $_SESSION['stockCheckbox']= '';
 if (isset($_SESSION['search']['plain_text'])) {
 
     $_SESSION['search']['plain_text'] = "";
