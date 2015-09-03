@@ -696,6 +696,7 @@
       <parameter name="origin" type="identifier" />
       <parameter name="filter" type="identifier" />
       <parameter name="value" type="identifier" />
+      <parameter name="template" type="identifier" />
     </validationRule>
 
     <validationRule name="standardForm" extends="index">  
