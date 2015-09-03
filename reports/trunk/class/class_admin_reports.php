@@ -83,7 +83,7 @@ class admin_reports extends Database
 
         unset($_SESSION['m_admin']);
 
-        $_SESSION['error'] =  _GROUP_REPORTS_ADDED;
+        $_SESSION['info'] =  _GROUP_REPORTS_ADDED;
         header("location: ".$_SESSION['config']['businessappurl']."index.php?page=admin_reports&module=reports");
         exit();
     }
