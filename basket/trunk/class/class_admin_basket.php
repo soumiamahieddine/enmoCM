@@ -465,7 +465,7 @@ class admin_basket extends Database
 
                     // Empties the basket administration session var and redirect to baskets list
                     $this->clearbasketinfos();
-                    $_SESSION['error'] = _BASKET_ADDED;
+                    $_SESSION['info'] = _BASKET_ADDED;
                     header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
                     exit();
                 }
@@ -508,7 +508,7 @@ class admin_basket extends Database
 
                 // Empties the basket administration session var and redirect to baskets list
                 $this->clearbasketinfos();
-                $_SESSION['error'] = _BASKET_UPDATED;
+                $_SESSION['info'] = _BASKET_UPDATED;
                 header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
                 exit();
             }
@@ -692,7 +692,7 @@ class admin_basket extends Database
                         $hist = new history();
                         $hist->add($_SESSION['tablename']['bask_baskets'], $id,"VAL",'basketval',_BASKET_AUTORIZATION." : ".$id, $_SESSION['config']['databasetype'] ,'basket');
                     }
-                    $_SESSION['error'] = _AUTORIZED_BASKET;
+                    $_SESSION['info'] = _AUTORIZED_BASKET;
                 }
                 // Mode ban : not used
                 elseif($mode == "ban")
@@ -704,7 +704,7 @@ class admin_basket extends Database
                         $hist = new history();
                         $hist->add($_SESSION['tablename']['bask_baskets'], $id,"BAN",'basketban',_BASKET_SUSPENSION." : ".$id, $_SESSION['config']['databasetype'], 'basket');
                     }
-                    $_SESSION['error'] = _SUSPENDED_BASKET;
+                    $_SESSION['info'] = _SUSPENDED_BASKET;
 
                 }
                 // Mode delete  : delete a basket and all its setting
@@ -728,7 +728,7 @@ class admin_basket extends Database
                         $hist = new history();
                         $hist->add($_SESSION['tablename']['bask_baskets'], $id,"DEL",'basketdel',_BASKET_DELETION." : ".$id, $_SESSION['config']['databasetype'],  'basket');
                     }
-                    $_SESSION['error'] = _BASKET_DELETION;
+                    $_SESSION['info'] = _BASKET_DELETION;
                 }
 
                 // Redirection to the baskets list page
