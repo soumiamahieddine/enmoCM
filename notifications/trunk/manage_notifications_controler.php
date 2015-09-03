@@ -277,7 +277,7 @@ function display_del($notification_sid) {
         if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _NOTIF_DELETED.' : '.$notification_sid;
+            $_SESSION['info'] = _NOTIF_DELETED.' : '.$notification_sid;
 
             if (PHP_OS == "Linux") {
                 // delete scheduled notification
@@ -443,14 +443,14 @@ function validate_notif_submit() {
         }
     } else {
         if ($mode == 'add') {
-            $_SESSION['error'] = _NOTIF_ADDED;
+            $_SESSION['info'] = _NOTIF_ADDED;
 
             if (PHP_OS == "Linux") {
                 $ScheduleNotifications = new ScheduleNotifications();
                 $ScheduleNotifications->createScriptNotification($control['value'], $notifObj->notification_id);
             }
         } else {
-            $_SESSION['error'] = _NOTIF_MODIFIED;
+            $_SESSION['info'] = _NOTIF_MODIFIED;
         }
         unset($_SESSION['m_admin']);
         header(
