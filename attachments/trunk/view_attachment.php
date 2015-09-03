@@ -59,7 +59,7 @@ if (! empty($_SESSION['error'])) {
         "SELECT res_id FROM " . $table . " WHERE res_id = ?",array($resIdMaster));
     //$db->show();
     if ($stmt->rowCount() == 0) {
-        $_SESSION['error'] = _THE_DOC . " " . _EXISTS_OR_RIGHT . "&hellip;";
+        $_SESSION['error'] = _THE_DOC . " " . _EXISTS_OR_RIGHT;
         header(
             "location: " . $_SESSION['config']['businessappurl'] . "index.php"
         );
@@ -72,7 +72,7 @@ if (! empty($_SESSION['error'])) {
         );
 
         if ($stmt->rowCount() == 0) {
-            $_SESSION['error'] = _THE_DOC . " " . _EXISTS_OR_RIGHT . "&hellip;";
+            $_SESSION['error'] = _THE_DOC . " " . _EXISTS_OR_RIGHT;
             header(
                 "location: " . $_SESSION['config']['businessappurl']
                 . "index.php"
