@@ -310,7 +310,7 @@ function display_del($tag_label) {
         if (!$control) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _TAG_DELETED.' : '. str_replace("''", "'", $tag_label);
+            $_SESSION['info'] = _TAG_DELETED.' : '. str_replace("''", "'", $tag_label);
         }
         ?><script type="text/javascript">window.top.location='<?php
             echo $_SESSION['config']['businessappurl']
