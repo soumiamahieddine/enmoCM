@@ -105,7 +105,7 @@ if (!defined('_FOLDERS'))
 if (!defined('_FOLDERS_COMMENT'))
     define('_FOLDERS_COMMENT', 'Folders');
 if (!defined('_CHOOSE2'))
-    define('_CHOOSE2', 'Select&hellip;');
+    define('_CHOOSE2', 'Select');
 if (!defined('_IS_MANDATORY'))
     define('_IS_MANDATORY', 'is mandatory');
 if (!defined('_FOLDER_CREATION'))
@@ -177,7 +177,7 @@ if (!defined('_DELETE_FOLDER_NOTES2'))
 if (!defined('_DELETE_FOLDER_NOTES3'))
     define('_DELETE_FOLDER_NOTES3', 'The folder will be deleted after this validation.');
 if (!defined('_DELETE_FOLDER_NOTES4'))
-    define('_DELETE_FOLDER_NOTES4', 'The folder cannot be deleted because the validation is wrong&hellip;');
+    define('_DELETE_FOLDER_NOTES4', 'The folder cannot be deleted because the validation is wrong');
 if (!defined('_DELETE_FOLDER_NOTES5'))
     define('_DELETE_FOLDER_NOTES5', 'The folder is now deleted from the database.');
 if (!defined('_FOLDER_INDEX_MODIF'))

@@ -735,7 +735,7 @@ class folder extends request
 			$request->PDOupdate($_SESSION['tablename']['fold_folders'], $data, $where, $arrayPDO, $_SESSION['config']['databasetype']);
 
 			//$_SESSION['error'] = _FOLDER_INDEX_UPDATED." (".$values['folder_id'].")";
-			$_SESSION['error'] = _FOLDER_UPDATED." (".$values['folder_id'].")";
+			$_SESSION['info'] = _FOLDER_UPDATED." (".$values['folder_id'].")";
 			if($_SESSION['history']['folderup'])
 			{
 				$hist = new history();
@@ -849,7 +849,7 @@ class folder extends request
 			}
 			$db->query("UPDATE ".$table." SET status = 'DEL' WHERE folders_system_id = ? ".$where, $arrayPDO);
 			$db->query("UPDATE ".$_SESSION['tablename']['fold_folders']." SET status = 'DEL' WHERE folders_system_id = ? ".$where, $arrayPDO);
-			$_SESSION['error'] = _FOLDER_DELETED." (".$fold_id.")";
+			$_SESSION['info'] = _FOLDER_DELETED." (".$fold_id.")";
 		}
 	}
 

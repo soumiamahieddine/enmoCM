@@ -504,7 +504,7 @@ class foldertype
                         );
                     }
                     $this->clearfoldertypeinfos();
-                    $_SESSION['error'] = _FOLDERTYPE_ADDED;
+                    $_SESSION['info'] = _FOLDERTYPE_ADDED;
                     unset($_SESSION['m_admin']);
                     header(
                     	"location: " . $_SESSION['config']['businessappurl']
@@ -559,7 +559,7 @@ class foldertype
                     );
                 }
                 $this->clearfoldertypeinfos();
-                $_SESSION['error'] = _FOLDERTYPE_UPDATE;
+                $_SESSION['info'] = _FOLDERTYPE_UPDATE;
                 unset($_SESSION['m_admin']);
                 header(
                 	"location: " . $_SESSION['config']['businessappurl']
