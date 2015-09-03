@@ -129,12 +129,12 @@ class functions
     * @param     $msg  string Message to add
     * @param  $var  string Language dependant message
     */
-    public function add_error($msg,$var)
+    public function add_error($msg, $var)
     {
         $msg = trim($msg);
         if(!empty($msg))
         {
-            $_SESSION['error'] .= $msg." ".$var."<br />";
+            $_SESSION['error'] .= $msg." ".$var . ' ';
             if(strlen(str_replace(array("<br />","<br />"),"",$_SESSION['error'])) < 6)
             {
                 $_SESSION['error'] = "";

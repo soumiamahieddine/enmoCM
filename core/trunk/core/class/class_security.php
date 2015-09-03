@@ -282,7 +282,7 @@ class security extends Database
                 );
             }
         } else {
-            $error = _BAD_LOGIN_OR_PSW . '&hellip;';
+            $error = _BAD_LOGIN_OR_PSW;
             return array(
                 'user'  => $array,
                 'error' => $error,
@@ -398,7 +398,7 @@ class security extends Database
             }
             else
             {
-                $_SESSION['error'] = _SUSPENDED_ACCOUNT.'. '._MORE_INFOS." <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
+                $_SESSION['error'] = _SUSPENDED_ACCOUNT;
                 header("location: ".$_SESSION['config']['businessappurl']."index.php");
                 exit();
             }

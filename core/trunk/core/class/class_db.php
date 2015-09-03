@@ -763,7 +763,7 @@ class dbquery extends functions
         }
         // Query Preparation error (ORACLE & DB2)
         if ($this->_sqlError == 7) {
-            $_SESSION['error'] .= '<b>' . _SQL_QUERY_NOT_SECURE . '</b> <br />';
+            $_SESSION['error'] .= _SQL_QUERY_NOT_SECURE;
             $trace->add("", 0, "QUERY", "DBERROR", _SQL_QUERY_NOT_SECURE, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             //exit();
         }

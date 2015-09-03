@@ -267,7 +267,7 @@ class core_tools extends functions
         }
         else
         {
-            $_SESSION['error'] = "Language file missing...<br/>";
+            $_SESSION['error'] = "Language file missing";
         }
         if(isset($_SESSION['modules']))
         {
