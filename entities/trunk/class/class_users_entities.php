@@ -389,7 +389,7 @@ class users_entities extends dbquery
 
                 $this->clearuserinfos();
 
-                $_SESSION['error'] = _USER_UPDATED;
+                $_SESSION['info'] = _USER_UPDATED;
                 header("location: ".$_SESSION['config']['businessappurl'].'index.php?page=users_list&module=entities');
                 exit();
             }

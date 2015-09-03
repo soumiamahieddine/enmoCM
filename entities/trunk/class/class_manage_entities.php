@@ -846,7 +846,7 @@ class entity extends dbquery
                             $hist = new history();
                             $hist->add(ENT_ENTITIES, $id,'DEL','entitydel', _ENTITY_DELETION." : ".$this->protect_string_db(trim($id)), $_SESSION['config']['databasetype']);
                         }
-                        $_SESSION['error'] = $id." "._ENTITY_DELETED;
+                        $_SESSION['info'] = $id." "._ENTITY_DELETED;
                     }
                 }
                 //header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
@@ -1070,7 +1070,7 @@ class entity extends dbquery
                         $hist->add(ENT_ENTITIES, $_SESSION['m_admin']['entity']['entityId'] ,"ADD",'entityadd',_ADD_ENTITY." : ".$_SESSION['m_admin']['entity']['entityId'] , $_SESSION['config']['databasetype'], 'entities');
                     }
                     $this->clearentityinfos();
-                    $_SESSION['error'] = _ENTITY_ADDITION;
+                    $_SESSION['info'] = _ENTITY_ADDITION;
                     unset($_SESSION['m_admin']);
                     header("location: ".$_SESSION['config']['businessappurl']."index.php?page=manage_entities&module=entities&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
                     exit();
@@ -1119,7 +1119,7 @@ class entity extends dbquery
                     $hist->add(ENT_ENTITIES, $_SESSION['m_admin']['entity']['entityId'] ,'UP','entityup',_ENTITY_UPDATED.' : '.$_SESSION['m_admin']['entity']['entityId'] , $_SESSION['config']['databasetype'], 'folder');
                 }
                 $this->clearentityinfos();
-                $_SESSION['error'] = _ENTITY_MODIFICATION;
+                $_SESSION['info'] = _ENTITY_MODIFICATION;
                 unset($_SESSION['m_admin']);
                 header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
                 exit();
