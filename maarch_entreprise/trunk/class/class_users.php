@@ -181,7 +181,7 @@ class class_users extends Database
                 );
             }
 
-            $_SESSION['error'] = _USER_UPDATED;
+            $_SESSION['info'] = _USER_UPDATED;
             header(
                 'location: ' . $_SESSION['config']['businessappurl']
                 . 'index.php'

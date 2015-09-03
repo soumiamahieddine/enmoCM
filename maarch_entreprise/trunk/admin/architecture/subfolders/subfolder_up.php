@@ -104,8 +104,7 @@ if (isset($_REQUEST['valid'])) {
 									$_SESSION['config']['databasetype']
 								);
 							}
-							$_SESSION['error'] .= _SUBFOLDER_MODIF . " : " . $id
-											   . "<br/>";
+							$_SESSION['info'] .= _SUBFOLDER_MODIF . " : " . $id;
 						} else {
 							$erreur .= _SUBFOLDER_ID_PB . ".";
 						}
@@ -134,8 +133,7 @@ if (isset($_REQUEST['valid'])) {
 								$_SESSION['config']['databasetype']
 							);
 						}
-						$_SESSION['error'] .= _NEW_SUBFOLDER . " : " . $desc 
-										   . "<br/>";
+						$_SESSION['info'] .= _NEW_SUBFOLDER . " : " . $desc;
 					}
 					if (empty($erreur)) {
 						unset($_SESSION['m_admin']);

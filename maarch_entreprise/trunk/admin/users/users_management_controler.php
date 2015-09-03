@@ -314,7 +314,7 @@ function display_del($user_id){
         if(!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _DELETED_USER.' : '.$user_id;
+            $_SESSION['info'] = _DELETED_USER.' : '.$user_id;
         }
 
         ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
@@ -375,7 +375,7 @@ function display_del_check($user_id){
                     )
                 );
 
-            $_SESSION['error'] = _DELETED_USER.' : '.$old_user;
+            $_SESSION['info'] = _DELETED_USER.' : '.$old_user;
 
            ?>
 
@@ -471,7 +471,7 @@ function display_enable($user_id){
         if(!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _AUTORIZED_USER.' : '.$user_id;
+            $_SESSION['info'] = _AUTORIZED_USER.' : '.$user_id;
         }
 
         ?><script type="text/javascript">
@@ -509,7 +509,7 @@ function display_disable($user_id){
         if(!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _SUSPENDED_USER.' : '.$user_id;
+            $_SESSION['info'] = _SUSPENDED_USER.' : '.$user_id;
         }
 
         ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
@@ -700,10 +700,10 @@ function validate_user_submit()
         }
     } else {
         if($mode == "add"){
-            $_SESSION['error'] = _USER_ADDED;
+            $_SESSION['info'] = _USER_ADDED;
         }
          else{
-            $_SESSION['error'] = _USER_UPDATED;
+            $_SESSION['info'] = _USER_UPDATED;
         }
         unset($_SESSION['m_admin']);
         header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=users&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);

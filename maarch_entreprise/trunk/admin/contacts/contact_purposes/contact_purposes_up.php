@@ -155,7 +155,7 @@ if (isset($_REQUEST['valid'])) {
 							    $_SESSION['config']['databasetype']
 							);
 						}
-						$_SESSION['error'] .= _CONTACT_PURPOSE_MODIF . " : " . $id . "<br/>";
+						$_SESSION['info'] .= _CONTACT_PURPOSE_MODIF . " : " . $id;
 					} else {
 						$erreur .= _ID_CONTACT_PURPOSE_PB . ".";
 					}
@@ -192,7 +192,7 @@ if (isset($_REQUEST['valid'])) {
 
 				}
 				if($mode <> 'popup'){
-					$_SESSION['error'] .= _NEW_CONTACT_PURPOSE . " : " . $desc . "<br/>";
+					$_SESSION['info'] .= _NEW_CONTACT_PURPOSE . " : " . $desc;
 				}
 			}
 		}

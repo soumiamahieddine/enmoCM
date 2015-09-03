@@ -55,7 +55,7 @@ else
         $users = new history();
         $users->add($_SESSION['tablename']['doctypes_second_level'], $id,"DEL",'subfolderdel', _DEL_SUBFOLDER." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
     }
-    $_SESSION['error'] = _SUBFOLDER_DELETED.".";
+    $_SESSION['info'] = _SUBFOLDER_DELETED;
         unset($_SESSION['m_admin']);
     header("location: ".$_SESSION['config']['businessappurl']."index.php?page=subfolders&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what']);
     exit();

@@ -222,9 +222,9 @@ function validate_cs_submit($mode)
 		}
 	} else {
 		if ($mode == "add") {
-			$_SESSION['error'] = _DOCSERVER_LOCATION_ADDED;
+			$_SESSION['info'] = _DOCSERVER_LOCATION_ADDED;
 		} else {
-			$_SESSION['error'] = _DOCSERVER_LOCATION_UPDATED;
+			$_SESSION['info'] = _DOCSERVER_LOCATION_UPDATED;
 		}
 		unset($_SESSION['m_admin']);
 		header(
@@ -387,7 +387,7 @@ function display_del($docserverLocationId)
 		if (!empty($control['error']) && $control['error'] <> 1) {
 			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
-			$_SESSION['error'] = _DOCSERVER_LOCATION_DELETED . " "
+			$_SESSION['info'] = _DOCSERVER_LOCATION_DELETED . " "
 			                   . $docserverLocationId;
 		}
 		$pageName = "docserver_locations_management_controler";
@@ -418,7 +418,7 @@ function display_enable($docserverLocationId)
 		if (!empty($control['error']) && $control['error'] <> 1) {
 			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
-			$_SESSION['error'] = _DOCSERVER_LOCATION_ENABLED . " "
+			$_SESSION['info'] = _DOCSERVER_LOCATION_ENABLED . " "
 			                   . $docserverLocationId;
 		}
 		$pageName = "docserver_locations_management_controler";
@@ -449,7 +449,7 @@ function display_disable($docserverLocationId)
 		if (!empty($control['error']) && $control['error'] <> 1) {
 			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
-			$_SESSION['error'] = _DOCSERVER_LOCATION_DISABLED . " "
+			$_SESSION['info'] = _DOCSERVER_LOCATION_DISABLED . " "
 			                   . $docserverLocationId;
 		}
 		$pageName = "docserver_locations_management_controler";

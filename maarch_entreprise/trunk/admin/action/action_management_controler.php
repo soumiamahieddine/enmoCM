@@ -209,9 +209,9 @@ if (isset($_REQUEST['action_submit'])) {
         }
         unset($_SESSION['m_admin']);
         if($mode == 'add'){
-            $_SESSION['error'] =  _ACTION_ADDED;
+            $_SESSION['info'] =  _ACTION_ADDED;
         } else {
-            $_SESSION['error'] = _ACTION_MODIFIED;
+            $_SESSION['info'] = _ACTION_MODIFIED;
         }
 
         header('location: ' . $_SESSION['config']['businessappurl']
@@ -373,7 +373,7 @@ if ($mode == 'up') {
     $_SESSION['error'] = _ACTION.' '._UNKNOWN;
 } elseif ($mode == 'del') {
     ActionControler::delete($action_id);
-    $_SESSION['error'] = _ACTION_DELETED . ' ' . $action_id;
+    $_SESSION['info'] = _ACTION_DELETED . ' ' . $action_id;
 
     if($_SESSION['history']['actiondel'] == 'true') {
         require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');

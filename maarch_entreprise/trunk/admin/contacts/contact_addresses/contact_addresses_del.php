@@ -112,7 +112,7 @@ if ($_REQUEST['valid']) {
 			$users = new history();
 			$users->add($_SESSION['tablename']['contact_addresses'], $id,"DEL",'contact_addresses_del', _ADDRESS_DEL." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
 		}
-		$_SESSION['error'] = _DELETED_ADDRESS.".";
+		$_SESSION['info'] = _DELETED_ADDRESS;
 		unset($_SESSION['m_admin']);
 		?>
 	        <script type="text/javascript">
@@ -150,7 +150,7 @@ if ($_REQUEST['valid']) {
 			$users = new history();
 			$users->add($_SESSION['tablename']['contact_addresses'], $id,"DEL",'contact_addresses_del', _ADDRESS_MOVED." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
 		}
-		$_SESSION['error'] = _ADDRESS_MOVED.".";
+		$_SESSION['info'] = _ADDRESS_MOVED.".";
 		unset($_SESSION['m_admin']);
 		?>
 	        <script type="text/javascript">
@@ -175,7 +175,7 @@ if ($_REQUEST['valid']) {
 		$users = new history();
 		$users->add($_SESSION['tablename']['contact_addresses'], $id,"DEL",'contact_addresses_del', _ADDRESS_DEL." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
 	}
-	$_SESSION['error'] = _DELETED_ADDRESS.".";
+	$_SESSION['info'] = _DELETED_ADDRESS;
 	unset($_SESSION['m_admin']);
 	?>
         <script type="text/javascript">

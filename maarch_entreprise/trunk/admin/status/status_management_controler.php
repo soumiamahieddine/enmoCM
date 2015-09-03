@@ -218,7 +218,7 @@ function display_del($statusId)
         if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _STATUS_DELETED.' : '.$statusId;
+            $_SESSION['info'] = _STATUS_DELETED.' : '.$statusId;
         }
         ?><script type="text/javascript">window.top.location='<?php
             echo $_SESSION['config']['businessappurl']
@@ -353,9 +353,9 @@ function validate_status_submit()
         }
     } else {
         if ($mode == 'add') {
-            $_SESSION['error'] = _STATUS_ADDED;
+            $_SESSION['info'] = _STATUS_ADDED;
         } else {
-            $_SESSION['error'] = _STATUS_MODIFIED;
+            $_SESSION['info'] = _STATUS_MODIFIED;
         }
         unset($_SESSION['m_admin']);
 

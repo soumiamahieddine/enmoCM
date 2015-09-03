@@ -183,9 +183,9 @@ function validate_cs_submit($mode) {
         }
     } else {
         if ($mode == "add")
-            $_SESSION['error'] =  _DOCSERVER_TYPE_ADDED;
+            $_SESSION['info'] =  _DOCSERVER_TYPE_ADDED;
          else
-            $_SESSION['error'] = _DOCSERVER_TYPE_UPDATED;
+            $_SESSION['info'] = _DOCSERVER_TYPE_UPDATED;
         unset($_SESSION['m_admin']);
         header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
     }
@@ -324,7 +324,7 @@ function display_del($docserver_type_id) {
 		if (!empty($control['error']) && $control['error'] <> 1) {
 			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
-			$_SESSION['error'] = _DOCSERVER_TYPE_DELETED." ".$docserver_type_id;
+			$_SESSION['info'] = _DOCSERVER_TYPE_DELETED." ".$docserver_type_id;
 		}
 		$pageName = "docserver_types_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers";?>';</script>
@@ -350,7 +350,7 @@ function display_enable($docserver_type_id) {
 		if (!empty($control['error']) && $control['error'] <> 1) {
 			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
-			$_SESSION['error'] = _DOCSERVER_TYPE_ENABLED." ".$docserver_type_id;
+			$_SESSION['info'] = _DOCSERVER_TYPE_ENABLED." ".$docserver_type_id;
 		}
 		$pageName = "docserver_types_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers";?>';</script>
@@ -376,7 +376,7 @@ function display_disable($docserver_type_id) {
 		if (!empty($control['error']) && $control['error'] <> 1) {
 			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
-			$_SESSION['error'] = _DOCSERVER_TYPE_DISABLED." ".$docserver_type_id;
+			$_SESSION['info'] = _DOCSERVER_TYPE_DISABLED." ".$docserver_type_id;
 		}
 		$pageName = "docserver_types_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers";?>';</script>

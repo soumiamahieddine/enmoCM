@@ -2,7 +2,7 @@
 /*
 *   Copyright 2008-2015 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -29,7 +29,7 @@
 * @version $Revision$
 * @ingroup apps
 */
-include_once('../../core/class/class_functions.php');
+include_once '../../core/class/class_functions.php';
 include_once '../../core/class/class_db_pdo.php';
 include_once '../../core/init.php';
 
@@ -42,29 +42,27 @@ $started = MaarchIVS::start(__DIR__ . '/xml/IVS/requests_definitions.xml', 'xml'
 $valid = MaarchIVS::run('silent');
 if (!$valid) {
     $validOutpout = MaarchIVS::debug();
-    /*echo '<pre>';
-    var_dump($validOutpout);
-    echo '</pre>';*/
     $cptValid = count($validOutpout['validationErrors']);
-    //echo "count : " . $cptValid . PHP_EOL;
+    $error = '';
     for ($cptV=0;$cptV<=count($cptValid);$cptV++) {
-        /*echo '<pre>';
-        var_dump($validOutpout['validationErrors'][$cptV]);
-        echo '</pre>';*/
-        $_SESSION['error'] .= $validOutpout['validationErrors'][$cptV]->message . PHP_EOL;
-        $_SESSION['error'] .= $validOutpout['validationErrors'][$cptV]->parameter . PHP_EOL;
-        $_SESSION['error'] .= $validOutpout['validationErrors'][$cptV]->value . PHP_EOL;
+        $error .= $validOutpout['validationErrors'][$cptV]->message . PHP_EOL;
+        $error .= $validOutpout['validationErrors'][$cptV]->parameter . PHP_EOL;
+        $error .= $validOutpout['validationErrors'][$cptV]->value . PHP_EOL;
     }
-    if ($_REQUEST['display'] == "false") {
-        functions::xecho($_SESSION['error']);
-        exit;   
+    //process error for ajax request 
+    if (
+        array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) 
+        && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+    ) {
+        echo $error;
+        exit;
+    } else {
+        //process error for standard request
+        $_SESSION['error'] = $error;
     }
-    functions::xecho($_SESSION['error']);
-    exit;
 } else {
-    //echo "Request is valid";
+    //Request is valid
 }
-
 
 if (isset($_SESSION['config']['corepath'])) {
     require_once 'core/class/class_functions.php';
@@ -76,11 +74,10 @@ if (isset($_SESSION['config']['corepath'])) {
     ) {
         $_SESSION['custom_override_id'] = $core->get_custom_id();
         if (! empty($_SESSION['custom_override_id'])) {
-            $path = $_SESSION['config']['corepath'] . 'custom'
-                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-                  . DIRECTORY_SEPARATOR;
+            $path = $_SESSION['config']['corepath'] . 'custom/'
+                  . $_SESSION['custom_override_id'] . '/';
             set_include_path(
-                $path . PATH_SEPARATOR . $_SESSION['config']['corepath']
+                $path . '/' . $_SESSION['config']['corepath']
             );
         }
     }
@@ -92,16 +89,18 @@ if (isset($_SESSION['config']['corepath'])) {
     $_SESSION['custom_override_id'] = $core->get_custom_id();
     chdir('../..');
     if (! empty($_SESSION['custom_override_id'])) {
-        $path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-              . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR;
+        $path = $_SESSION['config']['corepath'] . 'custom/'
+              . $_SESSION['custom_override_id'] . '/';
         set_include_path(
-            $path . PATH_SEPARATOR . $_SESSION['config']['corepath']
+            $path . '/' . $_SESSION['config']['corepath']
         );
     }
 }
 
-if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
-    && ! empty($_SESSION['user']['UserId']) && $_GET['page'] <> 'login'
+if (
+    isset($_SESSION['user']['UserId']) 
+    && isset($_GET['page'])
+    && !empty($_SESSION['user']['UserId']) && $_GET['page'] <> 'login'
     && $_GET['page'] <> 'log' && $_GET['page'] <> 'logout'
 ) {
     $db = new Database();
@@ -112,30 +111,17 @@ if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
     );
 
     $db->query(
-        'UPDATE ' . $_SESSION['tablename']['users'] . " SET cookie_key = ?, cookie_date = CURRENT_TIMESTAMP WHERE user_id = ? and mail = ?", 
+        'UPDATE ' . $_SESSION['tablename']['users'] 
+            . " SET cookie_key = ?, cookie_date = CURRENT_TIMESTAMP WHERE user_id = ? and mail = ?", 
         array($key, $_SESSION['user']['UserId'], $_SESSION['user']['Mail']),1
     );
-
-    /*setcookie(
-        $_SESSION['sessionName'], 'UserId=' . $_SESSION['user']['UserId'] . '&key=' . $key,
-        time() + ($_SESSION['config']['cookietime'] * 1000),
-        0, 0, $_SERVER["HTTPS"], 1
-    );*/
-
 }
 
-
-// CV 31 oct 2014 : clean request
-// foreach ($_REQUEST as $name => $value) {
-    //if (is_string($value) && strpos($value, "<") !== false) {
-        //$value = preg_replace('/(<\/?script[^>]*>|<\w+[\s\n\r]*on[^>]*>|<\?php|<\?[\s|\n|\r])/i', "", $value);
-        // $value = functions::xssafe($value);
-        // $_REQUEST[$name] = $value;
-    //}
-// }
-
-if (! isset($_SESSION['user']['UserId']) && $_REQUEST['page'] <> 'login' && $_REQUEST['page'] <> 'log' ) {
-
+if (
+    !isset($_SESSION['user']['UserId']) 
+    && $_REQUEST['page'] <> 'login' 
+    && $_REQUEST['page'] <> 'log'
+) {
     $_SESSION['HTTP_REFERER'] = Url::requestUri();
     if (trim($_SERVER['argv'][0]) <> '') {
         header('location: reopen.php?' . $_SERVER['argv'][0]);
@@ -149,8 +135,6 @@ if (isset($_REQUEST['display'])) {
      $core->insert_page();
      exit();
 }
-
-//var_dump($_SESSION['info']);exit;
 
 if (isset($_GET['show'])) {
     $show = $_GET['show'];
@@ -169,21 +153,21 @@ $core->load_lang();
 $core->load_html();
 $core->load_header();
 $time = $core->get_session_time_expire();
-
 ?>
+
 <body style="background: #f2f2f2;" onload="session_expirate(<?php echo $time;?>, '<?php 
     echo $_SESSION['config']['businessappurl'];
     ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
 
 <?php
-$path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-      . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR . 'maarch_entreprise'. DIRECTORY_SEPARATOR . 'template'. DIRECTORY_SEPARATOR . 'header.html';
+$path = $_SESSION['config']['corepath'] . 'custom/'
+      . $_SESSION['custom_override_id'] . '/apps/maarch_entreprise/template/header.html';
 
 if (file_exists($path)) {
-    include_once('custom' . DIRECTORY_SEPARATOR
-      . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR . 'maarch_entreprise'. DIRECTORY_SEPARATOR . 'template'. DIRECTORY_SEPARATOR . 'header.html');
+    include_once('custom/' . $_SESSION['custom_override_id'] 
+        . '/apps/maarch_entreprise/template/header.html');
 } else {
-    include_once('apps' . DIRECTORY_SEPARATOR . 'maarch_entreprise'. DIRECTORY_SEPARATOR . 'template'. DIRECTORY_SEPARATOR . 'header.html');
+    include_once('apps/maarch_entreprise/template/header.html');
 }
 ?>
 
@@ -241,8 +225,7 @@ if (file_exists($path)) {
                 && isset($_SESSION['abs_user_status'])
                 && $_SESSION['abs_user_status'] == true) {
                 include
-                    'modules' . DIRECTORY_SEPARATOR . 'basket'
-                    . DIRECTORY_SEPARATOR . 'advert_missing.php';
+                    'modules/basket/advert_missing.php';
             } else {
               $core->insert_page();
             }
@@ -263,7 +246,5 @@ if (file_exists($path)) {
         $core->view_debug();
         ?>
     </div>
-
-<script type="text/javascript">//HideMenu('menunav');</script>
 </body>
 </html>

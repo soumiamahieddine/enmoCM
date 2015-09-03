@@ -241,9 +241,9 @@ function validate_cs_submit($mode)
         }
     } else {
         if ($mode == "add") {
-            $_SESSION['error'] = _DOCSERVER_ADDED;
+            $_SESSION['info'] = _DOCSERVER_ADDED;
         } else {
-            $_SESSION['error'] = _DOCSERVER_UPDATED;
+            $_SESSION['info'] = _DOCSERVER_UPDATED;
         }
         unset($_SESSION['m_admin']);
         header(
@@ -428,7 +428,7 @@ function display_del($docserverId)
         if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _DOCSERVER_DELETED . " " . $docserverId;
+            $_SESSION['info'] = _DOCSERVER_DELETED . " " . $docserverId;
         }
         $pageName = "docservers_management_controler";
         ?><script>window.top.location='<?php
@@ -458,7 +458,7 @@ function display_enable($docserverId)
         if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _DOCSERVER_ENABLED." ".$docserverId;
+            $_SESSION['info'] = _DOCSERVER_ENABLED." ".$docserverId;
         }
         $pageName = "docservers_management_controler";
         ?><script>window.top.location='<?php
@@ -488,7 +488,7 @@ function display_disable($docserverId)
         if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _DOCSERVER_DISABLED." ".$docserverId;
+            $_SESSION['info'] = _DOCSERVER_DISABLED." ".$docserverId;
         }
         $pageName = "docservers_management_controler";
         ?><script>window.top.location='<?php

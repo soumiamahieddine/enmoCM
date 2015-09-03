@@ -217,11 +217,11 @@ class indexing_searching_app extends Database
             {
                 if ($_ENV['categories'][$cat_id][$key]['mandatory'] == true  && $post[$key] == '' )
                 {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label'].' '._IS_EMPTY.'<br/>';
+                    $_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label'].' '._IS_EMPTY;
                 }
                 if ($_ENV['categories'][$cat_id][$key]['type_form'] == 'date' && !empty($post[$key]) && preg_match($_ENV['date_pattern'],$post[$key])== 0)
                 {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT." <br/>";
+                    $_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT;
                 }
                 else if ($_ENV['categories'][$cat_id][$key]['type_field'] == 'date' && $_ENV['categories'][$cat_id][$key]['table'] <> 'none' && !empty($post[$key]))
                 {
@@ -236,7 +236,7 @@ class indexing_searching_app extends Database
                 }
                 if ($_ENV['categories'][$cat_id][$key]['type_form'] == 'integer'  && preg_match("/^[0-9]+$/",$post[$key])== 0)
                 {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT." <br/>";
+                    $_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT;
                 }
                 else if ($_ENV['categories'][$cat_id][$key]['type_field'] == 'integer' && $_ENV['categories'][$cat_id][$key]['table'] <> 'none' && $post[$key] != '')
                 {
@@ -251,7 +251,7 @@ class indexing_searching_app extends Database
                 }
                 if ($_ENV['categories'][$cat_id][$key]['type_form'] == 'radio' && !empty($post[$key]) && !in_array($post[$key], $_ENV['categories'][$cat_id][$key]['values']))
                 {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT." <br/>";
+                    $_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT;
                 }
                 if ($_ENV['categories'][$cat_id][$key]['type_field'] == 'string' && $_ENV['categories'][$cat_id][$key]['table'] <> 'none' && !empty($post[$key]))
                 {
@@ -290,7 +290,7 @@ class indexing_searching_app extends Database
             && !empty($post['process_limit_date']) 
             && preg_match($_ENV['date_pattern'], $post['process_limit_date'])== 0)
         {
-            $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['label']." "._WRONG_FORMAT." <br/>";
+            $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['label']." "._WRONG_FORMAT;
         }
         if (!empty($post['process_limit_date'])) {
             array_push(
@@ -320,20 +320,20 @@ class indexing_searching_app extends Database
             {
                 if (empty($market) )
                 {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['market']['label'].' '._IS_EMPTY.'<br/>';
+                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['market']['label'].' '._IS_EMPTY;
                 }
             }
             if (!empty($market) )
             {
                 if (!preg_match('/\([0-9]+\)$/', $market))
                 {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['market']['label']." "._WRONG_FORMAT." <br/>";
+                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['market']['label']." "._WRONG_FORMAT;
                 }
                 $market_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
                 $stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($market_id));
                 if ($stmt->rowCount() == 0)
                 {
-                    $_SESSION['error'] .= _MARKET.' '.$market_id.' '._UNKNOWN.'<br/>';
+                    $_SESSION['error'] .= _MARKET.' '.$market_id.' '._UNKNOWN;
                 }
             }
             $project = '';
@@ -345,20 +345,20 @@ class indexing_searching_app extends Database
             {
                 if (empty($project))
                 {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['project']['label'].' '._IS_EMPTY.'<br/>';
+                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['project']['label'].' '._IS_EMPTY;
                 }
             }
             if (!empty($project) )
             {
                 if (!preg_match('/\([0-9]+\)$/', $project))
                 {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['project']['label']." "._WRONG_FORMAT." <br/>";
+                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['project']['label']." "._WRONG_FORMAT;
                 }
                 $project_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
                 $stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($project_id));
                 if ($stmt->rowCount() == 0)
                 {
-                    $_SESSION['error'] .= _MARKET.' '.$project_id.' '._UNKNOWN.'<br/>';
+                    $_SESSION['error'] .= _MARKET.' '.$project_id.' '._UNKNOWN;
                 }
             }
             if (!empty($project_id) && !empty($market_id))
@@ -366,7 +366,7 @@ class indexing_searching_app extends Database
                 $stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ? and parent_id = ?", array($market_id, $project_id));
                 if ($stmt->rowCount() == 0)
                 {
-                    $_SESSION['error'] .= _INCOMPATIBILITY_MARKET_PROJECT.'<br/>';
+                    $_SESSION['error'] .= _INCOMPATIBILITY_MARKET_PROJECT;
                 }
             }
 

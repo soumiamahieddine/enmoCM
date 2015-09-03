@@ -22,7 +22,7 @@ $pass2 = $func->wash($_REQUEST['pass2'], "no", _THE_PSW_VALIDATION);
 
 if($_SESSION['user']['pass'] <> $pass2)
 {
-	$_SESSION['error'] = _WRONG_SECOND_PSW.".<br />";
+	$_SESSION['error'] = _WRONG_SECOND_PSW;
 }
 else
 {

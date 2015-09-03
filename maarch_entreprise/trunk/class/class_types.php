@@ -283,7 +283,7 @@ class types extends database
         );
         $_SESSION['service_tag'] = '';
         if (! isset($_REQUEST['collection']) || empty($_REQUEST['collection'])) {
-            $_SESSION['error'] .= _COLLECTION . ' ' . _IS_MANDATORY . '.<br/>';
+            $_SESSION['error'] .= _COLLECTION . ' ' . _IS_MANDATORY;
         } else {
             $_SESSION['m_admin']['doctypes']['COLL_ID'] = $_REQUEST['collection'];
             $_SESSION['m_admin']['doctypes']['indexes'] = array();
@@ -315,7 +315,7 @@ class types extends database
         if (! isset($_REQUEST['sous_dossier'])
             || empty($_REQUEST['sous_dossier'])
         ) {
-            $_SESSION['error'] .= _THE_SUBFOLDER . ' ' . _IS_MANDATORY . '.<br/>';
+            $_SESSION['error'] .= _THE_SUBFOLDER . ' ' . _IS_MANDATORY;
         } else {
             $_SESSION['m_admin']['doctypes']['SUB_FOLDER'] = $func->wash(
                 $_REQUEST['sous_dossier'], "no", _THE_SUBFOLDER
@@ -421,7 +421,7 @@ class types extends database
                 );
                 $_SESSION['service_tag'] = '';
                 if ($_REQUEST['mode'] == "up") {
-                    $_SESSION['error'] = _DOCTYPE_MODIFICATION;
+                    $_SESSION['info'] = _DOCTYPE_MODIFICATION;
                     if ($_SESSION['history']['doctypesup'] == "true") {
                         $hist = new history();
                         $hist->add(
@@ -1063,7 +1063,7 @@ class types extends database
                 || $values[$mandatoryIndexes[$i]] == '')
             ) {
                 $_SESSION['error'] .= $indexes[$mandatoryIndexes[$i]]['label']
-                                   . ' <br/>' . _IS_EMPTY . '<br/>';
+                                   . _IS_EMPTY;
             }
         }
 
@@ -1072,8 +1072,8 @@ class types extends database
         foreach (array_keys($values) as $key) {
             if ($indexes[$key]['type'] == 'date' && ! empty($values[$key])) {
                 if (preg_match($datePattern, $values[$key]) == 0) {
-                    $_SESSION['error'] .= $indexes[$key]['label'] . " <br/>"
-                                       . _WRONG_FORMAT . ".<br/>";
+                    $_SESSION['error'] .= $indexes[$key]['label']
+                                       . _WRONG_FORMAT;
                     return false;
                 }
             } elseif ($indexes[$key]['type'] == 'string'
@@ -1095,8 +1095,8 @@ class types extends database
                     $values[$key], "num", $indexes[$key]['label']
                 );
             } elseif (!empty($values[$key])) {
-                $_SESSION['error'] .= $indexes[$key]['label'] . " <br/>"
-                                       . _WRONG_FORMAT . ".<br/>";
+                $_SESSION['error'] .= $indexes[$key]['label']
+                                       . _WRONG_FORMAT;
                 return false;
             }
 
@@ -1111,8 +1111,8 @@ class types extends database
                     }
                 }
                 if (! $found && $values[$key] <> "") {
-                    $_SESSION['error'] .= $indexes[$key]['label'] . " <br/>: "
-                                       . _ITEM_NOT_IN_LIST . ".<br/>";
+                    $_SESSION['error'] .= $indexes[$key]['label'] . " : "
+                                       . _ITEM_NOT_IN_LIST . "";
                     return false;
                 }
             }

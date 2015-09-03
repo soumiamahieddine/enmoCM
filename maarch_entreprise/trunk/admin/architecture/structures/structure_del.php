@@ -83,7 +83,7 @@ else
 		$users = new history();
 		$users->add($_SESSION['tablename']['doctypes_first_level'], $id,"DEL",'structuredel',_STRUCTURE_DEL." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
 	}
-	$_SESSION['error'] = _DELETED_STRUCTURE.".";
+	$_SESSION['info'] = _DELETED_STRUCTURE;
 	unset($_SESSION['m_admin']);
 	header("location: ".$_SESSION['config']['businessappurl']."index.php?page=structures&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what']);
 	exit();

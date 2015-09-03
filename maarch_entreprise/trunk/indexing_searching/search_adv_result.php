@@ -840,7 +840,7 @@ $json_txt .= '}';
 
 $_SESSION['current_search_query'] = $json_txt;
 if (!empty($_SESSION['error_search'])) {
-    $_SESSION['error'] = _MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'</strong>';
+    $_SESSION['error'] = _MUST_CORRECT_ERRORS.' : '.$_SESSION['error_search'];
     if ($mode == 'normal') {
         ?>
         <script  type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>

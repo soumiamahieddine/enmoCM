@@ -82,7 +82,7 @@ else
             $users = new history();
             $users->add($_SESSION['tablename']['doctypes'], $s_id,"DEL",'doctypesdel',_DOCTYPE_DELETION." : ".$info->description, $_SESSION['config']['databasetype']);
         }
-        $_SESSION['error'] = _DELETED_DOCTYPE;
+        $_SESSION['info'] = _DELETED_DOCTYPE;
 
         ?>
             <script type="text/javascript">window.location.href="<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=types&order=<?php functions::xecho($_REQUEST['order']);?>&order_field=<?php functions::xecho($_REQUEST['order_field']);?>&start=<?php functions::xecho($_REQUEST['start']);?>&what=<?php functions::xecho($_REQUEST['what']);?>";</script>
@@ -109,7 +109,7 @@ else
             $users = new history();
             $users->add($_SESSION['tablename']['doctypes'], $s_id,"DEL",'doctypesdel',_DOCTYPE_DELETION." : ".$info->description, $_SESSION['config']['databasetype']);
         }
-        $_SESSION['error'] = _DELETED_DOCTYPE;
+        $_SESSION['info'] = _DELETED_DOCTYPE;
 
         ?>
             <script type="text/javascript">window.location.href="<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=types&order=<?php functions::xecho($_REQUEST['order']);?>&order_field=<?php functions::xecho($_REQUEST['order_field']);?>&start=<?php functions::xecho($_REQUEST['start']);?>&what=<?php functions::xecho($_REQUEST['what']);?>";</script>

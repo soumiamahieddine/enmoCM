@@ -150,7 +150,7 @@ if (isset($_REQUEST['valid'])) {
 						    $_SESSION['config']['databasetype']
 						);
 					}
-					$_SESSION['error'] .= _STRUCTURE_MODIF . " : " . $id . "<br/>";
+					$_SESSION['info'] .= _STRUCTURE_MODIF . " : " . $id;
 				} else {
 					$erreur .= _ID_STRUCTURE_PB . ".";
 				}
@@ -187,7 +187,7 @@ if (isset($_REQUEST['valid'])) {
 					);
 
 				}
-				$_SESSION['error'] .= _NEW_STRUCTURE . " : " . $desc . "<br/>";
+				$_SESSION['info'] .= _NEW_STRUCTURE . " : " . $desc;
 			}
 		}
 	}

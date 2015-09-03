@@ -385,7 +385,7 @@ function displayDel($groupId)
         if (! empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _DELETED_GROUP.' : '.$groupId;
+            $_SESSION['info'] = _DELETED_GROUP.' : '.$groupId;
         }
 
         ?><script type="text/javascript">window.top.location='<?php
@@ -446,7 +446,7 @@ function displayDelCheck($groupId)
                     );
                 } 
 
-                $_SESSION['error'] = _DELETED_GROUP.' : '.$old_group;
+                $_SESSION['info'] = _DELETED_GROUP.' : '.$old_group;
              } ?>
             <script type="text/javascript">window.top.location='<?php
         echo $_SESSION['config']['businessappurl'] . 'index.php?page='
@@ -531,7 +531,7 @@ function displayEnable($groupId)
         if ( ! empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _AUTORIZED_GROUP.' : '.$groupId;
+            $_SESSION['info'] = _AUTORIZED_GROUP.' : '.$groupId;
         }
         $url = $_SESSION['config']['businessappurl'] . 'index.php?page='
              . 'usergroups_management_controler&mode=list&admin=groups&order='
@@ -570,7 +570,7 @@ function displayDisable($groupId)
         if (! empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _SUSPENDED_GROUP.' : '.$groupId;
+            $_SESSION['info'] = _SUSPENDED_GROUP.' : '.$groupId;
         }
         $url = $_SESSION['config']['businessappurl'] . 'index.php?page='
              . 'usergroups_management_controler&mode=list&admin=groups&order='
@@ -693,9 +693,9 @@ function validateGroupSubmit()
         }
     } else {
         if ($mode == 'add') {
-            $_SESSION['error'] = _GROUP_ADDED;
+            $_SESSION['info'] = _GROUP_ADDED;
         } else {
-            $_SESSION['error'] = _GROUP_UPDATED;
+            $_SESSION['info'] = _GROUP_UPDATED;
         }
         unset($_SESSION['m_admin']);
         header(

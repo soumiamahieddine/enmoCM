@@ -134,7 +134,7 @@ class ReopenMail extends Database
                 );
             }
 
-            $_SESSION['error'] = $historyMsg;
+            $_SESSION['info'] = $historyMsg;
             
             unset($_SESSION['m_admin']);
             header(

@@ -77,7 +77,7 @@ if ($_REQUEST['valid']) {
 			$users = new history();
 			$users->add($_SESSION['tablename']['contact_purposes'], $id,"DEL",'contact_purposes_del',_CONTACT_TYPE_DEL." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
 		}
-		$_SESSION['error'] = _DELETED_CONTACT_PURPOSE.".";
+		$_SESSION['info'] = _DELETED_CONTACT_PURPOSE.".";
 		unset($_SESSION['m_admin']);
 		?>
 	        <script type="text/javascript">

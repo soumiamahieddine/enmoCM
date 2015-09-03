@@ -146,7 +146,7 @@ if (isset($_REQUEST['valid'])) {
 							    $_SESSION['config']['databasetype']
 							);
 						}
-						$_SESSION['error'] .= _CONTACT_TYPE_MODIF . " : " . $id . "<br/>";
+						$_SESSION['info'] .= _CONTACT_TYPE_MODIF . " : " . $id;
 					} else {
 						$erreur .= _ID_CONTACT_TYPE_PB . ".";
 					}
@@ -182,7 +182,7 @@ if (isset($_REQUEST['valid'])) {
 					);
 
 				}
-				$_SESSION['error'] .= _NEW_CONTACT_TYPE . " : " . $desc . "<br/>";
+				$_SESSION['info'] .= _NEW_CONTACT_TYPE . " : " . $desc;
 			}
 		}
 	}
