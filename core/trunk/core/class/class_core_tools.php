@@ -261,12 +261,15 @@ class core_tools extends functions
         if (isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_id']))
             self::load_lang_custom_override($_SESSION['custom_override_id']);
 
-        if(isset($lang) && file_exists($maarch_directory.'apps'.DIRECTORY_SEPARATOR.$maarch_apps.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$lang.'.php'))
+        if(isset($lang) && file_exists($maarch_directory.'apps/maarch_entreprise/lang'.DIRECTORY_SEPARATOR.$lang.'.php'))
         {
-            include($maarch_directory.'apps'.DIRECTORY_SEPARATOR.$maarch_apps.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$lang.'.php');
+            include($maarch_directory.'apps/maarch_entreprise/lang'.DIRECTORY_SEPARATOR.$lang.'.php');
         }
         else
         {
+            echo $lang . '<br />';
+            echo $maarch_directory.'apps'.DIRECTORY_SEPARATOR.$maarch_apps.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$lang.'.php';
+            exit();
             $_SESSION['error'] = "Language file missing";
         }
         if(isset($_SESSION['modules']))
