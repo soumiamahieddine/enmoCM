@@ -267,9 +267,6 @@ class core_tools extends functions
         }
         else
         {
-            echo $lang . '<br />';
-            echo $maarch_directory.'apps'.DIRECTORY_SEPARATOR.$maarch_apps.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$lang.'.php';
-            exit();
             $_SESSION['error'] = "Language file missing";
         }
         if(isset($_SESSION['modules']))
