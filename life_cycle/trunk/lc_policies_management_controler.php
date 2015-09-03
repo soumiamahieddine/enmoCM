@@ -175,9 +175,9 @@ function validate_cs_submit($mode)
         }
     } else {
         if ($mode == "add")
-            $_SESSION['error'] = _LC_POLICY_ADDED;
+            $_SESSION['info'] = _LC_POLICY_ADDED;
          else
-            $_SESSION['error'] = _LC_POLICY_UPDATED;
+            $_SESSION['info'] = _LC_POLICY_UPDATED;
         unset($_SESSION['m_admin']);
         header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
     }
@@ -303,7 +303,7 @@ function display_del($policy_id)
         if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _LC_POLICY_DELETED." ".$policy_id;
+            $_SESSION['info'] = _LC_POLICY_DELETED." ".$policy_id;
         }
         $pageName = "lc_policies_management_controler";
         ?>

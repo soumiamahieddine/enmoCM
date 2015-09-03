@@ -181,9 +181,9 @@ function validate_cs_submit($mode) {
         }
     } else {
         if ($mode == "add")
-            $_SESSION['error'] = _LC_CYCLE_ADDED;
+            $_SESSION['info'] = _LC_CYCLE_ADDED;
          else
-            $_SESSION['error'] = _LC_CYCLE_UPDATED;
+            $_SESSION['info'] = _LC_CYCLE_UPDATED;
         unset($_SESSION['m_admin']);
         header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
     }
@@ -299,7 +299,7 @@ function display_del($cycle_id) {
         if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _LC_CYCLE_DELETED." ".$cycle_id;
+            $_SESSION['info'] = _LC_CYCLE_DELETED." ".$cycle_id;
         }
         $pageName = "lc_cycles_management_controler";
         ?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>

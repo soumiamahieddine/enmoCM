@@ -242,9 +242,9 @@ function validate_cs_submit($mode)
         }
     } else {
         if ($mode == "add") {
-            $_SESSION['error'] = _LC_CYCLE_STEP_ADDED;
+            $_SESSION['info'] = _LC_CYCLE_STEP_ADDED;
         } else {
-            $_SESSION['error'] = _LC_CYCLE_STEP_UPDATED;
+            $_SESSION['info'] = _LC_CYCLE_STEP_UPDATED;
         }
         unset($_SESSION['m_admin']);
         header("location: ".$_SESSION['config']['businessappurl']
@@ -398,7 +398,7 @@ function display_del($cycleStepId)
         if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _LC_CYCLE_STEP_DELETED." ".$cycleStepId;
+            $_SESSION['info'] = _LC_CYCLE_STEP_DELETED." ".$cycleStepId;
         }
         $pageName = "lc_cycle_steps_management_controler";
         ?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']
