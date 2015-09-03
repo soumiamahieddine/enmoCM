@@ -245,9 +245,9 @@ function validate_cs_submit($mode)
         }
     } else {
         if ($mode == 'add')
-            $_SESSION['error'] = _TEMPLATE_ADDED;
+            $_SESSION['info'] = _TEMPLATE_ADDED;
          else
-            $_SESSION['error'] = _TEMPLATE_UPDATED;
+            $_SESSION['info'] = _TEMPLATE_UPDATED;
         unset($_SESSION['m_admin']);
         header('location: ' . $_SESSION['config']['businessappurl'] 
             . 'index.php?page=' . $pageName . '&mode=list&module=templates&order=' 
@@ -444,7 +444,7 @@ function display_del($template_id)
         if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace('#', '<br />', $control['error']);
         } else {
-            $_SESSION['error'] = _TEMPLATE_DELETED . ' ' . $template_id;
+            $_SESSION['info'] = _TEMPLATE_DELETED . ' ' . $template_id;
         }
         $pageName = 'templates_management_controler';
         ?>
