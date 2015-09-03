@@ -24,11 +24,11 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
             {
                 if($cases->join_res($actual_case_id, $res_id_to_insert)==true)
                 {
-                    $_SESSION['error'] = _RESSOURCES_LINKED;
+                    $_SESSION['info'] = _RESSOURCES_LINKED;
                 }
                 else
                 {
-                    $_SESSION['error'] = _RESSOURCES_NOT_LINKED;
+                    $_SESSION['info'] = _RESSOURCES_NOT_LINKED;
                 }
                 ?>
                 <script type="text/javascript">
