@@ -1358,3 +1358,14 @@ if (!defined('_SIGNATORY_GROUP')) define( '_SIGNATORY_GROUP', 'Signatory group')
 
 if (!defined('_SIGNATURE')) define( '_SIGNATURE','Signature');
 
+
+//maarchIVS translate
+define("_IVS_LENGTH_ID_BELOW_MIN_LENGTH", "Length id below the minimal length");
+define("_IVS_LENGTH_EXCEEDS_MAX_LENGTH", "Length exceeds the maximal length");
+define("_IVS_LENGTH_NOT_ALLOWED", "Length is not allowed");
+define("_IVS_VALUE_NOT_ALLOWED", "Value is not allowed");
+define("_IVS_FORMAT_NOT_ALLOWED", "Format is not allowed");
+define("_IVS_VALUE_BELOW_MIN_VALUE", "Value is below the minimal value");
+define("_IVS_VALUE_EXCEEDS_MAX_VALUE", "Value exceeds the maximal value");
+define("_IVS_TOO_MANY_DIGITS", "Too many digits");
+define("_IVS_TOO_MANY_DECIMAL_DIGITS", "Too many decimal digits");

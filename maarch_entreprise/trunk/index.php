@@ -37,33 +37,6 @@ if ($_SESSION['config']['usePHPIDS'] == 'true') {
     include 'apps/maarch_entreprise/phpids_control.php';
 }
 
-include 'apps/maarch_entreprise/tools/maarchIVS/MaarchIVS.php';
-$started = MaarchIVS::start(__DIR__ . '/xml/IVS/requests_definitions.xml', 'xml');
-$valid = MaarchIVS::run('silent');
-if (!$valid) {
-    $validOutpout = MaarchIVS::debug();
-    $cptValid = count($validOutpout['validationErrors']);
-    $error = '';
-    for ($cptV=0;$cptV<=count($cptValid);$cptV++) {
-        $error .= $validOutpout['validationErrors'][$cptV]->message . PHP_EOL;
-        $error .= $validOutpout['validationErrors'][$cptV]->parameter . PHP_EOL;
-        $error .= $validOutpout['validationErrors'][$cptV]->value . PHP_EOL;
-    }
-    //process error for ajax request 
-    if (
-        array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) 
-        && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
-    ) {
-        echo $error;
-        exit;
-    } else {
-        //process error for standard request
-        $_SESSION['error'] = $error;
-    }
-} else {
-    //Request is valid
-}
-
 if (isset($_SESSION['config']['corepath'])) {
     require_once 'core/class/class_functions.php';
     require_once 'core/class/class_db.php';
@@ -95,6 +68,55 @@ if (isset($_SESSION['config']['corepath'])) {
             $path . '/' . $_SESSION['config']['corepath']
         );
     }
+}
+
+$core->load_lang();
+
+include 'apps/maarch_entreprise/tools/maarchIVS/MaarchIVS.php';
+$started = MaarchIVS::start(__DIR__ . '/xml/IVS/requests_definitions.xml', 'xml');
+$valid = MaarchIVS::run('silent');
+if (!$valid) {
+    $validOutpout = MaarchIVS::debug();
+    $cptValid = count($validOutpout['validationErrors']);
+    $error = '';
+    for ($cptV=0;$cptV<=count($cptValid);$cptV++) {
+        $message = $validOutpout['validationErrors'][$cptV]->message;
+        if ($message == "Length id below the minimal length") {
+            $message = _IVS_LENGTH_ID_BELOW_MIN_LENGTH;
+        } elseif ($message == "Length exceeds the maximal length") {
+            $message = _IVS_LENGTH_EXCEEDS_MAX_LENGTH;
+        } elseif ($message == "Length is not allowed") {
+            $message = _IVS_LENGTH_NOT_ALLOWED;
+        } elseif ($message == "Value is not allowed") {
+            $message = _IVS_VALUE_NOT_ALLOWED;
+        } elseif ($message == "Format is not allowed") {
+            $message = _IVS_FORMAT_NOT_ALLOWED;
+        } elseif ($message == "Value is below the minimal value") {
+            $message = _IVS_VALUE_BELOW_MIN_VALUE;
+        } elseif ($message == "Value exceeds the maximal value") {
+            $message = _IVS_LENGTH_EXCEEDS_MAX_LENGTH;
+        } elseif ($message == "Too many digits") {
+            $message = _IVS_TOO_MANY_DIGITS;
+        } elseif ($message == "Too many decimal digits") {
+            $message = _IVS_TOO_MANY_DECIMAL_DIGITS;
+        }
+        $error .= $message . PHP_EOL;
+        $error .= $validOutpout['validationErrors'][$cptV]->parameter . PHP_EOL;
+        $error .= $validOutpout['validationErrors'][$cptV]->value . PHP_EOL;
+    }
+    //process error for ajax request 
+    if (
+        array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) 
+        && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+    ) {
+        echo $error;
+        exit;
+    } else {
+        //process error for standard request
+        $_SESSION['error'] = $error;
+    }
+} else {
+    //Request is valid
 }
 
 if (
@@ -149,7 +171,7 @@ if (isset($_SESSION['HTTP_REFERER'])) {
     unset($_SESSION['HTTP_REFERER']);
     header('location: '.$url);
 }
-$core->load_lang();
+
 $core->load_html();
 $core->load_header();
 $time = $core->get_session_time_expire();

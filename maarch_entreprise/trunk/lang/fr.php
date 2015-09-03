@@ -1700,3 +1700,12 @@ if (!defined('_SEND_TO_VISA'))    define( '_SEND_TO_VISA', 'Envoi pour visa');
 
 if (!defined("_MAIL_WILL_DISAPPEAR"))    define("_MAIL_WILL_DISAPPEAR", "Ce courrier sort de votre périmètre. Vous ne pourrez plus y accéder ensuite.");
 
+//maarchIVS translate
+
+define("_IVS_LENGTH_ID_BELOW_MIN_LENGTH", "La longueur est infèrieure à la longueur minimale");
+define("_IVS_LENGTH_EXCEEDS_MAX_LENGTH", "La longueur est supérieure à la longueur maximale");
+define("_IVS_LENGTH_NOT_ALLOWED", "La longueur n'est pas autorisée");
+define("_IVS_VALUE_NOT_ALLOWED", "La valeur n'est pas autorisée");
+define("_IVS_FORMAT_NOT_ALLOWED", "Le format n'est pas autorisé");
+define("_IVS_TOO_MANY_DIGITS", "Trop de caractères");
+define("_IVS_TOO_MANY_DECIMAL_DIGITS", "Trop de caractères décimaux");
