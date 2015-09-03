@@ -162,6 +162,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $cr = new chrono();
     $db = new Database();
     $_SESSION['save_list']['fromProcess'] = "true";
+    $_SESSION['count_view_baskets']=0;
     $data = array();
     $params_data = array('show_folder' => false);
     $data = get_general_data($coll_id, $res_id, 'full', $params_data);

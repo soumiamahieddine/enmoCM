@@ -174,6 +174,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $business = new business_app_tools();
 
     $_SESSION['save_list']['fromValidateMail'] = "true";
+    $_SESSION['count_view_baskets']=0;
 
     if($_SESSION['features']['show_types_tree'] == 'true')
     {
