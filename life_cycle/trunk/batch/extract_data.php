@@ -402,7 +402,7 @@ try {
                 $answer, 
                 $arrayAttachments[0]['typist'], 
                 $arrayAttachments[0]['creation_date'], 
-                "", // date de départ
+                format_date_db(str_replace("/", "-",$selectedFile->closing_date), "", $GLOBALS['databasetype']), // date de départ
                 "", // Modèle de réponse //30 
                 $NbTransmission, 
                 $arrayTransmission[0]['identifier'], //"Numéro chrono transmission 1", 
