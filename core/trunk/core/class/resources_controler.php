@@ -445,15 +445,32 @@ class resources_controler
                 $queryExtValuesFinal = '('; 
                 $parameters = array();
 	            $db = new Database();
+                $findProcessLimitDate = false;
+                $findProcessNotes = false;
+                $delayProcessNotes = 0;
+
+                for ($i=0;$i<count($data);$i++) {
+                    if ($data[$i]['column'] == 'process_limit_date') {
+                        $findProcessLimitDate = true;
+                    }
+                    if ($data[$i]['column'] == 'process_notes') {
+                        $findProcessNotes = true;
+                        $delayProcessNotes = $data[$i]['value'];
+                    }
+                }
+
                 if ($table == 'mlb_coll_ext') {
-        		$processLimitDate = $this->retrieveProcessLimitDate($resId);
-        		//echo $processLimitDate;
+                    if ($delayProcessNotes > 0) {
+                        $processLimitDate = $this->retrieveProcessLimitDate(
+                            $resId, 
+                            $delayProcessNotes
+                        );
+                    } else {
+                        $processLimitDate = $this->retrieveProcessLimitDate($resId);
+                    }
+                    //echo $processLimitDate;
         		}
-        		for ($i=0;$i<count($data);$i++) {
-            		if ($data[$i]['column'] == 'process_limit_date') {
-            		    $findProcessLimitDate = true;
-            		}
-            	}
+        		
         		if (!$findProcessLimitDate && $processLimitDate <> '') {
             		array_push(
             		    $data,
@@ -464,6 +481,7 @@ class resources_controler
             		    )
             		);
         		}
+
 		        //var_dump($data);
 	            for ($i=0;$i<count($data);$i++) {
 	                if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
@@ -579,7 +597,7 @@ class resources_controler
     #####################################
     ## Retrieve process_limit_date for resource in extension table if mlb
     #####################################
-    public function retrieveProcessLimitDate($resId)
+    public function retrieveProcessLimitDate($resId, $defaultDelay = 0)
     {
         $processLimitDate = '';
         if ($resId <> '') {
@@ -604,7 +622,9 @@ class resources_controler
             } else {
                 $dateToCompute = $admissionDate;
             }
-            if ($delay == 0) {
+            if ($defaultDelay > 0) {
+                $delay = $defaultDelay;
+            } elseif ($delay == 0) {
                 $delay = 5;
             }
             require_once('core/class/class_alert_engine.php');
