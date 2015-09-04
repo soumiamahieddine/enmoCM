@@ -44,6 +44,11 @@
       <parameter name="page" value="users_list_by_name_search"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="user_update" >
+      <parameter name="admin" value="users"/>
+      <parameter name="page" value="user_modif"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
 
     <!-- Admin action -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
