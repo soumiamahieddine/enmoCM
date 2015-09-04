@@ -592,7 +592,7 @@ class functions
                             var label3 = document.createTextNode("<?php functions::xecho($_SESSION['location_bar']['level3']['label']);?>");
                             link3.appendChild(label3);
                             bar.appendChild(link3);
-                            var text3 = document.createTextNode(" > <?php functions::xecho($_SESSION['location_bar']['level4']['label']);?>");
+                            var text3 = document.createTextNode(" > <?php echo $_SESSION['location_bar']['level4']['label'];?>");
                             bar.appendChild(text3);
                         }
                     </script><?php
