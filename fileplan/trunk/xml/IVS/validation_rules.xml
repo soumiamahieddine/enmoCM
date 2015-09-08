@@ -17,12 +17,12 @@
 		<parameter name="id" type="identifierAt" />
 		<parameter name="actual_position_id" type="integer" />
 		<parameter name="fileplan_id" type="integer" />
-		<parameter name="fileplan_label" type="safetext" />
-		<parameter name="origin" type="safetext" />
-		<parameter name="mode" type="safetext" />
-		<parameter name="valid" type="safetext" />
-		<parameter name="cancel" type="safetext" />
-		<parameter name="position_label" type="safetext" />
+		<parameter name="fileplan_label" type="string" />
+		<parameter name="origin" type="string" />
+		<parameter name="mode" type="string" />
+		<parameter name="valid" type="string" />
+		<parameter name="cancel" type="string" />
+		<parameter name="position_label" type="string" />
 		<parameter name="url" type="url" />
 		<parameter name="parent_id" type="identifier_fileplan" />
 		<parameter name="values" type="arrayOfStrings" />
@@ -44,7 +44,7 @@
 		<parameter name="res_id" type="identifierAt" />
 		<parameter name="fileplan_id" type="integer" />
 		<parameter name="url" type="url" />
-		<parameter name="param" type="safetext" />
+		<parameter name="param" type="string" />
 	</validationRule>
 	<validationRule name="positions_documents_list" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
