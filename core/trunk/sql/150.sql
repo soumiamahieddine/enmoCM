@@ -198,6 +198,9 @@ ALTER TABLE templates ADD template_target character varying(255);
 ALTER TABLE entities DROP COLUMN IF EXISTS entity_path;
 ALTER TABLE entities ADD entity_path character varying(2048);
 
+ALTER TABLE baskets DROP COLUMN IF EXISTS basket_order;
+ALTER TABLE baskets ADD basket_order integer;
+
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS is_multicontacts; 
 ALTER TABLE mlb_coll_ext ADD is_multicontacts character(1);
 

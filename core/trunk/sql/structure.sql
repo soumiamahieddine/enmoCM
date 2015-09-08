@@ -700,6 +700,7 @@ CREATE TABLE baskets
   is_visible character(1) NOT NULL DEFAULT 'Y'::bpchar,
   is_folder_basket character (1) NOT NULL default 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  basket_order integer,
   CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id)
 )
 WITH (OIDS=FALSE);
