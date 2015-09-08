@@ -55,7 +55,7 @@
       <parameter name="desc" type="string" />
       <parameter name="fields" type="identifier" />
       <parameter name="mandatory_fields" type="identifier" />
-      <parameter name="Submit" type="safetext" />
+      <parameter name="Submit" type="string" />
     </validationRule>
     <validationRule name="fo_foldertype_del" extends="standardForm" mode="error">
       <parameter name="id" type="integer" />
