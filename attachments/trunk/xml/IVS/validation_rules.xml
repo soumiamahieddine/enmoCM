@@ -16,7 +16,7 @@
 		<parameter name="chrono" type="string" />
 		<parameter name="contact_attach" type="string" />
 		<parameter name="contactidAttach" type="identifier" />
-		<parameter name="edit" type="safetext" />
+		<parameter name="edit" type="string" />
 		<parameter name="fromDetail" type="string" />
 		<parameter name="templateOffice" type="string" />
 		<parameter name="title" type="string" />
@@ -42,7 +42,7 @@
 
 	<validationRule name="choose_attachment" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
-		<parameter name="dir" type="safetext" />
+		<parameter name="dir" type="string" />
 		<parameter name="file" type="YN" />
 	</validationRule>
 
