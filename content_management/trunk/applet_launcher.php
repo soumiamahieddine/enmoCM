@@ -170,7 +170,7 @@ if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "false"){
     <div id="maarchcm_error" class="error"></div>
     <applet ARCHIVE="<?php 
             echo $_SESSION['config']['coreurl'];?>modules/content_management/dist/maarchCM.jar" 
-        code="maarchcm.MaarchCM" name="maarchcmapplet" id="maarchcmapplet" 
+        code="com.maarch.MaarchCM" name="maarchcmapplet" id="maarchcmapplet" 
         WIDTH="1" HEIGHT="1" version = "1.6">
         <param name="url" value="<?php 
             echo $_SESSION['config']['coreurl'].$path;

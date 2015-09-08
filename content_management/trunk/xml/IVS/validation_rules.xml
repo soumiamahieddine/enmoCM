@@ -15,7 +15,7 @@
 		<parameter name="objectTable" type="cm_table_list" />
 		<parameter name="objectId" type="identifier" />
 		<parameter name="contactId" type="identifier" />
-		<parameter name="chronoAttachment" type="safetext" />
+		<parameter name="chronoAttachment" type="string" />
 		<parameter name="resMaster" type="identifier" />
     </validationRule>
 </validationRules>
