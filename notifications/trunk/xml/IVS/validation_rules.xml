@@ -3,24 +3,24 @@
 		<parameter name="module" type="identifier" />
 		<parameter name="mode" type="mode" />
 		<parameter name="id" type="identifier" />
-		<parameter name="notif_submit" type="safetext" />
-		<parameter name="what" type="safetext" />
+		<parameter name="notif_submit" type="string" />
+		<parameter name="what" type="string" />
 		<parameter name="order" type="order" />
 		<parameter name="order_field" type="order" />
 		<parameter name="notification_sid" type="integer" />
 		<parameter name="notification_id" type="identifier" />
-		<parameter name="description" type="safetext" />
+		<parameter name="description" type="string" />
 		<parameter name="event_id" type="integer" />
-		<parameter name="notification_mode" type="safetext" />
-		<parameter name="rss_url_template" type="safetext" />
+		<parameter name="notification_mode" type="string" />
+		<parameter name="rss_url_template" type="string" />
 		<parameter name="template_id" type="integer" />
 		<parameter name="is_enabled" type="YN" />
-		<parameter name="diffusion_type" type="safetext" />
-		<parameter name="attachfor_type" type="safetext" />
+		<parameter name="diffusion_type" type="string" />
+		<parameter name="attachfor_type" type="string" />
 		<parameter name="attach_for_type" type="identifier" />
 		<parameter name="attachfor_values" type="identifier" />
-		<parameter name="diffusion_properties" type="safetext" />
-		<parameter name="attachfor_properties" type="safetext" />
+		<parameter name="diffusion_properties" type="string" />
+		<parameter name="attachfor_properties" type="string" />
 		<parameter name="statuseslist" type="identifier" />
 		<parameter name="event_id" type="string" />
 		<parameter name="is_enabled" type="boolean" />
