@@ -1,23 +1,23 @@
 <validationRules>
 	<!-- validationRule name="template_manage_list" extends="standardForm" mode="error">
-		<parameter name="what" type="safetext" />
+		<parameter name="what" type="string" />
 	</validationRule -->
 	<validationRule name="template_manage_add" extends="standardForm" mode="error">
 		<parameter name="id" type="integer" />
 		<parameter name="module" type="identifier" />
-		<parameter name="what" type="safetext" />
-		<parameter name="template_label" type="safetext" />
-		<parameter name="template_comment" type="safetext" />
+		<parameter name="what" type="string" />
+		<parameter name="template_label" type="string" />
+		<parameter name="template_comment" type="string" />
 		<parameter name="template_target" type="identifier" />
 		<parameter name="template_attachment_type" type="identifier" />
 		<parameter name="template_type" type="identifier" />
 		<parameter name="template_datasource" type="identifier" />
-		<parameter name="template_content" type="safetext" />
-		<parameter name="template_content_txt" type="safetext" />
+		<parameter name="template_content" type="string" />
+		<parameter name="template_content_txt" type="string" />
 		<parameter name="template_style" type="document_id" />
 		<parameter name="entities_chosen" type="identifier" />
 		<parameter name="submit" type="identifier" />
-		<parameter name="Submit" type="safetext" />
+		<parameter name="Submit" type="string" />
 		<parameter name="template_file_name" type="docserver_file" />
 		<parameter name="template_path" type="docserver_path" />
 	</validationRule>
