@@ -91,6 +91,8 @@ if (!defined("_OUTGOING_MAIL_SIGNED"))
     define( "_OUTGOING_MAIL_SIGNED", "Courrier départ signé");
 if (!defined("_CONVERTED_PDF"))
     define( "_CONVERTED_PDF", "PDF converti par la solution");
+if (!defined("_PRINT_FOLDER"))
+    define( "_PRINT_FOLDER", "Dossier imprimé");
 if (!defined("_OUTGOING_MAIL"))
     define( "_OUTGOING_MAIL", "Courrier départ spontané");
 if (!defined("_A_PJ"))
