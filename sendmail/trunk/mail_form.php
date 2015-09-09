@@ -119,7 +119,7 @@ if ($mode == 'add') {
     $content .='<select name="sender_email" id="sender_email">
                     <option value="'.$_SESSION['user']['Mail'].'" selected="selected">'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . ' (' . $_SESSION['user']['Mail'] . ')</option>';
     foreach ($userEntitiesMails as $key => $value) {
-        $content .= '<option value="'.$value.'" >' . $value . '</option>';
+        $content .= '<option value="'.$key.'" >' . $value . '</option>';
     }
     $content .='</select>';
     $content .='</td>';
@@ -419,9 +419,9 @@ if ($mode == 'add') {
 
             $content .= '>'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . ' (' . $_SESSION['user']['Mail'] . ')</option>';
             foreach ($userEntitiesMails as $key => $value) {
-                $content .= '<option value="'.$value.'" ';
+                $content .= '<option value="'.$key.'" ';
 
-                if ($emailArray['sender_email'] == $value) {
+                if ($emailArray['sender_email'] == $key) {
                     $content .= ' selected="selected" ';
                 }
                 $content .= '>' . $value . '</option>';
@@ -720,11 +720,14 @@ if ($mode == 'add') {
 
 			$content .= '<td width="10%" align="right" nowrap><b>'.ucfirst(_FROM_SHORT).' </b></td><td width="90%" colspan="2">';
 
-            if ($emailArray['sender_email'] == $usermailArray['mail']) {
-                $content .= $usermailArray['firstname'].' '.$usermailArray['lastname']
-                    .' ('.$emailArray['sender_email'].')'; 
+            $mailEntities = $sendmail_tools->getAttachedEntitiesMails();
+
+            if (in_array($emailArray['sender_email'], array_keys($mailEntities))) {
+                $content .= $mailEntities[$emailArray['sender_email']];
+            } else if ($emailArray['sender_email'] == $usermailArray['mail']) {
+                 $content .= $usermailArray['firstname'] . " " . $usermailArray['lastname'] . " (".$emailArray['sender_email'].")";
             } else {
-                $content .= $emailArray['sender_email'];                 
+                $content .= $sendmail_tools->explodeSenderEmail($emailArray['sender_email']);
             }
 
             $content .= '<br/></td>';

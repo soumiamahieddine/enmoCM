@@ -751,22 +751,23 @@ class sendmail extends Database
         }
     }
 
-    public function getAttachedEntitiesMails($user_id) {
+    public function getAttachedEntitiesMails($user_id="") {
         $db = new Database;
         $arrayEntitiesMails = array();
 
-        $stmt = $db->query("SELECT e.short_label, e.email FROM ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e
-                            WHERE ue.user_id = ? and ue.entity_id = e.entity_id order by e.short_label", array($user_id));
+        if ($user_id <> "") {
+            $stmt = $db->query("SELECT e.short_label, e.email, e.entity_id FROM users_entities ue, entities e
+                                WHERE ue.user_id = ? and ue.entity_id = e.entity_id and enabled = 'Y' order by e.short_label", array($user_id));
+        } else {
+            $stmt = $db->query("SELECT short_label, email, entity_id FROM entities WHERE enabled = 'Y'");            
+        }
 
-        $numberMailEntities = array();
+        $userEntities = array();
         while ($res = $stmt->fetchObject()) {
             if ($res->email <> "") {
-                $arrayEntitiesMails[$res->short_label] = $res->email;
-                $numberMailEntities[$res->short_label] = 1;
-            } else {
-                $numberMailEntities[$res->short_label] = 0;                
+                $arrayEntitiesMails[$res->entity_id.','.$res->email] = $res->short_label . " (". $res->email .")";
+                $userEntities[]=$res->entity_id;
             }
-
         }
 
         $getXml = false;
@@ -778,14 +779,14 @@ class sendmail extends Database
             . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml'
         )
         ) {
-            $path = 'custom' . DIRECTORY_SEPARATOR
+            $path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
                 . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
                 . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
                 . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml';
             $getXml = true;
         } else if (file_exists($_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
                 . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml')) {
-            $path = 'modules' . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
+            $path = $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
                 . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml';
             $getXml = true;
         }
@@ -796,21 +797,23 @@ class sendmail extends Database
             if ($xml <> false) {
                 require_once("modules/entities/class/class_manage_entities.php");
                 $entities = new entity();
-                $allEntities=0;
 
                 foreach ($xml->externalEntityMail as $EntityMail) {
                     $shortLabelEntity = $entities->getentityshortlabel((string)$EntityMail->targetEntityId);
-                    if (in_array($shortLabelEntity, array_keys($numberMailEntities))) {
-                        $numberMailEntities[$shortLabelEntity]++;
-                        $arrayEntitiesMails[$shortLabelEntity . ' ' .$numberMailEntities[$shortLabelEntity]] = (string)$EntityMail->EntityMail;
-                    } else if ((string)$EntityMail->targetEntityId == '') {
-                        $allEntities++;
-                        $arrayEntitiesMails[_ALL . ' ' .$allEntities] = (string)$EntityMail->EntityMail;
+                    if (!in_array((string)$EntityMail->targetEntityId.",".(string)$EntityMail->EntityMail, array_keys($arrayEntitiesMails)) 
+                            && (in_array((string)$EntityMail->targetEntityId, $userEntities) || (string)$EntityMail->targetEntityId == "")
+                            && (string)$EntityMail->EntityMail <> "") {
+                        if ((string)$EntityMail->targetEntityId<>"") {
+                            $EntityName = $shortLabelEntity;
+                        } else {
+                            $EntityName = (string)$EntityMail->defaultName;
+                        }
+                        $arrayEntitiesMails[(string)$EntityMail->targetEntityId.",".(string)$EntityMail->EntityMail] = $EntityName . " (" . (string)$EntityMail->EntityMail .")";
                     }
                 }
             }
         }
-        ksort($arrayEntitiesMails);
+        asort($arrayEntitiesMails);
 
         return $arrayEntitiesMails;
     }
@@ -827,9 +830,20 @@ class sendmail extends Database
         $stmt = $db->query("SELECT mail FROM users WHERE user_id = ? ", array($_SESSION['user']['UserId']));
         $res = $stmt->fetchObject();
 
-        $entitiesMails[$user_id] = $res->mail;
+        if ($res->mail<>"") {
+            $entitiesMails[$res->mail] = "";
+        }
 
         return $entitiesMails;
+    }
+
+    public function explodeSenderEmail($senderEmail){
+        if (strpos($senderEmail, ",") === false) {
+            return $senderEmail;
+        } else {
+            $explode = explode(",", $senderEmail);
+            return $explode[1];
+        }
     }
 
 }

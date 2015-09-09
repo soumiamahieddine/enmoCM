@@ -22,7 +22,7 @@
 		<parameter name="notes" type="string" />
 		<parameter name="object" type="string" />
 		<parameter name="valid" type="string" />
-		<parameter name="sender_email" type="email" />
+		<parameter name="sender_email" type="string" />
 		<parameter name="templateMail" type="integer" />
 	</validationRule>
 

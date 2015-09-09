@@ -40,9 +40,6 @@ $core_tools = new core_tools();
 $request    = new request();
 $list       = new lists();   
 $sendmail_tools = new sendmail();
-
-require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
-    . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
     
 $identifier = '';
 $origin = '';
@@ -282,10 +279,12 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
                         $tab[$i][$j]["show"]=false;
-                        $tab[$i][$j]["order"]='sender';
+                        $tab[$i][$j]["order"]='mail';
                     }
                     if($tab[$i][$j][$value]=="sender_email")
                     {
+
+                        $tab[$i][$j]["value"] = $sendmail_tools->explodeSenderEmail($tab[$i][$j]["value"]);
 
                         $tab[$i][$j]["label"]=_SENDER;
                         $tab[$i][$j]["size"]="20";
@@ -293,7 +292,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
                         $tab[$i][$j]["show"]=true;
-                        $tab[$i][$j]["order"]='email_expediteur';
+                        $tab[$i][$j]["order"]='sender_email';
                     }
                     if($tab[$i][$j][$value]=="id")
                     {

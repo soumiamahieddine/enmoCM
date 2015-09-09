@@ -5,6 +5,7 @@
         <MaarchDirectory>C:\xampp\htdocs\maarch_entreprise\</MaarchDirectory>
         <MaarchUrl>http://localhost/maarch_entreprise/</MaarchUrl>
         <MaarchApps>maarch_entreprise</MaarchApps>
+		<CustomId></CustomId>
         <TmpDirectory>C:\xampp\htdocs\maarch_entreprise\modules\sendmail\batch\tmp\</TmpDirectory>
         <debugmode>
             <dontflag_mail>true</dontflag_mail>

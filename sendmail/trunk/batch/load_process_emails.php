@@ -140,6 +140,7 @@ $lang = (string)$config->Lang;
 $GLOBALS['maarchDirectory'] = $_SESSION['config']
 	['corepath'] = (string)$config->MaarchDirectory; 
 $_SESSION['config']['app_id'] = (string) $config->MaarchApps;
+$GLOBALS['CustomId'] = $_SESSION['custom_override_id'] = (string)$config->CustomId; 
 $GLOBALS['TmpDirectory'] = $_SESSION['config']
 	['tmppath'] = (string)$config->TmpDirectory;
 $GLOBALS['batchDirectory'] = $GLOBALS['maarchDirectory'] . 'modules' 
@@ -192,6 +193,10 @@ try {
         $GLOBALS['maarchDirectory'] . "modules" . DIRECTORY_SEPARATOR . "sendmail" 
 		. DIRECTORY_SEPARATOR . "class". DIRECTORY_SEPARATOR . "class_modules_tools.php"
 	);
+    Bt_myInclude(
+        $GLOBALS['maarchDirectory'] . "modules" . DIRECTORY_SEPARATOR . "entities" 
+        . DIRECTORY_SEPARATOR . "class". DIRECTORY_SEPARATOR . "class_manage_entities.php"
+    );
     Bt_myInclude(
         $GLOBALS['maarchDirectory'] . $path_to_mailer
     );  

@@ -62,10 +62,12 @@ while ($state <> 'END') {
 	            $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
 					. $userInfo['lastname'].' <'.$email->sender_email.'> ');
 			} else {
-				$GLOBALS['logger']->write("Sending e-mail from : " 
-					. ' <'.$email->sender_email.'>', 'INFO');
+				$mailsEntities = $sendmail_tools->getAttachedEntitiesMails();
+				$entityShortLabel = substr($mailsEntities[$email->sender_email], 0, strrpos($mailsEntities[$email->sender_email], "("));
+				$GLOBALS['logger']->write("Sending e-mail from : " . $entityShortLabel
+					. ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '>', 'INFO');
 					
-	            $GLOBALS['mailer']->setFrom(' <'.$email->sender_email.'> ');				
+	            $GLOBALS['mailer']->setFrom($entityShortLabel . ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '> ');				
 			}
 
 			//

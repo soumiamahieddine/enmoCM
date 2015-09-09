@@ -171,7 +171,7 @@ switch ($mode) {
         if (empty($identifier)) {
             $error = $request->wash_html(_IDENTIFIER.' '._IS_EMPTY.'!','NONE');
             $status = 1;
-        } else if (!in_array($_REQUEST['sender_email'], $userEntitiesMails) && $core_tools->test_service('use_mail_services', 'sendmail', false)) {
+        } else if (!in_array($_REQUEST['sender_email'], array_keys($userEntitiesMails)) && $core_tools->test_service('use_mail_services', 'sendmail', false)) {
             $error = $request->wash_html(_INCORRECT_SENDER,'NONE');
             $status = 1;
         } else {
@@ -306,7 +306,7 @@ switch ($mode) {
             if (empty($identifier)) {
                 $error = $request->wash_html(_IDENTIFIER.' '._IS_EMPTY.'!','NONE');
                 $status = 1;
-            } else if (!in_array($_REQUEST['sender_email'], $userEntitiesMails) && $core_tools->test_service('use_mail_services', 'sendmail', false)) {
+            } else if (!in_array($_REQUEST['sender_email'], array_keys($userEntitiesMails)) && $core_tools->test_service('use_mail_services', 'sendmail', false)) {
                 $error = $request->wash_html(_INCORRECT_SENDER,'NONE');
                 $status = 1;
             } else {
