@@ -152,6 +152,16 @@ $users_query =
     . " e.enabled = 'Y' and ue.primary_entity='Y' " . $user_expr . $entity_expr
     . " order by u.lastname asc, u.firstname asc, u.user_id asc, e.entity_label asc";
 
+if ($objectType == 'VISA_CIRCUIT')
+$users_query = 
+    "select u.user_id, u.firstname, u.lastname, e.entity_id, e.entity_label "
+    . "FROM " . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
+    . ENT_USERS_ENTITIES . " ue, ".USERGROUP_CONTENT_TABLE." uc WHERE u.status <> 'DEL' and u.enabled = 'Y' and"
+    . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
+    . " e.enabled = 'Y' and ue.primary_entity='Y' " . $user_expr . $entity_expr
+    . " and u.user_id = uc.user_id AND uc.group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = 'visa_documents')"
+    . " order by u.lastname asc, u.firstname asc, u.user_id asc, e.entity_label asc";
+	
 if ($user_expr == '' && $entity_expr == '') {
     //no query
 } else {
