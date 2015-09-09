@@ -1419,6 +1419,14 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                     }
                     window.top.createModal(response.form_content,'modal_'+id_action, response.height, response.width, response.mode_frm);
                 }
+				else if(response.status == 4) // Confirm asked to the user (for visa)
+                {
+                    var modal_txt='<div class=h2_title>'+response.error+'</div>';
+                    modal_txt += '<p class="buttons">';
+					//load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);
+                    modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="destroyModal(\'modal_'+id_action+'\')"/>';
+                    window.top.createModal(modal_txt, 'modal_'+id_action, '100px', '300px');
+                }
                 else // Param errors
                 {
                     if(console)
