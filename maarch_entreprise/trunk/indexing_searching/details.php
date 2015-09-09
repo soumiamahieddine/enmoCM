@@ -1202,6 +1202,23 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 <?php
                 }
 				
+				if ($core->test_service('print_folder_doc', 'visa', false))
+                {
+					require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
+					. "class" . DIRECTORY_SEPARATOR
+					. "class_modules_tools.php";
+                    ?>
+                    <dt><?php echo _PRINTFOLDER;?></dt>
+                    <dd>
+                        <br/>
+						<?php
+                        $print_folder = new visa();
+						echo $print_folder->showPrintFolder($coll_id, $table, $_SESSION['doc_id']);
+						?>
+                    </dd>
+                <?php
+                }
+				
 				if ($core->is_module_loaded('visa')) {
 					require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 					. "class" . DIRECTORY_SEPARATOR

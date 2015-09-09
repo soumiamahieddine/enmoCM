@@ -559,6 +559,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<br>';
     }
 
+	//PRINT FOLDER
+   if ($core_tools->test_service('print_folder_doc', 'visa', false)){
+        $frm_str .= '<h3 onclick="new Effect.toggle(\'print_fold_div\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'print_fold_div\', \'divStatus_print_fold_div\');hideOtherDiv(\'print_fold_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_print_fold_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'. _PRINTFOLDER .'</b>';
+        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+        $frm_str .= '</h3>';
+        $frm_str .= '<br>';
+    }
+	
     //ACTIONS
     $frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '<p align="center" style="width:90%;">';
@@ -981,6 +992,21 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<hr />';
         $frm_str .= '</div>';
     }
+	
+	//PRINT FOLDER FRAME
+    if ($core_tools->test_service('print_folder_doc', 'visa', false)){
+        $frm_str .= '<div id="print_fold_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
+            $frm_str .= '<div class="block" style="margin-top:-2px;">';
+                $frm_str .= '<center><h2 onclick="new Effect.toggle(\'print_fold_div\', \'blind\', {delay:0.2});';
+                $frm_str .= 'whatIsTheDivStatus(\'print_fold_div\', \'divStatus_print_fold_div\');';
+                $frm_str .= 'return false;">Dossier d\'impression</h2></center>';
+               
+                $frm_str .= '<br>';
+				$print_folder = new visa();
+				$frm_str .= $print_folder->showPrintFolder($coll_id, $table, $_SESSION['doc_id']);
+            $frm_str .= '</div>';
+        $frm_str .= '</div>';
+    }
 
     //LINKS FRAME
     $frm_str .= '<div id="links_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
@@ -1148,7 +1174,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'
         . $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
 	$curr_visa_wf = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
-	if (count($circuit['visa']) == 0 && count($circuit['sign']) == 0){
+	if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0){
 		$frm_str .= 'load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);';
 	}
 

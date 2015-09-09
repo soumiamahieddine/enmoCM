@@ -68,6 +68,10 @@
             <id>converted_pdf</id>
             <label>_CONVERTED_PDF</label>
         </type>
+		<type show="false" with_chrono="false">
+            <id>print_folder</id>
+            <label>_PRINT_FOLDER</label>
+        </type>
     </attachment_types>
     <priorities>
         <priority with_delay="2">_VERY_HIGH</priority> <!-- 0 -->
