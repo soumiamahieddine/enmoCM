@@ -28,7 +28,11 @@
 * @ingroup visa
 */
 
-class visa
+define('FPDF_FONTPATH',$core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/font/');
+require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdf.php');
+require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
+
+class visa extends Database
 {
 	/***
 	* Build Maarch module tables into sessions vars with a xml configuration file
@@ -60,6 +64,9 @@ class visa
 		$_SESSION['modules_loaded']['visa']['reason'] = (string) $conf->reason;
 		$_SESSION['modules_loaded']['visa']['location'] = (string) $conf->location;
 		$_SESSION['modules_loaded']['visa']['licence_number'] = (string) $conf->licence_number;
+		
+		$_SESSION['modules_loaded']['visa']['width_blocsign'] = (string) $conf->width_blocsign;
+		$_SESSION['modules_loaded']['visa']['height_blocsign'] = (string) $conf->height_blocsign;
 		
 		$routing_template = (string) $conf->routing_template;
 		
@@ -507,9 +514,440 @@ class visa
 		}
 		return $str;
 	}
+	
+	
+	
+	/* DOSSIER IMPRESSION */
+	public function getJoinedFiles($coll_id, $table, $id, $from_res_attachment=false, $filter_attach_type='all') {
+        $joinedFiles = array();
+        $db = new Database();
+        if ($from_res_attachment === false) {
+			require_once('core/class/class_security.php');
+			$sec = new security();	
+			$versionTable = $sec->retrieve_version_table_from_coll_id(
+				$coll_id
+			);
+			
+			//Have version table
+			if ($versionTable <> '') {
+				$stmt = $db->query("select res_id from " 
+							. $versionTable . " where res_id_master = ? and status <> 'DEL' order by res_id desc", array($id));
+				$line = $stmt->fetchObject();
+				$lastVersion = $line->res_id;
+				//Have new version
+				if ($lastVersion <> '') {
+					$stmt = $db->query(
+						"select res_id, description, subject, title, format, filesize, relation, creation_date, typist from "
+						. $versionTable . " where res_id = ? and status <> 'DEL'",array($lastVersion)
+					);
+					// $db->show();
+					//Get infos
+					while($res = $stmt->fetchObject()) {
+						$label = '';
+						//Tile, or subject or description
+						if (strlen(trim($res->title)) > 0)
+							$label = $res->title;
+						elseif (strlen(trim($res->subject)) > 0)
+							$label = $res->subject;
+						elseif (strlen(trim($res->description)) > 0)
+							$label = $res->description;
+						
+						if (isset($res->typist) && $res->typist != '')
+							$typist = $res->typist;
+						else $typist = '';
+						array_push($joinedFiles,
+									array('id' => $res->res_id, //ID
+										  'label' => $this->show_string($label), //Label
+										  'format' => $res->format, //Format 
+										  'filesize' => $res->filesize, //Filesize
+										  'creation_date' => $res->creation_date, //creation_date
+										  'typist' => $typist, //typist
+										  'is_version' => true, //Have version bool
+										  'version' => $res->relation //Version
+										)
+						);
+					}
+				}
+			}
+			
+            $stmt = $db->query(
+                "select res_id, description, subject, title, format, filesize, relation, creation_date from "
+                . $table . " where res_id = ? and status <> 'DEL'", array($id )
+                );
+        } else {
+			require_once 'modules/attachments/attachments_tables.php';
+			if ($filter_attach_type == 'all')
+				$stmt = $db->query(
+					"select res_id, description, subject, title, format, filesize, res_id_master, attachment_type, creation_date, typist from " 
+					.  RES_ATTACHMENTS_TABLE . " where res_id_master = ? and coll_id = ? and attachment_type <> 'converted_pdf' and status <> 'DEL' order by attachment_type, creation_date",
+					array($id, $coll_id)
+					);
+			else $stmt = $db->query(
+					"select res_id, description, subject, title, format, filesize, res_id_master, attachment_type, creation_date, typist from " 
+					.  RES_ATTACHMENTS_TABLE . " where res_id_master = ? and coll_id = ? and attachment_type = '".$filter_attach_type."' and status <> 'DEL' order by creation_date",
+					array($id, $coll_id)
+					);
+        }
+        // $db->show(); 
+        
+        while($res = $stmt->fetchObject()) {
+			$pdf_exist = true;
+			if ($from_res_attachment){
+				require_once 'modules/attachments/class/attachments_controler.php';
+				$ac = new attachments_controler();
+				$infos_attach = $ac->getAttachmentInfos($res->res_id);
+				if (!file_exists($infos_attach['pathfile_pdf'])) $pdf_exist = false;
+			}
+            $label = '';
+            //Tile, or subject or description
+            if (strlen(trim($res->title)) > 0)
+                $label = $res->title;
+            elseif (strlen(trim($res->subject)) > 0)
+                $label = $res->subject;
+            elseif (strlen(trim($res->description)) > 0)
+                $label = $res->description;
+			
+            if (isset($res->attachment_type) && $res->attachment_type != '')
+				$attachment_type = $res->attachment_type;
+			else $attachment_type = '';
+			
+			if (isset($res->typist) && $res->typist != '')
+				$typist = $res->typist;
+			else $typist = '';
+			
+			
+            array_push($joinedFiles,
+                        array('id' => $res->res_id, //ID
+                              'label' => $this->show_string($label), //Label
+                              'format' => $res->format, //Format 
+                              'filesize' => $res->filesize, //Filesize
+                              'creation_date' => $res->creation_date, //Filesize
+                              'attachment_type' => $attachment_type, //attachment_type
+                              'typist' => $typist, //attachment_type
+                              'is_version' => false, //
+							  'pdf_exist' => $pdf_exist,
+                              'version' => '' //
+                            )
+            );
+        }
+
+        return $joinedFiles;
+    }
+	
+
+	public function showPrintFolder($coll_id, $table, $id){
+		require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+		. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+		. 'class_indexing_searching_app.php';
+		$is = new indexing_searching_app();
+		
+		require_once('core/class/class_security.php');
+		$sec = new security();
+		$view = $sec->retrieve_view_from_coll_id($coll_id);
+		$stmt = $this->query("select subject, contact_society, category_id from $view where res_id = ?",array($id));
+		$res = $stmt->fetchObject();
+		$str = '';
+		$str .= '<div align="left">';
+		$str .= '<div class="divErrorPrint" id="divErrorPrint" name="divErrorPrint"></div>';
+	
+		$str .= '<p><b>Requérent</b> : '.$res->contact_society.'</p>';
+		$str .= '<p><b>Objet</b> : '.$res->subject.'</p>';
+		$str .= '<hr/>';
+		$str .= '<form style="width:99%;" name="print_folder_form" id="print_folder_form" action="#" method="post">';
+		$str .= '<table style="width:99%;" name="print_folder" id="print_folder" >';
+		$str .= '<thead><tr><th style="width:25%;"></th><th style="width:40%;">Titre</th><th style="width:20%;">Rédacteur</th><th style="width:10%;">Date</th><th style="width:5%;"></th></tr></thead>';
+		$str .= '<tbody>';
+		$str .= '<tr><td><h3>+ Document initiateur</h3></td><td></td><td></td><td></td><td></td></tr>';
+		if ($res->category_id == "outgoing"){
+			$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'outgoing_mail');
+			for($i=0; $i < count($joined_files); $i++) {
+				//Get data
+				$id_doc = $joined_files[$i]['id']; 
+				$description = $joined_files[$i]['label'];
+				$format = $joined_files[$i]['format'];
+				$contact = $joined_files[$i]['typist'];
+				$creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+				if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
+				//Show data
+				$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+			}
+		}
+		else {
+			$joined_files = $this->getJoinedFiles($coll_id, $table, $id, false);
+			for($i=0; $i < count($joined_files); $i++) {
+				//Get data
+				$id_doc = $joined_files[$i]['id']; 
+				$description = $joined_files[$i]['label'];
+				$format = $joined_files[$i]['format'];
+
+				$contact = $joined_files[$i]['typist'];
+				$creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+				
+				
+				if ($format == 'pdf') $check = 'class="check" checked="checked"'; else $check = ' ';
+				//Show data
+				$version = '';
+				if($joined_files[$i]['is_version'] === true){
+					//Version
+					$version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
+					$str .= '<tr><td></td><td>'.$description.$version.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'_V'.$joined_files[$i]['version'].'" type="checkbox" name="join_version[]"  value="'.$id_doc.'"></input></td></tr>';	
+				} else {
+					$str .= '<tr><td></td><td>'.$description.'</td><td>'.$res->contact_society.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_file[]" value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+				}
+			}
+		}
+		// FICHE DE CIRCULATION
+		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'routing');
+		if (count ($joined_files) > 0)
+		$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['routing'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
+		for($i=0; $i < count($joined_files); $i++) {
+            //Get data
+            $id_doc = $joined_files[$i]['id']; 
+            $description = $joined_files[$i]['label'];
+            $format = $joined_files[$i]['format'];
+            $contact = $joined_files[$i]['typist'];
+            $creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
+			//Show data
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+        }
+		
+		// PROJETS DE REPONSE
+		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'response_project');
+		if (count ($joined_files) > 0)
+		$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['response_project'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
+		for($i=0; $i < count($joined_files); $i++) {
+            //Get data
+            $id_doc = $joined_files[$i]['id']; 
+            $description = $joined_files[$i]['label'];
+            $format = $joined_files[$i]['format'];
+			$contact = $joined_files[$i]['typist'];
+            $creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
+			//Show data
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+        }
+		
+		// REPONSES SIGNEES
+		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'signed_response');
+		if (count ($joined_files) > 0)
+		$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['signed_response'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
+		for($i=0; $i < count($joined_files); $i++) {
+            //Get data
+            $id_doc = $joined_files[$i]['id']; 
+            $description = $joined_files[$i]['label'];
+            $format = $joined_files[$i]['format'];
+			$contact = $joined_files[$i]['typist'];
+            $creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
+			//Show data
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+        }
+		
+		// REPONSES SIGNEES
+		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'simple_attachment');
+		if (count ($joined_files) > 0)
+		$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['simple_attachment'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
+		for($i=0; $i < count($joined_files); $i++) {
+            //Get data
+            $id_doc = $joined_files[$i]['id']; 
+            $description = $joined_files[$i]['label'];
+            $format = $joined_files[$i]['format'];
+			$contact = $joined_files[$i]['typist'];
+            $creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
+			//Show data
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+        }
+		
+		//Notes         
+		$core_tools     = new core_tools();		
+		if ($core_tools->is_module_loaded('notes')) {
+			require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+				. "class" . DIRECTORY_SEPARATOR
+				. "class_modules_tools.php";
+			require_once 'core/class/class_request.php';
+			require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+			. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+			. 'class_users.php';
+			
+			$users_tools    = new class_users();
+			$request = new request();
+			$notes_tools    = new notes();
+			$user_notes = $notes_tools->getUserNotes($id, $coll_id);
+			if (count($user_notes) >0) {
+				$str .= '<tr><td><h3>+ '._NOTES.'</h3></td><td></td><td></td><td></td><td></td></tr>';
+				for($i=0; $i < count($user_notes); $i++) {
+					//Get data
+					$idNote = $user_notes[$i]['id']; 
+					$noteShort = $request->cut_string($user_notes[$i]['label'], 50);
+					$note = $user_notes[$i]['label'];
+					$userArray = $users_tools->get_user($user_notes[$i]['author']);
+					$date = $request->dateformat($user_notes[$i]['date']);
+					
+					$check = ' ';
+					
+					$str .= '<tr><td></td><td>'.$noteShort.'</td><td>'.$userArray['firstname']." ".$userArray['lastname'].'</td><td>'.$date.'</td><td><input id="note_'.$idNote.'" type="checkbox" name="notes[]"  value="'.$idNote.'"  '.$check.'></input></td></tr>';	
+				}
+			}
+		}
+		
+		$str .= '</body>';
+		$str .= '</table>';
+		
+		$path_to_script = $_SESSION['config']['businessappurl']
+		."index.php?display=true&module=visa&page=printFolder_ajax";
+	
+		$str .= '<hr/>';
+		$str .= '<input style="margin-left:44%" type="button" name="send" id="send" value="Imprimer" class="button" onclick="printFolder(\''.$id.'\', \''.$coll_id.'\', \'print_folder_form\', \''.$path_to_script.'\');" /> ';
+		$str .= '</form>';
+		$str .= '</div>';
+		
+		return $str;
+	}
+	
+	
 }
 
 
+class PdfNotes extends FPDI
+{
+	function LoadData($tab, $collId)
+	{
+		require_once 'modules/notes/notes_tables.php';
+		require_once 'core/class/class_request.php';
+		$request    = new request();
+		// Lecture des lignes du fichier
+		$data = array();
+		
+		$db2 = new Database();
+		foreach($tab as $id){
+            //Check if ID exists
+            $arrayPDO = array();
+            if (! empty($collId)) {
+                $where = " and coll_id = :collId";
+                $arrayPDO = array_merge($arrayPDO, array(":collId" => $collId));
+            } 
+            $arrayPDO = array_merge($arrayPDO, array(":Id" => $id));
+            $stmt2 = $db2->query(
+                "SELECT n.identifier, n.date_note, n.user_id, n.note_text, u.lastname, "
+                . "u.firstname FROM " . NOTES_TABLE . " n inner join ". USERS_TABLE
+                . " u on n.user_id  = u.user_id WHERE n.id = :Id " . $where, $arrayPDO
+            );
+            
+			
+            if($stmt2->rowCount() > 0) {
+                
+                $line = $stmt2->fetchObject();
+                $user = $request->show_string($line->lastname . " " . $line->firstname);
+                $notes = $line->note_text;
+                $userId = $line->user_id;
+                $date = explode("-",$line->date_note);
+                $date = $date[2]."/".$date[1]."/".$date[0];
+				
+                $identifier = $line->identifier;
+			}
+			$data[] = array(utf8_decode($user),$date,utf8_decode($notes));
+		}
+		return $data;
+	}
+
+	var $widths;
+	var $aligns;
+
+	function SetWidths($w)
+	{
+		$this->widths=$w;
+	}
+
+	function SetAligns($a)
+	{
+		$this->aligns=$a;
+	}
+
+	function Row($data)
+	{
+		//Calcule la hauteur de la ligne
+		$nb=0;
+		for($i=0;$i<count($data);$i++)
+			$nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
+		$h=5*$nb;
+		$this->CheckPageBreak($h);
+		for($i=0;$i<count($data);$i++)
+		{
+			$w=$this->widths[$i];	
+			$a=isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
+			$x=$this->GetX();$y=$this->GetY();
+			$this->Rect($x,$y,$w,$h);
+			$this->MultiCell($w,5,$data[$i],0,$a);
+			$this->SetXY($x+$w,$y);
+		}
+		$this->Ln($h);
+	}
+
+	function CheckPageBreak($h)
+	{
+		if($this->GetY()+$h>$this->PageBreakTrigger)$this->AddPage($this->CurOrientation);
+	}
+
+	function NbLines($w,$txt)
+	{
+		$cw=&$this->CurrentFont['cw'];
+		if($w==0)
+			$w=$this->w-$this->rMargin-$this->x;
+		$wmax=($w-2*$this->cMargin)*1000/$this->FontSize;
+		$s=str_replace("\r",'',$txt);
+		$nb=strlen($s);
+		if($nb>0 and $s[$nb-1]=="\n")	$nb--;
+		$sep=-1;$i=0;$j=0;$l=0;$nl=1;
+		while($i<$nb)
+		{
+			$c=$s[$i];
+			if($c=="\n")
+			{
+				$i++;$sep=-1;$j=$i;$l=0;$nl++;
+				continue;
+			}
+			if($c==' ')	$sep=$i;
+			$l+=$cw[$c];
+			if($l>$wmax)
+			{
+				if($sep==-1)
+				{
+					if($i==$j)	$i++;
+				}
+				else
+					$i=$sep+1;$sep=-1;$j=$i;$l=0;$nl++;
+			}
+			else
+				$i++;
+		}
+		return $nl;
+	}
+}
+
+class ConcatPdf extends FPDI
+{
+    public $files = array();
+
+    public function setFiles($files)
+    {
+        $this->files = $files;
+    }
+
+    public function concat()
+    {
+        foreach($this->files AS $file) {
+            $pageCount = $this->setSourceFile($file);
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                 $tplIdx = $this->ImportPage($pageNo);
+                 $s = $this->getTemplatesize($tplIdx);
+                 $this->AddPage($s['w'] > $s['h'] ? 'L' : 'P', array($s['w'], $s['h']));
+                 $this->useTemplate($tplIdx);
+            }
+        }
+    }
+}
 
 /* EXEMPLE TAB VISA_CIRCUIT
 
@@ -588,6 +1026,61 @@ Array
 
                 )
 
+        )
+
+)
+
+
+
+
+
+<h3>Document</h3><pre>Array
+(
+    [0] => Array
+        (
+            [id] => 197
+            [label] => 123456
+            [format] => pdf
+            [filesize] => 46468
+            [attachment_type] => 
+            [is_version] => 
+            [version] => 
+        )
+
+)
+</pre><h3>Document</h3><pre>Array
+(
+    [0] => Array
+        (
+            [id] => 400
+            [label] => reponse 1 v5
+            [format] => docx
+            [filesize] => 36219
+            [attachment_type] => response_project
+            [is_version] => 
+            [version] => 
+        )
+
+    [1] => Array
+        (
+            [id] => 409
+            [label] => Nouvelle PJ
+            [format] => pdf
+            [filesize] => 1204460
+            [attachment_type] => simple_attachment
+            [is_version] => 
+            [version] => 
+        )
+
+    [2] => Array
+        (
+            [id] => 410
+            [label] => pj 2
+            [format] => pdf
+            [filesize] => 361365
+            [attachment_type] => simple_attachment
+            [is_version] => 
+            [version] => 
         )
 
 )
