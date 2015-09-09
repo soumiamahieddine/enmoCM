@@ -254,7 +254,7 @@ if ($mode == 'list') {
                                 ) {
                                     ?>
                                     <option value="<?php
-                                        functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt']) . ': ';
+                                        functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt']); echo ': ';
                                         functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileName']);
                                     ?>" <?php
                                     if (isset($_SESSION['m_admin']['templates']['template_style'])
@@ -264,7 +264,7 @@ if ($mode == 'list') {
                                         echo 'selected="selected"';
                                     }
                                     ?>><?php
-                                        functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt']) . ': ';
+                                        functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt']); echo ': ';
                                         functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileName']);
                                     ?></option>
                                     <?php
