@@ -89,7 +89,7 @@ if (
         $core_tools->load_lang();
         $function = new functions();
         
-            include 'modules/visa/retrieve_attachment_from_cm.php';
+        include 'modules/visa/retrieve_attachment_from_cm.php';
 	   
         $status = 'ok';
         $content = file_get_contents($filePathOnTmp, FILE_BINARY);

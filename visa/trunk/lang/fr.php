@@ -2,6 +2,12 @@
 if (!defined("_SIGN_DOCS"))
     define("_SIGN_DOCS", "Signer les documents");
 
+if (!defined("_PRINTFOLDER"))
+    define("_PRINTFOLDER", "Dossier d'impression");
+
+if (!defined("_PRINT_FOLDER_DOC"))
+    define("_PRINT_FOLDER_DOC", "Imprimer le dossier complet");
+
 // CIRCUIT DE VISA
 if (!defined("_VISA_WORKFLOW"))
     define("_VISA_WORKFLOW", "Circuit de visa");
@@ -10,7 +16,7 @@ if (!defined("_VISA_WORKFLOW_COMMENT"))
 if (!defined("_VIEW_VISA_WORKFLOW"))
     define("_VIEW_VISA_WORKFLOW", "Visualisation du circuit de visa");
 if (!defined("_VIEW_VISA_WORKFLOW_DESC"))
-    define("_VIEW_VISA_WORKFLOW_DESC", "Permet de visualiser le circuit de visa dans les parties de liste de diffusion et dans celles d\"avancement.");
+    define("_VIEW_VISA_WORKFLOW_DESC", "Permet de visualiser le circuit de visa dans les parties de liste de diffusion et dans celles d'avancement.");
 if (!defined("_CONFIG_VISA_WORKFLOW"))
     define("_CONFIG_VISA_WORKFLOW", "Configuration du circuit de visa");
 if (!defined("_CONFIG_VISA_WORKFLOW_DESC"))
@@ -23,13 +29,15 @@ if (!defined("_VISA_ANSWERS"))
 if (!defined("_VISA_ANSWERS_DESC"))
     define("_VISA_ANSWERS_DESC", "Permet de viser les projets de réponse");
 
+if (!defined("_NO_VISA")) define("_NO_VISA", "Aucune personne désignée en visa");
+
 // CIRCUIT D"AVIS
 if (!defined("_AVIS_WORKFLOW"))
-    define("_AVIS_WORKFLOW", "Circuit d\"avis");
+    define("_AVIS_WORKFLOW", "Circuit d'avis");
 if (!defined("_CONFIG_AVIS_WORKFLOW"))
-    define("_CONFIG_AVIS_WORKFLOW", "Configuration du circuit d\"avis");
+    define("_CONFIG_AVIS_WORKFLOW", "Configuration du circuit d'avis");
 if (!defined("_CONFIG_AVIS_WORKFLOW_DESC"))
-    define("_CONFIG_AVIS_WORKFLOW_DESC", "Permet de configurer le circuit d\"avis du courrier");
+    define("_CONFIG_AVIS_WORKFLOW_DESC", "Permet de configurer le circuit d'avis du courrier");
 
 if (!defined("_THUMBPRINT"))
     define("_THUMBPRINT", "Empreinte numérique");

@@ -84,7 +84,8 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId']) && isset($_REQUEST['m
 	
     if ($stmt->rowCount() < 1) {
         echo _FILE . ' ' . _UNKNOWN.".<br/>";
-    } else {
+    } 
+	else {
         $line = $stmt->fetchObject();
 		$_SESSION['visa']['last_resId_signed']['res_id'] = $line->res_id_master;
 		$_SESSION['visa']['last_resId_signed']['title'] = $line->title;

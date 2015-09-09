@@ -449,7 +449,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$frm_str .= '"><i class="fm fm-file-fingerprint fm-3x" title="Signer ces projets de réponse (avec certificat)"></i></a>';
 			
 			$frm_str .= ' <a href="javascript://" id="sign_link" '.$color.' onclick="';
-			if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',1);';
+			if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',2);';
 			$frm_str .= '"><i class="fa fa-check fa-3x" title="Signer ces projets de réponse (sans certificat)"></i></a>';
 		}
 		

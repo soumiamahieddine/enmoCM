@@ -11,5 +11,8 @@
 		<location>Miviludes, Services du Premier Ministre</location>
 		
 		<licence_number>40dd49384bf59e98d10d</licence_number>
+
+		<width_blocsign>150</width_blocsign>
+		<height_blocsign>100</height_blocsign>
     </CONFIG>
 </root>
