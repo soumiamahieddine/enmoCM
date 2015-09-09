@@ -171,17 +171,6 @@ An action page is described in a ACTIONPAGE tag :
     </ACTIONPAGE>
 	<!-- ACTIONS AJOUTEES PAR DIS -->
 	<ACTIONPAGE>
-        <ID>prepare_visa</ID>
-        <LABEL>_PREPARE_VISA</LABEL>
-        <NAME>prepare_visa</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>visa</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-	<ACTIONPAGE>
         <ID>visa_mail</ID>
         <LABEL>_VISA_MAIL</LABEL>
         <NAME>visa_mail</NAME>
@@ -204,20 +193,9 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
 	<ACTIONPAGE>
-        <ID>print_folder</ID>
-        <LABEL>_IMPRIM_DOSSIER</LABEL>
-        <NAME>print_folder</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>visa</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-	<ACTIONPAGE>
-        <ID>send_email</ID>
-        <LABEL>_SEND_MAIL</LABEL>
-        <NAME>send_email</NAME>
+        <ID>send_to_visa</ID>
+        <LABEL>_SEND_TO_VISA</LABEL>
+        <NAME>send_to_visa</NAME>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

@@ -279,6 +279,11 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
             echo "{status : 3, form_content : '".$frm_test."', height : '".$frm_height."', width : '".$frm_width."', 'mode_frm' : '".$mode_form."', 'action_status' : '".functions::xssafe($status)."'}";
             exit();
         }
+		elseif( $_POST['req'] == 'first_request' && $error_visa == true)
+        {
+            echo "{status : 4, error : '".addslashes(_NO_VISA)."', validate : 'OK', 'action_status' : '".functions::xssafe($status)."'}";
+            exit();
+        }
         elseif( $_POST['req'] == 'first_request' && $confirm == true)
         {
             echo "{status : 2, confirm_content : '".addslashes(_ACTION_CONFIRM." ".functions::xssafe($label_action))."', validate : '"._VALIDATE."', cancel : '"._CANCEL."', label_action : '".addslashes(functions::xssafe($label_action))."', 'action_status' : '".functions::xssafe($status)."'}";
