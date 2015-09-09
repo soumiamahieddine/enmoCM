@@ -242,4 +242,64 @@ class attachments_controler
         );
         return $returnArray;
     }
+	
+	public function getAttachmentInfos($resId){
+		$db = new Database();
+		
+		$stmt = $db->query(
+            "SELECT * 
+                FROM res_view_attachments 
+                WHERE (res_id = ? OR res_id_version = ?) ORDER BY relation desc", array($resId,$resId)
+        );
+		
+		$infos = array();
+		if ($stmt->rowCount() == 0) {
+            $_SESSION['error'] = _THE_DOC . " " . _EXISTS_OR_RIGHT . "&hellip;";
+            header(
+                "location: " . $_SESSION['config']['businessappurl']
+                . "index.php"
+            );
+            exit();
+        } else {
+			$line = $stmt->fetchObject();
+            $docserver = $line->docserver_id;
+            $path = $line->path;
+            $filename = $line->filename;
+            $format = $line->format;
+            $stmt = $db->query(
+                "select path_template from docservers where docserver_id = ?",array($docserver)
+            );
+			
+            $lineDoc = $stmt->fetchObject();
+            $docserver = $lineDoc->path_template;
+            $file = $docserver . $path . $filename;
+            $file = str_replace("#", DIRECTORY_SEPARATOR, $file);
+			
+			$file_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION),'pdf',$file);
+			$infos['pathfile'] = $file;
+			$infos['path'] = $path;
+			$infos['pathfile_pdf'] = $file_pdf;
+			$infos['status'] = $line->status;
+			$infos['attachment_type'] = $line->attachment_type;
+			$infos['creation_date'] = $line->creation_date;
+			$infos['title'] = $line->title;
+			$infos['typist'] = $line->typist;
+		}
+		return $infos;
+	}
+	
+	public function getCorrespondingPdf($resId){
+		$infos = $this->getAttachmentInfos($resId);
+		$db2 = new Database();
+		$result = 0;
+		$stmt2 = $db2->query(
+            "SELECT res_id
+                FROM res_view_attachments 
+                WHERE path = ? AND filename = ? and attachment_type = 'converted_pdf' ORDER BY relation desc", array($infos['path'],pathinfo($infos['pathfile_pdf'], PATHINFO_BASENAME))
+        );
+		$line = $stmt2->fetchObject();
+		
+		if ($line->res_id != 0) $result = $line->res_id;
+		return $result;
+	}
 }

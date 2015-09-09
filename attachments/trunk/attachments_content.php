@@ -19,6 +19,7 @@ require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
 require_once "core/class/docservers_controler.php";
 require_once 'modules/attachments/attachments_tables.php';
 require_once "core/class/class_history.php";
+require_once 'modules/attachments/class/attachments_controler.php';
 
 $core = new core_tools();
 $core->load_lang();
@@ -28,6 +29,7 @@ $db = new Database();
 $req = new request();
 //$req2 = new request();
 $docserverControler = new docservers_controler();
+$ac = new attachments_controler();
 
 
 
@@ -865,8 +867,12 @@ if (isset($_POST['add']) && $_POST['add']) {
                         
                 
                 if ($previous_attachment->relation == 1) {
+					$pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
+					if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", array($pdf_id) );
                     $stmt = $db->query("UPDATE res_attachments set status = 'OBS' WHERE res_id = ?",array($_REQUEST['res_id']));
                 } else {
+					$pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
+					if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", array($pdf_id) );
                     $stmt = $db->query("UPDATE res_version_attachments set status = 'OBS' WHERE res_id = ?",array($_REQUEST['res_id']));
                 }
 
@@ -1060,8 +1066,12 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $_SESSION['error'] = $storeResult['error'];
             } else {
                 if ((int)$_REQUEST['relation'] == 1) {
+					$pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
+					if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE res_attachments SET status = 'DEL' WHERE res_id = ?", array($pdf_id) );
                     $stmt = $db->query("UPDATE res_attachments SET " . $set_update . " WHERE res_id = ?",array($_REQUEST['res_id']));
                 } else {
+					$pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
+					if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", array($pdf_id) );
                     $stmt = $db->query("UPDATE res_version_attachments SET " . $set_update . " WHERE res_id = ?",array($_REQUEST['res_id']));
                 }
             }

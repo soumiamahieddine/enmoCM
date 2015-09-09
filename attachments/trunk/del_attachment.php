@@ -5,20 +5,28 @@ require_once "core/class/class_request.php";
 require_once "core/class/class_resource.php";
 require_once "core/class/class_history.php";
 require_once 'modules/attachments/attachments_tables.php';
+require_once 'modules/attachments/class/attachments_controler.php';
 $core = new core_tools();
 $core->load_lang();
 
 $func = new functions();
+$ac = new attachments_controler();
 
 $db = new Database();
 
 if ($_REQUEST['relation'] == 1) {
     $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($_REQUEST['id']) );
+	$pdf_id = $ac->getCorrespondingPdf($_REQUEST['id']);
+	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id) );
+	
 } else {
     $stmt = $db->query("SELECT attachment_id_master FROM res_version_attachments WHERE res_id = ?", array($_REQUEST['id']) );
     $res=$stmt->fetchObject();
     $stmt = $db->query("UPDATE res_version_attachments SET status = 'DEL' WHERE attachment_id_master = ?", array($res->attachment_id_master) );
     $stmt = $db->query("UPDATE res_attachments SET status = 'DEL' WHERE res_id = ?", array($res->attachment_id_master));
+	
+	$pdf_id = $ac->getCorrespondingPdf($_REQUEST['id']);
+	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id) );
 }
 
 if ($_SESSION['history']['attachdel'] == "true") {
@@ -64,6 +72,9 @@ $query = "SELECT title FROM res_view_attachments WHERE status <> 'DEL' and statu
     } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){
         $query .= " and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed')";
     }
+	else{
+		$query .= " and (attachment_type <> 'converted_pdf')";
+	}
 $stmt = $db->query($query, array($resIdMaster));
 if ($stmt->rowCount() > 0) {
     $new_nb_attach = $stmt->rowCount();
