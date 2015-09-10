@@ -113,7 +113,7 @@ if($mode == 'normal') {
     $url_search = $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';
 
      //error 
-    $_SESSION['error_search'] = '<p class="error"><i class="fa fa-remove fa-2x"></i><br />'
+    $_SESSION['error_search'] = '<p style="text-align:center;color:red;"><i class="fa fa-remove fa-2x"></i><br />'
         ._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="javascript://" '
         .' onclick = "window.top.location.href=\''.$url_search.'\'">'._MAKE_NEW_SEARCH.'</a></strong></div>';
 
@@ -189,9 +189,16 @@ if($mode == 'normal') {
     }
            
     //error and search url
-    $url_error = $_SESSION['config']['businessappurl']
+    
+    if($_REQUEST['mode'] == 'popup'){
+        $url_error = $_SESSION['config']['businessappurl']
+        .'index.php?page=search_adv_error'
+        .'&dir=indexing_searching&display=true&mode='.$_REQUEST['mode'];
+    }else{
+        $url_error = $_SESSION['config']['businessappurl']
         .'index.php?page=search_adv_error'
         .'&dir=indexing_searching';
+    }
 
     if (isset($_REQUEST['exclude'])) {
         $_SESSION['excludeId'] = $_REQUEST['exclude'];
