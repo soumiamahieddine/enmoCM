@@ -41,6 +41,18 @@ $page_id = "admin_parameters";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
+?>
+<table width="100%">
+    <tr>
+        <td align="left">
+            <input class="button" type="button" value="<?php echo _CONTROL_PARAM_TECHNIC;
+                ?>" onclick="window.location.href = '<?php echo $_SESSION['config']['businessappurl'] 
+                    . 'index.php?admin=parameters&page=control_param_technic';?>';"/>      
+        </td>
+   </tr>
+</table>
+<?php
+
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."core_tables.php");

@@ -1369,3 +1369,7 @@ define("_IVS_VALUE_BELOW_MIN_VALUE", "Value is below the minimal value");
 define("_IVS_VALUE_EXCEEDS_MAX_VALUE", "Value exceeds the maximal value");
 define("_IVS_TOO_MANY_DIGITS", "Too many digits");
 define("_IVS_TOO_MANY_DECIMAL_DIGITS", "Too many decimal digits");
+
+
+if (!defined("_CONTROL_PARAM_TECHNIC")) define("_CONTROL_PARAM_TECHNIC", "Control technical params");
+if (!defined("_COMPONENT")) define("_COMPONENT", "Component");

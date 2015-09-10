@@ -1709,3 +1709,7 @@ if (!defined("_IVS_VALUE_NOT_ALLOWED")) define("_IVS_VALUE_NOT_ALLOWED", "La val
 if (!defined("_IVS_FORMAT_NOT_ALLOWED")) define("_IVS_FORMAT_NOT_ALLOWED", "Le format n'est pas autorisé");
 if (!defined("_IVS_TOO_MANY_DIGITS")) define("_IVS_TOO_MANY_DIGITS", "Trop de caractères");
 if (!defined("_IVS_TOO_MANY_DECIMAL_DIGITS")) define("_IVS_TOO_MANY_DECIMAL_DIGITS", "Trop de caractères décimaux");
+
+//control technical params
+if (!defined("_CONTROL_PARAM_TECHNIC")) define("_CONTROL_PARAM_TECHNIC", "Contrôler les paramètres techniques");
+if (!defined("_COMPONENT")) define("_COMPONENT", "Composant");
