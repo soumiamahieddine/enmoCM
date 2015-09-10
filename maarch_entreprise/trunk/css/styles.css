@@ -1846,7 +1846,7 @@ display:inline;
 }
 
 #calender {
-    width:190px;
+    width:214px;
     background-color:#fff;
     border:1px solid #73BDFF;
     padding:5px;
@@ -1913,6 +1913,7 @@ color: #CCC;
 
 #basis #calender select {
     width: auto;
+    margin:2px;
 }
 
 #dates #basis
