@@ -20,6 +20,7 @@
 		<parameter name="Submit" type="string" />
 		<parameter name="template_file_name" type="docserver_file" />
 		<parameter name="template_path" type="docserver_path" />
+		<parameter name="entitieslist" type="identifier" />
 	</validationRule>
 	
 	<validationRule name="templates_ajax_content_for_mails" extends="standardForm" mode="error">
