@@ -285,22 +285,28 @@ $filepath = str_replace('#', DIRECTORY_SEPARATOR, $docserver_path. DIRECTORY_SEP
 array_push($list_path_folder, $filepath);
 }
 
-foreach($_REQUEST['join_attachment'] as $id_attach){
-	$infos_attach = $ac->getAttachmentInfos($id_attach);
-	array_push($list_path_folder, $infos_attach['pathfile_pdf']);
+if (isset($_REQUEST['join_attachment']) && count($_REQUEST['join_attachment']) > 0){
+	foreach($_REQUEST['join_attachment'] as $id_attach){
+		$infos_attach = $ac->getAttachmentInfos($id_attach);
+		array_push($list_path_folder, $infos_attach['pathfile_pdf']);
+	}
 }
-
 if (isset($_REQUEST['notes']) && count($_REQUEST['notes']) > 0) {
 	$path_file_notes = createPdfNotes($_REQUEST['notes'], $_SESSION['user']['collections'][0]);
 	array_push($list_path_folder, $path_file_notes);
 }
 //echo print_r($list_path_folder,true);
-$out_file = concat_files($list_path_folder);
-if (!file_exists($out_file)) echo "{status : -1}";
-else{ 
-	$id_folder = ajout_bdd($out_file,$_SESSION['doc_id']);
-	echo "{status : 0, id_folder : $id_folder}";
+if (count($list_path_folder) == 0){
+	echo "{status : 1, error_txt : '"._NO_FILE_PRINT."'}";exit();
+} 
+else{
+	$out_file = concat_files($list_path_folder);
+	if (!file_exists($out_file)) echo "{status : -1}";
+	else{ 
+		$id_folder = ajout_bdd($out_file,$_SESSION['doc_id']);
+		echo "{status : 0, id_folder : $id_folder}";
+	}
+	exit ();
 }
-exit ();
 
 ?>

@@ -751,7 +751,7 @@ function showNotesPage(id_tabricator){
 }
 
 function printFolder(res_id, coll_id, form_id, path){
-	console.log("printFolder");
+	//console.log("printFolder");
 	new Ajax.Request(path,
     {
         asynchronous:false,
@@ -765,9 +765,10 @@ function printFolder(res_id, coll_id, form_id, path){
 				var winPrint = window.open('index.php?display=true&module=attachments&page=view_attachment&res_id_master='+res_id+'&id='+id_folder,'','height=800, width=700,scrollbars=yes,resizable=yes');
 				winPrint.focus();
 				winPrint.print();
-                /*eval(response.exec_js);
-                window.parent.destroyModal('form_email'); */
             } 
+			else if (response.status == 1){
+				$('divErrorPrint').innerHTML = response.error_txt;
+			}
         }
     });
 

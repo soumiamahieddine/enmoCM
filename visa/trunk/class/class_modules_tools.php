@@ -648,7 +648,7 @@ class visa extends Database
 		$res = $stmt->fetchObject();
 		$str = '';
 		$str .= '<div align="left">';
-		$str .= '<div class="divErrorPrint" id="divErrorPrint" name="divErrorPrint"></div>';
+		$str .= '<div class="errorVisa" id="divErrorPrint" name="divErrorPrint"></div>';
 	
 		$str .= '<p><b>Requérent</b> : '.$res->contact_society.'</p>';
 		$str .= '<p><b>Objet</b> : '.$res->subject.'</p>';

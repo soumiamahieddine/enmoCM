@@ -58,6 +58,8 @@ if (!defined("_SEND_TO_SIGNATURE"))
 if (!defined("_SUBMIT_COMMENT"))
     define("_SUBMIT_COMMENT", "Commentaire de visa (optionnel) ");
 
+if (!defined("_NO_FILE_PRINT"))
+    define("_NO_FILE_PRINT", "Aucun fichier à imprimer");
 
 if (!defined("_BAD_PIN"))
     define("_BAD_PIN", "Code PIN incorrect. Attention, 3 essais maximum !");
