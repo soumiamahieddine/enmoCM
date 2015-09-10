@@ -10,6 +10,7 @@
 		<testIt>false</testIt>
 		<specific>
 			<sendmailTo>dev@maarch.org</sendmailTo>
+			<sendmailConfPath>/etc/ssmtp/ssmtp.conf</sendmailConfPath>
 		</specific>
 	</notifications_sendmail>
 </ROOT>

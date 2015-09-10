@@ -163,7 +163,8 @@ foreach ($NotifSendmailGenParam as $notifSendmailParam) {
     //do nothing
 }
 $sendmailTestIt = $notifSendmailParam->getElementsByTagName('testIt')->item(0)->nodeValue;
-$sendmailTo = $MccParam->getElementsByTagName('sendmailTo')->item(0)->nodeValue;
+$sendmailTo = $notifSendmailParam->getElementsByTagName('sendmailTo')->item(0)->nodeValue;
+$sendmailConfPath = $notifSendmailParam->getElementsByTagName('sendmailConfPath')->item(0)->nodeValue;
 
 if ($sendmailTestIt == 'false') {
     echo 'Component not configured to be tested.<br />';
@@ -208,7 +209,7 @@ if ($sendmailTestIt == 'false') {
             $sendmailDetails .= 'charset : '. $mailParam->getElementsByTagName('charset')->item(0)->nodeValue . '<br/>';
             $sendmailCharset = $mailParam->getElementsByTagName('charset')->item(0)->nodeValue;
         } else {
-            $sendmailDetails = 'see more details at /etc/ssmtp/ssmtp.conf';
+            $sendmailDetails = 'see more details at ' . $sendmailConfPath;
         }
 
         $paramsDetails = '<b><i>Test sendmail : </i></b>' . '<br />'
