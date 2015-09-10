@@ -582,4 +582,29 @@ class ExportFunctions
         }
     }
 
+    function get_parent_folder($libelle)
+    {
+
+        $query_status = "SELECT folder_name FROM folders WHERE folders_system_id in ( SELECT f.parent_id FROM res_view_letterbox r LEFT JOIN folders f ON r.folders_system_id = f.folders_system_id WHERE r.res_id = ##res_id## )";
+
+        $db = new Database();
+
+        $i=0;
+        foreach($this->object_export as $line_name => $line_value) {
+            if ($i == 0) {
+                $line_value->get_parent_folder = $libelle;
+                $i++;
+                continue;
+            }
+
+            $res_id = $line_value->res_id;
+            $query = str_replace('##res_id##', '?', $query_status);
+            $stmt = $db->query($query, array($res_id));
+
+            $result = $stmt->fetchObject();
+
+            $line_value->get_parent_folder = $result->folder_name;
+        }
+    }
+
 }
