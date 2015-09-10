@@ -607,4 +607,55 @@ class ExportFunctions
         }
     }
 
+    function get_answer_nature($libelle)
+    {
+
+        $query_status = "SELECT answer_type_bitmask FROM res_view_letterbox WHERE res_id = ##res_id## ";
+
+        $db = new Database();
+
+        $i=0;
+        foreach($this->object_export as $line_name => $line_value) {
+            if ($i == 0) {
+                $line_value->get_answer_nature = $libelle;
+                $i++;
+                continue;
+            }
+
+            $res_id = $line_value->res_id;
+            $query = str_replace('##res_id##', '?', $query_status);
+            $stmt = $db->query($query, array($res_id));
+
+            $result = $stmt->fetchObject();
+
+		    $bitmask = $result->answer_type_bitmask;
+		    switch ($bitmask) {
+		        case "000000":
+		            $answer = '';
+		            break;
+		        case "000001":
+		            $answer = _SIMPLE_MAIL;
+		            break;
+		        case "000010":
+		            $answer = _REGISTERED_MAIL;
+		            break;
+		        case "000100":
+		            $answer = _DIRECT_CONTACT;
+		            break;
+		        case "001000":
+		            $answer = _EMAIL;
+		            break;
+		        case "010000":
+		            $answer = _FAX;
+		            break;
+		        case "100000":
+		            $answer = _ANSWER;
+		            break;
+		        default:
+		            $answer = '';
+		    }
+
+            $line_value->get_answer_nature = $answer;
+        }    	
+    }
 }
