@@ -728,7 +728,7 @@ class lists extends Database
                             $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
                         } else {
                         
-                            $history_date['start'] = "(event_date >= '"
+                            $history_date['start'] = "(date(event_date) >= '"
                                 .$_SESSION['filters']['history_date_start']['VALUE']."')";
                         }
                         //date end
@@ -737,7 +737,7 @@ class lists extends Database
                             $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
                         } else {
                         
-                            $history_date['end'] = "(event_date <= '"
+                            $history_date['end'] = "(date(event_date) <= '"
                                 .$_SESSION['filters']['history_date_end']['VALUE']."')";
                         }
                         
