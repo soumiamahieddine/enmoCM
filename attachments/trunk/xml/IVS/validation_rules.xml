@@ -23,6 +23,7 @@
 		<parameter name="new_version" type="YesNO" />
 		<parameter name="relation" type="integer" />
 		<parameter name="res_id" type="integer" />
+		<parameter name="get_chrono_display" type="string" />
 	</validationRule>
 
 	<validationRule name="get_chrono_attachment" extends="standardForm" mode="error">
