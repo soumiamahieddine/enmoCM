@@ -764,9 +764,9 @@ class sendmail extends Database
 
         $userEntities = array();
         while ($res = $stmt->fetchObject()) {
+            $userEntities[]=$res->entity_id;
             if ($res->email <> "") {
                 $arrayEntitiesMails[$res->entity_id.','.$res->email] = $res->short_label . " (". $res->email .")";
-                $userEntities[]=$res->entity_id;
             }
         }
 
