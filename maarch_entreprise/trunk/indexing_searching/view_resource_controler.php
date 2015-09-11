@@ -113,9 +113,7 @@ if ($s_id == '') {
         $res_outgoing = $stmt->fetchObject(); 
 
         if ($res_outgoing->category_id == 'outgoing') {
-            $stmt = $db->query("SELECT res_id FROM "
-                . $_SESSION['tablename']['attach_res_attachments']
-                . " WHERE status <> 'DEL' and status <> 'OBS' and res_id_master = ? and coll_id = ? and ((attachment_type = 'converted_pdf' and type_id = 1) OR (attachment_type = 'outgoing_mail' and format = 'pdf'))", 
+            $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' and res_id_master = ? and coll_id = ? and ((attachment_type = 'converted_pdf' and type_id = 1) OR (attachment_type = 'outgoing_mail' and format = 'pdf'))", 
                 array($s_id, $_SESSION['collection_id_choice']));
             $res_att = $stmt->fetchObject();
             if ($stmt->rowCount() > 0) {
