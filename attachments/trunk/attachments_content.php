@@ -1108,7 +1108,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $js .= '&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf&fromDetail=attachments';
             } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){
                 $js .= 'eleframe1[1].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load';
-                $js .= '&attach_type=response_project,outgoing_mail_signed&fromDetail=response';
+                $js .= '&attach_type=response_project,outgoing_mail_signed,outgoing_mail&fromDetail=response';
             } else {
                 $js .= 'eleframe1[0].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf&load';
             }
