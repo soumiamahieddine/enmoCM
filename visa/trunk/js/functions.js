@@ -768,6 +768,7 @@ function printFolder(res_id, coll_id, form_id, path){
             } 
 			else if (response.status == 1){
 				$('divErrorPrint').innerHTML = response.error_txt;
+				$('divErrorPrint').style.display = 'table-cell';
 			}
         }
     });

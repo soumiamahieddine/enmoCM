@@ -648,7 +648,7 @@ class visa extends Database
 		$res = $stmt->fetchObject();
 		$str = '';
 		$str .= '<div align="left">';
-		$str .= '<div class="errorVisa" id="divErrorPrint" name="divErrorPrint"></div>';
+		$str .= '<div class="error" id="divErrorPrint" name="divErrorPrint" onclick="this.hide();"></div>';
 	
 		$str .= '<p><b>Requérent</b> : '.$res->contact_society.'</p>';
 		$str .= '<p><b>Objet</b> : '.$res->subject.'</p>';
@@ -657,8 +657,9 @@ class visa extends Database
 		$str .= '<table style="width:99%;" name="print_folder" id="print_folder" >';
 		$str .= '<thead><tr><th style="width:25%;"></th><th style="width:40%;">Titre</th><th style="width:20%;">Rédacteur</th><th style="width:10%;">Date</th><th style="width:5%;"></th></tr></thead>';
 		$str .= '<tbody>';
-		$str .= '<tr><td><h3>+ Document initiateur</h3></td><td></td><td></td><td></td><td></td></tr>';
+		
 		if ($res->category_id == "outgoing"){
+			$str .= '<tr><td><h3>+ Courrier sortant</h3></td><td></td><td></td><td></td><td></td></tr>';
 			$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'outgoing_mail');
 			for($i=0; $i < count($joined_files); $i++) {
 				//Get data
@@ -673,6 +674,7 @@ class visa extends Database
 			}
 		}
 		else {
+			$str .= '<tr><td><h3>+ Courrier entrant</h3></td><td></td><td></td><td></td><td></td></tr>';
 			$joined_files = $this->getJoinedFiles($coll_id, $table, $id, false);
 			for($i=0; $i < count($joined_files); $i++) {
 				//Get data
