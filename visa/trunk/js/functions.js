@@ -520,7 +520,7 @@ function signFile(res_id,isVersion, mode, pinCode){
 		});
 	}
 	if (mode == 2){
-		console.log("Signature serveur simple");
+		//console.log("Signature serveur simple");
 		var path = '';
 		if (isVersion == 0) path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&id='+res_id;
 		else if (isVersion == 1) path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isVersion&id='+res_id;
@@ -530,7 +530,7 @@ function signFile(res_id,isVersion, mode, pinCode){
 			method:'post',
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
-				console.log(response.status);
+				//console.log(response.status);
 				if (response.status == 0){
 					if ($('cur_idAffich')) var num_rep = window.opener.$('cur_idAffich').value;
 					if ($('cur_rep')){
