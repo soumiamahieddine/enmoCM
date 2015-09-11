@@ -557,7 +557,7 @@ class visa extends Database
 						else $typist = '';
 						array_push($joinedFiles,
 									array('id' => $res->res_id, //ID
-										  'label' => $this->show_string($label), //Label
+										  'label' => $label, //Label
 										  'format' => $res->format, //Format 
 										  'filesize' => $res->filesize, //Filesize
 										  'creation_date' => $res->creation_date, //creation_date
@@ -618,7 +618,7 @@ class visa extends Database
 			
             array_push($joinedFiles,
                         array('id' => $res->res_id, //ID
-                              'label' => $this->show_string($label), //Label
+                              'label' => $label, //Label
                               'format' => $res->format, //Format 
                               'filesize' => $res->filesize, //Filesize
                               'creation_date' => $res->creation_date, //Filesize
@@ -641,6 +641,16 @@ class visa extends Database
 		. 'class_indexing_searching_app.php';
 		$is = new indexing_searching_app();
 		
+		require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+			. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+			. 'class_users.php';
+			
+			$users_tools    = new class_users();
+		
+		require_once 'core/class/class_request.php';
+			
+		$request = new request();
+			
 		require_once('core/class/class_security.php');
 		$sec = new security();
 		$view = $sec->retrieve_view_from_coll_id($coll_id);
@@ -666,11 +676,11 @@ class visa extends Database
 				$id_doc = $joined_files[$i]['id']; 
 				$description = $joined_files[$i]['label'];
 				$format = $joined_files[$i]['format'];
-				$contact = $joined_files[$i]['typist'];
-				$creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+				$contact = $users_tools->get_user($joined_files[$i]['typist']);
+				$creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
 				if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
 				//Show data
-				$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+				$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
 			}
 		}
 		else {
@@ -682,8 +692,8 @@ class visa extends Database
 				$description = $joined_files[$i]['label'];
 				$format = $joined_files[$i]['format'];
 
-				$contact = $joined_files[$i]['typist'];
-				$creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+				$contact = $users_tools->get_user($joined_files[$i]['typist']);
+				$creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
 				
 				
 				if ($format == 'pdf') $check = 'class="check" checked="checked"'; else $check = ' ';
@@ -692,7 +702,7 @@ class visa extends Database
 				if($joined_files[$i]['is_version'] === true){
 					//Version
 					$version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
-					$str .= '<tr><td></td><td>'.$description.$version.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'_V'.$joined_files[$i]['version'].'" type="checkbox" name="join_version[]"  value="'.$id_doc.'"></input></td></tr>';	
+					$str .= '<tr><td></td><td>'.$description.$version.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'_V'.$joined_files[$i]['version'].'" type="checkbox" name="join_version[]"  value="'.$id_doc.'"></input></td></tr>';	
 				} else {
 					$str .= '<tr><td></td><td>'.$description.'</td><td>'.$res->contact_society.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_file[]" value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
 				}
@@ -707,11 +717,11 @@ class visa extends Database
             $id_doc = $joined_files[$i]['id']; 
             $description = $joined_files[$i]['label'];
             $format = $joined_files[$i]['format'];
-            $contact = $joined_files[$i]['typist'];
-            $creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+            $contact = $users_tools->get_user($joined_files[$i]['typist']);
+            $creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
 			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
         }
 		
 		// PROJETS DE REPONSE
@@ -723,11 +733,11 @@ class visa extends Database
             $id_doc = $joined_files[$i]['id']; 
             $description = $joined_files[$i]['label'];
             $format = $joined_files[$i]['format'];
-			$contact = $joined_files[$i]['typist'];
-            $creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+			$contact = $users_tools->get_user($joined_files[$i]['typist']);
+            $creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
 			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
         }
 		
 		// REPONSES SIGNEES
@@ -739,11 +749,11 @@ class visa extends Database
             $id_doc = $joined_files[$i]['id']; 
             $description = $joined_files[$i]['label'];
             $format = $joined_files[$i]['format'];
-			$contact = $joined_files[$i]['typist'];
-            $creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+			$contact = $users_tools->get_user($joined_files[$i]['typist']);
+            $creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
 			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
         }
 		
 		// REPONSES SIGNEES
@@ -755,11 +765,11 @@ class visa extends Database
             $id_doc = $joined_files[$i]['id']; 
             $description = $joined_files[$i]['label'];
             $format = $joined_files[$i]['format'];
-			$contact = $joined_files[$i]['typist'];
-            $creation_date = explode(" ",$joined_files[$i]['creation_date'])[0];
+			$contact = $users_tools->get_user($joined_files[$i]['typist']);
+            $creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
 			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
         }
 		
 		//Notes         
@@ -768,13 +778,7 @@ class visa extends Database
 			require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
 				. "class" . DIRECTORY_SEPARATOR
 				. "class_modules_tools.php";
-			require_once 'core/class/class_request.php';
-			require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-			. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-			. 'class_users.php';
 			
-			$users_tools    = new class_users();
-			$request = new request();
 			$notes_tools    = new notes();
 			$user_notes = $notes_tools->getUserNotes($id, $coll_id);
 			if (count($user_notes) >0) {
