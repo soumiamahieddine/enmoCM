@@ -43,6 +43,7 @@ CREATE TABLE contact_types
 (
     id bigint NOT NULL DEFAULT nextval('contact_types_id_seq'::regclass),
     label character varying(255) NOT NULL,
+    can_add_contact character varying(1) NOT NULL DEFAULT 'Y'::character varying,
     CONSTRAINT contact_types_pkey PRIMARY KEY  (id)
 ) WITH (OIDS=FALSE);
 
