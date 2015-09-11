@@ -520,6 +520,11 @@
       <parameter name="dir" type="identifier" />
     </validationRule>
 
+    <validationRule name="getContacts" extends="standardForm" mode="error">  
+      <parameter name="type_id" type="identifier" />
+      <parameter name="dir" type="identifier" />
+    </validationRule>
+
     <validationRule name="choose_file" extends="standardForm" mode="error">  
       <parameter name="with_file" type="boolean" />
       <parameter name="dir" type="identifier" />
