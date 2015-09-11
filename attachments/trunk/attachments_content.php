@@ -473,10 +473,8 @@ if (isset($_POST['add']) && $_POST['add']) {
                     $new_nb_attach = $stmt->rowCount();
                 }
                 if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'create') {
-					if (isset($_SESSION['upfile']['outgoingMail']) && $_SESSION['upfile']['outgoingMail']){
-						//Redirection vers bannette NumBasket
-						//$js .= "window.parent.top.location.href = 'index.php?page=view_baskets&module=basket&baskets=NumBasket&resid=".$_SESSION['doc_id']."&directLinkToAction';";
-						//Redirection vers bannette MyBasket
+					//Redirection vers bannette MyBasket s'il s'agit d'un courrier spontané et que l'utilisateur connecté est le destinataire du courrier
+					if (isset($_SESSION['upfile']['outgoingMail']) && $_SESSION['upfile']['outgoingMail'] && $_SESSION['user']['UserId'] == $_SESSION['details']['diff_list']['dest']['users'][0]['user_id']){
 						$js .= "window.parent.top.location.href = 'index.php?page=view_baskets&module=basket&baskets=MyBasket&resid=".$_SESSION['doc_id']."&directLinkToAction';";
 					}
 					else {
