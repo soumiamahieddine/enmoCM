@@ -819,8 +819,9 @@ if (isset($_POST['add']) && $_POST['add']) {
 							'type' => "integer",
 						)
 					);
-				
-					if (isset($_SESSION['upfile']['outgoingMail']) && $_SESSION['upfile']['outgoingMail']){
+					$old_pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
+					if (isset($old_pdf_id) && $old_pdf_id != 0) $infos_old_pdf = $ac->getAttachmentInfos($old_pdf_id);
+					if ((isset($_SESSION['upfile']['outgoingMail']) && $_SESSION['upfile']['outgoingMail']) || ($infos_old_pdf['type_id']==1)){
 						array_push(
 							$_SESSION['data_pdf'],
 							array(
@@ -1014,8 +1015,10 @@ if (isset($_POST['add']) && $_POST['add']) {
 							'type' => "integer",
 						)
 					);
-				
-					if (isset($_SESSION['upfile']['outgoingMail']) && $_SESSION['upfile']['outgoingMail']){
+					
+					$old_pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
+					if (isset($old_pdf_id) && $old_pdf_id != 0) $infos_old_pdf = $ac->getAttachmentInfos($old_pdf_id);
+					if ((isset($_SESSION['upfile']['outgoingMail']) && $_SESSION['upfile']['outgoingMail']) || ($infos_old_pdf['type_id']==1)){
 						array_push(
 							$_SESSION['data_pdf'],
 							array(

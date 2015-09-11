@@ -282,6 +282,7 @@ class attachments_controler
 			$infos['status'] = $line->status;
 			$infos['attachment_type'] = $line->attachment_type;
 			$infos['creation_date'] = $line->creation_date;
+			$infos['type_id'] = $line->type_id;
 			$infos['title'] = $line->title;
 			$infos['typist'] = $line->typist;
 		}
