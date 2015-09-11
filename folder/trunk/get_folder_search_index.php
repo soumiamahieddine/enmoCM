@@ -36,7 +36,7 @@ $indexes = $foldertype->get_indexes($_REQUEST['foldertype_id']);
 $mandatory = $foldertype->get_mandatory_indexes($_REQUEST['foldertype_id']);
 if(count($indexes) > 0)
 {
-	$content .= '<table width="91%" border="0">';
+	$content .= '<table border="0">';
 	$i=0;
 	foreach(array_keys($indexes) as $key)
 	{
