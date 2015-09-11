@@ -214,6 +214,7 @@ if ($sendmailTestIt == 'false') {
 
         $paramsDetails = '<b><i>Test sendmail : </i></b>' . '<br />'
             . 'type : ' . $sendmailType . '<br />'
+            . 'sendmail to : ' . $sendmailTo . '<br />'
             . 'details : ' . $sendmailDetails . '<br />';
         echo $paramsDetails;
 
