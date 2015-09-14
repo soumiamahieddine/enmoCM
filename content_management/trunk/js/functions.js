@@ -50,10 +50,13 @@ function endAttachment()
 {
 	if (window.opener.$('cur_idAffich')) var num_rep = window.opener.$('cur_idAffich').value;
 	if (window.opener.$('cur_resId')) var res_id_master = window.opener.$('cur_resId').value;
+	if (window.opener.$('cur_rep')){
+		var oldRep = window.opener.$('cur_rep').value;
+	}
 
-	if(window.opener.$('viewframevalidRep'+num_rep)) {
+	if(window.opener.$('viewframevalidRep'+num_rep+'_'+oldRep)) {
 		//window.opener.$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=visa&page=view_doc&path=last";		
-		window.opener.$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master="+res_id_master+"&id=last";					
+		window.opener.$('viewframevalidRep'+num_rep+'_'+oldRep).src = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master="+res_id_master+"&id=last";					
 	}
     window.close();
 }
