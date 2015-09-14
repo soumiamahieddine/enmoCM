@@ -61,6 +61,7 @@ class visa extends Database
 		$xmlconfig = simplexml_load_file($configPath);
 		$conf = $xmlconfig->CONFIG;
 		$_SESSION['modules_loaded']['visa']['exeSign'] = (string) $conf->exeSign;
+		$_SESSION['modules_loaded']['visa']['showAppletSign'] = (string) $conf->showAppletSign;
 		$_SESSION['modules_loaded']['visa']['reason'] = (string) $conf->reason;
 		$_SESSION['modules_loaded']['visa']['location'] = (string) $conf->location;
 		$_SESSION['modules_loaded']['visa']['licence_number'] = (string) $conf->licence_number;

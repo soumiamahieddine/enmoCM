@@ -335,7 +335,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$num_rep = $i+1;
 		if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
 		else $titleRep = $tab_path_rep_file[$i]['title'];
-		$frm_str .= '<dt id="ans_'.$num_rep.'" onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.', '.$tab_path_rep_file[$i]['is_version'].');">'.$titleRep.'</dt><dd>';
+		$frm_str .= '<dt id="ans_'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'" onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.', '.$tab_path_rep_file[$i]['is_version'].');">'.$titleRep.'</dt><dd>';
 		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master='.$res_id.'&id='.$tab_path_rep_file[$i]['res_id'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
 		 $frm_str .= '</dd>';
 	}
@@ -444,10 +444,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		if ($core->test_service('sign_document', 'visa', false) && $currentStatus == 'ESIG') {
 			$color = ' style="" ';
 			if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response') $color = ' style="color:green" ';
-			$frm_str .= '<a href="javascript://" id="sign_link_certif" '.$color.' onclick="';
-			if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',0);';
-			$frm_str .= '"><i class="fm fm-file-fingerprint fm-3x" title="Signer ces projets de réponse (avec certificat)"></i></a>';
-			
+			if ($_SESSION['modules_loaded']['visa']['showAppletSign'] == "true"){
+				$frm_str .= '<a href="javascript://" id="sign_link_certif" '.$color.' onclick="';
+				if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',0);';
+				$frm_str .= '"><i class="fm fm-file-fingerprint fm-3x" title="Signer ces projets de réponse (avec certificat)"></i></a>';
+			}
 			$frm_str .= ' <a href="javascript://" id="sign_link" '.$color.' onclick="';
 			if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',2);';
 			$frm_str .= '"><i class="fa fa-check fa-3x" title="Signer ces projets de réponse (sans certificat)"></i></a>';

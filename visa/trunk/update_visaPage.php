@@ -95,7 +95,7 @@ $tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
 		if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
 		else $titleRep = $tab_path_rep_file[$i]['title'];
 		$titleRep = str_replace("'", "'",$titleRep);
-		$right_html .= '<dt id="ans_'.$num_rep.'" onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.', '.$tab_path_rep_file[$i]['is_version'].');">'.$titleRep.'</dt><dd>';
+		$right_html .= '<dt id="ans_'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'" onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.', '.$tab_path_rep_file[$i]['is_version'].');">'.$titleRep.'</dt><dd>';
 		$right_html .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master='.$res_id.'&id='.$tab_path_rep_file[$i]['res_id'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
 		 $right_html .= '</dd>';
 	}

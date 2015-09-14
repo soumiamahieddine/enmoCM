@@ -444,8 +444,10 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 			if (response.status == 1){
 				if (document.getElementById("sign_link")){
 					document.getElementById("sign_link").setAttribute('onclick','');	
-					document.getElementById("sign_link_certif").setAttribute('onclick','');	
 					document.getElementById("sign_link").style.color = 'green';
+				}
+				if (document.getElementById("sign_link_certif")){
+					document.getElementById("sign_link_certif").setAttribute('onclick','');	
 					document.getElementById("sign_link_certif").style.color = 'green';
 				}
 				
@@ -456,13 +458,12 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 			else if (response.status == 0){
 				if (document.getElementById("sign_link")){
 					document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+','+is_version+',2);');	
-					document.getElementById("sign_link_certif").setAttribute('onclick','signFile('+idReponse+','+is_version+',0);');	
-					
-					document.getElementById("sendPIN").setAttribute('onclick','signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
-					
-					document.getElementById("valuePIN").setAttribute('onKeyPress','if (event.keyCode == 13) signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
-					
 					document.getElementById("sign_link").style.color = '';
+				}
+				if (document.getElementById("sign_link_certif")){
+					document.getElementById("sign_link_certif").setAttribute('onclick','signFile('+idReponse+','+is_version+',0);');	
+					document.getElementById("sendPIN").setAttribute('onclick','signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
+					document.getElementById("valuePIN").setAttribute('onKeyPress','if (event.keyCode == 13) signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
 					document.getElementById("sign_link_certif").style.color = '';
 				}
 				if (document.getElementById("update_rep_link")) {
@@ -520,7 +521,7 @@ function signFile(res_id,isVersion, mode, pinCode){
 		});
 	}
 	if (mode == 2){
-		//console.log("Signature serveur simple");
+
 		var path = '';
 		if (isVersion == 0) path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&id='+res_id;
 		else if (isVersion == 1) path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isVersion&id='+res_id;
@@ -530,23 +531,23 @@ function signFile(res_id,isVersion, mode, pinCode){
 			method:'post',
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
-				//console.log(response.status);
 				if (response.status == 0){
-					if ($('cur_idAffich')) var num_rep = window.opener.$('cur_idAffich').value;
+					if ($('cur_idAffich')) var num_rep = $('cur_idAffich').value;
 					if ($('cur_rep')){
 						var newId = response.new_id;
 						var oldRep = $('cur_rep').value;
 						$('cur_rep').value = newId;
 					}
 					if ($('cur_resId')) var num_idMaster = $('cur_resId').value;
-					
 					if ($('update_rep_link')){
 						$('update_rep_link').style.display = 'none';
 					}
 					if ($('sign_link')){
 						$('sign_link').style.color = 'green';
-						$('sign_link_certif').style.color = 'green';
 						$('sign_link').setAttribute('onclick','');	
+					}
+					if ($('sign_link_certif')){
+						$('sign_link_certif').style.color = 'green';
 						$('sign_link_certif').setAttribute('onclick','');	
 					}
 					
@@ -554,10 +555,10 @@ function signFile(res_id,isVersion, mode, pinCode){
 						$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=attachments&page=view_attachment&res_id_master="+num_idMaster+"&id="+newId;			
 					}
 					
-					if($('ans_'+num_rep)) {
-						$('ans_'+num_rep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');			
+					if($('ans_'+num_rep+'_'+oldRep)) {
+						$('ans_'+num_rep+'_'+oldRep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');		
+						$('ans_'+num_rep+'_'+oldRep).id = 'ans_'+num_rep+'_'+newId;						
 					}
-					
 					var zone_id = 'signedDoc_'+$('cur_resId').value;
 					if (hasAllAnsSigned($('cur_resId').value) == 1){
 						$(zone_id).style.visibility = 'visible';
@@ -675,16 +676,20 @@ function endAttachmentSign(newId)
 	}
 	if (window.opener.$('sign_link')){
 		window.opener.$('sign_link').style.color = 'green';
-		window.opener.$('sign_link_certif').style.color = 'green';
 		window.opener.$('sign_link').setAttribute('onclick','');	
-		window.opener.$('sign_link_certif').setAttribute('onclick','');	
+	}
+	
+	if (window.opener.$('sign_link_certif')){
+		window.opener.$('sign_link_certif').style.color = 'green';
+		window.opener.$('sign_link_certif').setAttribute('onclick','');
 	}
 	if(window.opener.$('viewframevalidRep'+num_rep)) {
 		window.opener.$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=attachments&page=view_attachment&res_id_master="+num_idMaster+"&id="+newId;			
 	}
 	
-	if(window.opener.$('ans_'+num_rep)) {
-		window.opener.$('ans_'+num_rep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');			
+	if(window.opener.$('ans_'+num_rep+'_'+oldRep)) {
+		window.opener.$('ans_'+num_rep+'_'+oldRep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');	
+		$('ans_'+num_rep+'_'+oldRep).id = 'ans_'+num_rep+'_'+newId;				
 	}
 	
 	var zone_id = 'signedDoc_'+window.opener.$('cur_resId').value;
