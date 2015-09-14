@@ -678,7 +678,8 @@ class visa extends Database
 				$description = $joined_files[$i]['label'];
 				$format = $joined_files[$i]['format'];
 				$contact = $users_tools->get_user($joined_files[$i]['typist']);
-				$creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
+                $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
+				$creation_date = $request->dateformat($dateFormat[0]);
 				if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
 				//Show data
 				$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
@@ -694,7 +695,8 @@ class visa extends Database
 				$format = $joined_files[$i]['format'];
 
 				$contact = $users_tools->get_user($joined_files[$i]['typist']);
-				$creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
+                $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
+				$creation_date = $request->dateformat($dateFormat[0]);
 				
 				
 				if ($format == 'pdf') $check = 'class="check" checked="checked"'; else $check = ' ';
@@ -719,7 +721,8 @@ class visa extends Database
             $description = $joined_files[$i]['label'];
             $format = $joined_files[$i]['format'];
             $contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
+            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
+            $creation_date = $request->dateformat($dateFormat[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
@@ -735,7 +738,8 @@ class visa extends Database
             $description = $joined_files[$i]['label'];
             $format = $joined_files[$i]['format'];
 			$contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
+            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
+            $creation_date = $request->dateformat($dateFormat[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
@@ -751,7 +755,8 @@ class visa extends Database
             $description = $joined_files[$i]['label'];
             $format = $joined_files[$i]['format'];
 			$contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
+            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
+            $creation_date = $request->dateformat($dateFormat[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
@@ -767,7 +772,8 @@ class visa extends Database
             $description = $joined_files[$i]['label'];
             $format = $joined_files[$i]['format'];
 			$contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $creation_date = $request->dateformat(explode(" ",$joined_files[$i]['creation_date'])[0]);
+            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
+            $creation_date = $request->dateformat($dateFormat[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled ';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
