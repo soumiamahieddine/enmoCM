@@ -58,7 +58,7 @@ if ($mode == 'list') {
         true,
         $eventsList['what'],
         true,
-        $eventsList['autoCompletionArray']
+        $tagslist['autoCompletionArray']
     );
 } elseif ($mode == 'up' || $mode == 'add') {
     ?><h1><i class="fa fa-tags fa-2x"> </i>
