@@ -51,4 +51,8 @@
         <target>entities</target>
         <page>get_tree_childs</page>
     </exclude>
+    <exclude>
+        <target></target>
+        <page>get_tree_children_contact</page>
+    </exclude>
 </excludes>

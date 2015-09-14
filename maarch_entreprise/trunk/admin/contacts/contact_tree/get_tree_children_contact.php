@@ -84,7 +84,7 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 				if ($children[$cpt_level2]['enabled'] ==  'N') {
 					$color = "style=\"color:red;\"";
 				}
-				echo "{'id':'".functions::xssafe($children[$cpt_level2]['id'])."', 
+				echo "{'id':'contact_".functions::xssafe($children[$cpt_level2]['id'])."', 
 						'txt':'<a ".$color." onmouseover=\'this.style.cursor=\"pointer\";\' onclick=\"window.top.location.href=\'". $_SESSION['config']['businessappurl']."index.php?page=contacts_v2_up&id="
 							.functions::xssafe($children[$cpt_level2]['id'])."&fromContactTree\';\">"
 							.addslashes(functions::xssafe($children[$cpt_level2]['contact_label']))."</a>',
@@ -101,9 +101,12 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 		}
 	}
 	if($branch_level_id == "2") {
+		$branchIdContact = substr($_REQUEST['branch_id'], 8);
+
 		$stmt = $db->query("SELECT id, contact_purpose_id, lastname, firstname, address_num, address_street, address_town, address_postal_code, enabled 
 							FROM ".$_SESSION['tablename']['contact_addresses']." where contact_id = ? order by lastname, firstname, address_num",
-							array($_REQUEST['branch_id']));
+							array($branchIdContact));
+		
 		$children = array();
 		while($res = $stmt->fetchObject()) {
 			$address = '';
@@ -121,13 +124,8 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 				if ($children[$cpt_level3]['enabled'] ==  'N') {
 					$color = "style=\"color:red;\"";
 				}
-
-				//PB : if id in contact_addresses = 100, the address is not display in the contacts tree
-				if ($children[$cpt_level3]['id'] == 100) {
-					$children[$cpt_level3]['id'] = 10;
-				}
 				
-				echo "{'id':'".$children[$cpt_level3]['id']."', 
+				echo "{'id':'address_".$children[$cpt_level3]['id']."', 
 						'txt':'<span ".$color.">".trim(addslashes(functions::xssafe($children[$cpt_level3]['address_label'])))."</span>', 
 						'canhavechildren' : false, 
 						'img' : 'page.gif'}";

@@ -314,7 +314,7 @@
 
     <validationRule name="getTreeChildrenContact" extends="standardForm" mode="error">
       <parameter name="branch" type="string" />
-      <parameter name="branch_id" type="integer" />
+      <parameter name="branch_id" type="identifier" />
       <parameter name="tree_id" type="identifier" />
     </validationRule>
 

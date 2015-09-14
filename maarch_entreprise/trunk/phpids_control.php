@@ -5,7 +5,8 @@ for ($cptIDS=0;$cptIDS<count($_SESSION['PHPIDS_EXCLUDES']);$cptIDS++) {
     if (
             (
                 $_REQUEST['module'] == $_SESSION['PHPIDS_EXCLUDES'][$cptIDS]['TARGET'] ||
-                $_REQUEST['admin']  == $_SESSION['PHPIDS_EXCLUDES'][$cptIDS]['TARGET']
+                $_REQUEST['admin']  == $_SESSION['PHPIDS_EXCLUDES'][$cptIDS]['TARGET'] || 
+                $_SESSION['PHPIDS_EXCLUDES'][$cptIDS]['TARGET'] == ""
             )
         &&  
             $_REQUEST['page'] == $_SESSION['PHPIDS_EXCLUDES'][$cptIDS]['PAGE']
