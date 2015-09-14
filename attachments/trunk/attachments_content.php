@@ -1124,7 +1124,7 @@ if (isset($_POST['add']) && $_POST['add']) {
     }
 
     if (!isset($_SESSION['new_id'])) $_SESSION['new_id'] = 0;
-    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', title : '" . addslashes($title) . "', isVersion : " . $isVersion . ", error : '" . addslashes($error) . "', majFrameId : ".$_SESSION['new_id'].", exec_js : '".addslashes($js)."'}";
+    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', title : '" . addslashes($title) . "', isVersion : " . $isVersion . ", error : '" . addslashes($error) . "', majFrameId : ".$_SESSION['new_id'].", exec_js : '".addslashes($js)."', cur_id : ".$_REQUEST['res_id']."}";
     unset($_SESSION['new_id']);
     exit();
 }

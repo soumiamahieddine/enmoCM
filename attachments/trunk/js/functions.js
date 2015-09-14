@@ -69,6 +69,15 @@ function showAttachmentsForm(path, width, height) {
     });
 }
 
+function get_num_rep(res_id){
+	trig_elements = document.getElementsByClassName('trig');
+	for (i=0; i<trig_elements.length; i++){
+		var id = trig_elements[i].id;
+		var splitted_id = id.split("_");
+		if (splitted_id.length == 3 && splitted_id[0] == 'ans' && splitted_id[2] == res_id) return splitted_id[1];
+	}
+	return 0;
+}
 function ValidAttachmentsForm (path, form_id) {
 
     new Ajax.Request(path,
@@ -84,7 +93,8 @@ function ValidAttachmentsForm (path, form_id) {
 				
 				if ($('cur_idAffich')) var num_rep = $('cur_idAffich').value;
 				if ($('cur_resId')) var res_id_master = $('cur_resId').value;
-				if ($('cur_rep')) var rep_id = $('cur_rep').value;
+				if (response.cur_id) var rep_id = response.cur_id;
+				if (num_rep == 0) num_rep = get_num_rep(rep_id);
 				
 				if($('viewframevalidRep'+num_rep+'_'+rep_id)) {
 					if (response.majFrameId > 0){
