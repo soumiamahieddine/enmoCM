@@ -551,8 +551,9 @@ function signFile(res_id,isVersion, mode, pinCode){
 						$('sign_link_certif').setAttribute('onclick','');	
 					}
 					
-					if($('viewframevalidRep'+num_rep)) {
-						$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=attachments&page=view_attachment&res_id_master="+num_idMaster+"&id="+newId;			
+					if($('viewframevalidRep'+num_rep+'_'+oldRep)) {
+						$('viewframevalidRep'+num_rep+'_'+oldRep).src = "index.php?display=true&module=attachments&page=view_attachment&res_id_master="+num_idMaster+"&id="+newId;			
+						$('viewframevalidRep'+num_rep+'_'+oldRep).id = 'viewframevalidRep'+num_rep+'_'+newId;
 					}
 					
 					if($('ans_'+num_rep+'_'+oldRep)) {
@@ -683,8 +684,9 @@ function endAttachmentSign(newId)
 		window.opener.$('sign_link_certif').style.color = 'green';
 		window.opener.$('sign_link_certif').setAttribute('onclick','');
 	}
-	if(window.opener.$('viewframevalidRep'+num_rep)) {
-		window.opener.$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=attachments&page=view_attachment&res_id_master="+num_idMaster+"&id="+newId;			
+	if(window.opener.$('viewframevalidRep'+num_rep+'_'+oldRep)) {
+		window.opener.$('viewframevalidRep'+num_rep+'_'+oldRep).src = "index.php?display=true&module=attachments&page=view_attachment&res_id_master="+num_idMaster+"&id="+newId;	
+		window.opener.$('viewframevalidRep'+num_rep+'_'+oldRep).id = 'viewframevalidRep'+num_rep+'_'+newId;
 	}
 	
 	if(window.opener.$('ans_'+num_rep+'_'+oldRep)) {
