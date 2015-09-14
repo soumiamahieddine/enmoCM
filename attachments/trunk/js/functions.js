@@ -84,6 +84,7 @@ function ValidAttachmentsForm (path, form_id) {
 				
 				if ($('cur_idAffich')) var num_rep = $('cur_idAffich').value;
 				if ($('cur_resId')) var res_id_master = $('cur_resId').value;
+				if ($('cur_rep')) var rep_id = $('cur_rep').value;
 				
 				if($('viewframevalidRep'+num_rep)) {
 					if (response.majFrameId > 0){
@@ -92,9 +93,13 @@ function ValidAttachmentsForm (path, form_id) {
 					}
 					else $('viewframevalidRep'+num_rep).src = $('viewframevalidRep'+num_rep).src;
 				}
-				if($('ans_'+num_rep)) {
-					$('ans_'+num_rep).innerHTML = response.title;
-					if (response.isVersion) $('ans_'+num_rep).setAttribute('onclick','updateFunctionModifRep(\''+response.majFrameId+'\', '+num_rep+', '+response.isVersion+');');			
+
+				if($('ans_'+num_rep+'_'+rep_id)) {
+					$('ans_'+num_rep+'_'+rep_id).innerHTML = response.title;
+					if (response.isVersion){
+						$('ans_'+num_rep+'_'+rep_id).setAttribute('onclick','updateFunctionModifRep(\''+response.majFrameId+'\', '+num_rep+', '+response.isVersion+');');			
+						$('ans_'+num_rep+'_'+rep_id).id = 'ans_'+num_rep+'_'+response.majFrameId;
+					}
 				}
 					
                 eval(response.exec_js);
