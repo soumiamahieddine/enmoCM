@@ -38,6 +38,7 @@
         <contact_types>contact_types</contact_types>
         <contact_purposes>contact_purposes</contact_purposes>
         <contact_addresses>contact_addresses</contact_addresses>
+        <tags>tags</tags>
     </TABLENAME>
     <WORKBATCH>
         <size>100</size>
