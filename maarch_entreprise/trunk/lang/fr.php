@@ -757,9 +757,15 @@ if (!defined("_CHOOSE_STATUS")) define("_CHOOSE_STATUS","Choisissez un statut");
 if (!defined("_PROCESS_RECEIPT")) define("_PROCESS_RECEIPT","Destinataire(s) pour traitement");
 if (!defined("_CHOOSE_RECEIPT")) define("_CHOOSE_RECEIPT","Choisissez un destinataire");
 if (!defined("_TO_CC")) define("_TO_CC","En copie");
-if (!defined("_TO_SIGN")) define("_TO_SIGN","Pour signature");
 if (!defined("_ADD_CC")) define("_ADD_CC","En copie");
 if (!defined("_ADD_COPIES")) define("_ADD_COPIES","Ajouter des personnes en copie");
+//Circuits de visa
+if (!defined("_TO_SIGN")) define("_TO_SIGN","Pour signature");
+if (!defined("_VISA_USER"))    define("_VISA_USER", "Pour visa");
+//Circuits d'avis
+if (!defined("_TO_VIEW")) define("_TO_VIEW","Pour avis");
+if (!defined("_TO_SHARED_VIEW")) define("_TO_SHARED_VIEW","Pour avis partagé");
+if (!defined("_FOLLOWED_INFO")) define("_FOLLOWED_INFO","Pour information suivie");
 
 if (!defined("_PROCESS_NOTES")) define("_PROCESS_NOTES","Notes de traitement");
 if (!defined("_DIRECT_CONTACT")) define("_DIRECT_CONTACT","Prise de contact direct");
@@ -790,7 +796,9 @@ if (!defined("_SAVE_QUERY")) define("_SAVE_QUERY", "Enregistrer ma recherche");
 if (!defined("_SAVE_QUERY_TITLE")) define("_SAVE_QUERY_TITLE", "Enregistrement de recherche");
 if (!defined("_QUERY_NAME")) define("_QUERY_NAME", "Nom de ma recherche");
 if (!defined("_QUERY_SAVED")) define("_QUERY_SAVED", "Recherche sauvegardée");
-if (!defined("_VISA_USER"))    define("_VISA_USER", "Pour visa");
+
+
+
 
 if (!defined("_LOAD_QUERY")) define("_LOAD_QUERY", "Charger la recherche");
 if (!defined("_DELETE_QUERY")) define("_DELETE_QUERY", "Supprimer la recherche");
@@ -1709,7 +1717,3 @@ if (!defined("_IVS_VALUE_NOT_ALLOWED")) define("_IVS_VALUE_NOT_ALLOWED", "La val
 if (!defined("_IVS_FORMAT_NOT_ALLOWED")) define("_IVS_FORMAT_NOT_ALLOWED", "Le format n'est pas autorisé");
 if (!defined("_IVS_TOO_MANY_DIGITS")) define("_IVS_TOO_MANY_DIGITS", "Trop de caractères");
 if (!defined("_IVS_TOO_MANY_DECIMAL_DIGITS")) define("_IVS_TOO_MANY_DECIMAL_DIGITS", "Trop de caractères décimaux");
-
-//control technical params
-if (!defined("_CONTROL_PARAM_TECHNIC")) define("_CONTROL_PARAM_TECHNIC", "Contrôler les paramètres techniques");
-if (!defined("_COMPONENT")) define("_COMPONENT", "Composant");

@@ -43,7 +43,7 @@ if (isset($_REQUEST['res_id_master'])) {
 
                 $db = new Database();
 
-                $query = "SELECT * FROM res_view_attachments WHERE res_id_master = ? AND status <> 'DEL' and status <> 'OBS' and attachment_type <> 'converted_pdf' and coll_id = ? ORDER BY creation_date desc";
+                $query = "SELECT * FROM res_view_attachments WHERE res_id_master = ? AND status <> 'DEL' and status <> 'OBS' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and coll_id = ? ORDER BY creation_date desc";
                 $arrayPDO = array($_REQUEST['res_id_master'], $_SESSION['collection_id_choice']);
                 $stmt = $db->query($query, $arrayPDO);
 
