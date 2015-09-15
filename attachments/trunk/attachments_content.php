@@ -71,7 +71,7 @@ if (isset($_POST['add']) && $_POST['add']) {
     if (! isset($_REQUEST['title']) || empty($_REQUEST['title'])) {
         $_SESSION['error'] .= _OBJECT . ' ' . _MANDATORY . ". ";
     } else {
-        $title = functions::xssafe($func->protect_string_db($_REQUEST['title']));
+        $title = $_REQUEST['title'];
         $title = str_replace("&#039;", "'", $title);
     }
     
@@ -506,7 +506,7 @@ if (isset($_POST['add']) && $_POST['add']) {
         $_SESSION['error'] .= _OBJECT . ' ' . _MANDATORY . ". ";
         $status = 1;
     } else {
-        $title = functions::xssafe($func->protect_string_db($_REQUEST['title']));
+        $title = $_REQUEST['title'];
         $title = str_replace("&#039;", "'", $title);
     }
 
@@ -879,7 +879,7 @@ if (isset($_POST['add']) && $_POST['add']) {
         } else {
             $isVersion = 0;
             $set_update = "";
-            $set_update = " title = '".$title."'";
+            $set_update = " title = '".functions::protect_string_db($title)."'";
 
             if (isset($_REQUEST['back_date']) && $_REQUEST['back_date'] <> "") {
                 $set_update .= ", validation_date = '".$req->format_date_db($_REQUEST['back_date'])."'";
@@ -1361,7 +1361,7 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
             $content .= '<label>'. _OBJECT .'</label>';
             $content .= '<input type="text" name="title" id="title" value="';
             if (isset($_REQUEST['id'])) {
-                $content .= $req->show_string($data_attachment->title);
+                $content .= str_replace('"', '&quot;', $data_attachment->title);
             } else {
                 $content .= $req->show_string($data_attachment->subject);
             }
