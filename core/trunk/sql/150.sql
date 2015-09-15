@@ -340,6 +340,9 @@ ALTER TABLE users ADD signature_path character varying(255) DEFAULT NULL::charac
 ALTER TABLE users DROP COLUMN IF EXISTS signature_file_name;
 ALTER TABLE users ADD signature_file_name character varying(255) DEFAULT NULL::character varying;
 
+ALTER TABLE users DROP COLUMN IF EXISTS initials;
+ALTER TABLE users ADD COLUMN initials character varying(32);
+
 DELETE FROM status WHERE id = 'A_TRA';
 INSERT INTO status (id, label_status, is_system) VALUES ('A_TRA', 'A traiter', 'N');
 
