@@ -180,7 +180,7 @@ if ($mode == 'add') {
         $adress_mail = $adr->mail;
     }
     if($adress_mail != null and ($_SESSION['user']['UserId'] != $exp_user_id and $_SESSION['user']['UserId'] != $dest_user_id)){
-    $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput"><div id="loading_to" style="display:none;"></div><div class="email_element" id="0_'.$adress_mail.'">'.$adress_mail.'&nbsp;<div class="email_delete_button" id="0" onclick="updateAdress(\'http://localhost/maarch_trunk/apps/maarch_entreprise/index.php?display=true&amp;module=sendmail&amp;page=sendmail_ajax_content&amp;identifier=106&amp;origin=document&amp;coll_id=letterbox_coll&amp;size=full&amp;mode=adress\', \'del\', \''.$adress_mail.'\', \'to\', this.id);"
+    $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput"><div id="loading_to" style="display:none;"></div><div class="email_element" id="0_'.$adress_mail.'">'.$adress_mail.'&nbsp;<div class="email_delete_button" id="0" onclick="updateAdress(\''.$_SESSION['config']['coreurl'].'apps/maarch_entreprise/index.php?display=true&amp;module=sendmail&amp;page=sendmail_ajax_content&amp;identifier=106&amp;origin=document&amp;coll_id=letterbox_coll&amp;size=full&amp;mode=adress\', \'del\', \''.$adress_mail.'\', \'to\', this.id);"
          alt=\"Supprimer\" title=\"Supprimer\">x</div></div></div>'
         .'<div id="loading_to" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></div></div></td>';
     $_SESSION['adresses']['to'][0] = $adress_mail;
