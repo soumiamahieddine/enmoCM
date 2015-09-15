@@ -71,6 +71,7 @@
     </dataType>
     <dataType name="res_view_table_list" base="string">
       <enumeration value="res_view_letterbox" />
+      <enumeration value="res_letterbox" />
     </dataType>
     <dataType name="category_list" base="string">
       <enumeration value="incoming" />
