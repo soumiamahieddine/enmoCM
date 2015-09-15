@@ -661,7 +661,7 @@ class visa extends Database
 		$str .= '<div align="left">';
 		$str .= '<div class="error" id="divErrorPrint" name="divErrorPrint" onclick="this.hide();"></div>';
 	
-		$str .= '<p><b>Requérent</b> : '.$res->contact_society.'</p>';
+		$str .= '<p><b>Requérant</b> : '.$res->contact_society.'</p>';
 		$str .= '<p><b>Objet</b> : '.$res->subject.'</p>';
 		$str .= '<hr/>';
 		$str .= '<form style="width:99%;" name="print_folder_form" id="print_folder_form" action="#" method="post">';
