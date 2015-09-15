@@ -183,7 +183,12 @@ if (isset($_REQUEST['action_submit'])) {
         $action->setArray($action_value);
 
         ActionControler::save($action, $mode);
-        ActionControler::saveCategoriesAssociation(ActionControler::getLastActionId($_SESSION['m_admin']['action']['LABEL']));
+        if ($_SESSION['m_admin']['action']['ID'] == "") {
+            ActionControler::saveCategoriesAssociation(ActionControler::getLastActionId($_SESSION['m_admin']['action']['LABEL']));
+        } else {
+            ActionControler::saveCategoriesAssociation($_SESSION['m_admin']['action']['ID']);
+        }
+        
         ActionControler::razActionPage();
 
         if ($_SESSION['history']['actionadd'] == 'true' && $mode == 'add') {
