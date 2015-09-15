@@ -212,7 +212,7 @@ function ajout_bdd($tmpFolderFile, $res_id_master){
 				if ($id == false) {
 					$_SESSION['error'] = $resAttach->get_error();
 				} else {
-					if ($_SESSION['history']['attachadd'] == "true") {
+					/*if ($_SESSION['history']['attachadd'] == "true") {
 						$hist = new history();
 						$view = $sec->retrieve_view_from_coll_id(
 							$_SESSION['collection_id_choice']
@@ -233,7 +233,7 @@ function ajout_bdd($tmpFolderFile, $res_id_master){
 							$_SESSION['config']['databasetype'],
 							'attachments'
 						);
-					}
+					}*/
 					return $id;
 				}
 			}
