@@ -793,14 +793,20 @@ class visa extends Database
 				for($i=0; $i < count($user_notes); $i++) {
 					//Get data
 					$idNote = $user_notes[$i]['id']; 
-					$noteShort = $request->cut_string($user_notes[$i]['label'], 50);
+					//$noteShort = $request->cut_string($user_notes[$i]['label'], 50);
+       					$noteShort = $request->cut_string(str_replace(array("'", "\r", "\n","\""),array("\'", " ", " ", "&quot;"), 
+                                            $user_notes[$i]['label']), 50);
+
 					$note = $user_notes[$i]['label'];
 					$userArray = $users_tools->get_user($user_notes[$i]['author']);
 					$date = $request->dateformat($user_notes[$i]['date']);
 					
 					$check = ' ';
 					
-					$str .= '<tr><td></td><td>'.$noteShort.'</td><td>'.$userArray['firstname']." ".$userArray['lastname'].'</td><td>'.$date.'</td><td><input id="note_'.$idNote.'" type="checkbox" name="notes[]"  value="'.$idNote.'"  '.$check.'></input></td></tr>';	
+					$str .= '<tr><td></td><td>'.$noteShort.'</td><td>'
+                                             .$userArray['firstname']." ".$userArray['lastname']
+                                             .'</td><td>'.$date.'</td><td><input id="note_'.$idNote.'" type="checkbox" name="notes[]"  value="'
+                                             .$idNote.'"  '.$check.'></input></td></tr>';	
 				}
 			}
 		}
