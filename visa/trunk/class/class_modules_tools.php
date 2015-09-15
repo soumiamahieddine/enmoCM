@@ -580,7 +580,7 @@ class visa extends Database
 			if ($filter_attach_type == 'all')
 				$stmt = $db->query(
 					"select res_id, description, subject, title, format, filesize, res_id_master, attachment_type, creation_date, typist from " 
-					.  RES_ATTACHMENTS_TABLE . " where res_id_master = ? and coll_id = ? and attachment_type <> 'converted_pdf' and status <> 'DEL' order by attachment_type, creation_date",
+					.  RES_ATTACHMENTS_TABLE . " where res_id_master = ? and coll_id = ? and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and status <> 'DEL' order by attachment_type, creation_date",
 					array($id, $coll_id)
 					);
 			else $stmt = $db->query(

@@ -341,7 +341,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	}
 		$stmt = $db->query("SELECT res_id FROM "
             . $_SESSION['tablename']['attach_res_attachments']
-            . " WHERE status <> 'DEL' and attachment_type <> 'converted_pdf' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
+            . " WHERE status <> 'DEL' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
 		if ($stmt->rowCount() > 0) {
             $nb_attach = " (".$stmt->rowCount().")";
         }
@@ -378,7 +378,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     }
                     $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf" '
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder" '
                     . 'frameborder="0" width="900px" scrolling="yes" height="600px" scrolling="yes" ></iframe>';
                     $frm_str .= '</div>';
                 $frm_str .= '</div>';

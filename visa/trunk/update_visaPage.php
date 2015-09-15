@@ -101,7 +101,7 @@ $tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
 	}
 	
 		$db = new Database();
-		$stmt = $db->query("select res_id from res_view_attachments where status NOT IN ('DEL','OBS') and attachment_type <> 'converted_pdf' and res_id_master = ? and coll_id = ?",array($res_id,$coll_id));
+		$stmt = $db->query("select res_id from res_view_attachments where status NOT IN ('DEL','OBS') and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ?",array($res_id,$coll_id));
 		if ($stmt->rowCount() > 0) {
 			$nb_attach = ' (' . $stmt->rowCount(). ')';
 		}
@@ -121,7 +121,7 @@ $tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
                     $right_html .= '<center><h2>' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
                     
                     $stmt = $db->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
-                        . " where (status = 'A_TRA' or status = 'TRA' or status = 'SIGN') and attachment_type <> 'converted_pdf' and res_id_master = ? and coll_id = ?", array($res_id,$coll_id));
+                        . " where (status = 'A_TRA' or status = 'TRA' or status = 'SIGN') and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ?", array($res_id,$coll_id));
                     $nb_attach = 0;
                     if ($stmt->rowCount() > 0) {
                         $nb_attach = $stmt->rowCount();
@@ -136,7 +136,7 @@ $tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
                     }
                     $right_html .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf&resId='.$res_id.'" '
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder&resId='.$res_id.'" '
                     . 'frameborder="0" width="900px" scrolling="yes" height="600px"></iframe>';
                     $right_html .= '</div>';
                 $right_html .= '</div>';
