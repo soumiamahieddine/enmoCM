@@ -112,7 +112,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                         var eleframe1 =  window.parent.top.document.getElementById('list_attach');
                         eleframe1.location.href = '<?php
                     echo $_SESSION['config']['businessappurl'];
-                    ?>index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf&mode=normal&load';
+                    ?>index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf,print_folder&mode=normal&load';
                     </script>
                     <?php
                     exit();
@@ -468,7 +468,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $new_nb_attach = 0;
                 $stmt = $db->query("select res_id from "
                     . $_SESSION['tablename']['attach_res_attachments']
-                    . " where status <> 'DEL' and attachment_type <> 'converted_pdf' and res_id_master = ?", array($_SESSION['doc_id']));
+                    . " where status <> 'DEL' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ?", array($_SESSION['doc_id']));
                 if ($stmt->rowCount() > 0) {
                     $new_nb_attach = $stmt->rowCount();
                 }
@@ -482,7 +482,7 @@ if (isset($_POST['add']) && $_POST['add']) {
 					}
                 } else {
                     $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach\');';
-                    $js .= 'eleframe1.src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf&load\';';
+                    $js .= 'eleframe1.src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf,print_folder&load\';';
                     $js .= 'var nb_attach = '. $new_nb_attach.';';
                     $js .= 'window.parent.top.document.getElementById(\'nb_attach\').innerHTML = nb_attach;';
                 }
@@ -1105,12 +1105,12 @@ if (isset($_POST['add']) && $_POST['add']) {
             $js .= 'var eleframe1 =  window.top.document.getElementsByName(\'list_attach\');';
             if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') {
                 $js .= 'eleframe1[0].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load';
-                $js .= '&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf&fromDetail=attachments';
+                $js .= '&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf,print_folder&fromDetail=attachments';
             } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){
                 $js .= 'eleframe1[1].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load';
                 $js .= '&attach_type=response_project,outgoing_mail_signed,outgoing_mail&fromDetail=response';
             } else {
-                $js .= 'eleframe1[0].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf&load';
+                $js .= 'eleframe1[0].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf,print_folder&load';
             }
             $js .='\';';
         } else {

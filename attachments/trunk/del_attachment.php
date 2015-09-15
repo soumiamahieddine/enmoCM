@@ -68,12 +68,12 @@ $res = $stmt->fetchObject();
 $resIdMaster = $res->res_id_master;
 $query = "SELECT title FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' and res_id_master = ?";
     if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') {
-        $query .= " and (attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed' and attachment_type <> 'converted_pdf')";
+        $query .= " and (attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder')";
     } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){
         $query .= " and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed')";
     }
 	else{
-		$query .= " and (attachment_type <> 'converted_pdf')";
+		$query .= " and (attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder')";
 	}
 $stmt = $db->query($query, array($resIdMaster));
 if ($stmt->rowCount() > 0) {
@@ -86,13 +86,13 @@ if ($stmt->rowCount() > 0) {
     var eleframe1 =  window.top.document.getElementsByName('list_attach');
     var nb_attach = '<?php functions::xecho($new_nb_attach);?>';
     <?php if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') { ?>
-        eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf&fromDetail=attachments';?>";
+        eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf,print_folder&fromDetail=attachments';?>";
         window.parent.top.document.getElementById('nb_attach').innerHTML = " ("+nb_attach+")";
     <?php } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){ ?>
         eleframe1[1].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed&fromDetail=response';?>";
         window.parent.top.document.getElementById('answer_number').innerHTML = " ("+nb_attach+")";
     <?php } else { ?>
-        eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf';?>";
+        eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder';?>";
         window.parent.top.document.getElementById('nb_attach').innerHTML = nb_attach;
     <?php } ?>
 
