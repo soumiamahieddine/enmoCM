@@ -34,5 +34,6 @@ else {
 	var tab = <?php echo json_encode(functions::xssafe($_SESSION['stockCheckbox']));?>;
 	window.opener.$('res_id').value=tab;
 }
+window.opener.$('attach').click();
 self.close();
 </script>
