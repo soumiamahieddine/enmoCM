@@ -40,7 +40,8 @@ $core_tools->test_service('quicklaunch', "apps");
 <div id="welcome_box_left_quick_lunch">
     <!-- QUICK SEARCH ON COLLECTION -->
     <?php
-    if (count($_SESSION['user']['security']) > 0 || $_SESSION['user']['UserId'] == 'superadmin') {
+    if($core_tools->test_service('adv_search_mlb', "apps",false) == true){
+        if (count($_SESSION['user']['security']) > 0 || $_SESSION['user']['UserId'] == 'superadmin') {
         ?>
         <form name="choose_query" id="choose_query"  method="post" action="" class="<?php functions::xecho($class_for_form);?>" >
             <div class="block">
@@ -88,6 +89,7 @@ $core_tools->test_service('quicklaunch', "apps");
             }
         </script>
         <?php
+        }
     }
     ?>
 </div>
