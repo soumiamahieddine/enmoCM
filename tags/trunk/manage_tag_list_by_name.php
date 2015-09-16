@@ -30,8 +30,7 @@
 */
 $db = new Database();
 $stmt = $db->query(
-    "SELECT tag_label as tag FROM ".$_SESSION['tablename']['tags']
-    ." WHERE lower(tag_label) like lower(?) order by tag_label",
+    "SELECT distinct tag_label as tag FROM tags WHERE lower(tag_label) like lower(?) order by tag_label",
     array($_REQUEST['what'].'%')
 );
 
