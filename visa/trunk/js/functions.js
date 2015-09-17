@@ -568,6 +568,9 @@ function signFile(res_id,isVersion, mode, pinCode){
 						$(zone_id).style.visibility = 'hidden';
 					}
 				}
+				else{
+					alert(response.error);
+				}
 			}
 		});
 	}

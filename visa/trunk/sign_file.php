@@ -23,6 +23,8 @@ $core_tools->load_lang();
 
 if (!isset($_SESSION['user']['pathToSignature']) ||$_SESSION['user']['pathToSignature'] == '') {
     $_SESSION['error'] = _IMG_SIGN_MISSING;
+	echo "{status:1, error : '". _IMG_SIGN_MISSING ."'}";
+	exit;
 }
 
 if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
