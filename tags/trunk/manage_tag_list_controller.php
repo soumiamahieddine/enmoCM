@@ -70,6 +70,7 @@ $func = new functions();
 
 //Get list of all templates
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
+    $_REQUEST['id'] = htmlspecialchars_decode($_REQUEST['id']);
     $tag_label = $func->protect_string_db($_REQUEST['id']);
 }
 
