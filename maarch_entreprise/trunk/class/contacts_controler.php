@@ -174,7 +174,7 @@ class contacts_controler extends ObjectControler implements ObjectControlerIF
 
                 $db->query($queryContact);
 
-                $currentContactId = $db->last_insert_id('contact_v2_id_seq');
+                $currentContactId = $db->lastInsertId('contact_v2_id_seq');
 
                 $queryAddressFields .= "contact_id, user_id, entity_id)";
                 $queryAddressValues .=  $currentContactId . ", 'superadmin', 'SUPERADMIN')";
@@ -183,7 +183,7 @@ class contacts_controler extends ObjectControler implements ObjectControlerIF
                        . ' values ' . $queryAddressValues ;
 
                 $db->query($queryAddress);
-                $currentAddressId = $db->last_insert_id('contact_addresses_id_seq');
+                $currentAddressId = $db->lastInsertId('contact_addresses_id_seq');
             }
 
             $returnResArray = array(
