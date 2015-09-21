@@ -8,6 +8,9 @@ if (!defined("_PRINTFOLDER"))
 if (!defined("_PRINT_FOLDER_DOC"))
     define("_PRINT_FOLDER_DOC", "Imprimer le dossier complet");
 
+if (!defined("_NO_PDF_FILE"))
+    define("_NO_PDF_FILE", "Aucun PDF présent pour ce fichier");
+
 // CIRCUIT DE VISA
 if (!defined("_VISA_WORKFLOW"))
     define("_VISA_WORKFLOW", "Circuit de visa");
