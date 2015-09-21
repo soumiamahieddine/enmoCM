@@ -85,13 +85,13 @@ echo '<div class="block" style="text-align:center;">';
 $db->query("UPDATE contacts_v2 SET user_id='' WHERE user_id IS NULL");
 
 //duplicates by society
-$selectDuplicatesBySociety = "SELECT contact_id, user_id, society, lower(society) as lowsoc, society_short,"
-    . "is_corporate_person, lastname, firstname "
-    . "from contacts_v2 "
-    . "WHERE lower(society) in ("
-    . "SELECT lower(society) FROM contacts_v2 GROUP BY lower(society) "
-    . "     HAVING Count(lower(society)) > 1 and lower(society) <> '' ) "
-    . "order by lower(society)";
+$selectDuplicatesBySociety = "SELECT contacts_v2.contact_id, contacts_v2.user_id, society, lower(society) as lowsoc, society_short,
+    is_corporate_person, contact_addresses.title,contact_addresses.lastname, contact_addresses.firstname, address_num||' '||address_street||' '||address_postal_code||' '||address_town as address 
+    from contacts_v2, contact_addresses 
+    WHERE contacts_v2.contact_id = contact_addresses.contact_id AND lower(society) in (
+    SELECT lower(society) FROM contacts_v2 GROUP BY lower(society) 
+    HAVING Count(lower(society)) > 1 and lower(society) <> '' ) AND is_corporate_person = 'Y'
+    order by lower(society)";
 $htmlTabSoc = '<table style="width:100%;">';
 $htmlTabSoc .= '<CAPTION>' . _DUPLICATES_BY_SOCIETY . '</CAPTION>';
 $htmlTabSoc .= '<tr>';
@@ -99,8 +99,11 @@ $htmlTabSoc .= '<th style="width:60px">&nbsp;</th>';
 $htmlTabSoc .= '<th style="width:200px">' . _ID . '</th>';
 $htmlTabSoc .= '<th>' . _STRUCTURE_ORGANISM . '</th>';
 $htmlTabSoc .= '<th>' . _SOCIETY_SHORT . '</th>';
-$htmlTabSoc .= '<th style="width:200px">' . _IS_CORPORATE_PERSON . '</th>';
-$htmlTabSoc .= '<th style="width:50px">&nbsp;</th>';
+$htmlTabSoc .= '<th>' . _ADDRESS . '</th>';
+$htmlTabSoc .= '<th>' . _TITLE2 . '</th>';
+$htmlTabSoc .= '<th>' . _LASTNAME . '</th>';
+$htmlTabSoc .= '<th>' . _FIRSTNAME . '</th>';
+$htmlTabSoc .= '<th>&nbsp;</th>';
 $htmlTabSoc .= '</tr>';
 
 $tabSoc = array();
@@ -112,10 +115,10 @@ $stmt = $db->query($selectDuplicatesBySociety);
 $cptSoc = 0;
 while($lineDoublSoc = $stmt->fetchObject()) {
 
-    $stmt2 = $db->query("SELECT id FROM contact_addresses WHERE contact_id = ?", array($lineDoublSoc->contact_id));
-    $result_address = $stmt2->fetchObject();
+    //$stmt2 = $db->query("SELECT id FROM contact_addresses WHERE contact_id = ?", array($lineDoublSoc->contact_id));
+    //$result_address = $stmt2->fetchObject();
 
-    if ($lineDoublSoc->contact_id <> '' && $result_address->id <> '') {
+    if ($lineDoublSoc->contact_id <> ''/* && $result_address->id <> '' */) {
         $cptSoc++;
 
         if ($socCompare == $lineDoublSoc->lowsoc) {
@@ -134,7 +137,10 @@ while($lineDoublSoc = $stmt->fetchObject()) {
         $htmlTabSoc .= '<td>' . $lineDoublSoc->contact_id . '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->society . '</td>';
         $htmlTabSoc .= '<td align="center">' . $lineDoublSoc->society_short . '</td>';
-        $htmlTabSoc .= '<td>' . $corporatePeople . '</td>';
+        $htmlTabSoc .= '<td>' . $lineDoublSoc->address . '</td>';
+        $htmlTabSoc .= '<td>' . $business->get_label_title($lineDoublSoc->title) . '</td>';
+        $htmlTabSoc .= '<td>' . $lineDoublSoc->lastname . '</td>';
+        $htmlTabSoc .= '<td>' . $lineDoublSoc->firstname . '</td>';
         $htmlTabSoc .= '<td><i onclick="loadDeleteContactDiv('
             . $lineDoublSoc->contact_id . ', \'' 
             . addslashes($lineDoublSoc->society) . '\', \'\');" class="fa fa-close fa-2x" title="'._DELETE.'" title="'
@@ -177,13 +183,13 @@ if ($cptSoc == 0) {
 ?><br><?php
 /***********************************************************************/
 //duplicates by name
-$selectDuplicatesByName = "SELECT contact_id, lower(lastname||' '||firstname) as lastname_firstname, society, society_short,"
-    . "is_corporate_person, lastname, firstname, title "
-    . "from contacts_v2 "
-    . "WHERE lower(lastname||' '||firstname) in ("
-    . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts_v2 GROUP BY lastname_firstname "
-    . "     HAVING Count(lower(lastname||' '||firstname)) > 1 and lower(lastname||' '||firstname) <> ' ') "
-    . "order by lower(lastname||' '||firstname)";
+$selectDuplicatesByName = "SELECT contacts_v2.contact_id, lower(contacts_v2.lastname||' '||contacts_v2.firstname) as lastname_firstname, society, society_short,
+    is_corporate_person, contacts_v2.lastname, contacts_v2.firstname, contacts_v2.title, address_num||' '||address_street||' '||address_postal_code||' '||address_town as address
+    from contacts_v2, contact_addresses
+    WHERE contacts_v2.contact_id = contact_addresses.contact_id AND is_corporate_person = 'N' AND lower(contacts_v2.lastname||' '||contacts_v2.firstname) in (
+    SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts_v2 GROUP BY lastname_firstname 
+    HAVING Count(lower(lastname||' '||firstname)) > 1 and lower(lastname||' '||firstname) <> ' ') 
+    order by lower(contacts_v2.lastname||' '||contacts_v2.firstname)";
 $htmlTabName = '<table style="width:100%;">';
 $htmlTabName .= '<CAPTION>' . _DUPLICATES_BY_NAME . '</CAPTION>';
 $htmlTabName .= '<tr>';
@@ -195,7 +201,6 @@ $htmlTabName .= '<th>' . _FIRSTNAME . '</th>';
 $htmlTabName .= '<th>' . _STRUCTURE_ORGANISM . '</th>';
 $htmlTabName .= '<th>' . _SOCIETY_SHORT . '</th>';
 $htmlTabName .= '<th>' . _ADDRESS . '</th>';
-$htmlTabName .= '<th style="width:200px">' . _IS_CORPORATE_PERSON . '</th>';
 $htmlTabName .= '<th style="width:50px">&nbsp;</th>';
 $htmlTabName .= '</tr>';
 $tabName = array();
@@ -233,10 +238,8 @@ while($lineDoublName = $stmt->fetchObject()) {
         $htmlTabName .= '<td>' . $lineDoublName->firstname . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->society . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->society_short . '</td>';
-        $htmlTabName .= '<td>' . $lineDoublName->address_num;
-        $htmlTabName .= ' ' . $lineDoublName->address_street;
-        $htmlTabName .= ' ' . $lineDoublName->address_town . '</td>';
-        $htmlTabName .= '<td>' . $corporatePeople . '</td>';
+        $htmlTabName .= '<td>' . $lineDoublName->address;
+        $htmlTabName .= '</td>';
         $htmlTabName .= '<td><i onclick="loadDeleteContactDiv('
             . $lineDoublName->contact_id . ', \'\', \'' 
             . addslashes($lineDoublName->lastname_firstname) . '\');" class="fa fa-close fa-2x" title="'._DELETE . ' ' . $lineDoublName->contact_id . ' '
