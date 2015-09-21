@@ -34,6 +34,12 @@ else {
 	var tab = <?php echo json_encode(functions::xssafe($_SESSION['stockCheckbox']));?>;
 	window.opener.$('res_id').value=tab;
 }
-window.opener.$('attach').click();
+
+<?php
+if ($_SESSION['current_basket']['id'] == "IndexingBasket") {
+	?>window.opener.$('attach').click();<?php
+}
+?>
+
 self.close();
 </script>
