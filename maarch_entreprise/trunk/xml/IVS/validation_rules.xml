@@ -461,6 +461,7 @@
       <parameter name="modulename" type="identifier" />
       <parameter name="nodetails" type="boolean" />
       <parameter name="collection" type="collection_list" />
+      <parameter name="barcode" type="alnum" />
       <parameter name="Submit" type="identifier" />
     </validationRule>
 
