@@ -561,7 +561,6 @@
       <parameter name="modulename" type="identifier" />
       <parameter name="action_form" type="identifier" />
       <parameter name="exclude" type="integer" />
-      <parameter name="lines" type="integer" />
     </validationRule>
     
     <validationRule name="document_history" extends="standardForm" mode="error">  
@@ -721,6 +720,7 @@
 
     <validationRule name="standardForm" extends="index">  
       <parameter name="mode" type="mode" />
+      <parameter name="lines" type="integer" />
     </validationRule>
 
     <validationRule name="example" extends="baseExample">
