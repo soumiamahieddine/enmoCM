@@ -316,24 +316,25 @@ class indexing_searching_app extends Database
             }
             $project_id = '';
             $market_id = '';
-            if (isset($_ENV['categories'][$cat_id]['other_cases']['market']) && $_ENV['categories'][$cat_id]['other_cases']['market']['mandatory'] == true )
+            if (isset($_ENV['categories'][$cat_id]['other_cases']['folder']) && $_ENV['categories'][$cat_id]['other_cases']['folder']['mandatory'] == true )
             {
                 if (empty($market) )
                 {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['market']['label'].' '._IS_EMPTY;
+                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['folder']['label'].' '._IS_EMPTY;
                 }
             }
             if (!empty($market) )
             {
                 if (!preg_match('/\([0-9]+\)$/', $market))
                 {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['market']['label']." "._WRONG_FORMAT;
-                }
-                $market_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
-                $stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($market_id));
-                if ($stmt->rowCount() == 0)
-                {
-                    $_SESSION['error'] .= _MARKET.' '.$market_id.' '._UNKNOWN;
+                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['folder']['label']." "._WRONG_FORMAT.". "._USE_AUTOCOMPLETION;
+                } else {
+                    $market_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
+                    $stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($market_id));
+                    if ($stmt->rowCount() == 0)
+                    {
+                        $_SESSION['error'] .= _MARKET.' '.$market_id.' '._UNKNOWN;
+                    }
                 }
             }
             $project = '';
@@ -438,6 +439,9 @@ class indexing_searching_app extends Database
             );
             
             $_SESSION['info'] = _INDEX_UPDATED;
+        } else {
+            $_SESSION['info'] = $_SESSION['error'];
+            $_SESSION['error'] = "";            
         }
         //$_SESSION['error_page'] = $_SESSION['error'];
         //$error = $_SESSION['error'];
