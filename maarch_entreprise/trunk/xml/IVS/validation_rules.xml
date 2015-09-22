@@ -382,7 +382,7 @@
     <validationRule name="search_adv_result" extends="standardForm" mode="error">
       <parameter name="baskets_clause" type="identifier" />
       <parameter name="contact_internal_id" type="identifier" />
-      <parameter name="contactid" type="identifier" />
+      <parameter name="contactid" type="string" />
       <parameter name="contactid_external" type="identifier" />
       <parameter name="contactid_internal" type="identifier" />
       <parameter name="descriptioncase" type="string" />
