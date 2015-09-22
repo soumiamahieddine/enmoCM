@@ -1499,6 +1499,20 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             )
         );
     }
+    //without file case
+    if (
+        isset($_SESSION['with_file']) 
+        && $_SESSION['with_file']
+    ) {
+        array_push(
+            $_SESSION['data'],
+            array(
+                'column' => 'source',
+                'value' => 'with_empty_file',
+                'type' => 'string',
+            )
+        );
+    }
 
     $attach = get_value_fields($formValues, 'attach');
 

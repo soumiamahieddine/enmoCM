@@ -35,6 +35,7 @@ $func = new functions();
 $core_tools->load_html();
 $core_tools->load_header('', true, false);
 $upFileOK = false;
+$_SESSION['with_file'] = false;
 ?>
     <body>
     <?php
@@ -89,6 +90,7 @@ $upFileOK = false;
             $upFileOK = true;
         }
     } elseif ($_REQUEST['with_file'] == 'true') {
+        $_SESSION['with_file'] = true;
         $pathToFile = 'apps/' . $_SESSION['config']['app_id'] . '/_no_file.pdf';
 
         if (is_file('custom/'.$_SESSION['custom_override_id'].'/'.$pathToFile)) {
