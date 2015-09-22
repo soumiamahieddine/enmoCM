@@ -558,7 +558,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	
 	$act_chosen = get_value_fields($values_form, 'chosen_action');
 	
-	if ($act_chosen == "end_action"){
+	/*if ($act_chosen == "end_action"){
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 		$sec = new security();
@@ -587,22 +587,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			$up_request = "UPDATE res_letterbox SET status='ESIG' WHERE res_id = $res_id";
 			$db = new Database();
 			$db->query("UPDATE res_letterbox SET status='ESIG' WHERE res_id = ?", array($res_id));
-			//$table = $sec->retrieve_table_from_coll($coll_id);
-			/*$replaceValues2 = array();
-			array_push(
-				$replaceValues2,
-				array(
-					'column' => 'status',
-					'value' => 'ESIG',
-					'type' => 'string',
-				)
-			);
-			$where2 = 'res_id = ?';
-			$array_what2[] = $res_id;
-			$request2 = new request();
-			$request2->PDOupdate($table, $replaceValues2, $where2, $array_what2, $_SESSION['config']['databasetype']);*/
-			
 		}
-	}
+	}*/
     return array('result' => $res_id.'#', 'history_msg' => '');
 }
