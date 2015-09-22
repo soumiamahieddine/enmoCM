@@ -723,7 +723,7 @@ $linkwithwhat =
 					
 					if ($color == ' class="col"') $color = '';
 					else $color = ' class="col"';?>
-					<tr <?php functions::xecho($color);?> >
+					<tr <?php echo $color;?> >
 						<td>
 							<i class="fa fa-user fa-2x" title="<?php echo _USER.' '.$role_label;?>"></i> 
 						</td>
@@ -777,7 +777,7 @@ $linkwithwhat =
 					$entity = $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i];
 					if ($color == ' class="col"') $color = '';
 					else $color = ' class="col"';?>
-					<tr <?php functions::xecho($color);?> >
+					<tr <?php echo $color;?> >
 						<td>
 							<i class="fa fa-sitemap fa-2x" title="<?php echo _ENTITY.' '.$role_label;?>"></i> 
 						</td>

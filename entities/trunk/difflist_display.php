@@ -25,7 +25,7 @@ foreach($roles as $role_id => $role_label) {
             
             if ($color == ' class="col"') $color = ' ';
             else $color = ' class="col"';?>
-            <tr <?php functions::xecho($color);?> >
+            <tr <?php echo $color;?> >
                 <td style="width:15%;text-align:center;">
                     <i class="fa fa-user fa-2x" title="<?php echo _USER;?>"></i>
                 </td>
@@ -52,7 +52,7 @@ foreach($roles as $role_id => $role_label) {
             $entity = $difflist[$role_id]['entities'][$i];
             if ($color == ' class="col"') $color = '';
             else $color = ' class="col"';?>
-            <tr <?php functions::xecho($color);?> >
+            <tr <?php echo $color;?> >
                 <td style="width:15%;text-align:center;">
                     <i class="fa fa-sitemap fa-2x" title="<?php echo _ENTITY . " " . $role_label ;?>" ></i>
                 </td>
