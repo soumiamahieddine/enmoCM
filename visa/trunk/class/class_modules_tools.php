@@ -238,7 +238,7 @@ class visa extends Database
 	public function getUsersVis(){
 		$db = new Database();
 		
-		$stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)", array('visa_documents'));
+		$stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)  order by users.lastname", array('visa_documents'));
 		
 		$tab_users = array();
 		
