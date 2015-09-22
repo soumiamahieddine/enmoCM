@@ -309,7 +309,7 @@ case "add_user":
 
 // ADD ENTITY AS copy/custom mode
 case 'add_entity':
-    $db->query(
+    $stmt = $db->query(
         "SELECT entity_id, entity_label FROM " . ENT_ENTITIES
         . " WHERE entity_id = ?",array($id)
     );
