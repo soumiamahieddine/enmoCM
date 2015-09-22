@@ -1137,7 +1137,7 @@ if (isset($_REQUEST['id'])) {
         $column_res = 'res_id';
     }
     
-    $stmt = $db->query("SELECT validation_date, title, dest_contact_id, dest_address_id, relation 
+    $stmt = $db->query("SELECT validation_date, title, dest_contact_id, dest_address_id, dest_address_id as address_id, relation 
                     FROM res_view_attachments 
                     WHERE ".$column_res." = ? and res_id_master = ?
                     ORDER BY relation desc",array($_REQUEST['id'],$_SESSION['doc_id']));
@@ -1162,7 +1162,7 @@ if (isset($_REQUEST['id'])) {
     $_SESSION['upfile']['fileNameOnTmp'] = $fileNameOnTmp;
 
 } else {
-    $stmt = $db->query("SELECT subject, exp_contact_id, address_id FROM res_view_letterbox WHERE res_id = ?",array($_SESSION['doc_id']));
+    $stmt = $db->query("SELECT subject, exp_contact_id, dest_contact_id, address_id FROM res_view_letterbox WHERE res_id = ?",array($_SESSION['doc_id']));
     $data_attachment = $stmt->fetchObject();
 
     unset($_SESSION['upfile']);
@@ -1172,7 +1172,7 @@ if (isset($_REQUEST['id'])) {
 if ($data_attachment->dest_contact_id <> "") {
     $stmt = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
                     FROM view_contacts 
-                    WHERE contact_id = ? and ca_id = ?', array($data_attachment->dest_contact_id,$data_attachment->dest_address_id));
+                    WHERE contact_id = ? and ca_id = ?', array($data_attachment->dest_contact_id,$data_attachment->address_id));
 } else if ($data_attachment->exp_contact_id <> "") {
     $stmt = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
                     FROM view_contacts 
@@ -1405,6 +1405,8 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                     $content .= $data_attachment->dest_contact_id;
                 } else if ($data_attachment->exp_contact_id){
                     $content .= $data_attachment->exp_contact_id;
+                } else if ($data_attachment->dest_contact_id) {
+                    $content .= $data_attachment->dest_contact_id;
                 }
         $content .= '"/>';
         $content .= '<input type="hidden" id="addressidAttach" name="addressidAttach" value="';
