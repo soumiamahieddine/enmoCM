@@ -1598,9 +1598,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         }
         else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'string' && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none')
         {
-            //FIX BUG WITH -- and ;
-            $values_form[$i]['VALUE']=str_replace(';', ' ', $values_form[$i]['VALUE']);
-            $values_form[$i]['VALUE']=str_replace('--', '-',$values_form[$i]['VALUE']);
             if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res')
             {
                 $query_res .= ", ".$values_form[$i]['ID']." = ?";
