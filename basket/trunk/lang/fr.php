@@ -425,3 +425,5 @@ if (!defined("_MANAGE_SECONDARY_USER_BASKETS_HELP"))
     define("_MANAGE_SECONDARY_USER_BASKETS_HELP", "L'utilisateur doit avoir au moins un groupe secondaire ayant des corbeilles pour accéder à cette fonctionnalité.");
 if (!defined("_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL"))
     define("_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL", "(Ajouter un groupe secondaire ayant des corbeilles puis enregistrer l'utilisateur avant de revenir sur cet écran).");
+if (!defined("_MANAGE_BASKET_ORDER"))
+    define("_MANAGE_BASKET_ORDER", "Gérer l'ordre des corbeilles");

@@ -289,3 +289,13 @@ function moveInWF(way, collId, resId, role, userId)
         );  
     }
 }
+
+function simpleAjaxReturn(url){
+    new Ajax.Request(url,
+    {
+        method:'post',
+        onSuccess: function(answer){
+            window.opener.location.href = 'index.php?module=basket&page=manage_basket_order&mode=reload';
+        }
+    });
+}

@@ -810,5 +810,86 @@ class admin_basket extends Database
         }
     }
 
+    /**
+    * Manage Basket order
+    */
+    public function ManageBasketOrder($getFromBdd = true)
+    {
 
+        echo '<h1><i class="fa fa-inbox fa-2x" title="" /></i> '._MANAGE_BASKET_ORDER.'</h1>';
+        echo '<br/>';
+        $db = new Database();
+
+        if ($getFromBdd) {
+            $stmt = $db->query("SELECT * FROM baskets WHERE is_visible = 'Y' and basket_id <> 'IndexingBasket' ORDER BY basket_order, basket_name");
+
+            $_SESSION['basket_order']= array();
+
+            while ($allBaskets = $stmt->fetchObject()) {
+                array_push($_SESSION['basket_order'], array("basket_id" => $allBaskets->basket_id, "basket_name" => $allBaskets->basket_name, "basket_desc" => $allBaskets->basket_desc, "basket_order" => $allBaskets->basket_order));
+            }
+        }
+        ?>
+
+        <div id="inner_content">
+            <table class="listing spec" cellspacing="0" border="0" style="width: 100%; margin: 0;">
+                <head>
+                    <tr>
+                        <th><?php echo _INDEX;?></th>
+                        <th><?php echo _ID;?></th>
+                        <th><?php echo _BASKET;?></th>
+                        <th><?php echo _DESC;?></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </head>
+
+            <?php
+                foreach ($_SESSION['basket_order'] as $key => $value) {
+
+                    if(($key % 2) == 1) {
+                        $color = ' class="col"';
+                    } else {
+                        $color = ' ';
+                    }
+
+                    ?><tr <?php echo $color;?> ><td><?php echo $key;?></td>
+                        <td><?php echo $_SESSION['basket_order'][$key]['basket_id'];?></td>
+                        <td><?php echo $_SESSION['basket_order'][$key]['basket_name'];?></td>
+                        <td><?php echo $_SESSION['basket_order'][$key]['basket_desc'];?></td>
+                        <td><?php 
+                            if($key > 0){
+                                ?>
+                                <a onclick="simpleAjaxReturn('<?php echo $_SESSION['config']['businessappurl']."index.php?page=setSessionBasketOrder&module=basket&basketIndex=".$key."&mode=up";?>')" href="javascript://">
+                                    <i class="fa fa-angle-up fa-2x" ></i>
+                                </a><?php 
+                            } ?>
+                        </td>
+                        <td><?php 
+                            if(isset($_SESSION['basket_order'][$key+1])){
+                                ?>
+                                <a onclick="simpleAjaxReturn('<?php echo $_SESSION['config']['businessappurl']."index.php?page=setSessionBasketOrder&module=basket&basketIndex=".$key."&mode=down";?>')" href="javascript://">
+                                    <i class="fa fa-angle-down fa-2x" ></i>
+                                </a><?php 
+                            } ?>
+                        </td>
+                    </tr><?php
+                }
+
+            ?>
+            </table>
+            <br/>
+            <div align="center">
+                <input class="button" type="button" value="<?php echo _VALIDATE;
+                    ?>" onclick="window.location.href = '<?php echo $_SESSION['config']['businessappurl'] 
+                        . 'index.php?module=basket&page=setSessionBasketOrder&mode=save';?>';"/>
+
+                <input class="button" type="button" value="<?php echo _CANCEL;
+                    ?>" onclick="window.location.href = '<?php echo $_SESSION['config']['businessappurl'] 
+                        . 'index.php?module=basket&page=basket';?>';"/>
+            </div>
+        </div>
+        <?php
+
+    }
 }

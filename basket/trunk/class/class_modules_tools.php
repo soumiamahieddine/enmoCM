@@ -295,8 +295,8 @@ class basket extends Database
         $arr = array();
         $db = new Database();
         $stmt = $db->query(
-            "select gb.basket_id from " . GROUPBASKET_TABLE . " gb, "
-            . BASKET_TABLE . " b where gb.group_id = ? and gb.basket_id = b.basket_id order by b.basket_name ",array($primaryGroup));
+            "SELECT gb.basket_id FROM " . GROUPBASKET_TABLE . " gb, "
+            . BASKET_TABLE . " b WHERE gb.group_id = ? and gb.basket_id = b.basket_id order by b.basket_order, b.basket_name ", array($primaryGroup));
         // $db->show();
         while ($res = $stmt->fetchObject()) {
             $tmp = $this->get_baskets_data(

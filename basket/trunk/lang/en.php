@@ -422,3 +422,5 @@ if (!defined('_MANAGE_SECONDARY_USER_BASKETS_HELP'))
     define('_MANAGE_SECONDARY_USER_BASKETS_HELP', 'The user must have at least a secondary profile to acces to this function.');
 if (!defined('_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL'))
     define('_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL', '(First off all, add un secondary profile to the user and save it before coming back to this panel).');
+if (!defined("_MANAGE_BASKET_ORDER"))
+    define("_MANAGE_BASKET_ORDER", "Manage basket order");
