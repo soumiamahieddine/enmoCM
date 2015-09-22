@@ -34,7 +34,6 @@ $db = new Database();
 $req = new request();
 $tmp = false;
 if ($_POST['action'] == 'creation') {
-    $func_date = $req->current_datetime();
     if (isset($_POST['name']) && !empty($_POST['name'])) {
         $name = preg_replace('/[\'"]/', '', $_POST['name']);
 
@@ -48,16 +47,16 @@ if ($_POST['action'] == 'creation') {
             $tmp = $db->query(
                 'INSERT INTO ' . $_SESSION['tablename']['saved_queries']
                 . ' (user_id, query_name, creation_date, created_by, '
-                . " query_type, query_txt) VALUES (?, ?, ?, ?, 'my_search', ? )", 
-                array($_SESSION['user']['UserId'], $_POST['name'], $func_date, $_SESSION['user']['UserId'], $_SESSION['current_search_query']), true
+                . " query_type, query_txt) VALUES (?, ?, CURRENT_TIMESTAMP, ?, 'my_search', ? )", 
+                array($_SESSION['user']['UserId'], $_POST['name'], $_SESSION['user']['UserId'], $_SESSION['current_search_query']), true
             );
         } else {
             $res = $stmt->fetchObject();
             $id = $res->query_id;
             $tmp = $db->query(
                 'UPDATE ' . $_SESSION['tablename']['saved_queries']
-                . " SET query_txt = ?, last_modification_date = ? WHERE user_id = ? and query_name= ?"
-                , array($_SESSION['current_search_query'], $func_date, $_SESSION['user']['UserId'], $_POST['name']), true
+                . " SET query_txt = ?, last_modification_date = CURRENT_TIMESTAMP WHERE user_id = ? and query_name= ?"
+                , array($_SESSION['current_search_query'], $_SESSION['user']['UserId'], $_POST['name']), true
             );
         }
         if (!$tmp) {
