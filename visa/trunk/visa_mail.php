@@ -258,21 +258,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		
 		$frm_str .= '</dd>';
 	}
-	//Onglet Avancement 
 	
-	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
-	$frm_str .= '<h2>'. _WF .'</h2>';
-	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_workflow_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="workflow_history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>';
-	$frm_str .= '<br/>';
-	$frm_str .= '<br/>';
-	
-	$frm_str .= '<span style="cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'history_document\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'history_document\', \'divStatus_all_history_div\');return false;">';
-	$frm_str .= '<span id="divStatus_all_history_div" style="color:#1C99C5;"><<</span>';
-	$frm_str .= '<b>&nbsp;'. _ALL_HISTORY .'</b>';
-	$frm_str .= '</span>';
-	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>';
-
-	$frm_str .= '</dd>';
 	
 	//Onglet Circuit 
 	$frm_str .= '<dt id="onglet_circuit">'._VISA_WORKFLOW.'</dt><dd id="page_circuit" style="overflow-x: hidden;">';
@@ -307,7 +293,24 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</div>';
 	$frm_str .= '</dd>';
 	
-	//Onglet notes
+	
+	//Onglet Avancement 
+	
+	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
+	$frm_str .= '<h2>'. _WF .'</h2>';
+	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_workflow_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="workflow_history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>';
+	$frm_str .= '<br/>';
+	$frm_str .= '<br/>';
+	
+	$frm_str .= '<span style="cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'history_document\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'history_document\', \'divStatus_all_history_div\');return false;">';
+	$frm_str .= '<span id="divStatus_all_history_div" style="color:#1C99C5;"><<</span>';
+	$frm_str .= '<b>&nbsp;'. _ALL_HISTORY .'</b>';
+	$frm_str .= '</span>';
+	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>';
+
+	$frm_str .= '</dd>';
+	
+	
 	
 	//Onglet notes
 	if ($core->is_module_loaded('notes')){
