@@ -193,7 +193,8 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 	}
 
 	if (cons_empty){
-		$('divErrorVisa').innerHTML = 'Au moins un conseiller est vide';
+		$('divErrorVisa').innerHTML = 'Sélectionner au moins un utilisateur';
+		$('divErrorVisa').style.display = 'table-cell';
 	}
 	else
 	new Ajax.Request("index.php?display=true&module=visa&page=saveVisaWF",
@@ -289,7 +290,8 @@ function saveVisaModel(id_tableau){
 	}
 	
 	if (cons_empty){
-		$('divErrorVisa').innerHTML = 'Au moins un conseiller est vide';
+		$('divErrorVisa').innerHTML = 'Sélectionner au moins un utilisateur';
+		$('divErrorVisa').style.display = 'table-cell';
 	}
 	else
 	new Ajax.Request("index.php?display=true&module=visa&page=saveVisaModel",
@@ -307,6 +309,7 @@ function saveVisaModel(id_tableau){
 				eval("response = "+answer.responseText);
 				if (response.status == 1){
 					$('divErrorVisa').innerHTML = 'Modèle sauvegardé';
+					$('divErrorVisa').style.display = 'table-cell';
 					$('modalSaveVisaModel').style.display = 'none';
 				}
 			}

@@ -295,7 +295,7 @@ class visa extends Database
 				
 		$circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
 		if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users']) && !$core_tools->test_service('config_visa_workflow', 'visa', false)){
-			$str .= '<div class="errorVisa" id="divErrorVisa" name="divErrorVisa">'._EMPTY_USER_LIST.'</div>';
+			$str .= '<div class="error" id="divErrorVisa" name="divErrorVisa" onclick="this.hide();">'._EMPTY_USER_LIST.'</div>';
 		}
 		else{
 			require_once('modules/entities/class/class_manage_listdiff.php');
@@ -304,7 +304,7 @@ class visa extends Database
 		
 		$str .= '<div align="center">';
 		
-		$str .= '<div class="errorVisa" id="divErrorVisa" name="divErrorVisa"></div>';
+		$str .= '<div class="error" id="divErrorVisa" name="divErrorVisa" onclick="this.hide();"></div>';
 		
 		if (!empty($listModels) && $bool_modif && !$isVisaStep){
 		$str .= '<select name="modelList" id="modelList" onchange="load_listmodel_visa(this.options[this.selectedIndex], \''.$typeList.'\', \''.$id_tab.'\');">';
