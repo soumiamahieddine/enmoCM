@@ -631,7 +631,7 @@ class visa extends Database
 			else $typist = '';
 			
 			if (
-				$pdf_exist 
+				($from_res_attachment && $pdf_exist)
 				|| strtoupper($res->format) == 'PDF'
 			) {
 				//nothing
