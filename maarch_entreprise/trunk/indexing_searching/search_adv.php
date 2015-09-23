@@ -74,6 +74,7 @@ $init = false;
 if(isset($_REQUEST['reinit']) && $_REQUEST['reinit']  == "true")
 {
     $init = true;
+    $_SESSION['current_search_query'] = "";
 }
 $level = "";
 if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
