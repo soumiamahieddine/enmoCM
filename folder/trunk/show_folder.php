@@ -102,6 +102,7 @@ if (isset($_POST['delete_folder'])) {
     <div id="inner_content" class="clearfix">
 
     <?php
+    $_SESSION['save_list']['fromDetail'] = "true";
     if (empty($_SESSION['error'])) {
 
     	$folderObject->load_folder(

@@ -11,6 +11,18 @@ $func       = new functions();
 $list       = new lists();
 
 $_SESSION['error_page'] = '';
+if($_GET['start'] != NULL){
+    $_SESSION['save_list']['start'] = $_GET['start'];
+}
+if($_GET['lines'] != NULL){
+    $_SESSION['save_list']['lines'] = $_GET['lines'];
+}
+if($_GET['order'] != NULL){
+    $_SESSION['save_list']['order'] = $_GET['order'];
+}
+if($_GET['order_field'] != NULL){
+    $_SESSION['save_list']['order_field'] = $_GET['order_field'];
+}
 
 //Table or view
     $view = $_SESSION['view']['view_folders'];

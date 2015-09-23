@@ -206,7 +206,22 @@ $arrayPDO = array();
         }
     }
     
-    
+if($_SESSION['save_list']['fromDetail'] == "true") {
+        $urlParameters .= '&start='.$_SESSION['save_list']['start'];
+        $urlParameters .= '&lines='.$_SESSION['save_list']['lines'];
+        $urlParameters .= '&order='.$_SESSION['save_list']['order'];
+        $urlParameters .= '&order_field='.$_SESSION['save_list']['order_field'];
+        // if ($_SESSION['save_list']['template'] <> "") {
+        //     $urlParameters .= '&template='.$_SESSION['save_list']['template'];
+        // }
+        $_SESSION['save_list']['fromDetail'] = "false";
+        $_SESSION['save_list']['url'] = $urlParameters;
+    }
+    $_SESSION['save_list']['start'] = "";
+    $_SESSION['save_list']['lines'] = "";
+    $_SESSION['save_list']['order'] = "";
+    $_SESSION['save_list']['order_field'] = "";
+    //$_SESSION['save_list']['template'] = "";    
 
 if(!empty($_SESSION['error']))
 {
@@ -222,7 +237,7 @@ else
     $_SESSION['searching']['where_request_parameters'] = $arrayPDO;
 
     //List
-    $target = $_SESSION['config']['businessappurl'].'index.php?module=folder&page=folders_list_search_adv';
+    $target = $_SESSION['config']['businessappurl'].'index.php?module=folder&page=folders_list_search_adv'.$urlParameters;
     $listContent = $list->loadList($target, true, 'divList', 'false');
     echo $listContent;
 }
