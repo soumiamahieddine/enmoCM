@@ -630,7 +630,14 @@ class visa extends Database
 				$typist = $res->typist;
 			else $typist = '';
 			
-			
+			if (!$pdf_exist) {
+				$viewLinkHtml = '<a title="' . _PRINT_DOCUMENT 
+	              	. '" target="_blank" ' 
+					. 'href="' . $viewLink . '">'
+					. '<i class="fa fa-print fa-2x" title="' 
+					. _PRINT_DOCUMENT . '"></i>'
+					. '</a>';
+			}
             array_push($joinedFiles,
                 array('id' => $res->res_id, //ID
                       'label' => $label, //Label
@@ -642,12 +649,7 @@ class visa extends Database
                       'is_version' => false, //
 					  'pdf_exist' => $pdf_exist,
                       'version' => '',
-                      'viewLink' => '<a title="' . _PRINT_DOCUMENT 
-                      	. '" target="_blank" ' 
-						. 'href="' . $viewLink . '">'
-						. '<i class="fa fa-print fa-2x" title="' 
-						. _PRINT_DOCUMENT . '"></i>'
-						. '</a>'
+                      'viewLink' => $viewLinkHtml
                     )
             );
         }
