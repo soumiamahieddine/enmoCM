@@ -462,6 +462,8 @@
       <parameter name="nodetails" type="boolean" />
       <parameter name="collection" type="collection_list" />
       <parameter name="barcode" type="alnum" />
+      <parameter name="exp_date_from" type="datefr" />
+      <parameter name="exp_date_to" type="datefr" />
       <parameter name="welcome" type="string" />
       <parameter name="Submit" type="identifier" />
     </validationRule>
