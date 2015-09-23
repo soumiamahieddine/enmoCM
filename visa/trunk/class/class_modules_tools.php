@@ -630,7 +630,10 @@ class visa extends Database
 				$typist = $res->typist;
 			else $typist = '';
 			
-			if ($pdf_exist) {
+			if (
+				$pdf_exist 
+				|| strtoupper($res->format) == 'PDF'
+			) {
 				//nothing
 			} else {
 				$viewLinkHtml = '<a title="' . _PRINT_DOCUMENT 
