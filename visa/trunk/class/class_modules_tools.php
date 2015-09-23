@@ -532,7 +532,9 @@ class visa extends Database
 			//Have version table
 			if ($versionTable <> '') {
 				$stmt = $db->query("select res_id from " 
-							. $versionTable . " where res_id_master = ? and status <> 'DEL' order by res_id desc", array($id));
+							. $versionTable 
+							. " where res_id_master = ? and status <> 'DEL' order by res_id desc", 
+							array($id));
 				$line = $stmt->fetchObject();
 				$lastVersion = $line->res_id;
 				//Have new version
@@ -557,15 +559,15 @@ class visa extends Database
 							$typist = $res->typist;
 						else $typist = '';
 						array_push($joinedFiles,
-									array('id' => $res->res_id, //ID
-										  'label' => $label, //Label
-										  'format' => $res->format, //Format 
-										  'filesize' => $res->filesize, //Filesize
-										  'creation_date' => $res->creation_date, //creation_date
-										  'typist' => $typist, //typist
-										  'is_version' => true, //Have version bool
-										  'version' => $res->relation //Version
-										)
+							array('id' => $res->res_id, //ID
+								  'label' => $label, //Label
+								  'format' => $res->format, //Format 
+								  'filesize' => $res->filesize, //Filesize
+								  'creation_date' => $res->creation_date, //creation_date
+								  'typist' => $typist, //typist
+								  'is_version' => true, //Have version bool
+								  'version' => $res->relation //Version
+								)
 						);
 					}
 				}
@@ -574,20 +576,25 @@ class visa extends Database
             $stmt = $db->query(
                 "select res_id, description, subject, title, format, filesize, relation, creation_date from "
                 . $table . " where res_id = ? and status <> 'DEL'", array($id )
-                );
+            );
         } else {
 			require_once 'modules/attachments/attachments_tables.php';
-			if ($filter_attach_type == 'all')
+			if ($filter_attach_type == 'all') {
 				$stmt = $db->query(
 					"select res_id, description, subject, title, format, filesize, res_id_master, attachment_type, creation_date, typist from " 
-					.  RES_ATTACHMENTS_TABLE . " where res_id_master = ? and coll_id = ? and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and status <> 'DEL' order by attachment_type, creation_date",
+					.  RES_ATTACHMENTS_TABLE 
+					. " where res_id_master = ? and coll_id = ? and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and status <> 'DEL' order by attachment_type, creation_date",
 					array($id, $coll_id)
 					);
-			else $stmt = $db->query(
+			} else {
+				$stmt = $db->query(
 					"select res_id, description, subject, title, format, filesize, res_id_master, attachment_type, creation_date, typist from " 
-					.  RES_ATTACHMENTS_TABLE . " where res_id_master = ? and coll_id = ? and attachment_type = '".$filter_attach_type."' and status <> 'DEL' order by creation_date",
+					.  RES_ATTACHMENTS_TABLE 
+					. " where res_id_master = ? and coll_id = ? and attachment_type = '" 
+					. $filter_attach_type . "' and status <> 'DEL' order by creation_date",
 					array($id, $coll_id)
-					);
+				);
+			}
         }
         // $db->show(); 
         
@@ -597,7 +604,14 @@ class visa extends Database
 				require_once 'modules/attachments/class/attachments_controler.php';
 				$ac = new attachments_controler();
 				$infos_attach = $ac->getAttachmentInfos($res->res_id);
+				$viewLink = $_SESSION['config']['businessappurl']
+	        		. 'index.php?display=true&module=attachments&page=view_attachment&res_id_master=' 
+	        		. $id . '&id=' . $res->res_id;
 				if (!file_exists($infos_attach['pathfile_pdf'])) $pdf_exist = false;
+			} else {
+				$viewLink = $_SESSION['config']['businessappurl']
+					. 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=' 
+        			. $id;
 			}
             $label = '';
             //Tile, or subject or description
@@ -618,25 +632,31 @@ class visa extends Database
 			
 			
             array_push($joinedFiles,
-                        array('id' => $res->res_id, //ID
-                              'label' => $label, //Label
-                              'format' => $res->format, //Format 
-                              'filesize' => $res->filesize, //Filesize
-                              'creation_date' => $res->creation_date, //Filesize
-                              'attachment_type' => $attachment_type, //attachment_type
-                              'typist' => $typist, //attachment_type
-                              'is_version' => false, //
-							  'pdf_exist' => $pdf_exist,
-                              'version' => '' //
-                            )
+                array('id' => $res->res_id, //ID
+                      'label' => $label, //Label
+                      'format' => $res->format, //Format 
+                      'filesize' => $res->filesize, //Filesize
+                      'creation_date' => $res->creation_date, //Filesize
+                      'attachment_type' => $attachment_type, //attachment_type
+                      'typist' => $typist, //attachment_type
+                      'is_version' => false, //
+					  'pdf_exist' => $pdf_exist,
+                      'version' => '',
+                      'viewLink' => '<a title="' . _PRINT_DOCUMENT 
+                      	. '" target="_blank" ' 
+						. 'href="' . $viewLink . '">'
+						. '<i class="fa fa-print fa-2x" title="' 
+						. _PRINT_DOCUMENT . '"></i>'
+						. '</a>'
+                    )
             );
         }
-
         return $joinedFiles;
     }
 	
 
-	public function showPrintFolder($coll_id, $table, $id){
+	public function showPrintFolder($coll_id, $table, $id)
+	{
 		require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
 		. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
 		. 'class_indexing_searching_app.php';
@@ -682,7 +702,13 @@ class visa extends Database
 				$creation_date = $request->dateformat($dateFormat[0]);
 				if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 				//Show data
-				$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+				$str .= '<tr><td>'  
+					 . '</td><td>' . $description 
+					 . '</td><td>' . $contact['firstname']
+					 . " " . $contact['lastname'] . '</td><td>' 
+					 . $creation_date . '</td><td><input id="join_file_' 
+					 . $id_doc . '" type="checkbox" name="join_attachment[]"  value="' 
+					 . $id_doc . '"  '.$check.'></input>' . $joined_files[$i]['viewLink']. '</td></tr>';	
 			}
 		}
 		else {
@@ -705,9 +731,17 @@ class visa extends Database
 				if($joined_files[$i]['is_version'] === true){
 					//Version
 					$version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
-					$str .= '<tr><td></td><td>'.$description.$version.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'_V'.$joined_files[$i]['version'].'" type="checkbox" name="join_version[]"  value="'.$id_doc.'"></input></td></tr>';	
+					$str .= '<tr><td>' 
+						. '</td><td>'.$description.$version.'</td><td>'.$contact['firstname']." "
+						. $contact['lastname'].'</td><td>'.$creation_date
+						. '</td><td><input id="join_file_'.$id_doc.'_V'.$joined_files[$i]['version']
+						. '" type="checkbox" name="join_version[]"  value="'.$id_doc
+						. '"></input>' . $joined_files[$i]['viewLink'] . '</td></tr>';	
 				} else {
-					$str .= '<tr><td></td><td>'.$description.'</td><td>'.$res->contact_society.'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_file[]" value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+					$str .= '<tr><td></td><td>'.$description.'</td><td>'.$res->contact_society
+						. '</td><td>'.$creation_date.'</td><td><input id="join_file_'
+						. $id_doc.'" type="checkbox" name="join_file[]" value="'.$id_doc.'"  '.$check
+						. '></input>' . $joined_files[$i]['viewLink'] . '</td></tr>';	
 				}
 			}
 		}
@@ -725,7 +759,10 @@ class visa extends Database
             $creation_date = $request->dateformat($dateFormat[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
+				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
+				. $id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
+				. '></input>' . $joined_files[$i]['viewLink'] . '</td></tr>';	
         }
 		
 		// PROJETS DE REPONSE
@@ -742,7 +779,10 @@ class visa extends Database
             $creation_date = $request->dateformat($dateFormat[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
+				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc
+				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
+				. '></input>' . $joined_files[$i]['viewLink'] . '</td></tr>';	
         }
 		
 		// REPONSES SIGNEES
@@ -759,7 +799,10 @@ class visa extends Database
             $creation_date = $request->dateformat($dateFormat[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
+				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc
+				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
+				. '></input>' . $joined_files[$i]['viewLink']. '</td></tr>';	
         }
 		
 		// REPONSES SIGNEES
@@ -776,7 +819,10 @@ class visa extends Database
             $creation_date = $request->dateformat($dateFormat[0]);
 			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check.'></input></td></tr>';	
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
+				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc 
+				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check 
+				. '></input>' . $joined_files[$i]['viewLink']. '</td></tr>';	
         }
 		
 		//Notes         

@@ -32,5 +32,5 @@ if (!defined('_SEND_TO_SIGNATURE'))
 if (!defined('_SUBMIT_COMMENT'))
     define('_SUBMIT_COMMENT', 'Commentaire de visa (optionnel) ');
 
-
-?>
+if (!defined("_PRINT_DOCUMENT"))
+    define("_PRINT_DOCUMENT", "View and print the document");

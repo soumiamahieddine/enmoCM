@@ -66,3 +66,6 @@ if (!defined("_NO_FILE_PRINT"))
 
 if (!defined("_BAD_PIN"))
     define("_BAD_PIN", "Code PIN incorrect. Attention, 3 essais maximum !");
+
+if (!defined("_PRINT_DOCUMENT"))
+    define("_PRINT_DOCUMENT", "Afficher et imprimer le document");
