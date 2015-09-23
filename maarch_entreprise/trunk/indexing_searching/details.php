@@ -691,9 +691,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 	
 								}elseif ($data[$key]['display'] == 'textinput')
                                 {
-                                    ?>
-                                    <input type="text" name="<?php functions::xecho($key);?>" id="<?php functions::xecho($key);?>" value="<?php functions::xecho($data[$key]['show_value']);?>" readonly="readonly" class="readonly" size="40"  title="<?php functions::xecho($data[$key]['show_value']);?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" />
-                                    <?php
+                                    if($key == 'type_id'){
+                                        ?>
+                                        <input type="text" name="<?php echo $key;?>"  value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
+                                        <input type="hidden" name="<?php echo $key;?>" id="<?php echo $data[$key]['value'];?>" value="<?php echo $data[$key]['value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
+                                        <?php
+                                        }else{
+                                        ?>
+                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
+                                        <?php
+                                        }
                                 }
                                 elseif ($data[$key]['display'] == 'textarea')
 								
