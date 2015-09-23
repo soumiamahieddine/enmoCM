@@ -105,7 +105,7 @@ $arrayPDO = array();
 //Where clause
 $where_tab = array();
     //From basket
-        if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
+        if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = '('.stripslashes($_SESSION['current_basket']['clause']).')'; //Basket clause
     //From filters
         $filterClause = $list->getFilters(); 
         if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause

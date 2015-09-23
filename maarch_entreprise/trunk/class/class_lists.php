@@ -201,14 +201,14 @@ class lists extends Database
                 if (!empty($view)) {
                     if (! empty($this->params['basketClause'])) {
                         $this->params['basketClause'] = str_replace('res_view_letterbox.', 'r.', $this->params['basketClause']);
-                        $where = 'where ' . $this->params['basketClause'];
+                        $where = 'where (' . $this->params['basketClause'] . ')';
                     }
 
                     $stmt = $db->query(
                         "SELECT distinct(r.destination) as entity_id, count(distinct r.res_id)"
                         . " as total, e.entity_label , e.short_label FROM " 
                         . $view. " r left join " . ENT_ENTITIES
-                        . " e on e.entity_id = r.destination " .$where
+                        . " e on e.entity_id = r.destination " .$where . " and entity_id <> ''"
                         . " group by e.entity_label,  e.short_label, r.destination order by e.entity_label"
                     );
                     while ($res = $stmt->fetchObject()) {
@@ -245,14 +245,14 @@ class lists extends Database
                 if (!empty($view)) {
                     if (! empty($this->params['basketClause'])) {
                         $this->params['basketClause'] = str_replace('res_view_letterbox.', 'r.', $this->params['basketClause']);
-                        $where = 'where ' . $this->params['basketClause'];
+                        $where = 'where (' . $this->params['basketClause'] . ')';
                     }
 
                     $stmt = $db->query(
                         "SELECT distinct(r.destination) as entity_id, count(distinct r.res_id)"
                         . " as total, e.entity_label , e.short_label FROM " 
                         . $view. " r left join " . ENT_ENTITIES
-                        . " e on e.entity_id = r.destination " .$where
+                        . " e on e.entity_id = r.destination " .$where . " and entity_id <> ''"
                         . " group by e.entity_label,  e.short_label, r.destination order by e.entity_label"
                     );
                     while ($res = $stmt->fetchObject()) {
