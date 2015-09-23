@@ -42,37 +42,41 @@
     $db = new Database();
     $sec = new security();
 
-    $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
-    if(empty($view))
-    {
-        $view = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
-    }
+        $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
+        if(empty($view))
+        {
+            $view = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
+        }
 
-    $stmt = $db->query("SELECT category_id FROM ".$view." WHERE res_id = ? ", array($_SESSION['doc_id']));
-    $resMaster = $stmt->fetchObject();
+        $stmt = $db->query("SELECT category_id FROM ".$view." WHERE res_id = ? ", array($_SESSION['doc_id']));
+        $resMaster = $stmt->fetchObject();
 
-    $category_id = $resMaster->category_id;
+        $category_id = $resMaster->category_id;
 
-    $nb_attachment = 0;
+        $nb_attachment = 0;
 
-    // Check if reponse project was already attached to this outgoing document.
-    if ($category_id == "outgoing") {
-            $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE res_id_master = ? and attachment_type = 'response_project'",array($_SESSION['doc_id']));
-            $nb_attachment = $stmt->rowCount();
-    }
+        // Check if reponse project was already attached to this outgoing document.
+        if ($category_id == "outgoing") {
+                $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE res_id_master = ? and attachment_type = 'response_project'",array($_SESSION['doc_id']));
+                $nb_attachment = $stmt->rowCount();
+        }
 
-    if ($category_id == "incoming" || ($category_id == "outgoing" && $nb_attachment > 0)) {
-        $chronoX = new chrono();
-        $myVars = array(
-            'category_id' => 'outgoing'
-        );
+        if ($category_id == "incoming" || ($category_id == "outgoing" && $nb_attachment > 0)) {
+            if (isset($_SESSION['save_chrono_number']) && $_SESSION['save_chrono_number'] <> "") {
+                echo "{status: 1, chronoNB: '".$_SESSION['save_chrono_number']."'}";
+            } else {
+                $chronoX = new chrono();
+                $myVars = array(
+                    'category_id' => 'outgoing'
+                );
 
-        $myChrono = $chronoX->generate_chrono('outgoing', $myVars);
+                $myChrono = $chronoX->generate_chrono('outgoing', $myVars);
+                $_SESSION['save_chrono_number'] = $myChrono;
+                echo "{status: 1, chronoNB: '".functions::xssafe($myChrono)."'}";
+            }
+        } else if ($category_id == "outgoing" && $nb_attachment == 0) {
+            $stmt = $db->query("SELECT alt_identifier FROM ".$view." WHERE res_id = ?", array($_SESSION['doc_id']));
+            $chronoMaster = $stmt->fetchObject();
+            echo "{status: 1, chronoNB: '".functions::xssafe($chronoMaster->alt_identifier)."'}";
+        }
 
-        echo "{status: 1, chronoNB: '".functions::xssafe($myChrono)."'}";
-
-    } else if ($category_id == "outgoing" && $nb_attachment == 0) {
-        $stmt = $db->query("SELECT alt_identifier FROM ".$view." WHERE res_id = ?", array($_SESSION['doc_id']));
-        $chronoMaster = $stmt->fetchObject();
-        echo "{status: 1, chronoNB: '".functions::xssafe($chronoMaster->alt_identifier)."'}";
-    }

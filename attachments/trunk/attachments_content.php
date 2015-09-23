@@ -1432,14 +1432,14 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                 if (isset($_REQUEST['id'])) {
                     $content .= '" name="edit" id="edit" class="button" onclick="ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;
                 } else {
-                    $content .= '" name="add" id="add" class="button" onclick="ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;                   
+                    $content .= '" name="add" id="add" class="button" onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;                   
                 }
 
                 $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\')"/>';
                 $content .= '&nbsp;';
             $content .= '<input type="button" value="';
                 $content .=  _CANCEL;
-                $content .= '" name="cancel" class="button"  onclick="destroyModal(\'form_attachments\');"/>';
+                $content .= '" name="cancel" class="button"  onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');destroyModal(\'form_attachments\');"/>';
                 $content .= '&nbsp;';
                 $content .= '&nbsp;';
                 $content .= '<label>&nbsp;</label>';
