@@ -57,7 +57,8 @@
 
         // Check if reponse project was already attached to this outgoing document.
         if ($category_id == "outgoing") {
-                $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE res_id_master = ? and attachment_type = 'response_project'",array($_SESSION['doc_id']));
+                $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE res_id_master = ? and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail') and status <> 'DEL' and status <> 'OBS'"
+                                    ,array($_SESSION['doc_id']));
                 $nb_attachment = $stmt->rowCount();
         }
 

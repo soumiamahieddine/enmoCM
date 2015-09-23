@@ -40,6 +40,7 @@
     $core = new core_tools();
     $core->test_user();
     $db = new Database();
+    $sec = new security();
 
     $stmt = $db->query("SELECT distinct identifier FROM res_view_attachments WHERE res_id_master = ? and attachment_type = ? and status <> 'DEL' and status <> 'OBS'", array($_SESSION['doc_id'], $_SESSION['attachment_types_get_chrono'][$_REQUEST['type_id']]));
     
@@ -47,6 +48,21 @@
 
     while ($res = $stmt->fetchObject()) {
          array_push($listIdentifier,$res->identifier);
+    }
+
+    $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
+    if(empty($view))
+    {
+        $view = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
+    }
+
+    $stmt = $db->query("SELECT category_id, alt_identifier FROM ".$view." WHERE res_id = ? ", array($_SESSION['doc_id']));
+    $res = $stmt->fetchObject();
+
+    $category_id = $res->category_id;
+
+    if ($category_id == "outgoing" && $_SESSION['attachment_types_get_chrono'][$_REQUEST['type_id']] == "response_project") {
+        array_push($listIdentifier,$res->alt_identifier);
     }
 
     $countIdentifier = count($listIdentifier);
