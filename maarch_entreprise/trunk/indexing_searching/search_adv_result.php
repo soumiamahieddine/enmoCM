@@ -382,6 +382,7 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 $where_multifield_request .= "( lower(subject) LIKE lower(:multifieldWelcome) "
                     ."or lower(identifier) LIKE lower(:multifieldWelcome) "
+                    ."or lower(alt_identifier) LIKE lower(:multifieldWelcome) "
                     ."or lower(title) LIKE lower(:multifieldWelcome)) "
                     ."or contact_id in (select contact_id from view_contacts where society ilike :multifieldWelcome or contact_firstname ilike :multifieldWelcome or contact_lastname ilike :multifieldWelcome) or (exp_user_id in (select user_id from users where firstname ilike :multifieldWelcome or lastname ilike :multifieldWelcome ))";
                 $arrayPDO = array_merge($arrayPDO, array(":multifieldWelcome" => "%".$_REQUEST['welcome']."%"));
