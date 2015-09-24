@@ -42,6 +42,12 @@ $services = '[';
 $_SESSION['indexing_services_cat'] = array();
 $_SESSION['indexing_category_id'] = $_REQUEST['category_id'];
 $_SESSION['category_id'] = $_REQUEST['category_id'];
+$doc_date = '';
+if ($_SESSION['category_id'] == 'outgoing') {
+	$doc_date = ', doc_date : "' . date('d-m-Y') . '"';
+} else {
+	$doc_date = '';
+}
 // Module and apps services
 $core->execute_modules_services($_SESSION['modules_services'], 'change_category.php', 'include');
 $core->execute_app_services($_SESSION['app_services'], 'change_category.php', 'include');
@@ -59,5 +65,5 @@ $services = preg_replace('/, $/', '', $services);
 $services .= ']';
 unset($_SESSION['indexing_category_id']);
 unset($_SESSION['indexing_services_cat']);
-echo "{status : 0,  services : ".$services."}";
+echo "{status : 0,  services : ".$services . $doc_date ."}";
 exit();

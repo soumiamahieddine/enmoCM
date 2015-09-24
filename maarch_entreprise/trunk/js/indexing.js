@@ -662,6 +662,18 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                 if(response.status == 0 )
                 {
                     var services_to_exec = response.services;
+                    if (response.doc_date != undefined) {
+                        var doc_date = response.doc_date;
+                        console.log(doc_date);
+                        if ($('doc_date') != undefined) {
+                            $('doc_date').value = doc_date;
+                        }
+                    } else {
+                        if ($('doc_date') != undefined) {
+                            $('doc_date').value = '';
+                        }
+                    }
+                    
                     //console.log('3 '+print_r(services_to_exec));
                     var path_scripts = '';
                     var call_func = '';
