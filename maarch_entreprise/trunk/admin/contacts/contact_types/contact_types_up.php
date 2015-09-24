@@ -75,7 +75,7 @@ $id = "";
 if (isset($_GET['id']) && ! empty($_GET['id'])) {
 	$id = $_GET['id'];
 	$stmt = $db->query(
-		"SELECT label FROM "
+		"SELECT label, contact_target FROM "
 	    . $_SESSION['tablename']['contact_types']
 	    . " WHERE id = ?", array($id)
 	);
@@ -84,6 +84,7 @@ if (isset($_GET['id']) && ! empty($_GET['id'])) {
 	$desc = functions::show_string($res->label);
 	$_SESSION['CURRENT_ID_CONTACT_TYPE'] = $id;
 	$_SESSION['CURRENT_DESC_CONTACT_TYPE'] = $desc;
+	$_SESSION['CURRENT_TARGET_CONTACT_TYPE'] = $res->contact_target;
 }
 
 $erreur = "";
@@ -92,6 +93,7 @@ if (isset($_REQUEST['valid'])) {
 	    && ! empty($_REQUEST['desc_contact_types'])
 	) {
 		$desc = $_REQUEST['desc_contact_types'];
+		$contact_target = $_REQUEST['contact_target'];
         $desc=str_replace(';', ' ', $desc);
         $desc=str_replace('--', '-', $desc);
 	    $desc = $core->wash(
@@ -133,8 +135,8 @@ if (isset($_REQUEST['valid'])) {
 						$id = $_REQUEST['ID_contact_types'];
 						$db->query(
 							"UPDATE " . $_SESSION['tablename']['contact_types']
-						    . " SET label = ? WHERE id = ?",
-						    array($desc, $id)
+						    . " SET label = ?, contact_target = ? WHERE id = ?",
+						    array($desc, $contact_target, $id)
 						);
 
 						if ($_SESSION['history']['contact_types_up'] == "true") {
@@ -161,8 +163,8 @@ if (isset($_REQUEST['valid'])) {
 				$db->query(
 					"INSERT INTO "
 				    . $_SESSION['tablename']['contact_types']
-				    . " ( label) VALUES (?)",
-					array($desc)
+				    . " ( label, contact_target) VALUES (?, ?)",
+					array($desc, $contact_target)
 				);
 				$stmt = $db->query(
 					"SELECT id FROM "
@@ -310,6 +312,17 @@ if ($mode == "up") {
 		   <input 
 		   		type="text"  name="desc_contact_types" value="<?php functions::xecho($_SESSION['CURRENT_DESC_CONTACT_TYPE']);?>" 
 			/>
+	     </p>
+
+		<p>
+	    	<label>
+	    		<?php echo _CONTACT_TARGET;?>
+	    	</label>
+		   <select name="contact_target" id="contact_target" >
+		   		<option value="both" <?php if($_SESSION['CURRENT_TARGET_CONTACT_TYPE'] == 'both'){?> selected="selected"<?php } ?> ><?php echo _IS_CORPORATE_PERSON . " ". _AND ." " . _INDIVIDUAL;?></option>
+		   		<option value="corporate" <?php if($_SESSION['CURRENT_TARGET_CONTACT_TYPE'] == 'corporate'){?> selected="selected"<?php } ?> ><?php echo _IS_CORPORATE_PERSON;?></option>
+		   		<option value="no_corporate" <?php if($_SESSION['CURRENT_TARGET_CONTACT_TYPE'] == 'no_corporate'){?> selected="selected"<?php } ?> ><?php echo _INDIVIDUAL;?></option>
+			</select>
 	     </p>
 
 	<p class="buttons">

@@ -1752,6 +1752,19 @@ function unlock(path_script, id, coll)
     }
 }
 
+function setContactType(mode){
+    new Ajax.Request("index.php?dir=my_contacts&page=setContactType",
+    {
+        method:'post',
+        parameters: {
+            contact_target : mode
+        },
+        onSuccess: function(answer){
+            $('contact_type').innerHTML = answer.responseText;
+        }
+    });
+}
+
 /**
  * Show or hide the data related to a person in the contacts admin
  *

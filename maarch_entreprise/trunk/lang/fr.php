@@ -874,6 +874,9 @@ if (!defined("_CONTACT_MODIFIED")) define("_CONTACT_MODIFIED", "Contact modifié
 if (!defined("_CONTACT_DELETED")) define("_CONTACT_DELETED", "Contact supprimé");
 if (!defined("_MODIFY_CONTACT")) define("_MODIFY_CONTACT", "Modifier un contact");
 if (!defined("_IS_CORPORATE_PERSON")) define("_IS_CORPORATE_PERSON", "Personne morale");
+if (!defined("_INDIVIDUAL")) define("_INDIVIDUAL", "Particulier");
+if (!defined("_CONTACT_TARGET")) define("_CONTACT_TARGET", "Pour quel contact est il possible d'utiliser ce type ?");
+if (!defined("_CONTACT_TARGET_LIST")) define("_CONTACT_TARGET_LIST", "Cible du type de contact");
 if (!defined("_IS_PRIVATE")) define("_IS_PRIVATE", "Coordonnées confidentielles");
 if (!defined("_TITLE2")) define("_TITLE2", "Civilité");
 if (!defined("_WARNING_MESSAGE_DEL_CONTACT"))  define("_WARNING_MESSAGE_DEL_CONTACT", "Avertissement :<br> La suppression d'un contact entraine la réaffectation des documents et des courriers à un nouveau contact.");

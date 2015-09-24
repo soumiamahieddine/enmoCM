@@ -59,7 +59,7 @@ $func = new functions();
 $select[$_SESSION['tablename']['contact_types']] = array();
 array_push(
     $select[$_SESSION['tablename']['contact_types']],
-    "id", "label"
+    "id", "label", "contact_target"
 );
 $what = "";
 $where = "";
@@ -105,12 +105,31 @@ for ($i = 0; $i < count($tab); $i ++) {
                 );
                 $tab[$i][$j]["contact_types_label"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["label"] = _DESC_CONTACT_TYPES;
-                $tab[$i][$j]["size"] = "60";
+                $tab[$i][$j]["size"] = "40";
                 $tab[$i][$j]["label_align"] = "left";
                 $tab[$i][$j]["align"] = "left";
                 $tab[$i][$j]["valign"] = "bottom";
                 $tab[$i][$j]["show"] = true;
                 $tab[$i][$j]["order"] = 'contact_types_label';
+            }
+            if ($tab[$i][$j][$value] == "contact_target") {
+                if ($tab[$i][$j]['value'] == "both") {
+                    $tab[$i][$j]['value'] = _IS_CORPORATE_PERSON . " ". _AND ." " . _INDIVIDUAL;
+                } else if ($tab[$i][$j]['value'] == "corporate") {
+                    $tab[$i][$j]['value'] = _IS_CORPORATE_PERSON;
+                } else if($tab[$i][$j]['value'] == "no_corporate") {
+                    $tab[$i][$j]['value'] = _INDIVIDUAL;
+                } else {
+                    $tab[$i][$j]['value'] = "";
+                }
+                
+                $tab[$i][$j]["label"] = _CONTACT_TARGET_LIST;
+                $tab[$i][$j]["size"] = "100";
+                $tab[$i][$j]["label_align"] = "left";
+                $tab[$i][$j]["align"] = "left";
+                $tab[$i][$j]["valign"] = "bottom";
+                $tab[$i][$j]["show"] = true;
+                $tab[$i][$j]["order"] = 'contact_target';
             }
         }
     }

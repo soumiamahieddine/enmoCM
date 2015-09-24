@@ -293,6 +293,11 @@
       <parameter name="fromSearchContacts" type="string" />
     </validationRule>
 
+    <validationRule name="setContactType" extends="standardForm" mode="error">
+      <parameter name="contact_target" type="identifier" />
+      <parameter name="dir" type="identifier" />
+    </validationRule>
+
     <validationRule name="contactPurposesDel" extends="standardForm" mode="error">
       <parameter name="valid" type="string" />
       <parameter name="id" type="integer" />
@@ -309,6 +314,7 @@
     <validationRule name="contactTypesUp" extends="standardForm" mode="error">
       <parameter name="ID_contact_types" type="integer" />
       <parameter name="desc_contact_types" type="string" />
+      <parameter name="contact_target" type="identifier" />
       <parameter name="valid" type="string" />
     </validationRule>
 

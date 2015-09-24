@@ -403,13 +403,6 @@ class contacts_v2 extends Database
         $tmp = $business->get_titles();
         $titles = $tmp['titles'];
 
-        $contact_types = array();
-
-        $stmt = $db->query("SELECT id, label FROM ".$_SESSION['tablename']['contact_types']." ORDER BY label");
-        while($res = $stmt->fetchObject()){
-            $contact_types[$res->id] = functions::show_string($res->label); 
-        }
-
         ?>
         <h1>
             <?php
@@ -465,11 +458,11 @@ class contacts_v2 extends Database
                     <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){functions::xecho($_REQUEST['start']);}?>" />
                 <table width="65%" id="frmcontact_table">
                     <tr>
-                        <td><?php echo _IS_CORPORATE_PERSON;?> :</td>
+                        <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="indexing_field">
-                            <input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onclick="javascript:show_admin_contacts( true, '<?php functions::xecho($display_value);?>');"><?php echo _YES;?>
-                            <input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false, '<?php functions::xecho($display_value);?>');"/><?php echo _NO;?>
+                            <input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onclick="javascript:show_admin_contacts( true, '<?php functions::xecho($display_value);?>');setContactType('corporate')" id="corpo_yes"><span onclick="$('corpo_yes').click();" onmouseover="this.style.cursor='pointer';"><?php echo _IS_CORPORATE_PERSON;?></span>
+                            <input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false, '<?php functions::xecho($display_value);?>');setContactType('no_corporate')" id="corpo_no"><span onclick="$('corpo_no').click();" onmouseover="this.style.cursor='pointer';"><?php echo _INDIVIDUAL;?></span>
                         </td>
                         <td>&nbsp;</td>
                     </tr>
@@ -497,17 +490,7 @@ class contacts_v2 extends Database
                                 } ?>
                                 >
                                 <option value=""><?php echo _CHOOSE_CONTACT_TYPES;?></option>
-                                <?php
-                                    foreach(array_keys($contact_types) as $key) {
-                                        ?><option value="<?php functions::xecho($key);?>" <?php
 
-                                        if(isset($_SESSION['m_admin']['contact']['CONTACT_TYPE']) && $key == $_SESSION['m_admin']['contact']['CONTACT_TYPE'] )
-                                        {
-                                            echo 'selected="selected"';
-                                        }
-                                        ?>><?php functions::xecho($contact_types[$key]);?>
-                                        </option><?php
-                                    }?>
                             </select></td>
                         <td><span class="red_asterisk" style="visibility:visible;" id="contact_types_mandatory"><i class="fa fa-star"></i></span></td>
                     </tr>
@@ -640,6 +623,9 @@ class contacts_v2 extends Database
                     ?>
                     </p>
                 </form>
+
+                <script type="text/javascript">setContactType("<?php if(isset($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']) && $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N' ){ echo 'no_corporate'; } else { echo 'corporate'; }?>");</script>
+
             <?php
                 if($mode=="up" && $admin)
                 {
@@ -2093,11 +2079,11 @@ class contacts_v2 extends Database
             <div id="info_contact_div" style="display:inline">
                 <table width="65%" >
                     <tr >
-                        <td><?php echo _IS_CORPORATE_PERSON;?> : </td>
+                        <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="indexing_field" align="right">
-                            <input disabled type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?> /><?php echo _YES;?>
-                            <input disabled type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> /><?php echo _NO;?>
+                            <input disabled type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?> /><?php echo _IS_CORPORATE_PERSON;?>
+                            <input disabled type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> /><?php echo _INDIVIDUAL;?>
                         </td>
                         <td>&nbsp;&nbsp;&nbsp;</td>
                     </tr>

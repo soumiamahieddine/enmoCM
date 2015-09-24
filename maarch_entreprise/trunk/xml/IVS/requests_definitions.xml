@@ -560,6 +560,12 @@
     </requestDefinition>
 
     <!-- My contacts -->
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="setContactType" >
+      <parameter name="dir" value="my_contacts"/>
+      <parameter name="page" value="setContactType"/>
+    </requestDefinition>
+
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="contactid" >
       <parameter name="dir" value="my_contacts"/>
       <parameter name="page" value="put_in_session"/>
