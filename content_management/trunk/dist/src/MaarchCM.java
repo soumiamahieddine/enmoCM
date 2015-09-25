@@ -86,7 +86,7 @@ public class MaarchCM extends JApplet {
         
         if (!this.controlParams()) {
             System.out.println("PARAMETERS NOT OK ! END OF APPLICATION");
-            //System.exit(0);
+            System.exit(0);
         }
         
         System.out.println("----------END PARAMETERS----------");
