@@ -591,6 +591,7 @@
       <parameter name="id" type="integer" />
       <parameter name="coll_id" type="collection_list" />
       <parameter name="dir" type="identifier" />
+      <parameter name="collid" type="collection_list" />
     </validationRule>
     
     <validationRule name="multiLink" extends="standardForm" mode="error">  
