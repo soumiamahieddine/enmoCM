@@ -78,6 +78,11 @@
                 'false'
             );
 
+            if (oneIsEmpty) {
+                $('#ajaxReturn_testConnect_ok').html('<?php echo "connexion ok";?>');
+                return;
+             }
+
         });
  
 
@@ -182,6 +187,7 @@
             </form>
             <br />
             <div id="ajaxReturn_testConnect_ko"></div>
+            <div id="ajaxReturn_testConnect_ok"></div>
         </p>
     </div>
 </div>
@@ -190,16 +196,27 @@
     <div class="contentBlock" id="docservers">
         <p>
             <div id="buttons">
-                <div style="float: left;" class="previousButton" id="previous">
+                <!--div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=docservers');" style="display:none;">
                         <?php echo _PREVIOUS;?>
                     </a>
-                </div>
+                </div-->
+                <!--div style="float: left;" class="previousButton" id="next">
+                    <a href="#" onClick="goTo('index.php?step=password');" id="ajaxReturn_testConnect" >
+                        <?php echo "Sauter étape";?>
+                    </a>
+                </div-->
+                <!--div style="float: right;" class="nextButton" id="next">
+                    <a href="#" onClick="goTo('index.php?step=password');" id="ajaxReturn_testConnect">
+                        <?php echo _NEXT;?>
+                    </a>
+                </div-->
                 <div style="float: right;" class="nextButton" id="next">
-                    <a href="#" onClick="goTo('index.php?step=password');" id="ajaxReturn_testConnect" style=" display: none;">
+                    <a href="#" onClick="goTo('index.php?step=password');">
                         <?php echo _NEXT;?>
                     </a>
                 </div>
+                
             </div>
             <br />
             <br />
