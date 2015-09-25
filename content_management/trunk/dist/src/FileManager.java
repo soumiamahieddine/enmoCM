@@ -1,19 +1,34 @@
-package maarchcm;
+/** 
+ * Jdk platform : 1.8 
+ */
+
+/** 
+ * SVN version 120
+ */
+
+
+package com.maarch;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
- *
+ * FileManager class manages the exchange of files between the applet and the workstation
  * @author Laurent Giovannoni
  */
-public class fileManager {
+public class FileManager {
     
+    /**
+    * Creates the tmp dir
+    * @param path path to the tmp dir
+    */
     public void createUserLocalDirTmp(String path) throws IOException {
         File file=new File(path);
         if (!file.exists()) {
@@ -26,11 +41,22 @@ public class fileManager {
         } else {
             System.out.println("directory " + path + " already exists");
         }
-        file.setReadable(true, false);
-        file.setWritable(true, false);
-        file.setExecutable(true, false);
+        if (!file.setReadable(true, false)) {
+            System.out.println("set permission readable failed on : " + path);
+        }
+        if (!file.setWritable(true, false)) {
+            System.out.println("set permission writable failed on : " + path);
+        }
+        if (!file.setExecutable(true, false)) {
+            System.out.println("set permission executable failed on : " + path);
+        }
     }
     
+    /**
+    * Controls the existance of psExec file in tmp dir
+    * @param path path to the tmp dir
+    * @return boolean
+    */
     public boolean isPsExecFileExists(String path) throws IOException {
         File file=new File(path);
         if (!file.exists()) {
@@ -42,18 +68,29 @@ public class fileManager {
         }
     }
     
+    /**
+    * Creates the template sended by Maarch file in tmp dir
+    * @param encodedContent the file to create
+    * @param pathTofile directory of the file to create
+    * @return boolean
+    */
     public boolean createFile(String encodedContent, final String pathTofile) throws IOException, PrivilegedActionException{
-        BASE64Decoder decoder = new BASE64Decoder();
-        final byte[] decodedBytes = decoder.decodeBuffer(encodedContent);
+        final byte[] decodedBytes = Base64.decodeBase64(encodedContent);
         FileOutputStream fos = (FileOutputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
                     FileOutputStream fos = new FileOutputStream(pathTofile);
                     fos.write(decodedBytes);
                     fos.close();
                     File file = new File(pathTofile);
-                    file.setReadable(true, false);
-                    file.setWritable(true, false);
-                    file.setExecutable(true, false);
+                    if (!file.setReadable(true, false)) {
+                        System.out.println("set permission readable failed on : " + pathTofile);
+                    }
+                    if (!file.setWritable(true, false)) {
+                        System.out.println("set permission writable failed on : " + pathTofile);
+                    }
+                    if (!file.setExecutable(true, false)) {
+                        System.out.println("set permission executable failed on : " + pathTofile);
+                    }
                     return fos;
                 }
             }
@@ -61,14 +98,20 @@ public class fileManager {
         return true;
     }
     
+    /**
+    * Creates the bat file to launch te editor of te template
+    * @param pathToBatFile path to the bat file
+    * @param pathToFileToLaunch path to the file to launch
+    * @param fileToLaunch name of the file to launch
+    * @param os os of the workstation
+    * @param localTmpDir path to the tmp dir
+    * @return boolean
+    */
     public boolean createBatFile(
             final String pathToBatFile, 
             final String pathToFileToLaunch, 
             final String fileToLaunch, 
             final String os,
-            final String maarchUser,
-            final String maarchPassword,
-            final String psExecMode,
             final String localTmpDir
             ) throws IOException, PrivilegedActionException {
         final Writer out;
@@ -80,33 +123,12 @@ public class fileManager {
         AccessController.doPrivileged(new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
                     if ("win".equals(os)) {
-                        if (psExecMode.equals("OK")) {
-                            final Writer outJs;
-                            outJs = new OutputStreamWriter(new FileOutputStream(localTmpDir + "launcher.js"), "CP850");
-                            outJs.write("WshShell = new ActiveXObject(\"WScript.Shell\");\r\n");
-                            //outJs.write("objShell = new ActiveXObject(\"WScript.Shell\");\r\n");
-                            outJs.write("oExec = WshShell.run(\"\\\"" + pathToFileToLaunch.replace("\\", "/") + fileToLaunch + "\\\"\", 1, 1);\r\n");
-                            outJs.write("strHomeFolder = \"\\\"" + pathToFileToLaunch.replace("\\", "/") + "\\\"\";\r\n");
-                            outJs.write("while (oExec.Status == 0)\r\n");
-                            outJs.write("{\r\n");
-                            outJs.write("WScript.Sleep(100);\r\n");
-                            //outJs.write("oExec = objShell.run(\"%COMSPEC% /K icacls \\\"\" + strHomeFolder + \"\\\" /grant maarch:F /T\", 1, 1);\r\n");
-                            outJs.write("}\r\n");
-                            out.write("\"" + localTmpDir + "PsExec.exe\" -accepteula -u " + maarchUser + " -p " + maarchPassword 
-                                    + " wscript \"" + localTmpDir + "launcher.js\"");
-                            outJs.close();
-                            File myFileJs = new File(pathToBatFile);
-                            myFileJs.setReadable(true, false);
-                            myFileJs.setWritable(true, false);
-                            myFileJs.setExecutable(true, false);
+                        if (fileToLaunch.contains(".odt") || fileToLaunch.contains(".ods")) {
+                            //out.write("start /WAIT SOFFICE.exe -env:UserInstallation=file:///" 
+                            //    + pathToFileToLaunch.replace("\\", "/")  + " \"" + pathToFileToLaunch + fileToLaunch + "\"");
+                            out.write("start /WAIT SOFFICE.exe -env:UserInstallation=$SYSUSERCONFIG \"" + pathToFileToLaunch + fileToLaunch + "\"");
                         } else {
-                            if (fileToLaunch.contains(".odt") || fileToLaunch.contains(".ods")) {
-                                //out.write("start /WAIT SOFFICE.exe -env:UserInstallation=file:///" 
-                                //    + pathToFileToLaunch.replace("\\", "/")  + " \"" + pathToFileToLaunch + fileToLaunch + "\"");
-                                out.write("start /WAIT SOFFICE.exe -env:UserInstallation=$SYSUSERCONFIG \"" + pathToFileToLaunch + fileToLaunch + "\"");
-                            } else {
-                                out.write("start /WAIT \"\" \"" + pathToFileToLaunch + fileToLaunch + "\"");
-                            }
+                            out.write("start /WAIT \"\" \"" + pathToFileToLaunch + fileToLaunch + "\"");
                         }
                     } else if ("mac".equals(os)) {
                         out.write("open -W " + pathToFileToLaunch + fileToLaunch);
@@ -115,9 +137,16 @@ public class fileManager {
                     }
                     out.close();
                     File file = new File(pathToBatFile);
-                    file.setReadable(true, false);
-                    file.setWritable(true, false);
-                    file.setExecutable(true, false);
+                    if (!file.setReadable(true, false)) {
+                        System.out.println("set permission readable failed on : " + pathToBatFile);
+                    }
+                    if (!file.setWritable(true, false)) {
+                        System.out.println("set permission writable failed on : " + pathToBatFile);
+                    }
+                    if (!file.setExecutable(true, false)) {
+                        System.out.println("set permission executable failed on : " + pathToBatFile);
+                    }
+                    
                     return out;
                 }
             }
@@ -125,63 +154,48 @@ public class fileManager {
         return true;
     }
     
-    public boolean createRightsFile(
-            final String path, 
-            final String maarchUser
-            ) throws IOException, PrivilegedActionException {
-        AccessController.doPrivileged(new PrivilegedExceptionAction() {
-                public Object run() throws IOException {
-                    final Writer outJs;
-                    outJs = new OutputStreamWriter(new FileOutputStream(path + "setRights.vbs"), "CP850");
-                    outJs.write("Option Explicit\r\n");
-                    outJs.write("Dim strHomeFolder, intRunError, objShell, objFSO\r\n");
-                    outJs.write("strHomeFolder = \"" + path.replace("\\", "/") + "\"\r\n");
-                    outJs.write("Set objShell = CreateObject(\"Wscript.Shell\")\r\n");
-                    outJs.write("Set objFSO = CreateObject(\"Scripting.FileSystemObject\")\r\n");
-                    outJs.write("If objFSO.FolderExists(strHomeFolder) Then\r\n");
-                    outJs.write("intRunError = objShell.Run(\"%COMSPEC% /C icacls \"\"\" _\r\n");
-                    outJs.write("& strHomeFolder & \"\"\" /grant " + maarchUser + ":(OI)(CI)F /inheritance:e /T\", 2, True)\r\n");
-                    outJs.write("End If\r\n");
-                    outJs.write("WScript.Quit\r\n");
-                    outJs.close();
-                    File file = new File(path);
-                    file.setExecutable(true, false);
-                    return outJs;
-                }
-            }
-        );
-        return true;
-    }
-    
+    /**
+    * Encodes a file in base64
+    * @param fichier path to the file to encode
+    * @return string
+    * @throws java.lang.Exception
+    */
     public static String encodeFile(String fichier) throws Exception {
         byte[] buffer = readFile(fichier);
-        BASE64Encoder encoder = new BASE64Encoder();
-        String encode = encoder.encodeBuffer(buffer);
-        return encode;
+        byte[] encodedBytes = Base64.encodeBase64(buffer);
+        return new String(encodedBytes);
     }
     
+    /**
+    * Reads a file
+    * @param filename path to the file to read
+    * @return byte
+    */
     private static byte[] readFile(String filename) throws IOException {
-        java.io.File file = new java.io.File(filename);
-        java.io.BufferedInputStream bis = new java.io.BufferedInputStream(new
-            java.io.FileInputStream(file));
-        int bytes = (int) file.length();
-        byte[] buffer = new byte[bytes];
-        bis.read(buffer);
-        bis.close();
-        return buffer;
+        byte[] fileToEncode = Files.readAllBytes(Paths.get(filename));
+        return fileToEncode;
     }
     
+    /**
+    * Launchs a command to execute
+    * @param launchCommand the command to launch
+    * @return process
+    */
     public Process launchApp(final String launchCommand) throws PrivilegedActionException {
-        Process proc = (Process) AccessController.doPrivileged(
+        return (Process) AccessController.doPrivileged(
             new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
                     return Runtime.getRuntime().exec(launchCommand);
                 }
             }
         );
-        return proc;
     }
     
+    /**
+    * Retrieves the right program to edit the template with his extension
+    * @param ext extension of the template
+    * @return string
+    */
     public String findGoodProgramWithExt(String ext) {
         String program = "";
         if ("docx".equals(ext.toLowerCase()) || "doc".equals(ext.toLowerCase())) {
@@ -199,6 +213,11 @@ public class fileManager {
         return program;
     }
     
+    /**
+    * Retrieves the path of a program in the registry
+    * @param program name of the program
+    * @return string
+    */
     public String findPathProgramInRegistry(String program) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         String path;
         path =  WinRegistry.readString (
@@ -208,6 +227,11 @@ public class fileManager {
         return "\"" + path + "\"";
     }
     
+    /**
+    * Retrieves the right options to edit the template
+    * @param ext extension of the template
+    * @return string
+    */
     public String findGoodOptionsToEdit(String ext) {
         String options = "";
         if ("docx".equals(ext.toLowerCase()) || "doc".equals(ext.toLowerCase())) {
@@ -225,6 +249,11 @@ public class fileManager {
         return options;
     }
     
+    /**
+    * Deletes file in the tmp dir
+    * @param directory path of the tmp dir
+    * @param pattern pattern of files to delete
+    */
     public static void deleteFilesOnDir (String directory, String pattern) throws IOException {
         File dir = new File(directory);
         File[] directoryListing = dir.listFiles();
