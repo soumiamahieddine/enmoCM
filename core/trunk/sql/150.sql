@@ -553,7 +553,7 @@ CREATE VIEW res_view_letterbox AS
     mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, mlb.is_multicontacts, r.video_user, r.video_time,
     r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes,
 	r.locker_user_id, r.locker_time,
-    ca.case_id, ca.case_label, ca.case_description, en.entity_label,
+    ca.case_id, ca.case_label, ca.case_description, en.entity_label, en.entity_type AS entityType,
     cont.contact_id AS contact_id,
     cont.firstname AS contact_firstname, cont.lastname AS contact_lastname,
     cont.society AS contact_society, u.lastname AS user_lastname,
