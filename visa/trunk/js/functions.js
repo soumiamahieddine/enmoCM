@@ -213,6 +213,8 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 				eval("response = "+answer.responseText);
 				if (response.status == 1){
 					$('divErrorVisa').innerHTML = 'Mise à jour du circuit effectuée';
+                    $('divErrorVisa').style.display = 'table-cell';
+                    Element.hide.delay(5, 'divErrorVisa');
 				}
 			}
 	});
