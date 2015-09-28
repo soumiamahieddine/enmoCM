@@ -138,7 +138,7 @@ class visa extends Database
 		$docserver_path = $res->path_template;
 		
 		$stmt = $db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response','outgoing_mail') order by creation_date asc", array($res_id));
-		
+
 		$array_reponses = array();
 		$cpt_rep = 0;
 		while ($res2 = $stmt->fetchObject()){
@@ -152,12 +152,11 @@ class visa extends Database
 				if ($res2->res_id_version == 0){
 					$array_reponses[$cpt_rep]['res_id'] = $res2->res_id;
 					$array_reponses[$cpt_rep]['is_version'] = 0;
-				}
-				else{
+				} else {
 					$array_reponses[$cpt_rep]['res_id'] = $res2->res_id_version;
 					$array_reponses[$cpt_rep]['is_version'] = 1;
 				}
-				if ($array_reponses[$cpt_rep]['attachment_type'] == 'outgoing_mail'){
+				if ($res2->res_id_version == 0 && $array_reponses[$cpt_rep]['attachment_type'] == 'outgoing_mail'){
 					$array_reponses[$cpt_rep]['is_version'] = 2;
 				}
 				$cpt_rep++;
