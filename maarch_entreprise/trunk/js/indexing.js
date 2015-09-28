@@ -669,7 +669,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                             $('doc_date').value = doc_date;
                         }
                     } else {
-                        if ($('doc_date') != undefined) {
+                        if ($('doc_date') != undefined && $('doc_date').value == '') {
                             $('doc_date').value = '';
                         }
                     }
