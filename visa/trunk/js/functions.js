@@ -313,6 +313,7 @@ function saveVisaModel(id_tableau){
 					$('divErrorVisa').innerHTML = 'Modèle sauvegardé';
 					$('divErrorVisa').style.display = 'table-cell';
 					$('modalSaveVisaModel').style.display = 'none';
+					Element.hide.delay(5, 'divErrorVisa');
 				}
 			}
 	});
