@@ -4,7 +4,6 @@
     </dataType>
     <dataType name="login" base="graph">
       <!--pattern value="/^\w+$/" /-->
-      <!--pattern value="/^[A-z]*\.*[A-z]*+$/" /-->
       <pattern value="/^[\w.]*$/" />
     </dataType>
     <dataType name="datefr" base="graph">
