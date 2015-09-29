@@ -89,8 +89,12 @@ function ValidAttachmentsForm (path, form_id) {
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
             if(response.status == 0){
-                destroyModal('form_attachments'); 
-				
+                destroyModal('form_attachments');
+
+            if ($('viewframe') != undefined) {
+                var srcViewFrame = $('viewframe').src;
+                $('viewframe').src = srcViewFrame;
+            }
 				if ($('cur_idAffich')) var num_rep = $('cur_idAffich').value;
 				if ($('cur_resId')) var res_id_master = $('cur_resId').value;
 				if (response.cur_id) var rep_id = response.cur_id;
