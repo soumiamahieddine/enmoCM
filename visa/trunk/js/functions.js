@@ -777,15 +777,16 @@ function printFolder(res_id, coll_id, form_id, path){
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
             if(response.status == 0){
-				var id_folder = response.id_folder;
-				var winPrint = window.open('index.php?display=true&module=attachments&page=view_attachment&res_id_master='+res_id+'&id='+id_folder,'','height=800, width=700,scrollbars=yes,resizable=yes');
-				/*winPrint.focus();
-				winPrint.print();*/
+							var id_folder = response.id_folder;
+							var winPrint = window.open('index.php?display=true&module=attachments&page=view_attachment&res_id_master='+res_id+'&id='+id_folder,'','height=800, width=700,scrollbars=yes,resizable=yes');
+							/*winPrint.focus();
+							winPrint.print();*/
             } 
-			else if (response.status == 1){
-				$('divErrorPrint').innerHTML = response.error_txt;
-				$('divErrorPrint').style.display = 'table-cell';
-			}
+						else if (response.status == 1) {
+							$('divErrorPrint').innerHTML = response.error_txt;
+							$('divErrorPrint').style.display = 'table-cell';
+							Element.hide.delay(5, 'divErrorPrint');
+						}
         }
     });
 
