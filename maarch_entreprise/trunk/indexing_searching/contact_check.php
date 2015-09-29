@@ -34,12 +34,12 @@ if(empty($_POST['contact_id'])){
 	$arrayPDO = array();
 
 	if (is_numeric($_POST['contact_id'])) {
-		$where = "contact_id = ".$_POST['contact_id']." AND address_id = ".$_POST['address_id']." AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
-		$wherePDO = "contact_id = ? AND address_id = ? AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
+		$where = "status <> 'DEL' AND contact_id = ".$_POST['contact_id']." AND address_id = ".$_POST['address_id']." AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
+		$wherePDO = "status <> 'DEL' AND contact_id = ? AND address_id = ? AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
 		$arrayPDO = array($_POST['contact_id'], $_POST['address_id']);
 	} else {
-		$where = "(exp_user_id = '".$_POST['contact_id']."' OR dest_user_id = '".$_POST['contact_id']."') AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
-		$wherePDO = "(exp_user_id = ? OR dest_user_id = ?) AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
+		$where = "status <> 'DEL' AND (exp_user_id = '".$_POST['contact_id']."' OR dest_user_id = '".$_POST['contact_id']."') AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
+		$wherePDO = "status <> 'DEL' AND (exp_user_id = ? OR dest_user_id = ?) AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
 		$arrayPDO = array($_POST['contact_id'], $_POST['contact_id']);
 	}
 	
