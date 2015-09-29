@@ -205,7 +205,7 @@ switch ($mode) {
             // Buttons
             $content .='<hr />';
             $content .='<div align="center">';
-            $content .=' <input type="button" name="valid" value="&nbsp;'._ADD_NOTE
+            $content .=' <input type="button" name="valid" value="&nbsp;'._VALIDATE
                         .'&nbsp;" id="valid" class="button" onclick="'
                         .'selectall($(\'entities_chosen\'));validNotesForm(\''
                         .$path_to_script.'&mode=added\', \'formNotes\');" />&nbsp;';
@@ -397,7 +397,7 @@ switch ($mode) {
                 // Buttons
                 $content .='<hr />';
                 $content .='<div align="center">';
-                $content .=' <input type="button" name="valid" value="&nbsp;'._MODIFY
+                $content .=' <input type="button" name="valid" value="&nbsp;'._VALIDATE
                          .'&nbsp;" id="valid" class="button" onclick="'
                          .'selectall($(\'entities_chosen\'));validNotesForm(\''
                          .$path_to_script.'&mode=updated\', \'formNotes\');" />&nbsp;';
