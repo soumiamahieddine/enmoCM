@@ -90,18 +90,23 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 ------------------
 --CONTACTS_TYPES--
 ------------------
-INSERT INTO contact_types VALUES (100, 'Particuliers');
-INSERT INTO contact_types VALUES (101, 'Gouvernement');
-INSERT INTO contact_types VALUES (102, 'Collectivités territoriales');
-INSERT INTO contact_types VALUES (103, 'Associations');
-INSERT INTO contact_types VALUES (104, 'Entreprises');
-INSERT INTO contact_types VALUES (105, 'Autorités juridictionnelles');
-INSERT INTO contact_types VALUES (106, 'Organisations syndicales');
+
+INSERT INTO contact_types (id, label) VALUES (100, '1. Entreprises');
+INSERT INTO contact_types (id, label) VALUES (101, '2. Associations');
+INSERT INTO contact_types (id, label) VALUES (102, '3. Administrations');
+INSERT INTO contact_types (id, label) VALUES (103, '4. Collectivités territoriales');
+INSERT INTO contact_types (id, label) VALUES (104, '5. Autorités juridictionnelles');
+INSERT INTO contact_types (id, label) VALUES (105, '6. Organisations syndicales');
+INSERT INTO contact_types (id, label) VALUES (106, '0. Particuliers');
+INSERT INTO contact_types (id, label) VALUES (107, '7. Banques');
+INSERT INTO contact_types (id, label) VALUES (108, '8. CCI');
+
+
 
 INSERT INTO contact_purposes (id, label) VALUES (1, 'Siège social France');
 INSERT INTO contact_purposes (id, label) VALUES (2, 'Siège social Sénégal');
 
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (1, 104, 'Y', 'MAARCH', '', '', '', '', '', 'Editeur du logiciel libre Maarch', 'bblier', 'VILLE', '2015-04-24 12:43:54.97424', NULL, 'Y');
+INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (1, 100, 'Y', 'MAARCH', '', '', '', '', '', 'Editeur du logiciel libre Maarch', 'bblier', 'VILLE', '2015-04-24 12:43:54.97424', NULL, 'Y');
 
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (1, 1, 1, '', '', '', '', '', '', '11', 'Boulevard du Sud-Est', '', 'NANTERRE', '', '', '', 'info@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (2, 1, 2, '', '', '', '', '', '', '', 'Sacré Coeur 3', 'Villa 9653 4ème phase', 'DAKAR', '', 'SENEGAL', '', '', '', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
