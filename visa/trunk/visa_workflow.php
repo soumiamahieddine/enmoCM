@@ -1,8 +1,8 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*   Copyright 2008-2015 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -33,37 +33,48 @@
 /**
 * $confirm  bool true
 */
- $confirm = true;
+$confirm = true;
 
 /**
 * $etapes  array Contains only one etap, the status modification
 */
- $etapes = array('empty_error');
+$etapes = array('empty_error');
  
- require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
-			. "class" . DIRECTORY_SEPARATOR
-			. "class_modules_tools.php";
- 
- 
- function manage_empty_error($arr_id, $history, $id_action, $label_action, $status)
-{
-	$_SESSION['action_error'] = '';
-	$result = '';
-	$coll_id = $_SESSION['current_basket']['coll_id'];
-	$res_id = $arr_id[0];
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-	$sec = new security();
-	$table = $sec->retrieve_table_from_coll($coll_id);
-	
-	$db = new Database();
-	$stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP WHERE res_id = ? AND item_id= ? AND difflist_type = ?", array($res_id, $_SESSION['user']['UserId'], 'VISA_CIRCUIT'));
-	
-	$circuit_visa = new visa();
-	if ($circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $circuit_visa->nbVisa($res_id, $coll_id)){
-		$stmt = $db->query("UPDATE res_letterbox SET status='ESIG' WHERE res_id = ? ", array($res_id));
-	}
-	
-	return array('result' => $res_id.'#', 'history_msg' => '');
-}
+require_once "modules/visa/class/class_modules_tools.php";
 
-?>
+function manage_empty_error($arr_id, $history, $id_action, $label_action, $status)
+{
+	$db = new Database();
+    $_SESSION['action_error'] = '';
+    $result = '';
+    $coll_id = $_SESSION['current_basket']['coll_id'];
+    $res_id = $arr_id[0];
+    require_once("core/class/class_security.php");
+    $sec = new security();
+    $table = $sec->retrieve_table_from_coll($coll_id);
+    $circuit_visa = new visa();
+    $sequence = $circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT');
+    $stepDetails = array();
+    $stepDetails = $circuit_visa->getStepDetails($res_id, $coll_id, 'VISA_CIRCUIT', $sequence);
+    $message = '';
+    //enables to process the visa if i am not the item_id
+    if ($stepDetails['item_id'] <> $_SESSION['user']['UserId']) {
+    	$stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
+            . " WHERE res_id = ? AND item_id= ? AND difflist_type = ?"
+            , array($res_id, $stepDetails['item_id'], 'VISA_CIRCUIT'));
+    	$message = _VISA_BY . " " . $_SESSION['user']['UserId'] 
+    		. " " . _INSTEAD_OF . " " . $stepDetails['item_id'];
+    } else {
+    	$stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
+            . " WHERE res_id = ? AND item_id= ? AND difflist_type = ?"
+            , array($res_id, $_SESSION['user']['UserId'], 'VISA_CIRCUIT'));
+    }
+
+    if (
+        $circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $circuit_visa->nbVisa($res_id, $coll_id)
+    ){
+        $stmt = $db->query("UPDATE res_letterbox SET status='ESIG' WHERE res_id = ? ", array($res_id));
+    }
+
+    return array('result' => $res_id.'#', 'history_msg' => $message);
+}

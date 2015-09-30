@@ -69,3 +69,9 @@ if (!defined("_BAD_PIN"))
 
 if (!defined("_PRINT_DOCUMENT"))
     define("_PRINT_DOCUMENT", "Afficher et imprimer le document");
+
+if (!defined("_VISA_BY"))
+    define("_VISA_BY", "Visa par");
+
+if (!defined("_INSTEAD_OF"))
+    define("_INSTEAD_OF", "A la place de");

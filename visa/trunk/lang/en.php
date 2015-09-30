@@ -34,3 +34,10 @@ if (!defined('_SUBMIT_COMMENT'))
 
 if (!defined("_PRINT_DOCUMENT"))
     define("_PRINT_DOCUMENT", "View and print the document");
+
+
+if (!defined("_VISA_BY"))
+    define("_VISA_BY", "Visa by");
+
+if (!defined("_INSTEAD_OF"))
+    define("_INSTEAD_OF", "Instead of");
