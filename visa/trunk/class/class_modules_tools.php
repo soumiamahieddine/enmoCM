@@ -304,6 +304,7 @@ class visa extends Database
 		$str .= '<div align="center">';
 		
 		$str .= '<div class="error" id="divErrorVisa" name="divErrorVisa" onclick="this.hide();"></div>';
+		$str .= '<div class="info" id="divInfoVisa" name="divInfoVisa" onclick="this.hide();"></div>';
 		
 		if (!empty($listModels) && $bool_modif && !$isVisaStep){
 		$str .= '<select name="modelList" id="modelList" onchange="load_listmodel_visa(this.options[this.selectedIndex], \''.$typeList.'\', \''.$id_tab.'\');">';

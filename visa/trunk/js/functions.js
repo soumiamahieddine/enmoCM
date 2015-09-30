@@ -213,9 +213,9 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
 				if (response.status == 1){
-					$('divErrorVisa').innerHTML = 'Mise à jour du circuit effectuée';
-                    $('divErrorVisa').style.display = 'table-cell';
-                    Element.hide.delay(5, 'divErrorVisa');
+					$('divInfoVisa').innerHTML = 'Mise à jour du circuit effectuée';
+                    $('divInfoVisa').style.display = 'table-cell';
+                    Element.hide.delay(5, 'divInfoVisa');
 				}
 			}
 	});
@@ -312,10 +312,10 @@ function saveVisaModel(id_tableau){
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
 				if (response.status == 1){
-					$('divErrorVisa').innerHTML = 'Modèle sauvegardé';
-					$('divErrorVisa').style.display = 'table-cell';
+					$('divInfoVisa').innerHTML = 'Modèle sauvegardé';
+					$('divInfoVisa').style.display = 'table-cell';
 					$('modalSaveVisaModel').style.display = 'none';
-					Element.hide.delay(5, 'divErrorVisa');
+					Element.hide.delay(5, 'divInfoVisa');
 				}
 			}
 	});
