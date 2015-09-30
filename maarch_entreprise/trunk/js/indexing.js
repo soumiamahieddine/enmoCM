@@ -657,23 +657,19 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                         },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);
-                //~ console.log('1 '+answer.responseText);
-                //~ console.log('2 '+response);
+                // console.log('1 '+answer.responseText);
+                // console.log('2 '+response);
                 if(response.status == 0 )
                 {
                     var services_to_exec = response.services;
-                    if (response.doc_date != undefined) {
+                    if (
+                        cat_id == 'outgoing'
+                        && (response.doc_date != undefined 
+                        && ($('doc_date') != undefined && $('doc_date').value == ''))
+                    ) {
                         var doc_date = response.doc_date;
-                        console.log(doc_date);
-                        if ($('doc_date') != undefined) {
-                            $('doc_date').value = doc_date;
-                        }
-                    } else {
-                        if ($('doc_date') != undefined && $('doc_date').value == '') {
-                            $('doc_date').value = '';
-                        }
+                        $('doc_date').value = doc_date;
                     }
-                    
                     //console.log('3 '+print_r(services_to_exec));
                     var path_scripts = '';
                     var call_func = '';
