@@ -638,10 +638,13 @@ class contacts_v2 extends Database
     <?php
     }
 
-    public function chooseContact(){
+    public function chooseContact($clean = true){
 
         $db = new Database();
-        $this->clearcontactinfos();
+        if ($clean) {
+            $this->clearcontactinfos();
+        }
+        
         ?>
         <h1><i class="fa fa-plus fa-2x"></i>
             <?php

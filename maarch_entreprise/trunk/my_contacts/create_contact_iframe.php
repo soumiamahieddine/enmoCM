@@ -58,7 +58,12 @@ if (isset($_GET['fromAttachmentContact']) && $_GET['fromAttachmentContact'] == "
 }
 
 $core_tools2->load_js();
-$contact->chooseContact();
+if (isset($_GET['created']) && $_GET['created'] <> '') {
+	$contact->chooseContact(true);
+} else {
+	$contact->chooseContact(false);
+}
+
 ?>
 	<br/>
 	<hr>
