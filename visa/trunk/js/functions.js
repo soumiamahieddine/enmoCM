@@ -195,6 +195,7 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 	if (cons_empty){
 		$('divErrorVisa').innerHTML = 'Sélectionner au moins un utilisateur';
 		$('divErrorVisa').style.display = 'table-cell';
+		Element.hide.delay(5, 'divErrorVisa');
 	}
 	else
 	new Ajax.Request("index.php?display=true&module=visa&page=saveVisaWF",
@@ -294,6 +295,7 @@ function saveVisaModel(id_tableau){
 	if (cons_empty){
 		$('divErrorVisa').innerHTML = 'Sélectionner au moins un utilisateur';
 		$('divErrorVisa').style.display = 'table-cell';
+		Element.hide.delay(5, 'divErrorVisa');
 	}
 	else
 	new Ajax.Request("index.php?display=true&module=visa&page=saveVisaModel",
