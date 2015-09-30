@@ -113,7 +113,10 @@ if ($s_id == '') {
         $res_outgoing = $stmt->fetchObject(); 
 
         if ($res_outgoing->category_id == 'outgoing' && $res_outgoing->source == 'with_empty_file') {
-            $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' and res_id_master = ? and coll_id = ? and ((attachment_type = 'converted_pdf' and type_id = 1) OR (attachment_type = 'outgoing_mail' and format = 'pdf')) order by res_id desc", 
+            $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' "
+                . "and res_id_master = ? and coll_id = ? and ((attachment_type = 'converted_pdf' and type_id = 1) "
+                . "OR (attachment_type = 'outgoing_mail' and format = 'pdf')"
+                . "OR (attachment_type = 'signed_response' and format = 'pdf')) order by res_id desc", 
                 array($s_id, $_SESSION['collection_id_choice']));
             $res_att = $stmt->fetchObject();
             if ($stmt->rowCount() > 0) {
@@ -126,7 +129,10 @@ if ($s_id == '') {
                 <?php
                 exit();
             }  else {
-            	$stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' and res_id_master = ? and coll_id = ? and ((attachment_type = 'converted_pdf' and (type_id = 1 or type_id = 0)) OR (attachment_type = 'outgoing_mail' and format = 'pdf')) order by res_id desc",
+            	$stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' "
+                    . "and res_id_master = ? and coll_id = ? and ((attachment_type = 'converted_pdf' and (type_id = 1 or type_id = 0)) "
+                    . "OR (attachment_type = 'outgoing_mail' and format = 'pdf')"
+                    . "OR (attachment_type = 'signed_response' and format = 'pdf')) order by res_id desc",
                     array($s_id, $_SESSION['collection_id_choice']));
             	$res_att = $stmt->fetchObject();
             	if ($stmt->rowCount() > 0) {
@@ -134,7 +140,8 @@ if ($s_id == '') {
 	            <script type="text/javascript">
 	                window.location.href = '<?php
 	                echo $_SESSION['config']['businessappurl'];
-	                ?>index.php?display=true&module=attachments&page=view_attachment&res_id_master=<?php echo $s_id;?>&id=<?php echo $res_att->res_id;?>'
+	                ?>index.php?display=true&module=attachments&page=view_attachment&res_id_master=<?php 
+                        echo $s_id;?>&id=<?php echo $res_att->res_id;?>'
 	            </script>
 	            <?php
 	            exit();
