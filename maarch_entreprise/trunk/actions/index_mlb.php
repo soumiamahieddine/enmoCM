@@ -201,7 +201,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '</h2>';
     $frmStr .='<i onmouseover="this.style.cursor=\'pointer\';" '.
              'onclick="javascript:window.top.location.href=\''
-            . $_SESSION['config']['businessappurl'] . 'index.php\';reinit();" class="fa fa-undo fa-2x closeModale" title="'._BACK.'"/>';
+            . $_SESSION['config']['businessappurl'] . 'index.php\';reinit();" class="fa fa-backward fa-2x closeModale" title="'._BACK.'"/>';
     $frmStr .='</i>';
     $frmStr .= '<div id="validleft">';
     $frmStr .= '<div id="index_div" style="display:none;";>';
