@@ -117,7 +117,11 @@ function ValidAttachmentsForm (path, form_id) {
 						$('ans_'+num_rep+'_'+rep_id).id = 'ans_'+num_rep+'_'+response.majFrameId;
 					}
 				}
-					
+				
+				if ($('cur_idAffich')){
+					console.log('test refresh');
+					loadNewId('index.php?display=true&module=visa&page=update_visaPage',res_id_master, $('coll_id').value);
+				}
                 eval(response.exec_js);
             } else {
                 alert(response.error);

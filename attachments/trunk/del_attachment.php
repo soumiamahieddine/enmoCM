@@ -83,19 +83,44 @@ if ($stmt->rowCount() > 0) {
 }
 ?>
 <script type="text/javascript">
-    var eleframe1 =  window.top.document.getElementsByName('list_attach');
-    var nb_attach = '<?php functions::xecho($new_nb_attach);?>';
-    <?php if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') { ?>
-        eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf,print_folder&fromDetail=attachments';?>";
-        window.parent.top.document.getElementById('nb_attach').innerHTML = " ("+nb_attach+")";
-    <?php } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){ ?>
-        eleframe1[1].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed&fromDetail=response';?>";
-        window.parent.top.document.getElementById('answer_number').innerHTML = " ("+nb_attach+")";
-    <?php } else { ?>
-        eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder';?>";
-        window.parent.top.document.getElementById('nb_attach').innerHTML = nb_attach;
-    <?php } ?>
-
+	
+	if (window.parent.top.document.getElementById('cur_resId')){
+		function get_num_rep(res_id){
+			trig_elements = window.parent.top.document.getElementsByClassName('trig');
+			for (i=0; i<trig_elements.length; i++){
+				var id = trig_elements[i].id;
+				var splitted_id = id.split("_");
+				if (splitted_id.length == 3 && splitted_id[0] == 'ans' && splitted_id[2] == res_id) return splitted_id[1];
+			}
+			return 0;
+		}
+		
+		var res_id_doc = <?php functions::xecho($_REQUEST['id']); ?>;
+		var num_rep = get_num_rep(res_id_doc);
+		
+		if(window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc)) {
+			var tab = window.parent.top.document.getElementById('tabricatorRight');
+			tab.removeChild(window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc));
+		}
+		if(window.parent.top.document.getElementById('content_'+num_rep+'_'+res_id_doc)) {
+			var tab = window.parent.top.document.getElementById('tabricatorRight');
+			tab.removeChild(window.parent.top.document.getElementById('content_'+num_rep+'_'+res_id_doc));
+		}
+		
+	}
+	
+	var eleframe1 =  window.top.document.getElementsByName('list_attach');
+	var nb_attach = '<?php functions::xecho($new_nb_attach);?>';
+	<?php if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') { ?>
+		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf,print_folder&fromDetail=attachments';?>";
+		window.parent.top.document.getElementById('nb_attach').innerHTML = " ("+nb_attach+")";
+	<?php } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){ ?>
+		eleframe1[1].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed&fromDetail=response';?>";
+		window.parent.top.document.getElementById('answer_number').innerHTML = " ("+nb_attach+")";
+	<?php } else { ?>
+		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder';?>";
+		window.parent.top.document.getElementById('nb_attach').innerHTML = nb_attach;
+	<?php } ?>
     // window.parent.top.document.getElementById('nb_attach').innerHTML = nb_attach;
 
 </script>
