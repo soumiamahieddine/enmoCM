@@ -1427,34 +1427,41 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
         $content .= '<br/>';   
     }
         $content .= '<p class="buttons">';
-            $content .= '<input type="button" value="';
+                if (isset($_REQUEST['id'])) {
+                    $content .= '<input type="button" value="';
+                    $content .= _EDIT_MODEL;
+                    $content .= '" name="edit" id="edit" class="button" onclick="window.open(\''
+                        . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentUpVersion&objectId='.$_REQUEST['id'].'&objectTable=res_view_attachments&resMaster='.$_SESSION['doc_id']
+                        .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
+                } /*else {
+                                        $content .= '" name="edit" id="edit" style="display:none" class="button" '
+                                                    .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
+                                                    .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
+                                    }*/
+
+                $content .= '&nbsp;';
+                $content .= '&nbsp;';
+                $content .= '<input type="button" value="';
                 $content .=  _VALIDATE;
                 if (isset($_REQUEST['id'])) {
                     $content .= '" name="edit" id="edit" class="button" onclick="ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;
                 } else {
-                    $content .= '" name="add" id="add" class="button" onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;                   
+                    $content .= '" name="add" id="add" class="button" onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;
                 }
-
                 $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\')"/>';
-                $content .= '&nbsp;';
-            $content .= '<input type="button" value="';
-                $content .=  _CANCEL;
-                $content .= '" name="cancel" class="button"  onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');destroyModal(\'form_attachments\');"/>';
+
                 $content .= '&nbsp;';
                 $content .= '&nbsp;';
                 $content .= '<label>&nbsp;</label>';
-                if (isset($_REQUEST['id'])) {
-                        $content .= '<input type="button" value="';
-                        $content .= _EDIT_MODEL;
-                        $content .= '" name="edit" id="edit" class="button" onclick="window.open(\''
-                                        . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentUpVersion&objectId='.$_REQUEST['id'].'&objectTable=res_view_attachments&resMaster='.$_SESSION['doc_id']
-                                        .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
-                    } /*else {
-                        $content .= '" name="edit" id="edit" style="display:none" class="button" '
-                                    .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
-                                    .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';            
-                    }*/
-        
+
+                $content .= '<input type="button" value="';
+                $content .=  _CANCEL;
+                $content .= '" name="cancel" class="button"  onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');destroyModal(\'form_attachments\');"/>';
+
+
+
+
+
         $content .= '</p>';
         $content .= '&nbsp;';
         $content .= '&nbsp;';
