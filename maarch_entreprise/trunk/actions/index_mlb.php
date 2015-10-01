@@ -186,8 +186,8 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     }
     $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
         . " on status_id = id "
-        . " WHERE basket_id= ? and group_id = ? and action_id = ?";
-    $stmt = $db->query($query, array($owner_basket_id, $owner_usr_grp, $actionId));
+        . " WHERE basket_id= ? and (group_id = ? OR group_id in (select group_id from user_baskets_secondary where user_id = ? and basket_id = ?)) and action_id = ?";
+    $stmt = $db->query($query, array($owner_basket_id, $owner_usr_grp, $_SESSION['user']['UserId'], $owner_basket_id, $actionId));
 
     if($stmt->rowCount() > 0) {
         while($status = $stmt->fetchObject()) {
