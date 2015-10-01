@@ -965,7 +965,8 @@ if (!defined("_DELETED_CONTACT_TYPE")) define("_DELETED_CONTACT_TYPE","Type de c
 if (!defined("_WARNING_MESSAGE_DEL_CONTACT_TYPE")) define("_WARNING_MESSAGE_DEL_CONTACT_TYPE","Avertissement :<br> La suppression d'un type de contact entraine la réaffectation des contacts à un nouveau type de contact.");
 if (!defined("_CONTACT_TYPE_REAFFECT")) define("_CONTACT_TYPE_REAFFECT","Réaffectation des contacts");
 if (!defined("_ALL")) define("_ALL","Tous");
-if (!defined("_CONTACT_ALREADY_CREATED")) define("_CONTACT_ALREADY_CREATED","Contacts déjà existants (pour information)");
+if (!defined("_CONTACT_ALREADY_CREATED")) define("_CONTACT_ALREADY_CREATED","Contacts déjà existants");
+if (!defined("_CONTACT_ALREADY_CREATED_INFORMATION")) define("_CONTACT_ALREADY_CREATED_INFORMATION","(pour information)");
 
 if (!defined("_CONTACT_PURPOSES_LIST")) define("_CONTACT_PURPOSES_LIST","Liste des dénominations");
 if (!defined("_DESC_CONTACT_PURPOSES")) define("_DESC_CONTACT_PURPOSES","Dénomination");

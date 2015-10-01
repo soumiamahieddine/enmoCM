@@ -247,6 +247,8 @@ if (!defined('_CONTACT_NAME')) define( '_CONTACT_NAME', 'Invoice contact');
 if (!defined('_CONTACT_OWNER_COMMENT')) define('_CONTACT_OWNER_COMMENT', 'Leave this field empty to make this contact public.');
 if (!defined('_CONTACT_REAFFECT'))  define('_CONTACT_REAFFECT', 'Re-attribute documents');
 if (!defined('_CONTACT_TYPE')) define( '_CONTACT_TYPE', 'Contact type');
+if (!defined("_CONTACT_ALREADY_CREATED")) define("_CONTACT_ALREADY_CREATED","Contacts already created");
+if (!defined("_CONTACT_ALREADY_CREATED_INFORMATION")) define("_CONTACT_ALREADY_CREATED_INFORMATION","(for information)");
 if (!defined('_CONTAINER'))  define('_CONTAINER', 'A Container');
 if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Container max number');
 if (!defined('_CONTINUE')) define('_CONTINUE', 'Continue');
