@@ -137,7 +137,7 @@ try {
 
     $GLOBALS['logger']->write('Select incoming mails created from last ' . $GLOBALS['FromDate'], 'INFO');
     $querySelectedFile = "SELECT *  
-                        FROM " . $GLOBALS['view'] . " WHERE creation_date > current_timestamp - interval '".$GLOBALS['FromDate']."' and category_id = 'incoming' and status <> 'DEL' ORDER BY creation_date";
+                        FROM " . $GLOBALS['view'] . " WHERE creation_date > current_timestamp - interval '".$GLOBALS['FromDate']."' and category_id = 'incoming' and status <> 'DEL' and status <> 'NUM' ORDER BY creation_date";
     $stmt = Bt_doQuery(
         $GLOBALS['db'], 
         $querySelectedFile
