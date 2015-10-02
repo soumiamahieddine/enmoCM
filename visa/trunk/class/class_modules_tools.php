@@ -802,6 +802,26 @@ class visa extends Database
 				. '></input>' . $joined_files[$i]['viewLink'] . '</td></tr>';	
         }
 		
+		// Fiche de circulation
+		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'record_traffic');
+		if (count ($joined_files) > 0)
+		$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['record_traffic'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
+		for($i=0; $i < count($joined_files); $i++) {
+            //Get data
+            $id_doc = $joined_files[$i]['id']; 
+            $description = $joined_files[$i]['label'];
+            $format = $joined_files[$i]['format'];
+            $contact = $users_tools->get_user($joined_files[$i]['typist']);
+            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
+            $creation_date = $request->dateformat($dateFormat[0]);
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+			//Show data
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
+				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
+				. $id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
+				. '></input>' . $joined_files[$i]['viewLink'] . '</td></tr>';	
+        }
+		
 		// PROJETS DE REPONSE
 		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'response_project');
 		if (count ($joined_files) > 0)
