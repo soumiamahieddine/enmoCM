@@ -347,9 +347,6 @@ function loadNewId(path_update,newId, collId){
 	
 	
 	
-	//Modification de l'affichage du document
-	//$('viewframevalidDoc').setAttribute('src','index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='+newId+'&coll_id='+collId);
-	
 	//Modification des autres zones
 	new Ajax.Request(path_update,
 	{
@@ -366,7 +363,6 @@ function loadNewId(path_update,newId, collId){
 				if (response.status == 1){ //page de visa
 					$('tabricatorLeft').innerHTML = response.left_html;
 					$('tabricatorRight').innerHTML = response.right_html;
-					//console.log("Modification bouton action");
 					$("send_action").setAttribute('onclick',response.valid_button);
 					
 					updateFunctionModifRep(response.id_rep, 1, response.is_vers_rep);
@@ -377,22 +373,13 @@ function loadNewId(path_update,newId, collId){
 				}
 				
 				if (response.status == 2){ //page préparation circuit
-					/*$('page_avancement').innerHTML = response.avancement;
-					$('onglet_notes').innerHTML = response.notes_dt;
-					$('page_notes').innerHTML = response.notes_dd;*/
 					$('tabricatorRight').innerHTML = response.right_html;
-					//console.log("'"+response.valid_button+"'");
 					$("send_action").setAttribute('onclick',response.valid_button);
 					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
 					//console.log("MAJ OK");
 				}
 				
 				if (response.status == 3){ //page envoi mail
-					/*$('page_avancement').innerHTML = response.avancement;
-					$('onglet_notes').innerHTML = response.notes_dt;
-					$('page_notes').innerHTML = response.notes_dd;
-					$('onglet_pj').innerHTML = response.pj_dt;
-					$('page_pj').innerHTML = response.pj_dd;*/
 					$('tabricatorRight').innerHTML = response.right_html;
 					$("send_action").setAttribute('onclick',response.valid_button);
 					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
@@ -401,14 +388,7 @@ function loadNewId(path_update,newId, collId){
 				}
 				
 				if (response.status == 4){ //page impression dossier
-					/*$('page_avancement').innerHTML = response.avancement;
-					$('onglet_notes').innerHTML = response.notes_dt;
-					$('page_notes').innerHTML = response.notes_dd;
-					$('onglet_pj').innerHTML = response.pj_dt;
-					$('page_pj').innerHTML = response.pj_dd;*/
-					//console.log(response.right_html);
 					$('tabricatorRight').innerHTML = response.right_html;
-					//console.log("'"+response.valid_button+"'");
 					$("send_action").setAttribute('onclick',response.valid_button);
 					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
 					//console.log("MAJ OK");

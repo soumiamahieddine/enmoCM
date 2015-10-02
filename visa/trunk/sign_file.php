@@ -35,7 +35,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
 //echo "1";
         $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id from "
             . $tableName 
-            . " where (attachment_type = ? or attachment_type = ?) and res_id_version = ?", array('response_project', 'outgoing_mail', $objectId));
+            . " where (attachment_type = ? or attachment_type = ? or attachment_type = ?) and res_id_version = ?", array('response_project', 'outgoing_mail', 'waybill', $objectId));
     } elseif (isset($_REQUEST['isOutgoing'])) {
 //echo "2";
         $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id from " 
@@ -46,7 +46,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
     } else {
 //echo "3";
 //exit;
-        $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id from ".$tableName." where attachment_type = ? and res_id = ?", array('response_project', $objectId));
+        $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id from ".$tableName." where (attachment_type = ? or attachment_type = ?) and res_id = ?", array('response_project','waybill', $objectId));
     }
 //exit;
 	

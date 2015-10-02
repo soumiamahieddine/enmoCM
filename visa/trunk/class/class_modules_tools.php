@@ -137,7 +137,7 @@ class visa extends Database
 		$res = $stmt->fetchObject();
 		$docserver_path = $res->path_template;
 		
-		$stmt = $db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response','outgoing_mail') order by creation_date asc", array($res_id));
+		$stmt = $db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response','outgoing_mail','waybill') order by creation_date asc", array($res_id));
 
 		$array_reponses = array();
 		$cpt_rep = 0;
