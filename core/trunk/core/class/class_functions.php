@@ -725,7 +725,7 @@ class functions
     {
         $conn = new Database();
 
-        $stmt = $conn->query("select * from ".$_SESSION['tablename']['users']." where user_id = ?", array($id));
+        $stmt = $conn->query("SELECT * FROM ".$_SESSION['tablename']['users']." WHERE user_id = ?", array($id));
         if($stmt->rowCount() == 0)
         {
             return array("UserId" => "",
@@ -733,18 +733,38 @@ class functions
                 "LastName" => "",
                 "Phone" => "",
                 "Mail" => "",
-                "department" => ""
+                "department" => "",
+                "thumbprint" => "",
+                "pathToSignature" => ""
             );
         }
         else
         {
             $line = $stmt->fetchObject();
+
+            $query = "SELECT path_template FROM " . _DOCSERVERS_TABLE_NAME . " WHERE docserver_id = 'TEMPLATES'";
+            $stmt2 = $conn->query($query);
+            $resDs = $stmt2->fetchObject();
+            $pathToDs = $resDs->path_template;
+            if ($line->signature_file_name <> "") {
+                $_SESSION['user']['pathToSignature'] = $pathToDs . str_replace(
+                        "#", 
+                        DIRECTORY_SEPARATOR, 
+                        $line->signature_path
+                    )
+                    . $line->signature_file_name;
+            } else {
+                $_SESSION['user']['pathToSignature'] = "";
+            }
+
             return array("UserId" => $line->user_id,
                 "FirstName" => $line->firstname,
                 "LastName" => $line->lastname,
                 "Phone" => $line->phone,
                 "Mail" => $line->mail ,
-                "department" => $line->department
+                "department" => $line->department,
+                "thumbprint" => $line->thumbprint,
+                "pathToSignature" => $_SESSION['user']['pathToSignature']
             );
         }
     }
