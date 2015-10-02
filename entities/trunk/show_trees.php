@@ -13,6 +13,7 @@ $core_tools->load_header();
 
 <body>
 <?php
+
 if (count($_SESSION['tree_entities']) < 1) {
     echo _NO_DEFINED_TREES;
 } else {
@@ -31,7 +32,7 @@ if (count($_SESSION['tree_entities']) < 1) {
                 $listOfMyEntities = implode(',', $my_tab_entities_id);
                 $stmt = $db->query(
                     "select entity_id from "
-                    . ENT_ENTITIES . " where entity_id not in (?) and enabled= 'Y' order by entity_id",array($listOfMyEntities)
+                    . ENT_ENTITIES . " where entity_id not in (" . $listOfMyEntities .") and enabled= 'Y' order by entity_id"
                 );
                 //$ent->show();
                 while ($res = $stmt->fetchObject()) {
@@ -120,7 +121,7 @@ if (count($_SESSION['tree_entities']) < 1) {
         <script type="text/javascript">
             function funcOpen (branch, response) {
                 // Ici tu peux traiter le retour et retourner true si
-                // tu veux insérer les enfants, false si tu veux pas
+                // tu veux insï¿½rer les enfants, false si tu veux pas
                 return true;
             }
 
