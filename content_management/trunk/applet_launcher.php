@@ -223,11 +223,7 @@ else if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
         <param name="mayscript" value="mayscript" />
     </applet>
 </div>
-<p class="buttons">
-    <input type="button" name="cancel" value="<?php 
-        echo _CLOSE;
-        ?>" class="button" onclick="destroyModal('CMApplet');"/>
-</p>
+
 <?php
 }
 
