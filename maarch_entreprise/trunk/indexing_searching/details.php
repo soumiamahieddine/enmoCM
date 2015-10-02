@@ -1447,7 +1447,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     if ($nbr_notes == 0)
                         $nbr_notes = ' (<span id="nb_note">'.$nbr_notes.'</span>)';
                     else
-                        $nbr_notes = ' <span id="nb_note" style="color: red;font-weight: bold;">('.$nbr_notes.')</span>';
+                        $nbr_notes = ' <span id="nb_note" style="color: red;">('.$nbr_notes.')</span>';
                     //Notes iframe
                     ?>
                     <dt><?php echo _NOTES.$nbr_notes;?></dt>
