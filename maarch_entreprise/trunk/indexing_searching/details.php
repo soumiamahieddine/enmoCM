@@ -1444,7 +1444,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     //Count notes
                     $nbr_notes = $notes_tools->countUserNotes($s_id, $coll_id);
                     // if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
-                    $nbr_notes = ' (<span id="nb_note">'.$nbr_notes.'</span>)';
+                    if ($nbr_notes == 0)
+                        $nbr_notes = ' (<span id="nb_note">'.$nbr_notes.'</span>)';
+                    else
+                        $nbr_notes = ' <span id="nb_note" style="color: red;font-weight: bold;">('.$nbr_notes.')</span>';
                     //Notes iframe
                     ?>
                     <dt><?php echo _NOTES.$nbr_notes;?></dt>

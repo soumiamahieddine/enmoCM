@@ -931,12 +931,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $notes_tools    = new notes();
             //Count notes
             $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
-            $nbr_notes = ' (<span id="nb_note">'.$nbr_notes.'</span>)';
+            if ($nbr_notes == 0)
+                $nbr_notes = ' (<span id="nb_note">'.$nbr_notes.'</span>)';
+            else
+                $nbr_notes = ' <span id="nb_note" style="color: red;font-weight: bold;">('.$nbr_notes.')</span>';
             $frm_str .= '<span onclick="hideOtherDiv(\'notes_div\');new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>'
-                . '&nbsp;<small>' . _NOTES . $nbr_notes . '</small>';
+                . '&nbsp;<small style="font-size: 10px">' . _NOTES . $nbr_notes . '</small>';
             $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
