@@ -451,7 +451,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '</label></td>';
     $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input name="doc_date" type="text" '
-            . 'id="doc_date" value="" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');"  onclick="clear_error(\'frm_error_'
+            . 'id="doc_date" value="" placeholder="JJ-MM-AAAA" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');"  onclick="clear_error(\'frm_error_'
             . $actionId . '\');showCalender(this);" /></td>';
     $frmStr .= '<td><span class="red_asterisk" id="doc_date_mandatory" '
             . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
