@@ -53,4 +53,17 @@ $core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_users.php';
 $users = new class_users();
+
+if ($_GET['reinit']) {
+	$userInfos = functions::infouser($_SESSION['user']['UserId']);
+	$_SESSION['user']['UserId'] = $userInfos['UserId'];
+	$_SESSION['user']['FirstName'] = $userInfos['FirstName'];
+	$_SESSION['user']['LastName'] = $userInfos['LastName'];
+	$_SESSION['user']['Phone'] = $userInfos['Phone'];
+	$_SESSION['user']['Mail'] = $userInfos['Mail'];
+	$_SESSION['user']['department'] = $userInfos['department'];
+	$_SESSION['user']['thumbprint'] = $userInfos['thumbprint'];
+	$_SESSION['user']['pathToSignature'] = $userInfos['pathToSignature'];
+}
+
 $users->change_info_user();
