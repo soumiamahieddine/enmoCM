@@ -124,7 +124,8 @@ $pdf->SetTextColor($color['color1'],$color['color2'],$color['color3']);
 
 $pdf->SetFont($font['fontName'], '', $font['fontSize']);
 //$stringWatermark = substr($watermark, 0, 11);
-$stringWatermark = $watermark;
+//$stringWatermark = $watermark;
+$stringWatermark = explode(',', $watermark);
 // Load the base PDF into template
 $nbPages = $pdf->setSourceFile($filePathOnTmp);
 //For each pages add the watermark
@@ -137,12 +138,15 @@ for ($cpt=1;$cpt<=$nbPages;$cpt++) {
     //Set opacity
     $pdf->SetAlpha($position['opacity']);
     //Add Watermark
-    $pdf->TextWithRotation(
-        $position['X'], 
-        $position['Y'], 
-        $stringWatermark, 
-        $position['angle']
-    );
+     for ($i=0; $i< 5; $i++) {
+		$position['Y'] = $position['Y']+10;
+		$pdf->TextWithRotation(
+			$position['X'], 
+			$position['Y'], 
+			$stringWatermark[$i], 
+			$position['angle']
+		);
+	}
 }
 $pdf->Output($filePathOnTmpResult, "F");
 
