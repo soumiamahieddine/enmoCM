@@ -1188,6 +1188,8 @@ function process_category_check($catId, $values)
         } else if ($processLimitDateUseNo == 'no') {
             $_SESSION['store_process_limit_date'] = "ko";
         }
+       $processLimitDate = new datetime($processLimitDate);
+       $processLimitDate = date_add($processLimitDate,date_interval_create_from_date_string('23 hours + 59 minutes + 59 seconds'));
     }
 
     if (isset($_ENV['categories'][$catId]['priority'])) {
@@ -1613,12 +1615,17 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         $processLimitDate = get_value_fields(
             $formValues, 'process_limit_date'
         );
+        $processLimitDate = new datetime($processLimitDate);
+        $processLimitDate = date_add($processLimitDate,date_interval_create_from_date_string('23 hours + 59 minutes + 59 seconds'));
+        
+        $processLimitDate = (array) $processLimitDate;
+
         if ($_ENV['categories'][$catId]['other_cases']['process_limit_date']['table'] == 'res') {
             array_push(
                 $_SESSION['data'],
                 array(
                     'column' => 'process_limit_date',
-                    'value' => functions::format_date_db($processLimitDate),
+                    'value' => functions::format_date_db($processLimitDate['date'],'true','','true'),
                     'type' => 'date',
                 )
             );
@@ -1627,7 +1634,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                 $queryExtFields .= 'process_limit_date,';
                 $queryExtValues .= " ? ,";
                 $arrayPDO = array_merge($arrayPDO, array(functions::format_date_db(
-                    $processLimitDate
+                    $processLimitDate['date'],'true','','true'
                 )));
             }
             $_SESSION['store_process_limit_date'] = "";
