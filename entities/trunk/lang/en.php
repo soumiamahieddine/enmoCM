@@ -310,3 +310,5 @@ if (!defined('_ENTITIES_PRINT_SEP_MLB'))
     define('_ENTITIES_PRINT_SEP_MLB', 'Print entities separator sheets');
 if (!defined('_SELECT_BARCODE_TYPE'))
     define('_SELECT_BARCODE_TYPE', 'Select the barcode type');
+if (!defined("_ADD_COPY_IN_INDEXING"))
+    define("_ADD_COPY_IN_INDEXING", "Add person just in copy in indexing page");

@@ -28,7 +28,7 @@ $_SESSION[$origin]['difflist_type'] = $diffList->get_difflist_type($objectType);
 if ($objectId <> '') {
     $_SESSION[$origin]['difflist_object']['object_id'] = $objectId;
     if ($objectType == 'entity_id') {
-        $query = "select entity_label from entities where entity_id = ?";
+        $query = "SELECT entity_label FROM entities WHERE entity_id = ?";
         $stmt = $db->query($query,array($objectId));
         $res = $stmt->fetchObject();
         if ($res->entity_label <> '') {
@@ -58,6 +58,10 @@ ob_end_clean();
 
 $labelButton = _MODIFY_LIST;
 $arg = '&mode=up';
+
+if( $core->test_service('add_copy_in_indexing', 'entities', false) && $origin == 'indexing' ){
+    $onlyCC = true;
+}
 
 if ($onlyCC) {
     $arg .= '&only_cc';

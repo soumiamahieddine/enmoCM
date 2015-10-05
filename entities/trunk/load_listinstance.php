@@ -56,7 +56,8 @@ if (empty($_REQUEST['collId']) && $_REQUEST['load_from_model'] == 'true') {
 $onlyCC = false;
 
 
-if( $core->test_service('add_copy_in_process', 'entities', false) && $_REQUEST['origin'] == 'process'){
+if( ($core->test_service('add_copy_in_process', 'entities', false) && $_REQUEST['origin'] == 'process') 
+    || ($core->test_service('add_copy_in_indexing', 'entities', false) && $_REQUEST['origin'] == 'indexing') ){
     $onlyCC = true;
 }
 
@@ -79,7 +80,7 @@ if ($objectId <> '') {
     $_SESSION[$origin]['difflist_object']['object_id'] = $objectId;
     if ($objectType == 'entity_id') {
         
-        $query = "select entity_label from entities where entity_id = ?";
+        $query = "SELECT entity_label FROM entities WHERE entity_id = ?";
         $stmt = $db->query($query,array($objectId));
         $res = $stmt->fetchObject();
         if ($res->entity_label <> '') {
