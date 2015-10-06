@@ -87,11 +87,11 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	$folders_system_id=$row['folders_system_id'];
 	$html.="<li id='".$row['folders_system_id']."' class='folder'>";
-	$html.="<span onclick='get_folders(".functions::xecho($folders_system_id).")'>"
-		.functions::xecho($row['folder_name'])
-		."</span><b>(".functions::xecho($row3['total'])
-		." sous-dossier(s), <span onclick='get_folder_docs(".functions::xecho($folders_system_id).")'>"
-		.functions::xecho($row2['total'])." document(s)</span>)</b>";
+	$html.="<span onclick='get_folders(".functions::xssafe($folders_system_id).")'>"
+		.functions::xssafe($row['folder_name'])
+		."</span><b>(".functions::xssafe($row3['total'])
+		." sous-dossier(s), <span onclick='get_folder_docs(".functions::xssafe($folders_system_id).")'>"
+		.functions::xssafe($row2['total'])." document(s)</span>)</b>";
 	$html.="</li>";
 }
 $html.="</ul>";
