@@ -387,28 +387,31 @@ $_SESSION['origin'] = "search_folder_tree";
                     onSuccess: function(answer){
                         docs = JSON.parse(answer.responseText);
 
-                        for (var i = 0; i <= docs.length; i++) {
-
-                            level=docs[i].folder_level*10;
-                            level_docs=level+10;
-                            var style='margin-left:'+level+'px;';
-                            var style_docs='margin-left:'+level_docs+'px;';
-                            $(''+folders_system_id).innerHTML +='<ul class="doc" style="margin-top:10px;'+style+'"><li><b>'+docs[i].doctypes_first_level_label+'</b></li><li style="'+style+';margin-bottom:10px;"><b>'+docs[i].doctypes_second_level_label+'</b></li><a style="'+style_docs+'" onclick=\'updateContent("index.php?dir=indexing_searching&page=little_details_invoices&display=true&value='+docs[i].res_id+'", "docView");\'>('+docs[i].res_id+') '+docs[i].type_label+' - '+docs[i].subject+'</ul>';
-
-                            $(''+folders_system_id).addClassName('mt_fopened');
-                            $(''+folders_system_id).removeClassName('mt_fclosed');
-                            $(''+folders_system_id).addClassName('link_open');
-                            $(''+folders_system_id).style.listStyleImage= 'url(static.php?filename=folderopen.gif)';
-                        };
+                        if (docs != '') {
+                            for (var subarray in docs) {
+                                $(''+folders_system_id).innerHTML +='<ul class="doc" style="margin-top:10px;margin-left:30px;"><li><b>'+subarray+'</b></li>';
+                                for (var mail in docs[subarray]) {
+                                    $(''+folders_system_id).innerHTML +='<li style="margin-bottom:10px;margin-top:10px;margin-left:50px;"><b>'+mail+'</b></li>';
+                                    for (var i = 0; i < docs[subarray][mail].length; i++) {
+                                        $(''+folders_system_id).innerHTML +='<li style="margin-bottom:5px;margin-left:80px;"><a onclick=\'updateContent("index.php?dir=indexing_searching&page=little_details_invoices&display=true&value='+docs[subarray][mail][i].res_id+'", "docView");\'>('+docs[subarray][mail][i].res_id+') '+docs[subarray][mail][i].type_label+' - '+docs[subarray][mail][i].subject+'</li>';
+                                        $(''+folders_system_id).addClassName('mt_fopened');
+                                        $(''+folders_system_id).removeClassName('mt_fclosed');
+                                        $(''+folders_system_id).addClassName('link_open');
+                                        $(''+folders_system_id).style.listStyleImage= 'url(static.php?filename=folderopen.gif)';
+                                    }
+                                }
+                                $(''+folders_system_id).innerHTML +='</ul>';
+                            }
+                        }
                         
                     },
                     onFailure: function(){
                         $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
                        }
                 });
+            }
         }
 
-        }
 </script>
 <script type="text/javascript" src="<?php
 echo $_SESSION['config']['businessappurl'] . 'tools/'
