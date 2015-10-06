@@ -49,6 +49,8 @@ while ($state <> 'END') {
                 $pass = (string)$mailerParams->smtp_password
                 );
             $GLOBALS['logger']->write("Sending e-mail to : " . $email->recipient, 'INFO');
+            //--> Set the return path
+            $GLOBALS['mailer']->setReturnPath($email->sender);
             $GLOBALS['mailer']->setFrom($email->sender);
             $GLOBALS['logger']->write("Subject : " . $email->subject, 'INFO');
             $GLOBALS['mailer']->setSubject($email->subject);
