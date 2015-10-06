@@ -807,14 +807,13 @@ class functions
                 $day = substr($var[2], 0, 2);
                 $hours = $var[3];
 
-                
             }
             if ($year <= "1900") {
                 return '';
             } else {
                 if ($databasetype == "SQLSERVER") {
                     if ($withTimeZone) {
-                        return  $day . "-" . $month . "-" . $year . " &nbsp;  " . $hours;
+                        return  $day . "-" . $month . "-" . $year . " " . $hours;
                     }else{
                         return  $day . "-" . $month . "-" . $year;
                     }
@@ -822,13 +821,13 @@ class functions
                 } else if ($databasetype == "POSTGRESQL") {
                     if ($_SESSION['config']['lang'] == "fr") {
                         if ($withTimeZone) {
-                            return $day . "-" . $month . "-" . $year . "  &nbsp; " . $hours;
+                            return $day . "-" . $month . "-" . $year . " " . $hours;
                         }else{
                             return $day . "-" . $month . "-" . $year;
                         }
                     } else {
                         if ($withTimeZone) {
-                            return $year . "-" . $month . "-" . $day . "  &nbsp; " . $hours;
+                            return $year . "-" . $month . "-" . $day . " " . $hours;
                         }else{
                             return $year . "-" . $month . "-" . $day;
                         }
