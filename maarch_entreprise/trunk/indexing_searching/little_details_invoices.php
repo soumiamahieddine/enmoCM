@@ -295,7 +295,7 @@ if (! empty($_SESSION['error']) ) {
          <hr/>
 
          <p>
-            <label><?php echo _NUM_GED." : ";?></label>
+            <label><?php echo _NUM_GED." ";?></label>
             <input type="text" name="resId" id="resId" value="<?php functions::xecho($resId);?>" class="readonly" readonly="readonly" />
          </p>
          <?php
@@ -322,21 +322,15 @@ if (! empty($_SESSION['error']) ) {
                         . "index.php?page=show_folder&module=folder&id="
                         . $folderId . "'>";
                     ?>
-                     <img alt="<?php
-                     functions::xecho($data[$key]['label']);
-                     ?>" title="<?php
-                     functions::xecho($data[$key]['label']);
-                     ?>" src="<?php functions::xecho($data[$key]['img']);?>"  /></a>
+                     <i class="fa fa-<?php functions::xecho($data[$key]['img']);?>"></i></a>
                      <?php
                 } else {
                     ?>
-                    <img alt="<?php functions::xecho($data[$key]['label']);?>" title="<?php
-                    functions::xecho($data[$key]['label']);
-                    ?>" src="<?php functions::xecho($data[$key]['img']);?>" /></a>
+                    <i class="fa fa-<?php functions::xecho($data[$key]['img']);?>"></i></a>
                     <?php
                 }
             }
-                functions::xecho($data[$key]['label']);?> :</label><?php
+                functions::xecho($data[$key]['label']);?> </label><?php
             if (! isset($data[$key]['readonly'])
                 || $data[$key]['readonly'] == true
             ) {
