@@ -716,6 +716,17 @@ WITH (
   OIDS=FALSE
 );
 
+CREATE TABLE res_mark_as_read
+(
+  coll_id character varying(32),
+  res_id bigint,
+  user_id character varying(32),
+  basket_id character varying(32)
+)
+WITH (
+  OIDS=FALSE
+);
+
 CREATE TABLE groupbasket
 (
   group_id character varying(32) NOT NULL,

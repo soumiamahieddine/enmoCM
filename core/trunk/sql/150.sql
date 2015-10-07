@@ -178,6 +178,18 @@ CREATE TABLE user_baskets_secondary
   CONSTRAINT user_baskets_secondary_pkey PRIMARY KEY (system_id)
 );
 
+-- ************************************************************************* --
+--                                VIEWED MAIL                                --
+-- ************************************************************************* --
+
+DROP TABLE IF EXISTS res_mark_as_read;
+CREATE TABLE res_mark_as_read
+(
+  coll_id character varying(32),
+  res_id bigint,
+  user_id character varying(32),
+  basket_id character varying(32)
+) 
 
 -- ************************************************************************* --
 --                               NEW COLUMNS IN EXTENSIONS TABLE             --
