@@ -232,6 +232,8 @@ if (!defined("_SYSTEM"))
     define("_SYSTEM", "Système");
 if (!defined("_ENTITY"))
     define("_ENTITY", "Entité");
+if (!defined("_DEST_ENTITY"))
+    define("_DEST_ENTITY", "Entité destinatrice");
 if (!defined("_NOTIFICATIONS_CONTACT_DIFF_TYPE"))
     define("_NOTIFICATIONS_CONTACT_DIFF_TYPE", "Envoi à l'expéditeur du courrier");
 if (!defined("_SCHEDULE_NOTIFICATIONS"))

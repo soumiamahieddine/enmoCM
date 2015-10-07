@@ -17,6 +17,14 @@
         <use_attachment>true</use_attachment>
     </diffusion_type>
     <diffusion_type>
+        <id>dest_entity</id>
+        <label>_DEST_ENTITY</label>
+        <script>modules/notifications/diffusion_types/dest_entity.php</script>
+        <use_email>true</use_email>
+        <use_rss>false</use_rss>
+        <use_attachment>false</use_attachment>
+    </diffusion_type>
+    <diffusion_type>
         <id>user</id>
         <label>_USER</label>
         <script>modules/notifications/diffusion_types/user.php</script>

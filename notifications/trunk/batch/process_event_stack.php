@@ -67,7 +67,6 @@ while ($state <> 'END') {
             // Diffusion type specific recipients
             $recipients = array();
             $recipients = $diffusion_type_controler->getRecipients($notification, $event);
-            
             // Diffusion type specific res_id
             $logger->write("Getting document ids using diffusion type '" .$notification->diffusion_type . "'", 'INFO');
             $res_id = false;
@@ -81,42 +80,67 @@ while ($state <> 'END') {
             $nbRecipients = count($recipients);
             
             $logger->write($nbRecipients .' recipients found, checking active and absences', 'INFO');
-            for($i=0; $i<$nbRecipients; $i++) {
-                $recipient = $recipients[$i];
-                $user_id = $recipient->user_id;              
-                $logger->write('Recipient ' . $user_id, 'INFO');
-                if($recipient->enabled == 'N' || $recipient->status == 'DEL') {
-                    $logger->write($user_id .' is disabled or deleted, this notification will not sent', 'INFO');
-                    unset($recipients[$i]);
-                    continue;
-                }
-                
-                if($recipient->status == 'ABS') {
-                    $logger->write($user_id .' is absent, routing to replacent', 'INFO');
-                    unset($recipients[$i]);
-                    $query = "SELECT us.* FROM users us"
-                        . " JOIN user_abs abs ON us.user_id = abs.new_user "
-                        . " WHERE abs.user_abs = ? AND us.enabled='Y'";
-                    $dbAbs = new Database();
-                    $stmt = $dbAbs->query($query, array($user_id));
-                    if($stmt->rowCount() > 0) {
-                        $recipient = $dbAbs->fetchObject($user_id);
-                        $user_id = $recipient->user_id;
-                        $logger->write($user_id .' is the replacent', 'INFO');
-                        $recipients[] = $recipient;
-                    } else {
-                        $logger->write('No replacent found (probably disabled)', 'INFO');
+
+            if ($notification->diffusion_type === 'dest_entity') {
+
+                for($i=0; $i<$nbRecipients; $i++) {
+                    $recipient = $recipients[$i];
+                    $entity_id = $recipient->entity_id;
+                    $logger->write('Recipient entity ' . $entity_id, 'INFO');
+                    if($recipient->enabled != 'Y') {
+                        $logger->write($entity_id .' is disabled or deleted, this notification will not sent', 'INFO');
+                        unset($recipients[$i]);
                         continue;
                     }
+
+                    if(!isset($tmpNotifs[$entity_id])) {
+                        $tmpNotifs[$entity_id]['recipient'] = $recipient;
+                        $tmpNotifs[$entity_id]['attach'] = $diffusion_type_controler->getAttachFor($notification, $entity_id);
+                        $logger->write('Checking if attachment required for ' . $entity_id . ': ' . $tmpNotifs[$entity_id]['attach'], 'INFO');
+                    }
+                    $tmpNotifs[$entity_id]['events'][] = $event;
                 }
-                if(!isset($tmpNotifs[$user_id])) {
-                    $tmpNotifs[$user_id]['recipient'] = $recipient;
-                    $tmpNotifs[$user_id]['attach'] = $diffusion_type_controler->getAttachFor($notification, $user_id);
-                    $logger->write('Checking if attachment required for ' . $user_id . ': ' . $tmpNotifs[$user_id]['attach'], 'INFO');
+
+            } else {
+
+                for($i=0; $i<$nbRecipients; $i++) {
+                    $recipient = $recipients[$i];
+                    $user_id = $recipient->user_id;
+                    $logger->write('Recipient ' . $user_id, 'INFO');
+                    if($recipient->enabled == 'N' || $recipient->status == 'DEL') {
+                        $logger->write($user_id .' is disabled or deleted, this notification will not sent', 'INFO');
+                        unset($recipients[$i]);
+                        continue;
+                    }
+
+                    if($recipient->status == 'ABS') {
+                        $logger->write($user_id .' is absent, routing to replacent', 'INFO');
+                        unset($recipients[$i]);
+                        $query = "SELECT us.* FROM users us"
+                            . " JOIN user_abs abs ON us.user_id = abs.new_user "
+                            . " WHERE abs.user_abs = ? AND us.enabled='Y'";
+                        $dbAbs = new Database();
+                        $stmt = $dbAbs->query($query, array($user_id));
+                        if($stmt->rowCount() > 0) {
+                            $recipient = $dbAbs->fetchObject($user_id);
+                            $user_id = $recipient->user_id;
+                            $logger->write($user_id .' is the replacent', 'INFO');
+                            $recipients[] = $recipient;
+                        } else {
+                            $logger->write('No replacent found (probably disabled)', 'INFO');
+                            continue;
+                        }
+                    }
+                    if(!isset($tmpNotifs[$user_id])) {
+                        $tmpNotifs[$user_id]['recipient'] = $recipient;
+                        $tmpNotifs[$user_id]['attach'] = $diffusion_type_controler->getAttachFor($notification, $user_id);
+                        $logger->write('Checking if attachment required for ' . $user_id . ': ' . $tmpNotifs[$user_id]['attach'], 'INFO');
+                    }
+                    $tmpNotifs[$user_id]['events'][] = $event;
                 }
-                $tmpNotifs[$user_id]['events'][] = $event;
+
             }
-            
+
             if (count($recipients) === 0) {
                 $logger->write('No recipient found' , 'WARNING');
                 $events_controler->commitEvent($event->event_stack_sid, "INFO: no recipient found");
@@ -133,7 +157,6 @@ while ($state <> 'END') {
             break;
         }
         break;
-        
         
     /**********************************************************************/
     /*                      FILL_EMAIL_STACK                              */
@@ -268,4 +291,3 @@ Bt_logInDataBase(
 );  
 //unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);
-?>

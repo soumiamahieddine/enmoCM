@@ -71,16 +71,22 @@ case 'recipients':
 	break;
 
 case 'attach':
-	$entities = "'". str_replace(",", "','", $notification->attachfor_properties) . "'";
-	$query = "SELECT user_id" 
-		. " FROM users_entities"
-		. " WHERE entity_id in (".$entities.")"
-		. " AND user_id = ?";
+
 	$attach = false;
-	$dbAttach = new Database();
-	$stmt = $dbAttach->query($query, array($user_id));
-	if($stmt->rowCount() > 0) {
-		$attach = true;
+	if ($notification->diffusion_type === 'dest_entity') {
+		$tmp_entities = explode(',', $notification->attachfor_properties);
+		$attach = in_array($user_id, $tmp_entities);
+	} else {
+		$entities = "'". str_replace(",", "','", $notification->attachfor_properties) . "'";
+		$query = "SELECT user_id"
+			. " FROM users_entities"
+			. " WHERE entity_id in (".$entities.")"
+			. " AND user_id = ?";
+		$dbAttach = new Database();
+		$stmt = $dbAttach->query($query, array($user_id));
+		if($stmt->rowCount() > 0) {
+			$attach = true;
+		}
 	}
 	break;
 }
