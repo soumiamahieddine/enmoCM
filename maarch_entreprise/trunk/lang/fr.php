@@ -1725,3 +1725,5 @@ if (!defined("_IVS_TOO_MANY_DECIMAL_DIGITS")) define("_IVS_TOO_MANY_DECIMAL_DIGI
 //control technical params
 if (!defined("_CONTROL_PARAM_TECHNIC")) define("_CONTROL_PARAM_TECHNIC", "Contrôler les paramètres techniques");
 if (!defined("_COMPONENT")) define("_COMPONENT", "Composant");
+
+if (!defined("_MARK_AS_READ")) define("_MARK_AS_READ", "Marquer comme lu");

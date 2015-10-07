@@ -1378,3 +1378,5 @@ define("_IVS_TOO_MANY_DECIMAL_DIGITS", "Too many decimal digits");
 
 if (!defined("_CONTROL_PARAM_TECHNIC")) define("_CONTROL_PARAM_TECHNIC", "Control technical params");
 if (!defined("_COMPONENT")) define("_COMPONENT", "Component");
+
+if (!defined("_MARK_AS_READ")) define("_MARK_AS_READ", "Mark as read");
