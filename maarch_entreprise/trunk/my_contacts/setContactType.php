@@ -28,9 +28,13 @@ $db = new Database();
 if ($_POST['contact_target'] == "") {
     $_POST['contact_target'] = "corporate";
 }
+if ($_POST['can_add_contact'] == "") {
+    $stmt = $db->query("SELECT id, label FROM contact_types WHERE contact_target = ? or contact_target = 'both' or contact_target is null ORDER BY label", array($_POST['contact_target']));
+} else {
+    $stmt = $db->query("SELECT id, label FROM contact_types WHERE can_add_contact = ? AND (contact_target = ? or contact_target = 'both' or contact_target is null) ORDER BY label", array($_POST['can_add_contact'], $_POST['contact_target']));
+}
 
-$stmt = $db->query("SELECT id, label FROM contact_types WHERE contact_target = ? or contact_target = 'both' or contact_target is null ORDER BY label", array($_POST['contact_target']));
- 
+
 $frmStr = '';
 
 $frmStr .= '<option value="">' . _CHOOSE_CONTACT_TYPES . '</option>';

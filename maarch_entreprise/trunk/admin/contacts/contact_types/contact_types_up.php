@@ -43,6 +43,9 @@ if (isset($_GET['id']) && ! empty($_GET['id'])) {
 } else {
 	$_SESSION['CURRENT_ID_CONTACT_TYPE'] = '';
 	$_SESSION['CURRENT_DESC_CONTACT_TYPE'] = '';
+	$_SESSION['CURRENT_TARGET_CONTACT_TYPE'] = '';
+	$_SESSION['CURRENT_CONTACT_CREATION'] = '';
+
 }
 
 /****************Management of the location bar  ************/
@@ -75,7 +78,7 @@ $id = "";
 if (isset($_GET['id']) && ! empty($_GET['id'])) {
 	$id = $_GET['id'];
 	$stmt = $db->query(
-		"SELECT label, contact_target FROM "
+		"SELECT label, contact_target, can_add_contact FROM "
 	    . $_SESSION['tablename']['contact_types']
 	    . " WHERE id = ?", array($id)
 	);
@@ -85,6 +88,7 @@ if (isset($_GET['id']) && ! empty($_GET['id'])) {
 	$_SESSION['CURRENT_ID_CONTACT_TYPE'] = $id;
 	$_SESSION['CURRENT_DESC_CONTACT_TYPE'] = $desc;
 	$_SESSION['CURRENT_TARGET_CONTACT_TYPE'] = $res->contact_target;
+	$_SESSION['CURRENT_CONTACT_CREATION'] = $res->can_add_contact;
 }
 
 $erreur = "";
@@ -94,6 +98,7 @@ if (isset($_REQUEST['valid'])) {
 	) {
 		$desc = $_REQUEST['desc_contact_types'];
 		$contact_target = $_REQUEST['contact_target'];
+		$contact_creation = $_REQUEST['contact_creation'];
         $desc=str_replace(';', ' ', $desc);
         $desc=str_replace('--', '-', $desc);
 	    $desc = $core->wash(
@@ -135,8 +140,8 @@ if (isset($_REQUEST['valid'])) {
 						$id = $_REQUEST['ID_contact_types'];
 						$db->query(
 							"UPDATE " . $_SESSION['tablename']['contact_types']
-						    . " SET label = ?, contact_target = ? WHERE id = ?",
-						    array($desc, $contact_target, $id)
+						    . " SET label = ?, contact_target = ?, can_add_contact = ? WHERE id = ?",
+						    array($desc, $contact_target, $contact_creation, $id)
 						);
 
 						if ($_SESSION['history']['contact_types_up'] == "true") {
@@ -163,8 +168,8 @@ if (isset($_REQUEST['valid'])) {
 				$db->query(
 					"INSERT INTO "
 				    . $_SESSION['tablename']['contact_types']
-				    . " ( label, contact_target) VALUES (?, ?)",
-					array($desc, $contact_target)
+				    . " ( label, contact_target, can_add_contact) VALUES (?, ?, ?)",
+					array($desc, $contact_target, $contact_creation)
 				);
 				$stmt = $db->query(
 					"SELECT id FROM "
@@ -323,8 +328,16 @@ if ($mode == "up") {
 		   		<option value="corporate" <?php if($_SESSION['CURRENT_TARGET_CONTACT_TYPE'] == 'corporate'){?> selected="selected"<?php } ?> ><?php echo _IS_CORPORATE_PERSON;?></option>
 		   		<option value="no_corporate" <?php if($_SESSION['CURRENT_TARGET_CONTACT_TYPE'] == 'no_corporate'){?> selected="selected"<?php } ?> ><?php echo _INDIVIDUAL;?></option>
 			</select>
-	     </p>
-
+		</p>
+		<p>
+			<label>
+				<?php echo _CONTACT_TYPE_CREATION;?>
+			</label>
+			<input name="contact_creation" value="Y" type="radio"
+				   <?php if($_SESSION['CURRENT_CONTACT_CREATION'] == 'Y' || $_SESSION['CURRENT_CONTACT_CREATION'] == ''){?>checked=""<?php }?> ><?php echo _YES;?>
+			<input name="contact_creation" value="N" type="radio"
+				   <?php if($_SESSION['CURRENT_CONTACT_CREATION'] == 'N'){?>checked=""<?php }?>><?php echo _NO;?>
+		</p>
 	<p class="buttons">
 		<input type="submit" name="valid" class="button" value="<?php
 	echo _VALIDATE;

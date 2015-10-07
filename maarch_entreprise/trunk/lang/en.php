@@ -551,6 +551,7 @@ if (!defined('_IS_CORPORATE_PERSON')) define('_IS_CORPORATE_PERSON', 'Institutio
 if (!defined("_INDIVIDUAL")) define("_INDIVIDUAL", "Individual");
 if (!defined("_CONTACT_TARGET")) define("_CONTACT_TARGET", "This type is available for which contact");
 if (!defined("_CONTACT_TARGET_LIST")) define("_CONTACT_TARGET_LIST", "Target of contact type");
+if (!defined("_CONTACT_TYPE_CREATION")) define("_CONTACT_TYPE_CREATION", "Possibility to create a contact with this type");
 if (!defined('_IS_EMPTY')) define('_IS_EMPTY', 'is empty');
 if (!defined('_IS_LOGGED'))  define('_IS_LOGGED', 'Is logged');
 if (!defined('_IS_META'))  define('_IS_META', 'Is meta');

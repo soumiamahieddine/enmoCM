@@ -295,6 +295,7 @@
 
     <validationRule name="setContactType" extends="standardForm" mode="error">
       <parameter name="contact_target" type="identifier" />
+      <parameter name="can_add_contact" type="YN" />
       <parameter name="dir" type="identifier" />
     </validationRule>
 
@@ -315,6 +316,7 @@
       <parameter name="ID_contact_types" type="integer" />
       <parameter name="desc_contact_types" type="string" />
       <parameter name="contact_target" type="identifier" />
+      <parameter name="contact_creation" type="YN" />
       <parameter name="valid" type="string" />
     </validationRule>
 

@@ -1752,12 +1752,13 @@ function unlock(path_script, id, coll)
     }
 }
 
-function setContactType(mode){
+function setContactType(mode, creation){
     new Ajax.Request("index.php?dir=my_contacts&page=setContactType",
     {
         method:'post',
         parameters: {
-            contact_target : mode
+            contact_target : mode,
+            can_add_contact : creation
         },
         onSuccess: function(answer){
             $('contact_type').innerHTML = answer.responseText;
