@@ -267,7 +267,7 @@ if($mode == 'normal') {
         $status_tab = array();
         // $status_str = '';
         for($i=0; $i<count($status);$i++){
-                array_push($status_tab, "'".$status[$i]['ID']."'");
+                array_push($status_tab, $status[$i]['ID']);
         }
         // $status_str = implode(' ,', $status_tab);
         $where_tab[] = "status not in (:statustab)";
