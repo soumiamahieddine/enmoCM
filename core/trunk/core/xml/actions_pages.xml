@@ -137,6 +137,17 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
+        <ID>mark_as_read</ID>
+        <LABEL>_MARK_AS_READ</LABEL>
+        <NAME>mark_as_read</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
         <ID>confirm_folder_status</ID>
         <LABEL>_CONFIRM_FOLDER_STATUS</LABEL>
         <NAME>confirm_folder_status</NAME>
