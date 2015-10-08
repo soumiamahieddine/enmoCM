@@ -9,54 +9,60 @@ function add_this_tags(action_script, ui_script)
 	//}
 	//Allons chercher l'info du formulaire en l etat...
 	var content = $('tag_userform').value;
-	if(action_script)
-	{
 
-		new Ajax.Request(action_script,
+	if(content.length < 50) {
+		if(action_script)
 		{
-			method:'post',
-			parameters:
+
+			new Ajax.Request(action_script,
 			{
-				p_input_value : content
-				//p_res_id : res_id,
-				//p_coll_id : coll_id
-				
-			},
-		    onSuccess: function(answer){
-			eval("response = "+answer.responseText);
-				//alert(answer.responseText);
-				if(response.status == 0 )
+				method:'post',
+				parameters:
 				{
-					//load_tags(ui_script,res_id,coll_id)
-					load_tags(ui_script)
-				} else if (response.status == 1 ){
-					//var span = document.getElementById('show_tags');
-					//span.innerHTML ="<font color=\"red\">vous n avez pas les droits pour ajouter ce mot clé !</font>";
-					//alert("<?php echo _ADD_TAG; ?>");
-					if(response.value == 'fr'){
-						alert("Vous devez utiliser les mots clés existants!");
-					}else if(response.value == 'en'){
-						alert("You must use the tags exists !");
-					}
-				} else
-				{
-					if(console)
+					p_input_value : content
+					//p_res_id : res_id,
+					//p_coll_id : coll_id
+					
+				},
+			    onSuccess: function(answer){
+				eval("response = "+answer.responseText);
+					//alert(answer.responseText);
+					if(response.status == 0 )
 					{
-						console.log('Erreur Ajax');
+						//load_tags(ui_script,res_id,coll_id)
+						load_tags(ui_script)
+					} else if (response.status == 1 ){
+						//var span = document.getElementById('show_tags');
+						//span.innerHTML ="<font color=\"red\">vous n avez pas les droits pour ajouter ce mot clé !</font>";
+						//alert("<?php echo _ADD_TAG; ?>");
+						if(response.value == 'fr'){
+							alert("Vous devez utiliser les mots clés existants!");
+						}else if(response.value == 'en'){
+							alert("You must use the tags exists !");
+						}
+					} else
+					{
+						if(console)
+						{
+							console.log('Erreur Ajax');
+						}
 					}
-				}
-			},
-		    onFailure: function(){ alert('Something went wrong...'); }
-		});
-		
-	}
-	else
-	{
-		if(console)
-		{
-			console.log('Error delete_this_tag::no script defined');
+				},
+			    onFailure: function(){ alert('Something went wrong...'); }
+			});
+			
 		}
+		else
+		{
+			if(console)
+			{
+				console.log('Error delete_this_tag::no script defined');
+			}
+		}
+	} else {
+		alert("Le mot-clé doit être inférieur à 50 caractères");
 	}
+
 }
 
 
