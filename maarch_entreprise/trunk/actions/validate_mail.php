@@ -490,7 +490,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         {
                             $frm_str .= $today;
                         }
-                        $frm_str .= '" onfocus="checkRealDate(\'admissionDate\');" onChange="checkRealDate(\'admissionDate\');" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
+                        $frm_str .= '" onclick="clear_error(\'frm_error_' . $actionId . '\');'
+            . 'showCalender(this);" onChange="checkRealDate(\'admissionDate\');updateProcessDate(\''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&dir=indexing_searching&page=update_process_date\');" onFocus="checkRealDate(\'admissionDate\');updateProcessDate(\''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&dir=indexing_searching&page=update_process_date\');"/></td>';
                         $frm_str .= '<td><span class="red_asterisk" id="admission_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                   $frm_str .= '</tr>';
 				  
