@@ -191,20 +191,20 @@ if ($mode == 'list') {
 						'<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
 						'diff_type_div',
 						'notifications',
-						'');">
+						'');clear_attach_type();set_attach_type(this.options[this.selectedIndex].value)">
 
                 <option value=""><?php echo _SELECT_DIFFUSION_TYPE;?></option>
                 <?php
-                foreach($diffusion_types as $this_diffusion){
-                    ?><option value="<?php functions::xecho($this_diffusion->id);?>"
-                    <?php
-                    if(trim($_SESSION['m_admin']['notification']['diffusion_type'])
-                        == trim($this_diffusion->id)) {
-                        echo 'selected="selected"';
-                    }?>><?php functions::xecho($this_diffusion->label);
-                    ?></option><?php
-                }
-                ?>
+                foreach($diffusion_types as $this_diffusion){ ?>
+                    <option value="<?php functions::xecho($this_diffusion->id);?>"
+                        <?php
+                        if(trim($_SESSION['m_admin']['notification']['diffusion_type']) == trim($this_diffusion->id)) {
+                            echo 'selected="selected"';
+                        }?>
+                        >
+                        <?php functions::xecho($this_diffusion->label); ?>
+                    </option>
+                <?php } ?>
             </select>
         </p>
 
@@ -227,16 +227,17 @@ if ($mode == 'list') {
 						'notifications',
 						'');">
 
-                <option value=""><?php echo _NEVER;?></option>
+                <option tag="voidAttach" value=""><?php echo _NEVER;?></option>
                 <?php
                 foreach($diffusion_types as $this_diffusion){
 					if(
                         $this_diffusion->id != 'dest_user' 
                         && $this_diffusion->id != 'copy_list'
+                        && $this_diffusion->id != 'dest_entity'
                         && $this_diffusion->id != 'note_dest_user'
                         && $this_diffusion->id != 'note_copy_list'
                     ) {
-						?><option value="<?php functions::xecho($this_diffusion->id);?>"
+						?><option tag="attach" value="<?php functions::xecho($this_diffusion->id);?>"
 						<?php
 						if(trim($_SESSION['m_admin']['notification']['attachfor_type'])
 							== trim($this_diffusion->id)) {

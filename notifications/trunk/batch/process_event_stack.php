@@ -87,8 +87,8 @@ while ($state <> 'END') {
                     $recipient = $recipients[$i];
                     $entity_id = $recipient->entity_id;
                     $logger->write('Recipient entity ' . $entity_id, 'INFO');
-                    if($recipient->enabled != 'Y') {
-                        $logger->write($entity_id .' is disabled or deleted, this notification will not sent', 'INFO');
+                    if($recipient->enabled != 'Y' || $recipient->mail == '') {
+                        $logger->write($entity_id .' is disabled or mail is invalid, this notification will not be send', 'INFO');
                         unset($recipients[$i]);
                         continue;
                     }
@@ -108,7 +108,7 @@ while ($state <> 'END') {
                     $user_id = $recipient->user_id;
                     $logger->write('Recipient ' . $user_id, 'INFO');
                     if($recipient->enabled == 'N' || $recipient->status == 'DEL') {
-                        $logger->write($user_id .' is disabled or deleted, this notification will not sent', 'INFO');
+                        $logger->write($user_id .' is disabled or deleted, this notification will not be send', 'INFO');
                         unset($recipients[$i]);
                         continue;
                     }

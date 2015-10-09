@@ -17,7 +17,9 @@ require_once 'modules' . DIRECTORY_SEPARATOR . 'notifications' . DIRECTORY_SEPAR
 if ((! isset($_REQUEST['id_type']) || empty($_REQUEST['id_type']))) {
     //$_SESSION['error'] = _TYPE_EMPTY;
     //echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";
-    echo "{status : 0, div_content : ''}";
+	$form_content = '<p class="sstit">' . _NO_ATTACHMENT_WITH_NOTIFICATION . '</p>';
+	echo "{status : 0, div_content : '" . addslashes($form_content) . "'}";
+
 	exit();
 }
 

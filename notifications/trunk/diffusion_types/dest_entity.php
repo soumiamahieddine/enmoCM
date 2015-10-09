@@ -23,7 +23,7 @@ switch ($request) {
 case 'form_content':
     require_once 'core/class/class_request.php' ;
 
-    if($_SESSION['m_admin']['notification']['diffusion_type']!='dest_user'){$_SESSION['m_admin']['notification']['diffusion_properties']='';}
+    if($_SESSION['m_admin']['notification']['diffusion_type']!='dest_entity'){$_SESSION['m_admin']['notification']['diffusion_properties']='';}
     //Get list of selected status
     $choosen_status_tab = explode(",",$_SESSION['m_admin']['notification']['diffusion_properties']);
     $choosen_status_sring = "'" . implode("','", $choosen_status_tab) . "'";
@@ -40,7 +40,7 @@ case 'form_content':
     );
     $status_list = $tab;
 
-	$form_content .= '<p class="sstit">' . _NOTIFICATIONS_DEST_USER_DIFF_TYPE_WITH_STATUS . '</p>';
+	$form_content .= '<p class="sstit">' . _NOTIFICATIONS_DEST_ENTITY_DIFF_TYPE_WITH_STATUS . '</p>';
     $form_content .= '<table>';
         $form_content .= '<tr>';
             $form_content .= '<td>';

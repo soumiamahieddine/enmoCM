@@ -22,32 +22,53 @@ function change_properties_box(difftype_id, path_manage_script, diff_list_id, or
                           origin : origin_arg
                     },
                 onSuccess: function(answer){
-                eval("response = "+answer.responseText);
-                //alert(answer.responseText);
-                if(response.status == 0 )
-                {
-                    var diff_list_div = $(div_id);
-					
-                    if(diff_list_div != null)
+                    eval("response = "+answer.responseText);
+                    //alert(answer.responseText);
+                    if(response.status == 0 )
                     {
-						diff_list_div.innerHTML = response.div_content;
+                        var diff_list_div = $(div_id);
+
+                        if(diff_list_div != null)
+                        {
+                            diff_list_div.innerHTML = response.div_content;
+                        }
                     }
-                }
-                else
-                {
-					var diff_list_div = $(div_id);
-                    if(diff_list_div != null)
+                    else
                     {
-                        diff_list_div.innerHTML = '';
+                        var diff_list_div = $(div_id);
+                        if(diff_list_div != null)
+                        {
+                            diff_list_div.innerHTML = '';
+                        }
+
+                        try{
+                            $('frm_error').innerHTML = response.error_txt;
+                        }
+                        catch(e){}
                     }
-                    
-                    try{
-                        $('frm_error').innerHTML = response.error_txt;
-                    }
-                    catch(e){}
-                }
-            }
+               }
         });
+    }
+}
+
+function clear_attach_type()
+{
+    var firstOption = document.querySelectorAll('option[tag="voidAttach"]');
+    firstOption[0].selected = "selected";
+    var theSelect = document.querySelectorAll('select[name="attach_for_type"]');
+    theSelect[0].onchange();
+}
+
+function set_attach_type(type)
+{
+    var allOptions = document.querySelectorAll('option[tag="attach"]');
+    var optionsToHide =  ["user", "group", "contact"];
+    for(var x=0;x < allOptions.length;x++)
+    {
+        if (type == "dest_entity" && optionsToHide.include(allOptions[x].value))
+            allOptions[x].style.display = "none";
+        else
+            allOptions[x].style.display = "";
     }
 }
 

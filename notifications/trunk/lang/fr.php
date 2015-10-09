@@ -200,6 +200,8 @@ if (!defined("_DEST_USER"))
     define("_DEST_USER", "Destinataire principal");
 if (!defined("_NOTE_DEST_USER"))
     define("_NOTE_DEST_USER", "Destinataire principal du document annoté");
+if (!defined("_NOTIFICATIONS_DEST_ENTITY_DIFF_TYPE_WITH_STATUS"))
+    define("_NOTIFICATIONS_DEST_ENTITY_DIFF_TYPE_WITH_STATUS", "Envoi a l'entité principal du document avec le(s) statut(s):");
 if (!defined("_NOTIFICATIONS_COPY_LIST_DIFF_TYPE"))
     define("_NOTIFICATIONS_COPY_LIST_DIFF_TYPE", "Envoi aux utilisateurs en copie du document");
 if (!defined("_COPYLIST"))
