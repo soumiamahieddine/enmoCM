@@ -473,18 +473,14 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><label for="admission_date" class="form_title" >'
             . _RECEIVING_DATE . '</label></td>';
     $frmStr .= '<td>&nbsp;</td>';
-    /*$frmStr .= '<td class="indexing_field"><input name="admission_date" '
+    $frmStr .= '<td class="indexing_field"><input name="admission_date" '
             . 'type="text" id="admission_date" value="' . $today
             . '" onclick="clear_error(\'frm_error_' . $actionId . '\');'
             . 'showCalender(this);" onChange="checkRealDate(\'admissionDate\');updateProcessDate(\''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&dir=indexing_searching&page=update_process_date\');" onFocus="checkRealDate(\'admissionDate\');updateProcessDate(\''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&dir=indexing_searching&page=update_process_date\');"/></td>';*/
-    $frmStr .= '<td class="indexing_field"><input name="admission_date" '
-            . 'type="text" id="admission_date" value="' . $today
-            . '" onclick="clear_error(\'frm_error_' . $actionId . '\');'
-            . 'showCalender(this);" onChange="checkRealDate(\'admissionDate\');" onFocus="checkRealDate(\'admissionDate\');"/></td>';
+            . '&dir=indexing_searching&page=update_process_date\');"/></td>';
     $frmStr .= '<td><span class="red_asterisk" id="admission_date_mandatory" '
             . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
