@@ -1384,6 +1384,11 @@ function process_category_check($cat_id, $values)
         {
             $_SESSION['store_process_limit_date'] = "ko";
         }
+
+		$process_limit_date = new datetime($process_limit_date);
+       $process_limit_date = date_add($process_limit_date,date_interval_create_from_date_string('23 hours + 59 minutes + 59 seconds'));
+
+
     }
 
     if (isset($_ENV['categories'][$cat_id]['priority'])) {
@@ -1663,17 +1668,20 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))
     {
         $process_limit_date = get_value_fields($values_form, 'process_limit_date');
+
+        $process_limit_date = new datetime($process_limit_date);
+        $process_limit_date = date_add($process_limit_date,date_interval_create_from_date_string('23 hours + 59 minutes + 59 seconds'));
+        $process_limit_date = (array) $process_limit_date; 
+
         if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'res')
         {
-            $query_res .= ", process_limit_date = ?";
-            $arrayPDOres = array_merge($arrayPDOres, array(functions::format_date_db($process_limit_date)));
+            $query_res .= ", process_limit_date = '".$db->format_date_db($process_limit_date['date'],'true','','true')."'";
         }
         else if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'coll_ext')
         {
             if($_SESSION['store_process_limit_date'] == "ok")
             {
-                $query_ext .= ", process_limit_date = ?";
-                $arrayPDOext = array_merge($arrayPDOext, array(functions::format_date_db($process_limit_date)));
+                $query_ext .= ", process_limit_date = '".$db->format_date_db($process_limit_date['date'],'true','','true')."'";
             } else {
 				$query_ext .= ", process_limit_date = null";
 			}
