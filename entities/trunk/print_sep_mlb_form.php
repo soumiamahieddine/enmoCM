@@ -95,6 +95,7 @@ $_SESSION['separator']['entities'] = array();
             <select name="typeBarcode" id="typeBarcode">
                 <!--<option value="C39">C39</option>-->
                 <option value="C128">C128</option>
+                <option value="QRCODE">QRCODE</option>
             </select>
             <br/>
             <input class="button" name="print_generic" type="submit" value="<?php echo _ENTITIES_PRINT_SEP_MLB_GENERIC;?>" />
