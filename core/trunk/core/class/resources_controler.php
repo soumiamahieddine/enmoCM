@@ -457,13 +457,21 @@ class resources_controler
                         $findProcessNotes = true;
                         $delayProcessNotes = $data[$i]['value'];
                     }
+					if ($data[$i]['column'] == 'process_notes') {
+		                $findProcessNotes = true;
+		                //$delayProcessNotes = $data[$i]['value'];
+		                $donnees = explode(',',$data[$i]['value']);
+		                $delayProcessNotes = $donnees['0'];
+		                $calendarType = $donnees['1'];
+		            }
                 }
 
                 if ($table == 'mlb_coll_ext') {
                     if ($delayProcessNotes > 0) {
                         $processLimitDate = $this->retrieveProcessLimitDate(
                             $resId, 
-                            $delayProcessNotes
+                            $delayProcessNotes,
+                        	$calendarType
                         );
                     } else {
                         $processLimitDate = $this->retrieveProcessLimitDate($resId);
@@ -597,8 +605,8 @@ class resources_controler
     #####################################
     ## Retrieve process_limit_date for resource in extension table if mlb
     #####################################
-    public function retrieveProcessLimitDate($resId, $defaultDelay = 0)
-    {
+    public function retrieveProcessLimitDate($resId, $defaultDelay = 0, $calendarType = FALSE)
+    { 
         $processLimitDate = '';
         if ($resId <> '') {
             $db = new Database();
@@ -630,10 +638,21 @@ class resources_controler
             require_once('core/class/class_alert_engine.php');
             $alert_engine = new alert_engine();
             if (isset($dateToCompute) && !empty($dateToCompute)) {
+
+
+            $ArrayDateParse = date_parse_from_format("Y-n-j", $dateToCompute);
+            $dateToCompute = $ArrayDateParse['year'].'-'.$ArrayDateParse['month'].'-'.$ArrayDateParse['day'];
+            $dateToCompute = new datetime($dateToCompute);
+            $dateToCompute = date_add($dateToCompute,date_interval_create_from_date_string('23 hours + 59 minutes + 59 seconds'));
+            $dateToCompute = (array) $dateToCompute; 
+
+
+
                 $convertedDate = $alert_engine->dateFR2Time(
-                    str_replace("-", "/", $db->format_date_db($dateToCompute))
-                );
-                $date = $alert_engine->WhenOpenDay($convertedDate, $delay);
+                   str_replace("-", "/", $db->format_date_db($dateToCompute['date'],'true','','true')), true
+                ); 
+                $date = $alert_engine->WhenOpenDay($convertedDate, $delay, false ,$calendarType);
+
             } else {
                 $date = $alert_engine->date_max_treatment($delay, false);
             }

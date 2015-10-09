@@ -59,71 +59,83 @@ class alert_engine extends Database
     * @param int $Delta
     * @param boolean $isMinus
     */
-    public function WhenOpenDay($Date, $Delta, $isMinus = false)
+    public function WhenOpenDay($Date, $Delta, $isMinus = false, $calendarType = 'workingDay')
     {
-        $Hollidays = array (
-            '1_1',
-            '1_5',
-            '8_5',
-            '14_7',
-            '15_8',
-            '1_11',
-            '11_11',
-            '25_12'
-        );
-        require_once 'core/class/class_db_pdo.php';
-        
-        $db = new Database();
-        $stmt = $db->query("select * from parameters where id like 'alert_stop%'");
-        while ($result = $stmt->fetchObject()) {
-            if ($result->param_value_date <> '') {
-                $compare = $this->compare_date($result->param_value_date, date("d-m-Y"));
-                //take the alert stop only if > now
-                if ($compare == 'date1' || $compare == 'equal') {
-                    $dateExploded = explode("-", str_replace(" 00:00:00", "", $result->param_value_date));
-                    array_push($Hollidays, (int)$dateExploded[2] . "_" . (int)$dateExploded[1]);
-                }
-            }
-        }
-        //var_dump($Hollidays);
-        
-        if (function_exists ('easter_date')) {
-            $WhenEasterCelebrates = easter_date((int)date('Y'), $Date);
-        } else {
-            $WhenEasterCelebrates = $this->getEaster((int)date('Y'), $Date);
-        }
-        $Hollidays[] = date ('j_n', $WhenEasterCelebrates);
-        $Hollidays[] = date ('j_n', $WhenEasterCelebrates + (86400*39));
-        $Hollidays[] = date ('j_n', $WhenEasterCelebrates + (86400*49));
-        $iEnd = $Delta * 86400;
-
-        $i = 0;
-        while ($i < $iEnd) {
-            $i = strtotime ('+1 day', $i);
+        if($calendarType == 'calendar'){
             if ($isMinus) {
-                if (in_array(
-                    date('w', $Date-$i),array (0,6)
-                ) || in_array (date ('j_n', $Date-$i), $Hollidays)
-                ) {
-                    $iEnd = strtotime ('+1 day', $iEnd);
-                    $Delta ++;
-                }
+                return date('Y-m-d H:i:s', $Date + (86400*-$Delta));
             } else {
-                if (
-                    in_array(
-                        date('w', $Date+$i),array (0,6)
-                    ) || in_array (date ('j_n', $Date+$i), $Hollidays)
-                ) {
-                    $iEnd = strtotime ('+1 day', $iEnd);
-                    $Delta ++;
+                return date('Y-m-d H:i:s', $Date + (86400*$Delta));
+            }
+
+        }elseif($calendarType == 'workingDay' || $calendarType == NULL){
+
+            $Hollidays = array (
+                '1_1',
+                '1_5',
+                '8_5',
+                '14_7',
+                '15_8',
+                '1_11',
+                '11_11',
+                '25_12'
+            );
+            require_once 'core/class/class_db_pdo.php';
+            
+            $db = new Database();
+            $stmt = $db->query("select * from parameters where id like 'alert_stop%'");
+            while ($result = $stmt->fetchObject()) {
+                if ($result->param_value_date <> '') {
+                    $compare = $this->compare_date($result->param_value_date, date("d-m-Y"));
+                    //take the alert stop only if > now
+                    if ($compare == 'date1' || $compare == 'equal') {
+                        $dateExploded = explode("-", str_replace(" 00:00:00", "", $result->param_value_date));
+                        array_push($Hollidays, (int)$dateExploded[2] . "_" . (int)$dateExploded[1]);
+                    }
                 }
             }
-        }
-        if ($isMinus) {
-            return date('Y-m-d', $Date + (86400*-$Delta));
-        } else {
-            return date('Y-m-d', $Date + (86400*$Delta));
-        }
+            //var_dump($Hollidays);
+            
+            if (function_exists ('easter_date')) {
+                $WhenEasterCelebrates = easter_date((int)date('Y'), $Date);
+            } else {
+                $WhenEasterCelebrates = $this->getEaster((int)date('Y'), $Date);
+            }
+            $Hollidays[] = date ('j_n', $WhenEasterCelebrates);
+            $Hollidays[] = date ('j_n', $WhenEasterCelebrates + (86400*39));
+            $Hollidays[] = date ('j_n', $WhenEasterCelebrates + (86400*49));
+            $iEnd = $Delta * 86400;
+
+            $i = 0;
+            while ($i < $iEnd) {
+                $i = strtotime ('+1 day', $i);
+                if ($isMinus) {
+                    if (in_array(
+                        date('w', $Date-$i),array (0,6)
+                    ) || in_array (date ('j_n', $Date-$i), $Hollidays)
+                    ) {
+                        $iEnd = strtotime ('+1 day', $iEnd);
+                        $Delta ++;
+                    }
+                } else {
+                    if (
+                        in_array(
+                            date('w', $Date+$i),array (0,6)
+                        ) || in_array (date ('j_n', $Date+$i), $Hollidays)
+                    ) {
+                        $iEnd = strtotime ('+1 day', $iEnd);
+                        $Delta ++;
+                    }
+                }
+            }
+            if ($isMinus) {
+                return date('Y-m-d', $Date + (86400*-$Delta));
+            } else {
+                return date('Y-m-d', $Date + (86400*$Delta));
+            }
+
+        }  
+
     }
 
     /**
@@ -159,10 +171,16 @@ class alert_engine extends Database
         return $result;
     }
     
-    function dateFR2Time($date)
+    function dateFR2Time($date, $addHours = false)
     {
+        if($addHours == false){
         list($day, $month, $year) = explode('/', $date);
         $timestamp = mktime(0, 0, 0, $month, $day, $year);
         return $timestamp;
+        }elseif($addHours == true){
+        list($day, $month, $year) = explode('/', $date);
+        $timestamp = mktime(23, 59, 59, $month, $day, $year);
+        return $timestamp;   
+        }
     }
 }
