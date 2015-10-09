@@ -53,29 +53,49 @@ For developper :
         <id>incoming</id>
         <separator></separator>
         <ELEMENT>
+            <type>text</type>
+            <value>MAARCH</value>
+        </ELEMENT>
+        <ELEMENT>
+            <type>text</type>
+            <value>/</value>
+        </ELEMENT>
+        <ELEMENT>
             <type>date</type>
             <value>year</value>
         </ELEMENT>
         <ELEMENT>
-            <type>text</type>
-            <value>/MAARCH/</value>
+            <type>maarch_functions</type>
+            <value>category_char</value>
         </ELEMENT>
         <ELEMENT>
             <type>maarch_functions</type>
-            <value>chr_global</value>
+            <value>chr_by_category</value>
         </ELEMENT>
     </CHRONO>
 
     <CHRONO>
         <id>outgoing</id>
-        <separator>/</separator>
+        <separator></separator>
         <ELEMENT>
-            <type>maarch_form</type>
-            <value>chrono_out</value>
+            <type>text</type>
+            <value>MAARCH</value>
         </ELEMENT>
         <ELEMENT>
-            <type>maarch_var</type>
-            <value>entity_id</value>
+            <type>text</type>
+            <value>/</value>
+        </ELEMENT>
+        <ELEMENT>
+            <type>date</type>
+            <value>year</value>
+        </ELEMENT>
+        <ELEMENT>
+            <type>maarch_functions</type>
+            <value>category_char</value>
+        </ELEMENT>
+        <ELEMENT>
+            <type>maarch_functions</type>
+            <value>chr_by_category</value>
         </ELEMENT>
     </CHRONO>
 

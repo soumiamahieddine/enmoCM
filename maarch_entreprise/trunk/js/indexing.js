@@ -430,9 +430,9 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'destination_mandatory', type:'label', state:'display'},
         {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
         {id:'process_limit_date_mandatory', type:'label', state:'display'},
-        {id:'chrono_number', type:'label', state:'display'},
-        {id:'chrono_number_tr', type:'tr', state:'display'},
-        {id:'chrono_number_mandatory', type:'label', state:'display'},
+        {id:'chrono_number', type:'label', state:'hide'},
+        {id:'chrono_number_tr', type:'tr', state:'hide'},
+        {id:'chrono_number_mandatory', type:'label', state:'hide'},
         {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }

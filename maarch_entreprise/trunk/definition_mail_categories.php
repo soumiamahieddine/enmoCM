@@ -265,7 +265,7 @@ $_ENV['categories']['outgoing']['subject'] = array (
     'modify' => true,
     'form_show' => 'textarea'
 );
-$_ENV['categories']['outgoing']['other_cases']['chrono_number'] = array (
+/*$_ENV['categories']['outgoing']['other_cases']['chrono_number'] = array (
     'type_form' => 'integer',
     'type_field' => 'integer',
     'mandatory' => true,
@@ -274,7 +274,7 @@ $_ENV['categories']['outgoing']['other_cases']['chrono_number'] = array (
     'img' => 'compass',
     'modify' => false,
     'form_show' => 'textfield'
-);
+);*/
 $_ENV['categories']['outgoing']['process_limit_date_use'] = array (
     'type_form' => 'radio',
     'mandatory' => true,

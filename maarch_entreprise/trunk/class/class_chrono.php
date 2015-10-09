@@ -261,7 +261,7 @@ class chrono
             $chrono = $fetch->param_value_int;
         }
         $this->_updateChronoForCategory($chrono, $db, $category);
-        return $category . "/" . $chrono;
+        return "/" . $chrono;
         //return $category;
 
     }
@@ -292,9 +292,9 @@ class chrono
             return "category::php_var error";
         } else {
             if ($phpVar['category_id'] == "incoming") {
-                return "E";
+                return "A";
             } else if ($phpVar['category_id'] == "outgoing") {
-                return "S";
+                return "D";
             } else {
                 return '';
             }
