@@ -60,7 +60,10 @@ class alert_engine extends Database
     * @param boolean $isMinus
     */
     public function WhenOpenDay($Date, $Delta, $isMinus = false, $calendarType = 'workingDay')
-    {
+    { 
+        if ($calendarType <> 'calendar' && $calendarType <> 'workingDay') {
+            $calendarType = 'workingDay';
+        }
         if($calendarType == 'calendar'){
             if ($isMinus) {
                 return date('Y-m-d H:i:s', $Date + (86400*-$Delta));
@@ -129,9 +132,9 @@ class alert_engine extends Database
                 }
             }
             if ($isMinus) {
-                return date('Y-m-d', $Date + (86400*-$Delta));
+                return date('Y-m-d H:i:s', $Date + (86400*-$Delta));
             } else {
-                return date('Y-m-d', $Date + (86400*$Delta));
+                return date('Y-m-d H:i:s', $Date + (86400*$Delta));
             }
 
         }  
