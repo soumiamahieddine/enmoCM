@@ -547,10 +547,10 @@ class lists extends Database
                 if(isset($_SESSION['filters']['identifier']['VALUE']) && !empty($_SESSION['filters']['identifier']['VALUE'])) {
                     $identifier = $_SESSION['filters']['identifier']['VALUE'];
                 } else {
-                    $identifier = '['._IDENTIFIER.']';
+                    $identifier = '['._CHRONO_NUMBER.']';
                 }
                 $filters .='<input type="text" name="identifier" id="identifier" value="'.$identifier.'" size="40" '
-                            .'onfocus="if(this.value==\'['._IDENTIFIER.']\'){this.value=\'\';}" '
+                            .'onfocus="if(this.value==\'['._CHRONO_NUMBER.']\'){this.value=\'\';}" '
                             .'onChange="loadList(\''.$this->link
                             .'&filter=identifier&value=\' + this.value, \''.$this->divListId.'\', '.$this->modeReturn.');" '
                             .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
@@ -688,7 +688,7 @@ class lists extends Database
                         $_SESSION['filters']['folder']['CLAUSE'] = "folder_id = '".$folderId."'";
 
                     } else if ($_REQUEST['filter'] == 'identifier') {
-                        $_SESSION['filters']['identifier']['CLAUSE'] = "identifier = '".$_SESSION['filters']['identifier']['VALUE']."'";
+                        $_SESSION['filters']['identifier']['CLAUSE'] = "alt_identifier ilike ('%".$_SESSION['filters']['identifier']['VALUE']."%')";
 
                     } else if ($_REQUEST['filter'] == 'type') {
                     

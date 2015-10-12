@@ -729,7 +729,7 @@
       <parameter name="baskets" type="identifier" />
       <parameter name="origin" type="identifier" />
       <parameter name="filter" type="identifier" />
-      <parameter name="value" type="identifier" />
+      <parameter name="value" type="string" />
       <parameter name="template" type="identifier" />
     </validationRule>
 

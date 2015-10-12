@@ -71,6 +71,11 @@
             <LABEL>_CREATION_DATE</LABEL>
             <ENABLED>true</ENABLED>
         </FILTER>
+        <FILTER>
+            <ID>identifier</ID>
+            <LABEL>_CHRONO_NUMBER</LABEL>
+            <ENABLED>true</ENABLED>
+        </FILTER>
     </FILTERS>
     <TEMPLATES>
         <TEMPLATE>
