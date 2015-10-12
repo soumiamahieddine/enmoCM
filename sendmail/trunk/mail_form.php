@@ -232,6 +232,7 @@ if ($mode == 'add') {
             $format = $joined_files[$i]['format'];
             $format = $joined_files[$i]['format'];
             $mime_type = $is->get_mime_type($joined_files[$i]['format']);
+            $att_type = $joined_files[$i]['format'];
             $filesize = $joined_files[$i]['filesize']/1024;
             ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize,2).' Octets';
 			//Show data
@@ -246,14 +247,14 @@ if ($mode == 'add') {
 					. "_V".$joined_files[$i]['version']."\" name=\"join_version[]\""
 					. " class=\"check\" value=\""
 					. $id."\" >"
-					. $description." <em>(".$mime_type.")</em> ".$filesize.$version."</li>";
+					. "<strong>" . $description . "</strong> <em>(" . $att_type . " - " . $filesize .")</em></li>";
 			} else {
 				$content .= "<li alt=\"".$description
 					. "\" title=\"".$description
 					. "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_file[]\""
 					. " class=\"check\" value=\""
 					. $id."\" >"
-					. $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
+					. "<strong>" . $description . "</strong> <em>(" . $att_type . " - " . $filesize .")</em></li>";
             }
 
 			$filename = $sendmail_tools->createFilename($description.$version, $format);
@@ -267,19 +268,29 @@ if ($mode == 'add') {
         if (count($attachment_files) >0) {
             $content .='<br/>';
             $content .=_ATTACHMENTS;
+            $content .= "<table style=\"border-collapse:collapse\">";
             for($i=0; $i < count($attachment_files); $i++) {
                 //Get data
                 $id = $attachment_files[$i]['id']; 
                 $description = $attachment_files[$i]['label'];
+//                $description = 'Réunion du lundi';
                 $format = $attachment_files[$i]['format'];
                 $mime_type = $is->get_mime_type($attachment_files[$i]['format']);
+                $att_type = $attachment_files[$i]['format'];
                 $filesize = $attachment_files[$i]['filesize']/1024;
-                $attachment_type = $attachment_files[$i]['attachment_type'];
+                $attachment_type = $_SESSION['attachment_types'][$attachment_files[$i]['attachment_type']];
+                $chrono = $attachment_files[$i]['identifier'];
+//                $chrono = 'MVL/2015D/31';
+                $dest_society = $attachment_files[$i]['society'];
+                $dest_firstname = $attachment_files[$i]['firstname'];
+//                $dest_firstname = 'jaki';
+                $dest_lastname = $attachment_files[$i]['lastname'];
+//                $dest_lastname = 'benji';
                 ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
                 
-                $content .= "<li alt=\"".$description
+                $content .= "<tr><td><li alt=\"".$description
                     . "\" title=\"".$description
-                    . "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_attachment[]\""
+                    . "\"><input style=\"margin-left: 3px\" type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_attachment[]\""
                     . " class=\"check\" value=\""
                     . $id."\"";
                 
@@ -287,12 +298,15 @@ if ($mode == 'add') {
                         $content .= " checked=\"checked\" ";
                     }
 
-                $content .= ">"
-                   . $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
+                $content .= ">(" . $attachment_type . ")</td><td style=\"width : 40%;\"><strong style=\"margin-left: 20px\">" . $description . "</strong></li></td><td style=\"width : 40%;\"><em style=\"margin-left: 20px\">";
+                if ($chrono != "")
+                    $content .= $chrono . " - </em><em>";
+                $content .= $dest_firstname . " " . $dest_lastname. " " . $dest_society . " (" . $att_type . " - " . $filesize .")</em></td></tr>";
                    
 				$filename = $sendmail_tools->createFilename($description, $format);
                 // $all_joined_files .= $description.': '.$filename.PHP_EOL;
             }
+            $content .= "</table>";
         }
     }
 

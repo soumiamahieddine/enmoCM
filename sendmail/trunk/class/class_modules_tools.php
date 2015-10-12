@@ -206,8 +206,13 @@ class sendmail extends Database
                 );
         } else {
 			require_once 'modules/attachments/attachments_tables.php';
+//            $stmt = $db->query(
+//                "SELECT res_id, description, subject, title, format, filesize, res_id_master, attachment_type, identifier FROM res_view_attachments WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and status <> 'OBS'",
+//				array($id, $coll_id)
+//				);
             $stmt = $db->query(
-                "SELECT res_id, description, subject, title, format, filesize, res_id_master, attachment_type FROM res_view_attachments WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and status <> 'OBS'",
+                "SELECT rva.res_id, rva.description, rva.subject, rva.title, rva.format, rva.filesize, rva.res_id_master, rva.attachment_type, rva.identifier, cv2.society, cv2.firstname, cv2.lastname
+                FROM res_view_attachments rva, contacts_v2 cv2 WHERE rva.dest_contact_id = cv2.contact_id and rva.res_id_master = ? and rva.coll_id = ? and rva.status <> 'DEL' and rva.status <> 'OBS' ORDER BY rva.attachment_type, rva.description",
 				array($id, $coll_id)
 				);
         }
@@ -230,7 +235,11 @@ class sendmail extends Database
                               'filesize' => $res->filesize, //Filesize
                               'is_version' => false, //
                               'version' => '', //
-                              'attachment_type' => $res->attachment_type
+                              'attachment_type' => $res->attachment_type,
+                              'identifier' => $res->identifier,
+                              'society' => $res->society,
+                              'firstname' => $res->firstname,
+                              'lastname' => $res->lastname
                             )
             );
         }
