@@ -453,13 +453,12 @@ class resources_controler
                     if ($data[$i]['column'] == 'process_limit_date') {
                         $findProcessLimitDate = true;
                     }
-                    if ($data[$i]['column'] == 'process_notes') {
-                        $findProcessNotes = true;
-                        $delayProcessNotes = $data[$i]['value'];
-                    }
+                    // if ($data[$i]['column'] == 'process_notes') {
+                    //     $findProcessNotes = true;
+                    //     $delayProcessNotes = $data[$i]['value'];
+                    // }
 					if ($data[$i]['column'] == 'process_notes') {
 		                $findProcessNotes = true;
-		                //$delayProcessNotes = $data[$i]['value'];
 		                $donnees = explode(',',$data[$i]['value']);
 		                $delayProcessNotes = $donnees['0'];
 		                $calendarType = $donnees['1'];
@@ -639,17 +638,8 @@ class resources_controler
             $alert_engine = new alert_engine();
             if (isset($dateToCompute) && !empty($dateToCompute)) {
 
-
-            $ArrayDateParse = date_parse_from_format("Y-n-j", $dateToCompute);
-            $dateToCompute = $ArrayDateParse['year'].'-'.$ArrayDateParse['month'].'-'.$ArrayDateParse['day'];
-            $dateToCompute = new datetime($dateToCompute);
-            $dateToCompute = date_add($dateToCompute,date_interval_create_from_date_string('23 hours + 59 minutes + 59 seconds'));
-            $dateToCompute = (array) $dateToCompute; 
-
-
-
                 $convertedDate = $alert_engine->dateFR2Time(
-                   str_replace("-", "/", $db->format_date_db($dateToCompute['date'],'true','','true')), true
+                   str_replace("-", "/", $db->format_date_db($dateToCompute,'true','','true')), true
                 ); 
                 $date = $alert_engine->WhenOpenDay($convertedDate, $delay, false ,$calendarType);
 
