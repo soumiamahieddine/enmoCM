@@ -51,7 +51,7 @@ class attachments_controler
         $table = $sec->retrieve_table_from_coll($collId);
         $db = new Database();
         $query = 'select res_id from ' . $table . ' where res_id = ?';
-        $stmt = $db->query($query,array($resId));
+        $stmt = $db->query($query,array($resId), true);
         if ($stmt->rowCount() == 0) {
             $returnCode = -2;
             $error .= 'res_id inexistant';
