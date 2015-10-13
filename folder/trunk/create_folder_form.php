@@ -110,7 +110,7 @@ for ($i = 0; $i < count($foldertypes); $i ++) {
             </select> <i class="red_asterisk fa fa-asterisk mCyellow"></i>
         </p>
         <p>
-            <label for="folder_id"><?php echo _ID;?></label>
+            <label for="folder_id"><?php echo _FOLDERID_LONG;?></label>
             <input name="folder_id" id="folder_id" value="<?php
 if (isset($_SESSION['m_admin']['folder']['folder_id'])) {
     functions::xecho($_SESSION['m_admin']['folder']['folder_id']);
