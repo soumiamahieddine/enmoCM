@@ -150,14 +150,16 @@ if ($objectType <> 'templateStyle') {
     }
 }
 
-$cookieKey = '';
-$cptCook = 0;
-foreach ($_COOKIE as $key => $value) {
-    if ($cptCook == 0) {
-        $cookieKey = $key . '=' . $value;
-    }
-    $cptCook++;
-}
+// $cookieKey = '';
+// $cptCook = 0;
+// foreach ($_COOKIE as $key => $value) {
+//     if ($cptCook == 0) {
+//         $cookieKey = $key . '=' . $value;
+//     }
+//     $cptCook++;
+// }
+
+$cookieKey = $_SESSION['sessionName'] . '=' . $_COOKIE[$_SESSION['sessionName']];
 
 //init error session
 $_SESSION['error'] = '';
