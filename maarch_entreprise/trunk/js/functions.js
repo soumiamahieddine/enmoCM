@@ -12,6 +12,13 @@ function whatIsTheDivStatus(theDiv, divStatus)
     }
 }
 
+function resetInlineDisplay(theDiv)
+{
+    setTimeout(function() {
+        if ($(theDiv).style.display == '')
+            $(theDiv).style.display = 'inline';
+    }, 250);
+}
 function hideOtherDiv(theDiv)
 {
     var DivTable = ["create_contact_div","history_div", "notes_div", "emails_div", "diff_list_div", "versions_div", "links_div", "list_answers_div", "cases_div", "diff_list_history_div", "visa_div", "avis_div", "print_fold_div"];

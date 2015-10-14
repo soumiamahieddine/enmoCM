@@ -2018,6 +2018,31 @@ color: #CCC;
     text-align: right;
 }
 
+.contact_field_margin
+{
+    margin-left: -1%;
+}
+
+.address_modification_field
+{
+    margin-left: -0.5%;
+}
+
+.salutation_modification_field
+{
+    margin-left: 6%;
+}
+
+.address_modification_field_frame
+{
+    margin-left: 6%;
+}
+
+.salutation_modification_field_frame
+{
+    margin-left: 6%;
+}
+
 #rep
 {
     width: 40%;
