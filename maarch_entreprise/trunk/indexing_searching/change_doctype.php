@@ -274,7 +274,10 @@ if (isset($delay) && $delay > 0) {
         $date = $alert_engine->date_max_treatment($delay, false);
     }
     $process_date = functions::dateformat($date, '-');
-    echo "{status : 0, process_date : '" . trim(functions::xssafe($process_date)) 
+    $tmpProcessDate = explode(" ", $process_date);
+    $date = $tmpProcessDate[0];
+    
+    echo "{status : 0, process_date : '" . trim(functions::xssafe($date)) 
         . "', opt_indexes : '" . addslashes($opt_indexes) . "', services : " 
         . $services . "}";
     exit();
