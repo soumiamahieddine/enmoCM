@@ -583,7 +583,11 @@
       <parameter name="load" type="boolean" />
       <parameter name="dir" type="identifier" />
       <parameter name="size" type="identifier" />
-      <parameter name="url" type="url" />
+      <parameter name="url" type="string" />
+      <parameter name="filter" type="identifier" />
+      <parameter name="history_date_start" type="date" />
+      <parameter name="value" type="string" />
+
     </validationRule>
 
     <validationRule name="little_details" extends="standardForm" mode="error">  
