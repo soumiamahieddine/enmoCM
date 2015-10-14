@@ -29,12 +29,19 @@
 * @ingroup admin
 */
 
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR  . 'class' . DIRECTORY_SEPARATOR . 'class_business_app_tools.php';
 $business = new business_app_tools();
 $contact = new contacts_v2();
 $core_tools = new core_tools();
 $core_tools->load_lang();
+
+$request= new request;
+$tab_export = $request->PDOselect($_SESSION['export_admin_list']['select'], $_SESSION['export_admin_list']['where'],
+									$_SESSION['export_admin_list']['aPDO'],$_SESSION['export_admin_list']['order'],
+									$_SESSION['config']['databasetype'], 20000);
+unset($_SESSION['export_admin_list']);
 
 $fp = fopen($_SESSION['config']['tmppath'].'admin_list_'.$_SESSION['user']['UserId'].'.csv', 'w');
 
@@ -45,29 +52,29 @@ $db = new Database();
 
 $header_done = false;
 
-$nb_colum = count($_SESSION['export_admin_list'][0]);
+$nb_colum = count($tab_export[0]);
 
-for ($i_export=0;$i_export<count($_SESSION['export_admin_list']);$i_export++){
+for ($i_export=0;$i_export<count($tab_export);$i_export++){
     for ($j_export=0;$j_export<$nb_colum;$j_export++){
-    	if($_SESSION['export_admin_list'][$i_export][$j_export]['column'] <> _ID){
+    	if($tab_export[$i_export][$j_export]['column'] <> _ID){
 	    	if ($i_export==0) {
-	    		array_push($list_header, mb_strtoupper(utf8_decode($_SESSION['export_admin_list'][$i_export][$j_export]['column'])));
+	    		array_push($list_header, mb_strtoupper(utf8_decode($tab_export[$i_export][$j_export]['column'])));
 	    	}
-			if($_SESSION['export_admin_list'][$i_export][$j_export]['column'] == _CONTACT_TYPE){
-				array_push($list_row, utf8_decode($contact->get_label_contact(($_SESSION['export_admin_list'][$i_export][$j_export]['value']),$_SESSION['tablename']['contact_types'])));
-			} else if($_SESSION['export_admin_list'][$i_export][$j_export]['column'] == _IS_CORPORATE_PERSON){
-				if($_SESSION['export_admin_list'][$i_export][$j_export]['value'] == 'Y'){
+			if($tab_export[$i_export][$j_export]['column'] == _CONTACT_TYPE){
+				array_push($list_row, utf8_decode($contact->get_label_contact(($tab_export[$i_export][$j_export]['value']),$_SESSION['tablename']['contact_types'])));
+			} else if($tab_export[$i_export][$j_export]['column'] == _IS_CORPORATE_PERSON){
+				if($tab_export[$i_export][$j_export]['value'] == 'Y'){
 					array_push($list_row, utf8_decode(_YES));
 				} else {
 					array_push($list_row, utf8_decode(_NO));
 				}
 			} else {
-				array_push($list_row, utf8_decode($_SESSION['export_admin_list'][$i_export][$j_export]['value']));
+				array_push($list_row, utf8_decode($tab_export[$i_export][$j_export]['value']));
 			}
 		}
     }
 
-    $stmt = $db->query("SELECT * FROM contact_addresses WHERE contact_id = ? ", array($_SESSION['export_admin_list'][$i_export][0]['value']));
+    $stmt = $db->query("SELECT * FROM contact_addresses WHERE contact_id = ? ", array($tab_export[$i_export][0]['value']));
 
     if ($stmt->rowCount()>0) {
 	    while($address = $stmt->fetchObject()){

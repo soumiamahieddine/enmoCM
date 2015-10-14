@@ -139,11 +139,13 @@ array_push($select2[$_SESSION['tablename']['contacts_v2']], 'contact_id as "'._I
 
 $request= new request;
 
-$tab_export = $request->PDOselect($select2,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype'], 20000);
 // $request->show();
 
 $_SESSION['export_admin_list'] = array();
-$_SESSION['export_admin_list'] = $tab_export;
+$_SESSION['export_admin_list']['select'] = $select2;
+$_SESSION['export_admin_list']['where'] = $where;
+$_SESSION['export_admin_list']['aPDO'] = $arrayPDO;
+$_SESSION['export_admin_list']['order'] = $orderstr;
 
 $tab=$request->PDOselect($select,$where,$arrayPDO, $orderstr,$_SESSION['config']['databasetype']);
 
