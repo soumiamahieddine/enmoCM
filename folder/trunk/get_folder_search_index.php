@@ -36,7 +36,7 @@ $indexes = $foldertype->get_indexes($_REQUEST['foldertype_id']);
 $mandatory = $foldertype->get_mandatory_indexes($_REQUEST['foldertype_id']);
 if(count($indexes) > 0)
 {
-	$content .= '<table border="0">';
+	$content .= '<table border="0" border="0" cellpadding="3" width="100%">';
 	$i=0;
 	foreach(array_keys($indexes) as $key)
 	{
@@ -150,7 +150,7 @@ if(count($indexes) > 0)
 					}
 				$content .='</select>';
 			$content .= '</td>';
-			$content .= '<td width="2%">&nbsp;</td>';
+			//$content .= '<td width="2%">&nbsp;</td>';
 			if($i%2 == 1 && $i!=0) // impair
 			{
 				$content .=  '</tr>';
