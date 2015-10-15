@@ -637,7 +637,7 @@ class contacts_v2 extends Database
             <?php
                 echo '&nbsp;' . _ADD_ADDRESS_TO_CONTACT;
             ?>
-        </h2>
+        </h1>
         <br/>
             <span style="margin-left:30px;">
                 <?php echo '&nbsp;'. _ADD_ADDRESS_TO_CONTACT_DESC;?>
@@ -1109,13 +1109,9 @@ class contacts_v2 extends Database
                         <tr id="departement_p">
                             <td><label for="departement"><?php echo _SERVICE;?>&nbsp;: </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="departement" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$('rule_departement').style.display='table-row'" onblur="$('rule_departement').style.display='none';" id="departement" value="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']));} ?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="departement" type="text" onfocus="$('rule_departement').style.display='table-row'" onblur="$('rule_departement').style.display='none';" id="departement" value="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']));} ?>"/>
                                 <span class="blue_asterisk" style="visibility:visible;">*</span>
                             </td>
-							<tr style="display:none;" id="rule_departement">
-                                <td>&nbsp;</td>
-                                <td align="left"><i><?php echo _WRITE_IN_UPPER;?></i></td>
-							</tr>
                         </tr>
                         
                         <tr id="title_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ functions::xecho($display_value);}?>">
@@ -1223,7 +1219,7 @@ class contacts_v2 extends Database
                         <tr>
                             <td><label for="country"><?php echo _COUNTRY;?> : </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="country" type="text" onfocus="$('rule_country').style.display='table-row'" onblur="$('rule_country').style.display='none';" id="country" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COUNTRY'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_COUNTRY'])); }?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="country" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$('rule_country').style.display='table-row'" onblur="$('rule_country').style.display='none';" id="country" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COUNTRY'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_COUNTRY'])); }?>"/>
                                 <span class="blue_asterisk" style="visibility:visible;">*</span>
                             </td>
                         </tr>
