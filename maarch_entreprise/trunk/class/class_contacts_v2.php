@@ -553,7 +553,7 @@ class contacts_v2 extends Database
                         <td><span id="lastname_mandatory" class="red_asterisk" style="visibility:none;"><i class="fa fa-star"></i></span></td>
                         <td>&nbsp;</td>
                         <tr style="display:none;" id="rule_lastname">
-                            <td colspan="3" align="right"><i><?php echo _WRITE_IN_UPPER;?></i></td>
+                            <td colspan="2" align="right"><i><?php echo _WRITE_IN_UPPER;?></i></td>
                         </tr>
                     </tr>
                     <tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ functions::xecho($display_value);}?>">
