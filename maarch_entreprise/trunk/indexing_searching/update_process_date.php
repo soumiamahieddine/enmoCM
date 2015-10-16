@@ -84,8 +84,12 @@ if (isset($delay) && $delay > 0) {
     } else {
         $date = $alert_engine->date_max_treatment($delay, false);
     }
-    $process_date = $db->dateformat($date, '-');
-    echo "{status : 0, process_date : '" . trim($process_date) . "'}";
+
+    $process_date = functions::dateformat($date, '-');
+    $tmpProcessDate = explode(" ", $process_date);
+    $date = $tmpProcessDate[0];
+    
+    echo "{status : 0, process_date : '" . trim($date) . "'}";
     exit();
 } else {
     echo "{status : 1}";
