@@ -524,7 +524,7 @@
     </validationRule>
 
     <validationRule name="ajax_ShowCP" extends="standardForm" mode="error">  
-      <parameter name="what" type="identifier" />
+      <parameter name="what" type="safetext" />
       <parameter name="dir" type="identifier" />
       <parameter name="id" type="integer" />
     </validationRule>
