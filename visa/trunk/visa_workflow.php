@@ -57,17 +57,18 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
     $stepDetails = array();
     $stepDetails = $circuit_visa->getStepDetails($res_id, $coll_id, 'VISA_CIRCUIT', $sequence);
     $message = '';
+
     //enables to process the visa if i am not the item_id
     if ($stepDetails['item_id'] <> $_SESSION['user']['UserId']) {
     	$stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
-            . " WHERE res_id = ? AND item_id= ? AND difflist_type = ?"
-            , array($res_id, $stepDetails['item_id'], 'VISA_CIRCUIT'));
+            . " WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?"
+            , array($stepDetails['listinstance_id'], $stepDetails['item_mode'], $res_id, $stepDetails['item_id'], 'VISA_CIRCUIT'));
     	$message = _VISA_BY . " " . $_SESSION['user']['UserId'] 
     		. " " . _INSTEAD_OF . " " . $stepDetails['item_id'];
     } else {
     	$stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
-            . " WHERE res_id = ? AND item_id= ? AND difflist_type = ?"
-            , array($res_id, $_SESSION['user']['UserId'], 'VISA_CIRCUIT'));
+            . " WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?"
+            , array($stepDetails['listinstance_id'], $stepDetails['item_mode'], $res_id, $_SESSION['user']['UserId'], 'VISA_CIRCUIT'));
     }
 
     if (
