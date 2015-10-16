@@ -91,15 +91,15 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 --CONTACTS_TYPES--
 ------------------
 
-INSERT INTO contact_types (id, label) VALUES (100, '1. Entreprises');
-INSERT INTO contact_types (id, label) VALUES (101, '2. Associations');
-INSERT INTO contact_types (id, label) VALUES (102, '3. Administrations');
-INSERT INTO contact_types (id, label) VALUES (103, '4. Collectivités territoriales');
-INSERT INTO contact_types (id, label) VALUES (104, '5. Autorités juridictionnelles');
-INSERT INTO contact_types (id, label) VALUES (105, '6. Organisations syndicales');
-INSERT INTO contact_types (id, label) VALUES (106, '0. Particuliers');
-INSERT INTO contact_types (id, label) VALUES (107, '7. Banques');
-INSERT INTO contact_types (id, label) VALUES (108, '8. CCI');
+INSERT INTO contact_types (id, label, contact_target) VALUES (100, '1. Entreprises', 'corporate');
+INSERT INTO contact_types (id, label, contact_target) VALUES (101, '2. Associations', 'both');
+INSERT INTO contact_types (id, label, contact_target) VALUES (102, '3. Administrations', 'corporate');
+INSERT INTO contact_types (id, label, contact_target) VALUES (103, '4. Collectivités territoriales', 'corporate');
+INSERT INTO contact_types (id, label, contact_target) VALUES (104, '5. Autorités juridictionnelles', 'corporate');
+INSERT INTO contact_types (id, label, contact_target) VALUES (105, '6. Organisations syndicales', 'corporate');
+INSERT INTO contact_types (id, label, contact_target) VALUES (106, '0. Particuliers', 'no_corporate');
+INSERT INTO contact_types (id, label, contact_target) VALUES (107, '7. Banques', 'corporate');
+INSERT INTO contact_types (id, label, contact_target) VALUES (108, '8. CCI', 'corporate');
 
 
 
