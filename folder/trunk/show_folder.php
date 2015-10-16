@@ -381,7 +381,7 @@ if (isset($_POST['delete_folder'])) {
                     <iframe name="filling_res" id="filling_res" src="<?php  
                     echo $_SESSION['config']['businessappurl']
                         . "index.php?display=true&module=folder&page=filling_res";
-                        ?>" frameborder="0" scrolling="auto" width="400px" height="580px"></iframe>
+                        ?>" frameborder="0" scrolling="auto" width="100%" height="580px"></iframe>
                     <?php
                 }
                 else
@@ -394,7 +394,7 @@ if (isset($_POST['delete_folder'])) {
                     <td valign="top" style="border-left: 1px solid #CCCCCC;">
                         <iframe name="view_doc" id="view_doc" src="<?php echo $_SESSION['config']['businessappurl']
                             ."index.php?display=true&module=folder&page=list_doc";
-                            ?>" frameborder="0" scrolling="no" width="550px" height="580px"></iframe>
+                            ?>" frameborder="0" scrolling="auto" width="550px" height="580px"></iframe>
                     </td>
                 </tr>
             </table>

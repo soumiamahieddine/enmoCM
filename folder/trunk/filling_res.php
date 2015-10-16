@@ -126,6 +126,7 @@ if (empty($collIdTest)) {
 			{
 				var eleframe1 = window.top.document.getElementById('view_doc');
 				eleframe1.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=list_doc&listid='+id;
+				eleframe1.width = '100%'; 
 			}
 		</script>
 		<div align="left">
