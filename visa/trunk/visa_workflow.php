@@ -38,6 +38,16 @@ $confirm = true;
 /**
 * $etapes  array Contains only one etap, the status modification
 */
+
+$error_visa_workflow = false;
+
+$db = new Database();
+$stmt = $db->query("SELECT listinstance_id from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and process_date ISNULL", array($_POST['values'], 'letterbox_coll', 'VISA_CIRCUIT'));
+
+if ($stmt->rowCount() < 2) {
+    $error_visa_workflow = true;
+}
+
 $etapes = array('empty_error');
  
 require_once "modules/visa/class/class_modules_tools.php";
@@ -74,8 +84,12 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
     if (
         $circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $circuit_visa->nbVisa($res_id, $coll_id)
     ){
-        $stmt = $db->query("UPDATE res_letterbox SET status='ESIG' WHERE res_id = ? ", array($res_id));
+        $mailStatus = 'ESIG';
+    } else {
+        $mailStatus = 'EVIS';
     }
+
+    $stmt = $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", array($mailStatus, $res_id));
 
     return array('result' => $res_id.'#', 'history_msg' => $message);
 }

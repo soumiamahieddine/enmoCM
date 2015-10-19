@@ -255,7 +255,7 @@ class visa extends Database
 	
 	public function myPosVisa($res_id, $coll_id, $listDiffType){
 		$db = new Database();
-		$stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
+		$stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date ISNULL ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
 		
 		$res = $stmt->fetchObject();
 		if ($res->item_mode == 'sign'){
@@ -495,8 +495,10 @@ class visa extends Database
 							if ($isVisaStep && ($myPosVisa+1 == $seq || $myPosVisa == $seq)) $up = ' style="visibility:hidden"';
 							else $up = ' style="visibility:visible"';
 							$down = ' style="visibility:hidden"';
-							if ($isVisaStep && $myPosVisa == $seq) $add = ' style="visibility:hidden"';
-							else $add = ' style="visibility:visible"';
+							
+							// if ($isVisaStep && $myPosVisa == $seq) $add = ' style="visibility:hidden"';
+							// else $add = ' style="visibility:visible"';
+							$add = ' style="visibility:visible"';
 							
 							if ($isVisaStep && $myPosVisa == $seq) $del = ' style="visibility:hidden"';
 							else $del = ' style="visibility:visible"';
