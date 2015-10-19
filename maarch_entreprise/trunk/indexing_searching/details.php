@@ -1243,7 +1243,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 				<div class="error" id="divError" name="divError"></div>
 				<div style="text-align:center;">
 				<?php
-				echo $visa->getList($s_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT');
+				echo $visa->getList($s_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT', '','Y');
 				?>
 				</div>
 				
