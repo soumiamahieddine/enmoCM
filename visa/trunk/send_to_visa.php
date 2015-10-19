@@ -48,20 +48,7 @@ $confirm = true;
 	$res_id = $arr_id[0];
 
 	$visa = new visa();
-	$curr_visa_wf = $visa->getWorkflow($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'], 'VISA_CIRCUIT');
-
-	$db = new Database();
-	$stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and process_date ISNULL ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $_SESSION['current_basket']['coll_id'], 'VISA_CIRCUIT'));
-	$resListDiffVisa = $stmt->fetchObject();
-
-	// If there is only one step in the visa workflow, we set status to ESIG
-	if ((count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 1) || $resListDiffVisa->item_mode == "sign"){
-        $mailStatus = 'ESIG';
-    } else {
-        $mailStatus = 'EVIS';
-    }
-
-    $stmt = $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", array($mailStatus, $res_id));
+	$visa->setStatusVisa($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id']);
 
 	// for($i=0; $i<count($arr_id );$i++)
 	// {

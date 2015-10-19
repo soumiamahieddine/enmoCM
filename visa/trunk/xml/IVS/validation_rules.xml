@@ -50,7 +50,8 @@
     	<parameter name="title" type="string" />
     	<parameter name="conseillers" type="string" />
     	<parameter name="consignes" type="string" />
-		<parameter name="list_sign" type="string" />
+        <parameter name="list_sign" type="string" />
+		<parameter name="fromDetail" type="YN" />
     </validationRule>
     <validationRule name="vi_sign_ans" extends="standardForm" mode="error">
     	<parameter name="id" type="string" />

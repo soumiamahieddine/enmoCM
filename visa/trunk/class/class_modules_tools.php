@@ -308,8 +308,26 @@ class visa extends Database
 		}
 		return '';
 	}
+
+	public function setStatusVisa($res_id, $coll_id){
+		$curr_visa_wf = $this->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
+
+		$db = new Database();
+		$stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and process_date ISNULL ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, 'VISA_CIRCUIT'));
+		$resListDiffVisa = $stmt->fetchObject();
+
+		// If there is only one step in the visa workflow, we set status to ESIG
+		if ((count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 1) || $resListDiffVisa->item_mode == "sign"){
+	        $mailStatus = 'ESIG';
+	    } else {
+	        $mailStatus = 'EVIS';
+	    }
+
+	    $stmt = $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", array($mailStatus, $res_id));
+
+	}
 	
-	public function getList($res_id, $coll_id, $bool_modif=false, $typeList, $isVisaStep = false){
+	public function getList($res_id, $coll_id, $bool_modif=false, $typeList, $isVisaStep = false, $fromDetail = ""){
 		$core_tools =new core_tools();
 		if ( $typeList == 'VISA_CIRCUIT'){
 			$id_tab="tab_visaSetWorkflow";
@@ -531,7 +549,13 @@ class visa extends Database
 		$str .= '</tbody>';
 		$str .= '</table>';
 		if ($bool_modif){
-			$str .= '<input type="button" name="send" id="send" value="Sauvegarder" class="button" onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\');" /> ';
+			$str .= '<input type="button" name="send" id="send" value="Sauvegarder" class="button" ';
+
+				if ($fromDetail == "Y") {
+					$str .= 'onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'Y\');" /> ';
+				} else {
+					$str .= 'onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'N\');" /> ';
+				}
 			
 				$str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'block\';" />';
 				$str .= '<div id="modalSaveVisaModel" >';

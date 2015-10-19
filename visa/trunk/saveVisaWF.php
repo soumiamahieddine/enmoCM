@@ -88,6 +88,10 @@
 		);*/
 		
 	$visa->saveWorkflow($res_id, $coll_id, $_SESSION['visa_wf']['diff_list'], 'VISA_CIRCUIT');
+
+	if ($_POST['fromDetail'] == "Y") {
+		$visa->setStatusVisa($res_id, $coll_id);
+	}
 	
 	echo "{status : 1}";
 	exit();

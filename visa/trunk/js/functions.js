@@ -171,7 +171,7 @@ function deplacerLigne(source, cible, id_tableau)
 	refreshIcones(id_tableau);
 }
 
-function saveVisaWorkflow(res_id, coll_id, id_tableau){
+function saveVisaWorkflow(res_id, coll_id, id_tableau, fromDetail){
 	var tableau = document.getElementById(id_tableau);
 	
 	var arrayLignes = tableau.rows; //l'array est stocké dans une variable
@@ -184,6 +184,15 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 	var isSign = "";
 	
 	var cons_empty = false;
+
+	var detail = "";
+
+	if (fromDetail == undefined || fromDetail == "N" ) {
+		detail = "N";
+	} else if (fromDetail == "Y") {
+		detail = "Y";
+	}
+
 	while(i<longueur)
 	{
 		
@@ -215,7 +224,8 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 				conseillers : conseillers,
 				consignes : consignes,
 				dates : dates,
-				list_sign : isSign
+				list_sign : isSign,
+				fromDetail : detail
 			},
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
