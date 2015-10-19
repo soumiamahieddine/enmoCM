@@ -25,7 +25,8 @@ function refreshIcones(id_tableau){
 		//MAJ id et name
 		//arrayLignes[i].cells[0].innerHTML = i;
 		arrayLignes[i].cells[0].childNodes[0].name = "conseiller_"+num;	arrayLignes[i].cells[0].childNodes[0].id="conseiller_"+num;
-		arrayLignes[i].cells[1].childNodes[0].name = "down_"+num;	arrayLignes[i].cells[1].childNodes[0].id="down_"+num;		
+		arrayLignes[i].cells[0].childNodes[1].id = "signatory_" + num;
+		arrayLignes[i].cells[1].childNodes[0].name = "down_"+num;	arrayLignes[i].cells[1].childNodes[0].id="down_"+num;
 		document.getElementById("down_"+num).setAttribute('onclick','deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2, \''+id_tableau+'\');');
 				
 		arrayLignes[i].cells[2].childNodes[0].name = "up_"+num;	arrayLignes[i].cells[2].childNodes[0].id="up_"+num;
@@ -40,17 +41,18 @@ function refreshIcones(id_tableau){
 		if (longueur > 2) document.getElementById("suppr_"+num).style.visibility="visible";
 		else document.getElementById("suppr_"+num).style.visibility="hidden";
 		
-		if (i > 1){
+		if (i > 1)
 			document.getElementById("up_"+num).style.visibility="visible";
-		}
-		else document.getElementById("up_"+num).style.visibility="hidden";
+		else
+			document.getElementById("up_"+num).style.visibility="hidden";
 		
 		if (i != longueur-1){
 			document.getElementById("add_"+num).style.visibility="hidden";
+
 			document.getElementById("isSign_"+num).style.visibility="hidden";
-			
 			document.getElementById("isSign_"+num).checked=false;
-			
+			document.getElementById("signatory_" + num).innerHTML = "";
+
 			document.getElementById("down_"+num).style.visibility="visible";
 		}
 		else {
@@ -58,8 +60,10 @@ function refreshIcones(id_tableau){
 			
 			document.getElementById("isSign_"+num).style.visibility="hidden";
 			document.getElementById("isSign_"+num).checked=true;
-			
+			document.getElementById("signatory_" + num).innerHTML = " <i title='Signataire' style='color : #fdd16c' class='fa fa-certificate fa-lg fa-fw'></i>";
+
 			document.getElementById("down_"+num).style.visibility="hidden";
+
 		}
 		
 		/* Ajout des conditions pour les lignes disabled */
@@ -74,7 +78,6 @@ function refreshIcones(id_tableau){
 				document.getElementById("up_"+num).style.visibility="hidden";
 		}
 		/*************************************************/
-		
 		i++;
 	}
 }
@@ -99,7 +102,7 @@ function addRow(id_tableau)
 	for (var j=0; j<listeDeroulante.options.length; j++){
 		listOptions += "<option value='"+listeDeroulante.options[j].value+"'>"+listeDeroulante.options[j].innerHTML+"</option>";
 	}
-	colonne2.innerHTML += "<select>"+listOptions+"</select>";
+	colonne2.innerHTML += "<select>"+listOptions+"</select><span id='signatory_" + position + "'></span>";
 	//colonne2.innerHTML += "</select>";
 
 	var colonne3 = ligne.insertCell(1);
@@ -119,12 +122,14 @@ function addRow(id_tableau)
 	colonne6.innerHTML += "<a href=\"javascript://\" id=\"add_"+position+"\" name=\"add_"+position+"\" onclick=\"addRow('"+id_tableau+"')\"style=\"visibility:visible;\" ><i class=\"fa fa-user-plus fa-2x\"></i></a>";
 	
 	var colonne7 = ligne.insertCell(5);
-	colonne7.innerHTML += "<input type=\"text\" id=\"consigne_"+position+"\" name=\"consigne_"+position+"\" style=\"width:100%;\"/>";
+	colonne7.innerHTML += "<input type=\"text\" id=\"consigne_"+position+"\" name=\"consigne_"+position+"\" style=\"width:95%;\"/>";
 	
 	var colonne8 = ligne.insertCell(6);
+	colonne8.style.display = 'none';
 	colonne8.innerHTML += "<input type=\"hidden\" id=\"date_"+position+"\" name=\"date_"+position+"\"/>";
 	
 	var colonne9 = ligne.insertCell(7);
+	colonne9.style.display = 'none';
 	colonne9.innerHTML += "<input type=\"checkbox\" id=\"isSign_"+position+"\" name=\"isSign_"+position+"\"/>";
 	
 	refreshIcones(id_tableau);
@@ -157,6 +162,8 @@ function deplacerLigne(source, cible, id_tableau)
 		if (i == 0){
 			nouvelle.cells[0].childNodes[0].selectedIndex = cellules[i].childNodes[0].selectedIndex;
 		}
+		if (i > 5)
+			nouvelle.cells[i].style.display = 'none';
 	}
 
 	//on supprimer l'ancienne ligne
