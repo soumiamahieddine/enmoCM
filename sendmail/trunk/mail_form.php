@@ -268,27 +268,27 @@ if ($mode == 'add') {
         if (count($attachment_files) >0) {
             $content .='<br/>';
             $content .=_ATTACHMENTS;
-            $content .= "<table style=\"border-collapse:collapse\">";
+            $content .= "<table cellspacing='3' style='border-collapse:collapse;'>";
             for($i=0; $i < count($attachment_files); $i++) {
                 //Get data
                 $id = $attachment_files[$i]['id']; 
                 $description = $attachment_files[$i]['label'];
-//                $description = 'Réunion du lundi';
+                if (strlen($description) > 73) {
+                    $description = substr($description, 0, 70);
+                    $description .= "...";
+                }
                 $format = $attachment_files[$i]['format'];
                 $mime_type = $is->get_mime_type($attachment_files[$i]['format']);
                 $att_type = $attachment_files[$i]['format'];
                 $filesize = $attachment_files[$i]['filesize']/1024;
                 $attachment_type = $_SESSION['attachment_types'][$attachment_files[$i]['attachment_type']];
                 $chrono = $attachment_files[$i]['identifier'];
-//                $chrono = 'MVL/2015D/31';
                 $dest_society = $attachment_files[$i]['society'];
                 $dest_firstname = $attachment_files[$i]['firstname'];
-//                $dest_firstname = 'jaki';
                 $dest_lastname = $attachment_files[$i]['lastname'];
-//                $dest_lastname = 'benji';
                 ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
                 
-                $content .= "<tr><td><li alt=\"".$description
+                $content .= "<tr><td style='width : 40%;'><li alt=\"".$description
                     . "\" title=\"".$description
                     . "\"><input style=\"margin-left: 3px\" type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_attachment[]\""
                     . " class=\"check\" value=\""
@@ -298,10 +298,12 @@ if ($mode == 'add') {
                         $content .= " checked=\"checked\" ";
                     }
 
-                $content .= ">(" . $attachment_type . ")</td><td style=\"width : 40%;\"><strong style=\"margin-left: 20px\">" . $description . "</strong></li></td><td style=\"width : 40%;\"><em style=\"margin-left: 20px\">";
+                $content .= ">(" . $attachment_type . ")</td>";
+                $content .= "<td style='width : 60%;'><strong style='margin-left: 20px;'>" . $description . "</strong></li></td></tr>";
+                $content .= "<tr><td style='font-size: 10px'><em style='margin-left: 10%'>";
                 if ($chrono != "")
                     $content .= $chrono . " - </em><em>";
-                $content .= $dest_firstname . " " . $dest_lastname. " " . $dest_society . " (" . $att_type . " - " . $filesize .")</em></td></tr>";
+                $content .= $dest_firstname . " " . $dest_lastname. " " . $dest_society . " (" . $att_type . " - " . $filesize .")</em></td></tr><tr><td>&nbsp;</td></tr>";
                    
 				$filename = $sendmail_tools->createFilename($description, $format);
                 // $all_joined_files .= $description.': '.$filename.PHP_EOL;

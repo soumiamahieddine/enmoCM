@@ -206,13 +206,9 @@ class sendmail extends Database
                 );
         } else {
 			require_once 'modules/attachments/attachments_tables.php';
-//            $stmt = $db->query(
-//                "SELECT res_id, description, subject, title, format, filesize, res_id_master, attachment_type, identifier FROM res_view_attachments WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and status <> 'OBS'",
-//				array($id, $coll_id)
-//				);
             $stmt = $db->query(
                 "SELECT rva.res_id, rva.description, rva.subject, rva.title, rva.format, rva.filesize, rva.res_id_master, rva.attachment_type, rva.identifier, cv2.society, cv2.firstname, cv2.lastname
-                FROM res_view_attachments rva, contacts_v2 cv2 WHERE rva.dest_contact_id = cv2.contact_id and rva.res_id_master = ? and rva.coll_id = ? and rva.status <> 'DEL' and rva.status <> 'OBS' ORDER BY rva.attachment_type, rva.description",
+                FROM res_view_attachments rva LEFT JOIN contacts_v2 cv2 ON rva.dest_contact_id = cv2.contact_id WHERE rva.res_id_master = ? and rva.coll_id = ? and rva.status <> 'DEL' and rva.status <> 'OBS' ORDER BY rva.attachment_type, rva.description",
 				array($id, $coll_id)
 				);
         }
@@ -227,7 +223,7 @@ class sendmail extends Database
                 $label = $res->subject;
             elseif (strlen(trim($res->description)) > 0)
                 $label = $res->description;
-                
+
             array_push($joinedFiles,
                         array('id' => $res->res_id, //ID
                               'label' => $this->show_string($label), //Label
