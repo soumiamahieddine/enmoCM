@@ -1728,3 +1728,6 @@ if (!defined("_CONTROL_PARAM_TECHNIC")) define("_CONTROL_PARAM_TECHNIC", "Contr√
 if (!defined("_COMPONENT")) define("_COMPONENT", "Composant");
 
 if (!defined("_MARK_AS_READ")) define("_MARK_AS_READ", "Marquer comme lu");
+
+if (!defined("_USE_PREVIOUS_ADDRESS")) define("_USE_PREVIOUS_ADDRESS", "R√©utiliser une adresse");
+

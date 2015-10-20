@@ -2932,3 +2932,16 @@ function convertSize() {
         window.alert('WRONG FORMAT');
     }
 }
+
+function setPreviousAddress(address) {
+    if (address != "") {
+        var allCoordoate    = address.split('||');
+        $('num').value      = allCoordoate[0];
+        $('street').value   = allCoordoate[1];
+        $('add_comp').value = allCoordoate[2];
+        $('cp').value       = allCoordoate[3];
+        $('town').value     = allCoordoate[4];
+        $('country').value  = allCoordoate[5];
+        $('website').value  = allCoordoate[6];
+    }
+}

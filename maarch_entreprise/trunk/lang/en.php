@@ -1381,3 +1381,5 @@ if (!defined("_CONTROL_PARAM_TECHNIC")) define("_CONTROL_PARAM_TECHNIC", "Contro
 if (!defined("_COMPONENT")) define("_COMPONENT", "Component");
 
 if (!defined("_MARK_AS_READ")) define("_MARK_AS_READ", "Mark as read");
+
+if (!defined("_USE_PREVIOUS_ADDRESS")) define("_USE_PREVIOUS_ADDRESS", "Use previous address");

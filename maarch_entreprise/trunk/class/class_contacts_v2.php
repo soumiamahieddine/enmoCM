@@ -1066,6 +1066,31 @@ class contacts_v2 extends Database
                 </table>
                 <div id="address_div"  style="display:inline">
                     <table width="65%" id="frmaddress_table1">
+                    <?php
+                    if ($mode == "add") { ?>
+                        <tr id="previous_address_tr" >
+                            <td></td>
+                            <td>
+                                <select onchange="setPreviousAddress(this.options[this.selectedIndex].value)" class="<?php echo $fieldAddressClass;?>">
+                                    <option value=""><?php echo _USE_PREVIOUS_ADDRESS;?></option>
+                                    <?php
+                                        $stmt = $db->query("SELECT distinct address_num, address_street, address_complement, address_postal_code, address_town, address_country, website FROM contact_addresses WHERE contact_id = ?", array($_SESSION['m_admin']['contact']['ID']) );
+                                        while ($result = $stmt->fetchObject()) {
+                                            if ($result->address_num <> "" || $result->address_street <> "" || $result->address_postal_code <> "" || $result->address_town <> "" || $result->address_country <> "") {
+                                                $pipeAddress = $result->address_num . "||" . $result->address_street . "||" . $result->address_complement  . "||" . $result->address_postal_code . "||" . $result->address_town . "||" . $result->address_country . "||" . $result->website;
+                                                $AddressReplacePipe = str_replace("||", " ", $pipeAddress);
+                                                ?>
+                                                <option value="<?php echo $pipeAddress ;?>">
+                                                    <?php echo $AddressReplacePipe;?>
+                                                </option><?php
+                                            }
+                                        }
+                                    ?>
+                                </select>
+                            </td>
+                        </tr> <?php
+                    }
+                    ?>
                         <tr id="contact_purposes_tr" >
                             <td><label for="contact_purposes"><?php echo _CONTACT_PURPOSE;?>&nbsp;:&nbsp;</label>
 
