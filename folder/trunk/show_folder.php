@@ -138,8 +138,8 @@ if (isset($_POST['delete_folder'])) {
         ?>
         	<div class="block">
             	<!-- <h4><a href="#" onclick="history.back();return false;" class="back"><?php echo _BACK;?></a></h4> -->
-                <h4><a href="<?php echo $_SESSION['config']['businessappurl'] 
-            .'index.php?page=search_adv_folder_result&module=folder';?>" class="back"><?php echo _BACK;?></a></h4>
+                <a href="<?php echo $_SESSION['config']['businessappurl'] 
+            .'index.php?page=search_adv_folder_result&module=folder';?>" class="back"><i class="fa fa-backward fa-2x" title="<?php echo _BACK;?>"></i></a>
         	</div>
         <br/>
         <dl id="tabricator2">
