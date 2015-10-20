@@ -92,7 +92,7 @@ for ($i = 0; $i < count($tab); $i ++) {
             if ($tab[$i][$j][$value] == "id") {
                 $tab[$i][$j]["contact_types_id"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["label"] = _ID;
-                $tab[$i][$j]["size"] = "30";
+                $tab[$i][$j]["size"] = "10";
                 $tab[$i][$j]["label_align"] = "left";
                 $tab[$i][$j]["align"] = "left";
                 $tab[$i][$j]["valign"] = "bottom";
@@ -105,7 +105,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 );
                 $tab[$i][$j]["contact_types_label"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["label"] = _DESC_CONTACT_TYPES;
-                $tab[$i][$j]["size"] = "40";
+                $tab[$i][$j]["size"] = "30";
                 $tab[$i][$j]["label_align"] = "left";
                 $tab[$i][$j]["align"] = "left";
                 $tab[$i][$j]["valign"] = "bottom";
@@ -124,7 +124,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 }
                 
                 $tab[$i][$j]["label"] = _CONTACT_TARGET_LIST;
-                $tab[$i][$j]["size"] = "100";
+                $tab[$i][$j]["size"] = "50";
                 $tab[$i][$j]["label_align"] = "left";
                 $tab[$i][$j]["align"] = "left";
                 $tab[$i][$j]["valign"] = "bottom";
