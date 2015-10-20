@@ -9,7 +9,7 @@ if (!defined('_VIEW_VISA_WORKFLOW'))
 if (!defined('_VIEW_VISA_WORKFLOW_DESC'))
     define('_VIEW_VISA_WORKFLOW_DESC', 'Allow to visualize the visa workflow in the diffusion list zone and in advancement.');
 if (!defined('_CONFIG_VISA_WORKFLOW'))
-    define('_CONFIG_VISA_WORKFLOW', 'Configuration visa workflow');
+    define('_CONFIG_VISA_WORKFLOW', 'Set visa workflow');
 if (!defined('_CONFIG_VISA_WORKFLOW_DESC'))
     define('_CONFIG_VISA_WORKFLOW_DESC', 'Allow to set the visa workflow to be taken by mail.');
 	
@@ -30,7 +30,7 @@ if (!defined('_SEND_TO_SIGNATURE'))
     define('_SEND_TO_SIGNATURE', 'Send to signature');
 
 if (!defined('_SUBMIT_COMMENT'))
-    define('_SUBMIT_COMMENT', 'Commentaire de visa (optionnel) ');
+    define('_SUBMIT_COMMENT', 'Submit visa comment (optional) ');
 
 if (!defined("_PRINT_DOCUMENT"))
     define("_PRINT_DOCUMENT", "View and print the document");
@@ -41,3 +41,9 @@ if (!defined("_VISA_BY"))
 
 if (!defined("_INSTEAD_OF"))
     define("_INSTEAD_OF", "Instead of");
+
+if (!defined("_CONFIG_VISA_WORKFLOW_IN_DETAIL"))
+    define("_CONFIG_VISA_WORKFLOW_IN_DETAIL", "Set visa workflow from detail");
+
+if (!defined("_CONFIG_VISA_WORKFLOW_DESC"))
+    define("_CONFIG_VISA_WORKFLOW_DESC", "Allow to set the visa workflow from detail");

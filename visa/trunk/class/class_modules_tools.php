@@ -338,7 +338,9 @@ class visa extends Database
 			$id_form="form_avisSetWorkflow";
 		}
 		
-		
+		if ($fromDetail == "Y" && !$core_tools->test_service('config_visa_workflow_from_detail', 'visa', false)) {
+			$bool_modif = false;
+		}
 				
 		$circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
 		if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users']) && !$core_tools->test_service('config_visa_workflow', 'visa', false)){
@@ -476,7 +478,7 @@ class visa extends Database
 							$str .= '</td>';
 							$str .= '<td>'.$step['process_comment'].'</td>';	
 							if ($step['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
-							elseif ($step['user_id'] == $_SESSION['user']['UserId']) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
+							elseif ($step['user_id'] == $_SESSION['user']['UserId']) $str .= '<td><i class="fa fa-hourglass-half fa-2x"></i></td>';		
 							else $str .= '<td></td>';		
 						}
 						$str .= '</tr>';
@@ -535,10 +537,10 @@ class visa extends Database
 						}
 						else{
 							$str .= '<td>'.$circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
-							$str .= '</td>';
+							$str .= ' <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></td>';
 							$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
 							if ($circuit['sign']['users'][0]['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
-							elseif ($circuit['sign']['users'][0]['user_id'] == $_SESSION['user']['UserId']) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
+							elseif ($circuit['sign']['users'][0]['user_id'] == $_SESSION['user']['UserId']) $str .= '<td><i class="fa fa-hourglass-half"></i></td>';		
 							else $str .= '<td></td>';		
 						}
 						$str .= '</tr>';

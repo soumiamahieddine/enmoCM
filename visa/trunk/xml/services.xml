@@ -8,7 +8,16 @@
 	   <servicetype>use</servicetype>
 	   <system_service>false</system_service>
 	   <enabled>true</enabled>
-	   
+	</SERVICE>
+
+	<SERVICE>
+	   <id>config_visa_workflow_in_detail</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
+	   <name>_CONFIG_VISA_WORKFLOW_IN_DETAIL</name>
+	   <comment>_CONFIG_VISA_WORKFLOW_IN_DETAIL_DESC</comment>
+	   <servicepage></servicepage>
+	   <servicetype>use</servicetype>
+	   <system_service>false</system_service>
+	   <enabled>true</enabled>
 	</SERVICE>
 	
 	<SERVICE>
@@ -19,7 +28,6 @@
 	   <servicetype>use</servicetype>
 	   <system_service>false</system_service>
 	   <enabled>true</enabled>
-	   
 	</SERVICE>
 	
 	<SERVICE>
@@ -30,7 +38,6 @@
 	   <servicetype>use</servicetype>
 	   <system_service>false</system_service>
 	   <enabled>true</enabled>
-	 
 	</SERVICE>
 	
 	<SERVICE>
