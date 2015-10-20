@@ -300,7 +300,7 @@ if ($mode == 'add') {
 
                 $content .= ">(" . $attachment_type . ")</td>";
                 $content .= "<td style='width : 60%;'><strong style='margin-left: 20px;'>" . $description . "</strong></li></td></tr>";
-                $content .= "<tr><td style='font-size: 10px' colspan=2><em style='margin-left: 4%'>";
+                $content .= "<tr><td style='font-size: 10px' colspan=2><em style='margin-left: 28px'>";
                 if ($chrono != "")
                     $content .= $chrono . " - </em><em>";
                 $content .= $dest_firstname . " " . $dest_lastname. " " . $dest_society . " (" . $att_type . " - " . $filesize .")</em></td></tr><tr><td>&nbsp;</td></tr>";
