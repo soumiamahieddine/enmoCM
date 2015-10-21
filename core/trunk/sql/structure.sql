@@ -820,6 +820,7 @@ CREATE TABLE entities
   parent_entity_id character varying(32),
   entity_type character varying(64),
   entity_path character varying(2048),
+  ldap_id character varying(255),
   CONSTRAINT entities_pkey PRIMARY KEY (entity_id)
 )
 WITH (OIDS=FALSE);

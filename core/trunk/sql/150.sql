@@ -212,6 +212,9 @@ ALTER TABLE templates ADD template_target character varying(255);
 ALTER TABLE entities DROP COLUMN IF EXISTS entity_path;
 ALTER TABLE entities ADD entity_path character varying(2048);
 
+ALTER TABLE entities DROP COLUMN IF EXISTS ldap_id;
+ALTER TABLE entities ADD ldap_id character varying(255);
+
 ALTER TABLE baskets DROP COLUMN IF EXISTS basket_order;
 ALTER TABLE baskets ADD basket_order integer;
 
