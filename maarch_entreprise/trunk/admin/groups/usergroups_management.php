@@ -38,6 +38,7 @@ if ($mode == 'list') {
             <?php
         if ($mode == 'up') {
             if (count($users) > 0) {
+                $uc = new users_controler();
                 ?><div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" onmouseover="this.style.cursor='pointer';">
                 &nbsp;<i class="fa fa-user fa-2x"></i><i><?php
                 echo _SEE_GROUP_MEMBERS;
@@ -59,7 +60,7 @@ if ($mode == 'list') {
                              <?php
                         $color = ' class="col"';
 
-                for ($i = 0; $i < count($users); $i ++) {
+                for ($i = 0; $i < count($users[0]); $i ++) {
                     if ($color == ' class="col"') {
                         $color = '';
                     } else {
@@ -68,10 +69,10 @@ if ($mode == 'list') {
                      ?>
                              <tr <?php echo $color;?> >
                                        <td style="width:25%;"><?php
-                                           functions::xecho($users[$i]->__get('lastname'));
+                                           echo $uc->getLastName($users[0][$i]);
                                         ?></td>
                                         <td style="width:25%;"><?php
-                                            functions::xecho($users[$i]->__get('firstname'));
+                                            echo $uc->getFirstName($users[0][$i]);
                                         ?></td>
                                        <td ><?php
                     if ($core->test_service('admin_users', 'apps', false)) {
@@ -79,7 +80,7 @@ if ($mode == 'list') {
                                        <a class="change" href="<?php
                                        echo $_SESSION['config']['businessappurl']
                                        .'index.php?page=users_management_controler&amp;mode=up&amp;admin=users&amp;id='
-                                       .$users[$i]->__get('user_id');
+                                       .$users[0][$i];
                                        ?>"  title="<?php
                                        echo _GO_MANAGE_USER;
                                        ?>"><i><?php

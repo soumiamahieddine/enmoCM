@@ -222,13 +222,13 @@ function displayUp($groupId)
     // Get all basket_id linked to the group
     $basketsIds = $ugc->getBaskets($groupId);
     for ($i = 0; $i < count($usersIds); $i ++) {
-        $tmpUser = $uc ->get($usersIds[$i]);
-        if (isset($tmpUser)) {
-            array_push($users, $tmpUser);
+        //$tmpUser = $uc ->get($usersIds[$i]);
+        if (isset($usersIds)) {
+            array_push($users, $usersIds);
         }
     }
 
-    unset($tmpUser);
+    //unset($tmpUser);
 
     if (isset($GLOBALS['basket_loaded']) && $GLOBALS['basket_loaded'] == true
         && count($basketsIds) > 0
