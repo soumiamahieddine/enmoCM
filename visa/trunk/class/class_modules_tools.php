@@ -477,9 +477,9 @@ class visa extends Database
 							$str .= '<td>'.$step['firstname'].' '.$step['lastname'];
 							$str .= '</td>';
 							$str .= '<td>'.$step['process_comment'].'</td>';	
-							if ($step['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
-							elseif ($step['user_id'] == $_SESSION['user']['UserId']) $str .= '<td><i class="fa fa-hourglass-half fa-2x"></i></td>';		
-							else $str .= '<td></td>';		
+							if ($step['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x" title="'._VISED.'"></i></td>';		
+							else $str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_VISA.'"></i></td>';		
+							// else $str .= '<td></td>';		
 						}
 						$str .= '</tr>';
 					}
@@ -539,9 +539,9 @@ class visa extends Database
 							$str .= '<td>'.$circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
 							$str .= ' <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></td>';
 							$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
-							if ($circuit['sign']['users'][0]['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
-							elseif ($circuit['sign']['users'][0]['user_id'] == $_SESSION['user']['UserId']) $str .= '<td><i class="fa fa-hourglass-half"></i></td>';		
-							else $str .= '<td></td>';		
+							if ($circuit['sign']['users'][0]['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x" title="'._SIGNED.'"></i></td>';		
+							else $str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_SIGN.'"></i></td>';		
+								
 						}
 						$str .= '</tr>';
 					}

@@ -81,3 +81,15 @@ if (!defined("_CONFIG_VISA_WORKFLOW_IN_DETAIL"))
 
 if (!defined("_CONFIG_VISA_WORKFLOW_DESC"))
     define("_CONFIG_VISA_WORKFLOW_DESC", "Permet de configurer le circuit de visa depuis la fiche détaillée");
+
+if (!defined("_WAITING_FOR_SIGN"))
+    define("_WAITING_FOR_SIGN", "En attente de la signature");
+
+if (!defined("_SIGNED"))
+    define("_SIGNED", "Signé");
+
+if (!defined("_WAITING_FOR_VISA"))
+    define("_WAITING_FOR_VISA", "En attente du visa");
+
+if (!defined("_VISED"))
+    define("_VISED", "Visé");

@@ -47,3 +47,15 @@ if (!defined("_CONFIG_VISA_WORKFLOW_IN_DETAIL"))
 
 if (!defined("_CONFIG_VISA_WORKFLOW_DESC"))
     define("_CONFIG_VISA_WORKFLOW_DESC", "Allow to set the visa workflow from detail");
+
+if (!defined("_WAITING_FOR_SIGN"))
+    define("_WAITING_FOR_SIGN", "Waiting for signature");
+
+if (!defined("_SIGNED"))
+    define("_SIGNED", "Signed");
+
+if (!defined("_WAITING_FOR_VISA"))
+    define("_WAITING_FOR_VISA", "Waiting for visa");
+
+if (!defined("_VISED"))
+    define("_VISED", "Checked");
