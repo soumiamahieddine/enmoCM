@@ -78,6 +78,37 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         }
     }
 
+    public function getLastName($userId)
+    {
+        $db = new dbquery();
+        $db->connect();
+        $query = "select lastname from " . USERS_TABLE ." WHERE user_id='".$userId."'";
+
+        $db->query($query);
+        $lastname = $db->fetch_object();
+
+        if (isset($lastname))
+            return $lastname->lastname;
+        else
+            return null;
+    }
+
+    public function getFirstName($userId)
+    {
+        $db = new dbquery();
+        $db->connect();
+        $query = "select firstname from " . USERS_TABLE ." WHERE user_id='".$userId."'";
+
+        $db->query($query);
+        $firstname = $db->fetch_object();
+
+        if (isset($firstname))
+            return $firstname->firstname;
+        else
+            return null;
+    }
+
+
     /**
     * Returns an user object based on a user identifier with PDO
     *
