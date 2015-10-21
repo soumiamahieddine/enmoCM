@@ -338,7 +338,7 @@ class visa extends Database
 			$id_form="form_avisSetWorkflow";
 		}
 		
-		if ($fromDetail == "Y" && !$core_tools->test_service('config_visa_workflow_from_detail', 'visa', false)) {
+		if ($fromDetail == "Y" && !$core_tools->test_service('config_visa_workflow_in_detail', 'visa', false)) {
 			$bool_modif = false;
 		}
 				
