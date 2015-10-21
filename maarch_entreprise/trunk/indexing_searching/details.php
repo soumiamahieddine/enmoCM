@@ -1203,7 +1203,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         
                         <br />
                         <div id="diff_list_history_div" style="display:none">
-                            <?php require_once('modules/entities/difflist_history_display.php');?>
+                            <?php 
+                            $diffListType = 'entity_id';
+                            require_once('modules/entities/difflist_history_display.php');?>
                         </div>
                     </dd>
                 <?php
