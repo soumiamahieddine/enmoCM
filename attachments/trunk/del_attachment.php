@@ -70,7 +70,7 @@ $query = "SELECT title FROM res_view_attachments WHERE status <> 'DEL' and statu
     if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') {
         $query .= " and (attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder')";
     } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){
-        $query .= " and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed')";
+        $query .= " and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed' or attachment_type = 'outgoing_mail')";
     }
 	else{
 		$query .= " and (attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder')";
@@ -83,7 +83,7 @@ if ($stmt->rowCount() > 0) {
 }
 ?>
 <script type="text/javascript">
-	
+
 	if (window.parent.top.document.getElementById('cur_resId')){
 		function get_num_rep(res_id){
 			trig_elements = window.parent.top.document.getElementsByClassName('trig');
@@ -115,7 +115,7 @@ if ($stmt->rowCount() > 0) {
 		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf,print_folder&fromDetail=attachments';?>";
 		window.parent.top.document.getElementById('nb_attach').innerHTML = " ("+nb_attach+")";
 	<?php } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){ ?>
-		eleframe1[1].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed&fromDetail=response';?>";
+		eleframe1[1].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,outgoing_mail&fromDetail=response';?>";
 		window.parent.top.document.getElementById('answer_number').innerHTML = " ("+nb_attach+")";
 	<?php } else { ?>
 		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder';?>";
