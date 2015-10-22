@@ -12,7 +12,10 @@ if (!defined('_CONFIG_VISA_WORKFLOW'))
     define('_CONFIG_VISA_WORKFLOW', 'Set visa workflow');
 if (!defined('_CONFIG_VISA_WORKFLOW_DESC'))
     define('_CONFIG_VISA_WORKFLOW_DESC', 'Allow to set the visa workflow to be taken by mail.');
-	
+
+if (!defined("_EMPTY_VISA_WORKFLOW"))
+    define("_EMPTY_VISA_WORKFLOW", "No visa workflow set");
+
 if (!defined('_VISA_ANSWERS'))
     define('_VISA_ANSWERS', 'target the draft responses');
 	

@@ -26,6 +26,8 @@ if (!defined("_CONFIG_VISA_WORKFLOW_DESC"))
     define("_CONFIG_VISA_WORKFLOW_DESC", "Permet de configurer le circuit de visa que devra prendre le courrier");
 if (!defined("_EMPTY_USER_LIST"))
     define("_EMPTY_USER_LIST", "La liste des utilisateurs est vide");
+if (!defined("_EMPTY_VISA_WORKFLOW"))
+    define("_EMPTY_VISA_WORKFLOW", "Aucun circuit de visa paramétré");
 if (!defined("_VISA_ANSWERS"))
     define("_VISA_ANSWERS", "Viser les projets de réponse");
 	
