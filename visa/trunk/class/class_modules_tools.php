@@ -379,7 +379,7 @@ class visa extends Database
 				$str .= '<th style="width:0%;display:none" align="left" valign="bottom"></th>';
 				$str .= '<th style="width:0%;display:none" align="center" valign="bottom"></th>';
 			}
-			else{
+			else {
 				$str .= '<th style="width:55%;" align="left" valign="bottom"><span>Consigne</span></th>';
 				$str .= '<th style="width:10%;" align="left" valign="bottom"><span>Etat</span></th>';
 			}
@@ -448,10 +448,14 @@ class visa extends Database
 								$up = ' style="visibility:visible"';
 								$displayCB = ' style="visibility:hidden"';
 								$checkCB = '';
-								if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '') $down = ' style="visibility:hidden"';
-								else $down = ' style="visibility:visible"';
-								if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '') $del = ' style="visibility:hidden"';
-								else $del = ' style="visibility:visible"';
+								if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '')
+									$down = ' style="visibility:hidden"';
+								else
+									$down = ' style="visibility:visible"';
+								if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '')
+									$del = ' style="visibility:hidden"';
+								else
+									$del = ' style="visibility:visible"';
 								if (empty($circuit['sign']['users']) && $seq == count ($circuit['visa']['users'])-1){
 									$add = ' style="visibility:visible"';
 									$down = ' style="visibility:hidden"';
@@ -461,14 +465,15 @@ class visa extends Database
 								else{
 									$add = ' style="visibility:hidden"';
 								}
-								if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '') $displayCB = ' style="visibility:hidden"';
+								if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '')
+									$displayCB = ' style="visibility:hidden"';
 
 								if ($seq == 0 || ($isVisaStep && $myPosVisa+1 >= $seq) || $circuit['visa']['users'][$seq-1]['process_date'] != ''){
 									$up = ' style="visibility:hidden"';
 								}
 								$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x" title="'.DOWN_USER_WORKFLOW.'"></i></a></td>';
 								$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
-								$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" '.$del.' ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
+								$str .= '<td id="allez"><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$seq.'" name="suppr_'.$seq.'" '.$del.' ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
 								$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x" title="'.ADD_USER_WORKFLOW.'"></i></a></td>';
 								$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$step['process_comment'].'" style="width:95%;" '.$disabled.'/></td>';
 								$str .= '<td style="display:none"><input type="hidden" value="'.$step['process_date'].'" id="date_'.$seq.'" name="date_'.$seq.'"/></td>';
@@ -539,7 +544,7 @@ class visa extends Database
 
 							$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x" title="'.DOWN_USER_WORKFLOW.'"></i></a></td>';
 							$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
-							$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" '.$del.' ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
+							$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$seq.'" name="suppr_'.$seq.'" '.$del.' ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
 							$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x" title="'.ADD_USER_WORKFLOW.'"></i></a></td>';
 							$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_comment'].'" style="width:95%;" '.$disabled.'/></td>';
 							$str .= '<td style="display:none"><input type="hidden" id="date_'.$seq.'" name="date_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_date'].'" /></td>';
@@ -775,7 +780,10 @@ class visa extends Database
 				$contact = $users_tools->get_user($joined_files[$i]['typist']);
                 $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
 				$creation_date = $request->dateformat($dateFormat[0]);
-				if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+				if ($joined_files[$i]['pdf_exist'])
+					$check = 'class="check" checked="checked"';
+				else
+					$check = ' disabled title="' . _NO_PDF_FILE . '"';
 				//Show data
 				$str .= '<tr><td>'  
 					 . '</td><td>' . $description 
@@ -783,7 +791,7 @@ class visa extends Database
 					 . " " . $contact['lastname'] . '</td><td>' 
 					 . $creation_date . '</td><td><input id="join_file_' 
 					 . $id_doc . '" type="checkbox" name="join_attachment[]"  value="' 
-					 . $id_doc . '"  '.$check.'></input>' . $joined_files[$i]['viewLink']. '</td></tr>';	
+					 . $id_doc . '"  '.$check.'/>' . $joined_files[$i]['viewLink']. '</td></tr>';
 			}
 		}
 		else {
@@ -802,7 +810,6 @@ class visa extends Database
 				
 				if ($format == 'pdf') $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 				//Show data
-				$version = '';
 				if($joined_files[$i]['is_version'] === true){
 					//Version
 					$version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
@@ -811,12 +818,12 @@ class visa extends Database
 						. $contact['lastname'].'</td><td>'.$creation_date
 						. '</td><td><input id="join_file_'.$id_doc.'_V'.$joined_files[$i]['version']
 						. '" type="checkbox" name="join_version[]"  value="'.$id_doc
-						. '"></input>' . $joined_files[$i]['viewLink'] . '</td></tr>';	
+						. '"/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
 				} else {
 					$str .= '<tr><td></td><td>'.$description.'</td><td>'.$res->contact_society
 						. '</td><td>'.$creation_date.'</td><td><input id="join_file_'
 						. $id_doc.'" type="checkbox" name="join_file[]" value="'.$id_doc.'"  '.$check
-						. '></input>' . $joined_files[$i]['viewLink'] . '</td></tr>';	
+						. '/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
 				}
 			}
 		}
@@ -837,7 +844,7 @@ class visa extends Database
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
 				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
 				. $id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
-				. '></input>' . $joined_files[$i]['viewLink'] . '</td></tr>';	
+				. '/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
         }
 		
 		// Fiche de circulation
@@ -857,7 +864,7 @@ class visa extends Database
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
 				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
 				. $id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
-				. '></input>' . $joined_files[$i]['viewLink'] . '</td></tr>';	
+				. '/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
         }
 		
 		// PROJETS DE REPONSE
@@ -877,7 +884,7 @@ class visa extends Database
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
 				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc
 				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
-				. '></input>' . $joined_files[$i]['viewLink'] . '</td></tr>';	
+				. '/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
         }
 		
 		// REPONSES SIGNEES
@@ -920,7 +927,7 @@ class visa extends Database
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
 				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc 
 				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check 
-				. '></input>' . $joined_files[$i]['viewLink']. '</td></tr>';	
+				. '/>' . $joined_files[$i]['viewLink']. '</td></tr>';
         }
 		
 		//Notes         
@@ -948,7 +955,7 @@ class visa extends Database
 					$str .= '<tr><td></td><td>'.$noteShort.'</td><td>'
                                              .$userArray['firstname']." ".$userArray['lastname']
                                              .'</td><td>'.$date.'</td><td><input id="note_'.$idNote.'" type="checkbox" name="notes[]"  value="'
-                                             .$idNote.'"  '.$check.'></input></td></tr>';	
+                                             .$idNote.'"  '.$check.'/></td></tr>';
 				}
 			}
 		}
