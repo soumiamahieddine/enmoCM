@@ -693,7 +693,7 @@ $linkwithwhat =
 				<td><?php functions::xecho($_SESSION[$origin]['diff_list']['dest']['lastname'] ). " " . $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
 				<td><?php functions::xecho($_SESSION[$origin]['diff_list']['dest']['entity_label']);?></td>
 				<td class="action_entities"><!-- Remove dest -->
-					<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_dest"><!-- i class="fa fa-remove fa-2x"></i --><?php echo _DELETE;?></a>
+					<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_dest"><i class="fa fa-remove fa-2x"></i></a>
 				</td>
 				<td class="action_entities"><!-- Move dest to copy -->
 					<a href="<?php functions::xecho($linkwithwhat);?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a>
@@ -743,7 +743,7 @@ $linkwithwhat =
 						<td class="action_entities"><?php 
 							/*if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { */
 							if (!$noDelete && !$onlyCc) { ?>
-								<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id);?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($user['user_id']);?>"><!-- i class="fa fa-remove"></i --><?php echo _DELETE;?></a><?php
+								<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id);?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($user['user_id']);?>"><i class="fa fa-times fa-lg" title="<?php echo _DEL_USER_LISTDIFF ;?>"></i></a><?php
 							} ?>
 						</td>
 						<td class="action_entities"><!-- Switch copy to dest --><?php
@@ -797,7 +797,7 @@ $linkwithwhat =
 						<td class="action_entities"><?php 
 						if (!$noDelete && !$onlyCc) { ?>
 							<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_entity&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($entity['entity_id']);?>">
-								<!--i class="fa fa-remove"></i--><?php echo _DELETE;?>
+								<i class="fa fa-times fa-lg" title="<?php echo _DEL_ENTITY_LISTDIFF ;?>"></i>
 							</a><?php
 						} ?>
 						</td>
@@ -937,7 +937,7 @@ $linkwithwhat =
 								}?>
 								</select>&nbsp;
 								<span onclick="add_user(<?php functions::xecho($j);?>);" style="cursor: pointer"/> 
-									<!--i class="fa fa-plus fa-2x"></i--><?php echo _ADD;?>
+									<i class="fa fa-user-plus fa-lg" title="<?php echo _ADD_USER_LISTDIFF ;?>"></i>
 								</span> <?php 
 							} else echo _NO_AVAILABLE_ROLE;?>
 							</td>
@@ -990,7 +990,7 @@ $linkwithwhat =
                                     } ?>
                                     </select>&nbsp;
                                     <span onclick="add_entity(<?php functions::xecho($j);?>);" style="cursor: pointer"/> 
-                                        <!--i class="fa fa-plus fa-2x"--></i><?php echo _ADD;?>
+                                        <i class="fa fa-plus fa-lg" title="<?php echo _ADD_ENTITY_LISTDIFF; ?>"></i>
                                     </span> <?php 
                                 } else echo _NO_AVAILABLE_ROLE;?>  
                                 </td>

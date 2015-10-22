@@ -422,3 +422,15 @@ if (!defined("_SELECT_BARCODE_TYPE"))
     define("_SELECT_BARCODE_TYPE", "Type de code à barres");
 if (!defined("_ADD_COPY_IN_INDEXING"))
     define("_ADD_COPY_IN_INDEXING", "Ajouter des personnes seulement en copie dans l'indexation");
+
+if (!defined("_DEL_USER_LISTDIFF"))
+    define("_DEL_USER_LISTDIFF", "Retirer l'utilisateur de la liste de diffusion");
+
+if (!defined("_DEL_ENTITY_LISTDIFF"))
+    define("_DEL_ENTITY_LISTDIFF", "Retirer l'entité de la liste de diffusion");
+
+if (!defined("_ADD_USER_LISTDIFF"))
+    define("_ADD_USER_LISTDIFF", "Ajouter l'utilisateur à la liste de diffusion");
+
+if (!defined("_ADD_ENTITY_LISTDIFF"))
+    define("_ADD_ENTITY_LISTDIFF", "Ajouter l'entité à la liste de diffusion");

@@ -699,7 +699,7 @@ $linkwithwhat =
                 <td><?php functions::xecho($_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'] ). " " . $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'];?></td>
                 <td><?php functions::xecho($_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label']);?></td>
                 <td class="action_entities"><!-- Remove dest -->
-                    <a href="<?php functions::xecho($linkwithwhat);?>&action=remove_dest"><i class="fa fa-remove fa-2x"></i><?php echo _DELETE;?></a>
+                    <a href="<?php functions::xecho($linkwithwhat);?>&action=remove_dest"><i class="fa fa-remove fa-lg"></i></a>
                 </td>
                 <td class="action_entities"><!-- Move dest to copy -->
                     <a href="<?php functions::xecho($linkwithwhat);?>&action=dest_to_copy&role=copy" ><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a>
@@ -747,7 +747,7 @@ $linkwithwhat =
                         <td ><?php functions::xecho($user['lastname'] . " " . $user['firstname']);?></td>
                         <td><?php functions::xecho($user['entity_label']);?></td>
                         <td class="action_entities"><!-- Remove user -->
-                            <a href="<?php functions::xecho($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($user['user_id']);?>"><!--i class="fa fa-remove fa-2x"></i--><?php echo _DELETE;?></a>
+                            <a href="<?php functions::xecho($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($user['user_id']);?>"><i class="fa fa-remove fa-lg" title="<?php echo _DEL_USER_LISTDIFF ;?>"></i></a>
                         </td>
                         <td class="action_entities"><!-- Switch copy to dest --><?php
                         if($role_id == 'dest'  && isset($roles['copy']) ) { ?>
@@ -801,7 +801,7 @@ $linkwithwhat =
                         <td ><?php functions::xecho($entity['entity_label']);?></td>
                         <td class="action_entities">
                             <a href="<?php functions::xecho($linkwithwhat);?>&action=remove_entity&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($entity['entity_id']);?>" >
-                                <!-- i class="fa fa-remove fa-2x"></i--><?php echo _DELETE;?>
+                                <i class="fa fa-remove fa-lg" title="<?php echo _DEL_ENTITY_LISTDIFF;?>"></i>
                             </a>
                         </td>
                         <td class="action_entities">&nbsp;</td>
@@ -930,7 +930,7 @@ $linkwithwhat =
                             } ?>
                             </select>&nbsp;
                             <span onclick="add_user(<?php functions::xecho($j);?>);" style="cursor: pointer"/> 
-                                <i class="fa fa-plus fa-2x"></i><?php echo _ADD;?>
+                                <i class="fa fa-user-plus fa-lg" title="<?php echo _ADD_USER_LISTDIFF ;?>"></i>
                             </span><?php
                         } else echo _NO_AVAILABLE_ROLE;?>
                         </td>
@@ -983,7 +983,7 @@ $linkwithwhat =
                                 } ?>
                                 </select>&nbsp;
                                 <span onclick="add_entity(<?php functions::xecho($j);?>);" style="cursor: pointer"/> 
-                                    <i class="fa fa-plus fa-2x"></i><?php echo _ADD;?>
+                                    <i class="fa fa-plus fa-lg" title="<?php echo _ADD_ENTITY_LISTDIFF;?>"></i>
                                 </span><?php
                             } else echo _NO_AVAILABLE_ROLE;?>               
                             </td>

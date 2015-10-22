@@ -312,3 +312,15 @@ if (!defined('_SELECT_BARCODE_TYPE'))
     define('_SELECT_BARCODE_TYPE', 'Select the barcode type');
 if (!defined("_ADD_COPY_IN_INDEXING"))
     define("_ADD_COPY_IN_INDEXING", "Add person just in copy in indexing page");
+
+if (!defined("_DEL_USER_LISTDIFF"))
+    define("_DEL_USER_LISTDIFF", "Remove user from diffusion list");
+
+if (!defined("_DEL_ENTITY_LISTDIFF"))
+    define("_DEL_ENTITY_LISTDIFF", "Remove entity from diffusion list");
+
+if (!defined("_ADD_USER_LISTDIFF"))
+    define("_ADD_USER_LISTDIFF", "Add user to diffusion list");
+
+if (!defined("_ADD_ENTITY_LISTDIFF"))
+    define("_ADD_ENTITY_LISTDIFF", "Add entity to diffusion list");
