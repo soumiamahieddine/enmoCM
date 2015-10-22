@@ -59,3 +59,15 @@ if (!defined("_WAITING_FOR_VISA"))
 
 if (!defined("_VISED"))
     define("_VISED", "Checked");
+
+if (!defined("DOWN_USER_WORKFLOW"))
+    define("DOWN_USER_WORKFLOW", "Move down user in the workflow");
+
+if (!defined("UP_USER_WORKFLOW"))
+    define("UP_USER_WORKFLOW", "Move up user in the workflow");
+
+if (!defined("ADD_USER_WORKFLOW"))
+    define("ADD_USER_WORKFLOW", "Add an user in the workflow");
+
+if (!defined("DEL_USER_WORKFLOW"))
+    define("DEL_USER_WORKFLOW", "Delete user from the workflow");

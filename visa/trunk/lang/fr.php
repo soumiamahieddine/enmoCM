@@ -93,3 +93,15 @@ if (!defined("_WAITING_FOR_VISA"))
 
 if (!defined("_VISED"))
     define("_VISED", "Visé");
+
+if (!defined("DOWN_USER_WORKFLOW"))
+    define("DOWN_USER_WORKFLOW", "Déplacer l'utilisateur vers le bas");
+
+if (!defined("UP_USER_WORKFLOW"))
+    define("UP_USER_WORKFLOW", "Déplacer l'utilisateur vers le haut");
+
+if (!defined("ADD_USER_WORKFLOW"))
+    define("ADD_USER_WORKFLOW", "Ajouter un utilisateur dans le circuit");
+
+if (!defined("DEL_USER_WORKFLOW"))
+    define("DEL_USER_WORKFLOW", "Retirer l'utilisateur du circuit");
