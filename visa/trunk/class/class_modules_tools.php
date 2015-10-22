@@ -344,7 +344,7 @@ class visa extends Database
 				
 		$circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
 		$str = "";
-		if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users']) && !$core_tools->test_service('config_visa_workflow', 'visa', false)){
+		if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users']) && !$core_tools->test_service('config_visa_workflow_in_detail', 'visa', false)){
 			$str .= "<div class='error' id='divErrorVisa' name='divErrorVisa' onclick='this.hide();'>" . _EMPTY_USER_LIST . "</div>";
 			$str .= "<div><strong><em>" . _EMPTY_VISA_WORKFLOW . "</em></strong></div>";
 		}
@@ -466,10 +466,10 @@ class visa extends Database
 								if ($seq == 0 || ($isVisaStep && $myPosVisa+1 >= $seq) || $circuit['visa']['users'][$seq-1]['process_date'] != ''){
 									$up = ' style="visibility:hidden"';
 								}
-								$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
-								$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
-								$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" '.$del.' ><i class="fa fa-user-times fa-2x"></i></a></td>';
-								$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
+								$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x" title="'.DOWN_USER_WORKFLOW.'"></i></a></td>';
+								$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
+								$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" '.$del.' ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
+								$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x" title="'.ADD_USER_WORKFLOW.'"></i></a></td>';
 								$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$step['process_comment'].'" style="width:95%;" '.$disabled.'/></td>';
 								$str .= '<td style="display:none"><input type="hidden" value="'.$step['process_date'].'" id="date_'.$seq.'" name="date_'.$seq.'"/></td>';
 
@@ -481,9 +481,9 @@ class visa extends Database
 								$str .= '<td>'.$step['firstname'].' '.$step['lastname'];
 								$str .= '</td>';
 								$str .= '<td>'.$step['process_comment'].'</td>';
-								if ($step['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';
-								elseif ($step['user_id'] == $_SESSION['user']['UserId']) $str .= '<td><i class="fa fa-hourglass-half fa-2x"></i></td>';
-								else $str .= '<td></td>';
+								if ($step['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x" title="'._VISED.'"></i></td>';
+								else $str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_VISA.'"></i></td>';
+								// else $str .= '<td></td>';
 							}
 							$str .= '</tr>';
 						}
@@ -548,13 +548,10 @@ class visa extends Database
 						} else {
 							$str .= '<td>'.$circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
 							$str .= ' <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></td>';
-							$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';
-							if ($circuit['sign']['users'][0]['process_date'] != '')
-								$str .= '<td><i class="fa fa-check fa-2x"></i></td>';
-							elseif ($circuit['sign']['users'][0]['user_id'] == $_SESSION['user']['UserId'])
-								$str .= '<td><i class="fa fa-hourglass-half"></i></td>';
-							else
-								$str .= '<td></td>';
+							$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
+							if ($circuit['sign']['users'][0]['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x" title="'._SIGNED.'"></i></td>';		
+							else $str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_SIGN.'"></i></td>';		
+								
 						}
 						$str .= '</tr>';
 					}
