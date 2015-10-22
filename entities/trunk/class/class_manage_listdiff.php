@@ -350,6 +350,12 @@ class diffusion_list extends dbquery
         $creatorEntity = "",
         $fromQualif = false
     ) {
+
+        // Fix : superadmin can edit visa workflow in detail
+        if ($creatorUser == "superadmin") {
+            $creatorEntity = "";
+        }
+
         $oldListInst = $this->get_listinstance($resId, false, $collId);
 /*        echo 'old<br/>';
         var_dump($oldListInst);
