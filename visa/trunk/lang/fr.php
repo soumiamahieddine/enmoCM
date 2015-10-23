@@ -107,3 +107,6 @@ if (!defined("ADD_USER_WORKFLOW"))
 
 if (!defined("DEL_USER_WORKFLOW"))
     define("DEL_USER_WORKFLOW", "Retirer l'utilisateur du circuit");
+
+if (!defined("_NO_NEXT_STEP_VISA"))
+    define("_NO_NEXT_STEP_VISA", "Impossible d'effectuer cette action. Le circuit ne contient pas d'étape supplémentaire.");

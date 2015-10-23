@@ -46,8 +46,10 @@
 	$_SESSION['visa_wf']['diff_list']['visa']['users'] = array();
 	$_SESSION['visa_wf']['diff_list']['sign']['users'] = array();
 	
-	for ($i = 0; $i < count($conseillers) - 1; $i++){
-		if ($list_sign[$i] == 0){
+	$nbConseillers = count($conseillers);
+
+	for ($i = 0; $i < $nbConseillers - 1; $i++){
+		if ($list_sign[$i] == 0 && $nbConseillers > 2){
 			array_push(
 				$_SESSION['visa_wf']['diff_list']['visa']['users'], 
 				array(
