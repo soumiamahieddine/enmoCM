@@ -877,7 +877,7 @@ if (!defined("_IS_CORPORATE_PERSON")) define("_IS_CORPORATE_PERSON", "Personne m
 if (!defined("_INDIVIDUAL")) define("_INDIVIDUAL", "Particulier");
 if (!defined("_CONTACT_TARGET")) define("_CONTACT_TARGET", "Pour quel contact est il possible d'utiliser ce type ?");
 if (!defined("_CONTACT_TARGET_LIST")) define("_CONTACT_TARGET_LIST", "Cible du type de contact");
-if (!defined("_CONTACT_TYPE_CREATION")) define("_CONTACT_TYPE_CREATION", "Possibilité de créer un contact de ce type ?");
+if (!defined("_CONTACT_TYPE_CREATION")) define("_CONTACT_TYPE_CREATION", "Possibilité de créer un contact de ce type hors panneau d'administration ?");
 if (!defined("_IS_PRIVATE")) define("_IS_PRIVATE", "Coordonnées confidentielles");
 if (!defined("_TITLE2")) define("_TITLE2", "Civilité");
 if (!defined("_WARNING_MESSAGE_DEL_CONTACT"))  define("_WARNING_MESSAGE_DEL_CONTACT", "Avertissement :<br> La suppression d'un contact entraine la réaffectation des documents et des courriers à un nouveau contact.");
