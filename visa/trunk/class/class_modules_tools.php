@@ -344,7 +344,7 @@ class visa extends Database
 				
 		$circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
 		$str = "";
-		if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users']) && !$core_tools->test_service('config_visa_workflow_in_detail', 'visa', false)){
+		if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users']) && !$core_tools->test_service('config_visa_workflow_in_detail', 'visa', false) && $fromDetail == "Y"){
 			$str .= "<div class='error' id='divErrorVisa' name='divErrorVisa' onclick='this.hide();'>" . _EMPTY_USER_LIST . "</div>";
 			$str .= "<div><strong><em>" . _EMPTY_VISA_WORKFLOW . "</em></strong></div>";
 		}
