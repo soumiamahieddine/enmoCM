@@ -189,7 +189,7 @@ CREATE TABLE res_mark_as_read
   res_id bigint,
   user_id character varying(32),
   basket_id character varying(32)
-) 
+);
 
 -- ************************************************************************* --
 --                               NEW COLUMNS IN EXTENSIONS TABLE             --
