@@ -424,3 +424,11 @@ if (!defined('_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL'))
     define('_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL', '(First off all, add un secondary profile to the user and save it before coming back to this panel).');
 if (!defined("_MANAGE_BASKET_ORDER"))
     define("_MANAGE_BASKET_ORDER", "Manage basket order");
+if (!defined("_SEE_BASKETS_RELATED"))
+    define("_SEE_BASKETS_RELATED", "See associated baskets");
+
+if (!defined("_GO_MANAGE_USER")) 
+    define("_GO_MANAGE_USER", "Edit");
+
+if (!defined("_GO_MANAGE_BASKET"))
+    define("_GO_MANAGE_BASKET", "Edit");
