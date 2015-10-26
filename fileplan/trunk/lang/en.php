@@ -30,11 +30,11 @@ if (!defined('_FILEPLAN_COMMENT'))
 if (!defined('_PUT_DOC_IN_FILEPLAN'))  
 	define('_PUT_DOC_IN_FILEPLAN','Classify the documents');
 if (!defined('_PUT_DOC_IN_FILEPLAN_COMMENT'))  
-	define('_PUT_DOC_IN_FILEPLAN_COMMENT','Classify the documents in the organizationnal fileplan');
+	define('_PUT_DOC_IN_FILEPLAN_COMMENT','Classify the documents in the organizational fileplan');
 if (!defined('_ADMIN_MODULE_FILEPLAN'))
-    define('_ADMIN_MODULE_FILEPLAN', 'Organizationnal fileplan');
+    define('_ADMIN_MODULE_FILEPLAN', 'Organizational fileplan');
 if (!defined('_ADMIN_MODULE_FILEPLAN_DESC'))
-    define('_ADMIN_MODULE_FILEPLAN_DESC', 'Management of organizationnal fileplan (allow to manage somes specifies plans to a entity).');
+    define('_ADMIN_MODULE_FILEPLAN_DESC', 'Management of organizational fileplan (allow to manage somes specifies plans to a entity).');
 
 /*FILEPLAN MANAGEMENT*/	
 if (!defined('_ADD_FILEPLAN'))
