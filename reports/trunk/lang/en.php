@@ -70,4 +70,8 @@ if (!defined('_ERROR_REPORT_TYPE'))
     define('_ERROR_REPORT_TYPE', 'The type of report is not correct');
 if (!defined('_ERROR_PERIOD_TYPE'))
     define('_ERROR_PERIOD_TYPE', 'The type of period is not correct');
+
+if (!defined("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT"))
+   define("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT", "Average processing time");
+
 ?>
