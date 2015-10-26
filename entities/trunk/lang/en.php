@@ -229,19 +229,19 @@ if (!defined('_HELP_BY_ENTITY'))
 
 /******************** For reports ************/
 if (!defined('_ENTITY_VOL_STAT'))
-    define('_ENTITY_VOL_STAT', 'Volume des courriers par entit&eacute;');
+    define('_ENTITY_VOL_STAT', 'Amount of mail by entity');
 if (!defined('_ENTITY_VOL_STAT_DESC'))
-    define('_ENTITY_VOL_STAT', 'Volume des courriers par entit&eacute;');
+    define('_ENTITY_VOL_STAT_DESC', 'Amount of mail by entity');
 if (!defined('_NO_DATA_MESSAGE'))
-    define('_NO_DATA_MESSAGE', 'Pas assez de données');
+    define('_NO_DATA_MESSAGE', 'Not enough data');
 if (!defined('_MAIL_VOL_BY_ENT_REPORT'))
-    define('_MAIL_VOL_BY_ENT_REPORT', 'Volume de courrier par service');
+    define('_MAIL_VOL_BY_ENT_REPORT', 'Amoung of mails by entity');
 if (!defined('_WRONG_DATE_FORMAT'))
-    define('_WRONG_DATE_FORMAT', 'Format de date incorrect');
+    define('_WRONG_DATE_FORMAT', 'Wrong date format');
 if (!defined('_ENTITY_PROCESS_DELAY'))
-    define('_ENTITY_PROCESS_DELAY', 'D&eacute;lai moyen de traitement par entit&eacute;');
+    define('_ENTITY_PROCESS_DELAY', 'Average processing time by entity');
 if (!defined('_ENTITY_LATE_MAIL'))
-    define('_ENTITY_LATE_MAIL', 'Volume de courrier en retard par entit&eacute;');
+    define('_ENTITY_LATE_MAIL', 'Amoung of late mails by entity');
 
 /******************** Action put in copy ************/
 if (!defined('_ADD_COPY_FOR_DOC'))
@@ -324,3 +324,30 @@ if (!defined("_ADD_USER_LISTDIFF"))
 
 if (!defined("_ADD_ENTITY_LISTDIFF"))
     define("_ADD_ENTITY_LISTDIFF", "Add entity to diffusion list");
+
+if (!defined("_ADMIN_DIFFLIST_TYPES")) define("_ADMIN_DIFFLIST_TYPES", "Types of diffusion list (Administration)");
+if (!defined("_ADMIN_DIFFLIST_TYPES_DESC")) define("_ADMIN_DIFFLIST_TYPES_DESC", "Manage types of diffusion list");
+
+if (!defined("_UPDATE_LIST_DIFF_IN_DETAILS"))
+    define("_UPDATE_LIST_DIFF_IN_DETAILS", "Update dffusion list in detail");
+
+if (!defined("_ADMIN_LISTMODELS")) define("_ADMIN_LISTMODELS", "Diffusion models (Administration)");
+if (!defined("_ADMIN_LISTMODELS_DESC")) define("_ADMIN_LISTMODELS_DESC", "Manage diffusion models");
+
+if (!defined("_DIFFLIST_TYPES"))
+    define("_DIFFLIST_TYPES", "Types of diffusion list");
+
+if (!defined("_LISTMODELS"))
+    define("_LISTMODELS", "Models of diffusion list"); 
+
+if (!defined("_LISTMODEL"))
+    define("_LISTMODEL", "model(s)"); 
+
+if (!defined("_ALL_LISTMODELS"))
+    define("_ALL_LISTMODELS", "All Models"); 
+
+if (!defined("_UPDATE_LIST_DIFF"))
+  define("_UPDATE_LIST_DIFF", "Edit diffusion list");
+
+if (!defined("_ENTITIES_PRINT_SEP_MLB_GENERIC"))
+    define("_ENTITIES_PRINT_SEP_MLB_GENERIC", "Print generic separator COURRIER");
