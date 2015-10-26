@@ -65,6 +65,39 @@
                 <LIBELLE>Page détail</LIBELLE>
                 <CALL>makeLink_detail</CALL>
             </FUNCTION>
+
+<!--             <FUNCTION>
+                <LIBELLE>Thème</LIBELLE>
+                <CALL>get_parent_folder</CALL>
+            </FUNCTION>
+            <FUNCTION>
+                <LIBELLE>Service destinataire</LIBELLE>
+                <CALL>get_entity_dest_short_label</CALL>
+            </FUNCTION>
+            <FUNCTION>
+                <LIBELLE>Type de contact</LIBELLE>
+                <CALL>get_contact_type</CALL>
+            </FUNCTION>
+            <FUNCTION>
+                <LIBELLE>Civilité du contact</LIBELLE>
+                <CALL>get_contact_civility</CALL>
+            </FUNCTION>
+            <FUNCTION>
+                <LIBELLE>Mots clés</LIBELLE>
+                <CALL>get_tags</CALL>
+            </FUNCTION>
+            <FUNCTION>
+                <LIBELLE>Nature de la réponse</LIBELLE>
+                <CALL>get_answer_nature</CALL>
+            </FUNCTION>
+            <FUNCTION>
+                <LIBELLE>Signataire</LIBELLE>
+                <CALL>get_signatory_name</CALL>
+            </FUNCTION>
+            <FUNCTION>
+                <LIBELLE>Date de signature</LIBELLE>
+                <CALL>get_signatory_date</CALL>
+            </FUNCTION> -->
         </FUNCTIONS>
         <EMPTYS>
             <EMPTY>
