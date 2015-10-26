@@ -810,13 +810,8 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             }
         }
         if($ok == true){
-            $query = "delete from " . USER_BASKETS_SECONDARY_TABLE
-                . " where system_id in (select system_id from "
-                . USER_BASKETS_SECONDARY_TABLE
-                . " where group_id not in (select group_id from "
-                . USERGROUP_CONTENT_TABLE
-                . " where user_id = ?))";
-            $stmt = self::$db->query($query, array($userId));  
+            $query = "DELETE FROM user_baskets_secondary WHERE user_id = :userId AND group_id NOT IN (SELECT group_id FROM usergroup_content WHERE user_id = :userId)";
+            $stmt = self::$db->query($query, array(":userId" => $userId));  
         }
         
         return $ok;
