@@ -1,8 +1,10 @@
 <?php
+
 $confirm = false;
 $etapes = array('form');
 $frm_width='355px';
 $frm_height = 'auto';
+
 require("modules/entities/entities_tables.php");
 require_once("modules/entities/class/EntityControler.php");
 require_once('modules/entities/class/class_manage_entities.php');
@@ -11,10 +13,9 @@ require_once('modules/visa/class/class_modules_tools.php');
 
  function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
  {
-    $ent = new entity();
-    $entity_ctrl = new EntityControler();
-    $services = array();
-    $servicesCompare = array();
+     $ent = new entity();
+     $entity_ctrl = new EntityControler();
+     $servicesCompare = array();
     $db = new Database();
     $labelAction = '';
     if ($id_action <> '') {
@@ -57,22 +58,22 @@ require_once('modules/visa/class/class_modules_tools.php');
     $frm_str .= '</h2><br/><br/>';
     require 'modules/templates/class/templates_controler.php';
     $templatesControler = new templates_controler();
-    $templates = array();
 
     $EntitiesIdExclusion = array();
     $entities = $entity_ctrl->getAllEntities();
     $countEntities = count($entities);
-    //var_dump($entities);
+
     for ($cptAllEnt = 0;$cptAllEnt<$countEntities;$cptAllEnt++) {
         if (!is_integer(array_search($entities[$cptAllEnt]->__get('entity_id'), $servicesCompare))) {
             array_push($EntitiesIdExclusion, $entities[$cptAllEnt]->__get('entity_id'));
         }
     }
     
-    $allEntitiesTree= array();
-    $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
+     $allEntitiesTree= array();
+     $ent->getShortEntityTreeAdvanced(
         $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
-    );
+     );
+
     if ($destination <> '') {
         $templates = $templatesControler->getAllTemplatesForProcess($destination);
     } else {

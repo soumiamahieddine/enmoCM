@@ -168,7 +168,7 @@ class visa extends Database
 	public function getWorkflow($res_id, $coll_id, $typeList){
 		require_once('modules/entities/class/class_manage_listdiff.php');
         $listdiff = new diffusion_list();
-        $roles = $listdiff->list_difflist_roles();
+        $listdiff->list_difflist_roles();
         $circuit = $listdiff->get_listinstance($res_id, false, $coll_id, $typeList);
 		if (isset($circuit['copy'])) unset($circuit['copy']);
 		return $circuit;
@@ -204,7 +204,7 @@ class visa extends Database
 	
 	public function deleteWorkflow($res_id, $coll_id){
 		$db = new Database();
-		$stmt = $db->query("DELETE FROM visa_circuit WHERE res_id= ? AND coll_id= ?",array($res_id, $coll_id));
+		$db->query("DELETE FROM visa_circuit WHERE res_id= ? AND coll_id= ?",array($res_id, $coll_id));
 	}
 	
 	public function nbVisa($res_id, $coll_id){
@@ -355,8 +355,8 @@ class visa extends Database
 		
 			$str .= '<div align="center">';
 		
-			$str .= '<div class="error" id="divErrorVisa" name="divErrorVisa" onclick="this.hide();"></div>';
-			$str .= '<div class="info" id="divInfoVisa" name="divInfoVisa" onclick="this.hide();"></div>';
+			$str .= '<div class="error" id="divErrorVisa" onclick="this.hide();"></div>';
+			$str .= '<div class="info" id="divInfoVisa" onclick="this.hide();"></div>';
 
 			if (!empty($listModels) && $bool_modif && !$isVisaStep){
 				$str .= '<select name="modelList" id="modelList" onchange="load_listmodel_visa(this.options[this.selectedIndex], \''.$typeList.'\', \''.$id_tab.'\');">';
@@ -376,8 +376,8 @@ class visa extends Database
 				$str .= '<th style="width:5%;"></th>';
 				$str .= '<th style="width:5%;"></th>';
 				$str .= '<th style="width:45%;" align="left" valign="bottom"><span>Consigne</span></th>';
-				$str .= '<th style="width:0%;display:none" align="left" valign="bottom"></th>';
-				$str .= '<th style="width:0%;display:none" align="center" valign="bottom"></th>';
+				$str .= '<th style="width:0;display:none" align="left" valign="bottom"></th>';
+				$str .= '<th style="width:0;display:none" align="center" valign="bottom"></th>';
 			}
 			else {
 				$str .= '<th style="width:55%;" align="left" valign="bottom"><span>Consigne</span></th>';
@@ -425,7 +425,7 @@ class visa extends Database
 							}
 
 							$str .= '<tr ' . $color . '>';
-							//$str .= '<td>' . $seq+1 . '</td>';
+
 							if ($bool_modif){
 								$str .= '<td>';
 								$tab_users = $this->getUsersVis();
@@ -444,7 +444,10 @@ class visa extends Database
 								}
 								$str .= '</select>';
 
-								$str .= '<span id="signatory_' . $seq . '"></span></td>';
+								$str .= "<span id=\"signatory_" . $seq . "\">";
+								if (empty($circuit['sign']['users']) && $seq == count ($circuit['visa']['users'])-1)
+									$str .= " <i title=\"Signataire\" style=\"color : #fdd16c\" class=\"fa fa-certificate fa-lg fa-fw\"></i>";
+								$str .= "</span></td>";
 								$up = ' style="visibility:visible"';
 								$displayCB = ' style="visibility:hidden"';
 								$checkCB = '';
