@@ -63,3 +63,72 @@ if (!defined('_GENERATE_ATTACHMENT_FROM'))
 
 if (!defined('_EDIT_ATTACHMENTS_FROM_DETAILS'))
     define('_EDIT_ATTACHMENTS_FROM_DETAILS', 'Manage attachments from details page');
+
+if (!defined("_CREATED"))
+    define( "_CREATED", "Created");
+if (!defined("_BBY"))
+    define( "_BBY", "By");
+if (!defined("_EXP_DATE"))
+    define( "_EXP_DATE", "Date of departure");
+if (!defined("_CREATE_PJ"))
+    define( "_CREATE_PJ", "Create an attachment");
+if (!defined("_ATTACH_FILE"))
+    define( "_ATTACH_FILE", "Attach a file");
+if (!defined("_MODEL"))
+    define( "_MODEL", "Model");
+if (!defined("_CHOOSE_MODEL"))
+    define( "_CHOOSE_MODEL", "Choose a model");
+if (!defined("_BACK_DATE"))
+    define( "_BACK_DATE", "Return date");
+if (!defined("_ATTACHMENT_TYPES"))
+    define( "_ATTACHMENT_TYPES", "Attachment types");
+if (!defined("_RESPONSE_PROJECT"))
+    define( "_RESPONSE_PROJECT", "Response project");
+if (!defined("_SIGNED_RESPONSE"))
+    define( "_SIGNED_RESPONSE", "Signed response");
+if (!defined("_ROUTING"))
+    define( "_ROUTING", "Record traffic");
+if (!defined("_OUTGOING_MAIL_SIGNED"))
+    define( "_OUTGOING_MAIL_SIGNED", "Mail signed departure");
+if (!defined("_CONVERTED_PDF"))
+    define( "_CONVERTED_PDF", "PDF converted by the application");
+if (!defined("_PRINT_FOLDER"))
+    define( "_PRINT_FOLDER", "Printed folder");
+if (!defined("_OUTGOING_MAIL"))
+    define( "_OUTGOING_MAIL", "Spontaneaous outgoing mail");
+if (!defined("_A_PJ"))
+    define( "_A_PJ", "Attachment");
+if (!defined("_CHOOSE_ATTACHMENT_TYPE"))
+    define( "_CHOOSE_ATTACHMENT_TYPE", "Choose an attachment type");
+if (!defined("_UPDATED_DATE"))
+    define( "_UPDATED_DATE", "Updated");
+if (!defined("_FILE_MISSING"))
+    define( "_FILE_MISSING", "File is missing");
+if (!defined("_FILE_EMPTY"))
+    define( "_FILE_EMPTY", "File is empty");
+if (!defined("_EDIT_MODEL"))
+    define( "_EDIT_MODEL", "Edit");
+if (!defined("_ALREADY_MODEL_SELECTED"))
+    define( "_ALREADY_MODEL_SELECTED", "Model already choosed");
+if (!defined("_MODIFY_ANSWER"))
+    define( "_MODIFY_ANSWER", "Edit an attachment");
+if (!defined("_CREATE_NEW_ATTACHMENT_VERSION"))
+    define( "_CREATE_NEW_ATTACHMENT_VERSION", "Create a new version ?");
+if (!defined("_ATTACH_UPDATED"))
+    define( "_ATTACH_UPDATED", "Attachment updated");
+if (!defined("_FINAL_VERSION"))
+    define( "_FINAL_VERSION", "Final version");
+if (!defined("_SHOW_PREVIOUS_VERSION"))
+    define( "_SHOW_PREVIOUS_VERSION", "See previous version");
+if (!defined("_CREATE_ATTACHMENTS_FROM_DETAILS"))
+    define( "_CREATE_ATTACHMENTS_FROM_DETAILS", "Create an attachment from detail");
+if (!defined("_DELETE_ATTACHMENTS"))
+    define( "_DELETE_ATTACHMENTS", "Delete attachment");
+if (!defined("_MODIFY_ATTACHMENTS"))
+    define( "_MODIFY_ATTACHMENTS", "Edit attachments");
+if (!defined("_ALL_ATTACHMENT_TYPES"))
+    define( "_ALL_ATTACHMENT_TYPES", "All attachments");
+if (!defined("_ATTACHEMENTS"))
+    define( "_ATTACHEMENTS", "Attachments");
+if (!defined("_WAYBILL"))
+define( "_WAYBILL", "Waybill");
