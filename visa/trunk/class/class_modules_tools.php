@@ -168,7 +168,7 @@ class visa extends Database
 	public function getWorkflow($res_id, $coll_id, $typeList){
 		require_once('modules/entities/class/class_manage_listdiff.php');
         $listdiff = new diffusion_list();
-        $listdiff->list_difflist_roles();
+        $roles = $listdiff->list_difflist_roles();
         $circuit = $listdiff->get_listinstance($res_id, false, $coll_id, $typeList);
 		if (isset($circuit['copy'])) unset($circuit['copy']);
 		return $circuit;

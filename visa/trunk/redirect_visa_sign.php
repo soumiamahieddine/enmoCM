@@ -69,8 +69,8 @@ require_once('modules/visa/class/class_modules_tools.php');
         }
     }
     
-     $allEntitiesTree= array();
-     $ent->getShortEntityTreeAdvanced(
+     $allEntitiesTree = array();
+     $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
         $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
      );
 
