@@ -77,3 +77,18 @@ if (!defined("DEL_USER_WORKFLOW"))
 
 if (!defined("_NO_NEXT_STEP_VISA"))
     define("_NO_NEXT_STEP_VISA", "C'ant do this action. The workflow doesn't have others steps.");
+
+if (!defined("_THUMBPRINT"))
+    define("_THUMBPRINT", "Thumprint");
+
+if (!defined("_SIGN_DOCS"))
+    define("_SIGN_DOCS", "Sign documents");
+
+if (!defined("_PRINT_FOLDER_DOC"))
+    define("_PRINT_FOLDER_DOC", "Print folder doc");
+
+if (!defined("_REDIRECTION_VISA_SIGN"))
+    define("_REDIRECTION_VISA_SIGN", "Redirection for signature");
+
+if (!defined("_VISA_MAIL")) 
+    define("_VISA_MAIL", "To stamp a mail");
