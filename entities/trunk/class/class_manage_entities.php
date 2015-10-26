@@ -364,11 +364,11 @@ class entity extends dbquery
         $db = new Database();
         if(trim($parent) == "")
         {
-            $stmt = $db->query('select entity_id, entity_label, short_label from '.ENT_ENTITIES." where enabled = 'Y' and (parent_entity_id ='' or parent_entity_id is null) ".$where);
+            $stmt = $db->query('select entity_id, entity_label, short_label from '.ENT_ENTITIES." where enabled = 'Y' and (parent_entity_id ='' or parent_entity_id is null) ".$where . " order by short_label, entity_id");
         }
         else
         {
-            $stmt = $db->query('select entity_id, entity_label, short_label from '.ENT_ENTITIES." where enabled = 'Y' and parent_entity_id = '".trim($parent)."' ".$where);
+            $stmt = $db->query('select entity_id, entity_label, short_label from '.ENT_ENTITIES." where enabled = 'Y' and parent_entity_id = '".trim($parent)."' ".$where . " order by short_label, entity_id");
         }
        
         if($stmt->rowCount() > 0)
