@@ -706,7 +706,7 @@ if(isset($_REQUEST['nodetails']))
         </td>
     </tr>
     <tr>
-        <td><span class="green_asterisk"><i class="fa fa-star" style="vertical-align:50%"></i></span> indique que la recherche se fait sur les courriers et les pi&egrave;ces jointes.</td>
+        <td><span class="green_asterisk"><i class="fa fa-star" style="vertical-align:50%"></i></span><?php echo _SEARCH_INDICATION;?></td>
     </tr>
     <tr><td colspan="2"><hr/></td></tr>
 <tr>

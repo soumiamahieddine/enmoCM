@@ -18,9 +18,7 @@
  *   You should have received a copy of the GNU General Public License
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
-if (!defined('_SENDER'))    define( '_SENDER', 'Sendeur');
-if (!defined('_VIEW_LAST_COURRIERS'))
-    define('_VIEW_HYSTORY_LAST_COURRIERS', 'History of my last courriers');
+if (!defined('_SENDER'))    define( '_SENDER', 'Sender');
 if (!defined('MUST_BE_LESS_THAN')) define('MUST_BE_LESS_THAN', 'must not be longer than');
 if (!defined('_ACCESS_LIST_EXTEND')) define('_ACCESS_LIST_EXTEND', 'Display extended lists');
 if (!defined('_ACCESS_LIST_STANDARD')) define('_ACCESS_LIST_STANDARD', 'Display simple lists');
@@ -81,7 +79,7 @@ if (!defined('_ADMIN_USERS_DESC')) define('_ADMIN_USERS_DESC', 'Add, suspend, or
 if (!defined('_ADMISSION_DATE')) define('_ADMISSION_DATE', 'Reception date');
 if (!defined('_ADR_PRIORITY'))  define('_ADR_PRIORITY', 'Priority in storage zones');
 if (!defined('_ADV_SEARCH_INVOICES')) define( '_ADV_SEARCH_INVOICES', '[cold] Search a custumer invoice');
-if (!defined('_ADV_SEARCH_MLB')) define('_ADV_SEARCH_MLB', '[letter] Search a document');
+if (!defined('_ADV_SEARCH_MLB')) define('_ADV_SEARCH_MLB', 'Search a mail');
 if (!defined('_ADV_SEARCH_TITLE')) define('_ADV_SEARCH_TITLE', 'Document advanced search');
 if (!defined('_AJAX_PARAM_ERROR')) define('_AJAX_PARAM_ERROR', 'Wrong parameters given to the AJAX request.');
 if (!defined('_ALARM1_DELAY')) define('_ALARM1_DELAY', 'Period before 1st reminder');
@@ -424,7 +422,7 @@ if (!defined('_FILE_NOT_EXISTS_ON_THE_SERVER'))  define('_FILE_NOT_EXISTS_ON_THE
 if (!defined('_FILE_NOT_SEND')) define('_FILE_NOT_SEND', 'The document has not been sent');
 if (!defined('_FILE_PROPERTIES')) define('_FILE_PROPERTIES', 'file properties');
 if (!defined('_FINGERPRINT_MODE'))  define('_FINGERPRINT_MODE', 'Signature mode');
-if (!defined('_FINGERPRINT_MODE'))  define('_FINGERPRINT_MODE', 'Signature mode');
+if (!defined('_FINGERPRINT'))  define('_FINGERPRINT', 'Fingerprint');
 if (!defined('_FIRSTNAME')) define('_FIRSTNAME', 'First name');
 if (!defined('_FIRSTNAME_UPPERCASE')) define('_FIRSTNAME_UPPERCASE', 'FIRST NAME');
 if (!defined('_FIRST_CONN')) define('_FIRST_CONN', 'First connection connection');
@@ -521,7 +519,7 @@ if (!defined('_INDEX')) define('_INDEX', 'Index');
 if (!defined('_INDEXATION_TITLE')) define('_INDEXATION_TITLE', 'Record a document');
 if (!defined('_INDEXING')) define( '_INDEXING', 'Indexing');
 if (!defined('_INDEXING_INSERT_ERROR'))    define('_INDEXING_INSERT_ERROR', 'Indexation : error during insert');
-if (!defined('_INDEXING_MLB')) define('_INDEXING_MLB', '[letter] Record a letter');
+if (!defined('_INDEXING_MLB')) define('_INDEXING_MLB', 'Record a mail');
 if (!defined('_INDEXING_STATUSES')) define( '_INDEXING_STATUSES', 'Index in status');
 if (!defined('_UNCHANGED')) define( '_UNCHANGED', 'Unchanged');
 if (!defined('_INDEX_FILE')) define('_INDEX_FILE', 'Add a document');
@@ -778,7 +776,7 @@ if (!defined('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS')) define( '_PARAM_AVAILA
 if (!defined('_PARAM_MLB_DOCTYPES'))    define('_PARAM_MLB_DOCTYPES', 'Define document types ');
 if (!defined('_PARAM_MLB_DOCTYPES_DESC'))    define('_PARAM_MLB_DOCTYPES_DESC', 'Define document types description ');
 if (!defined('_PASSWORD'))    define( '_PASSWORD', 'Password');
-if (!defined('_PASSWORD_FOR_USER')) define('_PASSWORD_FOR_USER', 'the password for the usert');
+if (!defined('_PASSWORD_FOR_USER')) define('_PASSWORD_FOR_USER', 'the password for the user');
 if (!defined('_PASSWORD_MODIFICATION')) define('_PASSWORD_MODIFICATION', 'PAssword modification');
 if (!defined('_PASSWORD_NOT_CHANGED'))    define('_PASSWORD_NOT_CHANGED', 'Error: Password not changed');
 if (!defined('_ALREADY_CREATED_AND_DELETED')) define( '_ALREADY_CREATED_AND_DELETED', 'already created and deleted');
@@ -1076,7 +1074,7 @@ if (!defined('_WAITING_FLOAT')) define( '_WAITING_FLOAT', 'Floating number await
 if (!defined('_WAITING_INTEGER')) define('_WAITING_INTEGER', 'Integer expected');
 if (!defined('_WARNING')) define('_WARNING', 'Warning ');
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONTACT', 'Waring : contact deletion implies reaffectation of documents whatever their stauts');
-if (!defined('_WELCOME')) define('_WELCOME', 'Welcome to Maarch!');
+if (!defined('_WELCOME')) define('_WELCOME', 'Welcome to Maarch !');
 if (!defined('_WELCOME2')) define('_WELCOME2', 'Welcome');
 if (!defined('_WELCOME_TEXT_LOAD'))    define('_WELCOME_TEXT_LOAD', 'Welcome text load');
 if (!defined('_WELCOME_TITLE')) define('_WELCOME_TITLE', 'Home');
@@ -1233,7 +1231,7 @@ if (!defined('_WITHOUT_FILE')) define('_WITHOUT_FILE', 'Without file');
 if (!defined('_ASSOCIATED_CATEGORY')) define('_ASSOCIATED_CATEGORY', 'Associated category');
 if (!defined('_NO_CATEGORY_ASSOCIATED')) define('_NO_CATEGORY_ASSOCIATED', 'No associated category');
 if (!defined('_CHOOSE_CATEGORY_ASSOCIATION')) define('_CHOOSE_CATEGORY_ASSOCIATION', 'Choose categories to associate');
-if (!defined('_CHOOSE_CATEGORY_ASSOCIATION_HELP')) define('_CHOOSE_CATEGORY_ASSOCIATION_HELP', 'If empty all categories are associeted');
+if (!defined('_CHOOSE_CATEGORY_ASSOCIATION_HELP')) define('_CHOOSE_CATEGORY_ASSOCIATION_HELP', 'If empty all categories are associated');
 
 //SERVICE VIEW DOC HISTORY
 if (!defined('_VIEW_DOC_HISTORY')) define('_VIEW_DOC_HISTORY', 'View document history');
@@ -1351,7 +1349,7 @@ if (!defined('_DIFFLIST_NEVER_MODIFIED')) define('_DIFFLIST_NEVER_MODIFIED', 'Th
 
 if(!defined('_TAG_ADMIN')) define('_TAG_ADMIN', 'Tag Admin');
 
-if (!defined('_CONTACT_CHECK'))  define('_CONTACT_CHECK', 'A lest one mail was recently affected to the same contact.');
+if (!defined('_CONTACT_CHECK'))  define('_CONTACT_CHECK', 'A least one mail was recently affected to the same contact.');
 
 if (!defined('_DESCRIPTION')) define('_DESCRIPTION', 'Description');
 
@@ -1364,6 +1362,7 @@ if (!defined('_SIGNATORY_GROUP')) define( '_SIGNATORY_GROUP', 'Signatory group')
 
 if (!defined('_SIGNATURE')) define( '_SIGNATURE','Signature');
 
+if (!defined("_SEARCH_CONTACTS")) define("_SEARCH_CONTACTS","Search contacts");
 
 //maarchIVS translate
 define("_IVS_LENGTH_ID_BELOW_MIN_LENGTH", "Length id below the minimal length");
@@ -1383,3 +1382,40 @@ if (!defined("_COMPONENT")) define("_COMPONENT", "Component");
 if (!defined("_MARK_AS_READ")) define("_MARK_AS_READ", "Mark as read");
 
 if (!defined("_USE_PREVIOUS_ADDRESS")) define("_USE_PREVIOUS_ADDRESS", "Use previous address");
+
+if (!defined("_VIEW_LAST_COURRIERS")) define("_VIEW_LAST_COURRIERS", "My last mails");
+
+if (!defined("_ADMIN_PARAMETERS")) define("_ADMIN_PARAMETERS", "Parameters");
+
+if (!defined("_CONTENT_MANAGEMENT_COMMENT")) define("_CONTENT_MANAGEMENT_COMMENT", "Content management");
+if (!defined("_ADD_LINKS")) define("_ADD_LINKS", "Add links");
+
+if (!defined("_DATA_MODIFICATION_LABEL")) define ("_DATA_MODIFICATION_LABEL","Edit data");
+if (!defined("_DELETE_RECORD_LABEL")) define ("_DELETE_RECORD_LABEL","Delete mail");
+
+if (!defined("_PERIOD")) define("_PERIOD", "Period");
+
+if (!defined("_IMG_RELATED")) define("_IMG_RELATED", "Associated image");
+if (!defined("_PARAMETERS")) define("_PARAMETERS", "Parameters");
+if (!defined("_PARAMETER_S")) define("_PARAMETER_S", "Parameter(s)");
+if (!defined("_ALL_PARAMETERS")) define("_ALL_PARAMETERS", "All parameters");
+if (!defined("_PARAMETER")) define("_PARAMETER", "parameter");
+
+if (!defined("_VALUE")) define("_VALUE", "Value");
+if (!defined("_INT")) define("_INT", "Integer");
+
+if(!defined("_REFERENCE_MAIL")) define("_REFERENCE_MAIL", "Mail sender reference");
+if(!defined("_OTHERS_INFORMATIONS")) define("_OTHERS_INFORMATIONS", "Others informations ()Autres informations (signatories, instructions, ...)");
+if (!defined("_MONITORING_NUMBER")) define("_MONITORING_NUMBER", "Monitoring number");
+if (!defined("_DOCTYPES_MAIL"))    define("_DOCTYPES_MAIL", "Mail type(s)");
+
+if (!defined("_SEARCH_INDICATION"))    define("_SEARCH_INDICATION", " indicates that the search is on mails and attachments.");
+
+if (!defined("_STRUCTURE_ORGANISM")) define("_STRUCTURE_ORGANISM", "Structure");
+if (!defined("_VIEW_ADDRESS")) define("_VIEW_ADDRESS","View address");
+if (!defined("_VIEW_CONTACT")) define("_VIEW_CONTACT","View contact");
+if (!defined("_CONTACT_ADDRESSES_ASSOCIATED")) define("_CONTACT_ADDRESSES_ASSOCIATED","Associated addresses to this contact");
+if (!defined("_BACK_TO_RESULTS_LIST")) define("_BACK_TO_RESULTS_LIST","Back to results list");
+if (!defined("_PROCEED_WORKFLOW"))    define("_PROCEED_WORKFLOW", "Continue visa workflow");
+if (!defined('_SEND_TO_VISA'))    define( '_SEND_TO_VISA', 'Send to visa');
+if (!defined("_SEND_SIGNED_DOCS"))    define("_SEND_SIGNED_DOCS", "Send signed documents");
