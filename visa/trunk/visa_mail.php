@@ -240,7 +240,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</td>';
 		
 		$frm_str .= '<td style="width:33%";">';	
-		$frm_str .= '<a href="javascript://" id="cancel" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><i class="fa fa-undo fa-2x" title="Annuler"></i></a>';
+		$frm_str .= '<a href="javascript://" id="cancel" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><i class="fa fa-backward fa-2x" title="Annuler"></i></a>';
 		
 		$frm_str .= '</td>';
 	$frm_str .= '</tr>';	
