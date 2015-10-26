@@ -26,11 +26,11 @@ if (!defined('_LIFE_CYCLE'))
 if (!defined('_LIFE_CYCLE_COMMENT'))
     define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
 if (!defined('_ADMIN_LIFE_CYCLE_SHORT'))
-    define('_ADMIN_LIFE_CYCLE_SHORT', ' Life cycle administration');
+    define('_ADMIN_LIFE_CYCLE_SHORT', ' Life cycle');
 if (!defined('_ADMIN_LIFE_CYCLE'))
-    define('_ADMIN_LIFE_CYCLE',' Administration des cycles de vie des ressources num&eacute;riques');
+    define('_ADMIN_LIFE_CYCLE','Life cycle administration');
 if (!defined('_ADMIN_LIFE_CYCLE_DESC'))
-    define('_ADMIN_LIFE_CYCLE_DESC','Administration des cycles de vie des ressources num&eacute;riques.');
+    define('_ADMIN_LIFE_CYCLE_DESC','Manage life cycle documents');
 if (!defined('_MANAGE_LC_CYCLES'))
     define('_MANAGE_LC_CYCLES', 'Life cycle management ("lc_cycles")');
 if (!defined('_MANAGE_LC_CYCLE_STEPS'))
