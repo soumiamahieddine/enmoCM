@@ -92,3 +92,6 @@ if (!defined("_REDIRECTION_VISA_SIGN"))
 
 if (!defined("_VISA_MAIL")) 
     define("_VISA_MAIL", "To stamp a mail");
+
+if (!defined("_PRINTFOLDER"))
+     define("_PRINTFOLDER", "Print folder");
