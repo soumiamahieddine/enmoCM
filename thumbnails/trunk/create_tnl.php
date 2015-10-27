@@ -1,4 +1,42 @@
 <?php
+/*
+*   Copyright 2008 - 2015 Maarch
+*
+*   This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+try {
+    include('Maarch_CLITools/ArgsParser.php');
+    include('LoggerLog4php.php');
+    include('Maarch_CLITools/FileHandler.php');
+    include('Maarch_CLITools/ConsoleHandler.php');
+} catch (IncludeFileError $e) {
+    echo 'Maarch_CLITools required ! \n (pear.maarch.org)\n';
+    exit(106);
+}
+
+// Open Logger
+$_ENV['logger'] = new Logger4Php();
+$_ENV['logger']->set_threshold_level('DEBUG');
+
+$logFile = 'log/' . date('Y-m-d_H-i-s') . '.log';
+
+$file = new FileHandler($logFile);
+$_ENV['logger']->add_handler($file);
+
 //error mode and function
 error_reporting(E_ERROR);
 set_error_handler(errorHandler);
@@ -28,46 +66,6 @@ class IncludeFileError extends Exception
         $this->file = $file;
         parent::__construct("Include File \"$file\" is missing!", 1);
     }
-}
-
-/**
-* Creation of the log file
-*/
-function loginCreation()
-{
-    if (
-        !is_dir(dirname($_SERVER['PHP_SELF']) . DIRECTORY_SEPARATOR
-            . 'log' . DIRECTORY_SEPARATOR)
-    ) {
-        mkdir(dirname($_SERVER['PHP_SELF']) . DIRECTORY_SEPARATOR . 'log'
-            . DIRECTORY_SEPARATOR,
-            0777
-        );
-    }
-    $folderLogName = dirname($_SERVER['PHP_SELF']) . DIRECTORY_SEPARATOR . 'log'
-        . DIRECTORY_SEPARATOR;
-    if (isset($_ENV['config_name']) && $_ENV['config_name'] <> '') {
-        $_ENV['log'] = $folderLogName . $_ENV['config_name'] . '_thumbnail_'
-            . date('Y') . '_' . date('m') . '_' . date('d') . '.log';
-    } else {
-        $_ENV['log'] = $folderLogName . 'full_text_' . date('Y') . '_' . date('m')
-            . '_' . date('d') . '.log';
-    }
-    writeLog('Application start with : ' . $_SERVER['SCRIPT_FILENAME']);
-}
-
-/**
-* Write on the log file
-* @param  $eventInfo string text which is written in the log file
-*/
-function writeLog($EventInfo)
-{
-    $logFileOpened = fopen($_ENV['log'], 'a');
-    fwrite($logFileOpened, '[' . date('d') . '/' . date('m') . '/' . date('Y')
-        . ' ' . date('H') . ':' . date('i') . ':' . date('s') . '] ' . $EventInfo
-        . "\r\n"
-    );
-    fclose($logFileOpened);
 }
 
 function MyInclude($file)
@@ -105,8 +103,8 @@ function r_mkdir($path, $mode = 0777, $recursive = true) {
 */
 function errorHandler($errno, $errstr, $errfile, $errline, $errcontext)
 {
-    writeLog('[ERROR] from  line ' . $errline . ' : ' . $errstr . ' [ERROR]');
-    $_ENV['ErrorLevel'] = 1;
+    $_ENV['logger']->write('from  line ' . $errline . ' : ' . $errstr, 'WARNING', 1);
+    $_ENV['errorLevel'] = 1;
 }
 
 // Begin
@@ -128,17 +126,22 @@ foreach ($xmlconfig->CONFIG as $CONFIG) {
 	$_ENV['core_path'] = $maarchDirectory . 'core' . DIRECTORY_SEPARATOR;
 }
 $_ENV['databasetype'] = $xmlconfig->CONFIG_BASE->databasetype;
-if (DIRECTORY_SEPARATOR == "/") {
-    $_ENV['osname'] = "UNIX";
-} else {
-    $_ENV['osname'] = "WINDOWS";
-}
-loginCreation();
 
-writeLog("Launch of process of thumbnails conversion");
-writeLog("Loading the xml config file");
-writeLog("Config name : " . $_ENV['config_name']);
-writeLog("Conversion launched for table : " . $_ENV['tablename']);
+$log4phpParams = $xmlconfig->LOG4PHP;
+if ((string) $log4phpParams->enabled == 'true') {
+    $_ENV['logger']->set_log4PhpLibrary(
+        $maarchDirectory . 'apps/maarch_entreprise/tools/log4php/Logger.php'
+    );
+    $_ENV['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
+    $_ENV['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
+    $_ENV['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
+    $_ENV['logger']->set_log4PhpBatchName('thumbnails');
+}
+
+$_ENV['logger']->write("Launch of process of thumbnails conversion");
+$_ENV['logger']->write("Loading the xml config file");
+$_ENV['logger']->write("Config name : " . $_ENV['config_name']);
+$_ENV['logger']->write("Conversion launched for table : " . $_ENV['tablename']);
 
 require($_ENV['core_path']."class/class_functions.php");
 require($_ENV['core_path']."class/class_db_pdo.php");
@@ -151,62 +154,57 @@ $query = "select priority_number, docserver_id from docservers where is_readonly
 $stmt1 = $_ENV['db']->query($query, array($_ENV['collection']));
 $docserverId = $stmt1->fetchObject()->docserver_id;
 
-writeLog($query);
-writeLog($docserverId);
+$_ENV['logger']->write($query);
+$_ENV['logger']->write($docserverId);
 $docServers = "select docserver_id, path_template from docservers";
 $stmt1 = $_ENV['db']->query($docServers);
-writeLog("docServers found : ");
+$_ENV['logger']->write("docServers found : ");
 
 while ($queryResult = $stmt1->fetchObject()) {
   $pathToDocServer[$queryResult->docserver_id] = $queryResult->path_template;
-  writeLog($queryResult->docserver_id. '-' .$queryResult->path_template);
+  $_ENV['logger']->write($queryResult->docserver_id. '-' .$queryResult->path_template);
 }
 
 if (is_dir($pathToDocServer[(string)$docserverId])){
 	$pathOutput = $pathToDocServer[(string)$docserverId];
-	writeLog("path of output docserver : ".$pathOutput);
+	$_ENV['logger']->write("path of output docserver : ".$pathOutput);
 }
 else {
-	writeLog("output docserver unknown ! : ".$docserverId);
+	$_ENV['logger']->write("output docserver unknown ! : ".$docserverId, "ERROR");
 	exit();
 }
 $cpt_batch_size=0;
 
 $queryMakeThumbnails = "select res_id, docserver_id, path, filename, format from "
     . $_ENV['tablename'] . " where tnl_filename = '' or tnl_filename is null ";
-writeLog("query to found document with no thumbnail : ".$queryMakeThumbnails);
+$_ENV['logger']->write("query to found document with no thumbnail : ".$queryMakeThumbnails);
 $stmt1 = $_ENV['db']->query($queryMakeThumbnails);
 while ($queryResult=$stmt1->fetchObject()) {
 	if ($_ENV['max_batch_size'] >= $cpt_batch_size) {
-			$pathToFile = $pathToDocServer[$queryResult->docserver_id] . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path)
-            . $queryResult->filename;
-			$outputPathFile  = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path) . str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename);
-			
-			
-			writeLog("processing of document : " . $pathToFile . " | res_id : "
-            . $queryResult->res_id);
-			echo "processing of document : " . $pathToFile . " \r\n res_id : "
-            . $queryResult->res_id . "\n";
-			
-			
-			
-			$racineOut = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path);
-			if (!is_dir($racineOut)){
-				r_mkdir($racineOut,0777);
-				writeLog("Create $racineOut directory ");
-			}
-			
-			exec("convert -thumbnail x300 -background white -alpha remove ".$pathToFile."[0] $outputPathFile");
-			$stmt2 = $_ENV['db']->query("UPDATE ".$_ENV['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename), $queryResult->res_id));
-			
+		$pathToFile = $pathToDocServer[$queryResult->docserver_id] . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path)
+        . $queryResult->filename;
+		$outputPathFile  = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path) . str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename);
 		
+		$_ENV['logger']->write("processing of document : " . $pathToFile . " | res_id : "
+        . $queryResult->res_id);
+		echo "processing of document : " . $pathToFile . " \r\n res_id : "
+        . $queryResult->res_id . "\n";
+		
+		$racineOut = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path);
+		if (!is_dir($racineOut)){
+			r_mkdir($racineOut,0777);
+			$_ENV['logger']->write("Create $racineOut directory ");
+		}
+		
+		exec("convert -thumbnail x300 -background white -alpha remove ".$pathToFile."[0] $outputPathFile");
+		$stmt2 = $_ENV['db']->query("UPDATE ".$_ENV['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename), $queryResult->res_id));
+			
 	} else {
-    writeLog("Max batch size ! Stop processing !");
-    echo "\r\nMax batch size ! Stop processing !";
-    break;
+        $_ENV['logger']->write("Max batch size ! Stop processing !");
+        echo "\r\nMax batch size ! Stop processing !";
+        break;
   }
   $cpt_batch_size++;
 }
-writeLog("End of application !");
+$_ENV['logger']->write("End of application !");
 exit();
-?>
