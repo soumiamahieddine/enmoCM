@@ -35,3 +35,5 @@ if (!defined("_NEW_VERSION_ADDED"))
     define("_NEW_VERSION_ADDED","Nouvelle version ajoutée");
 if (!defined("_DONT_CLOSE"))
     define("_DONT_CLOSE","Ne pas fermer cette fenêtre !");
+if (!defined("_LOADING"))
+    define("_LOADING","Chargement");

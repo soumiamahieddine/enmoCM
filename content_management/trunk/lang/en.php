@@ -35,3 +35,5 @@ if (!defined('_NEW_VERSION_ADDED'))
     define('_NEW_VERSION_ADDED','New version added');
 if (!defined('_DONT_CLOSE'))
     define('_DONT_CLOSE','Do not close this popup !');
+if (!defined("_LOADING"))
+    define("_LOADING","Loading");
