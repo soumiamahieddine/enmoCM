@@ -289,7 +289,11 @@ class history
                 $logging_methods[0]['ID'] = 'database';
                 $logging_methods[0]['ACTIVATED'] = true;
                 $logging_methods[1]['ID'] = 'log4php';
-                $logging_methods[1]['ACTIVATED'] = false;
+                $logging_methods[1]['ACTIVATED'] = true;
+                $logging_methods[1]['LOGGER_NAME_TECH'] = 'loggerTechnique';
+                $logging_methods[1]['LOGGER_NAME_FUNC'] = 'loggerFonctionnel';
+                $logging_methods[1]['LOG_FORMAT'] = '[%RESULT%][%CODE_METIER%][%WHERE%][%ID%][%HOW%][%USER%][%WHAT%][%ID_MODULE%][%REMOTE_IP%]';
+                $logging_methods[1]['CODE_METIER'] = 'MAARCH';
             }
 
             if (!isset($noXml)) {
@@ -408,11 +412,38 @@ class history
             $_SESSION['user']['primarygroup'] = '';
         }
 
-        Logger::configure(
+        if (file_exists(
+            $_SESSION['config']['corepath']. DIRECTORY_SEPARATOR . 'custom'
+            . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+            . DIRECTORY_SEPARATOR . "apps"
+            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . "xml"
+            . DIRECTORY_SEPARATOR . "log4php.xml"
+        )) {
+            $configFileLog4PHP = "apps"
+                . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                . DIRECTORY_SEPARATOR . "xml"
+                . DIRECTORY_SEPARATOR . "log4php.xml";
+
+        } elseif (file_exists(
             "apps"
-            .DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
-            .DIRECTORY_SEPARATOR."xml"
-            .DIRECTORY_SEPARATOR."log4php.xml"
+            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . "xml"
+            . DIRECTORY_SEPARATOR . "log4php.xml"
+        )) {
+            $configFileLog4PHP = "apps"
+                . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                . DIRECTORY_SEPARATOR . "xml"
+                . DIRECTORY_SEPARATOR . "log4php.xml";
+        } else {
+            $configFileLog4PHP = "apps"
+                . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                . DIRECTORY_SEPARATOR . "xml"
+                . DIRECTORY_SEPARATOR . "log4php.default.xml";
+        }
+
+        Logger::configure(
+            $configFileLog4PHP
         );
 
         if ($isTech) {
