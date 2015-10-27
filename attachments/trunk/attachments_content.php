@@ -1137,11 +1137,12 @@ if (isset($_REQUEST['id'])) {
         $column_res = 'res_id';
     }
     
-    $stmt = $db->query("SELECT validation_date, title, dest_contact_id, dest_address_id, dest_address_id as address_id, relation 
+    $stmt = $db->query("SELECT validation_date, title, dest_contact_id, dest_address_id, dest_address_id as address_id, relation, format
                     FROM res_view_attachments 
                     WHERE ".$column_res." = ? and res_id_master = ?
                     ORDER BY relation desc",array($_REQUEST['id'],$_SESSION['doc_id']));
     $data_attachment = $stmt->fetchObject();
+    $attachmentFormat = $data_attachment->format;
     //var_dump($data_attachment);
     if ($data_attachment->relation == 1) {
         $res_table = 'res_attachments';
@@ -1420,17 +1421,17 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
     if (isset($_REQUEST['id'])) {
          $content .= '<p>';
             $content .= '<label>'. _CREATE_NEW_ATTACHMENT_VERSION.'</label>';
-            $content .= '<input type="radio" name="new_version" id="new_version_yes" value="yes"/>'._YES;
+            $content .= '<input type="radio" name="new_version" id="new_version_yes" value="yes" onclick="setButtonStyle(\'yes\', \''.$attachmentFormat.'\')"/>'._YES;
             $content .= '&nbsp;&nbsp;';
-            $content .= '<input type="radio" name="new_version" id="new_version_no" checked value="no"/>'._NO;
+            $content .= '<input type="radio" name="new_version" id="new_version_no" checked value="no" onclick="setButtonStyle(\'no\', \''.$attachmentFormat.'\')"/>'._NO;
         $content .= '</p>';
         $content .= '<br/>';   
     }
         $content .= '<p class="buttons">';
-                if (isset($_REQUEST['id'])) {
+                if (isset($_REQUEST['id']) && $attachmentFormat <> "pdf") {
                     $content .= '<input type="button" value="';
                     $content .= _EDIT_MODEL;
-                    $content .= '" name="edit" id="edit" class="button" onclick="window.open(\''
+                    $content .= '" name="editModel" id="editModel" class="button" onclick="$(\'edit\').style.visibility=\'visible\';window.open(\''
                         . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentUpVersion&objectId='.$_REQUEST['id'].'&objectTable=res_view_attachments&resMaster='.$_SESSION['doc_id']
                         .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
                 } /*else {

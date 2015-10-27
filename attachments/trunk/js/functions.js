@@ -241,3 +241,11 @@ function createModalinAttachmentList(txt, id_mod, height, width, mode_frm){
     Event.observe(layer, 'DOMMouseScroll', function(event){Event.stop(event);}.bindAsEventListener(), false);
     window.top.window.$(id_mod).focus();
 }
+
+function setButtonStyle(radioButton, fileFormat) {
+    if (radioButton == "yes" && fileFormat != "pdf") {
+        $('edit').style.visibility="hidden";
+    } else if (radioButton == "no" && fileFormat != "pdf") {
+        $('edit').style.visibility="visible";
+    }
+}
