@@ -40,19 +40,40 @@ if ($_GET['mode'] == "up") {
 	$tmpArray = $_SESSION['basket_order'][$_GET['basketIndex']-1];
 	$_SESSION['basket_order'][$_GET['basketIndex']-1] = $_SESSION['basket_order'][$_GET['basketIndex']];
 	$_SESSION['basket_order'][$_GET['basketIndex']] = $tmpArray;
+
+} else if ($_GET['mode'] == "topup") {
+	$tmpArray = $_SESSION['basket_order'][$_GET['basketIndex']];
+	unset($_SESSION['basket_order'][$_GET['basketIndex']]);
+	$_SESSION['basket_order'] = array_values($_SESSION['basket_order']);
+	$_SESSION['basket_order'] = array_merge(array($tmpArray), $_SESSION['basket_order']);
+
 } else if ($_GET['mode'] == "down") {
 	$tmpArray = $_SESSION['basket_order'][$_GET['basketIndex']+1];
 	$_SESSION['basket_order'][$_GET['basketIndex']+1] = $_SESSION['basket_order'][$_GET['basketIndex']];
 	$_SESSION['basket_order'][$_GET['basketIndex']] = $tmpArray;
+
+} else if ($_GET['mode'] == "topdown") {
+	$tmpArray = $_SESSION['basket_order'][$_GET['basketIndex']];
+	unset($_SESSION['basket_order'][$_GET['basketIndex']]);
+	$_SESSION['basket_order'] = array_values($_SESSION['basket_order']);
+	array_push($_SESSION['basket_order'], $tmpArray);
+
 } else if ($_GET['mode'] == "save") {
 	foreach ($_SESSION['basket_order'] as $key => $value) {
 		$db->query("UPDATE baskets SET basket_order = ? WHERE basket_id = ?", array($key, $value['basket_id']));
 	}
 	
+    // Log in database 
+    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+    $hist = new history();
+    $hist->add("basket_order", $_SESSION['user']['UserId'],"UP",'basketorderup', _BASKET_ORDER_EDITED, $_SESSION['config']['databasetype'], 'basket');
+
+    $_SESSION['info'] = "test";
 	?>
 	<script>
 		window.location.href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?module=basket&page=basket";
 	</script>
 	<?php
+	exit;
 }
 

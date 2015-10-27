@@ -841,6 +841,8 @@ class admin_basket extends Database
                         <th><?php echo _DESC;?></th>
                         <th></th>
                         <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </head>
 
@@ -860,8 +862,16 @@ class admin_basket extends Database
                         <td><?php 
                             if($key > 0){
                                 ?>
+                                <a onclick="simpleAjaxReturn('<?php echo $_SESSION['config']['businessappurl']."index.php?page=setSessionBasketOrder&module=basket&basketIndex=".$key."&mode=topup";?>')" href="javascript://">
+                                    <i class="fa fa-angle-double-up fa-2x" title="<?php echo _MOVE_UP_TOP ;?>"></i>
+                                </a><?php 
+                            } ?>
+                        </td>
+                        <td><?php 
+                            if($key > 0){
+                                ?>
                                 <a onclick="simpleAjaxReturn('<?php echo $_SESSION['config']['businessappurl']."index.php?page=setSessionBasketOrder&module=basket&basketIndex=".$key."&mode=up";?>')" href="javascript://">
-                                    <i class="fa fa-angle-up fa-2x" ></i>
+                                    <i class="fa fa-angle-up fa-2x" title="<?php echo _MOVE_UP_ONE_LEVEL ;?>"></i>
                                 </a><?php 
                             } ?>
                         </td>
@@ -869,7 +879,15 @@ class admin_basket extends Database
                             if(isset($_SESSION['basket_order'][$key+1])){
                                 ?>
                                 <a onclick="simpleAjaxReturn('<?php echo $_SESSION['config']['businessappurl']."index.php?page=setSessionBasketOrder&module=basket&basketIndex=".$key."&mode=down";?>')" href="javascript://">
-                                    <i class="fa fa-angle-down fa-2x" ></i>
+                                    <i class="fa fa-angle-down fa-2x" title="<?php echo _MOVE_DOWN_ONE_LEVEL ;?>"></i>
+                                </a><?php 
+                            } ?>
+                        </td>
+                        <td><?php 
+                            if(isset($_SESSION['basket_order'][$key+1])){
+                                ?>
+                                <a onclick="simpleAjaxReturn('<?php echo $_SESSION['config']['businessappurl']."index.php?page=setSessionBasketOrder&module=basket&basketIndex=".$key."&mode=topdown";?>')" href="javascript://">
+                                    <i class="fa fa-angle-double-down fa-2x" title="<?php echo _MOVE_DOWN_BOTTOM ;?>"></i>
                                 </a><?php 
                             } ?>
                         </td>

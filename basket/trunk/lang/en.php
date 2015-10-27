@@ -432,3 +432,15 @@ if (!defined("_GO_MANAGE_USER"))
 
 if (!defined("_GO_MANAGE_BASKET"))
     define("_GO_MANAGE_BASKET", "Edit");
+
+if (!defined("_MOVE_UP_TOP"))
+    define("_MOVE_UP_TOP", "Move to the top of the list");
+if (!defined("_MOVE_UP_ONE_LEVEL"))
+    define("_MOVE_UP_ONE_LEVEL", "Move up one line");
+if (!defined("_MOVE_DOWN_ONE_LEVEL"))
+    define("_MOVE_DOWN_ONE_LEVEL", "Move down one line");
+if (!defined("_MOVE_DOWN_BOTTOM"))
+    define("_MOVE_DOWN_BOTTOM", "Move to the bottom of the list");
+
+if (!defined("_BASKET_ORDER_EDITED"))
+    define("_BASKET_ORDER_EDITED", "Basket order edited");

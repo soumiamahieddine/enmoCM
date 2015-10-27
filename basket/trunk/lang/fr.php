@@ -427,3 +427,14 @@ if (!defined("_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL"))
     define("_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL", "(Ajouter un groupe secondaire ayant des corbeilles puis enregistrer l'utilisateur avant de revenir sur cet écran).");
 if (!defined("_MANAGE_BASKET_ORDER"))
     define("_MANAGE_BASKET_ORDER", "Gérer l'ordre des corbeilles");
+if (!defined("_MOVE_UP_TOP"))
+    define("_MOVE_UP_TOP", "Remonter tout en haut de la liste");
+if (!defined("_MOVE_UP_ONE_LEVEL"))
+    define("_MOVE_UP_ONE_LEVEL", "Monter d'une ligne");
+if (!defined("_MOVE_DOWN_ONE_LEVEL"))
+    define("_MOVE_DOWN_ONE_LEVEL", "Descendre d'une ligne");
+if (!defined("_MOVE_DOWN_BOTTOM"))
+    define("_MOVE_DOWN_BOTTOM", "Descendre tout en bas de la liste");
+
+if (!defined("_BASKET_ORDER_EDITED"))
+    define("_BASKET_ORDER_EDITED", "Ordre des corbeilles modifié");
