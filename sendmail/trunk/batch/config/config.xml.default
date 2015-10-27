@@ -2,11 +2,11 @@
 <ROOT>
     <CONFIG>
         <Lang>fr</Lang> <!-- fr, en-->
-        <MaarchDirectory>C:\xampp\htdocs\maarch_entreprise\</MaarchDirectory>
-        <MaarchUrl>http://localhost/maarch_entreprise/</MaarchUrl>
+        <MaarchDirectory>/var/www/html/maarch/</MaarchDirectory>
+        <MaarchUrl>http://localhost/maarch/</MaarchUrl>
         <MaarchApps>maarch_entreprise</MaarchApps>
 		<CustomId></CustomId>
-        <TmpDirectory>C:\xampp\htdocs\maarch_entreprise\modules\sendmail\batch\tmp\</TmpDirectory>
+        <TmpDirectory>/var/www/html/maarch/modules/sendmail/batch/tmp/</TmpDirectory>
         <debugmode>
             <dontflag_mail>true</dontflag_mail>
             <verbose_mode>false</verbose_mode>
@@ -27,12 +27,12 @@
         <databaseserver>127.0.0.1</databaseserver>
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <databasename>maarch_entreprise</databasename>
+        <databasename>maarch</databasename>
         <databaseuser>postgres</databaseuser>
         <databasepassword>maarch</databasepassword>
     </CONFIG_BASE>
     <MAILER>
-        <path_to_mailer>\apps\maarch_entreprise\tools\mails\htmlMimeMail.php</path_to_mailer>
+        <path_to_mailer>/apps/maarch_entreprise/tools/mails/htmlMimeMail.php</path_to_mailer>
         <path_to_phpmailer>PHPMailer_v5.1</path_to_phpmailer>
         <type>smtp</type><!-- mail (default), smtp, sendmail, qmail -->
         <smtp_host>smtp.yourdomain.com</smtp_host><!-- smtp1.example.com:25;smtp2.example.com -->
@@ -47,9 +47,9 @@
         <mailfrom>notifications@maarch.fr</mailfrom>
     </MAILER>
     <LOG4PHP>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
         <Log4PhpLogger>loggerTechnique</Log4PhpLogger>
-        <Log4PhpBusinessCode>MaarchEntrepriseDemo</Log4PhpBusinessCode>
-        <Log4PhpConfigPath>/var/www/maarch_entreprise/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
+        <Log4PhpBusinessCode>sendmail</Log4PhpBusinessCode>
+        <Log4PhpConfigPath>/var/www/html/maarch/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
     </LOG4PHP>
 </ROOT>
