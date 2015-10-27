@@ -177,7 +177,7 @@ if (!defined('_NO_DIFF_LIST_ASSOCIATED'))
 if (!defined('_PRINCIPAL_RECIPIENT'))
     define('_PRINCIPAL_RECIPIENT', 'Main recipient');
 if (!defined('_ADD_COPY_IN_PROCESS'))
-    define('_ADD_COPY_IN_PROCESS', 'Add users in copy');
+    define('_ADD_COPY_IN_PROCESS', 'Add users in copy in process page');
 if (!defined('_DIFF_LIST_COPY'))
     define('_DIFF_LIST_COPY', 'Mailing list');
 if (!defined('_NO_COPY'))
@@ -274,6 +274,8 @@ if (!defined('_ITS_NOT_MY_TURN_IN_THE_WF'))
     define('_ITS_NOT_MY_TURN_IN_THE_WF', 'It is not my turn in the workflow');
 if (!defined('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF'))
     define('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF', 'There is no available role for me in the workflow');
+if (!defined("_NO_AVAILABLE_ROLE"))
+    define("_NO_AVAILABLE_ROLE", "No available roles"); 
 
 if (!defined('_NO_FILTER')) 
     define('_NO_FILTER', 'Erase filters');
@@ -310,8 +312,8 @@ if (!defined('_ENTITIES_PRINT_SEP_MLB'))
     define('_ENTITIES_PRINT_SEP_MLB', 'Print entities separator sheets');
 if (!defined('_SELECT_BARCODE_TYPE'))
     define('_SELECT_BARCODE_TYPE', 'Select the barcode type');
-if (!defined("_ADD_COPY_IN_INDEXING"))
-    define("_ADD_COPY_IN_INDEXING", "Add person just in copy in indexing page");
+if (!defined("_ADD_COPY_IN_INDEXING_VALIDATION"))
+    define("_ADD_COPY_IN_INDEXING_VALIDATION", "Add person only in copy in indexing/validation page");
 
 if (!defined("_DEL_USER_LISTDIFF"))
     define("_DEL_USER_LISTDIFF", "Remove user from diffusion list");

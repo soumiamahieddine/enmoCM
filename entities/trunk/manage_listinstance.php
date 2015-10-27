@@ -742,7 +742,7 @@ $linkwithwhat =
 						<td><?php functions::xecho($user['entity_label']);?></td>
 						<td class="action_entities"><?php 
 							/*if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { */
-							if (!$noDelete && !$onlyCc) { ?>
+							if (!$noDelete && (!$onlyCc || ($onlyCc && $role_id == 'copy'))) { ?>
 								<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id);?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($user['user_id']);?>"><i class="fa fa-times fa-lg" title="<?php echo _DEL_USER_LISTDIFF ;?>"></i></a><?php
 							} ?>
 						</td>
@@ -795,7 +795,7 @@ $linkwithwhat =
 						<td ><?php functions::xecho($entity['entity_id']);?></td>
 						<td ><?php functions::xecho($entity['entity_label']);?></td>
 						<td class="action_entities"><?php 
-						if (!$noDelete && !$onlyCc) { ?>
+						if (!$noDelete) { ?>
 							<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_entity&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($entity['entity_id']);?>">
 								<i class="fa fa-times fa-lg" title="<?php echo _DEL_ENTITY_LISTDIFF ;?>"></i>
 							</a><?php

@@ -59,7 +59,7 @@ ob_end_clean();
 $labelButton = _MODIFY_LIST;
 $arg = '&mode=up';
 
-if( $core->test_service('add_copy_in_indexing', 'entities', false) && $origin == 'indexing' ){
+if( $core->test_service('add_copy_in_indexing_validation', 'entities', false) && $origin == 'indexing' ){
     $onlyCC = true;
 }
 

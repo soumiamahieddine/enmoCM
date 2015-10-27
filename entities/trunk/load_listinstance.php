@@ -57,13 +57,13 @@ $onlyCC = false;
 
 
 if( ($core->test_service('add_copy_in_process', 'entities', false) && $_REQUEST['origin'] == 'process') 
-    || ($core->test_service('add_copy_in_indexing', 'entities', false) && $_REQUEST['origin'] == 'indexing') ){
+    || ($core->test_service('add_copy_in_indexing_validation', 'entities', false) && $_REQUEST['origin'] == 'indexing') ){
     $onlyCC = true;
 }
 
-if($_REQUEST['origin'] == 'indexing'){
-    $onlyCC = false;
-}
+// if($_REQUEST['origin'] == 'indexing'){
+//     $onlyCC = false;
+// }
 
 $objectType = $_REQUEST['objectType'];
 $objectId = $_REQUEST['objectId'];

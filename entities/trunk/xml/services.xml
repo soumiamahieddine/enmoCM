@@ -297,8 +297,8 @@
         </WHEREAMIUSED>
     </SERVICE>
     <SERVICE>
-        <id>add_copy_in_indexing</id>
-        <name>_ADD_COPY_IN_INDEXING</name>
+        <id>add_copy_in_indexing_validation</id>
+        <name>_ADD_COPY_IN_INDEXING_VALIDATION</name>
         <servicepage>load_listinstance.php</servicepage>
         <servicetype>use</servicetype>
         <system_service>false</system_service>
