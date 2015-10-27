@@ -48,9 +48,30 @@
 * @brief Extraction of information on PDF with lucene functions of Zend Framework
 */
 
+try {
+    include('Maarch_CLITools/ArgsParser.php');
+    include('LoggerLog4php.php');
+    include('Maarch_CLITools/FileHandler.php');
+    include('Maarch_CLITools/ConsoleHandler.php');
+} catch (IncludeFileError $e) {
+    echo 'Maarch_CLITools required ! \n (pear.maarch.org)\n';
+    exit(106);
+}
+
+// Open Logger
+$_ENV['logger'] = new Logger4Php();
+$_ENV['logger']->set_threshold_level('DEBUG');
+
+$logFile = 'log/' . date('Y-m-d_H-i-s') . '.log';
+
+$file = new FileHandler($logFile);
+$_ENV['logger']->add_handler($file);
+
+
 //error mode and function
 error_reporting(E_ERROR);
 set_error_handler(errorHandler);
+
 // global vars of the program
 /**
 * Name of the config (usefull for multi instance)
@@ -66,46 +87,6 @@ $_ENV['log'] = "";
 $_ENV['ErrorLevel'] = 0;
 
 /**
-* Creation of the log file
-*/
-function loginCreation()
-{
-    if (
-        !is_dir(dirname($_SERVER['PHP_SELF']) . DIRECTORY_SEPARATOR
-            . 'log' . DIRECTORY_SEPARATOR)
-    ) {
-        mkdir(dirname($_SERVER['PHP_SELF']) . DIRECTORY_SEPARATOR . 'log'
-            . DIRECTORY_SEPARATOR,
-            0777
-        );
-    }
-    $folderLogName = dirname($_SERVER['PHP_SELF']) . DIRECTORY_SEPARATOR . 'log'
-        . DIRECTORY_SEPARATOR;
-    if (isset($_ENV['config_name']) && $_ENV['config_name'] <> '') {
-        $_ENV['log'] = $folderLogName . $_ENV['config_name'] . '_full_text_'
-            . date('Y') . '_' . date('m') . '_' . date('d') . '.log';
-    } else {
-        $_ENV['log'] = $folderLogName . 'full_text_' . date('Y') . '_' . date('m')
-            . '_' . date('d') . '.log';
-    }
-    writeLog('Application start with : ' . $_SERVER['SCRIPT_FILENAME']);
-}
-
-/**
-* Write on the log file
-* @param  $eventInfo string text which is written in the log file
-*/
-function writeLog($EventInfo)
-{
-    $logFileOpened = fopen($_ENV['log'], 'a');
-    fwrite($logFileOpened, '[' . date('d') . '/' . date('m') . '/' . date('Y')
-        . ' ' . date('H') . ':' . date('i') . ':' . date('s') . '] ' . $EventInfo
-        . "\r\n"
-    );
-    fclose($logFileOpened);
-}
-
-/**
 * Managing of errors
 * @param  $errno integer number of the error
 * @param  $errstr string text of the error
@@ -115,7 +96,7 @@ function writeLog($EventInfo)
 */
 function errorHandler($errno, $errstr, $errfile, $errline, $errcontext)
 {
-    writeLog('[ERROR] from  line ' . $errline . ' : ' . $errstr . ' [ERROR]');
+    $_ENV['logger']->write('from  line ' . $errline . ' : ' . $errstr, 'ERROR', 1);
     $_ENV['ErrorLevel'] = 1;
 }
 
@@ -153,15 +134,15 @@ function indexFullText($pathToFile, $indexFileDirectory, $format, $Id)
     if (is_file($pathToFile)) {
         switch (strtoupper($format)) {
             case "PDF":
-                writeLog("it's a PDF file");
+                $_ENV['logger']->write("it's a PDF file", 'INFO');
                 $result = prepareIndexFullTextPdf($pathToFile, $indexFileDirectory, $Id);
                 break;
             case "HTML":
-                writeLog("it's A HTML file");
+                $_ENV['logger']->write("it's A HTML file", 'INFO');
                 $result = prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id);
                 break;
             case "MAARCH":
-                writeLog("it's A MAARCH file");
+                $_ENV['logger']->write("it's A MAARCH file", 'INFO');
                 $result = prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id);
                 break;
             default:
@@ -181,7 +162,7 @@ function prepareIndexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
                 . DIRECTORY_SEPARATOR . $_ENV['pdftotext'] . "\" \""
                 . $pathToFile . "\" \"" . $tmpFile."\""
             );
-            writeLog("\"" . "\"" . $_ENV['maarch_tools_path'] . "pdftotext"
+            $_ENV['logger']->write("\"" . "\"" . $_ENV['maarch_tools_path'] . "pdftotext"
                 . DIRECTORY_SEPARATOR . $_ENV['pdftotext'] . "\" \""
                 . $pathToFile . "\" \"" . $tmpFile . "\"" . "\""
             );
@@ -189,7 +170,7 @@ function prepareIndexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
             $resultExtraction = exec("pdftotext \"" . $pathToFile
                 . "\" \"" . $tmpFile . "\""
             );
-            writeLog("pdftotext \"" . $pathToFile . "\" \"" . $tmpFile . "\"");
+            $_ENV['logger']->write("pdftotext \"" . $pathToFile . "\" \"" . $tmpFile . "\"");
         }
         $fileContent = trim(readFileF($tmpFile));
         if (is_file($tmpFile)) unlink($tmpFile);
@@ -232,11 +213,11 @@ function launchIndexFullText($fileContent, $tempIndexFileDirectory, $Id) // $Ind
         );
         require_once('Zend/Search/Lucene.php');
         if (!is_dir($indexFileDirectory)) {
-            writeLog($indexFileDirectory . " not exists !");
+            $_ENV['logger']->write($indexFileDirectory . " not exists !", "ERROR", 2);
             $index = Zend_Search_Lucene::create($indexFileDirectory);
         } else {
             if (isDirEmpty($indexFileDirectory)) {
-                writeLog($indexFileDirectory . " empty !");
+                $_ENV['logger']->write($indexFileDirectory . " empty !");
                 $index = Zend_Search_Lucene::create($indexFileDirectory);
             } else {
                 $index = Zend_Search_Lucene::open($indexFileDirectory);
@@ -288,8 +269,9 @@ $conf = $argv[1];
 $xmlconfig = simplexml_load_file($conf);
 foreach ($xmlconfig->CONFIG as $CONFIG) {
     $_ENV['config_name'] = $CONFIG->CONFIG_NAME;
-    $base_directory = $CONFIG->BASE_DIRECTORY;
-    $_ENV['base_directory'] = $base_directory;
+    $maarch_directory = $CONFIG->MAARCH_DIRECTORY;
+    $_ENV['maarch_directory'] = $maarch_directory;
+    $_ENV['base_directory'] = $_ENV['maarch_directory'] . '/modules/full_text/';
     $indexFileDirectory = $CONFIG->INDEX_FILE_DIRECTORY;
     $_ENV['tablename'] = $CONFIG->TABLE_NAME;
     $fulltextColumnName = $CONFIG->FULLTEXT_COLUMN_NAME;
@@ -298,61 +280,76 @@ foreach ($xmlconfig->CONFIG as $CONFIG) {
 }
 if (DIRECTORY_SEPARATOR == "/") {
     $_ENV['osname'] = "UNIX";
-     $_ENV['pdftotext'] = "pdftotext";
+    $_ENV['pdftotext'] = "pdftotext";
 } else {
     $_ENV['osname'] = "WINDOWS";
     $_ENV['pdftotext'] = "pdftotext.exe";
 }
-loginCreation();
-writeLog("Launch of Lucene full text engine");
-writeLog("Loading the xml config file");
-writeLog("Config name : " . $_ENV['config_name']);
-writeLog("Full text engine launched for table : " . $_ENV['tablename']);
+
+$log4phpParams = $xmlconfig->LOG4PHP;
+if ((string) $log4phpParams->enabled == 'true') {
+    $_ENV['logger']->set_log4PhpLibrary(
+        $_ENV['maarch_directory'] . 'apps/maarch_entreprise/tools/log4php/Logger.php'
+    );
+    $_ENV['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
+    $_ENV['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
+    $_ENV['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
+    $_ENV['logger']->set_log4PhpBatchName('full_text');
+}
+
+$_ENV['logger']->write("Launch of Lucene full text engine");
+$_ENV['logger']->write("Loading the xml config file");
+$_ENV['logger']->write("Config name : " . $_ENV['config_name']);
+$_ENV['logger']->write("Full text engine launched for table : " . $_ENV['tablename']);
 require("../../core/class/class_functions.php");
 require("../../core/class/class_db_pdo.php");
 $_ENV['db'] = new Database($conf);
 
-writeLog("connection on the DB server OK !");
+$_ENV['logger']->write("connection on the DB server OK !");
 $docServers = "SELECT docserver_id, path_template FROM docservers";
 
 $stmt = $_ENV['db']->query($docServers);
 
-writeLog("docServers found : ");
+$_ENV['logger']->write("docServers found : ");
 while ($queryResult=$stmt->fetch(PDO::FETCH_NUM)) {
   $pathToDocServer[$queryResult[0]] = $queryResult[1];
-  writeLog($queryResult[1]);
+  $_ENV['logger']->write($queryResult[1]);
 }
 $queryIndexFullText = "SELECT res_id, docserver_id, path, filename, format FROM "
     . $_ENV['tablename'] . " WHERE " . $fulltextColumnName . " = '0' or "
     . $fulltextColumnName . " = '' or " . $fulltextColumnName . " is null ";
-writeLog("query to found document with no full text : ".$queryIndexFullText);
+$_ENV['logger']->write("query to found document with no full text : ".$queryIndexFullText);
 $stmt = $_ENV['db']->query($queryIndexFullText);
 $cpt_batch_size=0;
-writeLog("max_batch_size : ".$_ENV['max_batch_size']);
+$_ENV['logger']->write("max_batch_size : ".$_ENV['max_batch_size']);
 while ($queryResult=$stmt->fetch(PDO::FETCH_NUM)) {
     if ($_ENV['max_batch_size'] >= $cpt_batch_size) {
         $pathToFile = $pathToDocServer[$queryResult[1]]
             . str_replace("#", DIRECTORY_SEPARATOR, $queryResult[2])
             . DIRECTORY_SEPARATOR . $queryResult[3];
-        writeLog("processing of document : " . $pathToFile . " | res_id : "
+        $_ENV['logger']->write("processing of document : " . $pathToFile . " | res_id : "
             . $queryResult[0]);
         echo "processing of document : " . $pathToFile . " \r\n res_id : "
             . $queryResult[0] . "\n";
         $result = indexFullText(
             $pathToFile, $indexFileDirectory, $queryResult[4], $queryResult[0]
         );
-        writeLog("Result of processing : " . $result);
+        if ($result <> 1) {
+            $_ENV['logger']->write("Result of processing : " . $pathToFile 
+                . " " . $result, "ERROR", $result);
+        }
+        $_ENV['logger']->write("Result of processing : " . $result);
         echo "Result of processing : " . $result . "\r\n";
         $updateDoc = "UPDATE " . $_ENV['tablename'] . " SET "
             . $fulltextColumnName . " = ? WHERE res_id = ?";
         $_ENV['db']->query($updateDoc, array($result, $queryResult[0]));
     } else {
-    writeLog("Max batch size ! Stop processing !");
+    $_ENV['logger']->write("Max batch size ! Stop processing !");
     echo "\r\nMax batch size ! Stop processing !";
     break;
   }
   $cpt_batch_size++;
 }
-writeLog("Return execution code : ".$_ENV['ErrorLevel']);
-writeLog("End of application !");
+$_ENV['logger']->write("Return execution code : ".$_ENV['ErrorLevel']);
+$_ENV['logger']->write("End of application !");
 exit($_ENV['ErrorLevel']);
