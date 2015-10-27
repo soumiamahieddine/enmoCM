@@ -1419,3 +1419,13 @@ if (!defined("_BACK_TO_RESULTS_LIST")) define("_BACK_TO_RESULTS_LIST","Back to r
 if (!defined("_PROCEED_WORKFLOW"))    define("_PROCEED_WORKFLOW", "Continue visa workflow");
 if (!defined('_SEND_TO_VISA'))    define( '_SEND_TO_VISA', 'Send to visa');
 if (!defined("_SEND_SIGNED_DOCS"))    define("_SEND_SIGNED_DOCS", "Send signed documents");
+
+if (!defined("_ADD_ADDRESS_TO_CONTACT")) define("_ADD_ADDRESS_TO_CONTACT","Add an address to an existing contact");
+if (!defined("_ADD_ADDRESS_TO_CONTACT_DESC")) define("_ADD_ADDRESS_TO_CONTACT_DESC","This part is use to add an address to a contact who already exist.");
+if (!defined("_WHICH_CONTACT")) define("_WHICH_CONTACT","For which contact do you want to add an address ?");
+
+if (!defined("_HELP_PRIVATE")) define("_HELP_PRIVATE","<i>Fields mark with <span class=\"blue_asterisk\">*</span> are hidden in contact card when the address is confidential</i>");
+if (!defined("_CHOOSE_A_CONTACT")) define("_CHOOSE_A_CONTACT","Choose a contact");
+if (!defined("_CHOOSE_THIS_CONTACT")) define("_CHOOSE_THIS_CONTACT","Choose this contact");
+if (!defined("_TYPE_OF_THE_CONTACT")) define("_TYPE_OF_THE_CONTACT","Contact type");
+if (!defined("_ADD_NEW_CONTACT")) define("_ADD_NEW_CONTACT", "Add a new contact");
