@@ -1429,3 +1429,5 @@ if (!defined("_CHOOSE_A_CONTACT")) define("_CHOOSE_A_CONTACT","Choose a contact"
 if (!defined("_CHOOSE_THIS_CONTACT")) define("_CHOOSE_THIS_CONTACT","Choose this contact");
 if (!defined("_TYPE_OF_THE_CONTACT")) define("_TYPE_OF_THE_CONTACT","Contact type");
 if (!defined("_ADD_NEW_CONTACT")) define("_ADD_NEW_CONTACT", "Add a new contact");
+
+if (!defined("_CHOOSE_ENTITY_SUBENTITIES")) define("_CHOOSE_ENTITY_SUBENTITIES", "Choose an entity (+ subentitie(s))");
