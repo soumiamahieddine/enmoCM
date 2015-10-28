@@ -742,7 +742,7 @@ class functions
         {
             $line = $stmt->fetchObject();
 
-            $query = "SELECT path_template FROM " . _DOCSERVERS_TABLE_NAME . " WHERE docserver_id = 'TEMPLATES'";
+            $query = "SELECT path_template FROM docservers WHERE docserver_id = 'TEMPLATES'";
             $stmt2 = $conn->query($query);
             $resDs = $stmt2->fetchObject();
             $pathToDs = $resDs->path_template;
