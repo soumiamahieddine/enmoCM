@@ -64,6 +64,7 @@ function show_helper($mode)
                 echo "<p><b>@subentities[(entity_1,...,entity_n)] : </b><em>"._HELP_KEYWORD3."</em><br/></p>";
                 echo "<p><b>@parent_entity[entity_id] : <em></b>"._HELP_KEYWORD4."</em><br/></p>";
                 echo "<p><b>@sisters_entities[entity_id] : <em></b>"._HELP_KEYWORD5."</em><br/></p>";
+                echo "<p><b>@entity_type['type'] : <em></b>"._HELP_KEYWORD9."</em><br/></p>";
                 echo "<p><b>@all_entities : <em></b>"._HELP_KEYWORD6."</em><br/></p>";
                 echo "<p><b>@immediate_children[entity_1,..., entity_id] : </b><em>"._HELP_KEYWORD7."</em><br/></p>";
                 echo "<p><b>@ancestor_entities[entity_id][depth] : </b><em>"._HELP_KEYWORD8."</em><br/></p>";

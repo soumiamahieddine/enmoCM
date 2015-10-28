@@ -454,10 +454,10 @@ for ($i=0;$i<count($tab);$i++)
         }
     }
 }
-//Clé de la liste
+//Clï¿½ de la liste
 $listKey = 'res_id';
 
-//Initialiser le tableau de paramètres
+//Initialiser le tableau de paramï¿½tres
 $paramsTab = array();
 $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_DOCS;              //Titre de la page
 $paramsTab['listCss'] = 'listing largerList spec';                                  //css
