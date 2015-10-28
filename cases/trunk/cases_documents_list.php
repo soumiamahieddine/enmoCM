@@ -82,22 +82,35 @@ $where_request .= $obj_cases->get_where_clause_from_case($_SESSION['cases']['act
 $where_request .= " and (";
 
 $j=0;
+$basketClause = false;
 if (count($_SESSION['user']['baskets']) > 0) {
     while($j<=count($_SESSION['user']['baskets'])){
-        if($_SESSION['user']['baskets'][$j]['clause']<>''){
+    	//controle for basket that has empty whereclause ' '
+    	$basketClauseReplace = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j]['clause']);
+
+        if($basketClauseReplace <> ""){
             $where_request .= "(" . $_SESSION['user']['baskets'][$j]['clause'] . ")";
-            if($j+1 != count($_SESSION['user']['baskets'])){
+            $basketClause = true;
+            
+    		$basketClauseReplace1 = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j+1]['clause']);
+            if($j+1 != count($_SESSION['user']['baskets']) && $basketClauseReplace1 <> ""){
                 $where_request .=" or "; 
             }
         }
         $j++;
     }
-    $where_request .= " or ";
+    // $where_request .= " or ";
 }
 if ($_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where'] <> '') {
     
-    $where_request .= $_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where'].") ";
+	if ($basketClause) {
+		$where_request .= " or ";
+	}
+    $where_request .= $_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where']." ";
 }
+
+$where_request .= " )";
+
 if($where_clause <> '')
 {
 		//$where_clause .= $obj_cases->get_where_clause_from_case($_SESSION['cases']['actual_case_id']);
