@@ -95,7 +95,7 @@ if (!defined("_CONVERTED_PDF"))
 if (!defined("_PRINT_FOLDER"))
     define( "_PRINT_FOLDER", "Printed folder");
 if (!defined("_OUTGOING_MAIL"))
-    define( "_OUTGOING_MAIL", "Spontaneaous outgoing mail");
+    define( "_OUTGOING_MAIL", "Spontaneous outgoing mail");
 if (!defined("_A_PJ"))
     define( "_A_PJ", "Attachment");
 if (!defined("_CHOOSE_ATTACHMENT_TYPE"))
