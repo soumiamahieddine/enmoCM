@@ -226,6 +226,8 @@ if (!defined("_HELP_KEYWORD7"))
     define("_HELP_KEYWORD7", "sous-entités immédiates (n-1) des entités données en argument");
 if (!defined("_HELP_KEYWORD8"))
     define("_HELP_KEYWORD8", "entités ancètres de l'entité donnée en argument jusqu'à la profondeur demandée en second argument (ou la racine si aucun argument 2 fourni)");
+if (!defined("_HELP_KEYWORD9"))
+    define("_HELP_KEYWORD9", "toutes les entités du type mis en argument");
 if (!defined("_HELP_KEYWORDS"))
     define("_HELP_KEYWORDS", "Aide sur les mots clés");
 if (!defined("_HELP_KEYWORD_EXEMPLE_TITLE"))
