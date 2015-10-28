@@ -437,4 +437,3 @@ if (!defined("_ADD_USER_LISTDIFF"))
 
 if (!defined("_ADD_ENTITY_LISTDIFF"))
     define("_ADD_ENTITY_LISTDIFF", "Ajouter l'entité à la liste de diffusion");
-
