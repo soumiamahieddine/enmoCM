@@ -1328,8 +1328,7 @@ class lists extends Database
             $return = '<a href="' . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
                             . '&module=attachments&page=del_attachment&relation=' . $resultTheLine[1]['value'] . '&id=' . $resultTheLine[0]['value'].'&fromDetail='.$fromDetail.'" class="delete"'
                             . 'onclick="return(confirm(\'' . _REALLY_DELETE . ' ?\n\r\n\r'
-                            . _DEFINITIVE_ACTION . '\'));">'
-                            . _DELETE . '</a>';
+                            . _DEFINITIVE_ACTION . '\'));"><i class="fa fa-trash-o fa-lg" title="'._DELETE.'"></i></a>';
         }
         return $return;
     }
@@ -1356,8 +1355,8 @@ class lists extends Database
         $core_tools = new core_tools();
         if (($core_tools->test_service('modify_attachments', 'attachments', false) || $typist == $_SESSION['user']['UserId']) && $status <> "TRA") {
             $return = '<a href="javascript://" class="change" onclick="modifyAttachmentsForm(\'' . $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=attachments&page=attachments_content&id=' . $resultTheLine[0]['value'] . '&relation='.$relation.'&fromDetail='.$fromDetail.'\',\'98%\',\'auto\');">'
-                                . _MODIFY . '</a>';
+                            . 'index.php?display=true&module=attachments&page=attachments_content&id=' . $resultTheLine[0]['value'] . '&relation='.$relation.'&fromDetail='.$fromDetail.'\',\'98%\',\'auto\');">
+                                <i class="fa fa-pencil fa-lg" title="'._MODIFY.'"></i></a>';
         }
 
         return $return;
