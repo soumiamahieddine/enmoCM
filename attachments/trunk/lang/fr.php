@@ -130,4 +130,7 @@ if (!defined("_ALL_ATTACHMENT_TYPES"))
 if (!defined("_ATTACHEMENTS"))
     define( "_ATTACHEMENTS", "Attachements");
 if (!defined("_WAYBILL"))
-define( "_WAYBILL", "Bordereau d'envoi");
+    define( "_WAYBILL", "Bordereau d'envoi");
+
+if (!defined("_VIEW_MAIN_DOC"))
+    define( "_VIEW_MAIN_DOC", "Voir le courrier principal");

@@ -1284,7 +1284,12 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
     $content .= '</select>';
     $content .= '<script>$("contactidAttach").value='.$contacts[0]['contact_id'].';$("addressidAttach").value='.$contacts[0]['address_id'].';launch_autocompleter2_contacts_v2("'. $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "contact_attach", "show_contacts_attach", "", "contactidAttach", "addressidAttach")</script>';
     }
-    
+
+    if (!isset($_REQUEST['id'])) {
+        $content .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.
+                    functions::xssafe($_SESSION['doc_id']).'" target="_blank" ><i class="fa fa-file-text-o fa-lg" style="margin-left:5%;color:white" title="'._VIEW_MAIN_DOC.'"></i></a>';
+    }
+
     $content .= '</h2>';
     
 
