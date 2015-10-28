@@ -358,7 +358,6 @@ class entities extends dbquery
             PREG_PATTERN_ORDER
         );
         if ($total > 0) {
-            //$this->show_array( $tmpArr);
             for ($i = 0; $i < $total; $i ++) {
                 $tmp = str_replace("'", '', $tmpArr[1][$i]);
                 $tmp = trim($tmp);
