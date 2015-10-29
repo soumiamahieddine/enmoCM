@@ -201,7 +201,22 @@ class visa extends Database
 			$title
         );    
 	}
-	
+
+
+	private function getWorkflowsNumberByTitle($title){
+		$db = new Database();
+		$stmt = $db->query("SELECT * FROM listmodels WHERE title = ?", array($title));
+		return $stmt->rowCount();
+	}
+
+	public function isWorkflowTitleFree($title){
+		$nb = $this->getWorkflowsNumberByTitle($title);
+		if ($nb == 0)
+			return true;
+		else
+			return false;
+	}
+
 	public function deleteWorkflow($res_id, $coll_id){
 		$db = new Database();
 		$db->query("DELETE FROM visa_circuit WHERE res_id= ? AND coll_id= ?",array($res_id, $coll_id));

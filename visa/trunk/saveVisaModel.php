@@ -73,7 +73,9 @@
 	}
 		
 	$visa->saveModelWorkflow($id_list, $_SESSION['visa_wf']['diff_list'], 'VISA_CIRCUIT', $title);
-	
-	echo "{status : 1}";
+
+	$response = ['status' => 1];
+
+	echo json_encode($response);
 	exit();
 ?>

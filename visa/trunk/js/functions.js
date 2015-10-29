@@ -238,110 +238,132 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau, fromDetail){
 	});
 }
 
-function load_listmodel_visa(
-	selectedOption,
-	objectType,
-	diff_list_id,
-	save_auto
-) {
+function	load_listmodel_visa(selectedOption, objectType, diff_list_id, save_auto) {
 	if (save_auto == undefined || save_auto == '') {
 		save_auto = false;
 	}
-    var div_id = diff_list_id || 'tab_visaSetWorkflow';
+	var div_id = diff_list_id || 'tab_visaSetWorkflow';
 	
 	var objectId = selectedOption.value || selectedOption;
 	
 	var diff_list_div = $(div_id);
-	new Ajax.Request(
-		"index.php?display=true&module=visa&page=load_listmodel_visa",
-        {
-            method:'post',
-            parameters: { 
-				objectType : objectType,
-				objectId : objectId
+	new Ajax.Request("index.php?display=true&module=visa&page=load_listmodel_visa",
+		{
+			method:'post',
+			parameters: {
+				objectType	: objectType,
+				objectId		: objectId
 			},
-            onSuccess: function(answer){
-                eval("response = "+answer.responseText);
-                //alert(answer.responseText);
-                if(response.status == 0 ) {
-					//console.log("Recup liste");
+			onSuccess: function(answer){
+				eval("response = "+answer.responseText);
+				if(response.status == 0 ) {
 					diff_list_div.innerHTML = response.div_content;
 					if (save_auto){
 						var res_id = $('values').value;
 						var coll_id = $('coll_id').value;
 						saveVisaWorkflow(res_id, coll_id, diff_list_id);
 					}
-                }
-                else if (response.status != 1 ){
+				} else if (response.status != 1 ){
 					diff_list_div.innerHTML = '';
-                    try{
-                        $('frm_error').innerHTML = response.error_txt;
-                    } catch(e){}
-                }
-            }
-        }
+					try{
+						$('frm_error').innerHTML = response.error_txt;
+					} catch(e){}
+				}
+			}
+		}
 	);
 }
 
-function saveVisaModel(id_tableau){
-	var tableau = document.getElementById(id_tableau);
-	
+function	triggerFlashMsg($divName, $msg) {
+	var div	= $($divName);
+
+	div.innerHTML 		= $msg;
+	div.style.display = 'table-cell';
+	Element.hide.delay(5, $divName);
+}
+
+function	saveVisaModel(id_tableau) {
+	var tableau 		= document.getElementById(id_tableau);
+	var title 			= $('titleModel').value;
+	var id_list			= $('objectId_input').value;
+
 	var arrayLignes = tableau.rows; //l'array est stocké dans une variable
-	var longueur = arrayLignes.length;//on peut donc appliquer la propriété length
-	var i=1; //on définit un incrémenteur qui représentera la clé
-	
+	var longueur 		= arrayLignes.length;//on peut donc appliquer la propriété length
+
 	var conseillers = "";
-	var consignes = "";
-	var isSign = "";
-	
-	var cons_empty = false;
-	while(i<longueur)
+	var consignes 	= "";
+	var isSign 			= "";
+	var cons_empty 	= false;
+
+	var i = 1;
+	while(i < longueur)
 	{
+
+		var num = i - 1;
+		if (document.getElementById("conseiller_"+num).value == "" )
+			cons_empty = true;
+		conseillers	+= document.getElementById("conseiller_"+num).value + "#";
+		consignes		+= document.getElementById("consigne_"+num).value + "#";
 		
-		var num = i-1;
-		if (document.getElementById("conseiller_"+num).value == "" ) cons_empty = true;
-		conseillers += document.getElementById("conseiller_"+num).value + "#";
-		consignes += document.getElementById("consigne_"+num).value + "#";
-		
-		if (document.getElementById("isSign_"+num).checked == true) isSign += "1#";
-		else isSign += "0#";
+		if (document.getElementById("isSign_"+num).checked == true)
+			isSign += "1#";
+		else
+			isSign += "0#";
 		
 		i++;
 	}
-	
+
+
 	if (cons_empty){
-		$('divErrorVisa').innerHTML = 'Sélectionner au moins un utilisateur';
-		$('divErrorVisa').style.display = 'table-cell';
-		Element.hide.delay(5, 'divErrorVisa');
-	}
-	else
-	new Ajax.Request("index.php?display=true&module=visa&page=saveVisaModel",
-	{
-		
-			method:'post',
-			parameters: { 
-				id_list : $('objectId_input').value,
-				title : $('titleModel').value,
-				conseillers : conseillers,
-				consignes : consignes,
-				list_sign : isSign
-			},
-			onSuccess: function(answer){
-				eval("response = "+answer.responseText);
-				if (response.status == 1){
-					$('divInfoVisa').innerHTML = 'Modèle sauvegardé';
-					$('divInfoVisa').style.display = 'table-cell';
-					$('modalSaveVisaModel').style.display = 'none';
-					Element.hide.delay(5, 'divInfoVisa');
+		triggerFlashMsg('divErrorVisa', 'Sélectionner au moins un utilisateur');
+	} else if (title == "") {
+		triggerFlashMsg('divErrorVisa', 'Titre manquant');
+	} else {
+		new Ajax.Request("index.php?display=true&module=visa&page=getVisaModelByTitle",
+			{
+
+				method: 'GET',
+				dataType:	'JSON',
+				parameters: {
+					title: title
+				},
+				onSuccess: function (responseValue) {
+					var response = JSON.parse(responseValue.responseText);
+					if (response.isWorkflowTitleFree) {
+
+						new Ajax.Request("index.php?display=true&module=visa&page=saveVisaModel",
+							{
+								method:'POST',
+								parameters: {
+									title 			: title,
+									id_list 		: id_list,
+									list_sign 	: isSign,
+									consignes 	: consignes,
+									conseillers	: conseillers
+								},
+								onSuccess: function(responseValue){
+									var response = JSON.parse(responseValue.responseText);
+									if (response.status == 1){
+										triggerFlashMsg('divInfoVisa', 'Modèle sauvegardé');
+										$('modalSaveVisaModel').style.display = 'none';
+									}
+								}
+							});
+
+					} else {
+						triggerFlashMsg('divErrorVisa', 'Titre déjà utilisé pour un modèle');
+					}
 				}
-			}
-	});
+			});
+	}
+
 }
+
 /* Fonctions ajoutées par DIS */
 
 //Fonction permettant de lancer les 2 modules Tabricator côte à côte pour les différentes pages d'action (formation circuit de visa, visa ..)
 function launchTabri(){
-    var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+	var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
 	var tabricatorLeft = new Tabricator('tabricatorLeft', 'DT');
 }
 
