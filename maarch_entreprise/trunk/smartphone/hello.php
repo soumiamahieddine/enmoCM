@@ -28,7 +28,7 @@ $core->load_lang();
 						<br><br><br>
 						<img src="<?php
 							echo $_SESSION['config']['businessappurl'];
-						?>static.php?filename=maarch_community.gif" alt="Maarch" usemap="#maarch">
+						?>static.php?filename=default_maarch.gif" width="100%" alt="Maarch" usemap="#maarch">
 						<map name="maarch">
 							<area shape="rect" coords="0,0,240,80" href="login.php">
 						</map>

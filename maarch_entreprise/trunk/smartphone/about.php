@@ -14,7 +14,7 @@ $core->load_lang();
     <p id="logo" align="center">
     <img src="<?php
             echo $_SESSION['config']['businessappurl'];
-        ?>static.php?filename=maarch_community.gif" alt="Maarch" />
+        ?>static.php?filename=default_maarch.gif" alt="Maarch" width="100%"/>
     </p>
     <div class="wpb_wrapper">
             <p style="text-align:justify;">Nous sommes une société différente.<br>
