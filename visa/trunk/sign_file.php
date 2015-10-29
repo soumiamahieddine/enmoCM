@@ -32,23 +32,18 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
 	$tableName = 'res_view_attachments';
 	$db = new Database();
     if (isset($_REQUEST['isVersion'])) {
-//echo "1";
+
         $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id from "
             . $tableName 
-            . " where (attachment_type = ? or attachment_type = ? or attachment_type = ?) and res_id_version = ?", array('response_project', 'outgoing_mail', 'waybill', $objectId));
+            . " where (attachment_type = ? or attachment_type = ? or attachment_type = ? or attachment_type = 'transfer') and res_id_version = ?", array('response_project', 'outgoing_mail', 'waybill', $objectId));
     } elseif (isset($_REQUEST['isOutgoing'])) {
-//echo "2";
+
         $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id from " 
             . $tableName 
             . " where attachment_type = ? and res_id = ?", array('outgoing_mail', $objectId));
-//var_dump($stmt);
-//exit;
     } else {
-//echo "3";
-//exit;
-        $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id from ".$tableName." where (attachment_type = ? or attachment_type = ?) and res_id = ?", array('response_project','waybill', $objectId));
+        $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id from ".$tableName." where (attachment_type = ? or attachment_type = ? or attachment_type = 'transfer') and res_id = ?", array('response_project','waybill', $objectId));
     }
-//exit;
 	
     if ($stmt->rowCount() < 1) {
 		$_SESSION['error'] = _FILE . ' ' . _UNKNOWN;
