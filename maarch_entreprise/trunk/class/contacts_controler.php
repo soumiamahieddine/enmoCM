@@ -120,11 +120,21 @@ class contacts_controler extends ObjectControler implements ObjectControlerIF
             $currentContactId = "0";
             $currentAddressId = "0";
 
-            for ($i=0;$i<count($data);$i++) {
+            $enabled = "Y";
+            foreach ($data as $key => $value) {
+                if (strtoupper($value['table']) == strtoupper('contact_addresses') && strtoupper($value['column']) == strtoupper('enabled')) {
+                    $enabled = strtoupper($value['value']);
+                    break;
+                }
+            }
+
+            $countData = count($data);
+
+            for ($i=0;$i<$countData;$i++) {
                 if (strtoupper($data[$i]['column']) == strtoupper('email') && $data[$i]['value'] <> "") {
                     $theString = str_replace(">", "", $data[$i]['value']);
                     $mail = explode("<", $theString);
-                    $stmt = $db->query("SELECT contact_id, ca_id FROM view_contacts WHERE email = '" . $mail[count($mail) -1] . "' and enabled = 'Y'");
+                    $stmt = $db->query("SELECT contact_id, ca_id FROM view_contacts WHERE email = '" . $mail[count($mail) -1] . "' and enabled = '".$enabled."'");
                     $res = $stmt->fetchObject();
                     if ($res->ca_id <> "") {
                         $contact_exists = true;
