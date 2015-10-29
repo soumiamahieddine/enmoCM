@@ -146,35 +146,46 @@ $_SESSION['with_file'] = false;
         <input type="hidden" name="dir" value="indexing_searching" />
         <input type="hidden" name="page" value="choose_file" />
         <p>
-            <label for="file" >
+            <label for="file" style="width:90%;margin-right: -12px;">
             <?php
              if (
                 !empty($_SESSION['upfile']['local_path'])
                 && empty($_SESSION['error'])
             ) {
-                ?><i class="fa fa-check-square fa-2x"></i>
+                ?><i class="fa fa-check-square fa-2x" title="<?php echo _FILE_SELECTED; ?>"></i>
+                    <input type="button" onclick="$$('#file')[0].click()" class="button" value="<?php echo _DOWNLOADED_FILE; ?>" style="width: 90%;margin: 0px;margin-top: -2px;font-size: 17px;text-align: center;"></input>
                 <?php
-                echo  _DOWNLOADED_FILE;
+                
             } else {
-                ?><i class="fa fa-remove fa-2x"></i>
-                    <?php
-                    echo _CHOOSE_FILE;
+                ?><i class="fa fa-remove fa-2x" title="<?php echo _NO_FILE_SELECTED; ?>"></i>
+                    <input type="button" onclick="$$('#file')[0].click()" class="button" value="<?php echo _CHOOSE_FILE; ?>" style="width: 90%;margin: 0px;margin-top: -2px;font-size: 17px;text-align: center;"></input>
+                <?php
             }
             ?>
             </label>
+            <?php 
+            if($_REQUEST['with_file'] == 'true'){ ?>
+               <i class="fa fa-circle fa-2x" id="with_file_icon" onclick="$$('#with_file')[0].click();" title="<?php echo _WITHOUT_FILE; ?> (actif)" style="cursor:pointer;"></i>
+
+            <?php }else{ ?>
+                <i class="fa fa-circle-thin fa-2x" id="with_file_icon" onclick="$$('#with_file2')[0].click();" title="<?php echo _WITHOUT_FILE; ?>" style="cursor:pointer;"></i>
+
+            <?php }
+
+            ?>
             <input type="file" name="file" id="file" onchange="$('with_file').value='false';this.form.method = 'post';this.form.submit();" value="<?php
                 if (isset($_SESSION['file_path'])) {
                     echo $_SESSION['file_path'];
-                } ?>" style="width:200px;margin-left:33px;" />
+                } ?>" style="width:200px;margin-left:33px;display:none;" />
         </p>
-        <p>
+        <p style="display:none;">
             <label for="with_file">
                 <?php echo _WITHOUT_FILE;?>
             </label>
-            <div align="center">
+            <div align="center" style="display:none;">
             <?php echo _YES;?><input <?php
                 if ($_REQUEST['with_file'] == 'true') { echo 'checked="checked"';}
-            ?> type="radio" name="with_file" id="with_file" value="true" onclick="this.form.method = 'post';this.form.submit();" />
+            ?> type="radio" name="with_file" id="with_file2" value="true" onclick="this.form.method = 'post';this.form.submit();" />
             <?php echo _NO;?><input <?php
                 if ($_REQUEST['with_file'] == 'false' || $_REQUEST['with_file'] == '') { echo 'checked="checked"';}
             ?> type="radio" name="with_file" id="with_file" value="false" onclick="this.form.method = 'post';this.form.submit();" />
