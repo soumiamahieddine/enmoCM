@@ -802,9 +802,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
                         . $storeInfos['file_destination_name']
                     )
                 ) {
-                    $_SESSION['error'] = _FILE_NOT_EXISTS . ' : ' . $storeInfos['path_template']
-                        .  str_replace("#", DIRECTORY_SEPARATOR, $storeInfos['destination_dir'])
-                        . $storeInfos['file_destination_name'];
+                    $_SESSION['error'] = $storeInfos['error'];
                     return false;
                 }
                 return $storeInfos;
