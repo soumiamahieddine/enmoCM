@@ -146,7 +146,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$currentStatus = $resChrono->status;
     $frm_str .= '<h2 class="tit" id="action_title">'._VISA_MAIL.' '._NUM.'<span id="numIdDocPage">'.$res_id.'</span>';
     $frm_str .= '</h2>';
-	
+    $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '.
+             'onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();" class="fa fa-times-circle fa-2x closeModale" title="'._BACK.'"/>';
+    $frm_str .='</i>';
 	$frm_str .= '<div id="visa_listDoc">';
 	$frm_str .= '<div class="listDocsBasket">';
 	$tab_docs = $visa->getDocsBasket();
@@ -229,20 +231,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<div class="toolbar">';
 	$frm_str .= '<table>';	
 	$frm_str .= '<tr>';
-		$frm_str .= '<td style="width:33%";">';	
+		$frm_str .= '<td style="width:50%";">';	
 		$frm_str .= '<a href="javascript://" id="previous_doc" onclick="previousDoc(\'index.php?display=true&module=visa&page=update_visaPage\', \''.$coll_id.'\');"><i class="fa fa-chevron-up fa-2x" title="Précédent"></i></a>';
 		
 		$frm_str .= '</td>';
 		
-		$frm_str .= '<td style="width:33%";">';	
+		$frm_str .= '<td style="width:50%";">';	
 		$frm_str .= '<a href="javascript://" id="next_doc" onclick="nextDoc(\'index.php?display=true&module=visa&page=update_visaPage\', \''.$coll_id.'\');"><i class="fa fa-chevron-down fa-2x" title="Suivant"></i></a>';
 		
 		$frm_str .= '</td>';
 		
-		$frm_str .= '<td style="width:33%";">';	
-		$frm_str .= '<a href="javascript://" id="cancel" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><i class="fa fa-backward fa-2x" title="Annuler"></i></a>';
+		//$frm_str .= '<td style="width:33%";">';	
+		//$frm_str .= '<a href="javascript://" id="cancel" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><i class="fa fa-backward fa-2x" title="Annuler"></i></a>';
 		
-		$frm_str .= '</td>';
+		//$frm_str .= '</td>';
 	$frm_str .= '</tr>';	
 	$frm_str .= '</table>';	
 	$frm_str .= '</div>';
