@@ -1431,3 +1431,9 @@ if (!defined("_TYPE_OF_THE_CONTACT")) define("_TYPE_OF_THE_CONTACT","Contact typ
 if (!defined("_ADD_NEW_CONTACT")) define("_ADD_NEW_CONTACT", "Add a new contact");
 
 if (!defined("_CHOOSE_ENTITY_SUBENTITIES")) define("_CHOOSE_ENTITY_SUBENTITIES", "Choose an entity (+ subentitie(s))");
+
+if (!defined("_MANAGE_CONTACT_PURPOSES_DESC")) define("_MANAGE_CONTACT_PURPOSES_DESC","Manage contact purposes");
+if (!defined("_MANAGE_CONTACT_PURPOSES")) define("_MANAGE_CONTACT_PURPOSES","Manage contact purposes");
+
+if (!defined("_MANAGE_CONTACT_TYPES_DESC")) define("_MANAGE_CONTACT_TYPES_DESC","Manage contact types");
+if (!defined("_MANAGE_CONTACT_TYPES")) define("_MANAGE_CONTACT_TYPES","Manage contact type");
