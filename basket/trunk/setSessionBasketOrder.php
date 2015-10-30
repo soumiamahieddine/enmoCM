@@ -68,7 +68,7 @@ if ($_GET['mode'] == "up") {
     $hist = new history();
     $hist->add("basket_order", $_SESSION['user']['UserId'],"UP",'basketorderup', _BASKET_ORDER_EDITED, $_SESSION['config']['databasetype'], 'basket');
 
-    $_SESSION['info'] = "test";
+    $_SESSION['info'] = _BASKET_ORDER_EDITED;
 	?>
 	<script>
 		window.location.href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?module=basket&page=basket";
