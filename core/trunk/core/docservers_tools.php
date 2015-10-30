@@ -51,6 +51,7 @@ function Ds_copyOnDocserver(
     $infoFileNameInTargetDocserver,
     $docserverSourceFingerprint='NONE'
 ) {
+    error_reporting(0);
     $destinationDir = $infoFileNameInTargetDocserver['destinationDir'];
     $fileDestinationName =
         $infoFileNameInTargetDocserver['fileDestinationName'];
@@ -114,6 +115,7 @@ function Ds_copyOnDocserver(
  */
 function Ds_createPathOnDocServer($docServer)
 {
+    error_reporting(0);
     umask(0022);
     if (!is_dir($docServer . date('Y') . DIRECTORY_SEPARATOR)) {
         mkdir($docServer . date('Y') . DIRECTORY_SEPARATOR, 0770);
