@@ -557,7 +557,14 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . '\'blind\', {delay:0.2});return false;"'
             . 'style="visibility:hidden;" ><i class="fa fa-book fa-2x" title="' 
                 . _CONTACT_CARD . '"></i></a>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><input type="text" name="contact" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');"'
+    $frmStr .= '<td class="indexing_field">';
+
+    $frmStr .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+
+    $frmStr .=' <i class="fa fa-book" title="'._EXTERNAL.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+
+    $frmStr .=' <i class="fa fa-users" title="'._MULTI.'" style="cursor:pointer;" id="type_multi_contact_external_icon" onclick="$$(\'#type_multi_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#009DC5\'});"></i>';
+    $frmStr .=' <input type="text" name="contact" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');"'
             . 'id="contact" onblur="clear_error(\'frm_error_' . $actionId . '\');'
             . 'display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\', \''.$path_check_date_link.'\');}" /><div id="show_contacts" '
             . 'class="autocomplete autocompleteIndex"></div></td>';
@@ -598,7 +605,14 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . '\'blind\', {delay:0.2});return false;" '
             . 'style="visibility:hidden;" ><i class="fa fa-book" title="' 
                 . _CONTACT_CARD . '"></i></a>&nbsp;</td>';
-	$frmStr .= '<td><input type="text" name="email" id="email" value="" onblur="clear_error(\'frm_error_' . $actionId . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
+	$frmStr .= '<td class="indexing_field">';
+    $frmStr .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+
+    $frmStr .=' <i class="fa fa-book" title="'._EXTERNAL.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+
+    $frmStr .=' <i class="fa fa-users" title="'._MULTI.'" style="cursor:pointer;color:#009DC5;" id="type_multi_contact_external_icon" onclick="$$(\'#type_multi_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#009DC5\'});"></i>';
+ 
+    $frmStr .='<input type="text" name="email" id="email" value="" onblur="clear_error(\'frm_error_' . $actionId . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
     $frmStr .= '<div id="multiContactList" class="autocomplete"></div>';
     $frmStr .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
         .$_SESSION['config']['businessappurl']
