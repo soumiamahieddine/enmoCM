@@ -84,19 +84,25 @@ $where_request .= " and (";
 $j=0;
 $basketClause = false;
 if (count($_SESSION['user']['baskets']) > 0) {
-    while($j<=count($_SESSION['user']['baskets'])){
-    	//controle for basket that has empty whereclause ' '
-    	$basketClauseReplace = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j]['clause']);
+    while($j<=count($_SESSION['user']['baskets'])) {
+    	if ($_SESSION['user']['baskets'][$j]['is_folder_basket'] == 'N') {
+	    	//controle for basket that has empty whereclause ' '
+	    	$basketClauseReplace = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j]['clause']);
 
-        if($basketClauseReplace <> ""){
-            $where_request .= "(" . $_SESSION['user']['baskets'][$j]['clause'] . ")";
-            $basketClause = true;
-            
-    		$basketClauseReplace1 = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j+1]['clause']);
-            if($j+1 != count($_SESSION['user']['baskets']) && $basketClauseReplace1 <> ""){
-                $where_request .=" or "; 
-            }
-        }
+	        if($basketClauseReplace <> ""){
+	            $where_request .= "(" . $_SESSION['user']['baskets'][$j]['clause'] . ")";
+	            $basketClause = true;
+	            
+	    		$basketClauseReplace1 = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j+1]['clause']);
+	            if(
+	            	$j+1 != count($_SESSION['user']['baskets']) 
+	            	&& $basketClauseReplace1 <> "" 
+	            	&& $_SESSION['user']['baskets'][$j+1]['is_folder_basket'] == 'N'
+	            ) {
+	                $where_request .=" or "; 
+	            }
+	        }
+	    }
         $j++;
     }
     // $where_request .= " or ";
