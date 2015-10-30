@@ -115,7 +115,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 			$content .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
 			$content .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
 			$content .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:visible;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
-			$content .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
+			$content .= '<td><a href="javascript://" '.$add.'  id="eadd_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
 			$content .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$step['process_comment'].'" style="width:95%;"/></td>';
 			$content .= '<td style="display:none"><input type="hidden" value="'.$step['process_date'].'" id="date_'.$seq.'" name="date_'.$seq.'"/></td>';
 			$content .= '<td style="display:none"><input type="checkbox" style="visibility:hidden" id="isSign_'.$seq.'" name="isSign_'.$seq.'" /></td>';
@@ -150,14 +150,19 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 		$content .= "<span id=\"signatory_' . $j . '\"> <i title=\"Signataire\" style=\"color : #fdd16c\" class=\"fa fa-certificate fa-lg fa-fw\"></i></span>";
 		$content .= "</td>";
 
-		$up = ' style="visibility:visible"';
-		$down = ' style="visibility:hidden"';
-		$add = ' style="visibility:visible"';
+		$up 	= 'style="visibility:visible"';
+		$down 	= 'style="visibility:hidden"';
+		$add 	= 'style="visibility:visible"';
+		$del 	= 'style="visibility:visible"';
+		if (count ($circuit['visa']['users']) == 0){
+			$up 	= 'style="visibility:hidden"';
+			$del 	= 'style="visibility:hidden"';
+		}
 
-		$content .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
-		$content .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
-		$content .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:visible;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
-		$content .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
+		$content .= '<td><a href="javascript://" ' . $down ." id=\"down_$seq\" name=\"down_$seq\""	 .' onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
+		$content .= '<td><a href="javascript://" ' . $up   ." id=\"up_$seq\" name=\"up_$seq\""		 .' onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
+		$content .= '<td><a href="javascript://" ' . $del  ." id=\"suppr_$seq\" name=\"suppr_$seq\"" .' onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab. "')\" ><i class='fa fa-user-times fa-2x'></i></a></td>";
+		$content .= '<td><a href="javascript://" ' . $add  ." id=\"add_$seq\" name=\"add_$seq\""	 .' onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
 		$content .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_comment'].'" style="width:95%;"/></td>';
 		$content .= '<td style="display:none"><input type="hidden" id="date_'.$seq.'" name="date_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_date'].'" /></td>';
 		$content .= '<td style="display:none"><input type="checkbox" style="visibility:hidden" id="isSign_'.$seq.'" name="isSign_'.$seq.'" checked/></td>';

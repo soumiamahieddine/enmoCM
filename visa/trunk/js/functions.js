@@ -95,7 +95,6 @@ function addRow(id_tableau)
 	colonne1.innerHTML += position;//on y met la position
 	*/
 	var id_Cons = "conseiller_0";
-	//alert(id_Cons);
 	var listeDeroulante = document.getElementById(id_Cons);
 	var colonne2 = ligne.insertCell(0);//on ajoute la seconde cellule
 	var listOptions = "";
@@ -136,8 +135,6 @@ function addRow(id_tableau)
 }
 
 function delRow(num, id_tableau){
-	//console.log("Suppression de la ligne "+num);
-	
 	document.getElementById(id_tableau).deleteRow(num);
 	
 	refreshIcones(id_tableau);
