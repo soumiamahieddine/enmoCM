@@ -445,9 +445,10 @@ class visa extends Database
 								$str .= '<td>';
 								$tab_users = $this->getUsersVis();
 
-								if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '') $disabled = ' disabled ';
-								else $disabled = '';
-
+								if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '')
+									$disabled = ' disabled ';
+								else
+									$disabled = '';
 
 								$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
 								$str .= '<option value="" >Sélectionnez un utilisateur</option>';
@@ -504,8 +505,10 @@ class visa extends Database
 								$str .= '<td>'.$step['firstname'].' '.$step['lastname'];
 								$str .= '</td>';
 								$str .= '<td>'.$step['process_comment'].'</td>';
-								if ($step['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x" title="'._VISED.'"></i></td>';
-								else $str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_VISA.'"></i></td>';
+								if ($step['process_date'] != '')
+									$str .= '<td><i class="fa fa-check fa-2x" title="'._VISED.'"></i></td>';
+								else
+									$str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_VISA.'"></i></td>';
 								// else $str .= '<td></td>';
 							}
 							$str .= '</tr>';
@@ -556,6 +559,10 @@ class visa extends Database
 							else
 								$del = ' style="visibility:visible"';
 
+							if (count ($circuit['visa']['users']) == 0){
+								$up 	= 'style="visibility:hidden"';
+								$del 	= 'style="visibility:hidden"';
+							}
 							$displayCB = ' style="visibility:hidden"';
 							if ($isVisaStep && $myPosVisa == $seq)
 								$displayCB = ' style="visibility:hidden"';
@@ -572,8 +579,10 @@ class visa extends Database
 							$str .= '<td>'.$circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
 							$str .= ' <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></td>';
 							$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
-							if ($circuit['sign']['users'][0]['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x" title="'._SIGNED.'"></i></td>';		
-							else $str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_SIGN.'"></i></td>';		
+							if ($circuit['sign']['users'][0]['process_date'] != '')
+								$str .= '<td><i class="fa fa-check fa-2x" title="'._SIGNED.'"></i></td>';
+							else
+								$str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_SIGN.'"></i></td>';
 								
 						}
 						$str .= '</tr>';
