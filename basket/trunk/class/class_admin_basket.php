@@ -326,7 +326,7 @@ class admin_basket extends Database
                             var response = answer.responseText;
                             //console.log(response);
                         },
-                        onFailure: function(){ alert('Something went wrong...'); },
+                        onFailure: function(){ alert('Something went wrong...'); }
                     });
                     $('groupbasket_form').src = 'index.php?display=true&module=basket&page=groupbasket_form';
                 }
@@ -439,7 +439,7 @@ class admin_basket extends Database
                     exit();
                 }
                 else
-                {   
+                {
                     $tmp = $_SESSION['m_admin']['basket']['clause'];
                     
                     // Checks the where clause syntax
@@ -447,10 +447,10 @@ class admin_basket extends Database
                     if($syntax['status'] <> true)
                     {
                         $_SESSION['error'] .= ' : ' . _SYNTAX_ERROR_WHERE_CLAUSE . ' ' . $syntax['error'];
-                        header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket_up&id=".$_SESSION['m_admin']['basket']['basketId']."&module=basket");
+                        header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket_add&module=basket");
                         exit();
                     }
-                   $stmt = $db->query(
+                   $db->query(
                         "INSERT INTO ".$_SESSION['tablename']['bask_baskets']." ( coll_id, basket_id, basket_name, basket_desc , basket_clause, is_visible, is_folder_basket ) "
                         ."VALUES (?,?,?,?,?,?,?)", array($_SESSION['m_admin']['basket']['coll_id'],$_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['name'],$_SESSION['m_admin']['basket']['desc'],$tmp,$_SESSION['m_admin']['basket']['is_visible'],$_SESSION['m_admin']['basket']['is_folder_basket']));
                     $this->load_db();
@@ -475,13 +475,19 @@ class admin_basket extends Database
             {
                 
                 $tmp =  $_SESSION['m_admin']['basket']['clause'];
-                if($tmp == NULL){$tmp = "";} 
+                if($tmp == NULL){
+                    $tmp = "";
+                }
                 $desc = $_SESSION['m_admin']['basket']['desc'];
                 //var_dump($desc);
                 //exit;
-                if($desc == NULL){$desc = "";}
+                if($desc == NULL){
+                    $desc = "";
+                }
                 $name = $_SESSION['m_admin']['basket']['name'];
-                if($name == NULL){$name = "";}
+                if($name == NULL){
+                    $name = "";
+                }
 
                 //    $clause = ", basket_clause = '".$tmp."'";
                 //}
@@ -495,7 +501,7 @@ class admin_basket extends Database
                     exit();
                 }
 
-                $stmt = $db->query("UPDATE ".$_SESSION['tablename']['bask_baskets']." set basket_name = ? , coll_id = ? , basket_desc = ? ,basket_clause = ?, is_folder_basket = ?, is_visible = ? where basket_id = ?",array($name,$_SESSION['m_admin']['basket']['coll_id'],$desc, $tmp, $_SESSION['m_admin']['basket']['is_folder_basket'], $_SESSION['m_admin']['basket']['is_visible'], $_SESSION['m_admin']['basket']['basketId']));
+                $db->query("UPDATE ".$_SESSION['tablename']['bask_baskets']." set basket_name = ? , coll_id = ? , basket_desc = ? ,basket_clause = ?, is_folder_basket = ?, is_visible = ? where basket_id = ?",array($name,$_SESSION['m_admin']['basket']['coll_id'],$desc, $tmp, $_SESSION['m_admin']['basket']['is_folder_basket'], $_SESSION['m_admin']['basket']['is_visible'], $_SESSION['m_admin']['basket']['basketId']));
                 $this->load_db();
 
                 // Log in database if required
@@ -612,21 +618,21 @@ class admin_basket extends Database
     {
         $db = new Database();
         // Empties the tables from the existing data about the current basket ($_SESSION['m_admin']['basket']['basketId'])
-        $stmt = $db->query("DELETE FROM ".$_SESSION['tablename']['bask_groupbasket'] ." where basket_id= ?",array($_SESSION['m_admin']['basket']['basketId']));
-        $stmt = $db->query("DELETE FROM ".$_SESSION['tablename']['bask_actions_groupbaskets'] ." where basket_id= ?",array($_SESSION['m_admin']['basket']['basketId']));
+        $db->query("DELETE FROM ".$_SESSION['tablename']['bask_groupbasket'] ." where basket_id= ?",array($_SESSION['m_admin']['basket']['basketId']));
+        $db->query("DELETE FROM ".$_SESSION['tablename']['bask_actions_groupbaskets'] ." where basket_id= ?",array($_SESSION['m_admin']['basket']['basketId']));
         $grouplistetmp ="";
 
         // Browses the $_SESSION['m_admin']['basket']['groups']
         for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
         {
             // Update groupbasket table
-            $stmt = $db->query("INSERT INTO ".$_SESSION['tablename']['bask_groupbasket']." (group_id, basket_id, sequence,  result_page, list_lock_clause, sublist_lock_clause)
+            $db->query("INSERT INTO ".$_SESSION['tablename']['bask_groupbasket']." (group_id, basket_id, sequence,  result_page, list_lock_clause, sublist_lock_clause)
             VALUES (?,?,?,?,?,?)",array($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],$_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$i]['SEQUENCE'],$_SESSION['m_admin']['basket']['groups'][$i]['RESULT_PAGE'],$_SESSION['m_admin']['basket']['groups'][$i]['LOCK_LIST'],$_SESSION['m_admin']['basket']['groups'][$i]['LOCK_SUBLIST']));
 
             // Browses the actions array for the current basket - group couple and inserts the action in actions_groupbasket table  if needed
             for($j=0; $j < count($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS']); $j++)
             {
-                $stmt = $db->query("INSERT INTO ".$_SESSION['tablename']['bask_actions_groupbaskets']
+                $db->query("INSERT INTO ".$_SESSION['tablename']['bask_actions_groupbaskets']
                     ." (group_id, basket_id, where_clause, used_in_basketlist, used_in_action_page, id_action )
                     VALUES (?,?,?,?,?,?)",array($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],$_SESSION['m_admin']['basket']['basketId'], $_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['WHERE'],$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['MASS_USE'],$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['PAGE_USE'],$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION']));
             }
@@ -685,7 +691,7 @@ class admin_basket extends Database
                 // Mode allow : not used
                 if($mode == "allow")
                 {
-                    $stmt = $db->query("Update ".$_SESSION['tablename']['bask_baskets']." set enabled = 'Y' where basket_id= ?", array($id));
+                    $db->query("Update ".$_SESSION['tablename']['bask_baskets']." set enabled = 'Y' where basket_id= ?", array($id));
                     if($_SESSION['history']['basketval'] == "true")
                     {
                         require_once("core/class/class_history.php");
@@ -697,7 +703,7 @@ class admin_basket extends Database
                 // Mode ban : not used
                 elseif($mode == "ban")
                 {
-                    $stmt = $db->query("Update ".$_SESSION['tablename']['bask_baskets']." set enabled = 'N' where basket_id = ?",array($id));
+                    $db->query("Update ".$_SESSION['tablename']['bask_baskets']." set enabled = 'N' where basket_id = ?",array($id));
                     if($_SESSION['history']['basketban'] == "true")
                     {
                         require_once("core/class/class_history.php");
@@ -710,9 +716,9 @@ class admin_basket extends Database
                 // Mode delete  : delete a basket and all its setting
                 elseif($mode == "del" )
                 {
-                    $stmt = $db->query("delete from ".$_SESSION['tablename']['bask_baskets']."  where basket_id = ?", array($id));
-                    $stmt = $db->query("delete from ".$_SESSION['tablename']['bask_groupbasket']."  where basket_id = ?", array($id));
-                    $stmt = $db->query("delete from ".$_SESSION['tablename']['bask_actions_groupbaskets']."  where basket_id = ?", array($id));
+                    $db->query("delete from ".$_SESSION['tablename']['bask_baskets']."  where basket_id = ?", array($id));
+                    $db->query("delete from ".$_SESSION['tablename']['bask_groupbasket']."  where basket_id = ?", array($id));
+                    $db->query("delete from ".$_SESSION['tablename']['bask_actions_groupbaskets']."  where basket_id = ?", array($id));
 
                     $_SESSION['service_tag'] = 'del_basket';
                     $_SESSION['temp_basket_id'] = $id;
@@ -743,6 +749,7 @@ class admin_basket extends Database
     *
     * @param  $id_action  string Action identifier
     * @param  $ind_group_session  string Indice of the group in the $_SESSION['m_admin']['basket']['groups'] array
+    * @return bool
     */
     public function is_action_defined_for_the_group($id_action, $ind_group_session)
     {
@@ -766,7 +773,7 @@ class admin_basket extends Database
     /**
     * Checks if an action is allowed in a mode for a given group
     *
-    * @param  $ind_group_session  string Indice of the group in the $_SESSION['m_admin']['basket']['groups'] array
+    * @param  $ind_group  string Indice of the group in the $_SESSION['m_admin']['basket']['groups'] array
     * @param  $id_action  string Action identifier
     * @param  $what  string Action  mode : "MASS_USE" or "PAGE_USE"
     * @return string 'Y' if the action is allowed in the mode, 'N' if not allowed, empty string otherwise
