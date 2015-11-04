@@ -771,7 +771,7 @@ SELECT contact_id,'1','','','','','','',address_num,address_street,address_compl
 
 INSERT INTO contact_purposes (id,label) VALUES ('1','Adresse Principale');
 
-INSERT INTO contact_types (id,label) VALUES ('1','Courriers', 'Y', 'both');
+INSERT INTO contact_types (id,label,can_add_contact,contact_target) VALUES ('1','Courriers', 'Y', 'both');
 
 UPDATE mlb_coll_ext m SET address_id = adr.id FROM contact_addresses adr WHERE m.exp_contact_id = adr.contact_id OR m.dest_contact_id = adr.contact_id;
 
