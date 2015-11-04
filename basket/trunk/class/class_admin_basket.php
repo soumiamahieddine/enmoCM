@@ -208,110 +208,148 @@ class admin_basket extends Database
             {
             ?>
             <div class="block" style="float:left;width:70%;height:400px;overflow:auto;">
-            <form name="formbasket" id="formbasket" method="post" style="margin:auto;" action="<?php if($mode == "up") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_up_db"; } elseif($mode == "add") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_add_db"; } ?>" class="forms addforms">
-                <input type="hidden" name="display"  value="true" />
-                <input type="hidden" name="module"  value="basket" />
-                <?php 
-                if ($mode == "up") {
-                     $disabled = ' disabled="disabled" ';
-                     ?>
-                    <input type="hidden" name="page"  value="basket_up_db" />
-                    <?php
-                } elseif($mode == "add") {
-                    ?>
-                    <input type="hidden" name="page"  value="basket_add_db" />
-                    <?php
-                }
-                ?>
-                <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){functions::xecho($_REQUEST['order']);}?>" />
-                <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){functions::xecho($_REQUEST['order_field']);}?>" />
-                <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){functions::xecho($_REQUEST['what']);}?>" />
-                <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){functions::xecho($_REQUEST['start']);}?>" />
-                
-                <p>
-                    <label><?php echo _COLLECTION;?> : </label>
-                    <select name="collection" id="collection" <?php echo  $disabled;?> onchange="updateCollection(this.options[this.selectedIndex].value, 'true');">
-                        <option value=""><?php echo _CHOOSE_COLLECTION;?></option>
-                        <?php 
-                        for($i=0; $i<count($_SESSION['collections']);$i++) {
-                            ?>
-                            <option value="<?php functions::xecho($_SESSION['collections'][$i]['id']);?>" <?php if(count($_SESSION['collections']) == 1 || $_SESSION['collections'][$i]['id'] == $_SESSION['m_admin']['basket']['coll_id']) { echo 'selected="selected"';}?>><?php functions::xecho($_SESSION['collections'][$i]['label']);?></option>
-                            <?php
-                        }
-                        ?>
-                    </select>
-                </p>
-                
-                <p>
-                    <label><?php echo _ID;?> : </label>
-                    <input name="basketId" id="basketId" type="text" value="<?php functions::xecho($_SESSION['m_admin']['basket']['basketId']);?>" <?php if($mode == "up") { echo 'readonly="readonly" class="readonly"';} ?> />
-                <input type="hidden"  name="id" value="<?php functions::xecho($id);?>" />
-                </p>
-                <p>
-                    <label><?php echo _BASKET;?> : </label>
-                    <input name="basketname"  type="text" id="basketname" value="<?php functions::xecho($_SESSION['m_admin']['basket']['name']);?>" />
-                </p>
-                <p>
-                    <label><?php echo _DESC;?> : </label>
-                    <textarea  cols="30" rows="4"  name="basketdesc"  style="width:200px;" id="basketdesc" ><?php functions::xecho($_SESSION['m_admin']['basket']['desc']);?></textarea>
-                </p>
-                <?php if($_SESSION['m_admin']['basket']['is_generic'] == 'Y')
-                {
-                    ?>
-                    <p>
-                        <em><?php echo _SYSTEM_BASKET_MESSAGE;?>.</em>
-                    </p>
-                <?php } ?>
-                <p>
-                    <label><?php echo _BASKET_VIEW;?> : </label>
-                    <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" ><?php functions::xecho($_SESSION['m_admin']['basket']['clause']);?></textarea> <a href="#" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class = "fa fa-question-circle fa-2x" title="<?php echo _HELP_KEYWORDS;?>" ></i></a>
-                </p>
-                <p>
-                    <label><?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?> : </label>
-                    <input type='checkbox' name="is_visible_only_on_search" id="is_visible_only_on_search" value="N" <?php 
-                        if ($_SESSION['m_admin']['basket']['is_visible'] === 'N') {
-                            echo 'checked="checked"'; 
-                        }
-                    ?> onchange="updateIsVisible();"/>
-                    <input type='hidden' name="is_visible" id="is_visible" <?php 
-                        if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') {
-                            echo 'value="Y"';
-                        } else {
-                            echo 'value="N"';
-                        }
-                    ?>/>
-                </p> 
-                <script language="javascript">
-                    function updateIsVisible()
-                    {
-                        if ($(is_visible_only_on_search).checked == true) {
-                            $(is_visible).value = 'N';
-                        } else {
-                            $(is_visible).value = 'Y';
-                        }
-                    }
-                </script>
-                <br />
-                <!--<p>
-                    <label><?php echo _BASKET_VISIBLE;?> : </label>
-                    <input type='checkbox' name="is_visible" id="is_visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') echo 'checked="checked"';?>/>
-                </p>-->
-                <?php
-                if ($core_tools->is_module_loaded('folder')) {
-                ?>
-                <p>
-                    <label><?php echo _IS_FOLDER_BASKET;?> : </label>
-                    <input type='checkbox' name="is_folder_basket" id="is_folder_basket" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_folder_basket'] === 'Y') echo 'checked="checked"';?>/>
-                </p>
-                <?php
-                }
-                ?>
-                <p></p>
-                <p class="buttons" style="text-align:center;">
-                    &nbsp;<input type="submit" name="Submit" value="<?php echo _VALIDATE;?>" class="button" />&nbsp;
-                    <input type="button" name="cancel" value="<?php echo _CANCEL;?>" class="button"  onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=basket&amp;module=basket';"/>
-                </p>
-            </form>
+                <table width="100%">
+                    <tr>
+                        <td>
+                            <form name="formbasket" id="formbasket" method="post" style="margin:auto;" action="<?php if($mode == "up") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_up_db"; } elseif($mode == "add") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_add_db"; } ?>" class="forms addforms">
+                                <input type="hidden" name="display"  value="true" />
+                                <input type="hidden" name="module"  value="basket" />
+                                <?php
+                                if ($mode == "up") {
+                                     $disabled = ' disabled="disabled" ';
+                                     ?>
+                                    <input type="hidden" name="page"  value="basket_up_db" />
+                                    <?php
+                                } elseif($mode == "add") {
+                                    ?>
+                                    <input type="hidden" name="page"  value="basket_add_db" />
+                                    <?php
+                                }
+                                ?>
+                                <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){functions::xecho($_REQUEST['order']);}?>" />
+                                <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){functions::xecho($_REQUEST['order_field']);}?>" />
+                                <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){functions::xecho($_REQUEST['what']);}?>" />
+                                <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){functions::xecho($_REQUEST['start']);}?>" />
+
+                                <p>
+                                    <label><?php echo _COLLECTION;?> : </label>
+                                    <select name="collection" id="collection" <?php echo  $disabled;?> onchange="updateCollection(this.options[this.selectedIndex].value, 'true');">
+                                        <option value=""><?php echo _CHOOSE_COLLECTION;?></option>
+                                        <?php
+                                        for($i=0; $i<count($_SESSION['collections']);$i++) {
+                                            ?>
+                                            <option value="<?php functions::xecho($_SESSION['collections'][$i]['id']);?>" <?php if(count($_SESSION['collections']) == 1 || $_SESSION['collections'][$i]['id'] == $_SESSION['m_admin']['basket']['coll_id']) { echo 'selected="selected"';}?>><?php functions::xecho($_SESSION['collections'][$i]['label']);?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </p>
+
+                                <p>
+                                    <label><?php echo _ID;?> : </label>
+                                    <input name="basketId" id="basketId" type="text" value="<?php functions::xecho($_SESSION['m_admin']['basket']['basketId']);?>" <?php if($mode == "up") { echo 'readonly="readonly" class="readonly"';} ?> />
+                                <input type="hidden"  name="id" value="<?php functions::xecho($id);?>" />
+                                </p>
+                                <p>
+                                    <label><?php echo _BASKET;?> : </label>
+                                    <input name="basketname"  type="text" id="basketname" value="<?php functions::xecho($_SESSION['m_admin']['basket']['name']);?>" />
+                                </p>
+                                <p>
+                                    <label><?php echo _DESC;?> : </label>
+                                    <textarea  cols="30" rows="4"  name="basketdesc"  style="width:200px;" id="basketdesc" ><?php functions::xecho($_SESSION['m_admin']['basket']['desc']);?></textarea>
+                                </p>
+                                <?php if($_SESSION['m_admin']['basket']['is_generic'] == 'Y')
+                                {
+                                    ?>
+                                    <p>
+                                        <em><?php echo _SYSTEM_BASKET_MESSAGE;?>.</em>
+                                    </p>
+                                <?php } ?>
+                                <p>
+                                    <label><?php echo _BASKET_VIEW;?> : </label>
+                                    <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" >
+                                        <?php functions::xecho($_SESSION['m_admin']['basket']['clause']);?>
+                                    </textarea>
+                                </p>
+                                <p>
+                                    <label><?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?> : </label>
+                                    <input type='checkbox' name="is_visible_only_on_search" id="is_visible_only_on_search" value="N" <?php
+                                        if ($_SESSION['m_admin']['basket']['is_visible'] === 'N') {
+                                            echo 'checked="checked"';
+                                        }
+                                    ?> onchange="updateIsVisible();"/>
+                                    <input type='hidden' name="is_visible" id="is_visible" <?php
+                                        if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') {
+                                            echo 'value="Y"';
+                                        } else {
+                                            echo 'value="N"';
+                                        }
+                                    ?>/>
+                                </p>
+                                <script language="javascript">
+                                    function updateIsVisible()
+                                    {
+                                        if ($(is_visible_only_on_search).checked == true) {
+                                            $(is_visible).value = 'N';
+                                        } else {
+                                            $(is_visible).value = 'Y';
+                                        }
+                                    }
+                                </script>
+                                <br />
+                                <!--<p>
+                                    <label><?php echo _BASKET_VISIBLE;?> : </label>
+                                    <input type='checkbox' name="is_visible" id="is_visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') echo 'checked="checked"';?>/>
+                                </p>-->
+                                <?php if ($core_tools->is_module_loaded('folder')) { ?>
+                                    <p>
+                                        <label><?php echo _IS_FOLDER_BASKET;?> : </label>
+                                        <input type='checkbox' name="is_folder_basket" id="is_folder_basket" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_folder_basket'] === 'Y') echo 'checked="checked"';?>/>
+                                    </p>
+                                <?php } ?>
+                                <p></p>
+                                <p class="buttons" style="text-align:center;">
+                                    &nbsp;<input type="submit" name="Submit" value="<?php echo _VALIDATE;?>" class="button" />&nbsp;
+                                    <input type="button" name="cancel" value="<?php echo _CANCEL;?>" class="button"  onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=basket&amp;module=basket';"/>
+                                </p>
+                            </form>
+                        </td>
+                        <td width="55%">
+                            <div id="keywords-helper" class="small_text">
+                                <h3><i class ="fa fa-info-circle fa-3x" ></i> <?php echo _HELP_KEYWORDS;?></h3>
+                                <p align='right'>
+                                    <b><u><?php echo _HELP_BY_CORE;?>:</u></b>
+                                    <br/>
+                                    <br/>
+                                </p>
+                                <p>
+                                    <b>@user : </b>
+                                    <em><?php echo _HELP_KEYWORD0;?></em>
+                                    <br/>
+                                    <b>@email : </b>
+                                    <em><?php echo _HELP_KEYWORD_EMAIL;?></em>
+                                </p>
+                                <br/>
+                                <p align='right'>
+                                    <b><u><?php echo _HELP_BY_ENTITY;?>:</u></b><br/><br/>
+                                </p>
+                                <p align='justify'>
+                                    <b>@my_entities : </b><em><?php echo _HELP_KEYWORD1;?></em><br>
+                                    <b>@my_primary_entity : </b><em><?php echo _HELP_KEYWORD2;?></em><br>
+                                    <b>@subentities[('entity_1',...,'entity_n')] : </b><em><?php echo _HELP_KEYWORD3;?></em><br/>
+                                    <b>@parent_entity['entity_id'] : </b><em><?php echo _HELP_KEYWORD4;?></em><br/>
+                                    <b>@sisters_entities['entity_id'] : </b><em><?php echo _HELP_KEYWORD5;?></em><br/>
+                                    <b>@entity_type['type'] : </b><em><?php echo _HELP_KEYWORD9;?></em><br/>
+                                    <b>@all_entities : </b><em><?php echo _HELP_KEYWORD6;?></em><br/>
+                                    <b>@immediate_children['entity_1',..., 'entity_id'] : </b><em><?php echo _HELP_KEYWORD7;?></em><br/>
+                                    <b>@ancestor_entities['entity_id'][depth] : </b><em><?php echo _HELP_KEYWORD8;?></em><br/>
+                                    <br/><br/><?php echo _HELP_KEYWORD_EXEMPLE_TITLE;?><br/>
+                                    <div style='border:1px black solid; padding:3px;'><b><?php echo _HELP_KEYWORD_EXEMPLE;?></b></div>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <script language="javascript">
                 updateCollection($('collection').value, 'false');
