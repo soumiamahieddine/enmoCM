@@ -701,12 +701,6 @@
       <parameter name="Input"/>
     </requestDefinition>
 
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="static_filename" >
-      <parameter name="page" value="static"/>
-      <parameter name="display" value="true"/>
-      <parameter name="filename"/>
-    </requestDefinition>
-
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="select_address" >
       <parameter name="page" value="select_attachedAddress"/>
       <parameter name="display" value="true"/>
@@ -720,6 +714,46 @@
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="url_path" >
       <parameter name="page" value="documents_list_copies"/>
       <parameter name="display" value="true"/>
+    </requestDefinition>
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="get_content_js" >
+      <parameter name="page" value="get_content_js"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="get_content_js" >
+      <parameter name="page" value="get_content_js"/>
+    </requestDefinition>
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="get_content_js" >
+      <parameter name="page" value="get_content_js"/>
+    </requestDefinition>
+
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="get_content_js" >
+      <parameter name="page" value="get_content_js"/>
+    </requestDefinition>
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="static_filename" >
+      <parameter name="filename" value="static"/>
+      <parameter name="display" value="true"/>
+    </requestDefinition>
+
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="static_filename" >
+      <parameter name="filename" value="static"/>
+    </requestDefinition>
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="static_filename" >
+      <parameter name="filename" value="static"/>
+    </requestDefinition>
+
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="static_filename" >
+      <parameter name="filename" value="static"/>
+    </requestDefinition>
+
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="static_filename" >
+      <parameter name="page" value="static"/>
+      <parameter name="display" value="true"/>
+      <parameter name="filename"/>
     </requestDefinition>
 
     <!-- CORE PART  -->

@@ -104,6 +104,20 @@ if (!$valid) {
         $error .= $validOutpout['validationErrors'][$cptV]->parameter . PHP_EOL;
         $error .= $validOutpout['validationErrors'][$cptV]->value . PHP_EOL;
     }
+    foreach ($_REQUEST as $name => $value) {
+        if (is_string($value) && strpos($value, "<") !== false) {
+            $value = preg_replace('/(<\/?script[^>]*>|<\?php|<\?[\s|\n|\r])/i', "", $value);
+            $_REQUEST[$name] = $value;
+            $_GET[$name] = $value;
+            $_POST[$name] = $value;
+        }
+        $value = str_replace("\\", "", $value);
+        $value = str_replace("/", "", $value);
+        $value = str_replace("..", "", $value);
+        $_REQUEST[$name] = $value;
+        $_GET[$name] = $value;
+        $_POST[$name] = $value;
+    }
     //process error for ajax request 
     if (
         array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) 

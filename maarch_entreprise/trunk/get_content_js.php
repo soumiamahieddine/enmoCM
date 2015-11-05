@@ -32,20 +32,19 @@
 
 header('content-type: text/javascript');
 
-if(empty($_REQUEST['scripts']))
-{
+if (empty($_REQUEST['scripts'])) {
 	echo '';
 	exit();
 }
 
 $arr_scripts = explode('$$', $_REQUEST['scripts']);
-//print_r($arr_scripts);
-for($i=0; $i<count($arr_scripts ); $i++)
-{
-	if($arr_scripts[$i] <> '')
-	{
+for ($i=0; $i<count($arr_scripts ); $i++) {
+	if ($arr_scripts[$i] <> '') {
+		$arr_scripts[$i] = str_replace("\\", "", $arr_scripts[$i]);
+		$arr_scripts[$i] = str_replace("/", "", $arr_scripts[$i]);
+		$arr_scripts[$i] = str_replace("..", "", $arr_scripts[$i]);
 		echo file_get_contents($arr_scripts[$i]);
 	}
 }
 exit();
-?>
+

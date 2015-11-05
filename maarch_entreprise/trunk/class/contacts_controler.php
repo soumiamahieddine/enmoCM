@@ -15,62 +15,6 @@ try {
  */
 class contacts_controler extends ObjectControler implements ObjectControlerIF
 {
-    public function listContacts($whereClause) {
-        $listResult = array();
-        try {
-            $db = new Database();
-            $cpt = 0;
-            if (
-                isset($whereClause->whereClause)
-                && !empty($whereClause->whereClause)
-            ) {
-                $sqlQuery = "SELECT * FROM contacts WHERE "
-                    . $whereClause->whereClause . " ORDER BY contact_id ASC";
-            } else {
-                $sqlQuery = "SELECT * FROM contacts ORDER BY contact_id ASC";
-            }
-
-            $stmt = $db->query($sqlQuery);
-
-            if ($stmt->rowCount() > 0) {
-                while ($line = $stmt->fetchObject()) {
-                    $listResult[$cpt]['contact_id'] = $line->contact_id;
-                    $listResult[$cpt]['lastname'] = $line->lastname;
-                    $listResult[$cpt]['firstname'] = $line->firstname;
-                    $listResult[$cpt]['society'] = $line->society;
-                    $listResult[$cpt]['function'] = $line->function;
-                    $listResult[$cpt]['address_num'] = $line->address_num;
-                    $listResult[$cpt]['address_street'] = $line->address_street;
-                    $listResult[$cpt]['address_complement'] = $line->address_complement;
-                    $listResult[$cpt]['address_town'] = $line->address_town;
-                    $listResult[$cpt]['address_postal_code'] = $line->address_postal_code;
-                    $listResult[$cpt]['address_country'] = $line->address_country;
-                    $listResult[$cpt]['email'] = $line->email;
-                    $listResult[$cpt]['phone'] = $line->phone;
-                    $listResult[$cpt]['other_data'] = $line->other_data;
-                    $listResult[$cpt]['is_corporate_person'] = $line->is_corporate_person;
-                    $listResult[$cpt]['user_id'] = $line->user_id;
-                    $listResult[$cpt]['title'] = $line->title;
-                    $listResult[$cpt]['enabled'] = $line->enabled;
-                    $cpt++;
-                }
-            } else {
-                $error = 'Aucun Contacts dans la base';
-            }
-        } catch (Exception $e) {
-            $fault = new SOAP_Fault($e->getMessage(), '1');
-            return $fault->message();
-        }
-        $func = new functions();
-        $resultArray = array();
-        $resultArray = $func->object2array($listResult);
-        $return = array(
-            'status' => $sqlQuery,
-            'value' => $resultArray,
-            'error' => $error,
-        );
-        return $return;
-    }
 
     /**
      * Save given object in database.

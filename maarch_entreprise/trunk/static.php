@@ -3,6 +3,9 @@ include_once('../../core/init.php');
 
 if(isset($_GET['filename']) && !empty($_GET['filename']))
 {
+    $_GET['filename'] = str_replace("\\", "", $_GET['filename']);
+    $_GET['filename'] = str_replace("/", "", $_GET['filename']);
+    $_GET['filename'] = str_replace("..", "", $_GET['filename']);
     $filename = trim($_GET['filename']);
     $items = explode('.', $filename);
     $ext = array_pop($items);

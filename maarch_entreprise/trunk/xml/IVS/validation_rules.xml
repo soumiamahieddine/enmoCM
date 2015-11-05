@@ -10,6 +10,7 @@
       <parameter name="order_field" type="string" />
       <parameter name="module" type="identifier" />
       <parameter name="level" type="identifier" />
+      <parameter name="dir" type="identifier" />
     </validationRule>
 
     <validationRule name="admin_users_update" extends="standardForm" mode="error">
@@ -719,10 +720,6 @@
       <parameter name="Input" type="string" />
     </validationRule>
 
-    <validationRule name="static_filename" extends="standardForm" mode="error">  
-      <parameter name="filename" type="filename" />
-    </validationRule>
-
     <validationRule name="select_address" extends="standardForm" mode="error">  
       <parameter name="contact_id" type="identifier" />
       <parameter name="select" type="integer" />
@@ -752,4 +749,13 @@
     <validationRule name="baseExample" >
       <parameter name="param1" type="string" />
     </validationRule>
+
+    <validationRule name="get_content_js" extends="standardForm" mode="error">  
+      <parameter name="scripts" type="filename_secure" />
+    </validationRule>
+
+    <validationRule name="static_filename" extends="standardForm" mode="error">  
+      <parameter name="filename" type="boolean" />
+    </validationRule>
+
 </validationRules>
