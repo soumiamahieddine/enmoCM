@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2008-2014 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -62,32 +62,32 @@ $_SESSION['with_file'] = false;
         $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
             . '_' . rand() . '.' . strtolower($the_ext);
         $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
-        //$md5 = md5_file($_FILES['file']['tmp_name']);
         if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
                 $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN
                     . ". " . _MORE_INFOS . " (<a href=\"mailto:"
                     . $_SESSION['config']['adminmail'] . "\">"
                     . $_SESSION['config']['adminname'] . "</a>)";
-        } elseif (!@move_uploaded_file($_FILES['file']['tmp_name'], $filePathOnTmp)) {
-            $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN . ". "
-                . _MORE_INFOS . " (<a href=\"mailto:"
-                . $_SESSION['config']['adminmail'] . "\">"
-                . $_SESSION['config']['adminname'] . "</a>)";
         } else {
-            $_SESSION['upfile']['size'] = $_FILES['file']['size'];
-            $_SESSION['upfile']['mime'] = $_FILES['file']['type'];
-            $_SESSION['upfile']['local_path'] = $filePathOnTmp;
-            //$_SESSION['upfile']['name'] = $_FILES['file']['name'];
-            $_SESSION['upfile']['name'] = $fileNameOnTmp;
-            $_SESSION['upfile']['format'] = $the_ext;
             require_once 'core/docservers_tools.php';
             $arrayIsAllowed = array();
-            $arrayIsAllowed = Ds_isFileTypeAllowed($_SESSION['upfile']['local_path']);
+            $arrayIsAllowed = Ds_isFileTypeAllowed($_FILES['file']['tmp_name'], strtolower($the_ext));
             if ($arrayIsAllowed['status'] == false) {
                 $_SESSION['error'] = _WRONG_FILE_TYPE . ' ' . $arrayIsAllowed['mime_type'];
                 $_SESSION['upfile'] = array();
+            } elseif (!@move_uploaded_file($_FILES['file']['tmp_name'], $filePathOnTmp)) {
+                $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN . ". "
+                    . _MORE_INFOS . " (<a href=\"mailto:"
+                    . $_SESSION['config']['adminmail'] . "\">"
+                    . $_SESSION['config']['adminname'] . "</a>)";
+            } else {
+                $_SESSION['upfile']['size'] = $_FILES['file']['size'];
+                $_SESSION['upfile']['mime'] = $_FILES['file']['type'];
+                $_SESSION['upfile']['local_path'] = $filePathOnTmp;
+                //$_SESSION['upfile']['name'] = $_FILES['file']['name'];
+                $_SESSION['upfile']['name'] = $fileNameOnTmp;
+                $_SESSION['upfile']['format'] = $the_ext;
+                $upFileOK = true;
             }
-            $upFileOK = true;
         }
     } elseif ($_REQUEST['with_file'] == 'true') {
         $_SESSION['with_file'] = true;
@@ -111,7 +111,7 @@ $_SESSION['with_file'] = false;
         $_SESSION['upfile'] = array();
         $upFileOK = true;
     }
-    if ($upFileOK) {
+    //if ($upFileOK) {
         ?>
         <script language="javascript" type="text/javascript">
             function refreshFrame(frameId) {
@@ -137,7 +137,7 @@ $_SESSION['with_file'] = false;
             }
         </script>
         <?php
-    }
+    //}
     ?>
     <form name="select_file_form" id="select_file_form" method="get" enctype="multipart/form-data" action="<?php
         echo $_SESSION['config']['businessappurl'];
