@@ -547,12 +547,16 @@ function Ds_isCompleteFile($file, $delay=500, $pointer=0)
 * @param  string $filePath
 * @param  array
 */
-function Ds_isFileTypeAllowed($filePath)
+function Ds_isFileTypeAllowed($filePath, $extDefault = '')
 {
+    
     $mimeType = Ds_getMimeType(
         $filePath
     );
     $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+    if ($ext == '') {
+        $ext = $extDefault;
+    }
     if ($ext == 'html' && $mimeType == "text/plain") {
         $arrayReturn = array(
             'status' => true,
