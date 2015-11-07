@@ -11,7 +11,7 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+/*require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_resource.php");
 require_once "core/class/class_security.php";
 
@@ -38,6 +38,9 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
             if (empty($_REQUEST['answer_title']) || !isset($_REQUEST['answer_title'])) {
                 $_REQUEST['answer_title'] = $_SESSION['courrier']['res_id']."_".$_REQUEST['template_label'].date("dmY");
             }
+            $_REQUEST['answer_title'] = str_replace("\\", "", $_REQUEST['answer_title']);
+            $_REQUEST['answer_title'] = str_replace("/", "", $_REQUEST['answer_title']);
+            $_REQUEST['answer_title'] = str_replace("..", "", $_REQUEST['answer_title']);
             $path_tmp = $_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.$_REQUEST['answer_title'].".maarch";
             $myfile = fopen($path_tmp, "w");
             if (!$myfile) {
@@ -47,7 +50,7 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
             }
             fwrite($myfile, $_REQUEST['template_content']);
             fclose($myfile);            
-            /***********DOCSERVER*********************/
+            //DOCSERVER
             if (!isset($_SESSION['collection_id_choice']) 
                 || empty($_SESSION['collection_id_choice'])
             ) {
@@ -78,7 +81,7 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
                 $docserverId = $storeResult['docserver_id'];
                 $fileDestinationName = $storeResult['file_destination_name'];
             }
-            /***INDEXING***/
+            //INDEXING
             $res_attach = new resource();
             $_SESSION['data'] = array();
             array_push($_SESSION['data'], array('column' => "typist", 'value' => $_SESSION['user']['UserId'], 'type' => "string"));
@@ -186,5 +189,4 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
             }
         }
     }
-}
-?>
+}*/
