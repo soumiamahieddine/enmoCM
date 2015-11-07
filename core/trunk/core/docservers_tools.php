@@ -477,7 +477,7 @@ function Ds_setRights($dest)
 }
 
 /**
-* get the mime type of a doc
+* get the mime type of a file with a path
 * @param $filePath path of the file
 * @return string of the mime type
 */
@@ -485,6 +485,17 @@ function Ds_getMimeType($filePath)
 {
     require_once 'MIME/Type.php';
     return MIME_Type::autoDetect($filePath);
+}
+
+/**
+* get the mime type of a file with a buffer
+* @param $fileBuffer buffer of the file
+* @return string of the mime type
+*/
+function Ds_getMimeTypeWithBuffer($fileBuffer)
+{
+    $finfo = new finfo(FILEINFO_MIME);
+    return $finfo->buffer($fileBuffer);
 }
 
 /**
