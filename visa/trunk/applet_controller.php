@@ -80,6 +80,9 @@ if (
 ) {
     $objectType = $_REQUEST['objectType'];
     $objectTable = $_REQUEST['objectTable'];
+    $_REQUEST['objectId'] = str_replace("\\", "", $_REQUEST['objectId']);
+    $_REQUEST['objectId'] = str_replace("/", "", $_REQUEST['objectId']);
+    $_REQUEST['objectId'] = str_replace("..", "", $_REQUEST['objectId']);
     $objectId = $_REQUEST['objectId'];
     $appPath = 'start';
     if ($_REQUEST['action'] == 'editObject') {
@@ -141,8 +144,10 @@ if (
                 '+',
                 $_REQUEST['fileContent']
             );
+            $_REQUEST['fileExtension'] = str_replace("\\", "", $_REQUEST['fileExtension']);
+            $_REQUEST['fileExtension'] = str_replace("/", "", $_REQUEST['fileExtension']);
+            $_REQUEST['fileExtension'] = str_replace("..", "", $_REQUEST['fileExtension']);
             $fileExtension = $_REQUEST['fileExtension'];
-			
 			
             $fileContent = base64_decode($fileEncodedContent);
             //copy file on Maarch tmp dir

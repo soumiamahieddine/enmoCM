@@ -5,7 +5,7 @@
 		<parameter name="objectTable" type="cm_table_list" />
 		<parameter name="objectId" type="identifier" />
 		<parameter name="fileContent" type="string" />
-		<parameter name="fileExtension" type="identifier" />
+		<parameter name="fileExtension" type="filename_extension" />
 		<parameter name="pdfContent" type="string" />
 		<parameter name="errorCode" type="string" />
     </validationRule>
