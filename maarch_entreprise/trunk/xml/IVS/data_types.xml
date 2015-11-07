@@ -125,4 +125,7 @@
     <dataType name="filename_secure" base="string">
       <pattern value="/^[A-z0-9.]+$/" />
     </dataType>
+    <dataType name="filename_extension" base="string">
+      <pattern value="/\.[0-9a-z]{1,5}$/i" />
+    </dataType>
   </dataTypes>
