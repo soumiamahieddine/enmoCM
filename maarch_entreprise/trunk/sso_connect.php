@@ -5,6 +5,8 @@ require_once('core' . DIRECTORY_SEPARATOR . 'class'
     . DIRECTORY_SEPARATOR . 'class_request.php');
 require_once('core' . DIRECTORY_SEPARATOR . 'class' 
     . DIRECTORY_SEPARATOR . 'users_controler.php');
+require_once('core' . DIRECTORY_SEPARATOR . 'class'
+    . DIRECTORY_SEPARATOR . 'class_security.php');
 require_once('core' . DIRECTORY_SEPARATOR . 'core_tables.php');
 
 
@@ -18,8 +20,7 @@ require_once('modules/entities/class/EntityControler.php');
 
 //Pour les actions sur les Services
 require_once 'core/class/ServiceControler.php';
-require_once 
-            'apps/maarch_entreprise/class/class_business_app_tools.php';
+require_once 'apps/maarch_entreprise/class/class_business_app_tools.php';
 
 
 $core = new core_tools();
@@ -335,8 +336,9 @@ $uc = new users_controler();
 /**********************************************************************/
 /**** UPDATE OR INSERT ?? ****/
 
-if ($stmt->rowCount() > 0) { 
-    $userObject->password = MD5($loginArray['password']);
+if ($stmt->rowCount() > 0) {
+    $sec = new security();
+    $userObject->password = $sec->getPasswordHash($loginArray['password']);
     
     //user exists, so update it
     $control = $uc->save($userObject, $groupArray, 'up', $params);

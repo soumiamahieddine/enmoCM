@@ -159,8 +159,11 @@ class class_users extends Database
 
             $arrayPDO = array();
             if ($_SESSION['config']['ldap'] != "true") {
+                require_once('core' . DIRECTORY_SEPARATOR . 'class'
+                    . DIRECTORY_SEPARATOR . 'class_security.php');
                 $query .= " password = ?,";
-                $arrayPDO = array_merge($arrayPDO, array(md5($_SESSION['user']['pass1'])));
+                $sec = new security();
+                $arrayPDO = array_merge($arrayPDO, array($sec->getPasswordHash($_SESSION['user']['pass1'])));
             }
 
             $query .= " firstname = ?, lastname = ?, phone = ?, mail = ? , department = ?, thumbprint = ?, signature_path = ?, signature_file_name = ? WHERE user_id = ?"; 

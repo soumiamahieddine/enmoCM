@@ -135,7 +135,7 @@ if (count($_SESSION['config']) <= 0) {
             $db->query($query);
             if ($db->fetch_object()) {
                 $_SESSION['error'] = '';
-                $pass = md5($password);
+                $pass = $sec->getPasswordHash($password);
                 $res = $sec->login($login, $pass, 'ldap');
                 $_SESSION['user'] = $res['user'];
                 if (empty($_SESSION['error'])) {
@@ -174,7 +174,7 @@ if (count($_SESSION['config']) <= 0) {
             exit;
         } else {
             $_SESSION['error'] = '';
-            $pass = md5($password);
+            $pass = $sec->getPasswordHash($password);
             $res = $sec->login($login, $pass);
             //$core->show_array($res);exit();
             $_SESSION['user'] = $res['user'];

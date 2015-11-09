@@ -144,7 +144,7 @@ if (! empty($_SESSION['error'])) {
 
             if ($result) {
                 $_SESSION['error'] = '';
-                $pass = md5($password);
+                $pass = $sec->getPasswordHash($password);
                 $res = $sec->login($login, $pass, 'ldap');
                 $_SESSION['user'] = $res['user'];
                 if (empty($_SESSION['error'])) {
@@ -184,7 +184,7 @@ if (! empty($_SESSION['error'])) {
         }
         else {
             $_SESSION['error'] = '';
-            $pass = md5($password);
+            $pass = $sec->getPasswordHash($password);
             $res = $sec->login($login, $pass, false, $ra_code);
             //$core->show_array($res);
             $_SESSION['user'] = $res['user'];
@@ -213,7 +213,7 @@ if (! empty($_SESSION['error'])) {
             exit;
         } else {
             $_SESSION['error'] = '';
-            $pass = md5($password);
+            $pass = $sec->getPasswordHash($password);
             $res = $sec->login($login, $pass);
             //$core->show_array($res);
             $_SESSION['user'] = $res['user'];

@@ -11,6 +11,9 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
+require_once('core' . DIRECTORY_SEPARATOR . 'class'
+	. DIRECTORY_SEPARATOR . 'class_security.php');
+
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $func = new functions();
@@ -26,7 +29,8 @@ if($_SESSION['user']['pass'] <> $pass2)
 }
 else
 {
-	$_SESSION['user']['pass'] = md5($pass2);
+	$sec = new security();
+	$_SESSION['user']['pass'] = $sec->getPasswordHash($pass2);
 }
 
 $_SESSION['user']['FirstName'] = $func->wash($_REQUEST['FirstName'], "no", _THE_LASTNAME);

@@ -4,6 +4,8 @@ $error = '';
 try{
     require_once "core/class/users_controler.php";
     require_once 'core/core_tables.php';
+    require_once('core' . DIRECTORY_SEPARATOR . 'class'
+        . DIRECTORY_SEPARATOR . 'class_security.php');
 } catch (Exception $e){
     functions::xecho($e->getMessage());
 }
@@ -14,7 +16,8 @@ if (! isset($_SESSION['config']['userdefaultpassword'])
 ) {
     $_SESSION['config']['userdefaultpassword'] = 'maarch';
 }
-$defaultPassword = md5($_SESSION['config']['userdefaultpassword']);
+$sec = new security();
+$defaultPassword = $sec->getPasswordHash($_SESSION['config']['userdefaultpassword']);
 
 $userCtrl = new users_controler();
 $res = $userCtrl->changePassword(
