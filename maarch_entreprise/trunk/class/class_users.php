@@ -49,7 +49,7 @@ class class_users extends Database
             $_POST['LastName'], 'no', _LASTNAME
         );
 
-        if ($_SESSION['config']['ldap'] != "true") {
+        if ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") {
             $_SESSION['user']['pass1'] = $this->wash(
                 $_POST['pass1'], 'no', _FIRST_PSW
             );
@@ -61,13 +61,13 @@ class class_users extends Database
             );
         }
         
-        if ($_SESSION['config']['ldap'] != "true") {
+        if ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") {
             $_SESSION['user']['pass2'] = $this->wash(
                 $_POST['pass2'], 'no', _SECOND_PSW
             );
         }
 
-        if ($_SESSION['user']['pass1'] <> $_SESSION['user']['pass2'] && $_SESSION['config']['ldap'] != "true") {
+        if ($_SESSION['user']['pass1'] <> $_SESSION['user']['pass2'] && ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin")) {
             $this->add_error(_WRONG_SECOND_PSW, '');
         }
 
@@ -158,7 +158,7 @@ class class_users extends Database
             $query = "UPDATE " . USERS_TABLE . " SET";
 
             $arrayPDO = array();
-            if ($_SESSION['config']['ldap'] != "true") {
+            if ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") {
                 require_once('core' . DIRECTORY_SEPARATOR . 'class'
                     . DIRECTORY_SEPARATOR . 'class_security.php');
                 $query .= " password = ?,";
@@ -293,11 +293,11 @@ class class_users extends Database
                         <input name="UserId"  type="text" id="UserId" value="<?php functions::xecho($_SESSION['user']['UserId']);?>"  readonly="readonly" />
                         <input type="hidden"  name="id" value="<?php functions::xecho($_SESSION['user']['UserId']);?>" />
                     </p>
-                    <p <?php if($_SESSION['config']['ldap'] == "true"){echo 'style="display:none"';} ?> >
+                    <p <?php if($_SESSION['config']['ldap'] == "true" && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
                         <label for="pass1"><?php echo _PASSWORD;?> : </label>
                         <input name="pass1"  type="password" id="pass1"  value="" />
                     </p>
-                    <p <?php if($_SESSION['config']['ldap'] == "true"){echo 'style="display:none"';} ?> >
+                    <p <?php if($_SESSION['config']['ldap'] == "true"  && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
                         <label for="pass2"><?php echo _REENTER_PSW;?> : </label>
                         <input name="pass2"  type="password" id="pass2" value="" />
                     </p>
