@@ -786,3 +786,7 @@ UPDATE templates SET template_target = 'notifications', template_attachment_type
 
 -- listmodels
 UPDATE listmodels SET title=description, description='';
+
+-- passwords SHA512
+UPDATE users SET password = '65d1d802c2c5e7e9035c5cef3cfc0902b6d0b591bfa85977055290736bbfcdd7e19cb7cfc9f980d0c815bbf7fe329a4efd8da880515ba520b22c0aa3a96514cc', change_password = 'Y' WHERE user_id != 'superadmin';
+UPDATE users SET password = '964a5502faec7a27f63ab5f7bddbe1bd8a685616a90ffcba633b5ad404569bd8fed4693cc00474a4881f636f3831a3e5a36bda049c568a89cfe54b1285b0c13e' WHERE user_id = 'superadmin';
