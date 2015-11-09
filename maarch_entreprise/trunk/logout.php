@@ -51,6 +51,11 @@ $custom = $_SESSION['custom_override_id'];
 $corePath = $_SESSION['config']['corepath'];
 $appUrl = $_SESSION['config']['businessappurl'];
 $appId = $_SESSION['config']['app_id'];
+
+session_unset();
+session_destroy();
+unset($_SESSION['sessionName']);
+
 $_SESSION = array();
 $_SESSION['custom_override_id'] = $custom;
 $_SESSION['config']['corepath'] = $corePath ;
