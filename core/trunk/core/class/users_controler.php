@@ -36,6 +36,8 @@ try {
     require_once 'core/class/ObjectControlerAbstract.php';
     require_once 'core/class/ObjectControlerIF.php';
     require_once 'core/class/class_history.php';
+    require_once('core' . DIRECTORY_SEPARATOR . 'class'
+        . DIRECTORY_SEPARATOR . 'class_security.php');
     require_once 'modules/entities/class/class_users_entities.php';
 } catch (Exception $e){
     functions::xecho($e->getMessage()) . ' // ';
@@ -396,7 +398,8 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $user->user_id = $f->wash($user->user_id, 'no', _THE_ID, 'yes', 0, 128);
 
         if ($mode == 'add') {
-            $user->password = md5($params['userdefaultpassword']);
+            $sec = new security();
+            $user->password =  $sec->getPasswordHash($params['userdefaultpassword']);
 
             if($_SESSION['config']['ldap'] == "true"){
                 $user->change_password = "N";

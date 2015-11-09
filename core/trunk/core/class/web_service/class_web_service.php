@@ -158,6 +158,8 @@ class webService {
         ) {
             require_once("core" . DIRECTORY_SEPARATOR . "class"
                 . DIRECTORY_SEPARATOR . "class_functions.php");
+            require_once('core' . DIRECTORY_SEPARATOR . 'class'
+                . DIRECTORY_SEPARATOR . 'class_security.php');
             $func = new functions();
             $connexion = new Database();
             if ($func->isEncrypted() == "true") {
@@ -179,10 +181,11 @@ class webService {
             $userID = str_replace('>', '', $userID);
             $userID = str_replace('<', '', $userID);
 
+            $sec = new security();
             $stmt = $connexion->query(
                 "select * from " . $_SESSION['tablename']['users']
                 . " where user_id = ? and password = ? and STATUS <> 'DEL'",
-                array($userID, md5($password))
+                array($userID, $sec->getPasswordHash($password))
             );
             if ($stmt->rowCount() > 0) {
                 $authenticated = true;

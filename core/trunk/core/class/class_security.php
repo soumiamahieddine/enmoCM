@@ -115,7 +115,7 @@ class security extends Database
                         . "and (loginmode = :loginmode1 or loginmode = :loginmode2)";
                     $params = array(
                         'password' => $pass, 
-                        'ra_code' => md5($ra_code),
+                        'ra_code' => $this->getPasswordHash($ra_code),
                         'ra_expiration_date' => date('Y-m-d 00:00:00'),
                         'status' => 'DEL',
                         'loginmode1' => 'standard',
@@ -429,6 +429,16 @@ class security extends Database
             }
         }
         return $arr;
+    }
+
+    /**
+     *
+     * @param  $textToHash
+     * @return string hashedText
+     */
+    public function getPasswordHash($textToHash)
+    {
+        return hash('sha512', $textToHash);
     }
 
     /**

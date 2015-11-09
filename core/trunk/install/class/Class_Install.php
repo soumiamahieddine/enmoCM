@@ -34,6 +34,8 @@ try {
     require_once 'core/class/class_functions.php';
     require_once 'core/class/class_db.php';
     require_once 'install/class/Class_Merge.php';
+    require_once('core' . DIRECTORY_SEPARATOR . 'class'
+        . DIRECTORY_SEPARATOR . 'class_security.php');
 } catch (Exception $e) {
     functions::xecho($e->getMessage()) . ' // ';
 }
@@ -1010,8 +1012,9 @@ class Install extends functions
     )
     {
         $db = new dbquery();
+        $sec = new security();
         $db->connect();
-        $query = "UPDATE users SET password='".md5($newPass)."' WHERE user_id='superadmin'";
+        $query = "UPDATE users SET password='" . $sec->getPasswordHash($newPass) . "' WHERE user_id='superadmin'";
         $db->query($query);
     }
 }
