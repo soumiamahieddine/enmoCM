@@ -171,7 +171,7 @@ if ($has_data) {
         exit;
     } elseif($report_type == 'array') {
 	
-		$data2=urlencode(serialize($data));
+		$data2 = urlencode(json_encode($data));
 		$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
 		echo $form;
 		
