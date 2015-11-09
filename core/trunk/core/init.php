@@ -13,7 +13,7 @@ $secure = $_SERVER["HTTPS"];
 $httponly = true;
 $cookieParams = session_get_cookie_params();
 session_set_cookie_params(
-    time()+3600000, 
+    3600, 
     $cookieParams["path"], 
     $cookieParams["domain"], 
     $secure, 
