@@ -21,6 +21,10 @@
 
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
 	
+	$core_tools = new core_tools();
+	$core_tools->test_user();
+	$core_tools->test_service('reports', 'reports');
+
 	if(isset($_POST["data"])){
 		try{
 			$functions = new functions();
