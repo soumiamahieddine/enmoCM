@@ -49,30 +49,45 @@ class class_users extends Database
             $_POST['LastName'], 'no', _LASTNAME
         );
 
-        if ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") {
-            $_SESSION['user']['pass1'] = $this->wash(
-                $_POST['pass1'], 'no', _FIRST_PSW
-            );
+        if (!empty($_POST['pass1']) || !empty($_POST['pass2'])) {
+            $currentPassword = $_POST['currentPassword'];
+            if (!empty($currentPassword)) {
+                require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_security.php');
+                $stmt = $db->query("SELECT password FROM " . USERS_TABLE . " WHERE user_id = ?", array($_SESSION['user']['UserId']));
+                $obj = $stmt->fetchObject();
+                $sec = new security();
+                if ($obj->password === $sec->getPasswordHash($currentPassword)) {
+                    if ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") {
+                        $_SESSION['user']['pass1'] = $this->wash(
+                            $_POST['pass1'], 'no', _FIRST_PSW
+                        );
+                    }
+
+                    if ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") {
+                        $_SESSION['user']['pass2'] = $this->wash(
+                            $_POST['pass2'], 'no', _SECOND_PSW
+                        );
+                    }
+
+                    if ($_SESSION['user']['pass1'] <> $_SESSION['user']['pass2'] && ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin")) {
+                        $this->add_error(_WRONG_SECOND_PSW, '');
+                    }
+                } else {
+                    $this->add_error('Mauvais mot de passe', '');
+                }
+
+            } else {
+                $this->add_error(_EMPTY_PSW, '');
+            }
+        } else {
+            $_SESSION['user']['pass1'] = '';
+            $_SESSION['user']['pass2'] = '';
         }
 
-        if(!empty($_POST['Phone'])){
+        if(isset($_POST['Phone']) && !empty($_POST['Phone'])){
             $_SESSION['user']['Phone'] = $this->wash(
                 $_POST['Phone'], 'phone', _PHONE, "no", "",32
             );
-        }
-        
-        if ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") {
-            $_SESSION['user']['pass2'] = $this->wash(
-                $_POST['pass2'], 'no', _SECOND_PSW
-            );
-        }
-
-        if ($_SESSION['user']['pass1'] <> $_SESSION['user']['pass2'] && ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin")) {
-            $this->add_error(_WRONG_SECOND_PSW, '');
-        }
-
-        if (isset($_POST['Phone']) && ! empty($_POST['Phone'])) {
-            $_SESSION['user']['Phone']  = $_POST['Phone'];
         }
 
         if (isset($_POST['Fonction']) && ! empty($_POST['Fonction'])) {
@@ -158,7 +173,7 @@ class class_users extends Database
             $query = "UPDATE " . USERS_TABLE . " SET";
 
             $arrayPDO = array();
-            if ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") {
+            if (($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") && $_SESSION['user']['pass1'] != '') {
                 require_once('core' . DIRECTORY_SEPARATOR . 'class'
                     . DIRECTORY_SEPARATOR . 'class_security.php');
                 $query .= " password = ?,";
@@ -224,11 +239,10 @@ class class_users extends Database
         <div id="inner_content" class="clearfix">
             <div id="user_box" style="float:right;width:17%;">
                 <div class="block" style="height:400px;">
-                         <?php if($core->is_module_loaded("entities") )
-                        {?>
-                         <h2 class="tit"><?php echo _USER_ENTITIES_TITLE;?> : </h2>
-                            <ul id="my_profil" style="height:280px;overflow:auto;">
-                         <?php
+                    <?php if($core->is_module_loaded("entities") ) {?>
+                        <h2 class="tit"><?php echo _USER_ENTITIES_TITLE;?> : </h2>
+                        <ul id="my_profil" style="height:280px;overflow:auto;">
+                            <?php
                             $stmt = $db->query("SELECT e.entity_label, ue.primary_entity FROM ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e
                             WHERE ue.user_id = ? and ue.entity_id = e.entity_id order by e.entity_label",
                             array($_SESSION['user']['UserId']));
@@ -246,159 +260,156 @@ class class_users extends Database
                                         echo "<li style='padding:5px;'>".$line->entity_label." </li>";
                                     }
                                 }
-                            }
-                         ?>
+                            } ?>
                          </ul>
-                         <?php }?>
-                     </div>
-                     <div class="block_end">&nbsp;</div>
-                     </div>
-                     <div id="user_box_2" style="float:right;width:17%;">
+                    <?php }?>
+                </div>
+                <div class="block_end">&nbsp;</div>
+            </div>
+            <div id="user_box_2" style="float:right;width:17%;">
                 <div class="block" style="height:400px;">
-                 <h2 class="tit"><?php echo _USER_GROUPS_TITLE;?> : </h2>
-                     <ul id="my_profil" style="height:280px;overflow:auto;">
-                      <?php
-
-            $stmt = $db->query(
-                "SELECT u.group_desc, uc.primary_group FROM " . USERGROUP_CONTENT_TABLE . " uc, "
-                . USERGROUPS_TABLE ." u WHERE uc.user_id = ? and uc.group_id = u.group_id"
-                . " order by u.group_desc",
-                array($_SESSION['user']['UserId'])
-            );
-
-            if ($stmt->rowCount() < 1) {
-                echo _USER_BELONGS_NO_GROUP . ".";
-            } else {
-                while ($line = $stmt->fetchObject()) {
-                    if($line->primary_group == 'Y'){
-                        echo "<li style='list-style-position:inside;padding:5px;'><i class=\"fa fa-arrow-right\"></i> ".$line->group_desc." </li>";
-                    }else{
-                        echo "<li style='padding:5px;'>".$line->group_desc." </li>";
-                    }
-                }
-            }
-                         ?>
-                         </ul>
-                     </div>
-                     <div class="block_end">&nbsp;</div>
-                     </div>
-                        <div class="block" style="float:left;width:55%;height:auto;">
-                        <form name="frmuser" style="margin:auto;" enctype="multipart/form-data" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=user_modif" class="forms addforms">
-                            <input type="hidden" name="display" value="true" />
-                            <input type="hidden" name="admin" value="users" />
-                            <input type="hidden" name="page" value="user_modif" />
-                        <div class="">
-                    <p>
-                        <label><?php echo _ID;?> : </label>
-                        <input name="UserId"  type="text" id="UserId" value="<?php functions::xecho($_SESSION['user']['UserId']);?>"  readonly="readonly" />
-                        <input type="hidden"  name="id" value="<?php functions::xecho($_SESSION['user']['UserId']);?>" />
-                    </p>
-                    <p <?php if($_SESSION['config']['ldap'] == "true" && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
-                        <label for="pass1"><?php echo _PASSWORD;?> : </label>
-                        <input name="pass1"  type="password" id="pass1"  value="" />
-                    </p>
-                    <p <?php if($_SESSION['config']['ldap'] == "true"  && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
-                        <label for="pass2"><?php echo _REENTER_PSW;?> : </label>
-                        <input name="pass2"  type="password" id="pass2" value="" />
-                    </p>
-                    <p>
-                        <label for="LastName"><?php echo _LASTNAME;?> : </label>
-                        <input name="LastName"   type="text" id="LastName" size="45" value="<?php functions::xecho($this->show_string($_SESSION['user']['LastName']));?>" />
-                    </p>
-                    <p>
-                        <label for="FirstName"><?php echo _FIRSTNAME;?> : </label>
-                        <input name="FirstName"  type="text" id="FirstName" size="45" value="<?php functions::xecho($this->show_string($_SESSION['user']['FirstName']));?>" />
-                     </p>
-                     <?php if(!$core->is_module_loaded("entities") )
-                        {?>
-                      <p>
-                        <label for="Department"><?php echo _DEPARTMENT;?> : </label>
-                            <input name="Department" id="Department" type="text"  disabled size="45" value="<?php functions::xecho($this->show_string($_SESSION['user']['department']));?>" />
-                        </p>
-                        <?php }?>
-                      <p>
-                        <label for="Phone"><?php echo _PHONE_NUMBER;?> : </label>
-                        <input name="Phone"  type="text" id="Phone" value="<?php functions::xecho($_SESSION['user']['Phone']);?>" />
-                      </p>
-                     <p>
-                        <label for="Mail"><?php echo _MAIL;?> : </label>
-                        <input name="Mail"  type="text" id="Mail" size="45" value="<?php functions::xecho($_SESSION['user']['Mail']);?>" />
-                      </p>
-
-					   <p>
-                        <label for="thumbprint"><?php echo _THUMBPRINT;  ?> : </label>
-						<textarea name="thumbprint" id="thumbprint"><?php functions::xecho($_SESSION['user']['thumbprint']);?></textarea>
-                      </p>
-					  <p>
-                        <label for="signature"><?php echo _SIGNATURE;  ?> : </label>
-                        <input type="file" name="signature" id="signature"/>
-                        <br />
-                        <br />
+                    <h2 class="tit"><?php echo _USER_GROUPS_TITLE;?> : </h2>
+                    <ul id="my_profil" style="height:280px;overflow:auto;">
                         <?php
-                        if (file_exists($_SESSION['user']['pathToSignature'])) {
-                            $extension = explode(".", $_SESSION['user']['pathToSignature']);
-                            $count_level = count($extension)-1;
-                            $the_ext = $extension[$count_level];
-                            $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
-                                . '_' . rand() . '.' . strtolower($the_ext);
-                            $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+                        $stmt = $db->query(
+                            "SELECT u.group_desc, uc.primary_group FROM " . USERGROUP_CONTENT_TABLE . " uc, "
+                            . USERGROUPS_TABLE ." u WHERE uc.user_id = ? and uc.group_id = u.group_id"
+                            . " order by u.group_desc",
+                            array($_SESSION['user']['UserId'])
+                        );
 
-                            if (copy($_SESSION['user']['pathToSignature'], $filePathOnTmp)) {
-                                ?>
-                                 <img src="<?php 
-                                    echo $_SESSION['config']['businessappurl'] 
-                                        . '/tmp/' . $fileNameOnTmp;
-                                    ?>" alt="signature" id="signFromDs"/> 
-                                <?php
-                            } else {
-                                echo _COPY_ERROR;
-                            }
-                        }
-                        ?>
-                        <canvas id="imageCanvas" style="display:none;"></canvas>
-                        <script>
-                            var signature = document.getElementById('signature');
-                                signature.addEventListener('change', handleImage, false);
-                            var canvas = document.getElementById('imageCanvas');
-                            var signFromDs = document.getElementById('signFromDs');
-                            var ctx = canvas.getContext('2d');
-
-                            function handleImage(e){
-                                var reader = new FileReader();
-                                reader.onload = function(event){
-                                    var img = new Image();
-                                    img.onload = function(){
-                                        canvas.width = img.width;
-                                        canvas.height = img.height;
-                                        ctx.drawImage(img,0,0);
-                                        canvas.style.display = 'block';
-                                        signFromDs.style.display = 'none';
-                                    }
-                                    img.src = event.target.result;
+                        if ($stmt->rowCount() < 1) {
+                            echo _USER_BELONGS_NO_GROUP . ".";
+                        } else {
+                            while ($line = $stmt->fetchObject()) {
+                                if($line->primary_group == 'Y'){
+                                    echo "<li style='list-style-position:inside;padding:5px;'><i class=\"fa fa-arrow-right\"></i> ".$line->group_desc." </li>";
+                                }else{
+                                    echo "<li style='padding:5px;'>".$line->group_desc." </li>";
                                 }
-                                reader.readAsDataURL(e.target.files[0]);     
                             }
-                        </script>  
-                    </p>
-                    <p class="buttons">
+                        } ?>
+                    </ul>
+                </div>
+                <div class="block_end">&nbsp;</div>
+            </div>
+            <div class="block" style="float:left;width:55%;height:auto;">
+                <form name="frmuser" style="margin:auto;" enctype="multipart/form-data" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=user_modif" class="forms addforms">
+                    <input type="hidden" name="display" value="true" />
+                    <input type="hidden" name="admin" value="users" />
+                    <input type="hidden" name="page" value="user_modif" />
+                    <div id="user-infos">
+                        <p>
+                            <label><?php echo _ID;?> : </label>
+                            <input name="UserId"  type="text" id="UserId" value="<?php functions::xecho($_SESSION['user']['UserId']);?>"  readonly="readonly" />
+                            <input type="hidden"  name="id" value="<?php functions::xecho($_SESSION['user']['UserId']);?>" />
+                        </p>
+
+                        <p>
+                            <label for="LastName"><?php echo _LASTNAME;?> : </label>
+                            <input name="LastName"   type="text" id="LastName" size="45" value="<?php functions::xecho($this->show_string($_SESSION['user']['LastName']));?>" />
+                        </p>
+                        <p>
+                            <label for="FirstName"><?php echo _FIRSTNAME;?> : </label>
+                            <input name="FirstName"  type="text" id="FirstName" size="45" value="<?php functions::xecho($this->show_string($_SESSION['user']['FirstName']));?>" />
+                        </p>
+                        <?php if(!$core->is_module_loaded("entities") ) {?>
+                            <p>
+                                <label for="Department"><?php echo _DEPARTMENT;?> : </label>
+                                <input name="Department" id="Department" type="text"  disabled size="45" value="<?php functions::xecho($this->show_string($_SESSION['user']['department']));?>" />
+                            </p>
+                        <?php }?>
+                        <p>
+                            <label for="Phone"><?php echo _PHONE_NUMBER;?> : </label>
+                            <input name="Phone"  type="text" id="Phone" value="<?php functions::xecho($_SESSION['user']['Phone']);?>" />
+                        </p>
+                        <p>
+                            <label for="Mail"><?php echo _MAIL;?> : </label>
+                            <input name="Mail"  type="text" id="Mail" size="45" value="<?php functions::xecho($_SESSION['user']['Mail']);?>" />
+                        </p>
+					    <p>
+                            <label for="thumbprint"><?php echo _THUMBPRINT;  ?> : </label>
+						    <textarea name="thumbprint" id="thumbprint"><?php functions::xecho($_SESSION['user']['thumbprint']);?></textarea>
+                        </p>
+					    <p>
+                            <label for="signature"><?php echo _SIGNATURE;  ?> : </label>
+                            <input type="file" name="signature" id="signature"/>
+                            <br />
+                            <br />
+                            <?php
+                            if (file_exists($_SESSION['user']['pathToSignature'])) {
+                                $extension = explode(".", $_SESSION['user']['pathToSignature']);
+                                $count_level = count($extension)-1;
+                                $the_ext = $extension[$count_level];
+                                $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($the_ext);
+                                $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+
+                                if (copy($_SESSION['user']['pathToSignature'], $filePathOnTmp)) { ?>
+                                    <img src="<?php echo $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp; ?>"
+                                         alt="signature" id="signFromDs"/>
+                                <?php } else {
+                                    echo _COPY_ERROR;
+                                }
+                            }
+                            ?>
+                            <canvas id="imageCanvas" style="display:none;"></canvas>
+                            <script>
+                                var signature = document.getElementById('signature');
+                                signature.addEventListener('change', handleImage, false);
+
+                                var canvas = document.getElementById('imageCanvas');
+                                var signFromDs = document.getElementById('signFromDs');
+                                var ctx = canvas.getContext('2d');
+
+                                function handleImage(e){
+                                    var reader = new FileReader();
+                                    reader.onload = function(event){
+                                        var img = new Image();
+                                        img.onload = function(){
+                                            canvas.width = img.width;
+                                            canvas.height = img.height;
+                                            ctx.drawImage(img,0,0);
+                                            canvas.style.display = 'block';
+                                            signFromDs.style.display = 'none';
+                                        };
+                                        img.src = event.target.result;
+                                    };
+                                    reader.readAsDataURL(e.target.files[0]);
+                                }
+                            </script>
+                        </p>
+                        <p style="margin-top: 20px" <?php if($_SESSION['config']['ldap'] == "true"  && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
+                            <em><?php echo _MODIFICATION_PSW_SNTE;?></em>
+                        </p>
+                        <p <?php if($_SESSION['config']['ldap'] == "true"  && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
+                            <label for="currentPassword"><?php echo _CURRENT_PSW;?> : </label>
+                            <input type="password" style="display: none"/>
+                            <input name="currentPassword"  type="password" id="currentPassword" value="" />
+                        </p>
+                        <p <?php if($_SESSION['config']['ldap'] == "true" && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
+                            <label for="pass1"><?php echo _NEW_PSW;?> : </label>
+                            <input name="pass1"  type="password" id="pass1"  value="" />
+                        </p>
+                        <p style="margin-bottom: 20px" <?php if($_SESSION['config']['ldap'] == "true"  && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
+                            <label for="pass2"><?php echo _REENTER_PSW;?> : </label>
+                            <input name="pass2"  type="password" id="pass2" value="" />
+                        </p>
+                        <p class="buttons">
                             <input type="submit" name="Submit" value="<?php echo _VALIDATE;?>" class="button" />
                             <input type="button" name="cancel" value="<?php echo _CANCEL;?>" class="button" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';" />
-                    </p>
+                        </p>
                     </div>
-
-                    </form>
-                    </div>
-                    <div class="blank_space"></div>
-                <?php
-
+                </form>
+            </div>
+            <div class="blank_space"></div>
+            <?php
             //  require_once("core/class/class_core_tools.php");
-                $core = new core_tools;
-                echo $core->execute_modules_services($_SESSION['modules_services'], 'modify_user.php', "include");
-                ?>
+            $core = new core_tools;
+            echo $core->execute_modules_services($_SESSION['modules_services'], 'modify_user.php', "include");
+            ?>
         </div>
 
     <?php
-
     }
     
     /**
