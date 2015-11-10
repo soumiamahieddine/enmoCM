@@ -416,12 +416,12 @@ if (count($tab) > 0) {
             <?php
             $details = 'details';
             $list->list_doc($tab, $i, '', 'res_id', 'list_results_mlb_frame&module=cases&searched_item=' . $_GET['searched_item'] . '&searched_value=' . $_GET['searched_value'], 'res_id', $details . '&dir=indexing_searching', true, true, 'post', $_SESSION['config']['businessappurl'] . "index.php?display=true&module=cases&page=execute_attachement&searched_item=" . $_GET['searched_item'] . "&searched_value=" . $_GET['searched_value'], _LINK_TO_CASE, false, true, true, false, false, false, true, true, '', '', false, '', '', 'listing spec', '', false, false, null, '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="cases" /><input type="hidden" name="page" value="execute_attachement" />', '{}', true, '', true, array (), true, $template_list, $template_to_use, false, true);
-            echo "<p align='center'><a href=\"" . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=' . $_GET['searched_item'] . '&searched_value=' . $_GET['searched_value'] . '">' . _MAKE_NEW_SEARCH . '</a></strong></div></p>';
+            echo "<p align='center'><a href=\"" . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=' . functions::xssafe($_GET['searched_item']) . '&searched_value=' . functions::xssafe($_GET['searched_value']) . '">' . _MAKE_NEW_SEARCH . '</a></strong></div></p>';
             ?>
         </div>
         <?php
 } else {
-    echo "<br/><br/><br/><p class=\"error\"><i class='fa fa-close fa-2x'></i><br />" . _NO_RESULTS . "</p><br/><p align='center'><a href=\"" . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=' . $_GET['searched_item'] . '&searched_value=' . $_GET['searched_value'] . '">' . _MAKE_NEW_SEARCH . '</a></strong></div></p>';
+    echo "<br/><br/><br/><p class=\"error\"><i class='fa fa-close fa-2x'></i><br />" . _NO_RESULTS . "</p><br/><p align='center'><a href=\"" . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=' . functions::xssafe($_GET['searched_item']) . '&searched_value=' . functions::xssafe($_GET['searched_value']) . '">' . _MAKE_NEW_SEARCH . '</a></strong></div></p>';
 }
 $core_tools->load_js();
 ?>
