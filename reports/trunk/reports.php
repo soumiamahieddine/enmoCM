@@ -30,6 +30,9 @@
 
 $rep = new core_tools();
 $db = new Database();
+
+$rep->test_service('reports', 'reports');
+
 /****************Management of the location bar  ************/
 $init = false;
 if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
