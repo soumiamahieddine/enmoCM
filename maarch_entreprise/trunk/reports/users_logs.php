@@ -20,6 +20,7 @@
 */
 
 $core_tools = new core_tools();
+$core_tools->test_user();
 $core_tools->load_lang();
 $core_tools->test_service('reports', 'reports');
 $content = '';
