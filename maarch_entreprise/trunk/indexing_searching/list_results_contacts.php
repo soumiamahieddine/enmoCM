@@ -32,8 +32,10 @@ require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 
 $core_tools = new core_tools();
 $list       = new lists();
-    
-//Begin
+
+$core_tools->test_user();
+$core_tools->test_service('search_contacts', 'apps');
+
 
 /****************Management of the location bar  ************/
 $init = false;
