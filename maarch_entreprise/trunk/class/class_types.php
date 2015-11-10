@@ -1267,14 +1267,23 @@ class types extends database
                 if (preg_match('/^doc_/', $fieldName)) {
                     $column = 'doc_' . $column;
                 }
-                // type == 'string'
+                // type == 'string or others'
                 if ($indexes[$j]['column'] == $fieldName
                     || 'doc_' . $indexes[$j]['column'] == $fieldName
                 ) {
+					if ( $indexes[$j]['type'] = float || $indexes[$j]['type'] = integer )
+					{
+						       $jsonTxt .= " '" . $fieldName . "' : ['"
+                             . addslashes(trim($val)) . "'],";
+					$whereRequest .= " (" . $column . ") = ('"
+                                      . $val . "') and ";
+						
+					} else {
                     $jsonTxt .= " '" . $fieldName . "' : ['"
                              . addslashes(trim($val)) . "'],";
 					$whereRequest .= " lower(" . $column . ") like lower('%"
                                       . $this->protect_string_db($val) . "%') and ";
+					}
                     break;
                 } else if (($indexes[$j]['column'] . '_from' == $fieldName
                     || $indexes[$j]['column'] . '_to' == $fieldName
