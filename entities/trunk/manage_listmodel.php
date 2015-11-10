@@ -849,7 +849,7 @@ $linkwithwhat =
                             <label for="what_users" class="bold"><?php echo _USER;?></label>
                         </th>
                         <th>
-                            <input name="what_users" id="what_users" type="text" <?php if(isset($_GET["what_users"])) echo "value ='".$_GET["what_users"]."'";?> />
+                            <input name="what_users" id="what_users" type="text" <?php if(isset($_GET["what_users"])) echo "value ='".functions::xssafe($_GET["what_users"])."'";?> />
                         </th>
                     </tr>
                     <tr>
@@ -857,7 +857,7 @@ $linkwithwhat =
                             <label for="what_services" class="bold"><?php echo _DEPARTMENT;?></label>
                         </th>
                         <th>
-                            <input name="what_services" id="what_services" type="text" <?php if(isset($_GET["what_services"])) echo "value ='".$_GET["what_services"]."'";?>/>
+                            <input name="what_services" id="what_services" type="text" <?php if(isset($_GET["what_services"])) echo "value ='".functions::xssafe($_GET["what_services"])."'";?>/>
                         </th>
                     </tr>
                     <tr>

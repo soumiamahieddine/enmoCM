@@ -203,6 +203,7 @@
 		<parameter name="role" type="identifier" />
 		<parameter name="no_filter" type="string" />
 		<parameter name="rank" type="integer" />
+		<parameter name="auto_filter" type="string" />
     </validationRule>
 
     <validationRule name="loadDiffList" extends="standardForm" mode="error">

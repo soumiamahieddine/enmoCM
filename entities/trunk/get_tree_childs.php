@@ -103,7 +103,7 @@ if (isset($_POST['branch_id'])) {
             . "', is_entity : " . $children[$i]['is_entity']."}";
         echo ']';
     } else {
-        echo "[{id:'no_user_" . $_POST['branch_id'] 
+        echo "[{id:'no_user_" . functions::xssafe($_POST['branch_id']) 
             . "', canhavechildren:false, txt:'<em>(" 
             . addslashes(_NO_USER) . ")</em>', is_entity : false}]";
     }
