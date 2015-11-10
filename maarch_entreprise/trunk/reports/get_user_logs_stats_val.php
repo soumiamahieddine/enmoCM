@@ -100,7 +100,7 @@ if(isset($_REQUEST['user']) && $_REQUEST['user'] != '')
 	else
 	{
 		$title = _TITLE_STATS_USER_LOG.' :  '.$user_name.' ('.$_REQUEST['user'].')';
-		echo '<h3>'.$title.'</h3>';
+		echo '<h3>'.functions::xssafe($title).'</h3>';
 		?><div align="center"><?php echo _NO_RESULTS;?></div>
 		<?php
 	}

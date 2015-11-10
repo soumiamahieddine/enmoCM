@@ -89,7 +89,7 @@ if(isset($_REQUEST['valid']))
         }
         ?>
         <script type="text/javascript">
-            window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&dir=my_contacts&load&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
+            window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&dir=my_contacts&load&order='.functions::xssafe($_REQUEST['order'])."&order_field=".functions::xssafe($_REQUEST['order_field'])."&start=".functions::xssafe($_REQUEST['start'])."&what=".functions::xssafe($_REQUEST['what']);?>";
         </script>
         <?php
 

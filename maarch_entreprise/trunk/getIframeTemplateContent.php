@@ -70,7 +70,7 @@ if ($sessionTemplateContent == $requestTemplateContent) {
     $_SESSION['template_content'] = $_REQUEST['template_content'];
     $_SESSION['template_content'] = str_replace('[dates]', date('d-m-Y'), $_SESSION['template_content']);
     $_SESSION['template_content'] = str_replace('[time]', date('G:i:s'), $_SESSION['template_content']);
-    echo "{status : '0, responseText : " . addslashes($_REQUEST['template_content']) . "'}";
+    echo "{status : '0, responseText : " . addslashes(functions::xssafe($_REQUEST['template_content'])) . "'}";
 }
 
 exit;

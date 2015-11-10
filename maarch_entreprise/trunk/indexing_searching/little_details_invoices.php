@@ -531,7 +531,7 @@ if (! empty($_SESSION['error']) ) {
         <iframe name="view" id="view" width="100%" height="700" frameborder="0" scrolling="auto" src="<?php
         echo $_SESSION['config']['businessappurl'] . "index.php?display=true"
             . "&dir=indexing_searching&page=view_resource_controler&id="
-            . $resId;
+            . functions::xssafe($resId);
         ?>"></iframe>
         <?php
 

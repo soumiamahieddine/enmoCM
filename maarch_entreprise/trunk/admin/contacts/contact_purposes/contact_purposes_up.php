@@ -312,7 +312,7 @@ if ($mode == "up") {
 	    echo _ID . ' ' . _CONTACT_PURPOSE;
 	    ?> :</label>
 			<input type="text" class="readonly" name="ID_contact_purposes" value="<?php
-		echo $_SESSION['CURRENT_ID_CONTACT_PURPOSE'];
+		functions::xecho($_SESSION['CURRENT_ID_CONTACT_PURPOSE']);
 		?>" readonly="readonly" />
 	     </p>
 	     <p>&nbsp;</p>

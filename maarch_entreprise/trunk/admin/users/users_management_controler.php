@@ -317,7 +317,7 @@ function display_del($user_id){
             $_SESSION['info'] = _DELETED_USER.' : '.$user_id;
         }
 
-        ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
+        ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".functions::xssafe($_REQUEST['order'])."&order_field=".functions::xssafe($_REQUEST['order_field'])."&start=".functions::xssafe($_REQUEST['start'])."&what=".functions::xssafe($_REQUEST['what']);?>';</script>
         <?php 
         exit;
     }

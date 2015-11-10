@@ -60,7 +60,7 @@ $mode = '';
 $calledByWS = false;
 //1:test the request ID
 if (isset($_REQUEST['id'])) {
-    $s_id = $_REQUEST['id'];
+    $s_id = functions::xssafe($_REQUEST['id']);
 } else {
     $s_id = '';
 }

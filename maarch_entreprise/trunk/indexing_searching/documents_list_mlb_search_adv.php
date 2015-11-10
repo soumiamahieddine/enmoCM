@@ -813,7 +813,7 @@ if (count($tab) > 0) {
      exit();
 } else {
     
-    echo '<script type="text/javascript">window.top.location.href=\''.$url_error.'\';</script>';
+    echo '<script type="text/javascript">window.top.location.href=\''.functions::xssafe($url_error).'\';</script>';
     exit();
 }
 
