@@ -28,7 +28,8 @@ foreach($events as $event) {
             . "JOIN notes on notes.identifier = mlb.res_id "
             . "JOIN users on users.user_id = notes.user_id "
             . "WHERE notes.coll_id = ? "
-            . "AND notes.id = ? ", array($coll_id, $event->record_id);
+            . "AND notes.id = ? ";
+        $arrayPDO = array($coll_id, $event->record_id);
         break;
     
     case "res_letterbox" :
@@ -43,7 +44,8 @@ foreach($events as $event) {
             . "AND li.item_id = ? "
             . "AND li.item_mode = 'dest' "
             . "AND li.item_type = 'user_id' "
-            . "AND li.res_id = ? " , array($coll_id, $recipient->user_id, $event->record_id);
+            . "AND li.res_id = ? ";
+        $arrayPDO = array($coll_id, $recipient->user_id, $event->record_id);
         break;
     }
     
@@ -51,7 +53,7 @@ foreach($events as $event) {
         $GLOBALS['logger']->write($query , 'DEBUG');
     }
     
-	$stmt = $dbDatasource->query($query);
+	$stmt = $dbDatasource->query($query, $arrayPDO);
 	$note = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // Lien vers la page détail
