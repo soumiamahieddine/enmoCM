@@ -1264,73 +1264,68 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
 //$templates = array();
 //$templates = $templatesControler->getAllTemplatesForProcess($_SESSION['destination_entity']);
 $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
-    $content .= '</div>';
-    if (isset($_REQUEST['id'])) {
-        $title = _MODIFY_ANSWER;
-    } else {
-        $title = _ATTACH_ANSWER;        
-    }
+$content .= '</div>';
+if (isset($_REQUEST['id'])) {
+    $title = _MODIFY_ANSWER;
+} else {
+    $title = _ATTACH_ANSWER;
+}
 
-    $content .= '<h2>&nbsp;' . $title;
+$content .= '<h2>&nbsp;' . $title;
 
-    //multicontact
-    if (!empty($contacts)) {
-        $content .= ' pour le contact : <select style="background-color: #FFF;border: 1px solid #999;color: #666;text-align: left;" id="selectContactIdRes" onchange="loadSelectedContact()">';
+//multicontact
+if (!empty($contacts)) {
+    $content .= ' pour le contact : <select style="background-color: #FFF;border: 1px solid #999;color: #666;text-align: left;" id="selectContactIdRes" onchange="loadSelectedContact()">';
 
     foreach ($contacts as $key => $value) {
         $content .= '<option value="'.$value['contact_id'].'#'.$value['address_id'].'#'.$value['format_contact'].'">'.$value['format_contact'].'</option>';
         //$content .= '<input type="hidden" id="format_list_contact_'.$value['contact_id'].'_res" value="'.$value['format_contact'].'"/>';
-    } 
+    }
     $content .= '</select>';
     $content .= '<script>$("contactidAttach").value='.$contacts[0]['contact_id'].';$("addressidAttach").value='.$contacts[0]['address_id'].';launch_autocompleter2_contacts_v2("'. $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "contact_attach", "show_contacts_attach", "", "contactidAttach", "addressidAttach")</script>';
-    }
+}
 
-    if (!isset($_REQUEST['id'])) {
-        $content .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.
-                    functions::xssafe($_SESSION['doc_id']).'" target="_blank" ><i class="fa fa-file-text-o fa-lg" style="margin-left:5%;color:white" title="'._VIEW_MAIN_DOC.'"></i></a>';
-    }
-
-    $content .= '</h2>';
+$content .= '</h2>';
     
 
-    $content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:30%;float:left;margin-left:-5px;background-color:#deedf3">';
-    $content .= '<hr style="width:85%;margin-left:0px">';
-        $content .= '<input type="hidden" id="category_id" value="outgoing"/>';
-    if (isset($_REQUEST['id'])) {
-        $content .= '<input type="hidden" name="res_id" id="res_id" value="'.$_REQUEST['id'].'"/>';
-        $content .= '<input type="hidden" name="relation" id="relation" value="'.$_REQUEST['relation'].'"/>';
+$content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:30%;float:left;margin-left:-5px;background-color:#deedf3">';
+$content .= '<hr style="width:85%;margin-left:0px">';
+$content .= '<input type="hidden" id="category_id" value="outgoing"/>';
+if (isset($_REQUEST['id'])) {
+    $content .= '<input type="hidden" name="res_id" id="res_id" value="'.$_REQUEST['id'].'"/>';
+    $content .= '<input type="hidden" name="relation" id="relation" value="'.$_REQUEST['relation'].'"/>';
+}
+$content .= '<input type="hidden" name="fromDetail" id="fromDetail" value="'.$_REQUEST['fromDetail'].'"/>';
+
+if (!isset($_REQUEST['id'])) {
+    $content .= '<p>';
+    $content .= '<label>' . _ATTACHMENT_TYPES . '</label>';
+    $content .= '<select name="attachment_types" id="attachment_types" onchange="affiche_chrono();select_template(\'' . $_SESSION['config']['businessappurl']
+        . 'index.php?display=true&module=templates&page='
+        . 'select_templates\', this.options[this.selectedIndex].value);"/>';
+    $content .= '<option value="">' . _CHOOSE_ATTACHMENT_TYPE . '</option>';
+    foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
+        if($_SESSION['attachment_types_show'][$attachmentType] == "true"){
+            $content .= '<option value="' . $attachmentType . '" with_chrono = "'. $_SESSION['attachment_types_with_chrono'][$attachmentType].'" get_chrono = "'. $_SESSION['attachment_types_get_chrono'][$attachmentType].'">';
+            $content .= $_SESSION['attachment_types'][$attachmentType];
+            $content .= '</option>';
+        }
     }
-    $content .= '<input type="hidden" name="fromDetail" id="fromDetail" value="'.$_REQUEST['fromDetail'].'"/>';
 
-    if (!isset($_REQUEST['id'])) {
-        $content .= '<p>';
-            $content .= '<label>' . _ATTACHMENT_TYPES . '</label>';
-            $content .= '<select name="attachment_types" id="attachment_types" onchange="affiche_chrono();select_template(\'' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&module=templates&page='
-                . 'select_templates\', this.options[this.selectedIndex].value);"/>';
-                $content .= '<option value="">' . _CHOOSE_ATTACHMENT_TYPE . '</option>';
-                    foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
-                        if($_SESSION['attachment_types_show'][$attachmentType] == "true"){
-                            $content .= '<option value="' . $attachmentType . '" with_chrono = "'. $_SESSION['attachment_types_with_chrono'][$attachmentType].'" get_chrono = "'. $_SESSION['attachment_types_get_chrono'][$attachmentType].'">';
-                                $content .= $_SESSION['attachment_types'][$attachmentType];
-                            $content .= '</option>';
-                        }
-                    }
-
-            $content .= '</select>&nbsp;<span class="red_asterisk" id="attachment_types_mandatory"><i class="fa fa-star"></i></span>';
-        $content .= '</p>';
-        $content .= '<br/>';
-        $content .= '<p>';
-            $content .= '<label id="chrono_label" style="display:none">'. _CHRONO_NUMBER.'</label>';
-            $content .= '<input type="text" name="chrono_display" id="chrono_display" style="display:none" disabled class="readonly"/>';
-            $content .= '<select name="get_chrono_display" id="get_chrono_display" style="display:none" onchange="$(\'chrono\').value=this.options[this.selectedIndex].value"/>';
-            $content .= '<input type="hidden" name="chrono" id="chrono" />';
-        $content .= '</p>';
-        $content .= '<br/>';
-        $content .= '<p>';
-            $content .= '<label>'. _MODEL.'</label>';
-            $content .= '<select name="templateOffice" id="templateOffice" onchange="showEditButton();">';
-                $content .= '<option value="">'. _CHOOSE_MODEL.'</option>';
+    $content .= '</select>&nbsp;<span class="red_asterisk" id="attachment_types_mandatory"><i class="fa fa-star"></i></span>';
+    $content .= '</p>';
+    $content .= '<br/>';
+    $content .= '<p>';
+    $content .= '<label id="chrono_label" style="display:none">'. _CHRONO_NUMBER.'</label>';
+    $content .= '<input type="text" name="chrono_display" id="chrono_display" style="display:none" disabled class="readonly"/>';
+    $content .= '<select name="get_chrono_display" id="get_chrono_display" style="display:none" onchange="$(\'chrono\').value=this.options[this.selectedIndex].value"/>';
+    $content .= '<input type="hidden" name="chrono" id="chrono" />';
+    $content .= '</p>';
+    $content .= '<br/>';
+    $content .= '<p>';
+    $content .= '<label>'. _MODEL.'</label>';
+    $content .= '<select name="templateOffice" id="templateOffice" onchange="showEditButton();">';
+    $content .= '<option value="">'. _CHOOSE_MODEL.'</option>';
 /*                    for ($i=0;$i<count($templates);$i++) {
                         if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
                            $content .= '<option value="'. $templates[$i]['ID'].'">';
@@ -1338,100 +1333,103 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                         }
                         $content .= '</option>';
                     }*/
-            $content .= '</select>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
-            $content .= '<label>&nbsp;</label>';
-            if(!isset($_REQUEST['id'])){
-                $content .= '<input type="button" value="';
-                    $content .= _EDIT_MODEL;
-                    $content .= '" name="edit" id="edit" style="display:none" class="button" '
-                                    .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&attachType=\'+$(\'attachment_types\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
-                                    .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';            
-            }
-        $content .= '</p>';
-        $content .= '<br/>';
-        $content .= '<p>';
-            $content .= '<label>&nbsp;</label>';
-            $content .=  _OR;
-        $content .= '</p>';
-        $content .= '<br/>';
-        $content .= '<p>';
-            $content .= '<label>'. _ATTACH_FILE.'</label>';
-            $content .= '<iframe style="width:210px" name="choose_file" id="choose_file" frameborder="0" scrolling="no" height="25" src="' . $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=attachments&page=choose_attachment"></iframe>';
-            $content .= '<input type="text" name="not_enabled" id="not_enabled" disabled value="'. _ALREADY_MODEL_SELECTED.'" style="display:none" />';
-            $content .= '<i class="fa fa-check-square fa-2x" style="display:none;margin-top:-15px" id="file_loaded"></i>';
-        $content .= '</p>';
-        $content .= '<br/>';
+    $content .= '</select>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
+    $content .= '<label>&nbsp;</label>';
+    if(!isset($_REQUEST['id'])){
+        $content .= '<input type="button" value="';
+        $content .= _EDIT_MODEL;
+        $content .= '" name="edit" id="edit" style="display:none" class="button" '
+            .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&attachType=\'+$(\'attachment_types\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
+            .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
     }
-        $content .= '<p>';
-            $content .= '<label>'. _OBJECT .'</label>';
-            $content .= '<input type="text" name="title" id="title" value="';
-            if (isset($_REQUEST['id'])) {
-                $content .= str_replace('"', '&quot;', $data_attachment->title);
-            } else {
-                $content .= $req->show_string($data_attachment->subject);
-            }
-            $content .= '"/>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
-        $content .= '</p>';
-        if (!isset($_REQUEST['id'])) {
-            $content .= '<hr style="width:85%;margin-left:0px">';
-        } else {
-            $content .= '<br/>';
-        }
-        $content .= '<p>';
-            $content .= '<label>'. _BACK_DATE.'</label>';
-            $content .= '<input type="text" name="back_date" id="back_date" onClick="showCalender(this);" value="';
-            if (isset($_REQUEST['id'])) {
-                $content .= $req->format_date_db($data_attachment->validation_date);
-            }
+    $content .= '</p>';
+    $content .= '<br/>';
+    $content .= '<p>';
+    $content .= '<label>&nbsp;</label>';
+    $content .=  _OR;
+    $content .= '</p>';
+    $content .= '<br/>';
+    $content .= '<p>';
+    $content .= '<label>'. _ATTACH_FILE.'</label>';
+    $content .= '<iframe style="width:210px" name="choose_file" id="choose_file" frameborder="0" scrolling="no" height="25" src="' . $_SESSION['config']['businessappurl']
+        . 'index.php?display=true&module=attachments&page=choose_attachment"></iframe>';
+    $content .= '<input type="text" name="not_enabled" id="not_enabled" disabled value="'. _ALREADY_MODEL_SELECTED.'" style="display:none" />';
+    $content .= '<i class="fa fa-check-square fa-2x" style="display:none;margin-top:-15px" id="file_loaded"></i>';
+    $content .= '</p>';
+    $content .= '<br/>';
+}
 
-            $content .='"/>';
-        $content .= '</p>';
-        $content .= '<br/>';
-        $content .= '<p>';
-            $content .= '<label>'. _DEST_USER;
-            if ($core->test_admin('my_contacts', 'apps', false)) {
-                $content .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
-                        . '" onclick="new Effect.toggle(\'create_contact_div_attach\', '
-                        . '\'blind\', {delay:0.2});return false;" '
-                        . 'style="display:inline;" ><i class="fa fa-pencil fa-2x" title="' . _CREATE_CONTACT . '"></i></a>';
-            }
-           $content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe_attach\').src=\'' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'&fromAttachmentContact=Y\';new Effect.toggle(\'info_contact_div_attach\', '
-                . '\'blind\', {delay:0.2});return false;"'
-                . ' style="visibility:hidden;padding-left:30%"><i class="fa fa-book fa-2x"></i></a>';
-            $content .= '</label>';
-            $content .= '<input type="text" name="contact_attach" onblur="display_contact_card(\'visible\', \'contact_card_attach\');" onkeyup="erase_contact_external_id(\'contact_attach\', \'contactidAttach\');erase_contact_external_id(\'contact_attach\', \'addressidAttach\');" id="contact_attach" value="';
-                $content .= $data_contact;
-            $content .= '"/>';
-            $content .= '<div id="show_contacts_attach" class="autocomplete autocompleteIndex"></div>';
-        $content .= '</p>';
-        $content .= '<input type="hidden" id="contactidAttach" name="contactidAttach" value="';
-                if (isset($_REQUEST['id'])) {
-                    $content .= $data_attachment->dest_contact_id;
-                } else if ($data_attachment->exp_contact_id){
-                    $content .= $data_attachment->exp_contact_id;
-                } else if ($data_attachment->dest_contact_id) {
-                    $content .= $data_attachment->dest_contact_id;
-                }
-        $content .= '"/>';
-        $content .= '<input type="hidden" id="addressidAttach" name="addressidAttach" value="';
-            if (isset($_REQUEST['id'])) {
-                $content .= $data_attachment->dest_address_id;
-            } else if ($data_attachment->address_id <> ''){
-                $content .= $data_attachment->address_id;
-            }
-        $content .= '"/>';
-        $content .= '<br/>';
-    if (isset($_REQUEST['id'])) {
-         $content .= '<p>';
-            $content .= '<label>'. _CREATE_NEW_ATTACHMENT_VERSION.'</label>';
-            $content .= '<input type="radio" name="new_version" id="new_version_yes" value="yes" onclick="setButtonStyle(\'yes\', \''.$attachmentFormat.'\')"/>'._YES;
-            $content .= '&nbsp;&nbsp;';
-            $content .= '<input type="radio" name="new_version" id="new_version_no" checked value="no" onclick="setButtonStyle(\'no\', \''.$attachmentFormat.'\')"/>'._NO;
-        $content .= '</p>';
-        $content .= '<br/>';   
-    }
+$content .= '<p>';
+$content .= '<label>'. _OBJECT .'</label>';
+$content .= '<input type="text" name="title" id="title" value="';
+if (isset($_REQUEST['id'])) {
+    $content .= str_replace('"', '&quot;', $data_attachment->title);
+} else {
+    $content .= $req->show_string($data_attachment->subject);
+}
+$content .= '"/>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
+$content .= '</p>';
+if (!isset($_REQUEST['id'])) {
+    $content .= '<hr style="width:85%;margin-left:0px">';
+} else {
+    $content .= '<br/>';
+}
+$content .= '<p>';
+$content .= '<label>'. _BACK_DATE.'</label>';
+$content .= '<input type="text" name="back_date" id="back_date" onClick="showCalender(this);" value="';
+if (isset($_REQUEST['id'])) {
+    $content .= $req->format_date_db($data_attachment->validation_date);
+}
+
+$content .='"/>';
+$content .= '</p>';
+$content .= '<br/>';
+$content .= '<p>';
+$content .= '<label>'. _DEST_USER;
+if ($core->test_admin('my_contacts', 'apps', false)) {
+    $content .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
+            . '" onclick="new Effect.toggle(\'create_contact_div_attach\', '
+            . '\'blind\', {delay:0.2});return false;" '
+            . 'style="display:inline;" ><i class="fa fa-pencil fa-2x" title="' . _CREATE_CONTACT . '"></i></a>';
+}
+$content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe_attach\').src=\'' . $_SESSION['config']['businessappurl']
+    . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'&fromAttachmentContact=Y\';new Effect.toggle(\'info_contact_div_attach\', '
+    . '\'blind\', {delay:0.2});return false;"'
+    . ' style="visibility:hidden;padding-left:30%"><i class="fa fa-book fa-2x"></i></a>';
+$content .= '</label>';
+$content .= '<input type="text" name="contact_attach" onblur="display_contact_card(\'visible\', \'contact_card_attach\');" onkeyup="erase_contact_external_id(\'contact_attach\', \'contactidAttach\');erase_contact_external_id(\'contact_attach\', \'addressidAttach\');" id="contact_attach" value="';
+$content .= $data_contact;
+$content .= '"/>';
+$content .= '<div id="show_contacts_attach" class="autocomplete autocompleteIndex"></div>';
+$content .= '</p>';
+$content .= '<input type="hidden" id="contactidAttach" name="contactidAttach" value="';
+if (isset($_REQUEST['id'])) {
+    $content .= $data_attachment->dest_contact_id;
+} else if ($data_attachment->exp_contact_id){
+    $content .= $data_attachment->exp_contact_id;
+} else if ($data_attachment->dest_contact_id) {
+    $content .= $data_attachment->dest_contact_id;
+}
+$content .= '"/>';
+$content .= '<input type="hidden" id="addressidAttach" name="addressidAttach" value="';
+if (isset($_REQUEST['id'])) {
+    $content .= $data_attachment->dest_address_id;
+} else if ($data_attachment->address_id <> ''){
+    $content .= $data_attachment->address_id;
+}
+$content .= '"/>';
+$content .= '<br/>';
+
+
+if (isset($_REQUEST['id'])) {
+    $content .= '<p>';
+    $content .= '<label>'. _CREATE_NEW_ATTACHMENT_VERSION.'</label>';
+    $content .= '<input type="radio" name="new_version" id="new_version_yes" value="yes" onclick="setButtonStyle(\'yes\', \''.$attachmentFormat.'\')"/>'._YES;
+    $content .= '&nbsp;&nbsp;';
+    $content .= '<input type="radio" name="new_version" id="new_version_no" checked value="no" onclick="setButtonStyle(\'no\', \''.$attachmentFormat.'\')"/>'._NO;
+    $content .= '</p>';
+    $content .= '<br/>';
+}
         $content .= '<p class="buttons">';
                 if (isset($_REQUEST['id']) && $attachmentFormat <> "pdf") {
                     $content .= '<input type="button" value="';
@@ -1485,19 +1483,23 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
     // $content .= '<script>$(\'title\').value=</script>';
 
     if ($core->test_admin('my_contacts', 'apps', false)) {
-        $content .= '<div id="create_contact_div_attach" style="display:none;float:left;width:65%;background-color:#deedf3">';
+        $content .= '<div id="create_contact_div_attach" style="display:none;float:right;width:65%;background-color:#deedf3">';
             $content .= '<iframe width="100%" height="550" src="' . $_SESSION['config']['businessappurl']
                     . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe&fromAttachmentContact=Y" name="contact_iframe" id="contact_iframe"'
                     . ' scrolling="auto" frameborder="0" style="display:block;">'
                     . '</iframe>';
         $content .= '</div>';
     }
-    $content .= '<div id="info_contact_div_attach" style="display:none;float:left;width:70%;background-color:#deedf3">';
+    $content .= '<div id="info_contact_div_attach" style="display:none;float:right;width:70%;background-color:#deedf3">';
         $content .= '<iframe width="100%" height="800" name="info_contact_iframe_attach" id="info_contact_iframe_attach"'
                 . ' scrolling="auto" frameborder="0" style="display:block;">'
                 . '</iframe>';
     $content .= '</div>';
-//$content .= '</div>';
+$content .= '<div style="float: right; width: 70%">';
+$content .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
+    . functions::xssafe($_SESSION['doc_id']) . '&coll_id=' . $coll_id .
+    '" name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" style="width:100% !important;height:600px" onmouseover="this.focus()"></iframe>';
+$content .= '</div>';
 
 echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
 exit ();
