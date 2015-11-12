@@ -30,6 +30,7 @@
       <parameter name="id" type="login" />
       <parameter name="pass1" type="string" />
       <parameter name="pass2" type="string" />
+      <parameter name="currentPassword" type="string" />
       <parameter name="LastName" type="personname" />
       <parameter name="FirstName" type="string" />
       <parameter name="Phone" type="phone" />
