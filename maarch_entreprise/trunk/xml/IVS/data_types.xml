@@ -86,7 +86,7 @@
       <enumeration value="multi" />
     </dataType>
     <dataType name="personname" base="string">
-      <pattern value="/^[A-z\s\-\']+$/" />
+      <pattern value="/^[A-z\s\-\'\é\è\ï]+$/" />
     </dataType>
     <dataType name="short_word" base="word">
       <pattern value="/^\w{1,5}$/" />
