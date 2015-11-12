@@ -267,9 +267,7 @@ class admin_basket extends Database
                                 <?php } ?>
                                 <p>
                                     <label><?php echo _BASKET_VIEW;?> : </label>
-                                    <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" >
-                                        <?php functions::xecho($_SESSION['m_admin']['basket']['clause']);?>
-                                    </textarea>
+                                    <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" ><?php functions::xecho($_SESSION['m_admin']['basket']['clause']);?></textarea>
                                 </p>
                                 <p>
                                     <label><?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?> : </label>
