@@ -82,8 +82,8 @@ if (
 ) {
     $objectType = $_REQUEST['objectType'];
     $objectTable = $_REQUEST['objectTable'];
-    $_REQUEST['objectId'] = str_replace("\\", "", $_REQUEST['objectId']);
-    $_REQUEST['objectId'] = str_replace("/", "", $_REQUEST['objectId']);
+    // $_REQUEST['objectId'] = str_replace("\\", "", $_REQUEST['objectId']);
+    // $_REQUEST['objectId'] = str_replace("/", "", $_REQUEST['objectId']);
     $_REQUEST['objectId'] = str_replace("..", "", $_REQUEST['objectId']);
     $objectId = $_REQUEST['objectId'];
     $appPath = 'start';
