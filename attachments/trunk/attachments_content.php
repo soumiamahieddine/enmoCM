@@ -1498,7 +1498,7 @@ if (isset($_REQUEST['id'])) {
 $content .= '<div style="float: right; width: 70%">';
 $content .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
     . functions::xssafe($_SESSION['doc_id']) . '&coll_id=' . $coll_id .
-    '" name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" style="width:100% !important;height:600px" onmouseover="this.focus()"></iframe>';
+    '" name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" style="width:100% !important;height:900px" onmouseover="this.focus()"></iframe>';
 $content .= '</div>';
 
 echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
