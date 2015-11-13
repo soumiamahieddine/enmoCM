@@ -1489,33 +1489,36 @@ function set_new_contact_address(path_manage_script, id_div, close){
 }
 
 function check_date_exp(path_manage_script, path_link){
-    var contact_id = $('contactid').value;
-    var address_id = $('addressid').value;
-    var res_id = $('values').value;
     var check_days_before = $('check_days_before').value;
-    new Ajax.Request(path_manage_script,
-    {
-        method:'post',
-        parameters: {
-            contact_id : contact_id, 
-            address_id : address_id, 
-            res_id : res_id
-        },
-        onSuccess: function(answer){
-            if(answer.responseText == "success"){
-        	    document.getElementById('contact').style.backgroundColor='#ffffff';
-        	    document.getElementById('contact_check').style.display='none';
-        	    document.getElementById('contactcheck').value = answer.responseText;
-     		} else {
-        	    document.getElementById('contact').style.backgroundColor='#ffe09b';
-        	    document.getElementById('contact_check').style.display='table-row';
-        	    document.getElementById("contact_check").innerHTML = "<td colspan=\"3\" style=\"font-size: 9px;text-align: center;color:#ea0000;\">Au moins un courrier enregistré dans les "+check_days_before+" derniers jours est affecté au même contact. "+
-                                                                        "<input type='button' class='button' value='Voir' onclick=\"window.open('"+path_link+"',"+
-                                                                        " 'search_doc_for_attachment', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775');\"/></td>";
-        	    document.getElementById('contactcheck').value = answer.responseText;
-    	    }
-        }       
-    });  
+
+    if (check_days_before > 0) {
+        var contact_id = $('contactid').value;
+        var address_id = $('addressid').value;
+        var res_id = $('values').value;
+        new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: {
+                contact_id : contact_id,
+                address_id : address_id,
+                res_id : res_id
+            },
+            onSuccess: function(answer){
+                if(answer.responseText == "success"){
+                    document.getElementById('contact').style.backgroundColor='#ffffff';
+                    document.getElementById('contact_check').style.display='none';
+                    document.getElementById('contactcheck').value = answer.responseText;
+                } else {
+                    document.getElementById('contact').style.backgroundColor='#ffe09b';
+                    document.getElementById('contact_check').style.display='table-row';
+                    document.getElementById("contact_check").innerHTML = "<td colspan=\"3\" style=\"font-size: 9px;text-align: center;color:#ea0000;\">Au moins un courrier enregistré dans les "+check_days_before+" derniers jours est affecté au même contact. "+
+                                                                            "<input type='button' class='button' value='Voir' onclick=\"window.open('"+path_link+"',"+
+                                                                            " 'search_doc_for_attachment', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775');\"/></td>";
+                    document.getElementById('contactcheck').value = answer.responseText;
+                }
+            }
+        });
+    }
 }
 
 function reset_check_date_exp(){
