@@ -236,6 +236,38 @@ class entities extends dbquery
         }
 
         $total = preg_match_all(
+            "|@entity_type\[('[^\]]*')\]|", $where, $tmpArr,
+            PREG_PATTERN_ORDER
+        );
+        if ($total > 0) {
+            for ($i = 0; $i < $total; $i ++) {
+                $tmp = str_replace("'", '', $tmpArr[1][$i]);
+                $tmp = trim($tmp);
+                $tmpEntities = array();
+
+                $db = new Database();
+                if(!empty($tmp))
+                {
+                    $stmt = $db->query('select entity_id from '.ENT_ENTITIES." where entity_type = ?", array(trim($tmp)));
+                    while($res = $stmt->fetchObject())
+                        array_push($tmpEntities, "'".$res->entity_id."'");
+                }
+                $entities = "";
+                for ($j = 0; $j < count($tmpEntities); $j++) {
+                    $entities .= $tmpEntities[$j].", ";
+                }
+                $entities = preg_replace("|, $|", '', $entities);
+
+                if ($entities == '' && $userId == 'superadmin') {
+                    $entities = $this->empty_list();
+                }
+                $where = preg_replace(
+                    "|@entity_type\['[^\]]*'\]|", $entities, $where, 1
+                );
+            }
+        }
+
+        $total = preg_match_all(
         	"|@subentities\[('[^\]]*')\]|", $where, $tmpArr, PREG_PATTERN_ORDER
         );
         if ($total > 0) {
@@ -350,37 +382,6 @@ class entities extends dbquery
                 }
                 $where = preg_replace(
                 	"|@parent_entity\['[^\]]*'\]|", $entity, $where, 1
-                );
-            }
-        }
-        $total = preg_match_all(
-            "|@entity_type\[('[^\]]*')\]|", $where, $tmpArr,
-            PREG_PATTERN_ORDER
-        );
-        if ($total > 0) {
-            for ($i = 0; $i < $total; $i ++) {
-                $tmp = str_replace("'", '', $tmpArr[1][$i]);
-                $tmp = trim($tmp);
-                $tmpEntities = array();
-
-                $db = new Database();
-                if(!empty($tmp))
-                {
-                    $stmt = $db->query('select entity_id from '.ENT_ENTITIES." where entity_type = ?", array(trim($tmp)));
-                    while($res = $stmt->fetchObject())
-                        array_push($tmpEntities, "'".$res->entity_id."'");
-                }
-                $entities = "";
-                for ($i = 0; $i < count($tmpEntities); $i++) {
-                    $entities .= $tmpEntities[$i].", ";
-                }
-                $entities = preg_replace("|, $|", '', $entities);
-
-                if ($entities == '' && $userId == 'superadmin') {
-                    $entities = $this->empty_list();
-                }
-                $where = preg_replace(
-                    "|@entity_type\['[^\]]*'\]|", $entities, $where, 1
                 );
             }
         }
