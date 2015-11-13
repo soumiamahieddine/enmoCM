@@ -344,9 +344,25 @@ class SecurityControler
             $where = $this->process_where_clause($where, $userId);
             // Process with the modules vars
             foreach (array_keys($_SESSION['modules_loaded']) as $key) {
-                $pathModuleTools = $_SESSION['modules_loaded'][$key]['path']
-                                   . "class" . DIRECTORY_SEPARATOR
-                                   . "class_modules_tools.php";
+                if (file_exists(
+                    $_SESSION['config']['corepath'] . 'custom'
+                        . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                        . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR
+                        . $_SESSION['modules_loaded'][$key]['name'] . DIRECTORY_SEPARATOR . "class"
+                        . DIRECTORY_SEPARATOR . "class_modules_tools.php"
+                )
+                ) {
+                    $pathModuleTools = $_SESSION['config']['corepath'] . 'custom'
+                        . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                        . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR
+                        . $_SESSION['modules_loaded'][$key]['name'] . DIRECTORY_SEPARATOR . "class"
+                        . DIRECTORY_SEPARATOR . "class_modules_tools.php";
+                } else {
+                    $pathModuleTools = 'modules' . DIRECTORY_SEPARATOR
+                        . $_SESSION['modules_loaded'][$key]['name'] . DIRECTORY_SEPARATOR . "class"
+                        . DIRECTORY_SEPARATOR . "class_modules_tools.php";
+                }
+
                 if (file_exists($pathModuleTools)) {
                     require_once($pathModuleTools);
                     if (class_exists($key)) {
