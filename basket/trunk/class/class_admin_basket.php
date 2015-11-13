@@ -657,7 +657,7 @@ class admin_basket extends Database
         $db->query("DELETE FROM ".$_SESSION['tablename']['bask_groupbasket'] ." where basket_id= ?",array($_SESSION['m_admin']['basket']['basketId']));
         $db->query("DELETE FROM ".$_SESSION['tablename']['bask_actions_groupbaskets'] ." where basket_id= ?",array($_SESSION['m_admin']['basket']['basketId']));
         $grouplistetmp ="";
-
+        $groupIdList = '';
         // Browses the $_SESSION['m_admin']['basket']['groups']
         for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
         {
@@ -679,7 +679,16 @@ class admin_basket extends Database
                 $stmt = $db->query("INSERT INTO ".$_SESSION['tablename']['bask_actions_groupbaskets']." (group_id, basket_id, where_clause, used_in_basketlist, used_in_action_page, id_action, default_action_list)
             VALUES (?, ?,'','N','N', ?, 'Y')",array($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],$_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION']));
             }
+            $groupIdList .= $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'] . ',';
         }
+        $arrayPDO = array($_SESSION['m_admin']['basket']['basketId']);
+        $groupIdList = rtrim($groupIdList, ",");
+        $allGroupId = explode(",", $groupIdList);
+        $arrayPDO = array_merge($arrayPDO, array($allGroupId));
+
+        $stmt = $db->query("DELETE FROM user_baskets_secondary where basket_id = ? and group_id not in (?)", $arrayPDO);
+        /*var_dump($stmt);
+        echo $_SESSION['m_admin']['basket']['basketId'] . ' ' . $groupIdList;exit;*/
 
         $_SESSION['service_tag'] = 'load_basket_db';
         $core = new core_tools();
@@ -755,6 +764,7 @@ class admin_basket extends Database
                     $db->query("delete from ".$_SESSION['tablename']['bask_baskets']."  where basket_id = ?", array($id));
                     $db->query("delete from ".$_SESSION['tablename']['bask_groupbasket']."  where basket_id = ?", array($id));
                     $db->query("delete from ".$_SESSION['tablename']['bask_actions_groupbaskets']."  where basket_id = ?", array($id));
+                    $db->query("delete from user_baskets_secondary where basket_id = ?", array($id));
 
                     $_SESSION['service_tag'] = 'del_basket';
                     $_SESSION['temp_basket_id'] = $id;
