@@ -75,7 +75,7 @@
     </attachment_types>
     <priorities>
         <priority with_delay="2">_VERY_HIGH</priority> <!-- 0 -->
-        <priority with_delay="false">_HIGH</priority> <!-- 1 -->
+        <priority with_delay="10">_HIGH</priority> <!-- 1 -->
         <priority with_delay="false">_NORMAL</priority> <!-- 2 -->
         <!--<priority with_delay="false">_LOW</priority>  3 -->
         <!--<priority with_delay="false">_VERY_LOW</priority>  4 -->
