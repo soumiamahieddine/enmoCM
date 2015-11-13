@@ -843,6 +843,7 @@ if (!defined("_CHOOSE_TYPE")) define("_CHOOSE_TYPE", "Choisissez un type");
 if (!defined("_FILE_LOADED_BUT_NOT_VISIBLE")) define("_FILE_LOADED_BUT_NOT_VISIBLE", "Le fichier est chargé et prêt à être enregistré sur le serveur.<br/>");
 if (!defined("_ONLY_FILETYPES_AUTHORISED")) define("_ONLY_FILETYPES_AUTHORISED", "Seuls les fichiers suivants peuvent être affichés dans cette fenêtre");
 if (!defined("_PROBLEM_LOADING_FILE_TMP_DIR")) define("_PROBLEM_LOADING_FILE_TMP_DIR", "Problème lors du chargement du fichier sur le répertoire temporaire du serveur");
+if (!defined("_NO_FILE_SELECTED")) define("_NO_FILE_SELECTED", "Aucun fichier chargé");
 if (!defined("_DOWNLOADED_FILE")) define("_DOWNLOADED_FILE", "Fichier chargé");
 if (!defined("_WRONG_FILE_TYPE")) define("_WRONG_FILE_TYPE", "Ce type de fichier n'est pas permis");
 

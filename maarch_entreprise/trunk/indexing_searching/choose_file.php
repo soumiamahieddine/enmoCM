@@ -146,33 +146,23 @@ $_SESSION['with_file'] = false;
         <input type="hidden" name="dir" value="indexing_searching" />
         <input type="hidden" name="page" value="choose_file" />
         <p>
-            <label for="file" style="width:90%;margin-right: -12px;">
+            <label for="file" style="width:90%;margin-right: -12px;margin-top: -2px">
             <?php
-             if (
-                !empty($_SESSION['upfile']['local_path'])
-                && empty($_SESSION['error'])
-            ) {
-                ?><i class="fa fa-check-square fa-2x" title="<?php echo _FILE_SELECTED; ?>"></i>
-                    <input type="button" onclick="$$('#file')[0].click()" class="button" value="<?php echo _DOWNLOADED_FILE; ?>" style="width: 90%;margin: 0px;margin-top: -2px;font-size: 17px;text-align: center;"></input>
-                <?php
-                
-            } else {
-                ?><i class="fa fa-remove fa-2x" title="<?php echo _NO_FILE_SELECTED; ?>"></i>
-                    <input type="button" onclick="$$('#file')[0].click()" class="button" value="<?php echo _CHOOSE_FILE; ?>" style="width: 90%;margin: 0px;margin-top: -2px;font-size: 17px;text-align: center;"></input>
-                <?php
-            }
-            ?>
+            if (!empty($_SESSION['upfile']['local_path']) && empty($_SESSION['error'])) { ?>
+                <i class="fa fa-check-square fa-2x" title="<?php echo _DOWNLOADED_FILE; ?>"></i>
+                <input type="button" onclick="$$('#file')[0].click()" class="button" value="<?php echo _DOWNLOADED_FILE; ?>" style="width: 90%;margin: 0px;margin-top: -2px;font-size: 15px;text-align: center;">
+            <?php } else { ?>
+                <i class="fa fa-remove fa-2x" title="<?php echo _NO_FILE_SELECTED; ?>"></i>
+                <input type="button" onclick="$$('#file')[0].click()" class="button" value="<?php echo _CHOOSE_FILE; ?>" style="width: 90%;margin: 0px;margin-top: -2px;font-size: 15px;text-align: center;">
+            <?php } ?>
             </label>
-            <?php 
+            <?php
             if($_REQUEST['with_file'] == 'true'){ ?>
-               <i class="fa fa-circle fa-2x" id="with_file_icon" onclick="$$('#with_file')[0].click();" title="<?php echo _WITHOUT_FILE; ?> (actif)" style="cursor:pointer;"></i>
-
+                <i class="fa fa-file-o fa-fw fa-2x" id="with_file_icon" onclick="$$('#with_file')[0].click();" title="<?php echo _WITHOUT_FILE; ?> (actif)" style="cursor:pointer;"></i>
             <?php }else{ ?>
-                <i class="fa fa-circle-thin fa-2x" id="with_file_icon" onclick="$$('#with_file2')[0].click();" title="<?php echo _WITHOUT_FILE; ?>" style="cursor:pointer;"></i>
+                <i class="fa fa-ban fa-2x" id="with_file_icon" onclick="$$('#with_file2')[0].click();" title="<?php echo _WITHOUT_FILE; ?>" style="cursor:pointer;"></i>
+            <?php } ?>
 
-            <?php }
-
-            ?>
             <input type="file" name="file" id="file" onchange="$('with_file').value='false';this.form.method = 'post';this.form.submit();" value="<?php
                 if (isset($_SESSION['file_path'])) {
                     echo $_SESSION['file_path'];

@@ -237,7 +237,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $frmStr .= '<iframe src="' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&dir=indexing_searching&page='
                 . 'choose_file" name="choose_file" id="choose_file" '
-                . 'frameborder="0" scrolling="no" width="100%" height="45">'
+                . 'frameborder="0" scrolling="no" width="100%" height="30">'
                 . '</iframe>';
         $frmStr .= '</div>';
     }

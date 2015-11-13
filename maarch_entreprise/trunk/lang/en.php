@@ -380,6 +380,7 @@ if (!defined('_DONE_ANSWERS')) define('_DONE_ANSWERS','Answers to the mail');
 if (!defined('_DOUBLED_DOC')) define('_DOUBLED_DOC', 'Duplicate problem');
 if (!defined('_DOWN')) define('_DOWN', 'Move down');
 if (!defined('_DOWNLOAD')) define('_DOWNLOAD', 'Download document');
+if (!defined("_NO_FILE_SELECTED")) define("_NO_FILE_SELECTED", "No file saved");
 if (!defined('_DOWNLOADED_FILE')) define('_DOWNLOADED_FILE', 'File saved');
 if (!defined('_DO_NOT_MODIFY_UNLESS_EXPERT')) define('_DO_NOT_MODIFY_UNLESS_EXPERT', ' Don&quot;t modify this section unless you know exactly what you do. Wrong settings can stop the application from working!');
 if (!defined('_DUPLICATION')) define('_DUPLICATION', 'Duplication');
