@@ -261,6 +261,7 @@ INSERT INTO usergroups_services VALUES ('COURRIER', 'reports');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'tag_view');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'delete_tag_to_res');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'create_tag');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'sendmail');
 
@@ -745,6 +746,23 @@ INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comme
 INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES (47, 'AGENT', 'letterbox_coll', 'DESTINATION in (@my_entities)', 'AGENT', 'N', 'N', 'N', 0, NULL, NULL, 'DOC');
 INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES (49, 'RESP_COURRIER', 'letterbox_coll', 'DESTINATION IN (@subentities[@my_entities])', 'Profil responsable', 'N', 'N', 'N', 153, NULL, NULL, 'DOC');
 INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES (50, 'MODIF', 'letterbox_coll', 'DESTINATION in (@my_entities)', 'modification', 'N', 'N', 'N', 8, NULL, NULL, 'DOC');
+
+--------------------
+--KEYWORDS / TAGS --
+--------------------
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('SEMINAIRE', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('INNOVATION', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('MAARCH', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('ENVIRONNEMENT', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('PARTENARIAT', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('JUMELAGE', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('ECONOMIE', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('ASSOCIATIONS', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('RH', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('BUDGET', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('QUARTIERS', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('LITTORAL', 'letterbox_coll', 0);
+INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('SPORT', 'letterbox_coll', 0);
 
 ------------
 --TEMPLATES--
