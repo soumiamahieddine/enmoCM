@@ -508,7 +508,7 @@ class diffusion_list extends dbquery
                 
                 if (!$userFound || $fromQualif) {
                     # History
-                    $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
+                    $listinstance_id = $db->lastInsertId('listinstance_id_seq');      
                     $hist->add(
                         ENT_LISTINSTANCE,
                         $listinstance_id,
@@ -556,7 +556,7 @@ class diffusion_list extends dbquery
                 
                 if (!$entityFound || $fromQualif) {
                     # History
-                    $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
+                    $listinstance_id = $db->lastInsertId('listinstance_id_seq');      
                     $hist->add(
                         ENT_LISTINSTANCE,
                         $listinstance_id,
