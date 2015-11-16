@@ -304,7 +304,8 @@ if($core_tools->is_module_loaded('entities'))
         $where = ' where '.$where;
     }
 
-    $stmt = $conn->query("SELECT DISTINCT r.destination, e.short_label FROM ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by e.short_label, r.destination order by e.short_label");
+    $stmt = $conn->query("SELECT DISTINCT ".$table.".destination, e.short_label FROM ".$table." join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = ".$table.".destination 
+                            ".$where." group by e.short_label, ".$table.".destination order by e.short_label");
 
     $arr_tmp = array();
     while($res = $stmt->fetchObject())
