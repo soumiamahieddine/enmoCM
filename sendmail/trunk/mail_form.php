@@ -152,7 +152,7 @@ if ($mode == 'add') {
     $dest_user_id = null;
     $adresse_mail = null;
     $db = new Database();
-    $stmt = $db->query("SELECT address_id, exp_user_id, dest_user_id, admission_date
+    $stmt = $db->query("SELECT res_id, category_id, address_id, exp_user_id, dest_user_id, admission_date
                 FROM mlb_coll_ext 
                 WHERE (( exp_contact_id is not null 
                 or dest_contact_id is not null 
@@ -161,11 +161,18 @@ if ($mode == 'add') {
                 and  res_id = ?)", array($_SESSION['doc_id']));
     $res = $stmt->fetchObject();
     
+    $res_id = $res->res_id;
+    $category_id = $res->category_id;
     $address_id = $res->address_id;
     $exp_user_id = $res->exp_user_id;
     $dest_user_id = $res->dest_user_id;
     $admission_date = $res->admission_date;
-	
+
+    if ($res_id != null) {
+        $stmt = $db->query("SELECT subject FROM res_letterbox WHERE res_id = ?", array($res_id));
+        $rawSubject = $stmt->fetchObject();
+        $subject = $rawSubject->subject;
+    }
     if($address_id != null){
         $stmt = $db->query("SELECT email FROM contact_addresses WHERE id = ?", array($address_id));
         $adr = $stmt->fetchObject();
@@ -207,8 +214,13 @@ if ($mode == 'add') {
     $content .= '<tr>';
     $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span><label> '._EMAIL_OBJECT.' </label></td>';
 
-    $content .= '<td colspan="2"><input name="object" id="object" class="emailInput" type="text" value="'._EMAIL_OBJECT_ANSWER. ' ' . functions::format_date_db($admission_date).'" /></td>';
-    $content .= '</tr>';
+    $content .= '<td colspan="2">';
+    if ($category_id === 'outgoing')
+        $content .= '<input name="object" id="object" class="emailInput" type="text" value="' . $subject . '" />';
+    else
+        $content .= '<input name="object" id="object" class="emailInput" type="text" value="' . _EMAIL_OBJECT_ANSWER . ' ' . functions::format_date_db($admission_date).'" />';
+
+    $content .= '</td></tr>';
     $content .= '</table><br />';
     $content .='<hr />';
     $content .= '<h4 onclick="new Effect.toggle(\'joined_files\', \'blind\', {delay:0.2});'
