@@ -394,6 +394,7 @@ if(!empty($control['error']) && $control['error'] <> 1) {
 /**********************************************************************/
 /**** CONNECTION A MAARCH ****/
 
+    $_SESSION['web_sso_url'] = $loginRequestArray['WEB_SSO_URL'];
     header("location: " . $_SESSION['config']['businessappurl'] 
         . "log.php?login=" . $loginArray['UserId'] 
         . "&pass=" . $loginArray['password']);

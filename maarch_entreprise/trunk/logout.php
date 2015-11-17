@@ -57,6 +57,10 @@ $args = array_merge(array(session_name(), ''), array_values(session_get_cookie_p
 $args[2] = time() - 3600;
 call_user_func_array('setcookie', $args);
 
+if(isset($_SESSION['web_sso_url'])){
+        $webSSOurl = $_SESSION['web_sso_url'];
+}
+
 session_unset();
 session_destroy(); // Suppression physique de la session
 unset($_SESSION['sessionName']);
@@ -71,9 +75,14 @@ if (isset($_GET['logout']) && $_GET['logout']) {
 } else {
     $logoutExtension = "";
 }
-header(
-    "location: " . $appUrl . "index.php?display=true&page=login"
-    . $logoutExtension
-);
-exit();
 
+if(isset($webSSOurl) && $webSSOurl <> ''){
+        header("location: " . $webSSOurl );
+        exit();
+} else {
+        header(
+         "location: " . $appUrl . "index.php?display=true&page=login"
+         . $logoutExtension
+        );
+        exit();
+}
