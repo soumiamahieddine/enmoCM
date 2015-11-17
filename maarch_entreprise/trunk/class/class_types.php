@@ -806,7 +806,7 @@ class types extends database
                 }
                 
                 $stmt = $db->query($query);
-                while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                while ($res = $stmt->fetch()) {
                      array_push(
                          $values,
                          array(
