@@ -426,6 +426,7 @@
       <parameter name="destinataire_chosen" type="identifier" />
       <parameter name="destinataire_available" type="identifier" />
       <parameter name="project" type="string" />
+      <parameter name="priority" type="integer" />
       <parameter name="doc_custom_t1" type="string" />
       <parameter name="doc_custom_t2" type="string" />
       <parameter name="doc_custom_t3" type="string" />
