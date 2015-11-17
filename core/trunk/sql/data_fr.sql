@@ -415,26 +415,26 @@ INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item
 ------------
 --BASKETS--
 ------------
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'SigningBasket', '11 - Courriers à viser', 'Corbeille des courriers à approuver', 'STATUS = ''VIS'' and DESTINATION in (@subentities[@my_entities])', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'QualificationBasket', '22 - Courriers à qualifier', 'Corbeille de qualification', 'status=''ATT''', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'IndexingBasket', '00 - Courriers à indexer', 'Corbeille d''indexation', ' ', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'CopyMailBasket', '03 - Courriers en copie', 'Corbeille d''information', '(res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''user_id'' and item_id = @user and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))) and status <> ''DEL'' and res_id not in (select res_id from res_mark_as_read WHERE user_id = @user)', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'RetourCourrier', '21 - Retours Courrier', 'Courriers retournés au service Courrier', 'STATUS=''RET''', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'InitBasket', '20 - Courriers pour validation DSG', 'Courriers en attente d envoi en validation', 'STATUS=''INIT''', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'ContribBasket', '04 - Courrier pour contribution', 'Courrier pour contribution', '(doc_custom_t6 = @user or doc_custom_t7 in (@my_entities)) and (status = ''NEW'' or status = ''COU'')', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'ValidationBasket', '00 - Courriers à valider', 'Corbeille de validation', '(status = ''VAL'' and destination <>''COU'')', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'MyBasket', '01 - Courriers à traiter', 'Corbeille de traitement', '(status =''NEW'' or status =''COU'') and dest_user = @user and type_id not in (100)', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'LateMailBasket', '02 - Courriers en retard', 'Courriers en retard', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'') and (now() > process_limit_date)', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'DepartmentBasket', '10 - Courriers de ma direction', 'Corbeille de supervision', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'' and status <> ''VAL'')', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'SigningBasket', 'Courriers à viser', 'Corbeille des courriers à approuver', 'STATUS = ''VIS'' and DESTINATION in (@subentities[@my_entities])', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'QualificationBasket', 'Courriers à qualifier', 'Corbeille de qualification', 'status=''ATT''', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'IndexingBasket', 'Courriers à indexer', 'Corbeille d''indexation', ' ', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'CopyMailBasket', 'Courriers en copie', 'Corbeille d''information', '(res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''user_id'' and item_id = @user and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))) and status <> ''DEL'' and res_id not in (select res_id from res_mark_as_read WHERE user_id = @user)', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'RetourCourrier', 'Retours Courrier', 'Courriers retournés au service Courrier', 'STATUS=''RET''', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'InitBasket', 'Courriers pour validation DSG', 'Courriers en attente d envoi en validation', 'STATUS=''INIT''', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'ContribBasket', 'Courrier pour contribution', 'Courrier pour contribution', '(doc_custom_t6 = @user or doc_custom_t7 in (@my_entities)) and (status = ''NEW'' or status = ''COU'')', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'ValidationBasket', 'Courriers à valider', 'Corbeille de validation', '(status = ''VAL'' and destination <>''COU'')', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'MyBasket', 'Courriers à traiter', 'Corbeille de traitement', '(status =''NEW'' or status =''COU'') and dest_user = @user and type_id not in (100)', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'LateMailBasket', 'Courriers en retard', 'Courriers en retard', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'') and (now() > process_limit_date)', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'DepartmentBasket', 'Courriers de ma direction', 'Corbeille de supervision', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'' and status <> ''VAL'')', 'N', 'Y', 'Y');
 
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'EmailsToQualify', '23 - Courriels à qualifier', 'Courriels à qualifier', 'status=''MAQUAL'' and (dest_user = '''' or dest_user is null)', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'EmailsToQualify', 'Courriels à qualifier', 'Courriels à qualifier', 'status=''MAQUAL'' and (dest_user = '''' or dest_user is null)', 'N', 'Y');
 
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersMyBasket', '[dossier] 90 - Mes dossiers à traiter', 'Dossiers à traiter', 'status = ''FOLDNEW'' and count_document > 0 and dest_user = @user', 'N', 'Y', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersValidationBasket', '[dossier] 91 - Dossiers à valider', 'Corbeilles des dossiers à valider', 'status = ''FOLDVAL'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersRejectedBasket', '[dossier] 92 - Dossiers rejetés', 'Corbeille des dossiers rejetés', 'status = ''FOLDREJ'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersIncompleteBasket', '[dossier] 93 - Dossiers incomplets', 'Corbeille des dossiers incomplets', 'status = ''FOLDNOT'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersTreatBasket', '[dossier] 94 - Dossiers traités', 'Corbeille des dossiers traités', 'status = ''FOLDTRT'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersDepartmentBasket', '[dossier] 95 - Dossiers', 'Corbeille de dossiers', 'status = ''FOLDNEW'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersMyBasket', '[dossier] Mes dossiers à traiter', 'Dossiers à traiter', 'status = ''FOLDNEW'' and count_document > 0 and dest_user = @user', 'N', 'Y', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersValidationBasket', '[dossier] Dossiers à valider', 'Corbeilles des dossiers à valider', 'status = ''FOLDVAL'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersRejectedBasket', '[dossier] Dossiers rejetés', 'Corbeille des dossiers rejetés', 'status = ''FOLDREJ'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersIncompleteBasket', '[dossier] Dossiers incomplets', 'Corbeille des dossiers incomplets', 'status = ''FOLDNOT'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersTreatBasket', '[dossier] Dossiers traités', 'Corbeille des dossiers traités', 'status = ''FOLDTRT'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersDepartmentBasket', '[dossier] Dossiers', 'Corbeille de dossiers', 'status = ''FOLDNEW'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
 
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'AlloMairieBasket', 'Demandes Maarch Mairie', 'Corbeilles des demandes Maarch Mairie', 'status = ''SMART''', 'N', 'Y', 'Y');
 
@@ -1043,7 +1043,10 @@ INSERT INTO templates VALUES (101, '[maarch mairie] Clôture de demande', '[maar
 </table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (102, 'Passer me voir', 'Passer me voir', 'Passer me voir à mon bureau, merci.', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (103, 'Compléter', 'Compléter', 'Le projet de réponse doit être complété/révisé sur les points suivants : \n\n- ', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
-
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (111, 'Accompagnement courriel', 'Modèle de courriel d''''accompagnement', '<p>Bonjour,</p>
+<p>En r&eacute###ponse &agrave### votre courrier en date du [res_letterbox.doc_date], veuillez trouver notre r&eacute###ponse en pi&egrave###ce-jointe.</p>
+<p>Cordialement,</p>
+<p><strong>Ville de Maarch-les-Bains</strong><br /><em>[user.firstname] [user.lastname]</em><br /><em>[user.phone]</em></p>', 'HTML', NULL, NULL, 'DOCX: standard_nosign', 'letterbox_attachment', 'sendmail', 'all');
 
 
 ------------
@@ -1151,6 +1154,28 @@ INSERT INTO templates_association VALUES (89, 103, 'destination', 'VILLE', 'enti
 INSERT INTO templates_association VALUES (90, 103, 'destination', 'CCAS', 'entities');
 INSERT INTO templates_association VALUES (91, 103, 'destination', 'AD06', 'entities');
 
+INSERT INTO templates_association VALUES (71, 111, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association VALUES (72, 111, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association VALUES (73, 111, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association VALUES (74, 111, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association VALUES (75, 111, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association VALUES (76, 111, 'destination', 'PE', 'entities');
+INSERT INTO templates_association VALUES (77, 111, 'destination', 'SP', 'entities');
+INSERT INTO templates_association VALUES (78, 111, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association VALUES (79, 111, 'destination', 'DRH', 'entities');
+INSERT INTO templates_association VALUES (80, 111, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association VALUES (81, 111, 'destination', 'COU', 'entities');
+INSERT INTO templates_association VALUES (82, 111, 'destination', 'COR', 'entities');
+INSERT INTO templates_association VALUES (83, 111, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association VALUES (84, 111, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association VALUES (85, 111, 'destination', 'PJU', 'entities');
+INSERT INTO templates_association VALUES (86, 111, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association VALUES (87, 111, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association VALUES (88, 111, 'destination', 'ELUS', 'entities');
+INSERT INTO templates_association VALUES (89, 111, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association VALUES (90, 111, 'destination', 'CCAS', 'entities');
+INSERT INTO templates_association VALUES (91, 111, 'destination', 'AD06', 'entities');
+
 ------------
 --DOCSERVERS--
 ------------
@@ -1175,15 +1200,15 @@ INSERT INTO difflist_types VALUES ('VISA_CIRCUIT', 'Circuit de visa', 'visa sign
 
 -- AJOUT DES BANNETTES 
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled)
- VALUES ('letterbox_coll', 'EvisBasket', '12 - Courriers à e-viser', 'Courriers à e-viser', 'status=''EVIS'' and (res_id,@user) IN (SELECT res_id, item_id FROM listinstance
+ VALUES ('letterbox_coll', 'EvisBasket', 'Courriers à e-viser', 'Courriers à e-viser', 'status=''EVIS'' and (res_id,@user) IN (SELECT res_id, item_id FROM listinstance
  	WHERE item_mode = ''visa'' and process_date ISNULL and res_view_letterbox.res_id = res_id order by listinstance_id asc limit 1)', 'N', 'Y', 'N', 'Y');
 
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled)
- VALUES ('letterbox_coll', 'EsigBasket', '13 - Courriers à e-signer', 'Courriers à e-signer', 'status=''ESIG'' and (res_id,@user) IN (SELECT res_id, item_id FROM listinstance
+ VALUES ('letterbox_coll', 'EsigBasket', 'Courriers à e-signer', 'Courriers à e-signer', 'status=''ESIG'' and (res_id,@user) IN (SELECT res_id, item_id FROM listinstance
 WHERE item_mode = ''sign'' and process_date ISNULL and res_view_letterbox.res_id = res_id order by listinstance_id asc limit 1)', 'N', 'Y', 'N', 'Y');
 
 
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'EenvBasket', '14 - Courriers à e-envoyer', 'Courriers à e-envoyer', 'status=''EENV''', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'EenvBasket', 'Courriers à e-envoyer', 'Courriers à e-envoyer', 'status=''EENV''', 'N', 'Y', 'N', 'Y');
 
 -- AJOUT DES STATUS 
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('DIMP', 'Dossier à imprimer', 'N', 'N', 'fm-letter-status-aimp', 'apps', 'Y', 'Y');
