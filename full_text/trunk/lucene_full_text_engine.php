@@ -186,7 +186,8 @@ function prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id)
     if (is_file($pathToFile)) {
         $fileContent = trim(readFileF($pathToFile));
         //remove html tags
-        $fileContent = strip_tags($fileContent);
+        //$fileContent = strip_tags($fileContent);
+        $fileContent = convert_html_to_text($fileContent);
         $result = launchIndexFullText($fileContent, $indexFileDirectory, $Id);
     } else {
         $result = 2;
@@ -207,11 +208,6 @@ function launchIndexFullText($fileContent, $tempIndexFileDirectory, $Id) // $Ind
     $indexFileDirectory = (string) $tempIndexFileDirectory; // with version 1.12, we need a string, not an XML element
     $result = -1;
     if (strlen($fileContent) > 50) {
-        // Storing text in lucene index
-        set_include_path($_ENV['maarch_tools_path'] . DIRECTORY_SEPARATOR
-            . PATH_SEPARATOR . get_include_path()
-        );
-        require_once('Zend/Search/Lucene.php');
         if (!is_dir($indexFileDirectory)) {
             $_ENV['logger']->write($indexFileDirectory . " not exists !", "ERROR", 2);
             $index = Zend_Search_Lucene::create($indexFileDirectory);
@@ -303,6 +299,14 @@ $_ENV['logger']->write("Config name : " . $_ENV['config_name']);
 $_ENV['logger']->write("Full text engine launched for table : " . $_ENV['tablename']);
 require("../../core/class/class_functions.php");
 require("../../core/class/class_db_pdo.php");
+
+// Storing text in lucene index
+set_include_path($_ENV['maarch_tools_path'] . DIRECTORY_SEPARATOR
+    . PATH_SEPARATOR . get_include_path()
+);
+require_once('Zend/Search/Lucene.php');
+include_once('html2text/html2text.php');
+
 $_ENV['db'] = new Database($conf);
 
 $_ENV['logger']->write("connection on the DB server OK !");
