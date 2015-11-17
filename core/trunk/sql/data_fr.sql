@@ -264,6 +264,7 @@ INSERT INTO usergroups_services VALUES ('COURRIER', 'add_tag_to_res');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'delete_tag_to_res');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'create_tag');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'sendmail');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'use_mail_services');
 
 
 INSERT INTO usergroups_services VALUES ('ELU', 'adv_search_mlb');
@@ -332,7 +333,7 @@ INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adr
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PJS', 'DGSDGAPJS:Pôle Jeunesse et Sport', 'DGSDGAPJS:Pôle Jeunesse et Sport', 'Y', '', '', '', '', '', '', '', '', 'DGA', 'Service');
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PE', 'DGSDGAPJSPE:Petite enfance', 'DGSDGAPJSPE:Petite enfance', 'Y', '', '', '', '', '', '', '', '', 'PJS', 'Service');
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('SP', 'DGSDGAPJSSP:Sport', 'DGSDGAPJSSP:Sport', 'Y', '', '', '', '', '', '', '', '', 'PJS', 'Service');
-INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('COU', 'DGSDSGCOU:Service Courrier', 'DGSDSGCOU:Service Courrier', 'Y', '', '', '', '', '', '', '', '', 'DSG', 'Service');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('COU', 'DGSDSGCOU:Service Courrier', 'DGSDSGCOU:Service Courrier', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', 'DSG', 'Service');
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('FIN', 'DGSFIN:Direction des Finances', 'DGSFIN:Direction des Finances', 'Y', '', '', '', '', '', '', '', '', 'DGS', 'Service');
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PJU', 'DGSFINPJU:Pôle Juridique', 'DGSFINPJU:Pôle Juridique', 'Y', '', '', '', '', '', '', '', '', 'FIN', 'Service');
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DGA', 'DGSDGA:Direction Générale Adjointe', 'DGSDGA:Direction Générale Adjointe', 'Y', '', '', '', '', '', '', '', '', 'DGS', 'Bureau');
@@ -951,7 +952,7 @@ VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvel
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
-INSERT INTO templates VALUES (100, '[maarch mairie] Enregistrement demande - DIVERS', '[maarch mairie] Enregistrement demande - DIVERS', '<p style="text-align: center###"><span style="font-size: small### text-decoration: underline###">ENREGISTREMENT DEMANDE Maarch Mairie - DIVERS</span></p>
+INSERT INTO templates VALUES (9, '[maarch mairie] Enregistrement demande - DIVERS', '[maarch mairie] Enregistrement demande - DIVERS', '<p style="text-align: center###"><span style="font-size: small### text-decoration: underline###">ENREGISTREMENT DEMANDE Maarch Mairie - DIVERS</span></p>
 <p style="text-align: center###">&nbsp###</p>
 <table style="border: 1pt solid #000000### width: 800px### background-color: #40a497###" border="1" cellspacing="1" cellpadding="5">
 <tbody>
@@ -998,7 +999,7 @@ INSERT INTO templates VALUES (100, '[maarch mairie] Enregistrement demande - DIV
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes');
-INSERT INTO templates VALUES (101, '[maarch mairie] Clôture de demande', '[maarch mairie] Clôture de demande', '<p style="text-align: left###"><span style="font-size: small###">&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###</span><span style="text-decoration: underline###"><span style="font-size: small###">CLOTURE DEMANDE Maarch Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
+INSERT INTO templates VALUES (10, '[maarch mairie] Clôture de demande', '[maarch mairie] Clôture de demande', '<p style="text-align: left###"><span style="font-size: small###">&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###</span><span style="text-decoration: underline###"><span style="font-size: small###">CLOTURE DEMANDE Maarch Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
 <p style="text-align: center###">&nbsp###</p>
 <table style="background-color: #a8c33c### width: 800px### border: #000000 1pt solid###" border="1" cellspacing="1" cellpadding="5">
 <tbody>
@@ -1041,9 +1042,9 @@ INSERT INTO templates VALUES (101, '[maarch mairie] Clôture de demande', '[maar
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (102, 'Passer me voir', 'Passer me voir', 'Passer me voir à mon bureau, merci.', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (103, 'Compléter', 'Compléter', 'Le projet de réponse doit être complété/révisé sur les points suivants : \n\n- ', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (111, 'Accompagnement courriel', 'Modèle de courriel d''''accompagnement', '<p>Bonjour,</p>
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (11, 'Passer me voir', 'Passer me voir', 'Passer me voir à mon bureau, merci.', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (12, 'Compléter', 'Compléter', 'Le projet de réponse doit être complété/révisé sur les points suivants : \n\n- ', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (13, 'Accompagnement courriel', 'Modèle de courriel d''''accompagnement', '<p>Bonjour,</p>
 <p>En r&eacute###ponse &agrave### votre courrier en date du [res_letterbox.doc_date], veuillez trouver notre r&eacute###ponse en pi&egrave###ce-jointe.</p>
 <p>Cordialement,</p>
 <p><strong>Ville de Maarch-les-Bains</strong><br /><em>[user.firstname] [user.lastname]</em><br /><em>[user.phone]</em></p>', 'HTML', NULL, NULL, 'DOCX: standard_nosign', 'letterbox_attachment', 'sendmail', 'all');
@@ -1071,110 +1072,105 @@ VALUES (9, 'RED', 'Redirection de courrier', '1', 'EMAIL', 7, '', 'dest_user', '
 ------------
 --TEMPLATES_ASSOCIATION--
 ------------
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (20, 3, 'destination', 'VILLE', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (21, 3, 'destination', 'CAB', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (22, 3, 'destination', 'DGS', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (23, 3, 'destination', 'DSI', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (24, 3, 'destination', 'FIN', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (25, 3, 'destination', 'DGA', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (26, 3, 'destination', 'PCU', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (27, 3, 'destination', 'PTE', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (28, 3, 'destination', 'PJS', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (29, 3, 'destination', 'PE', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (30, 3, 'destination', 'SP', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (31, 3, 'destination', 'PSO', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (32, 3, 'destination', 'DSG', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (33, 3, 'destination', 'COU', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (34, 3, 'destination', 'PSF', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (35, 3, 'destination', 'DRH', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (10, 3, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (11, 3, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (12, 3, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (13, 3, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (14, 3, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (15, 3, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (16, 3, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (17, 3, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (18, 3, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (19, 3, 'destination', 'PE', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (20, 3, 'destination', 'SP', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (21, 3, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (22, 3, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (23, 3, 'destination', 'COU', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (24, 3, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (25, 3, 'destination', 'DRH', 'entities');
 
-INSERT INTO templates_association VALUES (100, 101, 'destination', 'CAB', 'entities');
-INSERT INTO templates_association VALUES (101, 101, 'destination', 'DGS', 'entities');
-INSERT INTO templates_association VALUES (102, 101, 'destination', 'DGA', 'entities');
-INSERT INTO templates_association VALUES (103, 101, 'destination', 'PCU', 'entities');
-INSERT INTO templates_association VALUES (104, 101, 'destination', 'PJS', 'entities');
-INSERT INTO templates_association VALUES (105, 101, 'destination', 'PE', 'entities');
-INSERT INTO templates_association VALUES (106, 101, 'destination', 'SP', 'entities');
-INSERT INTO templates_association VALUES (107, 101, 'destination', 'PSO', 'entities');
-INSERT INTO templates_association VALUES (108, 101, 'destination', 'DRH', 'entities');
-INSERT INTO templates_association VALUES (109, 101, 'destination', 'DSG', 'entities');
-INSERT INTO templates_association VALUES (110, 101, 'destination', 'COU', 'entities');
-INSERT INTO templates_association VALUES (111, 101, 'destination', 'COR', 'entities');
-INSERT INTO templates_association VALUES (112, 101, 'destination', 'DSI', 'entities');
-INSERT INTO templates_association VALUES (113, 101, 'destination', 'FIN', 'entities');
-INSERT INTO templates_association VALUES (114, 101, 'destination', 'PJU', 'entities');
-INSERT INTO templates_association VALUES (115, 101, 'destination', 'PTE', 'entities');
-INSERT INTO templates_association VALUES (116, 101, 'destination', 'PSF', 'entities');
-INSERT INTO templates_association VALUES (117, 101, 'destination', 'ELUS', 'entities');
-INSERT INTO templates_association VALUES (118, 101, 'destination', 'VILLE', 'entities');
-INSERT INTO templates_association VALUES (119, 101, 'destination', 'CCAS', 'entities');
-INSERT INTO templates_association VALUES (120, 101, 'destination', 'AD06', 'entities');
+INSERT INTO templates_association VALUES (30, 10, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association VALUES (31, 10, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association VALUES (32, 10, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association VALUES (33, 10, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association VALUES (34, 10, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association VALUES (35, 10, 'destination', 'PE', 'entities');
+INSERT INTO templates_association VALUES (36, 10, 'destination', 'SP', 'entities');
+INSERT INTO templates_association VALUES (37, 10, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association VALUES (38, 10, 'destination', 'DRH', 'entities');
+INSERT INTO templates_association VALUES (39, 10, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association VALUES (40, 10, 'destination', 'COU', 'entities');
+INSERT INTO templates_association VALUES (41, 10, 'destination', 'COR', 'entities');
+INSERT INTO templates_association VALUES (42, 10, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association VALUES (43, 10, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association VALUES (44, 10, 'destination', 'PJU', 'entities');
+INSERT INTO templates_association VALUES (45, 10, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association VALUES (46, 10, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association VALUES (47, 10, 'destination', 'ELUS', 'entities');
+INSERT INTO templates_association VALUES (48, 10, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association VALUES (49, 10, 'destination', 'CCAS', 'entities');
 
-INSERT INTO templates_association VALUES (50, 102, 'destination', 'CAB', 'entities');
-INSERT INTO templates_association VALUES (51, 102, 'destination', 'DGS', 'entities');
-INSERT INTO templates_association VALUES (52, 102, 'destination', 'DGA', 'entities');
-INSERT INTO templates_association VALUES (53, 102, 'destination', 'PCU', 'entities');
-INSERT INTO templates_association VALUES (54, 102, 'destination', 'PJS', 'entities');
-INSERT INTO templates_association VALUES (55, 102, 'destination', 'PE', 'entities');
-INSERT INTO templates_association VALUES (56, 102, 'destination', 'SP', 'entities');
-INSERT INTO templates_association VALUES (57, 102, 'destination', 'PSO', 'entities');
-INSERT INTO templates_association VALUES (58, 102, 'destination', 'DRH', 'entities');
-INSERT INTO templates_association VALUES (59, 102, 'destination', 'DSG', 'entities');
-INSERT INTO templates_association VALUES (60, 102, 'destination', 'COU', 'entities');
-INSERT INTO templates_association VALUES (61, 102, 'destination', 'COR', 'entities');
-INSERT INTO templates_association VALUES (62, 102, 'destination', 'DSI', 'entities');
-INSERT INTO templates_association VALUES (63, 102, 'destination', 'FIN', 'entities');
-INSERT INTO templates_association VALUES (64, 102, 'destination', 'PJU', 'entities');
-INSERT INTO templates_association VALUES (65, 102, 'destination', 'PTE', 'entities');
-INSERT INTO templates_association VALUES (66, 102, 'destination', 'PSF', 'entities');
-INSERT INTO templates_association VALUES (67, 102, 'destination', 'ELUS', 'entities');
-INSERT INTO templates_association VALUES (68, 102, 'destination', 'VILLE', 'entities');
-INSERT INTO templates_association VALUES (69, 102, 'destination', 'CCAS', 'entities');
-INSERT INTO templates_association VALUES (70, 102, 'destination', 'AD06', 'entities');
+INSERT INTO templates_association VALUES (50, 11, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association VALUES (51, 11, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association VALUES (52, 11, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association VALUES (53, 11, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association VALUES (54, 11, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association VALUES (55, 11, 'destination', 'PE', 'entities');
+INSERT INTO templates_association VALUES (56, 11, 'destination', 'SP', 'entities');
+INSERT INTO templates_association VALUES (57, 11, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association VALUES (58, 11, 'destination', 'DRH', 'entities');
+INSERT INTO templates_association VALUES (59, 11, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association VALUES (60, 11, 'destination', 'COU', 'entities');
+INSERT INTO templates_association VALUES (61, 11, 'destination', 'COR', 'entities');
+INSERT INTO templates_association VALUES (62, 11, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association VALUES (63, 11, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association VALUES (64, 11, 'destination', 'PJU', 'entities');
+INSERT INTO templates_association VALUES (65, 11, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association VALUES (66, 11, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association VALUES (67, 11, 'destination', 'ELUS', 'entities');
+INSERT INTO templates_association VALUES (68, 11, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association VALUES (69, 11, 'destination', 'CCAS', 'entities');
 
-INSERT INTO templates_association VALUES (71, 103, 'destination', 'CAB', 'entities');
-INSERT INTO templates_association VALUES (72, 103, 'destination', 'DGS', 'entities');
-INSERT INTO templates_association VALUES (73, 103, 'destination', 'DGA', 'entities');
-INSERT INTO templates_association VALUES (74, 103, 'destination', 'PCU', 'entities');
-INSERT INTO templates_association VALUES (75, 103, 'destination', 'PJS', 'entities');
-INSERT INTO templates_association VALUES (76, 103, 'destination', 'PE', 'entities');
-INSERT INTO templates_association VALUES (77, 103, 'destination', 'SP', 'entities');
-INSERT INTO templates_association VALUES (78, 103, 'destination', 'PSO', 'entities');
-INSERT INTO templates_association VALUES (79, 103, 'destination', 'DRH', 'entities');
-INSERT INTO templates_association VALUES (80, 103, 'destination', 'DSG', 'entities');
-INSERT INTO templates_association VALUES (81, 103, 'destination', 'COU', 'entities');
-INSERT INTO templates_association VALUES (82, 103, 'destination', 'COR', 'entities');
-INSERT INTO templates_association VALUES (83, 103, 'destination', 'DSI', 'entities');
-INSERT INTO templates_association VALUES (84, 103, 'destination', 'FIN', 'entities');
-INSERT INTO templates_association VALUES (85, 103, 'destination', 'PJU', 'entities');
-INSERT INTO templates_association VALUES (86, 103, 'destination', 'PTE', 'entities');
-INSERT INTO templates_association VALUES (87, 103, 'destination', 'PSF', 'entities');
-INSERT INTO templates_association VALUES (88, 103, 'destination', 'ELUS', 'entities');
-INSERT INTO templates_association VALUES (89, 103, 'destination', 'VILLE', 'entities');
-INSERT INTO templates_association VALUES (90, 103, 'destination', 'CCAS', 'entities');
-INSERT INTO templates_association VALUES (91, 103, 'destination', 'AD06', 'entities');
+INSERT INTO templates_association VALUES (71, 12, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association VALUES (72, 12, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association VALUES (73, 12, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association VALUES (74, 12, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association VALUES (75, 12, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association VALUES (76, 12, 'destination', 'PE', 'entities');
+INSERT INTO templates_association VALUES (77, 12, 'destination', 'SP', 'entities');
+INSERT INTO templates_association VALUES (78, 12, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association VALUES (79, 12, 'destination', 'DRH', 'entities');
+INSERT INTO templates_association VALUES (80, 12, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association VALUES (81, 12, 'destination', 'COU', 'entities');
+INSERT INTO templates_association VALUES (82, 12, 'destination', 'COR', 'entities');
+INSERT INTO templates_association VALUES (83, 12, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association VALUES (84, 12, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association VALUES (85, 12, 'destination', 'PJU', 'entities');
+INSERT INTO templates_association VALUES (86, 12, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association VALUES (87, 12, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association VALUES (88, 12, 'destination', 'ELUS', 'entities');
+INSERT INTO templates_association VALUES (89, 12, 'destination', 'VILLE', 'entities');
 
-INSERT INTO templates_association VALUES (131, 111, 'destination', 'CAB', 'entities');
-INSERT INTO templates_association VALUES (132, 111, 'destination', 'DGS', 'entities');
-INSERT INTO templates_association VALUES (133, 111, 'destination', 'DGA', 'entities');
-INSERT INTO templates_association VALUES (134, 111, 'destination', 'PCU', 'entities');
-INSERT INTO templates_association VALUES (135, 111, 'destination', 'PJS', 'entities');
-INSERT INTO templates_association VALUES (136, 111, 'destination', 'PE', 'entities');
-INSERT INTO templates_association VALUES (137, 111, 'destination', 'SP', 'entities');
-INSERT INTO templates_association VALUES (138, 111, 'destination', 'PSO', 'entities');
-INSERT INTO templates_association VALUES (139, 111, 'destination', 'DRH', 'entities');
-INSERT INTO templates_association VALUES (140, 111, 'destination', 'DSG', 'entities');
-INSERT INTO templates_association VALUES (141, 111, 'destination', 'COU', 'entities');
-INSERT INTO templates_association VALUES (142, 111, 'destination', 'COR', 'entities');
-INSERT INTO templates_association VALUES (143, 111, 'destination', 'DSI', 'entities');
-INSERT INTO templates_association VALUES (144, 111, 'destination', 'FIN', 'entities');
-INSERT INTO templates_association VALUES (145, 111, 'destination', 'PJU', 'entities');
-INSERT INTO templates_association VALUES (146, 111, 'destination', 'PTE', 'entities');
-INSERT INTO templates_association VALUES (147, 111, 'destination', 'PSF', 'entities');
-INSERT INTO templates_association VALUES (148, 111, 'destination', 'ELUS', 'entities');
-INSERT INTO templates_association VALUES (149, 111, 'destination', 'VILLE', 'entities');
-INSERT INTO templates_association VALUES (150, 111, 'destination', 'CCAS', 'entities');
-INSERT INTO templates_association VALUES (151, 111, 'destination', 'AD06', 'entities');
+INSERT INTO templates_association VALUES (90, 13, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association VALUES (91, 13, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association VALUES (92, 13, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association VALUES (93, 13, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association VALUES (94, 13, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association VALUES (95, 13, 'destination', 'PE', 'entities');
+INSERT INTO templates_association VALUES (96, 13, 'destination', 'SP', 'entities');
+INSERT INTO templates_association VALUES (97, 13, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association VALUES (98, 13, 'destination', 'DRH', 'entities');
+INSERT INTO templates_association VALUES (99, 13, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association VALUES (100, 13, 'destination', 'COU', 'entities');
+INSERT INTO templates_association VALUES (101, 13, 'destination', 'COR', 'entities');
+INSERT INTO templates_association VALUES (102, 13, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association VALUES (103, 13, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association VALUES (104, 13, 'destination', 'PJU', 'entities');
+INSERT INTO templates_association VALUES (105, 13, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association VALUES (106, 13, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association VALUES (107, 13, 'destination', 'ELUS', 'entities');
+INSERT INTO templates_association VALUES (108, 13, 'destination', 'VILLE', 'entities');
+
 
 ------------
 --DOCSERVERS--
