@@ -12,7 +12,7 @@ if ($_REQUEST['society_label'] <> '') {
         . "from contacts_v2 "
         . "WHERE lower(society) in ("
         . "SELECT lower(society) FROM contacts_v2 GROUP BY lower(society) "
-        . "     HAVING Count(lower(society)) > 1 and lower(society) <> '' ) and contact_id <> ? and lower(society) = ? "
+        . "     HAVING Count(lower(society)) > 1 and lower(society) <> '' ) and contact_id <> ? and lower(society) = lower(?) "
         . "order by lower(society)";
     $arrayPDO = array($_REQUEST['contact_id'], $_REQUEST['society_label']);
 }
