@@ -1154,27 +1154,27 @@ INSERT INTO templates_association VALUES (89, 103, 'destination', 'VILLE', 'enti
 INSERT INTO templates_association VALUES (90, 103, 'destination', 'CCAS', 'entities');
 INSERT INTO templates_association VALUES (91, 103, 'destination', 'AD06', 'entities');
 
-INSERT INTO templates_association VALUES (71, 111, 'destination', 'CAB', 'entities');
-INSERT INTO templates_association VALUES (72, 111, 'destination', 'DGS', 'entities');
-INSERT INTO templates_association VALUES (73, 111, 'destination', 'DGA', 'entities');
-INSERT INTO templates_association VALUES (74, 111, 'destination', 'PCU', 'entities');
-INSERT INTO templates_association VALUES (75, 111, 'destination', 'PJS', 'entities');
-INSERT INTO templates_association VALUES (76, 111, 'destination', 'PE', 'entities');
-INSERT INTO templates_association VALUES (77, 111, 'destination', 'SP', 'entities');
-INSERT INTO templates_association VALUES (78, 111, 'destination', 'PSO', 'entities');
-INSERT INTO templates_association VALUES (79, 111, 'destination', 'DRH', 'entities');
-INSERT INTO templates_association VALUES (80, 111, 'destination', 'DSG', 'entities');
-INSERT INTO templates_association VALUES (81, 111, 'destination', 'COU', 'entities');
-INSERT INTO templates_association VALUES (82, 111, 'destination', 'COR', 'entities');
-INSERT INTO templates_association VALUES (83, 111, 'destination', 'DSI', 'entities');
-INSERT INTO templates_association VALUES (84, 111, 'destination', 'FIN', 'entities');
-INSERT INTO templates_association VALUES (85, 111, 'destination', 'PJU', 'entities');
-INSERT INTO templates_association VALUES (86, 111, 'destination', 'PTE', 'entities');
-INSERT INTO templates_association VALUES (87, 111, 'destination', 'PSF', 'entities');
-INSERT INTO templates_association VALUES (88, 111, 'destination', 'ELUS', 'entities');
-INSERT INTO templates_association VALUES (89, 111, 'destination', 'VILLE', 'entities');
-INSERT INTO templates_association VALUES (90, 111, 'destination', 'CCAS', 'entities');
-INSERT INTO templates_association VALUES (91, 111, 'destination', 'AD06', 'entities');
+INSERT INTO templates_association VALUES (131, 111, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association VALUES (132, 111, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association VALUES (133, 111, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association VALUES (134, 111, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association VALUES (135, 111, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association VALUES (136, 111, 'destination', 'PE', 'entities');
+INSERT INTO templates_association VALUES (137, 111, 'destination', 'SP', 'entities');
+INSERT INTO templates_association VALUES (138, 111, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association VALUES (139, 111, 'destination', 'DRH', 'entities');
+INSERT INTO templates_association VALUES (140, 111, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association VALUES (141, 111, 'destination', 'COU', 'entities');
+INSERT INTO templates_association VALUES (142, 111, 'destination', 'COR', 'entities');
+INSERT INTO templates_association VALUES (143, 111, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association VALUES (144, 111, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association VALUES (145, 111, 'destination', 'PJU', 'entities');
+INSERT INTO templates_association VALUES (146, 111, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association VALUES (147, 111, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association VALUES (148, 111, 'destination', 'ELUS', 'entities');
+INSERT INTO templates_association VALUES (149, 111, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association VALUES (150, 111, 'destination', 'CCAS', 'entities');
+INSERT INTO templates_association VALUES (151, 111, 'destination', 'AD06', 'entities');
 
 ------------
 --DOCSERVERS--
