@@ -202,6 +202,7 @@ if (
         if (
             !empty($_REQUEST['fileContent'])
             && !empty($_REQUEST['fileExtension'])
+            && preg_match('/[0-9a-z]{1,5}$/i', $_REQUEST['fileExtension'])
         ) {
             $fileEncodedContent = str_replace(
                 ' ',
