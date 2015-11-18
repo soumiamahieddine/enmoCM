@@ -403,6 +403,7 @@
     * @return array of adr fields if is ok
     */
     public function getResourceAdr($view, $resId, $whereClause, $adrTable) {
+
         $control = array();
         if(!isset($view) || empty($resId) || empty($whereClause)) {
             $control = array("status" => "ko", "error" => _PB_WITH_ARGUMENTS);
@@ -417,16 +418,24 @@
             $line = $stmt->fetchObject();
             $format = $line->format;
             if($line->is_multi_docservers == "Y") {
-                $query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from " 
-                    . $adrTable . " where res_id = ? order by adr_priority";
-                $stmt = $db->query($query, array($resId));
-                if ($stmt->rowCount() > 0) {
-                    while($line = $stmt->fetchObject()) {
-                        array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => $line->adr_priority));
+                if (
+                    $adrTable == 'adr_x' ||
+                    $adrTable == 'adr_business' ||
+                    $adrTable == 'adr_log' ||
+                    $adrTable == 'adr_rm'
+
+                ) {
+                    $query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from " 
+                        . $adrTable . " where res_id = ? order by adr_priority";
+                    $stmt = $db->query($query, array($resId));
+                    if ($stmt->rowCount() > 0) {
+                        while($line = $stmt->fetchObject()) {
+                            array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => $line->adr_priority));
+                        }
+                    } else {
+                        $control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
+                        return $control;
                     }
-                } else {
-                    $control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
-                    return $control;
                 }
             } else {
                 array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => ""));
