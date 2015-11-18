@@ -1087,10 +1087,16 @@ class lists extends Database
 				break;
 			}
 		}
-		
+        $isAttachment = false;
+        foreach($resultTheLine as $r){
+            if ($r['column'] === 'attachment_type') {
+                $isAttachment = true;
+                break;
+            }
+        }
 		
         $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
-		if ($core->is_module_loaded('thumbnails') === true){
+		if ($core->is_module_loaded('thumbnails') === true && !$isAttachment){
 			require_once "modules" . DIRECTORY_SEPARATOR . "thumbnails" . DIRECTORY_SEPARATOR
 			. "class" . DIRECTORY_SEPARATOR
 			. "class_modules_tools.php";
