@@ -25,7 +25,7 @@ require_once 'apps/maarch_entreprise/class/class_business_app_tools.php';
 
 $core = new core_tools();
 
-if (isset($_SESSION['error'])) {
+if (isset($_SESSION['error']) && !empty($_SESSION['error'])) {
     echo functions::xssafe($_SESSION['error']);
     $_SESSION['error'] = '';
     exit;
