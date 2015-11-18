@@ -37,12 +37,15 @@ if (empty($_REQUEST['scripts'])) {
 	exit();
 }
 
+$authorizedPaths = ['modules/templates/js/change_doctype.js'];
 $arr_scripts = explode('$$', $_REQUEST['scripts']);
 for ($i=0; $i<count($arr_scripts ); $i++) {
 	if ($arr_scripts[$i] <> '') {
-		$arr_scripts[$i] = str_replace("\\", "", $arr_scripts[$i]);
-		$arr_scripts[$i] = str_replace("/", "", $arr_scripts[$i]);
-		$arr_scripts[$i] = str_replace("..", "", $arr_scripts[$i]);
+		if (!in_array($arr_scripts[$i], $authorizedPaths)) {
+			$arr_scripts[$i] = str_replace("\\", "", $arr_scripts[$i]);
+			$arr_scripts[$i] = str_replace("/", "", $arr_scripts[$i]);
+			$arr_scripts[$i] = str_replace("..", "", $arr_scripts[$i]);
+		}
 		echo file_get_contents($arr_scripts[$i]);
 	}
 }

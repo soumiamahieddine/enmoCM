@@ -123,7 +123,7 @@
       <pattern value="/^[\w.]+$/" />
     </dataType>
     <dataType name="filename_secure" base="string">
-      <pattern value="/^[A-z0-9.]+$/" />
+      <pattern value="/^[A-z0-9.]+|modules\/templates\/js\/change_doctype.js$/" />
     </dataType>
     <dataType name="filename_extension" base="string">
       <pattern value="/\.[0-9a-z]{1,5}$/i" />
