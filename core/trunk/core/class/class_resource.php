@@ -436,6 +436,9 @@
                         $control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
                         return $control;
                     }
+                } else {
+                    $control = array("status" => "ko", "error" => _PB_WITH_ARGUMENTS . ' adrTable');
+                    return $control;
                 }
             } else {
                 array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => ""));
