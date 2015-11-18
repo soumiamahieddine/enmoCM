@@ -20,7 +20,7 @@ $list       = new lists();
 
 $core->load_lang();
 
-//$core->test_service('folder_search', 'folder');
+$core->test_service('folder_search', 'folder');
 /****************Management of the location bar  ************/
 $init = false;
 if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {

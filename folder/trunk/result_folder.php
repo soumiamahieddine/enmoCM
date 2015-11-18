@@ -17,6 +17,7 @@ $core_tools->load_lang();
 require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
+$core_tools->test_service('folder_search', 'folder');
 $core_tools->load_html();
 //here we building the header
 $core_tools->load_header('', true, false);

@@ -12,6 +12,7 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
 $core = new core_tools();
+$core->test_admin('admin_foldertypes', 'folder');
 $core->load_lang();
 $core->load_html();
 $core->load_header();

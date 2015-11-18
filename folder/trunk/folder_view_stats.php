@@ -2,6 +2,7 @@
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
+$core_tools->test_service('reports', 'reports');
 $content = '';
 $content .='<div id="params">';
 	$content .='<form id="folderviewform" name="folderviewform" method="get" action="">';

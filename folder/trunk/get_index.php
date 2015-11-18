@@ -21,6 +21,7 @@
 require_once 'modules/folder/class/class_admin_foldertypes.php';
 
 $core = new core_tools();
+$core->test_admin('admin_foldertypes', 'folder');
 //here we loading the lang vars
 $core->load_lang();
 $ft = new foldertype();

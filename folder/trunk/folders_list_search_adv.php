@@ -1,9 +1,13 @@
 <?php
 
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php";
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php";
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php";
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
             ."class".DIRECTORY_SEPARATOR."class_lists.php";
+
+$theCore = new core_tools();
+$theCore->test_service('folder_search', 'folder');
 
 $status_obj = new manage_status();
 $request    = new request();

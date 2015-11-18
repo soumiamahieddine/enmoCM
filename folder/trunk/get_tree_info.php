@@ -39,7 +39,7 @@ $core->load_lang();
 $sec = new security();
 $func = new functions();
 $db = new Database();
-
+$core->test_service('view_folder_tree', 'folder');
 $whereClause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 ?>
 <script type="text/javascript">
