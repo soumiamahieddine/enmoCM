@@ -37,6 +37,8 @@ $core_tools->load_lang();
 $core_tools->load_html();
 $core_tools->load_header();
 
+$core_tools->test_admin('admin_reports', 'reports');
+
 $func = new functions();
 $userReports = array();
 $user_id = $_SESSION['user']['UserId'];
