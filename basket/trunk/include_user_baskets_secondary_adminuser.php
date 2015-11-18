@@ -29,6 +29,9 @@
 * @ingroup basket
 */
 
+$core_tools = new core_tools();
+$core_tools->test_admin('admin_users', 'apps');
+
 ?>
 
 <script type="text/javascript">

@@ -28,6 +28,8 @@
 * @version $Revision$
 * @ingroup basket
 */
+$core_tools = new core_tools();
+$core_tools->test_admin('admin_users', 'apps');
 if(isset($_SESSION['m_admin']['users']['status']) && $_SESSION['m_admin']['users']['status'] == 'ABS')
 {
 
