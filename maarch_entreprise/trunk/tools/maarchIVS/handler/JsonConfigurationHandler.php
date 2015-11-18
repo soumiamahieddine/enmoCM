@@ -130,7 +130,7 @@ class JsonConfigurationHandler
             }
 
             // Wrong method
-            if ($requestDefinition->method  != $method) {
+            if (!in_array($method, explode('|', $requestDefinition->method))) {
                 continue;
             }  
 

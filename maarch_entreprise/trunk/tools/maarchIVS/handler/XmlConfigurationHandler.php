@@ -68,8 +68,8 @@ class XmlConfigurationHandler
     public function getValidationRules($method, $path, $parameters=array())
     {
         $validationRules = array();
-    
-        $requestDefinitionElements = $this->configurationXPath->query("//requestDefinition[@method='$method' and contains('$path', @path)]");
+        $query = "//requestDefinition[contains(@method, '$method') and contains('$path', @path)]";
+        $requestDefinitionElements = $this->configurationXPath->query($query);
 
         foreach ($requestDefinitionElements as $requestDefinitionElement) {
             if (!$requestDefinitionElement->hasAttribute('validationRule')) {

@@ -72,6 +72,12 @@ if (isset($_SESSION['config']['corepath'])) {
 
 $core->load_lang();
 
+if (isset($_REQUEST['dir']) && !empty($_REQUEST['dir'])) {    
+    $_REQUEST['dir'] = str_replace("\\", "", $_REQUEST['dir']);
+    $_REQUEST['dir'] = str_replace("/", "", $_REQUEST['dir']);
+    $_REQUEST['dir'] = str_replace("..", "", $_REQUEST['dir']);
+}
+
 include 'apps/maarch_entreprise/tools/maarchIVS/MaarchIVS.php';
 $started = MaarchIVS::start(__DIR__ . '/xml/IVS/requests_definitions.xml', 'xml');
 $valid = MaarchIVS::run('silent');
