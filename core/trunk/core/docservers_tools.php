@@ -470,7 +470,10 @@ function Ds_setRights($dest)
         && (isset($GLOBALS['apacheUserAndGroup'])
         && $GLOBALS['apacheUserAndGroup'] <> '')
     ) {
-        exec('chown ' . $GLOBALS['apacheUserAndGroup'] . ' ' . $dest);
+        exec('chown ' 
+            . escapeshellarg($GLOBALS['apacheUserAndGroup']) . ' ' 
+            . escapeshellarg($dest)
+        );
     }
     umask(0022);
     chmod($dest, 0770);
