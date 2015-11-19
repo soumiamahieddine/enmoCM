@@ -91,6 +91,7 @@ if ($MccTestIt == 'false') {
     $arrayOfParams = array();
     $arrayOfParams = loadXmlParams($pathToMailCapture);
     $cptMailBox = 0;
+    $_SESSION['mailAccounts'] = array();
     foreach ($arrayOfParams as $param) {
         echo '---------------------------------------'
             . '---------------------------------------<br />';
@@ -99,12 +100,12 @@ if ($MccTestIt == 'false') {
         $mailAccounts = $param->getElementsByTagName('accounts');
         foreach ($mailAccounts as $mailBox) {
             $returnTest = false;
-            $mailBoxUri = $mailBox->getElementsByTagName('mailbox')->item(0)->nodeValue;
-            $mailBoxUsername = $mailBox->getElementsByTagName('username')->item(0)->nodeValue;
-            $mailBoxPassword = $mailBox->getElementsByTagName('password')->item(0)->nodeValue;
+            $_SESSION['mailAccounts'][$cptMailBox]['mailBoxUri'] = $mailBox->getElementsByTagName('mailbox')->item(0)->nodeValue;
+            $_SESSION['mailAccounts'][$cptMailBox]['mailBoxUsername'] = $mailBox->getElementsByTagName('username')->item(0)->nodeValue;
+            $_SESSION['mailAccounts'][$cptMailBox]['mailBoxPassword'] = $mailBox->getElementsByTagName('password')->item(0)->nodeValue;
             $paramsDetails = '<b><i>Test mailbox : </i></b>' . '<br />'
-                . 'uri : ' . $mailBoxUri . '<br />'
-                . 'login : ' . $mailBoxUsername . '<br />'
+                . 'uri : ' . $_SESSION['mailAccounts'][$cptMailBox]['mailBoxUri'] . '<br />'
+                . 'login : ' . $_SESSION['mailAccounts'][$cptMailBox]['mailBoxUsername'] . '<br />'
                 . 'password : ***** <br />';
             ?>
             <li>
@@ -120,10 +121,8 @@ if ($MccTestIt == 'false') {
                 new Ajax.Request(path_manage_script,
                 {
                     method:'post',
-                    parameters: { 
-                        mailBoxUri : '<?php functions::xecho($mailBoxUri);?>',
-                        mailBoxUsername : '<?php functions::xecho($mailBoxUsername);?>',
-                        mailBoxPassword : '<?php functions::xecho($mailBoxPassword);?>'
+                    parameters: {
+                        mailBoxIndex : '<?php functions::xecho($cptMailBox);?>'
                     },
                     onSuccess: function(answer)
                     {
@@ -158,18 +157,20 @@ echo '<div id="sendmailDiv">';
 echo '<ul class="fa-ul" style="font-size:14px;">';
 echo '<li>';
 
+$_SESSION['sendmailAccounts'] = array();
 $NotifSendmailGenParam = $xmlconfig->getElementsByTagName('notifications_sendmail');
 foreach ($NotifSendmailGenParam as $notifSendmailParam) {
     //do nothing
 }
 $sendmailTestIt = $notifSendmailParam->getElementsByTagName('testIt')->item(0)->nodeValue;
-$sendmailTo = $notifSendmailParam->getElementsByTagName('sendmailTo')->item(0)->nodeValue;
+$_SESSION['sendmailTo'] = $notifSendmailParam->getElementsByTagName('sendmailTo')->item(0)->nodeValue;
 $sendmailConfPath = $notifSendmailParam->getElementsByTagName('sendmailConfPath')->item(0)->nodeValue;
 
 if ($sendmailTestIt == 'false') {
     echo 'Component not configured to be tested.<br />';
     echo 'See ' . $path . ' to configure the test.<br />';
 } else {
+    
     $pathToNotifications = $_SESSION['config']['corepath'] . 'modules/notifications/batch/config/';
     $pathToSendmail = $_SESSION['config']['corepath'] . 'modules/sendmail/batch/config/';
     $arrayOfParams = array();
@@ -191,30 +192,41 @@ if ($sendmailTestIt == 'false') {
             //do nothing
         }
         
-        $sendmailType = $mailParam->getElementsByTagName('type')->item(0)->nodeValue;
-        if ($sendmailType <> 'sendmail' && $sendmailType <> 'mail') {
+        //$sendmailType = $mailParam->getElementsByTagName('type')->item(0)->nodeValue;
+        $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailType'] = $mailParam->getElementsByTagName('type')->item(0)->nodeValue;
+        if (
+            $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailType'] <> 'sendmail' && 
+            $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailType'] <> 'mail'
+        ) {
             $sendmailDetails .= 'host : '. $mailParam->getElementsByTagName('smtp_host')->item(0)->nodeValue . '<br/>';
-            $sendmailHost = $mailParam->getElementsByTagName('smtp_host')->item(0)->nodeValue;
+            $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailHost'] = $mailParam->getElementsByTagName('smtp_host')->item(0)->nodeValue;
+
             $sendmailDetails .= 'port : '. $mailParam->getElementsByTagName('smtp_port')->item(0)->nodeValue . '<br/>';
-            $sendmailPort = $mailParam->getElementsByTagName('smtp_port')->item(0)->nodeValue;
+            $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailPort'] = $mailParam->getElementsByTagName('smtp_port')->item(0)->nodeValue;
+
             $sendmailDetails .= 'user : '. $mailParam->getElementsByTagName('smtp_user')->item(0)->nodeValue . '<br/>';
-            $sendmailUser = $mailParam->getElementsByTagName('smtp_user')->item(0)->nodeValue;
-            $sendmailPassword = $mailParam->getElementsByTagName('smtp_password')->item(0)->nodeValue;
+            $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailUser'] = $mailParam->getElementsByTagName('smtp_user')->item(0)->nodeValue;
+
+            $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailPassword'] = $mailParam->getElementsByTagName('smtp_password')->item(0)->nodeValue;
             $sendmailDetails .= 'auth : '. $mailParam->getElementsByTagName('smtp_auth')->item(0)->nodeValue . '<br/>';
-            $sendmailAuth = $mailParam->getElementsByTagName('smtp_auth')->item(0)->nodeValue;
+
+            $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailAuth'] = $mailParam->getElementsByTagName('smtp_auth')->item(0)->nodeValue;
             $sendmailDetails .= 'secure : '. $mailParam->getElementsByTagName('smtp_secure')->item(0)->nodeValue . '<br/>';
-            $sendmailSecure = $mailParam->getElementsByTagName('smtp_secure')->item(0)->nodeValue;
+
+            $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailSecure'] = $mailParam->getElementsByTagName('smtp_secure')->item(0)->nodeValue;
             $sendmailDetails .= 'domains : '. $mailParam->getElementsByTagName('domains')->item(0)->nodeValue . '<br/>';
-            $sendmailDomains = $mailParam->getElementsByTagName('domains')->item(0)->nodeValue;
+
+            $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailDomains'] = $mailParam->getElementsByTagName('domains')->item(0)->nodeValue;
             $sendmailDetails .= 'charset : '. $mailParam->getElementsByTagName('charset')->item(0)->nodeValue . '<br/>';
-            $sendmailCharset = $mailParam->getElementsByTagName('charset')->item(0)->nodeValue;
+
+            $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailCharset'] = $mailParam->getElementsByTagName('charset')->item(0)->nodeValue;
         } else {
             $sendmailDetails = 'see more details at ' . $sendmailConfPath;
         }
 
         $paramsDetails = '<b><i>Test sendmail : </i></b>' . '<br />'
-            . 'type : ' . $sendmailType . '<br />'
-            . 'sendmail to : ' . $sendmailTo . '<br />'
+            . 'type : ' . $_SESSION['sendmailAccounts'][$cptSendmail]['sendmailType'] . '<br />'
+            . 'sendmail to : ' . $_SESSION['sendmailTo']  . '<br />'
             . 'details : ' . $sendmailDetails . '<br />';
         echo $paramsDetails;
 
@@ -230,18 +242,7 @@ if ($sendmailTestIt == 'false') {
                 {
                     method:'post',
                     parameters: { 
-                        sendmailType : '<?php functions::xecho($sendmailType);?>',
-                        sendmailHost : '<?php functions::xecho($sendmailHost);?>',
-                        sendmailPort : '<?php functions::xecho($sendmailPort);?>',
-                        sendmailUser : '<?php functions::xecho($sendmailUser);?>',
-                        sendmailPassword : '<?php functions::xecho($sendmailPassword);?>',
-                        sendmailAuth : '<?php functions::xecho($sendmailAuth);?>',
-                        sendmailSecure : '<?php functions::xecho($sendmailSecure);?>',
-                        sendmailDomains : '<?php functions::xecho($sendmailDomains);?>',
-                        sendmailCharset : '<?php functions::xecho($sendmailCharset);?>',
-                        sendmailApp : 'sendmail',
-                        sendmailTo : '<?php functions::xecho($sendmailTo);?>',
-
+                        sendmailIndex : '<?php functions::xecho($cptSendmail);?>'
                     },
                     onSuccess: function(answer)
                     {

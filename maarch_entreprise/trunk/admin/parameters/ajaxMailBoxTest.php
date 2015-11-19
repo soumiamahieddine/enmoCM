@@ -2,9 +2,9 @@
 
 /*
 *
-*    Copyright 2008,2015 Maarch
+*   Copyright 2008,2015 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -17,13 +17,14 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//var_dump($_REQUEST);
-$uri = $_REQUEST['mailBoxUri'];
-$login = $_REQUEST['mailBoxUsername'];
-$password = $_REQUEST['mailBoxPassword'];
+/*var_dump($_REQUEST);
+var_dump($_SESSION['mailAccounts'][$_REQUEST['mailBoxIndex']]);*/
+$uri = $_SESSION['mailAccounts'][$_REQUEST['mailBoxIndex']]['mailBoxUri'];
+$login = $_SESSION['mailAccounts'][$_REQUEST['mailBoxIndex']]['mailBoxUsername'];
+$password = $_SESSION['mailAccounts'][$_REQUEST['mailBoxIndex']]['mailBoxPassword'];
 
 try {
     $imap = @imap_open(

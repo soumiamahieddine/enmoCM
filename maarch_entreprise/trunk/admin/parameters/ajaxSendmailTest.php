@@ -22,31 +22,31 @@
 
 include($_SESSION['config']['corepath'] 
     . '/apps/maarch_entreprise/tools/mails/htmlMimeMail.php');
-//var_dump($_REQUEST);
-
+/*var_dump($_REQUEST);
+var_dump($_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]);*/
 $mailer = new htmlMimeMail();
 
 $mailer->setSMTPParams(
-    $host = (string)$_REQUEST['sendmailHost'], 
-    $port = (string)$_REQUEST['sendmailPort'],
-    $helo = (string)$_REQUEST['sendmailDomains'],
-    $auth = filter_var($_REQUEST['sendmailAuth'], FILTER_VALIDATE_BOOLEAN),
-    $user = (string)$_REQUEST['sendmailUser'],
-    $pass = (string)$_REQUEST['sendmailPassword']
+    $host = (string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailHost'], 
+    $port = (string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailPort'],
+    $helo = (string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailDomains'],
+    $auth = filter_var($_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailAuth'], FILTER_VALIDATE_BOOLEAN),
+    $user = (string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailUser'],
+    $pass = (string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailPassword']
 );
 
 $mailer->setFrom(' <testSendmail@maarch.org> ');
-$mailer->setSubject('test ' . $_REQUEST['sendmailApp']);
-$mailer->setText('test ' . $_REQUEST['sendmailApp']);
+$mailer->setSubject('test sendmail from Maarch');
+$mailer->setText('test sendmail from Maarch ');
 
-$mailer->setTextCharset((string)$_REQUEST['sendmailCharset']);
-$mailer->setHtmlCharset((string)$_REQUEST['sendmailCharset']);
-$mailer->setHeadCharset((string)$_REQUEST['sendmailCharset']);
+$mailer->setTextCharset((string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailCharset']);
+$mailer->setHtmlCharset((string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailCharset']);
+$mailer->setHeadCharset((string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailCharset']);
 $recipients = array();
-array_push($recipients, $_REQUEST['sendmailTo']);
+array_push($recipients, $_SESSION['sendmailTo']);
 
 try {
-    $sendmail = $mailer->send($recipients, (string)$_REQUEST['sendmailType']);
+    $sendmail = $mailer->send($recipients, (string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailType']);
 } catch (Exception $e) {
     echo 'Exception : ',  $e->getMessage(), "";
 }
@@ -54,8 +54,8 @@ try {
 $errorDetails = '';
 $status = 'ok';
 if( 
-    ($sendmail == 1 && ((string)$_REQUEST['sendmailType'] == "smtp" || (string)$_REQUEST['sendmailType'] == "mail" )) 
-    || ($sendmail == 0 && (string)$_REQUEST['sendmailType'] == "sendmail")
+    ($sendmail == 1 && ((string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailType'] == "smtp" || (string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailType'] == "mail" )) 
+    || ($sendmail == 0 && (string)$_SESSION['sendmailAccounts'][$_REQUEST['sendmailIndex']]['sendmailType'] == "sendmail")
 ) {
     $status = 'ok';
 } else {
