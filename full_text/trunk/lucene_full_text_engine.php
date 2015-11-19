@@ -158,19 +158,20 @@ function prepareIndexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
         $tmpFile = $_ENV["base_directory"] . DIRECTORY_SEPARATOR . "tmp"
             . DIRECTORY_SEPARATOR . basename($pathToFile) . ".ftx";
         if ($_ENV['osname'] == "WINDOWS") {
-            $resultExtraction = exec("\"" . $_ENV['maarch_tools_path'] . "pdftotext"
-                . DIRECTORY_SEPARATOR . $_ENV['pdftotext'] . "\" \""
-                . $pathToFile . "\" \"" . $tmpFile."\""
+            $resultExtraction = exec(escapeshellarg($_ENV['maarch_tools_path'] . "pdftotext"
+                . DIRECTORY_SEPARATOR . $_ENV['pdftotext']) . " "
+                . escapeshellarg($pathToFile) . " " . escapeshellarg($tmpFile)
             );
-            $_ENV['logger']->write("\"" . "\"" . $_ENV['maarch_tools_path'] . "pdftotext"
-                . DIRECTORY_SEPARATOR . $_ENV['pdftotext'] . "\" \""
-                . $pathToFile . "\" \"" . $tmpFile . "\"" . "\""
+            $_ENV['logger']->write(escapeshellarg($_ENV['maarch_tools_path'] . "pdftotext"
+                . DIRECTORY_SEPARATOR . $_ENV['pdftotext']) . " "
+                . escapeshellarg($pathToFile) . " " . escapeshellarg($tmpFile)
             );
         } elseif ($_ENV['osname'] == "UNIX") {
-            $resultExtraction = exec("pdftotext \"" . $pathToFile
-                . "\" \"" . $tmpFile . "\""
+            $resultExtraction = exec("pdftotext " . escapeshellarg($pathToFile)
+                . " " . escapeshellarg($tmpFile) 
             );
-            $_ENV['logger']->write("pdftotext \"" . $pathToFile . "\" \"" . $tmpFile . "\"");
+            $_ENV['logger']->write("pdftotext " . escapeshellarg($pathToFile) . " " . escapeshellarg($tmpFile));
+            echo "pdftotext " . escapeshellarg($pathToFile) . " " . escapeshellarg($tmpFile) . PHP_EOL;
         }
         $fileContent = trim(readFileF($tmpFile));
         if (is_file($tmpFile)) unlink($tmpFile);
