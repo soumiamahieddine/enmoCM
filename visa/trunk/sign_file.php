@@ -63,7 +63,15 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
 			echo "{status:1, error : 'Fichier $fileOnDs non present'}";
 			exit;
 		}
-		$cmd = "java -jar '".$_SESSION['config']['corepath']."modules/visa/dist/SignPdf.jar' '".$fileOnDs."' '".$_SESSION['user']['pathToSignature']."' ".$_SESSION['modules_loaded']['visa']['width_blocsign']." ".$_SESSION['modules_loaded']['visa']['height_blocsign']." '".$_SESSION['config']['tmppath']."'";
+		$cmd = "java -jar " 
+			. escapeshellarg($_SESSION['config']['corepath'] . "modules/visa/dist/SignPdf.jar") . " " 
+			. escapeshellarg($fileOnDs) . " " 
+			. escapeshellarg($_SESSION['user']['pathToSignature']) . " " 
+			. escapeshellarg($_SESSION['modules_loaded']['visa']['width_blocsign']) . " " 
+			. escapeshellarg($_SESSION['modules_loaded']['visa']['height_blocsign']) . " " 
+			. escapeshellarg($_SESSION['config']['tmppath']);
+
+		//echo $cmd;
 		exec($cmd);
 		
 		$tmpFileName = pathinfo($fileOnDs, PATHINFO_BASENAME);

@@ -25,20 +25,6 @@ function createPdfNotes($list_notes, $coll_id){
 
 	
 function concat_files($folder){
-	/*$cmd = "pdftk ";
-	foreach($folder as $file){
-		if (file_exists($file))
-			$cmd .= "\"".$file."\" ";
-	}
-	
-	$tmpFileName = 'tmp_print_folder_' . rand() . '.pdf';
-	$filePathOnTmp = $_SESSION['config']['tmppath'] . $tmpFileName;
-	
-	$cmd .= " cat output \"".$filePathOnTmp."\"";
-	
-	$cmd = str_replace("//","/",$cmd);
-	exec($cmd);
-	return $filePathOnTmp;*/
 	require_once("modules".DIRECTORY_SEPARATOR."visa".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 	$pdf = new ConcatPdf();
 	$pdf->setFiles($folder);
@@ -308,5 +294,3 @@ else{
 	}
 	exit ();
 }
-
-?>
