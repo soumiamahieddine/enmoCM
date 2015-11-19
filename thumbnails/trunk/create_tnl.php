@@ -181,24 +181,45 @@ $_ENV['logger']->write("query to found document with no thumbnail : ".$queryMake
 $stmt1 = $_ENV['db']->query($queryMakeThumbnails);
 while ($queryResult=$stmt1->fetchObject()) {
 	if ($_ENV['max_batch_size'] >= $cpt_batch_size) {
-		$pathToFile = $pathToDocServer[$queryResult->docserver_id] . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path)
-        . $queryResult->filename;
-		$outputPathFile  = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path) . str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename);
+		$fileFormat = $queryResult->format;
+		echo 'format ' . $queryResult->format . PHP_EOL;
+		$pathToFile = $pathToDocServer[$queryResult->docserver_id] 
+			. str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path)
+        	. $queryResult->filename;
+		$outputPathFile  = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path) 
+			. str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename);
 		
 		$_ENV['logger']->write("processing of document : " . $pathToFile . " | res_id : "
-        . $queryResult->res_id);
+        	. $queryResult->res_id);
 		echo "processing of document : " . $pathToFile . " \r\n res_id : "
-        . $queryResult->res_id . "\n";
+        	. $queryResult->res_id . "\n";
 		
-		$racineOut = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path);
-		if (!is_dir($racineOut)){
-			r_mkdir($racineOut,0777);
-			$_ENV['logger']->write("Create $racineOut directory ");
-		}
-		
-		exec("convert -thumbnail x300 -background white -alpha remove ".$pathToFile."[0] $outputPathFile");
-		$stmt2 = $_ENV['db']->query("UPDATE ".$_ENV['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename), $queryResult->res_id));
+       	if (
+       		strtoupper($fileFormat) <> 'PDF' 
+       		&& strtoupper($fileFormat) <> 'HTML'
+       		&& strtoupper($fileFormat) <> 'MAARCH'
+       	) {
+       		$_ENV['logger']->write("file format not allowed : " . $fileFormat);
+			echo "file format not allowed : " . $fileFormat . PHP_EOL;
+       	} else {
+			$racineOut = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path);
+			if (!is_dir($racineOut)){
+				r_mkdir($racineOut,0777);
+				$_ENV['logger']->write("Create $racineOut directory ");
+			}
 			
+			$command = '';
+			if (strtoupper($fileFormat) == 'PDF') {
+				$command = "convert -thumbnail x300 -background white -alpha remove " . escapeshellarg($pathToFile) . "[0] " 
+					. escapeshellarg($outputPathFile);
+			} else {
+				$command = "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " . escapeshellarg($pathToFile) . " " 
+					. escapeshellarg($outputPathFile);
+			}
+			echo $command . PHP_EOL;
+			exec($command);
+		}
+		$stmt2 = $_ENV['db']->query("UPDATE ".$_ENV['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename), $queryResult->res_id));		
 	} else {
         $_ENV['logger']->write("Max batch size ! Stop processing !");
         echo "\r\nMax batch size ! Stop processing !";
