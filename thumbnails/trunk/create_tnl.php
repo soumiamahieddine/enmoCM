@@ -216,7 +216,7 @@ while ($queryResult=$stmt1->fetchObject()) {
 				$command = "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " . escapeshellarg($pathToFile) . " " 
 					. escapeshellarg($outputPathFile);
 			}
-			echo $command . PHP_EOL;
+			//echo $command . PHP_EOL;
 			exec($command);
 		}
 		$stmt2 = $_ENV['db']->query("UPDATE ".$_ENV['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename), $queryResult->res_id));		
