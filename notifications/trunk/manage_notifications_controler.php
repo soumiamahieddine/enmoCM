@@ -310,7 +310,7 @@ function display_del($notification_sid) {
                     $scheduleNotification->saveCrontab($cronTab, true);
                 }
                 
-                shell_exec("rm -f ".$pathToFolow.'modules/notifications/batch/scripts/'.$filename);
+                unlink($pathToFolow . 'modules/notifications/batch/scripts/' . $filename);
             }
         }
         ?><script type="text/javascript">window.top.location='<?php

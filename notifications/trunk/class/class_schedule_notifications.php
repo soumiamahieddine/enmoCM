@@ -133,7 +133,7 @@ class ScheduleNotifications{
         
         if ($_SESSION['custom_override_id'] <> '') {
         	$pathToFolow = $_SESSION['config']['corepath'] . 'custom/'.$_SESSION['custom_override_id'] . '/';
-        	shell_exec("mkdir " . $pathToFolow.'modules/notifications/batch/scripts/');
+        	shell_exec("mkdir " . escapeshellarg($pathToFolow.'modules/notifications/batch/scripts/'));
         } else {
         	$pathToFolow = $_SESSION['config']['corepath'];
         }
@@ -152,7 +152,9 @@ class ScheduleNotifications{
         fwrite($file_open, 'php \'process_email_stack.php\' -c '.$ConfigNotif);
         fwrite($file_open, "\n");
         fclose($file_open);
-        shell_exec("chmod +x " . $pathToFolow.'modules/notifications/batch/scripts/'.$filename);
+        shell_exec("chmod +x " 
+        	. escapeshellarg($pathToFolow . "modules/notifications/batch/scripts/" . $filename)
+        );
 	}
 
 	function checkCrontab($crontabToSave){
