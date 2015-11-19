@@ -162,6 +162,7 @@ elseif($mode == "up" || $mode == "add")
                 <?php
                 echo '<select name="LoginMode" style="width: 95%;"  id="LoginMode">';
 
+                $ssoLogin = false;
                     foreach($_SESSION['login_method_memory'] as $METHOD)
                     {
                         if($METHOD['ACTIVATED'] == 'true')
@@ -172,6 +173,9 @@ elseif($mode == "up" || $mode == "add")
 
                             echo '<option value="'.$METHOD['ID'].'" '.$vala.'  >'.constant($METHOD['BRUT_LABEL']).'</option>';
                         }
+                        if ($METHOD['ID'] == 'sso' && $METHOD['ACTIVATED'] == 'true') {
+                            $ssoLogin = true;
+                        }
                     }
 
                 echo '</select>';
@@ -180,7 +184,7 @@ elseif($mode == "up" || $mode == "add")
             </p>
             <p class="buttons">
             <?php
-                if($mode == "up" && $_SESSION['config']['ldap'] != "true")
+                if($mode == "up" && $_SESSION['config']['ldap'] != "true" && !$ssoLogin)
                 {
                     ?>
                     <input type="button" name="reset_pwd" value="<?php echo _RESET.' '._PASSWORD;?>" class="button" onclick="displayModal('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=psw_changed', 'pwd_changed', 40, 150);"  />

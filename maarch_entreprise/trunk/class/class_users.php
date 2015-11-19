@@ -49,6 +49,15 @@ class class_users extends Database
             $_POST['LastName'], 'no', _LASTNAME
         );
 
+        $ssoLogin = false;
+        foreach($_SESSION['login_method_memory'] as $METHOD)
+        {
+            if ($METHOD['ID'] == 'sso' && $METHOD['ACTIVATED'] == 'true') {
+                $ssoLogin = true;
+                break;
+            }
+        }
+
         if (!empty($_POST['pass1']) || !empty($_POST['pass2'])) {
             $currentPassword = $_POST['currentPassword'];
             if (!empty($currentPassword)) {
@@ -57,23 +66,23 @@ class class_users extends Database
                 $obj = $stmt->fetchObject();
                 $sec = new security();
                 if ($obj->password === $sec->getPasswordHash($currentPassword)) {
-                    if ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") {
+                    if (($_SESSION['config']['ldap'] != "true" &&  !$ssoLogin ) || $_SESSION['user']['UserId'] == "superadmin") {
                         $_SESSION['user']['pass1'] = $this->wash(
                             $_POST['pass1'], 'no', _FIRST_PSW
                         );
                     }
 
-                    if ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") {
+                    if (($_SESSION['config']['ldap'] != "true" &&  !$ssoLogin ) || $_SESSION['user']['UserId'] == "superadmin") {
                         $_SESSION['user']['pass2'] = $this->wash(
                             $_POST['pass2'], 'no', _SECOND_PSW
                         );
                     }
 
-                    if ($_SESSION['user']['pass1'] <> $_SESSION['user']['pass2'] && ($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin")) {
+                    if ($_SESSION['user']['pass1'] <> $_SESSION['user']['pass2'] && (($_SESSION['config']['ldap'] != "true" &&  !$ssoLogin ) || $_SESSION['user']['UserId'] == "superadmin")) {
                         $this->add_error(_WRONG_SECOND_PSW, '');
                     }
                 } else {
-                    $this->add_error('Mauvais mot de passe', '');
+                    $this->add_error(_WRONG_PSW, '');
                 }
 
             } else {
@@ -173,7 +182,7 @@ class class_users extends Database
             $query = "UPDATE " . USERS_TABLE . " SET";
 
             $arrayPDO = array();
-            if (($_SESSION['config']['ldap'] != "true" || $_SESSION['user']['UserId'] == "superadmin") && $_SESSION['user']['pass1'] != '') {
+            if ((($_SESSION['config']['ldap'] != "true" && !$ssoLogin) || $_SESSION['user']['UserId'] == "superadmin") && $_SESSION['user']['pass1'] != '') {
                 require_once('core' . DIRECTORY_SEPARATOR . 'class'
                     . DIRECTORY_SEPARATOR . 'class_security.php');
                 $query .= " password = ?,";
@@ -378,19 +387,29 @@ class class_users extends Database
                                 }
                             </script>
                         </p>
-                        <p style="margin-top: 20px" <?php if($_SESSION['config']['ldap'] == "true"  && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
+                        <?php
+                            $ssoLogin = false;
+                            foreach($_SESSION['login_method_memory'] as $METHOD)
+                            {
+                                if ($METHOD['ID'] == 'sso' && $METHOD['ACTIVATED'] == 'true') {
+                                    $ssoLogin = true;
+                                    break;
+                                }
+                            }
+                        ?>
+                        <p <?php if(($_SESSION['config']['ldap'] == "true" || $ssoLogin == true)  && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
                             <em><?php echo _MODIFICATION_PSW_SNTE;?></em>
                         </p>
-                        <p <?php if($_SESSION['config']['ldap'] == "true"  && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
+                        <p <?php if(($_SESSION['config']['ldap'] == "true" || $ssoLogin == true)  && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
                             <label for="currentPassword"><?php echo _CURRENT_PSW;?> : </label>
                             <input type="password" style="display: none"/>
                             <input name="currentPassword"  type="password" id="currentPassword" value="" />
                         </p>
-                        <p <?php if($_SESSION['config']['ldap'] == "true" && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
+                        <p <?php if(($_SESSION['config']['ldap'] == "true" || $ssoLogin == true) && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
                             <label for="pass1"><?php echo _NEW_PSW;?> : </label>
                             <input name="pass1"  type="password" id="pass1"  value="" />
                         </p>
-                        <p style="margin-bottom: 20px" <?php if($_SESSION['config']['ldap'] == "true"  && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
+                        <p <?php if(($_SESSION['config']['ldap'] == "true" || $ssoLogin == true)  && $_SESSION['user']['UserId'] != "superadmin"){echo 'style="display:none"';} ?> >
                             <label for="pass2"><?php echo _REENTER_PSW;?> : </label>
                             <input name="pass2"  type="password" id="pass2" value="" />
                         </p>
