@@ -622,7 +622,7 @@ VALUES (5, 'Les courriers', '', NULL, '0000000000', '0000000000', '0000000000', 
 ------------
 --DOCTYPES_FIRST_LEVEL--
 ------------
-INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (20, 'MAARCH MAIRIE', 'black_style_big', 'Y');
+INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (20, 'Saisines par Voie Electronique', 'black_style_big', 'Y');
 INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (10, 'Courriers des services', 'blue_style_big', 'Y');
 ALTER SEQUENCE doctypes_first_level_id_seq RESTART WITH 201;
 ------------
@@ -631,13 +631,14 @@ ALTER SEQUENCE doctypes_first_level_id_seq RESTART WITH 201;
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (10, 'Autres', 10, 'blue_style', 'Y');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (20, 'Dossiers civils', 10, 'blue_style', 'Y');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (40, 'Dossiers juridiques', 10, 'blue_style', 'Y');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (50, 'Demandes GDD', 20, 'black_style', 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (50, 'Formulaires internes', 20, 'black_style', 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (60, 'Formulaires en ligne', 20, 'black_style', 'Y');
 
 ------------
 --DOCTYPES--
 ------------
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 1, 'Email', 'Y', 10, 10, NULL, NULL);
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 10, 'Appel Téléphonique', 'Y', 10, 10, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 10, 'Appel Téléphonique', 'Y', 20, 50, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 15, 'Divers', 'Y', 10, 10, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 16, 'Demande ', 'Y', 10, 10, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 17, 'Convocation ', 'Y', 10, 10, NULL, NULL);
@@ -656,11 +657,10 @@ INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_lev
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 70, 'Contrat', 'Y', 10, 40, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 75, 'Avenant', 'Y', 10, 40, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 76, 'Préavis de grève', 'Y', 10, 40, NULL, NULL);
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 80, 'Demande Divers', 'Y', 20, 50, NULL, NULL);
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 85, 'Demande Environnement', 'Y', 20, 50, NULL, NULL);
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 90, 'Demande Urbanisme', 'Y', 20, 50, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 80, 'Demande Voirie', 'Y', 20, 50, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 85, 'Demande bac à ordure', 'Y', 20, 60, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 90, 'Demande location de salle', 'Y', 20, 60, NULL, NULL);
 
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 99, 'Demande Maarch Mairie', 'Y', 10, 10, NULL, NULL);
 ------------
 --DOCTYPES_INDEXES--
 ------------
@@ -669,12 +669,6 @@ INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (1
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (1, 'letterbox_coll', 'custom_t12', 'N');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (1, 'letterbox_coll', 'custom_t13', 'N');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (1, 'letterbox_coll', 'custom_t14', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (80, 'letterbox_coll', 'custom_t6', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (80, 'letterbox_coll', 'custom_t7', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (85, 'letterbox_coll', 'custom_t6', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (85, 'letterbox_coll', 'custom_t7', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (90, 'letterbox_coll', 'custom_t6', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (90, 'letterbox_coll', 'custom_t7', 'N');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (66, 'letterbox_coll', 'custom_t6', 'N');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (66, 'letterbox_coll', 'custom_t7', 'N');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (17, 'letterbox_coll', 'custom_t6', 'N');
@@ -709,10 +703,13 @@ INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (80,
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (85, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (90, 21, 14, 1);
 
+
 ------------
 --TEMPLATES_DOCTYPE_EXT--
 ------------
 INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (3, 10, 'Y');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (9, 80, 'Y');
+
 
 ------------
 --FOLDERTYPES_DOCTYPES_LEVEL1--
@@ -768,19 +765,30 @@ INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('SPORT', 'letterbox_coll',
 ------------
 --TEMPLATES--
 ------------
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target) 
-VALUES (3, 'AppelTel', 'Appel téléphonique', 
-'<p><font size="\\&quot;5\\&quot;"><strong>APPEL TELEPHONIQUE</strong></font></p>
-<p><font size="\\&quot;2\\&quot;">Bonjour,</font></p>
-<p><font size="\\&quot;2\\&quot;">Vous avez re&ccedil;u un appel t&eacute;l&eacute;phonique dont voici les informations :</font></p>
-<ul>
-<li><font size="\\&quot;2\\&quot;">Date : </font></li>
-<li><font size="\\&quot;2\\&quot;">Heure :</font></li>
-<li><font size="\\&quot;2\\&quot;">Soci&eacute;t&eacute; :</font></li>
-<li><font size="\\&quot;2\\&quot;">Contact :</font></li>
-</ul>
-<p><font size="\\&quot;2\\&quot;">Notes : </font></p>',
-'HTML', NULL, NULL, '', '', 'doctypes');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (3, 'AppelTel', 'Appel téléphonique', '<h2><span style="color: #000000###"><strong>Appel t&eacute###l&eacute###phonique</strong></span></h2>
+<hr />
+<p>&nbsp###</p>
+<p>Bonjour,</p>
+<p>Vous avez re&ccedil###u un appel t&eacute###l&eacute###phonique dont voici les informations :</p>
+<table style="height: 61px### border-color: #f0f0f0###" border="1" width="597"><caption>&nbsp###</caption>
+<tbody>
+<tr>
+<td style="text-align: center###"><strong>Date</strong></td>
+<td style="text-align: center###"><strong>Heure</strong></td>
+<td style="text-align: center###"><strong>Soci&eacute###t&eacute###</strong></td>
+<td style="text-align: center###"><strong>Contact</strong></td>
+</tr>
+<tr>
+<td>&nbsp###</td>
+<td>&nbsp###</td>
+<td>&nbsp###</td>
+<td>&nbsp###</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp###</p>
+<h4>Notes :</h4>
+<p>&nbsp###</p>', 'HTML', NULL, NULL, '', '', 'doctypes', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)  
 VALUES (2, '[notification] Notifications événement', 'Notifications des événements système', 
 '<p><font face="verdana,geneva" size="1">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
@@ -952,53 +960,32 @@ VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvel
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
-INSERT INTO templates VALUES (9, '[maarch mairie] Enregistrement demande - DIVERS', '[maarch mairie] Enregistrement demande - DIVERS', '<p style="text-align: center###"><span style="font-size: small### text-decoration: underline###">ENREGISTREMENT DEMANDE Maarch Mairie - DIVERS</span></p>
-<p style="text-align: center###">&nbsp###</p>
-<table style="border: 1pt solid #000000### width: 800px### background-color: #40a497###" border="1" cellspacing="1" cellpadding="5">
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (9, 'Demande - Voirie', 'Demande - Voirie', '<h2>Demande Intervention VOIRIE</h2>
+<hr />
+<table style="border: 1pt solid #000000### width: 597px### background-color: #f0f0f0### height: 172px###" border="1" cellspacing="1" cellpadding="5"><caption>&nbsp###</caption>
 <tbody>
 <tr>
-<td style="width: 200px###">DECLARATION DU BESOIN</td>
-<td>DATE: [dates]</td>
-<td>HEURE: [time]</td>
+<td style="width: 200px### background-color: #ffffff###"><strong>NOM, PRENOM demandeur</strong></td>
+<td style="width: 200px### background-color: #ffffff###">&nbsp###</td>
 </tr>
-</tbody>
-</table>
-<table style="border: 1pt solid #000000### width: 800px###" border="1" cellspacing="1" cellpadding="5">
-<tbody>
-<tr>
-<td style="width: 200px### background-color: #40a497###">OBJET</td>
-<td style="background-color: #bef3ec###">&nbsp###</td>
-</tr>
-<tr>
-<td style="width: 200px### background-color: #40a497###">DATE ET HEURE ESTIMEES DU DECLENCHEMENT</td>
+<tr style="background-color: #ffffff###">
+<td style="width: 200px###">Adresse</td>
 <td>&nbsp###</td>
 </tr>
-<tr>
-<td style="width: 200px### background-color: #40a497###">IMPLANTATION / LOCALISATION</td>
-<td style="background-color: #bef3ec###">&nbsp###</td>
-</tr>
-<tr>
-<td style="width: 200px### background-color: #40a497###">DESCRIPTION</td>
+<tr style="background-color: #ffffff###">
+<td style="width: 200px###"><strong>Contact</strong></td>
 <td>&nbsp###</td>
 </tr>
-<tr>
-<td style="width: 200px### background-color: #40a497###">ETENDUE DU PROBLEME</td>
-<td style="background-color: #bef3ec###">&nbsp###</td>
-</tr>
-<tr>
-<td style="width: 200px### background-color: #40a497###">NATURE DU DESAGREMENT</td>
+<tr style="background-color: #ffffff###">
+<td style="width: 200px###"><strong>Intitul&eacute### demande</strong></td>
 <td>&nbsp###</td>
 </tr>
-<tr>
-<td style="width: 200px### background-color: #40a497###">DELAIS DE TRAITEMENT SOUHAITE</td>
-<td style="background-color: #bef3ec###">&nbsp###</td>
-</tr>
-<tr>
-<td style="width: 200px### background-color: #40a497###">AUTRES OBSERVATIONS</td>
+<tr style="background-color: #ffffff###">
+<td style="width: 200px###">Compl&eacute###ment</td>
 <td>&nbsp###</td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes');
+</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes', 'all');
 INSERT INTO templates VALUES (10, '[maarch mairie] Clôture de demande', '[maarch mairie] Clôture de demande', '<p style="text-align: left###"><span style="font-size: small###">&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###</span><span style="text-decoration: underline###"><span style="font-size: small###">CLOTURE DEMANDE Maarch Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
 <p style="text-align: center###">&nbsp###</p>
 <table style="background-color: #a8c33c### width: 800px### border: #000000 1pt solid###" border="1" cellspacing="1" cellpadding="5">
