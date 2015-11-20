@@ -646,13 +646,13 @@ $linkwithwhat =
             var user_id = $('user_id_' + id).value;
             var role_select = $('user_role_' + id);
 			var role = role_select.options[role_select.selectedIndex].value;
-            goTo('<?php functions::xecho($linkwithwhat);?>&action=add_user&id='+user_id+'&role='+role);        
+            goTo('<?php echo($linkwithwhat);?>&action=add_user&id='+user_id+'&role='+role);
         }
         function add_entity(id) {
             var entity_id = $('entity_id_' + id).value;
             var role_select = $('entity_role_' + id);
 			var role = role_select.options[role_select.selectedIndex].value;
-            goTo('<?php functions::xecho($linkwithwhat);?>&action=add_entity&id='+entity_id+'&role='+role);        
+            goTo('<?php echo($linkwithwhat);?>&action=add_entity&id='+entity_id+'&role='+role);
         }
     </script>
     <br/>
@@ -693,10 +693,10 @@ $linkwithwhat =
 				<td><?php functions::xecho($_SESSION[$origin]['diff_list']['dest']['lastname'] ). " " . $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
 				<td><?php functions::xecho($_SESSION[$origin]['diff_list']['dest']['entity_label']);?></td>
 				<td class="action_entities"><!-- Remove dest -->
-					<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_dest"><i class="fa fa-remove fa-2x"></i></a>
+					<a href="<?php echo($linkwithwhat);?>&action=remove_dest"><i class="fa fa-remove fa-2x"></i></a>
 				</td>
 				<td class="action_entities"><!-- Move dest to copy -->
-					<a href="<?php functions::xecho($linkwithwhat);?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a>
+					<a href="<?php echo($linkwithwhat);?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a>
 				</td>
 			</tr>
 		</table><?php
@@ -729,11 +729,11 @@ $linkwithwhat =
 						</td>
 						<td><?php
 						if($user['visible'] == 'Y') { ?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_user_unvisible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
+							<a href="<?php echo($linkwithwhat);?>&action=make_user_unvisible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
 								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i>
 							</a><?php
 						} else {?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_user_visible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
+							<a href="<?php echo($linkwithwhat);?>&action=make_user_visible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
 								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i>
 							</a><?php
 						} ?>
@@ -743,7 +743,7 @@ $linkwithwhat =
 						<td class="action_entities"><?php 
 							/*if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { */
 							if (!$noDelete && (!$onlyCc || ($onlyCc && $role_id == 'copy'))) { ?>
-								<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id);?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($user['user_id']);?>"><i class="fa fa-times fa-lg" title="<?php echo _DEL_USER_LISTDIFF ;?>"></i></a><?php
+								<a href="<?php echo($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id);?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($user['user_id']);?>"><i class="fa fa-times fa-lg" title="<?php echo _DEL_USER_LISTDIFF ;?>"></i></a><?php
 							} ?>
 						</td>
 						<td class="action_entities"><!-- Switch copy to dest --><?php
@@ -751,17 +751,17 @@ $linkwithwhat =
 							if($role_id == 'dest' && isset($roles['copy']) && !$onlyCc && $_SESSION[$origin]['diff_list']['copy']['users'][0]!='') {?>
 								<a href="<?php functions::xecho($linkwithwhat);?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down"></i><?php echo _TO_CC;?></a><?php
 							} elseif($role_id == 'copy' && !$onlyCc &&  isset($roles['dest'])) { ?>
-								<a href="<?php functions::xecho($linkwithwhat);?>&action=copy_to_dest&role=copy&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i><?php echo _TO_DEST;?></a><?php
+								<a href="<?php echo($linkwithwhat);?>&action=copy_to_dest&role=copy&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i><?php echo _TO_DEST;?></a><?php
 							} else echo '&nbsp;'?>
 						</td>
 						<td class="action_entities"><!-- Move up in list --><?php 
 							if($i > 0) { ?>
-								<a href="<?php functions::xecho($linkwithwhat);?>&action=move_user_up&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i></a><?php 
+								<a href="<?php echo($linkwithwhat);?>&action=move_user_up&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i></a><?php
 							} ?>
 						</td>
 						<td class="action_entities"><!-- Move down in list --><?php 
 							if($i < $l-1) { ?>
-								<a href="<?php functions::xecho($linkwithwhat);?>&action=move_user_down&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-down"></i></a><?php 
+								<a href="<?php echo($linkwithwhat);?>&action=move_user_down&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-down"></i></a><?php
 							} ?>
 						</td>
 					</tr> <?php
@@ -783,11 +783,11 @@ $linkwithwhat =
 						</td>
 						<td><?php
 						if($entity['visible'] == 'Y') { ?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_entity_unvisible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
+							<a href="<?php echo($linkwithwhat);?>&action=make_entity_unvisible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
 								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i>
 							</a><?php
 						} else {?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_entity_visible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
+							<a href="<?php echo($linkwithwhat);?>&action=make_entity_visible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
 								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i>
 							</a><?php
 						} ?>
@@ -796,7 +796,7 @@ $linkwithwhat =
 						<td ><?php functions::xecho($entity['entity_label']);?></td>
 						<td class="action_entities"><?php 
 						if (!$noDelete) { ?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_entity&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($entity['entity_id']);?>">
+							<a href="<?php echo($linkwithwhat);?>&action=remove_entity&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($entity['entity_id']);?>">
 								<i class="fa fa-times fa-lg" title="<?php echo _DEL_ENTITY_LISTDIFF ;?>"></i>
 							</a><?php
 						} ?>
@@ -804,12 +804,12 @@ $linkwithwhat =
 						<td class="action_entities">&nbsp;</td>
 						<td class="action_entities"><!-- Move up in list --><?php
 						if($i > 0) { ?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=move_entity_up&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i></a><?php
+							<a href="<?php echo($linkwithwhat);?>&action=move_entity_up&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i></a><?php
 						} ?>
 						</td>
 						<td class="action_entities"><!-- Move down in list --><?php 
 						if($i < $l-1) { ?>
-							<a href="<?php functions::xecho($linkwithwhat);?>&action=move_entity_down&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-down"></i></a><?php
+							<a href="<?php echo($linkwithwhat);?>&action=move_entity_down&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-down"></i></a><?php
 						} ?>
 						</td>
 					</tr> <?php
@@ -878,9 +878,9 @@ $linkwithwhat =
 			</form>
 		</div>
 		<script type="text/javascript">
-			repost('<?php functions::xecho($link);?>',new Array('diff_list_items'),new Array('what_users','what_services'),'keyup',250);
-            repost('<?php functions::xecho($link);?>',new Array('diff_list_items'),new Array('no_filter'), 'click',250);
-            repost('<?php functions::xecho($link);?>',new Array('diff_list_items'),new Array('auto_filter'), 'click',250);
+			repost('<?php echo($link);?>',new Array('diff_list_items'),new Array('what_users','what_services'),'keyup',250);
+            repost('<?php echo($link);?>',new Array('diff_list_items'),new Array('no_filter'), 'click',250);
+            repost('<?php echo($link);?>',new Array('diff_list_items'),new Array('auto_filter'), 'click',250);
 		</script>
 		<br/>
 		<div id="diff_list_items"> <?php
