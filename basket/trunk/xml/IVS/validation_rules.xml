@@ -67,6 +67,7 @@
       <parameter name="*_difflist_typeslist" type="identifier" />
       <parameter name="*_statuseslist" type="identifier" />
       <parameter name="*_statuses_chosen" type="identifier" />
+      <parameter name="*_roles_chosen" type="identifier" />
       <parameter name="whereclause_*" type="string" />
       <parameter name="cancel" type="string" />
     </validationRule>
