@@ -74,7 +74,7 @@ class admin extends functions
 				    && $_SESSION['user']['services'][$app_services[$i]['id']]
 				) {
 					?>
-	                <div class="admin_item" title="<?php functions::xecho($app_services[$i]['comment']);?>" onclick="window.top.location='<?php functions::xecho($app_services[$i]['servicepage']);?>';">
+	                <div class="admin_item" title="<?php functions::xecho($app_services[$i]['comment']);?>" onclick="window.top.location='<?php echo($app_services[$i]['servicepage']);?>';">
 	                    <div><i class="<?php functions::xecho($app_services[$i]['style']);?> fa-4x"></i></div>
 	                    <div <?php functions::xecho($debug_style);?>>
 
@@ -118,7 +118,7 @@ class admin extends functions
 					?>
 					<div class="admin_item" title="<?php echo 'Module '
 					. functions::xssafe($value) .' : ' 
-					. functions::xssafe($modules_services[$value][$i]['comment']);?>" onclick="window.top.location='<?php functions::xecho($modules_services[$value][$i]['servicepage']);?>';">
+					. functions::xssafe($modules_services[$value][$i]['comment']);?>" onclick="window.top.location='<?php echo($modules_services[$value][$i]['servicepage']);?>';">
 						<i class="<?php functions::xecho($modules_services[$value][$i]['style']);?> fa-4x"></i>
 						<div <?php functions::xecho($debug_style);?> >
 

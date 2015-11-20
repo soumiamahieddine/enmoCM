@@ -1094,13 +1094,13 @@ class list_show extends functions
                     <tr>
                         <td colspan="9" class="price">
                             <!--<span class="add clearfix">
-                                <a href="<?php functions::xecho($path_add.$param_comp);?>">
+                                <a href="<?php echo($path_add.$param_comp);?>">
                                     <span>
                                         <?php functions::xecho($label_add);?>
                                     </span>
                                 </a>
                             </span>-->
-                            <a href="<?php functions::xecho($path_add.$param_comp);?>">
+                            <a href="<?php echo($path_add.$param_comp);?>">
                                 <i class="fa fa-plus-square fa-3x" title="<?php functions::xecho($label_add);?>"></i>
                             </a>
                         </td>
@@ -1310,7 +1310,7 @@ class list_show extends functions
                         {
                             $path_up = preg_replace("/(&(?!amp;))/", "&amp;", $path_up);
                         ?>
-                        <a href="<?php functions::xecho($path_up.$param_comp);?>" class="actionList"><i class="fa fa-edit fa-2x" title="<?php echo _MODIFY;?>"></i><?php //echo _MODIFY;?></a>
+                        <a href="<?php echo($path_up.$param_comp);?>" class="actionList"><i class="fa fa-edit fa-2x" title="<?php echo _MODIFY;?>"></i><?php //echo _MODIFY;?></a>
                         <?php
 
                         }?>
@@ -1374,7 +1374,7 @@ class list_show extends functions
                                 {
                                     $path_ban = preg_replace("/(&(?!amp;))/", "&amp;", $path_ban);
                                 ?>
-                            <a href="<?php functions::xecho($path_ban.$param_comp);?>" class="actionList" onclick="return(confirm('<?php echo _REALLY_SUSPEND." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><i class="fa fa-pause fa-2x" title="<?php echo _SUSPEND;?>"></i></a><?php  }
+                            <a href="<?php echo($path_ban.$param_comp);?>" class="actionList" onclick="return(confirm('<?php echo _REALLY_SUSPEND." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><i class="fa fa-pause fa-2x" title="<?php echo _SUSPEND;?>"></i></a><?php  }
                                 }
                             }
                             ?>
@@ -1420,7 +1420,7 @@ class list_show extends functions
                         {
                             $path_del = preg_replace("/(&(?!amp;))/", "&amp;", $path_del);
                         ?>
-                            <a href="<?php functions::xecho($path_del.$param_comp);?>"  class="actionList"
+                            <a href="<?php echo($path_del.$param_comp);?>"  class="actionList"
                         onclick="return(confirm('<?php echo _REALLY_DELETE." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
                                  else { echo $admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION;?>'));"><i class="fa fa-remove fa-2x" title="<?php echo _DELETE;?>"></i></a>
                         <?php
@@ -1470,7 +1470,7 @@ class list_show extends functions
                 $path_del2 = preg_replace("/(&(?!amp;))/", "&amp;", $path_del2);
                         ?>
                         <td class="action">
-                        <a  href="javascript://" class="actionList" onclick="window.open('<?php functions::xecho($path_up2);?>','','height=<?php functions::xecho($height);?>, width=<?php functions::xecho($width);?>,scrollbars=yes,resizable=yes');" ><i class="fa fa-edit fa-2x" title="<?php echo _MODIFY;?>"></i></a>
+                        <a  href="javascript://" class="actionList" onclick="window.open('<?php echo($path_up2);?>','','height=<?php functions::xecho($height);?>, width=<?php functions::xecho($width);?>,scrollbars=yes,resizable=yes');" ><i class="fa fa-edit fa-2x" title="<?php echo _MODIFY;?>"></i></a>
                     </td>
 
                     <td class="action" >

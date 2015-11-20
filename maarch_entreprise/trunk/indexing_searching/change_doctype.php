@@ -247,7 +247,7 @@ for ($i=0;$i< count($_SESSION['indexing_services']);$i++) {
             . functions::xssafe($_SESSION['indexing_services'][$i]['arguments'][$j]['id'])
             . "\', value : \'" 
             . addslashes(
-                functions::xssafe($_SESSION['indexing_services'][$i]['arguments'][$j]['value'])
+                $_SESSION['indexing_services'][$i]['arguments'][$j]['value']
             )
             . "\' }, ";
     }
