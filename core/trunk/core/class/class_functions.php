@@ -1339,12 +1339,7 @@ class functions
     */
     static function xssafe($data, $encoding='UTF-8')
     {
-        if (
-            !is_array($data) 
-            && !strstr($data, 'index.php') 
-            && !strstr($data, 'static.php')
-            && !strstr($data, 'http')
-        ) {
+        if (!is_array($data)) {
             return htmlspecialchars($data, ENT_QUOTES | ENT_HTML401, $encoding);
         } else {
             return $data;
