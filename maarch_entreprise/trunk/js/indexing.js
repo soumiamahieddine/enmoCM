@@ -85,7 +85,6 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
                     var services_to_exec = response.services;
                     var path_scripts = '';
                     var call_func = '';
-
                     for(var ind=0; ind < services_to_exec.length;ind++)
                     {
                         path_scripts += services_to_exec[ind]['script'] + '$$';
@@ -93,6 +92,7 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
                     }
                     if(call_func != '' && path_scripts != '' && get_js_script != '')
                     {
+                        path_scripts = path_scripts.replace("modules/templates/js/", "");
                         new Ajax.Request(get_js_script,
                         {
                             method:'post',
