@@ -775,7 +775,7 @@ class list_show extends functions
             if($show_searchbox)
             {
                 ?>
-                <form action="<?php functions::xecho($link);?>" method="post" id="frmletters">
+                <form action="<?php echo($link);?>" method="post" id="frmletters">
                     <div>
                     <input name="<?php functions::xecho($whatinput );?>" id="<?php functions::xecho($whatinput );?>" type="text" size="15"/>
                     <?php

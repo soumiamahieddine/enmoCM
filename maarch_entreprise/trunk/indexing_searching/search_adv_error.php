@@ -82,7 +82,7 @@ elseif($mode == 'popup' || $mode == 'frame')
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
-    <?php functions::xecho($_SESSION['error_search']);
+    <?php echo($_SESSION['error_search']);
     $_SESSION['error_search'] = "";
     ?>
 </div>

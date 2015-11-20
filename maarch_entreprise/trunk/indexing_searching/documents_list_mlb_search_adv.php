@@ -648,20 +648,20 @@ if($mode == 'normal') {
 if (count($tab) > 0) {
 
     /************Construction de la liste*******************/
-    //Clé de la liste
+    //Clï¿½ de la liste
     $listKey = 'res_id';
 
-    //Initialiser le tableau de paramètres
+    //Initialiser le tableau de paramï¿½tres
     $paramsTab = array();
     $paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
     $paramsTab['listCss'] = 'listing largerList spec';                                  //css
-    $paramsTab['urlParameters'] =  $urlParameters.'&dir=indexing_searching';            //Parametres supplémentaires
+    $paramsTab['urlParameters'] =  $urlParameters.'&dir=indexing_searching';            //Parametres supplï¿½mentaires
     $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_DOCS;              //Titre de la page
     $paramsTab['pagePicto'] =  'search';                                      //Image de la page
     $paramsTab['bool_bigPageTitle'] = $bigPageTitle;                                    //Titre de la page en grand
     $paramsTab['bool_showIconDocument'] =  true;                                        //Affichage de l'icone du document
     $paramsTab['bool_showIconDetails'] =  $showIconDetails;                             //Affichage de l'icone de la page de details
-    $paramsTab['bool_showAttachment'] = true;                                           //Affichage du nombre de document attaché (mode étendu)
+    $paramsTab['bool_showAttachment'] = true;                                           //Affichage du nombre de document attachï¿½ (mode ï¿½tendu)
     if ($radioButton) {                                                                 //Boutton radio
         $paramsTab['bool_radioButton'] = $radioButton;
     }                                 
@@ -680,7 +680,7 @@ if (count($tab) > 0) {
         //Action
         if (isset($formAction) && !empty($formAction)) $paramsTab['formAction'] = $formAction;
         //Hiden fields
-        if (isset($hiddenFormFields) && count($hiddenFormFields) > 0) {                 //Champs hidden supplémentaire | mots clés = id, name, value
+        if (isset($hiddenFormFields) && count($hiddenFormFields) > 0) {                 //Champs hidden supplï¿½mentaire | mots clï¿½s = id, name, value
             $paramsTab['hiddenFormFields'] = array();                             
             $paramsTab['hiddenFormFields'] = $hiddenFormFields;                             
         }
@@ -813,7 +813,7 @@ if (count($tab) > 0) {
      exit();
 } else {
     
-    echo '<script type="text/javascript">window.top.location.href=\''.functions::xssafe($url_error).'\';</script>';
+    echo '<script type="text/javascript">window.top.location.href=\''.$url_error.'\';</script>';
     exit();
 }
 
