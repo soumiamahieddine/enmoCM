@@ -242,8 +242,8 @@ function createModalinAttachmentList(txt, id_mod, height, width, mode_frm){
     window.top.window.$(id_mod).focus();
 }
 
-function setButtonStyle(radioButton, fileFormat) {
-    if (radioButton == "yes" && fileFormat != "pdf") {
+function setButtonStyle(radioButton, fileFormat, statusValidateButton) {
+    if (radioButton == "yes" && fileFormat != "pdf" && statusValidateButton == "1") {
         $('edit').style.visibility="hidden";
     } else if (radioButton == "no" && fileFormat != "pdf") {
         $('edit').style.visibility="visible";

@@ -1424,9 +1424,10 @@ $content .= '<br/>';
 if (isset($_REQUEST['id'])) {
     $content .= '<p>';
     $content .= '<label>'. _CREATE_NEW_ATTACHMENT_VERSION.'</label>';
-    $content .= '<input type="radio" name="new_version" id="new_version_yes" value="yes" onclick="setButtonStyle(\'yes\', \''.$attachmentFormat.'\')"/>'._YES;
+    $content .= '<input type="hidden" id="hiddenValidateStatus" value="1"/>';
+    $content .= '<input type="radio" name="new_version" id="new_version_yes" value="yes" onclick="setButtonStyle(\'yes\', \''.$attachmentFormat.'\', $(\'hiddenValidateStatus\').value)"/>'._YES;
     $content .= '&nbsp;&nbsp;';
-    $content .= '<input type="radio" name="new_version" id="new_version_no" checked value="no" onclick="setButtonStyle(\'no\', \''.$attachmentFormat.'\')"/>'._NO;
+    $content .= '<input type="radio" name="new_version" id="new_version_no" checked value="no" onclick="setButtonStyle(\'no\', \''.$attachmentFormat.'\', $(\'hiddenValidateStatus\').value)"/>'._NO;
     $content .= '</p>';
     $content .= '<br/>';
 }
@@ -1434,7 +1435,7 @@ if (isset($_REQUEST['id'])) {
                 if (isset($_REQUEST['id']) && $attachmentFormat <> "pdf") {
                     $content .= '<input type="button" value="';
                     $content .= _EDIT_MODEL;
-                    $content .= '" name="editModel" id="editModel" class="button" onclick="$(\'edit\').style.visibility=\'visible\';window.open(\''
+                    $content .= '" name="editModel" id="editModel" class="button" onclick="$(\'hiddenValidateStatus\').value=\'2\';$(\'edit\').style.visibility=\'visible\';window.open(\''
                         . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentUpVersion&objectId='.$_REQUEST['id'].'&objectTable=res_view_attachments&resMaster='.$_SESSION['doc_id']
                         .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
                 } /*else {
