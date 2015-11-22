@@ -249,7 +249,7 @@ class attachments_controler
 		$stmt = $db->query(
             "SELECT * 
                 FROM res_view_attachments 
-                WHERE (res_id = ? OR res_id_version = ?) ORDER BY relation desc", array($resId,$resId)
+                WHERE (res_id = ? OR res_id_version = ?) and res_id_master = ? ORDER BY relation desc", array($resId, $resId, $_SESSION['doc_id'])
         );
 		
 		$infos = array();
