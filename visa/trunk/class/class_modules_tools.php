@@ -688,22 +688,27 @@ class visa extends Database
 					);
 			} else {
 				$stmt = $db->query(
-					"select res_id, description, subject, title, format, filesize, res_id_master, attachment_type, creation_date, typist from " 
-					.  RES_ATTACHMENTS_TABLE 
+					"select res_id, res_id_version, description, subject, title, format, filesize, res_id_master, attachment_type, creation_date, typist from " 
+					. " res_view_attachments "
 					. " where res_id_master = ? and coll_id = ? and attachment_type = '" 
-					. $filter_attach_type . "' and status <> 'DEL' order by creation_date",
+					. $filter_attach_type . "' and status not in ('DEL', 'OBS') order by creation_date",
 					array($id, $coll_id)
 				);
 			}
         }
-        // $db->show(); 
         
         while($res = $stmt->fetchObject()) {
 			$pdf_exist = true;
 			if ($from_res_attachment){
 				require_once 'modules/attachments/class/attachments_controler.php';
 				$ac = new attachments_controler();
-				$infos_attach = $ac->getAttachmentInfos($res->res_id);
+				if ($res->res_id <> 0) {
+					$idFile = $res->res_id;
+				} else {
+					$idFile = $res->res_id_version;
+				}
+				$infos_attach = $ac->getAttachmentInfos($idFile);
+
 				$viewLink = $_SESSION['config']['businessappurl']
 	        		. 'index.php?display=true&module=attachments&page=view_attachment&res_id_master=' 
 	        		. $id . '&id=' . $res->res_id;
@@ -712,6 +717,7 @@ class visa extends Database
 				$viewLink = $_SESSION['config']['businessappurl']
 					. 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=' 
         			. $id;
+        		$idFile = $res->res_id;
 			}
             $label = '';
             //Tile, or subject or description
@@ -744,7 +750,7 @@ class visa extends Database
 					. '</a>';
 			}
             array_push($joinedFiles,
-                array('id' => $res->res_id, //ID
+                array('id' => $idFile, //ID
                       'label' => $label, //Label
                       'format' => $res->format, //Format 
                       'filesize' => $res->filesize, //Filesize
