@@ -1,4 +1,12 @@
-package discm;
+/** 
+ * Jdk platform : 1.8 
+ */
+
+/** 
+ * SVN version 10
+ */
+
+package com.dis;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -6,15 +14,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-public class myLogger {
+/**
+ * MyLogger class manages the log of the applet
+ * @author Laurent Giovannoni
+ */
+public class MyLogger {
     
     private String loggerFile;
     private FileHandler fh;
     private Logger logger;
 
-    myLogger(String pathTologs) {
-        this.loggerFile = pathTologs + "disCM.log";
-        this.logger = Logger.getLogger("disCM");
+    /**
+    * Prepares the log
+    * @param pathTologs path to the log file in the tmp dir
+    */
+    MyLogger(String pathTologs) {
+        this.loggerFile = pathTologs + "DisCM.log";
+        this.logger = Logger.getLogger("DisCM");
         try {
             // This block configure the logger with handler and formatter
             this.fh = new FileHandler(this.loggerFile, true);
@@ -31,6 +47,11 @@ public class myLogger {
         }
     }
     
+    /**
+    * Writes the log
+    * @param message message to write in the log file
+    * @param level level of the message
+    */
     public void log(String message, Level level) {
         this.logger.log(level, message);
     }

@@ -1,14 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/** 
+ * Jdk platform : 1.8 
  */
-package discm;
 
-/**
- *
- * @author Maarch
+/** 
+ * SVN version 120
  */
+
+package com.dis;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
+/**
+ * WinRegistry class manages the access to the registry
+ */
 public class WinRegistry {
   public static final int HKEY_CURRENT_USER = 0x80000001;
   public static final int HKEY_LOCAL_MACHINE = 0x80000002;
@@ -396,4 +397,3 @@ public class WinRegistry {
     return result;
   }
 }
-

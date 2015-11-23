@@ -1,23 +1,24 @@
-package discm;
+/** 
+ * Jdk platform : 1.8 
+ */
 
-import java.io.BufferedReader;
+/** 
+ * SVN version 141
+ */
+
+package com.dis;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.PrivilegedActionException;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JApplet;
@@ -31,13 +32,13 @@ import org.xml.sax.SAXException;
 import netscape.javascript.JSObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.Writer;
 
 
 /**
- *
- * @author Laurent Giovannoni
+ * DisCM class manages webservices between end user desktop and Maarch
+ * @author DIS
  */
 public class DisCM extends JApplet {
     //INIT PARAMETERS
@@ -47,13 +48,9 @@ public class DisCM extends JApplet {
     protected String objectId;
     protected String cookie;
     protected String userLocalDirTmp;
-    protected String userMaarch;
-    protected String userMaarchPwd;
-    protected String psExecMode;
     
     protected String messageStatus;
     
-    Hashtable app = new Hashtable();
     Hashtable messageResult = new Hashtable();
     
     //XML PARAMETERS
@@ -73,11 +70,14 @@ public class DisCM extends JApplet {
     protected String fileContentTosend;
     protected String pdfContentTosend;
     
-    public myLogger logger;
+    public MyLogger logger;
     
-    public fileManager fM;
+    public FileManager fM;
     public String fileToEdit;
     
+    /**
+     * Launch of the applet
+     */
     public void init() throws JSException
     {
         System.out.println("----------BEGIN PARAMETERS----------");
@@ -86,17 +86,19 @@ public class DisCM extends JApplet {
         this.objectTable = this.getParameter("objectTable");
         this.objectId = this.getParameter("objectId");
         this.cookie = this.getParameter("cookie");
-        this.userMaarch = this.getParameter("userMaarch");
-        this.userMaarchPwd = this.getParameter("userMaarchPwd");
-        this.psExecMode = this.getParameter("psExecMode");
         
         System.out.println("URL : " + this.url);
         System.out.println("OBJECT TYPE : " + this.objectType);
         System.out.println("OBJECT TABLE : " + this.objectTable);
         System.out.println("OBJECT ID : " + this.objectId);
         System.out.println("COOKIE : " + this.cookie);
-        System.out.println("USER MAARCH : " + this.userMaarch);
-        System.out.println("PSEXEC MODE : " + this.psExecMode);
+        
+        System.out.println("----------CONTROL PARAMETERS----------");
+        
+        if (!this.controlParams()) {
+            System.out.println("PARAMETERS NOT OK ! END OF APPLICATION");
+            System.exit(0);
+        }
         
         System.out.println("----------END PARAMETERS----------");
         try {
@@ -109,108 +111,150 @@ public class DisCM extends JApplet {
         }
     }
     
+    /**
+     * Controls the applet parameters
+     * @return boolean
+     */
+    public boolean controlParams()
+    {
+        Boolean returnControl = true;
+        //URL
+        
+        try {
+            URL url = new URL(this.url);
+            URLConnection conn = url.openConnection();
+            conn.connect();
+        } catch (MalformedURLException e) {
+            // the URL is not in a valid form
+            System.out.println("the URL is not in a valid form " + this.url);
+            returnControl = false;
+        } catch (IOException e) {
+            // the connection couldn't be established
+            System.out.println("the connection couldn't be established " + this.url);
+            returnControl = false;
+        }
+        
+        //OBJECT TYPE
+        if (
+                !"template".equals(this.objectType) &&
+                !"templateStyle".equals(this.objectType) &&
+                !"attachmentVersion".equals(this.objectType) &&
+                !"attachmentUpVersion".equals(this.objectType) &&
+                !"resource".equals(this.objectType) &&
+                !"attachmentFromTemplate".equals(this.objectType) &&
+                !"attachment".equals(this.objectType) &&
+                !"outgoingMail".equals(this.objectType)
+        ) {
+            System.out.println("ObjectType not in the authorized list " + this.objectType);
+            returnControl = false;
+        }
+        
+        //OBJECT TABLE
+        if (
+                !"res_letterbox".equals(this.objectTable) &&
+                !"res_business".equals(this.objectTable) &&
+                !"res_x".equals(this.objectTable) &&
+                !"res_attachments".equals(this.objectTable) &&
+                !"mlb_coll_ext".equals(this.objectTable) &&
+                !"business_coll_ext".equals(this.objectTable) &&
+                !"res_version_letterbox".equals(this.objectTable) &&
+                !"res_version_business".equals(this.objectTable) &&
+                !"res_version_x".equals(this.objectTable) &&
+                !"res_view_attachments".equals(this.objectTable) &&
+                !"res_view".equals(this.objectTable) &&
+                !"res_view_letterbox".equals(this.objectTable) &&
+                !"res_view_business".equals(this.objectTable) &&
+                !"templates".equals(this.objectTable)
+        ) {
+            System.out.println("ObjectTable not in the authorized list " + this.objectTable);
+            returnControl = false;
+        }
+
+        //OBJECT ID
+        if (this.objectId.equals(null) || this.objectId.equals("")) {
+            System.out.println("objectId is null or empty " + this.objectId);
+            returnControl = false;
+        }
+        
+        //COOKIE
+        if (this.cookie.equals(null) || this.cookie.equals("")) {
+            System.out.println("cookie is null or empty " + this.cookie);
+            returnControl = false;
+        }
+        
+        return returnControl;
+        
+    }
     
-    public void createPDF(String docxFile, String directory, boolean isUnix) {
-		try {
-			
-			
-			String cmd = "";
-			if (docxFile.contains(".odt") || docxFile.contains(".ods") || docxFile.contains(".ODT") || docxFile.contains(".ODS")) {
-				String convertProgram;
-				convertProgram = this.fM.findPathProgramInRegistry("soffice.exe");
-	            
-				cmd = convertProgram+" -env:UserInstallation=$SYSUSERCONFIG --headless --convert-to pdf --outdir \""+this.userLocalDirTmp.substring(0,this.userLocalDirTmp.length()-1)+"\" \""+docxFile+"\" \r\n";
-			}
-			else{
-				if (this.useExeConvert.equals("false"))
-					cmd = "cmd /C cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
-				else{
-					
-					StringBuffer buffer = new StringBuffer(docxFile);
-					buffer.replace(buffer.lastIndexOf("."),	buffer.length(), ".pdf");
-					String pdfOut = buffer.toString();
-					
-					cmd = "cmd /C \""+this.userLocalDirTmp+"Word2Pdf.exe\" \""+docxFile+"\" \""+pdfOut+"\" \r\n";
-				}
-			}
-			
-			
-			
-            
-            this.logger.log("EXEC PATH : " +cmd, Level.INFO);
-            fileManager fM = new fileManager();
-                      
-                        Process proc_vbs;
-            if (isUnix){
-            	cmd = "cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
-            	final Writer outBat;
-    			outBat = new OutputStreamWriter(new FileOutputStream(this.appPath_convert), "CP850");
-    			this.logger.log("--- cmd bat  --- "+cmd, Level.INFO);
-    			outBat.write(cmd);
-    			outBat.write("exit \r\n");
-    			outBat.close();
-    			
-    			File myFileBat = new File(this.appPath_convert);
-    			myFileBat.setReadable(true, false);
-    			myFileBat.setWritable(true, false);
-    			myFileBat.setExecutable(true, false);
-    			
-    			//String cmd2 = "start /B /MIN "+this.appPath_convert+" \r\n";
-    			String cmd2 = "start /WAIT /MIN "+this.appPath_convert+" \r\n";
-    			final Writer outBat2 = new OutputStreamWriter(new FileOutputStream(this.appPath), "CP850");
-    			outBat2.write(cmd2);
-    			outBat2.write("exit \r\n");
-    			outBat2.close();
-    			
-    			File myFileBat2 = new File(this.appPath);
-    			myFileBat2.setReadable(true, false);
-    			myFileBat2.setWritable(true, false);
-    			myFileBat2.setExecutable(true, false);
-            	
-    			final String exec_vbs = "\""+this.appPath+"\"";
-            	proc_vbs = fM.launchApp(exec_vbs);
+    public void createPDF(String docxFile, String directory, boolean isUnix) 
+    {
+        try {
+            String cmd = "";
+            if (docxFile.contains(".odt") || docxFile.contains(".ods") || docxFile.contains(".ODT") || docxFile.contains(".ODS")) {
+                    String convertProgram;
+                    convertProgram = this.fM.findPathProgramInRegistry("soffice.exe");
+
+                    cmd = convertProgram+" -env:UserInstallation=$SYSUSERCONFIG --headless --convert-to pdf --outdir \""+this.userLocalDirTmp.substring(0,this.userLocalDirTmp.length()-1)+"\" \""+docxFile+"\" \r\n";
+            } else {
+                    if (this.useExeConvert.equals("false")) {
+                            cmd = "cmd /C cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
+                    } else {
+
+                            StringBuffer buffer = new StringBuffer(docxFile);
+                            buffer.replace(buffer.lastIndexOf("."),	buffer.length(), ".pdf");
+                            String pdfOut = buffer.toString();
+
+                            cmd = "cmd /C \""+this.userLocalDirTmp+"Word2Pdf.exe\" \""+docxFile+"\" \""+pdfOut+"\" \r\n";
+                    }
             }
-            else {
-            	proc_vbs = fM.launchApp(cmd);
+
+            this.logger.log("EXEC PATH : " +cmd, Level.INFO);
+            FileManager fM = new FileManager();
+
+            Process proc_vbs;
+            if (isUnix){
+                cmd = "cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
+                final Writer outBat;
+                outBat = new OutputStreamWriter(new FileOutputStream(this.appPath_convert), "CP850");
+                this.logger.log("--- cmd bat  --- "+cmd, Level.INFO);
+                outBat.write(cmd);
+                outBat.write("exit \r\n");
+                outBat.close();
+
+                File myFileBat = new File(this.appPath_convert);
+                myFileBat.setReadable(true, false);
+                myFileBat.setWritable(true, false);
+                myFileBat.setExecutable(true, false);
+
+                //String cmd2 = "start /B /MIN "+this.appPath_convert+" \r\n";
+                String cmd2 = "start /WAIT /MIN "+this.appPath_convert+" \r\n";
+                final Writer outBat2 = new OutputStreamWriter(new FileOutputStream(this.appPath), "CP850");
+                outBat2.write(cmd2);
+                outBat2.write("exit \r\n");
+                outBat2.close();
+
+                File myFileBat2 = new File(this.appPath);
+                myFileBat2.setReadable(true, false);
+                myFileBat2.setWritable(true, false);
+                myFileBat2.setExecutable(true, false);
+
+                final String exec_vbs = "\""+this.appPath+"\"";
+                proc_vbs = fM.launchApp(exec_vbs);
+            } else {
+                proc_vbs = fM.launchApp(cmd);
             }
             proc_vbs.waitFor();
-            
-		} catch (Throwable e) {
-			this.logger.log("--- Erreur dans la conversion --- ", Level.INFO);
-			e.printStackTrace();
-		}
-	}
-    
-    public void test(String[] args)
-    {
-        System.out.println("----------TESTS----------");
-        System.out.println("----------BEGIN PARAMETERS----------");
-        this.url = args[0];
-        this.objectType = args[1];
-        this.objectTable = args[2];
-        this.objectId = args[3];
-        this.cookie = args[4];
-        this.userMaarch = args[5];
-        this.userMaarchPwd = args[6];
-        this.psExecMode = args[7];
-        
-        System.out.println("URL : " + this.url);
-        System.out.println("OBJECT TYPE : " + this.objectType);
-        System.out.println("OBJECT TABLE : " + this.objectTable);
-        System.out.println("OBJECT ID : " + this.objectId);
-        System.out.println("COOKIE : " + this.cookie);
-        System.out.println("USER MAARCH : " + this.userMaarch);
-        System.out.println("USER MAARCHPWD : " + this.userMaarchPwd);
-        System.out.println("PSEXEC MODE : " + this.psExecMode);
-        
-        System.out.println("----------END PARAMETERS----------");
-        try {
-            this.editObject();
-        } catch (Exception ex) {
-            Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
+
+        } catch (Throwable e) {
+            this.logger.log("--- Erreur dans la conversion --- ", Level.INFO);
+            e.printStackTrace();
         }
     }
     
+    /**
+     * Retrieve the xml message from Maarch and parse it
+     * @param flux_xml xml content message
+     */
     public void parse_xml(InputStream flux_xml) throws SAXException, IOException, ParserConfigurationException
     {
         this.logger.log("----------BEGIN PARSE XML----------", Level.INFO);
@@ -235,6 +279,10 @@ public class DisCM extends JApplet {
         this.logger.log("----------END PARSE XML----------", Level.INFO);
     }
     
+    /**
+     * Manage the return of program execution
+     * @param result result of the program execution
+     */
     public void processReturn(Hashtable result) {
         Iterator itValue = result.values().iterator(); 
         Iterator itKey = result.keySet().iterator();
@@ -287,49 +335,29 @@ public class DisCM extends JApplet {
         }
         //send message error to Maarch if necessary
         if (!this.error.isEmpty()) {
-            this.sendJsMessage(this.error.toString());
+            this.sendJsMessage(this.error);
         }
     }
+    
     
     /**
-     * @param args the command line arguments
+     * Main function of the class
+     * enables you to edit document with the user favorit editor
      */
-    public static void main(String[] args) {
-        try{
-            System.out.println(args[0]);
-            System.out.println(args[1]);
-            System.out.println(args[2]);
-            System.out.println(args[3]);
-            System.out.println(args[4]);
-            DisCM disCM = new DisCM();
-            disCM.test(args);
-        }
-       catch(Exception e) {
-           String exMessage = e.toString();
-           System.out.println(exMessage);
-       }
-    }
-    
     public String editObject() throws Exception, InterruptedException, JSException {
-        System.out.println("----------BEGIN EDIT OBJECT----------");
+        System.out.println("SECURE VERSION DIS----------BEGIN EDIT OBJECT----------");
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         String os = System.getProperty("os.name").toLowerCase();
-        boolean isUnix = os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0;
-        boolean isWindows = os.indexOf("win") >= 0;
-        boolean isMac = os.indexOf("mac") >= 0;
+        boolean isUnix = os.contains("nix") || os.contains("nux");
+        boolean isWindows = os.contains("win");
+        boolean isMac = os.contains("mac");
         this.userLocalDirTmp = System.getProperty("user.home");
-                
-        //this.userLocalDirTmp = "C:/repertoire avec espaces";
-        //this.userLocalDirTmp = "c:\\maarch";
-        //this.userLocalDirTmp = "\\\\192.168.21.100\\Public\\montage_nas\\avec espaces";
         
-        this.fM = new fileManager();
+        this.fM = new FileManager();
         this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
         if (isWindows) {
             System.out.println("This is Windows");
             this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
-            //this.appPath = this.userLocalDirTmp.replaceAll(" ", "%20") + "start.bat";
-            //this.appPath = "\""+this.userLocalDirTmp + "start.bat\"";
             this.appPath = this.userLocalDirTmp + "start.bat";
             this.appPath_convert = this.userLocalDirTmp + "conversion.bat";
             this.os = "win";
@@ -356,35 +384,16 @@ public class DisCM extends JApplet {
         
         
         System.out.println("Create the logger");
-        this.logger = new myLogger(this.userLocalDirTmp);
+        this.logger = new MyLogger(this.userLocalDirTmp);
         
         this.logger.log("Delete thefile if exists", Level.INFO);
         this.fM.deleteFilesOnDir(this.userLocalDirTmp, "thefile");
         
-        if (this.psExecMode.equals("OK")) {
-            this.logger.log("----------BEGIN PSEXEC MODE----------", Level.INFO);
-            boolean isPsExecExists = this.fM.isPsExecFileExists(this.userLocalDirTmp + "PsExec.exe");
-            if (!isPsExecExists) {
-                this.logger.log("----------BEGIN TRANSFER OF PSEXEC----------", Level.INFO);
-                String urlToSend = this.url + "?action=sendPsExec&objectType=" + this.objectType
-                        + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
-                sendHttpRequest(urlToSend, "none",false);
-                this.logger.log("MESSAGE STATUS : " + this.messageStatus.toString(), Level.INFO);
-                this.logger.log("MESSAGE RESULT : ", Level.INFO);
-                this.processReturn(this.messageResult);
-                this.logger.log("CREATE THE FILE : " + this.userLocalDirTmp + "PsExec.exe", Level.INFO);
-                this.fM.createFile(this.fileContent, this.userLocalDirTmp + "PsExec.exe");
-                this.fileContent = "";
-                this.logger.log("----------END TRANSFER OF PSEXEC----------", Level.INFO);
-            }
-            this.logger.log("----------END PSEXEC MODE----------", Level.INFO);
-        }
-        
         this.logger.log("----------BEGIN OPEN REQUEST----------", Level.INFO);
         String urlToSend = this.url + "?action=editObject&objectType=" + this.objectType
                         + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
-        sendHttpRequest(urlToSend, "none",false);
-        this.logger.log("MESSAGE STATUS : " + this.messageStatus.toString(), Level.INFO);
+        sendHttpRequest(urlToSend, "none", false);
+        this.logger.log("MESSAGE STATUS : " + this.messageStatus, Level.INFO);
         this.logger.log("MESSAGE RESULT : ", Level.INFO);
         this.processReturn(this.messageResult);
         this.logger.log("----------END OPEN REQUEST----------", Level.INFO);
@@ -403,9 +412,6 @@ public class DisCM extends JApplet {
             this.userLocalDirTmp, 
             this.fileToEdit, 
             this.os,
-            this.userMaarch,
-            this.userMaarchPwd,
-            this.psExecMode,
             this.userLocalDirTmp
         );
         this.logger.log("----------END CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
@@ -429,19 +435,19 @@ public class DisCM extends JApplet {
             this.logger.log("----------BEGIN EXECUTION OF THE EDITOR----------", Level.INFO);
             this.logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
             this.fM.createFile(this.fileContent, this.userLocalDirTmp + this.fileToEdit);
-            
+
             Thread theThread;
             theThread = new Thread(new ProcessLoop(this));
-            
+
             //theThread.logger = this.logger;
-            
+
             theThread.start();
             
             String actualContent;
             this.fileContentTosend = "";
             do {
                 theThread.sleep(1000);
-                actualContent = this.fM.encodeFile(this.userLocalDirTmp + this.fileToEdit);
+                actualContent = FileManager.encodeFile(this.userLocalDirTmp + this.fileToEdit);
                 if (!this.fileContentTosend.equals(actualContent)) {
                     this.fileContentTosend = actualContent;
                     this.logger.log("----------[SECURITY BACKUP] BEGIN SEND OF THE OBJECT----------", Level.INFO);
@@ -449,7 +455,7 @@ public class DisCM extends JApplet {
                                 + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
                     this.logger.log("[SECURITY BACKUP] URL TO SAVE : " + urlToSave, Level.INFO);
                     sendHttpRequest(urlToSave, this.fileContentTosend,false);
-                    this.logger.log("[SECURITY BACKUP] MESSAGE STATUS : " + this.messageStatus.toString(), Level.INFO);
+                    this.logger.log("[SECURITY BACKUP] MESSAGE STATUS : " + this.messageStatus, Level.INFO);
                 }
             }
             while (theThread.isAlive());
@@ -460,7 +466,7 @@ public class DisCM extends JApplet {
             
             this.logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
 
-            this.fileContentTosend = this.fM.encodeFile(this.userLocalDirTmp + this.fileToEdit);
+            this.fileContentTosend = FileManager.encodeFile(this.userLocalDirTmp + this.fileToEdit);
             
             this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
             
@@ -471,7 +477,7 @@ public class DisCM extends JApplet {
             
             this.logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
             if (this.fM.isPsExecFileExists(pdfFile)){           
-          	  this.pdfContentTosend = fileManager.encodeFile(pdfFile);
+          	  this.pdfContentTosend = FileManager.encodeFile(pdfFile);
             }
             else {
             	this.pdfContentTosend = "null";
@@ -486,13 +492,13 @@ public class DisCM extends JApplet {
                             + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
             this.logger.log("----------BEGIN SEND OF THE OBJECT----------", Level.INFO);
             this.logger.log("URL TO SAVE : " + urlToSave, Level.INFO);
-            sendHttpRequest(urlToSave, this.fileContentTosend,true);
-            this.logger.log("MESSAGE STATUS : " + this.messageStatus.toString(), Level.INFO);
+            sendHttpRequest(urlToSave, this.fileContentTosend, true);
+            this.logger.log("MESSAGE STATUS : " + this.messageStatus, Level.INFO);
             this.logger.log("LAST MESSAGE RESULT : ", Level.INFO);
             this.processReturn(this.messageResult);
             //send message to Maarch at the end
             if (!this.endMessage.isEmpty()) {
-                this.sendJsMessage(this.endMessage.toString());
+                this.sendJsMessage(this.endMessage);
             }
             this.sendJsEnd();
             this.logger.log("----------END SEND OF THE OBJECT----------", Level.INFO);
@@ -503,11 +509,14 @@ public class DisCM extends JApplet {
         return "ok";
     }
     
+    /**
+     * Class to manage the execution of an external program
+     */
     public class ProcessLoop extends Thread {
         public DisCM disCM;
         
-        public ProcessLoop(DisCM maarchCM){
-            this.disCM = maarchCM;
+        public ProcessLoop(DisCM DisCM){
+            this.disCM = DisCM;
         }
 
         public void run() {
@@ -527,15 +536,17 @@ public class DisCM extends JApplet {
         }
     }
     
+    /**
+     * Launch the external program and wait his execution end
+     * @return boolean
+     */
     public boolean launchProcess() throws PrivilegedActionException, InterruptedException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
     {
-        final String exec;
         Process proc;
 
         this.logger.log("LAUNCH THE EDITOR !", Level.INFO);
         if ("linux".equals(this.os)) {
-            exec = this.appPath;
-            proc = this.fM.launchApp(exec);
+            proc = this.fM.launchApp(this.appPath);
         } else {
             this.logger.log("FILE TO EDIT : " + this.userLocalDirTmp + this.fileToEdit, Level.INFO);
             
@@ -561,22 +572,37 @@ public class DisCM extends JApplet {
         return true;
     }
     
+    /**
+     * Send a string message to Maarch with javascript
+     * @param message
+     */
     public void sendJsMessage(String message) throws JSException
     {
         JSObject jso;
         jso = JSObject.getWindow(this);
         this.logger.log("----------JS CALL sendAppletMsg TO MAARCH----------", Level.INFO);
-        jso.call("sendAppletMsg", new String[] {String.valueOf(message)});
+        String theMessage;
+        theMessage = String.valueOf(message);
+        jso.call("sendAppletMsg", theMessage);
     }
     
+    /**
+     * Warns Maarch of the end of the execution of the applet
+     */
     public void sendJsEnd() throws InterruptedException, JSException
     {
         JSObject jso;
         jso = JSObject.getWindow(this);
         this.logger.log("----------JS CALL endOfApplet TO MAARCH----------", Level.INFO);
-        jso.call("endOfApplet", new String[] {String.valueOf(this.objectType), this.endMessage});    
+        String[] theMessage = {String.valueOf(this.objectType), this.endMessage};
+        jso.call("endOfApplet", (Object[]) theMessage);
     }
     
+    /**
+     * Send an http request to Maarch
+     * @param url url to contact Maarch
+     * @param postRequest the request
+     */
     public void sendHttpRequest(String theUrl, String postRequest, boolean endProcess) throws Exception {
         URL UrlOpenRequest = new URL(theUrl);
         HttpURLConnection HttpOpenRequest = (HttpURLConnection) UrlOpenRequest.openConnection();
