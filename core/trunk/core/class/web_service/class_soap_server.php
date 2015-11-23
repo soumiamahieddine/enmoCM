@@ -76,7 +76,14 @@ class MaarchSoapServer extends webService {
             if(file_exists($methodArray['path']) && $methodArray['object'] <> "" && $methodArray['method'] <> "") {
                 require_once($methodArray['path']);
                 $objectControler = new $methodArray['object']();
-                return call_user_func_array(array($objectControler, $methodArray['method']), $args);
+                try {
+                    return call_user_func_array(array($objectControler, $methodArray['method']), $args);
+                } catch (Exception $e) {
+                    if ($_SESSION['config']['debug'] == "true") {
+                        var_dump($e);
+                    }
+                }
+                
             }
         }
     }
