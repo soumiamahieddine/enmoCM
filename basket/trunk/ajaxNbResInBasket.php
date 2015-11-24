@@ -40,9 +40,9 @@ for ($i=0;$i<count($_SESSION['user']['baskets']);$i++) {
     }
 }
 
-
-echo "{status : 1, nb : '" . $nb ."', idSpan : '" . functions::xssafe($_REQUEST['id_basket']) . "'}";
+echo json_encode(['status'=>1, 'nb'=>$nb, 'idSpan'=> functions::xssafe($_REQUEST['id_basket']), 'id_basket'=> functions::xssafe($basketId)]);
 exit;
+
 $sessionTemplateContent = trim(str_replace(
     "\n", 
     "",
