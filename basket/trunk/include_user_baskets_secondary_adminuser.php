@@ -41,7 +41,8 @@ $core_tools->test_admin('admin_users', 'apps');
         if ( error_num == 1) {
             document.getElementById('secondary_baskets').submit();
         } else if(error_num == 4) {
-            alert("<?php echo _CHOOSE_SECONDARY_BASKET;?>");
+            //alert("<?php echo _CHOOSE_SECONDARY_BASKET;?>");
+            document.getElementById('secondary_baskets').submit();
         } else {
             alert("<?php echo _FORM_ERROR;?>");
         }

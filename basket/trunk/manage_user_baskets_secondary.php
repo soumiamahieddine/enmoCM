@@ -46,6 +46,7 @@ if (
 } else {
 	$_SESSION['error'] = _BASKETS_OWNER.' '._MISSING;
 }
+
 if(
 	isset($_REQUEST['basketId']) 
 	&& is_array($_REQUEST['basketId'])
@@ -62,7 +63,7 @@ if(
 			)
 		);
 	}
-} else {
+} elseif($_REQUEST['basketId'] != NULL) {
 	$_SESSION['error'] = _NO_CHOOSEN_BASKET;
 }
 if (!empty($_SESSION['error'])) {
