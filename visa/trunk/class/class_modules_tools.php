@@ -1013,7 +1013,7 @@ class visa extends Database
 					//Get data
 					$idNote = $user_notes[$i]['id']; 
 					//$noteShort = $request->cut_string($user_notes[$i]['label'], 50);
-       					$noteShort = $request->cut_string(str_replace(array("'", "\r", "\n","\""),array("\'", " ", " ", "&quot;"), 
+       					$noteShort = $request->cut_string(str_replace(array("'", "\r", "\n","\""),array("'", " ", " ", "&quot;"),
                                             $user_notes[$i]['label']), 50);
 
 					$note = $user_notes[$i]['label'];
