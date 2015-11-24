@@ -17,8 +17,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.PrivilegedActionException;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JApplet;
@@ -70,109 +72,131 @@ public class MaarchCM extends JApplet {
     public void init() throws JSException
     {
         System.out.println("----------BEGIN PARAMETERS----------");
-        this.url = this.getParameter("url");
-        this.objectType = this.getParameter("objectType");
-        this.objectTable = this.getParameter("objectTable");
-        this.objectId = this.getParameter("objectId");
-        this.cookie = this.getParameter("cookie");
+        url = getParameter("url");
+        objectType = getParameter("objectType");
+        objectTable = getParameter("objectTable");
+        objectId = getParameter("objectId");
+        cookie = getParameter("cookie");
         
-        System.out.println("URL : " + this.url);
-        System.out.println("OBJECT TYPE : " + this.objectType);
-        System.out.println("OBJECT TABLE : " + this.objectTable);
-        System.out.println("OBJECT ID : " + this.objectId);
-        System.out.println("COOKIE : " + this.cookie);
+        System.out.println("URL : " + url);
+        System.out.println("OBJECT TYPE : " + objectType);
+        System.out.println("OBJECT TABLE : " + objectTable);
+        System.out.println("OBJECT ID : " + objectId);
+        System.out.println("COOKIE : " + cookie);
         
         System.out.println("----------CONTROL PARAMETERS----------");
         
-        if (!this.controlParams()) {
+        if (
+            isURLInvalid() || 
+            isObjectTypeInvalid() || 
+            isObjectTableInvalid() ||
+            isObjectIdInvalid() ||
+            isCookieInvalid()
+        ) {
             System.out.println("PARAMETERS NOT OK ! END OF APPLICATION");
-            System.exit(0);
+            //System.exit(0);
+            try {
+                this.getAppletContext().showDocument(new URL("error.html"));
+                //Go to an appropriate error page
+            } catch (Exception e) {
+                //Nothing
+            }
         }
         
         System.out.println("----------END PARAMETERS----------");
         try {
             this.editObject();
-            this.destroy();
-            this.stop();
-            System.exit(0);
+            //this.destroy();
+            //this.stop();
+            //System.exit(0);
         } catch (Exception ex) {
             Logger.getLogger(MaarchCM.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     /**
-     * Controls the applet parameters
+     * Controls the url parameter
      * @return boolean
      */
-    public boolean controlParams()
+    private boolean isURLInvalid() 
     {
-        Boolean returnControl = true;
-        //URL
-        
         try {
-            URL url = new URL(this.url);
-            URLConnection conn = url.openConnection();
-            conn.connect();
+            new URL(url).openConnection().connect();
+            return false; //success
         } catch (MalformedURLException e) {
-            // the URL is not in a valid form
-            System.out.println("the URL is not in a valid form " + this.url);
-            returnControl = false;
+            System.out.println("the URL is not a valid form " + url);
         } catch (IOException e) {
-            // the connection couldn't be established
-            System.out.println("the connection couldn't be established " + this.url);
-            returnControl = false;
+            System.out.println("the connection couldn't be etablished " + url);
         }
-        
-        //OBJECT TYPE
-        if (
-                !"template".equals(this.objectType) &&
-                !"templateStyle".equals(this.objectType) &&
-                !"attachmentVersion".equals(this.objectType) &&
-                !"attachmentUpVersion".equals(this.objectType) &&
-                !"resource".equals(this.objectType) &&
-                !"attachmentFromTemplate".equals(this.objectType) &&
-                !"attachment".equals(this.objectType) &&
-                !"outgoingMail".equals(this.objectType)
-        ) {
-            System.out.println("ObjectType not in the authorized list " + this.objectType);
-            returnControl = false;
-        }
-        
-        //OBJECT TABLE
-        if (
-                !"res_letterbox".equals(this.objectTable) &&
-                !"res_business".equals(this.objectTable) &&
-                !"res_x".equals(this.objectTable) &&
-                !"res_attachments".equals(this.objectTable) &&
-                !"mlb_coll_ext".equals(this.objectTable) &&
-                !"business_coll_ext".equals(this.objectTable) &&
-                !"res_version_letterbox".equals(this.objectTable) &&
-                !"res_version_business".equals(this.objectTable) &&
-                !"res_version_x".equals(this.objectTable) &&
-                !"res_view_attachments".equals(this.objectTable) &&
-                !"res_view".equals(this.objectTable) &&
-                !"res_view_letterbox".equals(this.objectTable) &&
-                !"res_view_business".equals(this.objectTable) &&
-                !"templates".equals(this.objectTable)
-        ) {
-            System.out.println("ObjectTable not in the authorized list " + this.objectTable);
-            returnControl = false;
-        }
-
-        //OBJECT ID
-        if (this.objectId.equals(null) || this.objectId.equals("")) {
-            System.out.println("objectId is null or empty " + this.objectId);
-            returnControl = false;
-        }
-        
-        //COOKIE
-        if (this.cookie.equals(null) || this.cookie.equals("")) {
-            System.out.println("cookie is null or empty " + this.cookie);
-            returnControl = false;
-        }
-        
-        return returnControl;
-        
+        return true; //default is failure
+    }
+    
+    /**
+     * Controls the objectType parameter
+     * @return boolean
+     */
+    private boolean isObjectTypeInvalid()
+    {
+        Set<String> whiteList= new HashSet<>();
+        whiteList.add("template");
+        whiteList.add("templateStyle");
+        whiteList.add("attachmentVersion");
+        whiteList.add("attachmentUpVersion");
+        whiteList.add("resource");
+        whiteList.add("attachmentFromTemplate");
+        whiteList.add("attachment");
+        whiteList.add("outgoingMail");
+        if (whiteList.contains(objectType)) return false; //success
+        System.out.println("ObjectType not in the authorized list " + objectType);
+        return true; //default is failure
+    }
+    
+    /**
+     * Controls the objectTable parameter
+     * @return boolean
+     */
+    private boolean isObjectTableInvalid()
+    {
+        Set<String> whiteList= new HashSet<>();
+        whiteList.add("res_letterbox");
+        whiteList.add("res_business");
+        whiteList.add("res_x");
+        whiteList.add("res_attachments");
+        whiteList.add("mlb_coll_ext");
+        whiteList.add("business_coll_ext");
+        whiteList.add("res_version_letterbox");
+        whiteList.add("res_version_business");
+        whiteList.add("res_version_x");
+        whiteList.add("res_view_attachments");
+        whiteList.add("res_view");
+        whiteList.add("res_view_letterbox");
+        whiteList.add("res_view_business");
+        whiteList.add("templates");
+        if (whiteList.contains(objectTable)) return false; //success
+        System.out.println("objectTable not in the authorized list " + objectTable);
+        return true; //default is failure
+    }
+    
+    /**
+     * Controls the objectId parameter
+     * @return boolean
+     */
+    private boolean isObjectIdInvalid()
+    {
+        if (objectId != null && objectId.length() > 0) return false; //success
+        System.out.println("objectId is null or empty " + objectId);
+        return true; //default is failure
+    }
+    
+    /**
+     * Controls the cookie parameter
+     * @return boolean
+     */
+    private boolean isCookieInvalid()
+    {
+        if (cookie != null && cookie.length() > 0) return false; //success
+        System.out.println("cookie is null or empty " + cookie);
+        return true; //default is failure
     }
     
     /**
@@ -252,9 +276,11 @@ public class MaarchCM extends JApplet {
     /**
      * Main function of the class
      * enables you to edit document with the user favorit editor
+     * @return nothing
+     * @throws java.lang.Exception
      */
-    public String editObject() throws Exception, JSException {
-        System.out.println("SECURE VERSION 2409 ----------BEGIN EDIT OBJECT----------LGI");
+    public String editObject() throws Exception {
+        System.out.println("SECURE VERSION 2409 ----------BEGIN EDIT OBJECT----------LGI 24/11/2015");
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         String os = System.getProperty("os.name").toLowerCase();
         boolean isUnix = os.contains("nix") || os.contains("nux");
@@ -293,7 +319,7 @@ public class MaarchCM extends JApplet {
         this.logger = new MyLogger(this.userLocalDirTmp);
         
         this.logger.log("Delete thefile if exists", Level.INFO);
-        this.fM.deleteFilesOnDir(this.userLocalDirTmp, "thefile");
+        FileManager.deleteFilesOnDir(this.userLocalDirTmp, "thefile");
         
         this.logger.log("----------BEGIN OPEN REQUEST----------", Level.INFO);
         String urlToSend = this.url + "?action=editObject&objectType=" + this.objectType
@@ -317,8 +343,7 @@ public class MaarchCM extends JApplet {
             this.appPath, 
             this.userLocalDirTmp, 
             this.fileToEdit, 
-            this.os,
-            this.userLocalDirTmp
+            this.os
         );
         this.logger.log("----------END CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
         

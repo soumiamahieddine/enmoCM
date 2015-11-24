@@ -76,7 +76,7 @@ public class FileManager {
     */
     public boolean createFile(String encodedContent, final String pathTofile) throws IOException, PrivilegedActionException{
         final byte[] decodedBytes = Base64.decodeBase64(encodedContent);
-        FileOutputStream fos = (FileOutputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+        AccessController.doPrivileged(new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
                     FileOutputStream fos = new FileOutputStream(pathTofile);
                     fos.write(decodedBytes);
@@ -104,15 +104,13 @@ public class FileManager {
     * @param pathToFileToLaunch path to the file to launch
     * @param fileToLaunch name of the file to launch
     * @param os os of the workstation
-    * @param localTmpDir path to the tmp dir
     * @return boolean
     */
     public boolean createBatFile(
             final String pathToBatFile, 
             final String pathToFileToLaunch, 
             final String fileToLaunch, 
-            final String os,
-            final String localTmpDir
+            final String os
             ) throws IOException, PrivilegedActionException {
         final Writer out;
         if ("win".equals(os)) {
@@ -198,13 +196,11 @@ public class FileManager {
     */
     public String findGoodProgramWithExt(String ext) {
         String program = "";
-        if ("docx".equals(ext.toLowerCase()) || "doc".equals(ext.toLowerCase())) {
+        if ((ext.equalsIgnoreCase("docx") || ext.equalsIgnoreCase("doc"))) {
             program = "winword.exe";
-        } else if ("xlsx".equals(ext.toLowerCase()) || "xls".equals(ext.toLowerCase())) {
+        } else if (ext.equalsIgnoreCase("xlsx") || ext.equalsIgnoreCase("xls")) {
             program = "excel.exe";
-        } else if ("pptx".equals(ext.toLowerCase()) || "ppt".equals(ext.toLowerCase())) {
-            program = "powerpnt.exe";
-        } else if ("pptx".equals(ext.toLowerCase()) || "ppt".equals(ext.toLowerCase())) {
+        } else if (ext.equalsIgnoreCase("pptx") || ext.equalsIgnoreCase("ppt")) {
             program = "powerpnt.exe";
         } else {
             program = "soffice.exe";
