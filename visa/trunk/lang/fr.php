@@ -34,7 +34,10 @@ if (!defined("_VISA_ANSWERS"))
 if (!defined("_VISA_ANSWERS_DESC"))
     define("_VISA_ANSWERS_DESC", "Permet de viser les projets de réponse");
 
-if (!defined("_NO_VISA")) define("_NO_VISA", "Aucune personne désignée en visa");
+if (!defined("_NO_VISA"))
+    define("_NO_VISA", "Aucune personne désignée en visa");
+if (!defined("_NO_RESPONSE_PROJECT_VISA"))
+    define("_NO_RESPONSE_PROJECT_VISA", "Veuillez éditer au moins une fois la pièce jointe afin que le parapheur puisse l'afficher");
 
 // CIRCUIT D"AVIS
 if (!defined("_AVIS_WORKFLOW"))

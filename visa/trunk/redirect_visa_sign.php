@@ -1,15 +1,32 @@
 <?php
 
-$confirm = false;
-$etapes = array('form');
-$frm_width='355px';
-$frm_height = 'auto';
 
-require("modules/entities/entities_tables.php");
-require_once("modules/entities/class/EntityControler.php");
-require_once('modules/entities/class/class_manage_entities.php');
 require_once('modules/visa/class/class_modules_tools.php');
 
+$etapes = [];
+$error_visa = false;
+$error_visa_response_project = false;
+
+$visa = new visa();
+$curr_visa_wf = $visa->getWorkflow($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'], 'VISA_CIRCUIT');
+
+if (count($curr_visa_wf['sign']) == 0){
+    $error_visa = true;
+}
+
+if (!$visa->hasResponseProject($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'])){
+    $error_visa_response_project = true;
+}
+
+if (!$error_visa && !$error_visa_response_project){
+    require("modules/entities/entities_tables.php");
+    require_once("modules/entities/class/EntityControler.php");
+    require_once('modules/entities/class/class_manage_entities.php');
+    $confirm = false;
+    $etapes = array('form');
+    $frm_width='355px';
+    $frm_height = 'auto';
+}
 
  function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
  {

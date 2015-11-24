@@ -164,7 +164,24 @@ class visa extends Database
 		}
 		return $array_reponses;
 	}
-	
+
+	public function hasResponseProject($res_id, $coll_id){
+		$db = new Database();
+		$stmt = $db->query("SELECT * from res_attachments WHERE res_id_master = ? and coll_id = ? and attachment_type = 'response_project' ", array($res_id, $coll_id));
+		if ($stmt->rowCount() <= 0)
+			return false;
+		$res = $stmt->fetchObject();
+		$filename = $res->filename;
+		$stmt = $db->query("SELECT * from res_attachments WHERE res_id_master = ? and coll_id = ? and attachment_type = 'converted_pdf' ORDER BY creation_date DESC", array($res_id, $coll_id));
+		if ($stmt->rowCount() <= 0)
+			return false;
+		$res = $stmt->fetchObject();
+		$pdfFilename = $res->filename;
+		if (str_replace('.docx', '',$filename) === str_replace('.pdf', '',$pdfFilename))
+			return true;
+		return false;
+	}
+
 	public function getWorkflow($res_id, $coll_id, $typeList){
 		require_once('modules/entities/class/class_manage_listdiff.php');
         $listdiff = new diffusion_list();

@@ -26,7 +26,8 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 * $confirm  bool true
 */
  
- $error_visa = false;
+$error_visa = false;
+$error_visa_response_project = false;
  
 $visa = new visa();
 $curr_visa_wf = $visa->getWorkflow($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'], 'VISA_CIRCUIT');
@@ -35,11 +36,15 @@ if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0){
 	$error_visa = true;
 }
 
+if (!$visa->hasResponseProject($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'])){
+	$error_visa_response_project = true;
+}
+
 $confirm = true;
 /**
 * $etapes  array Contains only one etap, the status modification
 */
- $etapes = array('empty_error');
+$etapes = array('empty_error');
  
  function manage_empty_error($arr_id, $history, $id_action, $label_action, $status)
 {

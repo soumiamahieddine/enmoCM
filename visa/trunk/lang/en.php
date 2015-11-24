@@ -75,6 +75,12 @@ if (!defined("ADD_USER_WORKFLOW"))
 if (!defined("DEL_USER_WORKFLOW"))
     define("DEL_USER_WORKFLOW", "Delete user from the workflow");
 
+if (!defined("_NO_VISA"))
+    define("_NO_VISA", "Aucune personne désignée en visa");
+
+if (!defined("_NO_RESPONSE_PROJECT_VISA"))
+    define("_NO_RESPONSE_PROJECT_VISA", "Please edit project response");
+
 if (!defined("_NO_NEXT_STEP_VISA"))
     define("_NO_NEXT_STEP_VISA", "C'ant do this action. The workflow doesn't have others steps.");
 
