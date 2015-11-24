@@ -764,11 +764,11 @@ class list_show extends functions
                 <?php  for($i=ord('A'); $i <= ord('Z');$i++)
                 {
                     ?>
-                    <a  href="<?php functions::xecho($link);?>&amp;<?php functions::xecho($whatinput );?>=<?php echo chr($i);?>"><?php echo chr($i);?></a>
+                    <a  href="<?php echo $link;?>&amp;<?php functions::xecho($whatinput );?>=<?php echo chr($i);?>"><?php echo chr($i);?></a>
                     <?php
                 }
                 ?>
-                - <a href="<?php functions::xecho($link);?>&amp;<?php functions::xecho($whatinput );?>="><?php echo $all_text;?></a>
+                - <a href="<?php echo $link;?>&amp;<?php functions::xecho($whatinput );?>="><?php echo $all_text;?></a>
             </td>
             <td  align="right">
             <?php
@@ -786,9 +786,9 @@ class list_show extends functions
                         <div id="<?php functions::xecho($whatListinput );?>" class="autocomplete"></div>
                         <script type="text/javascript">
                         <?php if ($autoCompletionArray2['searchBoxAutoCompletionUpdate']) { ?>
-                                launch_autocompleter_update('<?php functions::xecho($autoCompletionArray2['list_script_url']);?>', '<?php functions::xecho($whatinput );?>', '<?php functions::xecho($whatListinput );?>', '<?php functions::xecho($autoCompletionArray2['number_to_begin']);?>', 'selectedObject')
+                                launch_autocompleter_update('<?php echo $autoCompletionArray2['list_script_url'];?>', '<?php functions::xecho($whatinput );?>', '<?php functions::xecho($whatListinput );?>', '<?php functions::xecho($autoCompletionArray2['number_to_begin']);?>', 'selectedObject')
                             <?php } else { ?>
-                                initList('<?php functions::xecho($whatinput );?>', '<?php functions::xecho($whatListinput );?>', '<?php functions::xecho($autoCompletionArray2['list_script_url']);?>', 'what', '<?php functions::xecho($autoCompletionArray2['number_to_begin']);?>');
+                                initList('<?php functions::xecho($whatinput );?>', '<?php functions::xecho($whatListinput );?>', '<?php echo $autoCompletionArray2['list_script_url'];?>', 'what', '<?php functions::xecho($autoCompletionArray2['number_to_begin']);?>');
                             <?php } ?>
                         </script>
                         <input type="hidden" name="selectedObject" id="selectedObject" />
