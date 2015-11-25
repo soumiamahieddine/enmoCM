@@ -334,6 +334,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	$db = new Database();
 	$frm_str .= '<div id="visa_right">';
+	$frm_str .= '<div style="height:100%;">';
 	$frm_str .= '<dl id="tabricatorRight" >';
 	$tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
 	for ($i=0; $i<count($tab_path_rep_file);$i++){
@@ -397,6 +398,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	
 	$frm_str .= '</dl>';
+	$frm_str .= '</div>';
 	$frm_str .= '<div class="toolbar">';
 	$frm_str .= '<table style="width:90%;">';	
 	
@@ -492,7 +494,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</tr>';	
 	$frm_str .= '</table>';	
 	
-	$frm_str .= '</div>';	
+	$frm_str .= '</div>';
 	$frm_str .= '</div>';
 	
 	$frm_str .= '<div id="modalPIN">';
