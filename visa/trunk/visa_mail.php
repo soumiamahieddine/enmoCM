@@ -336,27 +336,29 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	$db = new Database();
 	$frm_str .= '<div id="visa_right">';
-	$frm_str .= '<div style="height:100%;">';
 	$frm_str .= '<dl id="tabricatorRight" >';
 	$tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
 	for ($i=0; $i<count($tab_path_rep_file);$i++){
 		$num_rep = $i+1;
-		if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
-		else $titleRep = $tab_path_rep_file[$i]['title'];
+		if (strlen($tab_path_rep_file[$i]['title']) > 20)
+			$titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
+		else
+			$titleRep = $tab_path_rep_file[$i]['title'];
 		$frm_str .= '<dt id="ans_'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'" onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.', '.$tab_path_rep_file[$i]['is_version'].');">'.$titleRep.'</dt><dd id="content_'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'">';
 		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master='.$res_id.'&id='.$tab_path_rep_file[$i]['res_id'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
-		 $frm_str .= '</dd>';
+		$frm_str .= '</dd>';
 	}
-		$stmt = $db->query("SELECT res_id FROM "
-            . $_SESSION['tablename']['attach_res_attachments']
-            . " WHERE status <> 'DEL' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
-		if ($stmt->rowCount() > 0) {
-            $nb_attach = " (<span id=\"nb_attach\">".$stmt->rowCount()."</span>)";
-        }
-	
-		$frm_str .= '<dt id="onglet_pj" onclick="$(\'cur_idAffich\').value=0;">'. _ATTACHED_DOC .$nb_attach.'</dt><dd id="page_pj">';
-		
-		if ($core_tools->is_module_loaded('attachments')) {
+	$stmt = $db->query("SELECT res_id FROM "
+		. $_SESSION['tablename']['attach_res_attachments']
+		. " WHERE status <> 'DEL' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
+	if ($stmt->rowCount() > 0) {
+		$nb_attach = " (<span id=\"nb_attach\">".$stmt->rowCount()."</span>)";
+	}
+
+	$frm_str .= '<dt id="onglet_pj" onclick="$(\'cur_idAffich\').value=0;">'. _ATTACHED_DOC .$nb_attach.'</dt>';
+	$frm_str .= '<dd id="page_pj">';
+
+	if ($core_tools->is_module_loaded('attachments')) {
         require 'modules/templates/class/templates_controler.php';
         $templatesControler = new templates_controler();
         $templates = array();
@@ -400,7 +402,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	
 	$frm_str .= '</dl>';
-	$frm_str .= '</div>';
 	$frm_str .= '<div class="toolbar">';
 	$frm_str .= '<table style="width:90%;">';	
 	
