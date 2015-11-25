@@ -182,7 +182,7 @@ class visa extends Database
 
 	public function hasResponseProject($res_id, $coll_id){
 		$db = new Database();
-		$stmt = $db->query("SELECT * from res_attachments WHERE res_id_master = ? and coll_id = ? and attachment_type IN ('response_project', 'print_folder', 'transfer') ", array($res_id, $coll_id));
+		$stmt = $db->query("SELECT * from res_attachments WHERE res_id_master = ? and coll_id = ? and attachment_type IN ('response_project', 'print_folder', 'waybill', 'transfer') ", array($res_id, $coll_id));
 		if ($stmt->rowCount() <= 0)
 			return false;
 
