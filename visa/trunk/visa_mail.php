@@ -202,6 +202,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			if (strlen($data['contact']) > 25) $contact = substr($data['contact'],0,25).'...';
 			else $contact = $data['contact'];
 			$frm_str .= $contact;
+		} else {
+			$frm_str .= _MULTI . '-' . _DEST;
 		}
 		$frm_str .= '</li>';
 		
