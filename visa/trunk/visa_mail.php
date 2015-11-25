@@ -446,7 +446,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</form>';
 		$frm_str .= '</td>';
 		$frm_str .= '<td style="width:25%";">';	
-		if ($core->test_service('sign_document', 'visa', false) && $currentStatus == 'ESIG') {
+		//if ($core->test_service('sign_document', 'visa', false) && $currentStatus == 'ESIG') {
+		if ($core->test_service('sign_document', 'visa', false) ) {
 			$color = ' style="" ';
 			if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response') $color = ' style="color:green" ';
 			if ($_SESSION['modules_loaded']['visa']['showAppletSign'] == "true"){
