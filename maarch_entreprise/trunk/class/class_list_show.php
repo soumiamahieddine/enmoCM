@@ -1343,7 +1343,7 @@ class list_show extends functions
                                 {
                                     $path_auth = preg_replace("/(&(?!amp;))/", "&amp;", $path_auth);
                             ?>
-                                <a href="<?php functions::xecho($path_auth.$param_comp);?>" class="actionList" onclick="return(confirm('<?php echo _REALLY_AUTHORIZE." "; if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
+                                <a href="<?php echo($path_auth.$param_comp);?>" class="actionList" onclick="return(confirm('<?php echo _REALLY_AUTHORIZE." "; if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
                                  else { echo $admin_id; } ?> ?'));"><i class="fa fa-check fa-2x" title="<?php echo _AUTHORIZE;?>"></i></a>
                                 <?php
                                 }
