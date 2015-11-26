@@ -34,6 +34,9 @@ require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
 
 class visa extends Database
 {
+
+	var	$fileNameNotConverted;
+
 	/***
 	* Build Maarch module tables into sessions vars with a xml configuration file
 	*
@@ -181,16 +184,19 @@ class visa extends Database
 	}
 
 	public function hasResponseProject($res_id, $coll_id){
+		$this->fileNameNotConverted = null;
+
 		$db = new Database();
 		$stmt = $db->query("SELECT * from res_attachments WHERE res_id_master = ? and coll_id = ? and attachment_type IN ('response_project', 'print_folder', 'signed_response', 'outgoing_mail', 'waybill', 'transfer') ", array($res_id, $coll_id));
-		if ($stmt->rowCount() <= 0)
+		if ($stmt->rowCount() <= 0) {
 			return false;
+		}
 
 		$resFirstFiles = [];
 
 		while($res = $stmt->fetchObject()){
 			if ($res->format !== 'pdf')
-				array_push($resFirstFiles, $res->filename);
+				array_push($resFirstFiles, $res);
 		}
 
 		$stmt = $db->query("SELECT * from res_attachments WHERE res_id_master = ? and coll_id = ? and attachment_type IN ('converted_pdf') ", array($res_id, $coll_id));
@@ -202,9 +208,10 @@ class visa extends Database
 		while($res = $stmt->fetchObject()){
 			array_push($resSecondFiles, $res->filename);
 		}
-		foreach($resFirstFiles as $docFileName){
-			if ($this->hasSameFileInArray($docFileName, $resSecondFiles))
+		foreach($resFirstFiles as $tmpObj){
+			if ($this->hasSameFileInArray($tmpObj->filename, $resSecondFiles))
 				continue;
+			$this->fileNameNotConverted = $tmpObj->title;
 			return false;
 		}
 		return true;
