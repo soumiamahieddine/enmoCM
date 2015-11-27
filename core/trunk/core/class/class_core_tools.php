@@ -495,7 +495,7 @@ class core_tools extends functions
                 $tmp = htmlentities  ( $tmp,ENT_COMPAT, 'UTF-8', true); // Encodes
                 ?>
                 <li onmouseover="this.className='on';" onmouseout="this.className='';">
-                <a href="#" onclick="window.open('<?php functions::xecho($tmp);?>', '<?php 
+                <a href="#" onclick="window.open('<?php echo($tmp);?>', '<?php
                     if(isset($menu[$i]['target']) && $menu[$i]['target'] <> '') {
                         echo $menu[$i]['target'];
                     } else {
