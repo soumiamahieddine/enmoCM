@@ -439,12 +439,18 @@ function displayDelCheck($groupId)
                 array($old_group, $users)
             );
             if($_POST['group_id'] != 'no_group'){
+                $stmt = $db->query("select * from usergroup_content WHERE group_id = ?", array($new_group));
+                $usersPresentInGroup = [];
+                while($res = $stmt->fetchObject())
+                    array_push($usersPresentInGroup, $res->user_id);
                 foreach ($users as $key => $value) {
-                    $db->query(
-                        "INSERT INTO usergroup_content(group_id, user_id, primary_group) values (?, ?, 'N')",
-                        array($new_group, $value)
-                    );
-                } 
+                    if (!in_array($value, $usersPresentInGroup)){
+                        $db->query(
+                            "INSERT INTO usergroup_content(group_id, user_id, primary_group) values (?, ?, 'N')",
+                            array($new_group, $value)
+                        );
+                    }
+                }
 
                 $_SESSION['info'] = _DELETED_GROUP.' : '.$old_group;
              } ?>
