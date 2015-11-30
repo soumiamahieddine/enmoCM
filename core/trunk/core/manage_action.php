@@ -387,7 +387,8 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
                     }
                     $what .= ' : ';
                 }
-                $what .= $label_action.'('._NUM.$arr_res[$i].') ';
+                //$what .= $label_action.'('._NUM.$arr_res[$i].') ';
+                $what .= $label_action;
                 if(isset($res_action['history_msg']) && !empty($res_action['history_msg']))
                 {
                     $what .= $res_action['history_msg'];
