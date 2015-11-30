@@ -90,32 +90,52 @@ if ($core->is_module_loaded('notes')){
 /* Partie droite */
 $right_html = '';
 $tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
-	for ($i=0; $i<count($tab_path_rep_file);$i++){
-		$num_rep = $i+1;
-		if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
+$cptAttach = count($tab_path_rep_file);
+if ($cptAttach < 6) {
+	$viewMode = 'extended';
+} elseif ($cptAttach < 10) {
+	$viewMode = 'small';
+} else {
+	$viewMode = 'verysmall';
+}
+for ($i=0; $i<count($tab_path_rep_file);$i++) {
+	$num_rep = $i+1;
+	if ($viewMode == 'verysmall') {
+		$titleRep = $i + 1;
+	} elseif ($viewMode == 'small') {
+		$titleRep = substr($tab_path_rep_file[$i]['title'],0,10);
+	} else {
+		if (strlen($tab_path_rep_file[$i]['title']) > 15) $titleRep = substr($tab_path_rep_file[$i]['title'],0,15) . '...';
 		else $titleRep = $tab_path_rep_file[$i]['title'];
-		$titleRep = str_replace("'", "'",$titleRep);
-		$right_html .= '<dt id="ans_'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'" onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.', '.$tab_path_rep_file[$i]['is_version'].');">'.$titleRep.'</dt><dd id="content_'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'">';
-		$right_html .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master='.$res_id.'&id='.$tab_path_rep_file[$i]['res_id'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
-		 $right_html .= '</dd>';
 	}
+	//if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
+	//else $titleRep = $tab_path_rep_file[$i]['title'];
+	$titleRep = str_replace("'", "'",$titleRep);
+	$right_html .= '<dt title="' . $_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']] . ' : '  
+				. $tab_path_rep_file[$i]['title'] . '" id="ans_' . $num_rep . '_' 
+				. $tab_path_rep_file[$i]['res_id'] 
+				. '" onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.', '.$tab_path_rep_file[$i]['is_version'].');">'
+				. $titleRep . '</dt><dd id="content_' . $num_rep . '_' . $tab_path_rep_file[$i]['res_id'] . '">';
+	$right_html .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master='.$res_id.'&id='.$tab_path_rep_file[$i]['res_id'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
+	$right_html .= '</dd>';
+}
 	
 		$db = new Database();
 		$stmt = $db->query("select res_id from res_view_attachments where status NOT IN ('DEL','OBS') and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ?",array($res_id,$coll_id));
 		if ($stmt->rowCount() > 0) {
-			$nb_attach = ' (<span id="nb_attach">' . $stmt->rowCount(). '</span>)';
+			$nb_attach = ' (<span id="nb_attach"><b>' . $stmt->rowCount(). '</b></span>)';
 		}
 	
-		$right_html .= '<dt id="onglet_pj">'. _ATTACHED_DOC .$nb_attach.'</dt><dd id="page_pj">';
+		$right_html .= '<dt id="onglet_pj">PJ ' . $nb_attach.'</dt><dd id="page_pj">';
 		
 		if ($core->is_module_loaded('attachments')) {
-        require 'modules/templates/class/templates_controler.php';
-        $templatesControler = new templates_controler();
-        $templates = array();
-        $templates = $templatesControler->getAllTemplatesForProcess($curdest);
-        $_SESSION['destination_entity'] = $curdest;
-        //var_dump($templates);
-        $right_html .= '<div id="list_answers_div" onmouseover="this.style.cursor=\'pointer\';" style="width:920px;">';
+	        require 'modules/templates/class/templates_controler.php';
+	        $templatesControler = new templates_controler();
+	        $templates = array();
+	        $templates = $templatesControler->getAllTemplatesForProcess($curdest);
+	        $_SESSION['destination_entity'] = $curdest;
+	        //var_dump($templates);
+	        $right_html .= '<div id="list_answers_div" onmouseover="this.style.cursor=\'pointer\';" style="width:920px;">';
             $right_html .= '<div class="block" style="margin-top:-2px;">';
                 $right_html .= '<div id="processframe" name="processframe">';
                     $right_html .= '<center><h2>' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
@@ -142,8 +162,8 @@ $tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
                 $right_html .= '</div>';
             $right_html .= '</div>';
             $right_html .= '<hr />';
-        $right_html .= '</div>';
-    }
+        	$right_html .= '</div>';
+    	}
 	
 	
 		$right_html .= '</dd>';
@@ -154,4 +174,3 @@ $tab_path_rep_file = $visa->get_rep_path($res_id, $coll_id);
 //echo "{status : 1,avancement:'".$avancement_html."',circuit:'".$circuit_html."',notes_dt:'".$notes_html_dt."',notes_dd:'".$notes_html_dd."'}";
 echo "{status : 1,left_html:'".addslashes($left_html)."',right_html:'".addslashes($right_html)."',valid_button:'".addslashes($valid_but)."',id_rep:'".$tab_path_rep_file[0]['res_id']."',is_vers_rep:'".$tab_path_rep_file[0]['is_version']."'}";
 exit();
-?>
