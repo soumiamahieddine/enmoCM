@@ -1271,7 +1271,7 @@ class types extends database
                 if ($indexes[$j]['column'] == $fieldName
                     || 'doc_' . $indexes[$j]['column'] == $fieldName
                 ) {
-					if ( $indexes[$j]['type'] = float || $indexes[$j]['type'] = integer )
+					if ( $indexes[$j]['type'] == 'float' || $indexes[$j]['type'] == 'integer' )
 					{
 						       $jsonTxt .= " '" . $fieldName . "' : ['"
                              . addslashes(trim($val)) . "'],";
