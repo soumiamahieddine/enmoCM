@@ -187,7 +187,7 @@ class visa extends Database
 		$this->fileNameNotConverted = null;
 
 		$db = new Database();
-		$stmt = $db->query("SELECT * from res_attachments WHERE res_id_master = ? and coll_id = ? and attachment_type IN ('response_project', 'print_folder', 'signed_response', 'outgoing_mail', 'waybill', 'transfer') ", array($res_id, $coll_id));
+		$stmt = $db->query("SELECT * FROM res_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL') AND attachment_type IN ('response_project', 'print_folder', 'signed_response', 'outgoing_mail', 'waybill', 'transfer') ", array($res_id, $coll_id));
 		if ($stmt->rowCount() <= 0) {
 			return false;
 		}
@@ -199,7 +199,7 @@ class visa extends Database
 				array_push($resFirstFiles, $res);
 		}
 
-		$stmt = $db->query("SELECT * from res_attachments WHERE res_id_master = ? and coll_id = ? and attachment_type IN ('converted_pdf') ", array($res_id, $coll_id));
+		$stmt = $db->query("SELECT * FROM res_attachments WHERE res_id_master = ? AND coll_id = ? AND attachment_type IN ('converted_pdf') ", array($res_id, $coll_id));
 		if ($stmt->rowCount() <= 0 && !empty($resFirstFiles))
 			return false;
 
