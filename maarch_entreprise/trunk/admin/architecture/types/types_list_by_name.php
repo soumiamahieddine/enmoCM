@@ -31,18 +31,19 @@
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $db = new Database();
-
+$what = $_REQUEST['what'];
 $stmt= $db->query("SELECT description as tag FROM "
 	.$_SESSION['tablename']['doctypes']
 	." WHERE lower(description) like lower(?) and enabled = 'Y' ORDER BY description",
-	array($_REQUEST['what'].'%'));
+	array('%'.$what.'%'));
 
 $listArray = array();
+echo "<ul>\n";
 while($line = $stmt->fetchObject())
 {
 	array_push($listArray, $line->tag);
+	//print_r($listArray);
 }
-echo "<ul>\n";
 $authViewList = 0;
 
 foreach($listArray as $what)
@@ -51,8 +52,8 @@ foreach($listArray as $what)
 	{
 		$flagAuthView = true;
 	}
-    if(stripos($what, $_REQUEST['what']) === 0)
-    {
+    //if(stripos($what, $_REQUEST['what']) === 0)
+    //{
         echo "<li>".functions::xssafe($what)."</li>\n";
 		if($flagAuthView)
 		{
@@ -60,6 +61,6 @@ foreach($listArray as $what)
 			break;
 		}
 		$authViewList++;
-    }
+    //}
 }
 echo "</ul>";
