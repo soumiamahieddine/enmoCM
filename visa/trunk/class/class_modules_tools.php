@@ -212,6 +212,9 @@ class visa extends Database
 			if ($this->hasSameFileInArray($tmpObj->filename, $resSecondFiles))
 				continue;
 			$this->fileNameNotConverted = $tmpObj->title;
+			if ($tmpObj->subject)
+				$this->fileNameNotConverted .= ' Sujet : ' . $tmpObj->subject;
+			$this->fileNameNotConverted .= ' Format : ' . $tmpObj->format;
 			return false;
 		}
 		return true;
