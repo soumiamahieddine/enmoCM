@@ -46,13 +46,14 @@ if ($whereSecurityOnEntities == '') {
 
 $db = new Database();
 $stmt = $db->query(
-    "SELECT DISTINCT(users.user_id), users.lastname as tag FROM users, users_entities "
+    "SELECT DISTINCT(users.user_id), CONCAT(users.lastname,' ',users.firstname) as tag FROM users, users_entities "
     . " WHERE ("
         . "lower(users.lastname) like lower(:what) "
         . " or lower(users.user_id) like lower(:what) "
+        . " or lower(users.firstname) like lower(:what) "
     . ") and users.status <> 'DEL' " . $whereSecurityOnEntities . " and (users.user_id = users_entities.user_id) "
-    . " order by users.lastname",
-    array(':what' => $_REQUEST['what'].'%')
+    . " order by tag",
+    array(':what' => '%'.$_REQUEST['what'].'%')
 );
 
 $listArray = array();

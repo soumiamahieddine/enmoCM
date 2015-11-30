@@ -175,8 +175,8 @@ function display_list(){
     $arrayPDO = array();
     if(isset($_REQUEST['what'])){
         $what = $_REQUEST['what'];
-		$where .= " and (lower(lastname) like lower(?) or lower(users.user_id) like lower(?) )";
-        $arrayPDO = array($what.'%', $what.'%');
+		$where .= " and (lower(lastname) like lower(?) or lower(users.user_id) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
+        $arrayPDO = array($what.'%', $what.'%', $what);
     }
 
     // Checking order and order_field values
@@ -195,7 +195,6 @@ function display_list(){
 	if($entities_loaded == true ){
 		$tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype']);
     } else {
-	
 		require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 		$ent = new entity();
 		$my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
@@ -209,8 +208,8 @@ function display_list(){
 		$what = '';
 		if(isset($_REQUEST['what'])){
 			$what = $_REQUEST['what'];
-			$where .= " and lower(lastname) like lower(?)";
-            $arrayPDO = array($what.'%');
+			$where .= " and lower(lastname) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?";
+            $arrayPDO = array($what.'%',$what);
 		}
 
 		// Checking order and order_field values
