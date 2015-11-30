@@ -1322,9 +1322,11 @@ if (!isset($_REQUEST['id'])) {
     $content .= '<input type="hidden" name="chrono" id="chrono" />';
     $content .= '</p>';
     $content .= '<br/>';
+    $content .= '<p style="text-align:right;padding-right:60px;"><i class="fa fa-paperclip" title="'._LOADED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});"></i> <i class="fa fa-file-text-o" title="'._GENERATED_FILE.'" style="cursor:pointer;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'choose_file\').setStyle({display: \'none\'});"></i></p>';
     $content .= '<p>';
-    $content .= '<label>'. _MODEL.'</label>';
-    $content .= '<select name="templateOffice" id="templateOffice" onchange="showEditButton();">';
+    //$content .= '<label>'. _MODEL.'</label>';
+    $content .= '<label>'. _FILE.'</label>';
+    $content .= '<select name="templateOffice" id="templateOffice" style="display:none;" onchange="showEditButton();">';
     $content .= '<option value="">'. _CHOOSE_MODEL.'</option>';
 /*                    for ($i=0;$i<count($templates);$i++) {
                         if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
@@ -1333,18 +1335,28 @@ if (!isset($_REQUEST['id'])) {
                         }
                         $content .= '</option>';
                     }*/
-    $content .= '</select>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
-    $content .= '<label>&nbsp;</label>';
+    $content .= '</select>';
+    $content .= '<iframe style="width:210px" name="choose_file" id="choose_file" frameborder="0" scrolling="no" height="25" src="' . $_SESSION['config']['businessappurl']
+        . 'index.php?display=true&module=attachments&page=choose_attachment"></iframe>';
+
+
+    $content .='&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
+    
+    $content .= '</p>';
+       $content .= '<p>'; 
     if(!isset($_REQUEST['id'])){
+        
+        $content .= '<label>&nbsp;</label>';
         $content .= '<input type="button" value="';
         $content .= _EDIT_MODEL;
         $content .= '" name="edit" id="edit" style="display:none" class="button" '
             .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&attachType=\'+$(\'attachment_types\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
             .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
     }
-    $content .= '</p>';
+            $content .= '</p>';
+
     $content .= '<br/>';
-    $content .= '<p>';
+    /*$content .= '<p style="display:none;">';
     $content .= '<label>&nbsp;</label>';
     $content .=  _OR;
     $content .= '</p>';
@@ -1356,7 +1368,7 @@ if (!isset($_REQUEST['id'])) {
     $content .= '<input type="text" name="not_enabled" id="not_enabled" disabled value="'. _ALREADY_MODEL_SELECTED.'" style="display:none" />';
     $content .= '<i class="fa fa-check-square fa-2x" style="display:none;margin-top:-15px" id="file_loaded"></i>';
     $content .= '</p>';
-    $content .= '<br/>';
+    $content .= '<br/>';*/
 }
 
 $content .= '<p>';
@@ -1390,16 +1402,16 @@ if ($core->test_admin('my_contacts', 'apps', false)) {
     $content .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
             . '" onclick="new Effect.toggle(\'create_contact_div_attach\', '
             . '\'blind\', {delay:0.2});return false;" '
-            . 'style="display:inline;" ><i class="fa fa-pencil fa-2x" title="' . _CREATE_CONTACT . '"></i></a>';
+            . 'style="display:inline;" ><i class="fa fa-pencil" title="' . _CREATE_CONTACT . '"></i></a>';
 }
-$content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe_attach\').src=\'' . $_SESSION['config']['businessappurl']
-    . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'&fromAttachmentContact=Y\';new Effect.toggle(\'info_contact_div_attach\', '
-    . '\'blind\', {delay:0.2});return false;"'
-    . ' style="visibility:hidden;padding-left:30%"><i class="fa fa-book fa-2x"></i></a>';
 $content .= '</label>';
 $content .= '<input type="text" name="contact_attach" onblur="display_contact_card(\'visible\', \'contact_card_attach\');" onkeyup="erase_contact_external_id(\'contact_attach\', \'contactidAttach\');erase_contact_external_id(\'contact_attach\', \'addressidAttach\');" id="contact_attach" value="';
 $content .= $data_contact;
 $content .= '"/>';
+$content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe_attach\').src=\'' . $_SESSION['config']['businessappurl']
+    . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'&fromAttachmentContact=Y\';new Effect.toggle(\'info_contact_div_attach\', '
+    . '\'blind\', {delay:0.2});return false;"'
+    . ' style="visibility:hidden;"> <i class="fa fa-book"></i></a>';
 $content .= '<div id="show_contacts_attach" class="autocomplete autocompleteIndex"></div>';
 $content .= '</p>';
 $content .= '<input type="hidden" id="contactidAttach" name="contactidAttach" value="';

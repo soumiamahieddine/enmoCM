@@ -86,9 +86,19 @@ $upFileOK = false;
         <input type="hidden" name="display" value="true" />
         <input type="hidden" name="dir" value="indexing_searching" />
         <input type="hidden" name="page" value="choose_attachment" />
-        <p>
+        <?php
+            if (!empty($_SESSION['upfile']['local_path']) && empty($_SESSION['error'])) { ?>
+                <i class="fa fa-check-square fa-2x" title="<?php echo _DOWNLOADED_FILE; ?>"></i>
+                <input type="button" id="fileButton" onclick="$$('#file')[0].click();" class="button"
+                       value="<?php if($_REQUEST['with_file'] == 'true'){ echo _WITHOUT_FILE; } else {echo _DOWNLOADED_FILE;}?>"
+                       style="width: 88%;margin: 0px;margin-top: -2px;font-size: 12px;text-align: center;">
+            <?php } else { ?>
+                <i class="fa fa-remove fa-2x" title="<?php echo _NO_FILE_SELECTED; ?>"></i>
+                <input type="button" id="fileButton" onclick="$$('#file')[0].click();" class="button" value="<?php echo _CHOOSE_FILE; ?>" style="width: 88%;margin: 0px;margin-top: -2px;font-size: 12px;text-align: center;">
+            <?php } ?>
+        <p style="display:none">
         <!-- window.parent.$('title').value = this.value.substring(0,this.value.indexOf('.')); -->
-            <input type="file" name="file" id="file" onchange="window.parent.$('file_loaded').setStyle({display: 'inline'});$('with_file').value='false';this.form.method = 'post';this.form.submit();" value="<?php
+            <input type="file" name="file" id="file" onchange="$('with_file').value='false';this.form.method = 'post';this.form.submit();" value="<?php
                 if (isset($_SESSION['file_path'])) {
                     echo $_SESSION['file_path'];
                 } ?>" style="width:200px" />
