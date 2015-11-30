@@ -82,17 +82,19 @@ if (! empty($_SESSION['error'])) {
             $path = $line->path;
             $filename = $line->filename;
             $format = "pdf";
-           $stmt = $db->query(
+            $pdfFilename = str_ireplace($line->format, $format, $filename);
+            
+            $stmt = $db->query(
                 "select path_template from " . _DOCSERVERS_TABLE_NAME
                 . " where docserver_id = ?",array($docserver)
             );
             //$db->show();
             $lineDoc = $stmt->fetchObject();
             $docserver = $lineDoc->path_template;
-            $file = $docserver . $path . $filename;
+            $file = $docserver . $path . $pdfFilename;
             $file = str_replace("#", DIRECTORY_SEPARATOR, $file);
 			
-			$file = str_replace(pathinfo($file, PATHINFO_EXTENSION), "pdf",$file);
+			//$file = str_replace(pathinfo($file, PATHINFO_EXTENSION), "pdf",$file);
 			
             if (strtoupper($format) == "MAARCH") {
                 if (file_exists($file)) {
