@@ -331,18 +331,37 @@ class visa extends Database
 		return $res->sequence;
 	}
 	
-	public function getUsersVis(){
+	public function getUsersVis($group_id = null){
 		$db = new Database();
 		
-		$stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)  order by users.lastname", array('visa_documents'));
+		if($group_id <> null){
+			$stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ? AND group_id = ?)  order by users.lastname", array('visa_documents',$group_id));
+		}else{
+			$stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)  order by users.lastname", array('visa_documents'));
+		}
 		
 		$tab_users = array();
 		
 		
 		while($res = $stmt->fetchObject()){
-			array_push($tab_users,array('id'=>$res->user_id, 'firstname'=>$res->firstname,'lastname'=>$res->lastname));
+			array_push($tab_users,array('id'=>$res->user_id, 'firstname'=>$res->firstname,'lastname'=>$res->lastname,'group_id'=>$res->group_id));
 		}
 		return $tab_users;
+	}
+
+	public function getGroupVis(){
+		$db = new Database();
+		
+		$stmt = $db->query("SELECT DISTINCT(usergroup_content.group_id),group_desc from usergroups, usergroup_content WHERE usergroups.group_id = usergroup_content.group_id AND usergroup_content.group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)", array('visa_documents'));
+		
+		$tab_usergroup = array();
+		
+		
+		while($res = $stmt->fetchObject()){
+			array_push($tab_usergroup,array('group_id'=>$res->group_id,'group_desc'=>$res->group_desc));
+		}
+		//print_r($tab_usergroup);
+		return $tab_usergroup;
 	}
 	
 	public function allUserVised($res_id, $coll_id, $typeList){
@@ -460,12 +479,17 @@ class visa extends Database
 					$str .= '<tr class="col" id="lineVisaWorkflow_'.$j.'">';
 					$str .= '<td>';
 					if ($bool_modif){
-						$tab_users = $this->getUsersVis();
 						$str .= '<select id="conseiller_'.$j.'" name="conseiller_'.$j.'" >';
 						$str .= '<option value="" >Sélectionnez un utilisateur</option>';
-						foreach($tab_users as $user){
-							$str .= '<option value="'.$user['id'].'" >'.$user['lastname'].', '.$user['firstname'].'</option>';
+						$tab_usergroups = $this->getGroupVis();
+						foreach ($tab_usergroups as $key => $value) {
+							$str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
+							$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
+							foreach($tab_users as $user){
+								$str .= '<option value="'.$user['id'].'" >'.$user['lastname'].', '.$user['firstname'].'</option>';
+							}
 						}
+						$str .= '</optgroup>';
 						$str .= '</select>';
 					}
 					$str .= '<span id="signatory_' . $j . '"> <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
@@ -504,11 +528,19 @@ class visa extends Database
 
 								$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
 								$str .= '<option value="" >Sélectionnez un utilisateur</option>';
-								foreach($tab_users as $user){
-									$selected = " ";
-									if ($user['id'] == $step['user_id'])
-										$selected = " selected";
-									$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+								
+								$tab_usergroups = $this->getGroupVis();
+								foreach ($tab_usergroups as $key => $value) {
+									$str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
+									$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
+									foreach($tab_users as $user){
+										$selected = " ";
+										if ($user['id'] == $step['user_id'])
+											$selected = " selected";
+										$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+
+									}
+									$str .= '</optgroup>';
 								}
 								$str .= '</select>';
 
@@ -587,11 +619,17 @@ class visa extends Database
 							$tab_users = $this->getUsersVis();
 							$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
 							$str .= '<option value="" >Sélectionnez un utilisateur</option>';
-							foreach($tab_users as $user){
-								$selected = " ";
-								if ($user['id'] == $circuit['sign']['users'][0]['user_id'])
-									$selected = " selected";
-								$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+							$tab_usergroups = $this->getGroupVis();
+							foreach ($tab_usergroups as $key => $value) {
+								$str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
+								$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
+								foreach($tab_users as $user){
+									$selected = " ";
+									if ($user['id'] == $circuit['sign']['users'][0]['user_id'])
+										$selected = " selected";
+									$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+								}
+								$str .= '</optgroup>';
 							}
 							$str .= '</select>';
 
