@@ -19,7 +19,8 @@ $db = new Database();
 
 $select = "select entity_label from ".ENT_ENTITIES;
 $where = " where (lower(entity_label) like lower(?) ";
-$where .= " or lower(short_label) like lower(?)) ";
+$where .= " or lower(short_label) like lower(?) ";
+$where .= " or lower(entity_id) like lower(?)) ";
 
 if($_SESSION['user']['UserId'] != 'superadmin')
 {
@@ -32,7 +33,7 @@ if($_SESSION['user']['UserId'] != 'superadmin')
 
 $sql = $select.$where." order by entity_id";
 
-$stmt = $db->query($sql,array($_REQUEST['what']."%",$_REQUEST['what']."%"));
+$stmt = $db->query($sql,array("%".$_REQUEST['what']."%","%".$_REQUEST['what']."%","%".$_REQUEST['what']."%"));
 
 $entities = array();
 while($line = $stmt->fetchObject())
