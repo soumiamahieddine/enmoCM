@@ -140,31 +140,36 @@ class visa extends Database
 		$res = $stmt->fetchObject();
 		$docserver_path = $res->path_template;
 		
-		$stmt = $db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response','outgoing_mail','waybill','transfer') order by creation_date asc", array($res_id));
+		$stmt = $db->query("select filename, format, path, title, res_id, res_id_version, attachment_type from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response','outgoing_mail','waybill','transfer') order by creation_date asc", array($res_id));
 
 		$array_reponses = array();
 		$cpt_rep = 0;
 		while ($res2 = $stmt->fetchObject()){
-			$filename=$res2->filename;
+			$filename = $res2->filename;
+			$format = "pdf";
+            $filename_pdf = str_ireplace($res2->format, $format, $filename);
 			$path = preg_replace('/#/', DIRECTORY_SEPARATOR, $res2->path);
-			$filename_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);
-			if (file_exists($docserver_path.$path.$filename_pdf)){
-				$array_reponses[$cpt_rep]['path'] = $docserver_path.$path.$filename_pdf;
+			//$filename_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);
+			if (file_exists($docserver_path . $path . $filename_pdf)) {
+				$array_reponses[$cpt_rep]['path'] = $docserver_path . $path . $filename_pdf;
 				$array_reponses[$cpt_rep]['title'] = $res2->title;
 				$array_reponses[$cpt_rep]['attachment_type'] = $res2->attachment_type;
-				if ($res2->res_id_version == 0){
+				if ($res2->res_id_version == 0) {
 					$array_reponses[$cpt_rep]['res_id'] = $res2->res_id;
 					$array_reponses[$cpt_rep]['is_version'] = 0;
 				} else {
 					$array_reponses[$cpt_rep]['res_id'] = $res2->res_id_version;
 					$array_reponses[$cpt_rep]['is_version'] = 1;
 				}
-				if ($res2->res_id_version == 0 && $array_reponses[$cpt_rep]['attachment_type'] == 'outgoing_mail'){
+				if ($res2->res_id_version == 0 && $array_reponses[$cpt_rep]['attachment_type'] == 'outgoing_mail') {
 					$array_reponses[$cpt_rep]['is_version'] = 2;
 				}
 				$cpt_rep++;
 			}
 		}
+		/*echo "<pre>";
+		print_r($array_reponses);
+		echo "</pre>";*/
 		return $array_reponses;
 	}
 
