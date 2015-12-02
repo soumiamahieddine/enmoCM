@@ -286,10 +286,9 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
         }
 		elseif( $_POST['req'] == 'first_request' && $error_visa_response_project == true)
         {
-            if ($visa->fileNameNotConverted)
-                echo "{status : 4, error : '" . addslashes(_NO_CONVERTED_PDF_VISA) . $visa->fileNameNotConverted . "', validate : 'OK', 'action_status' : '".functions::xssafe($status)."'}";
-            else
-                echo "{status : 4, error : '".addslashes(_NO_RESPONSE_PROJECT_VISA)."', validate : 'OK', 'action_status' : '".functions::xssafe($status)."'}";
+            echo "{status : 3, form_content : '<div class=\"h2_title\">" . $visa->errorMessageVisa .
+                "</div><p class=\"buttons\"><input type=\"button\" onclick=\"destroyModal(\'" . $modalId . "\')\" class=\"button\" value=\"OK\" id=\"submit\" name=\"submit\"></p>',
+                height : 'auto', width : 'auto', 'mode_frm' : '', validate : 'OK', 'action_status' : '".functions::xssafe($status)."'}";
             exit();
         }
         elseif( $_POST['req'] == 'first_request' && $error_visa_workflow == true)
