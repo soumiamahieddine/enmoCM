@@ -206,10 +206,6 @@ class visa extends Database
 		}
 
 		$stmt = $db->query("SELECT * FROM res_attachments WHERE res_id_master = ? AND coll_id = ? AND attachment_type IN ('converted_pdf') ", array($res_id, $coll_id));
-		if ($stmt->rowCount() <= 0 && !empty($resFirstFiles)) {
-			$this->errorMessageVisa = _NO_CONVERTED_PDF_VISA;
-			return false;
-		}
 
 		$resSecondFiles = [];
 
