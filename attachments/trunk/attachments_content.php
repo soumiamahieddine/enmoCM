@@ -1322,11 +1322,11 @@ if (!isset($_REQUEST['id'])) {
     $content .= '<input type="hidden" name="chrono" id="chrono" />';
     $content .= '</p>';
     $content .= '<br/>';
-    $content .= '<p style="text-align:right;padding-right:60px;"><i class="fa fa-paperclip" title="'._LOADED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});"></i> <i class="fa fa-file-text-o" title="'._GENERATED_FILE.'" style="cursor:pointer;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'choose_file\').setStyle({display: \'none\'});"></i></p>';
+    $content .= '<p style="text-align:left;padding-left:418px;"><i class="fa fa-paperclip" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});"></i> <i class="fa fa-file-text-o" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'choose_file\').setStyle({display: \'none\'});"></i></p>';
     $content .= '<p>';
     //$content .= '<label>'. _MODEL.'</label>';
     $content .= '<label>'. _FILE.'</label>';
-    $content .= '<select name="templateOffice" id="templateOffice" style="display:none;" onchange="showEditButton();">';
+    $content .= '<select name="templateOffice" id="templateOffice" style="display:display:inline-block;" onchange="showEditButton();">';
     $content .= '<option value="">'. _CHOOSE_MODEL.'</option>';
 /*                    for ($i=0;$i<count($templates);$i++) {
                         if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
@@ -1336,7 +1336,7 @@ if (!isset($_REQUEST['id'])) {
                         $content .= '</option>';
                     }*/
     $content .= '</select>';
-    $content .= '<iframe style="width:210px" name="choose_file" id="choose_file" frameborder="0" scrolling="no" height="25" src="' . $_SESSION['config']['businessappurl']
+    $content .= '<iframe style="display:none; width:210px" name="choose_file" id="choose_file" frameborder="0" scrolling="no" height="25" src="' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&module=attachments&page=choose_attachment"></iframe>';
 
 
