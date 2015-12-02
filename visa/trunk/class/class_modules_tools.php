@@ -221,8 +221,8 @@ class visa extends Database
 				continue;
 			if (!$this->errorMessageVisa)
 				$this->errorMessageVisa .= _PLEASE_CONVERT_PDF_VISA;
-			$this->errorMessageVisa .= '<br/>';
-			$this->errorMessageVisa .= $_SESSION['attachment_types'][$tmpObj->attachment_type] . ' | ';
+			$this->errorMessageVisa .= '<br/>&nbsp;&nbsp;';
+			$this->errorMessageVisa .= $_SESSION['attachment_types'][$tmpObj->attachment_type] . ' : ';
 			$this->errorMessageVisa .= $tmpObj->title;
 		}
 		return true;
