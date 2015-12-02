@@ -37,9 +37,11 @@ if (!defined("_VISA_ANSWERS_DESC"))
 if (!defined("_NO_VISA"))
     define("_NO_VISA", "Aucune personne désignée en visa");
 if (!defined("_NO_RESPONSE_PROJECT_VISA"))
-    define("_NO_RESPONSE_PROJECT_VISA", "Veuillez éditer au moins une fois la pièce jointe afin que le parapheur puisse l'afficher");
+    define("_NO_RESPONSE_PROJECT_VISA", "Veuillez au moins créer une pièce jointe et l'éditer");
 if (!defined("_NO_CONVERTED_PDF_VISA"))
-    define("_NO_CONVERTED_PDF_VISA", "Veuillez éditer la pièce jointe ");
+    define("_NO_CONVERTED_PDF_VISA", "Veuillez éditer votre/vos pièce(s) jointe(s)");
+if (!defined("_PLEASE_CONVERT_PDF_VISA"))
+    define("_PLEASE_CONVERT_PDF_VISA", "Veuillez éditer les pièces jointes suivantes : ");
 
 // CIRCUIT D"AVIS
 if (!defined("_AVIS_WORKFLOW"))

@@ -28,7 +28,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
  
 $error_visa = false;
 $error_visa_response_project = false;
- 
+
 $visa = new visa();
 $curr_visa_wf = $visa->getWorkflow($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'], 'VISA_CIRCUIT');
 
@@ -36,7 +36,9 @@ if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0){
 	$error_visa = true;
 }
 
-if (!$visa->hasResponseProject($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'])){
+$visa->checkResponseProject($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id']);
+if ($visa->errorMessageVisa){
+	$modalId = 'modal_414';
 	$error_visa_response_project = true;
 }
 

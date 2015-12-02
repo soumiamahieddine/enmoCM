@@ -35,7 +35,7 @@ require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
 class visa extends Database
 {
 
-	var	$fileNameNotConverted;
+	var	$errorMessageVisa;
 
 	/***
 	* Build Maarch module tables into sessions vars with a xml configuration file
@@ -188,12 +188,13 @@ class visa extends Database
 		return false;
 	}
 
-	public function hasResponseProject($res_id, $coll_id){
-		$this->fileNameNotConverted = null;
+	public function checkResponseProject($res_id, $coll_id) {
+		$this->errorMessageVisa = null;
 
 		$db = new Database();
 		$stmt = $db->query("SELECT * FROM res_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL') AND attachment_type IN ('response_project', 'print_folder', 'signed_response', 'outgoing_mail', 'waybill', 'transfer') ", array($res_id, $coll_id));
 		if ($stmt->rowCount() <= 0) {
+			$this->errorMessageVisa = _NO_RESPONSE_PROJECT_VISA;
 			return false;
 		}
 
@@ -205,8 +206,10 @@ class visa extends Database
 		}
 
 		$stmt = $db->query("SELECT * FROM res_attachments WHERE res_id_master = ? AND coll_id = ? AND attachment_type IN ('converted_pdf') ", array($res_id, $coll_id));
-		if ($stmt->rowCount() <= 0 && !empty($resFirstFiles))
+		if ($stmt->rowCount() <= 0 && !empty($resFirstFiles)) {
+			$this->errorMessageVisa = _NO_CONVERTED_PDF_VISA;
 			return false;
+		}
 
 		$resSecondFiles = [];
 
@@ -216,11 +219,11 @@ class visa extends Database
 		foreach($resFirstFiles as $tmpObj){
 			if ($this->hasSameFileInArray($tmpObj->filename, $resSecondFiles))
 				continue;
-			$this->fileNameNotConverted = $tmpObj->title;
-			if ($tmpObj->subject)
-				$this->fileNameNotConverted .= ' Sujet : ' . $tmpObj->subject;
-			$this->fileNameNotConverted .= ' Format : ' . $tmpObj->format;
-			return false;
+			if (!$this->errorMessageVisa)
+				$this->errorMessageVisa .= _PLEASE_CONVERT_PDF_VISA;
+			$this->errorMessageVisa .= '<br/>';
+			$this->errorMessageVisa .= $_SESSION['attachment_types'][$tmpObj->attachment_type] . ' | ';
+			$this->errorMessageVisa .= $tmpObj->title;
 		}
 		return true;
 	}
