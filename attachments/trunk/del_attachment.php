@@ -17,7 +17,9 @@ $db = new Database();
 if ($_REQUEST['relation'] == 1) {
     $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($_REQUEST['id']) );
 	$pdf_id = $ac->getCorrespondingPdf($_REQUEST['id']);
-	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id) );
+	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id));
+	$document_id = $ac->getCorrespondingDocument($_REQUEST['id']);
+	if (isset($document_id) && $document_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
 	
 } else {
     $stmt = $db->query("SELECT attachment_id_master FROM res_version_attachments WHERE res_id = ?", array($_REQUEST['id']) );
@@ -26,7 +28,9 @@ if ($_REQUEST['relation'] == 1) {
     $stmt = $db->query("UPDATE res_attachments SET status = 'DEL' WHERE res_id = ?", array($res->attachment_id_master));
 	
 	$pdf_id = $ac->getCorrespondingPdf($_REQUEST['id']);
-	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id) );
+	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id));
+	$document_id = $ac->getCorrespondingDocument($_REQUEST['id']);
+	if (isset($document_id) && $document_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
 }
 
 if ($_SESSION['history']['attachdel'] == "true") {

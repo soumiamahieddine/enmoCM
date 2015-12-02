@@ -284,23 +284,49 @@ class attachments_controler
 			$infos['creation_date'] = $line->creation_date;
 			$infos['type_id'] = $line->type_id;
 			$infos['title'] = $line->title;
-			$infos['typist'] = $line->typist;
+            $infos['typist'] = $line->typist;
+            $infos['res_id_master'] = $line->res_id_master;
+			$infos['identifier'] = $line->identifier;
 		}
 		return $infos;
 	}
 	
-	public function getCorrespondingPdf($resId){
+	public function getCorrespondingPdf($resId)
+    {
 		$infos = $this->getAttachmentInfos($resId);
 		$db2 = new Database();
 		$result = 0;
 		$stmt2 = $db2->query(
             "SELECT res_id
                 FROM res_view_attachments 
-                WHERE path = ? AND filename = ? and attachment_type = 'converted_pdf' ORDER BY relation desc", array($infos['path'],pathinfo($infos['pathfile_pdf'], PATHINFO_BASENAME))
+                WHERE path = ? AND filename = ? and attachment_type = 'converted_pdf' ORDER BY relation desc", 
+                array($infos['path'],pathinfo($infos['pathfile_pdf'], PATHINFO_BASENAME))
         );
 		$line = $stmt2->fetchObject();
 		
 		if ($line->res_id != 0) $result = $line->res_id;
 		return $result;
 	}
+
+    public function getCorrespondingDocument($resId)
+    {
+        $infos = $this->getAttachmentInfos($resId);
+        $db2 = new Database();
+        $result = 0;
+        $stmt2 = $db2->query(
+            "SELECT res_id
+                FROM res_view_attachments 
+                WHERE res_id_master = ? and identifier = ? "
+                . "and attachment_type <> 'converted_pdf' and attachment_type <> 'signed_response' and res_id <> ? "
+                . "ORDER BY relation desc", 
+                array(
+                    $infos['res_id_master'], 
+                    $infos['identifier'],
+                    $resId
+                )
+        );
+        $line = $stmt2->fetchObject();
+        if ($line->res_id != 0) $result = $line->res_id;
+        return $result;
+    }
 }
