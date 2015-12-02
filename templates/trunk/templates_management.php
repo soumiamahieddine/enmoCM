@@ -155,19 +155,19 @@ if ($mode == 'list') {
                     <select name="template_attachment_type" id="template_attachment_type">
                         <option value="all" ><?php echo _ALL_ATTACHMENT_TYPES;?></option>
                         <?php
-		                    foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
-		                        ?><option value="<?php functions::xecho($attachmentType);?>" <?php
+                            foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
+                                ?><option value="<?php functions::xecho($attachmentType);?>" <?php
 
-	                            if (isset($_SESSION['m_admin']['templates']['template_attachment_type'])
-	                                && 
-	                                $_SESSION['m_admin']['templates']['template_attachment_type'] == $attachmentType
-	                            ) {
-	                                echo 'selected="selected"';
-	                            }
-	                            ?> >
-		                            <?php functions::xecho($_SESSION['attachment_types'][$attachmentType]);?>
-		                        </option>
-		                    <?php }
+                                if (isset($_SESSION['m_admin']['templates']['template_attachment_type'])
+                                    && 
+                                    $_SESSION['m_admin']['templates']['template_attachment_type'] == $attachmentType
+                                ) {
+                                    echo 'selected="selected"';
+                                }
+                                ?> >
+                                    <?php functions::xecho($_SESSION['attachment_types'][$attachmentType]);?>
+                                </option>
+                            <?php }
                         ?>
                     </select>
                 </p>
@@ -247,24 +247,14 @@ if ($mode == 'list') {
                                     $_SESSION['m_admin']['templates']['current_style']
                                         = $_SESSION['m_admin']['templatesStyles'][0]['filePath'];
                                 }
-                                $extensions=array();
-                                foreach ($_SESSION['m_admin']['templatesStyles'] as $key => $template) {
-                                    if(!in_array($template['fileExt'], $extensions)){
-                                        array_push($extensions, $template['fileExt']);
-                                    }
-                                }
-
-                                foreach ($extensions as $key => $extension_name) {
-                                    echo '<optgroup label="'.$extension_name.'">';
                                 for (
                                     $cptStyle = 0;
                                     $cptStyle < count($_SESSION['m_admin']['templatesStyles']);
                                     $cptStyle ++
                                 ) {
-                                    if ($extension_name == $_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt']) {
-                                                                         
                                     ?>
                                     <option value="<?php
+                                        functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt']); echo ': ';
                                         functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileName']);
                                     ?>" <?php
                                     if (isset($_SESSION['m_admin']['templates']['template_style'])
@@ -274,12 +264,10 @@ if ($mode == 'list') {
                                         echo 'selected="selected"';
                                     }
                                     ?>><?php
+                                        functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt']); echo ': ';
                                         functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileName']);
                                     ?></option>
                                     <?php
-                                }
-                                }
-                                    echo '</optgroup>';
                                 }
                                 ?>
                             </select>
