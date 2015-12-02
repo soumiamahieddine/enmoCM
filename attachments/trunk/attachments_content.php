@@ -1326,7 +1326,7 @@ if (!isset($_REQUEST['id'])) {
     $content .= '<p>';
     //$content .= '<label>'. _MODEL.'</label>';
     $content .= '<label>'. _FILE.'</label>';
-    $content .= '<select name="templateOffice" id="templateOffice" style="display:display:inline-block;" onchange="showEditButton();">';
+    $content .= '<select name="templateOffice" id="templateOffice" style="display:inline-block;" onchange="showEditButton();">';
     $content .= '<option value="">'. _CHOOSE_MODEL.'</option>';
 /*                    for ($i=0;$i<count($templates);$i++) {
                         if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
