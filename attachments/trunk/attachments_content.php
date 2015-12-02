@@ -893,7 +893,26 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $set_update .= ", dest_contact_id = null, dest_address_id = null";
             }
 
-            if ($_SESSION['upfile']['upAttachment'] == true) {
+            if ((int)$_REQUEST['relation'] > 1) {
+                $column_res = 'res_id_version';
+            } else {
+                $column_res = 'res_id';
+            }
+
+            $stmt = $db->query("SELECT fingerprint FROM res_view_attachments WHERE ".$column_res." = ? and res_id_master = ? and status <> 'OBS'"
+                                , array($_REQUEST['res_id'], $_SESSION['doc_id']));
+            $res = $stmt->fetchObject();
+
+            require_once 'core/class/docserver_types_controler.php';
+            require_once 'core/docservers_tools.php';
+            $docserverTypeControler = new docserver_types_controler();
+            $docserverInfo = $docserverControler->getDocserverToInsert($collId);
+            $docserver = $docserverControler->get($docserverInfo->docserver_id);
+            $docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
+            $NewHash = Ds_doFingerprint($_SESSION['upfile']['tmp_name'], $docserverTypeObject->fingerprint_mode);
+            $OriginalHash = $res->fingerprint;
+
+            if ($_SESSION['upfile']['upAttachment'] && $OriginalHash <> $NewHash) {
                 $fileInfos = array(
                     "tmpDir"      => $_SESSION['config']['tmppath'],
                     "size"        => $_SESSION['upfile']['size'],
