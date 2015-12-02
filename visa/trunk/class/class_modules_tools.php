@@ -129,22 +129,28 @@ class visa extends Database
 		}
 		
 		$db = new Database();
-		$stmt = $db->query("select docserver_id from res_view_attachments where res_id_master = ?  order by res_id desc", array($res_id));
+		$stmt = $db->query("select docserver_id from res_view_attachments where res_id_master = ? order by res_id desc", 
+			array($res_id));
 		while ($res = $stmt->fetchObject()){
 			$docserver_id = $res->docserver_id;
 			break;
 		}
 		
-		$stmt = $db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = ?", array($docserver_id));
+		$stmt = $db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = ?", 
+			array($docserver_id));
 		
 		$res = $stmt->fetchObject();
 		$docserver_path = $res->path_template;
 		
-		$stmt = $db->query("select filename, format, path, title, res_id, res_id_version, attachment_type from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response','outgoing_mail','waybill','transfer') order by creation_date asc", array($res_id));
+		$stmt = $db->query("select filename, format, path, title, res_id, res_id_version, attachment_type "
+			. "from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' "
+			. "AND status <> 'DEL' and attachment_type IN "
+			. "('response_project','signed_response','outgoing_mail','waybill','transfer') order by creation_date asc", 
+			array($res_id));
 
 		$array_reponses = array();
 		$cpt_rep = 0;
-		while ($res2 = $stmt->fetchObject()){
+		while ($res2 = $stmt->fetchObject()) {
 			$filename = $res2->filename;
 			$format = "pdf";
             $filename_pdf = str_ireplace($res2->format, $format, $filename);
