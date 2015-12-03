@@ -297,7 +297,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . functions::xssafe($res_id) . '}, onSuccess: function(answer){window.location.href=\'' 
                 . $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets=' 
                 . $_SESSION['current_basket']['id'] . '\';} });$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"'
-             .' class="fa fa-backward fa-2x closeModale" title="'._BACK.'"/>';
+             .' class="fa fa-times-circle fa-2x closeModale" title="'._BACK.'"/>';
     $frm_str .='</i>';
     $frm_str .= '<div id="validleft">';
     $frm_str .= '<div id="valid_div" style="display:none;";>';
@@ -508,7 +508,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');reset_check_date_exp();"';
 
 						if ($data['type_contact'] == 'internal') {
-							$frm_str .= ' checked="checked" ';
+							$frm_str .= ' checked="checked" '; 
 						}
                     $frm_str .= ' /><label for="type_contact_internal">'._INTERNAL2.'</label></td></tr>';
 					
@@ -568,7 +568,22 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str.="<script>check_date_exp('".$path_to_script."');</script>";
         }*/
 
-                   $frm_str .='<td class="indexing_field"><input type="text" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\',\''.$path_check_date_link.'\');}"';
+                   $frm_str .='<td class="indexing_field">';
+                    if($data['type_contact'] == 'internal'){
+                        $frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;color:#009DC5;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+
+                        $frm_str .=' <i class="fa fa-book" title="'._EXTERNAL.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+
+                    }elseif ($data['type_contact'] == 'external') {
+                        $frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+
+                        $frm_str .=' <i class="fa fa-book" title="'._EXTERNAL.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+
+                    }
+                   
+                    $frm_str .=' <i class="fa fa-users" title="'._MULTI.'" style="cursor:pointer;" id="type_multi_contact_external_icon" onclick="$$(\'#type_multi_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#009DC5\'});"></i>';
+    
+                   $frm_str .='<input type="text" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\',\''.$path_check_date_link.'\');}"';
                     if(isset($data['contact']) && !empty($data['contact']))
                    {
                       $frm_str .= ' value="'.$data['contact'].'" ';
@@ -615,7 +630,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . '\'blind\', {delay:0.2});return false;" '
 							. 'style="visibility:hidden;" ><i class="fa fa-book fa-2x" title="' 
                             . _CONTACT_CARD . '"></i></a>&nbsp;</td>';
-					$frm_str .= '<td><input type="text" name="email" id="email" onblur="clear_error(\'frm_error_' . $id_action . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
+					$frm_str .= '<td class="indexing_field">';
+
+                    $frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+
+                    $frm_str .=' <i class="fa fa-book" title="'._EXTERNAL.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+
+                    $frm_str .=' <i class="fa fa-users" title="'._MULTI.'" style="cursor:pointer;color:#009DC5;" id="type_multi_contact_external_icon" onclick="$$(\'#type_multi_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#009DC5\'});"></i>';
+                     
+                    $frm_str .='<input type="text" name="email" id="email" onblur="clear_error(\'frm_error_' . $id_action . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
 					$frm_str .= '<div id="multiContactList" class="autocomplete"></div>';
 					$frm_str .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
 						.$_SESSION['config']['businessappurl']
@@ -869,7 +892,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</tr>';
         
         /*** Folder  ***/
-        if ($core_tools->is_module_loaded('folder')) {
+        if ($core_tools->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
             $folder = '';
             if(isset($data['folder'])&& !empty($data['folder']))
             {
@@ -1197,7 +1220,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     	// DocLocker constantly	
     	$frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';
             
-        if($core_tools->is_module_loaded('folder'))
+        if($core_tools->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1))
         {
             $frm_str .= ' initList(\'folder\', \'show_folder\',\''
                 . $_SESSION['config']['businessappurl'] . 'index.php?display='
@@ -1776,7 +1799,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		}
     }
     
-    if($core->is_module_loaded('folder'))
+    if($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1))
     {
         $folder_id = '';
         $stmt = $db->query("SELECT folders_system_id FROM ".$table ." WHERE res_id = ?", array($res_id));

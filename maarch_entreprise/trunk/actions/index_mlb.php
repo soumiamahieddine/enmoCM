@@ -809,7 +809,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
 
     /*** Folder ***/
-    if ($core->is_module_loaded('folder')) {
+    if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
         $frmStr .= '<tr id="folder_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER
                 . '</label></td>';
@@ -929,7 +929,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&dir=indexing_searching&page=autocomplete_contacts\', \'contact\', \'show_contacts\', \'\', \'contactid\', \'addressid\');';
 
-    if ($core->is_module_loaded('folder')) {
+    if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
         $frmStr .= ' initList(\'folder\', \'show_folder\',\''
                 . $_SESSION['config']['businessappurl'] . 'index.php?display='
                 . 'true&module=folder&page=autocomplete_folders&mode=folder\','

@@ -533,7 +533,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
 
     //FOLDERS
-    if ($core_tools->is_module_loaded('folder')) {
+    if ($core_tools->is_module_loaded('folder')  && ($core->test_service('associate_folder', 'folder',false) == 1)) {
          // Displays the folder data
         $folder = get_folder_data($coll_id, $res_id);
 
@@ -1385,7 +1385,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         include_once("modules".DIRECTORY_SEPARATOR."tags".
                     DIRECTORY_SEPARATOR."tags_update.php");
     }
-    if ($core->is_module_loaded('folder')) {
+    if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
         $folder_id = '';
         $old_folder_id = '';
         //get old folder ID
