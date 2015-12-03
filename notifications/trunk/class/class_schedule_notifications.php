@@ -133,12 +133,17 @@ class ScheduleNotifications{
         
         if ($_SESSION['custom_override_id'] <> '') {
         	$pathToFolow = $_SESSION['config']['corepath'] . 'custom/'.$_SESSION['custom_override_id'] . '/';
-        	shell_exec("mkdir " . escapeshellarg($pathToFolow.'modules/notifications/batch/scripts/'));
+        	//shell_exec("mkdir " . escapeshellarg($pathToFolow.'modules/notifications/batch/scripts/'));
+        	if(!file_exists($pathToFolow.'modules/notifications/batch/scripts/')){
+	        	mkdir($pathToFolow.'modules/notifications/batch/scripts/',0777,true);
+        	}
+	        $file_open = fopen($pathToFolow.'modules/notifications/batch/scripts/'.$filename, 'w+');
+
         } else {
         	$pathToFolow = $_SESSION['config']['corepath'];
+	        $file_open = fopen($pathToFolow.'modules/notifications/batch/scripts/'.$filename, 'w+');
         }
 
-        $file_open = fopen($pathToFolow.'modules/notifications/batch/scripts/'.$filename, 'w+');
         fwrite($file_open, '#!/bin/sh');
         fwrite($file_open, "\n");
         fwrite($file_open, 'path=\''.$_SESSION['config']['corepath'].'modules/notifications/batch/\'');
