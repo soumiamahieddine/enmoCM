@@ -1103,8 +1103,16 @@ class lists extends Database
 						
 			$tnl = new thumbnails();
 			$path = $tnl->getPathTnl($res_id, 'letterbox_coll');
-			$return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
-					._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span><img src="index.php?page=doc_thumb&module=thumbnails&res_id='.$res_id.'&coll_id=letterbox_coll&display=true"></span></a></div>';
+            if (is_file($path)) {
+                $return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
+                    ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span><img src="index.php?page=doc_thumb&module=thumbnails&res_id='.$res_id.'&coll_id=letterbox_coll&display=true"></span></a></div>';
+            
+            }else{
+                $return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
+                    ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span id="no_doc"><i class="fa fa-eye-slash fa-2x"></i>
+</span></a></div>';
+            
+            }
 			
 		}
 		else $return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
