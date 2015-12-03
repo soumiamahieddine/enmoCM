@@ -9,12 +9,12 @@ if (!defined('_CHOOSE_LANGUAGE')) {
 }
 
 //WELCOME
-if (!defined('_WELCOME')) {
-    define('_WELCOME', "Bienvenue");
+if (!defined('_WELCOME_INSTALL')) {
+    define('_WELCOME_INSTALL', "Bienvenue");
 }
 
-if (!defined('_DESC')) {
-    define('_DESC', "Bienvenue dans l'assistant d'installation de Maarch ! <br />
+if (!defined('_DESC_INSTALL')) {
+    define('_DESC_INSTALL', "Bienvenue dans l'assistant d'installation de Maarch ! <br />
                     <br />
                     Maarch est un Système d'Archivage Electronique doté de capacités de GED, Gestion de Courrier, travail collaboratif, et SAE normé OAIS et NFZ42-013. Maarch est un produit Open Source sur licence GPL v3 : il n'y a pas de coûts de licence, mais des services professionnels certifiés fournis par Maarch SAS et son réseau de partenaires à travers le monde. <br />
                     <br />

@@ -9,12 +9,12 @@ if (!defined('_CHOOSE_LANGUAGE')) {
 }
 
 //WELCOME
-if (!defined('_WELCOME')) {
-    define('_WELCOME', "Welcome");
+if (!defined('_WELCOME_INSTALL')) {
+    define('_WELCOME_INSTALL', "Welcome");
 }
 
-if (!defined('_DESC')) {
-    define('_DESC', "Welcome to Maarch install tool !<br />
+if (!defined('_DESC_INSTALL')) {
+    define('_DESC_INSTALL', "Welcome to Maarch install tool !<br />
                     <br />
                     Maarch is an Electronic Archiving System that comes with Document Management, Content Management, Mail Management, Coolaborative and legal archiving/record management capabilities. Maarch is a full Open Source product under GPL v3 licence : there is no licence cost, but professional services offered by Maarch and its partner global network.<br />
                     <br />

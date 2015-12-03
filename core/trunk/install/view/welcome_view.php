@@ -31,12 +31,12 @@
 <div class="blockWrapper">
     <div class="titleBlock">
         <h2 onClick="slide('welcome');" style="cursor: pointer;">
-            <?php echo _WELCOME;?>
+            <?php echo _WELCOME_INSTALL;?>
         </h2>
     </div>
     <div class="contentBlock" id="welcome">
         <p>
-            <?php echo _DESC;?>
+            <?php echo _DESC_INSTALL;?>
         </p>
     </div>
 </div>
