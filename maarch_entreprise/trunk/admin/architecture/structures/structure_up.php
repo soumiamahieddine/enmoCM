@@ -88,20 +88,20 @@ if (isset($_REQUEST['valid'])) {
 	) {
 		$desc = $_REQUEST['desc_structure'];
 	} else {
-		$erreur .= _DESC_STRUCTURE_MISSING . ".<br/>";
+		$erreur .= _DESC_STRUCTURE_MISSING . ".";
 	}
 
 	if (isset($_REQUEST['css_style']) && !empty($_REQUEST['css_style'])) {
 	    $cssStyle = $_REQUEST['css_style'];
 	} else {
-	    $erreur .= _FONT_COLOR. ' ' . _MISSING . '.<br/>';
+	    $erreur .= _FONT_COLOR. ' ' . _MISSING . '.';
 	}
 
 	if ($folderModuleLoaded) {
 		if (! isset($_REQUEST['foldertypes'])
 		    || count($_REQUEST['foldertypes']) == 0
 		) {
-			$erreur .= _FOLDERTYPE_MISSING . ".<br/>";
+			$erreur .= _FOLDERTYPE_MISSING . ".";
 		}
 	}
 
@@ -256,12 +256,23 @@ $time = $core->get_session_time_expire();
 <body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);window.resizeTo(700,700);">
 <br/>
 
-<div class="error">
-<?php
-functions::xecho($erreur);
-$erreur = "";
-?>
-</div>
+<?php 
+if (!empty($erreur)) { ?>
+	<div style="display:table-cell" class="error" onclick="this.hide()" id="divErrorStructure">
+		<?php
+		functions::xecho($erreur);
+		$erreur = "";
+		?>
+	</div>
+
+<script>
+	setTimeout(function() {
+	    $('divErrorStructure').hide();
+	}, 5000);
+</script>
+
+<?php } ?>
+
 <div class="block">
 <h2>
 &nbsp;<i class="fa fa-folder fa-2x"></i> <?php

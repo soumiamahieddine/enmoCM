@@ -142,16 +142,16 @@ if (isset($_REQUEST['valid'])) {
 						<?php
 					}
 				} else {
-					$erreur .= _STRUCTURE_MANDATORY . '.<br/>';
+					$erreur .= _STRUCTURE_MANDATORY . '.';
 				}
 			} else {
 				$erreur .= _THE_SUBFOLDER . " " . _ALREADY_EXISTS;
 			} 
 		} else {
-			$erreur .= _SUBFOLDER_DESC_MISSING . ".<br/>";
+			$erreur .= _SUBFOLDER_DESC_MISSING . ".";
 		}
 	} else {
-	    $erreur .= _FONT_COLOR. ' ' . _MISSING . '.<br/>';
+	    $erreur .= _FONT_COLOR. ' ' . _MISSING . '.';
 	}
 }
 
@@ -211,12 +211,22 @@ $time = $core->get_session_time_expire();
 ?>
 <body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 
-<div class="error">
-<?php  
-functions::xecho($erreur);
-$erreur = "";
-?>
-</div>
+<?php 
+if (!empty($erreur)) { ?>
+	<div style="display:table-cell" class="error" onclick="this.hide()" id="divErrorSubFolder">
+		<?php
+		functions::xecho($erreur);
+		$erreur = "";
+		?>
+	</div>
+
+<script>
+	setTimeout(function() {
+	    $('divErrorSubFolder').hide();
+	}, 5000);
+</script>
+
+<?php } ?>
 <div class="block">
 <h2> &nbsp;<i class="fa fa-folder-open fa-2x"></i> <?php  
 if ($mode == "up") { 
