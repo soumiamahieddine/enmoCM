@@ -36,6 +36,18 @@
 			
 	$res_id = $_REQUEST['res_id'];
 	$coll_id = $_REQUEST['coll_id'];
+
+	if (
+		isset($_REQUEST['cons_empty']) 
+		&& $_REQUEST['cons_empty'] <> ''
+		&& $_REQUEST['cons_empty'] == 'true'
+	) {
+		echo "{status : 2}";
+		$_SESSION['error_visa'] = 'Sélectionner au moins un utilisateur';
+		exit();
+	} else {
+		$_SESSION['error_visa'] = '';
+	}
 	$conseillers = explode('#',$_REQUEST['conseillers']);
 	$consignes = explode('#',$_REQUEST['consignes']);
 	$dates = explode('#',$_REQUEST['dates']);

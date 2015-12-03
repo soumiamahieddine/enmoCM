@@ -205,12 +205,12 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau, fromDetail){
 		i++;
 	}
 
-	if (cons_empty){
+	/*if (cons_empty){
 		$('divErrorVisa').innerHTML = 'Sélectionner au moins un utilisateur';
 		$('divErrorVisa').style.display = 'table-cell';
 		Element.hide.delay(5, 'divErrorVisa');
 	}
-	else
+	else*/
 	new Ajax.Request("index.php?display=true&module=visa&page=saveVisaWF",
 	{
 		
@@ -222,15 +222,21 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau, fromDetail){
 				consignes : consignes,
 				dates : dates,
 				list_sign : isSign,
-				fromDetail : detail
+				fromDetail : detail,
+				cons_empty : cons_empty
 			},
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
-				if (response.status == 1){
+				if (response.status == 1) {
 					$('divInfoVisa').innerHTML = 'Mise à jour du circuit effectuée';
                     $('divInfoVisa').style.display = 'table-cell';
                     Element.hide.delay(5, 'divInfoVisa');
+				} else if (response.status == 2){
+					$('divErrorVisa').innerHTML = 'Sélectionner au moins un utilisateur';
+					$('divErrorVisa').style.display = 'table-cell';
+					Element.hide.delay(5, 'divErrorVisa');
 				}
+
 			}
 	});
 }

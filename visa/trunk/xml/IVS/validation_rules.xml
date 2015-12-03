@@ -51,7 +51,8 @@
     	<parameter name="conseillers" type="string" />
     	<parameter name="consignes" type="string" />
         <parameter name="list_sign" type="string" />
-		<parameter name="fromDetail" type="YN" />
+        <parameter name="fromDetail" type="YN" />
+		<parameter name="cons_empty" type="boolean" />
     </validationRule>
     <validationRule name="vi_sign_ans" extends="standardForm" mode="error">
     	<parameter name="id" type="string" />

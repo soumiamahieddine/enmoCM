@@ -29,6 +29,10 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 $error_visa = false;
 $error_visa_response_project = false;
 
+if (isset($_SESSION['error_visa']) && $_SESSION['error_visa'] <> '') {
+	$error_visa = true;
+}
+
 $visa = new visa();
 $curr_visa_wf = $visa->getWorkflow($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'], 'VISA_CIRCUIT');
 
@@ -48,7 +52,7 @@ $confirm = true;
 */
 $etapes = array('empty_error');
  
- function manage_empty_error($arr_id, $history, $id_action, $label_action, $status)
+function manage_empty_error($arr_id, $history, $id_action, $label_action, $status)
 {
 	$_SESSION['action_error'] = '';
 	$result = '';

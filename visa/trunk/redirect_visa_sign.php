@@ -7,6 +7,10 @@ $etapes = [];
 $error_visa = false;
 $error_visa_response_project = false;
 
+if (isset($_SESSION['error_visa']) && $_SESSION['error_visa'] <> '') {
+    $error_visa = true;
+}
+
 $visa = new visa();
 $curr_visa_wf = $visa->getWorkflow($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'], 'VISA_CIRCUIT');
 
@@ -32,9 +36,9 @@ if (!$error_visa && !$error_visa_response_project){
 
  function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
  {
-     $ent = new entity();
-     $entity_ctrl = new EntityControler();
-     $servicesCompare = array();
+    $ent = new entity();
+    $entity_ctrl = new EntityControler();
+    $servicesCompare = array();
     $db = new Database();
     $labelAction = '';
     if ($id_action <> '') {
