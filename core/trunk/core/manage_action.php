@@ -286,9 +286,8 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
         }
 		elseif( $_POST['req'] == 'first_request' && $error_visa_response_project == true)
         {
-            echo "{status : 3, form_content : '<div class=\"h2_title\">" . $visa->errorMessageVisa .
-                "</div><p class=\"buttons\"><input type=\"button\" onclick=\"destroyModal(\'" . $modalId . "\')\" class=\"button\" value=\"OK\" id=\"submit\" name=\"submit\"></p>',
-                height : 'auto', width : 'auto', 'mode_frm' : '', validate : 'OK', 'action_status' : '".functions::xssafe($status)."'}";
+            echo "{status : 3, form_content : '<div class=\"h2_title\">" . addslashes($visa->errorMessageVisa) .
+                "</div><p class=\"buttons\"><input type=\"button\" onclick=\"destroyModal(\'" . $modalId . "\')\" class=\"button\" value=\"OK\" id=\"submit\" name=\"submit\"></p>', height : 'auto', width : 'auto', 'mode_frm' : '', validate : 'OK', 'action_status' : '".functions::xssafe($status)."'}";
             exit();
         }
         elseif( $_POST['req'] == 'first_request' && $error_visa_workflow == true)
