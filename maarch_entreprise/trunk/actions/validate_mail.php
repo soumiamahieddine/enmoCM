@@ -902,7 +902,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER . '</label></td>';
             $frm_str .= '<td>&nbsp;</td>';
             $frm_str .='<td><input type="text" name="folder" id="folder" value="'
-                . $folder . '" onblur=""/><div id="show_folder" class="autocomplete"></div>';
+                . $folder . '" onblur=""/>';
+
+            if ($core->test_service('create_folder', 'folder', false) == 1) {
+                $frm_str .=' <a href="#" id="create_folder" title="' . _CREATE_FOLDER
+                        . '" onclick="new Effect.toggle(\'create_folder_div\', '
+                        . '\'blind\', {delay:0.2});return false;" '
+                        . 'style="display:inline;" ><i class="fa fa-plus-circle" title="' 
+                        . _CREATE_FOLDER . '"></i></a>';
+            }
+            $frm_str .='<div id="show_folder" class="autocomplete"></div>';
             $frm_str .= '</tr>';
         }
 
@@ -1038,6 +1047,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</div>';
     }
     /**** Contact form end *******/
+
+        /**** Folder form start *******/
+    if ($core->test_service('create_folder', 'folder', false) == 1) {
+        $frm_str .= '<div id="create_folder_div" style="display:none">';
+            $frm_str .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
+                    . 'index.php?page=create_folder_form_iframe&module=folder&display=false" name="folder_iframe" id="folder_iframe"'
+                    . ' scrolling="auto" frameborder="0" style="display:block;">'
+                    . '</iframe>';
+        $frm_str .= '</div>';
+    }
+    /**** Folder form end *******/
+
     /**** Contact info start *******/
     $frm_str .= '<div id="info_contact_div" style="display:none">';
         $frm_str .= '<iframe width="100%" height="800" name="info_contact_iframe" id="info_contact_iframe"'

@@ -816,7 +816,16 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
         $frmStr .= '<td class="indexing_field"><input type="text" '
                 . 'name="folder" id="folder" onblur="clear_error(\'frm_error_'
-                . $actionId . '\');return false;" /><div id="show_folder" '
+                . $actionId . '\');return false;" />';
+
+        if ($core->test_service('create_folder', 'folder', false) == 1) {
+                $frmStr .= ' <a href="#" id="create_folder" title="' . _CREATE_FOLDER
+                        . '" onclick="new Effect.toggle(\'create_folder_div\', '
+                        . '\'blind\', {delay:0.2});return false;" '
+                        . 'style="display:inline;" ><i class="fa fa-plus-circle" title="' 
+                        . _CREATE_FOLDER . '"></i></a>';
+            }
+        $frmStr .= '<div id="show_folder" '
                 . 'class="autocomplete"></div></td>';
         $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" '
                 . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
@@ -880,6 +889,19 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
 
     /**** Contact form end *******/
+
+    /**** Folder form start *******/
+    if ($core->test_service('create_folder', 'folder', false) == 1) {
+        $frmStr .= '<div id="create_folder_div" style="display:none">';
+            $frmStr .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
+                    . 'index.php?page=create_folder_form_iframe&module=folder&display=false" name="folder_iframe" id="folder_iframe"'
+                    . ' scrolling="auto" frameborder="0" style="display:block;">'
+                    . '</iframe>';
+        $frmStr .= '</div>';
+    }
+    /**** Folder form end *******/
+
+
     /**** Contact info start *******/
     $frmStr .= '<div id="info_contact_div" style="display:none">';
         $frmStr .= '<iframe width="100%" height="800" name="info_contact_iframe" id="info_contact_iframe"'
