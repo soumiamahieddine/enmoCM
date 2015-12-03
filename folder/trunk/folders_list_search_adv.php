@@ -91,7 +91,11 @@ if($_GET['order_field'] != NULL){
                     {
                         $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
                         $statusCmp = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
+                        if (!isset($res_status['IMG_SRC']) ||  empty($res_status['IMG_SRC'])){
+                            $tab[$i][$j]['value'] = "<i class = 'fm fm-letter-status-new fm-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
+                        } else {
+                            $tab[$i][$j]['value'] = "<i class = 'fm ".$res_status['IMG_SRC']." fm-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
+                        }                        
                         $tab[$i][$j]["label"]=_STATUS;
                         $tab[$i][$j]["size"]="4";
                         $tab[$i][$j]["label_align"]="left";
