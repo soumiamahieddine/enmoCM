@@ -1039,7 +1039,7 @@ class contacts_v2 extends Database
                     $action = $_SESSION['config']['businessappurl'].'index.php?display=true&page=contact_addresses_up_db&fromContactAddressesList';
                 }
                 ?>
-                <form name="frmcontact" id="frmcontact" method="post" action="<?php functions::xecho($action);?>" class="forms">
+                <form name="frmcontact" id="frmcontact" method="post" action="<?php echo($action);?>" class="forms">
                     <input type="hidden" name="display"  value="true" />
                     <?php if(!$admin)
                     {?>
@@ -1363,10 +1363,10 @@ class contacts_v2 extends Database
                             } ?>
                              /> 
                         <?php } ?>
-                        <input type="button" class="button"  name="cancel" value="<?php echo _SEE_ALL_ADDRESSES;?>" onclick="javascript:window.location.href='<?php functions::xecho($see_all_addresses);?>';" />
+                        <input type="button" class="button"  name="cancel" value="<?php echo _SEE_ALL_ADDRESSES;?>" onclick="javascript:window.location.href='<?php echo($see_all_addresses);?>';" />
                         <?php
                     } else {
-                        ?><input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php functions::xecho($cancel_target);?>';" /><?php
+                        ?><input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php echo($cancel_target);?>';" /><?php
                     }
                     ?>
                     </p>
