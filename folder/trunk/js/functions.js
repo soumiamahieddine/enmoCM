@@ -257,3 +257,11 @@ function get_ft_opt_index(url)
         });
     }
 }
+
+function checkSubFolder(folderId)
+{
+	if (folderId == "")
+		$('folder_dest_div').style.display = "";
+	else
+		$('folder_dest_div').style.display = "none";
+}

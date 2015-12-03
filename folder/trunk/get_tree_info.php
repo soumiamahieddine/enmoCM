@@ -68,9 +68,21 @@ if($matches[0] != ''){
 		);
 
 }else{
-	$stmt = $db->query(
-		"SELECT folders_system_id, folder_name, parent_id FROM folders WHERE foldertype_id not in (100) AND parent_id=0 AND status NOT IN ('DEL') order by folder_id asc "
+	if (isset($_SESSION['user']['entities']['0'])) {
+		$finalDest = '(';
+		foreach ($_SESSION['user']['entities'] as $tmp) {
+			$finalDest .= ($finalDest[strlen($finalDest) - 1] == '(' ? '\'' . $tmp['ENTITY_ID'] . '\'' : ', \'' . $tmp['ENTITY_ID'] . '\'');
+		}
+		$finalDest .= ')';
+		$stmt = $db->query(
+			"SELECT folders_system_id, folder_name, parent_id FROM folders WHERE foldertype_id not in (100) AND parent_id=0 AND status NOT IN ('DEL')
+				AND (destination in " . $finalDest . " OR destination is null) order by folder_id asc "
 		);
+	} else {
+		$stmt = $db->query(
+			"SELECT folders_system_id, folder_name, parent_id FROM folders WHERE foldertype_id not in (100) AND parent_id=0 AND status NOT IN ('DEL') order by folder_id asc "
+		);
+	}
 }
 
 $categories = array();

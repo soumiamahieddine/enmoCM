@@ -51,8 +51,17 @@ $select = array();
 		
 		$stmt = $db->query("SELECT foldertype_id FROM foldertypes_doctypes_level1 Where doctypes_first_level_id = ?", array($res->doctypes_first_level_id));
 		$res = $stmt->fetchObject();
-	
-		$where .= " (foldertype_id = :folderTypeId) and (lower(folder_name) like lower(:Input) or lower(folder_id) like lower(:Input) ) and (status NOT IN('DEL','FOLDDEL'))";
+
+		if (isset($_SESSION['user']['entities']['0'])) {
+			$finalDest = '(';
+			foreach ($_SESSION['user']['entities'] as $tmp) {
+				$finalDest .= ($finalDest[strlen($finalDest) - 1] == '(' ? '\'' . $tmp['ENTITY_ID'] . '\'' : ', \'' . $tmp['ENTITY_ID'] . '\'');
+			}
+			$finalDest .= ')';
+			$where .= " (foldertype_id = :folderTypeId) and (lower(folder_name) like lower(:Input) or lower(folder_id) like lower(:Input) ) and (status NOT IN('DEL','FOLDDEL')) and (destination in " . $finalDest . " OR destination is null)";
+		} else {
+			$where .= " (foldertype_id = :folderTypeId) and (lower(folder_name) like lower(:Input) or lower(folder_id) like lower(:Input) ) and (status NOT IN('DEL','FOLDDEL'))";
+		}
 		$arrayPDO = array(":folderTypeId" => $res->foldertype_id, ":Input" => "%" .$_REQUEST['Input']."%");
 		//Order
 		$order = 'order by folders_system_id, folder_name';
@@ -75,7 +84,16 @@ $select = array();
 			$arrayPDO = array_merge($arrayPDO, array($res->foldertype_id));
 		}
 		$wh .= 0 ;
-		$where .= " (foldertype_id in (".$wh.")) and (lower(folder_name) like lower(?) or lower(folder_id) like lower(?)) and (status NOT IN('DEL','FOLDDEL'))";
+		if (isset($_SESSION['user']['entities']['0'])) {
+			$finalDest = '(';
+			foreach ($_SESSION['user']['entities'] as $tmp) {
+				$finalDest .= ($finalDest[strlen($finalDest) - 1] == '(' ? '\'' . $tmp['ENTITY_ID'] . '\'' : ', \'' . $tmp['ENTITY_ID'] . '\'');
+			}
+			$finalDest .= ')';
+			$where .= " (foldertype_id in (".$wh.")) and (lower(folder_name) like lower(?) or lower(folder_id) like lower(?)) and (status NOT IN('DEL','FOLDDEL')) and (destination in " . $finalDest . " OR destination is null)";
+		} else {
+			$where .= " (foldertype_id in (".$wh.")) and (lower(folder_name) like lower(?) or lower(folder_id) like lower(?)) and (status NOT IN('DEL','FOLDDEL'))";
+		}
 		$arrayPDO = array_merge($arrayPDO, array("%" .$_REQUEST['Input']."%", "%" .$_REQUEST['Input']."%"));
 		//Order
 		$order = 'order by folders_system_id, folder_name';

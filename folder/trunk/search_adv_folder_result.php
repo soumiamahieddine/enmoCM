@@ -172,6 +172,15 @@ $arrayPDO = array();
         }
     }
 
+    if (isset($_SESSION['user']['entities']['0'])) {
+        $finalDest = '(';
+        foreach ($_SESSION['user']['entities'] as $tmp) {
+            $finalDest .= ($finalDest[strlen($finalDest) - 1] == '(' ? '\'' . $tmp['ENTITY_ID'] . '\'' : ', \'' . $tmp['ENTITY_ID'] . '\'');
+        }
+        $finalDest .= ')';
+        $where_request .= " (destination in " . $finalDest . " OR destination is null) and";
+    }
+
 //Optional indexes
     if(isset($_SESSION['folder_search']['foldertype_id']) && !empty($_SESSION['folder_search']['foldertype_id']))
     {

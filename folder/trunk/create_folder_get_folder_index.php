@@ -104,11 +104,24 @@ if (count($indexes) > 0) {
 
 $db = new Database();
 
-$stmt = $db->query(
-	"SELECT folders_system_id, folder_id, folder_name FROM "
-    . $_SESSION['tablename']['fold_folders']
-    . " WHERE folder_level = 1 and status <> 'DEL'"
-);
+if (isset($_SESSION['user']['entities'][0])) {
+	$finalDest = '(';
+	foreach ($_SESSION['user']['entities'] as $tmp) {
+		$finalDest .= ($finalDest[strlen($finalDest) - 1] == '(' ? '\'' . $tmp['ENTITY_ID'] . '\'' : ', \'' . $tmp['ENTITY_ID'] . '\'');
+	}
+	$finalDest .= ')';
+	$stmt = $db->query(
+		"SELECT folders_system_id, folder_id, folder_name FROM "
+		. $_SESSION['tablename']['fold_folders']
+		. " WHERE folder_level = 1 and status <> 'DEL' and (destination in " . $finalDest . " OR destination is null)"
+	);
+} else {
+	$stmt = $db->query(
+		"SELECT folders_system_id, folder_id, folder_name FROM "
+		. $_SESSION['tablename']['fold_folders']
+		. " WHERE folder_level = 1 and status <> 'DEL' "
+	);
+}
 
 $folders = array();
 while ($res = $stmt->fetchObject()) {

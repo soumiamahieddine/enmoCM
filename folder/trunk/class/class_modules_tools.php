@@ -319,12 +319,35 @@ class folder extends request
 				);
 				exit();
 			} else {
+				if ($_SESSION['m_admin']['folder']['folder_parent']) {
+					$stmt = $db->query(
+						"SELECT destination FROM " . FOLD_FOLDERS_TABLE . " WHERE folders_system_id = ? and status != 'DEL'",
+						array($_SESSION['m_admin']['folder']['folder_parent'])
+					);
+					$resQuery = $stmt->fetchObject();
+				}
+
+
+				$folderDest = null;
+				if (isset($resQuery)) {
+					$folderDest = $resQuery->destination;
+				} else if (isset($_REQUEST['folder_dest']) && $_REQUEST['folder_dest'] && isset($_SESSION['user']['primaryentity']['id'])) {
+					$folderDest = $_SESSION['user']['primaryentity']['id'];
+				}
 				$db->query(
 					"INSERT INTO " . FOLD_FOLDERS_TABLE
-				    . " (folder_id, folder_name, foldertype_id, creation_date, "
-				    . "typist, last_modified_date, parent_id,folder_level) VALUES (?, ?, ?,  CURRENT_TIMESTAMP, ?, CURRENT_TIMESTAMP, ?, ? )",
-				array($_SESSION['m_admin']['folder']['folder_id'], $_SESSION['m_admin']['folder']['folder_name'], $_SESSION['m_admin']['folder']['foldertype_id'], $_SESSION['user']['UserId'], $_SESSION['m_admin']['folder']['folder_parent'], $_SESSION['m_admin']['folder']['folder_level'])
+					. " (folder_id, folder_name, foldertype_id, creation_date, "
+					. "typist, last_modified_date, parent_id,folder_level, destination) VALUES (?, ?, ?,  CURRENT_TIMESTAMP, ?, CURRENT_TIMESTAMP, ?, ?, ?)",
+					[	$_SESSION['m_admin']['folder']['folder_id'],
+						$_SESSION['m_admin']['folder']['folder_name'],
+						$_SESSION['m_admin']['folder']['foldertype_id'],
+						$_SESSION['user']['UserId'],
+						$_SESSION['m_admin']['folder']['folder_parent'],
+						$_SESSION['m_admin']['folder']['folder_level'],
+						$folderDest
+					]
 				);
+
 				$stmt = $db->query(
 					'SELECT folders_system_id FROM ' . FOLD_FOLDERS_TABLE
 				    . " WHERE folder_id = ?", array($_SESSION['m_admin']['folder']['folder_id'])

@@ -92,6 +92,7 @@
       <parameter name="folder_parent" type="integer" />
       <parameter name="foldertype" type="integer" />
       <parameter name="custom_*" type="string" />
+      <parameter name="folder_dest" type="bool" />
       <parameter name="validate" type="string" />
     </validationRule>
     <validationRule name="fo_search_adv_folder_result" extends="standardForm" mode="error">
