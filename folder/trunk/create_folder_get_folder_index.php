@@ -105,15 +105,14 @@ if (count($indexes) > 0) {
 $db = new Database();
 
 if (isset($_SESSION['user']['entities'][0])) {
-	$finalDest = '(';
+	$finalDest = [];
 	foreach ($_SESSION['user']['entities'] as $tmp) {
-		$finalDest .= ($finalDest[strlen($finalDest) - 1] == '(' ? '\'' . $tmp['ENTITY_ID'] . '\'' : ', \'' . $tmp['ENTITY_ID'] . '\'');
+		$finalDest[] = $tmp['ENTITY_ID'];
 	}
-	$finalDest .= ')';
 	$stmt = $db->query(
 		"SELECT folders_system_id, folder_id, folder_name FROM "
 		. $_SESSION['tablename']['fold_folders']
-		. " WHERE folder_level = 1 and status <> 'DEL' and (destination in " . $finalDest . " OR destination is null)"
+		. " WHERE folder_level = 1 and status <> 'DEL' and (destination in (?) OR destination is null)", [$finalDest]
 	);
 } else {
 	$stmt = $db->query(
@@ -127,11 +126,11 @@ $folders = array();
 while ($res = $stmt->fetchObject()) {
 	array_push(
 	    $folders,
-	    array(
+	    [
 	    	'SYS_ID' => $res->folders_system_id,
 	    	'ID' => $res->folder_id,
 	    	'NAME' => $res->folder_name
-	    )
+	    ]
 	);
 }
 include_once 'modules/folder/create_folder_get_folder_index_comp.php';

@@ -173,12 +173,12 @@ $arrayPDO = array();
     }
 
     if (isset($_SESSION['user']['entities']['0'])) {
-        $finalDest = '(';
+        $finalDest = [];
         foreach ($_SESSION['user']['entities'] as $tmp) {
-            $finalDest .= ($finalDest[strlen($finalDest) - 1] == '(' ? '\'' . $tmp['ENTITY_ID'] . '\'' : ', \'' . $tmp['ENTITY_ID'] . '\'');
+            $finalDest[] = $tmp['ENTITY_ID'];
         }
-        $finalDest .= ')';
-        $where_request .= " (destination in " . $finalDest . " OR destination is null) and";
+        $where_request .= " (destination in (:finaldest) OR destination is null) and";
+        $arrayPDO = array_merge($arrayPDO, [":finaldest" => $finalDest]);
     }
 
 //Optional indexes
