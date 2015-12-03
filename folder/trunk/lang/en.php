@@ -22,6 +22,8 @@
 /*********************** SERVICES ***********************************/
 if (!defined('_ADMIN_FOLDERTYPES'))
     define('_ADMIN_FOLDERTYPES', 'Document types');
+if (!defined("_ATTACH_DOC_TO_FOLDER"))
+    define("_ATTACH_DOC_TO_FOLDER", "Attach a document to a folder");
 if (!defined('_ADMIN_FOLDERTYPES_DESC'))
     define('_ADMIN_FOLDERTYPES_DESC', 'Manage Document types. Define associated elements of qualification for each type, as well as the mandatory documents for a folder to be complete.');
 

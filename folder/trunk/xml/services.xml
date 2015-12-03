@@ -66,6 +66,15 @@
    <enabled>true</enabled>
   </SERVICE>
   <SERVICE>
+   <id>associate_folder</id>
+   <name>_ATTACH_DOC_TO_FOLDER</name>
+   <comment>_ATTACH_DOC_TO_FOLDER</comment>
+   <servicepage>none</servicepage>
+   <servicetype>use</servicetype>
+    <system_service>false</system_service>
+   <enabled>true</enabled>
+  </SERVICE>
+  <SERVICE>
    <id>delete_folder</id>
    <name>_DELETE_FOLDER</name>
    <comment>_DELETE_FOLDER</comment>

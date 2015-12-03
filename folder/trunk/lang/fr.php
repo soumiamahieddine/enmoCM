@@ -22,6 +22,8 @@
 /*********************** SERVICES ***********************************/
 if (!defined("_ADMIN_FOLDERTYPES"))
     define("_ADMIN_FOLDERTYPES", "Types de dossier");
+if (!defined("_ATTACH_DOC_TO_FOLDER"))
+    define("_ATTACH_DOC_TO_FOLDER", "Rattacher un document à un dossier");
 if (!defined("_ADMIN_FOLDERTYPES_DESC"))
     define("_ADMIN_FOLDERTYPES_DESC", "Administrer les types de dossier. Définir pour chaque type les qualificateurs liés et les types de documents obligatoires pour la complétude du dossier.");
 
