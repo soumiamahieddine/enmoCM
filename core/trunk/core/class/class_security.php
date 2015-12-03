@@ -44,6 +44,7 @@
 require_once 'core/class/class_db_pdo.php';
 require_once 'core/class/class_history.php';
 require_once 'core/class/SecurityControler.php';
+require_once 'core/class/class_core_tools.php';
 require_once 'core/where_targets.php';
 require_once 'core/class/users_controler.php';
 if (isset($_SESSION['config'])) {
