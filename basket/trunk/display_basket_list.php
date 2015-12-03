@@ -124,7 +124,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                 $core_tools->is_module_loaded('folder') 
                                 && $_SESSION['user']['baskets'][$i]['is_folder_basket'] == 'Y'
                             ) {
-                                echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a href="'
+                                echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a title="'.$_SESSION['user']['baskets'][$i]['desc'].'" href="'
                                     . $_SESSION['config']['businessappurl']
                                     . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
                                     . $_SESSION['user']['baskets'][$i]['id']
@@ -135,7 +135,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                     . functions::xssafe($_SESSION['user']['baskets'][$i]['name'])
                                     . ' </a></li>';
                             } else {
-                                echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a href="'
+                                echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a title="'.$_SESSION['user']['baskets'][$i]['desc'].'" href="'
                                     . $_SESSION['config']['businessappurl']
                                     . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
                                     . $_SESSION['user']['baskets'][$i]['id']
