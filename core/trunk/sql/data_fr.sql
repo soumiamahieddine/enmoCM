@@ -214,6 +214,8 @@ INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'modify_attachments');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'delete_attachments');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'adv_search_mlb');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'view_doc_history');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'associate_folder');
+
 
 INSERT INTO usergroups_services VALUES ('AGENT', 'adv_search_mlb');
 INSERT INTO usergroups_services VALUES ('AGENT', 'index_mlb');
@@ -238,6 +240,8 @@ INSERT INTO usergroups_services VALUES ('AGENT', 'sendmail');
 INSERT INTO usergroups_services VALUES ('AGENT', 'edit_attachments_from_detail');
 INSERT INTO usergroups_services VALUES ('AGENT', 'modify_attachments');
 INSERT INTO usergroups_services VALUES ('AGENT', 'delete_attachments');
+INSERT INTO usergroups_services VALUES ('AGENT', 'associate_folder');
+
 
 INSERT INTO usergroups_services VALUES ('COURRIER', 'admin');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'adv_search_mlb');
@@ -265,6 +269,7 @@ INSERT INTO usergroups_services VALUES ('COURRIER', 'delete_tag_to_res');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'create_tag');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'sendmail');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'use_mail_services');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'associate_folder');
 
 
 INSERT INTO usergroups_services VALUES ('ELU', 'adv_search_mlb');
@@ -280,6 +285,7 @@ INSERT INTO usergroups_services VALUES ('ELU', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('ELU', 'tag_view');
 INSERT INTO usergroups_services VALUES ('ELU', 'add_tag_to_res');
 INSERT INTO usergroups_services VALUES ('ELU', 'sendmail');
+INSERT INTO usergroups_services VALUES ('ELU', 'associate_folder');
 
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'admin');
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'index_mlb');
@@ -292,6 +298,8 @@ INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'admin_templates');
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'tag_view');
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'view_baskets');
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'adv_search_mlb');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'associate_folder');
+
 
 INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin');
 INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'adv_search_mlb');
@@ -320,6 +328,7 @@ INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_tag');
 INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'tag_view');
 INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'add_tag_to_res');
 INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'delete_tag_to_res');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'associate_folder');
 
 ------------
 --ENTITIES--
