@@ -83,6 +83,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
         <p>&nbsp;</p>
         <ul>
             <li>Florian AZIZIAN</li>
+            <li>Damien BUREL</li>
             <li>Bruno CARLIN</li>
             <li>Carole COTIN</li>
             <li>Driss DEMIRAY</li>
@@ -91,6 +92,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
             <li>Jean-Louis ERCOLANI</li>
             <li>Claire FIGUERAS</li>
             <li>Laurent GIOVANNONI</li>
+            <li>Henri QUENEAU</li>
             <li>Kader KANE</li>
             <li>Yves-Christian KPAKPO</li>
             <li>Sébastien NANABONDJA</li>
