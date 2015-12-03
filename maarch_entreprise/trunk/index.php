@@ -114,15 +114,23 @@ if (!$valid) {
         if (is_string($value) && strpos($value, "<") !== false) {
             $value = preg_replace('/(<\/?script[^>]*>|<\?php|<\?[\s|\n|\r])/i', "", $value);
             $_REQUEST[$name] = $value;
-            $_GET[$name] = $value;
-            $_POST[$name] = $value;
+            if (isset($_GET[$name]) && $_GET[$name] <> '') {
+                $_GET[$name] = $value;
+            }
+            if (isset($_POST[$name]) && $_POST[$name] <> '') {
+                $_POST[$name] = $value;
+            }
         }
         $value = str_replace("\\", "", $value);
         $value = str_replace("/", "", $value);
         $value = str_replace("..", "", $value);
         $_REQUEST[$name] = $value;
-        $_GET[$name] = $value;
-        $_POST[$name] = $value;
+        if (isset($_GET[$name]) && $_GET[$name] <> '') {
+            $_GET[$name] = $value;
+        }
+        if (isset($_POST[$name]) && $_POST[$name] <> '') {
+            $_POST[$name] = $value;
+        }
     }
     //process error for ajax request 
     if (
