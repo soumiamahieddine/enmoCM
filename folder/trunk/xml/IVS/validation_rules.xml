@@ -94,6 +94,7 @@
       <parameter name="custom_*" type="string" />
       <parameter name="folder_dest" type="bool" />
       <parameter name="validate" type="string" />
+      <parameter name="iframe" type="bool" />
     </validationRule>
     <validationRule name="fo_search_adv_folder_result" extends="standardForm" mode="error">
       <parameter name="coll_id" type="collection_list" />

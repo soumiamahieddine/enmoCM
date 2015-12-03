@@ -286,23 +286,37 @@ class folder extends request
 	/**
 	* Creates a folder
 	*/
-	public function create_folder()
+	public function create_folder($iframe=false)
 	{
 		$db = new Database();
 		$this->checks_folder_data();
 		if (! empty($_SESSION['error'])) {
-			header(
-				"location: " . $_SESSION['config']['businessappurl']
-			    . "index.php?page=create_folder_form&module=folder"
-			);
+			if($iframe == true){
+					header(
+					"location: " . $_SESSION['config']['businessappurl']
+				    . "index.php?page=create_folder_form_iframe&module=folder&display=false"
+					);
+				}else{
+					header(
+					"location: " . $_SESSION['config']['businessappurl']
+				    . "index.php?page=create_folder_form&module=folder"
+					);
+				}
 			exit();
 		} else if(preg_match('/\'|\"/',$_SESSION['m_admin']['folder']['folder_id'])) 
 { 
 			$_SESSION['error'] = _CHAR_ERROR . "<br />";
-				header(
+				if($iframe == true){
+					header(
+					"location: " . $_SESSION['config']['businessappurl']
+				    . "index.php?page=create_folder_form_iframe&module=folder&display=false"
+					);
+				}else{
+					header(
 					"location: " . $_SESSION['config']['businessappurl']
 				    . "index.php?page=create_folder_form&module=folder"
-				);
+					);
+				}
 				exit();
 		}else{
 			$stmt = $db->query(
@@ -313,10 +327,17 @@ class folder extends request
 			if ($stmt->rowCount() > 0) {
 				$_SESSION['error'] = $_SESSION['m_admin']['folder']['folder_id']
 				    . " " . _ALREADY_EXISTS . "<br />";
-				header(
+				if($iframe == true){
+					header(
+					"location: " . $_SESSION['config']['businessappurl']
+				    . "index.php?page=create_folder_form_iframe&module=folder&display=false"
+					);
+				}else{
+					header(
 					"location: " . $_SESSION['config']['businessappurl']
 				    . "index.php?page=create_folder_form&module=folder"
-				);
+					);
+				}
 				exit();
 			} else {
 				if ($_SESSION['m_admin']['folder']['folder_parent']) {
@@ -379,10 +400,17 @@ class folder extends request
 
 				$_SESSION['info'] = _FOLDER_ADDED;
 				unset($_SESSION['m_admin']);
-				header(
+				if($iframe == true){
+					header(
+					"location: " . $_SESSION['config']['businessappurl']
+				    . "index.php?page=create_folder_form_iframe&module=folder&display=false"
+					);
+				}else{
+					header(
 					"location: " . $_SESSION['config']['businessappurl']
 				    . "index.php?page=show_folder&module=folder&id=" . $id
-				);
+					);
+				}
 				exit();
 			}
 
