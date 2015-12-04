@@ -47,7 +47,7 @@ require_once 'core/class/SecurityControler.php';
 require_once 'core/class/class_core_tools.php';
 require_once 'core/where_targets.php';
 require_once 'core/class/users_controler.php';
-if (isset($_SESSION['config'])) {
+if (isset($_SESSION['config']['app_id'])) {
     require_once 'apps/' . $_SESSION['config']['app_id']
         . '/class/class_business_app_tools.php';
 }
