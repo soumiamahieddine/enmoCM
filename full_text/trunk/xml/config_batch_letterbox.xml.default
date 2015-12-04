@@ -3,7 +3,7 @@
   <CONFIG>
     <CONFIG_NAME>letterbox</CONFIG_NAME> <!-- usefull for multi customs -->
     <MAARCH_DIRECTORY>/var/www/html/maarch/</MAARCH_DIRECTORY> <!-- Path to full text module -->
-    <INDEX_FILE_DIRECTORY>/opt/maarch/docservers/maarch/indexes/letterbox_coll/</INDEX_FILE_DIRECTORY> <!-- Path to the indexes dir of the collection -->
+    <INDEX_FILE_DIRECTORY>/opt/maarch/docservers/indexes/letterbox_coll/</INDEX_FILE_DIRECTORY> <!-- Path to the indexes dir of the collection -->
     <TABLE_NAME>res_letterbox</TABLE_NAME>  
     <FULLTEXT_COLUMN_NAME>fulltext_result</FULLTEXT_COLUMN_NAME> <!-- Null or 0 = to do, 1 = OK, else KO -->
     <MAARCH_TOOLS_PATH>/var/www/html/maarch/apps/maarch_entreprise/tools/</MAARCH_TOOLS_PATH>
