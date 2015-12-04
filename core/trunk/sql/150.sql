@@ -751,7 +751,7 @@ CREATE VIEW res_view_attachments AS
 
 
 
-UPDATE parameters SET param_value_int = 150 where id='database_version';
+UPDATE parameters SET param_value_int = 151 where id='database_version';
 
 
 
