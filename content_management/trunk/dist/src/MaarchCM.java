@@ -280,7 +280,7 @@ public class MaarchCM extends JApplet {
      * @throws java.lang.Exception
      */
     public String editObject() throws Exception {
-        System.out.println("SECURE VERSION 2409 ----------BEGIN EDIT OBJECT----------LGI 24/11/2015");
+        System.out.println("SECURE VERSION 2409 ----------BEGIN EDIT OBJECT----------LGI 07/12/2015");
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         String os = System.getProperty("os.name").toLowerCase();
         boolean isUnix = os.contains("nix") || os.contains("nux");

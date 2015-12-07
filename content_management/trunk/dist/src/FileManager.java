@@ -217,11 +217,9 @@ public class FileManager {
         if ("docx".equals(ext.toLowerCase()) || "doc".equals(ext.toLowerCase())) {
             options = " /n /dde ";
         } else if ("xlsx".equals(ext.toLowerCase()) || "xls".equals(ext.toLowerCase())) {
-            options = " /n /dde ";
+            options = " /x ";
         } else if ("pptx".equals(ext.toLowerCase()) || "ppt".equals(ext.toLowerCase())) {
-            options = " /n /dde ";
-        } else if ("pptx".equals(ext.toLowerCase()) || "ppt".equals(ext.toLowerCase())) {
-            options = " /n /dde ";
+            options = " ";
         } else {
             options = " -env:UserInstallation=$SYSUSERCONFIG ";
         }

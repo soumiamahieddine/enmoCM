@@ -213,13 +213,13 @@ public class DisCM extends JApplet {
     public void createPDF(String docxFile, String directory, boolean isUnix) 
     {
         try {
+            boolean conversion = true;
             String cmd = "";
             if (docxFile.contains(".odt") || docxFile.contains(".ods") || docxFile.contains(".ODT") || docxFile.contains(".ODS")) {
                 String convertProgram;
                 convertProgram = this.fM.findPathProgramInRegistry("soffice.exe");
-
                 cmd = convertProgram+" -env:UserInstallation=$SYSUSERCONFIG --headless --convert-to pdf --outdir \""+this.userLocalDirTmp.substring(0,this.userLocalDirTmp.length()-1)+"\" \""+docxFile+"\" \r\n";
-            } else {
+            } else if (docxFile.contains(".doc") || docxFile.contains(".docx") || docxFile.contains(".DOC") || docxFile.contains(".DOCX")) {
                 if (this.useExeConvert.equals("false")) {
                         cmd = "cmd /C cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
                 } else {
@@ -230,44 +230,48 @@ public class DisCM extends JApplet {
 
                         cmd = "cmd /C \""+this.userLocalDirTmp+"Word2Pdf.exe\" \""+docxFile+"\" \""+pdfOut+"\" \r\n";
                 }
-            }
-
-            this.logger.log("EXEC PATH : " +cmd, Level.INFO);
-            FileManager fM = new FileManager();
-
-            Process proc_vbs;
-            if (isUnix){
-                cmd = "cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
-                final Writer outBat;
-                outBat = new OutputStreamWriter(new FileOutputStream(this.appPath_convert), "CP850");
-                this.logger.log("--- cmd bat  --- "+cmd, Level.INFO);
-                outBat.write(cmd);
-                outBat.write("exit \r\n");
-                outBat.close();
-
-                File myFileBat = new File(this.appPath_convert);
-                myFileBat.setReadable(true, false);
-                myFileBat.setWritable(true, false);
-                myFileBat.setExecutable(true, false);
-
-                //String cmd2 = "start /B /MIN "+this.appPath_convert+" \r\n";
-                String cmd2 = "start /WAIT /MIN "+this.appPath_convert+" \r\n";
-                final Writer outBat2 = new OutputStreamWriter(new FileOutputStream(this.appPath), "CP850");
-                outBat2.write(cmd2);
-                outBat2.write("exit \r\n");
-                outBat2.close();
-
-                File myFileBat2 = new File(this.appPath);
-                myFileBat2.setReadable(true, false);
-                myFileBat2.setWritable(true, false);
-                myFileBat2.setExecutable(true, false);
-
-                final String exec_vbs = "\""+this.appPath+"\"";
-                proc_vbs = fM.launchApp(exec_vbs);
             } else {
-                proc_vbs = fM.launchApp(cmd);
+                conversion = false;
             }
-            proc_vbs.waitFor();
+            
+            if (conversion) {
+                this.logger.log("EXEC PATH : " +cmd, Level.INFO);
+                FileManager fM = new FileManager();
+
+                Process proc_vbs;
+                if (isUnix){
+                    cmd = "cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
+                    final Writer outBat;
+                    outBat = new OutputStreamWriter(new FileOutputStream(this.appPath_convert), "CP850");
+                    this.logger.log("--- cmd bat  --- "+cmd, Level.INFO);
+                    outBat.write(cmd);
+                    outBat.write("exit \r\n");
+                    outBat.close();
+
+                    File myFileBat = new File(this.appPath_convert);
+                    myFileBat.setReadable(true, false);
+                    myFileBat.setWritable(true, false);
+                    myFileBat.setExecutable(true, false);
+
+                    //String cmd2 = "start /B /MIN "+this.appPath_convert+" \r\n";
+                    String cmd2 = "start /WAIT /MIN "+this.appPath_convert+" \r\n";
+                    final Writer outBat2 = new OutputStreamWriter(new FileOutputStream(this.appPath), "CP850");
+                    outBat2.write(cmd2);
+                    outBat2.write("exit \r\n");
+                    outBat2.close();
+
+                    File myFileBat2 = new File(this.appPath);
+                    myFileBat2.setReadable(true, false);
+                    myFileBat2.setWritable(true, false);
+                    myFileBat2.setExecutable(true, false);
+
+                    final String exec_vbs = "\""+this.appPath+"\"";
+                    proc_vbs = fM.launchApp(exec_vbs);
+                } else {
+                    proc_vbs = fM.launchApp(cmd);
+                }
+                proc_vbs.waitFor();
+            }
 
         } catch (Throwable e) {
             this.logger.log("--- Erreur dans la conversion --- ", Level.INFO);
@@ -370,7 +374,7 @@ public class DisCM extends JApplet {
      * @throws java.lang.Exception
      */
     public String editObject() throws Exception, InterruptedException, JSException {
-        System.out.println("SECURE VERSION DIS----------BEGIN EDIT OBJECT---------- LGI 24/11/2015");
+        System.out.println("SECURE VERSION DIS----------BEGIN EDIT OBJECT---------- LGI 07/12/2015");
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         String os = System.getProperty("os.name").toLowerCase();
         boolean isUnix = os.contains("nix") || os.contains("nux");
