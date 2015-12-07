@@ -316,7 +316,7 @@ class attachments_controler
         $stmt2 = $db2->query(
             "SELECT res_id
                 FROM res_view_attachments 
-                WHERE res_id_master = ? and identifier = ? "
+                WHERE res_id_master = ? and identifier = ? and (identifier <> '' and identifier is not null) "
                 . "and attachment_type <> 'converted_pdf' and attachment_type <> 'signed_response' and res_id <> ? "
                 . "ORDER BY relation desc", 
                 array(
