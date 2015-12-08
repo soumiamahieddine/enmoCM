@@ -562,8 +562,8 @@ if (count($_REQUEST['meta']) > 0) {
                         }
                         else
                         {
-                            $where_request .= " ( status = :statusChosen) or ";
-                            $arrayPDO = array_merge($arrayPDO, array(":statusChosen" => $_REQUEST['status_chosen']));
+                            $where_request .= " ( status = :statusChosen_".$get_i.") or ";
+                            $arrayPDO = array_merge($arrayPDO, array(":statusChosen_".$get_i => $_REQUEST['status_chosen'][$get_i]));
                         }
                     }
                 }
