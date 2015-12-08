@@ -155,7 +155,7 @@ function indexFullText($pathToFile, $indexFileDirectory, $format, $Id)
 function prepareIndexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
 {
     if (is_file($pathToFile)) {
-        $tmpFile = $_ENV["base_directory"] . DIRECTORY_SEPARATOR . "tmp"
+        $tmpFile = $_ENV["base_directory"] . "tmp"
             . DIRECTORY_SEPARATOR . basename($pathToFile) . ".ftx";
         if ($_ENV['osname'] == "WINDOWS") {
             $resultExtraction = exec(escapeshellarg($_ENV['maarch_tools_path'] . "pdftotext"
@@ -208,7 +208,7 @@ function launchIndexFullText($fileContent, $tempIndexFileDirectory, $Id) // $Ind
 {
     $indexFileDirectory = (string) $tempIndexFileDirectory; // with version 1.12, we need a string, not an XML element
     $result = -1;
-    if (strlen($fileContent) > 50) {
+    if (strlen($fileContent) > 20) {
         if (!is_dir($indexFileDirectory)) {
             $_ENV['logger']->write($indexFileDirectory . " not exists !", "ERROR", 2);
             $index = Zend_Search_Lucene::create($indexFileDirectory);
@@ -253,7 +253,7 @@ function readFileF($file)
         $result = fread($fp, filesize($file));
         fclose($fp);
     }
-    Return $result;
+    return $result;
 }
 
 // Begin
