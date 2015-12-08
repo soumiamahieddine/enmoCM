@@ -26,6 +26,7 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
     }
     if(doctype_id != null && doctype_id != '' && doctype_id != NaN)
     {
+        alert(path_manage_script);
         new Ajax.Request(path_manage_script,
         {
             method:'post',
@@ -321,16 +322,19 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
     if ($('type_contact_internal')) {
         if ($('type_contact_internal').checked == true) {
             var typeContactInternal = 'checked';
+            
         }
     }
     if ($('type_contact_external')) {
         if ($('type_contact_external').checked == true) {
             typeContactExternal = 'checked';
+           
         }
     }    
 	if ($('type_multi_contact_external')) {
         if ($('type_multi_contact_external').checked == true) {
             typeMultiContactExternal = 'checked';
+
         }
     }
     if (typeContactInternal == 'not_checked' && typeContactExternal == 'not_checked' && typeMultiContactExternal == 'not_checked') {
@@ -367,6 +371,9 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
         {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
         {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
+        {id:'type_multi_contact_external_icon', type:'label', state:'hide'},
+        {id:'type_contact_external_icon', type:'label', state:'display'},
+        {id:'type_contact_internal_icon', type:'label', state:'display'},
         {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
@@ -418,6 +425,9 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
         {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
         {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
+        {id:'type_multi_contact_external_icon', type:'label', state:'display'},
+        {id:'type_contact_external_icon', type:'label', state:'display'},
+        {id:'type_contact_internal_icon', type:'label', state:'display'},
         {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
@@ -469,6 +479,9 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
         {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
         {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
+        {id:'type_multi_contact_external_icon', type:'label', state:'hide'},
+        {id:'type_contact_external_icon', type:'label', state:'display'},
+        {id:'type_contact_internal_icon', type:'label', state:'display'},
         {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},

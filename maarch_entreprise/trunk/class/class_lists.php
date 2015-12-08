@@ -2762,7 +2762,7 @@ class lists extends Database
                     .$this->params['actions'][$i]['LABEL'].'</option>';
             }
             $actionsList .= ' </select>';
-            $actionsList .= ' <input type="button" name="send" id="send" value="'._VALIDATE
+            $actionsList .= ' <input type="button" name="send" id="send_mass" value="'._VALIDATE
                 .'" onClick="validForm(\'mass\');window.location.href=\'#top\'" class="button" />';
         }
         
