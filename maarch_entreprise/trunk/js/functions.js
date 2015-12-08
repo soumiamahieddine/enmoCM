@@ -1387,6 +1387,12 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                               coll_id : id_coll,
                               module : modulename
                               },
+                onLoading: function(answer) {
+                //show loading image in toolbar
+                    $('send_mass').disabled=true;
+                    $('send_mass').style.opacity="0.5";
+                    $('send_mass').value="traitement...";
+                },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);
                 //console.log(answer.responseText);
@@ -1446,6 +1452,9 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                     }
                     //close_action(id_action,  page_result);
                 }
+                $('send_mass').disabled=false;
+                $('send_mass').style.opacity="1";
+                $('send_mass').value="valider";
             },
             onFailure: function(){
                 //alert('erreur');
