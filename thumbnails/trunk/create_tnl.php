@@ -213,8 +213,23 @@ while ($queryResult=$stmt1->fetchObject()) {
 				$command = "convert -thumbnail x300 -background white -alpha remove " . escapeshellarg($pathToFile) . "[0] " 
 					. escapeshellarg($outputPathFile);
 			} else {
-				$command = "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " . escapeshellarg($pathToFile) . " " 
+				$posPoint = strpos($pathToFile, '.');
+				$extension = substr($pathToFile, $posPoint);
+				$chemin = substr($pathToFile, 0, $posPoint);
+				if($extension == '.maarch'){
+					if (!copy($pathToFile, $chemin.'.html')) {
+					    echo "La copie $pathToFile du fichier a échoué...\n";
+					}else{
+						echo "La copie $pathToFile du fichier a réussi...\n";
+						$cheminComplet = $chemin.".html";
+						$command = "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " . escapeshellarg($cheminComplet) . " " 
+						. escapeshellarg($outputPathFile);
+
+					}
+				}else{
+					$command = "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " . escapeshellarg($pathToFile) . " " 
 					. escapeshellarg($outputPathFile);
+				}
 			}
 			//echo $command . PHP_EOL;
 			exec($command);
