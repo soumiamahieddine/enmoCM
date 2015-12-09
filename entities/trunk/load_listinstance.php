@@ -57,7 +57,7 @@ $onlyCC = false;
 
 
 if( ($core->test_service('add_copy_in_process', 'entities', false) && $_REQUEST['origin'] == 'process') 
-    || ($core->test_service('add_copy_in_indexing_validation', 'entities', false) && $_REQUEST['origin'] == 'indexing') ){
+    || ($core->test_service('add_copy_in_indexing_validation', 'entities', false) && ($_REQUEST['origin'] == 'indexing' || $_REQUEST['origin'] == 'redirect')) ){
     $onlyCC = true;
 }
 
