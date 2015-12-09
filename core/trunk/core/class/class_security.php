@@ -173,6 +173,7 @@ class security extends Database
                     'signature_file_name' => $user->__get('signature_file_name'),
                     'pathToSignature' => $_SESSION['user']['pathToSignature'],
                     'Status' => $user->__get('status'),
+                    'cookie_date' => $user->__get('cookie_date'),
                 );
                 // $_SESSION['error'] =  '';
                 /*setcookie(
