@@ -791,6 +791,7 @@ if (!defined('_PHONE_NUMBER')) define('_PHONE_NUMBER', 'Phone number');
 if (!defined('_PIECE_TYPE')) define('_PIECE_TYPE', 'type of file');
 if (!defined('_PJ'))    define('_PJ', 'Attachments');
 if (!defined('_PLEASE_CHANGE_PSW')) define('_PLEASE_CHANGE_PSW', ' Please modify your password.');
+if (!defined("_PSW_REINI")) define("_PSW_REINI", "Your password has been reset. Please set a new one.");
 if (!defined('_PLEASE_ENTER_YOUR_RA_CODE'))     define( '_PLEASE_ENTER_YOUR_RA_CODE', 'Please enter your remote access code.');
 if (!defined('_PLUS')) define( '_PLUS', 'Plus');
 if (!defined('_POSTAL_CODE')) define('_POSTAL_CODE','Zip code');
