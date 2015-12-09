@@ -85,9 +85,11 @@ if($_POST['FOLDER_TREE']){
 	exit();
 }else if($_POST['FOLDER_TREE_DOCS']){
 	$docs = array();
-	$stmt = $db->query("SELECT res_id, type_label, subject,doctypes_first_level_label,doctypes_second_level_label, folder_level 
-						FROM res_view_letterbox 
-						WHERE folders_system_id in (?) AND (".$whereClause.") AND status NOT IN ('DEL')", array($_POST['folders_system_id']));
+	$stmt = $db->query("SELECT res_id, type_label, subject,doctypes_first_level_label,doctypes_second_level_label, folder_level
+						FROM res_view_letterbox
+						WHERE folders_system_id in (?) AND (".$whereClause." OR folder_destination IN (?)) AND status NOT IN ('DEL')",
+						array($_POST['folders_system_id'], $sec->getEntitiesForCurrentUser()));
+
 	while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 		
 		$docs[$row['doctypes_first_level_label']][$row['doctypes_second_level_label']][] = array(

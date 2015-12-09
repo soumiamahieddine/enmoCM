@@ -86,10 +86,11 @@ if($matches[0] != ''){
 
 $categories = array();
 $html.="<ul class='folder' id='folder_tree_content'>";
+$entitiesTab = $sec->getEntitiesForCurrentUser();
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$stmt2 = $db->query(
-		"SELECT count(*) as total FROM res_view_letterbox WHERE folders_system_id in (?) AND (".$whereClause.") AND status NOT IN ('DEL')"
-		,array($row['folders_system_id']));
+		"SELECT count(*) as total FROM res_view_letterbox WHERE folders_system_id in (?) AND (".$whereClause."OR folder_destination IN (?)) AND status NOT IN ('DEL')"
+		,array($row['folders_system_id'], $entitiesTab));
 	$row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
 	$stmt3 = $db->query(
 		"SELECT count(*) as total FROM folders WHERE foldertype_id not in (100) AND parent_id IN (?) AND status NOT IN ('DEL')"
@@ -100,8 +101,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$html.="<li id='".$row['folders_system_id']."' class='folder'>";
 	$html.="<span onclick='get_folders(".functions::xssafe($folders_system_id).")'>"
 		.functions::xssafe($row['folder_name'])
-		."</span><b>(".functions::xssafe($row3['total'])
-		." sous-dossier(s), <span onclick='get_folder_docs(".functions::xssafe($folders_system_id).")'>"
+		."</span><b>(<span>".functions::xssafe($row3['total'])
+		." sous-dossier(s)</span>, <span onclick='get_folder_docs(".functions::xssafe($folders_system_id).")'>"
 		.functions::xssafe($row2['total'])." document(s)</span>)</b>";
 	$html.="</li>";
 }
