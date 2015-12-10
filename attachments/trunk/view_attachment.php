@@ -54,7 +54,6 @@ if (! empty($_SESSION['error'])) {
     exit();
 } else {
 
-
     $stmt = $db->query(
         "SELECT coll_id, res_id_master 
             FROM res_view_attachments 
@@ -62,6 +61,15 @@ if (! empty($_SESSION['error'])) {
     $res = $stmt->fetchObject();
     $collId = $res->coll_id;
     $resIdMaster = $res->res_id_master;
+
+    if ($stmt->rowCount() == 0) {
+        $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS;
+        header(
+            "location: " . $_SESSION['config']['businessappurl']
+            . "index.php"
+        );
+        exit();
+    }
 
     $where2 = "";
     foreach (array_keys($_SESSION['user']['security']) as $key) {
@@ -74,9 +82,9 @@ if (! empty($_SESSION['error'])) {
     $table = $sec->retrieve_table_from_coll($collId);
     $stmt = $db->query(
         "SELECT res_id FROM " . $table . " WHERE res_id = ?",array($resIdMaster));
-    //$db->show();
+
     if ($stmt->rowCount() == 0) {
-        $_SESSION['error'] = _THE_DOC . " " . _EXISTS_OR_RIGHT;
+        $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS;
         header(
             "location: " . $_SESSION['config']['businessappurl'] . "index.php"
         );
@@ -89,7 +97,7 @@ if (! empty($_SESSION['error'])) {
         );
 
         if ($stmt->rowCount() == 0) {
-            $_SESSION['error'] = _THE_DOC . " " . _EXISTS_OR_RIGHT;
+            $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS;
             header(
                 "location: " . $_SESSION['config']['businessappurl']
                 . "index.php"
