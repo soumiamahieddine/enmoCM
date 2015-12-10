@@ -34,5 +34,5 @@
     </h2>
 </div>
 <div class="logo">
-    <img src="img/logo.png" height="90px" />
+    <img src="img/logo.png" height="70px" />
 </div>
