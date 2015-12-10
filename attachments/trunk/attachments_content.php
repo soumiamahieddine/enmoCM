@@ -1344,7 +1344,7 @@ if (!isset($_REQUEST['id'])) {
     $content .= '<p style="text-align:left;margin-left:74.5%;"></p>';
     $content .= '<p>';
     //$content .= '<label>'. _MODEL.'</label>';
-    $content .= '<label>'. _FILE.' <span><i class="fa fa-paperclip" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});"></i> <i class="fa fa-file-text-o" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
+    $content .= '<label>'. _FILE.' <span><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});"></i> <i class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
     $content .= '<select name="templateOffice" id="templateOffice" style="display:inline-block;" onchange="showEditButton();">';
     $content .= '<option value="">'. _CHOOSE_MODEL.'</option>';
 /*                    for ($i=0;$i<count($templates);$i++) {
@@ -1421,7 +1421,7 @@ if ($core->test_admin('my_contacts', 'apps', false)) {
     $content .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
             . '" onclick="new Effect.toggle(\'create_contact_div_attach\', '
             . '\'blind\', {delay:0.2});return false;" '
-            . 'style="display:inline;" ><i class="fa fa-pencil" title="' . _CREATE_CONTACT . '"></i></a>';
+            . 'style="display:inline;" ><i class="fa fa-pencil fa-lg" title="' . _CREATE_CONTACT . '"></i></a>';
 }
 $content .= '</label>';
 $content .= '<input type="text" name="contact_attach" onblur="display_contact_card(\'visible\', \'contact_card_attach\');" onkeyup="erase_contact_external_id(\'contact_attach\', \'contactidAttach\');erase_contact_external_id(\'contact_attach\', \'addressidAttach\');" id="contact_attach" value="';
@@ -1430,7 +1430,7 @@ $content .= '"/>';
 $content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe_attach\').src=\'' . $_SESSION['config']['businessappurl']
     . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'&fromAttachmentContact=Y\';new Effect.toggle(\'info_contact_div_attach\', '
     . '\'blind\', {delay:0.2});return false;"'
-    . ' style="visibility:hidden;"> <i class="fa fa-book"></i></a>';
+    . ' style="visibility:hidden;"> <i class="fa fa-book fa-lg"></i></a>';
 $content .= '<div id="show_contacts_attach" class="autocomplete autocompleteIndex"></div>';
 $content .= '</p>';
 $content .= '<input type="hidden" id="contactidAttach" name="contactidAttach" value="';
