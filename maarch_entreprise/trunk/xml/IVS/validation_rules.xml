@@ -1,7 +1,7 @@
 <validationRules>
     <validationRule name="index" mode="lax">
       <parameter name="admin" type="string" />
-      <parameter name="page" type="string" />
+      <parameter name="page" type="identifier" />
       <parameter name="order" type="order" />
       <parameter name="start" type="integer" />
       <parameter name="display" type="boolean" />
