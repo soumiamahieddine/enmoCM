@@ -51,32 +51,33 @@ $upFileOK = false;
             . '_' . rand() . '.' . strtolower($the_ext);
             $_SESSION['upfile']['fileNameOnTmp'] = $fileNameOnTmp;
         $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
-        //$md5 = md5_file($_FILES['file']['tmp_name']);
+
         if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
                 $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN
                     . ". " . _MORE_INFOS . " (<a href=\"mailto:"
                     . $_SESSION['config']['adminmail'] . "\">"
                     . $_SESSION['config']['adminname'] . "</a>)";
-        } elseif (!@move_uploaded_file($_FILES['file']['tmp_name'], $filePathOnTmp)) {
-            $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN . ". "
-                . _MORE_INFOS . " (<a href=\"mailto:"
-                . $_SESSION['config']['adminmail'] . "\">"
-                . $_SESSION['config']['adminname'] . "</a>)";
         } else {
-            $_SESSION['upfile']['size'] = $_FILES['file']['size'];
-            $_SESSION['upfile']['mime'] = $_FILES['file']['type'];
-            $_SESSION['upfile']['local_path'] = $filePathOnTmp;
-            //$_SESSION['upfile']['name'] = $_FILES['file']['name'];
-            $_SESSION['upfile']['name'] = $fileNameOnTmp;
-            $_SESSION['upfile']['format'] = $the_ext;
             require_once 'core/docservers_tools.php';
             $arrayIsAllowed = array();
-            $arrayIsAllowed = Ds_isFileTypeAllowed($_SESSION['upfile']['local_path']);
+            $arrayIsAllowed = Ds_isFileTypeAllowed($_FILES['file']['tmp_name'], strtolower($the_ext));
             if ($arrayIsAllowed['status'] == false) {
                 $_SESSION['error'] = _WRONG_FILE_TYPE . ' ' . $arrayIsAllowed['mime_type'];
                 $_SESSION['upfile'] = array();
+            } elseif (!@move_uploaded_file($_FILES['file']['tmp_name'], $filePathOnTmp)) {
+                $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN . ". "
+                    . _MORE_INFOS . " (<a href=\"mailto:"
+                    . $_SESSION['config']['adminmail'] . "\">"
+                    . $_SESSION['config']['adminname'] . "</a>)";
+            } else {
+                $_SESSION['upfile']['size'] = $_FILES['file']['size'];
+                $_SESSION['upfile']['mime'] = $_FILES['file']['type'];
+                $_SESSION['upfile']['local_path'] = $filePathOnTmp;
+                //$_SESSION['upfile']['name'] = $_FILES['file']['name'];
+                $_SESSION['upfile']['name'] = $fileNameOnTmp;
+                $_SESSION['upfile']['format'] = $the_ext;
+                $upFileOK = true;
             }
-            $upFileOK = true;
         }
     }
     ?>
