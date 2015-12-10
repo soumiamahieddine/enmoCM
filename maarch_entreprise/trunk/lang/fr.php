@@ -19,7 +19,7 @@
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.5");
+if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.5.1");
 
 /************** Administration **************/
 if (!defined("_VIEW_LAST_COURRIERS")) define("_VIEW_LAST_COURRIERS", "Mes derniers courriers");
