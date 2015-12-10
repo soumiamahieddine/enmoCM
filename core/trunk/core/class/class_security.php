@@ -841,16 +841,20 @@ class security extends Database
         if (empty($view)) {
             $view = $this->retrieve_table_from_coll($coll_id);
         }
-        $entitiesTab = [];
-        foreach ($_SESSION['user']['entities'] as $tmp) {
-            $entitiesTab[] = $tmp['ENTITY_ID'];
-        }
+        $entitiesTab = $this->getEntitiesForCurrentUser();
         $where_clause = $this->get_where_clause_from_coll_id($coll_id);
         $query = "select res_id from " . $view . " where res_id = ?";
-        if (!empty($where_clause)) {
-            $query .= " and (" . $where_clause . "or folder_destination in (?)) ";
+        if (!empty($entitiesTab)) {
+            if (!empty($where_clause)) {
+                $query .= " and (" . $where_clause . " or folder_destination in (?)) ";
+            }
+            $stmt = $this->query($query, array($s_id, $entitiesTab));
+        } else {
+            if (!empty($where_clause)) {
+                $query .= " and (" . $where_clause . ") ";
+            }
+            $stmt = $this->query($query, array($s_id));
         }
-        $stmt = $this->query($query, array($s_id, $entitiesTab));
         if ($stmt->rowCount() < 1) {
             //NOT IN THE DOC PERIMETER SO TEST IT IN THE BASKETS
             $basketQuery = '';
