@@ -265,11 +265,11 @@ if (!defined('_TRY_AGAIN')) {
 }
 
 //BUTTON
-if (!defined('_PREVIOUS')) {
-    define('_PREVIOUS', "Previous");
+if (!defined('_PREVIOUS_INSTALL')) {
+    define('_PREVIOUS_INSTALL', "Previous");
 }
-if (!defined('_NEXT')) {
-    define('_NEXT', "Next");
+if (!defined('_NEXT_INSTALL')) {
+    define('_NEXT_INSTALL', "Next");
 }
 
 
