@@ -73,6 +73,10 @@ if ($s_id == '') {
     $_SESSION['error'] = _THE_DOC . ' ' . _IS_EMPTY;
     header('location: ' . $_SESSION['config']['businessappurl'] . 'index.php');
     exit();
+} else if (!is_numeric($s_id)) {
+    $_SESSION['error'] = _FORMAT . ' ' . _UNKNOWN;
+    header('location: ' . $_SESSION['config']['businessappurl'] . 'index.php');
+    exit();
 } else {
     //2:retrieve the view
     $table = '';
