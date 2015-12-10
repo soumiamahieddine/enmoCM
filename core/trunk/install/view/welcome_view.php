@@ -47,12 +47,12 @@
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=language');">
-                        <?php echo _PREVIOUS;?>
+                        <?php echo _PREVIOUS_INSTALL;?>
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
                     <a href="#" onClick="goTo('index.php?step=licence');">
-                        <?php echo _NEXT;?>
+                        <?php echo _NEXT_INSTALL;?>
                     </a>
                 </div>
             </div>

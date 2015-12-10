@@ -51,7 +51,7 @@
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=password');">
-                        <?php echo _PREVIOUS;?>
+                        <?php echo _PREVIOUS_INSTALL;?>
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="start">

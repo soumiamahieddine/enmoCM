@@ -266,11 +266,11 @@ if (!defined('_TRY_AGAIN')) {
 }
 
 //BUTTON
-if (!defined('_PREVIOUS')) {
-    define('_PREVIOUS', "Précédent");
+if (!defined('_PREVIOUS_INSTALL')) {
+    define('_PREVIOUS_INSTALL', "Précédent");
 }
-if (!defined('_NEXT')) {
-    define('_NEXT', "Suivant");
+if (!defined('_NEXT_INSTALL')) {
+    define('_NEXT_INSTALL', "Suivant");
 }
 
 

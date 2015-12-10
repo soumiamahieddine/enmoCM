@@ -213,7 +213,7 @@
                 </div-->
                 <div style="float: right;" class="nextButton" id="next">
                     <a href="#" onClick="goTo('index.php?step=password');">
-                        <?php echo _NEXT;?>
+                        <?php echo _NEXT_INSTALL;?>
                     </a>
                 </div>
                 

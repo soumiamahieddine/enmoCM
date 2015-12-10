@@ -69,7 +69,7 @@
                 <div style="float: right;" class="nextButton" id="next">
                     <span id="returnCheckLanguage" style="display: none;">
                         <a href="#" onClick="$('form').submit();">
-                            <?php echo _NEXT;?>
+                            <?php echo _NEXT_INSTALL;?>
                         </a>
                     </span>
                 </div>

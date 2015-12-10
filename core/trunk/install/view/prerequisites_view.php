@@ -342,7 +342,7 @@
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=licence');">
-                        <?php echo _PREVIOUS;?>
+                        <?php echo _PREVIOUS_INSTALL;?>
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
@@ -351,7 +351,7 @@
                             echo _MUST_FIX;
                         } else {
                             echo '<a href="#" onClick="goTo(\'index.php?step=database\');">'
-                                ._NEXT
+                                ._NEXT_INSTALL
                             .'</a>';
                         }
                     ?>
