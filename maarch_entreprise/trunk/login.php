@@ -60,19 +60,19 @@ $_SESSION['urltocore'] = $_SESSION['config']['coreurl'] . 'core/';
 if (isset($_SESSION['config']['corepath'])
     && ! empty($_SESSION['config']['corepath'] )
 ) {
-    require
+    require_once
         'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
         . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
         . 'class_business_app_tools.php';
-    require
+    require_once
         'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
         . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
         . 'class_login.php';
     $configCorePath = 'core' . DIRECTORY_SEPARATOR . 'xml'
                       . DIRECTORY_SEPARATOR . 'config.xml';
 } else {
-    require 'class' . DIRECTORY_SEPARATOR . 'class_business_app_tools.php';
-    require 'class' . DIRECTORY_SEPARATOR . 'class_login.php';
+    require_once 'class' . DIRECTORY_SEPARATOR . 'class_business_app_tools.php';
+    require_once 'class' . DIRECTORY_SEPARATOR . 'class_login.php';
     $configCorePath = '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
                       . 'core' . DIRECTORY_SEPARATOR . 'xml'
                       . DIRECTORY_SEPARATOR . 'config.xml';
