@@ -64,3 +64,139 @@ if (isset($_SESSION['custom_override_id'])
         $_SESSION['config']['corepath'] . PATH_SEPARATOR . get_include_path()
     );
 }
+
+
+/**
+ * Get an array that represents directory tree
+ * @param string $directory     Directory path
+ * @param bool $recursive         Include sub directories
+ * @param bool $listDirs         Include directories on listing
+ * @param bool $listFiles         Include files on listing
+ * @param regex $exclude         Exclude paths that matches this regex
+ */
+function maarchFilesWhiteList($directory, $isCustom = false, $recursive = true, $listDirs = false, $listFiles = true, $exclude = '')
+{
+    $arrayItems = array();
+    $skipByExclude = false;
+    $handle = opendir($directory);
+    if ($handle) {
+        while (false !== ($file = readdir($handle))) {
+            preg_match("/(^(([\.]){1,2})$|"
+                . "(\.(svn|git|md|xml|default|inc|js|sql|html|sh|bat|txt|log|css|jpg|jpeg|png|gif|doc|docx"
+                . "|xls|xlsx|odt|ods|csv|pdf|rb|jar|svg|psd|msi|vbs))|(Thumbs\.db|\.DS_STORE|tools|css|js|img|lang|"
+                . "sql|tmp|log|logs|xml))$/iu", $file, $skip);
+            if ($exclude) {
+                preg_match($exclude, $file, $skipByExclude);
+            }
+            if (!$skip && !$skipByExclude) {
+                if (is_dir($directory. DIRECTORY_SEPARATOR . $file)) {
+                    if ($recursive) {
+                        $arrayItems = array_merge(
+                            $arrayItems, 
+                            maarchFilesWhiteList(
+                                $directory. DIRECTORY_SEPARATOR . $file, 
+                                $isCustom, 
+                                $recursive, 
+                                $listDirs, 
+                                $listFiles, 
+                                $exclude
+                            )
+                        );
+                    }
+                    if ($listDirs) {
+                        $fileName = $file;
+                        $file = $directory . DIRECTORY_SEPARATOR . $file;
+                        $arrayItems[$fileName] = $file;
+                    }
+                } else {
+                    if ($listFiles) {
+                        //$fileName = $file;
+                        $file = $directory . DIRECTORY_SEPARATOR . $file;
+                        if (
+                            $isCustom 
+                            && file_exists('custom/' . $_SESSION['custom_override_id'] . '/' . $file)
+                        ) {
+                            //$arrayItems[$fileName] = 'custom/' . $_SESSION['custom_override_id'] . '/' . $file;
+                            array_push($arrayItems, 'custom/' . $_SESSION['custom_override_id'] . '/' . $file);
+                        } else {
+                            //$arrayItems[$fileName] = $file;
+                            array_push($arrayItems, $file);
+                        }
+                    }
+                }
+            }
+        }
+        closedir($handle);
+    }
+    return $arrayItems;
+}
+
+
+//if (!isset($_SESSION['maarchFilesWhiteList']) && count($_SESSION['maarchFilesWhiteList']) == 0) {
+    $isCustom = false;
+    if (
+        is_dir('custom/' . $_SESSION['custom_override_id']) 
+        && !empty($_SESSION['custom_override_id'])
+    ) {
+        $isCustom = true;
+    }
+
+    $_SESSION['maarchFilesWhiteList'] = array();
+    $_SESSION['maarchFilesWhiteList']['core'] = maarchFilesWhiteList('core', $isCustom);
+    $_SESSION['maarchFilesWhiteList']['apps'] = maarchFilesWhiteList('apps', $isCustom);
+    $_SESSION['maarchFilesWhiteList']['modules'] = array();
+
+    $modules = array();
+    $handle = opendir('modules');
+    if ($handle) {
+        while (false !== ($file = readdir($handle))) {
+            //echo $file . '<br/>';
+            if (is_dir($_SESSION['config']['corepath'] . '/modules/' . $file) && $file <> '.' && $file <> '..') {
+                array_push($modules, $file);
+            }
+        }
+    }
+    for ($z=0;$z<count($modules);$z++) {
+        $_SESSION['maarchFilesWhiteList']['modules'][$modules[$z]] = maarchFilesWhiteList(
+            'modules/' . $modules[$z],
+            $isCustom
+        );
+    }
+    if (
+        is_dir($_SESSION['config']['corepath'] . '/custom/' . $_SESSION['custom_override_id']) 
+        && !empty($_SESSION['custom_override_id'])
+    ) {
+        if (is_dir($_SESSION['config']['corepath'] . 'custom/' . $_SESSION['custom_override_id'] . '/core')) {
+            $_SESSION['maarchFilesWhiteList']['custom']['core'] = maarchFilesWhiteList('custom/' . $_SESSION['custom_override_id'] . '/core');
+            $_SESSION['maarchFilesWhiteList']['core'] 
+                = array_merge($_SESSION['maarchFilesWhiteList']['core'], $_SESSION['maarchFilesWhiteList']['custom']['core']);
+        }
+        if (is_dir($_SESSION['config']['corepath'] . 'custom/' . $_SESSION['custom_override_id']. '/apps')) {
+            $_SESSION['maarchFilesWhiteList']['custom']['apps'] = maarchFilesWhiteList('custom/' . $_SESSION['custom_override_id']. '/apps');
+            $_SESSION['maarchFilesWhiteList']['apps'] 
+                = array_merge($_SESSION['maarchFilesWhiteList']['apps'], $_SESSION['maarchFilesWhiteList']['custom']['apps']);
+
+        }
+        for ($z=0;$z<count($modules);$z++) {
+            if (is_dir($_SESSION['config']['corepath'] . 'custom/' . $_SESSION['custom_override_id']. '/modules/' . $modules[$z])) {
+                $_SESSION['maarchFilesWhiteList']['custom']['modules'][$modules[$z]] = maarchFilesWhiteList(
+                    'custom/' . $_SESSION['custom_override_id']. '/modules/' . $modules[$z],
+                    $isCustom
+                );
+                $_SESSION['maarchFilesWhiteList']['modules'][$modules[$z]] 
+                    = array_merge($_SESSION['maarchFilesWhiteList']['modules'][$modules[$z]], $_SESSION['maarchFilesWhiteList']['custom']['modules'][$modules[$z]]);
+            }
+            
+        }
+    }
+
+    // echo '<pre>';
+    // print_r($_SESSION['maarchFilesWhiteList']);
+    // echo '</pre>';
+    // exit;
+//}
+// echo '<pre>';
+// print_r($_SESSION['maarchFilesWhiteList']);
+// echo '</pre>';
+// exit;
+

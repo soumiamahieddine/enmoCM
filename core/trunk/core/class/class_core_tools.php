@@ -1604,29 +1604,31 @@ class core_tools extends functions
         }
         if(isset($_GET['module']) && $_GET['module'] <> "core") {
             // Page is defined in a module
-            $aModules = [];
-            $aScandir = scandir('modules');
-            foreach ($aScandir as $sModule) {
-                if ( in_array($sModule,['.','..',]) ) continue;
-                $aModules[$sModule] = $sModule;
-            }
-            foreach ($aModules as $sModule) {
-                $aScandir = scandir("modules/$sModule");
-                $aPages = [];
-                foreach ($aScandir as $sPage) {
-                    if ( in_array($sModule,['.','..',]) ) continue;
-                    if ( is_dir("modules/$sModule/$sPage") ) continue;
-                    if ( ! is_file("modules/$sModule/$sPage") ) continue;
-                    if ( ! preg_match('/\.php$/', $sPage) ) continue;
-                    $aPages[$sPage] = "modules/$sModule/$sPage";
-                    $aModules[$sModule] = $aPages;
+            $found = false;
+            //$this->show_array($_SESSION['maarchFilesWhiteList']['modules'][$_GET['module']]);
+            for ($cptM=0;$cptM<count($_SESSION['maarchFilesWhiteList']['modules'][$_GET['module']]);$cptM++) {
+                //echo $_SESSION['maarchFilesWhiteList']['modules'][$_GET['module']][$cptM] . '<br />';
+                //echo 'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
+                if (
+                    $_SESSION['maarchFilesWhiteList']['modules'][$_GET['module']][$cptM] 
+                        == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php"
+                ) {
+                    require $_SESSION['maarchFilesWhiteList']['modules'][$_GET['module']][$cptM];
+                    $found = true;
+                    break;
+                } elseif (
+                    $_SESSION['maarchFilesWhiteList']['modules'][$_GET['module']][$cptM] 
+                        == 'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php"
+                ) {
+                    require $_SESSION['maarchFilesWhiteList']['modules'][$_GET['module']][$cptM];
+                    $found = true;
+                    break;
                 }
             }
-            if ( ! isset($aModules[$_GET['module']][$this->f_page.'.php']) ) {
+            if (!$found)  {
                 $this->loadDefaultPage();
-            }else {
-                require $aModules[$_GET['module']][$this->f_page.'.php'];
             }
+
             // if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
             //     require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
             // } elseif(file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
@@ -1636,13 +1638,38 @@ class core_tools extends functions
             // }
         } elseif(isset($_GET['module']) && $_GET['module'] == "core") {
             // Page is defined the core
-            if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-                require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$this->f_page.".php");
-            } elseif(file_exists($_SESSION['config']['corepath'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-                require('core'.DIRECTORY_SEPARATOR.$this->f_page.".php");
-            } else {
+            $found = false;
+            //$this->show_array($_SESSION['maarchFilesWhiteList']['core']);
+            for ($cptM=0;$cptM<count($_SESSION['maarchFilesWhiteList']['core']);$cptM++) {
+                //echo $_SESSION['maarchFilesWhiteList']['core'][$cptM] . '<br />';
+                //echo 'core'.DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
+                if (
+                    $_SESSION['maarchFilesWhiteList']['core'][$cptM] 
+                        == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$this->f_page.".php"
+                ) {
+                    require $_SESSION['maarchFilesWhiteList']['core'][$cptM];
+                    $found = true;
+                    break;
+                } elseif (
+                    $_SESSION['maarchFilesWhiteList']['core'][$cptM] 
+                        == 'core'.DIRECTORY_SEPARATOR.$this->f_page.".php"
+                ) {
+                    require $_SESSION['maarchFilesWhiteList']['core'][$cptM];
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found)  {
                 $this->loadDefaultPage();
             }
+
+            // if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")) {
+            //     require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$this->f_page.".php");
+            // } elseif(file_exists($_SESSION['config']['corepath'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")) {
+            //     require('core'.DIRECTORY_SEPARATOR.$this->f_page.".php");
+            // } else {
+            //     $this->loadDefaultPage();
+            // }
         } elseif(isset($_GET['admin']) && !empty($_GET['admin'])) {
             if (
                 !isset($_SESSION['user']['services']['admin'])
@@ -1651,48 +1678,144 @@ class core_tools extends functions
             ) {
                $this->loadDefaultPage();
             } else {
+                $found = false;
+                //$this->show_array($_SESSION['maarchFilesWhiteList']['apps']);
+                for ($cptM=0;$cptM<count($_SESSION['maarchFilesWhiteList']['apps']);$cptM++) {
+                    //echo $_SESSION['maarchFilesWhiteList']['apps'][$cptM] . '<br />';
+                    //echo 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
+                    if (
+                        $_SESSION['maarchFilesWhiteList']['apps'][$cptM] 
+                            == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php"
+                    ) {
+                        require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
+                        $found = true;
+                        break;
+                    } elseif (
+                        $_SESSION['maarchFilesWhiteList']['apps'][$cptM] 
+                            == 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php"
+                    ) {
+                        require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found)  {
+                    $this->loadDefaultPage();
+                }
+
                 // Page is defined the admin directory of the application
-                if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
+                /*if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
                     require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php");
                 } elseif(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
                     require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php");
                 } else {
                     $this->loadDefaultPage();
-                }
+                }*/
             }
         } elseif(isset($_GET['dir']) && !empty($_GET['dir'])) {
             // Page is defined in a dir directory of the application
-            if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-                require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php");
-            } elseif(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-                require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php");
-            } else {
+            $found = false;
+            //$this->show_array($_SESSION['maarchFilesWhiteList']['apps']);
+            for ($cptM=0;$cptM<count($_SESSION['maarchFilesWhiteList']['apps']);$cptM++) {
+                //echo $_SESSION['maarchFilesWhiteList']['apps'][$cptM] . '<br />';
+                //echo 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
+                if (
+                    $_SESSION['maarchFilesWhiteList']['apps'][$cptM] 
+                        == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php"
+                ) {
+                    require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
+                    $found = true;
+                    break;
+                } elseif (
+                    $_SESSION['maarchFilesWhiteList']['apps'][$cptM] 
+                        == 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php"
+                ) {
+                    require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found)  {
                 $this->loadDefaultPage();
             }
+
+            // if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
+            //     require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php");
+            // } elseif(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
+            //     require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php");
+            // } else {
+            //     $this->loadDefaultPage();
+            // }
         } else {
             // Page is defined in the application
-            if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-                require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php");
-            } elseif(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-                require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php");
-            } else {
-                require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-                $app = new business_app_tools();
-                $path = $app->insert_app_page($this->f_page);
-                if(
-                    (!$path || empty($path)) 
-                    && !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path) 
-                    && !file_exists($path)) {
-                    //require($_SESSION["config"]["defaultPage"].".php");
-                    $this->loadDefaultPage();
+            $found = false;
+            //$this->show_array($_SESSION['maarchFilesWhiteList']['apps']);
+            for ($cptM=0;$cptM<count($_SESSION['maarchFilesWhiteList']['apps']);$cptM++) {
+                //echo $_SESSION['maarchFilesWhiteList']['apps'][$cptM] . '<br />';
+                //echo 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
+                //echo 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
+                if (
+                    $_SESSION['maarchFilesWhiteList']['apps'][$cptM] 
+                        == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php"
+                ) {
+                    require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
+                    $found = true;
+                    break;
+                } elseif (
+                    $_SESSION['maarchFilesWhiteList']['apps'][$cptM] 
+                        == 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php"
+                ) {
+                    require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
+                    $found = true;
+                    break;
                 } else {
-                    if (!file_exists($path)) {
-                        $this->loadDefaultPage();
-                    } else {
-                        require($path);
+                    require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+                    $app = new business_app_tools();
+                    $path = $app->insert_app_page($this->f_page);
+                    if (
+                        $_SESSION['maarchFilesWhiteList']['apps'][$cptM] 
+                            == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path
+                    ) {
+                        require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
+                        $found = true;
+                        break;
+                    } elseif (
+                        $_SESSION['maarchFilesWhiteList']['apps'][$cptM] 
+                            == $path
+                    ) {
+                        require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
+                        $found = true;
+                        break;
                     }
                 }
             }
+            if (!$found)  {
+                $this->loadDefaultPage();
+            }
+
+            // if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
+            //     require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php");
+            // } elseif(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
+            //     require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php");
+            // } else {
+            //     require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+            //     $app = new business_app_tools();
+            //     $path = $app->insert_app_page($this->f_page);
+            //     echo $path;exit;
+            //     if(
+            //         (!$path || empty($path)) 
+            //         && !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path) 
+            //         && !file_exists($path)) {
+            //         //require($_SESSION["config"]["defaultPage"].".php");
+            //         $this->loadDefaultPage();
+            //     } else {
+            //         if (!file_exists($path)) {
+            //             $this->loadDefaultPage();
+            //         } else {
+            //             require($path);
+            //         }
+            //     }
+            // }
         }
         return true;
     }
