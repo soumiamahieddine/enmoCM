@@ -1604,13 +1604,36 @@ class core_tools extends functions
         }
         if(isset($_GET['module']) && $_GET['module'] <> "core") {
             // Page is defined in a module
-            if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-                require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
-            } elseif(file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-                require('modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
-            } else {
-                $this->loadDefaultPage();
+            $aModules = [];
+            $aScandir = scandir('modules');
+            foreach ($aScandir as $sModule) {
+                if ( in_array($sModule,['.','..',]) ) continue;
+                $aModules[$sModule] = $sModule;
             }
+            foreach ($aModules as $sModule) {
+                $aScandir = scandir("modules/$sModule");
+                $aPages = [];
+                foreach ($aScandir as $sPage) {
+                    if ( in_array($sModule,['.','..',]) ) continue;
+                    if ( is_dir("modules/$sModule/$sPage") ) continue;
+                    if ( ! is_file("modules/$sModule/$sPage") ) continue;
+                    if ( ! preg_match('/\.php$/', $sPage) ) continue;
+                    $aPages[$sPage] = "modules/$sModule/$sPage";
+                    $aModules[$sModule] = $aPages;
+                }
+            }
+            if ( ! isset($aModules[$_GET['module']][$this->f_page.'.php']) ) {
+                $this->loadDefaultPage();
+            }else {
+                require $aModules[$_GET['module']][$this->f_page.'.php'];
+            }
+            // if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
+            //     require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
+            // } elseif(file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
+            //     require('modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
+            // } else {
+            //     $this->loadDefaultPage();
+            // }
         } elseif(isset($_GET['module']) && $_GET['module'] == "core") {
             // Page is defined the core
             if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")) {
