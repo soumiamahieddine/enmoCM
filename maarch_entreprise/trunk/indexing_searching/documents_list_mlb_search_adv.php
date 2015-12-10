@@ -325,9 +325,12 @@ if($mode == 'normal') {
     $tab=$request->PDOselect($select,$where_request,$arrayPDO, $orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
     // $request->show();
 //Result array
-    for ($i=0;$i<count($tab);$i++)
+
+    $tabI = count($tab);
+    for ($i=0;$i<$tabI;$i++)
     {
-        for ($j=0;$j<count($tab[$i]);$j++)
+        $tabJ = count($tab[$i]);
+        for ($j=0;$j<$tabJ;$j++)
         {
             foreach(array_keys($tab[$i][$j]) as $value)
             {

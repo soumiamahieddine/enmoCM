@@ -158,9 +158,12 @@ if($selectedTemplate <> 'none') $extension_icon = "_big";
 $db = new Database();
 
 //Result Array
-for ($i=0;$i<count($tab);$i++)
+
+$tabI = count($tab);
+for ($i=0;$i<$tabI;$i++)
 {
-    for ($j=0;$j<count($tab[$i]);$j++)
+    $tabJ = count($tab[$i]);
+    for ($j=0;$j<$tabJ;$j++)
     {
         foreach(array_keys($tab[$i][$j]) as $value)
         {
