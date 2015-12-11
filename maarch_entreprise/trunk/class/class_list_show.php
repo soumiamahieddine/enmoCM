@@ -1474,7 +1474,7 @@ class list_show extends functions
                     </td>
 
                     <td class="action" >
-                        <a href="<?php functions::xecho($path_del2.$param_comp);?>" class="actionList"
+                        <a href="<?php echo($path_del2.$param_comp);?>" class="actionList"
                     onclick="return(confirm('<?php echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
                              else { echo " ".$admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION;?>'));"><i class="fa fa-remove fa-2x" title="<?php echo _DELETE;?>"></i></a>
                     </td>
