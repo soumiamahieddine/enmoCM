@@ -281,3 +281,15 @@ if (!defined("_CREATE_NOTIF_SCRIPT"))
     define("_CREATE_NOTIF_SCRIPT", "Créer le script");
 if (!defined("_PB_CRON_COMMAND"))
     define("_PB_CRON_COMMAND", "Une tache planifiée n'a pas été modifiée correctement. Merci de recommencer.");
+
+if (!defined("_DEST_USER_VISA"))
+    define("_DEST_USER_VISA", "VISA envoi à l'utilisateur devant viser");
+
+if (!defined("_DEST_USER_SIGN"))
+    define("_DEST_USER_SIGN", "VISA envoi à l'utilisateur devant signer");
+
+if (!defined("_NOTIFICATIONS_DEST_USER_VISA_DIFF_TYPE_WITH_STATUS"))
+    define("_NOTIFICATIONS_DEST_USER_VISA_DIFF_TYPE_WITH_STATUS", "Envoi à l'utilisateur devant viser avec le(s) statut(s):");
+
+if (!defined("_NOTIFICATIONS_DEST_USER_SIGN_DIFF_TYPE_WITH_STATUS"))
+    define("_NOTIFICATIONS_DEST_USER_SIGN_DIFF_TYPE_WITH_STATUS", "Envoi à l'utilisateur devant signer avec le(s) statut(s):");

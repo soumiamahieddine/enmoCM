@@ -275,3 +275,16 @@ if (!defined('_CREATE_NOTIF_SCRIPT'))
     define('_CREATE_NOTIF_SCRIPT', 'Create the script');
 if (!defined('_PB_CRON_COMMAND'))
     define('_PB_CRON_COMMAND', 'A scheduled task was modified incorrectly.');
+
+if (!defined("_DEST_USER_VISA"))
+    define("_DEST_USER_VISA", "VISA send to visa user");
+
+if (!defined("_DEST_USER_SIGN"))
+    define("_DEST_USER_SIGN", "VISA send to sign user");
+
+if (!defined("_NOTIFICATIONS_DEST_USER_VISA_DIFF_TYPE_WITH_STATUS"))
+    define("_NOTIFICATIONS_DEST_USER_VISA_DIFF_TYPE_WITH_STATUS", "Send to visa user with status:");
+
+if (!defined("_NOTIFICATIONS_DEST_USER_SIGN_DIFF_TYPE_WITH_STATUS"))
+    define("_NOTIFICATIONS_DEST_USER_SIGN_DIFF_TYPE_WITH_STATUS", "Send to sign user with status:");
+

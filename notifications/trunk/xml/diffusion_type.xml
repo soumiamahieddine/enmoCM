@@ -72,4 +72,20 @@
         <use_rss>false</use_rss>
         <use_attachment>false</use_attachment>
     </diffusion_type>
+    <diffusion_type>
+        <id>dest_user_visa</id>
+        <label>_DEST_USER_VISA</label>
+        <script>modules/notifications/diffusion_types/dest_user_visa.php</script>
+        <use_email>true</use_email>
+        <use_rss>false</use_rss>
+        <use_attachment>false</use_attachment>
+    </diffusion_type>
+    <diffusion_type>
+        <id>dest_user_sign</id>
+        <label>_DEST_USER_SIGN</label>
+        <script>modules/notifications/diffusion_types/dest_user_sign.php</script>
+        <use_email>true</use_email>
+        <use_rss>false</use_rss>
+        <use_attachment>false</use_attachment>
+    </diffusion_type>
 </root>

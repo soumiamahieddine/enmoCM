@@ -32,4 +32,12 @@
         <id>stepWF%</id>
         <label>Etape Workflow</label>
     </event_type>
+    <event_type>
+        <id>diffvisauser</id>
+        <label>VISA courrier a viser par utilisateur</label>
+    </event_type>
+    <event_type>
+        <id>diffsignuser</id>
+        <label>VISA courrier a signer par utilisateur</label>
+    </event_type>
 </root>
