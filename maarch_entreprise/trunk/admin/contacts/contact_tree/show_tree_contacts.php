@@ -171,7 +171,7 @@ $openlink =  $_SESSION['config']['businessappurl']."index.php?display=true&page=
                                             'id':'<?php echo addslashes(functions::xssafe($search_customer_results[$i]['content'][$j]['contact_type_id']));?>',
                                             'txt':'<a href="#" onclick="window.top.location.href=\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php functions::xecho($search_customer_results[$i]['content'][$j]['contact_type_id']);?>\'"><?php echo addslashes(functions::xssafe($search_customer_results[$i]['content'][$j]['contact_type_label']));?></a>',
                                             'onopenpopulate' : funcOpen,
-                                            'openlink' : '<?php functions::xecho($openlink);?>',
+                                            'openlink' : '<?php echo($openlink);?>',
                                             'canhavechildren' : true,
                                             'branch_level_id' : 1
                                         }
