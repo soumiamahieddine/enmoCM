@@ -368,6 +368,17 @@ INSERT INTO status (id, label_status, is_system) VALUES ('TRA', 'Traité', 'N');
 DELETE FROM status WHERE id = 'OBS';
 INSERT INTO status (id, label_status, is_system) VALUES ('OBS', 'Obsolète', 'N');
 
+UPDATE status SET img_filename = 'fm-letter-status-inprogress' WHERE id = 'COU'; 
+UPDATE status SET img_filename = 'fm-letter-del' WHERE id = 'DEL'; 
+UPDATE status SET img_filename = 'fm-letter-status-end' WHERE id = 'END'; 
+UPDATE status SET img_filename = 'fm-letter-status-new' WHERE id = 'NEW'; 
+UPDATE status SET img_filename = 'fm-letter-status-rejected' WHERE id = 'RET'; 
+UPDATE status SET img_filename = 'fm-file-fingerprint' WHERE id = 'SIG'; 
+UPDATE status SET img_filename = 'fm-letter-status-rejected' WHERE id = 'UNS'; 
+UPDATE status SET img_filename = 'fm-letter-status-aval' WHERE id = 'VAL'; 
+UPDATE status SET img_filename = 'fm-letter-status-attr' WHERE id = 'INIT'; 
+UPDATE status SET img_filename = 'fm-letter-status-aval' WHERE id = 'VIS';
+
 -- tumbnails
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_path;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_filename;
