@@ -423,7 +423,7 @@ if (!defined("_ENTITIES_PRINT_SEP_MLB_GENERIC"))
 if (!defined("_SELECT_BARCODE_TYPE"))
     define("_SELECT_BARCODE_TYPE", "Type de code à barres");
 if (!defined("_ADD_COPY_IN_INDEXING_VALIDATION"))
-    define("_ADD_COPY_IN_INDEXING_VALIDATION", "Ajouter des personnes seulement en copie depuis les pages d'indexation/validation/detail");
+    define("_ADD_COPY_IN_INDEXING_VALIDATION", "Interdire la modification du destinataire dans la liste de diffusion");
 
 
 if (!defined("_DEL_USER_LISTDIFF"))
