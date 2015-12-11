@@ -345,7 +345,7 @@ class foldertype
 
         if ($mode == "up") {
             if (empty($_REQUEST['id']) || !isset($_REQUEST['id'])) {
-                $_SESSION['error'] .= _ID_MISSING . "<br/>";
+                $_SESSION['error'] .= _ID_MISSING;
             } else {
                 $_SESSION['m_admin']['foldertype']['foldertypeId'] = $func->wash(
                 	$_REQUEST['id'], "alphanum", _THE_ID
@@ -357,14 +357,14 @@ class foldertype
             	$_REQUEST['desc'], "no", _THE_DESC
             );
         } else {
-            $_SESSION['error'] .= _DESC_MISSING . "<br/>";
+            $_SESSION['error'] .= _DESC_MISSING;
         }
         if (isset($_REQUEST['collection']) && ! empty($_REQUEST['collection'])) {
             $_SESSION['m_admin']['foldertype']['COLL_ID'] = $func->wash(
             	$_REQUEST['collection'], "no", _COLLECTION
             );
         } else {
-            $_SESSION['error'] .= _COLLECTION . ' ' . _MISSING . "<br/>";
+            $_SESSION['error'] .= _COLLECTION . ' ' . _MISSING;
         }
         if (isset($_REQUEST['comment']) && ! empty($_REQUEST['comment'])) {
             $_SESSION['m_admin']['foldertype']['comment'] = $_REQUEST['comment'];
