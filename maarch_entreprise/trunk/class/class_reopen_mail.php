@@ -166,7 +166,7 @@ class ReopenMail extends Database
 
         <div id="inner_content" class="clearfix" align="center">
         <div class="block">
-        <p ><?php echo _MAIL_SENTENCE2 . '<br />' . _MAIL_SENTENCE3 . '<br />' . _MAIL_SENTENCE4 . ' ' . _BASKETS . ' ' . _MAIL_SENTENCE5;?> </p>
+        <p ><?php echo _MAIL_SENTENCE2 . '<br />' . _MAIL_SENTENCE3 . '<br />' . _MAIL_SENTENCE4 ;?> </p>
           <br/>
           <p ></p>
           <form name="form1" method="post" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=reopen_mail&page=reopen_mail_db";?>" >
