@@ -57,13 +57,13 @@ if (!defined("_NEW_SEARCH"))
 if (!defined("_SELECT_FOLDER"))
     define("_SELECT_FOLDER", "Sélection Dossier");
 if (!defined("_CREATE_FOLDER"))
-    define("_CREATE_FOLDER", "Création Dossier");
+    define("_CREATE_FOLDER", "Créer un dossier");
 if (!defined("_CREATE_FOLDER2"))
     define("_CREATE_FOLDER2", "Créer Dossier");
 if (!defined("_FOLDER"))
     define("_FOLDER", "Dossier");
 if (!defined("_MODIFY_FOLDER"))
-    define("_MODIFY_FOLDER", "Droit de modification des index d'un dossier");
+    define("_MODIFY_FOLDER", "Modifier les index d'un dossier");
 if (!defined("_FOLDERID"))
     define("_FOLDERID", "Numéro du Dossier");
 if (!defined("_FOLDERSYSTEMID"))
@@ -174,7 +174,7 @@ if (!defined("_DIRECTION_DEP"))
 if (!defined("_DEP_AGENCY"))
     define("_DEP_AGENCY", "Service/agence");
 if (!defined("_DELETE_FOLDER"))
-    define("_DELETE_FOLDER", "Suppression de dossier");
+    define("_DELETE_FOLDER", "Supprimer un dossier");
 if (!defined("_DELETE_FOLDER_NOTES1"))
     define("_DELETE_FOLDER_NOTES1", "La suppression de dossier est irréversible, les pièces de ce dernier seront conservées mais ne seront plus accessibles en consultation.");
 if (!defined("_REALLY_DELETE_FOLDER"))
@@ -315,7 +315,7 @@ if (!defined("_REALLY_CLOSE_THIS_FOLDER"))
 if (!defined("_SUBFOLDER"))                         
     define("_SUBFOLDER", "Sous-dossier");
 if (!defined("_VIEW_FOLDER_TREE"))                  
-    define("_VIEW_FOLDER_TREE", "Consultation Dossiers");
+    define("_VIEW_FOLDER_TREE", "Consulter un dossier");
 if (!defined("_SEARCH_FOLDER_TREE"))                
     define("_SEARCH_FOLDER_TREE", "Recherche Dossiers");
 if (!defined("_NB_DOCS_IN_FOLDER"))                 
