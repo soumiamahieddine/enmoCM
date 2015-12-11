@@ -62,20 +62,17 @@ $fold_id=str_replace("(", "", $matches[0][0]);
 $fold_id=str_replace(")", "", $fold_id);
 //print_r($fold_id);
 
+$entitiesTab = $sec->getEntitiesForCurrentUser();
 if($matches[0] != ''){
 	$stmt = $db->query(
 		"SELECT folders_system_id, folder_name, parent_id FROM folders WHERE foldertype_id not in (100) AND folders_system_id IN (?) AND status NOT IN ('DEL') order by folder_id asc ", array($fold_id)
 		);
 
 }else{
-	if (isset($_SESSION['user']['entities']['0'])) {
-		$finalDest = [];
-		foreach ($_SESSION['user']['entities'] as $tmp) {
-			$finalDest[] = $tmp['ENTITY_ID'];
-		}
+	if (!empty($entitiesTab)) {
 		$stmt = $db->query(
 			"SELECT folders_system_id, folder_name, parent_id FROM folders WHERE foldertype_id not in (100) AND parent_id=0 AND status NOT IN ('DEL')
-				AND (destination in (?) OR destination is null) order by folder_id asc ", [$finalDest]
+				AND (destination in (?) OR destination is null) order by folder_id asc ", [$entitiesTab]
 		);
 	} else {
 		$stmt = $db->query(
@@ -86,11 +83,16 @@ if($matches[0] != ''){
 
 $categories = array();
 $html.="<ul class='folder' id='folder_tree_content'>";
-$entitiesTab = $sec->getEntitiesForCurrentUser();
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-	$stmt2 = $db->query(
-		"SELECT count(*) as total FROM res_view_letterbox WHERE folders_system_id in (?) AND (".$whereClause."OR folder_destination IN (?)) AND status NOT IN ('DEL')"
-		,array($row['folders_system_id'], $entitiesTab));
+	if (empty($entitiesTab)) {
+		$stmt2 = $db->query(
+			"SELECT count(*) as total FROM res_view_letterbox WHERE folders_system_id in (?) AND (".$whereClause.") AND status NOT IN ('DEL')"
+			, [$row['folders_system_id']]);
+	} else {
+		$stmt2 = $db->query(
+			"SELECT count(*) as total FROM res_view_letterbox WHERE folders_system_id in (?) AND (".$whereClause."OR folder_destination IN (?)) AND status NOT IN ('DEL')"
+			, [$row['folders_system_id'], $entitiesTab]);
+	}
 	$row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
 	$stmt3 = $db->query(
 		"SELECT count(*) as total FROM folders WHERE foldertype_id not in (100) AND parent_id IN (?) AND status NOT IN ('DEL')"
