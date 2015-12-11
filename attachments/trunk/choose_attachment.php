@@ -43,6 +43,7 @@ $upFileOK = false;
  			$_SESSION['error'] = 'La taille du fichier telecharge excede la valeur de upload_max_filesize';
         }
     } elseif (!empty($_FILES['file']['tmp_name']) && $_FILES['file']['error'] <> 1) {
+        $_SESSION['error'] = '';
     	$_SESSION['upfile']['tmp_name'] = $_FILES['file']['tmp_name'];
         $extension = explode(".",$_FILES['file']['name']);
         $count_level = count($extension)-1;
@@ -93,6 +94,9 @@ $upFileOK = false;
                 <input type="button" id="fileButton" onclick="$$('#file')[0].click();" class="button"
                        value="<?php if($_REQUEST['with_file'] == 'true'){ echo _WITHOUT_FILE; } else {echo _DOWNLOADED_FILE;}?>"
                        style="width: 88%;margin: 0px;margin-top: -2px;font-size: 12px;text-align: center;">
+            <?php } elseif (!empty($_SESSION['error'])) { ?>
+                <i class="fa fa-remove fa-2x" title="<?php echo $_SESSION['error']; ?>"></i>
+                <input type="button" id="fileButton" onclick="$$('#file')[0].click();" class="button" value="<?php echo $_SESSION['error']; ?>" style="width: 88%;margin: 0px;margin-top: -2px;font-size: 12px;text-align: center;">
             <?php } else { ?>
                 <i class="fa fa-remove fa-2x" title="<?php echo _NO_FILE_SELECTED; ?>"></i>
                 <input type="button" id="fileButton" onclick="$$('#file')[0].click();" class="button" value="<?php echo _CHOOSE_FILE; ?>" style="width: 88%;margin: 0px;margin-top: -2px;font-size: 12px;text-align: center;">
