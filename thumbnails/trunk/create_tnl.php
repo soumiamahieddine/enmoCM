@@ -210,7 +210,7 @@ while ($queryResult=$stmt1->fetchObject()) {
 			
 			$command = '';
 			if (strtoupper($fileFormat) == 'PDF') {
-				$command = "convert -thumbnail x300 -background white -alpha remove " . escapeshellarg($pathToFile) . "[0] " 
+				$command = "convert -thumbnail 200x300 -background white -alpha remove " . escapeshellarg($pathToFile) . "[0] " 
 					. escapeshellarg($outputPathFile);
 			} else {
 				$posPoint = strpos($pathToFile, '.');
