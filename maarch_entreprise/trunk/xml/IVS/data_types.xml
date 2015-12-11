@@ -51,6 +51,7 @@
       <enumeration value="transfer" />
       <enumeration value="set" />
       <enumeration value="mass" />
+      <enumeration value="search" />
     </dataType>
     <dataType name="size" base="string">
       <enumeration value="full" />
