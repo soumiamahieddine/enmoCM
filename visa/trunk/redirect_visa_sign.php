@@ -7,16 +7,16 @@ $etapes = [];
 $error_visa = false;
 $error_visa_response_project = false;
 
-if (isset($_SESSION['error_visa']) && $_SESSION['error_visa'] <> '') {
-    $error_visa = true;
-}
+// if (isset($_SESSION['error_visa']) && $_SESSION['error_visa'] <> '') {
+//     $error_visa = true;
+// }
 
 $visa = new visa();
-$curr_visa_wf = $visa->getWorkflow($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'], 'VISA_CIRCUIT');
+// $curr_visa_wf = $visa->getWorkflow($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'], 'VISA_CIRCUIT');
 
-if (count($curr_visa_wf['sign']) == 0){
-    $error_visa = true;
-}
+// if (count($curr_visa_wf['sign']) == 0){
+//     $error_visa = true;
+// }
 
 $visa->checkResponseProject($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id']);
 if ($visa->errorMessageVisa){
