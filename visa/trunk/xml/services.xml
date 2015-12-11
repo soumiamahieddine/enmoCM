@@ -43,7 +43,7 @@
 	<SERVICE>
 	   <id>sign_document</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
 	   <name>_SIGN_DOCS</name>
-	   <comment>_SIGN_DOCS_DESC</comment>
+	   <comment>_SIGN_DOCS</comment>
 	   <servicepage></servicepage>
 	   <servicetype>use</servicetype>
 	   <system_service>false</system_service>
