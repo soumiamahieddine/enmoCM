@@ -25,6 +25,7 @@
 		<parameter name="event_id" type="string" />
 		<parameter name="is_enabled" type="boolean" />
 		<parameter name="order_field" type="string" />
+		<parameter name="diffusion_values" type="string" />
 		<parameter name="Submit" type="string" />
 	</validationRule>
 	<validationRule name="manage_notifs_list_by_name" extends="standardForm" mode="error">
