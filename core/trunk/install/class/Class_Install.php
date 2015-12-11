@@ -45,12 +45,10 @@ class Install extends functions
     private $lang = 'en';
 
     private $docservers = array(
-        array('OFFLINE_1', 'offline'),
         array('FASTHD_AI', 'ai'),
-        array('OAIS_MAIN_1', 'OAIS_main'),
-        array('OAIS_SAFE_1', 'OAIS_safe'),
         array('FASTHD_MAN', 'manual'),
         array('TEMPLATES', 'templates'),
+        array('TNL', 'thumbnails_mlb'),
     );
 
     function __construct()
@@ -950,18 +948,7 @@ class Install extends functions
                 }
             }
         }
-        //create thumbnails_mlb dir
-        if (!is_dir(
-            $docserverPath . DIRECTORY_SEPARATOR
-                . 'thumbnails_mlb')
-        ) {
-            if (!mkdir(
-                $docserverPath . DIRECTORY_SEPARATOR
-                    . 'thumbnails_mlb')
-            ) {
-                return false;
-            }
-        }
+
         //create indexes dir
         if (!is_dir(
             $docserverPath . DIRECTORY_SEPARATOR
