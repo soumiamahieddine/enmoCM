@@ -88,7 +88,7 @@ if (!defined("_DISABLE_FILEPLAN"))
 if (!defined("_FILEPLAN_DISABLED"))
     define("_FILEPLAN_DISABLED", "Plan de classement verouilleré");
 if (!defined("_REMOVE_FILEPLAN_INFOS_1"))
-    define("_REMOVE_FILEPLAN_INFOS_1", "Voulez-vous supprimez plan de classement suivant et retirer les documents liés?");
+    define("_REMOVE_FILEPLAN_INFOS_1", "Voulez-vous supprimez le plan de classement suivant et retirer les documents liés?");
 if (!defined("_REMOVE_FILEPLAN_INFOS_2"))
     define("_REMOVE_FILEPLAN_INFOS_2", "Aucun document ne sera supprimé.");
 if (!defined("_CHOOSE_FILEPLAN"))
