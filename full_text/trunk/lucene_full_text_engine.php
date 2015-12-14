@@ -138,12 +138,16 @@ function indexFullText($pathToFile, $indexFileDirectory, $format, $Id)
                 $result = prepareIndexFullTextPdf($pathToFile, $indexFileDirectory, $Id);
                 break;
             case "HTML":
-                $_ENV['logger']->write("it's A HTML file", 'INFO');
+                $_ENV['logger']->write("it's a HTML file", 'INFO');
                 $result = prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id);
                 break;
             case "MAARCH":
-                $_ENV['logger']->write("it's A MAARCH file", 'INFO');
+                $_ENV['logger']->write("it's a MAARCH file", 'INFO');
                 $result = prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id);
+                break;
+            case "TXT":
+                $_ENV['logger']->write("it's a TXT file", 'INFO');
+                $result = prepareIndexFullTextTxt($pathToFile, $indexFileDirectory, $Id);
                 break;
             default:
             $result = -2;
@@ -196,6 +200,17 @@ function prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id)
     return $result;
 }
 
+function prepareIndexFullTextTxt($pathToFile, $indexFileDirectory, $Id)
+{
+    if (is_file($pathToFile)) {
+        $fileContent = trim(readFileF($pathToFile));
+        $result = launchIndexFullText($fileContent, $indexFileDirectory, $Id);
+    } else {
+        $result = 2;
+    }
+    return $result;
+}
+
 /**
 * Retrieve the text of a pdftext and launch the lucene engine
 * @param  $pathToFile string path of the file to index
@@ -220,7 +235,7 @@ function launchIndexFullText($fileContent, $tempIndexFileDirectory, $Id) // $Ind
                 $index = Zend_Search_Lucene::open($indexFileDirectory);
             }
         }
-        $index->setFormatVersion(Zend_Search_Lucene::FORMAT_2_3); // we set the lucene format to 2.3 
+        $index->setFormatVersion(Zend_Search_Lucene::FORMAT_2_3); // we set the lucene format to 2.3
         Zend_Search_Lucene_Analysis_Analyzer::setDefault(
             new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
         );
