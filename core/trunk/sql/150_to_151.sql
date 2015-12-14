@@ -6,7 +6,9 @@ DROP VIEW IF EXISTS view_contacts;
 DROP VIEW IF EXISTS res_view_attachments;
 
 
-ALTER table contact_types ADD COLUMN can_add_contact character varying(1) NOT NULL DEFAULT 'Y'::character varying, 
+ALTER TABLE contact_types DROP COLUMN IF EXISTS can_add_contact;
+ALTER TABLE contact_types DROP COLUMN IF EXISTS contact_target;
+ALTER TABLE contact_types ADD COLUMN can_add_contact character varying(1) NOT NULL DEFAULT 'Y'::character varying, 
 ADD COLUMN contact_target character varying(50);
 
 -- ************************************************************************* --
@@ -23,31 +25,22 @@ CREATE TABLE res_mark_as_read
 );
 
 
-
 ALTER TABLE entities DROP COLUMN IF EXISTS ldap_id;
 ALTER TABLE entities ADD ldap_id character varying(255);
 
 ALTER TABLE baskets DROP COLUMN IF EXISTS basket_order;
 ALTER TABLE baskets ADD basket_order integer;
 
-
 ALTER TABLE sendmail DROP COLUMN IF EXISTS sender_email;
 ALTER TABLE sendmail ADD COLUMN sender_email varchar(255);
-
-
 
 ALTER TABLE users DROP COLUMN IF EXISTS initials;
 ALTER TABLE users ADD COLUMN initials character varying(32);
 
 
-
-
-
-
 -- ************************************************************************* --
 --                               RECREATE VIEWS                              --
 -- ************************************************************************* --
-
 
 -- view for letterbox
 CREATE VIEW res_view_letterbox AS
