@@ -3,75 +3,79 @@
 VERSION FRANÇAISE
 ======================================
 
-Wiki : http://wiki.maarch.org/Maarch_Entreprise/Changelog/1.5fr
+Wiki : http://wiki.maarch.org/Maarch_Courrier/1.5.1/fr/Changelog
 
 
 CONTRIBUTEURS DE CETTE VERSION :
 
-Ministère de la Culture et de la Communication
-Services du Premier Ministre
-Autorité des Marchés Financiers (AMF)
-CA Blois Agglopolys
-CA Roissy Porte de France
-Ministère de l'Intérieur
-Contributeurs techniques
-
-Document Image Solutions (DIS)
-BULL/ATOS
-GOConcept
-Edissyum Consulting
-SWORD
-
-Une special dédicace à Frédéric ZERR (Minint) et Sandrine BRIAUD (Blois) pour avoir (encore) consacré du temps et de l'énergie à l'enrichissement et la mise au point de Maarch Courrier 1.5.
+ #### TODO ####
 
 
-NOUVEAUX MODULES ESIGN/VISA
+SECURITE
 
-Définition de circuits de visa courriers Départ, modèles de circuits
-Mode parapheur côte à côte
-Visa électronique
-Griffe électronique, gestion des griffes signataires
-Signature électronique nominative RGS**
+Amélioration de la sécurité (top 10 OWASP)
+Amélioration de la méthode de sauvegarde des mots de passe dans la base de données
 
-NOUVEAU MODULE THUMBNAILS
+GESTION DES LOGS
 
-Imagettes apparaissant au passage de la souris
+Amélioration de la gestion des logs
 
-NOUVELLE GESTION DES CONTACTS
+MODULE VISA
 
-Contacts sur 3 niveaux : type, contact, adresse
-Arborescence des contacts
-Détection de doublons courriers avec proposition de rattachement
-Détection de doublons contact
-Assistance à la saisie ville, code postal
-Contacts multiples sur courriers Départ
-Gestion des contacts inactifs ou supprimés
+Amélioration de la fiabilité du circuit visa
+Possibilité de signer à toutes les étapes du circuit visa
+L'intégration de la signature sur le document se fait désormais côté serveur
+Possibilité de définir un circuit visa par défaut en fonction du service traitant
 
-NOUVELLE GESTION DES PIÈCES JOINTES
+GESTION DES CONTACTS
 
-Typologie de pièces (projet de réponse, attachement, pièce signée, etc)
-Gestion des versions
-Fiabilisation de la gestion du contenu
-Compatibilité avec les environnements sécurisés (pas de .bat, applettes signées)
-Propriétés de PJ : titre, contact destinataire, format, date d'expédition, date de retour attendue, n° de chrono sortant
+Possibilité d'utiliser les coordonnées d'une adresse déjà créée
+Possibilité d'associer un type de contact à un contact particulier, moral, ou les deux.
+Possibilité de créer des types de contact utilisable seulement dans l'administration
 
-NOUVELLE ERGONOMIE
+GESTION DES CORBEILLES ET DES ENTITES
 
-Occupation dynamique de l'espace disponible (responsive)
-Remplacement de toutes les images par des polices de caractère (Font-Awesome + police Maarch)
-Imagettes
-Flat design
-Nouvelles listes de résultat
+Nouveau mot clé sur le type des entités (utilisable dans la clause d'une corbeille ou pour la redirection d'un courrier)
+Nouveau droit pour pouvoir interdire la modification du destinataire dans la liste de diffusion
+Nouvelle action "Marquer comme Lu"
+Possibilité de trier les corbeilles par index
 
-AUTRES AMÉLIORATIONS
+NOUVELLES NOTIFICATIONS
 
-Ajout de modèles d'annotation (modèles d'instruction)
-Ajout de modèles de courriel
-Possibilité d'afficher des bannettes de groupes secondaires
-Historisation des changements de configuration des listes de diffusion
-Ajout d'une vision synthétique de l'historique ("Avancement")
-Réouverture de courrier avec choix du statut
-Nouveau module de synchronisation LDAP
+Possibilité d'envoyer une notification vers l'adresse mail du service traitant
+Possibilité d'envoyer une notification aux personnes du circuit visa
+
+CATEGORIE DEPART
+
+Amélioration de la catégorie Courrier Départ (affichage du pdf de la pj de type "courrier départ spontané" à la place du courrier principal)
+
+GESTION DES DOSSIERS
+
+Possibilité de partager des dossiers par entité
+Possibilité de créer des dossiers depuis la page d'indexation
+
+DOSSIER D'IMPRESSION
+
+Génération d'un dossier d'impression contenant toutes les pièces jointes et notes d'un courrier entrant
+
+IMAGETTE
+
+Générer les imagettes sur les fichiers au format html, en plus de pdf.
+
+ERGONOMIE
+
+Amélioration de l'ergonomie de la page de création des pièces jointes
+Amélioration de l'ergonomie de la page d'indexation/validation
+Mise en évidence du nombre de notes lorsqu'il y en a
+
+ENVOI DE MAIL
+
+Possibilité d'envoyer des mails en utilisant l'adresse mail de nos entités
+
+SEPARATEUR CODE BARRE
+
+Possibilité de générer des séparateurs QRCode
+
 
 ======================================
 ENGLISH VERSION
