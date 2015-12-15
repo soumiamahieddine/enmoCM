@@ -137,8 +137,8 @@ if (! empty($_SESSION['error'])) {
                 // Instantiate database.
                 $database = new Database();
                 $stmt = $database->query(
-                    "SELECT * FROM users WHERE user_id LIKE :login", 
-                    array(':login', $login)
+                    "SELECT * FROM users WHERE user_id LIKE ?", 
+                    array($login)
                 );
                 $result = $stmt->fetch();
 
