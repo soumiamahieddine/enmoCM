@@ -153,6 +153,14 @@ if (! empty($_SESSION['error'])) {
                             $_SESSION['config']['databasetype'], 'apps'
                         );
                     }
+                    //WATERMARK
+                    if (strtoupper($format) == 'PDF') {
+                        if ($_SESSION['modules_loaded']['attachments']['watermark']['enabled'] == 'true') {
+                            $table = 'res_attachments';
+                            $watermarkForAttachments = true;
+                            include 'apps/maarch_entreprise/indexing_searching/watermark.php';
+                        }
+                    }
                     header("Pragma: public");
                     header("Expires: 0");
                     header(

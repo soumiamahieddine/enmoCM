@@ -66,6 +66,12 @@ class attachments
 		$_SESSION['modules_loaded']['attachments']['convertPdf'] = (string) $conf->convertPdf;
 		$_SESSION['modules_loaded']['attachments']['vbs_convert_path'] = (string) $conf->vbs_convert_path;
 		$_SESSION['modules_loaded']['attachments']['useExeConvert'] = (string) $conf->useExeConvert;
+        $watermark = $conf->watermark;
+        $_SESSION['modules_loaded']['attachments']['watermark']['enabled'] = (string) $watermark->enabled;
+        $_SESSION['modules_loaded']['attachments']['watermark']['text'] = (string) $watermark->text;
+        $_SESSION['modules_loaded']['attachments']['watermark']['position'] = (string) $watermark->position;
+        $_SESSION['modules_loaded']['attachments']['watermark']['font'] = (string) $watermark->font;
+        $_SESSION['modules_loaded']['attachments']['watermark']['text_color'] = (string) $watermark->text_color;
 		 
         $hist = $xmlconfig->HISTORY;
         $_SESSION['history']['attachadd'] = (string) $hist->attachadd;
