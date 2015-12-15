@@ -29,18 +29,26 @@
 * @ingroup indexing_searching
 */
 require_once 'apps/maarch_entreprise/class/class_pdf.php';
-$filePathOnTmp = $viewResourceArr['file_path'];
-$filePathOnTmpResult = $viewResourceArr['file_path'];
+
 if ($table == '') {
 	$table = 'res_view_letterbox';
 }
-if (
-    $_SESSION['features']['watermark']['text'] == ''
-) {
+if (isset($watermarkForAttachments) && $watermarkForAttachments) {
+    $filePathOnTmp = $file;
+    $filePathOnTmpResult = $file;
+    $watermarkTab = $_SESSION['modules_loaded']['attachments']['watermark'];
+    $s_id = $sId;
+} else {
+    $filePathOnTmp = $viewResourceArr['file_path'];
+    $filePathOnTmpResult = $viewResourceArr['file_path'];
+    $watermarkTab = $_SESSION['features']['watermark'];
+}
+
+if ($watermarkTab['text'] == '') {
     $watermark = 'watermark by ' . $_SESSION['user']['UserId'];
-} elseif ($_SESSION['features']['watermark']['text'] <> '') {
-	$watermark = $_SESSION['features']['watermark']['text'];
-	preg_match_all('/\[(.*?)\]/i', $_SESSION['features']['watermark']['text'], $matches);
+} elseif ($watermarkTab['text'] <> '') {
+	$watermark = $watermarkTab['text'];
+	preg_match_all('/\[(.*?)\]/i', $watermarkTab['text'], $matches);
     $date_now = '';
     $sqlArr = array();
     for ($z=0;$z<count($matches[1]);$z++) {
@@ -70,10 +78,10 @@ $positionDefault['X'] = 50;
 $positionDefault['Y'] = 450;
 $positionDefault['angle'] = 30;
 $positionDefault['opacity'] = 0.5;
-if ($_SESSION['features']['watermark']['position'] == '') {
+if ($watermarkTab['position'] == '') {
     $position = $positionDefault;
 } else {
-    $arrayPos = explode(',', $_SESSION['features']['watermark']['position']);
+    $arrayPos = explode(',', $watermarkTab['position']);
     if (count($arrayPos) == 4) {
         $position['X'] = trim($arrayPos[0]);
         $position['Y'] = trim($arrayPos[1]);
@@ -87,10 +95,10 @@ $fontDefault = array();
 $font = array();
 $fontDefault['fontName'] = 'helvetica';
 $fontDefault['fontSize'] = '10';
-if ($_SESSION['features']['watermark']['font'] == '') {
+if ($watermarkTab['font'] == '') {
     $font = $fontDefault;
 } else {
-    $arrayFont = explode(',', $_SESSION['features']['watermark']['font']);
+    $arrayFont = explode(',', $watermarkTab['font']);
     
     if (count($arrayFont) == 2) {
         $font['fontName'] = trim($arrayFont[0]);
@@ -104,10 +112,10 @@ $color = array();
 $colorDefault['color1'] = '192';
 $colorDefault['color2'] = '192';
 $colorDefault['color3'] = '192';
-if ($_SESSION['features']['watermark']['text_color'] == '') {
+if ($watermarkTab['text_color'] == '') {
     $color = $colorDefault;
 } else {
-    $arrayColor = explode(',', $_SESSION['features']['watermark']['text_color']);
+    $arrayColor = explode(',', $watermarkTab['text_color']);
     if (count($arrayColor) == 3) {
         $color['color1'] = trim($arrayColor[0]);
         $color['color2'] = trim($arrayColor[1]);
