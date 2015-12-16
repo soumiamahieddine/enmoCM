@@ -23,6 +23,6 @@
 		<attachadd>true</attachadd>
 		<attachup>true</attachup>
 		<attachdel>true</attachdel>
-		<attachview>false</attachview>
+		<attachview>true</attachview>
 	</HISTORY>
 </root>
