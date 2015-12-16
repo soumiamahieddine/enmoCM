@@ -290,7 +290,7 @@ $SOAP_typedef['returnRetrieveMasterResByChrono'] = array(
 
 $SOAP_dispatch_map['retrieveMasterResByChrono'] = array(
     'in'  => array(
-        'identifier' => 'sring',
+        'identifier' => 'string',
         'collId' => 'string',
     ),
     'out' => array('return' => '{urn:MaarchSoapServer}returnRetrieveMasterResByChrono'),
