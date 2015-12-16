@@ -352,6 +352,7 @@ class Database extends functions
                 break;
                 
             default : 
+                 $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
                 break;
             }
         }

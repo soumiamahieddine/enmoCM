@@ -144,7 +144,7 @@ function Ds_createPathOnDocServer($docServer)
             Ds_setRights($path);
         } else {
             return array(
-                'destinationDir' => '',
+                'destinationDir' => $path,
                 'error' => 'Folder alreay exists, workbatch already exist:'
                 . $path,
             );
