@@ -60,6 +60,10 @@ function Ds_copyOnDocserver(
         $storeInfos = array('error' => _FILE_ALREADY_EXISTS);
         return $storeInfos;
     }
+    if (!is_dir($destinationDir)) {
+        mkdir($destinationDir, 0770, true);
+        Ds_setRights($destinationDir);
+    }
     $cp = copy($sourceFilePath, $destinationDir . $fileDestinationName);
     Ds_setRights($destinationDir . $fileDestinationName);
     if ($cp == false) {
@@ -138,9 +142,10 @@ function Ds_createPathOnDocServer($docServer)
     }
     if (isset($GLOBALS['wb']) && $GLOBALS['wb'] <> '') {
         $path = $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m')
-              . DIRECTORY_SEPARATOR . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
+              . DIRECTORY_SEPARATOR . 'BATCH' . DIRECTORY_SEPARATOR 
+              . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
         if (!is_dir($path)) {
-            mkdir($path, 0770);
+            mkdir($path, 0770, true);
             Ds_setRights($path);
         } else {
             return array(
