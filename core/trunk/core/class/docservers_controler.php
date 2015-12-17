@@ -1044,11 +1044,15 @@ class docservers_controler
         //Removes . and .. lines
         array_shift($fileTab);
         array_shift($fileTab);
+
         if (file_exists(
             $pathOnDocserver . DIRECTORY_SEPARATOR . 'package_information'
         )
         ) {
             unset($fileTab[array_search('package_information', $fileTab)]);
+        }
+        if (is_dir($pathOnDocserver . DIRECTORY_SEPARATOR . 'BATCH')) {
+            unset($fileTab[array_search('BATCH', $fileTab)]);
         }
         $nbFiles = count($fileTab);
         //Docserver is empty
