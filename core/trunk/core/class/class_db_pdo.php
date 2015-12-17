@@ -50,7 +50,7 @@ class Database extends functions
     public function __construct()
     {
         $args = func_get_args();
-        if (count($args) < 1) {
+        if (count($args) < 1 || empty($args[0])) {
             if (isset($_SESSION['config']['databaseserver'])) {
                 $this->server = $_SESSION['config']['databaseserver'];
             }
