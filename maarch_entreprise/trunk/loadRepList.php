@@ -1,5 +1,27 @@
 <?php
 
+/*
+*
+*    Copyright 2008,2015 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*
+*   @author <dev@maarch.org>
+*/
+
 require_once('core/class/class_core_tools.php');
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
             ."class".DIRECTORY_SEPARATOR."class_users.php";
@@ -43,8 +65,11 @@ if (isset($_REQUEST['res_id_master'])) {
 
                 $db = new Database();
 
-                $query = "SELECT * FROM res_view_attachments WHERE res_id_master = ? AND status <> 'DEL' and status <> 'OBS' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and coll_id = ? ORDER BY creation_date desc";
-                $arrayPDO = array($_REQUEST['res_id_master'], $_SESSION['collection_id_choice']);
+                $query = "SELECT * FROM res_view_attachments 
+                            WHERE res_id_master = ? 
+                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN ('converted_pdf', 'print_folder') AND coll_id = ?  AND (status <> 'TMP' or (typist = ? and status = 'TMP')) 
+                            ORDER BY creation_date desc";
+                $arrayPDO = array($_REQUEST['res_id_master'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
                 $stmt = $db->query($query, $arrayPDO);
 
                 while ($return_db = $stmt->fetchObject()) {

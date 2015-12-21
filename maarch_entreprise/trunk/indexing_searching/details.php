@@ -1281,9 +1281,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 {
                     $countAttachments = "SELECT res_id, creation_date, title, format FROM " 
                         . $_SESSION['tablename']['attach_res_attachments'] 
-                        . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','outgoing_mail_signed','converted_pdf','outgoing_mail','print_folder')";
+                        . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','outgoing_mail_signed','converted_pdf','outgoing_mail','print_folder') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
                     $db = new Database();
-                    $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice']));
+                    $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']));
                     if ($stmt->rowCount() > 0) {
                         $nb_attach = ' (' . $stmt->rowCount() . ')';
                     } else {
@@ -1363,8 +1363,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 
                         $detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
                         $selectAttachments = "SELECT res_id, creation_date, title, format FROM ".$_SESSION['tablename']['attach_res_attachments']
-                                ." WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','outgoing_mail_signed','converted_pdf','outgoing_mail','print_folder')";
-                        $stmt = $db->query($selectAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice']));
+                                ." WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','outgoing_mail_signed','converted_pdf','outgoing_mail','print_folder') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                        $stmt = $db->query($selectAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']));
 
                         ?>
                         <div>
@@ -1392,8 +1392,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         
                         $countAttachments = "SELECT res_id, creation_date, title, format FROM " 
                                 . $_SESSION['tablename']['attach_res_attachments'] 
-                                . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed' or attachment_type = 'outgoing_mail')";
-                            $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice']));
+                                . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed' or attachment_type = 'outgoing_mail') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                            $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']));
                             if ($stmt->rowCount() > 0) {
                                 $nb_rep = ' <span id="answer_number">(' . ($stmt->rowCount()). ')</span>';
                             }
