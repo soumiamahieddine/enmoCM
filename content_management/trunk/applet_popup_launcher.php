@@ -1,9 +1,41 @@
 <?php
+
+/*
+*
+*    Copyright 2008,2015 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*
+*   @author <dev@maarch.org>
+*/
+
 require_once 'core/class/class_core_tools.php';
 $core_tools = new core_tools();
 $core_tools->load_html();
 $core_tools->load_header();
 $core_tools->load_js();
+
+// sessions use for temporary backup
+$_SESSION['attachmentInfo'] = array();
+$_SESSION['attachmentInfo']['title'] = $_REQUEST['titleAttachment'];
+$_SESSION['attachmentInfo']['chrono'] = $_REQUEST['chronoAttachment'];
+$_SESSION['attachmentInfo']['type'] = $_REQUEST['attachType'];
+$_SESSION['attachmentInfo']['contactId'] = $_REQUEST['contactId'];
+$_SESSION['attachmentInfo']['addressId'] = $_REQUEST['addressId'];
+$_SESSION['attachmentInfo']['back_date'] = $_REQUEST['back_date'];
 
 if (isset($_REQUEST['attachType']) && $_REQUEST['attachType'] == 'outgoing_mail'){
 	$objType = 'outgoingMail';
