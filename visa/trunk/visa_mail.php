@@ -369,7 +369,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	}
 		$stmt = $db->query("SELECT res_id FROM "
             . $_SESSION['tablename']['attach_res_attachments']
-            . " WHERE status <> 'DEL' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ?", array($res_id, $coll_id));
+            . " WHERE status <> 'DEL' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ? and (status <> 'TMP' or (typist = ? and status = 'TMP'))", array($res_id, $coll_id, $_SESSION['user']['UserId']));
 		if ($stmt->rowCount() > 0) {
             $nb_attach = " (<span id=\"nb_attach\"><b>".$stmt->rowCount()."</b></span>)";
         }
