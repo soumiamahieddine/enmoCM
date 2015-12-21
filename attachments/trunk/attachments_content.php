@@ -40,22 +40,19 @@ require_once 'modules/attachments/attachments_tables.php';
 require_once "core/class/class_history.php";
 require_once 'modules/attachments/class/attachments_controler.php';
 
-$core = new core_tools();
+$core               = new core_tools();
 $core->load_lang();
-$sec = new security();
-$func = new functions();
-$db = new Database();
-$req = new request();
-//$req2 = new request();
+$sec                = new security();
+$func               = new functions();
+$db                 = new Database();
+$req                = new request();
 $docserverControler = new docservers_controler();
-$ac = new attachments_controler();
-
-
+$ac                 = new attachments_controler();
 
 $_SESSION['error'] = "";
 
 $status = 0;
-$error = $content = $js = $parameters = '';
+$error  = $content = $js = $parameters = '';
 
 function _parse($text) {
     $text = str_replace("\r\n", "\n", $text);
@@ -321,7 +318,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                         //copie de la version PDF de la pièce si mode de conversion sur le client
                         if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
 							$_SESSION['new_id'] = $id;
-                            $file = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
+                            $file    = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
                             $newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
                             
                             copy($file, $newfile);
@@ -456,6 +453,13 @@ if (isset($_POST['add']) && $_POST['add']) {
                         if ($id == false) {
                             $_SESSION['error'] = $resAttach->get_error();
                         } else {
+                            // Delete temporary backup
+                            $db->query("DELETE FROM res_attachments WHERE res_id = ? and status = 'TMP' and typist = ?", 
+                                            array($_SESSION['attachmentInfo']['inProgressResId'], $_SESSION['user']['UserId']));
+                            unset($_SESSION['attachmentInfo']);
+                            unset($_SESSION['resIdVersionAttachment']);
+                            unset($_SESSION['targetAttachment']);
+
                             if ($_SESSION['history']['attachadd'] == "true") {
                                 $hist = new history();
                                 $view = $sec->retrieve_view_from_coll_id(
@@ -538,9 +542,9 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $column_res = 'res_id';
             }
             $stmt = $db->query("SELECT attachment_type, identifier, relation, attachment_id_master 
-                            FROM res_view_attachments
-                            WHERE ".$column_res." = ? and res_id_master = ?
-                            ORDER BY relation desc", array($_REQUEST['res_id'],$_SESSION['doc_id']));
+                                FROM res_view_attachments
+                                WHERE ".$column_res." = ? and res_id_master = ?
+                                ORDER BY relation desc", array($_REQUEST['res_id'],$_SESSION['doc_id']));
             $previous_attachment = $stmt->fetchObject();
 
             $fileInfos = array(
@@ -881,24 +885,25 @@ if (isset($_POST['add']) && $_POST['add']) {
 					);
                     unset($_SESSION['upfile']['fileNamePdfOnTmp']);
                 }
-                        
-                        
                 
                 if ($previous_attachment->relation == 1) {
 					$pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
 					if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", array($pdf_id) );
-                    $stmt = $db->query("UPDATE res_attachments set status = 'OBS' WHERE res_id = ?",array($_REQUEST['res_id']));
+                    $stmt = $db->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?",array($_REQUEST['res_id']));
                 } else {
 					$pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
 					if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", array($pdf_id) );
-                    $stmt = $db->query("UPDATE res_version_attachments set status = 'OBS' WHERE res_id = ?",array($_REQUEST['res_id']));
+                    $stmt = $db->query("UPDATE res_version_attachments SET status = 'OBS' WHERE res_id = ?",array($_REQUEST['res_id']));
                 }
 
             }
         } else {
             $isVersion = 0;
             $set_update = "";
-            $set_update = " title = '".functions::protect_string_db($title)."'";
+            $arrayPDO = array();
+
+            $set_update = " title = :title";
+            $arrayPDO = array_merge($arrayPDO, array(":title" => $title));
 
             if (isset($_REQUEST['back_date']) && $_REQUEST['back_date'] <> "") {
                 $set_update .= ", validation_date = '".$req->format_date_db($_REQUEST['back_date'])."'";
@@ -956,10 +961,16 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
                 $fingerprint = Ds_doFingerprint($filetmp, $docserverTypeObject->fingerprint_mode);
                 $filesize = filesize($filetmp);
-                $set_update .= ", fingerprint = '".$fingerprint."'";
-                $set_update .= ", filesize = ".$filesize;
-                $set_update .= ", path = '".$storeResult['destination_dir']."'";
-                $set_update .= ", filename = '".$storeResult['file_destination_name']."'";
+                $set_update .= ", fingerprint = :fingerprint";
+                $set_update .= ", filesize = :filesize";
+                $set_update .= ", path = :path";
+                $set_update .= ", filename = :filename";
+                $arrayPDO = array_merge($arrayPDO, 
+                        array(  ":fingerprint" => $fingerprint, 
+                                ":filesize" => $filesize, 
+                                ":path" => $storeResult['destination_dir'],
+                                ":filename" => $storeResult['file_destination_name'])
+                        );
                 // $set_update .= ", docserver_id = ".$storeResult['docserver_id'];
                 
                 //copie de la version PDF de la pièce si mode de conversion sur le client
@@ -1099,24 +1110,39 @@ if (isset($_POST['add']) && $_POST['add']) {
                 }
             }
 
-            $set_update .= ", doc_date = ".$req->current_datetime().", updated_by = '".$_SESSION['user']['UserId']."'";
+            $set_update .= ", doc_date = ".$req->current_datetime().", updated_by = :updated_by, status = 'A_TRA'";
+            $arrayPDO = array_merge($arrayPDO, array(":updated_by" => $_SESSION['user']['UserId']));
 
             if (isset($storeResult['error']) && $storeResult['error'] <> '') {
                 $_SESSION['error'] = $storeResult['error'];
             } else {
+                $arrayPDO = array_merge($arrayPDO, array(":res_id" => $_REQUEST['res_id']));
                 if ((int)$_REQUEST['relation'] == 1) {
 					$pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
 					if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE res_attachments SET status = 'DEL' WHERE res_id = ?", array($pdf_id) );
-                    $stmt = $db->query("UPDATE res_attachments SET " . $set_update . " WHERE res_id = ?",array($_REQUEST['res_id']));
+                    $stmt = $db->query("UPDATE res_attachments SET " . $set_update . " WHERE res_id = :res_id", $arrayPDO);
                 } else {
 					$pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
 					if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", array($pdf_id) );
-                    $stmt = $db->query("UPDATE res_version_attachments SET " . $set_update . " WHERE res_id = ?",array($_REQUEST['res_id']));
+                    $stmt = $db->query("UPDATE res_version_attachments SET " . $set_update . " WHERE res_id = :res_id", $arrayPDO);
                 }
             }
             
         }
-        
+
+        // Delete temporary backup
+        $stmt = $db->query("SELECT attachment_id_master 
+                            FROM res_version_attachments
+                            WHERE res_id = ? and status = 'TMP' and res_id_master = ?" 
+                            , array($_SESSION['attachmentInfo']['inProgressResId'], $_SESSION['doc_id']));
+        $previous_attachment = $stmt->fetchObject();
+
+        $db->query("DELETE FROM res_version_attachments WHERE attachment_id_master = ? and status = 'TMP'", array($previous_attachment->attachment_id_master));
+        unset($_SESSION['attachmentInfo']);
+        unset($_SESSION['resIdVersionAttachment']);
+        unset($_SESSION['targetAttachment']);
+
+        // Add in history
         if ($_SESSION['history']['attachup'] == "true") {
             $hist = new history();
             $view = $sec->retrieve_view_from_coll_id(
@@ -1169,18 +1195,21 @@ if (isset($_POST['add']) && $_POST['add']) {
 
 if (isset($_REQUEST['id'])) {
 
+    $_SESSION['targetAttachment'] = 'edit';
+
     if ((int)$_REQUEST['relation'] > 1) {
         $column_res = 'res_id_version';
     } else {
         $column_res = 'res_id';
     }
     
-    $stmt = $db->query("SELECT validation_date, title, dest_contact_id, dest_address_id, dest_address_id as address_id, relation, format
-                    FROM res_view_attachments 
-                    WHERE ".$column_res." = ? and res_id_master = ?
-                    ORDER BY relation desc",array($_REQUEST['id'],$_SESSION['doc_id']));
+    $stmt = $db->query("SELECT validation_date, title, dest_contact_id, dest_address_id, dest_address_id as address_id, relation, format, status
+                        FROM res_view_attachments 
+                        WHERE ".$column_res." = ? and res_id_master = ?
+                        ORDER BY relation desc", array($_REQUEST['id'], $_SESSION['doc_id']));
     $data_attachment = $stmt->fetchObject();
     $attachmentFormat = $data_attachment->format;
+    $statusEditAttachment = $data_attachment->status;
     //var_dump($data_attachment);
     if ($data_attachment->relation == 1) {
         $res_table = 'res_attachments';
@@ -1195,12 +1224,14 @@ if (isset($_REQUEST['id'])) {
         false
     );
 
-    $_SESSION['upfile']['size'] = filesize($viewResourceArr['file_path']);
-    $_SESSION['upfile']['format'] = $viewResourceArr['ext'];
-    $fileNameOnTmp = str_replace($viewResourceArr['tmp_path'].DIRECTORY_SEPARATOR, '', $viewResourceArr['file_path']);
+    $_SESSION['upfile']['size']          = filesize($viewResourceArr['file_path']);
+    $_SESSION['upfile']['format']        = $viewResourceArr['ext'];
+    $fileNameOnTmp                       = str_replace($viewResourceArr['tmp_path'].DIRECTORY_SEPARATOR, '', $viewResourceArr['file_path']);
     $_SESSION['upfile']['fileNameOnTmp'] = $fileNameOnTmp;
 
 } else {
+    $_SESSION['targetAttachment'] = 'add';
+
     $stmt = $db->query("SELECT subject, exp_contact_id, dest_contact_id, address_id FROM res_view_letterbox WHERE res_id = ?",array($_SESSION['doc_id']));
     $data_attachment = $stmt->fetchObject();
 
@@ -1210,12 +1241,12 @@ if (isset($_REQUEST['id'])) {
 
 if ($data_attachment->dest_contact_id <> "") {
     $stmt = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
-                    FROM view_contacts 
-                    WHERE contact_id = ? and ca_id = ?', array($data_attachment->dest_contact_id,$data_attachment->address_id));
+                        FROM view_contacts 
+                        WHERE contact_id = ? and ca_id = ?', array($data_attachment->dest_contact_id,$data_attachment->address_id));
 } else if ($data_attachment->exp_contact_id <> "") {
     $stmt = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
-                    FROM view_contacts 
-                    WHERE contact_id = ? and ca_id = ?', array($data_attachment->exp_contact_id,$data_attachment->address_id));       
+                        FROM view_contacts 
+                        WHERE contact_id = ? and ca_id = ?', array($data_attachment->exp_contact_id,$data_attachment->address_id));       
 }
 
 if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id <> '') {
@@ -1248,59 +1279,53 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
                         WHERE cr.res_id = ? and c.contact_id = cast(cr.contact_id as integer) and ca.contact_id=c.contact_id and ca.id=cr.address_id",array($_SESSION['doc_id']));
     $i=0;
     while($multi_contacts_attachment = $stmt->fetchObject()){
-            $format_contact='';
-            $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
-                            FROM view_contacts 
-                            WHERE contact_id = ? and ca_id = ?',array($multi_contacts_attachment->contact_id,$multi_contacts_attachment->address_id));
-    
-            $res = $stmt2->fetchObject();
-            if ($res->is_corporate_person == 'Y') {
-                $format_contact = $res->society;
-                if (!empty ($res->society_short)) {
-                    $format_contact .= ' ('.$res->society_short.')';
-                }
-                if (!empty($res->lastname) || !empty($res->firstname)) {
-                    $format_contact .= ' - ' . $res->lastname . ' ' . $res->firstname;
-                }
-                $format_contact .= ', ';
-            } else {
-                $format_contact .= $res->contact_lastname . ' ' . $res->contact_firstname;
-                if (!empty ($res->society)) {
-                    $format_contact .= ' (' .$res->society . ')';
-                }
-                $format_contact .= ', ';
+        $format_contact='';
+        $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
+                        FROM view_contacts 
+                        WHERE contact_id = ? and ca_id = ?',array($multi_contacts_attachment->contact_id,$multi_contacts_attachment->address_id));
+
+        $res = $stmt2->fetchObject();
+        if ($res->is_corporate_person == 'Y') {
+            $format_contact = $res->society;
+            if (!empty ($res->society_short)) {
+                $format_contact .= ' ('.$res->society_short.')';
             }
-            if ($res->is_private == 'Y') {
-                $format_contact .= '('._CONFIDENTIAL_ADDRESS.')';
-            } else {
-                $format_contact .= $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);                         
+            if (!empty($res->lastname) || !empty($res->firstname)) {
+                $format_contact .= ' - ' . $res->lastname . ' ' . $res->firstname;
             }
+            $format_contact .= ', ';
+        } else {
+            $format_contact .= $res->contact_lastname . ' ' . $res->contact_firstname;
+            if (!empty ($res->society)) {
+                $format_contact .= ' (' .$res->society . ')';
+            }
+            $format_contact .= ', ';
+        }
+        if ($res->is_private == 'Y') {
+            $format_contact .= '('._CONFIDENTIAL_ADDRESS.')';
+        } else {
+            $format_contact .= $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);                         
+        }
         $contacts[] = array(
-            'contact_id' => $multi_contacts_attachment->contact_id,
-            'firstname' => $multi_contacts_attachment->firstname,
-            'lastname' => $multi_contacts_attachment->lastname,
-            'society' => $multi_contacts_attachment->society,
-            'address_id' => $multi_contacts_attachment->address_id,
+            'contact_id'     => $multi_contacts_attachment->contact_id,
+            'firstname'      => $multi_contacts_attachment->firstname,
+            'lastname'       => $multi_contacts_attachment->lastname,
+            'society'        => $multi_contacts_attachment->society,
+            'address_id'     => $multi_contacts_attachment->address_id,
             'format_contact' => $format_contact
         );
 
         if($i==0){
-            $data_contact=$format_contact; 
-            $data_attachment->exp_contact_id=$multi_contacts_attachment->contact_id;
+            $data_contact                    = $format_contact; 
+            $data_attachment->exp_contact_id = $multi_contacts_attachment->contact_id;
         }
         $i++;
     } 
 }
 
+$content .= '<div class="error" >' . $_SESSION['error'];
+$_SESSION['error'] = "";
 
-//$content .= '<div class="block" style="width:2000px">';
-    $content .= '<div class="error" >' . $_SESSION['error'];
-    $_SESSION['error'] = "";
-
-//require 'modules/templates/class/templates_controler.php';
-//$templatesControler = new templates_controler();
-//$templates = array();
-//$templates = $templatesControler->getAllTemplatesForProcess($_SESSION['destination_entity']);
 $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
 $content .= '</div>';
 if (isset($_REQUEST['id'])) {
@@ -1332,6 +1357,8 @@ $content .= '<input type="hidden" id="category_id" value="outgoing"/>';
 if (isset($_REQUEST['id'])) {
     $content .= '<input type="hidden" name="res_id" id="res_id" value="'.$_REQUEST['id'].'"/>';
     $content .= '<input type="hidden" name="relation" id="relation" value="'.$_REQUEST['relation'].'"/>';
+    $_SESSION['relationAttachment'] = $_REQUEST['relation'];
+    $_SESSION['resIdVersionAttachment'] = $_REQUEST['id'];
 }
 $content .= '<input type="hidden" name="fromDetail" id="fromDetail" value="'.$_REQUEST['fromDetail'].'"/>';
 
@@ -1362,21 +1389,13 @@ if (!isset($_REQUEST['id'])) {
     $content .= '<br/>';
     $content .= '<p style="text-align:left;margin-left:74.5%;"></p>';
     $content .= '<p>';
-    //$content .= '<label>'. _MODEL.'</label>';
     $content .= '<label>'. _FILE.' <span><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});"></i> <i class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
     $content .= '<select name="templateOffice" id="templateOffice" style="display:inline-block;" onchange="showEditButton();">';
     $content .= '<option value="">'. _CHOOSE_MODEL.'</option>';
-/*                    for ($i=0;$i<count($templates);$i++) {
-                        if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
-                           $content .= '<option value="'. $templates[$i]['ID'].'">';
-                            $content .= $templates[$i]['LABEL'];
-                        }
-                        $content .= '</option>';
-                    }*/
+
     $content .= '</select>';
     $content .= '<iframe style="display:none; width:210px" name="choose_file" id="choose_file" frameborder="0" scrolling="no" height="25" src="' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&module=attachments&page=choose_attachment"></iframe>';
-
 
     $content .='&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
     
@@ -1388,25 +1407,17 @@ if (!isset($_REQUEST['id'])) {
         $content .= '<input type="button" value="';
         $content .= _EDIT_MODEL;
         $content .= '" name="edit" id="edit" style="display:none" class="button" '
-            .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&attachType=\'+$(\'attachment_types\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
+            .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&attachType=\'+$(\'attachment_types\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&addressId=\'+$(\'addressidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&titleAttachment=\'+$(\'title\').value+\'&back_date=\'+$(\'back_date\').value+\'&resMaster='.$_SESSION['doc_id']
             .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');this.hide();"/>';
     }
             $content .= '</p>';
+    $content .= '<br/>';
 
+}
+
+if (isset($statusEditAttachment) && $statusEditAttachment == 'TMP') {
+    $content .= '<p align="middle"><span style="color:green">'._RETRIEVE_BACK_UP.'</span></p>';
     $content .= '<br/>';
-    /*$content .= '<p style="display:none;">';
-    $content .= '<label>&nbsp;</label>';
-    $content .=  _OR;
-    $content .= '</p>';
-    $content .= '<br/>';
-    $content .= '<p>';
-    $content .= '<label>'. _ATTACH_FILE.'</label>';
-    $content .= '<iframe style="width:210px" name="choose_file" id="choose_file" frameborder="0" scrolling="no" height="25" src="' . $_SESSION['config']['businessappurl']
-        . 'index.php?display=true&module=attachments&page=choose_attachment"></iframe>';
-    $content .= '<input type="text" name="not_enabled" id="not_enabled" disabled value="'. _ALREADY_MODEL_SELECTED.'" style="display:none" />';
-    $content .= '<i class="fa fa-check-square fa-2x" style="display:none;margin-top:-15px" id="file_loaded"></i>';
-    $content .= '</p>';
-    $content .= '<br/>';*/
 }
 
 $content .= '<p>';
@@ -1453,6 +1464,7 @@ $content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" oncli
 $content .= '<div id="show_contacts_attach" class="autocomplete autocompleteIndex"></div>';
 $content .= '</p>';
 $content .= '<input type="hidden" id="contactidAttach" name="contactidAttach" value="';
+
 if (isset($_REQUEST['id'])) {
     $content .= $data_attachment->dest_contact_id;
 } else if ($data_attachment->exp_contact_id){
@@ -1460,62 +1472,65 @@ if (isset($_REQUEST['id'])) {
 } else if ($data_attachment->dest_contact_id) {
     $content .= $data_attachment->dest_contact_id;
 }
+
 $content .= '"/>';
 $content .= '<input type="hidden" id="addressidAttach" name="addressidAttach" value="';
+
 if (isset($_REQUEST['id'])) {
     $content .= $data_attachment->dest_address_id;
 } else if ($data_attachment->address_id <> ''){
     $content .= $data_attachment->address_id;
 }
+
 $content .= '"/>';
 $content .= '<br/>';
 
-
-if (isset($_REQUEST['id'])) {
+if (isset($_REQUEST['id']) && ($data_attachment->status <> 'TMP' || ($data_attachment->status == 'TMP' && $data_attachment->relation > 1))) {
     $content .= '<p>';
     $content .= '<label>'. _CREATE_NEW_ATTACHMENT_VERSION.'</label>';
-    $content .= '<input type="hidden" id="hiddenValidateStatus" value="1"/>';
     $content .= '<input type="radio" name="new_version" id="new_version_yes" value="yes" onclick="setButtonStyle(\'yes\', \''.$attachmentFormat.'\', $(\'hiddenValidateStatus\').value)"/>'._YES;
     $content .= '&nbsp;&nbsp;';
     $content .= '<input type="radio" name="new_version" id="new_version_no" checked value="no" onclick="setButtonStyle(\'no\', \''.$attachmentFormat.'\', $(\'hiddenValidateStatus\').value)"/>'._NO;
     $content .= '</p>';
     $content .= '<br/>';
 }
+    $content .= '<input type="hidden" id="hiddenValidateStatus" value="1"/>';
         $content .= '<p class="buttons">';
-                if (isset($_REQUEST['id']) && $attachmentFormat <> "pdf") {
-                    $content .= '<input type="button" value="';
-                    $content .= _EDIT_MODEL;
-                    $content .= '" name="editModel" id="editModel" class="button" onclick="$(\'hiddenValidateStatus\').value=\'2\';$(\'edit\').style.visibility=\'visible\';window.open(\''
-                        . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentUpVersion&objectId='.$_REQUEST['id'].'&objectTable=res_view_attachments&resMaster='.$_SESSION['doc_id']
-                        .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');this.hide();"/>';
-                } /*else {
-                                        $content .= '" name="edit" id="edit" style="display:none" class="button" '
-                                                    .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
-                                                    .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
-                                    }*/
-
-                $content .= '&nbsp;';
-                $content .= '&nbsp;';
+            if (isset($_REQUEST['id']) && $attachmentFormat <> "pdf") {
                 $content .= '<input type="button" value="';
-                $content .=  _VALIDATE;
-                if (isset($_REQUEST['id'])) {
-                    $content .= '" name="edit" id="edit" class="button" onclick="ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;
-                } else {
-                    $content .= '" name="add" id="add" class="button" onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;
-                }
-                $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\')"/>';
+                $content .= _EDIT_MODEL;
+                $content .= '" name="editModel" id="editModel" class="button" onclick="$(\'hiddenValidateStatus\').value=\'2\';$(\'edit\').style.visibility=\'visible\';window.open(\''
+                    . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentUpVersion&objectId='.$_REQUEST['id'].'&contactId=\'+$(\'contactidAttach\').value+\'&addressId=\'+$(\'addressidAttach\').value+\'&titleAttachment=\'+$(\'title\').value+\'&back_date=\'+$(\'back_date\').value+\'&objectTable=res_view_attachments&resMaster='.$_SESSION['doc_id']
+                    .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');this.hide();"/>';
+            } /*else {
+                                    $content .= '" name="edit" id="edit" style="display:none" class="button" '
+                                                .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
+                                                .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
+                                }*/
 
-                $content .= '&nbsp;';
-                $content .= '&nbsp;';
-                $content .= '<label>&nbsp;</label>';
+            $content .= '&nbsp;';
+            $content .= '&nbsp;';
+            $content .= '<input type="button" value="';
+            $content .=  _VALIDATE;
+            if (isset($_REQUEST['id'])) {
+                $content .= '" name="edit" id="edit" class="button" onclick="ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;
+            } else {
+                $content .= '" name="add" id="add" class="button" onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;
+            }
+            $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\')"/>';
 
-                $content .= '<input type="button" value="';
-                $content .=  _CANCEL;
-                $content .= '" name="cancel" class="button"  onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');destroyModal(\'form_attachments\');"/>';
+            $content .= '&nbsp;';
+            $content .= '&nbsp;';
+            $content .= '<label>&nbsp;</label>';
 
-
-
-
+            $content .= '<input type="button" value="';
+            $content .=  _CANCEL;
+            $content .= '" name="cancel" class="button"  onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');';
+            if (isset($_REQUEST['id'])) {
+                $content .= 'simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetTemporarySaved&mode=edit\');destroyModal(\'form_attachments\');"/>';
+            } else {
+                $content .= 'simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetTemporarySaved&mode=add\');destroyModal(\'form_attachments\');"/>';
+            }
 
         $content .= '</p>';
         $content .= '&nbsp;';
@@ -1530,8 +1545,6 @@ if (isset($_REQUEST['id'])) {
     }
 
     $content .= '<script>display_contact_card(\'visible\', \'contact_card_attach\');</script>';
-
-    // $content .= '<script>$(\'title\').value=</script>';
 
     if ($core->test_admin('my_contacts', 'apps', false)) {
         $content .= '<div id="create_contact_div_attach" style="display:none;float:right;width:65%;background-color:#deedf3">';

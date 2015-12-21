@@ -134,3 +134,5 @@ if (!defined("_WAYBILL"))
     define( "_WAYBILL", "Waybill");
 if (!defined("_VIEW_MAIN_DOC"))
     define( "_VIEW_MAIN_DOC", "View main mail");
+if (!defined("_RETRIEVE_BACK_UP"))
+    define( "_RETRIEVE_BACK_UP", "Retrieve of the last document being processed");
