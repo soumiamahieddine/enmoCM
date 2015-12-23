@@ -766,6 +766,8 @@ if (!defined('_ONLY_ERRORS')) define('_ONLY_ERRORS', 'Only with errors');
 if (!defined('_ONLY_FILETYPES_AUTHORISED')) define('_ONLY_FILETYPES_AUTHORISED', 'Only the following document types can be displayed in your browser');
 if (!defined('_ON_DOC_NUM')) define('_ON_DOC_NUM', ' on document nb.');
 if (!defined('_OPT_INDEXES')) define('_OPT_INDEXES', 'Additional information');
+if (!defined("_COMPLEMENTARY_OPT"))
+    define("_COMPLEMENTARY_OPT", "Complementary options");
 if (!defined('_OR')) define('_OR', 'or');
 if (!defined('_OTHER')) define('_OTHER', 'Other');
 if (!defined('_OTHER_RIGHTS')) define('_OTHER_RIGHTS', 'Other rights');
@@ -1368,6 +1370,8 @@ if (!defined('_SIGNATORY_NAME')) define( '_SIGNATORY_NAME', 'Signatory name');
 if (!defined('_SIGNATORY_GROUP')) define( '_SIGNATORY_GROUP', 'Signatory group');
 
 if (!defined('_SIGNATURE')) define( '_SIGNATURE','Signature');
+if (!defined("_NEW_EMAIL_SIGNATURE"))
+    define("_NEW_EMAIL_SIGNATURE","New mail signature");
 
 if (!defined("_SEARCH_CONTACTS")) define("_SEARCH_CONTACTS","Search contacts");
 

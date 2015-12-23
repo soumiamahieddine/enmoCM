@@ -19,6 +19,49 @@ function resetInlineDisplay(theDiv)
             $(theDiv).style.display = 'inline';
     }, 250);
 }
+
+function changeSignature(selected, mailSignaturesJS)
+{
+    var nb = selected.getAttribute('data-nb');
+    var body = $('emailSignature_ifr').contentWindow.document.getElementById("tinymce");
+    if (nb >= 0) {
+        body.innerHTML = mailSignaturesJS[nb].signature;
+        $('trashButton').style.display = '';
+        $('signatureTitle').style.display = 'none';
+    } else {
+        body.innerHTML = '';
+        $('trashButton').style.display = 'none';
+        $('signatureTitle').style.display = '';
+    }
+}
+
+function deleteSignature(mailSignaturesJS)
+{
+    var rep = confirm("Confirmation de suppression ?");
+
+    var select = $("selectSignatures");
+    var selectedIndex = select.options[select.selectedIndex];
+    var nb = selectedIndex.getAttribute("data-nb");
+    if (nb >= 0 && rep) {
+        var path_manage_script = "index.php?display=true&page=mailSignatureManagement";
+        new Ajax.Request(path_manage_script,
+          {
+              method    : "POST",
+              parameters: {
+                  action        : "DEL",
+                  idToDelete    : mailSignaturesJS[nb].id
+              },
+              onSuccess : function(answer){
+                  if (answer.responseText == "success") {
+                      selectedIndex.style.display = 'none';
+                      select.selectedIndex = 0;
+                      changeSignature(select.options[0], mailSignaturesJS);
+                  }
+              }
+          });
+    }
+}
+
 function hideOtherDiv(theDiv)
 {
     var DivTable = ["create_contact_div","history_div", "notes_div", "emails_div", "diff_list_div", "versions_div", "links_div", "list_answers_div", "cases_div", "diff_list_history_div", "visa_div", "avis_div", "print_fold_div"];

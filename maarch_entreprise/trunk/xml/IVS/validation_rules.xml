@@ -40,6 +40,9 @@
       </parameter>
       <parameter name="Submit" type="string" />
       <parameter name="signature" type="string" />
+      <parameter name="emailSignature" type="string" />
+      <parameter name="signatureTitle" type="string" />
+      <parameter name="selectSignatures" type="string" />
     </validationRule>
 
     <validationRule name="ajax_form_values" extends="standardForm" mode="error">

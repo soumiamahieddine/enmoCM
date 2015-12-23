@@ -1227,6 +1227,8 @@ if (!defined("_OWNER")) define("_OWNER", "Propriétaire");
 if (!defined("_CONTACT_OWNER_COMMENT")) define("_CONTACT_OWNER_COMMENT", "Laisser vide pour rendre ce contact public.");
 
 if (!defined("_OPT_INDEXES")) define("_OPT_INDEXES", "Informations complémentaires");
+if (!defined("_COMPLEMENTARY_OPT"))
+    define("_COMPLEMENTARY_OPT", "Options complémentaires");
 if (!defined("_NUM_BETWEEN")) define("_NUM_BETWEEN", "Compris entre");
 if (!defined("_MUST_CORRECT_ERRORS")) define("_MUST_CORRECT_ERRORS", "Vous devez corriger les erreurs suivantes ");
 if (!defined("_CLICK_HERE_TO_CORRECT")) define("_CLICK_HERE_TO_CORRECT", "Cliquez ici pour les corriger");
@@ -1707,6 +1709,8 @@ if (!defined("_SIGNATORY_GROUP")) define("_SIGNATORY_GROUP", "Groupe du signatai
 if (!defined("_FORMAT_PHONE")) define("_FORMAT_PHONE", "Format : 06 01 02 03 04");
 
 if (!defined("_SIGNATURE")) define("_SIGNATURE","Signature");
+if (!defined("_NEW_EMAIL_SIGNATURE"))
+    define("_NEW_EMAIL_SIGNATURE","Nouvelle signature mail");
 
 // Actions parapheur
 if (!defined("_SEND_MAIL"))    define("_SEND_MAIL", "Envoi du dossier par courriel");
