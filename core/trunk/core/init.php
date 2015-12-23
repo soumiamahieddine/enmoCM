@@ -132,13 +132,19 @@ function maarchFilesWhiteList($directory, $isCustom = false, $recursive = true, 
 }
 
 
-if (!isset($_SESSION['maarchFilesWhiteList']) && count($_SESSION['maarchFilesWhiteList']) == 0) {
+if ((!isset($_SESSION['maarchFilesWhiteList']) && count($_SESSION['maarchFilesWhiteList']) == 0) || $_SESSION['maarchFilesWhiteListTurn'] == 1 ) {
     $isCustom = false;
     if (
         is_dir('custom/' . $_SESSION['custom_override_id']) 
         && !empty($_SESSION['custom_override_id'])
     ) {
         $isCustom = true;
+    }
+
+    if(!isset($_SESSION['maarchFilesWhiteListTurn'])){
+        $_SESSION['maarchFilesWhiteListTurn'] = 1;
+    } else {
+        $_SESSION['maarchFilesWhiteListTurn'] = 2;
     }
 
     $_SESSION['maarchFilesWhiteList'] = array();
