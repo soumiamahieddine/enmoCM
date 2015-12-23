@@ -479,6 +479,8 @@
       <parameter name="barcode" type="alnum" />
       <parameter name="exp_date_from" type="datefr" />
       <parameter name="exp_date_to" type="datefr" />
+      <parameter name="department_number_chosen" type="string" />
+      <parameter name="department_number_available" type="string" />
       <parameter name="welcome" type="string" />
       <parameter name="Submit" type="identifier" />
     </validationRule>
