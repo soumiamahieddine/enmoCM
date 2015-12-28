@@ -18,6 +18,14 @@
 *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/****************************************************************************/
+/*                                                                          */
+/*                                                                          */
+/*               THIS PAGE CAN NOT BE OVERWRITTEN IN A CUSTOM               */
+/*                                                                          */
+/*                                                                          */
+/* **************************************************************************/
+
 /**
 * @brief Maarch index page : every php page is loaded with this page
 *

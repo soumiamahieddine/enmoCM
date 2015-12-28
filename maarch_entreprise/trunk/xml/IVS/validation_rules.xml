@@ -455,7 +455,7 @@
       <parameter name="process_notes" type="string" />
       <parameter name="chrono" type="string" />
       <parameter name="reference_number" type="identifier" />
-      <parameter name="identifier" type="identifier" />
+      <parameter name="identifier" type="string" />
       <parameter name="services_chosen" type="identifier" />
       <parameter name="services_available" type="identifier" />
       <parameter name="market" type="string" />
