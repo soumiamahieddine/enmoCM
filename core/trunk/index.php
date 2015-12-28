@@ -1,6 +1,6 @@
 <?php
 /*
-*   Copyright 2012 Maarch
+*   Copyright 2012-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -17,6 +17,14 @@
 *   You should have received a copy of the GNU General Public License
 *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+/****************************************************************************/
+/*                                                                          */
+/*                                                                          */
+/*               THIS PAGE CAN NOT BE OVERWRITTEN IN A CUSTOM         	    */
+/*                                                                          */
+/*                                                                          */
+/* **************************************************************************/
 
 /**
 * @brief Maarch root file
