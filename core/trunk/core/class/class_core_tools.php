@@ -18,6 +18,15 @@
 *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/****************************************************************************/
+/*                                                                          */
+/*                                                                          */
+/*               THIS PAGE CAN NOT BE OVERWRITTEN IN A CUSTOM               */
+/*                                                                          */
+/*                                                                          */
+/* **************************************************************************/
+
+
 /**
 * @defgroup core Framework core
 */
