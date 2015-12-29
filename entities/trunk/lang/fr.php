@@ -207,7 +207,7 @@ if (!defined("_USERS_LINKED_TO"))
 if (!defined("_ENTITY_MANDATORY_FOR_REDIRECTION"))
     define("_ENTITY_MANDATORY_FOR_REDIRECTION", "Entité obligatoire pour la réaffectation");
 if (!defined("_WARNING_MESSAGE_DEL_ENTITY"))
-    define("_WARNING_MESSAGE_DEL_ENTITY", "Avertissement :<br> La suppression d'une entité entraine la réaffectation des documents et utilisateurs à une nouvelle entité mais réaffecte également les documents (courriers) en attente de traitement, les modèles de liste de diffusion, les modèles de réponses et les unités d'archivage vers l'entité de remplacement.");
+    define("_WARNING_MESSAGE_DEL_ENTITY", "Avertissement :<br> La suppression d'une entité entraine la réaffectation des documents et utilisateurs à une nouvelle entité mais réaffecte également les documents (courriers) en attente de traitement, les modèles de liste de diffusion et les modèles de réponses vers l'entité de remplacement.");
 
 /******************** Keywords Helper ************/
 if (!defined("_HELP_KEYWORD1"))

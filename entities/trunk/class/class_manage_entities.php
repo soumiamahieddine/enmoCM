@@ -1,4 +1,24 @@
 <?php
+
+/*
+*    Copyright 2008,20015 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 require("modules/entities/entities_tables.php");
 
 class entity extends dbquery
@@ -379,7 +399,7 @@ class entity extends dbquery
             {
                 if (!in_array($line->entity_id, $except))
                 {
-                     array_push($entities, array('ID' =>$line->entity_id, 'LABEL' =>  $espace.functions::show_string($line->entity_label), 'SHORT_LABEL' =>$espace.functions::show_string($line->short_label), 'KEYWORD' => false));
+                     array_push($entities, array('ID' =>$line->entity_id, 'LABEL' =>  $espace.functions::xssafe($line->entity_label), 'SHORT_LABEL' =>$espace.functions::show_string($line->short_label), 'KEYWORD' => false));
 
                     $db2 = new entity();
                     $db= new Database();
@@ -1479,7 +1499,7 @@ class entity extends dbquery
                         for($i=0; $i < count($entities); $i++)
                         {
                             ?>
-                            <option value="<?php functions::xecho($entities[$i]['ID']);?>"><?php functions::xecho($entities[$i]['LABEL']);?></option>
+                            <option value="<?php functions::xecho($entities[$i]['ID']);?>"><?php echo $entities[$i]['LABEL'];?></option>
                             <?php
                         }
                         ?>

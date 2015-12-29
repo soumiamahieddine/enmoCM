@@ -1,4 +1,24 @@
 <?php
+
+/*
+*    Copyright 2008,20015 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /**
 * File : entity_del.php
 *
@@ -68,33 +88,33 @@ if(isset($_REQUEST['valid']))
             if(isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['table']))
             {
                 if ($_SESSION['collections'][$i]['view'] == 'rm_documents_view') {
-                    $stmt = $db->query("update rm_organizations set entity_id = ? where entity_id = ?",array($_REQUEST['doc_entity_id'],$s_id));
+                    $stmt = $db->query("UPDATE rm_organizations SET entity_id = ? WHERE entity_id = ?", array($_REQUEST['doc_entity_id'],$s_id));
                 } else {
-                    $stmt = $db->query("update ".$_SESSION['collections'][$i]['table']." set destination = ? where destination = ? and status <> 'DEL'",array($_REQUEST['doc_entity_id'],$s_id));
+                    $stmt = $db->query("UPDATE ".$_SESSION['collections'][$i]['table']." SET destination = ? WHERE destination = ? AND status <> 'DEL'", array($_REQUEST['doc_entity_id'],$s_id));
                 }
                 //$db->show();
             }
         }
-        $stmt = $db->query("update ".ENT_USERS_ENTITIES." set entity_id = ?"
-            ."' where entity_id = ? and user_id not in (select distinct(user_id) from " . ENT_USERS_ENTITIES 
-            . " where entity_id = ?)",array($_REQUEST['doc_entity_id'],$s_id,$_REQUEST['doc_entity_id']));
-        //$db->show();
-        $stmt = $db->query("delete from " . ENT_USERS_ENTITIES . " where entity_id = ?",array($s_id));
-        $stmt = $db->query("select entity_id from ".ENT_ENTITIES." where parent_entity_id = ?",array($s_id));
+        $stmt = $db->query("UPDATE ".ENT_USERS_ENTITIES." SET entity_id = ?"
+            ." WHERE entity_id = ? AND user_id NOT IN (SELECT DISTINCT(user_id) FROM " . ENT_USERS_ENTITIES 
+            . " WHERE entity_id = ?)", array($_REQUEST['doc_entity_id'],$s_id,$_REQUEST['doc_entity_id']));
+        
+        $stmt = $db->query("DELETE FROM " . ENT_USERS_ENTITIES . " WHERE entity_id = ?",array($s_id));
+        $stmt = $db->query("SELECT entity_id FROM ".ENT_ENTITIES." WHERE parent_entity_id = ?",array($s_id));
         $db = new Database();
         while($lineEnt=$stmt->fetchObject())
         {
             //si la nouvelle entité (l'entité remplaçante) est une entité fille de l'entité à supprimer alors l'entité remplaçante récupère l'entité mère de l'entité à supprimer
             if($lineEnt->entity_id == $_REQUEST['doc_entity_id'])
             {
-                $stmt2 = $db->query("select parent_entity_id from ".ENT_ENTITIES." where entity_id = ?", array($s_id));
+                $stmt2 = $db->query("SELECT parent_entity_id FROM ".ENT_ENTITIES." WHERE entity_id = ?", array($s_id));
                 $lineParentEnt = $stmt2->fetchObject();
-                $stmt2 = $db->query("update ".ENT_ENTITIES." set parent_entity_id = ? where entity_id = ?",array($lineParentEnt->parent_entity_id,$lineEnt->entity_id));
+                $stmt2 = $db->query("UPDATE ".ENT_ENTITIES." SET parent_entity_id = ? WHERE entity_id = ?",array($lineParentEnt->parent_entity_id,$lineEnt->entity_id));
                 //$db2->show();
             }
             else
             {
-                $stmt2 = $db->query("update ".ENT_ENTITIES." set parent_entity_id = ? where entity_id = ?",array($_REQUEST['doc_entity_id'],$lineEnt->entity_id));
+                $stmt2 = $db->query("UPDATE ".ENT_ENTITIES." SET parent_entity_id = ? WHERE entity_id = ?",array($_REQUEST['doc_entity_id'],$lineEnt->entity_id));
                 //$db2->show();
             }
         }
@@ -114,19 +134,19 @@ if(isset($_REQUEST['valid']))
         if($admin->is_module_loaded('baskets'))
         {
             //groupbasket_redirect
-            $stmt = $db->query("update ".$_SESSION['tablename']['ent_groupbasket_redirect']." set entity_id = ? where entity_id = ?",array($entity_id_up,$s_id));
+            $stmt = $db->query("UPDATE ".$_SESSION['tablename']['ent_groupbasket_redirect']." SET entity_id = ? WHERE entity_id = ?",array($entity_id_up,$s_id));
              //listinstance
-            $stmt = $db->query("update ".$_SESSION['tablename']['ent_listinstance']." set item_id = ? where item_id = ? and item_type = 'entity_id'",array($entity_id_up,$s_id));
+            $stmt = $db->query("UPDATE ".$_SESSION['tablename']['ent_listinstance']." SET item_id = ? WHERE item_id = ? and item_type = 'entity_id'",array($entity_id_up,$s_id));
             //$db->show();
             //listmodels
-            $stmt = $db->query("delete from ".$_SESSION['tablename']['ent_listmodels']." where object_id = ?",array($s_id));
+            $stmt = $db->query("DELETE FROM ".$_SESSION['tablename']['ent_listmodels']." WHERE object_id = ?",array($s_id));
             //$db->show();
         }
         //$db->show();
         if($admin->is_module_loaded('templates'))
         {
             //templates_association
-            $stmt = $db->query("update ".$_SESSION['tablename']['temp_templates_association']." set value_field = ? where value_field = ? and what = 'destination'",array($entity_id_up,$s_id));
+            $stmt = $db->query("UPDATE ".$_SESSION['tablename']['temp_templates_association']." SET value_field = ? WHERE value_field = ? and what = 'destination'",array($entity_id_up,$s_id));
             //$db->show();
         }
         
