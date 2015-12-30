@@ -51,21 +51,13 @@ class class_users extends Database
         return $htmlContent;
     }
 
-    private function rawToHtml($text) {
-        $text = str_replace("\r\n", PHP_EOL, $text);
-        $text = str_replace("\r", PHP_EOL, $text);
-        $text = str_replace('###', ';', $text);
-        $text = str_replace('___', '--', $text);
-
-        return $text;
-    }
-
     /**
     * Treats the information returned by the form of change_info_user().
     *
     */
     public function user_modif()
     {
+        $core = new core_tools();
         $db = new Database();
         $_SESSION['user']['FirstName'] = $this->wash(
             $_POST['FirstName'], 'no', _FIRSTNAME
@@ -222,18 +214,21 @@ class class_users extends Database
             $db->query($query, $arrayPDO);
 
             // email_signatures
-            if (isset($_POST['emailSignature']) && !empty($_POST['emailSignature'])) {
-                require_once 'apps/'. $_SESSION['config']['app_id'] .'/class/class_email_signatures.php';
-                $emailSignatures = new EmailSignatures();
+            if ($core->is_module_loaded('sendmail')) {
+                if (isset($_POST['emailSignature']) && !empty($_POST['emailSignature'])) {
+                    require_once 'modules/sendmail/class/class_email_signatures.php';
+                    $emailSignatures = new EmailSignatures();
 
-                $body = $this->cleanHtml($_POST['emailSignature']);
-                if (isset($_POST['selectSignatures']) && $_POST['selectSignatures'] == 'new'
-                    && isset($_POST['signatureTitle']) && !empty($_POST['signatureTitle'])) {
-                    $emailSignatures->createForCurrentUser(htmlspecialchars($_POST['signatureTitle']), $body);
-                } elseif (isset($_POST['selectSignatures']) && intval($_POST['selectSignatures'])) {
-                    $emailSignatures->updateForCurrentUser($_POST['selectSignatures'], $body);
+                    $body = $this->cleanHtml($_POST['emailSignature']);
+                    if (isset($_POST['selectSignatures']) && $_POST['selectSignatures'] == 'new'
+                        && isset($_POST['signatureTitle']) && !empty($_POST['signatureTitle'])
+                    ) {
+                        $emailSignatures->createForCurrentUser(htmlspecialchars($_POST['signatureTitle']), $body);
+                    } elseif (isset($_POST['selectSignatures']) && intval($_POST['selectSignatures'])) {
+                        $emailSignatures->updateForCurrentUser($_POST['selectSignatures'], $body);
+                    }
+
                 }
-
             }
 
 
@@ -432,41 +427,46 @@ class class_users extends Database
                                      whatIsTheDivStatus('complementary_fields', 'divStatus_complementary_fields');">
                             <span id="divStatus_complementary_fields" style="color:#1C99C5;"><<</span> <?php echo _COMPLEMENTARY_OPT;?>
                         </h5>
-                        <div id="complementary_fields"  style="display:none;margin-bottom: 5%;" >
-                            <?php
-                            $stmt = $db->query("SELECT * FROM " .EMAIL_SIGNATURES_TABLE. " WHERE user_id = ? order by title",
-                                [$_SESSION['user']['UserId']]);
-                            $mailSignatures = [];
-                            while($res = $stmt->fetchObject())
-                                $mailSignatures[] = ['id' => $res->id, 'title' => $res->title, 'signature' => $this->rawToHtml($res->html_body)];
-                            ?>
-                            <script type="text/javascript">
-                                var mailSignaturesJS = <?php echo json_encode($mailSignatures); ?>;
-                            </script>
-                            <label for="selectSignatures">
-                                <select style="width: 80%" name="selectSignatures" id ="selectSignatures" onchange="changeSignature(this.options[this.selectedIndex], mailSignaturesJS)">
-                                    <option value="new" data-nb="-1" selected><?php echo _NEW_EMAIL_SIGNATURE ?></option>
-                                    <?php
-                                    for ($i = 0; $mailSignatures[$i]; $i++) {
-                                    ?>
-                                    <option value="<?php echo $mailSignatures[$i]['id'] ?>" data-nb="<?php echo $i ?>"><?php echo $mailSignatures[$i]['title'] ?></option>
-                                    <?php
-                                    }
-                                    ?>
-                                </select>
-                                <span id="trashButton" style="display: none">&nbsp;&nbsp;&nbsp;<i onclick="deleteSignature(mailSignaturesJS);" class="fa fa-trash fa-lg"></i></span>
-                            </label>
-                            <input style="margin-bottom: 1%" name="signatureTitle" id="signatureTitle" type="text" placeholder="Titre"/>
-                            <?php
-                            ob_start();
-                            include('apps/maarch_entreprise/load_editor.php');
-                            echo ob_get_clean();
-                            ob_end_flush();
-                            ?>
-                            <div id="html_mode" style="display: block; width:80%;margin-left: 42%">
-                                <textarea name="emailSignature" id="emailSignature" style="width:100%" rows="15" cols="60"></textarea>
+                        <?php
+                        if ($core->is_module_loaded('sendmail')) {
+                            require_once 'modules/sendmail/class/class_email_signatures.php';
+                        ?>
+                            <div id="complementary_fields"  style="display:none;margin-bottom: 5%;" >
+                                <?php
+                                $emailSignaturesClass = new EmailSignatures();
+
+                                $mailSignatures = $emailSignaturesClass->getForCurrentUser();
+                                ?>
+                                <script type="text/javascript">
+                                    var mailSignaturesJS = <?php echo json_encode($mailSignatures); ?>;
+                                </script>
+                                <label for="selectSignatures">
+                                    <select style="width: 80%" name="selectSignatures" id ="selectSignatures" onchange="changeSignatureForProfil(this.options[this.selectedIndex], mailSignaturesJS)">
+                                        <option value="new" data-nb="-1" selected><?php echo _NEW_EMAIL_SIGNATURE ?></option>
+                                        <?php
+                                        for ($i = 0; $mailSignatures[$i]; $i++) {
+                                        ?>
+                                        <option value="<?php echo $mailSignatures[$i]['id'] ?>" data-nb="<?php echo $i ?>"><?php echo $mailSignatures[$i]['title'] ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <span id="trashButton" style="display: none">&nbsp;&nbsp;&nbsp;<i onclick="deleteSignature(mailSignaturesJS);" class="fa fa-trash fa-lg"></i></span>
+                                </label>
+                                <input style="margin-bottom: 1%" name="signatureTitle" id="signatureTitle" type="text" placeholder="Titre"/>
+                                <?php
+                                ob_start();
+                                include('apps/maarch_entreprise/load_editor.php');
+                                echo ob_get_clean();
+                                ob_end_flush();
+                                ?>
+                                <div id="html_mode" style="display: block; width:80%;margin-left: 42%">
+                                    <textarea name="emailSignature" id="emailSignature" style="width:100%" rows="15" cols="60"></textarea>
+                                </div>
                             </div>
-                        </div>
+                        <?php
+                        }
+                        ?>
                         <?php
                             $ssoLogin = false;
                             foreach($_SESSION['login_method_memory'] as $METHOD)

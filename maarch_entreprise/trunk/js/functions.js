@@ -20,7 +20,7 @@ function resetInlineDisplay(theDiv)
     }, 250);
 }
 
-function changeSignature(selected, mailSignaturesJS)
+function changeSignatureForProfil(selected, mailSignaturesJS)
 {
     var nb = selected.getAttribute('data-nb');
     var body = $('emailSignature_ifr').contentWindow.document.getElementById("tinymce");
@@ -55,7 +55,7 @@ function deleteSignature(mailSignaturesJS)
                   if (answer.responseText == "success") {
                       selectedIndex.style.display = 'none';
                       select.selectedIndex = 0;
-                      changeSignature(select.options[0], mailSignaturesJS);
+                      changeSignatureForProfil(select.options[0], mailSignaturesJS);
                   }
               }
           });

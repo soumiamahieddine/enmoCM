@@ -19,19 +19,10 @@
         language : "fr_FR",
         height : "120",
         plugins: [
-            "textcolor"
+            "textcolor bdesk_photo"
         ],
         menubar: false,
-        toolbar: "bold italic underline | alignleft aligncenter alignright | outdent indent | forecolor ",
-        //save_callback : "customSave",
-        //apply_source_formatting : true,
-        //convert_newlines_to_brs : true,
-        //preformatted : true,
-/*        convert_fonts_to_spans : false,
-        verify_html : true,
-        //content_css : "example_advanced.css",
-        extended_valid_elements : "a[href|target|name]",
-        plugins : "table,insertdatetime,fullscreen,paste,searchreplace,preview,print,directionality,layer",
+        toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor",
         theme_<?php functions::xecho($theme);?>_buttons1_add : "fontselect,fontsizeselect",
         theme_<?php functions::xecho($theme);?>_buttons2_add_before : "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
         theme_<?php functions::xecho($theme);?>_buttons2_add : "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
