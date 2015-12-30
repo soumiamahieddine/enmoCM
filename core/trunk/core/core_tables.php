@@ -111,7 +111,7 @@ if (! defined('USERS_TABLE')) {
     define('USERS_TABLE', 'users');
 }
 if (! defined('EMAIL_SIGNATURES_TABLE')) {
-    define('EMAIL_SIGNATURES_TABLE', 'email_signatures');
+    define('EMAIL_SIGNATURES_TABLE', 'users_email_signatures');
 }
 if (! defined('USER_BASKETS_SECONDARY_TABLE')) {
     define('USER_BASKETS_SECONDARY_TABLE', 'user_baskets_secondary');

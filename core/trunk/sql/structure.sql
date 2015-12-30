@@ -921,7 +921,7 @@ CREATE SEQUENCE email_signatures_id_seq
   START 7
   CACHE 1;
 
-CREATE TABLE email_signatures
+CREATE TABLE users_email_signatures
 (
   id bigint NOT NULL DEFAULT nextval('email_signatures_id_seq'::regclass),
   user_id character varying(255) NOT NULL,
