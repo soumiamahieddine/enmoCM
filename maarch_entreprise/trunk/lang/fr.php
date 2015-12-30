@@ -1039,7 +1039,7 @@ if (!defined("_EDIT_ADDRESS")) define("_EDIT_ADDRESS","Modifier l'adresse");
 if (!defined("_ADDRESS_EDITED")) define("_ADDRESS_EDITED","Adresse modifiée");
 if (!defined("_DELETED_ADDRESS")) define("_DELETED_ADDRESS","Adresse supprimée");
 if (!defined("_ADDRESS_DEL")) define("_ADDRESS_DEL","Suppression d'une adresse");
-if (!defined("_WARNING_MESSAGE_DEL_CONTACT_ADDRESS")) define("_WARNING_MESSAGE_DEL_CONTACT_ADDRESS","Avertissement :<br> La suppression d'une adresse entraine la réaffectation des documents à une nouvelle adresse.");
+if (!defined("_WARNING_MESSAGE_DEL_CONTACT_ADDRESS")) define("_WARNING_MESSAGE_DEL_CONTACT_ADDRESS","Avertissement : La suppression d'une adresse entraine la réaffectation des documents à une nouvelle adresse.");
 if (!defined("_CONTACT_ADDRESS_REAFFECT")) define("_CONTACT_ADDRESS_REAFFECT","Réaffectation des documents");
 if (!defined("_NEW_ADDRESS")) define("_NEW_ADDRESS","Nouvelle adresse");
 if (!defined("_CHOOSE_CONTACT_ADDRESS")) define("_CHOOSE_CONTACT_ADDRESS","Choisissez une adresse");
