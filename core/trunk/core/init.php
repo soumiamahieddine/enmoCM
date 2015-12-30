@@ -117,7 +117,7 @@ function maarchFilesWhiteList($directory, $isCustom = false, $recursive = true, 
                             && file_exists('custom/' . $_SESSION['custom_override_id'] . '/' . $file)
                         ) {
                             //$arrayItems[$fileName] = 'custom/' . $_SESSION['custom_override_id'] . '/' . $file;
-                            array_push($arrayItems, 'custom/' . $_SESSION['custom_override_id'] . '/' . $file);
+                            array_push($arrayItems, 'custom'. DIRECTORY_SEPARATOR . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . $file);
                         } else {
                             //$arrayItems[$fileName] = $file;
                             array_push($arrayItems, $file);
@@ -162,9 +162,10 @@ if ((!isset($_SESSION['maarchFilesWhiteList']) && count($_SESSION['maarchFilesWh
             }
         }
     }
-    for ($z=0;$z<count($modules);$z++) {
+    $countModules = count($modules);
+    for ($z=0;$z<$countModules;$z++) {
         $_SESSION['maarchFilesWhiteList']['modules'][$modules[$z]] = maarchFilesWhiteList(
-            'modules/' . $modules[$z],
+            'modules' . DIRECTORY_SEPARATOR . $modules[$z],
             $isCustom
         );
     }
@@ -173,20 +174,20 @@ if ((!isset($_SESSION['maarchFilesWhiteList']) && count($_SESSION['maarchFilesWh
         && !empty($_SESSION['custom_override_id'])
     ) {
         if (is_dir($_SESSION['config']['corepath'] . 'custom/' . $_SESSION['custom_override_id'] . '/core')) {
-            $_SESSION['maarchFilesWhiteList']['custom']['core'] = maarchFilesWhiteList('custom/' . $_SESSION['custom_override_id'] . '/core');
+            $_SESSION['maarchFilesWhiteList']['custom']['core'] = maarchFilesWhiteList('custom'. DIRECTORY_SEPARATOR . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR .'core');
             $_SESSION['maarchFilesWhiteList']['core'] 
                 = array_merge($_SESSION['maarchFilesWhiteList']['core'], $_SESSION['maarchFilesWhiteList']['custom']['core']);
         }
         if (is_dir($_SESSION['config']['corepath'] . 'custom/' . $_SESSION['custom_override_id']. '/apps')) {
-            $_SESSION['maarchFilesWhiteList']['custom']['apps'] = maarchFilesWhiteList('custom/' . $_SESSION['custom_override_id']. '/apps');
+            $_SESSION['maarchFilesWhiteList']['custom']['apps'] = maarchFilesWhiteList('custom' . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']. DIRECTORY_SEPARATOR .'apps');
             $_SESSION['maarchFilesWhiteList']['apps'] 
                 = array_merge($_SESSION['maarchFilesWhiteList']['apps'], $_SESSION['maarchFilesWhiteList']['custom']['apps']);
 
         }
-        for ($z=0;$z<count($modules);$z++) {
+        for ($z=0;$z<$countModules;$z++) {
             if (is_dir($_SESSION['config']['corepath'] . 'custom/' . $_SESSION['custom_override_id']. '/modules/' . $modules[$z])) {
                 $_SESSION['maarchFilesWhiteList']['custom']['modules'][$modules[$z]] = maarchFilesWhiteList(
-                    'custom/' . $_SESSION['custom_override_id']. '/modules/' . $modules[$z],
+                    'custom'. DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']. DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $modules[$z],
                     $isCustom
                 );
                 $_SESSION['maarchFilesWhiteList']['modules'][$modules[$z]] 
