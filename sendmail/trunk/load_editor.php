@@ -21,10 +21,14 @@
         plugins: [
                  "advlist autolink link lists charmap print preview hr",
                  "searchreplace visualblocks visualchars code fullscreen insertdatetime nonbreaking",
-                 "save table contextmenu directionality paste textcolor"
+                 "save table contextmenu directionality paste textcolor bdesk_photo"
         ],
         toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | preview fullpage | forecolor backcolor", 
         //save_callback : "customSave",
+        paste_data_images: true,
+        images_upload_handler: function (blobInfo, success, failure) {
+            success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
+        }
         //apply_source_formatting : true,
         //convert_newlines_to_brs : true,
         //preformatted : true,

@@ -24,6 +24,7 @@
 		<parameter name="valid" type="string" />
 		<parameter name="sender_email" type="string" />
 		<parameter name="templateMail" type="integer" />
+		<parameter name="selectSignatures" type="string" />
 	</validationRule>
 
 	<validationRule name="mail_form" extends="standardForm" mode="error">

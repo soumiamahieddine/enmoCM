@@ -41,6 +41,7 @@ require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
 require_once 'modules/sendmail/sendmail_tables.php';
 require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
+require_once 'modules/sendmail/class/class_email_signatures.php';
     
 $core_tools     = new core_tools();
 $request        = new request();
@@ -369,7 +370,18 @@ if ($mode == 'add') {
     while ( $result=$stmt->fetchObject()) {
         $content .= "<option value='" . $result->template_id ."'>" . $result->template_label . "</option>";
     }
-    $content .='</select>';
+    $content .= '</select>';
+    $content .= '<label style="margin-left: 15%;padding-right:10px">' . 'Signature de mail' . '</label>';
+    $emailSignaturesClass = new EmailSignatures();
+
+    $mailSignatures = $emailSignaturesClass->getForCurrentUser();
+    $content .= '<script type="text/javascript">var mailSignaturesJS = ' . json_encode($mailSignatures) . ';</script>';
+    $content .= '<select style="width: 20%;" name="selectSignatures" id ="selectSignatures" onchange="changeSignature(this.options[this.selectedIndex], mailSignaturesJS)">';
+    $content .= '<option value="none" data-nb="-1" selected >Sans signature</option>';
+    for ($i = 0; $mailSignatures[$i]; $i++) {
+        $content .= '<option value="' . $mailSignatures[$i]['id'] . '" data-nb="' . $i . '">' . $mailSignatures[$i]['title'] . '</option>';
+    }
+    $content .= '</select>';
     $content .= '</tr></br></br>';
 
     //Body

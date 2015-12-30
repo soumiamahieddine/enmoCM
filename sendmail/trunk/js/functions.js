@@ -44,7 +44,24 @@ function addTemplateToEmail(templateMails, path){
         }
     });
 }
- 
+
+function changeSignature(selected, mailSignaturesJS){
+    var nb = selected.getAttribute('data-nb');
+    var body = $('body_from_html_ifr').contentWindow.document.getElementById("tinymce");
+    var customTag = body.getElementsByTagName("mailSignature");
+
+    if (customTag.length == 0) {
+        body.innerHTML += "<mailSignature>toto</mailSignature>";
+        customTag = body.getElementsByTagName("mailSignature");
+    }
+
+    if (nb >= 0) {
+        customTag[0].innerHTML = mailSignaturesJS[nb].signature;
+    } else {
+        customTag[0].innerHTML = "";
+    }
+}
+
 function showEmailForm(path, width, height, iframe_container_id) {
     
     if(typeof(width)==='undefined'){
