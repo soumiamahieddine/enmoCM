@@ -18,7 +18,7 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'modules/sendmail/class/class_email_signatures_abstract.php';
+require_once 'modules/sendmail/class/class_email_signatures_Abstract.php';
 
 class EmailSignatures extends EmailSignaturesAbstract
 {
