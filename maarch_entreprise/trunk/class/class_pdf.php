@@ -26,90 +26,9 @@
 * @version  $Revision$
 */
 
-define('FPDF_FONTPATH', 'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/font/');
-require_once 'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdf.php';
-require_once 'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php';
+require_once 'apps/'. $_SESSION['config']['app_id'] .'/class/class_pdf_Abstract.php';
 
-//class PDF extends PDFB
-class PDF extends FPDI
+class PDF extends PDF_Abstract
 {
-    //var $extgstates = array();
-    //$extgstates = array();
-    function TextWithRotation($x, $y, $txt, $txt_angle, $font_angle=0)
-    {
-        $txt=str_replace(')', '\\)', str_replace('(', '\\(', str_replace('\\', '\\\\', $txt)));
-        $font_angle+=90+$txt_angle;
-        $txt_angle*=M_PI/180;
-        $font_angle*=M_PI/180;
-        $txt_dx=cos($txt_angle);
-        $txt_dy=sin($txt_angle);
-        $font_dx=cos($font_angle);
-        $font_dy=sin($font_angle);
-        $s=sprintf('BT %.2f %.2f %.2f %.2f %.2f %.2f Tm (%s) Tj ET',
-                 $txt_dx, $txt_dy, $font_dx, $font_dy,
-                 $x*$this->k, ($this->h-$y)*$this->k, $txt);
-        if ($this->ColorFlag)
-            $s='q '.$this->TextColor.' '.$s.' Q';
-        $this->_out($s);
-    }
-    
-    // alpha: real value from 0 (transparent) to 1 (opaque)
-    // bm:    blend mode, one of the following:
-    //          Normal, Multiply, Screen, Overlay, Darken, Lighten, ColorDodge, ColorBurn,
-    //          HardLight, SoftLight, Difference, Exclusion, Hue, Saturation, Color, Luminosity
-    function SetAlpha($alpha, $bm='Normal')
-    {
-        $_SESSION['extgstates'] = array();
-        // set alpha for stroking (CA) and non-stroking (ca) operations
-        $gs = $this->AddExtGState(array('ca'=>$alpha, 'CA'=>$alpha, 'BM'=>'/'.$bm));
-        $this->SetExtGState($gs);
-    }
-
-    function AddExtGState($parms)
-    {
-        $n = count($_SESSION['extgstates'])+1;
-        $_SESSION['extgstates'][$n]['parms'] = $parms;
-        return $n;
-    }
-
-    function SetExtGState($gs)
-    {
-        $this->_out(sprintf('/GS%d gs', $gs));
-    }
-
-    function _enddoc()
-    {
-        if(!empty($_SESSION['extgstates']) && $this->PDFVersion<'1.4')
-            $this->PDFVersion='1.4';
-        parent::_enddoc();
-    }
-
-    function _putextgstates()
-    {
-        for ($i = 1; $i <= count($_SESSION['extgstates']); $i++)
-        {
-            $this->_newobj();
-            $_SESSION['extgstates'][$i]['n'] = $this->n;
-            $this->_out('<</Type /ExtGState');
-            foreach ($_SESSION['extgstates'][$i]['parms'] as $k=>$v)
-                $this->_out('/'.$k.' '.$v);
-            $this->_out('>>');
-            $this->_out('endobj');
-        }
-    }
-
-    function _putresourcedict()
-    {
-        parent::_putresourcedict();
-        $this->_out('/ExtGState <<');
-        foreach($_SESSION['extgstates'] as $k=>$extgstate)
-            $this->_out('/GS'.$k.' '.$extgstate['n'].' 0 R');
-        $this->_out('>>');
-    }
-
-    function _putresources()
-    {
-        $this->_putextgstates();
-        parent::_putresources();
-    }
+    // custom
 }
