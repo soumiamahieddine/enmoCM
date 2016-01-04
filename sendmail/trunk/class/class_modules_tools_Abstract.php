@@ -1,7 +1,7 @@
 <?php
 /*
 *
-*   Copyright 2012 Maarch
+*   Copyright 2012-2016 Maarch
 *
 *   This file is part of Maarch Framework.
 *

@@ -1,7 +1,7 @@
 <?php
 /*
 *
-*   Copyright 2012 Maarch
+*   Copyright 2012-2016 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -30,9 +30,10 @@
 * @ingroup  sendmail
 */
 
+require_once 'modules/sendmail/class/class_modules_tools_Abstract.php';
 
 class sendmail extends SendmailAbstract
 {
-
+	// custom
 }
 
