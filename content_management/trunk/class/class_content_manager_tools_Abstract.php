@@ -38,12 +38,12 @@ require_once 'core/core_tables.php';
 abstract class content_management_tools_Abstract
 {
     //Parameters
-    private $extensions_xml_path = 'xml/extensions.xml';
-    private $programs_xml_path = 'xml/programs.xml';
-    private $parameter_id  = 'content_management_reservation';
-    private $templateMasterPath = 'modules/templates/templates_src/';
+    protected $extensions_xml_path = 'xml/extensions.xml';
+    protected $programs_xml_path = 'xml/programs.xml';
+    protected $parameter_id  = 'content_management_reservation';
+    protected $templateMasterPath = 'modules/templates/templates_src/';
     //Variables
-    private $db;
+    protected $db;
 
     public function __construct()
     {
