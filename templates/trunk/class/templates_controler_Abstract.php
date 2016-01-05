@@ -59,7 +59,7 @@ try {
 abstract class templates_controler_Abstract extends ObjectControler implements ObjectControlerIF
 {
     
-    private $stylesArray = array();
+    protected $stylesArray = array();
     
     /**
     * Save given object in database:
