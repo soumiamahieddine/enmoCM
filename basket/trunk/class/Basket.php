@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008-2016 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -29,28 +29,15 @@
 * @ingroup basket
 */
 
-// Loads the required class
-try {
-	require_once("core/class/BaseObject.php");
-} catch (Exception $e){
-	functions::xecho($e->getMessage()).' // ';
-}
+require_once 'modules/basket/class/Basket_Abstract.php';
 
 /**
 * @brief  Basket Object, herits of the BaseObject class
 *
 * @ingroup basket
 */
-class Basket_obj extends BaseObject
+class Basket_obj extends Basket_obj_Abstract
 {
-	/**
-	* Returns the string representing the Basket object
-	*
-	* @return string The basket label (basket_name and basket_id)
-	*/
-	function __toString()
-	{
-		return $this->basket_name." (".$this->basket_id.")" ;
-	}
+	// custom
 }
 

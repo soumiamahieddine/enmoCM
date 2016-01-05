@@ -19,31 +19,38 @@
 */
 
 /**
-* @brief  Contains the controler of the Basket Object
-* (create, save, modify, etc...)
+* @brief  Contains the Bakset Object (herits of the BaseObject class)
 *
 *
 * @file
-* @author Claire Figueras <dev@maarch.org>
+* @author <dev@maarch.org>
 * @date $date$
 * @version $Revision$
-* @ingroup core
+* @ingroup basket
 */
 
-require_once 'modules/basket/class/BasketControler_Abstract.php';
+// Loads the required class
+try {
+	require_once("core/class/BaseObject.php");
+} catch (Exception $e){
+	functions::xecho($e->getMessage()).' // ';
+}
 
 /**
-* @brief  Controler of the Basket Object
+* @brief  Basket Object, herits of the BaseObject class
 *
-*<ul>
-*  <li>Get an basket object from an id</li>
-*  <li>Save in the database a basket</li>
-*  <li>Manage the operation on the baskets related tables in the database
-*  (_insert, select, _update, delete)</li>
-*</ul>
-* @ingroup core
+* @ingroup basket
 */
-class BasketControler extends BasketControler_Abstract
+abstract class Basket_obj_Abstract extends BaseObject
 {
-	// custom
+	/**
+	* Returns the string representing the Basket object
+	*
+	* @return string The basket label (basket_name and basket_id)
+	*/
+	function __toString()
+	{
+		return $this->basket_name." (".$this->basket_id.")" ;
+	}
 }
+
