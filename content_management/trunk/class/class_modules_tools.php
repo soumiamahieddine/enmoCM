@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2012 Maarch
+*   Copyright 2012-2016 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -37,6 +37,8 @@
 * @ingroup content_management
 */
 
+require_once 'modules/content_management/class/class_modules_tools_Abstract.php';
+
 /**
 * @brief Module content_management : Module Tools Class
 *
@@ -47,60 +49,7 @@
 *
 * @ingroup content_management
 */
-class content_management
+class content_management extends content_management_Abstract
 {
-    function __construct()
-    {
-        // parent::__construct();
-        $this->index = array();
-    }
-
-    /**
-    * Loads content_management  tables into sessions vars from the
-    * content_management/xml/config.xml
-    * Loads content_management log setting into sessions vars from the
-    * content_management/xml/config.xml
-    */
-    public function build_modules_tables()
-    {
-        if (file_exists($_SESSION['config']['corepath'] . 'custom/'
-                        . $_SESSION['custom_override_id']
-                        . '/modules/content_management/xml/config.xml')
-        ) {
-            $path = $_SESSION['config']['corepath'] . 'custom/'
-                . $_SESSION['custom_override_id']
-                . '/modules/content_management/xml/config.xml';
-        } else {
-            $path = 'modules/content_management/xml/config.xml';
-        }
-        $xmlconfig = simplexml_load_file($path);
-        // Loads the log setting of the module content_management
-        $HISTORY = $xmlconfig->HISTORY;
-        $_SESSION['history']['cmadd'] = (string) $HISTORY->cmadd;
-        $_SESSION['history']['cmup'] = (string) $HISTORY->cmup;
-        $_SESSION['history']['cmdel'] = (string) $HISTORY->cmdel;
-    }
-
-    /**
-    * Load into session vars all the content_management specific vars :
-    * calls private methods
-    */
-    public function load_module_var_session($userData)
-    {
-        if (file_exists($_SESSION['config']['corepath'] . 'custom/'
-            . $_SESSION['custom_override_id']
-            . '/modules/content_management/xml/content_management_features.xml')
-        ) {
-            $path = $_SESSION['config']['corepath'] . 'custom/'
-                . $_SESSION['custom_override_id']
-                . '/modules/content_management/xml/content_management_features.xml';
-        } else {
-            $path = 'modules/content_management/xml/content_management_features.xml';
-        }
-        $_SESSION['CMFeatures'] = array();
-        /*$_SESSION['CMFeatures'] = functions::object2array(
-            simplexml_load_file($path)
-        );*/
-        //functions::show_array($_SESSION['CMFeatures']);
-    }
+    // custom
 }
