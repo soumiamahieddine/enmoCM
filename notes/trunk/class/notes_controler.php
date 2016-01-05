@@ -1,6 +1,6 @@
 <?php
 /*
-*   Copyright 2013 Maarch
+*   Copyright 2013-2016 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -29,80 +29,14 @@
 * @ingroup notes
 */
 
+require_once 'modules/notes/class/notes_controler_Abstract.php';
+
 /**
 * @brief  Controler of the note Object
 *
 * @ingroup notes
 */
-class notes_controler
+class notes_controler extends notes_controler_Abstract
 {
-    #####################################
-    ## add note on a resource
-    #####################################
-    public function addNote($resId, $collId, $noteContent)
-    {
-        $status = 'ok';
-        $error = '';
-        //control parameters
-        if (isset($resId) && empty($resId)) {
-            $status = 'ko';
-            $error = 'resId empty ';
-        }
-        if (isset($collId) && empty($collId)) {
-            $status = 'ko';
-            $error = 'collId empty ';
-        }
-        if (isset($noteContent) && empty($noteContent)) {
-            $status = 'ko';
-            $error .= 'noteContent empty ';
-        }
-        //process
-        if ($status == 'ok') {
-            require_once 'core/class/class_security.php';
-            require_once 'modules/notes/notes_tables.php';
-            $security = new security();
-            $view = $security->retrieve_view_from_coll_id($collId);
-            $table = $security->retrieve_table_from_coll($collId);
-            $db = new Database();
-            $query = "SELECT res_id FROM " . $view . " WHERE res_id = ?";
-            $stmt = $db->query($query, array($resId));
-            if ($stmt->rowCount() == 0) {
-                $status = 'ko';
-                $error .= 'resId not exists';
-            } else {
-                $query =
-                    "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, "
-                    . "date_note, user_id, coll_id, tablename) values"
-                    . " (?, ?, CURRENT_TIMESTAMP, ?, ?, ?)";
-                    
-                    $stmt = $db->query($query, array($resId, $noteContent, $_SESSION['user']['UserId'], $collId, $table));
-
-                    $hist = new history();
-                    $stmt = $db->query(
-                        "SELECT id FROM " . NOTES_TABLE . " WHERE "
-                        . "identifier = ? and user_id = ? and coll_id = ? order by id desc",
-                        array($resId, $_SESSION['user']['UserId'], $collId)
-                    );
-                    $res = $stmt->fetchObject();
-                    $id = $res->id;
-                    $hist->add(
-                        $view, $resId, 'UP', 'resup', _ADDITION_NOTE
-                        . _ON_DOC_NUM . $resId . ' (' . $id . ') ' . _FROM_WS,
-                        $_SESSION['config']['databasetype'], 'notes'
-                    );
-                    $hist->add(
-                        NOTES_TABLE, $id, 'ADD', 'noteadd', _NOTES_ADDED
-                        . ' (' . $id . ') ' . _FROM_WS,
-                        $_SESSION['config']['databasetype'], 'notes'
-                    );
-
-            }
-        }
-        $returnArray = array(
-            'status' => $status,
-            'value' => $id,
-            'error' => $error,
-        );
-        return $returnArray;
-    }
+    // custom
 }
