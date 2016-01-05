@@ -20,31 +20,36 @@
 */
 
 /**
-* @brief  Contains the controler of template object 
-* (create, save, modify, etc...)
+* @brief  Contains the templates Object (herits of the BaseObject class)
 * 
 * 
 * @file
-* @author Laurent Giovannoni
+* @author Laurent Giovannoni <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup templates
 */
 
-require_once 'modules/templates/class/templates_controler_Abstract.php';
+// Loads the required class
+try {
+    require_once("core/class/BaseObject.php");
+} catch (Exception $e){
+    functions::xecho($e->getMessage()).' // ';
+}
 
 /**
-* @brief  Controler of the templates object 
+* @brief templates Object, herits of the BaseObject class 
 *
-*<ul>
-*  <li>Get an templates object from an id</li>
-*  <li>Save in the database a templates</li>
-*  <li>Manage the operation on the templates related tables in the database 
-*  (insert, select, update, delete)</li>
-*</ul>
 * @ingroup templates
 */
-class templates_controler extends templates_controler_Abstract
+abstract class templates_Abstract extends BaseObject
 {
-    // custom
+    /**
+     *Print a viewable string to render the object.
+     * @return string Rendering of the object
+     */
+    public function __toString()
+    {
+        return $this->label;
+    }
 }
