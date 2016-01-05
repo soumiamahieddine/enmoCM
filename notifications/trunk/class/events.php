@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2008-2011 Maarch
+*   Copyright 2008-2016 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -30,29 +30,13 @@
 * @ingroup core
 */
 
-
-// Loads the required class
-try {
-    require_once("core/class/BaseObject.php");
-    require_once("core/class/ObjectControlerAbstract.php");
-} catch (Exception $e){
-    functions::xecho($e->getMessage()).' // ';
-}
+require_once 'modules/notifications/class/events_Abstract.php';
 
 /**
  * Class for controling docservers objects from database
  */
-class events
-    extends ObjectControler
+class events extends events_Abstract
 {
-		/**
-		 *Print a viewable string to render the object.
-		 * @return string Rendering of the object
-		 */
-
-		public function __toString()
-		{
-			return $this->event_sid;
-		}
+	// custom
 }
 

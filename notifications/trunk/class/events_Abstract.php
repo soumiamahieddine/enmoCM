@@ -20,22 +20,38 @@
 */
 
 /**
-* @brief Contains the docservers_controler Object
+* @brief Contains the events Object
 * (herits of the BaseObject class)
 *
 * @file
-* @author Loïc Vinet - Maarch
+* @author Cyril Vazquez - Maarch
 * @date $date$
 * @version $Revision$
 * @ingroup core
 */
 
-require_once 'modules/notifications/class/events_controler_Abstract.php';
+
+// Loads the required class
+try {
+    require_once("core/class/BaseObject.php");
+    require_once("core/class/ObjectControlerAbstract.php");
+} catch (Exception $e){
+    functions::xecho($e->getMessage()).' // ';
+}
 
 /**
  * Class for controling docservers objects from database
  */
-class events_controler extends events_controler_Abstract
+abstract class events_Abstract extends ObjectControler
 {
-    // custom    
+	/**
+	 *Print a viewable string to render the object.
+	 * @return string Rendering of the object
+	 */
+
+	public function __toString()
+	{
+		return $this->event_sid;
+	}
 }
+

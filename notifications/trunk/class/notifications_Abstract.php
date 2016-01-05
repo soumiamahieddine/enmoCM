@@ -1,5 +1,4 @@
 <?php
-
 /*
 *   Copyright 2008-2016 Maarch
 *
@@ -16,26 +15,40 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework. If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
-* @brief Contains the docservers_controler Object
-* (herits of the BaseObject class)
-*
+* @brief  Contains the notification Object (herits of the BaseObject class)
+* 
+* 
 * @file
-* @author Loïc Vinet - Maarch
+* @author Laurent Giovannoni <dev@maarch.org>
 * @date $date$
 * @version $Revision$
-* @ingroup core
+* @ingroup template	
 */
 
-require_once 'modules/notifications/class/events_controler_Abstract.php';
+// Loads the required class
+try {
+    require_once("core/class/BaseObject.php");
+} catch (Exception $e){
+    functions::xecho($e->getMessage()).' // ';
+}
 
 /**
- * Class for controling docservers objects from database
- */
-class events_controler extends events_controler_Abstract
+* @brief  lc_policies Object, herits of the BaseObject class 
+*
+* @ingroup template
+*/
+abstract class notifications_Abstract extends BaseObject
 {
-    // custom    
+    /**
+     *Print a viewable string to render the object.
+     * @return string Rendering of the object
+     */
+    public function __toString()
+    {
+        return $this->notification_sid;
+    }
 }
