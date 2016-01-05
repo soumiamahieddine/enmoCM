@@ -37,82 +37,82 @@ abstract class graphics_Abstract
 	/**
 	* Graphic border color
 	*
-    * @access private
+    * @access protected
     * @var Color Object
     */
-	private $border_color;
+	protected $border_color;
 
 	/**
 	* Color of the text
 	*
-    * @access private
+    * @access protected
     * @var Color Object
     */
-	private $typo_color;
+	protected $typo_color;
 
 	/**
 	* General background of the graphic
 	*
-    * @access private
+    * @access protected
     * @var Color Object
     */
-	private $background_color ;
+	protected $background_color ;
 
 	/**
 	* Color of the plot
 	*
-    * @access private
+    * @access protected
     * @var Color Object
     */
-	private $plot_color;
+	protected $plot_color;
 
 	/**
 	* Color of the second plot
 	*
-    * @access private
+    * @access protected
     * @var Color Object
     */
-	private $plot_color2;
+	protected $plot_color2;
 
 	/**
 	* Color of the first plot filling
 	*
-    * @access private
+    * @access protected
     * @var Color Object
     */
-	private $filling_color;
+	protected $filling_color;
 
 	/**
 	* Color of the second plot filling
 	*
-    * @access private
+    * @access protected
     * @var Color Object
     */
-	private $filling_color2;
+	protected $filling_color2;
 
 	/**
 	* Grid color
 	*
-    * @access private
+    * @access protected
     * @var Color Object
     */
-	private $grid_color;
+	protected $grid_color;
 
 	/**
 	* Color of the axis
 	*
-    * @access private
+    * @access protected
     * @var Color Object
     */
-	private $axis_color;
+	protected $axis_color;
 
 	/**
 	* In the bar graphic, color of the shadow
 	*
-    * @access private
+    * @access protected
     * @var Color Object
     */
-	private $bar_shadow_color;
+	protected $bar_shadow_color;
 
 	/**
 	* Construct method : load the color
