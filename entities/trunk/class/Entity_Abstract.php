@@ -29,14 +29,27 @@
 * @ingroup basket
 */
 
-require_once 'modules/entities/class/Entity_Abstract.php';
+// Loads the required class
+try {
+	require_once("core/class/BaseObject.php");
+} catch (Exception $e){
+	functions::xecho($e->getMessage()).' // ';
+}
 
 /**
 * @brief  Entity Object, herits of the BaseObject class 
 *
 * @ingroup basket
 */
-class EntityObj extends EntityObj_Abstract
+abstract class EntityObj_Abstract extends BaseObject
  {	
- 	// custom
+	/**
+	* Returns the string representing the Entity object
+	*
+	* @return string The entity label (entity_label)
+	*/
+	function __toString(){
+		return $this->entity_label ; 
+	}	
 }
+?>

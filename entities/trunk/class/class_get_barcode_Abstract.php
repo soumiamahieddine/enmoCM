@@ -32,8 +32,28 @@
 
 */
 
-require_once 'modules/entities/class/class_get_barcode_Abstract.php';
+abstract class barcocdeFPDF_Abstract extends FPDI {
 
-class barcocdeFPDF extends barcocdeFPDF_Abstract {
-	// custom
+  	function generateBarCode($type, $code, $hh=60, $hr, $hw, $showtype) 
+  	{
+    	$img_file_name = $_SESSION['user']['UserId'] . time() . rand() . ".png";
+		
+		$objCode = new pi_barcode();
+
+		$objCode->setCode($code);
+
+		$objCode->setType($type);
+
+		$objCode->setSize($hh, $hw);
+		  
+		$objCode->setText($code);
+		  
+		$objCode->hideCodeType();
+		  
+		$objCode->setFiletype('PNG');               
+
+		$objCode->writeBarcodeFile($_SESSION['config']['tmppath'] . $img_file_name);
+		
+		return  $img_file_name;
+  	}
 }
