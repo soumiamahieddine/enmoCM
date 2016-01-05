@@ -30,16 +30,28 @@
 * @version $Revision$
 */
 
-require_once 'modules/tags/class/TagControler_Abstract.php';
 
-// To activate de debug mode of the class
-$_ENV['DEBUG'] = false;
+// Loads the required class
+try {
+	require_once("core/class/BaseObject.php");
+} catch (Exception $e){
+	functions::xecho($e->getMessage()).' // ';
+}
 
 /**
-* @brief  Controler of the Tag Object
-* @ingroup core
+* @brief  Tag Object, herits of the BaseObject class 
+*
+* @ingroup tag
 */
-class tag_controler extends tag_controler_Abstract
-{
-    // custom  
+abstract class TagObj_Abstract extends BaseObject
+ {	
+	/**
+	* Returns the string representing the Tag object
+	*
+	* @return string The tag label (tag_label)
+	*/
+	function __toString(){
+		return $this->tag_label ; 
+	}	
 }
+?>

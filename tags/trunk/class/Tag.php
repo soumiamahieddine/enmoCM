@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2012 Maarch
+*    Copyright 2008-2016 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -30,28 +30,15 @@
 * @version $Revision$
 */
 
-
-// Loads the required class
-try {
-	require_once("core/class/BaseObject.php");
-} catch (Exception $e){
-	functions::xecho($e->getMessage()).' // ';
-}
+require_once 'modules/tags/class/Tag_Abstract.php';
 
 /**
 * @brief  Tag Object, herits of the BaseObject class 
 *
 * @ingroup tag
 */
-class TagObj extends BaseObject
+class TagObj extends TagObj_Abstract
  {	
-	/**
-	* Returns the string representing the Tag object
-	*
-	* @return string The tag label (tag_label)
-	*/
-	function __toString(){
-		return $this->tag_label ; 
-	}	
+ 	// custom
 }
-?>
+
