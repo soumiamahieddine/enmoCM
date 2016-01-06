@@ -649,9 +649,8 @@ if($mode == 'normal') {
     }
 
 if (count($tab) > 0) {
-
     /************Construction de la liste*******************/
-    //Cl� de la liste
+    //key de la liste
     $listKey = 'res_id';
 
     //Initialiser le tableau de param�tres
@@ -665,6 +664,7 @@ if (count($tab) > 0) {
     $paramsTab['bool_showIconDocument'] =  true;                                        //Affichage de l'icone du document
     $paramsTab['bool_showIconDetails'] =  $showIconDetails;                             //Affichage de l'icone de la page de details
     $paramsTab['bool_showAttachment'] = true;                                           //Affichage du nombre de document attach� (mode �tendu)
+    
     if ($radioButton) {                                                                 //Boutton radio
         $paramsTab['bool_radioButton'] = $radioButton;
     }                                 
