@@ -175,8 +175,6 @@ if (empty($docserver)) {
                     $_SESSION['config']['databasetype']
                 );
 				
-				
-				
                 if ($id == false) {
                     $result = array('ERROR' => $resVersion->get_error());
                     createXML('ERROR', $result);
