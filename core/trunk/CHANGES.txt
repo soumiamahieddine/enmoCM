@@ -8,74 +8,81 @@ Wiki : http://wiki.maarch.org/Maarch_Courrier/1.5.1/fr/Changelog
 
 CONTRIBUTEURS DE CETTE VERSION :
 
- #### TODO ####
+Ministère de la Culture
+Services du Premier Ministre
+Ministère de l'Intérieur
+Communauté d'agglomération de Blois-Agglopolys
+
+Contributeurs techniques
+
+Document Image Solutions (DIS)
+
+Effort de R&D entre la version 1.5 et la version 1.5.1 : ~300 jours-hommes
 
 
-SECURITE
+Sécurité :
 
-Amélioration de la sécurité (top 10 OWASP)
-Amélioration de la méthode de sauvegarde des mots de passe dans la base de données
+Renforcement global de la sécurité de l'application (conformité au top 10 OWASP)
+Renforcement de la protection du stockage des mots de passe
 
-GESTION DES LOGS
+Gestion des fichiers journaux :
 
-Amélioration de la gestion des logs
+Refonte de la gestion des journaux afin de simplifier leur exploitation
 
-MODULE VISA
+Module Visa :
 
 Amélioration de la fiabilité du circuit visa
-Possibilité de signer à toutes les étapes du circuit visa
-L'intégration de la signature sur le document se fait désormais côté serveur
+Possibilité de signer le document à toutes les étapes du circuit visa
+L'intégration de la griffe sur le document se fait désormais côté serveur
 Possibilité de définir un circuit visa par défaut en fonction du service traitant
 
-GESTION DES CONTACTS
+Gestion des contacts :
 
-Possibilité d'utiliser les coordonnées d'une adresse déjà créée
-Possibilité d'associer un type de contact à un contact particulier, moral, ou les deux.
-Possibilité de créer des types de contact utilisable seulement dans l'administration
+Auto-complétion de l'adresse postale d'un nouveau point contact, si cette adresse existe déjà
+Lors de la création d'un type de contact, possibilité de forcer sa qualité en "particulier", "moral", ou les deux
+Affinage des droits sur la création des contacts (ex: seul l'administrateur peut créer un nouveau contact institutionnel)
+Gestion des corbeilles et des entités :
 
-GESTION DES CORBEILLES ET DES ENTITES
-
-Nouveau mot clé sur le type des entités (utilisable dans la clause d'une corbeille ou pour la redirection d'un courrier)
+Nouveau mot clé ENTITY_TYPE sur le type des entités (utilisable dans la clause d'une corbeille ou pour la redirection d'un courrier)
 Nouveau droit pour pouvoir interdire la modification du destinataire dans la liste de diffusion
 Nouvelle action "Marquer comme Lu"
-Possibilité de trier les corbeilles par index
+Nouvelle fonctionnalité, pour l'administrateur, sur le tri des corbeilles
 
-NOUVELLES NOTIFICATIONS
+Nouvelles notifications :
 
 Possibilité d'envoyer une notification vers l'adresse mail du service traitant
 Possibilité d'envoyer une notification aux personnes du circuit visa
 
-CATEGORIE DEPART
+Catégorie départ :
 
-Amélioration de la catégorie Courrier Départ (affichage du pdf de la pj de type "courrier départ spontané" à la place du courrier principal)
+Le PDF d'un courrier départ est désormais affiché dans l'écran de visualisation des courriers
 
-GESTION DES DOSSIERS
+Gestion des dossiers :
 
-Possibilité de partager des dossiers par entité
+Possibilité de limiter l'affichage des dossiers par entité
 Possibilité de créer des dossiers depuis la page d'indexation
 
-DOSSIER D'IMPRESSION
+Dossier d'impression :
 
-Génération d'un dossier d'impression contenant toutes les pièces jointes et notes d'un courrier entrant
+Nouvelle fonctionnalité de génération d'un dossier d'impression, contenant toutes les pièces jointes et notes d'un courrier
 
-IMAGETTE
+Imagettes :
 
-Générer les imagettes sur les fichiers au format html, en plus de pdf.
+La génération d'imagette fonctionne également sur les courriers au format html (courriels, appel téléphonique…), en plus des courriers au format pdf (courrier numérisé)
 
-ERGONOMIE
+Ergonomie :
 
-Amélioration de l'ergonomie de la page de création des pièces jointes
-Amélioration de l'ergonomie de la page d'indexation/validation
-Mise en évidence du nombre de notes lorsqu'il y en a
+Ajout de l'affichage du courrier arrivé lors la création des pièces jointes en réponse
+Légère refonte de l'ergonomie de la page indexation/validation
+Mise en évidence du nombre de notes attaché à un courrier (lorsqu'il y en a)
 
-ENVOI DE MAIL
+Envoi de mail :
 
-Possibilité d'envoyer des mails en utilisant l'adresse mail de nos entités
+Possibilité d'utiliser en adresse d'expéditeur, l'adresse de son entité, en lieu et place de l'adresse personnelle, lors de l'envoi d'un courriel
 
-SEPARATEUR CODE BARRE
+Séparateur Code barre :
 
-Possibilité de générer des séparateurs QRCode
-
+Possibilité de générer des séparateurs de numérisation au format QRCode
 
 ======================================
 ENGLISH VERSION
