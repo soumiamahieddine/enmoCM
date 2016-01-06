@@ -18,7 +18,7 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'apps/'. $_SESSION['config']['app_id'] .'/class/class_email_signatures.php';
+require_once 'modules/sendmail/class/class_email_signatures.php';
 
 if (isset($_POST['action']) && !empty($_POST['action'])) {
 
