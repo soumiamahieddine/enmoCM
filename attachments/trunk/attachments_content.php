@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2008-2015 Maarch
+*   Copyright 2008-2016 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -555,6 +555,7 @@ if (isset($_POST['add']) && $_POST['add']) {
             );
 
             $storeResult = array();
+            
             $storeResult = $docserverControler->storeResourceOnDocserver(
                 $_SESSION['collection_id_choice'], $fileInfos
             );
@@ -898,6 +899,7 @@ if (isset($_POST['add']) && $_POST['add']) {
 
             }
         } else {
+            //UPDATE VERSION
             $isVersion = 0;
             $set_update = "";
             $arrayPDO = array();
@@ -1127,7 +1129,6 @@ if (isset($_POST['add']) && $_POST['add']) {
                     $stmt = $db->query("UPDATE res_version_attachments SET " . $set_update . " WHERE res_id = :res_id", $arrayPDO);
                 }
             }
-            
         }
 
         // Delete temporary backup
