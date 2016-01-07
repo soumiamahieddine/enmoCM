@@ -406,12 +406,13 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             }
 
             if (self::userExists($user->user_id)) {
-                $error .= _USER . ' ' . _ALREADY_EXISTS . '#';
+                $error .= _USER . ' ' . _ALREADY_EXISTS;
             }
 
             if (self::userDeleted($user->user_id)) {
                 $url = "'".$_SESSION['config']['businessappurl']."index.php?admin=users&page=users_management_controler&mode=up&reactivate=true'";
-                $error .= _USER . '  ' . _ALREADY_CREATED_AND_DELETED .' (<a style="cursor:pointer;" onclick="document.getElementById(\'frmuser\').action ='.$url.';document.getElementById(\'user_submit\').click();">' . _REACTIVATE .' ?</a>)'. '#';
+                $error .= _USER . '  ' . _ALREADY_CREATED_AND_DELETED . '. ';
+                $_SESSION['reactivateUser'] = '<input class="button" style="cursor:pointer;text-align: center" onclick="document.getElementById(\'frmuser\').action ='.$url.';document.getElementById(\'user_submit\').click();" value="' . _REACTIVATE .' ?">';
             }
         }
 
@@ -443,7 +444,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 }
             }
             if ($primarySet == false) {
-                $error .= _PRIMARY_GROUP . ' ' . _MANDATORY . '#';
+                $error .= _PRIMARY_GROUP . ' ' . _MANDATORY . '. ';
             }
         }
 

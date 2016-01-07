@@ -404,16 +404,15 @@ abstract class ObjectControler
             return false;
         }
         $table_name = get_class($object);
-        $table_id = $table_name . '_id';
 
         if (isset(self::$specific_id) && !empty(self::$specific_id)) {
             $table_id = self::$specific_id;
         }
         self::$db = new Database();
         
-        $query="update $table_name set status = 'OK' where lower(?)=lower(?)";
+        $query="update $table_name set status = 'OK' where user_id = lower(?)";
                 
-        $stmt = self::$db->query($query, array($table_id,$object->$table_id));
+        $stmt = self::$db->query($query, array($object->$table_id));
         
         if ($stmt) {
             $result = true;
