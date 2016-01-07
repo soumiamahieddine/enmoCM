@@ -22,6 +22,7 @@
       <parameter name="thumbprint" type="string" />
       <parameter name="LoginMode" type="string" />
       <parameter name="user_submit" type="identifier" />
+      <parameter name="reactivate" type="boolean" />
       <parameter name="Submit" type="string" />
     </validationRule>
 

@@ -58,61 +58,69 @@ elseif($mode == "up" || $mode == "add")
             ?>index.php?display=true&amp;admin=users&amp;page=users_management_controler&amp;mode=<?php 
             functions::xecho($mode);?>" class="forms addforms" style="width:50%;height:auto;">
             <div class="content" style="width:400px;margin:auto;">
-            <input type="hidden" name="display" value="true" />
-            <input type="hidden" name="admin" value="users" />
-            <input type="hidden" name="page" value="users_management_controler" />
-            <input type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
+                <input type="hidden" name="display" value="true" />
+                <input type="hidden" name="admin" value="users" />
+                <input type="hidden" name="page" value="users_management_controler" />
+                <input type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
 
-            <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){functions::xecho($_REQUEST['order']);}?>" />
-            <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){functions::xecho($_REQUEST['order_field']);}?>" />
-            <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){functions::xecho($_REQUEST['what']);}?>" />
-            <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){ functions::xecho($_REQUEST['start']);}?>" />
-            <p>
-                <label for="user_id"><?php echo _ID;?> :</label>
-                    <?php  if($mode == "up" && isset($_SESSION['m_admin']['users']['user_id'])) { echo functions::show_string($_SESSION['m_admin']['users']['user_id']); }else{ echo '<br/>'; } ?><input name="user_id"  type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="user_id" value="<?php  if(isset($_SESSION['m_admin']['users']['user_id'])) {echo functions::show_string($_SESSION['m_admin']['users']['user_id']);} ?>" />
-                    <span class="red_asterisk"><?php  if($mode != "up"){?>*<?php } ?></span>
-                    <!--<input type="hidden"  name="id" id="id" value="<?php functions::xecho($id);?>" />-->
-            </p>
-            <p>
-                <label for="LastName"><?php echo _LASTNAME;?> :</label><br/>
-                <input name="LastName" id="LastName" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['lastname'])){echo functions::show_string($_SESSION['m_admin']['users']['lastname']);} ?>" />
-                <span class="red_asterisk"><i class="fa fa-star"></i></span>
-            </p>
-            <p>
-                <label for="FirstName"><?php echo _FIRSTNAME;?> :</label><br/>
-                <input name="FirstName" style="width: 95%;" id="FirstName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['firstname'])){ echo functions::show_string($_SESSION['m_admin']['users']['firstname']); }?>" />
-                <span class="red_asterisk"><i class="fa fa-star"></i></span>
-            </p>
-            <p>
-                <?php echo _PHONE_NUMBER;?> :<br/>
-                <input name="Phone" id="Phone" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['phone'])){ functions::xecho($_SESSION['m_admin']['users']['phone']); }?>" />
-            </p>
-            <p>
-                <label for="Mail"><?php echo _MAIL;?> :</label><br/>
-                <input name="Mail" id="Mail" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ functions::xecho($_SESSION['m_admin']['users']['mail']); }?>" />
-                <span class="red_asterisk"><i class="fa fa-star"></i></span>
-            </p>
+                <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){functions::xecho($_REQUEST['order']);}?>" />
+                <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){functions::xecho($_REQUEST['order_field']);}?>" />
+                <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){functions::xecho($_REQUEST['what']);}?>" />
+                <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){ functions::xecho($_REQUEST['start']);}?>" />
+                <p>
+                    <?php
+                    if (isset($_SESSION['reactivateUser'])) {
+                        echo $_SESSION['reactivateUser'];
+                        unset($_SESSION['reactivateUser']);
+                    }
+                    ?>
+                </p>
+                <p>
+                    <label for="user_id"><?php echo _ID;?> :</label>
+                        <?php  if($mode == "up" && isset($_SESSION['m_admin']['users']['user_id'])) { echo functions::show_string($_SESSION['m_admin']['users']['user_id']); }else{ echo '<br/>'; } ?><input name="user_id"  type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="user_id" value="<?php  if(isset($_SESSION['m_admin']['users']['user_id'])) {echo functions::show_string($_SESSION['m_admin']['users']['user_id']);} ?>" />
+                        <span class="red_asterisk"><?php  if($mode != "up"){?>*<?php } ?></span>
+                        <!--<input type="hidden"  name="id" id="id" value="<?php functions::xecho($id);?>" />-->
+                </p>
+                <p>
+                    <label for="LastName"><?php echo _LASTNAME;?> :</label><br/>
+                    <input name="LastName" id="LastName" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['lastname'])){echo functions::show_string($_SESSION['m_admin']['users']['lastname']);} ?>" />
+                    <span class="red_asterisk"><i class="fa fa-star"></i></span>
+                </p>
+                <p>
+                    <label for="FirstName"><?php echo _FIRSTNAME;?> :</label><br/>
+                    <input name="FirstName" style="width: 95%;" id="FirstName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['firstname'])){ echo functions::show_string($_SESSION['m_admin']['users']['firstname']); }?>" />
+                    <span class="red_asterisk"><i class="fa fa-star"></i></span>
+                </p>
+                <p>
+                    <?php echo _PHONE_NUMBER;?> :<br/>
+                    <input name="Phone" id="Phone" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['phone'])){ functions::xecho($_SESSION['m_admin']['users']['phone']); }?>" />
+                </p>
+                <p>
+                    <label for="Mail"><?php echo _MAIL;?> :</label><br/>
+                    <input name="Mail" id="Mail" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ functions::xecho($_SESSION['m_admin']['users']['mail']); }?>" />
+                    <span class="red_asterisk"><i class="fa fa-star"></i></span>
+                </p>
 			
-			<?php
-			if (isset($_SESSION['modules_loaded']['visa'])) {
-			?>
-			 <p>
-			  <label for="thumbprint"><?php echo _THUMBPRINT;  ?> : </label><br/>
-				<textarea name="thumbprint" id="thumbprint" style="width: 95%;" ><?php 
-                    if(isset($_SESSION['m_admin']['users']['thumbprint'])) { 
-                        functions::xecho($_SESSION['m_admin']['users']['thumbprint']);
-                    }?></textarea>
-			  </p>
-              <p>
-                <label for="signature"><?php echo _SIGNATURE;  ?> : </label><br/>
-                <input type="file" name="signature" id="signature"/>
-                <br />
-                <br />
                 <?php
-                if (file_exists($_SESSION['m_admin']['users']['pathToSignature'])) {
-                    $extension = explode(".", $_SESSION['m_admin']['users']['pathToSignature']);
-                    $count_level = count($extension)-1;
-                    $the_ext = $extension[$count_level];
+                if (isset($_SESSION['modules_loaded']['visa'])) {
+                ?>
+                 <p>
+                  <label for="thumbprint"><?php echo _THUMBPRINT;  ?> : </label><br/>
+                    <textarea name="thumbprint" id="thumbprint" style="width: 95%;" ><?php
+                        if(isset($_SESSION['m_admin']['users']['thumbprint'])) {
+                            functions::xecho($_SESSION['m_admin']['users']['thumbprint']);
+                        }?></textarea>
+                  </p>
+                  <p>
+                    <label for="signature"><?php echo _SIGNATURE;  ?> : </label><br/>
+                    <input type="file" name="signature" id="signature"/>
+                    <br />
+                    <br />
+                    <?php
+                    if (file_exists($_SESSION['m_admin']['users']['pathToSignature'])) {
+                        $extension = explode(".", $_SESSION['m_admin']['users']['pathToSignature']);
+                        $count_level = count($extension)-1;
+                        $the_ext = $extension[$count_level];
                     $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
                         . '_' . rand() . '.' . strtolower($the_ext);
                     $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
