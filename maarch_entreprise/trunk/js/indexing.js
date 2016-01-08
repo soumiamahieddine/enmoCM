@@ -1240,7 +1240,9 @@ function display_contact_card(mode, id)
     if ($('contactidAttach')) {
         var contactid = $('contactidAttach').value;
     } else {
-        var contactid = $('contactid').value;
+        if ($('contactid')) {
+            var contactid = $('contactid').value;
+        }        
     }
     
 
@@ -1623,15 +1625,23 @@ function showEditButton(){
 
     if (modele_id.value != '') {
         $('edit').setStyle({display: 'inline'});
-        $('not_enabled').setStyle({display: 'inline'});
+        if ($('not_enabled')) {
+            $('not_enabled').setStyle({display: 'inline'});
+        }
         $('choose_file').setStyle({display: 'none'});
-        $('file_loaded').setStyle({display: 'none'});
+        if ($('file_loaded')) {
+            $('file_loaded').setStyle({display: 'none'});
+        }
         // $('title').value = modele_id.text;
     } else {
         $('edit').setStyle({display: 'none'});
-        $('not_enabled').setStyle({display: 'none'});
+        if ($('not_enabled')) {
+            $('not_enabled').setStyle({display: 'none'});
+        }
         $('choose_file').setStyle({display: 'inline'});
-        $('file_loaded').setStyle({display: 'none'});
+        if ($('file_loaded')) {
+            $('file_loaded').setStyle({display: 'none'});
+        }
         // $('title').value = '';
     }
 }
