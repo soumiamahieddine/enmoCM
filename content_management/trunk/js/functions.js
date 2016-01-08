@@ -22,6 +22,14 @@ function sendAppletMsg(theMsg)
 //destroy the modal of the applet and launch an ajax script
 function endOfApplet(objectType, theMsg)
 {
+    if (window.opener.$('add')) {
+        window.opener.$('add').setStyle({display: 'inline'});
+    }
+
+    if (window.opener.$('edit')) {
+        window.opener.$('edit').setStyle({display: 'inline'});
+    }
+
     $('divError').innerHTML = theMsg;
     if (objectType == 'template' || objectType == 'templateStyle' || objectType == 'attachmentVersion' || objectType == 'attachmentUpVersion') {
         endTemplate();
