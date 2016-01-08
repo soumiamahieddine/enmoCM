@@ -806,15 +806,17 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 } 
                                 else if ($data[$key]['field_type'] == 'autocomplete')
                                 {
-                                    if ($key == 'folder')
+                                    if ($key == 'folder' && $core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1))
                                     {
                                     ?>  
-                                        <input type="text" name="folder" id="folder" onblur="" value="<?php echo $data['folder']['show_value']; 
-                                        ?>" /><div id="show_folder" class="autocomplete"></div>
+                                        <input type="text" name="folder" id="folder" onblur="" value="<?php echo $data['folder']['show_value']; ?>" />
+                                        <div id="show_folder" class="autocomplete"></div>
                                         <script type="text/javascript">initList('folder', 'show_folder','<?php echo $_SESSION['config']['businessappurl'];
                                         ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder',  'Input', '2');</script>
                                         <?php
-                                    }
+                                    } else { ?>
+                                         <input class="readonly" type="text" name="folder" id="folder" onblur="" value="<?php echo $data['folder']['show_value']; ?>" readonly="readonly"/>
+                                    <?php }
                                 }
                             }
                                 $detailsExport .=  "</td>";
