@@ -99,7 +99,7 @@ abstract class content_management_tools_Abstract
         $timeLimit = $this->computeTimeLimit();
         $charTofind = $this->parameter_id . '#%#' . $objectTable . '#' . $objectId;
 
-        $query = "select id from " . PARAM_TABLE . " where id <> ? and param_value_int > ?";
+        $query = "select id from " . PARAM_TABLE . " where id like (?) and param_value_int > ?";
 
         $stmt = $this->db->query($query, array($charTofind, $timeLimit));
         

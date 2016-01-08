@@ -118,8 +118,9 @@ echo 'objectTable : ' . $objectTable . '<br>';
 echo 'objectId : ' . $objectId . '<br>';
 */
 
-//no reservation for templateStyle object
-if ($objectType <> 'templateStyle') {
+//no reservation for templateStyle and attachment object. TODO : check for attachmentUpVersion
+
+if (!in_array($objectType, array('templateStyle', 'attachmentVersion'))) {
     //reservation test
     $cM->deleteExpiredCM();
     $reservedBy = array();
