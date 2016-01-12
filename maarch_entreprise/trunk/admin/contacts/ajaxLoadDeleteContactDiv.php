@@ -21,7 +21,7 @@ if ($_REQUEST['name'] <> '') {
     . "is_corporate_person, lastname, firstname, title "
     . "from contacts_v2 "
     . "WHERE lower(lastname||' '||firstname) in ("
-    . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts_v2 GROUP BY lastname_firstname, contact_type "
+    . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts_v2 GROUP BY lastname_firstname "
     . "     HAVING Count(lower(lastname||' '||firstname)) > 1 and lower(lastname||' '||firstname) <> ' ') and contact_id <> ? and lower(lastname||' '||firstname) = ? "
     . "order by lower(lastname||' '||firstname)";
     $arrayPDO = array($_REQUEST['contact_id'], $_REQUEST['name']);
