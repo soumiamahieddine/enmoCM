@@ -1,3 +1,7 @@
+function setTitle(input) {
+	input.title = input.value;
+}
+
 function refreshIcones(id_tableau){
 	
 	var tableau = document.getElementById(id_tableau);

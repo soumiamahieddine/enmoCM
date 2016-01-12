@@ -511,7 +511,7 @@ abstract class visa_Abstract extends Database
 					$str .= '<td><a href="javascript://" id="up_'.$j.'" name="up_'.$j.'" style="visibility:hidden;" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
 					$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:hidden;" ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
 					$str .= '<td><a href="javascript://" style="visibility:visible;"  id="add_'.$j.'" name="add_'.$j.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x" title="'.ADD_USER_WORKFLOW.'"></i></a></td>';
-					$str .= '<td><input type="text" id="consigne_'.$j.'" name="consigne_'.$j.'" style="width:95%;"/></td>';
+					$str .= '<td><input type="text" id="consigne_'.$j.'" name="consigne_'.$j.'" onmouseover="setTitle(this);" style="width:95%;"/></td>';
 					$str .= '<td style="display:none"><input type="hidden" id="date_'.$j.'" name="date_'.$j.'"/></td>';
 
 					$str .= '<td style="display:none"><input type="checkbox" id="isSign_'.$j.'" name="isSign_'.$j.'" style="visibility:hidden;" /></td>';
@@ -592,7 +592,7 @@ abstract class visa_Abstract extends Database
 								$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
 								$str .= '<td id="allez"><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$seq.'" name="suppr_'.$seq.'" '.$del.' ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
 								$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x" title="'.ADD_USER_WORKFLOW.'"></i></a></td>';
-								$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$step['process_comment'].'" style="width:95%;" '.$disabled.'/></td>';
+								$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$step['process_comment'].'" onmouseover="setTitle(this);" style="width:95%;" '.$disabled.'/></td>';
 								$str .= '<td style="display:none"><input type="hidden" value="'.$step['process_date'].'" id="date_'.$seq.'" name="date_'.$seq.'"/></td>';
 
 
@@ -676,7 +676,7 @@ abstract class visa_Abstract extends Database
 							$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
 							$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$seq.'" name="suppr_'.$seq.'" '.$del.' ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
 							$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x" title="'.ADD_USER_WORKFLOW.'"></i></a></td>';
-							$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_comment'].'" style="width:95%;" '.$disabled.'/></td>';
+							$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_comment'].'" onmouseover="setTitle(this);" style="width:95%;" '.$disabled.'/></td>';
 							$str .= '<td style="display:none"><input type="hidden" id="date_'.$seq.'" name="date_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_date'].'" /></td>';
 
 							$str .= '<td style="display:none"><input type="checkbox" id="isSign_'.$seq.'" name="isSign_'.$seq.'" '.$displayCB.' checked/></td>';
