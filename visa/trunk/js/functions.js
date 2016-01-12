@@ -21,12 +21,16 @@ function refreshIcones(id_tableau){
 		
 		var num = i-1;
 		
-		if (arrayLignes[i].cells[0].childNodes[0].disabled == true) disabledLine = true;
+		if (arrayLignes[i].cells[0].childNodes[1].disabled == true)
+			disabledLine = true;
 		//MAJ id et name
 		//arrayLignes[i].cells[0].innerHTML = i;
-		arrayLignes[i].cells[0].childNodes[0].name = "conseiller_"+num;	arrayLignes[i].cells[0].childNodes[0].id="conseiller_"+num;
-		arrayLignes[i].cells[0].childNodes[1].id = "signatory_" + num;
-		arrayLignes[i].cells[1].childNodes[0].name = "down_"+num;	arrayLignes[i].cells[1].childNodes[0].id="down_"+num;
+		arrayLignes[i].cells[0].childNodes[0].id = "rank_" + num;
+		arrayLignes[i].cells[0].childNodes[1].name = "conseiller_"+num;
+		arrayLignes[i].cells[0].childNodes[1].id="conseiller_"+num;
+		arrayLignes[i].cells[0].childNodes[2].id = "signatory_" + num;
+		arrayLignes[i].cells[1].childNodes[0].name = "down_"+num;
+		arrayLignes[i].cells[1].childNodes[0].id="down_"+num;
 		document.getElementById("down_"+num).setAttribute('onclick','deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2, \''+id_tableau+'\');');
 				
 		arrayLignes[i].cells[2].childNodes[0].name = "up_"+num;	arrayLignes[i].cells[2].childNodes[0].id="up_"+num;
@@ -37,9 +41,12 @@ function refreshIcones(id_tableau){
 		arrayLignes[i].cells[5].childNodes[0].name = "consigne_"+num;	arrayLignes[i].cells[5].childNodes[0].id="consigne_"+num;
 		arrayLignes[i].cells[6].childNodes[0].name = "date_"+num;	arrayLignes[i].cells[6].childNodes[0].id="date_"+num;
 		arrayLignes[i].cells[7].childNodes[0].name = "isSign_"+num;	arrayLignes[i].cells[7].childNodes[0].id="isSign_"+num;
-		
-		if (longueur > 2) document.getElementById("suppr_"+num).style.visibility="visible";
-		else document.getElementById("suppr_"+num).style.visibility="hidden";
+
+		document.getElementById("rank_" + num).innerHTML = "<strong>" + i + " </strong>";
+		if (longueur > 2)
+			document.getElementById("suppr_"+num).style.visibility="visible";
+		else
+			document.getElementById("suppr_"+num).style.visibility="hidden";
 		
 		if (i > 1)
 			document.getElementById("up_"+num).style.visibility="visible";
@@ -101,7 +108,7 @@ function addRow(id_tableau)
 	for (var j=0; j<listeDeroulante.options.length; j++){
 		listOptions += "<option value='"+listeDeroulante.options[j].value+"'>"+listeDeroulante.options[j].innerHTML+"</option>";
 	}
-	colonne2.innerHTML += "<select>"+listOptions+"</select><span id='signatory_" + position + "'></span>";
+	colonne2.innerHTML += "<span id='rank_" + position + "'></span><select>"+listOptions+"</select><span id='signatory_" + position + "'></span>";
 	//colonne2.innerHTML += "</select>";
 
 	var colonne3 = ligne.insertCell(1);
@@ -157,7 +164,7 @@ function deplacerLigne(source, cible, id_tableau)
 			nouvelle.cells[5].childNodes[0].value = cellules[i].childNodes[0].value;
 		}
 		if (i == 0){
-			nouvelle.cells[0].childNodes[0].selectedIndex = cellules[i].childNodes[0].selectedIndex;
+			nouvelle.cells[0].childNodes[1].selectedIndex = cellules[i].childNodes[1].selectedIndex;
 		}
 		if (i > 5)
 			nouvelle.cells[i].style.display = 'none';

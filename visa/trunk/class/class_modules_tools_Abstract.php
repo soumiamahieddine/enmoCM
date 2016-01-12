@@ -491,6 +491,7 @@ abstract class visa_Abstract extends Database
 					$j=0;
 					$str .= '<tr class="col" id="lineVisaWorkflow_'.$j.'">';
 					$str .= '<td>';
+					$str .= '<span id="rank_' . $j . '"><strong>1 </strong></span>';
 					if ($bool_modif){
 						$str .= '<select id="conseiller_'.$j.'" name="conseiller_'.$j.'" >';
 						$str .= '<option value="" >Sélectionnez un utilisateur</option>';
@@ -538,7 +539,7 @@ abstract class visa_Abstract extends Database
 									$disabled = ' disabled ';
 								else
 									$disabled = '';
-
+								$str .= '<span id="rank_' . $seq . '"><strong>'. ($seq + 1) . '</strong></span>';
 								$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
 								$str .= '<option value="" >Sélectionnez un utilisateur</option>';
 								
@@ -599,7 +600,7 @@ abstract class visa_Abstract extends Database
 
 							}
 							else{
-								$str .= '<td>'.$step['firstname'].' '.$step['lastname'];
+								$str .= '<td><span><strong>' . ($seq + 1) . ' </strong></span>'.$step['firstname'].' '.$step['lastname'];
 								$str .= '</td>';
 								$str .= '<td>'.$step['process_comment'].'</td>';
 								if ($step['process_date'] != '')
@@ -630,6 +631,7 @@ abstract class visa_Abstract extends Database
 
 							$str .= '<td>';
 							$tab_users = $this->getUsersVis();
+							$str .= '<span id="rank_' . $seq . '"><strong>'. ($seq + 1) . ' </strong></span>';
 							$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
 							$str .= '<option value="" >Sélectionnez un utilisateur</option>';
 							$tab_usergroups = $this->getGroupVis();
@@ -679,7 +681,7 @@ abstract class visa_Abstract extends Database
 
 							$str .= '<td style="display:none"><input type="checkbox" id="isSign_'.$seq.'" name="isSign_'.$seq.'" '.$displayCB.' checked/></td>';
 						} else {
-							$str .= '<td>'.$circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
+							$str .= '<td><span><strong>' . ($seq + 1) . ' </strong></span>' . $circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
 							$str .= ' <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></td>';
 							$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
 							if ($circuit['sign']['users'][0]['process_date'] != '')

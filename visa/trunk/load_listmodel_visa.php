@@ -86,6 +86,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 			$content .= '<td>';
 
 			$tab_users = $visa->getUsersVis();
+			$content .= '<span id="rank_' . $seq . '"><strong>' . ($seq + 1) . ' </strong></span>';
 			$content .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
 			$content .= '<option value="" >S&eacute;lectionnez un utilisateur</option>';
 			foreach($tab_users as $user){
@@ -138,6 +139,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 
 		$content .= '<td>';
 		$tab_users = $visa->getUsersVis();
+		$content .= '<span id="rank_' . $seq . '"><strong>' . ($seq + 1) . ' </strong></span>';
 		$content .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
 		$content .= '<option value="" >S&eacute;lectionnez un utilisateur</option>';
 		foreach($tab_users as $user){
