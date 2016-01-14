@@ -1397,6 +1397,8 @@ if (!defined("_USE_PREVIOUS_ADDRESS")) define("_USE_PREVIOUS_ADDRESS", "Use prev
 if (!defined("_VIEW_LAST_COURRIERS")) define("_VIEW_LAST_COURRIERS", "My last mails");
 
 if (!defined("_ADMIN_PARAMETERS")) define("_ADMIN_PARAMETERS", "Parameters");
+if (!defined("_ADMIN_PRIORITIES"))
+    define("_ADMIN_PRIORITIES", "Set priorities");
 
 if (!defined("_CONTENT_MANAGEMENT_COMMENT")) define("_CONTENT_MANAGEMENT_COMMENT", "Content management");
 if (!defined("_ADD_LINKS")) define("_ADD_LINKS", "Add links");

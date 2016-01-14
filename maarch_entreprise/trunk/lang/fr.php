@@ -1571,6 +1571,8 @@ if (!defined("_PARAMETER")) define("_PARAMETER", "Paramètre");
 if (!defined("_PARAMETER_S")) define("_PARAMETER_S", "Paramètre(s)");
 if (!defined("_ALL_PARAMETERS")) define("_ALL_PARAMETERS", "Tous");
 if (!defined("_ADMIN_PARAMETERS")) define("_ADMIN_PARAMETERS", "Gérer les paramètres");
+if (!defined("_ADMIN_PRIORITIES"))
+    define("_ADMIN_PRIORITIES", "Priorités");
 if (!defined("_ADD_PARAMETER")) define("_ADD_PARAMETER", "Nouveau paramètre");
 if (!defined("_VALUE")) define("_VALUE", "Valeur");
 if (!defined("_STRING")) define("_STRING", "Chaîne de caractères");
