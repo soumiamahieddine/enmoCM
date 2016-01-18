@@ -37,7 +37,7 @@ if (!isset($_SESSION['user']['UserId']) && $_SESSION['user']['UserId'] == '') {
     }
     exit();
 }
-$_SESSION['HTTP_REFERER'] = '';
+unset($_SESSION['HTTP_REFERER']);
 
 try {
     require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
