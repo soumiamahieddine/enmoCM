@@ -257,11 +257,11 @@ abstract class indexing_searching_app_Abstract extends Database
                 {
                     if ($_ENV['categories'][$cat_id][$key]['table'] == 'res')
                     {
-                        array_push($data_res, array('column' => $key, 'value' => $func->protect_string_db($post[$key], '', 'no'), 'type' => "string"));
+                        array_push($data_res, array('column' => $key, 'value' => $post[$key], 'type' => "string"));
                     }
                     else if ($_ENV['categories'][$cat_id][$key]['table'] == 'coll_ext')
                     {
-                        array_push($data_ext, array('column' => $key, 'value' => $func->protect_string_db($post[$key], '', 'no'), 'type' => "string"));
+                        array_push($data_ext, array('column' => $key, 'value' => $post[$key], 'type' => "string"));
                     }
                 }
             }
