@@ -74,12 +74,13 @@
         </type>
     </attachment_types>
     <priorities>
-        <priority with_delay="2">_VERY_HIGH</priority> <!-- 0 -->
-        <priority with_delay="10">_HIGH</priority> <!-- 1 -->
-        <priority with_delay="false">_NORMAL</priority> <!-- 2 -->
-        <!--<priority with_delay="false">_LOW</priority>  3 -->
-        <!--<priority with_delay="false">_VERY_LOW</priority>  4 -->
-        <default_priority with_delay="false">2</default_priority>
+        <!-- Tag working_days "true" = Jours ouvrés // "false" = Jours calendaires -->
+        <priority with_delay="4" working_days="true">Très urgent</priority> <!-- 0 -->
+        <priority with_delay="8" working_days="true">Urgentissimo</priority> <!-- 1 -->
+        <priority with_delay="false" working_days="true">Normal</priority> <!-- 2 -->
+        <!--<priority with_delay="false" working_days="true">_LOW</priority>  3 -->
+        <!--<priority with_delay="false" working_days="true">_VERY_LOW</priority>  4 -->
+        <default_priority with_delay="false" working_days="true">2</default_priority>
     </priorities>
     <contact_check>
         <check_days_before>5</check_days_before> <!-- 0 if you want to disabled -->
@@ -121,6 +122,6 @@
             <id>title9</id>
             <label>Messieurs</label>
         </title>
-        <default_title></default_title>
+        <default_title/>
     </titles>
 </ROOT>

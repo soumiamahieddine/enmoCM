@@ -1573,6 +1573,21 @@ if (!defined("_ALL_PARAMETERS")) define("_ALL_PARAMETERS", "Tous");
 if (!defined("_ADMIN_PARAMETERS")) define("_ADMIN_PARAMETERS", "Gérer les paramètres");
 if (!defined("_ADMIN_PRIORITIES"))
     define("_ADMIN_PRIORITIES", "Priorités");
+if (!defined("_PRIORITY_TITLE"))
+    define("_PRIORITY_TITLE", "Nom de la priorité");
+if (!defined("_PRIORITY_DAYS"))
+    define("_PRIORITY_DAYS", "Délai de traitement en jours");
+if (!defined("_PRIORITIES_UPDATED"))
+    define("_PRIORITIES_UPDATED", "Priorités mises à jour");
+if (!defined("_PRIORITIES_ERROR"))
+    define("_PRIORITIES_ERROR", "Une erreur s'est produite, veuillez vérifier les paramètres renseignés");
+if (!defined("_PRIORITIES_ERROR_TAKEN"))
+    define("_PRIORITIES_ERROR_TAKEN", "Suppression annulé, cette priorité est utilisé dans différents courriers");
+if (!defined("_WORKING_DAYS"))
+    define("_WORKING_DAYS", "Jours ouvrés");
+if (!defined("_CALENDAR_DAYS"))
+    define("_CALENDAR_DAYS", "Jours calendaires");
+
 if (!defined("_ADD_PARAMETER")) define("_ADD_PARAMETER", "Nouveau paramètre");
 if (!defined("_VALUE")) define("_VALUE", "Valeur");
 if (!defined("_STRING")) define("_STRING", "Chaîne de caractères");

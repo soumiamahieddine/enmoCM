@@ -1399,6 +1399,21 @@ if (!defined("_VIEW_LAST_COURRIERS")) define("_VIEW_LAST_COURRIERS", "My last ma
 if (!defined("_ADMIN_PARAMETERS")) define("_ADMIN_PARAMETERS", "Parameters");
 if (!defined("_ADMIN_PRIORITIES"))
     define("_ADMIN_PRIORITIES", "Set priorities");
+if (!defined("_PRIORITY_TITLE"))
+    define("_PRIORITY_TITLE", "Priority title");
+if (!defined("_PRIORITY_DAYS"))
+    define("_PRIORITY_DAYS", "Days");
+if (!defined("_PRIORITIES_UPDATED"))
+    define("_PRIORITIES_UPDATED", "Priorities updated");
+if (!defined("_PRIORITIES_ERROR"))
+    define("_PRIORITIES_ERROR", "An error has occured, please check what you filled");
+if (!defined("_PRIORITIES_ERROR_TAKEN"))
+    define("_PRIORITIES_ERROR_TAKEN", "Canceled, this priority is used");
+if (!defined("_WORKING_DAYS"))
+    define("_WORKING_DAYS", "Working days");
+if (!defined("_CALENDAR_DAYS"))
+    define("_CALENDAR_DAYS", "Calendar days");
+
 
 if (!defined("_CONTENT_MANAGEMENT_COMMENT")) define("_CONTENT_MANAGEMENT_COMMENT", "Content management");
 if (!defined("_ADD_LINKS")) define("_ADD_LINKS", "Add links");
