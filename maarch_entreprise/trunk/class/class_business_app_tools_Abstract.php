@@ -448,12 +448,14 @@ abstract class business_app_tools_Abstract extends dbquery
         
         $_SESSION['mail_priorities'] = array();
         $_SESSION['mail_priorities_attribute'] = array();
+        $_SESSION['mail_priorities_wdays'] = array();
         $mailPriorities = $xmlfile->priorities;
         if (count($mailPriorities) > 0) {
             $i = 0;
             foreach ($mailPriorities->priority as $priority ) {
                 $label = (string) $priority;
-                $attribute = (string) $priority->attributes();
+                $attribute = (string) $priority['with_delay'];
+                $workingDays = (string) $priority['working_days'];
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
                 ) {
@@ -461,6 +463,7 @@ abstract class business_app_tools_Abstract extends dbquery
                 }
                 $_SESSION['mail_priorities'][$i] = $label;
                 $_SESSION['mail_priorities_attribute'][$i] = $attribute;
+                $_SESSION['mail_priorities_wdays'][$i] = ($workingDays != 'false' ? 'true' : 'false');
                 $i++;
             }
             $_SESSION['default_mail_priority'] = (string) $mailPriorities->default_priority;

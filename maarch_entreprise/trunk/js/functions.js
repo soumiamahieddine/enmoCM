@@ -62,6 +62,53 @@ function deleteSignature(mailSignaturesJS)
     }
 }
 
+function addNewRowPriority(buttonRow) {
+    var index = buttonRow.rowIndex;
+    var indexDiff = index - $("priorityAddField").rowIndex;
+    if ($("priorityAddField").style.display == "none") {
+        $("priorityAddField").style.display = "";
+        $("minusButton").style.display = "";
+    } else {
+        var newRow = $("prioritiesTable").insertRow(index);
+        newRow.innerHTML = "<td align='left'><input name='label_new" + indexDiff + "' id='label_new" + indexDiff + "' placeholder='Nom priorité' size='18'></td>" +
+                            "<td align='left'><input name='priority_new" + indexDiff + "' id='priority_new" + indexDiff + "' size='6' value='*'></td>" +
+                            "<td align='left'><select name='working_new" + indexDiff + "' id='working_new" + indexDiff + "'><option value='true'>Jours ouvrés</option><option value='false' >Jours calendaires</option></select></td>";
+    }
+
+}
+
+function delNewRowPriority(buttonRow) {
+    var index = buttonRow.rowIndex;
+    var indexDiff = index - $("priorityAddField").rowIndex;
+    if (indexDiff <= 1) {
+        $("priorityAddField").style.display = "none";
+        $("minusButton").style.display = "none";
+    } else {
+        $("prioritiesTable").deleteRow(index - 1);
+    }
+
+}
+
+function deletePriority(rowToDelete) {
+    var rep = confirm("Confirmation de suppression ?");
+    var index = rowToDelete.getAttribute("data-index");
+
+    if (index >= 0 && rep) {
+        var path_manage_script = "index.php?page=priorityManager&admin=priorities";
+        new Ajax.Request(path_manage_script,
+          {
+              method    : "POST",
+              parameters: {
+                  mode        : "delete",
+                  indexToDelete  : index
+              },
+              onSuccess : function(){
+                  window.top.location.reload();
+              }
+          });
+    }
+}
+
 function hideOtherDiv(theDiv)
 {
     var DivTable = ["create_contact_div","history_div", "notes_div", "emails_div", "diff_list_div", "versions_div", "links_div", "list_answers_div", "cases_div", "diff_list_history_div", "visa_div", "avis_div", "print_fold_div"];

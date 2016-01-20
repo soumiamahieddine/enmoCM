@@ -57,6 +57,10 @@ if (!isset($_REQUEST['priority_id']) || $_REQUEST['priority_id'] == '') {
     if ($_SESSION['mail_priorities_attribute'][$priorityId] <> 'false') {
         $priorityDelay = $_SESSION['mail_priorities_attribute'][$priorityId];
     }
+    $wdays = 'workingDay';
+    if (isset($_SESSION['mail_priorities_wdays'][$priorityId]) && $_SESSION['mail_priorities_wdays'][$priorityId] == 'false') {
+        $wdays = 'calendar';
+    }
 }
 
 //Process limit process date compute
@@ -80,7 +84,7 @@ if (isset($delay) && $delay > 0) {
     $alert_engine = new alert_engine();
     if (isset($admissionDate) && !empty($admissionDate)) {
         $convertedDate = $alert_engine->dateFR2Time(str_replace("-", "/", $admissionDate));
-        $date = $alert_engine->WhenOpenDay($convertedDate, $delay);
+        $date = $alert_engine->WhenOpenDay($convertedDate, $delay, false, $wdays);
     } else {
         $date = $alert_engine->date_max_treatment($delay, false);
     }

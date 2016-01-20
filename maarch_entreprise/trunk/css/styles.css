@@ -947,7 +947,20 @@ th.ref {
     width: 310px;
 }
 
+.prioritiesTable td {
+    padding-bottom: 3%;
+}
+
+.prioritiesTable th {
+    padding-bottom: 2%;
+}
+
+.prioritiesTable select {
+    border-radius: 4px;
+}
+
 /* Document details */
+
 
 .detail {
     margin-bottom: 1em;
