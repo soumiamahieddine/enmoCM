@@ -131,7 +131,7 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or lower(title) LIKE lower(:multifield) "
                     ."or lower(doc_custom_t1) LIKE lower(:multifield) ";
                     
-                if (is_numeric($_REQUEST['multifield']))
+                if (ctype_digit($_REQUEST['multifield']))
                 {
                     $where_request .= "or res_id = :multifield2 "
                     ."or lower(process_notes) like lower(:multifield)) ";
@@ -151,7 +151,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $arrayPDO = array_merge($arrayPDO, array(":numCase" => $_REQUEST['numcase']));
                 $case_view=true;
 
-                if (!is_numeric($_REQUEST['numcase'])) {
+                if (!ctype_digit($_REQUEST['numcase'])) {
                     $_SESSION['error_search'] = _CASE_NUMBER_ERROR;
                 }
 
@@ -277,7 +277,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= $view . "res_id = :numGed and ";
                 $arrayPDO = array_merge($arrayPDO, array(":numGed" => $_REQUEST['numged']));
 
-                if (!is_numeric($_REQUEST['numged'])) {
+                if (!ctype_digit($_REQUEST['numged'])) {
                     $_SESSION['error_search'] = _NUMERO_GED;
                 }
             }
