@@ -158,7 +158,14 @@ if (! empty($_SESSION['error'])) {
                         if ($_SESSION['modules_loaded']['attachments']['watermark']['enabled'] == 'true') {
                             $table = 'res_attachments';
                             $watermarkForAttachments = true;
-                            include 'apps/maarch_entreprise/indexing_searching/watermark.php';
+                            try{
+                                include 'apps/maarch_entreprise/indexing_searching/watermark.php';
+                            } catch(Exception $e) {
+                                $logger = Logger::getLogger('loggerTechnique');
+                                $logger->warn(
+                                "[{$_SESSION['user']['UserId']}][View_attachment] Watermark has failed"
+                                );
+                            }
                         }
                     }
                     header("Pragma: public");
