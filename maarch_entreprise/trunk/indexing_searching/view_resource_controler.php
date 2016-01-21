@@ -238,7 +238,14 @@ if ($s_id == '') {
         //WATERMARK
         if (strtoupper($viewResourceArr['ext']) == 'PDF') {
             if ($_SESSION['features']['watermark']['enabled'] == 'true') {
-                include 'apps/maarch_entreprise/indexing_searching/watermark.php';
+                try{
+                    include 'apps/maarch_entreprise/indexing_searching/watermark.php';
+                } catch(Exception $e) {
+                    $logger = Logger::getLogger('loggerTechnique');
+                    $logger->warn(
+                        "[{$_SESSION['user']['UserId']}][View_resource_controler] Watermark has failed"
+                    );
+                }
             }
         }
 
