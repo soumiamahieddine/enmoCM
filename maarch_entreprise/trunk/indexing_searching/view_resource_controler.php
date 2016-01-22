@@ -243,7 +243,7 @@ if ($s_id == '') {
                 } catch(Exception $e) {
                     $logger = Logger::getLogger('loggerTechnique');
                     $logger->warn(
-                        "[{$_SESSION['user']['UserId']}][View_resource_controler] Watermark has failed"
+                        "[{$_SESSION['user']['UserId']}][View_resource_controler] Watermark has failed :("
                     );
                 }
             }
