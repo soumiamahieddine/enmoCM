@@ -72,6 +72,8 @@ if (!defined("_FOLDERID_LONG"))
     define("_FOLDERID_LONG", "Identifiant du dossier");
 if (!defined("_FOLDER_DESTINATION_QUESTION"))
     define("_FOLDER_DESTINATION_QUESTION", "Rendre ce dossier uniquement accessible à votre service ?");
+if (!defined("_FOLDER_DESTINATION_SHORT"))
+    define("_FOLDER_DESTINATION_SHORT", "Dossier de service");
 if (!defined("_FOLDERNAME"))
     define("_FOLDERNAME", "Nom du Dossier");
 if (!defined("_FOLDERDATE"))

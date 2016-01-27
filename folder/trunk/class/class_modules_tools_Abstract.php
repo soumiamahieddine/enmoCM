@@ -526,6 +526,7 @@ abstract class folder_Abstract extends request
 		$folder['is_frozen'] = $this->is_frozen ;
 		$folder['coll_id'] = $this->coll_id ;
 		$folder['last_modified_date'] = $this->last_modified_date ;
+		$folder['destination'] = $this->destination;
 		$folder['index'] = array();
 		$folder['index'] = $this->index;
 
@@ -774,6 +775,10 @@ abstract class folder_Abstract extends request
 		$request = new request();
 		$func = new functions();
 		$foldertype_id =  $values['foldertype_id'];
+		$folderDest = null;
+		if (!empty($values['folder_dest']) && isset($_SESSION['user']['primaryentity']['id'])) {
+			$folderDest = $_SESSION['user']['primaryentity']['id'];
+		}
 		if(!empty($foldertype_id))
 		{
 			$indexes = $foldertype->get_indexes($foldertype_id,'minimal');
@@ -802,6 +807,8 @@ abstract class folder_Abstract extends request
 			$arrayPDO = array($id_to_update);
 			array_push($data, array('column' => 'folder_name', 		  'value' =>functions::protect_string_db($values['folder_name']),		   'type' =>"string"));
 			array_push($data, array('column' => 'last_modified_date', 'value' => $request->current_datetime(), 'type' => "date"));
+			if (isset($_SESSION['user']['primaryentity']['id']))
+				$data[] = ['column' => 'destination', 'value' => $folderDest, 'type' => 'string'];
 			
 			$request->PDOupdate($_SESSION['tablename']['fold_folders'], $data, $where, $arrayPDO, $_SESSION['config']['databasetype']);
 

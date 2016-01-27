@@ -119,6 +119,7 @@
       <parameter name="folder_parent" type="integer" />
       <parameter name="foldertype_id" type="integer" />
       <parameter name="foldertype" type="string" />
+      <parameter name="folder_dest" type="bool" />
       <parameter name="custom_*" type="string" />
       <parameter name="creation_date" type="datefr" />
       <parameter name="modification_date" type="datefr" />

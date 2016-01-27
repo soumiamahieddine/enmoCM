@@ -74,6 +74,8 @@ if (!defined('_FOLDERNAME'))
     define('_FOLDERNAME', 'Folder name');
 if (!defined("_FOLDER_DESTINATION_QUESTION"))
     define("_FOLDER_DESTINATION_QUESTION", "Accessibility to this folder only by your entity ?");
+if (!defined("_FOLDER_DESTINATION_SHORT"))
+    define("_FOLDER_DESTINATION_SHORT", "Entity folder");
 if (!defined('_FOLDERDATE'))
     define('_FOLDERDATE', 'Opening date');
 if (!defined('_FOLDERDATE_START'))

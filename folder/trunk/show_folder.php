@@ -171,6 +171,13 @@ if (isset($_POST['delete_folder'])) {
                         <th ><?php echo _STATUS;?> :</th>
                         <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($folderArray['status']);?>" id="status" name="status" /></td>
                     </tr>
+                    <?php if (isset($_SESSION['user']['primaryentity']['id'])) { ?>
+                    <tr>
+                        <th align="left" class="picto">&nbsp;</th>
+                        <th><?php echo _FOLDER_DESTINATION_SHORT;?> :</th>
+                        <td><input name="folder_dest" id="folder_dest" type="checkbox" style="margin-left: -0.5%" <?php if ($folderArray['destination']) {?> checked <?php }?>/></td>
+                    </tr>
+                    <?php } ?>
                 </table>
                 <?php 
             if (count($folderArray['index']) > 0) {
