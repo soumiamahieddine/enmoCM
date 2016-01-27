@@ -90,7 +90,7 @@ elseif($mode == 'up' || $mode == 'add'){
                     <?php
                         foreach ($action_tri as $module_name => $actions_ids) {
                             if($module_name == ''){
-                                echo '<optgroup label="apps">';
+                                echo '<optgroup label="Apps">';
                                 foreach ($actions_ids as $key => $action_id) {
                                     ?><option value="<?php
                                     functions::xecho($action_id['ID']);?>" <?php
@@ -103,7 +103,7 @@ elseif($mode == 'up' || $mode == 'add'){
                                 }
                                 echo '</optgroup>';
                             }else{
-                                echo '<optgroup label="'.$module_name.'">';
+                                echo '<optgroup label="'.ucfirst($module_name).'">';
                                 foreach ($actions_ids as $key => $action_id) {
                                     ?><option value="<?php
                                     functions::xecho($action_id['ID']);?>" <?php
