@@ -54,6 +54,12 @@ if(isset($_GET['role']) && !empty($_GET['role']))
     $role_id = $_GET['role'];
 else 
     $role_id = false;
+
+// Id ?
+if(isset($_GET['specific_role']))
+    $specific_role = $_GET['specific_role'];
+else  
+    $specific_role = false;
     
 # *****************************************************************************
 # Manage SESSION paramaters
@@ -64,6 +70,7 @@ $objectType = $_SESSION[$origin]['diff_list']['difflist_type'];
 # Load roles
 $difflistType = $difflist->get_difflist_type($objectType);
 $roles = $difflist->get_difflist_type_roles($difflistType);
+$available_roles = $difflist->list_difflist_roles();
 
 if($difflistType->allow_entities == 'Y')
     $allow_entities = true;
@@ -631,6 +638,8 @@ if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
 $link = $_SESSION['config']['businessappurl'] . "index.php?display=true&module=entities&page=manage_listinstance&origin=" . $origin;
 if ($onlyCc) $link .= '&only_cc';
 if ($noDelete) $link .= '&no_delete';
+if ($specific_role) $link .= '&specific_role='.$specific_role;
+
 
 $linkwithwhat =  
     $link 
@@ -677,25 +686,25 @@ $linkwithwhat =
 		#**************************************************************************
 		if (1==2 && isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
 			&& ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
-			&& ! $onlyCc
+			&& ! $onlyCc 
 		) { ?>
 		<h3 class="sstit"><?php echo _PRINCIPAL_RECIPIENT;?></h3>
 		<table cellpadding="0" cellspacing="0" border="0" class="listing spec">
 			<tr >
-				<td>
+				<td style="width:5%;">
 					<i class="fa fa-user fa-2x" title="<?php echo _USER;?>"></i> 
 				</td>
-				<td><?php
+				<td style="width:5%;"><?php
 				if($_SESSION[$origin]['diff_list']['dest']['visible'] == 'Y') { ?>
 					<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i> <?php
 				} ?>
 				</td>
 				<td><?php functions::xecho($_SESSION[$origin]['diff_list']['dest']['lastname'] ). " " . $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
 				<td><?php functions::xecho($_SESSION[$origin]['diff_list']['dest']['entity_label']);?></td>
-				<td class="action_entities"><!-- Remove dest -->
+				<td class="action_entities" style="width:5%;"><!-- Remove dest -->
 					<a href="<?php echo($linkwithwhat);?>&action=remove_dest"><i class="fa fa-remove fa-2x"></i></a>
 				</td>
-				<td class="action_entities"><!-- Move dest to copy -->
+				<td class="action_entities" style="width:15%;"><!-- Move dest to copy -->
 					<a href="<?php echo($linkwithwhat);?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a>
 				</td>
 			</tr>
@@ -708,7 +717,9 @@ $linkwithwhat =
 		foreach($roles as $role_id => $role_label) {
 			if (count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0
 			 || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
-			) { ?>
+			) { 
+                if($specific_role == $role_id || !isset($_REQUEST['specific_role'])){
+                ?>
 				<h3 class="sstit" style="font-size:1.5em; text-align:left; margin-left:230px; margin-bottom: -10px"><?php functions::xecho($role_label);?></h3>
 				<table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
 				#**************************************************************************
@@ -724,10 +735,10 @@ $linkwithwhat =
 					if ($color == ' class="col"') $color = '';
 					else $color = ' class="col"';?>
 					<tr <?php echo $color;?> >
-						<td>
+						<td style="width:5%;">
 							<i class="fa fa-user fa-2x" title="<?php echo _USER.' '.$role_label;?>"></i> 
 						</td>
-						<td><?php
+						<td style="width:5%;"><?php
 						if($user['visible'] == 'Y') { ?>
 							<a href="<?php echo($linkwithwhat);?>&action=make_user_unvisible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
 								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i>
@@ -740,13 +751,13 @@ $linkwithwhat =
 						</td>
 						<td ><?php functions::xecho($user['lastname'] ." ". $user['firstname']);?></td>
 						<td><?php functions::xecho($user['entity_label']);?></td>
-						<td class="action_entities"><?php 
+						<td class="action_entities" style="width:5%;"><?php 
 							/*if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { */
 							if (!$noDelete && (!$onlyCc || ($onlyCc && $role_id == 'copy'))) { ?>
 								<a href="<?php echo($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id);?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($user['user_id']);?>"><i class="fa fa-times fa-lg" title="<?php echo _DEL_USER_LISTDIFF ;?>"></i></a><?php
 							} ?>
 						</td>
-						<td class="action_entities"><!-- Switch copy to dest --><?php
+						<td class="action_entities" style="width:15%;"><!-- Switch copy to dest --><?php
 							//if($role_id == 'dest' && isset($roles['copy']) && ($role_id != 'dest' && $onlyCc)) { 
 							if($role_id == 'dest' && isset($roles['copy']) && !$onlyCc && $_SESSION[$origin]['diff_list']['copy']['users'][0]!='') {?>
 								<a href="<?php functions::xecho($linkwithwhat);?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down"></i><?php echo _TO_CC;?></a><?php
@@ -754,12 +765,12 @@ $linkwithwhat =
 								<a href="<?php echo($linkwithwhat);?>&action=copy_to_dest&role=copy&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i><?php echo _TO_DEST;?></a><?php
 							} else echo '&nbsp;'?>
 						</td>
-						<td class="action_entities"><!-- Move up in list --><?php 
+						<td class="action_entities" style="width:5%;"><!-- Move up in list --><?php 
 							if($i > 0) { ?>
 								<a href="<?php echo($linkwithwhat);?>&action=move_user_up&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i></a><?php
 							} ?>
 						</td>
-						<td class="action_entities"><!-- Move down in list --><?php 
+						<td class="action_entities" style="width:5%;"><!-- Move down in list --><?php 
 							if($i < $l-1) { ?>
 								<a href="<?php echo($linkwithwhat);?>&action=move_user_down&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-down"></i></a><?php
 							} ?>
@@ -778,10 +789,10 @@ $linkwithwhat =
 					if ($color == ' class="col"') $color = '';
 					else $color = ' class="col"';?>
 					<tr <?php echo $color;?> >
-						<td>
+						<td style="width:5%;">
 							<i class="fa fa-sitemap fa-2x" title="<?php echo _ENTITY.' '.$role_label;?>"></i> 
 						</td>
-						<td><?php
+						<td style="width:5%;"><?php
 						if($entity['visible'] == 'Y') { ?>
 							<a href="<?php echo($linkwithwhat);?>&action=make_entity_unvisible&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>">
 								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i>
@@ -794,26 +805,28 @@ $linkwithwhat =
 						</td>
 						<td ><?php functions::xecho($entity['entity_id']);?></td>
 						<td ><?php functions::xecho($entity['entity_label']);?></td>
-						<td class="action_entities"><?php 
+						<td class="action_entities" style="width:5%;"><?php 
 						if (!$noDelete) { ?>
 							<a href="<?php echo($linkwithwhat);?>&action=remove_entity&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($entity['entity_id']);?>">
 								<i class="fa fa-times fa-lg" title="<?php echo _DEL_ENTITY_LISTDIFF ;?>"></i>
 							</a><?php
 						} ?>
 						</td>
-						<td class="action_entities">&nbsp;</td>
-						<td class="action_entities"><!-- Move up in list --><?php
+						<td class="action_entities" style="width:15%;">&nbsp;</td>
+						<td class="action_entities" style="width:5%;"><!-- Move up in list --><?php
 						if($i > 0) { ?>
 							<a href="<?php echo($linkwithwhat);?>&action=move_entity_up&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i></a><?php
 						} ?>
 						</td>
-						<td class="action_entities"><!-- Move down in list --><?php 
+						<td class="action_entities" style="width:5%;"><!-- Move down in list --><?php 
 						if($i < $l-1) { ?>
 							<a href="<?php echo($linkwithwhat);?>&action=move_entity_down&role=<?php functions::xecho($role_id); ?>&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-down"></i></a><?php
 						} ?>
 						</td>
 					</tr> <?php
-				} ?>
+				} 
+                }
+                ?>
 				</table>
 				<br/> <?php
 			}
@@ -824,7 +837,7 @@ $linkwithwhat =
 		<form name="pop_diff" method="post" >
 			<div align="center">
 				<input align="middle" type="button" value="<?php echo _VALIDATE;?>" class="button" name="valid" onclick="change_diff_list('<?php functions::xecho($origin);?>', <?php echo "'" . $displayValue . "'";
-					if ($_REQUEST['origin'] == 'redirect') echo ",'diff_list_div_redirect'";
+					if ($_REQUEST['origin'] == 'redirect') echo ",'diff_list_div_redirect','','avis'";
 				?>);" />
 				<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
 			</div>
@@ -900,38 +913,38 @@ $linkwithwhat =
 						</tr>
 					</thead><?php
 					$color = ' class="col"';
+                    foreach ($available_roles as $id => $label) {
+                        $available_roles_ids[]=$id;
+                    }
+
+                    foreach ($user_roles as $key => $value) {
+                        $usersListDiff[]=$key;
+                    }
 					for ($j=0, $m=count($users);
 						$j<$m ;
 						$j++
 					) {
 						$user_id = $users[$j]['ID'];
 						$possible_roles = array();
-						foreach($roles as $role_id => $role_label) {
-							if(isset($user_roles[$user_id]) 
-									&& (in_array($role_id, $user_roles[$user_id]) 
-										|| in_array('dest', $user_roles[$user_id]) 
-										|| in_array('copy', $user_roles[$user_id])
-										)
-								)
-							{
-								continue;
-							}
-							if($role_id == 'copy' || $role_id == 'dest'
-									|| $usergroups_controler->inGroup($users[$j]['ID'], $role_id))
-								$possible_roles[$role_id] = $role_label;
-						} 
+
+                        if(!in_array($user_id, $usersListDiff)){
+                            foreach($roles as $role_id => $role_label) {
+                                if(in_array($role_id, $available_roles_ids) || $usergroups_controler->inGroup($users[$j]['ID'], $role_id))
+                                    $possible_roles[$role_id] = $role_label;
+                          }
+                        } 
 						
 						if ($color == ' class="col"') $color = '';
 						else $color = ' class="col"';?>
 						<tr <?php echo $color;?> id="user_<?php functions::xecho($j);?>">
-							<td><?php functions::xecho($users[$j]['NOM'] . " " .$users[$j]['PRENOM']);?></td>
-							<td><?php functions::xecho($users[$j]['DEP']);?></td>
-							<td class="action_entities"><?php
+							<td style="width:30%;"><?php functions::xecho($users[$j]['NOM'] . " " .$users[$j]['PRENOM']);?></td>
+							<td style="width:50%;"><?php functions::xecho($users[$j]['DEP']);?></td>
+							<td class="action_entities" style="width:20%;text-align:center;"><?php
 							if(count($possible_roles) > 0) { ?>
 								<input type="hidden" id="user_id_<?php functions::xecho($j);?>" value="<?php functions::xecho($users[$j]['ID']);?>" />
-								<select name="role" id="user_role_<?php functions::xecho($j);?>"><?php
+								<select name="role" id="user_role_<?php functions::xecho($j);?>" style="width:60%;"><?php
 								foreach($possible_roles as $role_id => $role_label) {
-									if($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) { ?>
+									if((($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) && (!isset($_REQUEST['specific_role']))) || ($role_id == $specific_role)) { ?>
 									<option value="<?php functions::xecho($role_id);?>"><?php functions::xecho($role_label);?></option><?php 
 									} 
 								}?>
@@ -951,7 +964,7 @@ $linkwithwhat =
 			#******************************************************************************
 			# LIST OF AVAILABLE ENTITIES
 			#******************************************************************************
-			if (count($entities) > 0) {
+			if (count($entities) > 0 && !isset($_REQUEST['specific_role'])) {
                 if($allow_entities) { ?>
                 <div align="center"> 
                     <h3 class="tit"><?php echo _ENTITIES_LIST;?></h3>
@@ -964,27 +977,30 @@ $linkwithwhat =
                             </tr>
                         </thead><?php
                         $color = ' class="col"';
+
+                        foreach ($entity_roles as $key => $value) {
+                            $entityListDiff[]=$key;
+                        }
                         for ($j=0, $m=count($entities); $j<$m ; $j++) {
                             $entity_id = $entities[$j]['ID'];
                             # Check if at least one role can be added
                             $possible_roles = array();
-                            foreach($roles as $role_id => $role_label) {
-                                if(isset($entity_roles[$entity_id]) && in_array($role_id, $entity_roles[$entity_id]))
-                                    continue;
-                                if($role_id == 'dest')
-                                    continue;
-                                $possible_roles[$role_id] = $role_label;
-                            } 
+                            if(!in_array($entity_id, $entityListDiff)){
+                                foreach($roles as $role_id => $role_label) {
+                                    if($role_id == 'copy')
+                                        $possible_roles[$role_id] = $role_label;
+                                } 
+                            }
                             
                             if ($color == ' class="col"') $color = '';
                             else $color = ' class="col"';?>
                             <tr <?php echo $color;?>>
-                                <td><?php functions::xecho($entities[$j]['ID']);?></td>
-                                <td><?php functions::xecho($entities[$j]['DEP']);?></td>
-                                <td class="action_entities"><?php
+                                <td style="width:30%;"><?php functions::xecho($entities[$j]['ID']);?></td>
+                                <td style="width:50%;"><?php functions::xecho($entities[$j]['DEP']);?></td>
+                                <td class="action_entities" style="width:20%;text-align:center;"><?php
                                 if(count($possible_roles) > 0) { ?>
                                     <input type="hidden" id="entity_id_<?php functions::xecho($j);?>" value="<?php functions::xecho($entities[$j]['ID']);?>" />
-                                    <select name="role" id="entity_role_<?php functions::xecho($j);?>"><?php 
+                                    <select name="role" id="entity_role_<?php functions::xecho($j);?>" style="width:60%;"><?php 
                                     foreach($possible_roles as $role_id => $role_label) { ?>
                                         <option value="<?php functions::xecho($role_id);?>"><?php functions::xecho($role_label);?></option><?php 
                                     } ?>

@@ -140,7 +140,6 @@ abstract class diffusion_list_Abstract extends dbquery
                     . "and l.object_type = ? "
                     . "and l.object_id = ?"
                 . "ORDER BY l.sequence",array($item_mode,$objectType,$objectId));
-
             while ($user = $stmt->fetchObject()) {
                 if(!isset($listmodel[$role_id]))
                     $listmodel[$role_id] = array();
@@ -798,19 +797,48 @@ abstract class diffusion_list_Abstract extends dbquery
         
         $db = new Database();
         $stmt = $db->query($query,array($user_id));
-        
-        $roles['dest'] = _DEST_USER;
-        $roles['copy'] = _TO_CC;
+
+        include_once 'modules' . DIRECTORY_SEPARATOR . 'avis'
+        . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
+        . $_SESSION['config']['lang'] . '.php';
+
+        //load roles difflist
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+            . DIRECTORY_SEPARATOR . 'entities' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'roles.xml'
+        )
+        ) {
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+            . DIRECTORY_SEPARATOR . 'entities' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'roles.xml';
+        } else {
+            $path = 'modules' . DIRECTORY_SEPARATOR . 'entities'
+                  . DIRECTORY_SEPARATOR . 'xml'
+                  . DIRECTORY_SEPARATOR . 'roles.xml';
+        }
+
+
+        $xmlroles = simplexml_load_file($path);
+
+        foreach ($xmlroles->ROLES as $key => $value) {
+            foreach ($value as $key2 => $role) {
+                $id = (string)$role->id;
+                $label = (string)$role->label;
+                if (!empty($label) && defined($label) && constant($label) <> NULL) {
+                $label = constant($label);
+            }
+                $roles[$id] = $label;
+            }
+        }
+
 		
-		/* AJOUT DES ROLES POUR LE CIRCUIT DE VISA */
-		$roles['visa'] = _VISA_USER;
-        $roles['sign'] = _TO_SIGN;
-        /*******************************************/
-		
-        while($usergroup = $stmt->fetchObject()) {
+       /* while($usergroup = $stmt->fetchObject()) {
             $group_id = $usergroup->group_id;
             $roles[$group_id] = $usergroup->group_desc;
-        }
+        }*/
         
         return $roles;
     }
@@ -857,36 +885,30 @@ abstract class diffusion_list_Abstract extends dbquery
         
         $role_ids = explode(' ', $difflist_type->difflist_type_roles);
 
+
         for($i=0, $l=count($role_ids);
             $i<$l;
             $i++
         ) {
             $role_id = $role_ids[$i];
-            switch($role_id) {
-            case 'dest' :
-                $role_label = _DEST_USER;
-                break;
-            case 'copy' :
-                $role_label = _TO_CC;
-                break;
-			case 'sign' :
-                $role_label = _TO_SIGN;
-                break;
-            case 'visa' :
-                $role_label = _VISA_USER;
-                break;
-                
-            default:
-                $stmt = $db->query(
-                    "SELECT group_desc FROM " . USERGROUPS_TABLE
-                    . " WHERE group_id = ?",array($role_id)
-                );
-                $group = $stmt->fetchObject();
-                $role_label = $group->group_desc;
-            }
+            $role_label = diffusion_list::get_difflist_type_roles_label($role_id);
             $roles[$role_id] = $role_label;
         }
         return $roles;
+        
+    }
+
+    public function get_difflist_type_roles_label(
+        $role_id
+    ) {
+        $roles = diffusion_list::list_difflist_roles();
+
+        foreach ($roles as $id => $label) {
+            if($role_id == $id)
+                $role_label = $label;
+        }
+
+        return $role_label;
         
     }
     

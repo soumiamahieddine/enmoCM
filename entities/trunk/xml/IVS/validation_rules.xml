@@ -204,6 +204,7 @@
 		<parameter name="no_filter" type="string" />
 		<parameter name="rank" type="integer" />
 		<parameter name="auto_filter" type="string" />
+		<parameter name="specific_role" type="string" />
     </validationRule>
 
     <validationRule name="loadDiffList" extends="standardForm" mode="error">
@@ -223,6 +224,7 @@
 		<parameter name="mandatory" type="string" />
 		<parameter name="objectId" type="identifier" />
 		<parameter name="collId" type="collection_list" />
+		<parameter name="specific_role" type="string" />
     </validationRule>
 
     <validationRule name="load_listmodel" extends="standardForm" mode="error">

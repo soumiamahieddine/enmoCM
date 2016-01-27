@@ -53,6 +53,9 @@ if (empty($_REQUEST['collId']) && $_REQUEST['load_from_model'] == 'true') {
     echo "{status : 2, error_txt : '" . addslashes($_SESSION['error']) . "'}";
     exit();
 }
+
+$specific_role = $_REQUEST['specific_role'];
+
 $onlyCC = false;
 
 
@@ -89,6 +92,12 @@ if ($objectId <> '') {
     }
 }
 
+if($specific_role <> null && empty($_SESSION[$origin]['diff_list'])){
+    $diff_list = new diffusion_list();
+    $res_id = $_SESSION['doc_id'];
+    $_SESSION[$origin]['diff_list'] = $diff_list->get_listinstance($res_id);
+
+}
 
 $content = '';
 if (! $onlyCC) {
@@ -123,13 +132,17 @@ if($origin != 'process'){
     $content_standard = '<center><b>' . _DIFF_LIST . '</b> | ';
     $content_standard .= '<span class="button" >';
     $content_standard .= '<i class="fa fa-edit fa-2x" title="'.$labelButton.'"></i>'
-             . '<a href="javascript://" onclick="window.open(\''
-             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-             . '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
+             . '<a href="javascript://" onclick="window.open(\'';
+    $content_standard .= $_SESSION['config']['businessappurl'] . 'index.php?display=true';
+    if($specific_role <> null){
+        $content_standard .= '&specific_role='.$specific_role;
+    }
+    $content_standard .= '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
              . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
              . 'resizable=yes,width=1280,height=800,location=no\');"><small>'
              . $labelButton . '</small></a>';
     $content_standard .= '</span></center>';
+    
 }else{
     $content_standard .= '<h2 style="margin:0;">' . _DIFF_LIST . ' : </h2>';
     $content_standard .= '<br/>';
