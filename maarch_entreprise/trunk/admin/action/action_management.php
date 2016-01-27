@@ -84,7 +84,6 @@ elseif($mode == 'up' || $mode == 'add'){
                     $array_actions['LABEL']=$value['LABEL'];
                     $action_tri[$value['MODULE']][]=$array_actions;
                 }
-                array_multisort($label, SORT_ASC, $label, SORT_ASC, $action_tri);
                 ?>
                 <select name="action_page" id="action_page">
                     <option value="_"><?php echo _NO_PAGE;?></option>
