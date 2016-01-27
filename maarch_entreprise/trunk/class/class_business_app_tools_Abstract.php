@@ -373,8 +373,94 @@ abstract class business_app_tools_Abstract extends dbquery
                     'COLLECTIONS' => $collections,
                 );
                 $i++;
+            }
+        }
+
+        //LOAD actions in other modules
+        foreach ($_SESSION['modules'] as $key => $value) {
+          
+            if (file_exists(
+                $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+                . $_SESSION['custom_override_id'] . 'modules' . DIRECTORY_SEPARATOR . $value['moduleid']
+                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+                . 'actions_pages.xml'
+                ||
+                $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . $value['moduleid']
+                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+                . 'actions_pages.xml'
+            )
+            ) {
+                $path = $_SESSION['config']['corepath'] . 'custom'
+                      . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                      . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $value['moduleid'] . DIRECTORY_SEPARATOR
+                      . 'xml' . DIRECTORY_SEPARATOR . 'actions_pages.xml';
+
+                $langPath = $_SESSION['config']['corepath'] . 'custom'
+                      . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                      . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $value['moduleid'] . DIRECTORY_SEPARATOR
+                      . 'lang' . DIRECTORY_SEPARATOR. $_SESSION['config']['lang'] . '.php';
+
+            } else {
+                $path = 'modules' . DIRECTORY_SEPARATOR . $value['moduleid'] . DIRECTORY_SEPARATOR . 'xml'
+                      . DIRECTORY_SEPARATOR . 'actions_pages.xml';
+
+                $langPath = 'modules' . DIRECTORY_SEPARATOR . $value['moduleid'] . DIRECTORY_SEPARATOR
+                      . 'lang' . DIRECTORY_SEPARATOR. $_SESSION['config']['lang'] . '.php';
+            }
+
+            if (file_exists(
+                $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+                . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $value['moduleid']
+                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+                . 'actions_pages.xml'
+            ) || file_exists(
+                $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . $value['moduleid']
+                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+                . 'actions_pages.xml'
+            )
+
+            ) {
+            $xmlfile = simplexml_load_file($path);
+
+            foreach ($xmlfile->ACTIONPAGE as $actionPage) {
+                $label = (string) $actionPage->LABEL;
+                if (!empty($label) && defined($label)
+                    && constant($label) <> NULL
+                ) {
+                    $label = constant($label);
+                }
+                $keyword = '';
+                if (isset($actionPage->KEYWORD)
+                    && ! empty($actionPage->KEYWORD)
+                ) {
+                    $keyword = (string) $actionPage->KEYWORD;
+                }
+                $createFlag = 'N';
+                if (isset($actionPage->FLAG_CREATE)
+                    && (string) $actionPage->FLAG_CREATE == 'true'
+                ) {
+                    $createFlag = 'Y';
+                }
+                $collections = array();
+                $collectionsTag = $actionPage->COLLECTIONS;
+                foreach ($collectionsTag->COLL_ID as $collection) {
+                    array_push($collections, (string) $collection);
+                }
+                $_SESSION['actions_pages'][$i] = array(
+                    'ID' => (string) $actionPage->ID,
+                    'LABEL' => $label,
+                    'NAME' => (string) $actionPage->NAME,
+                    'ORIGIN' => (string) $actionPage->ORIGIN,
+                    'MODULE' => (string) $actionPage->MODULE,
+                    'KEYWORD' => $keyword,
+                    'FLAG_CREATE' => $createFlag,
+                    'COLLECTIONS' => $collections,
+                );
+                $i++;
 
             }
+        }
+
         }
     }
 
