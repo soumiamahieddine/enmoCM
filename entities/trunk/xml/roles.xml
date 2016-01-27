@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<ROLES>
+		<ROLE>
+			<id>dest</id>
+			<label>_DEST_USER</label>
+		</ROLE>
+		<ROLE>
+			<id>copy</id>
+			<label>_TO_CC</label>
+		</ROLE>
+		<ROLE>
+			<id>visa</id>
+			<label>_VISA_USER</label>
+		</ROLE>	
+		<ROLE>
+			<id>sign</id>
+			<label>_TO_SIGN</label>
+		</ROLE>
+		<ROLE>
+			<id>avis</id>
+			<label>_AVIS_USER</label>
+		</ROLE>
+	</ROLES>
+</root>
