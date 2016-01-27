@@ -798,9 +798,6 @@ abstract class diffusion_list_Abstract extends dbquery
         $db = new Database();
         $stmt = $db->query($query,array($user_id));
 
-        include_once 'modules' . DIRECTORY_SEPARATOR . 'avis'
-        . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
-        . $_SESSION['config']['lang'] . '.php';
 
         //load roles difflist
         if (file_exists(
