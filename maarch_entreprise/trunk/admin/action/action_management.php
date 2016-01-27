@@ -78,10 +78,49 @@ elseif($mode == 'up' || $mode == 'add'){
             </p>
             <p>
                 <label for="action_page"><?php echo _ACTION_PAGE;?> : </label>
+                <?php 
+                foreach ($_SESSION['actions_pages'] as $key => $value) {
+                    $array_actions['ID']=$value['ID'];
+                    $array_actions['LABEL']=$value['LABEL'];
+                    $action_tri[$value['MODULE']][]=$array_actions;
+                }
+                array_multisort($label, SORT_ASC, $label, SORT_ASC, $action_tri);
+                ?>
                 <select name="action_page" id="action_page">
                     <option value="_"><?php echo _NO_PAGE;?></option>
                     <?php
-                    for($i = 0; $i < count($_SESSION['actions_pages']); $i++){
+                        foreach ($action_tri as $module_name => $actions_ids) {
+                            if($module_name == ''){
+                                echo '<optgroup label="apps">';
+                                foreach ($actions_ids as $key => $action_id) {
+                                    ?><option value="<?php
+                                    functions::xecho($action_id['ID']);?>" <?php
+                                    if($action_id['ID'] == $_SESSION['m_admin']['action']['ACTION_PAGE']){
+                                        echo 'selected="selected"';
+                                    } ?> ><?php
+
+                                    functions::xecho($action_id['LABEL']);
+                                    ?></option><?php
+                                }
+                                echo '</optgroup>';
+                            }else{
+                                echo '<optgroup label="'.$module_name.'">';
+                                foreach ($actions_ids as $key => $action_id) {
+                                    ?><option value="<?php
+                                    functions::xecho($action_id['ID']);?>" <?php
+                                    if($action_id['ID']
+                                        == $_SESSION['m_admin']['action']['ACTION_PAGE']){
+                                        echo 'selected="selected"';
+                                    }?> ><?php
+                                    functions::xecho($action_id['LABEL']);
+                                    ?></option><?php
+                                }
+                                echo '</optgroup>';
+                            }
+                        }
+                    ?>
+                    <?php
+                    /*for($i = 0; $i < count($_SESSION['actions_pages']); $i++){
                         ?><option value="<?php
                         functions::xecho($_SESSION['actions_pages'][$i]['ID']);?>" <?php
                         if($_SESSION['actions_pages'][$i]['ID']
@@ -90,7 +129,7 @@ elseif($mode == 'up' || $mode == 'add'){
                         }?> ><?php
                         functions::xecho($_SESSION['actions_pages'][$i]['LABEL']);
                         ?></option><?php
-                    }?>
+                    }*/?>
                 </select>
             </p>
             <p>
