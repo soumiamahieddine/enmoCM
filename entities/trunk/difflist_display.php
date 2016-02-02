@@ -9,7 +9,8 @@
 */
     echo '<div style="max-height:490px;overflow:auto;">';
 foreach($roles as $role_id => $role_label) {
-    if($specific_role != $role_id && isset($specific_role)) continue;
+    if($specific_role != $role_id && isset($specific_role) && $specific_role <> '') 
+        continue;
     if(count($difflist[$role_id]['users']) > 0
         || count($difflist[$role_id]['entities']) > 0
     ) { ?>

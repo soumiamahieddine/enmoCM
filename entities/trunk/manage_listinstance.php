@@ -77,10 +77,11 @@ if($difflistType->allow_entities == 'Y')
 else 
     $allow_entities = false;
 
+// Entity_id by default
 if($difflistType == ''){
 	$roles = array();
-	$roles['dest'] = 'Destinataire';
-	$roles['copy'] = 'En copie';
+	$difflistType = $difflist->get_difflist_type('entity_id');
+	$roles = $difflist->get_difflist_type_roles($difflistType);
 	$allow_entities = true;
 }
 // Dest user    
@@ -901,6 +902,7 @@ $linkwithwhat =
 		# LIST OF AVAILABLE USERS
 		#******************************************************************************
         if (count($users) > 0) {
+        	$usersListDiff = array();
             ?>
 			<div align="center">
 				<h3 class="tit"><?php echo _USERS_LIST;?></h3>
@@ -965,7 +967,9 @@ $linkwithwhat =
 			# LIST OF AVAILABLE ENTITIES
 			#******************************************************************************
 			if (count($entities) > 0 && !isset($_REQUEST['specific_role'])) {
-                if($allow_entities) { ?>
+                if($allow_entities) { 
+					$entityListDiff = array();
+                ?>
                 <div align="center"> 
                     <h3 class="tit"><?php echo _ENTITIES_LIST;?></h3>
                     <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
