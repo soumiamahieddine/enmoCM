@@ -713,7 +713,7 @@ abstract class SendmailAbstract extends Database
 
                     $user = functions::show_string($line->firstname . " " . $line->lastname);
                     $notes = functions::show_string($line->note_text);
-                    $date = $stmt->dateformat($line->date_note);
+                    $date = functions::dateformat($line->date_note);
 
                     $content .= "<tr height='130px'>";
                     $content .= "<td width='15%'>";
