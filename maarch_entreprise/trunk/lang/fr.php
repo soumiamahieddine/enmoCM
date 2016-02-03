@@ -918,6 +918,8 @@ if (!defined("_DOC_SENDED_BY_CONTACT")) define("_DOC_SENDED_BY_CONTACT", "<b>Doc
 if (!defined("_CONTACT_INFO")) define("_CONTACT_INFO", "Fiche contact");
 if (!defined("_SHIPPER")) define("_SHIPPER", "Expéditeur");
 if (!defined("_DEST")) define("_DEST", "Destinataire");
+if (!defined("_THIRD_DEST"))
+    define("_THIRD_DEST", "Tiers Bénéficiaire");
 if (!defined("_INTERNAL2")) define("_INTERNAL2", "Interne");
 if (!defined("_EXTERNAL")) define("_EXTERNAL", "Externe");
 if (!defined("_CHOOSE_SHIPPER")) define("_CHOOSE_SHIPPER", "Choisir un expéditeur");

@@ -464,6 +464,7 @@ abstract class business_app_tools_Abstract extends dbquery
         }
     }
 
+    // Méthode défini dans la classe simple pour cause de problèmes de surcharges custom
     protected function _loadEntrepriseVar()
     {
         $core = new core_tools();
