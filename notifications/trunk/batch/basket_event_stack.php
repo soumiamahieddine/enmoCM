@@ -47,34 +47,30 @@ while ($state <> 'END') {
     case 'LOAD_EVENTS' :
         $db = new Database();
         $secCtrl = new SecurityControler();
+        $entities = new entities();
 
         $stmt = $db->query("select * from baskets WHERE flag_notif = 'Y'"
         );
+
         while ($line = $stmt->fetchObject()) {
             $stmt2 = $db->query("select group_id from groupbasket WHERE basket_id = '".$line->basket_id."'");
-
+            //echo $line->basket_id."\n";
             while ($line2 = $stmt2->fetchObject()) {
+                //echo "_".$line2->group_id."\n";
                 $stmt3 = $db->query("select usergroup_content.user_id from usergroup_content,users WHERE group_id = '".$line2->group_id."' and users.status='OK' and usergroup_content.user_id=users.user_id");
+                $baskets_notif = array();
 
                 while ($line3 = $stmt3->fetchObject()) {
+                    //echo "__".$line3->user_id."\n";
                     $whereClause = $secCtrl->process_security_where_clause(
                             $line->basket_clause, $line3->user_id
                         );
+                    $whereClause = $entities->process_where_clause(
+                            $whereClause, $line3->user_id
+                        );                    
                     $stmt4 = $db->query("select * from res_view_letterbox ".$whereClause);
+
                     while ($line4 = $stmt4->fetchObject()) {
-                        /*$stmt6 = $db->query("SELECT user_id FROM notif_event_stack WHERE record_id = '".$line4->res_id."' and  event_info like '%".$line->basket_id."%' and  exec_date is not null order by event_stack_sid DESC limit 1");
-                        $line6 = $stmt6->fetchObject();
-                        if ($line6->user_id <> $line3->user_id || empty($line6->user_id)) {
-                            $stmt6 = $db->query("SELECT user_id FROM notif_event_stack WHERE record_id = '".$line4->res_id."' and user_id = '".$line3->user_id."' and  event_info like '%".$line->basket_id."%' and  exec_date is null order by event_stack_sid DESC limit 1");
-                            if($line6 = $stmt6->fetchObject()){
-
-                            }else{
-                                $info = "Notification -".$line->basket_id."- pour ".$line3->user_id;
-                                $stmt5 = $db->query("INSERT INTO notif_event_stack(table_name,notification_sid,record_id,user_id,event_info,event_date) VALUES('res_letterbox','7','".$line4->res_id."','".$line3->user_id."','".$info."',CURRENT_DATE)");              
-                                echo $line4->res_id;
-                            }
-
-                        }*/
                         $stmt6 = $db->query("SELECT user_id FROM notif_event_stack WHERE record_id = '".$line4->res_id."' and  event_info like '%".$line->basket_id."%' and user_id = '".$line3->user_id."'");
                         $line6 = $stmt6->fetchObject();
                         if ($line6) {
@@ -84,10 +80,9 @@ while ($state <> 'END') {
                             $stmt5 = $db->query("INSERT INTO notif_event_stack(table_name,notification_sid,record_id,user_id,event_info,event_date) VALUES('res_letterbox','500','".$line4->res_id."','".$line3->user_id."','".$info."',CURRENT_DATE)");                       
                             preg_match_all( '#\[(\w+)]#', $info, $result );
                             $basket_id = $result[1];
-                            $stmt6 = $db->query("SELECT basket_name FROM baskets WHERE basket_id = '".$basket_id[0]."'");
-                            $line6 = $stmt6->fetchObject();
-                            $subject = $line6->baskrootet_name;
-                            print_r($subject);
+                            if(!in_array($basket_id[0], $baskets_notif)){
+                                $baskets_notif[] = $basket_id[0];
+                            }
                         }
                     }
                 }
@@ -139,7 +134,12 @@ while ($state <> 'END') {
                         $tmpNotifs[$user_id]['attach'] = $diffusion_type_controler->getAttachFor($notification, $user_id);
                         $logger->write('Checking if attachment required for ' . $user_id . ': ' . $tmpNotifs[$user_id]['attach'], 'INFO');
                     }
-                    $tmpNotifs[$user_id]['events'][] = $event;
+                    preg_match_all( '#\[(\w+)]#', $event->event_info, $result );
+                    $basket_id = $result[1];
+                    //print_r($basket_id);
+                    $tmpNotifs[$user_id]['baskets'][$basket_id[0]]['events'][] = $event;
+
+                    //print_r($tmpNotifs[$user_id]);
           
                               
         }
@@ -151,13 +151,18 @@ while ($state <> 'END') {
     /* Merge template and fill notif_email_stack                          */
     /**********************************************************************/
         foreach($tmpNotifs as $user_id => $tmpNotif) {
+            foreach ($tmpNotif['baskets'] as $key => $basket_list) {
+                $stmt6 = $db->query("SELECT basket_name FROM baskets WHERE basket_id = '".$key."'");
+                $line6 = $stmt6->fetchObject();
+                $subject = $line6->basket_name;
+            
             // Merge template with data and style
             $logger->write('Merging template #' . $notification->template_id 
                 . ' ('.count($tmpNotif['events']).' events) for user ' . $user_id, 'INFO');
             
             $params = array(
                 'recipient' => $tmpNotif['recipient'],
-                'events' => $tmpNotif['events'],
+                'events' => $basket_list['events'],
                 'notification' => $notification,
                 'maarchUrl' => $maarchUrl,
                 'maarchApps' => $maarchApps,
@@ -235,8 +240,9 @@ while ($state <> 'END') {
             $db2 = new Database();
             $db2->query($query, $arrayPDO);
             
-            foreach($tmpNotif['events'] as $event) {
+            foreach($basket_list['events'] as $event) {
                 $events_controler->commitEvent($event->event_stack_sid, "SUCCESS");
+            }
             }
         } 
         $state = 'END';
