@@ -56,6 +56,9 @@ if (!defined("_SEE_MAIL"))
     define("_SEE_MAIL", "Voir ce courrier");
 if (!defined("_NO_SENDED"))
     define("_NO_SENDED"," L'email n'a pas  été envoyé");
+if (!defined("_ACTIVATE_NOTIFICATION"))
+    define("_ACTIVATE_NOTIFICATION","Activer les notifications par mail");
+
 
 // notifs.php
 if (!defined("_MUST_SPECIFY_CONFIG_FILE"))
