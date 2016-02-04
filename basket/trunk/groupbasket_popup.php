@@ -173,15 +173,54 @@ $time = $core_tools->get_session_time_expire();
         <p>&nbsp;</p>
         <p>
             <label><?php echo _DEFAULT_ACTION_LIST;?> :</label>
+            <?php 
+            //print_r($_SESSION['m_admin']['basket']['all_actions']);
+                foreach ($_SESSION['m_admin']['basket']['all_actions'] as $key => $value) {
+                    $array_actions['ID']=$value['ID'];
+                    $array_actions['LABEL']=$value['LABEL'];
+                    $action_tri[$value['ORIGIN']][]=$array_actions;
+                }
+            ?>
             <select name="default_action_page" id="default_action_page" onchange="manage_actions(this.options[this.selectedIndex].value, true, '<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=check_action";?>');">
                 <option value=""><?php echo _NO_ACTION_DEFINED;?></option>
                 <?php
-                for($i=0; $i < count($_SESSION['m_admin']['basket']['all_actions']); $i++)
+                /*for($i=0; $i < count($_SESSION['m_admin']['basket']['all_actions']); $i++)
                 {
                 ?>
                     <option value="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$i]['ID']);?>" <?php if ((isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION']) && $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']) || (isset($_SESSION['m_admin']['basket_popup']['default_action_page']) && $_SESSION['m_admin']['basket_popup']['default_action_page'] == $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'])) { echo "selected=\"selected\"";} ?>><?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$i]['LABEL']);?></option>
                 <?php
-                }?>
+                } */?>
+                <?php
+                    foreach ($action_tri as $module_name => $actions_ids) {
+                        if($module_name == ''){
+                            echo '<optgroup label="Apps">';
+                            foreach ($actions_ids as $key => $action_id) {
+                                ?><option value="<?php
+                                functions::xecho($action_id['ID']);?>" <?php
+                                if ((isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION']) && $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'] == $action_id['ID']) || (isset($_SESSION['m_admin']['basket_popup']['default_action_page']) && $_SESSION['m_admin']['basket_popup']['default_action_page'] == $action_id['ID'])){
+                                    echo 'selected="selected"';
+                                } ?> ><?php
+
+                                functions::xecho($action_id['LABEL']);
+                                ?></option><?php
+                            }
+                            echo '</optgroup>';
+                        }else{
+                            echo '<optgroup label="'.ucfirst($module_name).'">';
+                            foreach ($actions_ids as $key => $action_id) {
+                                ?><option value="<?php
+                                functions::xecho($action_id['ID']);?>" <?php
+                                if ((isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION']) && $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'] == $action_id['ID']) || (isset($_SESSION['m_admin']['basket_popup']['default_action_page']) && $_SESSION['m_admin']['basket_popup']['default_action_page'] == $action_id['ID'])){
+
+                                    echo 'selected="selected"';
+                                }?> ><?php
+                                functions::xecho($action_id['LABEL']);
+                                ?></option><?php
+                            }
+                            echo '</optgroup>';
+                        }
+                    }
+                    ?>
             </select>
         </p>
         <p>&nbsp;</p>
@@ -193,37 +232,43 @@ $time = $core_tools->get_session_time_expire();
             {
                 $bask = new admin_basket();
                 ?>
-                <table> <?php
-                for($i=0; $i < count($_SESSION['m_admin']['basket']['all_actions']); $i++)
-                { ?>
-                    <tr>
-                        <td>
-                            <div style='font-size:10px;'><?php functions::xecho($i);?>&nbsp;<input type="checkbox"  name="actions[]" value="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$i]['ID']);?>" class="check group_action" id="checkbox_<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$i]['ID']) ?>"<?php
-                            if (isset($_SESSION['m_admin']['basket']['all_actions'][$i]['ID'])
-                                && $bask->is_action_defined_for_the_group(
-                                    $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'],
-                                    $_SESSION['m_admin']['basket']['ind_group']
-                                ) || (isset($_SESSION['m_admin']['basket_popup'])
-                                    && isset($_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$i]['ID']])
-                                    && count(
-                                        $_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$i]['ID']]
-                                    ) > 0
-                                )
-                            ) {
-                                echo 'checked="checked"';
-                            }
-                            if (isset(
-                                $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION']
-                                ) && $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']
-                            ) {
-                                echo 'disabled="disabled"';
-                            }?> />
-                                <span id="label_<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$i]['ID']);?>"><?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$i]['LABEL']);  $tr++;     ?></span>
-                                <a href="javascript://" onclick="check_this_box('checkbox_<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$i]['ID']) ?>');show_config_action(<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$i]['ID']);?>, true, <?php if(!empty($_SESSION['m_admin']['basket']['all_actions'][$i]['KEYWORD'])){ echo 'true';}else{ echo 'false';}?>);" class="config" id="link_<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$i]['ID']);?>" style="display:inline;"><?php echo _CONFIG;?></a>
-                            </div>
-                        </td>
-                    </tr><?php
-                } ?>
+                <table> 
+                <?php
+                    echo "<ul>";
+                    foreach ($action_tri as $module_name => $actions_ids) {
+                        echo '<li style="margin-top:5px;"><i style="font-weight:bold;font-style: italic;">'.ucfirst($module_name).'</i><ul>';
+                        foreach ($actions_ids as $key => $action_id) {
+                            ?>
+                            <li><input type="checkbox"  name="actions[]" value="<?php functions::xecho($action_id['ID']);?>" class="check group_action" id="checkbox_<?php functions::xecho($action_id['ID']); ?>" onclick="$$('#action_<?php functions::xecho($action_id['ID']); ?>_page_use')[0].click();show_config_action(<?php functions::xecho($action_id['ID']);?>, true, <?php if(!empty($action_id['ID'])){ echo 'true';}else{ echo 'false';}?>);" <?php
+                        if (isset($action_id['ID'])
+                            && $bask->is_action_defined_for_the_group(
+                                $action_id['ID'],
+                                $_SESSION['m_admin']['basket']['ind_group']
+                            ) || (isset($_SESSION['m_admin']['basket_popup'])
+                                && isset($_SESSION['m_admin']['basket_popup']['actions'][$action_id['ID']])
+                                && count(
+                                    $_SESSION['m_admin']['basket_popup']['actions'][$action_id['ID']]
+                                ) > 0
+                            )
+                        ) {
+                            echo 'checked="checked"';
+                        }
+                        if (isset(
+                            $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION']
+                            ) && $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'] == $action_id['ID']
+                        ) {
+                            echo 'disabled="disabled"';
+                        }?> />
+                            <span id="label_<?php functions::xecho($action_id['ID']);?>"><?php functions::xecho($action_id['LABEL']);  $tr++;     ?></span>
+                            <a href="javascript://" class="fa fa-cogs" title="<?php echo _CONFIG_ACTION;?>" onclick="show_config_action(<?php functions::xecho($action_id['ID']);?>, true, <?php if(!empty($action_id['ID'])){ echo 'true';}else{ echo 'false';}?>);" class="config" id="link_<?php functions::xecho($action_id['ID']);?>" style="display:inline;"></a>
+                        </li>
+
+                            <?php
+                        }
+                        echo '</ul></li>';
+                        
+                    }
+                    ?>
                 </table><?php
             } else {?>
                 <div  align="center">&nbsp;&nbsp;&nbsp;<i><?php echo _NO_ACTIONS_DEFINED;?></i></div><?php
@@ -251,7 +296,7 @@ $time = $core_tools->get_session_time_expire();
                             <td width="20%">&nbsp;&nbsp;</td>
                             <td><?php echo _USE_ONE;?></td>
 
-                            <td><input type="checkbox" class="check" name="action_<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_page_use" value="Y" <?php if($bask->get_infos_groupbasket_session($_SESSION['m_admin']['basket']['ind_group'], $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'], 'PAGE_USE' ) == 'Y' || (isset($_SESSION['m_admin']['basket_popup']['actions']) && $_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']]['PAGE_USE'] == 'Y')){ echo 'checked="checked"';}?> /></td>
+                            <td><input type="checkbox" class="check" name="action_<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_page_use" id="action_<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_page_use" value="Y" <?php if($bask->get_infos_groupbasket_session($_SESSION['m_admin']['basket']['ind_group'], $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'], 'PAGE_USE' ) == 'Y' || (isset($_SESSION['m_admin']['basket_popup']['actions']) && $_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']]['PAGE_USE'] == 'Y')){ echo 'checked="checked"';}?> /></td>
                         </tr>
                     </table>
                 </div>

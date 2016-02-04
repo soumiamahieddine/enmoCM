@@ -159,6 +159,7 @@ abstract class admin_basket_Abstract extends Database
                     $_SESSION['m_admin']['basket']['is_visible'] = functions::show_string($line->is_visible);
                     $_SESSION['m_admin']['basket']['is_folder_basket'] = functions::show_string($line->is_folder_basket);
                     $_SESSION['m_admin']['basket']['coll_id'] = functions::show_string($line->coll_id);
+                    $_SESSION['m_admin']['basket']['flag_notif'] = functions::show_string($line->flag_notif);
                     if (! isset($_SESSION['m_admin']['load_groupbasket']) || $_SESSION['m_admin']['load_groupbasket'] == true)
                     {
                         $this->load_groupbasket($id);
@@ -262,8 +263,17 @@ abstract class admin_basket_Abstract extends Database
                                     <label><?php echo _BASKET_VIEW;?> : </label>
                                     <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" ><?php functions::xecho($_SESSION['m_admin']['basket']['clause']);?></textarea>
                                 </p>
-                                <p>
+                                 <?php
+                                    if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') {
+                                            $css='color:rgb(102, 102, 102);cursor:pointer;';
+                                        } else {
+                                           $css='color:#009dc5;cursor:pointer;';
+                                        }
+                                ?>
+                                <p style="display:none;">
                                     <label><?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?> : </label>
+
+
                                     <input type='checkbox' name="is_visible_only_on_search" id="is_visible_only_on_search" value="N" <?php
                                         if ($_SESSION['m_admin']['basket']['is_visible'] === 'N') {
                                             echo 'checked="checked"';
@@ -282,23 +292,72 @@ abstract class admin_basket_Abstract extends Database
                                     {
                                         if ($(is_visible_only_on_search).checked == true) {
                                             $(is_visible).value = 'N';
+                                            $(is_visible_only_on_search_icon).style.color = '#009dc5';
                                         } else {
                                             $(is_visible).value = 'Y';
+                                            $(is_visible_only_on_search_icon).style.color = 'rgb(102, 102, 102)';
                                         }
                                     }
                                 </script>
-                                <br />
+                        
                                 <!--<p>
                                     <label><?php echo _BASKET_VISIBLE;?> : </label>
                                     <input type='checkbox' name="is_visible" id="is_visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') echo 'checked="checked"';?>/>
                                 </p>-->
-                                <?php if ($core_tools->is_module_loaded('folder')) { ?>
-                                    <p>
+                                <?php if ($core_tools->is_module_loaded('folder')) { 
+
+                                    if ($_SESSION['m_admin']['basket']['is_folder_basket'] === 'Y'){
+                                        $css2='color:#009dc5;cursor:pointer;';
+                                    }else{
+                                        $css2='color:rgb(102, 102, 102);cursor:pointer;';
+                                    }
+                                    ?>
+                                    <script language="javascript">
+                                    function isFolderBasket()
+                                    {
+                                        if ($(is_folder_basket).checked == true) {
+                                            $(is_folder_basket_icon).style.color = '#009dc5';
+                                        } else {
+                                            $(is_folder_basket_icon).style.color = 'rgb(102, 102, 102)';
+                                        }
+                                    }
+                                    </script>
+                                    <p style="display:none;">
                                         <label><?php echo _IS_FOLDER_BASKET;?> : </label>
-                                        <input type='checkbox' name="is_folder_basket" id="is_folder_basket" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_folder_basket'] === 'Y') echo 'checked="checked"';?>/>
+                                        <input type='checkbox' name="is_folder_basket" id="is_folder_basket" onclick="isFolderBasket();" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_folder_basket'] === 'Y') echo 'checked="checked"';?>/>
                                     </p>
                                 <?php } ?>
-                                <p></p>
+                                <?php if ($core_tools->is_module_loaded('notifications')) { ?>
+                                        <script language="javascript">
+                                            function flagNotif()
+                                            {
+                                                if ($(flag_notif).checked == true) {
+                                                    $(flag_notif_icon).style.color = '#009dc5';
+                                                } else {
+                                                    $(flag_notif_icon).style.color = 'rgb(102, 102, 102)';
+                                                }
+                                            }
+                                        </script>
+                                        <p style="display:none;">
+                                        <label><?php echo _ACTIVATE_NOTIFICATION;?> : </label>
+                                        <input type='checkbox' name="flag_notif" id="flag_notif" onclick="flagNotif();" value="Y" <?php if ($_SESSION['m_admin']['basket']['flag_notif'] === 'Y') echo 'checked="checked"';?>/>
+                                    </p>
+                              <?php } ?>  
+
+                                <p style="text-align:center;">
+                                    <i class="fa fa-search fa-2x" id="is_visible_only_on_search_icon" title="<?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?>" style="<?php echo $css; ?>" onclick="$$('#is_visible_only_on_search')[0].click();"></i>
+                                     <?php if ($core_tools->is_module_loaded('folder')) { ?>
+                                    <i class="fa fa-folder-o fa-2x" id="is_folder_basket_icon" title="<?php echo _IS_FOLDER_BASKET;?>" style="<?php echo $css2; ?>" onclick="$$('#is_folder_basket')[0].click();"></i>
+                                <?php } ?>
+                                <?php if ($core_tools->is_module_loaded('notifications')) { 
+                                    if ($_SESSION['m_admin']['basket']['flag_notif'] === 'Y'){
+                                        $css2='color:#009dc5;cursor:pointer;';
+                                    }else{
+                                        $css2='color:rgb(102, 102, 102);cursor:pointer;';
+                                    }?>
+                                    <i class="fa fa-bell-o fa-2x" id="flag_notif_icon" title="<?php echo _ACTIVATE_NOTIFICATION;?>" style="<?php echo $css2; ?>" onclick="$$('#flag_notif')[0].click();"></i>
+                                <?php } ?>
+                                </p>
                                 <p class="buttons" style="text-align:center;">
                                     &nbsp;<input type="submit" name="Submit" value="<?php echo _VALIDATE;?>" class="button" />&nbsp;
                                     <input type="button" name="cancel" value="<?php echo _CANCEL;?>" class="button"  onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=basket&amp;module=basket';"/>
@@ -408,6 +467,11 @@ abstract class admin_basket_Abstract extends Database
         } else {
             $_SESSION['m_admin']['basket']['is_folder_basket'] = "N";
         }
+        if ( isset($_REQUEST['flag_notif']) && !empty($_REQUEST['flag_notif'])) {
+            $_SESSION['m_admin']['basket']['flag_notif'] = $_REQUEST['flag_notif'];
+        } else {
+            $_SESSION['m_admin']['basket']['flag_notif'] = "";
+        }
         $_SESSION['m_admin']['basket']['order'] = $_REQUEST['order'];
         $_SESSION['m_admin']['basket']['order_field'] = $_REQUEST['order_field'];
         $_SESSION['m_admin']['basket']['what'] = $_REQUEST['what'];
@@ -480,8 +544,8 @@ abstract class admin_basket_Abstract extends Database
                         exit();
                     }
                    $db->query(
-                        "INSERT INTO ".$_SESSION['tablename']['bask_baskets']." ( coll_id, basket_id, basket_name, basket_desc , basket_clause, is_visible, is_folder_basket ) "
-                        ."VALUES (?,?,?,?,?,?,?)", array($_SESSION['m_admin']['basket']['coll_id'],$_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['name'],$_SESSION['m_admin']['basket']['desc'],$tmp,$_SESSION['m_admin']['basket']['is_visible'],$_SESSION['m_admin']['basket']['is_folder_basket']));
+                        "INSERT INTO ".$_SESSION['tablename']['bask_baskets']." ( coll_id, basket_id, basket_name, basket_desc , basket_clause, is_visible, is_folder_basket, flag_notif ) "
+                        ."VALUES (?,?,?,?,?,?,?)", array($_SESSION['m_admin']['basket']['coll_id'],$_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['name'],$_SESSION['m_admin']['basket']['desc'],$tmp,$_SESSION['m_admin']['basket']['is_visible'],$_SESSION['m_admin']['basket']['is_folder_basket'],$_SESSION['m_admin']['basket']['flag_notif']));
                     $this->load_db();
 
                     // Log in database if required
@@ -530,7 +594,7 @@ abstract class admin_basket_Abstract extends Database
                     exit();
                 }
 
-                $db->query("UPDATE ".$_SESSION['tablename']['bask_baskets']." set basket_name = ? , coll_id = ? , basket_desc = ? ,basket_clause = ?, is_folder_basket = ?, is_visible = ? where basket_id = ?",array($name,$_SESSION['m_admin']['basket']['coll_id'],$desc, $tmp, $_SESSION['m_admin']['basket']['is_folder_basket'], $_SESSION['m_admin']['basket']['is_visible'], $_SESSION['m_admin']['basket']['basketId']));
+                $db->query("UPDATE ".$_SESSION['tablename']['bask_baskets']." set basket_name = ? , coll_id = ? , basket_desc = ? ,basket_clause = ?, is_folder_basket = ?, is_visible = ?, flag_notif = ? where basket_id = ?",array($name,$_SESSION['m_admin']['basket']['coll_id'],$desc, $tmp, $_SESSION['m_admin']['basket']['is_folder_basket'], $_SESSION['m_admin']['basket']['is_visible'], $_SESSION['m_admin']['basket']['flag_notif'], $_SESSION['m_admin']['basket']['basketId']));
                 $this->load_db();
 
                 // Log in database if required

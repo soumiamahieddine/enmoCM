@@ -24,6 +24,7 @@
       <parameter name="is_visible" type="YN" />
       <parameter name="is_visible_only_on_search" type="YN" />
       <parameter name="is_folder_basket" type="YN" />
+      <parameter name="flag_notif" type="YN" />
     </validationRule>
     <validationRule name="bk_basket_del" extends="standardForm" mode="error">
     	<parameter name="id" type="identifier" />
