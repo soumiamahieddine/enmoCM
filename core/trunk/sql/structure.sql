@@ -702,6 +702,7 @@ CREATE TABLE baskets
   is_folder_basket character (1) NOT NULL default 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   basket_order integer,
+  flag_notif character varying(1),
   CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id)
 )
 WITH (OIDS=FALSE);

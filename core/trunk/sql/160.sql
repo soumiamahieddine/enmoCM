@@ -542,6 +542,11 @@ WITH (
 );
 
 
+-- baskets notifications
+ALTER TABLE baskets DROP COLUMN IF EXISTS flag_notif;
+ALTER TABLE baskets ADD flag_notif character varying(1);
+
+
 -- ************************************************************************* --
 --                               RECREATE VIEWS                              --
 -- ************************************************************************* --
