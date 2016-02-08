@@ -115,7 +115,7 @@
       <pattern value="/^[0-9#]+$/" />
     </dataType>
     <dataType name="alnumSpace" base="string">
-      <pattern value="/^[A-z0-9 ]+$/" />
+      <pattern value="/^[A-z0-9 -]+$/" />
     </dataType>
     <dataType name="NumComma" base="string">
       <pattern value="/^[0-9,]+$/" />
