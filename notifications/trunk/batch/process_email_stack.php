@@ -50,12 +50,16 @@ while ($state <> 'END') {
                 );
             $GLOBALS['logger']->write("Sending e-mail to : " . $email->recipient, 'INFO');
             //--> Set the return path
+            $email->html_body = str_replace('#and#', '&', $email->html_body);
+            $email->html_body = str_replace("\''", "'", $email->html_body);
+            $email->html_body = str_replace("\'", "'", $email->html_body);
+            $email->html_body = str_replace("''", "'", $email->html_body);
+
             $GLOBALS['mailer']->setReturnPath($email->sender);
             $GLOBALS['mailer']->setFrom($email->sender);
             $GLOBALS['logger']->write("Subject : " . $email->subject, 'INFO');
             $GLOBALS['mailer']->setSubject($email->subject);
             $GLOBALS['mailer']->setHtml($email->html_body);
-            $GLOBALS['mailer']->setHtml(str_replace('#and#', '&', $email->html_body));
             $GLOBALS['mailer']->setTextCharset((string)$email->charset);
             $GLOBALS['mailer']->setHtmlCharset((string)$email->charset);
             $GLOBALS['mailer']->setHeadCharset((string)$email->charset);
