@@ -1579,7 +1579,8 @@ CREATE TABLE contacts_res
   coll_id character varying(32) NOT NULL,
   res_id bigint NOT NULL,
   contact_id character varying(128) NOT NULL,
-  address_id bigint NOT NULL
+  address_id bigint NOT NULL,
+  mode character varying NOT NULL DEFAULT 'multi'::character varying
  );
 
 -- contacts v2
