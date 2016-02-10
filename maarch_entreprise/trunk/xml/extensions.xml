@@ -101,6 +101,11 @@
         <index_frame_show>false</index_frame_show>
     </FORMAT>
     <FORMAT>
+        <name>PPSX</name>
+        <mime>application/vnd.openxmlformats-officedocument.presentationml.presentation</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
         <name>ODT</name>
         <mime>application/vnd.oasis.opendocument.text</mime>
         <index_frame_show>false</index_frame_show>
