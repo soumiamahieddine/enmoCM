@@ -41,6 +41,16 @@
         <index_frame_show>false</index_frame_show>
     </FORMAT>
     <FORMAT>
+        <name>PPS</name>
+        <mime>application/vnd.ms-powerpoint</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>PPS</name>
+        <mime>application/vnd.ms-office</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
         <name>DOCX</name>
         <mime>application/vnd.openxmlformats-officedocument.wordprocessingml.document</mime>
         <index_frame_show>false</index_frame_show>
@@ -83,6 +93,11 @@
     <FORMAT>
         <name>PPTX</name>
         <mime>application/vnd.ms-powerpoint</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>PPSX</name>
+        <mime>application/vnd.openxmlformats-officedocument.presentationml.slideshow</mime>
         <index_frame_show>false</index_frame_show>
     </FORMAT>
     <FORMAT>
