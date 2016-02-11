@@ -165,6 +165,7 @@ class security extends Database
                     'UserId'      => $user->__get('user_id'),
                     'FirstName'   => $user->__get('firstname'),
                     'LastName'    => $user->__get('lastname'),
+                    'Initials'    => $user->__get('initials'),
                     'Phone'       => $user->__get('phone'),
                     'Mail'        => $user->__get('mail'),
                     'department' => $user->__get('department'),
