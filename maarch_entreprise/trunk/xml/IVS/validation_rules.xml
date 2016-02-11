@@ -17,6 +17,7 @@
       <parameter name="user_id" type="login" />
       <parameter name="LastName" type="personname" />
       <parameter name="FirstName" type="string" />
+      <parameter name="Initials" type="string" />
       <parameter name="Phone" type="phone" />
       <parameter name="Mail" type="email" />
       <parameter name="thumbprint" type="string" />
@@ -34,6 +35,7 @@
       <parameter name="currentPassword" type="string" />
       <parameter name="LastName" type="personname" />
       <parameter name="FirstName" type="string" />
+      <parameter name="Initials" type="string" />
       <parameter name="Phone" type="phone" />
       <parameter name="Mail" type="email" />
       <parameter name="thumbprint" type="string" >

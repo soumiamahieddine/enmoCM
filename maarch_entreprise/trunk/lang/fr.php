@@ -117,6 +117,8 @@ if (!defined("_THE_LASTNAME"))    define("_THE_LASTNAME", "Le nom");
 if (!defined("_THE_FIRSTNAME"))    define("_THE_FIRSTNAME", "Le prénom");
 if (!defined("_THE_ID"))    define("_THE_ID", "L'identifiant");
 if (!defined("_FIRSTNAME"))    define("_FIRSTNAME", "Prénom");
+if (!defined("_INITIALS"))
+    define("_INITIALS", "Initiales");
 if (!defined("_STATUS"))    define("_STATUS", "Statut");
 if (!defined("_DEPARTMENT"))    define("_DEPARTMENT", "Département");
 if (!defined("_FUNCTION"))    define("_FUNCTION", "Fonction");

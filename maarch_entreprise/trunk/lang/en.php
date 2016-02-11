@@ -425,6 +425,8 @@ if (!defined('_FILE_PROPERTIES')) define('_FILE_PROPERTIES', 'file properties');
 if (!defined('_FINGERPRINT_MODE'))  define('_FINGERPRINT_MODE', 'Signature mode');
 if (!defined('_FINGERPRINT'))  define('_FINGERPRINT', 'Fingerprint');
 if (!defined('_FIRSTNAME')) define('_FIRSTNAME', 'First name');
+if (!defined("_INITIALS"))
+    define("_INITIALS", "Initials");
 if (!defined('_FIRSTNAME_UPPERCASE')) define('_FIRSTNAME_UPPERCASE', 'FIRST NAME');
 if (!defined('_FIRST_CONN')) define('_FIRST_CONN', 'First connection connection');
 if (!defined('_FIRST_PSW')) define('_FIRST_PSW', 'The first password ');

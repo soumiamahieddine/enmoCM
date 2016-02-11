@@ -77,6 +77,9 @@ abstract class class_users_Abstract extends Database
         $_SESSION['user']['LastName'] = $this->wash(
             $_POST['LastName'], 'no', _LASTNAME
         );
+        if (!empty($_POST['Initials'])) {
+            $_SESSION['user']['Initials']  = $_POST['Initials'];
+        }
 
         $ssoLogin = false;
         foreach($_SESSION['login_method_memory'] as $METHOD)
@@ -219,9 +222,9 @@ abstract class class_users_Abstract extends Database
                 $arrayPDO = array_merge($arrayPDO, array($sec->getPasswordHash($_SESSION['user']['pass1'])));
             }
 
-            $query .= " firstname = ?, lastname = ?, phone = ?, mail = ? , department = ?, thumbprint = ?, signature_path = ?, signature_file_name = ? WHERE user_id = ?"; 
+            $query .= " firstname = ?, lastname = ?, initials = ?, phone = ?, mail = ? , department = ?, thumbprint = ?, signature_path = ?, signature_file_name = ? WHERE user_id = ?";
 
-            $arrayPDO = array_merge($arrayPDO, array($firstname, $lastname, $_SESSION['user']['Phone'], $_SESSION['user']['Mail'], $department, $_SESSION['user']['thumbprint'],
+            $arrayPDO = array_merge($arrayPDO, array($firstname, $lastname, $_SESSION['user']['Initials'], $_SESSION['user']['Phone'], $_SESSION['user']['Mail'], $department, $_SESSION['user']['thumbprint'],
                 $_SESSION['user']['signature_path'], $_SESSION['user']['signature_file_name'], $_SESSION['user']['UserId']));
             $db->query($query, $arrayPDO);
 
@@ -262,6 +265,7 @@ abstract class class_users_Abstract extends Database
             $_SESSION['user']['UserId'] = $userInfos['UserId'];
             $_SESSION['user']['FirstName'] = $userInfos['FirstName'];
             $_SESSION['user']['LastName'] = $userInfos['LastName'];
+            $_SESSION['user']['Initials'] = $userInfos['Initials'];
             $_SESSION['user']['Phone'] = $userInfos['Phone'];
             $_SESSION['user']['Mail'] = $userInfos['Mail'];
             $_SESSION['user']['department'] = $userInfos['department'];
@@ -369,6 +373,10 @@ abstract class class_users_Abstract extends Database
                         <p>
                             <label for="FirstName"><?php echo _FIRSTNAME;?> : </label>
                             <input name="FirstName"  type="text" id="FirstName" size="45" value="<?php functions::xecho($this->show_string($_SESSION['user']['FirstName']));?>" />
+                        </p>
+                        <p>
+                            <label for="Initials"><?php echo _INITIALS;?> : </label>
+                            <input name="Initials"  type="text" id="Initials" size="45" value="<?php functions::xecho($this->show_string($_SESSION['user']['Initials']));?>" />
                         </p>
                         <?php if(!$core->is_module_loaded("entities") ) {?>
                             <p>
