@@ -1,3 +1,55 @@
+function manageFrame(button) {
+
+	var firstDiv = $("visa_listDoc");
+	var secondDiv = $("visa_left");
+	var thirdDiv = $("visa_right");
+
+	if (button.id == "firstFrame") {
+
+		if (firstDiv.style.display != "none") {
+			console.log(button.class);
+			firstDiv.style.display = "none";
+			button.className = "fa fa-arrow-circle-o-right fa-lg";
+			console.log(button.class);
+			console.log(button);
+		} else {
+			firstDiv.style.display = "";
+			button.className = "fa fa-arrow-circle-o-left fa-lg";
+		}
+	} else if (button.id == "secondFrame") {
+
+		if (secondDiv.style.display != "none") {
+			secondDiv.style.display = "none";
+			button.className = "fa fa-arrow-circle-o-right fa-lg";
+		} else {
+			secondDiv.style.display = "";
+			button.className = "fa fa-arrow-circle-o-left fa-lg";
+		}
+	}
+
+	if (firstDiv.style.display != "none" && secondDiv.style.display != "none") {
+		firstDiv.style.width = "15%";
+		secondDiv.style.width = "41%";
+		thirdDiv.style.width = "41%";
+		$("firstFrame").style.marginLeft = "14.2%";
+		$("secondFrame").style.marginLeft = "41.3%";
+	} else if (firstDiv.style.display != "none" && secondDiv.style.display == "none") {
+		firstDiv.style.width = "15%";
+		thirdDiv.style.width = "82%";
+		$("firstFrame").style.marginLeft = "14.2%";
+		$("secondFrame").style.marginLeft = "0.2%";
+	} else if (firstDiv.style.display == "none" && secondDiv.style.display != "none") {
+		secondDiv.style.width = "48%";
+		thirdDiv.style.width = "48%";
+		$("firstFrame").style.marginLeft = "0%";
+		$("secondFrame").style.marginLeft = "47.3%";
+	} else if (firstDiv.style.display == "none" && secondDiv.style.display == "none") {
+		thirdDiv.style.width = "98%";
+		$("firstFrame").style.marginLeft = "0%";
+		$("secondFrame").style.marginLeft = "0.2%";
+	}
+}
+
 function setTitle(input) {
 	input.title = input.value;
 }

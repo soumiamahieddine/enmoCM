@@ -148,7 +148,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</h2>';
     $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '.
              'onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();" class="fa fa-times-circle fa-2x closeModale" title="'._BACK.'"/>';
-    $frm_str .='</i>';
+    $frm_str .= '</i>';
+	$frm_str .= '<div>';
+	$frm_str .= '<i id="firstFrame" class="fa fa-arrow-circle-o-left fa-lg" style="margin-left: 14.2%;cursor: pointer" onclick="manageFrame(this)"></i>';
+	$frm_str .= '<i id="secondFrame" class="fa fa-arrow-circle-o-left fa-lg" style="margin-left: 41.3%;cursor: pointer" onclick="manageFrame(this)"></i>';
+	$frm_str .= '</div>';
 	$frm_str .= '<div id="visa_listDoc">';
 	$frm_str .= '<div class="listDocsBasket">';
 	$tab_docs = $visa->getDocsBasket();
