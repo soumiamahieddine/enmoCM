@@ -756,17 +756,21 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</td>';
 	}
 	//AVIS CIRCUIT
-	if ($core->test_service('config_avis_workflow', 'visa', false)){
-    $frm_str .= '<td>';
-    
-    $frm_str .= '<span onclick="new Effect.toggle(\'avis_div\', \'appear\', {delay:0.2});'
-        . 'whatIsTheDivStatus(\'avis_div\', \'divStatus_avis_div\');hideOtherDiv(\'avis_div\');return false;" '
-        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= '<span id="divStatus_avis_div" style="color:#1C99C5;"><<</span><b>'
-         . '&nbsp;<small>' . _AVIS_WORKFLOW . '</small>';
-    $frm_str .= '</b></span>';
-    $frm_str .= '</td>';
-	}
+    if ($core_tools->is_module_loaded('avis')) { 
+        require_once('modules'.DIRECTORY_SEPARATOR.'avis'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'avis_controler.php');
+    	if ($core->test_service('config_avis_workflow', 'avis', false)){
+            
+            $frm_str .= '<td>';
+            
+            $frm_str .= '<span onclick="new Effect.toggle(\'avis_div\', \'appear\', {delay:0.2});'
+                . 'whatIsTheDivStatus(\'avis_div\', \'divStatus_avis_div\');hideOtherDiv(\'avis_div\');return false;" '
+                . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+            $frm_str .= '<span id="divStatus_avis_div" style="color:#1C99C5;"><<</span><b>'
+                 . '&nbsp;<small>' . _AVIS_WORKFLOW . '</small>';
+            $frm_str .= '</b></span>';
+            $frm_str .= '</td>';
+    	}
+    }
     //END TOOLBAR
     $frm_str .= '</table>';
     $frm_str .= '</div>';
@@ -1144,28 +1148,31 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<hr />';
     $frm_str .= '</div>';
 	
-	//AVIS CIRCUIT FRAME
-    $modifVisaWorkflow = false;
-    if ($core->test_service('config_avis_workflow', 'visa', false)) {
-        $modifVisaWorkflow = true;
-    }
-    $frm_str .= '<div id="avis_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
-        $frm_str .= '<div class="block" style="margin-top:-2px;">';
-                $frm_str .= '<h2 onclick="new Effect.toggle(\'avis_div\', \'blind\', {delay:0.2});';
-                $frm_str .= 'whatIsTheDivStatus(\'avis_div\', \'divStatus_avis_div\');';
-                    $frm_str .= 'return false;">';
-                    $frm_str .= '<center>' . _AVIS_WORKFLOW . '</center>';
-                $frm_str .= '</h2>';
-                $frm_str .= '<div class="error" id="divError" name="divError"></div>';
-                $frm_str .= '<div style="text-align:center;">';
-                    $visa = new visa();
-					$frm_str .= $visa->getList($res_id, $coll_id, $modifVisaWorkflow,'AVIS_CIRCUIT');
-					
-                $frm_str .= '</div><br>';
+    if ($core_tools->is_module_loaded('avis')) { 
+    	//AVIS CIRCUIT FRAME
+        $modifVisaWorkflow = false;
+        /*if ($core->test_service('config_avis_workflow', 'avis', false)) {
+            $modifAvisWorkflow = true;
+        }*/
+        $modifAvisWorkflow = false;
+        $frm_str .= '<div id="avis_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
+            $frm_str .= '<div class="block" style="margin-top:-2px;">';
+                    $frm_str .= '<h2 onclick="new Effect.toggle(\'avis_div\', \'blind\', {delay:0.2});';
+                    $frm_str .= 'whatIsTheDivStatus(\'avis_div\', \'divStatus_avis_div\');';
+                        $frm_str .= 'return false;">';
+                        $frm_str .= '<center>' . _AVIS_WORKFLOW . '</center>';
+                    $frm_str .= '</h2>';
+                    /*require_once('modules/avis/difflist_avis_workflow_display.php');*/
+                    $frm_str .= '<div class="error" id="divError" name="divError"></div>';
+                    $frm_str .= '<div style="text-align:center;">';
+                        $avis = new avis_controler();
+    					$frm_str .= $avis->getList($res_id, $coll_id, $modifAvisWorkflow,'AVIS_CIRCUIT');
+    					
+                    $frm_str .= '</div><br>';
+            $frm_str .= '</div>';
+            $frm_str .= '<hr />';
         $frm_str .= '</div>';
-        $frm_str .= '<hr />';
-    $frm_str .= '</div>';
-
+    }
     //RESOURCE FRAME
     $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
