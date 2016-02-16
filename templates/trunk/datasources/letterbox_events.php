@@ -93,14 +93,14 @@ foreach($events as $event) {
 	    // $datasources['contact'] = array();
 	    $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($datasources['res_letterbox_contact'][0]['contact_id'], $datasources['res_letterbox_contact'][0]['address_id']));
 	    $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
-		$myContact['contact_title'] = $contacts->get_civility_contact($myContact->contact_title);
+		$myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
 	    $datasources['contact'][] = $myContact;
 
 	// single Contact
 	}else if (isset($res['contact_id']) && isset($res['address_id'])) {
 	    $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($res['contact_id'], $res['address_id']));
 	    $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
-	    $myContact['contact_title'] = $contacts->get_civility_contact($myContact->contact_title);
+	    $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
 	    $datasources['contact'][] = $myContact;
         
 	} else {

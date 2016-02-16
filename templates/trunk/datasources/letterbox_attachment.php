@@ -6,8 +6,8 @@
 $dbDatasource = new Database();
 
 require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'class_contacts_v2.php';
+. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+. 'class_contacts_v2.php';
 $contacts = new contacts_v2();
 
 // Main document resource from view
@@ -35,30 +35,23 @@ $datasources['res_letterbox'][] = $doc;
 
 
 //multicontact
-$stmt = $dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = ? AND contact_id = ? ", array($res_id, $res_contact_id));
+$stmt = $dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = ? AND contact_id = ? ", array($doc['res_id'], $doc['contact_id']));
 $datasources['res_letterbox_contact'][] = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
-    $datasources['contact'] = array();
+        // $datasources['contact'] = array();
     $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($datasources['res_letterbox_contact'][0]['contact_id'], $datasources['res_letterbox_contact'][0]['address_id']));
     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
-    $myContact['contact_type'] = $contacts->get_label_contact($myContact['contact_type'], $_SESSION['tablename']['contact_types']);
-    $myContact['contact_purpose_id'] = $contacts->get_label_contact($myContact['contact_purpose_id'], $_SESSION['tablename']['contact_purposes']);
     $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-	$myContact['title'] = $contacts->get_civility_contact($myContact['title']);
     $datasources['contact'][] = $myContact;
-// single Contact
-}else if (isset($datasources['res_letterbox'][0]['contact_id']) && isset($datasources['res_letterbox'][0]['address_id'])) {
 
-    $datasources['contact'] = array();
-    $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($datasources['res_letterbox'][0]['contact_id'], $datasources['res_letterbox'][0]['address_id']));
+    // single Contact
+}else if (isset($doc['contact_id']) && isset($doc['address_id'])) {
+    $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($doc['contact_id'], $doc['address_id']));
     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
-    $myContact['contact_type'] = $contacts->get_label_contact($myContact['contact_type'], $_SESSION['tablename']['contact_types']);
-    $myContact['contact_purpose_id'] = $contacts->get_label_contact($myContact['contact_purpose_id'], $_SESSION['tablename']['contact_purposes']);
     $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-    $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
     $datasources['contact'][] = $myContact;
+    
 } else {
-    $datasources['contact'] = array();
     $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = 0");
     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
     $datasources['contact'][] = $myContact;
@@ -82,11 +75,11 @@ $objCode = new pi_barcode();
 $objCode->setCode($chronoAttachment);
 $objCode->setType('C128');
 $objCode->setSize(30, 50);
-  
+
 $objCode->setText($chronoAttachment);
-  
+
 $objCode->hideCodeType();
-  
+
 $objCode->setFiletype('PNG');               
 
 $objCode->writeBarcodeFile($img_file_name);
