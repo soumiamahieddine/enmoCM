@@ -217,7 +217,7 @@ if ($mode == 'add') {
 
     $content .= '<td colspan="2">';
     if ($category_id === 'outgoing')
-        $content .= '<input name="object" id="object" class="emailInput" type="text" value="' . substr($subject, 0, 30) . '" />';
+        $content .= '<input name="object" id="object" class="emailInput" type="text" value="' . $subject . '" />';
     else
         $content .= '<input name="object" id="object" class="emailInput" type="text" value="' . _EMAIL_OBJECT_ANSWER . ' ' . functions::format_date_db($admission_date).'" />';
 

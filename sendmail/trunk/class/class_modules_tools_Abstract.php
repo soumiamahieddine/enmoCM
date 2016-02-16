@@ -657,7 +657,7 @@ abstract class SendmailAbstract extends Database
         $filename = preg_replace($search, $replace, utf8_decode($label.".".$extension));
         // $filename = preg_replace("/[^a-z0-9_-s.]/i","_", $label.".".$extension);
 
-        return $filename;
+        return substr($filename, 0, 30);
     }
 
     public function createNotesFile($coll_id, $id, $notesArray) {
