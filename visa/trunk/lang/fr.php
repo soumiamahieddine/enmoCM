@@ -14,6 +14,8 @@ if (!defined("_NO_PDF_FILE"))
 // CIRCUIT DE VISA
 if (!defined("_VISA_WORKFLOW"))
     define("_VISA_WORKFLOW", "Circuit de visa");
+if (!defined("_INTERRUPT_WORKFLOW"))
+    define("_INTERRUPT_WORKFLOW", "Interrompre le circuit de visa");
 if (!defined("_VISA_WORKFLOW_COMMENT"))   
 	define("_VISA_WORKFLOW_COMMENT", "Gestion du circuit de visa");
 if (!defined("_VIEW_VISA_WORKFLOW"))
