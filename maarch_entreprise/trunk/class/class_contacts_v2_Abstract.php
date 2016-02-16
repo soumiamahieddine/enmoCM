@@ -1825,7 +1825,7 @@ abstract class contacts_v2_Abstract extends Database
             foreach ($result as $key => $value) {
                 foreach ($value as $key2 => $value2) {
                     if($value2->id==$title){
-                        $title_value=$value2->label;
+                        $title_value=(string)$value2->label;
                     }
                 }
             }
