@@ -498,7 +498,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response')
 			$displayModif = ' style="display:none;" ';
 		
-		$frm_str .= ' <a href="javascript://" id="update_rep_link" '.$displayModif.'onclick="';
+		$frm_str .= ' <a style="margin-left : 20%" href="javascript://" id="update_rep_link" '.$displayModif.'onclick="';
 		
 		/*if ($tab_path_rep_file[0]['attachment_type'] == 'outgoing_mail'){
 			$frm_str .= 'window.open(\''
