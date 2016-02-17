@@ -38,10 +38,10 @@ $datasources['recipient'][0] = (array)$recipient;
 
 $datasources['res_letterbox'] = array();
 $datasources['contact'] = array();
-$arrayPDO = array();
 
 foreach($events as $event) {
     $res = array();
+    $arrayPDO = array();
     
     $select = "SELECT lb.*";
     $from = " FROM ".$res_view." lb ";
