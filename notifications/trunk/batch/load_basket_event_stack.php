@@ -208,7 +208,7 @@ try {
 
     // Entities
     Bt_myInclude(
-        "modules" . DIRECTORY_SEPARATOR . "entities" 
+        "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR . "class"
         . DIRECTORY_SEPARATOR . "class_modules_tools.php"
     );
     
