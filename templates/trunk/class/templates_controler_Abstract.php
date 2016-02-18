@@ -976,7 +976,37 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
                 $TBS->MergeBlock($name, 'array', $datasource);
             }
         }
-        
+
+        if ($ext = strrchr($pathToTemplate, '.')) {
+            if ($ext === '.odt')
+                $TBS->LoadTemplate('#styles.xml');
+            else if ($ext === '.docx')
+                $TBS->LoadTemplate('#word/header1.xml');
+
+            foreach ($datasources as $name => $datasource) {
+                // Scalar values or arrays ?
+                if(!is_array($datasource)) {
+                    $TBS->MergeField($name, $datasource);
+                } else {
+                    $TBS->MergeBlock($name, 'array', $datasource);
+                }
+            }
+
+            if ($ext === '.docx') {
+                $TBS->LoadTemplate('#word/footer1.xml');
+                foreach ($datasources as $name => $datasource) {
+                    // Scalar values or arrays ?
+                    if(!is_array($datasource)) {
+                        $TBS->MergeField($name, $datasource);
+                    } else {
+                        $TBS->MergeBlock($name, 'array', $datasource);
+                    }
+                }
+            }
+
+        }
+
+
         switch($outputType) {
         case 'content':
             if($templateObj->template_type == 'OFFICE') {
