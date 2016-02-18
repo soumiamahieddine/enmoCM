@@ -205,12 +205,6 @@ try {
         'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_core_tools.php'
     );
-
-    // Entities
-    Bt_myInclude(
-        "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR . "class"
-        . DIRECTORY_SEPARATOR . "class_modules_tools.php"
-    );
     
 	// Notifications
 	Bt_myInclude(
@@ -242,6 +236,12 @@ try {
     Bt_myInclude(
         'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'SecurityControler.php'
+    );
+
+    // Entities
+    Bt_myInclude(
+        "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR . "class"
+        . DIRECTORY_SEPARATOR . "class_modules_tools.php"
     );
    
 } catch (IncludeFileError $e) {
