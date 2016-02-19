@@ -543,9 +543,9 @@ abstract class admin_basket_Abstract extends Database
                         header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket_add&module=basket");
                         exit();
                     }
-                   $db->query(
+                    $db->query(
                         "INSERT INTO ".$_SESSION['tablename']['bask_baskets']." ( coll_id, basket_id, basket_name, basket_desc , basket_clause, is_visible, is_folder_basket, flag_notif ) "
-                        ."VALUES (?,?,?,?,?,?,?)", array($_SESSION['m_admin']['basket']['coll_id'],$_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['name'],$_SESSION['m_admin']['basket']['desc'],$tmp,$_SESSION['m_admin']['basket']['is_visible'],$_SESSION['m_admin']['basket']['is_folder_basket'],$_SESSION['m_admin']['basket']['flag_notif']));
+                        ."VALUES (?,?,?,?,?,?,?,?)", array($_SESSION['m_admin']['basket']['coll_id'],$_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['name'],$_SESSION['m_admin']['basket']['desc'],$tmp,$_SESSION['m_admin']['basket']['is_visible'],$_SESSION['m_admin']['basket']['is_folder_basket'],$_SESSION['m_admin']['basket']['flag_notif']));
                     $this->load_db();
 
                     // Log in database if required
