@@ -245,6 +245,9 @@ ALTER TABLE entities ADD ldap_id character varying(255);
 ALTER TABLE baskets DROP COLUMN IF EXISTS basket_order;
 ALTER TABLE baskets ADD basket_order integer;
 
+ALTER TABLE baskets DROP COLUMN IF EXISTS except_notif;
+ALTER TABLE baskets ADD COLUMN except_notif text default NULL;
+
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS is_multicontacts; 
 ALTER TABLE mlb_coll_ext ADD is_multicontacts character(1);
 
@@ -841,3 +844,8 @@ INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readon
 --Add service associate_folder by default
 INSERT INTO usergroups_services(group_id,service_id)
 SELECT group_id,'associate_folder' from usergroups;
+
+
+-- Add limit date avis column 
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS recommendation_limit_date;
+ALTER TABLE mlb_coll_ext ADD COLUMN recommendation_limit_date timestamp without time zone default NULL;

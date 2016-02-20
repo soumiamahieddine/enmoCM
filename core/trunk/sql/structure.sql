@@ -703,6 +703,7 @@ CREATE TABLE baskets
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   basket_order integer,
   flag_notif character varying(1),
+  except_notif text,
   CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id)
 )
 WITH (OIDS=FALSE);
@@ -2042,6 +2043,7 @@ CREATE TABLE mlb_coll_ext (
   answer_type_bitmask character varying(7)  default NULL,
   other_answer_desc character varying(255)  DEFAULT NULL::character varying,
   process_limit_date timestamp without time zone default NULL,
+  recommendation_limit_date timestamp without time zone default NULL,
   process_notes text,
   closing_date timestamp without time zone default NULL,
   alarm1_date timestamp without time zone default NULL,
@@ -3740,7 +3742,7 @@ CREATE VIEW res_view_letterbox AS
     r.dest_user, r.confidentiality, mlb.category_id, mlb.exp_contact_id, mlb.exp_user_id,
     mlb.dest_user_id, mlb.dest_contact_id, mlb.address_id, mlb.nature_id, mlb.alt_identifier,
     mlb.admission_date, mlb.answer_type_bitmask, mlb.other_answer_desc,
-    mlb.process_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date,
+    mlb.process_limit_date, mlb.recommendation_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date,
     mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, mlb.is_multicontacts, r.video_user, r.video_time,
     r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes,
 	r.locker_user_id, r.locker_time,
