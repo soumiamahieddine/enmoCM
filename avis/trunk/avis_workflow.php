@@ -157,7 +157,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
               'VALUE' => string 'Rediriger' (length=9)
     
     */
-    
+
     if(empty($values_form) || count($arr_id) < 1) 
         return false;
 
@@ -215,15 +215,20 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             . " WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?"
             , array($stepDetails['listinstance_id'], $stepDetails['item_mode'], $res_id, $_SESSION['user']['UserId'], 'AVIS_CIRCUIT'));
     }
+
     if (
         $sequence == $circuit_avis->nbAvis($res_id, $coll_id)-1
     ){
-        $mailStatus = 'NEW';
-    } else {
-        $mailStatus = 'EAVIS';
-    }
+        $stmt = $db->query("SELECT status_id FROM groupbasket_status WHERE group_id = ? and basket_id = ? and action_id = ?"
+        ,array($_SESSION['current_basket']['group_id'],$_SESSION['current_basket']['id'],$id_action));
 
-    $stmt = $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", array($mailStatus, $res_id));
+        if($status = $stmt->fetchObject()){
+            $mailStatus = $status->status_id;
+            $stmt = $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", array($mailStatus, $res_id));
+        }
+    } else {
+        //$mailStatus = 'EAVIS';
+    }
 
     # save note
         if($formValues['note_content_to_users'] != ''){
