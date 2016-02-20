@@ -53,6 +53,11 @@ while ($state <> 'END') {
         );
 
         while ($line = $stmt->fetchObject()) {
+            $exceptUsers[$line->basket_id] = array();
+            if($line->except_notif != '' || $line->except_notif != null){
+                $arrayExceptNotif = explode(',', $line->except_notif);
+                $exceptUsers[$line->basket_id]=$arrayExceptNotif;
+            }
             $stmt2 = $db->query("select group_id from groupbasket WHERE basket_id = '".$line->basket_id."'");
             //echo $line->basket_id."\n";
             while ($line2 = $stmt2->fetchObject()) {
@@ -107,10 +112,12 @@ while ($state <> 'END') {
     /**********************************************************************/
     case 'MERGE_EVENT' :
         foreach($events as $event) {
-            $logger->write("Getting recipients using diffusion type '" .$notification->diffusion_type . "'", 'INFO');
+            preg_match_all( '#\[(\w+)]#', $event->event_info, $result );
+            $basket_id = $result[1];
+            $logger->write("Basket => " .$basket_id[0], 'INFO');
 
             // Diffusion type specific res_id
-            $logger->write("Getting document ids using diffusion type '" .$notification->diffusion_type . "'", 'INFO');
+            //$logger->write("Getting document ids in basket ... '", 'INFO');
             $res_id = false;
             if($event->table_name == $coll_table || $event->table_name == $coll_view) {
                 $res_id = $event->record_id;
@@ -119,9 +126,9 @@ while ($state <> 'END') {
             } 
             $event->res_id = $res_id;
         
-
+                    $logger->write('Document => ' . $res_id, 'INFO');
                     $user_id = $event->user_id;
-                    $logger->write('Recipient ' . $user_id, 'INFO');
+                    $logger->write('Recipient => ' . $user_id, 'INFO');
 
 
                     if(!isset($tmpNotifs[$user_id])) {
@@ -132,7 +139,7 @@ while ($state <> 'END') {
                         $tmpNotifs[$user_id]['recipient'] = $stmt->fetchObject();
                         //$tmpNotifs[$user_id]['recipient'] = $user_id;
                         $tmpNotifs[$user_id]['attach'] = $diffusion_type_controler->getAttachFor($notification, $user_id);
-                        $logger->write('Checking if attachment required for ' . $user_id . ': ' . $tmpNotifs[$user_id]['attach'], 'INFO');
+                        //$logger->write('Checking if attachment required for ' . $user_id . ': ' . $tmpNotifs[$user_id]['attach'], 'INFO');
                     }
                     preg_match_all( '#\[(\w+)]#', $event->event_info, $result );
                     $basket_id = $result[1];
@@ -141,7 +148,6 @@ while ($state <> 'END') {
 
                     //print_r($tmpNotifs[$user_id]);
           
-                              
         }
         $totalNotificationsToProcess = count($tmpNotifs);
         $logger->write($totalNotificationsToProcess .' notifications to process', 'INFO');
@@ -152,13 +158,14 @@ while ($state <> 'END') {
     /**********************************************************************/
         foreach($tmpNotifs as $user_id => $tmpNotif) {
             foreach ($tmpNotif['baskets'] as $key => $basket_list) {
+                $basketId = $key;
                 $stmt6 = $db->query("SELECT basket_name FROM baskets WHERE basket_id = '".$key."'");
                 $line6 = $stmt6->fetchObject();
                 $subject = $line6->basket_name;
             
             // Merge template with data and style
             $logger->write('Merging template #' . $notification->template_id 
-                . ' ('.count($tmpNotif['events']).' events) for user ' . $user_id, 'INFO');
+                . ' to basket '.$subject.' for user ' . $user_id . ' ('.count($basket_list['events']).' documents)', 'INFO');
             
             $params = array(
                 'recipient' => $tmpNotif['recipient'],
@@ -210,38 +217,46 @@ while ($state <> 'END') {
                 }
                 $logger->write(count($attachments) . ' attachment(s) added', 'INFO');
             }
-            
-            $logger->write('Adding e-mail to email stack', 'INFO');
-            if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                $query = "DECLARE
-                              vString notif_email_stack.html_body%type;
-                            BEGIN
-                              vString := '" . $html ."';
-                              INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME . "
-                              (sender, recipient, subject, html_body, charset, attachments, module) 
-                              VALUES (?, ?, ?, vString, ?, '".implode(',', $attachments)."', 'notifications');
-                            END;";
-                $arrayPDO = array($sender, $recipient_mail, $subject, $mailerParams->charset);
-            } else {
+            if(in_array($user_id, $exceptUsers[$basketId])){
+                $logger->write('Notification disabled for '.$user_id, 'WARNING');
+            }else{
 
-                if(count($attachments) > 0) {
-                    $query = "INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME 
-                        . " (sender, recipient, subject, html_body, charset, attachments, module) "
-                        . "VALUES (?, ?, ?, ?, ?, '".implode(',', $attachments)."', 'notifications')";
+                $logger->write('Adding e-mail to email stack', 'INFO');
+                if ($_SESSION['config']['databasetype'] == 'ORACLE') {
+                    $query = "DECLARE
+                                  vString notif_email_stack.html_body%type;
+                                BEGIN
+                                  vString := '" . $html ."';
+                                  INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME . "
+                                  (sender, recipient, subject, html_body, charset, attachments, module) 
+                                  VALUES (?, ?, ?, vString, ?, '".implode(',', $attachments)."', 'notifications');
+                                END;";
+                    $arrayPDO = array($sender, $recipient_mail, $subject, $mailerParams->charset);
                 } else {
-                    $query = "INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME 
-                        . " (sender, recipient, subject, html_body, charset, module) "
-                        . "VALUES (?, ?, ?, ?, ?, 'notifications')";  
+
+                    if(count($attachments) > 0) {
+                        $query = "INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME 
+                            . " (sender, recipient, subject, html_body, charset, attachments, module) "
+                            . "VALUES (?, ?, ?, ?, ?, '".implode(',', $attachments)."', 'notifications')";
+                    } else {
+                        $query = "INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME 
+                            . " (sender, recipient, subject, html_body, charset, module) "
+                            . "VALUES (?, ?, ?, ?, ?, 'notifications')";  
+                    }
+                    $arrayPDO = array($sender, $recipient_mail, $subject, $html, $mailerParams->charset);
+                    
                 }
-                $arrayPDO = array($sender, $recipient_mail, $subject, $html, $mailerParams->charset);
-                
+                //$logger->write('SQL query:' . $query, 'DEBUG');
+                $db2 = new Database();
+                $db2->query($query, $arrayPDO);
             }
-            //$logger->write('SQL query:' . $query, 'DEBUG');
-            $db2 = new Database();
-            $db2->query($query, $arrayPDO);
-            
             foreach($basket_list['events'] as $event) {
-                $events_controler->commitEvent($event->event_stack_sid, "SUCCESS");
+                if(in_array($event->user_id, $exceptUsers[$basketId])){
+                    $events_controler->commitEvent($event->event_stack_sid, "WARNING : Notification disabled for ".$event->user_id);  
+
+                }else{
+                    $events_controler->commitEvent($event->event_stack_sid, "SUCCESS");
+                }
             }
             }
         } 
