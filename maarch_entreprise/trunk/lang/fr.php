@@ -1066,6 +1066,7 @@ if (!defined("_CREATE_CONTACTS")) define("_CREATE_CONTACTS","Tous les contacts")
 //// INDEXING SEARCHING
 if (!defined("_NO_COLLECTION_ACCESS_FOR_THIS_USER")) define("_NO_COLLECTION_ACCESS_FOR_THIS_USER", "Aucun accès aux collections documentaires pour cet utilisateur");
 if (!defined("_CREATION_DATE")) define("_CREATION_DATE", "Date de création");
+if (!defined("_MODIFICATION_DATE")) define("_MODIFICATION_DATE", "Date de modification");
 if (!defined("_NO_RESULTS")) define("_NO_RESULTS", "Aucun résultat");
 if (!defined("_FOUND_DOCS")) define("_FOUND_DOCS", "document(s) trouvé(s)");
 if (!defined("_MY_CONTACTS")) define("_MY_CONTACTS", "Créer des contacts depuis indexation/qualification");
@@ -1516,6 +1517,8 @@ if (!defined("_PJ"))    define("_PJ", "Pièces jointes");
 /******************** Liste avec réponses ************/
 if (!defined("_CONSULT"))    define("_CONSULT", "Consulter");
 if (!defined("_DOCUMENTS_LIST_WITH_ATTACHMENTS"))    define("_DOCUMENTS_LIST_WITH_ATTACHMENTS", "Liste avec filtre et réponses");
+if (!defined("_DOCUMENTS_LIST_BY_MODIFICATION"))
+    define("_DOCUMENTS_LIST_BY_MODIFICATION", "Liste filtrée par date de modification");
 if (!defined("_QUALIFY_FIRST"))    define("_QUALIFY_FIRST", "La fiche détails est vide car le document doit être qualifié");
 
 /******************** persistent mode ************/
@@ -1586,7 +1589,7 @@ if (!defined("_PRIORITIES_UPDATED"))
 if (!defined("_PRIORITIES_ERROR"))
     define("_PRIORITIES_ERROR", "Une erreur s'est produite, veuillez vérifier les paramètres renseignés");
 if (!defined("_PRIORITIES_ERROR_TAKEN"))
-    define("_PRIORITIES_ERROR_TAKEN", "Suppression annulé, cette priorité est utilisé dans différents courriers");
+    define("_PRIORITIES_ERROR_TAKEN", "Suppression annulée, cette priorité est utilisée");
 if (!defined("_WORKING_DAYS"))
     define("_WORKING_DAYS", "Jours ouvrés");
 if (!defined("_CALENDAR_DAYS"))

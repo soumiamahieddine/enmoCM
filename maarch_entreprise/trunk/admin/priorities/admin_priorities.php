@@ -98,7 +98,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
                 </tr>
                 <tr>
                     <td style="padding-bottom: 6%" colspan="3" align="center">
-                        <em>Pour laisser le délai de traitement par défaut, veuillez taper *</em>
+                        <em>Pour utiliser le délai de traitement lié au type de document, veuillez taper *</em>
                     </td>
                 </tr>
                 <tr class="buttons">
