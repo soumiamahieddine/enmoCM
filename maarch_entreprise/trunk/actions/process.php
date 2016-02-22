@@ -252,7 +252,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= 'if (tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\');';
         $frm_str .= 'if (tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_'
             . $id_action . '\');reinit();"'
-             .' class="fa fa-backward fa-2x closeModale" title="'._BACK.'"/>';
+             .' class="fa fa-times-circle fa-2x closeModale" title="'._BACK.'"/>';
     $frm_str .='</i>';
     /********************************* LEFT PART **************************************/
     $frm_str .= '<div id="validleftprocess">';
@@ -580,7 +580,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //HISTORY
     if ($core_tools->test_service('view_doc_history', 'apps', false)) {
         $frm_str .= '<td>';
-        $frm_str .= '<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');hideOtherDiv(\'history_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
@@ -606,7 +606,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $style = '';
             $style2 = '';
         }
-        $frm_str .= '<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');hideOtherDiv(\'notes_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
@@ -636,7 +636,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $style2 = '';
         }
         $frm_str .= '<td>';
-        $frm_str .= '<span onclick="new Effect.toggle(\'emails_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'emails_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'emails_div\', \'divStatus_emails_div\');hideOtherDiv(\'emails_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= ' <span id="divStatus_emails_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>&nbsp;'
@@ -648,7 +648,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //DIFFUSION LIST
     if ($core_tools->is_module_loaded('entities')) {        
         $frm_str .= '<td>';
-        $frm_str .= '<span onclick="new Effect.toggle(\'diff_list_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');hideOtherDiv(\'diff_list_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_diff_list_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
@@ -697,7 +697,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
         $_SESSION['cm']['resMaster'] = '';
         $frm_str .= '<td>';
-        $frm_str .= '<span onclick="new Effect.toggle(\'versions_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'versions_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');hideOtherDiv(\'versions_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_versions_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
@@ -725,7 +725,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $style = '';
         $style2 = '';
     }
-    $frm_str .= '<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
+    $frm_str .= '<span onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');hideOtherDiv(\'links_div\');return false;" '
         . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
     $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
@@ -744,7 +744,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
     $frm_str .= '<td>';
     
-    $frm_str .= '<span onclick="new Effect.toggle(\'visa_div\', \'appear\', {delay:0.2});'
+    $frm_str .= '<span onclick="new Effect.toggle(\'visa_div\', \'blind\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'visa_div\', \'divStatus_visa_div\');hideOtherDiv(\'visa_div\');return false;" '
         . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
     $frm_str .= '<span id="divStatus_visa_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
@@ -765,7 +765,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             
             $frm_str .= '<td>';
             
-            $frm_str .= '<span onclick="new Effect.toggle(\'avis_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="new Effect.toggle(\'avis_div\', \'blind\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'avis_div\', \'divStatus_avis_div\');hideOtherDiv(\'avis_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_avis_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
