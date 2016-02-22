@@ -239,7 +239,6 @@
         <moduleid>visa</moduleid>
         <comment>_VISA_WORKFLOW_COMMENT</comment>
     </MODULES>
-    </MODULES>
     <MODULES>
         <moduleid>avis</moduleid>
         <comment>_AVIS_WORKFLOW_COMMENT</comment>
