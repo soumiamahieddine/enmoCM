@@ -270,7 +270,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '<h3 onclick="new Effect.toggle(\'general_datas_div\', \'blind\', {delay:0.2});'
                     . 'whatIsTheDivStatus(\'general_datas_div\', \'divStatus_general_datas_div\');return false;" '
                     . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-                $frm_str .= ' <span id="divStatus_general_datas_div" style="color:#1C99C5;">>></span>&nbsp;<b>'
+                $frm_str .= ' <span id="divStatus_general_datas_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;<b>'
                         . _GENERAL_INFO . '</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
@@ -421,6 +421,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . " WHERE status <> 'DEL' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ? and (status <> 'TMP' or (typist = ? and status = 'TMP'))", array($res_id, $coll_id, $_SESSION['user']['UserId']));
         if ($stmt->rowCount() > 0) {
             $nb_attach = $stmt->rowCount();
+            $style = '';
+            $style2 = '';
+        }else{
+            $style = 'opacity:0.5;';
+            $style2 = 'display:none;';
         }
     }
 
@@ -428,14 +433,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $answer .= ': ';
     }
 
-    $frm_str .= '<h3 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
-              . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});'
-              . 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');hideOtherDiv(\'list_answers_div\');return false;" '
-              . 'onmouseover="this.style.cursor=\'pointer\';" style="width:90%;">';
-    $frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span>';
-    $frm_str .= '&nbsp;<b>' . _PJ . ' (<span id="nb_attach">'. $nb_attach . '</span>)</b>';
-    $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-    $frm_str .= '</h3>';
     $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
         $frm_str .= '<div class="ref-unit" style="width:95%;">';
             $frm_str .= '<table width="95%">';
@@ -513,36 +510,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         DIRECTORY_SEPARATOR."templates/process/index.php");
     }
 
-    //CASES
-    if ($core_tools->is_module_loaded('cases')) {
-        require_once('modules/cases/class/class_modules_tools.php');
-        $cases = new cases();
-        $case_id = $cases->get_case_id($res_id);
-        if ($case_id <> false) {
-            $case_properties = $cases->get_case_info($case_id);
-        } else {
-            $case_properties = array();
-        }
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'cases_div\', \'divStatus_cases_div\');hideOtherDiv(\'cases_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_cases_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' . _CASE . '</b>';
-        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
-        $frm_str .= '<br>';
-    }
-
     //FOLDERS
     if ($core_tools->is_module_loaded('folder')  && ($core->test_service('associate_folder', 'folder',false) == 1)) {
          // Displays the folder data
-        $folder = get_folder_data($coll_id, $res_id);
-
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'folder_div\', \'divStatus_folder_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_folder_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' . _FOLDER_ATTACH . '</b>';
-            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
         $frm_str .= '<div id="folder_div"  style="display:none">';
             $frm_str .= '<div>';
                 $frm_str .= '<table width="98%" align="center" border="0">';
@@ -559,16 +529,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<br>';
     }
 
-	//PRINT FOLDER
-   if ($core_tools->test_service('print_folder_doc', 'visa', false)){
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'print_fold_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'print_fold_div\', \'divStatus_print_fold_div\');hideOtherDiv(\'print_fold_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_print_fold_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'. _PRINTFOLDER .'</b>';
-        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
-        $frm_str .= '<br>';
-    }
 	
     //ACTIONS
     $frm_str .= '<hr class="hr_process"/>';
@@ -623,7 +583,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');hideOtherDiv(\'history_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>'
+        $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
             . '&nbsp;<small>' . _DOC_HISTORY . '</small>';
         $frm_str .= '</b></span>';
         $frm_str .= '</td>';
@@ -636,15 +596,21 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $notes_tools    = new notes();
         //Count notes
         $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
-        if ($nbr_notes == 0)
-            $nbr_notes = ' (<span id="nb_note">'.$nbr_notes.'</span>)';
-        else
-            $nbr_notes = ' <span id="nb_note" style="color: red;font-weight: bold;">('.$nbr_notes.')</span>';
+        if ($nbr_notes == 0){
+            $class = 'nbResZero';
+            $style2 = 'display:none';
+            $style = 'opacity:0.5;';
+        }
+        else{
+            $class = 'nbRes';
+            $style = '';
+            $style2 = '';
+        }
         $frm_str .= '<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');hideOtherDiv(\'notes_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>'
-            . '&nbsp;<small style="font-size: 10px">' . _NOTES . $nbr_notes . '</small>';
+        $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
+            . '&nbsp;<i class="fa fa-pencil fa-2x" style="'.$style.'" title="'._NOTES.'"></i> <sup><span id="nb_note" style="'.$style2.'" class="'.$class.'">'.$nbr_notes.'</span></sup>';
         $frm_str .= '</b></span>';
         $frm_str .= '</td>';
     }
@@ -660,12 +626,21 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         //Count mails
         $nbr_emails = 0;
         $nbr_emails = $sendmail_tools->countUserEmails($res_id, $coll_id);
+        if($nbr_emails == 0){
+            $class = 'nbResZero';
+            $style2 = 'display:none';
+            $style = 'opacity:0.5;';
+        }else{
+            $class = 'nbRes';
+            $style = '';
+            $style2 = '';
+        }
         $frm_str .= '<td>';
         $frm_str .= '<span onclick="new Effect.toggle(\'emails_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'emails_div\', \'divStatus_emails_div\');hideOtherDiv(\'emails_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_emails_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
-            . '<small>' ._SENDED_EMAILS . ' ('.$nbr_emails.')</small>';
+        $frm_str .= ' <span id="divStatus_emails_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>&nbsp;'
+            . '<i class="fa fa-envelope fa-2x" style="'.$style.'" title="'._SENDED_EMAILS.'"></i> <sup><span id="nb_emails" style="'.$style2.'" class="'.$class.'">'.$nbr_emails.'</span></sup>';
         $frm_str .= '</b></span>&nbsp;';
         $frm_str .= '</td>';
     }
@@ -676,8 +651,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<span onclick="new Effect.toggle(\'diff_list_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');hideOtherDiv(\'diff_list_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="divStatus_diff_list_div" style="color:#1C99C5;"><<</span><b>'
-            . '&nbsp;<small>' . _DIFF_LIST_COPY . '</small>';
+        $frm_str .= '<span id="divStatus_diff_list_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
+            . '&nbsp;<i class="fa fa-gear fa-2x" title="'._DIFF_LIST_COPY.'"></i> <sup><span style="display:none;"></span></sup>';
         $frm_str .= '</b></span>';
         $frm_str .= '</td>';
     }
@@ -711,17 +686,23 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
         if ($nb_versions_for_title == 0) {
             $extend_title_for_versions = '0';
+            $class = 'nbResZero';
+            $style2 = 'display:none';
+            $style = 'opacity:0.5;';
         } else {
             $extend_title_for_versions = $nb_versions_for_title;
+            $class = 'nbRes';
+            $style = '';
+            $style2 = '';
         }
         $_SESSION['cm']['resMaster'] = '';
         $frm_str .= '<td>';
         $frm_str .= '<span onclick="new Effect.toggle(\'versions_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');hideOtherDiv(\'versions_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="divStatus_versions_div" style="color:#1C99C5;"><<</span><b>'
-            . '&nbsp;<small>' . _VERSIONS . ' (<span id="nbVersions">' 
-            . $extend_title_for_versions . '</span>)</small>';
+        $frm_str .= '<span id="divStatus_versions_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
+            . '&nbsp;<i class="fa fa-code-fork fa-2x" style="'.$style.'" title="'._VERSIONS.'"></i> <sup><span id="nbVersions" style="'.$style2.'" class="'.$class.'">' 
+            . $extend_title_for_versions . '</span></sup>';
         $frm_str .= '</b></span>';
         $frm_str .= '</td>';
     }
@@ -735,29 +716,51 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $coll_id,
         'all'
     );
+    if ($nbLink == 0) {
+        $class = 'nbResZero';
+        $style2 = 'display:none';
+        $style = 'opacity:0.5;';
+    }else{
+        $class = 'nbRes';
+        $style = '';
+        $style2 = '';
+    }
     $frm_str .= '<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');hideOtherDiv(\'links_div\');return false;" '
         . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>'
-         . '&nbsp;<small>' . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)</small>';
+    $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
+         . '&nbsp;<i class="fa fa-link fa-2x" style="'.$style.'" title="'._LINK_TAB.'"></i> <sup><span id="nbLinks" style="'.$style2.'" class="'.$class.'">' 
+            . $nbLink . '</span></sup>';
     $frm_str .= '</b></span>';
     $frm_str .= '</td>';
 	
 	//VISA CIRCUIT
 	if ($core->test_service('config_visa_workflow', 'visa', false)){
+        $visa = new visa();
+        if($visa->nbVisa($$res_id,$coll_id) == 0){
+            $style = 'opacity:0.5;';
+        }else{
+            $style = '';
+        }
     $frm_str .= '<td>';
     
     $frm_str .= '<span onclick="new Effect.toggle(\'visa_div\', \'appear\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'visa_div\', \'divStatus_visa_div\');hideOtherDiv(\'visa_div\');return false;" '
         . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= '<span id="divStatus_visa_div" style="color:#1C99C5;"><<</span><b>'
-         . '&nbsp;<small>' . _VISA_WORKFLOW . '</small>';
+    $frm_str .= '<span id="divStatus_visa_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
+         . '&nbsp;<i class="fa fa-certificate fa-2x" style="'.$style.'" title="'._VISA_WORKFLOW.'"></i><sup><span style="display:none;"></span></sup>';
     $frm_str .= '</b></span>';
     $frm_str .= '</td>';
 	}
 	//AVIS CIRCUIT
     if ($core_tools->is_module_loaded('avis')) { 
         require_once('modules'.DIRECTORY_SEPARATOR.'avis'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'avis_controler.php');
+        $avis = new avis_controler();
+        if($avis->nbAvis($res_id,$coll_id) == 0){
+            $style = 'opacity:0.5;';
+        }else{
+            $style = '';
+        }
     	if ($core->test_service('config_avis_workflow', 'avis', false)){
             
             $frm_str .= '<td>';
@@ -765,12 +768,67 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<span onclick="new Effect.toggle(\'avis_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'avis_div\', \'divStatus_avis_div\');hideOtherDiv(\'avis_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= '<span id="divStatus_avis_div" style="color:#1C99C5;"><<</span><b>'
-                 . '&nbsp;<small>' . _AVIS_WORKFLOW . '</small>';
+            $frm_str .= '<span id="divStatus_avis_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
+                 . '&nbsp;<i class="fa fa-check-square fa-2x" style="'.$style.'" title="'._AVIS_WORKFLOW.'"></i><sup><span style="display:none;"></span></sup>';
             $frm_str .= '</b></span>';
             $frm_str .= '</td>';
     	}
     }
+
+    $frm_str .= '<td>';
+    $frm_str .= '<span onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
+              . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});'
+              . 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');hideOtherDiv(\'list_answers_div\');return false;" '
+              . 'onmouseover="this.style.cursor=\'pointer\';" style="width:90%;">';
+    $frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>';
+    $frm_str .= '&nbsp;<i class="fa fa-paperclip fa-2x" style="'.$style.'" title="'._PJ.'"></i> <sup><span class="nbRes" style="'.$style2.'" id="nb_attach">'. $nb_attach . '</span></sup></b>';
+    $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+    $frm_str .= '</span>';
+    $frm_str .= '</td>';
+
+    //CASES
+    if ($core_tools->is_module_loaded('cases')) {
+        require_once('modules/cases/class/class_modules_tools.php');
+        $cases = new cases();
+        $case_id = $cases->get_case_id($res_id);
+        if ($case_id <> false) {
+            $case_properties = $cases->get_case_info($case_id);
+            $style = '';
+        } else {
+            $case_properties = array();
+            $style = 'opacity:0.5;';
+        }
+
+        $frm_str .= '<td>';
+        $frm_str .= '<span onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'cases_div\', \'divStatus_cases_div\');hideOtherDiv(\'cases_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_cases_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;<b><i class="fa fa-suitcase fa-2x" style="'.$style.'" title="'. _CASE.'"></i><sup><span style="display:none;"></span></sup></b>';
+        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+        $frm_str .= '</span>';
+        $frm_str .= '<br>';
+        $frm_str .= '</td>';
+    }
+        $frm_str .= '<td>';
+        $frm_str .= '<span onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'folder_div\', \'divStatus_folder_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_folder_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;<b><i class="fa fa-folder-o fa-2x" style="'.$style.'" title="'. _FOLDER_ATTACH.'"></i><sup><span style="display:none;"></span></sup></b>';
+            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+        $frm_str .= '</span>';
+        $frm_str .= '<td>';
+
+    //PRINT FOLDER
+   if ($core_tools->test_service('print_folder_doc', 'visa', false)){
+        $frm_str .= '<span onclick="new Effect.toggle(\'print_fold_div\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'print_fold_div\', \'divStatus_print_fold_div\');hideOtherDiv(\'print_fold_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_print_fold_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;<b><i class="fa fa-print fa-2x" title="'. _PRINTFOLDER .'"></i><sup><span style="display:none;"></span></sup></b>';
+        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+        $frm_str .= '</span>';
+        $frm_str .= '<br>';
+    }
+
     //END TOOLBAR
     $frm_str .= '</table>';
     $frm_str .= '</div>';
@@ -850,7 +908,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<br/>'; 
                     $frm_str .= '<br/>';                
                     $frm_str .= '<span class="diff_list_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'diff_list_history_div\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'diff_list_history_div\', \'divStatus_diff_list_history_div\');return false;">';
-                        $frm_str .= '<span id="divStatus_diff_list_history_div" style="color:#1C99C5;"><<</span>';
+                        $frm_str .= '<span id="divStatus_diff_list_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>';
                         $frm_str .= '<b>&nbsp;<small>'._DIFF_LIST_HISTORY.'</small></b>';
                     $frm_str .= '</span>';
 
@@ -885,7 +943,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<br/>';
 
         $frm_str .= '<span style="cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'hist_doc_process\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'hist_doc_process\', \'divStatus_all_history_div\');return false;">'
-        . '<span id="divStatus_all_history_div" style="color:#1C99C5;"><<</span>'
+        . '<span id="divStatus_all_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>'
         . '<b>&nbsp;'. _ALL_HISTORY.'</b>'
     . '</span>';
     $frm_str .= '<iframe src="'
@@ -1129,7 +1187,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				$frm_str .= '<br/>'; 
                     $frm_str .= '<br/>';                
                     $frm_str .= '<span class="diff_list_visa_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'diff_list_visa_history_div\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'diff_list_visa_history_div\', \'divStatus_diff_list_visa_history_div\');return false;">';
-                        $frm_str .= '<span id="divStatus_diff_list_visa_history_div" style="color:#1C99C5;"><<</span>';
+                        $frm_str .= '<span id="divStatus_diff_list_visa_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>';
                         $frm_str .= '<b>&nbsp;<small>'._DIFF_LIST_VISA_HISTORY.'</small></b>';
                     $frm_str .= '</span>';
 
