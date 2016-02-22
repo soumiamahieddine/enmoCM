@@ -137,7 +137,7 @@ if(count($indexes) > 0)
     $opt_indexes .= '<h4 onclick="new Effect.toggle(\'doctype_fields\', \'blind\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'doctype_fields\', \'divStatus_doctype_fields\');" '
         . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
-    $opt_indexes .= ' <span id="divStatus_doctype_fields" style="color:#1C99C5;">>></span>&nbsp;' 
+    $opt_indexes .= ' <span id="divStatus_doctype_fields" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;' 
         . _DOCTYPE_INDEXES;
     $opt_indexes .= '</h4>';
 
