@@ -554,7 +554,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                      $frm_str .= '</label></td>';
                     $contact_mode = "view";
                     if($core_tools->test_service('update_contacts','apps', false)) $contact_mode = 'up';
-                   $frm_str .='<td rowspan="2"><a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
+                   $frm_str .='<td><a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
                         . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                         . '\'blind\', {delay:0.2});return false;"'
                         . ' style="visibility:hidden;" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>&nbsp;</td>';

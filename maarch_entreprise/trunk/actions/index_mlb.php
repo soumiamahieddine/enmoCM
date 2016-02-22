@@ -246,7 +246,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<h4 onclick="new Effect.toggle(\'general_infos_div\', \'blind\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'general_infos_div\', \'divStatus_general_infos_div\');" '
         . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
-    $frmStr .= ' <span id="divStatus_general_infos_div" style="color:#1C99C5;">>></span>&nbsp;' 
+    $frmStr .= ' <span id="divStatus_general_infos_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;' 
         ._GENERAL_INFO;
     $frmStr .= '</h4>';
     $frmStr .= '<div id="general_infos_div"  style="display:inline">';
@@ -787,7 +787,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<h4 onclick="new Effect.toggle(\'complementary_fields\', \'blind\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'complementary_fields\', \'divStatus_complementary_fields\');" '
         . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
-    $frmStr .= ' <span id="divStatus_complementary_fields" style="color:#1C99C5;"><<</span>&nbsp;' 
+    $frmStr .= ' <span id="divStatus_complementary_fields" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;' 
         . _OPT_INDEXES;
     $frmStr .= '</h4>';
     $frmStr .= '<div id="complementary_fields"  style="display:none">';
