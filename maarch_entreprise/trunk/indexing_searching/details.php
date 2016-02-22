@@ -569,7 +569,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             <br/>
             <dl id="tabricator1">
                 <?php $detailsExport .= "<h1><center>"._DETAILS_PRINT." : ".$s_id."</center></h1><hr>";?>
-                <dt><?php echo _PROPERTIES;?></dt>
+                <dt class="fa fa-tachometer" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _PROPERTIES;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
                 <dd>
                     <h2>
                         <span class="date">
@@ -1149,7 +1149,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 {
                     $detailsExport .= "<h2>"._DIFF_LIST."</h2>";
                     ?>
-                    <dt><?php echo _DIFF_LIST;?></dt>
+                    <dt class="fa fa-gear" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _DIFF_LIST;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
                     <dd>
                         <br/>
                         <div id="diff_list_div">
@@ -1224,7 +1224,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 					. "class" . DIRECTORY_SEPARATOR
 					. "class_modules_tools.php";
                     ?>
-                    <dt><?php echo _PRINTFOLDER;?></dt>
+                    <dt class="fa fa-print" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _PRINTFOLDER;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
                     <dd>
                         <br/>
 						<?php
@@ -1239,15 +1239,21 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 					require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 					. "class" . DIRECTORY_SEPARATOR
 					. "class_modules_tools.php";
-					?>
-				<dt id="onglet_circuit"><?php echo _VISA_WORKFLOW;?></dt><dd id="page_circuit" style="overflow-x: hidden;">
+					
+                        $visa = new visa();
+                        if($visa->nbVisa($s_id,$coll_id) == 0){
+                            $style = 'font-size:2em;color:#9AA7AB;padding-left: 15px;padding-right: 15px;';
+                        }else{
+                            $style = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                        }
+                    ?>
+				<dt id="onglet_circuit" class="fa fa-certificate" style="<?php echo $style; ?>" title="<?php echo _VISA_WORKFLOW;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt><dd id="page_circuit" style="overflow-x: hidden;">
 				<h2><?php echo _VISA_WORKFLOW;?></h2>
 				<?php
 				$modifVisaWorkflow = false;
 				if ($core->test_service('config_visa_workflow', 'visa', false)) {
 					$modifVisaWorkflow = true;
 				}
-				$visa = new visa();
 				?>
 				<div class="error" id="divError" name="divError"></div>
 				<div style="text-align:center;">
@@ -1276,7 +1282,53 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 				<?php
 				 }
 				 
-				 
+				if ($core->is_module_loaded('avis')) {
+                    require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
+                    . "class" . DIRECTORY_SEPARATOR
+                    . "avis_controler.php";
+
+                    $avis = new avis_controler();
+                    if($avis->nbAvis($s_id,$coll_id) == 0){
+                        $style = 'font-size:2em;color:#9AA7AB;padding-left: 15px;padding-right: 15px;';
+                    }else{
+                        $style = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                    }
+                    ?>
+                <dt id="onglet_circuit" class="fa fa-check-square" style="<?php echo $style; ?>" title="<?php echo _AVIS_WORKFLOW;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt><dd id="page_circuit_avis" style="overflow-x: hidden;">
+                <h2><?php echo _AVIS_WORKFLOW;?></h2>
+                <?php
+                $modifVisaWorkflow = false;
+                if ($core->test_service('config_avis_workflow', 'avis', false)) {
+                    $modifAvisWorkflow = true;
+                }
+                ?>
+                <div class="error" id="divError" name="divError"></div>
+                <div style="text-align:center;">
+                <?php
+                echo $avis->getList($s_id, $coll_id, $modifVisaWorkflow, 'AVIS_CIRCUIT', '','Y');
+                ?>
+                </div>
+                
+                <br/>
+                <br/>
+                <br/>
+                    <span class="diff_list_avis_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor='pointer';" onclick="new Effect.toggle('diff_list_avis_history_div', 'blind', {delay:0.2});whatIsTheDivStatus('diff_list_avis_history_div', 'divStatus_diff_list_avis_history_div');return false;">
+                        <span id="divStatus_diff_list_avis_history_div" style="color:#1C99C5;"><<</span>
+                        <b>&nbsp;<small><?php echo _DIFF_LIST_AVIS_HISTORY;?></small></b>
+                    </span>
+
+                    <div id="diff_list_avis_history_div" style="display:none">
+                        <?php
+                        //$return_mode = true;
+                        $diffListType = 'AVIS_CIRCUIT';
+                        require_once('modules/avis/difflist_avis_history_display.php');
+                        ?>
+                                    
+                    </div>
+                </dd>
+                <?php
+                }
+
                 //$detailsExport .= "<h2>"._PROCESS."</h2>";
                 $nb_attach = '';
                 if ($core->is_module_loaded('attachments'))
@@ -1287,13 +1339,19 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $db = new Database();
                     $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']));
                     if ($stmt->rowCount() > 0) {
-                        $nb_attach = ' (' . $stmt->rowCount() . ')';
+                        $nb_attach = $stmt->rowCount();
+                        $class = 'nbRes';
+                        $style = 'font-size: 10px;';
+                        $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
                     } else {
-                        $nb_attach = '';
+                        $nb_attach = '0';
+                        $class = 'nbResZero';
+                        $style = 'display:none;font-size: 10px;';
+                        $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
                     }
                 }
                 ?>
-                <dt><?php echo _ATTACHMENTS .  '<span id="nb_attach">'. $nb_attach . '</span>';?></dt>
+                <dt class="fa fa-paperclip" style="<?php echo $style2; ?>" title="<?php echo _ATTACHMENTS; ?>"> <sup><span id="nb_attach" class="<?php echo $class; ?>" style="<?php echo $style; ?>"><?php echo $nb_attach; ?></span></sup></dt>
                 <dd>
                     <div>
                         <table width="100%">
@@ -1397,11 +1455,19 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed' or attachment_type = 'outgoing_mail') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
                             $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']));
                             if ($stmt->rowCount() > 0) {
-                                $nb_rep = ' <span id="answer_number">(' . ($stmt->rowCount()). ')</span>';
+                                $nb_rep = $stmt->rowCount();
+                                $class = 'nbRes';
+                                $style = 'font-size: 10px;';
+                                $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                            }else{
+                                $nb_rep = '0';
+                                $class = 'nbResZero';
+                                $style = 'display:none;font-size: 10px;';
+                                $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
                             }
                     
                         ?>
-                <dt id="onglet_rep"><?php echo _DONE_ANSWERS .$nb_rep;?></dt>
+                <dt id="onglet_rep" class="fa fa-mail-reply" style="<?php echo $style2; ?>" title="<?php echo _DONE_ANSWERS; ?>"> <sup><span id="answer_number" style="<?php echo $style; ?>" class="<?php echo $class; ?>"><?php echo $nb_rep; ?></span></sup></dt>
                 <dd id="page_rep">
                     <center>
                         <?php
@@ -1422,7 +1488,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     //SERVICE TO VIEW DOC HISTORY
                     if ($viewDocHistory) {
                 ?>
-                <dt><?php echo _DOC_HISTORY;?></dt>
+                <dt class="fa fa-history" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _DOC_HISTORY;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
                 <dd>
                     <!--<h2><?php echo _HISTORY;?></h2>-->
                     <h2><?php echo _WF ;?></h2>
@@ -1453,13 +1519,18 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     //Count notes
                     $nbr_notes = $notes_tools->countUserNotes($s_id, $coll_id);
                     // if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
-                    if ($nbr_notes == 0)
-                        $nbr_notes = ' (<span id="nb_note">'.$nbr_notes.'</span>)';
-                    else
-                        $nbr_notes = ' <span id="nb_note" style="color: red;">('.$nbr_notes.')</span>';
+                    if ($nbr_notes == 0){
+                        $class = 'nbResZero';
+                        $style = 'display:none;font-size: 10px;';
+                        $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
+                    }else{
+                        $class = 'nbRes';
+                        $style = 'font-size: 10px;';
+                        $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                    }
                     //Notes iframe
                     ?>
-                    <dt><?php echo _NOTES.$nbr_notes;?></dt>
+                    <dt class="fa fa-pencil" style="<?php echo $style2; ?>" title="<?php echo _NOTES; ?>"> <sup><span id="nb_note" style="<?php echo $style; ?>" class="<?php echo $class; ?>"><?php echo $nbr_notes; ?></span></sup></dt>
                     <dd>
                         <!--<h2><?php echo _NOTES;?></h2>-->
                         <iframe name="list_notes_doc" id="list_notes_doc" src="<?php
@@ -1474,8 +1545,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 //CASES
                 if ($core->is_module_loaded('cases') == true)
                 {
+                    if ($res->case_id <> '') {
+                        $style = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                    }else{
+                        $style = 'font-size:2em;color:#9AA7AB;padding-left: 15px;padding-right: 15px;';
+                    }
                     ?>
-                    <dt><?php echo _CASE;?></dt>
+                    <dt class="fa fa-suitcase" style="<?php echo $style; ?>" title="<?php echo _CASE;?>"> <sup><span class="nbResZero" style="display: none;"></span></sup></dt>
                     <dd>
                     <?php
                         include('modules'.DIRECTORY_SEPARATOR.'cases'.DIRECTORY_SEPARATOR.'including_detail_cases.php');
@@ -1502,10 +1578,18 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $sendmail_tools    = new sendmail();
                      //Count mails
                     $nbr_emails = $sendmail_tools->countUserEmails($s_id, $coll_id);
-                    if ($nbr_emails > 0 ) $nbr_emails = ' ('.$nbr_emails.')';  else $nbr_emails = '';
+                    if ($nbr_emails > 0 ){
+                        $class = 'nbRes';
+                        $style = 'font-size: 10px;';
+                        $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                    } else {
+                        $class = 'nbResZero';
+                        $style = 'display:none;font-size: 10px;';
+                        $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
+                    } 
                    
                     ?>
-                    <dt><?php echo _SENDED_EMAILS.$nbr_emails;?></dt>
+                    <dt class="fa fa-envelope" style="<?php echo $style2; ?>" title="<?php echo _SENDED_EMAILS;?>"> <sup><span style="<?php echo $style; ?>" class="<?php echo $class; ?>"><?php echo $nbr_emails; ?></span></sup></dt>
                     <dd>
                     <?php
                     //Emails iframe
@@ -1540,16 +1624,20 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 }
                 if ($nb_versions_for_title == 0) {
                     $extend_title_for_versions = '0';
+                    $class="nbResZero";
+                    $style = 'display:none;font-size: 10px;';
+                    $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
                 } else {
                     $extend_title_for_versions = $nb_versions_for_title;
+                    $class="nbRes";
+                    $style = 'font-size: 10px;';
+                    $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
                 }
                 $_SESSION['cm']['resMaster'] = '';
                 ?>
-                <dt>
-                    <?php
-                    echo _VERSIONS . ' (<span id="nbVersions">'
-                        . $extend_title_for_versions . '</span>)';
-                    ?>
+                <dt  class="fa fa-code-fork" style="<?php echo $style2; ?>" title="<?php echo _VERSIONS; ?>">
+                    <?php echo ' <sup><span id="nbVersions" class="'.$class.'" style="'.$style.'">'
+                        . $extend_title_for_versions . '</span></sup>'; ?>
                 </dt>
                 <dd>
                     <div class="error" id="divError" name="divError"></div>
@@ -1605,14 +1693,22 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $_SESSION['collection_id_choice'],
                     'all'
                 );
+                if($nbLink == 0){
+                    $class="nbResZero";
+                    $style = 'display:none;font-size: 10px;';
+                    $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
+                }else{
+                    $class="nbRes";
+                    $style = 'font-size: 10px;';
+                    $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                }
                 $Links = '';
 
                 //if ($nbLink > 0) {
-                    $Links .= '<dt>';
-                        $Links .= _LINK_TAB;
-                        $Links .= ' (<span id="nbLinks">';
+                    $Links .= '<dt class="fa fa-link" style="'.$style2.'" title="'._LINK_TAB.'">';
+                        $Links .= ' <sup><span id="nbLinks" class="'.$class.'" style="'.$style.'">';
                         $Links .= $nbLink;
-                        $Links .= '</span>)';
+                        $Links .= '</span></sup>';
                     $Links .= '</dt>';
                     $Links .= '<dd>';
                         // $Links .= '<h2>';

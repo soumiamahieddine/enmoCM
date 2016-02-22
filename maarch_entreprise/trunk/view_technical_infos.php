@@ -106,7 +106,7 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
         );
     }
     ?>
-    <dt><?php echo _TECHNICAL_INFORMATIONS;?></dt>
+    <dt class="fa fa-cogs" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _TECHNICAL_INFORMATIONS;?>"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
     <dd>
         <h2>
             <span class="date">
