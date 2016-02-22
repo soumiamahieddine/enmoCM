@@ -28,41 +28,15 @@
 * @ingroup install
 */
 
-$_REQUEST['docserverRoot'] = str_replace("/", DIRECTORY_SEPARATOR, $_REQUEST['docserverRoot']);
+//CONTROLLER
 
-$checkDocserverRoot = $Class_Install->checkDocserverRoot(
-    $_REQUEST['docserverRoot']
-);
+    //TITLE
+        $shortTitle = _CONFIG_INSTALL;
+        $longTitle = _CONFIG_INSTALL;
 
-if ($checkDocserverRoot !== true) {
-    $return['status'] = 0;
-    $return['text'] = $checkDocserverRoot;
+    //PROGRESS
+        $stepNb = 6;
+        $stepNbTotal = 9;
 
-    $jsonReturn = json_encode($return);
-
-    echo $jsonReturn;
-    exit;
-}
-
-if (!$Class_Install->createDocservers($_REQUEST['docserverRoot'])) {
-    $return['status'] = 0;
-    $return['text'] = _CAN_NOT_CREATE_SUB_DOCSERVERS;
-
-    $jsonReturn = json_encode($return);
-
-    echo $jsonReturn;
-    exit;
-}
-
-$updateDocserversDB = $Class_Install->updateDocserversDB(
-    $_REQUEST['docserverRoot']
-);
-$Class_Install->updateDocserverForXml($_REQUEST['docserverRoot']);
-
-$return['status'] = 1;
-$return['text'] = '';
-
-$jsonReturn = json_encode($return);
-
-echo $jsonReturn;
-exit;
+//VIEW
+    $view = 'config';

@@ -4,7 +4,7 @@ function ajaxDB(
     divRetour,
     top
 )
-{
+{   
     var ajaxUrl  = url;
 
     var parametersTemp = parameters.split('|');
@@ -76,7 +76,43 @@ function ajaxDB(
                     $('.wait').css('display','none');
                 }
 
+            }else if(data.status == 3){
+                if (confirm("La base de données existe déjà. Voulez vous garder cette base?")){
+
+                    data.text = 'redirect';
+                    if (data.text == 'redirect') {
+                    goTo('index.php?step=config');
+                    return;
+                    }
+                    retour_ok.html(data.text);
+                    retour_ko.html('');
+                    slide(divRetour);
+                    $('.'+divRetour).slideToggle('slow');
+                    if ($('.wait')) {
+                        $('.wait').css('display','none');
+                    }
+               
+                }else{
+                    if (confirm("Voulez-vous en créer une nouvelle? (futur evolution : mise à jour de la base de données si existance de script de mise a jour")){
+
+          
+                            goTo('index.php?step=database');
+                            return;
+                        
+                     
+
+
+
+                    }else{
+                        goTo('index.php?step=welcome');
+                            return;
+                    }
+                }
+
             }
         });
     });
 }
+
+
+

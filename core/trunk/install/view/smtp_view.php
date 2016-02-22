@@ -111,28 +111,37 @@
                             :
                         </td>
                         <td>
-                            <input type="text" name="smtpHost" id="smtpHost" value="smtp.yourdomain.com"/>
+                            <input type="text" name="smtpHost" id="smtpHost" value="ssl://smtp.yourdomain.com"/>
                         </td>
+                        <td><FONT COLOR="#7F8FA6" ><i>exemple: ssl://smtp.gmail.com; smtp2.example.com</i></FONT></td>
                     </tr>
                     <tr>
                         <td><?php echo _SMTP_TYPE;?></td>
                         <td>:</td>
-                        <td><input type="text" name="smtpType" id="smtpType" value="smtp"/></td>
+                        <td><!--input type="text" name="smtpType" id="smtpType" value="smtp"/-->
+                            <SELECT name="smtpType" id="smtpType">
+                                <OPTION selected>smtp
+                                <OPTION>sendmail
+                                <OPTION>mail
+                            </SELECT>
+                        </td>
+                        <td><FONT COLOR="#7F8FA6" ><i><?php echo _SENDER_TYPE ?></i></FONT></td>
                     </tr>
                     <tr>
                         <td><?php echo _SMTP_PORT;?></td>
                         <td>:</td>
-                        <td><input type="text" name="smtpPort" id="smtpPort" value="25"/></td>
+                        <td><input type="text" name="smtpPort" id="smtpPort" value="465"/></td>
                     </tr>
                     <tr>
                         <td><?php echo _SMTP_USER;?></td>
                         <td>:</td>
-                        <td><input type="text" name="smtpUser" id="smtpUser" value="notif@yourdomain.com"/></td>
+                        <td><input type="text" name="smtpUser" id="smtpUser" value="server@yourdomain.com"/></td>
+                        <td><FONT COLOR="#7F8FA6" ><i><?php echo _SMTP_USER_CONNECT;?></i></FONT></td>
                     </tr>
                     <tr>
                         <td><?php echo _SMTP_PASSWORD;?></td>
                         <td>:</td>
-                        <td><input type="text" name="smtpPassword" id="smtpPassword" value="password"/></td>
+                        <td><input type="password" name="smtpPassword" id="smtpPassword" value="password"/></td>
                     </tr>
                     <!--tr>
                         <td><?php echo _SMTP_AUTH;?></td>
@@ -167,13 +176,15 @@
                     <tr>
                         <td><?php echo _SMTP_MAILTO;?></td>
                         <td>:</td>
-                        <td><input type="text" name="smtpMailTo" id="smtpMailTo" value="votreAdresse@domain.com"/></td>
+                        <td><input type="text" name="smtpMailTo" id="smtpMailTo" value="example@domain.com"/></td>
+                        <td><FONT COLOR="#7F8FA6" ><i><?php echo _SMTP_MAILTO_BOX;?></i></FONT></td>
                     </tr>
+
                     <tr>
                         <td></td>
                         <td></td>
                         <td>
-                            <input type="button" id="ajaxReturn_testConnect_button" onClick="envoiMailTestSmtp( 'testSmtp',
+                            <input type="button" id="ajaxReturn_testConnect_button" onClick="$('.wait').css('display','block');envoiMailTestSmtp( 'testSmtp',
                                                                                                                 $('#smtpHost').val(),
                                                                                                                 $('#smtpType').val(),
                                                                                                                 $('#smtpPort').val(),
@@ -187,6 +198,9 @@
             </form>
             <br />
             <div id="ajaxReturn_testConnect_ko"></div>
+            <div align="center">
+                    <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
+            </div>
             <div id="ajaxReturn_testConnect_ok"></div>
         </p>
     </div>

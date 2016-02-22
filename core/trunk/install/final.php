@@ -34,10 +34,14 @@ include_once '../core/init.php';
 
 $inF = fopen('installed.lck','w');
 fclose($inF);
-
+$nomCustom = 'cs_'.$_SESSION['config']['databasename'];
 unset($_SESSION);
 $_SESSION = array();
 session_unset();
 session_destroy();
+if(strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
+header('Location: ../'.$nomCustom);
+}elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
 header('Location: ../');
+}
 exit;

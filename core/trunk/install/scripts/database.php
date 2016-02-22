@@ -53,6 +53,19 @@ if ($_REQUEST['action'] == 'testConnect') {
         exit;
     }
 
+       
+        $filename = realpath('.').'/custom/';
+        if (!file_exists($filename)) {
+            $cheminCustom = realpath('.')."/custom";
+            mkdir($cheminCustom, 0755);                
+        }
+
+
+
+
+
+
+
     $return['status'] = 1;
     $return['text'] = '';
 
@@ -62,6 +75,35 @@ if ($_REQUEST['action'] == 'testConnect') {
     exit;
 } elseif ($_REQUEST['action'] == 'createdatabase') {
 
+
+    $verifDatabase = $Class_Install->verificationDatabase($_REQUEST['databasename']);
+    //var_dump($verifDatabase);
+    if($verifDatabase == false){
+        $_SESSION['config']['databasename'] = $_REQUEST['databasename'];
+        //var_dump($_SESSION['config']);
+        $return['status'] = 3;
+        $return['text'] = "base de données existe déjà";
+        $jsonReturn = json_encode($return);
+
+        echo $jsonReturn;
+        exit;
+    }elseif($verifDatabase == true){
+
+        //var_dump($verifDatabase);
+
+
+    $createCustom = $Class_Install->createCustom($_REQUEST['databasename']);
+        //var_dump($createCustom);
+    if($createCustom === false){ 
+        //var_dump($createDatabase);
+        $return['status'] = 0;
+        $return['text'] = _UNABLE_TO_CREATE_CUSTOM;
+
+        $jsonReturn = json_encode($return);
+
+        echo $jsonReturn;
+        exit;
+    }
     $_SESSION['config']['databasename'] = $_REQUEST['databasename'];
 
     $createDatabase = $Class_Install->createDatabase(
@@ -85,6 +127,9 @@ if ($_REQUEST['action'] == 'testConnect') {
 
     echo $jsonReturn;
     exit;
+
+    }
+
 } elseif ($_REQUEST['action'] == 'loadDatas') {
 
     $loadDatas = $Class_Install->createData(

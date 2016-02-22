@@ -16,7 +16,7 @@ if (!defined('_WELCOME_INSTALL')) {
 if (!defined('_DESC_INSTALL')) {
     define('_DESC_INSTALL', "Welcome to Maarch install tool !<br />
                     <br />
-                    Maarch is an Electronic Archiving System that comes with Document Management, Content Management, Mail Management, Coolaborative and legal archiving/record management capabilities. Maarch is a full Open Source product under GPL v3 licence : there is no licence cost, but professional services offered by Maarch and its partner global network.<br />
+                    Maarch is a full free software for Document Management, Content Management, Mail Management, Colaborative and legal archiving/record management capabilities. It allows to follow multichannel administrative information (postals mails, mails, forms, phones calls) and classify the documents to find effectively in time. The software offers supports tools for writing and to validate outgoing mails. Maarch Courrier is distributed under GPL v3 licence : there is no licence cost, but professional services offered by Maarch and its partner global network.<br />
                     <br />
                     Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com/en' target\"_blank\"> www.maarch.com</A> for more information on Maarch Professional Services.
 					<br>
@@ -27,6 +27,14 @@ if (!defined('_DESC_INSTALL')) {
 //LICENCE
 if (!defined('_LICENCE')) {
     define('_LICENCE', "Licence");
+}
+
+if (!defined('_SMTP_OK')) {
+    define('_SMTP_OK', "Information: Look your email");
+}
+
+if (!defined('_SMTP_ERROR')) {
+    define('_SMTP_ERROR', "Information : incorrect SMTP authentication");
 }
 
 if (!defined('_OK_WITH_LICENCE')) {
@@ -42,7 +50,13 @@ if (!defined('_PREREQUISITES_HEAD')) {
 }
 
 if (!defined('_PREREQUISITES_EXP')) {
-    define('_PREREQUISITES_EXP', "Maarch installation needs some prerequisites on PHP. Please report to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.org/en/projects/entreprise/architecture-and-requirements' target=\"_blank\"> Architecture and requirements</A> for details");
+    define('_PREREQUISITES_EXP', "Maarch installation needs some prerequisites on PHP. Please report to <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Courrier/1.5/fr/Install/Prerequis' target=\"_blank\"> Architecture and requirements</A> for details");
+}
+if (!defined('_LANG')) {
+    define('_LANG', "Lang");
+}
+if (!defined('_CONFIG_INSTALL')) {
+    define('_CONFIG_INSTALL', "Configuration");
 }
 if (!defined('_ACTIVATED')) {
     define('_ACTIVATED', "Ok");
@@ -51,7 +65,37 @@ if (!defined('_ACTIVATED')) {
 }if (!defined('_NOT_ACTIVATED')) {
     define('_NOT_ACTIVATED', "Not Ok");
 }
+if (!defined('_SMTP_USER_CONNECT')) {
+    define('_SMTP_USER_CONNECT', "User who is connect on the server");
+}
 
+if (!defined('_SENDER_TYPE')) {
+    define('_SENDER_TYPE', "smtp: Transfert message; sendmail: mail server service");
+}
+
+if (!defined('_SMTP_MAILTO_BOX')) {
+    define('_SMTP_MAILTO_BOX', "MailBox where the test mail will send");
+}
+
+if (!defined('_SMTP_INFORMATION')) {
+    define('_SMTP_INFORMATION', "Information: Check your email");
+}
+
+if (!defined('_CONFIG_EXP')) {
+    define('_CONFIG_EXP', "Here, you can see the software configuration");
+}
+if (!defined('_CONFIG_INFO')) {
+    define('_CONFIG_INFO', "Configuration File");
+}
+if (!defined('_APPLICATIONNAME')) {
+    define('_APPLICATIONNAME', "Application Name");
+}
+if (!defined('_PATH_TO_DOCSERVER')) {
+    define('_PATH_TO_DOCSERVER', "Path to docserver");
+}
+if (!defined('_USER_BDD')) {
+    define('_USER_BDD', "User of database");
+}
 if (!defined('_GENERAL')) {
     define('_GENERAL', "General");
 }
@@ -202,6 +246,9 @@ if (!defined('_BAD_INFORMATIONS_FOR_CONNECTION')) {
 }
 if (!defined('_UNABLE_TO_CREATE_DATABASE')) {
     define('_UNABLE_TO_CREATE_DATABASE', "Unable to create database, try another name or check the script structure.sql");
+}
+if (!defined('_UNABLE_TO_CREATE_CUSTOM')) {
+    define('_UNABLE_TO_CREATE_CUSTOM', "Unable to create custom, try another name for database or check custom folder");
 }
 if (!defined('_UNABLE_TO_LOAD_DATAS')) {
     define('_UNABLE_TO_LOAD_DATAS', "Unable to load dataset");

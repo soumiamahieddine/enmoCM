@@ -16,9 +16,11 @@ if (!defined('_WELCOME_INSTALL')) {
 if (!defined('_DESC_INSTALL')) {
     define('_DESC_INSTALL', "Bienvenue dans l'assistant d'installation de Maarch ! <br />
                     <br />
-                    Maarch est un Système d'Archivage Electronique doté de capacités de GED, Gestion de Courrier, travail collaboratif, et SAE normé OAIS et NFZ42-013. Maarch est un produit Open Source sur licence GPL v3 : il n'y a pas de coûts de licence, mais des services professionnels certifiés fournis par Maarch SAS et son réseau de partenaires à travers le monde. <br />
+                    Maarch est un logiciel libre très complet pour la Gestion et l'Organisation de l'Information Administrative (GOIA). Il permet de suivre les flux d'information administrative multicanal (courrier postal, courriel, formulaires, appels téléphoniques) et de les classer pour les retrouver de façon fiable dans le temps. </br> </br>Maarch Courrier propose des outils d'assistance à la rédaction et à la validation des courriers Départ. Maarch est distribué sous licence GPL v3 : il n'y a pas de coûts de licence, mais des services professionnels certifiés fournis par Maarch SAS et son réseau de partenaires à travers le monde. <br />
                     <br />
-                    Les services couvrent l'audit, l'installation, le paramétrage, la personnalisation, l'interfaçage avec votre SI, la formation, le support et la maintenance. Reportez vous sur <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com' target=\"_blank\"> www.maarch.com</A> pour plus d'informations sur les services.");
+                    Les services couvrent l'audit, l'installation, le paramétrage, la personnalisation, l'interfaçage avec votre SI, la formation, le support et la maintenance. Rendez vous sur <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com' target=\"_blank\"> www.maarch.com</A> pour plus d'informations sur les services.");
+
+
 }
 
 
@@ -26,6 +28,15 @@ if (!defined('_DESC_INSTALL')) {
 if (!defined('_LICENCE')) {
     define('_LICENCE', "Licence");
 }
+
+if (!defined('_SMTP_OK')) {
+    define('_SMTP_OK', "Information: Consultez votre messagerie");
+}
+
+if (!defined('_SMTP_ERROR')) {
+    define('_SMTP_ERROR', "Information : Authentication SMTP incorrect");
+}
+
 
 if (!defined('_OK_WITH_LICENCE')) {
     define('_OK_WITH_LICENCE', "J'accepte les termes de la licence");
@@ -40,7 +51,7 @@ if (!defined('_PREREQUISITES_HEAD')) {
 }
 
 if (!defined('_PREREQUISITES_EXP')) {
-    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch' target=\"_blank\"> pre-requis</A> pour les détails");
+    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Courrier/1.5/fr/Install/Prerequis' target=\"_blank\"> pre-requis</A> pour les détails");
 }
 if (!defined('_ACTIVATED')) {
     define('_ACTIVATED', "Conforme");
@@ -180,6 +191,27 @@ if (!defined('_DATABASENAME')) {
 if (!defined('_DATABASETYPE')) {
     define('_DATABASETYPE', "Type");
 }
+if (!defined('_LANG')) {
+    define('_LANG', "Langue");
+}
+if (!defined('_CONFIG_INSTALL')) {
+    define('_CONFIG_INSTALL', "Configuration");
+}
+if (!defined('_APPLICATIONNAME')) {
+    define('_APPLICATIONNAME', "Nom de l'application");
+}
+if (!defined('_CONFIG_EXP')) {
+    define('_CONFIG_EXP', "Ici, vous pouvez visualiser les informations qui ont été renseignées dans le fichier de configuration de l'application");
+}
+if (!defined('_CONFIG_INFO')) {
+    define('_CONFIG_INFO', "Fichier de configuration");
+}
+if (!defined('_PATH_TO_DOCSERVER')) {
+    define('_PATH_TO_DOCSERVER', "Chemin du docservers");
+}
+if (!defined('_USER_BDD')) {
+    define('_USER_BDD', "Utilisateur de la base de données");
+}
 if (!defined('_DATASET_CHOICE')) {
     define('_DATASET_CHOICE', "Choix du jeu de données d'exemple à importer");
 }
@@ -204,6 +236,10 @@ if (!defined('_BAD_INFORMATIONS_FOR_CONNECTION')) {
 if (!defined('_UNABLE_TO_CREATE_DATABASE')) {
     define('_UNABLE_TO_CREATE_DATABASE', "Impossible de créer la base de données, essayer un autre nom ou vérifier le script structure.sql");
 }
+if (!defined('_UNABLE_TO_CREATE_CUSTOM')) {
+    define('_UNABLE_TO_CREATE_CUSTOM', "Impossible de créer le custom, essayer un autre nom de base de données ou vérifier le répertoire custom");
+}
+
 if (!defined('_UNABLE_TO_LOAD_DATAS')) {
     define('_UNABLE_TO_LOAD_DATAS', "Impossible d'importer les datas");
 }
@@ -295,7 +331,7 @@ if (!defined('_SMTP_PORT')) {
 }
 
 if (!defined('_SMTP_USER')) {
-    define('_SMTP_USER', "nom d/'utilisateur");
+    define('_SMTP_USER', "nom d'utilisateur");
 }
 
 if (!defined('_SMTP_PASSWORD')) {
@@ -323,9 +359,23 @@ if (!defined('_SMTP_MAILFROM')) {
 }
 
 if (!defined('_SMTP_MAILTO')) {
-    define('_SMTP_MAILTO', "Votre adresse email");
+    define('_SMTP_MAILTO', "Votre adresse courriel");
 }
 
+if (!defined('_SMTP_USER_CONNECT')) {
+    define('_SMTP_USER_CONNECT', "Utilisateur se connectant au serveur");
+}
+if (!defined('_SENDER_TYPE')) {
+    define('_SENDER_TYPE', "smtp: Transfert de message; sendmail: serveur de messagerie électronique");
+}
+
+if (!defined('_SMTP_MAILTO_BOX')) {
+    define('_SMTP_MAILTO_BOX', "Courriel où sera envoyé le mail de test");
+}
+
+if (!defined('_SMTP_INFORMATION')) {
+    define('_SMTP_INFORMATION', "Information: Consultez votre messagerie");
+}
 
 if (!defined('_SMTP_EXP')) {
     define('_SMTP_EXP', "Ici, vous pouvez remplir ce formulaire afin de configurer les modules de notifications et de sendmails.");
