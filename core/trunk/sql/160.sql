@@ -269,6 +269,9 @@ ALTER TABLE res_letterbox ADD locker_user_id character varying(255) DEFAULT NULL
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS locker_time; 
 ALTER TABLE res_letterbox ADD locker_time timestamp without time zone;
 
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS modification_date;
+ALTER TABLE res_letterbox ADD modification_date timestamp without time zone DEFAULT NOW();
+
 ALTER TABLE res_business DROP COLUMN IF EXISTS reference_number; 
 ALTER TABLE res_business ADD reference_number character varying(255) DEFAULT NULL::character varying;
 
@@ -563,7 +566,7 @@ CREATE VIEW res_view_letterbox AS
     dfl.doctypes_first_level_label, dfl.css_style as doctype_first_level_style,
     d.doctypes_second_level_id, dsl.doctypes_second_level_label,
     dsl.css_style as doctype_second_level_style, r.format, r.typist,
-    r.creation_date, r.relation, r.docserver_id, r.folders_system_id,
+    r.creation_date, r.modification_date, r.relation, r.docserver_id, r.folders_system_id,
     f.folder_id, f.destination as folder_destination, f.is_frozen as folder_is_frozen, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize,
     r.status, r.work_batch, r.arbatch_id, r.arbox_id, r.page_count, r.is_paper,
     r.doc_date, r.scan_date, r.scan_user, r.scan_location, r.scan_wkstation,
