@@ -1294,6 +1294,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                     else //  Form Params errors
                     {
                         //console.log(response.error_txt);
+                        alert(response.error_txt);
                         try{
                                 $('frm_error_'+id_action).innerHTML = response.error_txt;
                             }
