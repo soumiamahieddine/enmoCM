@@ -6,9 +6,9 @@ page_result_final = '';
 function whatIsTheDivStatus(theDiv, divStatus)
 {
     if ($(theDiv).style.display == 'none') {
-        $(divStatus).innerHTML = '>>';
+        $(divStatus).innerHTML = '<i class="fa fa-minus-square-o"></i>';
     } else {
-        $(divStatus).innerHTML = '<<';
+        $(divStatus).innerHTML = '<i class="fa fa-plus-square-o"></i>';
     }
 }
 
@@ -122,7 +122,7 @@ function hideOtherDiv(theDiv)
                 new Effect.toggle('done_answers_div', 'blind', {delay:0});
             }
             // console.log(DivStatusTable[i]);
-            $(DivStatusTable[i]).innerHTML = '<<';
+            $(DivStatusTable[i]).innerHTML = '<i class="fa fa-plus-square-o"></i>';
         }
     }
 }
