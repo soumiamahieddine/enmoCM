@@ -51,6 +51,7 @@ abstract class avis_controler_Abstract
     }
 
     public function getList($res_id, $coll_id, $bool_modif=false, $typeList, $isAvisStep = false, $fromDetail = ""){
+        require_once 'modules/entities/class/class_manage_listdiff.php';
         $core_tools =new core_tools();
 
         $id_tab="tab_avisSetWorkflow";
@@ -61,15 +62,25 @@ abstract class avis_controler_Abstract
         }
                 
         $circuitAvis = $this->getWorkflow($res_id, $coll_id, $typeList);
+
+        $model = new diffusion_list();
+        $modelListDiff = $model->get_listmodel('AVIS_CIRCUIT',$_SESSION['destination_entity']);
+
+        // LOAD MODEL if exist
+        if(empty($circuitAvis['avis']['users']) && !empty($modelListDiff)){
+            $circuitAvis = $modelListDiff;
+        }
+
         $str = "";
-        if (!isset($circuitAvis['avis']['users']) && !isset($circuitAvis['lastAvis']['users']) && !$core_tools->test_service('config_avis_workflow_in_detail', 'avis', false) /*&& $fromDetail == "Y"*/){
+        if (!isset($circuitAvis['avis']['users']) && !isset($circuitAvis['lastAvis']['users']) && !$core_tools->test_service('config_avis_workflow_in_detail', 'avis', false)){
             $str .= "<div class='error' id='divErrorAvis' name='divErrorAvis' onclick='this.hide();'>" . _EMPTY_USER_LIST . "</div>";
             $str .= "<div><strong><em>" . _EMPTY_AVIS_WORKFLOW . "</em></strong></div>";
         }
         else {
-            require_once("modules/entities/class/class_manage_listdiff.php");
             $diff_list = new diffusion_list();
             $listModels = $diff_list->select_listmodels($typeList);
+
+            //$listModels = $modelListDiff;
 
             $str .= '<div align="center">';
         
@@ -341,6 +352,7 @@ abstract class avis_controler_Abstract
     }
 
     public function getListPopup($res_id, $coll_id, $bool_modif=false, $typeList, $isAvisStep = false, $fromDetail = ""){
+        require_once 'modules/entities/class/class_manage_listdiff.php';
         $core_tools =new core_tools();
 
         $id_tab="tab_avisSetWorkflowPopup";
@@ -348,6 +360,16 @@ abstract class avis_controler_Abstract
         
                 
         $circuitAvis = $this->getWorkflow($res_id, $coll_id, $typeList);
+
+        $model = new diffusion_list();
+        $modelListDiff = $model->get_listmodel('AVIS_CIRCUIT',$_SESSION['destination_entity']);
+
+        // LOAD MODEL if exist
+        if(empty($circuitAvis['avis']['users']) && !empty($modelListDiff)){
+            $circuitAvis = $modelListDiff;
+        }
+
+
         $str = "";
         if (!isset($circuitAvis['avis']['users']) && !isset($circuitAvis['lastAvis']['users']) && !$core_tools->test_service('config_avisPopup_workflow_in_detail', 'avis', false) && $fromDetail == "Y"){
             $str .= "<div class='error' id='divErrorAvisPopup' name='divErrorAvisPopup' onclick='this.hide();'>" . _EMPTY_USER_LIST . "</div>";

@@ -49,6 +49,8 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
     $values_str = preg_replace('/, $/', '', $values_str);
     $frm_str .= $values_str;
     $frm_str .= '</h2><br/>';
+
+    $frm_str .='<center>'.$_SESSION['action_error'].':</center><br/>';
     require 'modules/templates/class/templates_controler.php';
     $templatesControler = new templates_controler();
     $templates = array();
