@@ -898,7 +898,7 @@ $linkwithwhat =
                     foreach ($available_roles as $id => $label) {
                         $available_roles_ids[]=$id;
                     }
-
+                    $usersListDiff = array();
                     foreach ($user_roles as $key => $value) {
                         $usersListDiff[]=$key;
                     }
@@ -960,6 +960,7 @@ $linkwithwhat =
                         </thead><?php 
                     $color = ' class="col"';
 
+                    $entityListDiff = array();
                     foreach ($entity_roles as $key => $value) {
                         $entityListDiff[]=$key;
                     }
