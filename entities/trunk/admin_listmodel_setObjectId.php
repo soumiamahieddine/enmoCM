@@ -87,7 +87,33 @@ case 'VISA_CIRCUIT':
         echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
     }    
     break;
-    
+
+case 'AVIS_CIRCUIT':   
+    require_once 'modules/entities/class/class_manage_entities.php';
+    $ent = new entity();
+    $entity_ids = $ent->get_all_entities_id_user();
+    $entities = array();
+    for($i=0, $l=count($entity_ids);
+        $i<$l;
+        $i++
+    ) {
+        $entity_id = substr($entity_ids[$i], 1, -1);
+        $existinglist = 
+            $difflist->get_listmodel(
+                'VISA_CIRCUIT',
+                $entity_id
+            );
+        if(!$existinglist) {
+            $entities[$entity_id] = $ent->getentitylabel($entity_id); 
+        }
+    }
+    if(count($entities) > 0)
+        echo asSelect($entities, $objectId);
+    else {   
+        echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
+    }    
+    break;
+     
 case 'type_id':
     require_once 'core/class/class_db_pdo.php';
     require_once 'core/core_tables.php';
