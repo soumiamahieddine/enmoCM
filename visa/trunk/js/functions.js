@@ -4,49 +4,76 @@ function manageFrame(button) {
 	var secondDiv = $("visa_left");
 	var thirdDiv = $("visa_right");
 
+	var right = "fa fa-arrow-circle-o-right fa-2x";
+	var left = "fa fa-arrow-circle-o-left fa-2x";
+
 	if (button.id == "firstFrame") {
 
 		if (firstDiv.style.display != "none") {
-			console.log(button.class);
 			firstDiv.style.display = "none";
-			button.className = "fa fa-arrow-circle-o-right fa-lg";
-			console.log(button.class);
-			console.log(button);
+			button.className = right;
 		} else {
 			firstDiv.style.display = "";
-			button.className = "fa fa-arrow-circle-o-left fa-lg";
+			button.className = left;
 		}
 	} else if (button.id == "secondFrame") {
 
 		if (secondDiv.style.display != "none") {
+			$("thirdFrame").style.display = "none";
 			secondDiv.style.display = "none";
-			button.className = "fa fa-arrow-circle-o-right fa-lg";
+			button.className = right;
 		} else {
+			$("thirdFrame").style.display = "";
 			secondDiv.style.display = "";
-			button.className = "fa fa-arrow-circle-o-left fa-lg";
+			button.className = left;
+		}
+	} else if (button.id == "thirdFrame") {
+
+		if (thirdDiv.style.display != "none") {
+			$("secondFrame").style.display = "none";
+			thirdDiv.style.display = "none";
+			button.className = left;
+		} else {
+			$("secondFrame").style.display = "";
+			thirdDiv.style.display = "";
+			button.className = right;
 		}
 	}
 
-	if (firstDiv.style.display != "none" && secondDiv.style.display != "none") {
+	if (firstDiv.style.display != "none" && secondDiv.style.display != "none" && thirdDiv.style.display != "none") {
 		firstDiv.style.width = "15%";
+		$("firstFrame").style.marginLeft = "13.8%";
 		secondDiv.style.width = "41%";
+		$("secondFrame").style.marginLeft = "40.9%";
 		thirdDiv.style.width = "41%";
-		$("firstFrame").style.marginLeft = "14.2%";
-		$("secondFrame").style.marginLeft = "41.3%";
-	} else if (firstDiv.style.display != "none" && secondDiv.style.display == "none") {
+		$("thirdFrame").style.marginLeft = "0.6%";
+	} else if (firstDiv.style.display != "none" && (secondDiv.style.display == "none" || thirdDiv.style.display == "none")) {
 		firstDiv.style.width = "15%";
-		thirdDiv.style.width = "82%";
-		$("firstFrame").style.marginLeft = "14.2%";
-		$("secondFrame").style.marginLeft = "0.2%";
-	} else if (firstDiv.style.display == "none" && secondDiv.style.display != "none") {
+		$("firstFrame").style.marginLeft = "13.8%";
+		if (secondDiv.style.display == "none") {
+			thirdDiv.style.width = "82%";
+			$("secondFrame").style.marginLeft = "0.2%";
+		}
+		else {
+			secondDiv.style.width = "82%";
+			$("thirdFrame").style.marginLeft = "83%";
+		}
+	} else if (firstDiv.style.display == "none" && secondDiv.style.display != "none" && thirdDiv.style.display != "none") {
+		$("firstFrame").style.marginLeft = "-0.5%";
 		secondDiv.style.width = "48%";
+		$("secondFrame").style.marginLeft = "47%";
 		thirdDiv.style.width = "48%";
-		$("firstFrame").style.marginLeft = "0%";
-		$("secondFrame").style.marginLeft = "47.3%";
-	} else if (firstDiv.style.display == "none" && secondDiv.style.display == "none") {
-		thirdDiv.style.width = "98%";
-		$("firstFrame").style.marginLeft = "0%";
-		$("secondFrame").style.marginLeft = "0.2%";
+		$("thirdFrame").style.marginLeft = "0.6%"
+	} else if (firstDiv.style.display == "none" && (secondDiv.style.display == "none" || thirdDiv.style.display == "none")) {
+		$("firstFrame").style.marginLeft = "-0.5%";
+		if (secondDiv.style.display == "none") {
+			thirdDiv.style.width = "98%";
+			$("secondFrame").style.marginLeft = "0.2%";
+		}
+		else {
+			secondDiv.style.width = "98%";
+			$("thirdFrame").style.marginLeft = "97.5%";
+		}
 	}
 }
 
