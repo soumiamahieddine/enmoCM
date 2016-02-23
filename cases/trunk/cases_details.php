@@ -33,7 +33,7 @@ require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_secur
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php";
 
 $case_id = $_REQUEST['id'];
-$default_action = $_REQUEST['action'];
+$default_action = $_SESSION['current_basket']['default_action'];
 
 
 $db = new Database();
