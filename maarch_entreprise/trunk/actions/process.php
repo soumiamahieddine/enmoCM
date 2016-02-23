@@ -584,7 +584,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');hideOtherDiv(\'history_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
-            . '&nbsp;<small>' . _DOC_HISTORY . '</small>';
+            . '&nbsp;<i class="fa fa-history fa-2x" title="'._DOC_HISTORY.'"></i> <sup><span style="display:none;"></span></sup>';
         $frm_str .= '</b></span>';
         $frm_str .= '</td>';
     }
@@ -929,7 +929,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //HISTORY FRAME
     $frm_str .= '<div class="desc" id="history_div" style="display:none">';
-    $frm_str .= '<div class="ref-unit">';
+    $frm_str .= '<div class="ref-unit block" style="margin-top:-2px;">';
     $frm_str .= '<center><h2 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});';
     $frm_str .= 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');';
     $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _WF. '</h2></center>';
