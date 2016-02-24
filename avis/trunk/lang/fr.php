@@ -37,7 +37,7 @@ if (!defined("_SEND_TO_AVIS_WF"))
     define("_SEND_TO_AVIS_WF", "Evoyer au workflow d'avis");
 
 if (!defined("_WAITING_FOR_AVIS"))
-    define("_WAITING_FOR_AVIS", "En attante d'avis");
+    define("_WAITING_FOR_AVIS", "En attente d'avis");
 
 if (!defined("_PROCEED_WORKFLOW_AVIS"))
     define("_PROCEED_WORKFLOW_AVIS", "Poursuivre le circuit d'avis");
