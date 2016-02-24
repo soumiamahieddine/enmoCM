@@ -128,7 +128,7 @@ if ($onlyCC) {
     $arg .= '&only_cc';
 }
 
-if($origin != 'process'){
+if($origin != 'process' && $origin != 'details'){
     $content_standard = '<center><b>' . _DIFF_LIST . '</b> | ';
     $content_standard .= '<span class="button" >';
     $content_standard .= '<small><input type="button" style="margin-top:0px;" class="button" title="'.$labelButton.'" value="'.$labelButton.'" '
@@ -142,8 +142,9 @@ if($origin != 'process'){
              . 'resizable=yes,width=1280,height=800,location=no\');" /></small>';
     $content_standard .= '</span></center>';
     
+}else if($origin == 'details'){
 }else{
-    $content_standard .= '<h2 style="margin:0;">' . _DIFF_LIST . ' : </h2>';
+    $content_standard .= '<h2 style="margin:0;text-align:center;">' . _DIFF_LIST . '</h2>';
     $content_standard .= '<br/>';
     $content_standard .= '<div style="text-align:center;">';
     $content_standard .= '<input type="button" class="button" title="'.$labelButton.'" value="'.$labelButton.'" '
