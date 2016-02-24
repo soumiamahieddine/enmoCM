@@ -56,7 +56,7 @@ require_once 'modules/entities/difflist_display.php';
 $content .= str_replace(array("\r", "\n", "\t"), array("", "", ""), ob_get_contents());
 ob_end_clean();
 
-$labelButton = _MODIFY_LIST;
+$labelButton = _UPDATE_LIST_DIFF;
 $arg = '&mode=up';
 
 if( $core->test_service('add_copy_in_indexing_validation', 'entities', false) && $origin == 'indexing' ){
@@ -68,13 +68,12 @@ if ($onlyCC) {
 }
 $content_standard = '<center><b>' . _DIFF_LIST . '</b> | ';
 $content_standard .= '<span class="button" >';
-$content_standard .= '<i class="fa fa-edit fa-2x" title="'.$labelButton.'"></i>'
-         . '<a href="javascript://" onclick="window.open(\''
+$content_standard .= '<small><input type="button" style="margin-top:0px;" class="button" title="'.$labelButton.'" value="'.$labelButton.'" '
+         . 'onclick="window.open(\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
          . '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
          . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
-         . 'resizable=yes,width=1280,height=800,location=no\');"><small>'
-         . $labelButton . '</small></a>';
+         . 'resizable=yes,width=1280,height=800,location=no\');"/></small>';
 $content_standard .= '</span></center>';
 
 echo "{status : 0, div_content : '" . addslashes($content_standard . $content . '<br>') 

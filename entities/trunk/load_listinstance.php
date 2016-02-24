@@ -117,7 +117,7 @@ if(!empty($_SESSION[$origin]['diff_list'])) {
     $content .= str_replace(array("\r", "\n", "\t"), array("", "", ""), ob_get_contents());
     ob_end_clean();   
 
-    $labelButton = _MODIFY_LIST;
+    $labelButton = _UPDATE_LIST_DIFF;
     $arg = '&mode=up';
 } else {
     $content .= '<p>' . _NO_DIFF_LIST_ASSOCIATED . '</p>';
@@ -131,30 +131,28 @@ if ($onlyCC) {
 if($origin != 'process'){
     $content_standard = '<center><b>' . _DIFF_LIST . '</b> | ';
     $content_standard .= '<span class="button" >';
-    $content_standard .= '<i class="fa fa-edit fa-2x" title="'.$labelButton.'"></i>'
-             . '<a href="javascript://" onclick="window.open(\'';
+    $content_standard .= '<small><input type="button" style="margin-top:0px;" class="button" title="'.$labelButton.'" value="'.$labelButton.'" '
+             . 'onclick="window.open(\'';
     $content_standard .= $_SESSION['config']['businessappurl'] . 'index.php?display=true';
     if($specific_role <> null){
         $content_standard .= '&specific_role='.$specific_role;
     }
     $content_standard .= '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
              . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
-             . 'resizable=yes,width=1280,height=800,location=no\');"><small>'
-             . $labelButton . '</small></a>';
+             . 'resizable=yes,width=1280,height=800,location=no\');" /></small>';
     $content_standard .= '</span></center>';
     
 }else{
     $content_standard .= '<h2 style="margin:0;">' . _DIFF_LIST . ' : </h2>';
     $content_standard .= '<br/>';
-    $content_standard .= '<span class="button" >';
-    $content_standard .= '<i class="fa fa-pencil" title="'.$labelButton.'"></i>'
-             . '<a href="javascript://" onclick="window.open(\''
+    $content_standard .= '<div style="text-align:center;">';
+    $content_standard .= '<input type="button" class="button" title="'.$labelButton.'" value="'.$labelButton.'" '
+             . 'onclick="window.open(\''
              . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
              . '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
              . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
-             . 'resizable=yes,width=1280,height=800,location=no\');"> '
-             . $labelButton . '</a>';
-    $content_standard .= '</span>';
+             . 'resizable=yes,width=1280,height=800,location=no\');" />';
+    $content_standard .= '</div>';
 }
 echo "{status : 0, div_content : '" . addslashes($content_standard . $content . '<br>') 
     . "', div_content_action : '" . addslashes($content) . "'}";
