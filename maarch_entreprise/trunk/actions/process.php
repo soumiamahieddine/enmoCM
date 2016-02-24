@@ -1209,10 +1209,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($core_tools->is_module_loaded('avis')) { 
     	//AVIS CIRCUIT FRAME
         $modifVisaWorkflow = false;
-        /*if ($core->test_service('config_avis_workflow', 'avis', false)) {
+        if ($core->test_service('config_avis_workflow', 'avis', false)) {
             $modifAvisWorkflow = true;
-        }*/
-        $modifAvisWorkflow = false;
+        }
         $frm_str .= '<div id="avis_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
             $frm_str .= '<div class="block" style="margin-top:-2px;">';
                     $frm_str .= '<h2 onclick="new Effect.toggle(\'avis_div\', \'blind\', {delay:0.2});';

@@ -1297,15 +1297,14 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 <dt id="onglet_circuit" class="fa fa-check-square" style="<?php echo $style; ?>" title="<?php echo _AVIS_WORKFLOW;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt><dd id="page_circuit_avis" style="overflow-x: hidden;">
                 <h2><?php echo _AVIS_WORKFLOW;?></h2>
                 <?php
-                $modifVisaWorkflow = false;
-                if ($core->test_service('config_avis_workflow', 'avis', false)) {
+                if ($core->test_service('config_avis_workflow_in_detail', 'avis', false)) {
                     $modifAvisWorkflow = true;
                 }
                 ?>
                 <div class="error" id="divError" name="divError"></div>
                 <div style="text-align:center;">
                 <?php
-                echo $avis->getList($s_id, $coll_id, $modifVisaWorkflow, 'AVIS_CIRCUIT', '','Y');
+                echo $avis->getList($s_id, $coll_id, $modifAvisWorkflow, 'AVIS_CIRCUIT', '','Y');
                 ?>
                 </div>
                 
