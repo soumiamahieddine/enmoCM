@@ -95,7 +95,7 @@ require_once("modules/entities/class/class_manage_entities.php");
         //var_dump($allEntitiesTree);
         $frm_str .= '<hr />';
         $frm_str .='<div id="form2" style="border:none;">';
-        $frm_str .='<script>change_entity(\''.$_SESSION['destination_entity'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\', \'diff_list_div_redirect\', \'redirect\', \'\', \'false\', \'avis\');</script>';
+        $frm_str .='<script>change_entity(\''.$_SESSION['destination_entity'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance&specific_role=avis'.'\', \'diff_list_div_redirect\', \'redirect\', \'\', \'false\', \'avis\');</script>';
         $frm_str .= '<form name="frm_redirect_dep" id="frm_redirect_dep" method="post" class="forms" action="#">';
         $frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
         $frm_str .= '<input type="hidden" name="note_content_to_users" id="note_content_to_users" />';
