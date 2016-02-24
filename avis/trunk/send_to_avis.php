@@ -12,7 +12,12 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
 
  function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
  {
+    require_once 'apps/maarch_entreprise/definition_mail_categories.php';
+    
  	$res_id=$values[0];
+
+    $data = get_general_data($coll_id, $res_id, 'minimal');
+    //print_r($data);
  	$avis = new avis_controler();
     $ent = new entity();
     $entity_ctrl = new EntityControler();
@@ -77,7 +82,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
         } 
         $frm_str .='<b>'._RECOMMENDATION_LIMIT_DATE.':</b><br/>';
         $frm_str .= '<input name="recommendation_limit_date_tr" type="text" '
-            . 'id="recommendation_limit_date_tr" value="" placeholder="JJ-MM-AAAA" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');"  onclick="clear_error(\'frm_error_'
+            . 'id="recommendation_limit_date_tr" value="" placeholder="JJ-MM-AAAA" onfocus="checkRealDate();" onChange="checkRealDate();"  onclick="clear_error(\'frm_error_'
             . $actionId . '\');showCalender(this);"  onblur="document.getElementById(\'recommendation_limit_date\').value=document.getElementById(\'recommendation_limit_date_tr\').value;"/>';
         $frm_str .='<br/>';
         $frm_str .='<br/><b>'._RECOMMENDATION_NOTE.':</b><br/>';
@@ -110,6 +115,8 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
         $frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
         $frm_str .= '<input type="hidden" name="note_content_to_users" id="note_content_to_users" />';
         $frm_str .= '<input type="hidden" name="recommendation_limit_date" id="recommendation_limit_date" />';
+        $frm_str .= '<input type="hidden" name="doc_date" id="doc_date" value ="'.$data['doc_date'].'"/>';
+        $frm_str .= '<input type="hidden" name="process_limit_date" id="process_limit_date" value ="'.$data['process_limit_date'].'" />';
             $frm_str .='</form>';
         $frm_str .='</div>';
     $frm_str .='<hr />';

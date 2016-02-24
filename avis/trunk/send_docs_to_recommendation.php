@@ -5,7 +5,7 @@ $frm_width='355px';
 $frm_height = 'auto';
 require("modules/entities/entities_tables.php");
 require_once("modules/entities/class/EntityControler.php");
-require_once('modules/entities/class/class_manage_entities.php');;
+require_once("modules/entities/class/class_manage_entities.php");
 
 
  function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
@@ -71,7 +71,7 @@ require_once('modules/entities/class/class_manage_entities.php');;
         } 
         $frm_str .='<b>'._RECOMMENDATION_LIMIT_DATE.':</b><br/>';
         $frm_str .= '<input name="recommendation_limit_date_tr" type="text" '
-            . 'id="recommendation_limit_date_tr" value="" placeholder="JJ-MM-AAAA" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');"  onclick="clear_error(\'frm_error_'
+            . 'id="recommendation_limit_date_tr" value="" placeholder="JJ-MM-AAAA" onfocus="checkRealDate();" onChange="checkRealDate();"  onclick="clear_error(\'frm_error_'
             . $actionId . '\');showCalender(this);"  onblur="document.getElementById(\'recommendation_limit_date\').value=document.getElementById(\'recommendation_limit_date_tr\').value;"/>';
         $frm_str .='<br/>';
         $frm_str .='<br/><b>'._RECOMMENDATION_NOTE.':</b><br/>';
@@ -247,9 +247,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $note->addNote($res_id, $coll_id, $content_note);
             
         }
-
         $avis->processAvis($res_id);
-
         # Save listinstance
         $diffList->save_listinstance(
             $new_difflist, 

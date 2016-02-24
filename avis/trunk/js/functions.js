@@ -641,3 +641,58 @@ function saveAvisWorkflowPopup(res_id, coll_id, id_tableau, fromDetail){
 			}
 	});
 }
+
+function checkRealDate() {
+
+    var docDate;
+    var processLimitDate;
+    var avisLimitDate;
+
+
+    if($('doc_date')) {
+        docDate = $('doc_date').value;
+		var date2 = new Date();
+		date2.setFullYear(docDate.substr(6,4));
+		date2.setMonth(docDate.substr(3,2));
+		date2.setDate(docDate.substr(0,2));
+		date2.setHours(0);
+		date2.setMinutes(0);
+		var d2_docDate=date2.getTime();
+    }
+
+    if($('process_limit_date')) {
+        processLimitDate = $('process_limit_date').value;
+		var date4 = new Date();
+		date4.setFullYear(processLimitDate.substr(6,4));
+		date4.setMonth(processLimitDate.substr(3,2));
+		date4.setDate(processLimitDate.substr(0,2));
+		date4.setHours(0);
+		date4.setMinutes(0);
+		var d4_processLimitDate=date4.getTime();
+    }
+
+    if($('recommendation_limit_date')) {
+        avisLimitDate = $('recommendation_limit_date_tr').value;
+		var date5 = new Date();
+		date5.setFullYear(avisLimitDate.substr(6,4));
+		date5.setMonth(avisLimitDate.substr(3,2));
+		date5.setDate(avisLimitDate.substr(0,2));
+		date5.setHours(0);
+		date5.setMinutes(0);
+		var d5_avisLimitDate=date5.getTime();
+    }
+
+    if(d4_processLimitDate != "" && avisLimitDate != "" && d5_avisLimitDate > d4_processLimitDate) {          
+        alert("La date limite d'avis doit être antérieure à la date date limite du courrier ");
+        $('recommendation_limit_date').value = "";
+        $('recommendation_limit_date_tr').value = "";
+
+    }
+
+    if (d2_docDate > d5_avisLimitDate && avisLimitDate != "") {
+        alert("La date limite d'avis doit être supérieur à la date date du courrier ");
+        $('recommendation_limit_date').value = "";
+        $('recommendation_limit_date_tr').value = "";
+        
+    }
+}
