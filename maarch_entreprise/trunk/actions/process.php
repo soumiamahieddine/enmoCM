@@ -886,16 +886,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');';
                 $frm_str .= 'return false;">' . _DIFF_LIST_COPY . '</h2></center>';
                 if ($core_tools->test_service('add_copy_in_process', 'entities', false)) {
-                    $frm_str .= '<a href="#" onclick="window.open(\''
+                    $frm_str .= '<div style="text-align:center;"><input type="button" class="button" title="'._UPDATE_LIST_DIFF.'" value="'._UPDATE_LIST_DIFF.'" onclick="window.open(\''
                         . $_SESSION['config']['businessappurl']
                         . 'index.php?display=true&module=entities&page=manage_listinstance'
                         . '&origin=process&only_cc\', \'\', \'scrollbars=yes,menubar=no,'
-                        . 'toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="'
-                        . _UPDATE_LIST_DIFF
-                        . '"><i class="fa fa-pencil" title="' 
-                        . _UPDATE_LIST_DIFF . '"></i>&nbsp;'
-                        . _UPDATE_LIST_DIFF
-                        . '</a><br/>';
+                        . 'toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" /></div>';    
                 }
                 # Get content from buffer of difflist_display 
                 $difflist = $_SESSION['process']['diff_list'];
