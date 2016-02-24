@@ -28,7 +28,16 @@ if (!defined("_TO_AVIS"))
     define("_TO_AVIS", "POUR AVIS");
 
 if (!defined("_AVIS_ANSWERS"))
-    define("_AVIS_ANSWERS", "Donne son avis");
+    define("_AVIS_ANSWERS", "Donner son avis");
+
+if (!defined("_AVIS_ANSWERS_DESC"))
+    define("_AVIS_ANSWERS_DESC", "Permet à ce groupe d'apparaître dans la liste des personnes Conseillers (circuit d'avis)");
+
+if (!defined("_CONFIG_AVIS_WORKFLOW_IN_DETAIL"))
+    define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL", "Configuration du circuit d'avis depuis la fiche détaillée");
+
+if (!defined("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC"))
+    define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC", "Permet de définir le circuit directement depuis la fiche détaillée du courrier");
 
 if (!defined("_LAST_AVIS"))
     define("_LAST_AVIS", "Conseiller décideur");
