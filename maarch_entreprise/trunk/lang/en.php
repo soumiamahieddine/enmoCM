@@ -1447,6 +1447,8 @@ if (!defined("_VIEW_CONTACT")) define("_VIEW_CONTACT","View contact");
 if (!defined("_CONTACT_ADDRESSES_ASSOCIATED")) define("_CONTACT_ADDRESSES_ASSOCIATED","Associated addresses to this contact");
 if (!defined("_BACK_TO_RESULTS_LIST")) define("_BACK_TO_RESULTS_LIST","Back to results list");
 if (!defined("_PROCEED_WORKFLOW"))    define("_PROCEED_WORKFLOW", "Continue visa workflow");
+if (!defined("_INTERRUPT_WORKFLOW"))
+    define("_INTERRUPT_WORKFLOW", "Interrupt workflow");
 if (!defined('_SEND_TO_VISA'))    define( '_SEND_TO_VISA', 'Send to visa');
 if (!defined("_SEND_SIGNED_DOCS"))    define("_SEND_SIGNED_DOCS", "Send signed documents");
 

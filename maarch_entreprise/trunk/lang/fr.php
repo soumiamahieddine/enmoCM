@@ -1740,6 +1740,8 @@ if (!defined("_NEW_EMAIL_SIGNATURE"))
 if (!defined("_SEND_MAIL"))    define("_SEND_MAIL", "Envoi du dossier par courriel");
 if (!defined("_IMPRIM_DOSSIER"))    define("_IMPRIM_DOSSIER", "Impression du dossier");
 if (!defined("_PROCEED_WORKFLOW"))    define("_PROCEED_WORKFLOW", "Poursuivre le circuit de visa");
+if (!defined("_INTERRUPT_WORKFLOW"))
+    define("_INTERRUPT_WORKFLOW", "Interrompre le circuit de visa");
 if (!defined("_VISA_MAIL"))    define("_VISA_MAIL", "Viser le courrier");
 if (!defined("_SEND_SIGNED_DOCS"))    define("_SEND_SIGNED_DOCS", "Transmettre réponses signées");
 if (!defined("_PREPARE_VISA"))    define("_PREPARE_VISA", "Préparer le circuit de visa");
