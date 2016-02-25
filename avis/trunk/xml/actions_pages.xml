@@ -45,4 +45,15 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>avis_workflow_simple</ID>
+        <LABEL>_PROCEED_WORKFLOW_AVIS_SIMPLE</LABEL>
+        <NAME>avis_simple</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>avis</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
 </ROOT>
