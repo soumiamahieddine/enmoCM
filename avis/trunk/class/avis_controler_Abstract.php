@@ -796,7 +796,7 @@ abstract class avis_controler_Abstract
 
     public function nbAvis($res_id, $coll_id){
         $db = new Database();
-        $stmt = $db->query("SELECT listinstance_id from listinstance WHERE res_id= ? and coll_id = ? and item_mode = ?", array($res_id, $coll_id, 'avis'));
+        $stmt = $db->query("SELECT listinstance_id from listinstance WHERE res_id= ? and coll_id = ? and item_mode = ? and difflist_type = 'AVIS_CIRCUIT'", array($res_id, $coll_id, 'avis'));
         return $stmt->rowCount();
     }
     
