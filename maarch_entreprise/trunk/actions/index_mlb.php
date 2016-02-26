@@ -685,7 +685,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<td class="indexing_field">';
         $frmStr .= '<select name="destination" id="destination" onchange="'
                     . 'clear_error(\'frm_error_' . $actionId . '\');'
-                    . 'load_listmodel(this.options[this.selectedIndex], \'diff_list_div\', \'indexing\');'
+                    . 'load_listmodel(this.options[this.selectedIndex], \'diff_list_div\', \'indexing\', $(\'category_id\').value);'
                     . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
                 . ';" >';
         $frmStr .= '<option value="">' . _CHOOSE_DEPARTMENT . '</option>';

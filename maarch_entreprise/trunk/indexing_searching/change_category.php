@@ -45,8 +45,22 @@ $_SESSION['category_id'] = $_REQUEST['category_id'];
 $doc_date = '';
 if ($_SESSION['category_id'] == 'outgoing') {
 	$doc_date = ', doc_date : "' . date('d-m-Y') . '"';
+	$destination = ', destination : "'.$_SESSION['user']['primaryentity']['id']. '"';
+	$_SESSION['indexing']['diff_list']['dest']['user'] = '';
+	$diffListOutgoing = array(
+							'user_id' => $_SESSION['user']['FirstName'],
+							'lastname' => $_SESSION['user']['LastName'],
+							'firstname' => $_SESSION['user']['FirstName'],
+							'entity_id' => $_SESSION['user']['entities'][0]['ENTITY_ID'],
+							'entity_label' => $_SESSION['user']['entities'][0]['ENTITY_LABEL'],
+							'visible' => 'Y',
+							'process_comment' => ''
+						);
+
+	$_SESSION['indexing']['diff_list']['dest']['user'][]=$diffListOutgoing;
 } else {
 	$doc_date = '';
+	$destination = '';
 }
 // Module and apps services
 $core->execute_modules_services($_SESSION['modules_services'], 'change_category.php', 'include');
@@ -65,5 +79,5 @@ $services = preg_replace('/, $/', '', $services);
 $services .= ']';
 unset($_SESSION['indexing_category_id']);
 unset($_SESSION['indexing_services_cat']);
-echo "{status : 0,  services : ".$services . $doc_date ."}";
+echo "{status : 0,  services : ".$services . $doc_date . $destination ."}";
 exit();

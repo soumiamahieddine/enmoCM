@@ -724,7 +724,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<tr id="department_tr" style="display:'.$display_value.';">';
                     $frm_str .='<td class="indexing_label"><label for="department" class="form_title" id="label_dep_dest" style="display:inline;" >'._DEPARTMENT_DEST.'</label><label for="department" class="form_title" id="label_dep_exp" style="display:none;" >'._DEPARTMENT_EXP.'</label></td>';
                     $frm_str .='<td>&nbsp;</td>';
-                    $frm_str .='<td class="indexing_field"><select name="destination" id="destination" onchange="clear_error(\'frm_error_'.$id_action.'\');change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\');">';
+                    $frm_str .='<td class="indexing_field"><select name="destination" id="destination" onchange="clear_error(\'frm_error_'.$id_action.'\');change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $(\'category_id\').value);">';
                     $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
                     
                     $countAllEntities = count($allEntitiesTree);
@@ -1375,9 +1375,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='change_entity(\''.$data['destination'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
             if(!$load_listmodel)
             {
-                $frm_str .= ',\'false\'';
+                $frm_str .= ',\'false\',$(\'category_id\').value';
             }
-            $frm_str .= ');';
+            $frm_str .= ',$(\'category_id\').value);';
         }
         if ($data['confidentiality'] == 'Y') {
             $frm_str .='$(\'confidential\').checked=true;';

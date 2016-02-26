@@ -757,7 +757,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         require_once('modules'.DIRECTORY_SEPARATOR.'avis'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'avis_controler.php');
         $avis = new avis_controler();
         if($avis->nbAvis($res_id,$coll_id) == 0){
-            $style = 'opacity:0.5;';
+            $style = ' opacity:0.5;';
         }else{
             $style = '';
         }
@@ -880,7 +880,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //DIFFUSION FRAME
     if ($core_tools->is_module_loaded('entities')) {
-        $frm_str .= '<div id="diff_list_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
+        $category = $data['category_id']['value'];
+
+        $frm_str .= '<div id="diff_list_div" style="display:none;" onmouseover="this.style.cursor=\'pointer\';">';
             $frm_str .= '<div class="block" style="margin-top:-2px;">';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});';
                 $frm_str .= 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');';
@@ -888,7 +890,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 if ($core_tools->test_service('add_copy_in_process', 'entities', false)) {
                     $frm_str .= '<div style="text-align:center;"><input type="button" class="button" title="'._UPDATE_LIST_DIFF.'" value="'._UPDATE_LIST_DIFF.'" onclick="window.open(\''
                         . $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&module=entities&page=manage_listinstance'
+                        . 'index.php?display=true&module=entities&cat='.$category.'&page=manage_listinstance'
                         . '&origin=process&only_cc\', \'\', \'scrollbars=yes,menubar=no,'
                         . 'toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" /></div>';    
                 }
@@ -900,25 +902,25 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= str_replace(array("\r", "\n", "\t"), array("", "", ""), ob_get_contents());
                 ob_end_clean();
 
-                    $frm_str .= '<br/>'; 
-                    $frm_str .= '<br/>';                
-                    $frm_str .= '<span class="diff_list_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'diff_list_history_div\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'diff_list_history_div\', \'divStatus_diff_list_history_div\');return false;">';
-                        $frm_str .= '<span id="divStatus_diff_list_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>';
-                        $frm_str .= '<b>&nbsp;<small>'._DIFF_LIST_HISTORY.'</small></b>';
-                    $frm_str .= '</span>';
-
-                    $frm_str .= '<div id="diff_list_history_div" style="display:none">';
-
-                        $s_id = $res_id;
-                        $return_mode = true;
-						$diffListType = 'entity_id';
-                        require_once('modules/entities/difflist_history_display.php');
-
-                    $frm_str .= '</div>';
-                
                 //$frm_str .= '<hr class="hr_process"/>';
+                $frm_str .= '<br/>';                
+                $frm_str .= '<br/>';                
+                $frm_str .= '<span class="diff_list_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'diff_list_history_div\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'diff_list_history_div\', \'divStatus_diff_list_history_div\');return false;">';
+                    $frm_str .= '<span id="divStatus_diff_list_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>';
+                    $frm_str .= '<b>&nbsp;<small>'._DIFF_LIST_HISTORY.'</small></b>';
+                $frm_str .= '</span>';
+                $frm_str .= '<div id="diff_list_history_div" style="display:none">';
+            $s_id = $res_id;
+            $return_mode = true;
+            $diffListType = 'entity_id';
+            require_once('modules/entities/difflist_history_display.php');
             $frm_str .= '</div>';
+                $frm_str .= '</div>';
+                $frm_str .= '<br/>';
+                
+
             $frm_str .= '<hr />';
+
         $frm_str .= '</div>';
     }
 

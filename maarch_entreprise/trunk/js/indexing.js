@@ -310,7 +310,7 @@ function activate_process_date(activate, display_value_tr)
  *
  * @param cat_id String Category identifier
  **/
-function change_category(cat_id, display_value_tr, path_manage_script,get_js_script, params_cat)
+function change_category(cat_id, display_value_tr, path_manage_script,get_js_script, params_cat, origin='')
 {
     var typeContactInternal = 'not_checked';
     var typeContactExternal = 'not_checked';
@@ -672,6 +672,12 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                     ) {
                         var doc_date = response.doc_date;
                         $('doc_date').value = doc_date;
+
+                        var destination = response.destination;
+                        $('destination').value = destination;
+                    }
+                    if(origin != 'init'){
+                       document.getElementById("destination").onchange();
                     }
                     //console.log('3 '+print_r(services_to_exec));
                     var path_scripts = '';
@@ -1211,7 +1217,7 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
 function init_validation(path_autocomplete_contact, display_value_tr, path_manage_script, get_js_script)
 {
     var param_cat = {'type_contact_internal' : {'onclick' : false} , 'type_contact_external' : {'onclick' : false}, 'type_multi_contact_external' : {'onclick' : false}};
-    change_category($('category_id').value, display_value_tr,path_manage_script,get_js_script, param_cat);
+    change_category($('category_id').value, display_value_tr,path_manage_script,get_js_script, param_cat, 'init');
     change_contact_type(path_autocomplete_contact, false);
     $('contact').onchange();
     //$('destination').onchange();

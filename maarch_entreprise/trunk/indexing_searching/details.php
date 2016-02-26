@@ -1147,6 +1147,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 $detailsExport .= "</table>";
                 if ($core->is_module_loaded('entities'))
                 {
+                    $category = $data['category_id']['value'];
                     $detailsExport .= "<h2>"._DIFF_LIST."</h2>";
                     ?>
                     <dt class="fa fa-gear" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _DIFF_LIST;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
@@ -1161,7 +1162,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             echo '<div style="text-align:center;">';
                             echo '<input type="button" class="button" title="'._UPDATE_LIST_DIFF.'" value="'._UPDATE_LIST_DIFF.'" onclick="window.open(\''
                                 .$_SESSION['config']['businessappurl']
-                                .'index.php?display=true&module=entities&page=manage_listinstance&origin=details'.$onlyCC.'\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" />';
+                                .'index.php?display=true&module=entities&page=manage_listinstance&cat='.$category.'&origin=details'.$onlyCC.'\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" />';
                             ?>
                             <input type="button" class="button" onClick="saveListDiff('listinstance', '<?php 
                                 functions::xecho($_SESSION['tablename']['ent_listinstance']);?>', '<?php 
@@ -1185,6 +1186,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             # Include display of list
                             $roles = $diff_list->list_difflist_roles();
                             $difflist = $_SESSION['details']['diff_list'];
+
                             require_once 'modules/entities/difflist_display.php';  
                             
                             //if (($core->test_service('update_list_diff_in_details', 'entities', false)) && (!$core->test_service('add_copy_in_process', 'entities', false))) {
