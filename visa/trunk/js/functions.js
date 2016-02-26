@@ -188,9 +188,9 @@ function addRow(id_tableau)
 	var listeDeroulante = document.getElementById(id_Cons);
 	var colonne2 = ligne.insertCell(0);//on ajoute la seconde cellule
 	var listOptions = "";
-	for (var j=0; j<listeDeroulante.options.length; j++){
-		listOptions += "<option value='"+listeDeroulante.options[j].value+"'>"+listeDeroulante.options[j].innerHTML+"</option>";
-	}
+	
+	listOptions=listeDeroulante.innerHTML;
+
 	colonne2.innerHTML += "<span id='rank_" + position + "'></span><select>"+listOptions+"</select><span id='signatory_" + position + "'></span>";
 	//colonne2.innerHTML += "</select>";
 
