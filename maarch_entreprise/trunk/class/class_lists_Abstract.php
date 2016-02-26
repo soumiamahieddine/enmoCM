@@ -1517,6 +1517,20 @@ abstract class lists_Abstract extends Database
         }
     }
     
+    public function tmplt_nbNoteAvis($parameter) 
+    {
+        $my_explode = explode ("|", $parameter);
+        $res_id = str_replace("'","",$my_explode[1]);
+        $db = new Database();
+        //Load action name   
+        $stmt = $db->query(
+            "SELECT count(*) as total FROM notes WHERE identifier = ? and note_text like '[Avis%'", array($res_id)
+        );
+        $note = $stmt->fetchObject();
+
+        return $note->total;
+    }
+
     protected function _tmplt_loadVarSys($parameter, $resultTheLine=array(), $listKey='', $lineIsDisabled=false) {
         ##loadValue|arg1##: load value in the db; arg1= column's value identifier
         if (preg_match("/^loadValue\|/", $parameter)){
@@ -1600,6 +1614,8 @@ abstract class lists_Abstract extends Database
             $var = $this->tmplt_func_cadenas($parameter);
         } elseif (preg_match("/^showDefaultAction$/", $parameter)){
             $var = $this->tmplt_showDefaultAction($parameter);
+        }elseif (preg_match("/^nbNoteAvis\|/", $parameter)){
+            $var = $this->tmplt_nbNoteAvis($parameter);
         } else {
             $var = _WRONG_FUNCTION_OR_WRONG_PARAMETERS;
         }
