@@ -14,9 +14,9 @@ function addRowAvis(id_tableau)
 	var listeDeroulante = document.getElementById(id_Cons);
 	var colonne2 = ligne.insertCell(0);//on ajoute la seconde cellule
 	var listOptions = "";
-	for (var j=0; j<listeDeroulante.options.length; j++){
-		listOptions += "<option value='"+listeDeroulante.options[j].value+"'>"+listeDeroulante.options[j].innerHTML+"</option>";
-	}
+
+	listOptions=listeDeroulante.innerHTML;
+
 	colonne2.innerHTML += "<span id='avis_rank_" + position + "'></span><select>"+listOptions+"</select><span id='lastAvis_" + position + "'></span>";
 	//colonne2.innerHTML += "</select>";
 
