@@ -491,7 +491,7 @@ abstract class visa_Abstract extends Database
 					$j=0;
 					$str .= '<tr class="col" id="lineVisaWorkflow_'.$j.'">';
 					$str .= '<td>';
-					$str .= '<span id="rank_' . $j . '"><strong>1 </strong></span>';
+					$str .= '<span id="rank_' . $j . '"><span class="nbResZero" style="font-weight:bold;opacity:0.5;">1</span> </span>';
 					if ($bool_modif){
 						$str .= '<select id="conseiller_'.$j.'" name="conseiller_'.$j.'" >';
 						$str .= '<option value="" >Sélectionnez un utilisateur</option>';

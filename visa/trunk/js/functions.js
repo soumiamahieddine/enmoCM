@@ -125,7 +125,7 @@ function refreshIcones(id_tableau){
 		arrayLignes[i].cells[6].childNodes[0].name = "date_"+num;	arrayLignes[i].cells[6].childNodes[0].id="date_"+num;
 		arrayLignes[i].cells[7].childNodes[0].name = "isSign_"+num;	arrayLignes[i].cells[7].childNodes[0].id="isSign_"+num;
 
-		document.getElementById("rank_" + num).innerHTML = "<strong>" + i + " </strong>";
+		document.getElementById("rank_" + num).innerHTML = "<span class='nbResZero' style='font-weight:bold;opacity:0.5;'>"+i+"</span> ";
 		if (longueur > 2)
 			document.getElementById("suppr_"+num).style.visibility="visible";
 		else
