@@ -21,6 +21,7 @@ $diffList = new diffusion_list();
 $objectType = $_REQUEST['objectType'];
 $objectId = $_REQUEST['objectId'];
 $origin = $_REQUEST['origin'];
+$category = $_REQUEST['category'];
 
 // Get listmodel_parameters
 $_SESSION[$origin]['difflist_type'] = $diffList->get_difflist_type($objectType);
@@ -71,7 +72,7 @@ $content_standard .= '<span class="button" >';
 $content_standard .= '<small><input type="button" style="margin-top:0px;" class="button" title="'.$labelButton.'" value="'.$labelButton.'" '
          . 'onclick="window.open(\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-         . '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
+         . '&module=entities&page=manage_listinstance&cat='.$category.'&origin=' . $origin . $arg
          . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
          . 'resizable=yes,width=1280,height=800,location=no\');"/></small>';
 $content_standard .= '</span></center>';

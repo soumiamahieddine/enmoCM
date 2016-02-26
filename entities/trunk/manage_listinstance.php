@@ -43,6 +43,12 @@ if(isset($_GET['id']))
 else  
     $id = false;
 
+// Category ?
+if(isset($_GET['cat']))
+    $cat = $_GET['cat'];
+else  
+    $cat = false;
+
 // Rank for remove/move ?
 if(isset($_GET['rank']))
     $rank = $_GET['rank'];
@@ -639,6 +645,7 @@ if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
 $link = $_SESSION['config']['businessappurl'] . "index.php?display=true&module=entities&page=manage_listinstance&origin=" . $origin;
 if ($onlyCc) $link .= '&only_cc';
 if ($noDelete) $link .= '&no_delete';
+if ($cat) $link .= '&cat='.$cat;
 if ($specific_role) $link .= '&specific_role='.$specific_role;
 
 
@@ -716,6 +723,9 @@ $linkwithwhat =
 		# OTHER ROLES
 		#**************************************************************************
 		foreach($roles as $role_id => $role_label) {
+            if($cat == 'outgoing' && $role_label == 'Destinataire'){
+                $role_label = _SHIPPER;
+            }
 			if (count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0
 			 || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
 			) { 
@@ -838,7 +848,11 @@ $linkwithwhat =
 		<form name="pop_diff" method="post" >
 			<div align="center">
 				<input align="middle" type="button" value="<?php echo _VALIDATE;?>" class="button" name="valid" onclick="change_diff_list('<?php functions::xecho($origin);?>', <?php echo "'" . $displayValue . "'";
-					if ($_REQUEST['origin'] == 'redirect') echo ",'diff_list_div_redirect','','avis'";
+					if ($_REQUEST['origin'] == 'redirect'){
+                        echo ",'diff_list_div_redirect','','avis'";
+                    }else{
+                        echo ",'','','".$cat."'";
+                    } 
 				?>);" />
 				<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
 			</div>
@@ -946,6 +960,10 @@ $linkwithwhat =
 								<input type="hidden" id="user_id_<?php functions::xecho($j);?>" value="<?php functions::xecho($users[$j]['ID']);?>" />
 								<select name="role" id="user_role_<?php functions::xecho($j);?>" style="width:60%;"><?php
 								foreach($possible_roles as $role_id => $role_label) {
+                                    if($cat == 'outgoing' && $role_label == 'Destinataire'){
+                                        $role_label = _SHIPPER;
+                                    }
+
 									if((($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) && (!isset($_REQUEST['specific_role']))) || ($role_id == $specific_role)) { ?>
 									<option value="<?php functions::xecho($role_id);?>"><?php functions::xecho($role_label);?></option><?php 
 									} 

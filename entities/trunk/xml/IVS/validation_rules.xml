@@ -136,6 +136,7 @@
 		<parameter name="module" type="identifier" />
 		<parameter name="objectType" type="string" />
 		<parameter name="objectId" type="string" />
+		<parameter name="category" type="string" />
 		<parameter name="origin" type="identifier" />
     </validationRule>
     <validationRule name="check_user_entities" extends="standardForm" mode="error">
@@ -205,6 +206,7 @@
 		<parameter name="rank" type="integer" />
 		<parameter name="auto_filter" type="string" />
 		<parameter name="specific_role" type="string" />
+		<parameter name="cat" type="string" />
     </validationRule>
 
     <validationRule name="loadDiffList" extends="standardForm" mode="error">
@@ -224,6 +226,7 @@
 		<parameter name="mandatory" type="string" />
 		<parameter name="objectId" type="identifier" />
 		<parameter name="collId" type="collection_list" />
+		<parameter name="category" type="string" />
 		<parameter name="specific_role" type="string" />
     </validationRule>
 

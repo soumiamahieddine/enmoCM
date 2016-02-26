@@ -19,6 +19,7 @@ $core = new core_tools();
 $core->load_lang();
 $diffList = new diffusion_list();
 $origin = $_REQUEST['origin'];
+$category = $_REQUEST['category'];
 
 if (empty($_REQUEST['origin'])) {
     $_SESSION['error'] = _ORIGIN . ' ' . _UNKNOWN;
@@ -137,24 +138,28 @@ if($origin != 'process' && $origin != 'details'){
     if($specific_role <> null){
         $content_standard .= '&specific_role='.$specific_role;
     }
-    $content_standard .= '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
+    $content_standard .= '&module=entities&page=manage_listinstance&cat='.$category.'&origin=' . $origin . $arg
              . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
              . 'resizable=yes,width=1280,height=800,location=no\');" /></small>';
     $content_standard .= '</span></center>';
+    $full_content = $content_standard . $content;
     
 }else if($origin == 'details'){
+    $full_content =$content;
 }else{
-    $content_standard .= '<h2 style="margin:0;text-align:center;">' . _DIFF_LIST . '</h2>';
-    $content_standard .= '<br/>';
+    $content_standard .= '<div class="block" style="margin-top:-2px;">';
+    $content_standard .= '<h2 style="text-align:center;">' . _DIFF_LIST . '</h2>';
     $content_standard .= '<div style="text-align:center;">';
     $content_standard .= '<input type="button" class="button" title="'.$labelButton.'" value="'.$labelButton.'" '
              . 'onclick="window.open(\''
              . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-             . '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
+             . '&module=entities&page=manage_listinstance&cat='.$category.'&origin=' . $origin . $arg
              . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
              . 'resizable=yes,width=1280,height=800,location=no\');" />';
     $content_standard .= '</div>';
+
+    $full_content = $content_standard . $content. '</div>';
 }
-echo "{status : 0, div_content : '" . addslashes($content_standard . $content . '<br>') 
+echo "{status : 0, div_content : '" . addslashes($full_content . '<br>') 
     . "', div_content_action : '" . addslashes($content) . "'}";
 exit();

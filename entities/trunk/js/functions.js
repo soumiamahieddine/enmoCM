@@ -6,7 +6,8 @@ function change_entity(
 	diff_list_id, 
 	origin_keyword, 
 	display_value_tr, 
-	load_listmodel
+	load_listmodel,
+    category =''
 ) {
     var div_id = diff_list_id || 'diff_list_div';
     var tr_display_val = display_value_tr || 'table-row';
@@ -32,7 +33,8 @@ function change_entity(
 				collId : 'letterbox_coll',
                 load_from_model : load_listmodel,
                 origin : origin_arg,
-                mandatory : isMandatory
+                mandatory : isMandatory,
+                category : category
             },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);
@@ -116,7 +118,8 @@ function select_listmodels(
 function load_listmodel(
 	selectedOption,
 	diff_list_id, 
-	origin_keyword
+	origin_keyword,
+    category = ''
 ) {
     var div_id = diff_list_id || 'diff_list_div';
     var origin = origin_keyword || '';
@@ -132,7 +135,8 @@ function load_listmodel(
             parameters: { 
 				objectType : objectType,
 				objectId : objectId,
-                origin : origin
+                origin : origin,
+                category : category
 			},
             onSuccess: function(answer){
                 eval("response = "+answer.responseText);
@@ -155,7 +159,8 @@ function change_diff_list(
 	origin,
 	display_value_tr, 
 	difflist_div, 
-	difflist_tr
+	difflist_tr,
+    category = ''
 ) {
     var list_div = difflist_div || 'diff_list_div';
     var list_div_from_action = 'diff_list_div_from_action';
@@ -167,7 +172,8 @@ function change_diff_list(
         {
             method:'post',
             parameters: {
-				origin : origin
+			origin : origin,
+            category : category
             },
             onSuccess: function(answer){
                 eval("response = "+answer.responseText);

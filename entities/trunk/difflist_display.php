@@ -8,7 +8,13 @@
     $onlyCC =  hide 'dest';
 */
     echo '<div style="max-height:490px;overflow:auto;">';
+    
 foreach($roles as $role_id => $role_label) {
+
+    if($category == 'outgoing' && $role_label == 'Destinataire'){
+        $role_label = _SHIPPER;
+    }
+
     if($specific_role != $role_id && isset($specific_role) && $specific_role <> '') 
         continue;
     if(count($difflist[$role_id]['users']) > 0
