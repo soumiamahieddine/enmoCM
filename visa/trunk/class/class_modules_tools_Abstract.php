@@ -466,7 +466,7 @@ abstract class visa_Abstract extends Database
 				$str .= '</select>';
 			}
 
-			$str .= '<table class="listing spec detailtabricatordebug" cellspacing="0" border="0" id="'.$id_tab.'">';
+			$str .= '<table class="listing spec detailtabricator" cellspacing="0" border="0" id="'.$id_tab.'" style="width:100%;">';
 			$str .= '<thead><tr>';
 			$str .= '<th style="width:40%;" align="left" valign="bottom"><span>Visa</span></th>';
 			if ($bool_modif){
@@ -539,7 +539,11 @@ abstract class visa_Abstract extends Database
 									$disabled = ' disabled ';
 								else
 									$disabled = '';
-								$str .= '<span id="rank_' . $seq . '"><strong>'. ($seq + 1) . '</strong></span>';
+
+								if ($circuit['visa']['users'][$seq-1]['process_date'] != '' AND $circuit['visa']['users'][$seq]['process_date'] == ''){
+									$actual_vis = '<i class="fa fa-caret-right" title="actuel viseur" style="cursor:help;"></i>';
+								}
+								$str .= '<span id="rank_' . $seq . '">'.$actual_vis.' <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) .'</span> </span>';
 								$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
 								$str .= '<option value="" >Sélectionnez un utilisateur</option>';
 								
@@ -588,6 +592,7 @@ abstract class visa_Abstract extends Database
 								if ($seq == 0 || ($isVisaStep && $myPosVisa+1 >= $seq) || $circuit['visa']['users'][$seq-1]['process_date'] != ''){
 									$up = ' style="visibility:hidden"';
 								}
+
 								$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x" title="'.DOWN_USER_WORKFLOW.'"></i></a></td>';
 								$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
 								$str .= '<td id="allez"><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$seq.'" name="suppr_'.$seq.'" '.$del.' ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
@@ -597,10 +602,14 @@ abstract class visa_Abstract extends Database
 
 
 								$str .= '<td style="display:none"><input type="checkbox" id="isSign_'.$seq.'" name="isSign_'.$seq.'" '.$displayCB.' '.$checkCB.'/></td>';
+								if ($step['process_date'] != '')
+									$str .= '<td><i class="fa fa-check fa-2x" title="'._VISED.'"></i></td>';
+								else
+									$str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_VISA.'"></i></td>';
 
 							}
 							else{
-								$str .= '<td><span><strong>' . ($seq + 1) . ' </strong></span>'.$step['firstname'].' '.$step['lastname'];
+								$str .= '<td><span><span class="nbResZero" style="font-weight:bold;opacity:0.5;">' . ($seq + 1) . '</span> </span>'.$step['firstname'].' '.$step['lastname'];
 								$str .= '</td>';
 								$str .= '<td>'.$step['process_comment'].'</td>';
 								if ($step['process_date'] != '')
@@ -631,7 +640,7 @@ abstract class visa_Abstract extends Database
 
 							$str .= '<td>';
 							$tab_users = $this->getUsersVis();
-							$str .= '<span id="rank_' . $seq . '"><strong>'. ($seq + 1) . ' </strong></span>';
+							$str .= '<span id="rank_' . $seq . '"><span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) . '</span> </span>';
 							$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
 							$str .= '<option value="" >Sélectionnez un utilisateur</option>';
 							$tab_usergroups = $this->getGroupVis();
@@ -680,8 +689,12 @@ abstract class visa_Abstract extends Database
 							$str .= '<td style="display:none"><input type="hidden" id="date_'.$seq.'" name="date_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_date'].'" /></td>';
 
 							$str .= '<td style="display:none"><input type="checkbox" id="isSign_'.$seq.'" name="isSign_'.$seq.'" '.$displayCB.' checked/></td>';
+							if ($circuit['sign']['users'][0]['process_date'] != '')
+								$str .= '<td><i class="fa fa-check fa-2x" title="'._SIGNED.'"></i></td>';
+							else
+								$str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_SIGN.'"></i></td>';
 						} else {
-							$str .= '<td><span><strong>' . ($seq + 1) . ' </strong></span>' . $circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
+							$str .= '<td><span><span class="nbResZero" style="font-weight:bold;opacity:0.5;">' . ($seq + 1) .'</span> </span>' . $circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
 							$str .= ' <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></td>';
 							$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
 							if ($circuit['sign']['users'][0]['process_date'] != '')
