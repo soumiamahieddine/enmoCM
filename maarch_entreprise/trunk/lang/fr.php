@@ -1553,6 +1553,8 @@ if (!defined("_SHOW"))                              define("_SHOW", "Afficher");
 if (!defined("_LINES"))                             define("_LINES", " lignes");
 if (!defined("_NO_TEMPLATE_FILE_AVAILABLE"))        define("_NO_TEMPLATE_FILE_AVAILABLE", "Template non disponible");
 
+if (!defined("_GED"))    define("_GED", "n° Ged");
+
 //EMAIL INDEXES
 if (!defined("_EMAIL_FROM_ADDRESS")) define("_EMAIL_FROM_ADDRESS", "Email de");
 if (!defined("_EMAIL_TO_ADDRESS")) define("_EMAIL_TO_ADDRESS", "Email pour");

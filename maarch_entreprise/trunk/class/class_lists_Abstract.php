@@ -163,7 +163,7 @@ abstract class lists_Abstract extends Database
         
         //Db query
         $db = new Database();
-        
+        //var_dump($_SESSION['filters']['contact']);
         //Load filter's data
         switch ($filter) {
         
@@ -375,6 +375,7 @@ abstract class lists_Abstract extends Database
             
             case 'contact':
                 if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
+                    //var_dump('coucou');
 
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
@@ -421,6 +422,44 @@ abstract class lists_Abstract extends Database
                 $filters .= '<input type="hidden" id="contactidFilters" name="contactidFilters" ';
                 if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
                     $filters .= 'value="'.$_SESSION['filters']['contact']['VALUE'].'"';
+                }
+                $filters .='/>';
+            break;
+
+            case 'res_id':
+
+                $res_id = '['._GED.']';
+                $filters .='<input type="text" name="res_id" id="res_id" value="'.$res_id.'" size="15" '
+                            .'onChange="myFunction(), loadList(\''.$this->link
+                            .'&filter=res_id&value=\' + $(\'residFilters\').value, \''.$this->divListId.'\', '
+                            .$this->modeReturn.');" />&nbsp;';
+                //Autocompletion script and div 
+                $filters .='<script type="text/javascript">function myFunction() {';
+                $filters .='var x = document.getElementById("res_id").value;';
+                $filters .='document.getElementById("residFilters").value = x;';
+                $filters .='}</script>';
+                $filters .= '<input type="hidden" id="residFilters" name="residFilters" ';
+                if(isset($_SESSION['filters']['res_id']['VALUE']) && !empty($_SESSION['filters']['res_id']['VALUE'])) {
+                    $filters .= 'value="'.$_SESSION['filters']['res_id']['VALUE'].'"';
+                }
+                $filters .='/>';
+            break;
+
+            case 'subject':
+
+                $subject = '['._SUBJECT.']';
+                $filters .='<input type="text" name="subject" id="subject" value="'.$subject.'" size="40" '
+                            .'onChange="myFunction(), loadList(\''.$this->link
+                            .'&filter=subject&value=\' + $(\'subjectFilters\').value, \''.$this->divListId.'\', '
+                            .$this->modeReturn.');" />&nbsp;';
+                //Autocompletion script and div 
+                $filters .='<script type="text/javascript">function myFunction() {';
+                $filters .='var x = document.getElementById("subject").value;';
+                $filters .='document.getElementById("subjectFilters").value = x;';
+                $filters .='}</script>';
+                $filters .= '<input type="hidden" id="subjectFilters" name="subjectFilters" ';
+                if(isset($_SESSION['filters']['subject']['VALUE']) && !empty($_SESSION['filters']['subject']['VALUE'])) {
+                    $filters .= 'value="'.$_SESSION['filters']['subject']['VALUE'].'"';
                 }
                 $filters .='/>';
             break;
@@ -622,7 +661,7 @@ abstract class lists_Abstract extends Database
                 } else {
                     //Keep value
                     $_SESSION['filters'][$_REQUEST['filter']]['VALUE'] = $_REQUEST['value'];
-                    
+                    //var_dump($_REQUEST['filter']);
                     //Build where clause
                     if ($_REQUEST['filter'] == 'status') {
 
@@ -694,6 +733,17 @@ abstract class lists_Abstract extends Database
                     
                         $_SESSION['filters']['type']['CLAUSE'] = "type_id = '".$_SESSION['filters']['type']['VALUE']."'";
                         
+                    } else if ($_REQUEST['filter'] == 'res_id') {
+                        /*Permet de filtrer sur le res_id*/
+                        if(is_numeric($_SESSION['filters']['res_id']['VALUE'])){
+                            $_SESSION['filters']['res_id']['CLAUSE'] = "res_id = '".$_SESSION['filters']['res_id']['VALUE']."'";
+                        }  
+                    } else if ($_REQUEST['filter'] == 'subject') {
+                        /*Permet de filtrer sur le l'objet du courrier et si la valeur saisi est un numérique va rechercher sur le res_id*/
+                            $_SESSION['filters']['subject']['CLAUSE'] = "upper(subject) like '%".strtoupper($_SESSION['filters']['subject']['VALUE'])."%'"; 
+                            if(is_numeric($_SESSION['filters']['subject']['VALUE'])){
+                            $_SESSION['filters']['subject']['CLAUSE'] .= "or res_id = '".$_SESSION['filters']['subject']['VALUE']."'"; 
+                            }
                     } else if ($_REQUEST['filter'] == 'isViewed') {                    
                         if ($_SESSION['filters']['isViewed']['VALUE'] == 'yes') {
                             $_SESSION['filters']['isViewed']['CLAUSE'] = "res_id in (select res_id from listinstance WHERE coll_id = '".$_SESSION['collection_id_choice']."' and item_type = 'user_id' and item_id = '".$_SESSION['user']['UserId']."' and item_mode = 'cc' and viewed > 0)";
@@ -2542,7 +2592,9 @@ abstract class lists_Abstract extends Database
         $filters = $filtersControl = '';
         if(isset($this->params['filters']) && count($this->params['filters']) > 0) {
            $found  = false;
+
             for ($i =0; $i<count($this->params['filters']); $i++) {
+                //var_dump($this->params['filters'][$i]);
                 if (isset($_SESSION['filters'][$this->params['filters'][$i]])) {
                     $filtersControl .= $this->_buildFilter($this->params['filters'][$i]);
                     $found  = true;
