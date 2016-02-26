@@ -361,7 +361,7 @@ abstract class lists_Abstract extends Database
                 } else {
                     $folder = '['._FOLDER.']';
                 }
-                $filters .='<input type="text" name="folder_id" id="folder_id" value="'.$folder.'" size="40" '
+                $filters .='<input type="text" name="folder_id" id="folder_id" placeholder="'.$folder.'" size="40" '
                             .'onfocus="if(this.value==\'['._FOLDER.']\'){this.value=\'\';}'
                             .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13) loadList(\''.$this->link
                             .'&filter=folder&value=\' + this.value, \''.$this->divListId.'\', '
@@ -409,7 +409,7 @@ abstract class lists_Abstract extends Database
                 } else {
                     $contact = '['._CONTACT.']';
                 }
-                $filters .='<input type="text" name="contact_id" id="contact_id" value="'.$contact.'" size="40" '
+                $filters .='<input type="text" name="contact_id" id="contact_id" placeholder="'.$contact.'" size="25" '
                             .'onfocus="if(this.value==\'['._CONTACT.']\'){this.value=\'\';}" '
                             .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
                             .'&filter=contact&value=\' + $(\'contactidFilters\').value, \''.$this->divListId.'\', '
@@ -429,7 +429,7 @@ abstract class lists_Abstract extends Database
             case 'res_id':
 
                 $res_id = '['._GED.']';
-                $filters .='<input type="text" name="res_id" id="res_id" value="'.$res_id.'" size="15" '
+                $filters .='<input type="text" name="res_id" id="res_id" placeholder="'.$res_id.'" size="15" '
                             .'onChange="myFunction(), loadList(\''.$this->link
                             .'&filter=res_id&value=\' + $(\'residFilters\').value, \''.$this->divListId.'\', '
                             .$this->modeReturn.');" />&nbsp;';
@@ -448,7 +448,7 @@ abstract class lists_Abstract extends Database
             case 'subject':
 
                 $subject = '['._SUBJECT.']';
-                $filters .='<input type="text" name="subject" id="subject" value="'.$subject.'" size="40" '
+                $filters .='<input type="text" name="subject" id="subject" placeholder="'.$subject.'" size="40" '
                             .'onChange="myFunction(), loadList(\''.$this->link
                             .'&filter=subject&value=\' + $(\'subjectFilters\').value, \''.$this->divListId.'\', '
                             .$this->modeReturn.');" />&nbsp;';
