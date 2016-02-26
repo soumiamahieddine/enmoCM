@@ -139,6 +139,16 @@
             <GOTOLIST></GOTOLIST>
         </TEMPLATE>
         <TEMPLATE>
+            <ID>documents_list_with_avis</ID>
+            <LABEL>_DOCUMENTS_LIST_WITH_AVIS</LABEL>
+            <IMG>fa fa-list-ul fa-2x</IMG>
+            <NAME>documents_list_with_avis</NAME>
+            <ORIGIN>module</ORIGIN>
+            <MODULE>avis</MODULE>
+            <ENABLED>true</ENABLED>
+            <GOTOLIST></GOTOLIST>
+        </TEMPLATE>
+        <TEMPLATE>
             <ID>documents_list_copies</ID>
             <LABEL>_DOCUMENTS_LIST_COPIES</LABEL>
             <IMG>fa fa-list-ul fa-2x</IMG>
