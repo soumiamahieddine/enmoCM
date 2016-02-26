@@ -2841,7 +2841,8 @@ hr{
     overflow:                  auto;
     padding:                   5px;
     height:  92%;
-    width: 99.5%;
+    /*width: 99.5%;*/
+    width:                      auto;
 }
 
 
