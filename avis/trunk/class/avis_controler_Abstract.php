@@ -60,7 +60,6 @@ abstract class avis_controler_Abstract
         if ($fromDetail == "Y" && !$core_tools->test_service('config_avis_workflow_in_detail', 'avis', false)) {
             $bool_modif = false;
         }
-                
         $circuitAvis = $this->getWorkflow($res_id, $coll_id, $typeList);
 
         $model = new diffusion_list();
@@ -169,7 +168,7 @@ abstract class avis_controler_Abstract
                                     $disabled = ' disabled ';
                                 else
                                     $disabled = '';
-                                $str .= '<span id="avis_rank_' . $seq . '"><strong>'. ($seq + 1) . '</strong></span>';
+                                $str .= '<span id="avis_rank_' . $seq . '"><span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) . '</span> </span>';
                                 $str .= '<select id="avis_'.$seq.'" name="avis_'.$seq.'" '.$disabled.'>';
                                 $str .= '<option value="" >Sélectionnez un utilisateur</option>';
                                 

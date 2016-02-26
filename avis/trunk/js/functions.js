@@ -64,7 +64,7 @@ function addRowAvisPopup(id_tableau)
     var listOptions = "";
     
     listOptions=listeDeroulante.innerHTML;
-    
+
     colonne2.innerHTML += "<span id='avisPopup_rank_" + position + "'></span><select>"+listOptions+"</select><span id='lastAvisPopup_" + position + "'></span>";
     //colonne2.innerHTML += "</select>";
 
@@ -138,7 +138,7 @@ function refreshIconesAvis(id_tableau){
 		arrayLignes[i].cells[6].childNodes[0].name = "avis_date_"+num;	arrayLignes[i].cells[6].childNodes[0].id="avis_date_"+num;
 		arrayLignes[i].cells[7].childNodes[0].name = "avis_isSign_"+num;	arrayLignes[i].cells[7].childNodes[0].id="avis_isSign_"+num;
 
-		document.getElementById("avis_rank_" + num).innerHTML = "<strong>" + i + " </strong>";
+		document.getElementById("avis_rank_" + num).innerHTML = "<span class='nbResZero' style='font-weight:bold;opacity:0.5;'>"+i+"</span> ";
 	
 		if(longueur > 2){
 			document.getElementById("avis_add_0").style.visibility="hidden";
