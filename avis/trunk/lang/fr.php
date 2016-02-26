@@ -59,3 +59,9 @@ if (!defined("_AVIS_SENT"))
 
 if (!defined("_AVIS_NB"))
     define("_AVIS_NB", "Avis n°");
+
+if (!defined("_NB_AVIS"))
+    define("_NB_AVIS", "Nombre d'Avis");
+
+if (!defined("_DOCUMENTS_LIST_WITH_AVIS"))
+    define("_DOCUMENTS_LIST_WITH_AVIS", "Liste des documents avec avis");
