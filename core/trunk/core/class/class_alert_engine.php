@@ -59,10 +59,10 @@ class alert_engine extends Database
     * @param int $Delta
     * @param boolean $isMinus
     */
-    public function WhenOpenDay($Date, $Delta, $isMinus = false, $calendarType = 'workingDay')
+    public function WhenOpenDay($Date, $Delta, $isMinus = false, $calendarType = null)
     { 
         if ($calendarType <> 'calendar' && $calendarType <> 'workingDay') {
-            $calendarType = 'workingDay';
+            $calendarType = $_SESSION['features']['type_calendar'];
         }
         if($calendarType == 'calendar'){
             if ($isMinus) {
@@ -71,7 +71,7 @@ class alert_engine extends Database
                 return date('Y-m-d H:i:s', $Date + (86400*$Delta));
             }
 
-        }elseif($calendarType == 'workingDay' || $calendarType == NULL){
+        }elseif($calendarType == 'workingDay'){
 
             $Hollidays = array (
                 '1_1',
