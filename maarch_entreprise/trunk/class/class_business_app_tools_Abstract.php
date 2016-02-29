@@ -556,6 +556,12 @@ abstract class business_app_tools_Abstract extends dbquery
             $_SESSION['default_mail_priority'] = (string) $mailPriorities->default_priority;
         }
 
+        $_SESSION['type_calendar'] = array();
+        var_dump($xmlfile);
+        $type_calendar = $xmlfile->type_calendar;
+        $_SESSION['type_calendar'] = $type_calendar;
+
+
         $contact_check = $xmlfile->contact_check;
         if (count($contact_check) > 0) {
             $_SESSION['check_days_before'] = (string) $contact_check->check_days_before;
@@ -662,6 +668,7 @@ abstract class business_app_tools_Abstract extends dbquery
             $_SESSION['features']['watermark']['position'] = (string) $watermark->position;
             $_SESSION['features']['watermark']['font'] = (string) $watermark->font;
             $_SESSION['features']['watermark']['text_color'] = (string) $watermark->text_color;
+            $_SESSION['features']['type_calendar'] = (string) $feats->type_calendar;
         }
     }
 

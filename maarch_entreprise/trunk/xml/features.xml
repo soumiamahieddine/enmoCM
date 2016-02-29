@@ -11,5 +11,6 @@
 			<font>helvetica,10</font> <!-- Setup the font name and her size, ex: helvetica,10 -->
 			<text_color>20,192,30</text_color> <!-- Setup the color of the text, ex: 192,192,192 -->
 		</watermark>
+		<type_calendar>calendar</type_calendar><!-- calendar or workingDay -->
 	</FEATURES>
 </ROOT>
