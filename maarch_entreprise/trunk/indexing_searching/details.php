@@ -1153,26 +1153,30 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <dt class="fa fa-gear" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _DIFF_LIST;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
                     <dd>
                         <?php
-                        if ($core->test_service('update_list_diff_in_details', 'entities', false) || $core->test_service('add_copy_in_indexing_validation', 'entities', false)) {
                             $onlyCC = '';
-                            if($core->test_service('add_copy_in_indexing_validation', 'entities', false)){
-                                $onlyCC = '&only_cc';
-                            }
-                            echo '<br />';
-                            echo '<div style="text-align:center;">';
-                            echo '<input type="button" class="button" title="'._UPDATE_LIST_DIFF.'" value="'._UPDATE_LIST_DIFF.'" onclick="window.open(\''
-                                .$_SESSION['config']['businessappurl']
-                                .'index.php?display=true&module=entities&page=manage_listinstance&cat='.$category.'&origin=details'.$onlyCC.'\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" />';
-                            ?>
-                            <input type="button" class="button" onClick="saveListDiff('listinstance', '<?php 
-                                functions::xecho($_SESSION['tablename']['ent_listinstance']);?>', '<?php 
-                                functions::xecho($coll_id);?>', '<?php 
-                                functions::xecho($s_id);?>','<?php 
-                                functions::xecho($_SESSION['user']['UserId']);?>', '<?php 
-                                echo true;?>','<?php 
-                                echo false;?>');$('div_diff_list_message').show();" value="<?php 
-                                echo _STORE_DIFF_LIST;?>" />
-                            </div>
+                            if ($core->test_service('update_list_diff_in_details', 'entities', false) || $core->test_service('add_copy_in_indexing_validation', 'entities', false)) {
+                                if($core->test_service('add_copy_in_indexing_validation', 'entities', false)){
+                                    $onlyCC = '&only_cc';
+                                }
+                                echo '<br />';
+                                echo '<div style="text-align:center;">';
+                                
+                                echo '<input type="button" class="button" title="'._UPDATE_LIST_DIFF.'" value="'._UPDATE_LIST_DIFF.'" onclick="window.open(\''
+                                    .$_SESSION['config']['businessappurl']
+                                    .'index.php?display=true&module=entities&page=manage_listinstance&cat='.$category.'&origin=details'.$onlyCC.'\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" />';
+                                ?>
+                                <input type="button" class="button" onClick="saveListDiff('listinstance', '<?php 
+                                    functions::xecho($_SESSION['tablename']['ent_listinstance']);?>', '<?php 
+                                    functions::xecho($coll_id);?>', '<?php 
+                                    functions::xecho($s_id);?>','<?php 
+                                    functions::xecho($_SESSION['user']['UserId']);?>', '<?php 
+                                    echo true;?>','<?php 
+                                    echo false;?>');$('div_diff_list_message').show();" value="<?php 
+                                    echo _STORE_DIFF_LIST;?>" />
+                                </div>
+                                <?php
+                                }
+                                ?>
                             <br />
                             <div id="div_diff_list_message" style="color:red;text-align: center;"></div>
                             <br />
