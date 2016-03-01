@@ -63,8 +63,8 @@ $arrayPDO = array();
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($_REQUEST['what']);
-	$where = " lower(object_id) like lower(?) and ";
-    $arrayPDO = array_merge($arrayPDO, array($what."%"));
+	$where = " (lower(object_id) like lower(?) or lower(description) like lower(?)) and ";
+    $arrayPDO = array_merge($arrayPDO, array("%".$what."%", "%".$what."%"));
 }
 
 if($_SESSION['user']['UserId'] != 'superadmin') {
@@ -92,6 +92,8 @@ $select[ENT_LISTMODELS] = array();
 array_push($select[ENT_LISTMODELS], "object_type || '|' || object_id as list_id", 'object_type', 'object_id', 'title', 'description');
 
 $where .= ' 1=1 group by object_type, object_id, title, description';
+// var_dump($select);
+// var_dump($where);
 $tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
 
 for ($i=0;$i<count($tab);$i++)
@@ -176,7 +178,10 @@ $label_add = _ADD_LISTMODEL;
 $_SESSION['m_admin']['init'] = true;
 
 $title = _LISTMODELS." : ".$i." "._LISTMODEL;
-$autoCompletionArray = false;//array();
+//$autoCompletionArray = false;//array();
+$autoCompletionArray = array();
+$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=listmodels_list_by_label';
+$autoCompletionArray["number_to_begin"] = 1;
 
 $list->admin_list($tab, $i, $title, 'list_id','admin_listmodels','entities', 'list_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_LISTMODELS, _LISTMODEL, "share-alt-square", true, true, false, true, "", true, $autoCompletionArray, false, true);
 ?>
