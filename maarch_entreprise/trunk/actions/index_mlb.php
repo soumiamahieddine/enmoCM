@@ -330,7 +330,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . 'index.php?display=true&page=get_content_js\');change_category_actions(\'' 
             . $_SESSION['config']['businessappurl'] 
             . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
-            . '&resId=' . $resId . '&collId=' . $collId . '\');">';
+            . '&resId=' . $resId . '&collId=' . $collId . '\');hideSelectFile();">';
     $frmStr .= '<option value="">' . _CHOOSE_CATEGORY . '</option>';
     foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $catId) {
         if ($catId <> 'default_category') {
