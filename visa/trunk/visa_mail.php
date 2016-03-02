@@ -433,7 +433,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	$frm_str .= '</dl>';
 	$frm_str .= '<div class="toolbar">';
-	$frm_str .= '<table style="width:90%;">';	
+	$frm_str .= '<table style="width:100%;">';	
 	
 	$frm_str .= '<tr>';
 	$frm_str .= '<td>';	
@@ -483,8 +483,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '<td style="width:25%";">';	
 		//if ($core->test_service('sign_document', 'visa', false) && $currentStatus == 'ESIG') {
 		if ($core->test_service('sign_document', 'visa', false) ) {
-			$color = ' style="" ';
-			if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response') $color = ' style="color:green" ';
+			$color = ' style="float:left;" ';
+			if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response') $color = ' style="float:left;color:green;" ';
 			if ($_SESSION['modules_loaded']['visa']['showAppletSign'] == "true"){
 				$frm_str .= '<a href="javascript://" id="sign_link_certif" '.$color.' onclick="';
 				if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',0);';
@@ -492,14 +492,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			}
 			$frm_str .= ' <a href="javascript://" id="sign_link" '.$color.' onclick="';
 			if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',2);';
-			$frm_str .= '"><i class="fa fa-check fa-3x" title="Signer ces projets de réponse (sans certificat)"></i></a>';
+			$frm_str .= '"><i class="fa fa-thumbs-o-up fa-3x" title="Signer ces projets de réponse (sans certificat)"></i></a>';
 		}
 		
-		$displayModif = ' style="" ';
+		$displayModif = ' style="float:right;" ';
 		if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response')
-			$displayModif = ' style="display:none;" ';
+			$displayModif = ' style="float:right;display:none;" ';
 		
-		$frm_str .= ' <a style="margin-left : 20%" href="javascript://" id="update_rep_link" '.$displayModif.'onclick="';
+		$frm_str .= ' <a href="javascript://" id="update_rep_link" '.$displayModif.'onclick="';
 		
 		/*if ($tab_path_rep_file[0]['attachment_type'] == 'outgoing_mail'){
 			$frm_str .= 'window.open(\''
