@@ -7,7 +7,10 @@ if (!defined("_AVIS_WORKFLOW_COMMENT"))
     define("_AVIS_WORKFLOW_COMMENT", "Gestion du circuit d'avis");
 
 if (!defined("_SEND_DOCS_TO_RECOMMENDATION"))
-    define("_SEND_DOCS_TO_RECOMMENDATION", "Transmettre pour avis");
+    define("_SEND_DOCS_TO_RECOMMENDATION", "Envoyer pour avis");
+
+if (!defined("_VALIDATE_RECOMMENDATION"))
+    define("_VALIDATE_RECOMMENDATION", "Superviser la demande d'avis");
 
 if (!defined("_AVIS_USER"))
     define("_AVIS_USER", "Pour avis");
@@ -43,13 +46,16 @@ if (!defined("_LAST_AVIS"))
     define("_LAST_AVIS", "Conseiller décideur");
 
 if (!defined("_SEND_TO_AVIS_WF"))
-    define("_SEND_TO_AVIS_WF", "Evoyer au workflow d'avis");
+    define("_SEND_TO_AVIS_WF", "Evoyer au circuit d'avis");
 
 if (!defined("_WAITING_FOR_AVIS"))
     define("_WAITING_FOR_AVIS", "En attente d'avis");
 
 if (!defined("_PROCEED_WORKFLOW_AVIS"))
     define("_PROCEED_WORKFLOW_AVIS", "Poursuivre le circuit d'avis");
+
+if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE"))
+    define("_PROCEED_WORKFLOW_AVIS_SIMPLE", "Donner un avis");
 
 if (!defined("_EMPTY_AVIS_WORKFLOW"))
     define("_EMPTY_AVIS_WORKFLOW", "Le circuit d'avis est vide");
@@ -68,3 +74,6 @@ if (!defined("_DOCUMENTS_LIST_WITH_AVIS"))
 
 if (!defined("_NB_AVIS_SENT"))
     define("_NB_AVIS_SENT", "Avis donné(s)");
+
+if (!defined("_WRITTEN_BY"))
+    define("_WRITTEN_BY", "Rédigé par");

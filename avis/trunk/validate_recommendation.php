@@ -6,12 +6,15 @@ $frm_height = 'auto';
 require("modules/entities/entities_tables.php");
 require_once("modules/entities/class/EntityControler.php");
 require_once("modules/entities/class/class_manage_entities.php");
+require_once('modules/avis/class/avis_controler.php');
 
 
  function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
  {
     $ent = new entity();
     $entity_ctrl = new EntityControler();
+    $avis = new avis_controler();
+
     $services = array();
     $servicesCompare = array();
     $db = new Database();
@@ -49,7 +52,8 @@ require_once("modules/entities/class/class_manage_entities.php");
     $templatesControler = new templates_controler();
     $templates = array();
 
-      
+        $avisContent = $avis->getAvis($values_str);
+
         $EntitiesIdExclusion = array();
         $entities = $entity_ctrl->getAllEntities();
         $countEntities = count($entities);
@@ -71,10 +75,10 @@ require_once("modules/entities/class/class_manage_entities.php");
         } 
         $frm_str .='<b>'._RECOMMENDATION_LIMIT_DATE.':</b><br/>';
         $frm_str .= '<input name="recommendation_limit_date_tr" type="text" '
-            . 'id="recommendation_limit_date_tr" value="" placeholder="JJ-MM-AAAA" onfocus="checkRealDate();" onChange="checkRealDate();"  onclick="clear_error(\'frm_error_'
+            . 'id="recommendation_limit_date_tr" value="'.$avisContent->recommendation_limit_date.'" placeholder="JJ-MM-AAAA" onfocus="checkRealDate();" onChange="checkRealDate();"  onclick="clear_error(\'frm_error_'
             . $actionId . '\');showCalender(this);"  onblur="document.getElementById(\'recommendation_limit_date\').value=document.getElementById(\'recommendation_limit_date_tr\').value;"/>';
         $frm_str .='<br/>';
-        $frm_str .='<br/><b>'._RECOMMENDATION_NOTE.':</b><br/>';
+        /*$frm_str .='<br/><b>'._RECOMMENDATION_NOTE.':</b><br/>';
         $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
                     . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''
                     . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
@@ -89,17 +93,19 @@ require_once("modules/entities/class/class_manage_entities.php");
                 }
                 $frm_str .= '</option>';
             }
-        $frm_str .= '</select><br />';
-
-        $frm_str .= '<textarea style="width:98%;height:60px;resize:none;" name="notes"  id="notes" onblur="document.getElementById(\'note_content_to_users\').value=document.getElementById(\'notes\').value;"></textarea>';
+        $frm_str .= '</select><br />';*/
+        $avisContent->note_text=str_replace('[POUR AVIS] ', '', $avisContent->note_text);
+        $frm_str .='<br/><b>'._WRITTEN_BY.' : '.$avisContent->user_id.'</b><br/>';
+        $frm_str .= '<textarea style="width:98%;height:60px;resize:none;" name="notes"  id="notes" onblur="document.getElementById(\'note_content_to_users\').value=document.getElementById(\'notes\').value;">'.$avisContent->note_text.'</textarea>';
         //var_dump($allEntitiesTree);
         $frm_str .= '<hr />';
         $frm_str .='<div id="form2" style="border:none;">';
         $frm_str .='<script>change_entity(\''.$_SESSION['destination_entity'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance&specific_role=avis'.'\', \'diff_list_div_redirect\', \'redirect\', \'\', \'false\', \'avis\');</script>';
         $frm_str .= '<form name="frm_redirect_dep" id="frm_redirect_dep" method="post" class="forms" action="#">';
         $frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
-        $frm_str .= '<input type="hidden" name="note_content_to_users" id="note_content_to_users" />';
-        $frm_str .= '<input type="hidden" name="recommendation_limit_date" id="recommendation_limit_date" />';
+        $frm_str .= '<input type="hidden" name="note_content_to_users" id="note_content_to_users" value="'.$avisContent->note_text.'" />';
+        $frm_str .= '<input type="hidden" name="note_content_to_users_origin" id="note_content_to_users_origin" value="'.$avisContent->note_text.'" />';
+        $frm_str .= '<input type="hidden" name="recommendation_limit_date" id="recommendation_limit_date" value="'.$avisContent->recommendation_limit_date.'" />';
                 $frm_str .='<p>';
                     $frm_str .='<div style="clear:both;"></div>';
                 $frm_str .= '<div id="diff_list_div_redirect" class="scroll_div" style="height:auto;"></div>';
@@ -199,7 +205,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $res_id = $arr_id[0];
     require_once('modules/entities/class/class_manage_listdiff.php');
     require_once('modules/notes/class/notes_controler.php');
-    require_once('modules/avis/class/avis_controler.php');
     $diffList = new diffusion_list();
     $note = new notes_controler();
     $avis = new avis_controler();
@@ -234,17 +239,16 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 )
             );
         }
-        
+
         # save note
-        if($formValues['note_content_to_users'] != ''){
+        if(($formValues['note_content_to_users'] != '') && ($formValues['note_content_to_users'] != $formValues['note_content_to_users_origin'])){
             //Add notes
-            $userIdTypist = $_SESSION['user']['UserId'];
             $content_note = $formValues['note_content_to_users'];
             $content_note = str_replace(";", ".", $content_note);
             $content_note = str_replace("--", "-", $content_note);
             $content_note = $content_note;
-            $content_note = '[' . _TO_AVIS . '] ' . $content_note;
-            $note->addNote($res_id, $coll_id, $content_note);
+            $content_note = '[' . _TO_AVIS . '] ' . $content_note.' ← '._MODIFY_BY.' '.$_SESSION['user']['UserId'];
+            $avis->UpdateNoteAvis($res_id, $coll_id, $content_note);
             
         }
         $avis->processAvis($res_id,$formValues['recommendation_limit_date']);

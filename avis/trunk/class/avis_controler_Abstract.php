@@ -36,15 +36,33 @@
 */
 abstract class avis_controler_Abstract
 {
-    #####################################
-    ## send avis
-    #####################################
-    public function processAvis($resId)
+    public function getAvis($resId)
     {
         //define avis limit date
         $db = new Database();
         
-        $query = "UPDATE mlb_coll_ext SET recommendation_limit_date = CURRENT_DATE where res_id = ?";
+        $query = "SELECT notes.user_id,notes.note_text,recommendation_limit_date FROM notes,mlb_coll_ext WHERE identifier = ? AND note_text LIKE '[POUR AVIS]%' AND notes.identifier=mlb_coll_ext.res_id";
+                
+        $stmt = $db->query($query, array($resId));
+
+        $avis = $stmt->fetchObject();
+
+        return $avis;
+              
+    }
+    #####################################
+    ## send avis
+    #####################################
+    public function processAvis($resId, $modification_date)
+    {
+        //define avis limit date
+        $db = new Database();
+        
+        $query = "UPDATE mlb_coll_ext SET recommendation_limit_date = ? where res_id = ?";
+                
+        $stmt = $db->query($query, array($modification_date,$resId));
+
+        $query = "UPDATE res_letterbox SET modification_date = CURRENT_DATE where res_id = ?";
                 
         $stmt = $db->query($query, array($resId));
               
@@ -798,6 +816,67 @@ abstract class avis_controler_Abstract
         $db = new Database();
         $stmt = $db->query("SELECT listinstance_id from listinstance WHERE res_id= ? and coll_id = ? and item_mode = ? and difflist_type = 'AVIS_CIRCUIT'", array($res_id, $coll_id, 'avis'));
         return $stmt->rowCount();
+    }
+
+        #####################################
+    ## add note on a resource
+    #####################################
+    public function UpdateNoteAvis($resId, $collId, $noteContent)
+    {
+        $status = 'ok';
+        $error = '';
+        //control parameters
+        if (isset($resId) && empty($resId)) {
+            $status = 'ko';
+            $error = 'resId empty ';
+        }
+        if (isset($collId) && empty($collId)) {
+            $status = 'ko';
+            $error = 'collId empty ';
+        }
+        if (isset($noteContent) && empty($noteContent)) {
+            $status = 'ko';
+            $error .= 'noteContent empty ';
+        }
+        //process
+        if ($status == 'ok') {
+            require_once 'core/class/class_security.php';
+            require_once 'modules/notes/notes_tables.php';
+            $security = new security();
+            $view = $security->retrieve_view_from_coll_id($collId);
+            $table = $security->retrieve_table_from_coll($collId);
+            $db = new Database();
+            $query = "SELECT res_id FROM " . $view . " WHERE res_id = ?";
+            $stmt = $db->query($query, array($resId));
+            if ($stmt->rowCount() == 0) {
+                $status = 'ko';
+                $error .= 'resId not exists';
+            } else {
+                $query =
+                    "UPDATE " . NOTES_TABLE
+                    . " SET note_text = ?"
+                    . ", date_note = CURRENT_TIMESTAMP"
+                    . " WHERE identifier = ?"
+                    . " AND note_text LIKE '[POUR AVIS]%'"
+                    . " AND coll_id = ?";
+
+                $stmt = $db->query($query, array($noteContent, $resId, $collId));
+
+                $hist = new history();
+                $hist->add(
+                    $view, $resId, 'UP', 'resup', _AVIS_UPDATED
+                    . _ON_DOC_NUM . $resId . ' ' . _BY . ' '.$_SESSION['user']['UserId'],
+                    $_SESSION['config']['databasetype'], 'notes'
+                );
+
+            }
+        }
+        $returnArray = array(
+            'status' => $status,
+            'value' => $id,
+            'error' => $error,
+        );
+        return $returnArray;
     }
     
 }

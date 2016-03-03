@@ -24,6 +24,17 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
+        <ID>validate_recommendation</ID>
+        <LABEL>_VALIDATE_RECOMMENDATION</LABEL>
+        <NAME>validate_recommendation</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>avis</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
         <ID>send_to_avis</ID>
         <LABEL>_SEND_TO_AVIS_WF</LABEL>
         <NAME>send_to_avis</NAME>
