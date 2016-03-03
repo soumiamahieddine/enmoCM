@@ -65,3 +65,6 @@ if (!defined("_NB_AVIS"))
 
 if (!defined("_DOCUMENTS_LIST_WITH_AVIS"))
     define("_DOCUMENTS_LIST_WITH_AVIS", "Liste des documents avec avis");
+
+if (!defined("_NB_AVIS_SENT"))
+    define("_NB_AVIS_SENT", "Avis donné(s)");
