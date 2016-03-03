@@ -53,17 +53,18 @@ abstract class avis_controler_Abstract
     #####################################
     ## send avis
     #####################################
-    public function processAvis($resId, $modification_date)
+    public function processAvis($resId, $recommendation_limit_date='')
     {
         //define avis limit date
         $db = new Database();
         
-        $query = "UPDATE mlb_coll_ext SET recommendation_limit_date = ? where res_id = ?";
-                
-        $stmt = $db->query($query, array($modification_date,$resId));
+        if($recommendation_limit_date <> ''){
+        
+            $query = "UPDATE mlb_coll_ext SET recommendation_limit_date = ? where res_id = ?";
+            $stmt = $db->query($query, array($recommendation_limit_date,$resId));
+        }
 
-        $query = "UPDATE res_letterbox SET modification_date = CURRENT_DATE where res_id = ?";
-                
+        $query = "UPDATE res_letterbox SET modification_date = CURRENT_DATE where res_id = ?";        
         $stmt = $db->query($query, array($resId));
               
     }

@@ -230,6 +230,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         //$mailStatus = 'EAVIS';
     }
 
+    $circuit_avis->processAvis($res_id);
+
     # save note
         if($formValues['note_content_to_users'] != ''){
             //Add notes
