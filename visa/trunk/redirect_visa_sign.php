@@ -33,12 +33,16 @@ if (!$error_visa && !$error_visa_response_project){
     $frm_height = 'auto';
 }
 
- function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
- {
+function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
+{
+    require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php');
+
     $ent = new entity();
     $entity_ctrl = new EntityControler();
     $servicesCompare = array();
     $db = new Database();
+    $cr = new chrono();
+
     $labelAction = '';
     if ($id_action <> '') {
         $stmt = $db->query("select label_action from actions where id = ?", array($id_action));
@@ -76,7 +80,13 @@ if (!$error_visa && !$error_visa_response_project){
         }
     }
     $values_str = preg_replace('/, $/', '', $values_str);
-    $frm_str .= $values_str;
+	if(_ID_TO_DISPAY == 'res_id'){
+		$frm_str .= $values_str;
+	} else if (_ID_TO_DISPAY == 'chrono_number') {
+    	$chrono_number = $cr->get_chrono_number($values_str, 'res_view_letterbox');
+    	$frm_str .= $chrono_number;
+	}
+    
     $frm_str .= '</h2><br/><br/>';
     require 'modules/templates/class/templates_controler.php';
     $templatesControler = new templates_controler();
@@ -149,7 +159,7 @@ if (!$error_visa && !$error_visa_response_project){
             $frm_str .='<input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
     $frm_str .='</div>';
     return addslashes($frm_str);
- }
+}
 
  function check_form($form_id,$values)
  {
