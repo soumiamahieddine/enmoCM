@@ -5,7 +5,8 @@ $frm_width='355px';
 $frm_height = 'auto';
 require("modules/entities/entities_tables.php");
 require_once("modules/entities/class/EntityControler.php");
-require_once('modules/entities/class/class_manage_entities.php');;
+require_once('modules/entities/class/class_manage_entities.php');
+require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php');
 
 
  function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
@@ -13,6 +14,8 @@ require_once('modules/entities/class/class_manage_entities.php');;
     $ent = new entity();
     $entity_ctrl = new EntityControler();
     $services = array();
+    $cr7 = new chrono();
+
     $servicesCompare = array();
     $db = new Database();
     $labelAction = '';
@@ -67,7 +70,15 @@ require_once('modules/entities/class/class_manage_entities.php');;
         }
     }
     $values_str = preg_replace('/, $/', '', $values_str);
-    $frm_str .= $values_str;
+
+	if(_ID_TO_DISPAY == 'res_id'){
+		$frm_str .= $values_str;
+	} else if (_ID_TO_DISPAY == 'chrono_number'){
+    	$chrono_number = $cr7->get_chrono_number($values_str, 'res_view_letterbox');
+    	$frm_str .= $chrono_number;
+	}
+    
+
     $frm_str .= '</h2><br/><br/>';
     require 'modules/templates/class/templates_controler.php';
     $templatesControler = new templates_controler();
