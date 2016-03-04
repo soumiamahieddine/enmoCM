@@ -322,6 +322,11 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
     	$new_difflist = $_SESSION['redirect']['diff_list'];
 
+        // Fix lorsque l'on redirige vers une entité qui n'a pas de liste de diffusion par défaut
+        if(empty($new_difflist['difflist_type'])){
+            $new_difflist['difflist_type'] = 'entity_id';
+        }
+
         $res_id = $arr_id[$i];
         # update dest_user
         $new_dest = $new_difflist['dest']['users'][0]['user_id'];
@@ -498,7 +503,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $new_difflist['difflist_type'],
             $coll_id, 
             $res_id, 
-            $_SESSION['user']['UserId']
+            $_SESSION['user']['UserId'],
+            $_SESSION['user']['primaryentity']['id']
         );           
     }
     
@@ -528,7 +534,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             for($i=0; $i < count($arr_id); $i++)
             {
                 $arr_list .= $arr_id[$i].'#';
-                $db2 = new Database(); /* $db2 sert à quoi ???*/
                 $stmt = $db->query("update ".$table." set destination = ? where res_id = ?",array($values_form[$j]['VALUE'],$arr_id[$i]));
                 if(isset($_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id']) && !empty($_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id']))
                 {
