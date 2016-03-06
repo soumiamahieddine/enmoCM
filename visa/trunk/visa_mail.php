@@ -144,7 +144,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$resChrono = $stmt->fetchObject();
 	$chrono_number = $resChrono->alt_identifier;
 	$currentStatus = $resChrono->status;
-    $frm_str .= '<h2 class="tit" id="action_title">'._VISA_MAIL.' '._NUM.'<span id="numIdDocPage">'.$res_id.'</span>';
+    $frm_str .= '<h2 class="tit" id="action_title">'._VISA_MAIL.' '._NUM.'<span id="numIdDocPage">';
+
+	if(_ID_TO_DISPAY == 'res_id'){
+		$frm_str .= $res_id;
+	} else if (_ID_TO_DISPAY == 'chrono_number'){
+    	$frm_str .= $chrono_number;
+	}
+
+    $frm_str .='</span>';
+
     $frm_str .= '</h2>';
     $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '.
              'onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();" class="fa fa-times-circle fa-2x closeModale" title="'._BACK.'"/>';
