@@ -22,8 +22,13 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
     $stepDetails = $circuit_visa->getStepDetails($res_id, $coll_id, 'VISA_CIRCUIT', $sequence);
 
     // Person who ends the workflow
-    $db->query('UPDATE listinstance SET process_date = CURRENT_TIMESTAMP, process_comment = ? WHERE listinstance_id = ? AND item_id = ? AND res_id = ? AND difflist_type = ?',
-                ["A terminé le circuit avec l'action {$label_action}", $stepDetails['listinstance_id'], $stepDetails['item_id'], $res_id, 'VISA_CIRCUIT']);
+    if ($stepDetails['listinstance_id']) {
+        $db->query('UPDATE listinstance SET process_date = CURRENT_TIMESTAMP, process_comment = ? WHERE listinstance_id = ? AND item_id = ? AND res_id = ? AND difflist_type = ?',
+                    ["A terminé le circuit avec l'action {$label_action}", $stepDetails['listinstance_id'], $stepDetails['item_id'], $res_id, 'VISA_CIRCUIT']);
+    } else {
+        $db->query('UPDATE listinstance SET process_date = CURRENT_TIMESTAMP, process_comment = ? WHERE res_id = ? AND difflist_type = ? AND item_mode = ?',
+            ["A terminé le circuit avec l'action {$label_action}", $res_id, 'VISA_CIRCUIT', 'sign']);
+    }
 
     // People remaining in the workflow
     $db->query('UPDATE listinstance SET process_date = CURRENT_TIMESTAMP, process_comment = ? WHERE res_id = ? AND difflist_type = ? AND process_date IS NULL',
