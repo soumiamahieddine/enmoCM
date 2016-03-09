@@ -1761,9 +1761,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 echo $Links;
                 ?>
             </dl>
-    <?php
-}
-?> 
 </div>
 </div>
 <script type="text/javascript">
