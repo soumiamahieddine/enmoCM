@@ -194,7 +194,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$classLine = ' class="selectedId " ';
 		}
 		else $classLine = ' class="unselectedId " ';
-		$frm_str .= '<div '.$classLine.' onmouseover="this.style.cursor=\'pointer\';" onclick="loadNewId(\'index.php?display=true&module=visa&page=update_visaPage\','.$res_id_doc.',\''.$coll_id.'\');" id="list_doc_'.$res_id_doc.'">';
+
+		if(_ID_TO_DISPAY == 'res_id'){
+			$id_to_display = '';
+		} else if (_ID_TO_DISPAY == 'chrono_number'){
+	    	$id_to_display = $chrono_number_doc;
+		}
+		$frm_str .= '<div '.$classLine.' onmouseover="this.style.cursor=\'pointer\';" onclick="loadNewId(\'index.php?display=true&module=visa&page=update_visaPage\','.$res_id_doc.',\''.$coll_id.'\',\''.$id_to_display.'\');" id="list_doc_'.$res_id_doc.'">';
 		check_category($coll_id, $res_id_doc);
 		$data = get_general_data($coll_id, $res_id_doc, 'minimal');
 		
@@ -493,7 +499,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		//if ($core->test_service('sign_document', 'visa', false) && $currentStatus == 'ESIG') {
 		if ($core->test_service('sign_document', 'visa', false) ) {
 			$color = ' style="float:left;" ';
-			if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response') $color = ' style="float:left;color:green;" ';
+			$img = '<img id="sign_link_img" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=sign.png" title="Signer ces projets de réponse (sans certificat)" />';
+			if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response'){
+				$color = ' style="float:left;color:green;" ';
+				$img = '<img id="sign_link_img" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=sign_valid.png" title="Signer ces projets de réponse (sans certificat)" />';
+			} 
+
 			if ($_SESSION['modules_loaded']['visa']['showAppletSign'] == "true"){
 				$frm_str .= '<a href="javascript://" id="sign_link_certif" '.$color.' onclick="';
 				if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',0);';
@@ -501,7 +512,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			}
 			$frm_str .= ' <a href="javascript://" id="sign_link" '.$color.' onclick="';
 			if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',2);';
-			$frm_str .= '"><i class="fm fm-file-fingerprint fm-3x" title="Signer ces projets de réponse (sans certificat)"></i></a>';
+			$frm_str .= '">'.$img.'</a>';
 		}
 		
 		$displayModif = ' style="float:right;" ';

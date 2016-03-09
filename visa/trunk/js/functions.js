@@ -462,7 +462,7 @@ function launchTabri(){
 
 
 
-function loadNewId(path_update,newId, collId){
+function loadNewId(path_update,newId, collId, idToDisplay){
 	/* Modification dans la liste de gauche */
 	var zone_old = 'list_doc_'+$('cur_resId').value;
 	var zone_new = 'list_doc_'+newId;
@@ -472,7 +472,12 @@ function loadNewId(path_update,newId, collId){
 	$(zone_new).className = 'selectedId';
 	
 	$('cur_resId').value=newId;
-	$('numIdDocPage').innerHTML=newId;
+
+	if(idToDisplay != ''){
+		$('numIdDocPage').innerHTML=idToDisplay;
+	}else{
+		$('numIdDocPage').innerHTML=newId;
+	}
 	//console.log($("send"));
 	
 	/****************************************/
@@ -565,6 +570,8 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 				if (document.getElementById("sign_link")){
 					document.getElementById("sign_link").setAttribute('onclick','');	
 					document.getElementById("sign_link").style.color = 'green';
+					document.getElementById("sign_link_img").src = 'static.php?filename=sign_valid.png';
+
 				}
 				if (document.getElementById("sign_link_certif")){
 					document.getElementById("sign_link_certif").setAttribute('onclick','');	
@@ -664,6 +671,7 @@ function signFile(res_id,isVersion, mode, pinCode){
 					}
 					if ($('sign_link')){
 						$('sign_link').style.color = 'green';
+						document.getElementById("sign_link_img").src = 'static.php?filename=sign_valid.png';
 						$('sign_link').setAttribute('onclick','');	
 					}
 					if ($('sign_link_certif')){
