@@ -435,6 +435,21 @@ abstract class list_show_with_template_Abstract extends list_show
     }
 
 
+    public function tmplt_nbNoteAvis($parameter) 
+    {
+        exit();
+        print_r($parameter);
+        $db = new Database();
+        //Load action name   
+        $stmt = $db->query(
+            "SELECT count(*) as total FROM note WHERE identifier = ? and note_text like '[Avis%'", array($parameter)
+        );
+        $note = $stmt->fetchObject();
+
+        return $note->total;
+    }
+
+
 
     //Load string ans search all function defined in this string
     public function load_var_sys($actual_string, $theline, $result = array(), $key = 'empty' , $include_by_module= '')
