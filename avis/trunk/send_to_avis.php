@@ -14,7 +14,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
  {
     require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php');
     $cr7 = new chrono();
-    
+
     require_once 'apps/maarch_entreprise/definition_mail_categories.php';
     
  	$res_id=$values[0];
@@ -62,8 +62,6 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
         $frm_str .= $chrono_number;
     }
     $frm_str .= '</h2><br/>';
-
-    $frm_str .='<center>'.$_SESSION['action_error'].':</center><br/>';
     require 'modules/templates/class/templates_controler.php';
     $templatesControler = new templates_controler();
     $templates = array();

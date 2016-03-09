@@ -77,3 +77,6 @@ if (!defined("_NB_AVIS_SENT"))
 
 if (!defined("_WRITTEN_BY"))
     define("_WRITTEN_BY", "Rédigé par");
+
+if (!defined("_AVIS_NOTE"))
+    define("_AVIS_NOTE", "Description de la demande");
