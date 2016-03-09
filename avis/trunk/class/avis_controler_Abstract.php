@@ -78,6 +78,8 @@ abstract class avis_controler_Abstract
         
         if ($fromDetail == "Y" && !$core_tools->test_service('config_avis_workflow_in_detail', 'avis', false)) {
             $bool_modif = false;
+        }else if($fromDetail == "" && !$core_tools->test_service('config_avis_workflow', 'avis', false)){
+            $bool_modif = false;
         }
         $circuitAvis = $this->getWorkflow($res_id, $coll_id, $typeList);
 
@@ -90,11 +92,15 @@ abstract class avis_controler_Abstract
         }
 
         $str = "";
-        if (!isset($circuitAvis['avis']['users']) && !isset($circuitAvis['lastAvis']['users']) && !$core_tools->test_service('config_avis_workflow_in_detail', 'avis', false)){
+
+        if (!isset($circuitAvis['avis']['users']) && $fromDetail == "Y" && !isset($circuitAvis['lastAvis']['users']) && (!$core_tools->test_service('config_avis_workflow_in_detail', 'avis', false))){
             $str .= "<div class='error' id='divErrorAvis' name='divErrorAvis' onclick='this.hide();'>" . _EMPTY_USER_LIST . "</div>";
             $str .= "<div><strong><em>" . _EMPTY_AVIS_WORKFLOW . "</em></strong></div>";
-        }
-        else {
+        }else if(!isset($circuitAvis['avis']['users']) && $fromDetail == "" && !isset($circuitAvis['lastAvis']['users']) && (!$core_tools->test_service('config_avis_workflow', 'avis', false))){
+            $str .= "<div class='error' id='divErrorAvis' name='divErrorAvis' onclick='this.hide();'>" . _EMPTY_USER_LIST . "</div>";
+            $str .= "<div><strong><em>" . _EMPTY_AVIS_WORKFLOW . "</em></strong></div>";
+
+        }else {
             $diff_list = new diffusion_list();
             $listModels = $diff_list->select_listmodels($typeList);
 
@@ -360,7 +366,7 @@ abstract class avis_controler_Abstract
                     $str .= '<input type="hidden" value="'.$typeList . '_' . strtoupper(base_convert(date('U'), 10, 36)).'" name="objectId_inputAvis" id="objectId_inputAvis"/><br/>';
                     $str .= '<label for="titleModel">Titre</label> ';
                     $str .= '<input type="text" name="titleModelAvis" id="titleModelAvis"/><br/>';
-                    $str .= '<input type="button" name="saveModelAvis" id="saveModelAvis" value="'._VALIDATE.'" class="button" onclick="saveAvisModel(\''.$id_tab.'\');" /> ';
+                    $str .= '<input type="button" name="saveModelAvis" id="saveModelAvis" value="'._VALIDATE.'" class="button" onclick="saveAvisModelPopup(\''.$id_tab.'\');" /> ';
                     $str .= '<input type="button" name="cancelModelAvis" id="cancelModelAvis" value="'._CANCEL.'" class="button" onclick="$(\'modalSaveAvisModel\').style.display = \'none\';" />';
                     $str .= '</div>';
             }
@@ -439,7 +445,7 @@ abstract class avis_controler_Abstract
                     $str .= '<td>';
                     $str .= '<span id="avisPopup_rankPopup_' . $j . '"><strong>1 </strong></span>';
                     if ($bool_modif){
-                        $str .= '<select id="avisPopup_'.$j.'" name="avisPopup_'.$j.'" >';
+                        $str .= '<select style="width:150px;" id="avisPopup_'.$j.'" name="avisPopup_'.$j.'" >';
                         $str .= '<option value="" >Sélectionnez un utilisateur</option>';
                         $tab_usergroups = $this->getGroupAvis();
                         foreach ($tab_usergroups as $key => $value) {
@@ -485,8 +491,8 @@ abstract class avis_controler_Abstract
                                     $disabled = ' disabled ';
                                 else
                                     $disabled = '';
-                                $str .= '<span id="avisPopup_rankPopup_' . $seq . '"><strong>'. ($seq + 1) . '</strong></span>';
-                                $str .= '<select id="avisPopup_'.$seq.'" name="avisPopup_'.$seq.'" '.$disabled.'>';
+                                $str .= '<span id="avisPopup_rankPopup_' . $seq . '"><span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) . '</span> </span>';
+                                $str .= '<select style="width:150px;" id="avisPopup_'.$seq.'" name="avisPopup_'.$seq.'" '.$disabled.'>';
                                 $str .= '<option value="" >Sélectionnez un utilisateur</option>';
                                 
                                 $tab_usergroups = $this->getGroupAvis();
@@ -646,14 +652,14 @@ abstract class avis_controler_Abstract
             $str .= '</table>';
             if ($bool_modif){
 
-                    $str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveAvisModel\').style.display = \'block\';" />';
-                    $str .= '<div id="modalSaveAvisModel" >';
+                    $str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveAvisModelPopup\').style.display = \'block\';" />';
+                    $str .= '<div id="modalSaveAvisModelPopup" >';
                     $str .= '<h3>Sauvegarder le circuit de avis</h3>';
-                    $str .= '<input type="hidden" value="'.$typeList . '_' . strtoupper(base_convert(date('U'), 10, 36)).'" name="objectId_inputAvis" id="objectId_inputAvis"/><br/>';
+                    $str .= '<input type="hidden" value="'.$typeList . '_' . strtoupper(base_convert(date('U'), 10, 36)).'" name="objectId_inputAvisPopup" id="objectId_inputAvisPopup"/><br/>';
                     $str .= '<label for="titleModel">Titre</label> ';
-                    $str .= '<input type="text" name="titleModelAvis" id="titleModelAvis"/><br/>';
-                    $str .= '<input type="button" name="saveModelAvis" id="saveModelAvis" value="'._VALIDATE.'" class="button" onclick="saveAvisModel(\''.$id_tab.'\');" /> ';
-                    $str .= '<input type="button" name="cancelModelAvis" id="cancelModelAvis" value="'._CANCEL.'" class="button" onclick="$(\'modalSaveAvisModel\').style.display = \'none\';" />';
+                    $str .= '<input type="text" name="titleModelAvisPopup" id="titleModelAvisPopup"/><br/>';
+                    $str .= '<input type="button" name="saveModelAvis" id="saveModelAvis" value="'._VALIDATE.'" class="button" onclick="saveAvisModelPopup(\''.$id_tab.'\');" /> ';
+                    $str .= '<input type="button" name="cancelModelAvis" id="cancelModelAvis" value="'._CANCEL.'" class="button" onclick="$(\'modalSaveAvisModelPopup\').style.display = \'none\';" />';
                     $str .= '</div>';
             }
             $str .= '</div>';

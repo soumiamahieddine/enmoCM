@@ -65,7 +65,7 @@ function addRowAvisPopup(id_tableau)
     
     listOptions=listeDeroulante.innerHTML;
 
-    colonne2.innerHTML += "<span id='avisPopup_rank_" + position + "'></span><select>"+listOptions+"</select><span id='lastAvisPopup_" + position + "'></span>";
+    colonne2.innerHTML += "<span id='avisPopup_rank_" + position + "'></span><select style='width:150px;' >"+listOptions+"</select><span id='lastAvisPopup_" + position + "'></span>";
     //colonne2.innerHTML += "</select>";
 
     var colonne3 = ligne.insertCell(1);
@@ -234,7 +234,7 @@ function refreshIconesAvisPopup(id_tableau){
         arrayLignes[i].cells[6].childNodes[0].name = "avisPopup_date_"+num;  arrayLignes[i].cells[6].childNodes[0].id="avisPopup_date_"+num;
         arrayLignes[i].cells[7].childNodes[0].name = "avisPopup_isSign_"+num;    arrayLignes[i].cells[7].childNodes[0].id="avisPopup_isSign_"+num;
 
-        document.getElementById("avisPopup_rank_" + num).innerHTML = "<strong>" + i + " </strong>";
+        document.getElementById("avisPopup_rank_" + num).innerHTML = "<span class='nbResZero' style='font-weight:bold;opacity:0.5;'>" + i + "</span> ";
     
         if(longueur > 2){
             document.getElementById("avisPopup_add_0").style.visibility="hidden";
@@ -352,6 +352,74 @@ function deplacerLigneAvisPopup(source, cible, id_tableau)
     //on supprimer l'ancienne ligne
     tableau.deleteRow(ligne.rowIndex);//on met ligne.rowIndex et non pas source car le numéro d'index a pu changer
     refreshIconesAvisPopup(id_tableau);
+}
+
+function saveAvisModelPopup(id_tableau) {
+	var tableau 		= document.getElementById(id_tableau);
+	var title 			= $('titleModelAvisPopup').value;
+	var id_list			= $('objectId_inputAvisPopup').value;
+
+	var arrayLignes = tableau.rows; //l'array est stocké dans une variable
+	var longueur 		= arrayLignes.length;//on peut donc appliquer la propriété length
+
+	var conseillers = "";
+	var consignes 	= "";
+	var cons_empty 	= false;
+
+	var i = 1;
+	while(i < longueur)
+	{
+		var num = i - 1;
+		if (document.getElementById("avisPopup_"+num).value == "" )
+			cons_empty = true;
+		conseillers	+= document.getElementById("avisPopup_"+num).value + "#";
+		consignes		+= document.getElementById("avisPopup_consigne_"+num).value + "#";
+		
+		i++;
+	}
+
+	if (cons_empty){
+		triggerFlashMsg('divErrorAvis', 'Sélectionner au moins un utilisateur');
+	} else if (title == "") {
+		triggerFlashMsg('divErrorAvis', 'Titre manquant');
+	} else {
+		new Ajax.Request("index.php?display=true&module=avis&page=getAvisModelByTitle",
+			{
+
+				method: 'GET',
+				dataType:	'JSON',
+				parameters: {
+					title: title
+				},
+				onSuccess: function (responseValue) {
+					var response = JSON.parse(responseValue.responseText);
+					if (response.isWorkflowTitleFree) {
+
+						new Ajax.Request("index.php?display=true&module=avis&page=saveAvisModel",
+							{
+								method:'POST',
+								parameters: {
+									title 			: title,
+									id_list 		: id_list,
+									consignes 	: consignes,
+									conseillers	: conseillers
+								},
+								onSuccess: function(responseValue){
+									var response = JSON.parse(responseValue.responseText);
+									if (response.status == 1){
+										triggerFlashMsg('divInfoAvis', 'Modèle sauvegardé');
+										$('modalSaveAvisModelPopup').style.display = 'none';
+									}
+								}
+							});
+
+					} else {
+						triggerFlashMsg('divErrorAvis', 'Titre déjà utilisé pour un modèle');
+					}
+				}
+			});
+	}
+
 }
 
 function saveAvisModel(id_tableau) {
