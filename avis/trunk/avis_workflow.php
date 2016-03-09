@@ -215,7 +215,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
             . " WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?"
             , array($stepDetails['listinstance_id'], $stepDetails['item_mode'], $res_id, $stepDetails['item_id'], 'AVIS_CIRCUIT'));
-        $message = _AVIS_BY . " " . $_SESSION['user']['UserId'] 
+        $message = _AVIS_SENT . " " . _BY ." " . $_SESSION['user']['UserId'] 
             . " " . _INSTEAD_OF . " " . $stepDetails['item_id'];
     } else {
         $stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
