@@ -1543,10 +1543,10 @@ function hideSelectFile(){
     var category = e.options[e.selectedIndex].value;
     if (category == "outgoing") {
         // $('choose_file_div').style.display='none';
-        window.frames["choose_file"].$('with_file_true').click();       
+        window.frames["choose_file"].$('with_file2').click();       
     } else {
         // $('choose_file_div').style.display='block';
-        window.frames["choose_file"].$('with_file_false').click(); 
+        window.frames["choose_file"].$('with_file').click(); 
     };
 }
 
