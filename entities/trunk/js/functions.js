@@ -160,7 +160,8 @@ function change_diff_list(
 	display_value_tr, 
 	difflist_div, 
 	difflist_tr,
-    category = ''
+    category = '',
+    specific_role = ''
 ) {
     var list_div = difflist_div || 'diff_list_div';
     var list_div_from_action = 'diff_list_div_from_action';
@@ -173,7 +174,8 @@ function change_diff_list(
             method:'post',
             parameters: {
 			origin : origin,
-            category : category
+            category : category,
+            specific_role : specific_role
             },
             onSuccess: function(answer){
                 eval("response = "+answer.responseText);

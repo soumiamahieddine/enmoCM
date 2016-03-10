@@ -93,7 +93,7 @@ if ($objectId <> '') {
     }
 }
 
-if($specific_role <> null && empty($_SESSION[$origin]['diff_list'])){
+if(($specific_role <> null || $specific_role <> '') && empty($_SESSION[$origin]['diff_list'])){
     $diff_list = new diffusion_list();
     $res_id = $_SESSION['doc_id'];
     $_SESSION[$origin]['diff_list'] = $diff_list->get_listinstance($res_id);
