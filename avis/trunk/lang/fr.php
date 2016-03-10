@@ -80,3 +80,6 @@ if (!defined("_WRITTEN_BY"))
 
 if (!defined("_AVIS_NOTE"))
     define("_AVIS_NOTE", "Description de la demande");
+
+if (!defined("_VALIDATE_BY"))
+    define("_VALIDATE_BY", "Validé par");
