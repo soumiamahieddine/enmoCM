@@ -1,4 +1,5 @@
 
+
 -- core/sql/structure/core.postgresql.sql
 
 SET client_encoding = 'UTF8';
