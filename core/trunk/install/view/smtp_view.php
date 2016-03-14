@@ -45,12 +45,12 @@
             if (smtpPort.length < 1) {
                 var oneIsEmpty = true;
             }
-            if (smtpUser.length < 1) {
-                var oneIsEmpty = true;
-            }
-            if (smtpPassword.length < 1) {
-                var oneIsEmpty = true;
-            }
+            // if (smtpUser.length < 1) {
+            //     var oneIsEmpty = true;
+            // }
+            // if (smtpPassword.length < 1) {
+            //     var oneIsEmpty = true;
+            // }
             if (smtpAuth.length < 1) {
                 var oneIsEmpty = true;
             }
