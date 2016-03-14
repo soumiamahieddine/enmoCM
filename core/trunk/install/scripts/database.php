@@ -79,54 +79,90 @@ if ($_REQUEST['action'] == 'testConnect') {
     $verifDatabase = $Class_Install->verificationDatabase($_REQUEST['databasename']);
     //var_dump($verifDatabase);
     if($verifDatabase == false){
-        $_SESSION['config']['databasename'] = $_REQUEST['databasename'];
-        //var_dump($_SESSION['config']);
-        $return['status'] = 3;
-        $return['text'] = "base de données existe déjà";
+        //var_dump('test coucou');
+        // $_SESSION['config']['databasename'] = $_REQUEST['databasename'];
+        // //var_dump($_SESSION['config']);
+        // $return['status'] = 3;
+        // $return['text'] = "base de données existe déjà";
+        // $jsonReturn = json_encode($return);
+        // echo $jsonReturn;   
+        //exit;
+        $createCustom = $Class_Install->createCustom($_REQUEST['databasename']);
+        //var_dump($createCustom);
+        //var_dump($createCustom);
+        if(!$createCustom){ 
+            //var_dump($createDatabase);
+            $return['status'] = 0;
+            $return['text'] = _UNABLE_TO_CREATE_CUSTOM;
+
+            $jsonReturn = json_encode($return);
+
+            echo $jsonReturn;
+            exit;
+        }
+
+        $fillConfigs = $Class_Install->fillConfigOfAppAndModule($_REQUEST['databasename']);
+        //var_dump($fillConfigs);
+        if (!$fillConfigs) {
+            $return['status'] = 0;
+            $return['text'] = _UNABLE_TO_CREATE_CUSTOM;
+
+            $jsonReturn = json_encode($return);
+
+            echo $jsonReturn;
+            exit;
+        }
+
+
+        $return['status'] = 1;
+        $return['text'] = 'redirect';
+
         $jsonReturn = json_encode($return);
 
         echo $jsonReturn;
         exit;
+
+
     }elseif($verifDatabase == true){
 
         //var_dump($verifDatabase);
 
 
-    $createCustom = $Class_Install->createCustom($_REQUEST['databasename']);
-        //var_dump($createCustom);
-    if($createCustom === false){ 
-        //var_dump($createDatabase);
-        $return['status'] = 0;
-        $return['text'] = _UNABLE_TO_CREATE_CUSTOM;
+        $createCustom = $Class_Install->createCustom($_REQUEST['databasename']);
+            //var_dump($createCustom);
+        if($createCustom === false){ 
+            //var_dump($createDatabase);
+            $return['status'] = 0;
+            $return['text'] = _UNABLE_TO_CREATE_CUSTOM;
+
+            $jsonReturn = json_encode($return);
+
+            echo $jsonReturn;
+            exit;
+        }
+        $_SESSION['config']['databasename'] = $_REQUEST['databasename'];
+
+        $createDatabase = $Class_Install->createDatabase(
+            $_REQUEST['databasename']
+        );
+
+        if (!$createDatabase) {
+            $return['status'] = 0;
+            $return['text'] = _UNABLE_TO_CREATE_DATABASE;
+
+            $jsonReturn = json_encode($return);
+
+            echo $jsonReturn;
+            exit;
+        }
+
+        $return['status'] = 1;
+        $return['text'] = '';
 
         $jsonReturn = json_encode($return);
 
         echo $jsonReturn;
         exit;
-    }
-    $_SESSION['config']['databasename'] = $_REQUEST['databasename'];
-
-    $createDatabase = $Class_Install->createDatabase(
-        $_REQUEST['databasename']
-    );
-
-    if (!$createDatabase) {
-        $return['status'] = 0;
-        $return['text'] = _UNABLE_TO_CREATE_DATABASE;
-
-        $jsonReturn = json_encode($return);
-
-        echo $jsonReturn;
-        exit;
-    }
-
-    $return['status'] = 1;
-    $return['text'] = '';
-
-    $jsonReturn = json_encode($return);
-
-    echo $jsonReturn;
-    exit;
 
     }
 

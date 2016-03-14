@@ -294,7 +294,196 @@ class Install extends functions
         
         $customAlreadyExist = realpath('.').'/custom/cs_'.$databasename;
             if(file_exists($customAlreadyExist)){ 
-            return false;
+            //return false;
+                if(is_dir(realpath('.')."/custom/cs_$databasename/apps/") && is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/") && is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml/")){
+                }elseif(is_dir(realpath('.')."/custom/cs_$databasename/apps/") && !is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/")){
+                    $cheminCustomMaarchCourrierAppsMaarchEntreprise = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise";
+                    mkdir($cheminCustomMaarchCourrierAppsMaarchEntreprise, 0755);
+
+                    $cheminCustomMaarchCourrierAppsMaarchEntrepriseXml = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml";
+                    mkdir($cheminCustomMaarchCourrierAppsMaarchEntrepriseXml, 0755);
+
+                }elseif(is_dir(realpath('.')."/custom/cs_$databasename/apps/") && is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/") && !is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml/")){
+
+                    $cheminCustomMaarchCourrierAppsMaarchEntrepriseXml = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml";
+                    mkdir($cheminCustomMaarchCourrierAppsMaarchEntrepriseXml, 0755);
+
+                }elseif(!is_dir(realpath('.')."/custom/cs_$databasename/apps/")){
+
+                    $cheminCustomMaarchCourrierApps = realpath('.')."/custom/cs_$databasename/apps";
+                    mkdir($cheminCustomMaarchCourrierApps, 0755);
+
+                    $cheminCustomMaarchCourrierAppsMaarchEntreprise = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise";
+                    mkdir($cheminCustomMaarchCourrierAppsMaarchEntreprise, 0755);
+
+                    $cheminCustomMaarchCourrierAppsMaarchEntrepriseXml = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml";
+                    mkdir($cheminCustomMaarchCourrierAppsMaarchEntrepriseXml, 0755);
+
+                }
+
+                if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/")){
+
+                    $cheminCustomMaarchCourrierModules = realpath('.')."/custom/cs_$databasename/modules";
+                    mkdir($cheminCustomMaarchCourrierModules, 0755);
+
+                    /** Création répertoire thumbnails dans le custom **/
+
+                    $cheminCustomMaarchCourrierModulesThumbnails = realpath('.')."/custom/cs_$databasename/modules/thumbnails";
+                    mkdir($cheminCustomMaarchCourrierModulesThumbnails, 0755);
+
+                    $cheminCustomMaarchCourrierModulesThumbnailsXml = realpath('.')."/custom/cs_$databasename/modules/thumbnails/xml";
+                    mkdir($cheminCustomMaarchCourrierModulesThumbnailsXml, 0755);
+
+                    $cheminCustomMaarchCourrierModulesThumbnailsScripts = realpath('.')."/custom/cs_$databasename/modules/thumbnails/scripts";
+                    mkdir($cheminCustomMaarchCourrierModulesThumbnailsScripts, 0755);
+
+                            /** Création répertoire notification dans le custom **/
+
+                    $cheminCustomMaarchCourrierModulesNotifications = realpath('.')."/custom/cs_$databasename/modules/notifications";
+                    mkdir($cheminCustomMaarchCourrierModulesNotifications, 0755);
+
+                    $cheminCustomMaarchCourrierModulesNotificationsBatch = realpath('.')."/custom/cs_$databasename/modules/notifications/batch";
+                    mkdir($cheminCustomMaarchCourrierModulesNotificationsBatch, 0755);
+
+                    $cheminCustomMaarchCourrierModulesNotificationsConfig = realpath('.')."/custom/cs_$databasename/modules/notifications/batch/config";
+                    mkdir($cheminCustomMaarchCourrierModulesNotificationsConfig, 0755);
+
+                    $cheminCustomMaarchCourrierModulesNotificationsScripts = realpath('.')."/custom/cs_$databasename/modules/notifications/batch/scripts";
+                    mkdir($cheminCustomMaarchCourrierModulesNotificationsScripts, 0755);
+
+                    /** Création répertoire sendmail dans le custom **/
+
+                    $cheminCustomMaarchCourrierModulesSendmail = realpath('.')."/custom/cs_$databasename/modules/sendmail";
+                    mkdir($cheminCustomMaarchCourrierModulesSendmail, 0755);
+
+                    $cheminCustomMaarchCourrierModulesSendmailBatch = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch";
+                    mkdir($cheminCustomMaarchCourrierModulesSendmailBatch, 0755);
+
+                    $cheminCustomMaarchCourrierModulesSendmailBatchConfig = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/config";
+                    mkdir($cheminCustomMaarchCourrierModulesSendmailBatchConfig, 0755);
+
+                    $cheminCustomMaarchCourrierModulesSendmailBatchScripts = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/scripts";
+                    mkdir($cheminCustomMaarchCourrierModulesSendmailBatchScripts, 0755);
+
+
+                    /** Création répertoire LDAP dans le custom **/
+
+                    $cheminCustomMaarchCourrierModulesLdap = realpath('.')."/custom/cs_$databasename/modules/ldap";
+                    mkdir($cheminCustomMaarchCourrierModulesLdap, 0755);
+
+                    $cheminCustomMaarchCourrierModulesLdapXml = realpath('.')."/custom/cs_$databasename/modules/ldap/xml";
+                    mkdir($cheminCustomMaarchCourrierModulesLdapXml, 0755);
+
+                    $cheminCustomMaarchCourrierModulesLdapScript = realpath('.')."/custom/cs_$databasename/modules/ldap/script";
+                    mkdir($cheminCustomMaarchCourrierModulesLdapScript, 0755);
+
+
+
+                    /** Création répertoire fulltext dans le custom **/
+
+                    $cheminCustomMaarchCourrierModulesFullText = realpath('.')."/custom/cs_$databasename/modules/full_text";
+                    mkdir($cheminCustomMaarchCourrierModulesFullText, 0755);
+
+                    $cheminCustomMaarchCourrierModulesFullTextXml = realpath('.')."/custom/cs_$databasename/modules/full_text/xml";
+                    mkdir($cheminCustomMaarchCourrierModulesFullTextXml, 0755);
+
+                    $cheminCustomMaarchCourrierModulesFullTextScripts = realpath('.')."/custom/cs_$databasename/modules/full_text/scripts";
+                    mkdir($cheminCustomMaarchCourrierModulesFullTextScripts, 0755);
+
+                }
+
+                if(is_dir(realpath('.')."/custom/cs_$databasename/modules/")){
+
+                    /** Création répertoire thumbnails dans le custom **/
+
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/thumbnails/")){
+                        $cheminCustomMaarchCourrierModulesThumbnails = realpath('.')."/custom/cs_$databasename/modules/thumbnails";
+                        mkdir($cheminCustomMaarchCourrierModulesThumbnails, 0755);
+                    }
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/thumbnails/xml/")){
+                        $cheminCustomMaarchCourrierModulesThumbnailsXml = realpath('.')."/custom/cs_$databasename/modules/thumbnails/xml";
+                        mkdir($cheminCustomMaarchCourrierModulesThumbnailsXml, 0755);
+                    }
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/thumbnails/scripts/")){
+                        $cheminCustomMaarchCourrierModulesThumbnailsScripts = realpath('.')."/custom/cs_$databasename/modules/thumbnails/scripts";
+                        mkdir($cheminCustomMaarchCourrierModulesThumbnailsScripts, 0755);
+                    }
+
+                     /** Création répertoire thumbnails dans le custom **/
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/notifications/batch/")){
+                        $cheminCustomMaarchCourrierModulesNotificationsBatch = realpath('.')."/custom/cs_$databasename/modules/notifications/batch";
+                        mkdir($cheminCustomMaarchCourrierModulesNotificationsBatch, 0755);
+                    }
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/notifications/batch/config/")){
+                        $cheminCustomMaarchCourrierModulesNotificationsConfig = realpath('.')."/custom/cs_$databasename/modules/notifications/batch/config";
+                        mkdir($cheminCustomMaarchCourrierModulesNotificationsConfig, 0755);
+                    }
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/notifications/batch/scripts/")){
+                        $cheminCustomMaarchCourrierModulesNotificationsScripts = realpath('.')."/custom/cs_$databasename/modules/notifications/batch/scripts";
+                        mkdir($cheminCustomMaarchCourrierModulesNotificationsScripts, 0755);
+                    }
+
+
+                                        /** Création répertoire thumbnails dans le custom **/
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/")){
+                        $cheminCustomMaarchCourrierModulesSendmail = realpath('.')."/custom/cs_$databasename/modules/sendmail";
+                        mkdir($cheminCustomMaarchCourrierModulesSendmail, 0755);
+                    }
+
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/")){
+                        $cheminCustomMaarchCourrierModulesSendmailBatch = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch";
+                        mkdir($cheminCustomMaarchCourrierModulesSendmailBatch, 0755);
+                    }
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/config/")){
+                        $cheminCustomMaarchCourrierModulesSendmailBatchConfig = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/config";
+                        mkdir($cheminCustomMaarchCourrierModulesSendmailBatchConfig, 0755);
+                    }
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/scripts/")){
+                    $cheminCustomMaarchCourrierModulesSendmailBatchScripts = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/scripts";
+                    mkdir($cheminCustomMaarchCourrierModulesSendmailBatchScripts, 0755);
+                    }
+
+
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/ldap/")){
+                        $cheminCustomMaarchCourrierModulesLdap = realpath('.')."/custom/cs_$databasename/modules/ldap";
+                        mkdir($cheminCustomMaarchCourrierModulesLdap, 0755);
+                    }
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/ldap/xml/")){
+                        $cheminCustomMaarchCourrierModulesLdapXml = realpath('.')."/custom/cs_$databasename/modules/ldap/xml";
+                        mkdir($cheminCustomMaarchCourrierModulesLdapXml, 0755);
+                    }
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/ldap/script/")){
+                    $cheminCustomMaarchCourrierModulesLdapScript = realpath('.')."/custom/cs_$databasename/modules/ldap/script";
+                    mkdir($cheminCustomMaarchCourrierModulesLdapScript, 0755);
+                    }
+
+
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/full_text/")){
+                        $cheminCustomMaarchCourrierModulesFullText = realpath('.')."/custom/cs_$databasename/modules/full_text";
+                        mkdir($cheminCustomMaarchCourrierModulesFullText, 0755);
+                    }
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/full_text/xml")){
+                    $cheminCustomMaarchCourrierModulesFullTextXml = realpath('.')."/custom/cs_$databasename/modules/full_text/xml";
+                    mkdir($cheminCustomMaarchCourrierModulesFullTextXml, 0755);
+                    }
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/full_text/scripts")){
+                    $cheminCustomMaarchCourrierModulesFullTextScripts = realpath('.')."/custom/cs_$databasename/modules/full_text/scripts";
+                    mkdir($cheminCustomMaarchCourrierModulesFullTextScripts, 0755);
+                    } 
+                }
+
+            //Création du lien symbolique sous linux
+            if(strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
+                $cmd = "ln -s ".realpath('.')."/ cs_$databasename";
+                exec($cmd);
+
+            }/*elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
+                $cmd = "mklink cs_$databasename ".realpath('.');
+                var_dump($cmd);
+                var_dump(exec($cmd));
+                exit;
+                exec($cmd);
+            }*/ 
 
             }else{ 
 
@@ -481,6 +670,8 @@ class Install extends functions
             }*/ 
 			// Création du lien symbolique sous windows mais il faut être en administrateur pour lancer la commande : mklink nomDuCustom cheminDeLAPPLI
         }
+
+        return true;
         
     }
 
@@ -576,7 +767,90 @@ class Install extends functions
 
     }
 
+    public function fillConfigOfAppAndModule($databasename){
+        $_SESSION['config']['databasename'] = $databasename;
+        $connect  = 'host='.$_SESSION['config']['databaseserver'] . ' ';
+        $connect .= 'port='.$_SESSION['config']['databaseserverport'] . ' ';
+        $connect .= 'user='.$_SESSION['config']['databaseuser'] . ' ';
+        $connect .= 'password='.$_SESSION['config']['databasepassword'] . ' ';
+        $connect .= 'dbname=postgres';
 
+        if (!$this->setConfigXmlThumbnails()) {
+            return false;
+            exit;
+        }
+        if (!$this->setConfig_batch_XmlThumbnails()) {
+            return false;
+            exit;
+        }        
+        if (!$this->setConfigScriptLaunchThumbnails()) {
+            return false;
+            exit;
+        }
+        if (!$this->setConfig_sendmail()) {
+            return false;
+            exit;
+        }
+
+
+       if (!$this->setConfigXml()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setConfigXmlVisa()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setScriptNotificationSendmailSh()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setScriptNotificationNctNccAndAncSh()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setScriptSendmailSendmailSh()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setConfig_LDAP()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setScript_syn_LDAP_sh()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setConfig_fulltext()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setScript_full_text()) {
+            return false;
+            exit;
+        }
+        
+        if (!$this->setConfig_batch_XmlNotifications()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setConfig_batch_XmlSendmail()) {
+            return false;
+            exit;
+        }
+
+        return true;
+
+    }
 
     public function createDatabase(
         $databasename
@@ -754,6 +1028,7 @@ class Install extends functions
 
         private function setConfigXmlThumbnails()
     {
+        //var_dump("setConfigXmlThumbnails");
         $xmlconfig = simplexml_load_file('modules/thumbnails/xml/config.xml.default');
         //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
         $CONFIG = $xmlconfig->CONFIG;
