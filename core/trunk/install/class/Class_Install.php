@@ -59,6 +59,7 @@ class Install extends functions
         $this->loadLang();
     }
 
+
     public function getLangList()
     {
         $langList = array();

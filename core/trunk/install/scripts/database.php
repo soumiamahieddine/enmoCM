@@ -66,6 +66,7 @@ if ($_REQUEST['action'] == 'testConnect') {
 
 
 
+
     $return['status'] = 1;
     $return['text'] = '';
 
