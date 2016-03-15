@@ -36,7 +36,7 @@
 
     //PROGRESS
         $stepNb = 6;
-        $stepNbTotal = 8;
+        $stepNbTotal = 9;
 
 //VIEW
     $view = 'docservers';

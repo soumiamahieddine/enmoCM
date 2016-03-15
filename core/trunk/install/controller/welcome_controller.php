@@ -36,7 +36,7 @@
 
     //PROGRESS
         $stepNb = 2;
-        $stepNbTotal = 8;
+        $stepNbTotal = 9;
 
 //VIEW
     $view = 'welcome';

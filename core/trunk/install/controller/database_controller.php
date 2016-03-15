@@ -39,7 +39,7 @@
 
     //PROGRESS
         $stepNb = 5;
-        $stepNbTotal = 8;
+        $stepNbTotal = 9;
 
 //VIEW
     $view = 'database';

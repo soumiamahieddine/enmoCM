@@ -25,6 +25,10 @@ if (!defined('_DESC_INSTALL')) {
 
 
 //LICENCE
+if (!defined('_SET_CONFIG')) {
+    define('_SET_CONFIG', "modifier");
+}
+
 if (!defined('_LICENCE')) {
     define('_LICENCE', "Licence");
 }
@@ -35,6 +39,14 @@ if (!defined('_SMTP_OK')) {
 
 if (!defined('_SMTP_ERROR')) {
     define('_SMTP_ERROR', "Information : Authentication SMTP incorrect");
+}
+
+if (!defined('_SET_CONFIG_OK')) {
+    define('_SET_CONFIG_OK', "Modification faite");
+}
+
+if (!defined('_SET_CONFIG_KO')) {
+    define('_SET_CONFIG_KO', "Aucune modification réalisée : un problème est survenu");
 }
 
 
@@ -202,6 +214,9 @@ if (!defined('_APPLICATIONNAME')) {
 }
 if (!defined('_CONFIG_EXP')) {
     define('_CONFIG_EXP', "Ici, vous pouvez visualiser les informations qui ont été renseignées dans le fichier de configuration de l'application");
+}
+if (!defined('_CONFIG_SMTP_EXP')) {
+    define('_CONFIG_SMTP_EXP', "Ici, vous pouvez visualiser les informations qui ont été renseignées dans le fichier de configuration pour le smtp");
 }
 if (!defined('_CONFIG_INFO')) {
     define('_CONFIG_INFO', "Fichier de configuration");

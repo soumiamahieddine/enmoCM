@@ -38,7 +38,7 @@
 
     //PROGRESS
         $stepNb = 4;
-        $stepNbTotal = 8;
+        $stepNbTotal = 9;
 
 //VIEW
     $view = 'prerequisites';

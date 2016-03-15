@@ -25,6 +25,12 @@ if (!defined('_DESC_INSTALL')) {
 
 
 //LICENCE
+
+if (!defined('_SET_CONFIG')) {
+    define('_SET_CONFIG', "set");
+}
+
+
 if (!defined('_LICENCE')) {
     define('_LICENCE', "Licence");
 }
@@ -69,6 +75,15 @@ if (!defined('_SMTP_USER_CONNECT')) {
     define('_SMTP_USER_CONNECT', "User who is connect on the server");
 }
 
+
+if (!defined('_SET_CONFIG_OK')) {
+    define('_SET_CONFIG_OK', "Done");
+}
+
+if (!defined('_SET_CONFIG_KO')) {
+    define('_SET_CONFIG_KO', "no set done : there is a bug");
+}
+
 if (!defined('_SENDER_TYPE')) {
     define('_SENDER_TYPE', "smtp: Transfert message; sendmail: mail server service");
 }
@@ -83,6 +98,9 @@ if (!defined('_SMTP_INFORMATION')) {
 
 if (!defined('_CONFIG_EXP')) {
     define('_CONFIG_EXP', "Here, you can see the software configuration");
+}
+if (!defined('_CONFIG_SMTP_EXP')) {
+    define('_CONFIG_SMTP_EXP', "Here, you can see the software configuration for smtp");
 }
 if (!defined('_CONFIG_INFO')) {
     define('_CONFIG_INFO', "Configuration File");

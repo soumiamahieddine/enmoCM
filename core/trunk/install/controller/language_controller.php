@@ -38,7 +38,7 @@
 
     //PROGRESS
         $stepNb = 1;
-        $stepNbTotal = 8;
+        $stepNbTotal = 9;
 
 //VIEW
     $view = 'language';

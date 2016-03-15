@@ -35,8 +35,8 @@
         $longTitle = _RESUME;
 
     //PROGRESS
-        $stepNb = 8;
-        $stepNbTotal = 8;
+        $stepNb = 9;
+        $stepNbTotal = 9;
 
 //VIEW
     $view = 'resume';

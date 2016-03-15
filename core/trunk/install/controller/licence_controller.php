@@ -48,7 +48,7 @@
 
     //PROGRESS
         $stepNb = 3;
-        $stepNbTotal = 8;
+        $stepNbTotal = 9;
 
 //VIEW
     $view = 'licence';

@@ -35,7 +35,7 @@
         $longTitle = _CONFIG_INSTALL;
 
     //PROGRESS
-        $stepNb = 6;
+        $stepNb = 8;
         $stepNbTotal = 9;
 
 //VIEW
