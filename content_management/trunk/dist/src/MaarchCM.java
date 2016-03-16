@@ -44,6 +44,7 @@ public class MaarchCM extends JApplet {
     protected String objectTable;
     protected String objectId;
     protected String cookie;
+    protected String uniqueId;
     protected String userLocalDirTmp;
     
     protected String messageStatus;
@@ -76,12 +77,14 @@ public class MaarchCM extends JApplet {
         objectType = getParameter("objectType");
         objectTable = getParameter("objectTable");
         objectId = getParameter("objectId");
+        uniqueId = getParameter("uniqueId");
         cookie = getParameter("cookie");
         
         System.out.println("URL : " + url);
         System.out.println("OBJECT TYPE : " + objectType);
         System.out.println("OBJECT TABLE : " + objectTable);
         System.out.println("OBJECT ID : " + objectId);
+        System.out.println("UNIQUE ID : " + uniqueId);
         System.out.println("COOKIE : " + cookie);
         
         System.out.println("----------CONTROL PARAMETERS----------");
@@ -250,6 +253,9 @@ public class MaarchCM extends JApplet {
             if ("OBJECT_ID".equals(key)) {
                 this.objectId = value;
             }
+            if ("UNIQUE_ID".equals(key)) {
+                this.uniqueId = value;
+            }
             if ("COOKIE".equals(key)) {
                 this.cookie = value;
             }
@@ -323,7 +329,8 @@ public class MaarchCM extends JApplet {
         
         this.logger.log("----------BEGIN OPEN REQUEST----------", Level.INFO);
         String urlToSend = this.url + "?action=editObject&objectType=" + this.objectType
-                        + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
+                        + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
+                        + "&uniqueId=" + this.uniqueId;
         sendHttpRequest(urlToSend, "none");
         this.logger.log("MESSAGE STATUS : " + this.messageStatus, Level.INFO);
         this.logger.log("MESSAGE RESULT : ", Level.INFO);
@@ -370,7 +377,8 @@ public class MaarchCM extends JApplet {
                     this.fileContentTosend = actualContent;
                     this.logger.log("----------[SECURITY BACKUP] BEGIN SEND OF THE OBJECT----------", Level.INFO);
                     String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
-                                + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
+                                + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
+                                + "&uniqueId=" + this.uniqueId;
                     this.logger.log("[SECURITY BACKUP] URL TO SAVE : " + urlToSave, Level.INFO);
                     sendHttpRequest(urlToSave, this.fileContentTosend);
                     this.logger.log("[SECURITY BACKUP] MESSAGE STATUS : " + this.messageStatus, Level.INFO);
@@ -389,7 +397,8 @@ public class MaarchCM extends JApplet {
             this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
             
             String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
-                            + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
+                            + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
+                            + "&uniqueId=" + this.uniqueId;
             this.logger.log("----------BEGIN SEND OF THE OBJECT----------", Level.INFO);
             this.logger.log("URL TO SAVE : " + urlToSave, Level.INFO);
             sendHttpRequest(urlToSave, this.fileContentTosend);
