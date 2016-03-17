@@ -816,7 +816,7 @@ function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, 
     var div    = id_div  || 'show_contacts';
     
     var params = get_contacts_params();
-    
+
     if (contact_autocompleter && contact_autocompleter.element == $$('#' + input)[0])
         contact_autocompleter.options.defaultParams = params;
     else if(path_script)
@@ -829,6 +829,8 @@ function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, 
                 var all_li = li.id;
                 var res = all_li.split(",");
                 parent.$(contact_id).value = res[0];
+                if (typeof (parent.$(contact_id).onchange) == 'function')
+                    parent.$(contact_id).onchange();
                 parent.$(address_id).value = res[1];
             }
         });
