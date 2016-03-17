@@ -808,8 +808,25 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
               . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});'
               . 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');hideOtherDiv(\'list_answers_div\');return false;" '
               . 'onmouseover="this.style.cursor=\'pointer\';" style="width:90%;">';
-    $frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>';
-    $frm_str .= '&nbsp;<i class="fa fa-paperclip fa-2x" style="'.$style.'" title="'._PJ.'"></i> <sup><span class="nbRes" style="'.$style2.'" id="nb_attach">'. $nb_attach . '</span></sup></b>';
+
+    $db = new Database;
+    $stmt = $db->query("SELECT res_id FROM "
+        . $_SESSION['tablename']['attach_res_attachments']
+        . " WHERE status <> 'DEL'  and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ? and (status <> 'TMP' or (typist = ? and status = 'TMP'))", array($res_id, $coll_id, $_SESSION['user']['UserId']));
+    if ($stmt->rowCount() > 0) {
+        $nb_attach = $stmt->rowCount();
+        $style = '';
+        $style2 = '';
+    }else{
+        $style = 'opacity:0.5;';
+        $style2 = 'display:none;';
+    }
+    if ($answer <> '') {
+        $answer .= ': ';
+    }
+    
+    $frm_str .= '<span id="divStatus_done_answers_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
+                . '&nbsp;<i class="fa fa-paperclip fa-2x" style="'.$style.'" title="'._PJ.'"></i> <sup><span class="nbRes" style="'.$style2.'" id="nb_attach">'. $nb_attach . '</span></sup>';
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</span>';
     $frm_str .= '</td>';
