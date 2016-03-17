@@ -22,6 +22,8 @@ include('apps/maarch_entreprise/js/indexing.js');
 include('apps/maarch_entreprise/js/maarch.js');
 include('apps/maarch_entreprise/js/keypress.js');
 include('apps/maarch_entreprise/js/Chart.js');
+include('apps/maarch_entreprise/js/chosen.proto.min.js');
+include('apps/maarch_entreprise/js/event.simulate.js');
 
 foreach(array_keys($_SESSION['modules_loaded']) as $value)
 {

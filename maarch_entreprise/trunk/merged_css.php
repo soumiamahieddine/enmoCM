@@ -125,5 +125,6 @@ if (isset($_GET['ie']) && file_exists('apps/' . $_SESSION['config']['app_id'] . 
     }
 }
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/doctype_levels.css';
+include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/chosen.min.css';
 ob_end_flush();
 

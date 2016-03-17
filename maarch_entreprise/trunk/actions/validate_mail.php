@@ -893,16 +893,33 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         
         /*** Folder  ***/
         if ($core_tools->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
+            require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
+            . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+            $folders = new folder();
+            $folder_info = $folders->get_folders_tree('1');
             $folder = '';
+            $folder_id = '';
             if(isset($data['folder'])&& !empty($data['folder']))
             {
                 $folder = $data['folder'];
+                $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
             }
             $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
             $frm_str .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER . '</label></td>';
             $frm_str .= '<td>&nbsp;</td>';
-            $frm_str .='<td><input type="text" name="folder" id="folder" value="'
-                . $folder . '" onblur=""/>';
+            
+            $frm_str .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder"><option>Sélectionnez un dossier</option>';
+
+            foreach ($folder_info as $key => $value) {
+                if($value['folders_system_id'] == $folder_id){
+                    $frm_str .= '<option selected="selected" value="'.$value['folders_system_id'].'">'.$value['folder_name'].'</option>';
+                }else{
+                    $frm_str .= '<option value="'.$value['folders_system_id'].'">'.$value['folder_name'].'</option>';
+                }
+                
+            }
+
+            $frm_str .= '</select></td>';
 
             if ($core->test_service('create_folder', 'folder', false) == 1) {
                 $frm_str .=' <a href="#" id="create_folder" title="' . _CREATE_FOLDER
@@ -911,7 +928,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . 'style="display:inline;" ><i class="fa fa-plus-circle" title="' 
                         . _CREATE_FOLDER . '"></i></a>';
             }
-            $frm_str .='<div id="show_folder" class="autocomplete"></div>';
             $frm_str .= '</tr>';
         }
 
@@ -1347,13 +1363,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     	// DocLocker constantly	
     	$frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';
             
-        if($core_tools->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1))
-        {
-            $frm_str .= ' initList(\'folder\', \'show_folder\',\''
-                . $_SESSION['config']['businessappurl'] . 'index.php?display='
-                . 'true&module=folder&page=autocomplete_folders&mode=folder\','
-                . ' \'Input\', \'2\');';   
-        }
         $frm_str .='init_validation(\''.$_SESSION['config']['businessappurl'] 
             . 'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \''
             . $display_value.'\', \'' 
@@ -1401,7 +1410,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             .$_SESSION['config']['businessappurl']
             .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
         $frm_str .= 'affiche_reference();';
+
+        $frm_str .= '$$(\'select\').each(function(element) { new Chosen(element,{width: "226px", disable_search_threshold: 10}); });';
         $frm_str .='</script>';
+        $frm_str .= '<style>#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}</style>';
+
 
 	// À la fin de la methode d’ouverture de la modale
 	$docLocker->lock();
@@ -1624,7 +1637,7 @@ function process_category_check($cat_id, $values)
         $db = new Database();
         $folder_id = '';
 
-        $folder = get_value_fields($values, 'folder');
+        $folder_id = get_value_fields($values, 'folder');
         if(isset($_ENV['categories'][$cat_id]['other_cases']['folder']) && $_ENV['categories'][$cat_id]['other_cases']['folder']['mandatory'] == true)
         {
             if(empty($folder))
@@ -1633,7 +1646,7 @@ function process_category_check($cat_id, $values)
                 return false;
             }
         }
-        if(!empty($folder) )
+        /*if(!empty($folder) )
         {
             if(!preg_match('/\([0-9]+\)$/', $folder))
             {
@@ -1647,7 +1660,7 @@ function process_category_check($cat_id, $values)
                 $_SESSION['action_error'] = _FOLDER.' '.$folder_id.' '._UNKNOWN;
                 return false;
             }
-        }
+        }*/
         if(!empty($type_id ) &&  !empty($folder_id))
         {
             $foldertype_id = '';
@@ -1933,9 +1946,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $res = $stmt->fetchObject();
         $old_folder_id = $res->folders_system_id;
 
-        $folder = get_value_fields($values_form, 'folder');
-        $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
-        
+        $folder_id = get_value_fields($values_form, 'folder');
+
         if(!empty($folder_id)) {
             $query_res .= ", folders_system_id = ?";
             $arrayPDOres = array_merge($arrayPDOres, array($folder_id));

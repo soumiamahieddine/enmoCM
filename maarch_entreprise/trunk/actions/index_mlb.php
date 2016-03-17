@@ -810,11 +810,24 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
 
     /*** Folder ***/
     if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
+        require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
+            . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+        $folders = new folder();
+        $folder_info = $folders->get_folders_tree('1');
+
         $frmStr .= '<tr id="folder_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER
                 . '</label></td>';
         $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
-        $frmStr .= '<td class="indexing_field"><input type="text" '
+
+        $frmStr .= '<td class="indexing_field" style="text-align:right;"><select class="chosen-select"><option>Sélectionnez un dossier</option>';
+
+        foreach ($folder_info as $key => $value) {
+             $frmStr .= '<option value="'.$value['folders_system_id'].'">'.$value['folder_name'].'</option>';
+        }
+
+        $frmStr .= '</select></td>';
+        /*$frmStr .= '<td class="indexing_field"><input type="text" '
                 . 'name="folder" id="folder" onblur="clear_error(\'frm_error_'
                 . $actionId . '\');return false;" />';
 
@@ -826,7 +839,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                         . _CREATE_FOLDER . '"></i></a>';
             }
         $frmStr .= '<div id="show_folder" '
-                . 'class="autocomplete"></div></td>';
+                . 'class="autocomplete"></div></td>';*/
         $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" '
                 . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
@@ -952,14 +965,16 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '&dir=indexing_searching&page=autocomplete_contacts\', \'contact\', \'show_contacts\', \'\', \'contactid\', \'addressid\');';
 
     if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
-        $frmStr .= ' initList(\'folder\', \'show_folder\',\''
+        /*$frmStr .= ' initList(\'folder\', \'show_folder\',\''
                 . $_SESSION['config']['businessappurl'] . 'index.php?display='
                 . 'true&module=folder&page=autocomplete_folders&mode=folder\','
-                . ' \'Input\', \'2\');';
+                . ' \'Input\', \'2\');';*/
     }
+    $frmStr .= '$$(\'select\').each(function(element) { new Chosen(element,{width: "226px", disable_search_threshold: 10}); });';
     $frmStr .= '$(\'baskets\').style.visibility=\'hidden\';'
             . 'var item  = $(\'index_div\'); if(item)'
             . '{item.style.display=\'block\';}</script>';
+    $frmStr .= '<style>#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}</style>';
 
     return addslashes($frmStr);
 

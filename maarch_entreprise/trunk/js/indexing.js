@@ -678,6 +678,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                     }
                     if(origin != 'init'){
                        document.getElementById("destination").onchange();
+                       Event.fire($("destination"), "chosen:updated");
                     }
                     //console.log('3 '+print_r(services_to_exec));
                     var path_scripts = '';

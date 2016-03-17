@@ -164,7 +164,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $_SESSION['save_list']['fromProcess'] = "true";
     $_SESSION['count_view_baskets']=0;
     $data = array();
-    $params_data = array('show_folder' => false);
+    $params_data = array('show_folder' => true);
     $data = get_general_data($coll_id, $res_id, 'full', $params_data);
     $process_data = $is->get_process_data($coll_id, $res_id);
     $chrono_number = $cr->get_chrono_number($res_id, $sec->retrieve_view_from_table($table));
@@ -281,7 +281,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
               $frm_str .= '<table width="95%" align="left" border="0">';
               // Displays the document indexes
             foreach (array_keys($data) as $key) {
-				if($key != 'is_multicontacts' || ($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y')){
+				if($key != 'is_multicontacts' && $key != 'folder' ||($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y')){
 					$frm_str .= '<tr>';
 						$frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
 							. $data[$key]['label'] . ' :</span>';
@@ -500,6 +500,53 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
     $frm_str .= '<br>';
 
+
+    //FOLDERS
+    if ($core_tools->is_module_loaded('folder')  && ($core->test_service('associate_folder', 'folder',false) == 1)) {
+        require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
+            . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+        $folders = new folder();
+        $folder_info = $folders->get_folders_tree('1');
+        $folder = '';
+        $folder_id = '';
+
+        // Displays the folder data
+        $folder = '';
+
+        if(isset($data['folder'])&& !empty($data['folder']))
+        {
+            $folder = $data['folder']['show_value'];
+            $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
+        }
+
+        $frm_str .= '<div id="folder_div">';
+        $frm_str .= '<h3 class="categorie" style="width:90%;">';
+                $frm_str .= ' <span id="divStatus_general_datas_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;<b>'
+                        . _FOLDER . '</b>';
+            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+        $frm_str .= '</h3>';
+            $frm_str .= '<div>';
+                $frm_str .= '<table width="98%" align="center" border="0">';
+                        $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
+                    $frm_str .= '<td class="indexing_field"><select id="folder" name="folder" style="width:95%;"><option>Sélectionnez un dossier</option>';
+                     foreach ($folder_info as $key => $value) {
+                if($value['folders_system_id'] == $folder_id){
+                    $frm_str .= '<option selected="selected" value="'.$value['folders_system_id'].'">'.$value['folder_name'].'</option>';
+                }else{
+                    $frm_str .= '<option value="'.$value['folders_system_id'].'">'.$value['folder_name'].'</option>';
+                }
+                
+            }
+
+            $frm_str .= '</select></td>';
+                $frm_str .= '</tr>';
+                $frm_str .= '</table>';
+            $frm_str .= '</div>';
+        $frm_str .= '</div>';
+        $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
+        $frm_str .= '<br>';
+    }
+
     //TAGS
     if (
         $core_tools->is_module_loaded('tags') && (
@@ -508,25 +555,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     {
         include_once("modules".DIRECTORY_SEPARATOR."tags".
         DIRECTORY_SEPARATOR."templates/process/index.php");
-    }
-
-    //FOLDERS
-    if ($core_tools->is_module_loaded('folder')  && ($core->test_service('associate_folder', 'folder',false) == 1)) {
-         // Displays the folder data
-        $frm_str .= '<div id="folder_div"  style="display:none">';
-            $frm_str .= '<div>';
-                $frm_str .= '<table width="98%" align="center" border="0">';
-                        $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
-                    $frm_str .= '<td><label for="folder" class="form_title_process" >' . _FOLDER_OR_SUBFOLDER . '</label></td>';
-                    $frm_str .= '<td>&nbsp;</td>';
-                     $frm_str .='<td><input type="text" name="folder" id="folder" value="'
-                        . $folder . '" onblur=""/><div id="show_folder" class="autocomplete"></div>';
-                $frm_str .= '</tr>';
-                $frm_str .= '</table>';
-            $frm_str .= '</div>';
-        $frm_str .= '</div>';
-        $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
-        $frm_str .= '<br>';
     }
 
 	
@@ -1241,15 +1269,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0){
 		$frm_str .= 'load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);';
 	}
+    $frm_str .= 'new Chosen($(\'folder\'),{width: "95%", disable_search_threshold: 10});';
 
 	// DocLocker constantly	
 	$frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';
-        if ($core_tools->is_module_loaded('folder')) {
-            $frm_str .= ' initList(\'folder\', \'show_folder\',\''
-                . $_SESSION['config']['businessappurl'] . 'index.php?display='
-                . 'true&module=folder&page=autocomplete_folders&mode=folder\','
-                . ' \'Input\', \'2\');';
-        }
         $frm_str .= '$(\'entity\').style.visibility=\'hidden\';';
         $frm_str .= '$(\'category\').style.visibility=\'hidden\';';
         $frm_str .= '$(\'baskets\').style.visibility=\'hidden\';';
@@ -1319,11 +1342,8 @@ function check_form($form_id,$values)
         $folder_id = '';
 
         if (!empty($folder)) {
-            if (!preg_match('/\([0-9]+\)$/', $folder)) {
-                $_SESSION['action_error'] = _FOLDER." "._WRONG_FORMAT."";
-                return false;
-            }
-            $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
+
+            $folder_id = $folder;
             $stmt = $db->query("SELECT folders_system_id FROM ".$_SESSION['tablename']['fold_folders']." WHERE folders_system_id = ?", array($folder_id));
             if ($stmt->rowCount() == 0) {
                 $_SESSION['action_error'] = _FOLDER.' '.$folder_id.' '._UNKNOWN;
@@ -1455,7 +1475,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $old_folder_id = $res->folders_system_id;
             
         if (!empty($folder)) {    
-            $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
+            $folder_id = $folder;
 
             if ($folder_id <> $old_folder_id && $_SESSION['history']['folderup']) {
                 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
