@@ -383,7 +383,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div><br/>';
 
     //RESPONSE FORM
-    $nb_attach = 0;
+    /*$nb_attach = 0;
 
     $stmt = $db->query("SELECT answer_type_bitmask FROM "
         .$_SESSION['collections'][0]['extensions'][0]." WHERE res_id = ?", array($res_id));
@@ -493,12 +493,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     /*$frm_str .= '<td><label for="process_notes">'
                         . _PROCESS_NOTES
                         . ' : </label><br/><textarea name="process_notes" id="process_notes" style="display:block;" rows="8" cols="30">'
-                        . $process_data['process_notes'].'</textarea></td>';*/
+                        . $process_data['process_notes'].'</textarea></td>';
                 $frm_str .= '</tr>';
             $frm_str .= '</table>';
         $frm_str .= '</div>';
     $frm_str .= '</div>';
-    $frm_str .= '<br>';
+    $frm_str .= '<br>';*/
 
 
     //FOLDERS
@@ -805,8 +805,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $frm_str .= '<td>';
     $frm_str .= '<span onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
-              . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});'
-              . 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');hideOtherDiv(\'list_answers_div\');return false;" '
+              . 'whatIsTheDivStatus(\'list_answers_div\', \'divStatus_done_answers_div\');return false;" '
               . 'onmouseover="this.style.cursor=\'pointer\';" style="width:90%;">';
 
     $db = new Database;
@@ -890,8 +889,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<div class="block" style="margin-top:-2px;">';
                 $frm_str .= '<div id="processframe" name="processframe">';
                     $frm_str .= '<center><h2 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});';
-                    $frm_str .= 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});';
-                    $frm_str .= 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');';
+                    $frm_str .= 'whatIsTheDivStatus(\'list_answers_div\', \'divStatus_done_answers_div\');';
                     $frm_str .= 'return false;">' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
                     $db = new Database;
                     $stmt = $db->query("SELECT res_id FROM ".$_SESSION['tablename']['attach_res_attachments']
@@ -1311,13 +1309,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
  **/
 function check_form($form_id,$values)
 {
-    $check = false;
-    $other_checked = false;
+    $check = true;
+    //$other_checked = false;
     $other_txt = '';
     $folder = '';
     $core = new core_tools();
     //print_r($values);
-    for ($i=0; $i<count($values); $i++) {
+    /*for ($i=0; $i<count($values); $i++) {
         if ($values[$i]['ID'] == "direct_contact" && $values[$i]['VALUE'] == "true") {
             $check = true;
         }
@@ -1353,7 +1351,7 @@ function check_form($form_id,$values)
         if ($values[$i]['ID'] == "res_id_to_process") {
             $res_id = $values[$i]['VALUE'];
         }
-    }
+    }*/
     if ($core->is_module_loaded('folder')) {
         $db = new Database();
         $folder_id = '';
@@ -1392,13 +1390,13 @@ function check_form($form_id,$values)
             }
         }
     }
-    if ($other_checked && $other_txt == '') {
+    /*if ($other_checked && $other_txt == '') {
         $_SESSION['action_error'] = _MUST_DEFINE_ANSWER_TYPE;
         return false;
     }
     if ($check == false) {
         $_SESSION['action_error'] = _MUST_CHECK_ONE_BOX;
-    }
+    }*/
     return $check;
 }
 
