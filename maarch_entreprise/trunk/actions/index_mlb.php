@@ -820,7 +820,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . '</label></td>';
         $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
 
-        $frmStr .= '<td class="indexing_field" style="text-align:right;"><select class="chosen-select"><option>Sélectionnez un dossier</option>';
+        $frmStr .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder"><option value="">Sélectionnez un dossier</option>';
 
         foreach ($folder_info as $key => $value) {
              $frmStr .= '<option value="'.$value['folders_system_id'].'">'.$value['folder_name'].'</option>';

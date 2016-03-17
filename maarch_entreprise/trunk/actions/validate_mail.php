@@ -908,7 +908,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER . '</label></td>';
             $frm_str .= '<td>&nbsp;</td>';
             
-            $frm_str .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder"><option>Sélectionnez un dossier</option>';
+            $frm_str .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder"><option value="">Sélectionnez un dossier</option>';
 
             foreach ($folder_info as $key => $value) {
                 if($value['folders_system_id'] == $folder_id){
