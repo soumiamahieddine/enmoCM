@@ -67,6 +67,27 @@ while($note = $stmt->fetch(PDO::FETCH_ASSOC)) {
 $datasources['attachments'] = array();
 $myAttachment['chrono'] = $chronoAttachment;
 
+// Transmissions
+if (isset($_SESSION['transmissionContacts'])) {
+
+    if (isset($_SESSION['upfileTransmissionNumber']) && $_SESSION['transmissionContacts'][$_SESSION['upfileTransmissionNumber']]) {
+        $curNb = $_SESSION['upfileTransmissionNumber'];
+        $datasources['transmissions'][0]['currentContact'] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$curNb]['title'])
+            . ' ' . $_SESSION['transmissionContacts'][$curNb]['firstname']
+            . ' ' . $_SESSION['transmissionContacts'][$curNb]['lastname'];
+    }
+
+    for ($nb = 1; $_SESSION['transmissionContacts'][$nb]; $nb++) {
+        if ($nb == 1)
+            $datasources['transmissions'] = [];
+
+        $datasources['transmissions'][0]['contact' . $nb] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title'])
+                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['firstname']
+                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['lastname'];
+    }
+
+}
+
 $img_file_name = $_SESSION['config']['tmppath'].$_SESSION['user']['UserId'].time().rand()."_barcode_attachment.png";
 
 require_once('apps/maarch_entreprise/tools/pdfb/barcode/pi_barcode.php');
