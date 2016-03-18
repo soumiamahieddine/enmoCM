@@ -573,14 +573,54 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 <?php $detailsExport .= "<h1><center>"._DETAILS_PRINT." : ".$s_id."</center></h1><hr>";?>
                 <dt class="fa fa-tachometer" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _PROPERTIES;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
                 <dd>
+                    
+                    <br/>
+                <form method="post" name="index_doc" id="index_doc" action="index.php?page=details&dir=indexing_searching&id=<?php functions::xecho($s_id);?>">
+                    <div align="center">
+                        <?php if ($printDetails) {
+                            /*if (
+                              isset($_SESSION['custom_override_id'])
+                              && $_SESSION['custom_override_id'] <> ''
+                            ) {
+                               $path = $_SESSION['config']['coreurl']
+                                . '/custom/'
+                                . $_SESSION['custom_override_id']
+                                . '/apps/'
+                                . $_SESSION['config']['app_id'];
+                            } else {*/
+                              $path = $_SESSION['config']['businessappurl'];
+                            //}
+                            ?>
+                            <!-- OLD PRINT DETAILS VERSION -->
+                            <!--<input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php functions::xecho($path . "/tmp/export_details_".$_SESSION['user']['UserId']."_export.html");?>', '_blank');" />-->
+                            <!-- NEW PRINT DETAILS VERSION -->
+                            <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=print&id=<?php functions::xecho($s_id);?>', '_blank');" />
+                            <?php
+                            }
+                        ?>
+                        <?php if ($putInValid) {
+                            ?>
+                            <input type="submit" class="button"  value="<?php echo _PUT_DOC_ON_VALIDATION;?>" name="put_doc_on_validation" onclick="return(confirm('<?php echo _REALLY_PUT_DOC_ON_VALIDATION;?>\n\r\n\r'));" />
+                            <?php
+                            }
+                        ?>
+                        <?php if ($delete_doc)
+                        {?>
+                        <input type="submit" class="button"  value="<?php echo _DELETE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));" />
+                        <?php }
+                        if ($modify_doc)
+                        {?>
+                        <input type="submit" class="button"  value="<?php echo _SAVE_MODIFICATION;?>" name="submit_index_doc" />
+                        <?php  } ?>
+                            <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php echo _BACK_TO_WELCOME;?>" onclick="window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';" />
+
+                            </div>
                     <h2>
                         <span class="date">
                             <?php $detailsExport .= "<h2>"._FILE_DATA."</h2>";?>
                             <b><?php echo _FILE_DATA;?></b>
                         </span>
                     </h2>
-                    <br/>
-                <form method="post" name="index_doc" id="index_doc" action="index.php?page=details&dir=indexing_searching&id=<?php functions::xecho($s_id);?>">
                     <?php $detailsExport .= "<table cellpadding='2' cellspacing='0' border='1' class='block forms details' width='100%'>";?>
                     <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                         <?php
@@ -1024,45 +1064,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </div>
                     <br/>
                     <br/>
-                    <div align="center">
-                        <?php if ($printDetails) {
-                            /*if (
-                              isset($_SESSION['custom_override_id'])
-                              && $_SESSION['custom_override_id'] <> ''
-                            ) {
-                               $path = $_SESSION['config']['coreurl']
-                                . '/custom/'
-                                . $_SESSION['custom_override_id']
-                                . '/apps/'
-                                . $_SESSION['config']['app_id'];
-                            } else {*/
-                              $path = $_SESSION['config']['businessappurl'];
-                            //}
-                            ?>
-							<!-- OLD PRINT DETAILS VERSION -->
-                            <!--<input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php functions::xecho($path . "/tmp/export_details_".$_SESSION['user']['UserId']."_export.html");?>', '_blank');" />-->
-							<!-- NEW PRINT DETAILS VERSION -->
-                            <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=print&id=<?php functions::xecho($s_id);?>', '_blank');" />
-                            <?php
-                            }
-                        ?>
-                        <?php if ($putInValid) {
-                            ?>
-                            <input type="submit" class="button"  value="<?php echo _PUT_DOC_ON_VALIDATION;?>" name="put_doc_on_validation" onclick="return(confirm('<?php echo _REALLY_PUT_DOC_ON_VALIDATION;?>\n\r\n\r'));" />
-                            <?php
-                            }
-                        ?>
-                        <?php if ($delete_doc)
-                        {?>
-                        <input type="submit" class="button"  value="<?php echo _DELETE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));" />
-                        <?php }
-                        if ($modify_doc)
-                        {?>
-                        <input type="submit" class="button"  value="<?php echo _SAVE_MODIFICATION;?>" name="submit_index_doc" />
-                        <?php  } ?>
-                            <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php echo _BACK_TO_WELCOME;?>" onclick="window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';" />
-
-							</div>
+                    
 							</form><br><br>
 						<?php
                         //Identifiant du courrier en cours
