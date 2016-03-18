@@ -44,35 +44,24 @@ $_SESSION['tagsuser'] = array();
 $tags = new tag_controler();
 $tags->load_sessiontag($s_id,$coll_id);	
 //--------------------------------------
+$frm_str .= '<tr><th colspan="6" style="text-align:center;">';
+$frm_str .= '<br/><span><i class="fa fa-tags fa-2x"></i>';               
+$frm_str .= _TAGS.'</span></th>';
+$frm_str .= '</tr>';
+$frm_str .= '<tr>';
 
-$frm_str = '<div id="tags">';
-                    
-$frm_str .= '<h2>';
-$frm_str .= '<span class="date">';
-$frm_str .= '<b>'._TAGS.'</b>';
-$frm_str .= '</span>';
-$frm_str .= '</h2>';
-$frm_str .= '<table width="98%" align="center" border="0">';
-
-$frm_str .= '<tr id="tag_tr">';
-$frm_str .= '<td>';
+$frm_str .= '<td colspan="6" style="text-align:center;">';
 if ($modify_doc)
 {
-	$tag_customsize = '950px';
-	$tag_customcols = '120';
-	include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS		
+	$modify_keyword = true;
 }
-$frm_str .= '</td>';
-$frm_str .= '</tr>';
+$tag_customsize = '950px';
+$tag_customcols = '120';
+include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS		
+
+$frm_str .= '</td></tr><style>#tag_userform_chosen{width:600px !important;}</style>';
 
 
-$frm_str .= '<tr id="tag_tr">';
-$frm_str .= '<td width="70%"><div id="tag_displayed" style="display:block;width:660px;"></div></td>';
-$frm_str .= '</tr>';
-
-$frm_str .= '</table>';
-$frm_str .= '</div>'; 
-$frm_str .= '</br>';
 
 if (!$modify_doc){
 	$rttagfinaldetail = $route_tag_ui_script_without_modif;

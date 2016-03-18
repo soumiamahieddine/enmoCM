@@ -39,9 +39,34 @@ if (!$tag_customsize)
 	$tag_customcols = '35';
 }
 
-if ($core_tools->test_service('add_tag_to_res', 'tags',false) == 1)
-{
-	$frm_str .='<textarea rows="2" cols="'.$tag_customcols.'" id="tag_userform" '
+if (!is_array($_SESSION['tagsuser'])) {
+	$_SESSION['tagsuser'] = array();
+}
+
+//if ($core_tools->test_service('add_tag_to_res', 'tags',false) == 1)
+//{
+	$tags_list=$tags->get_all_tags();
+	//print_r($tags_list);
+	
+	if($modify_keyword){
+		$frm_str .='<select  id="tag_userform" name="tag_userform[]" multiple="" data-placeholder="Aucun mot clé">';
+	}else{
+		$frm_str .='<select disabled="disabled" id="tag_userform" title="Vous n\'avez pas le droit d\'associer de mots clés" name="tag_userform[]" multiple="" data-placeholder="Aucun mot clé">';
+	}
+
+	if (!empty($tags_list)) {
+		foreach ($tags_list as $key => $value) {
+			if (in_array($value['tag_label'], $_SESSION['tagsuser'])) {
+				$frm_str .= '<option selected="selected" value="'.$value['tag_label'].'">'.$value['tag_label'].'</option>';
+			}else{
+				$frm_str .= '<option value="'.$value['tag_label'].'">'.$value['tag_label'].'</option>';
+			}
+		}
+	}
+
+
+	$frm_str .='</select>';
+	/*$frm_str .='<textarea rows="2" cols="'.$tag_customcols.'" id="tag_userform" '
 			 .'style="width:'.$tag_customsize.';" >'.$tag.'</textarea>&nbsp;';
 	$frm_str .='<div id="show_tags" class="autocomplete"></div>';
 	if($_SESSION['user']['services']['create_tag'] == 1){
@@ -55,7 +80,7 @@ if ($core_tools->test_service('add_tag_to_res', 'tags',false) == 1)
 	$frm_str .= '<script type="text/javascript">launch_autocompleter_tags(\''
                 . $_SESSION['config']['businessappurl'] . 'index.php?display='
                 . 'true&module=tags&page=autocomplete_tags\','
-                . ' \'tag_userform\');</script>';
-}
+                . ' \'tag_userform\');</script>';*/
+//}
 
 ?>

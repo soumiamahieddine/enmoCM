@@ -42,34 +42,27 @@ $tags = new tag_controler();
 //--------------------------------------
 
 
-$frmStr .= '<tr id="box_id_tr" ><td colspan="4">';
-$frmStr .= '<em>'._TAGS.' :</em>';
-$frmStr .= '<span class="lb1-details">&nbsp;</span>';
-$frmStr .= '</h2>';
-$frmStr .= '<div id="tag_div">';
-$frmStr .= '<div>';
+$frmStr .= '<tr id="box_id_tr" >';
+$frmStr .= '<td>'._TAGS.'</td>';
+$frmStr .= '</tr><tr><td colspan="3">';
  
-$frmStr .= '<table width="98%" align="center" border="0">';
-
 $tag_customsize = '360px';
 $tag_customcols = '53';
+
+if ($core->test_service('add_tag_to_res', 'tags',false) == 1)
+{
+	$modify_keyword = true;
+}
 include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS	
 $frmStr .= $frm_str;
 
+$frmStr .='</td></tr><style>#tag_userform_chosen{width:100% !important;}</style>';
 
-$frmStr .= '<tr id="tag_tr">';
+
 //$frmStr .= '<td><label for="tag" class="tag_title" ></label></td>';
-$frmStr .= '<td colspan ="2"><div id="tag_displayed" style="display:block;width:400px;"></div></td>';
 
-
-$frmStr .= '</tr>';
-$frmStr .= '</table>';
-$frmStr .= '</div>';
-$frmStr .= '</div>';
 $frmStr .= '<input type="hidden" name="res_id" id="res_id"  value="'.$res_id.'" />';
-
 
 $frmStr .= '<script type="text/javascript">load_tags('.$route_tag_ui_script.', \''.$res_id.'\', \''.$coll_id.'\');';
 $frmStr .= '</script>';
-$frmStr .= '</td></tr>';
 ?>

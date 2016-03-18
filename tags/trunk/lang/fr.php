@@ -60,13 +60,13 @@ if (!defined("_TAG_LABEL_IS_EMPTY"))
 if (!defined("_NO_TAG"))
     define("_NO_TAG", "Pas de "._TAG_DEFAULT);
 if (!defined("_TAG_VIEW"))
-    define("_TAG_VIEW", "Visualisation des "._TAGS_DEFAULT);
+    define("_TAG_VIEW", "Voir les "._TAGS_DEFAULT." des documents");
 if (!defined("_TAG_VIEW_DESC"))
     define("_TAG_VIEW_DESC", "Permet de visualiser les "._TAGS_DEFAULT);
 if (!defined("_ADD_TAG"))
     define("_ADD_TAG", "Ajouter un "._TAG_DEFAULT);
 if (!defined("_ADD_TAG_TO_RES"))
-    define("_ADD_TAG_TO_RES", "Ajouter des "._TAGS_DEFAULT." à une ressource");
+    define("_ADD_TAG_TO_RES", "Associer les "._TAGS_DEFAULT." disponible à un document");
 if (!defined("_CREATE_TAG"))
     define("_CREATE_TAG", "Créer des "._TAGS_DEFAULT);
 if (!defined("_ADD_TAG_TO_RES_DESC"))
