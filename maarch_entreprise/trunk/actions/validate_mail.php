@@ -933,6 +933,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
         if ($core_tools->is_module_loaded('tags') &&
                     ($core_tools->test_service('tag_view', 'tags',false) == 1)) {
+            $tags = get_value_fields($formValues, 'tag_userform');
+            $tags_list = explode('__', $tags);
             include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR
             ."templates/validate_mail/index.php");
         }

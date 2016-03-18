@@ -1285,6 +1285,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= 'load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);';
 	}
     $frm_str .= 'new Chosen($(\'folder\'),{width: "95%", disable_search_threshold: 10});';
+    $frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10});';
 
 	// DocLocker constantly	
 	$frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';
@@ -1470,6 +1471,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         if ($values_form[$j]['ID'] == "folder") {
             $folder = $values_form[$j]['VALUE'];
         }
+        if ($values_form[$j]['ID'] == "tag_userform") {
+            $tags = $values_form[$j]['VALUE'];
+        }
     }
     if ($no_answer == '1') {
         $bitmask = '000000';
@@ -1478,6 +1482,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     }
 
     if ($core->is_module_loaded('tags')) {
+        $tags_list = explode('__', $tags);
         include_once("modules".DIRECTORY_SEPARATOR."tags".
                     DIRECTORY_SEPARATOR."tags_update.php");
     }

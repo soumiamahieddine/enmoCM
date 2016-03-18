@@ -244,6 +244,8 @@ if (isset($_POST['submit_index_doc'])) {
     $is->update_mail($_POST, 'POST', $s_id, $coll_id);
 
     if ($core->is_module_loaded('tags')) {
+        $tags = $_POST['tag_userform'];
+        $tags_list = $tags;
         include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR."tags_update.php");
     }
 }
@@ -918,7 +920,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     ?>
 
                     <div id="opt_indexes">
-                    <?php if (count($indexes) > 0)
+                    <?php if (count($indexes) > 0 || ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)))
                     {
                         ?><br/>
                         <h2>
@@ -1012,6 +1014,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 $i++;
                             }
                             ?>
+                            <?php
+                            if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
+                                    include_once('modules/tags/templates/details/index.php');
+                                    echo '<script>new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10});</script>';
+                            } ?>
                         </table>
                         <?php  } ?>
                     </div>
@@ -1105,9 +1112,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 					<?php } ?>
          
                     <?php
-                    if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
-                            include_once('modules/tags/templates/details/index.php');
-                    }
+                    
         }
 		
         ?>

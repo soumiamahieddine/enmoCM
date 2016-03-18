@@ -975,6 +975,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'var item  = $(\'index_div\'); if(item)'
             . '{item.style.display=\'block\';}</script>';
     $frmStr .= '<style>#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}</style>';
+    $frm_str .='<script>$("#tag_userform").chosen().change( console.log("ok"); );</script>';
 
     return addslashes($frmStr);
 
@@ -1873,6 +1874,8 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             }
         }
         if ($core->is_module_loaded('tags')) {
+            $tags = get_value_fields($formValues, 'tag_userform');
+            $tags_list = explode('__', $tags);
                 include_once("modules".DIRECTORY_SEPARATOR."tags"
                 .DIRECTORY_SEPARATOR."tags_update.php");
         }
