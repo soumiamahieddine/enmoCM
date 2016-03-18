@@ -89,6 +89,12 @@ if (isset($_REQUEST['objectId'])) {
     $objectId = '';
 }
 
+if (isset($_REQUEST['uniqueId'])) {
+    $uniqueId = $_REQUEST['uniqueId'];
+} else {
+    $uniqueId = '';
+}
+
 if (isset($_REQUEST['contactId'])) {
     $_SESSION['cm']['contact_id'] = $_REQUEST['contactId'];
 }
@@ -183,6 +189,7 @@ if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "false"){
         <param name="objectType" value="<?php functions::xecho($objectType);?>">
         <param name="objectTable" value="<?php functions::xecho($objectTable);?>">
         <param name="objectId" value="<?php functions::xecho($objectId);?>">
+        <param name="uniqueId" value="<?php functions::xecho($uniqueId);?>">
         <param name="cookie" value="<?php echo $cookieKey;?>">
         <param name="userMaarch" value="<?php 
             echo $cMFeatures['CONFIG']['userMaarchOnClient'];
@@ -217,6 +224,7 @@ else if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
         <param name="objectType" value="<?php functions::xecho($objectType);?>">
         <param name="objectTable" value="<?php functions::xecho($objectTable);?>">
         <param name="objectId" value="<?php functions::xecho($objectId);?>">
+        <param name="uniqueId" value="<?php functions::xecho($uniqueId);?>">
         <param name="cookie" value="<?php echo $cookieKey;?>">
         <param name="userMaarch" value="<?php 
             echo $cMFeatures['CONFIG']['userMaarchOnClient'];

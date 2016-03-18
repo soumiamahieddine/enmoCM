@@ -29,13 +29,15 @@ $core_tools->load_header();
 $core_tools->load_js();
 
 // sessions use for temporary backup
-$_SESSION['attachmentInfo'] = array();
-$_SESSION['attachmentInfo']['title'] = $_REQUEST['titleAttachment'];
-$_SESSION['attachmentInfo']['chrono'] = $_REQUEST['chronoAttachment'];
-$_SESSION['attachmentInfo']['type'] = $_REQUEST['attachType'];
-$_SESSION['attachmentInfo']['contactId'] = $_REQUEST['contactId'];
-$_SESSION['attachmentInfo']['addressId'] = $_REQUEST['addressId'];
-$_SESSION['attachmentInfo']['back_date'] = $_REQUEST['back_date'];
+if (!isset($_REQUEST['transmissionNumber'])) {
+    $_SESSION['attachmentInfo'] = array();
+    $_SESSION['attachmentInfo']['title'] = $_REQUEST['titleAttachment'];
+    $_SESSION['attachmentInfo']['chrono'] = $_REQUEST['chronoAttachment'];
+    $_SESSION['attachmentInfo']['type'] = $_REQUEST['attachType'];
+    $_SESSION['attachmentInfo']['contactId'] = $_REQUEST['contactId'];
+    $_SESSION['attachmentInfo']['addressId'] = $_REQUEST['addressId'];
+    $_SESSION['attachmentInfo']['back_date'] = $_REQUEST['back_date'];
+}
 
 if (isset($_REQUEST['attachType']) && $_REQUEST['attachType'] == 'outgoing_mail'){
 	$objType = 'outgoingMail';
@@ -52,6 +54,8 @@ if (
 } else {
     $path = 'modules/content_management/applet_launcher.php';
 }
+$_SESSION['upfileTransmissionNumber'] = (isset($_REQUEST['transmissionNumber']) ? $_REQUEST['transmissionNumber'] : null);
+$uniqueId = (isset($_REQUEST['transmissionNumber']) ? $_REQUEST['transmissionNumber'] : null);
 
 ?>
 <style type="text/css">html{overflow:hidden}</style>
@@ -68,6 +72,8 @@ if (
                     functions::xecho($objType);
                     ?>&objectTable=<?php
                     functions::xecho($_REQUEST['objectTable']);
+                    ?>&uniqueId=<?php
+                    functions::xecho($uniqueId);
                     ?>&resMaster=<?php
                     functions::xecho($_REQUEST['resMaster']);
                     ?>&contactId=<?php

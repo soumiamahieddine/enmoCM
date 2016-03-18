@@ -31,7 +31,7 @@ function endOfApplet(objectType, theMsg)
     }
 
     $('divError').innerHTML = theMsg;
-    if (objectType == 'template' || objectType == 'templateStyle' || objectType == 'attachmentVersion' || objectType == 'attachmentUpVersion') {
+    if (objectType == 'template' || objectType == 'templateStyle' || objectType == 'attachmentVersion' || objectType == 'attachmentUpVersion' || objectType == 'transmission') {
         endTemplate();
     } else if (objectType == 'resource') {
         endResource();

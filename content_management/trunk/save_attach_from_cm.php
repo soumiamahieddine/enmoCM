@@ -83,7 +83,7 @@ if (empty($docserver)) {
                         . $tmpFileName, $docserverTypeObject->fingerprint_mode,
                     $objectId
                 )
-            );
+            ));
             if ($_SESSION['history']['attachup'] == 'true') {
                 $hist = new history();
                 $sec = new security();

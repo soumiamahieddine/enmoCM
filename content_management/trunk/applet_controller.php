@@ -96,18 +96,19 @@ $error = '';
 
 $cM = new content_management_tools();
 
-if (
-    !empty($_REQUEST['action'])
+if (!empty($_REQUEST['action'])
     && !empty($_REQUEST['objectType'])
     && !empty($_REQUEST['objectTable'])
     && !empty($_REQUEST['objectId'])
-) {
+    && isset($_REQUEST['uniqueId']))
+{
     $objectType = $_REQUEST['objectType'];
     $objectTable = $_REQUEST['objectTable'];
     // $_REQUEST['objectId'] = str_replace("\\", "", $_REQUEST['objectId']);
     // $_REQUEST['objectId'] = str_replace("/", "", $_REQUEST['objectId']);
     $_REQUEST['objectId'] = str_replace("..", "", $_REQUEST['objectId']);
     $objectId = $_REQUEST['objectId'];
+    $uniqueId = $_REQUEST['uniqueId'];
     $appPath = 'start';
     if ($_REQUEST['action'] == 'editObject') {
         //createXML('ERROR', $objectType . ' ' . $objectId);
@@ -123,6 +124,7 @@ if (
             && $objectType <> 'attachmentVersion'
             && $objectType <> 'outgoingMail'
             && $objectType <> 'attachmentUpVersion'
+            && $objectType != 'transmission'
         ) {
             //case of res -> master or version
             include 'modules/content_management/retrieve_res_from_cm.php';
@@ -179,6 +181,7 @@ if (
 					'OBJECT_TYPE' => $objectType,
 					'OBJECT_TABLE' => $objectTable,
 					'OBJECT_ID' => $objectId,
+					'UNIQUE_ID' => $uniqueId,
 					'APP_PATH' => $appPath,
 					'FILE_CONTENT' => $fileContent,
 					'FILE_CONTENT_VBS' => $encodedContent_vbsFile,
@@ -195,6 +198,7 @@ if (
 					'OBJECT_TYPE' => $objectType,
 					'OBJECT_TABLE' => $objectTable,
 					'OBJECT_ID' => $objectId,
+					'UNIQUE_ID' => $uniqueId,
 					'APP_PATH' => $appPath,
 					'FILE_CONTENT' => $fileContent,
 					'FILE_CONTENT_EXE' => $encodedContent_exeFile,
@@ -211,6 +215,7 @@ if (
 				'OBJECT_TYPE' => $objectType,
 				'OBJECT_TABLE' => $objectTable,
 				'OBJECT_ID' => $objectId,
+				'UNIQUE_ID' => $uniqueId,
 				'APP_PATH' => $appPath,
 				'FILE_CONTENT' => $fileContent,
 				'FILE_EXTENSION' => $fileExtension,
@@ -273,7 +278,8 @@ if (
                 //depending on the type of object, the action is not the same
                 if ($objectType == 'resource') {
                     include 'modules/content_management/save_new_version_from_cm.php';
-                }if ($objectType == 'resourceEdit') {
+                }
+                if ($objectType == 'resourceEdit') {
                     include 'modules/content_management/save_editRes_from_cm.php';
                 } elseif ($objectType == 'attachmentFromTemplate') {
                     include 'modules/content_management/save_attach_res_from_cm.php';
@@ -281,10 +287,12 @@ if (
                     include 'modules/content_management/save_attach_from_cm.php';
                 } elseif ($objectType == 'templateStyle' || $objectType == 'template') {
                     include 'modules/content_management/save_template_from_cm.php';
-                }  elseif ($objectType == 'attachmentVersion' || $objectType == 'attachmentUpVersion') {
+                } elseif ($objectType == 'attachmentVersion' || $objectType == 'attachmentUpVersion') {
                     include 'modules/content_management/save_attachment_from_cm.php';
-                }	elseif ($objectType == 'outgoingMail') {
+                } elseif ($objectType == 'outgoingMail') {
                     include 'modules/content_management/save_outmail_from_cm.php';
+                } elseif ($objectType == 'transmission') {
+                    include 'modules/content_management/save_transmission_from_cm.php';
                 }
                 //THE RETURN
                 if (!empty($_SESSION['error'])) {
