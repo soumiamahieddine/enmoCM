@@ -1741,6 +1741,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     $attach = get_value_fields($values_form, 'attach');
 
     if ($core->is_module_loaded('tags')) {
+        $tags_list = get_value_fields($values_form, 'tag_userform');
+        $tags_list = explode('__', $tags_list);
         include_once("modules".DIRECTORY_SEPARATOR."tags"
         .DIRECTORY_SEPARATOR."tags_update.php");
     }
