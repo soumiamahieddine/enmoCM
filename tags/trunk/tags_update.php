@@ -62,13 +62,12 @@ elseif($coll_id){
 
 include_once 'modules/tags/route.php';
 
-if (isset($_SESSION['tagsuser']))
-{
-
+//if (!empty($tags))
+//{
 	$tags = new tag_controler();	
-	$tagmodule_result = $tags->update_restag($ressource_tagmodule,$collection_tagmodule, $_SESSION['tagsuser']);
+	$tagmodule_result = $tags->update_restag($ressource_tagmodule,$collection_tagmodule, $tags_list);
 	unset($_SESSION['tagsuser']);
 	
-}
+//}
    
 ?>
