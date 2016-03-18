@@ -61,6 +61,125 @@ function _parse($text) {
     return $text;
 }
 
+function checkTransmissionError($nb) {
+    if (empty($_REQUEST["transmissionType{$nb}"]) && empty($_REQUEST["transmissionChrono{$nb}"]) && empty($_REQUEST["transmissionTitle{$nb}"]))
+        return false;
+    if (empty($_REQUEST["transmissionType{$nb}"]) || empty($_REQUEST["transmissionChrono{$nb}"])) {
+        $_SESSION['error'] .= "Transmission {$nb} : " . _ATTACHMENT_TYPES . ' ' . _MANDATORY . ". ";
+        return false;
+    }
+    if (empty($_REQUEST["transmissionTitle{$nb}"])) {
+        $_SESSION['error'] .= "Transmission {$nb} : " . _OBJECT . ' ' . _MANDATORY . ". ";
+        return false;
+    }
+    return true;
+}
+
+function setTransmissionData($nb, $storeResult) {
+    $func = new functions();
+    $transmissionData = [];
+
+    $transmissionData[] = [
+        'column' => 'typist',
+        'value' => $_SESSION['user']['UserId'],
+        'type' => 'string'
+    ];
+    $transmissionData[] = [
+        'column' => 'format',
+        'value' => $_SESSION['upfileTransmission'][$nb]['format'] ,
+        'type' => 'string'
+    ];
+    $transmissionData[] = [
+        'column' => 'docserver_id',
+        'value' => $storeResult['docserver_id'],
+        'type' => 'string'
+    ];
+    $transmissionData[] = [
+        'column' => 'status',
+        'value' => 'A_TRA',
+        'type' => 'string'
+    ];
+    $transmissionData[] = [
+        'column' => 'offset_doc',
+        'value' => ' ',
+        'type' => 'string'
+    ];
+    $transmissionData[] = [
+        'column' => 'logical_adr',
+        'value' => ' ',
+        'type' => 'string'
+    ];
+    $transmissionData[] = [
+        'column' => 'title',
+        'value' => str_replace("&#039;", "'", $_REQUEST["transmissionTitle{$nb}"]),
+        'type' => 'string'
+    ];
+    $transmissionData[] = [
+        'column' => 'attachment_type',
+        'value' => $func->protect_string_db($_REQUEST["transmissionType{$nb}"]),
+        'type' => 'string'
+    ];
+    $transmissionData[] = [
+        'column' => 'coll_id',
+        'value' => $_SESSION['collection_id_choice'],
+        'type' => 'string'
+    ];
+    $transmissionData[] = [
+        'column' => 'res_id_master',
+        'value' => $_SESSION['doc_id'],
+        'type' => 'integer'
+    ];
+    $transmissionData[] = [
+        'column' => 'identifier',
+        'value' => $_REQUEST["transmissionChrono{$nb}"],
+        'type' => 'string'
+    ];
+    $transmissionData[] = [
+        'column' => 'type_id',
+        'value' => 0,
+        'type' => 'int'
+    ];
+    $transmissionData[] = [
+        'column' => 'relation',
+        'value' => 1,
+        'type' => 'int'
+    ];
+
+    if (!empty($_REQUEST["transmissionBackDate{$nb}"])) {
+        $transmissionData[] = [
+            'column' => 'validation_date',
+            'value' => $func->format_date_db($_REQUEST["transmissionBackDate{$nb}"]),
+            'type' => 'date'
+        ];
+    }
+
+    if (!empty($_REQUEST["transmissionExpectedDate{$nb}"])) {
+        $transmissionData[] = [
+            'column' => 'expected_return',
+            'value' => $_REQUEST["transmissionExpectedDate{$nb}"],
+            'type' => 'string'
+        ];
+    }
+
+    if (!empty($_REQUEST["transmissionContactidAttach{$nb}"])) {
+        $transmissionData[] = [
+            'column' => 'dest_contact_id',
+            'value' => $_REQUEST["transmissionContactidAttach{$nb}"],
+            'type' => 'integer'
+        ];
+    }
+
+    if (!empty($_REQUEST["transmissionAddressidAttach{$nb}"])) {
+        $transmissionData[] = [
+            'column' => 'dest_address_id',
+            'value' => $_REQUEST["transmissionAddressidAttach{$nb}"],
+            'type' => 'integer'
+        ];
+    }
+
+    return $transmissionData;
+}
+
 if (isset($_POST['add']) && $_POST['add']) {
 
     if (empty($_SESSION['upfile']['tmp_name'])) {
@@ -74,6 +193,14 @@ if (isset($_POST['add']) && $_POST['add']) {
         $_SESSION['error'] = _ERROR_FILE_UPLOAD_MAX . "(" . round(
             $filesize / 1024, 2
         ) . "Ko Max).<br />";
+    }
+
+    for ($nb = 1; checkTransmissionError($nb); $nb++) {
+        if (empty($_SESSION['upfileTransmission'][$nb]['tmp_name'])) {
+            $_SESSION['error'] .= "Transmission {$nb} : " . _FILE_MISSING . '. ';
+        } elseif ($_SESSION['upfileTransmission'][$nb]['size'] == 0) {
+            $_SESSION['error'] .= "Transmission {$nb} : " . _FILE_EMPTY . '. ';
+        }
     }
 
     $attachment_types = '';
@@ -311,9 +438,31 @@ if (isset($_POST['add']) && $_POST['add']) {
 							$storeResult['destination_dir'],
 							$storeResult['file_destination_name'] ,
 							$storeResult['path_template'],
-							$storeResult['docserver_id'], $_SESSION['data'],
+							$storeResult['docserver_id'],
+                            $_SESSION['data'],
 							$_SESSION['config']['databasetype']
 						);
+
+                        for ($nb = 1; checkTransmissionError($nb); $nb++) {
+                            $fileInfosTr = [
+                                'tmpDir'      => $_SESSION['config']['tmppath'],
+                                'size'        => $_SESSION['upfileTransmission'][$nb]['size'],
+                                'format'      => $_SESSION['upfileTransmission'][$nb]['format'],
+                                'tmpFileName' => $_SESSION['upfileTransmission'][$nb]['fileNameOnTmp'],
+                            ];
+
+                            $storeResultTr = $docserverControler->storeResourceOnDocserver($_SESSION['collection_id_choice'], $fileInfosTr);
+
+                            $resAttach->load_into_db(
+                                RES_ATTACHMENTS_TABLE,
+                                $storeResultTr['destination_dir'],
+                                $storeResultTr['file_destination_name'] ,
+                                $storeResultTr['path_template'],
+                                $storeResultTr['docserver_id'],
+                                setTransmissionData($nb, $storeResultTr),
+                                $_SESSION['config']['databasetype']
+                            );
+                        }
                         
                         //copie de la version PDF de la pièce si mode de conversion sur le client
                         if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
@@ -1233,10 +1382,12 @@ if (isset($_REQUEST['id'])) {
 } else {
     $_SESSION['targetAttachment'] = 'add';
 
-    $stmt = $db->query("SELECT subject, exp_contact_id, dest_contact_id, address_id FROM res_view_letterbox WHERE res_id = ?",array($_SESSION['doc_id']));
+    $stmt = $db->query("SELECT subject, exp_contact_id, dest_contact_id, address_id, alt_identifier FROM res_view_letterbox WHERE res_id = ?",array($_SESSION['doc_id']));
     $data_attachment = $stmt->fetchObject();
 
     unset($_SESSION['upfile']);
+    unset($_SESSION['upfileTransmission']);
+
 }
 
 
@@ -1353,6 +1504,7 @@ $content .= '</h2>';
     
 
 $content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:30%;float:left;margin-left:-5px;background-color:#deedf3">';
+$content .= '<div class="transmissionDiv">';
 $content .= '<hr style="width:85%;margin-left:0px">';
 $content .= '<input type="hidden" id="category_id" value="outgoing"/>';
 if (isset($_REQUEST['id'])) {
@@ -1366,7 +1518,7 @@ $content .= '<input type="hidden" name="fromDetail" id="fromDetail" value="'.$_R
 if (!isset($_REQUEST['id'])) {
     $content .= '<p>';
     $content .= '<label>' . _ATTACHMENT_TYPES . '</label>';
-    $content .= '<select name="attachment_types" id="attachment_types" onchange="affiche_chrono();select_template(\'' . $_SESSION['config']['businessappurl']
+    $content .= '<select name="attachment_types" id="attachment_types" onchange="disableTransmissionButton(this.options[this.selectedIndex].value);affiche_chrono();select_template(\'' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&module=templates&page='
         . 'select_templates\', this.options[this.selectedIndex].value);"/>';
     $content .= '<option value="">' . _CHOOSE_ATTACHMENT_TYPE . '</option>';
@@ -1380,14 +1532,12 @@ if (!isset($_REQUEST['id'])) {
 
     $content .= '</select>&nbsp;<span class="red_asterisk" id="attachment_types_mandatory"><i class="fa fa-star"></i></span>';
     $content .= '</p>';
-    $content .= '<br/>';
     $content .= '<p>';
     $content .= '<label id="chrono_label" style="display:none">'. _CHRONO_NUMBER.'</label>';
     $content .= '<input type="text" name="chrono_display" id="chrono_display" style="display:none" disabled class="readonly"/>';
     $content .= '<select name="get_chrono_display" id="get_chrono_display" style="display:none" onchange="$(\'chrono\').value=this.options[this.selectedIndex].value"/>';
-    $content .= '<input type="hidden" name="chrono" id="chrono" />';
+    $content .= '<input type="hidden" name="chrono" id="chrono" value="' . $data_attachment->alt_identifier . '"/>';
     $content .= '</p>';
-    $content .= '<br/>';
     $content .= '<p style="text-align:left;margin-left:74.5%;"></p>';
     $content .= '<p>';
     $content .= '<label>'. _FILE.' <span><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});"></i> <i class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
@@ -1412,13 +1562,11 @@ if (!isset($_REQUEST['id'])) {
             .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');this.hide();$(\'add\').setStyle({display: \'none\'});"/>';
     }
             $content .= '</p>';
-    $content .= '<br/>';
 
 }
 
 if (isset($statusEditAttachment) && $statusEditAttachment == 'TMP') {
     $content .= '<p align="middle"><span style="color:green">'._RETRIEVE_BACK_UP.'</span></p>';
-    $content .= '<br/>';
 }
 
 $content .= '<p>';
@@ -1431,11 +1579,6 @@ if (isset($_REQUEST['id'])) {
 }
 $content .= '"/>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
 $content .= '</p>';
-if (!isset($_REQUEST['id'])) {
-    $content .= '<hr style="width:85%;margin-left:0px">';
-} else {
-    $content .= '<br/>';
-}
 $content .= '<p>';
 $content .= '<label>'. _BACK_DATE.'</label>';
 $content .= '<input type="text" name="back_date" id="back_date" onClick="showCalender(this);" value="';
@@ -1445,7 +1588,6 @@ if (isset($_REQUEST['id'])) {
 
 $content .='"/>';
 $content .= '</p>';
-$content .= '<br/>';
 $content .= '<p>';
 $content .= '<label>'. _DEST_USER;
 if ($core->test_admin('my_contacts', 'apps', false)) {
@@ -1484,7 +1626,6 @@ if (isset($_REQUEST['id'])) {
 }
 
 $content .= '"/>';
-$content .= '<br/>';
 
 if (isset($_REQUEST['id']) && ($data_attachment->status <> 'TMP' || ($data_attachment->status == 'TMP' && $data_attachment->relation > 1))) {
     $content .= '<p>';
@@ -1493,8 +1634,11 @@ if (isset($_REQUEST['id']) && ($data_attachment->status <> 'TMP' || ($data_attac
     $content .= '&nbsp;&nbsp;';
     $content .= '<input type="radio" name="new_version" id="new_version_no" checked value="no" onclick="setButtonStyle(\'no\', \''.$attachmentFormat.'\', $(\'hiddenValidateStatus\').value)"/>'._NO;
     $content .= '</p>';
-    $content .= '<br/>';
 }
+
+$content .= '</div>';
+
+    $content .= '<div id="transmission"></div>';
     $content .= '<input type="hidden" id="hiddenValidateStatus" value="1"/>';
         $content .= '<p class="buttons">';
             if (isset($_REQUEST['id']) && $attachmentFormat <> "pdf") {
@@ -1510,6 +1654,23 @@ if (isset($_REQUEST['id']) && ($data_attachment->status <> 'TMP' || ($data_attac
                                 }*/
 
             $content .= '&nbsp;';
+            $langArrayForTransmission = [
+                _ATTACHMENT_TYPES,
+                _CHRONO_NUMBER,
+                _FILE,
+                _OBJECT,
+                _BACK_DATE,
+                _DEST_USER,
+                _EDIT_MODEL,
+                _CREATE_CONTACT
+            ];
+            $content .= '<div style="float: left">';
+            $content .= '<i id="newTransmissionButton" disabled="disabled" title="Nouvelle transmission" style="opacity: 0.5;cursor: pointer;" class="fa fa-plus-circle fa-2x"
+                         onclick="addNewTransmission(\'' . $_SESSION['config']['businessappurl'] . '\', \''. $_SESSION['doc_id'] .'\', \'' . addslashes(implode('#' , $langArrayForTransmission)) . '\')"></i>';
+            $content .= '&nbsp;';
+            $content .= '<i id="delTransmissionButton" title="Supprimer la dernière transmission" style="cursor: pointer;display: none" class="fa fa-minus-circle fa-2x"
+                         onclick="delLastTransmission()"></i>';
+            $content .= '</div>';
             $content .= '&nbsp;';
             $content .= '<input type="button" value="';
             $content .=  _VALIDATE;

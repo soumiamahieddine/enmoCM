@@ -2,14 +2,13 @@
 <inputValidation xmlns:xi="http://www.w3.org/2001/XInclude">
 <validationRules>
 
-	<validationRule name="attachments_content" extends="standardForm" mode="error">
+	<validationRule name="attachments_content" extends="standardForm" mode="lax">
 		<parameter name="module" type="identifier" />
 		<parameter name="fromDetail" type="identifier" />
 		<parameter name="url" type="string" />
 		<parameter name="id" type="integer" />
 		<parameter name="relation" type="identifier" />
 		<parameter name="add" type="string" />
-		<parameter name="addressidAttach" type="identifier" />
 		<parameter name="attachment_types" type="identifier" />
 		<parameter name="back_date" type="datefr" />
 		<parameter name="cancel" type="string" />

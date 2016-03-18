@@ -1,3 +1,144 @@
+function saveContactToSession(size, prePath) {
+  var contactId = $("transmissionContactidAttach" + size).value;
+
+  if (contactId) {
+    new Ajax.Request(prePath + "index.php?display=true&module=attachments&page=saveTransmissionContact",
+      {
+        method:'post',
+        parameters: {
+          size      : size,
+          contactId : contactId
+        }
+      });
+  }
+}
+
+function disableTransmissionButton(currentValue) {
+  var button = $('newTransmissionButton');
+  if (currentValue == "") {
+    button.style.opacity = 0.5;
+  } else {
+    button.style.opacity = 1;
+  }
+}
+
+function showTransmissionEditButton(currentValue, editParagraph) {
+  if (currentValue == "") {
+    $(editParagraph).style.display = "none";
+  } else {
+    $(editParagraph).style.display = "";
+  }
+}
+
+function hideEditAndAddButton(editParagraph) {
+  $(editParagraph).style.display = "none";
+  $("add").style.display = "none";
+}
+
+function delLastTransmission() {
+
+  var size = $('transmission').childElementCount;
+
+  if (size >= 1) {
+    $('transmission').lastElementChild.remove();
+  }
+  if (size == 1) {
+    $('delTransmissionButton').style.display = "none";
+  }
+}
+
+function addNewTransmission(prePath, docId, langString) {
+  if ($('newTransmissionButton').style.opacity == 1) {
+
+    if ($('delTransmissionButton').style.display == "none") {
+      $('delTransmissionButton').style.display = "";
+    }
+
+
+    var div = document.createElement('div');
+    $('transmission').appendChild(div);
+    var size = $('transmission').childElementCount;
+    var lang = langString.split("#");
+
+    div.className = "transmissionDiv";
+    div.innerHTML = "<hr style='width:85%; height: 4px; margin-left:0px; margin-bottom:10px; margin-top: 10px'>" +
+                    "<p>" +
+                      "<label>" + lang[0] + "</label>" +
+                      "<select name='transmissionType" + size + "' id='transmissionType" + size + "' />" +
+                        "<option value='transmission'>Transmission</option>" +
+                      "</select>" +
+                      "&nbsp;<span class='red_asterisk'><i class='fa fa-star'></i></span>" +
+                    "</p>" +
+                    "<p>" +
+                      "<label>" + lang[1] + "</label>" +
+                      "<input type='text' name='DisTransmissionChrono" + size + "' id='DisTransmissionChrono" + size + "' disabled class='readonly' />" +
+                      "<input type='hidden' name='transmissionChrono" + size + "' id='transmissionChrono" + size + "' />" +
+                    "</p>" +
+                    "<p>" +
+                      "<label>" + lang[2] + "</label>" +
+                      "<select name='transmissionTemplate" + size + "' id='transmissionTemplate" + size + "' style='display:inline-block;' onchange='showTransmissionEditButton(this.options[this.selectedIndex].value, paraEdit" + size + ")'>" +
+                      "</select>" +
+                      "&nbsp;<span class='red_asterisk'><i class='fa fa-star'></i></span>" +
+                    "</p>" +
+                    "<p style='display: none' id='paraEdit" + size + "'>" +
+                      "<label>&nbsp;</label>" +
+                      "<input type='button' value='" + lang[6] + "' name='transmissionEdit" + size + "' id='transmissionEdit" + size + "' class='button' " +
+                        "onclick='window.open(\"" + prePath + "index.php?display=true&module=content_management&page=applet_popup_launcher&transmissionNumber=" + size + "&objectType=transmission&objectId=\"+$(\"transmissionTemplate" + size + "\").value+\"&attachType=response_project&objectTable=res_letterbox&contactId=\"+$(\"transmissionContactidAttach" + size + "\").value+\"&addressId=\"+$(\"transmissionAddressidAttach" + size + "\").value+\"&chronoAttachment=\"+$(\"transmissionChrono" + size + "\").value+\"&titleAttachment=\"+$(\"transmissionTitle" + size + "\").value+\"&back_date=\"+$(\"transmissionBackDate" + size + "\").value+\"&resMaster=" + docId + "\", \"\", \"height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\");" +
+                                "hideEditAndAddButton(paraEdit" + size + ")' />" +
+                    "</p>" +
+                    "<p>" +
+                      "<label>" + lang[3] + "</label>" +
+                      "<input type='text' name='transmissionTitle" + size + "' id='transmissionTitle" + size + "' value='' />" +
+                      "&nbsp;<span class='red_asterisk'><i class='fa fa-star'></i></span>" +
+                    "</p>" +
+                    "<p>" +
+                      "<label>" + lang[4] + "</label>" +
+                      "<input type='text' name='transmissionBackDate" + size + "' id='transmissionBackDate" + size + "' onClick='showCalender(this);' value='' style='width: 75px' />" +
+                      "<select name='transmissionExpectedDate" + size + "' id='transmissionExpectedDate" + size + "' style='margin-left: 25px;width: 100px' />" +
+                        "<option value='Y'>Attente retour</option>" +
+                        "<option value='N'>Pas de retour</option>" +
+                      "</select>" +
+                    "</p>" +
+                    "<p>" +
+                      "<label>" + lang[5] + " " +
+                        "<a href='#' id='create_multi_contact' title='" + lang[7] + "' " +
+                        "onclick='new Effect.toggle(\"create_contact_div_attach\", \"blind\", {delay:0.2});return false;' style='display:inline;' >" +
+                          "<i class='fa fa-pencil fa-lg' title='" + lang[7] + "'>" +
+                          "</i>" +
+                        "</a>" +
+                      "</label>" +
+                      "<input type='text' name='transmissionContact_attach" + size + "' id='transmissionContact_attach" + size + "' value='' " +
+                        "onblur='display_contact_card(\"visible\", \"transmissionContactCard" + size + "\");' " +
+                        "onkeyup='erase_contact_external_id(\"transmissionContact_attach" + size + "\", \"transmissionContactidAttach" + size + "\");erase_contact_external_id(\"transmissionContact_attach" + size + "\", \"transmissionAddressidAttach" + size + "\");' />" +
+                      "<a href='#' id='transmissionContactCard" + size + "' title='Fiche contact' onclick='document.getElementById(\"info_contact_iframe_attach\").src=\"" + prePath + "index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\"+document.getElementById(\"transmissionContactidAttach" + size + "\").value+\"&addressid=\"+document.getElementById(\"transmissionAddressidAttach" + size + "\").value+\"&fromAttachmentContact=Y\";new Effect.toggle(\"info_contact_div_attach\", \"blind\", {delay:0.2});return false;' style='visibility:hidden;'> " +
+                        "<i class='fa fa-book fa-lg'></i>" +
+                      "</a>" +
+                      "<div id='transmission_show_contacts_attach" + size + "' class='autocomplete autocompleteIndex' style='display: none'></div>" +
+                    "</p>" +
+                    "<input type='hidden' id='transmissionContactidAttach" + size + "' name='transmissionContactidAttach" + size + "' value='' onchange='saveContactToSession(\"" + size + "\", \"" + prePath + "\")' />" +
+                    "<input type='hidden' id='transmissionAddressidAttach" + size + "' name='transmissionAddressidAttach" + size + "' value='' />";
+
+    $('transmissionChrono' + size).value = $('chrono').value + "." + String.fromCharCode(64 + size);
+    $('DisTransmissionChrono' + size).value = $('chrono').value + "." + String.fromCharCode(64 + size);
+    $('transmissionTitle' + size).value = $('title').value;
+    getTemplatesForSelect((prePath + "index.php?display=true&module=templates&page=select_templates"), "transmission", "transmissionTemplate" + size);
+    launch_autocompleter_contacts_v2(prePath + "index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "transmissionContact_attach" + size, "transmission_show_contacts_attach" + size, "", "transmissionContactidAttach" + size, "transmissionAddressidAttach" + size)
+
+  }
+}
+
+function getTemplatesForSelect(path_to_script, attachment_type, selectToChange)
+{
+  new Ajax.Request(path_to_script,
+    {
+      method:'post',
+      parameters: {attachment_type: attachment_type},
+      onSuccess: function(answer){
+        $(selectToChange).innerHTML = answer.responseText;
+      }
+    });
+}
+
 function hide_index(mode_hide, display_val)
 {
 	var tr_link = $('attach_link_tr');
@@ -80,6 +221,7 @@ function get_num_rep(res_id){
 }
 function ValidAttachmentsForm (path, form_id) {
 
+  console.log(Form.serialize(form_id));
     new Ajax.Request(path,
     {
         asynchronous:false,
