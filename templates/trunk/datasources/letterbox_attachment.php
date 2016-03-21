@@ -78,9 +78,6 @@ if (isset($_SESSION['transmissionContacts'])) {
     }
 
     for ($nb = 1; $_SESSION['transmissionContacts'][$nb]; $nb++) {
-        if ($nb == 1)
-            $datasources['transmissions'] = [];
-
         $datasources['transmissions'][0]['contact' . $nb] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title'])
                                                             . ' ' . $_SESSION['transmissionContacts'][$nb]['firstname']
                                                             . ' ' . $_SESSION['transmissionContacts'][$nb]['lastname'];
