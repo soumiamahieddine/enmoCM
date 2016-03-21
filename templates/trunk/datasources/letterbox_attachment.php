@@ -68,6 +68,7 @@ $datasources['attachments'] = array();
 $myAttachment['chrono'] = $chronoAttachment;
 
 // Transmissions
+$datasources['transmissions'] = [];
 if (isset($_SESSION['transmissionContacts'])) {
 
     if (isset($_SESSION['upfileTransmissionNumber']) && $_SESSION['transmissionContacts'][$_SESSION['upfileTransmissionNumber']]) {
