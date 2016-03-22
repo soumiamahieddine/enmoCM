@@ -504,7 +504,7 @@
       <parameter name="contactid" type="identifier" />
       <parameter name="field" type="identifier" />
       <parameter name="for" type="identifier" />
-      <parameter name="index" type="boolean" />
+      <parameter name="index" type="string" />
       <parameter name="url" type="url" />
       <parameter name="coll_id" type="collection_list" />
       <parameter name="dir" type="identifier" />
