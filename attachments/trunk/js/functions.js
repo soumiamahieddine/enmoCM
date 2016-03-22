@@ -13,6 +13,19 @@ function saveContactToSession(size, prePath) {
   }
 }
 
+function displayTransmissionContactCard(mode, id, size)
+{
+  var contactCard = $(id);
+
+  var contactId = $("transmissionContact_attach" + size).value;
+
+  if(contactCard && (mode == 'hidden' || mode == 'visible') && contactId != '') {
+    contactCard.style.visibility = mode;
+  } else if (contactId == '') {
+    contactCard.style.visibility = "hidden";
+  }
+}
+
 function disableTransmissionButton(currentValue) {
   var size = $('transmission').childElementCount;
 
@@ -129,7 +142,7 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
                     }
 
     content +=        "<input type='text' name='transmissionContact_attach" + size + "' id='transmissionContact_attach" + size + "' value='' " +
-                        "onblur='display_contact_card(\"visible\", \"transmissionContactCard" + size + "\");' " +
+                        "onblur='displayTransmissionContactCard(\"visible\", \"transmissionContactCard" + size + "\", " + size + ");' " +
                         "onkeyup='erase_contact_external_id(\"transmissionContact_attach" + size + "\", \"transmissionContactidAttach" + size + "\");erase_contact_external_id(\"transmissionContact_attach" + size + "\", \"transmissionAddressidAttach" + size + "\");' />" +
                       "<a href='#' id='transmissionContactCard" + size + "' title='Fiche contact' onclick='document.getElementById(\"info_contact_iframe_attach\").src=\"" + prePath + "index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\"+document.getElementById(\"transmissionContactidAttach" + size + "\").value+\"&addressid=\"+document.getElementById(\"transmissionAddressidAttach" + size + "\").value+\"&fromAttachmentContact=Y\";new Effect.toggle(\"info_contact_div_attach\", \"blind\", {delay:0.2});return false;' style='visibility:hidden;'> " +
                         "<i class='fa fa-book fa-lg'></i>" +
