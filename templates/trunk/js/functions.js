@@ -100,6 +100,8 @@ function select_template(path_to_script, attachment_type)
         parameters: {attachment_type: attachment_type},
         onSuccess: function(answer){
             $('templateOffice').innerHTML = answer.responseText;
+            if (typeof ($('templateOffice').onchange) == 'function')
+                $('templateOffice').onchange();
         }
     });
 }
