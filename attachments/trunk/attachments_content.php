@@ -1429,51 +1429,53 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
 }else{
     $stmt = $db->query("SELECT cr.address_id, c.contact_id, c.is_corporate_person, c.society, c.society_short, c.firstname, c.lastname,ca.is_private,ca.address_street, ca.address_num, ca.address_town 
                         FROM contacts_res cr, contacts_v2 c, contact_addresses ca 
-                        WHERE cr.res_id = ? and c.contact_id = cast(cr.contact_id as integer) and ca.contact_id=c.contact_id and ca.id=cr.address_id",array($_SESSION['doc_id']));
+                        WHERE cr.res_id = ? and cast(c.contact_id as char) = cast(cr.contact_id as char) and ca.contact_id=c.contact_id and ca.id=cr.address_id",array($_SESSION['doc_id']));
     $i=0;
     while($multi_contacts_attachment = $stmt->fetchObject()){
-        $format_contact='';
-        $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
-                        FROM view_contacts 
-                        WHERE contact_id = ? and ca_id = ?',array($multi_contacts_attachment->contact_id,$multi_contacts_attachment->address_id));
+        if(is_integer($multi_contacts_attachment->contact_id)){
+            $format_contact='';
+            $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
+                            FROM view_contacts 
+                            WHERE contact_id = ? and ca_id = ?',array($multi_contacts_attachment->contact_id,$multi_contacts_attachment->address_id));
 
-        $res = $stmt2->fetchObject();
-        if ($res->is_corporate_person == 'Y') {
-            $format_contact = $res->society;
-            if (!empty ($res->society_short)) {
-                $format_contact .= ' ('.$res->society_short.')';
+            $res = $stmt2->fetchObject();
+            if ($res->is_corporate_person == 'Y') {
+                $format_contact = $res->society;
+                if (!empty ($res->society_short)) {
+                    $format_contact .= ' ('.$res->society_short.')';
+                }
+                if (!empty($res->lastname) || !empty($res->firstname)) {
+                    $format_contact .= ' - ' . $res->lastname . ' ' . $res->firstname;
+                }
+                $format_contact .= ', ';
+            } else {
+                $format_contact .= $res->contact_lastname . ' ' . $res->contact_firstname;
+                if (!empty ($res->society)) {
+                    $format_contact .= ' (' .$res->society . ')';
+                }
+                $format_contact .= ', ';
             }
-            if (!empty($res->lastname) || !empty($res->firstname)) {
-                $format_contact .= ' - ' . $res->lastname . ' ' . $res->firstname;
+            if ($res->is_private == 'Y') {
+                $format_contact .= '('._CONFIDENTIAL_ADDRESS.')';
+            } else {
+                $format_contact .= $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);                         
             }
-            $format_contact .= ', ';
-        } else {
-            $format_contact .= $res->contact_lastname . ' ' . $res->contact_firstname;
-            if (!empty ($res->society)) {
-                $format_contact .= ' (' .$res->society . ')';
-            }
-            $format_contact .= ', ';
-        }
-        if ($res->is_private == 'Y') {
-            $format_contact .= '('._CONFIDENTIAL_ADDRESS.')';
-        } else {
-            $format_contact .= $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);                         
-        }
-        $contacts[] = array(
-            'contact_id'     => $multi_contacts_attachment->contact_id,
-            'firstname'      => $multi_contacts_attachment->firstname,
-            'lastname'       => $multi_contacts_attachment->lastname,
-            'society'        => $multi_contacts_attachment->society,
-            'address_id'     => $multi_contacts_attachment->address_id,
-            'format_contact' => $format_contact
-        );
+            $contacts[] = array(
+                'contact_id'     => $multi_contacts_attachment->contact_id,
+                'firstname'      => $multi_contacts_attachment->firstname,
+                'lastname'       => $multi_contacts_attachment->lastname,
+                'society'        => $multi_contacts_attachment->society,
+                'address_id'     => $multi_contacts_attachment->address_id,
+                'format_contact' => $format_contact
+            );
 
-        if($i==0){
-            $data_contact                    = $format_contact; 
-            $data_attachment->exp_contact_id = $multi_contacts_attachment->contact_id;
-        }
-        $i++;
-    } 
+            if($i==0){
+                $data_contact                    = $format_contact; 
+                $data_attachment->exp_contact_id = $multi_contacts_attachment->contact_id;
+            }
+            $i++;
+        } 
+    }
 }
 
 $content .= '<div class="error" >' . $_SESSION['error'];
