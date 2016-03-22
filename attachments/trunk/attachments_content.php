@@ -668,6 +668,7 @@ if (isset($_POST['add']) && $_POST['add']) {
         $status = 1;
     }
     if (!isset($_SESSION['new_id'])) $_SESSION['new_id'] = 0;
+
     echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', majFrameId : ".functions::xssafe($_SESSION['new_id']).", exec_js : '".addslashes($js)."'}";
     unset($_SESSION['new_id']);
     exit();
@@ -1724,8 +1725,9 @@ $content .= '</div>';
 $content .= '<div style="float: right; width: 70%">';
 $content .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
     . functions::xssafe($_SESSION['doc_id']) . '&coll_id=' . $coll_id .
-    '" name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" style="width:100% !important;height:900px" onmouseover="this.focus()"></iframe>';
+    '" name="viewframevalid_attachment" id="viewframevalid_attachment"  scrolling="auto" frameborder="0" style="width:100% !important;height:900px;" onmouseover="this.focus()"></iframe>';
 $content .= '</div>';
+$content .= '<script>var height = (parseInt($(\'form_attachments\').style.height.replace(/px/,""))-40)+"px";$(\'formAttachment\').style.height = height;$(\'viewframevalid_attachment\').style.height = height;$(\'formAttachment\').style.overflow = "auto";</script>';
 
 echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
 exit ();
