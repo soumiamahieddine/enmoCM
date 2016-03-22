@@ -1472,13 +1472,39 @@ function change_category_actions(path_manage_script, resId, collId)
     }
 }
 
-function set_new_contact_address(path_manage_script, id_div, close){
+function set_new_contact_address(path_manage_script, id_div, close,transmission){
     if (close == "true") {
         new Effect.toggle(parent.document.getElementById(id_div), 'blind', {delay:0.2});  
     }
     
-    new Ajax.Request(path_manage_script,
+    if(transmission != '' & transmission != '0'){
+        new Ajax.Request(path_manage_script,
     {
+        method:'post',
+        parameters: {},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            if (parent.$('transmissionContact_attach'+transmission)) {
+                parent.$('transmissionContact_attach'+transmission).value = response.contactName;
+            } else if (parent.$('contact')) {
+                parent.$('contact').value = response.contactName;
+            }
+            if (parent.$('transmissionContactidAttach'+transmission)) {
+                parent.$('transmissionContactidAttach'+transmission).value = response.contactId;
+            } else if (parent.$('contactid')){
+                parent.$('contactid').value = response.contactId;
+            }
+            if (parent.$('addressidAttach'+transmission)) {
+                parent.$('addressidAttach'+transmission).value = response.addressId;
+            } else if (parent.$('transmissionAddressidAttach'+transmission)){
+                parent.$('transmissionAddressidAttach'+transmission).value = response.addressId;
+            }
+            getDepartment('index.php?display=true&page=getDepartment', response.addressId);
+        }       
+    });
+    }else{
+        new Ajax.Request(path_manage_script,
+        {
         method:'post',
         parameters: {},
         onSuccess: function(answer){
@@ -1498,8 +1524,10 @@ function set_new_contact_address(path_manage_script, id_div, close){
             } else if (parent.$('addressid')){
                 parent.$('addressid').value = response.addressId;
             }
+            getDepartment('index.php?display=true&page=getDepartment', response.addressId);
         }       
-    });  
+    });
+    }
 }
 
 function check_date_exp(path_manage_script, path_link){
