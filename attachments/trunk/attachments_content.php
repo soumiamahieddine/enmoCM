@@ -1666,6 +1666,8 @@ $content .= '</div>';
                 _CREATE_CONTACT
             ];
             $canCreateContact = $core->test_admin('my_contacts', 'apps', false);
+            if (!$canCreateContact)
+                $canCreateContact = 0;
             $content .= '<div style="float: left">';
             $content .= '<i id="newTransmissionButton0" disabled="disabled" title="Nouvelle transmission" style="opacity: 0.5;cursor: pointer;" class="fa fa-plus-circle fa-2x"
                          onclick="addNewTransmission(\'' . $_SESSION['config']['businessappurl'] . '\', \''. $_SESSION['doc_id'] .'\', ' . $canCreateContact . ', \'' . addslashes(implode('#' , $langArrayForTransmission)) . '\')"></i>';
