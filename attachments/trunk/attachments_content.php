@@ -1712,7 +1712,7 @@ $content .= '</div>';
     if ($core->test_admin('my_contacts', 'apps', false)) {
         $content .= '<div id="create_contact_div_attach" style="display:none;float:right;width:65%;background-color:#deedf3">';
             $content .= '<iframe width="100%" height="550" src="' . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe&fromAttachmentContact=Y" name="contact_iframe" id="contact_iframe"'
+                    . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe&fromAttachmentContact=Y&transmissionInput=0" name="contact_iframe_attach" id="contact_iframe_attach"'
                     . ' scrolling="auto" frameborder="0" style="display:block;">'
                     . '</iframe>';
         $content .= '</div>';
