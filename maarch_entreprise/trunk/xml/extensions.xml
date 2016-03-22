@@ -36,6 +36,11 @@
         <index_frame_show>false</index_frame_show>
     </FORMAT>
     <FORMAT>
+        <name>XLSM</name>
+        <mime>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
         <name>PPT</name>
         <mime>application/vnd.ms-powerpoint</mime>
         <index_frame_show>false</index_frame_show>
@@ -48,6 +53,16 @@
     <FORMAT>
         <name>PPS</name>
         <mime>application/vnd.ms-office</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>PPSM</name>
+        <mime>application/vnd.openxmlformats-officedocument.presentationml.presentation</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>PPTM</name>
+        <mime>application/vnd.openxmlformats-officedocument.presentationml.presentation</mime>
         <index_frame_show>false</index_frame_show>
     </FORMAT>
     <FORMAT>
@@ -148,6 +163,26 @@
     <FORMAT>
         <name>TXT</name>
         <mime>text/html</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>EML</name>
+        <mime>text/html</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>EML</name>
+        <mime>message/rfc822</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>application/CDFV2-corrupt
+    <FORMAT>
+        <name>MSG</name>
+        <mime>application/CDFV2-corrupt</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>MHT</name>
+        <mime>text/plain</mime>
         <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
