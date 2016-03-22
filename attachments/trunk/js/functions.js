@@ -14,19 +14,31 @@ function saveContactToSession(size, prePath) {
 }
 
 function disableTransmissionButton(currentValue) {
-  var button = $('newTransmissionButton');
+  var size = $('transmission').childElementCount;
+
+  var addButton = $('newTransmissionButton' + size);
+  if (size >= 1)
+    var delButton = $('delTransmissionButton' + size);
+
   if (currentValue == "") {
-    button.style.opacity = 0.5;
+    addButton.style.opacity = 0.5;
+    if (size >= 1)
+      delButton.style.opacity = 0.5;
   } else {
-    button.style.opacity = 1;
+    addButton.style.opacity = 1;
+    if (size >= 1)
+      delButton.style.opacity = 1;
   }
 }
 
-function showTransmissionEditButton(currentValue, editParagraph) {
+function showTransmissionEditButton(currentValue, editParagraph, size) {
   if (currentValue == "") {
     $(editParagraph).style.display = "none";
+    $("divOr" + size).style.display = "none";
   } else {
     $(editParagraph).style.display = "";
+    if ($("newTransmissionButton" + size).style.display != "none")
+      $("divOr" + size).style.display = "";
   }
 }
 
@@ -39,85 +51,110 @@ function delLastTransmission() {
 
   var size = $('transmission').childElementCount;
 
-  if (size >= 1) {
-    $('transmission').lastElementChild.remove();
-  }
-  if (size == 1) {
-    $('delTransmissionButton').style.display = "none";
+  if ($('delTransmissionButton' + size).style.opacity == 1) {
+    if (size >= 1) {
+      $('transmission').lastElementChild.remove();
+
+      $('newTransmissionButton' + (size - 1)).style.display = "";
+      if (size > 1) {
+        $('delTransmissionButton' + (size - 1)).style.display = "";
+        if ($("paraEdit" + (size - 1)).style.display != "none")
+          $("divOr" + (size - 1)).style.display = "";
+      }
+    }
   }
 }
 
-function addNewTransmission(prePath, docId, langString) {
-  if ($('newTransmissionButton').style.opacity == 1) {
+function addNewTransmission(prePath, docId, canCreateContact, langString) {
+  var size = $('transmission').childElementCount;
 
-    if ($('delTransmissionButton').style.display == "none") {
-      $('delTransmissionButton').style.display = "";
-    }
-
+  if ($('newTransmissionButton' + size).style.opacity == 1) {
 
     var div = document.createElement('div');
     $('transmission').appendChild(div);
-    var size = $('transmission').childElementCount;
-    var lang = langString.split("#");
+    size = $('transmission').childElementCount;
+    //var lang = langString.split("#");
+
+    $('newTransmissionButton' + (size - 1)).style.display = "none";
+    if (size > 1) {
+      $('delTransmissionButton' + (size - 1)).style.display = "none";
+      $("divOr" + (size - 1)).style.display = "none";
+    }
 
     div.className = "transmissionDiv";
-    div.innerHTML = "<hr style='width:85%; height: 4px; margin-left:0px; margin-bottom:10px; margin-top: 10px'>" +
+    var content   = "<hr style='width:85%; height: 4px; margin-left:0px; margin-bottom:10px; margin-top: 10px'>" +
                     "<p>" +
-                      "<label>" + lang[0] + "</label>" +
+                      "<label>" + "Type d'attachement" + "</label>" +
                       "<select name='transmissionType" + size + "' id='transmissionType" + size + "' />" +
                         "<option value='transmission'>Transmission</option>" +
                       "</select>" +
                       "&nbsp;<span class='red_asterisk'><i class='fa fa-star'></i></span>" +
                     "</p>" +
                     "<p>" +
-                      "<label>" + lang[1] + "</label>" +
+                      "<label>" + "Numéro chrono" + "</label>" +
                       "<input type='text' name='DisTransmissionChrono" + size + "' id='DisTransmissionChrono" + size + "' disabled class='readonly' />" +
                       "<input type='hidden' name='transmissionChrono" + size + "' id='transmissionChrono" + size + "' />" +
                     "</p>" +
                     "<p>" +
-                      "<label>" + lang[2] + "</label>" +
-                      "<select name='transmissionTemplate" + size + "' id='transmissionTemplate" + size + "' style='display:inline-block;' onchange='showTransmissionEditButton(this.options[this.selectedIndex].value, paraEdit" + size + ")'>" +
+                      "<label>" + "Fichier" + "</label>" +
+                      "<select name='transmissionTemplate" + size + "' id='transmissionTemplate" + size + "' style='display:inline-block;' onchange='showTransmissionEditButton(this.options[this.selectedIndex].value, paraEdit" + size + ", " + size + ")'>" +
                       "</select>" +
                       "&nbsp;<span class='red_asterisk'><i class='fa fa-star'></i></span>" +
                     "</p>" +
-                    "<p style='display: none' id='paraEdit" + size + "'>" +
-                      "<label>&nbsp;</label>" +
-                      "<input type='button' value='" + lang[6] + "' name='transmissionEdit" + size + "' id='transmissionEdit" + size + "' class='button' " +
-                        "onclick='window.open(\"" + prePath + "index.php?display=true&module=content_management&page=applet_popup_launcher&transmissionNumber=" + size + "&objectType=transmission&objectId=\"+$(\"transmissionTemplate" + size + "\").value+\"&attachType=response_project&objectTable=res_letterbox&contactId=\"+$(\"transmissionContactidAttach" + size + "\").value+\"&addressId=\"+$(\"transmissionAddressidAttach" + size + "\").value+\"&chronoAttachment=\"+$(\"transmissionChrono" + size + "\").value+\"&titleAttachment=\"+$(\"transmissionTitle" + size + "\").value+\"&back_date=\"+$(\"transmissionBackDate" + size + "\").value+\"&resMaster=" + docId + "\", \"\", \"height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\");" +
-                                "hideEditAndAddButton(paraEdit" + size + ")' />" +
-                    "</p>" +
                     "<p>" +
-                      "<label>" + lang[3] + "</label>" +
+                      "<label>" + "Objet" + "</label>" +
                       "<input type='text' name='transmissionTitle" + size + "' id='transmissionTitle" + size + "' value='' />" +
                       "&nbsp;<span class='red_asterisk'><i class='fa fa-star'></i></span>" +
                     "</p>" +
                     "<p>" +
-                      "<label>" + lang[4] + "</label>" +
+                      "<label>" + "Date de retour" + "</label>" +
                       "<input type='text' name='transmissionBackDate" + size + "' id='transmissionBackDate" + size + "' onClick='showCalender(this);' value='' style='width: 75px' />" +
-                      "<select name='transmissionExpectedDate" + size + "' id='transmissionExpectedDate" + size + "' style='margin-left: 25px;width: 100px' />" +
+                      "<select name='transmissionExpectedDate" + size + "' id='transmissionExpectedDate" + size + "' style='margin-left: 20px;width: 105px' />" +
                         "<option value='Y'>Attente retour</option>" +
                         "<option value='N'>Pas de retour</option>" +
                       "</select>" +
                     "</p>" +
-                    "<p>" +
-                      "<label>" + lang[5] + " " +
-                        "<a href='#' id='create_multi_contact' title='" + lang[7] + "' " +
-                        "onclick='document.getElementById(\"contact_iframe_attach\").src=\"index.php?display=false&dir=my_contacts&page=create_contact_iframe&fromAttachmentContact=Y&transmissionInput="+size+"\";new Effect.toggle(\"create_contact_div_attach\", \"blind\", {delay:0.2});return false;' style='display:inline;' >" +
-                          "<i class='fa fa-pencil fa-lg' title='" + lang[7] + "'>" +
+                    "<p>";
+
+                    if (canCreateContact) {
+    content +=        "<label>" + "Destinataire" +
+                        " <a href='#' title='" + "Ajouter un contact ou une adresse" + "' " +
+                          "onclick='new Effect.toggle(\"create_contact_div_attach\", \"blind\", {delay:0.2});return false;' style='display:inline;' >" +
+                          "<i class='fa fa-pencil fa-lg' title='" + "Ajouter un contact ou une adresse" + "'>" +
                           "</i>" +
                         "</a>" +
-                      "</label>" +
-                      "<input type='text' name='transmissionContact_attach" + size + "' id='transmissionContact_attach" + size + "' value='' " +
+                      "</label>";
+                    } else {
+    content +=        "<label>Destinataire</label>";
+                    }
+
+    content +=        "<input type='text' name='transmissionContact_attach" + size + "' id='transmissionContact_attach" + size + "' value='' " +
                         "onblur='display_contact_card(\"visible\", \"transmissionContactCard" + size + "\");' " +
                         "onkeyup='erase_contact_external_id(\"transmissionContact_attach" + size + "\", \"transmissionContactidAttach" + size + "\");erase_contact_external_id(\"transmissionContact_attach" + size + "\", \"transmissionAddressidAttach" + size + "\");' />" +
                       "<a href='#' id='transmissionContactCard" + size + "' title='Fiche contact' onclick='document.getElementById(\"info_contact_iframe_attach\").src=\"" + prePath + "index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\"+document.getElementById(\"transmissionContactidAttach" + size + "\").value+\"&addressid=\"+document.getElementById(\"transmissionAddressidAttach" + size + "\").value+\"&fromAttachmentContact=Y\";new Effect.toggle(\"info_contact_div_attach\", \"blind\", {delay:0.2});return false;' style='visibility:hidden;'> " +
                         "<i class='fa fa-book fa-lg'></i>" +
                       "</a>" +
-                      "<div><div id='transmission_show_contacts_attach" + size + "' class='autocomplete autocompleteIndex' style='display: none'></div></div>" +
                     "</p>" +
+                    "<div id='transmission_show_contacts_attach" + size + "' class='autocomplete autocompleteIndex' style='display: none'></div>" +
                     "<input type='hidden' id='transmissionContactidAttach" + size + "' name='transmissionContactidAttach" + size + "' value='' onchange='saveContactToSession(\"" + size + "\", \"" + prePath + "\")' />" +
-                    "<input type='hidden' id='transmissionAddressidAttach" + size + "' name='transmissionAddressidAttach" + size + "' value='' />";
+                    "<input type='hidden' id='transmissionAddressidAttach" + size + "' name='transmissionAddressidAttach" + size + "' value='' />" +
+                    "<div style='float: left;display: none;margin-bottom: 5px' id='paraEdit" + size + "'>" +
+                      "<input type='button' value='" + "Editer" + "' name='transmissionEdit" + size + "' id='transmissionEdit" + size + "' class='button' " +
+                        "onclick='window.open(\"" + prePath + "index.php?display=true&module=content_management&page=applet_popup_launcher&transmissionNumber=" + size + "&objectType=transmission&objectId=\"+$(\"transmissionTemplate" + size + "\").value+\"&attachType=response_project&objectTable=res_letterbox&contactId=\"+$(\"transmissionContactidAttach" + size + "\").value+\"&addressId=\"+$(\"transmissionAddressidAttach" + size + "\").value+\"&chronoAttachment=\"+$(\"transmissionChrono" + size + "\").value+\"&titleAttachment=\"+$(\"transmissionTitle" + size + "\").value+\"&back_date=\"+$(\"transmissionBackDate" + size + "\").value+\"&resMaster=" + docId + "\", \"\", \"height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\");" +
+                        "hideEditAndAddButton(paraEdit" + size + ")' />" +
+                      "<span style='display: none' id='divOr" + size + "'>" +
+                        "&nbsp;ou&nbsp;" +
+                      "</span>" +
+                    "</div>" +
+                    "<div style='float: left'>" +
+                      "<i id='newTransmissionButton" + size + "' title='Nouvelle transmission' style='opacity: 1;cursor: pointer;' class='fa fa-plus-circle fa-2x' " +
+                        "onclick='addNewTransmission(\"" + prePath + "\", " + docId + ", " + canCreateContact + ")'></i>" +
+                      "&nbsp;" +
+                      "<i id='delTransmissionButton" + size + "' title='Supprimer la dernière transmission' style='opacity: 1;cursor: pointer;' class='fa fa-minus-circle fa-2x' " +
+                        "onclick='delLastTransmission()'></i>" +
+                    "</div>";
 
+    div.innerHTML = content;
     $('transmissionChrono' + size).value = $('chrono').value + "." + String.fromCharCode(64 + size);
     $('DisTransmissionChrono' + size).value = $('chrono').value + "." + String.fromCharCode(64 + size);
     $('transmissionTitle' + size).value = $('title').value;

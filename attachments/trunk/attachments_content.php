@@ -1665,12 +1665,10 @@ $content .= '</div>';
                 _EDIT_MODEL,
                 _CREATE_CONTACT
             ];
+            $canCreateContact = $core->test_admin('my_contacts', 'apps', false);
             $content .= '<div style="float: left">';
-            $content .= '<i id="newTransmissionButton" disabled="disabled" title="Nouvelle transmission" style="opacity: 0.5;cursor: pointer;" class="fa fa-plus-circle fa-2x"
-                         onclick="addNewTransmission(\'' . $_SESSION['config']['businessappurl'] . '\', \''. $_SESSION['doc_id'] .'\', \'' . addslashes(implode('#' , $langArrayForTransmission)) . '\')"></i>';
-            $content .= '&nbsp;';
-            $content .= '<i id="delTransmissionButton" title="Supprimer la dernière transmission" style="cursor: pointer;display: none" class="fa fa-minus-circle fa-2x"
-                         onclick="delLastTransmission()"></i>';
+            $content .= '<i id="newTransmissionButton0" disabled="disabled" title="Nouvelle transmission" style="opacity: 0.5;cursor: pointer;" class="fa fa-plus-circle fa-2x"
+                         onclick="addNewTransmission(\'' . $_SESSION['config']['businessappurl'] . '\', \''. $_SESSION['doc_id'] .'\', ' . $canCreateContact . ', \'' . addslashes(implode('#' , $langArrayForTransmission)) . '\')"></i>';
             $content .= '</div>';
             $content .= '&nbsp;';
             $content .= '<input type="button" value="';
