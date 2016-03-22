@@ -119,7 +119,7 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
                     if (canCreateContact) {
     content +=        "<label>" + "Destinataire" +
                         " <a href='#' title='" + "Ajouter un contact ou une adresse" + "' " +
-                          "onclick='new Effect.toggle(\"create_contact_div_attach\", \"blind\", {delay:0.2});return false;' style='display:inline;' >" +
+                          "onclick='document.getElementById(\"contact_iframe_attach\").src=\"index.php?display=false&dir=my_contacts&page=create_contact_iframe&fromAttachmentContact=Y&transmissionInput="+size+"\";new Effect.toggle(\"create_contact_div_attach\", \"blind\", {delay:0.2});return false;' style='display:inline;' >" +
                           "<i class='fa fa-pencil fa-lg' title='" + "Ajouter un contact ou une adresse" + "'>" +
                           "</i>" +
                         "</a>" +
