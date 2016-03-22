@@ -846,19 +846,21 @@ function resize_frame_contact(mode) {
             $('inner_content').style.width = "700px";            
         } else if ($('inner_content_contact')) {
             $('inner_content_contact').style.width = "700px"; 
-        };
+        }
     }
     if (mode == 'contact') {
         if ($('frmcontact_table')) {
             $('frmcontact_table').style.width = "90%"; 
-        };
-        parent.$('contact_iframe').style.height="550px"      
+        }
+        if (parent.$('contact_iframe'))
+            parent.$('contact_iframe').style.height="550px"
     } else {
         $('info_contact_div').style.width = "65%";
         $('frmaddress_table1').style.width = "65%";
         $('frmaddress_table2').style.width = "65%";
-        parent.$('contact_iframe').style.height="850px"        
-    };
+        if (parent.$('contact_iframe'))
+            parent.$('contact_iframe').style.height="850px"
+    }
 }
 
 /**
