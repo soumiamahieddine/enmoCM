@@ -57,13 +57,20 @@ if (isset($_GET['fromAttachmentContact']) && $_GET['fromAttachmentContact'] == "
 	$_SESSION['AttachmentContact'] = "1";
 }
 
+if($_SESSION['AttachmentContact'] != "1"){
+	$_SESSION['transmissionInput']= "";
+}
+
+if (isset($_GET['transmissionInput'])) {
+	$_SESSION['transmissionInput'] = $_GET['transmissionInput'];
+}
+
 $core_tools2->load_js();
 if (isset($_GET['created']) && $_GET['created'] <> '') {
 	$contact->chooseContact(true);
 } else {
 	$contact->chooseContact(false);
 }
-
 ?>
 	<br/>
 	<hr>
@@ -85,10 +92,10 @@ if ($_SESSION['AttachmentContact'] == "1") {
 
 if(isset($_GET['created']) && $_GET['created'] <> ''){
 	?>
-		<script type="text/javascript">
-			set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>", "<?php functions::xecho($createContactDiv);?>", "true");
-			simpleAjax("<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=unsetAttachmentContact' ;?>");
-		</script>
+	<script type="text/javascript">
+		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>", "<?php functions::xecho($createContactDiv);?>", "true", "<?php echo $_SESSION['transmissionInput'];?>");
+		simpleAjax("<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=unsetAttachmentContact' ;?>");
+	</script>
 	<?php
 }
 
