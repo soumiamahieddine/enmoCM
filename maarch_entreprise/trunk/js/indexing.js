@@ -1193,7 +1193,7 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
 			if($(multi_external_type ).checked == true){
 				Element.setStyle(email, {display : 'inline'});
 				Element.setStyle(valid_multi_contact, {display : 'inline'});
-				Element.setStyle(to_multi_contact, {display : 'inline'});
+				Element.setStyle(to_multi_contact, {display : 'table-cell'});
 				Element.setStyle(to, {display : 'inline'});
 				Element.setStyle(show_multi_contact, {display : 'table-row'});
 				Element.setStyle(add_multi_contact, {display : 'table-row'});
