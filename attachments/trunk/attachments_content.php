@@ -1504,7 +1504,6 @@ if (!empty($contacts)) {
 }
 
 $content .= '</h2>';
-    
 
 $content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:30%;float:left;margin-left:-5px;background-color:#deedf3">';
 $content .= '<div class="transmissionDiv">';
@@ -1610,7 +1609,6 @@ $content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" oncli
 $content .= '<div id="show_contacts_attach" class="autocomplete autocompleteIndex"></div>';
 $content .= '</p>';
 $content .= '<input type="hidden" id="contactidAttach" name="contactidAttach" value="';
-
 if (isset($_REQUEST['id'])) {
     $content .= $data_attachment->dest_contact_id;
 } else if ($data_attachment->exp_contact_id){
@@ -1729,7 +1727,11 @@ $content .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?dis
     . functions::xssafe($_SESSION['doc_id']) . '&coll_id=' . $coll_id .
     '" name="viewframevalid_attachment" id="viewframevalid_attachment"  scrolling="auto" frameborder="0" style="width:100% !important;height:900px;" onmouseover="this.focus()"></iframe>';
 $content .= '</div>';
-$content .= '<script>var height = (parseInt($(\'form_attachments\').style.height.replace(/px/,""))-40)+"px";$(\'formAttachment\').style.height = height;$(\'viewframevalid_attachment\').style.height = height;$(\'formAttachment\').style.overflow = "auto";</script>';
+if(!isset($_REQUEST['id'])){
+    $content .= '<script>var height = (parseInt($(\'form_attachments\').style.height.replace(/px/,""))-40)+"px";$(\'formAttachment\').style.height = height;$(\'viewframevalid_attachment\').style.height = height;$(\'formAttachment\').style.overflow = "auto";</script>';
+}else{
+    $content .= '<script>var height = (parseInt(window.top.window.$(\'form_attachments\').style.height.replace(/px/,""))-40)+"px";window.top.window.$(\'formAttachment\').style.height = height;window.top.window.$(\'viewframevalid_attachment\').style.height = height;window.top.window.$(\'formAttachment\').style.overflow = "auto";</script>';
+}
 
 echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
 exit ();
