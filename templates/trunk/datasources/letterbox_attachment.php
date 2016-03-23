@@ -77,12 +77,20 @@ if (isset($_SESSION['transmissionContacts'])) {
             . ' ' . $_SESSION['transmissionContacts'][$curNb]['firstname']
             . ' ' . $_SESSION['transmissionContacts'][$curNb]['lastname'];
     }
-
+    
+    $array_Transmission = array();
+    $datasources['transmissions'] = [];
     for ($nb = 1; $_SESSION['transmissionContacts'][$nb]; $nb++) {
-        $datasources['transmissions'][0]['contact' . $nb] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title'])
+
+            $array_Transmission[] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title'])
                                                             . ' ' . $_SESSION['transmissionContacts'][$nb]['firstname']
                                                             . ' ' . $_SESSION['transmissionContacts'][$nb]['lastname'];
+
+        /*$datasources['transmissions'][0]['contact' . $nb] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title'])
+                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['firstname']
+                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['lastname'];*/
     }
+    $datasources['transmissions'][0]['contacts'] = implode(', ', $array_Transmission);
 
 }
 
