@@ -1385,7 +1385,7 @@ if (isset($_REQUEST['id'])) {
         $column_res = 'res_id';
     }
     
-    $stmt = $db->query("SELECT validation_date, effective_date, attachment_type, title, dest_contact_id, dest_address_id, dest_address_id as address_id, relation, format, status
+    $stmt = $db->query("SELECT validation_date, effective_date, attachment_type, title, dest_contact_id, dest_address_id, dest_address_id as address_id, relation, format, identifier, status
                         FROM res_view_attachments 
                         WHERE ".$column_res." = ? and res_id_master = ?
                         ORDER BY relation desc", array($_REQUEST['id'], $_SESSION['doc_id']));
@@ -1551,7 +1551,7 @@ $content .= '<input type="hidden" name="fromDetail" id="fromDetail" value="'.$_R
 if (!isset($_REQUEST['id'])) {
     $content .= '<p>';
     $content .= '<label>' . _ATTACHMENT_TYPES . '</label>';
-    $content .= '<select name="attachment_types" id="attachment_types" onchange="disableTransmissionButton(this.options[this.selectedIndex].value);affiche_chrono();select_template(\'' . $_SESSION['config']['businessappurl']
+    $content .= '<select name="attachment_types" id="attachment_types" onchange="affiche_chrono();disableTransmissionButton(this.options[this.selectedIndex].value);select_template(\'' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&module=templates&page='
         . 'select_templates\', this.options[this.selectedIndex].value);"/>';
     $content .= '<option value="">' . _CHOOSE_ATTACHMENT_TYPE . '</option>';
@@ -1589,7 +1589,16 @@ if (!isset($_REQUEST['id'])) {
 if (isset($statusEditAttachment) && $statusEditAttachment == 'TMP') {
     $content .= '<p align="middle"><span style="color:green">'._RETRIEVE_BACK_UP.'</span></p>';
 }
-
+if (isset($_REQUEST['id'])) {
+    $content .= '<p>';
+    $content .= '<label id="chrono_label" >'. _ATTACHMENT_TYPES.'</label>';
+    $content .= '<input type="text" name="attachment_type" id="attachment_type" value="' . $_SESSION['attachment_types'][$data_attachment->attachment_type] . '" disabled class="readonly"/>';
+    $content .= '</p>';
+    $content .= '<p>';
+    $content .= '<label id="chrono_label" >'. _CHRONO_NUMBER.'</label>';
+    $content .= '<input type="text" name="chrono_display" id="chrono_display" value="' . $data_attachment->identifier . '" disabled class="readonly"/>';
+    $content .= '</p>';
+}
 $content .= '<p>';
 $content .= '<label>'. _OBJECT .'</label>';
 $content .= '<input type="text" name="title" id="title" value="';
