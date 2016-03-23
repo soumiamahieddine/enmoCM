@@ -139,8 +139,8 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
                       "<label>" + "Date de retour attendue" + "</label>" +
                       "<input type='text' name='transmissionBackDate" + size + "' id='transmissionBackDate" + size + "' onClick='showCalender(this);' value='' style='width: 75px' />" +
                       "<select name='transmissionExpectedDate" + size + "' id='transmissionExpectedDate" + size + "' style='margin-left: 20px;width: 105px' />" +
-                        "<option value='EXP RTURN'>Attente retour</option>" +
-                        "<option value='NO RTURN'>Pas de retour</option>" +
+                        "<option value='EXP_RTURN'>Attente retour</option>" +
+                        "<option value='NO_RTURN'>Pas de retour</option>" +
                       "</select>" +
                     "</p>" +
                     "<p>";

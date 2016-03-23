@@ -97,7 +97,7 @@ function setTransmissionData($nb, $storeResult) {
     if (!empty($_REQUEST["transmissionExpectedDate{$nb}"])) {
         $rturn = $_REQUEST["transmissionExpectedDate{$nb}"];
     } else {
-        $rturn = 'NO RTURN';
+        $rturn = 'NO_RTURN';
     }
     $transmissionData[] = [
         'column' => 'status',
@@ -1621,9 +1621,9 @@ if (isset($_REQUEST['id'])) {
     $content .= '<input type="text" name="effectiveDate" id="effectiveDate" onClick="showCalender(this);" style="width: 75px" value="';
     $content .= $req->format_date_db($data_attachment->effective_date);
     $content .= '" />';
-    if ($data_attachment->attachment_type == 'transmission' && ($data_attachment->status == "RTURN" || $data_attachment->status == "EXP RTURN")) {
+    if ($data_attachment->attachment_type == 'transmission' && ($data_attachment->status == "RTURN" || $data_attachment->status == "EXP_RTURN")) {
         $content .= '<select name="effectiveDateStatus" id="effectiveDateStatus" style="margin-left: 20px;width: 105px" />';
-        $content .= '<option value="EXP RTURN">Attente retour</option>';
+        $content .= '<option value="EXP_RTURN">Attente retour</option>';
         if ($data_attachment->status == "RTURN")
             $content .= '<option selected="selected" value="RTURN">Retourné</option>';
         else
