@@ -26,7 +26,7 @@ function endOfApplet(objectType, theMsg)
         window.opener.$('add').setStyle({display: 'inline'});
     }
 
-    if (window.opener.$('edit')) {
+    if (window.opener.$('edit') && objectType != 'transmission') {
         window.opener.$('edit').setStyle({display: 'inline'});
     }
 
