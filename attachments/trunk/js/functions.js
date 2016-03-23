@@ -353,7 +353,7 @@ function modifyAttachmentsForm(path, width, height) {
            
             if(response.status == 0){
                 var modal_content = convertToTextVisibleNewLine(response.content);
-                createModalinAttachmentList(modal_content, 'form_attachments', height, width); 
+                createModalinAttachmentList(modal_content, 'form_attachments', height, width, 'fullscreen'); 
             } else {
                 window.top.$('main_error').innerHTML = response.error;
             }
@@ -410,7 +410,6 @@ function createModalinAttachmentList(txt, id_mod, height, width, mode_frm){
         id_mod = 'modal';
         id_layer = 'lb1-layer';
     }
-
     var tmp_width = width;
     var tmp_height = height;
     var layer_height = window.top.window.$('container').clientHeight;
