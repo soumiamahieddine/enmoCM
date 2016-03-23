@@ -615,6 +615,7 @@ CREATE TABLE res_attachments
   destination character varying(50) DEFAULT NULL::character varying,
   approver character varying(50) DEFAULT NULL::character varying,
   validation_date timestamp without time zone,
+  effective_date timestamp without time zone,
   work_batch bigint,
   origin character varying(50) DEFAULT NULL::character varying,
   is_ingoing character(1) DEFAULT NULL::bpchar,
@@ -3926,6 +3927,7 @@ CREATE TABLE res_version_attachments
   destination character varying(50) DEFAULT NULL::character varying,
   approver character varying(50) DEFAULT NULL::character varying,
   validation_date timestamp without time zone,
+  effective_date timestamp without time zone,
   work_batch bigint,
   origin character varying(50) DEFAULT NULL::character varying,
   is_ingoing character(1) DEFAULT NULL::bpchar,
@@ -4000,7 +4002,7 @@ CREATE VIEW res_view_attachments AS
   doc_language, relation, coverage, doc_date, docserver_id, folders_system_id, arbox_id, path,
   filename, offset_doc, logical_adr, fingerprint, filesize, is_paper, page_count,
   scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
-  envelop_id, status, destination, approver, validation_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
+  envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master
   FROM res_version_attachments
   UNION ALL
@@ -4009,6 +4011,6 @@ CREATE VIEW res_view_attachments AS
   doc_language, relation, coverage, doc_date, docserver_id, folders_system_id, arbox_id, path,
   filename, offset_doc, logical_adr, fingerprint, filesize, is_paper, page_count,
   scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
-  envelop_id, status, destination, approver, validation_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
+  envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0'
   FROM res_attachments;
