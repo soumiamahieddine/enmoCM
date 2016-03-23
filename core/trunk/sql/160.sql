@@ -377,6 +377,12 @@ ALTER TABLE res_attachments ADD is_multicontacts character(1);
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multi_docservers; 
 ALTER TABLE res_attachments ADD is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar;
 
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS effective_date;
+ALTER TABLE res_attachments ADD effective_date timestamp without time zone;
+
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS effective_date;
+ALTER TABLE res_version_attachments ADD effective_date timestamp without time zone;
+
 ALTER TABLE templates DROP COLUMN IF EXISTS template_attachment_type; 
 ALTER TABLE templates ADD template_attachment_type character varying(255) DEFAULT NULL::character varying;
 
@@ -779,7 +785,7 @@ CREATE VIEW res_view_attachments AS
   doc_language, relation, coverage, doc_date, docserver_id, folders_system_id, arbox_id, path,
   filename, offset_doc, logical_adr, fingerprint, filesize, is_paper, page_count,
   scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
-  envelop_id, status, destination, approver, validation_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
+  envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master
   FROM res_version_attachments
   UNION ALL
@@ -788,7 +794,7 @@ CREATE VIEW res_view_attachments AS
   doc_language, relation, coverage, doc_date, docserver_id, folders_system_id, arbox_id, path,
   filename, offset_doc, logical_adr, fingerprint, filesize, is_paper, page_count,
   scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
-  envelop_id, status, destination, approver, validation_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
+  envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0'
   FROM res_attachments;
 
