@@ -94,9 +94,14 @@ function setTransmissionData($nb, $storeResult) {
         'value' => $storeResult['docserver_id'],
         'type' => 'string'
     ];
+    if (!empty($_REQUEST["transmissionExpectedDate{$nb}"])) {
+        $rturn = $_REQUEST["transmissionExpectedDate{$nb}"];
+    } else {
+        $rturn = 'NO RTURN';
+    }
     $transmissionData[] = [
         'column' => 'status',
-        'value' => 'A_TRA',
+        'value' => $func->protect_string_db($rturn),
         'type' => 'string'
     ];
     $transmissionData[] = [
@@ -153,13 +158,13 @@ function setTransmissionData($nb, $storeResult) {
         ];
     }
 
-    if (!empty($_REQUEST["transmissionExpectedDate{$nb}"])) {
-        $transmissionData[] = [
-            'column' => 'expected_return',
-            'value' => $_REQUEST["transmissionExpectedDate{$nb}"],
-            'type' => 'string'
-        ];
-    }
+//    if (!empty($_REQUEST["transmissionExpectedDate{$nb}"])) {
+//        $transmissionData[] = [
+//            'column' => 'expected_return',
+//            'value' => $_REQUEST["transmissionExpectedDate{$nb}"],
+//            'type' => 'string'
+//        ];
+//    }
 
     if (!empty($_REQUEST["transmissionContactidAttach{$nb}"])) {
         $transmissionData[] = [
@@ -739,14 +744,22 @@ if (isset($_POST['add']) && $_POST['add']) {
                         'type' => "string",
                     )
                 );
-                array_push(
-                    $_SESSION['data'],
-                    array(
-                        'column' => "status",
-                        'value' => 'A_TRA',
-                        'type' => "string",
-                    )
-                );
+                if (!empty($_REQUEST['effectiveDateStatus'])) {
+                    $_SESSION['data'][] = [
+                        'column' => 'status',
+                        'value'  => $_REQUEST['effectiveDateStatus'],
+                        'type'   => 'string'
+                    ];
+                } else {
+                    array_push(
+                        $_SESSION['data'],
+                        array(
+                            'column' => "status",
+                            'value' => 'A_TRA',
+                            'type' => "string",
+                        )
+                    );
+                }
                 array_push(
                     $_SESSION['data'],
                     array(
@@ -842,6 +855,14 @@ if (isset($_POST['add']) && $_POST['add']) {
                             'type' => "date",
                         )
                     );
+                }
+
+                if (!empty($_REQUEST['effectiveDate'])) {
+                    $_SESSION['data'][] = [
+                        'column' => 'effective_date',
+                        'value'  => $func->format_date_db($_REQUEST['effectiveDate']),
+                        'type'   => 'date'
+                    ];
                 }
 
                 if (isset($_REQUEST['contactidAttach']) && $_REQUEST['contactidAttach'] <> '') {
@@ -1063,6 +1084,10 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $set_update .= ", validation_date = null";
             }
 
+            if (!empty($_REQUEST['effectiveDate'])) {
+                $set_update .= ", effective_date = '".$req->format_date_db($_REQUEST['effectiveDate'])."'";
+            }
+
             if (isset($_REQUEST['contactidAttach']) && $_REQUEST['contactidAttach'] <> "") {
                 $set_update .= ", dest_contact_id = ".$_REQUEST['contactidAttach'].", dest_address_id = ".$_REQUEST['addressidAttach'];
             } else {
@@ -1262,7 +1287,13 @@ if (isset($_POST['add']) && $_POST['add']) {
                 }
             }
 
-            $set_update .= ", doc_date = ".$req->current_datetime().", updated_by = :updated_by, status = 'A_TRA'";
+            $set_update .= ", doc_date = ".$req->current_datetime().", updated_by = :updated_by";
+            if (!empty($_REQUEST['effectiveDateStatus'])) {
+                $set_update .= ", status = :effectiveStatus";
+                $arrayPDO = array_merge($arrayPDO, array(":effectiveStatus" => $_REQUEST['effectiveDateStatus']));
+            } else {
+                $set_update .= ", status = 'A_TRA'";
+            }
             $arrayPDO = array_merge($arrayPDO, array(":updated_by" => $_SESSION['user']['UserId']));
 
             if (isset($storeResult['error']) && $storeResult['error'] <> '') {
@@ -1354,7 +1385,7 @@ if (isset($_REQUEST['id'])) {
         $column_res = 'res_id';
     }
     
-    $stmt = $db->query("SELECT validation_date, title, dest_contact_id, dest_address_id, dest_address_id as address_id, relation, format, status
+    $stmt = $db->query("SELECT validation_date, effective_date, attachment_type, title, dest_contact_id, dest_address_id, dest_address_id as address_id, relation, format, status
                         FROM res_view_attachments 
                         WHERE ".$column_res." = ? and res_id_master = ?
                         ORDER BY relation desc", array($_REQUEST['id'], $_SESSION['doc_id']));
@@ -1543,7 +1574,7 @@ if (!isset($_REQUEST['id'])) {
     $content .= '<p style="text-align:left;margin-left:74.5%;"></p>';
     $content .= '<p>';
     $content .= '<label>'. _FILE.' <span><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});"></i> <i class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
-    $content .= '<select name="templateOffice" id="templateOffice" style="display:inline-block;" onchange="showEditButton();">';
+    $content .= '<select name="templateOffice" id="templateOffice" style="display:inline-block;" onchange="showEditButton();showOrButtonForAttachment()">';
     $content .= '<option value="">'. _CHOOSE_MODEL.'</option>';
 
     $content .= '</select>';
@@ -1553,18 +1584,6 @@ if (!isset($_REQUEST['id'])) {
     $content .='&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
     
     $content .= '</p>';
-       $content .= '<p>'; 
-    if(!isset($_REQUEST['id'])){
-        
-        $content .= '<label>&nbsp;</label>';
-        $content .= '<input type="button" value="';
-        $content .= _EDIT_MODEL;
-        $content .= '" name="edit" id="edit" style="display:none" class="button" '
-            .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&attachType=\'+$(\'attachment_types\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&addressId=\'+$(\'addressidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&titleAttachment=\'+$(\'title\').value+\'&back_date=\'+$(\'back_date\').value+\'&resMaster='.$_SESSION['doc_id']
-            .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');this.hide();$(\'add\').setStyle({display: \'none\'});"/>';
-    }
-            $content .= '</p>';
-
 }
 
 if (isset($statusEditAttachment) && $statusEditAttachment == 'TMP') {
@@ -1583,12 +1602,28 @@ $content .= '"/>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><
 $content .= '</p>';
 $content .= '<p>';
 $content .= '<label>'. _BACK_DATE.'</label>';
-$content .= '<input type="text" name="back_date" id="back_date" onClick="showCalender(this);" value="';
 if (isset($_REQUEST['id'])) {
+    $content .= '<input type="text" name="back_date" id="back_date" onClick="showCalender(this);" value="';
     $content .= $req->format_date_db($data_attachment->validation_date);
+    $content .= '"/>';
+    $content .= '</p>';
+    $content .= '<p>';
+    $content .= '<label>'. "Date de retour effective".'</label>';
+    $content .= '<input type="text" name="effectiveDate" id="effectiveDate" onClick="showCalender(this);" style="width: 75px" value="';
+    $content .= $req->format_date_db($data_attachment->effective_date);
+    $content .= '" />';
+    if ($data_attachment->attachment_type == 'transmission' && ($data_attachment->status == "RTURN" || $data_attachment->status == "EXP RTURN")) {
+        $content .= '<select name="effectiveDateStatus" id="effectiveDateStatus" style="margin-left: 20px;width: 105px" />';
+        $content .= '<option value="EXP RTURN">Attente retour</option>';
+        if ($data_attachment->status == "RTURN")
+            $content .= '<option selected="selected" value="RTURN">Retourné</option>';
+        else
+            $content .= '<option value="RTURN">Retourné</option>';
+        $content .= '</select>';
+    }
+} else {
+    $content .= '<input type="text" name="back_date" id="back_date" onClick="showCalender(this);" value="" />';
 }
-
-$content .='"/>';
 $content .= '</p>';
 $content .= '<p>';
 $content .= '<label>'. _DEST_USER;
@@ -1628,6 +1663,36 @@ if (isset($_REQUEST['id'])) {
 
 $content .= '"/>';
 
+$langArrayForTransmission = [
+    _ATTACHMENT_TYPES,
+    _CHRONO_NUMBER,
+    _FILE,
+    _OBJECT,
+    _BACK_DATE,
+    _DEST_USER,
+    _EDIT_MODEL,
+    _CREATE_CONTACT
+];
+$canCreateContact = $core->test_admin('my_contacts', 'apps', false);
+if (!$canCreateContact)
+    $canCreateContact = 0;
+
+if(!isset($_REQUEST['id'])) {
+    $content .= '<div style="float: left;margin-bottom: 5px">';
+    $content .= '<input type="button" value="';
+    $content .= _EDIT_MODEL;
+    $content .= '" name="edit" id="edit" style="display:none;margin-top: 0" class="button" '
+        . 'onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&attachType=\'+$(\'attachment_types\').value+\'&objectTable=' . $objectTable . '&contactId=\'+$(\'contactidAttach\').value+\'&addressId=\'+$(\'addressidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&titleAttachment=\'+$(\'title\').value+\'&back_date=\'+$(\'back_date\').value+\'&resMaster=' . $_SESSION['doc_id']
+        . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');this.hide();$(\'add\').setStyle({display: \'none\'});"/>';
+    $content .= '<span style="display: none" id="divOr0">&nbsp;ou&nbsp;</span>';
+    $content .= '</div>';
+
+    $content .= '<div style="float: left">';
+    $content .= '<i id="newTransmissionButton0" disabled="disabled" title="Nouvelle transmission" style="opacity: 0.5;cursor: pointer;" class="fa fa-plus-circle fa-2x"
+                         onclick="addNewTransmission(\'' . $_SESSION['config']['businessappurl'] . '\', \'' . $_SESSION['doc_id'] . '\', ' . $canCreateContact . ', \'' . addslashes(implode('#', $langArrayForTransmission)) . '\')"></i>';
+    $content .= '</div>';
+}
+
 if (isset($_REQUEST['id']) && ($data_attachment->status <> 'TMP' || ($data_attachment->status == 'TMP' && $data_attachment->relation > 1))) {
     $content .= '<p>';
     $content .= '<label>'. _CREATE_NEW_ATTACHMENT_VERSION.'</label>';
@@ -1642,7 +1707,7 @@ $content .= '</div>';
     $content .= '<div id="transmission"></div>';
     $content .= '<input type="hidden" id="hiddenValidateStatus" value="1"/>';
         $content .= '<p class="buttons">';
-            if (isset($_REQUEST['id']) && $attachmentFormat <> "pdf") {
+            if (isset($_REQUEST['id']) && $attachmentFormat != "pdf") {
                 $content .= '<input type="button" value="';
                 $content .= _EDIT_MODEL;
                 $content .= '" name="editModel" id="editModel" class="button" onclick="$(\'hiddenValidateStatus\').value=\'2\';$(\'edit\').style.visibility=\'visible\';window.open(\''
@@ -1655,23 +1720,6 @@ $content .= '</div>';
                                 }*/
 
             $content .= '&nbsp;';
-            $langArrayForTransmission = [
-                _ATTACHMENT_TYPES,
-                _CHRONO_NUMBER,
-                _FILE,
-                _OBJECT,
-                _BACK_DATE,
-                _DEST_USER,
-                _EDIT_MODEL,
-                _CREATE_CONTACT
-            ];
-            $canCreateContact = $core->test_admin('my_contacts', 'apps', false);
-            if (!$canCreateContact)
-                $canCreateContact = 0;
-            $content .= '<div style="float: left">';
-            $content .= '<i id="newTransmissionButton0" disabled="disabled" title="Nouvelle transmission" style="opacity: 0.5;cursor: pointer;" class="fa fa-plus-circle fa-2x"
-                         onclick="addNewTransmission(\'' . $_SESSION['config']['businessappurl'] . '\', \''. $_SESSION['doc_id'] .'\', ' . $canCreateContact . ', \'' . addslashes(implode('#' , $langArrayForTransmission)) . '\')"></i>';
-            $content .= '</div>';
             $content .= '&nbsp;';
             $content .= '<input type="button" value="';
             $content .=  _VALIDATE;

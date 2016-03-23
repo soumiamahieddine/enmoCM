@@ -44,6 +44,14 @@ function disableTransmissionButton(currentValue) {
   }
 }
 
+function showOrButtonForAttachment() {
+  if ($("edit").style.display != "none" && $("newTransmissionButton0").style.display != "none") {
+    $("divOr0").style.display = "";
+  } else {
+    $("divOr0").style.display = "none";
+  }
+}
+
 function showTransmissionEditButton(currentValue, editParagraph, size) {
   if (currentValue == "") {
     $(editParagraph).style.display = "none";
@@ -73,6 +81,9 @@ function delLastTransmission() {
         $('delTransmissionButton' + (size - 1)).style.display = "";
         if ($("paraEdit" + (size - 1)).style.display != "none")
           $("divOr" + (size - 1)).style.display = "";
+      } else if (size == 1) {
+        if ($("edit").style.display != "none")
+          $("divOr0").style.display = "";
       }
     }
   }
@@ -89,9 +100,9 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
     //var lang = langString.split("#");
 
     $('newTransmissionButton' + (size - 1)).style.display = "none";
+    $("divOr" + (size - 1)).style.display = "none";
     if (size > 1) {
       $('delTransmissionButton' + (size - 1)).style.display = "none";
-      $("divOr" + (size - 1)).style.display = "none";
     }
 
     div.className = "transmissionDiv";
@@ -120,11 +131,11 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
                       "&nbsp;<span class='red_asterisk'><i class='fa fa-star'></i></span>" +
                     "</p>" +
                     "<p>" +
-                      "<label>" + "Date de retour" + "</label>" +
+                      "<label>" + "Date de retour attendue" + "</label>" +
                       "<input type='text' name='transmissionBackDate" + size + "' id='transmissionBackDate" + size + "' onClick='showCalender(this);' value='' style='width: 75px' />" +
                       "<select name='transmissionExpectedDate" + size + "' id='transmissionExpectedDate" + size + "' style='margin-left: 20px;width: 105px' />" +
-                        "<option value='Y'>Attente retour</option>" +
-                        "<option value='N'>Pas de retour</option>" +
+                        "<option value='EXP RTURN'>Attente retour</option>" +
+                        "<option value='NO RTURN'>Pas de retour</option>" +
                       "</select>" +
                     "</p>" +
                     "<p>";
@@ -152,8 +163,8 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
                     "<input type='hidden' id='transmissionContactidAttach" + size + "' name='transmissionContactidAttach" + size + "' value='' onchange='saveContactToSession(\"" + size + "\", \"" + prePath + "\")' />" +
                     "<input type='hidden' id='transmissionAddressidAttach" + size + "' name='transmissionAddressidAttach" + size + "' value='' />" +
                     "<div style='float: left;display: none;margin-bottom: 5px' id='paraEdit" + size + "'>" +
-                      "<input type='button' value='" + "Editer" + "' name='transmissionEdit" + size + "' id='transmissionEdit" + size + "' class='button' " +
-                        "onclick='window.open(\"" + prePath + "index.php?display=true&module=content_management&page=applet_popup_launcher&transmissionNumber=" + size + "&objectType=transmission&objectId=\"+$(\"transmissionTemplate" + size + "\").value+\"&attachType=response_project&objectTable=res_letterbox&contactId=\"+$(\"transmissionContactidAttach" + size + "\").value+\"&addressId=\"+$(\"transmissionAddressidAttach" + size + "\").value+\"&chronoAttachment=\"+$(\"transmissionChrono" + size + "\").value+\"&titleAttachment=\"+$(\"transmissionTitle" + size + "\").value+\"&back_date=\"+$(\"transmissionBackDate" + size + "\").value+\"&resMaster=" + docId + "\", \"\", \"height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\");" +
+                      "<input type='button' style='margin-top: 0' value='" + "Editer" + "' name='transmissionEdit" + size + "' id='transmissionEdit" + size + "' class='button' " +
+                        "onclick='window.open(\"" + prePath + "index.php?display=true&module=content_management&page=applet_popup_launcher&transmissionNumber=" + size + "&objectType=transmission&objectId=\"+$(\"transmissionTemplate" + size + "\").value+\"&attachType=transmission&objectTable=res_letterbox&contactId=\"+$(\"transmissionContactidAttach" + size + "\").value+\"&addressId=\"+$(\"transmissionAddressidAttach" + size + "\").value+\"&chronoAttachment=\"+$(\"transmissionChrono" + size + "\").value+\"&titleAttachment=\"+$(\"transmissionTitle" + size + "\").value+\"&back_date=\"+$(\"transmissionBackDate" + size + "\").value+\"&resMaster=" + docId + "\", \"\", \"height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\");" +
                         "hideEditAndAddButton(paraEdit" + size + ")' />" +
                       "<span style='display: none' id='divOr" + size + "'>" +
                         "&nbsp;ou&nbsp;" +
