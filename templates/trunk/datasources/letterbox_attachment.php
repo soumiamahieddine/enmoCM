@@ -56,6 +56,13 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
     $datasources['contact'][] = $myContact;
 }
+
+if (isset($datasources['contact'][0]['title']) && $datasources['contact'][0]['title'] == '')
+    $datasources['contact'][0]['title'] = $datasources['contact'][0]['contact_title'];
+if (isset($datasources['contact'][0]['firstname']) && $datasources['contact'][0]['firstname'] == '')
+    $datasources['contact'][0]['firstname'] = $datasources['contact'][0]['contact_firstname'];
+if (isset($datasources['contact'][0]['lastname']) && $datasources['contact'][0]['lastname'] == '')
+    $datasources['contact'][0]['lastname'] = $datasources['contact'][0]['contact_lastname'];
 // Notes
 $datasources['notes'] = array();
 $stmt = $dbDatasource->query("SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.user_id WHERE coll_id = ? AND identifier = ? ", array($coll_id, $res_id));
@@ -86,9 +93,9 @@ if (isset($_SESSION['transmissionContacts'])) {
 //                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['firstname']
 //                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['lastname'];
 
-        $datasources['transmissions'][0]['contact_title' . $nb] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title']);
-        $datasources['transmissions'][0]['contact_firstname' . $nb] = $_SESSION['transmissionContacts'][$nb]['firstname'];
-        $datasources['transmissions'][0]['contact_lastname' . $nb] = $_SESSION['transmissionContacts'][$nb]['lastname'];
+        $datasources['transmissions'][0]['title' . $nb] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title']);
+        $datasources['transmissions'][0]['firstname' . $nb] = $_SESSION['transmissionContacts'][$nb]['firstname'];
+        $datasources['transmissions'][0]['lastname' . $nb] = $_SESSION['transmissionContacts'][$nb]['lastname'];
     }
 //    $datasources['transmissions'][0]['contacts'] = implode(', ', $array_Transmission);
 
