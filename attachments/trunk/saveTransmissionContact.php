@@ -27,15 +27,15 @@ if (!empty($_POST['size']) && isset($_POST['contactId'])) {
     } else {
         $db = new Database();
 
-        $stmt = $db->query('SELECT society, firstname, lastname, title FROM contacts_v2 WHERE contact_id = ? ', [$_POST['contactId']]);
+        $stmt = $db->query('SELECT * FROM view_contacts WHERE contact_id = ? ', [$_POST['contactId']]);
 
         $contact = $stmt->fetchObject();
         if (!isset($_SESSION['transmissionContacts']))
             $_SESSION['transmissionContacts'] = [];
 
-        $_SESSION['transmissionContacts'][$nb]['firstname'] = $contact->firstname;
-        $_SESSION['transmissionContacts'][$nb]['lastname']  = $contact->lastname;
+        $_SESSION['transmissionContacts'][$nb]['firstname'] = $contact->contact_firstname == '' ? $contact->firstname : $contact->contact_firstname;
+        $_SESSION['transmissionContacts'][$nb]['lastname']  = $contact->contact_lastname == '' ? $contact->lastname : $contact->contact_lastname;
         $_SESSION['transmissionContacts'][$nb]['society']   = $contact->society;
-        $_SESSION['transmissionContacts'][$nb]['title']   = $contact->title;
+        $_SESSION['transmissionContacts'][$nb]['title']     = $contact->contact_title == '' ? $contact->title : $contact->contact_title;
     }
 }
