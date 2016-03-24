@@ -73,24 +73,24 @@ if (isset($_SESSION['transmissionContacts'])) {
 
     if (isset($_SESSION['upfileTransmissionNumber']) && $_SESSION['transmissionContacts'][$_SESSION['upfileTransmissionNumber']]) {
         $curNb = $_SESSION['upfileTransmissionNumber'];
-        $datasources['transmissions'][0]['currentContact'] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$curNb]['title'])
-            . ' ' . $_SESSION['transmissionContacts'][$curNb]['firstname']
-            . ' ' . $_SESSION['transmissionContacts'][$curNb]['lastname'];
+        $datasources['transmissions'][0]['currentContact_title'] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$curNb]['title']);
+        $datasources['transmissions'][0]['currentContact_firstname'] = $_SESSION['transmissionContacts'][$curNb]['firstname'];
+        $datasources['transmissions'][0]['currentContact_lastname'] = $_SESSION['transmissionContacts'][$curNb]['lastname'];
     }
     
     $array_Transmission = array();
 
     for ($nb = 1; $_SESSION['transmissionContacts'][$nb]; $nb++) {
 
-            $array_Transmission[] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title'])
-                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['firstname']
-                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['lastname'];
+//            $array_Transmission[] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title'])
+//                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['firstname']
+//                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['lastname'];
 
-        /*$datasources['transmissions'][0]['contact' . $nb] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title'])
-                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['firstname']
-                                                            . ' ' . $_SESSION['transmissionContacts'][$nb]['lastname'];*/
+        $datasources['transmissions'][0]['contact_title' . $nb] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title']);
+        $datasources['transmissions'][0]['contact_firstname' . $nb] = $_SESSION['transmissionContacts'][$nb]['firstname'];
+        $datasources['transmissions'][0]['contact_lastname' . $nb] = $_SESSION['transmissionContacts'][$nb]['lastname'];
     }
-    $datasources['transmissions'][0]['contacts'] = implode(', ', $array_Transmission);
+//    $datasources['transmissions'][0]['contacts'] = implode(', ', $array_Transmission);
 
 }
 
