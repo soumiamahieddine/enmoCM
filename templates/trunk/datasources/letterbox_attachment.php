@@ -42,6 +42,7 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
     $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($datasources['res_letterbox_contact'][0]['contact_id'], $datasources['res_letterbox_contact'][0]['address_id']));
     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
     $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
+    $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
     $datasources['contact'][] = $myContact;
 
     // single Contact
@@ -49,6 +50,7 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
     $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($doc['contact_id'], $doc['address_id']));
     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
     $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
+    $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
     $datasources['contact'][] = $myContact;
     
 } else {
