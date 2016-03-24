@@ -26,9 +26,9 @@ function endOfApplet(objectType, theMsg)
         window.opener.$('add').setStyle({display: 'inline'});
     }
 
-    if (window.opener.$('edit') && objectType != 'transmission') {
-        window.opener.$('edit').setStyle({display: 'inline'});
-    }
+    //if (window.opener.$('edit') && objectType != 'transmission') {
+    //    window.opener.$('edit').setStyle({display: 'inline'});
+    //}
 
     $('divError').innerHTML = theMsg;
     if (objectType == 'template' || objectType == 'templateStyle' || objectType == 'attachmentVersion' || objectType == 'attachmentUpVersion' || objectType == 'transmission') {
