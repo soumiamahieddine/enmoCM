@@ -99,8 +99,8 @@ if (isset($whereAttach) && $whereAttach <> '') $where .= $whereAttach;
         $orderstr = "order by ".$order_field." ".$order;
     else  {
         $list->setOrder();
-        $list->setOrderField('creation_date');
-        $orderstr = "order by creation_date desc";
+        $list->setOrderField('identifier');
+        $orderstr = "order by identifier asc";
     }
 
 $parameters = '';

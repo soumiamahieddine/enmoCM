@@ -468,6 +468,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 $_SESSION['config']['databasetype']
                             );
                         }
+                        unset($_SESSION['transmissionContacts']);
                         
                         //copie de la version PDF de la pièce si mode de conversion sur le client
                         if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
@@ -1509,6 +1510,7 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
     }
 }
 
+unset($_SESSION['transmissionContacts']);
 $content .= '<div class="error" >' . $_SESSION['error'];
 $_SESSION['error'] = "";
 
