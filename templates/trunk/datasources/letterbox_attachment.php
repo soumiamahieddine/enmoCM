@@ -79,7 +79,7 @@ if (isset($_SESSION['transmissionContacts'])) {
     }
     
     $array_Transmission = array();
-    $datasources['transmissions'] = [];
+
     for ($nb = 1; $_SESSION['transmissionContacts'][$nb]; $nb++) {
 
             $array_Transmission[] = $contacts->get_civility_contact($_SESSION['transmissionContacts'][$nb]['title'])
