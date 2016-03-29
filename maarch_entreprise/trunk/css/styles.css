@@ -1443,7 +1443,8 @@ td#indexing {
     padding: 0px;
     top: 38px;
     left: 280px;
-    width: 80%;
+    /*width: 80%;*/
+    width: auto;
 }
 #nav h1 {
     color: #16ADEB;
