@@ -37,8 +37,17 @@ if ($_REQUEST['relation'] == 1) {
     $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($_REQUEST['id']) );
 	$pdf_id = $ac->getCorrespondingPdf($_REQUEST['id']);
 	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id));
-	$document_id = $ac->getCorrespondingDocument($_REQUEST['id']);
-	if (isset($document_id) && $document_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
+	$document = $ac->getCorrespondingDocument($_REQUEST['id']);
+
+	if($document->relation == 1){
+		$target_table = "res_attachments";
+		$document_id = $document->res_id;
+
+	}else{
+		$target_table = "res_version_attachments";
+		$document_id = $document->res_id_version;
+	}
+	if (isset($document_id) && $document_id != 0) $stmt = $db->query("UPDATE " . $target_table . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
 	
 } else {
     $stmt = $db->query("SELECT attachment_id_master FROM res_version_attachments WHERE res_id = ?", array($_REQUEST['id']) );
@@ -48,8 +57,17 @@ if ($_REQUEST['relation'] == 1) {
 	
 	$pdf_id = $ac->getCorrespondingPdf($_REQUEST['id']);
 	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id));
-	$document_id = $ac->getCorrespondingDocument($_REQUEST['id']);
-	if (isset($document_id) && $document_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
+	$document = $ac->getCorrespondingDocument($_REQUEST['id']);
+	$document_id = $document->res_id;
+	if($document->relation == 1){
+		$target_table = "res_attachments";
+		$document_id = $document->res_id;
+
+	}else{
+		$target_table = "res_version_attachments";
+		$document_id = $document->res_id_version;
+	}
+	if (isset($document_id) && $document_id != 0) $stmt = $db->query("UPDATE " . $target_table . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
 }
 
 if ($_SESSION['history']['attachdel'] == "true") {
