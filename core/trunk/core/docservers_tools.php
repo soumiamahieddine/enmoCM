@@ -573,7 +573,7 @@ function Ds_isFileTypeAllowed($filePath, $extDefault = '')
         $filePath
     );
     $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-    if ($ext == '') {
+    if ($ext == '' || $ext == 'tmp') {
         $ext = $extDefault;
     }
     if ($ext == 'html' && $mimeType == "text/plain") {
