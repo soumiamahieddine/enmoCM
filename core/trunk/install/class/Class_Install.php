@@ -59,7 +59,6 @@ class Install extends functions
         $this->loadLang();
     }
 
-
     public function getLangList()
     {
         $langList = array();
@@ -411,6 +410,10 @@ class Install extends functions
                     }
 
                      /** Création répertoire thumbnails dans le custom **/
+                    if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/notifications/")){
+                        $cheminCustomMaarchCourrierModulesNotifications = realpath('.')."/custom/cs_$databasename/modules/notifications/";
+                        mkdir($cheminCustomMaarchCourrierModulesNotifications, 0755);
+                    }
                     if(!is_dir(realpath('.')."/custom/cs_$databasename/modules/notifications/batch/")){
                         $cheminCustomMaarchCourrierModulesNotificationsBatch = realpath('.')."/custom/cs_$databasename/modules/notifications/batch";
                         mkdir($cheminCustomMaarchCourrierModulesNotificationsBatch, 0755);
@@ -969,6 +972,11 @@ class Install extends functions
             return false;
             exit;
         }
+
+        if (!$this->setLog4php()) {
+            return false;
+            exit;
+        }
         
 
 
@@ -978,6 +986,24 @@ class Install extends functions
         }*/
         
         return true;
+    }
+
+    private function setLog4php(){
+
+        $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/log4php.default.xml');
+        $res = $xmlconfig->asXML();
+        $fp = @fopen(realpath('.')."/apps/maarch_entreprise/xml/log4php.xml", "w+");
+        if (!$fp) {
+            return false;
+            exit;
+        }
+        $write = fwrite($fp,$res);
+        if (!$write) {
+            return false;
+            exit;
+        }
+        return true;
+
     }
 
     private function setConfigXml()
@@ -1094,7 +1120,13 @@ class Install extends functions
 
         $chemin_core = realpath('.').'/core/';
 
+        $CONFIG = $xmlconfig->CONFIG;
         $CONFIG->MaarchDirectory = realpath('.')."/";
+        $chemin = $_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']);
+        $maarchUrl = rtrim($chemin, "install");
+        $CONFIG->MaarchUrl = $maarchUrl;
+        $CONFIG->MaarchApps = 'maarch_entreprise';
+        $CONFIG->TmpDirectory = realpath('.').'/modules/notifications/batch/tmp/';
         
         $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
         $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
@@ -1131,6 +1163,11 @@ class Install extends functions
         $chemin_core = realpath('.').'/core/';
 
         $CONFIG->MaarchDirectory = realpath('.')."/";
+        $chemin = $_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']);
+        $maarchUrl = rtrim($chemin, "install");
+        $CONFIG->MaarchUrl = $maarchUrl;
+        $CONFIG->MaarchApps = 'maarch_entreprise';
+        $CONFIG->TmpDirectory = realpath('.').'/modules/sendmail/batch/tmp/';
         
         $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
         $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
@@ -1226,6 +1263,12 @@ class Install extends functions
         $CONFIG_BASE->databasename = $_SESSION['config']['databasename'];
         $CONFIG_BASE->databaseuser = $_SESSION['config']['databaseuser'];
         $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
+
+        $LOG4PHP = $xmlconfig->LOG4PHP;
+        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/apps/maarch_entreprise/xml/log4php.xml';
+
+
+
         $res = $xmlconfig->asXML();
         $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_letterbox.xml", "w+");
         if (!$fp) {

@@ -206,6 +206,14 @@ class resources_controler
 	                	$userEntity = $userEntityId->entity_id;
 	                	$userPrimaryEntity = true;
 	                }
+                }else{
+                $queryEntity = "SELECT entity_id FROM entities WHERE email = ? and enabled = 'Y'";
+                $stmt = $db->query($queryEntity, array($mail[count($mail) -1]));
+                $entityIdFound = $stmt->fetchObject();
+                $userEntity = $entityIdFound->entity_id;
+                    if(!empty($userEntity)){
+                        $userPrimaryEntity = true;
+                        }
                 }
             }
         }
