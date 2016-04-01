@@ -1,6 +1,6 @@
 <?php
 
- function setConfigSendmail_batch_config_Xml($from,$to,$host,$user,$pass,$type,$port,$auth,$charset,$smtpSecure)
+ function setConfigSendmail_batch_config_Xml($from,$to,$host,$user,$pass,$type,$port,$auth,$charset,$smtpSecure,$mailfrom)
     {
 
         $xmlconfig = simplexml_load_file(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/config/config.xml');
@@ -20,6 +20,7 @@
         $MAILER->smtp_host = $host;
         $MAILER->smtp_user = $user;
         $MAILER->smtp_password = $pass;
+        $MAILER->mailfrom = $mailfrom;
         if($auth == 1){
         $MAILER->smtp_auth = "true";
         }else{
@@ -47,7 +48,7 @@
     }
 
 
- function setConfigNotification_batch_config_Xml($from,$to,$host,$user,$pass,$type,$port,$auth,$charset,$smtpSecure)
+ function setConfigNotification_batch_config_Xml($from,$to,$host,$user,$pass,$type,$port,$auth,$charset,$smtpSecure,$mailfrom)
     {
 
         $xmlconfig = simplexml_load_file(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/config/config.xml');
@@ -65,6 +66,7 @@
         $MAILER->smtp_host = $host;
         $MAILER->smtp_user = $user;
         $MAILER->smtp_password = $pass;
+        $MAILER->mailfrom = $mailfrom;
         if($auth == 1){
         $MAILER->smtp_auth = "true";
         }else{
@@ -88,7 +90,7 @@
         }
 
     }
-
+//if($_REQUEST['type']=='type'){}
 include($_SESSION['config']['corepath'] 
     . '/apps/maarch_entreprise/tools/mails/htmlMimeMail.php');
 
@@ -101,9 +103,10 @@ $email = $GLOBALS['emails'][$currentEmail];
                 $helo = (string)$mailerParams->domains,
                 $auth = filter_var($_REQUEST['smtpAuth'], FILTER_VALIDATE_BOOLEAN),
                 $user = $_REQUEST['smtpUser'],
-                $pass = $_REQUEST['smtpPassword']
+                $pass = $_REQUEST['smtpPassword'],
+                $from = $_REQUEST['smtpMailFrom']
                 );
-
+//var_dump($from);
             $GLOBALS['mailer']->setReturnPath($email->sender);
             $GLOBALS['mailer']->setFrom("notifications@maarch.fr");
             $GLOBALS['mailer']->setSubject("Test smtp Maarch");
@@ -113,33 +116,55 @@ $email = $GLOBALS['emails'][$currentEmail];
             $GLOBALS['mailer']->setHtmlCharset((string)$email->charset);
             $GLOBALS['mailer']->setHeadCharset((string)$email->charset);
             
+            
+
+        if($_REQUEST['type'] == 'test'){
+            
             $return = $GLOBALS['mailer']->send(array($_REQUEST['smtpMailTo']), $_REQUEST['smtpType']);
 
-if ($return == false) {
+            if ($return == false) {
 
-		$return2['status'] = 2;
-        $return2['text'] = _SMTP_ERROR;
+            		$return2['status'] = 2;
+                    $return2['text'] = _SMTP_ERROR;
 
-		$jsonReturn = json_encode($return2);
+            		$jsonReturn = json_encode($return2);
 
-		echo $jsonReturn;
-		exit;
+            		echo $jsonReturn;
+            		exit;
 
-  //echo("<p>" . $mail->getMessage() . "</p>");
-} else {
+              //echo("<p>" . $mail->getMessage() . "</p>");
+            } else {
 
-	require_once 'install/class/Class_Install.php';
-    
-setConfigSendmail_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure);
+            	require_once 'install/class/Class_Install.php';
+                
+            setConfigSendmail_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from);
 
-setConfigNotification_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure);
-        $return2['status'] = 2;
-        $return2['text'] = _SMTP_OK;
+            setConfigNotification_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from);
 
-        $jsonReturn = json_encode($return2);
+                    $return2['status'] = 2;
+                    $return2['text'] = _SMTP_OK;
 
-        echo $jsonReturn;
-        exit;
+                    $jsonReturn = json_encode($return2);
 
-}
+                    echo $jsonReturn;
+                    exit;
+
+            }
+        }elseif($_REQUEST['type'] == 'add'){
+
+            setConfigSendmail_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from);
+
+            setConfigNotification_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from);
+            
+                    $return2['status'] = 2;
+                    $return2['text'] = _INFO_SMTP_OK;
+
+                    $jsonReturn = json_encode($return2);
+
+                    echo $jsonReturn;
+                    exit;
+
+
+
+        }
 ?>

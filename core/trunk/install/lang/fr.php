@@ -29,6 +29,14 @@ if (!defined('_SET_CONFIG')) {
     define('_SET_CONFIG', "modifier");
 }
 
+if (!defined('_INFO_SMTP_OK')) {
+    define('_INFO_SMTP_OK', "Informations renseignées dans les fichiers de configuration");
+}
+
+if (!defined('_ADD_INFO_SMTP')) {
+    define('_ADD_INFO_SMTP', "Ajouter");
+}
+
 if (!defined('_LICENCE')) {
     define('_LICENCE', "Licence");
 }

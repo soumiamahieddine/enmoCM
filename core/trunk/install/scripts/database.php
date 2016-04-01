@@ -63,7 +63,6 @@ if ($_REQUEST['action'] == 'testConnect') {
 
 
 
-//test1
 
 
 

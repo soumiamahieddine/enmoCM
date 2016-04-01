@@ -29,7 +29,13 @@ if (!defined('_DESC_INSTALL')) {
 if (!defined('_SET_CONFIG')) {
     define('_SET_CONFIG', "set");
 }
+if (!defined('_INFO_SMTP_OK')) {
+    define('_INFO_SMTP_OK', "Informations add in stmp files config");
+}
 
+if (!defined('_ADD_INFO_SMTP')) {
+    define('_ADD_INFO_SMTP', "Add");
+}
 
 if (!defined('_LICENCE')) {
     define('_LICENCE', "Licence");
