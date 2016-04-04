@@ -81,15 +81,10 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
             , array($stepDetails['listinstance_id'], $stepDetails['item_mode'], $res_id, $_SESSION['user']['UserId'], 'VISA_CIRCUIT'));
     }
 
-    if (
-        $circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $circuit_visa->nbVisa($res_id, $coll_id)
-    ){
+    if ($circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $circuit_visa->nbVisa($res_id, $coll_id)) {
         $mailStatus = 'ESIG';
-    } else {
-        $mailStatus = 'EVIS';
+        $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", [$mailStatus, $res_id]);
     }
-
-    $stmt = $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", array($mailStatus, $res_id));
 
     return array('result' => $res_id.'#', 'history_msg' => $message);
 }
