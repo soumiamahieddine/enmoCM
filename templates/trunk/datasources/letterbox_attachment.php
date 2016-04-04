@@ -35,8 +35,9 @@ $datasources['res_letterbox'][] = $doc;
 
 
 //multicontact
-$stmt = $dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = ? AND contact_id = ? ", array($doc['res_id'], $doc['contact_id']));
+$stmt = $dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = ? AND contact_id = ? ", array($doc['res_id'], $res_contact_id));
 $datasources['res_letterbox_contact'][] = $stmt->fetch(PDO::FETCH_ASSOC);
+
 if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
         // $datasources['contact'] = array();
     $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($datasources['res_letterbox_contact'][0]['contact_id'], $datasources['res_letterbox_contact'][0]['address_id']));
