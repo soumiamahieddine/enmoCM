@@ -1746,6 +1746,10 @@ if (!defined("_IMPRIM_DOSSIER"))    define("_IMPRIM_DOSSIER", "Impression du dos
 if (!defined("_PROCEED_WORKFLOW"))    define("_PROCEED_WORKFLOW", "Poursuivre le circuit de visa");
 if (!defined("_INTERRUPT_WORKFLOW"))
     define("_INTERRUPT_WORKFLOW", "Interrompre le circuit de visa");
+if (!defined("_REJECTION_WORKFLOW_REDACTOR"))
+    define("_REJECTION_WORKFLOW_REDACTOR", "Refus de visa - retour rédacteur");
+if (!defined("_REJECTION_WORKFLOW_PREVIOUS"))
+    define("_REJECTION_WORKFLOW_PREVIOUS", "Refus de visa - retour au précédent viseur");
 if (!defined("_VISA_MAIL"))    define("_VISA_MAIL", "Viser le courrier");
 if (!defined("_SEND_SIGNED_DOCS"))    define("_SEND_SIGNED_DOCS", "Transmettre réponses signées");
 if (!defined("_PREPARE_VISA"))    define("_PREPARE_VISA", "Préparer le circuit de visa");

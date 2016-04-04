@@ -1452,6 +1452,10 @@ if (!defined("_BACK_TO_RESULTS_LIST")) define("_BACK_TO_RESULTS_LIST","Back to r
 if (!defined("_PROCEED_WORKFLOW"))    define("_PROCEED_WORKFLOW", "Continue visa workflow");
 if (!defined("_INTERRUPT_WORKFLOW"))
     define("_INTERRUPT_WORKFLOW", "Interrupt workflow");
+if (!defined("_REJECTION_WORKFLOW_REDACTOR"))
+    define("_REJECTION_WORKFLOW_REDACTOR", "Visa rejection - back to redactor");
+if (!defined("_REJECTION_WORKFLOW_PREVIOUS"))
+    define("_REJECTION_WORKFLOW_PREVIOUS", "Visa rejection - back to previous");
 if (!defined('_SEND_TO_VISA'))    define( '_SEND_TO_VISA', 'Send to visa');
 if (!defined("_SEND_SIGNED_DOCS"))    define("_SEND_SIGNED_DOCS", "Send signed documents");
 
