@@ -41,6 +41,7 @@ if ($objectType == 'templateStyle') {
             'res_view' => $res_view,
             'res_table' => $objectTable,
             'res_contact_id' => $_SESSION['cm']['contact_id'],
+            'res_address_id' => $_SESSION['cm']['address_id'],
             'chronoAttachment' => $_SESSION['cm']['chronoAttachment']
             );
         if ($objectType == 'attachmentFromTemplate' || $objectType == 'attachmentVersion' || $objectType == 'outgoingMail' || $objectType == 'transmission') {

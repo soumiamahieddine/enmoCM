@@ -78,6 +78,8 @@ $uniqueId = (isset($_REQUEST['transmissionNumber']) ? $_REQUEST['transmissionNum
                     functions::xecho($_REQUEST['resMaster']);
                     ?>&contactId=<?php
                     functions::xecho($_REQUEST['contactId']);
+                    ?>&addressId=<?php
+                    functions::xecho($_REQUEST['addressId']);
                     ?>&chronoAttachment=<?php
                     functions::xecho($_REQUEST['chronoAttachment']);
                     ?>&custom_override_id=<?php 

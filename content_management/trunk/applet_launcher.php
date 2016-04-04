@@ -99,6 +99,10 @@ if (isset($_REQUEST['contactId'])) {
     $_SESSION['cm']['contact_id'] = $_REQUEST['contactId'];
 }
 
+if (isset($_REQUEST['addressId'])) {
+    $_SESSION['cm']['address_id'] = $_REQUEST['addressId'];
+}
+
 if (isset($_REQUEST['chronoAttachment'])) {
     $_SESSION['cm']['chronoAttachment'] = $_REQUEST['chronoAttachment'];
 }
