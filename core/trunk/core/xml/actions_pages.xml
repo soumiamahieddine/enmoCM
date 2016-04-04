@@ -214,6 +214,28 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>rejection_visa_redactor</ID>
+        <LABEL>_REJECTION_WORKFLOW_REDACTOR</LABEL>
+        <NAME>rejection_visa_redactor</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>visa</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>rejection_visa_previous</ID>
+        <LABEL>_REJECTION_WORKFLOW_PREVIOUS</LABEL>
+        <NAME>rejection_visa_previous</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>visa</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
 	<ACTIONPAGE>
         <ID>send_to_visa</ID>
         <LABEL>_SEND_TO_VISA</LABEL>

@@ -1210,6 +1210,8 @@ INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename,
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('PVAL', 'Projet de réponse à valider', 'N', 'N', 'fm-letter-status-aval', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('CVAL', 'Circuit de visa à valider', 'N', 'N', 'fm-file-cycle-policy', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('WAIT', 'En attente  de la réponse signée', 'N', 'N', 'fm-letter-status-wait', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('AREV', 'À réviser', 'N', 'N', 'fm-letter-internal', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('AREVVI', 'À réviser (circuit)', 'N', 'N', 'fm-letter-internal', 'apps', 'Y', 'Y');
 
 -- AJOUT DES ACTIONS
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (400, '', 'Envoyer le projet de réponse', 'PVAL', 'N', 'Y', '', 'Y', 'apps', 'N');
