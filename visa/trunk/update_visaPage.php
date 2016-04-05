@@ -129,7 +129,7 @@ for ($i=0; $i<count($tab_path_rep_file);$i++) {
 			$nb_attach = ' (<span id="nb_attach"><b>' . $stmt->rowCount(). '</b></span>)';
 		}
 	
-		$right_html .= '<dt id="onglet_pj">PJ ' . $nb_attach.'</dt><dd id="page_pj">';
+		$right_html .= '<dt id="onglet_pj" onclick="$(\'cur_idAffich\').value=0;updateFunctionModifRep(0,0,0);">PJ ' . $nb_attach.'</dt><dd id="page_pj">';
 		
 		if ($core->is_module_loaded('attachments')) {
 	        require 'modules/templates/class/templates_controler.php';
