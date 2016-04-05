@@ -63,7 +63,7 @@ function checkAccess(current_form_id, url_check, url_manage, url_display_access,
   //  alert(frm_values);
     if(protect)
     {
-        frm_values = frm_values.replace(/\'/g, "\\'");
+        //frm_values = frm_values.replace(/\'/g, "\\'");
         frm_values = frm_values.replace(/\"/g, '\\"');
         frm_values = frm_values.replace(/\r\n/g, ' ');
         frm_values = frm_values.replace(/\r/g, ' ');
