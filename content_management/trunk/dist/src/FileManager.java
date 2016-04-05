@@ -214,11 +214,24 @@ public class FileManager {
     */
     public String findGoodOptionsToEdit(String ext) {
         String options = "";
-        if ("docx".equals(ext.toLowerCase()) || "doc".equals(ext.toLowerCase())) {
+        if (
+                "docx".equals(ext.toLowerCase()) || 
+                "doc".equals(ext.toLowerCase()) ||
+                "docm".equals(ext.toLowerCase()) 
+        ) {
             options = " /n /dde ";
-        } else if ("xlsx".equals(ext.toLowerCase()) || "xls".equals(ext.toLowerCase())) {
+        } else if (
+                "xlsx".equals(ext.toLowerCase()) || 
+                "xls".equals(ext.toLowerCase()) ||
+                "xlsm".equals(ext.toLowerCase()) 
+        ) {
             options = " /x ";
-        } else if ("pptx".equals(ext.toLowerCase()) || "ppt".equals(ext.toLowerCase())) {
+        } else if (
+                "pptx".equals(ext.toLowerCase()) || 
+                "ppt".equals(ext.toLowerCase()) ||
+                "pptm".equals(ext.toLowerCase()) ||
+                "ppsm".equals(ext.toLowerCase()) 
+        ) {
             options = " ";
         } else {
             options = " -env:UserInstallation=$SYSUSERCONFIG ";
