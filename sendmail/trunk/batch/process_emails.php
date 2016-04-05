@@ -61,6 +61,8 @@ while ($state <> 'END') {
 					
 	            $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
 					. $userInfo['lastname'].' <'.$email->sender_email.'> ');
+
+	            $GLOBALS['mailer']->setReplyTo($email->sender_email);
 			} else {
 				$mailsEntities = $sendmail_tools->getAttachedEntitiesMails();
 				$entityShortLabel = substr($mailsEntities[$email->sender_email], 0, strrpos($mailsEntities[$email->sender_email], "("));
@@ -68,6 +70,8 @@ while ($state <> 'END') {
 					. ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '>', 'INFO');
 					
 	            $GLOBALS['mailer']->setFrom($entityShortLabel . ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '> ');				
+
+	            $GLOBALS['mailer']->setReplyTo($sendmail_tools->explodeSenderEmail($email->sender_email));
 			}
 
 			//
