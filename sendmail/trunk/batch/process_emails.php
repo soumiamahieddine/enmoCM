@@ -77,6 +77,7 @@ while ($state <> 'END') {
 			
 			//--> Set the return path
 			$GLOBALS['mailer']->setReturnPath($userInfo['mail']);
+			$GLOBALS['mailer']->setReplyTo($userInfo['mail']);
 			//--> To
 			$to = array();
 			$to = explode(',', $email->to_list);
