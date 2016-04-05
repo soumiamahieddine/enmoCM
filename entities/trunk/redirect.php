@@ -14,9 +14,8 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
     $ent = new entity();
     $entity_ctrl = new EntityControler();
     $services = array();
-    $cr7 = new chrono();
-
     $servicesCompare = array();
+    $cr7 = new chrono();
     $db = new Database();
     $labelAction = '';
     if ($id_action <> '') {
@@ -58,27 +57,44 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
     }
     $values_str = '';
     if(empty($_SESSION['stockCheckbox'])){
-    for($i=0; $i < count($values);$i++)
+
+   		for($i=0; $i < count($values);$i++)
         {
-            $values_str .= $values[$i].', ';
+        	if(_ID_TO_DISPAY == 'res_id'){
+            	$values_str .= $values[$i].', ';
+
+		    } else if (_ID_TO_DISPAY == 'chrono_number'){
+				$values_str .= $values[$i].', ';
+				$chrono_number = $cr7->get_chrono_number($values[$i], 'res_view_letterbox');
+				$chrono_number_str .= $chrono_number.', ';
+				$values_str_chrn .= $chrono_number_str;
+		    }
         }
     }else{ 
 
-    for($i=0; $i < count($_SESSION['stockCheckbox']);$i++)
+    	for($i=0; $i < count($_SESSION['stockCheckbox']);$i++)
         {
-            $values_str .= $_SESSION['stockCheckbox'][$i].', ';
+            if(_ID_TO_DISPAY == 'res_id'){
+            	$values_str .= $_SESSION['stockCheckbox'][$i].', ';
+
+		    } else if (_ID_TO_DISPAY == 'chrono_number'){
+		    	$values_str .= $_SESSION['stockCheckbox'][$i].', ';
+
+		         $chrono_number = $cr7->get_chrono_number($_SESSION['stockCheckbox'][$i], 'res_view_letterbox');
+		         $chrono_number_str .= $chrono_number.', ';
+		         $values_str_chrn .= $chrono_number_str;
+		    }
         }
     }
-    $values_str = preg_replace('/, $/', '', $values_str);
 
-	if(_ID_TO_DISPAY == 'res_id'){
+	$values_str = preg_replace('/, $/', '', $values_str);
+
+    if(_ID_TO_DISPAY == 'res_id'){
 		$frm_str .= $values_str;
-	} else if (_ID_TO_DISPAY == 'chrono_number'){
-    	$chrono_number = $cr7->get_chrono_number($values_str, 'res_view_letterbox');
-    	$frm_str .= $chrono_number;
-	}
-    
-
+    } else if (_ID_TO_DISPAY == 'chrono_number'){
+    	$values_str_chrn = preg_replace('/, $/', '', $values_str_chrn);
+		$frm_str .= $values_str_chrn;
+    }
     $frm_str .= '</h2><br/><br/>';
     require 'modules/templates/class/templates_controler.php';
     $templatesControler = new templates_controler();
