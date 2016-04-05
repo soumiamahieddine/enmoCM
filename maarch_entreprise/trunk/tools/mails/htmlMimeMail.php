@@ -301,6 +301,15 @@ class htmlMimeMail
     }
 
     /**
+    * Accessor to set the reply-to
+    */
+    function setReplyTo($replyTo)
+    {
+        $this->headers['Reply-To'] = $replyTo;
+    }
+    
+
+    /**
     * Accessor to add a Cc: header
     */
     function setCc($cc)
