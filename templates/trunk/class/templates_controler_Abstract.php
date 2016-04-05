@@ -171,12 +171,15 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         $sec = new SecurityControler();
         $error = '';
 
-        $template->template_label = $f->protect_string_db(
-            $f->wash($template->template_label, 'no', _TEMPLATE_LABEL.' ', 'yes', 0, 255)
-        );
-        $template->template_comment = $f->protect_string_db(
-            $f->wash($template->template_comment, 'no', _TEMPLATE_COMMENT.' ', 'yes', 0, 255)
-        );
+        // $template->template_label = $f->protect_string_db(
+        //     $f->wash($template->template_label, 'no', _TEMPLATE_LABEL.' ', 'yes', 0, 255)
+        // );
+        // $template->template_comment = $f->protect_string_db(
+        //     $f->wash($template->template_comment, 'no', _TEMPLATE_COMMENT.' ', 'yes', 0, 255)
+        // );
+
+        $template->template_label = $f->wash($template->template_label, 'no', _TEMPLATE_LABEL.' ', 'yes', 0, 255);
+        $template->template_comment = $f->wash($template->template_comment, 'no', _TEMPLATE_COMMENT.' ', 'yes', 0, 255);
         
         $template->template_content = str_replace(';', '###', $template->template_content);        
         $template->template_content = str_replace('--', '___', $template->template_content); 
