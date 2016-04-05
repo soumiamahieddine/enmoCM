@@ -1382,7 +1382,7 @@ abstract class entity_Abstract extends dbquery
         {
             $nb_templates = 0;
         }
-        if($admin->is_module_loaded('baskets'))
+        if($admin->is_module_loaded('basket'))
         {
             $nb_listmodels = 0;
             $nb_listinstances = 0;
@@ -1432,7 +1432,7 @@ abstract class entity_Abstract extends dbquery
                     $nb_templates = $stmt->rowCount();
                 }
             }
-            if($admin->is_module_loaded('baskets'))
+            if($admin->is_module_loaded('basket'))
             {
                 $stmt = $db->query("select system_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where entity_id = ?",array($s_id));
                 if($stmt->rowCount() > 0)
@@ -1478,7 +1478,7 @@ abstract class entity_Abstract extends dbquery
                     echo "<br> - ".$nb_docs." "._DOC_IN_THE_DEPARTMENT;
                     echo "<br> - ".$nb_users." "._USERS_LINKED_TO;
 
-                    if($admin->is_module_loaded('baskets'))
+                    if($admin->is_module_loaded('basket'))
                     {
                         echo "<br> - ".$nb_redirect_baskets." "._BASKET_REDIRECTIONS_OCCURS_LINKED_TO;
                         echo "<br> - ".$nb_listinstances." "._LISTISTANCES_OCCURS_LINKED_TO;

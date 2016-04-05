@@ -95,6 +95,14 @@ if(isset($_REQUEST['valid']))
                 //$db->show();
             }
         }
+        $stmt = $db->query('SELECT user_id FROM ' . ENT_USERS_ENTITIES . ' WHERE entity_id = ? AND primary_entity = ? AND user_id IN (SELECT user_id FROM users_entities WHERE entity_id = ?)',
+            [$s_id, 'Y', $_REQUEST['doc_entity_id']]);
+
+        while($doubleUser = $stmt->fetchObject())
+        {
+            $db->query('DELETE FROM ' . ENT_USERS_ENTITIES . ' WHERE user_id = ? AND entity_id = ?', [$doubleUser->user_id, $_REQUEST['doc_entity_id']]);
+        }
+
         $stmt = $db->query("UPDATE ".ENT_USERS_ENTITIES." SET entity_id = ?"
             ." WHERE entity_id = ? AND user_id NOT IN (SELECT DISTINCT(user_id) FROM " . ENT_USERS_ENTITIES 
             . " WHERE entity_id = ?)", array($_REQUEST['doc_entity_id'],$s_id,$_REQUEST['doc_entity_id']));
@@ -131,7 +139,7 @@ if(isset($_REQUEST['valid']))
         {
             $entity_id_up = $_REQUEST['doc_entity_id'];
         }
-        if($admin->is_module_loaded('baskets'))
+        if($admin->is_module_loaded('basket'))
         {
             //groupbasket_redirect
             $stmt = $db->query("UPDATE ".$_SESSION['tablename']['ent_groupbasket_redirect']." SET entity_id = ? WHERE entity_id = ?",array($entity_id_up,$s_id));
