@@ -86,7 +86,7 @@ function setTransmissionData($nb, $storeResult) {
     ];
     $transmissionData[] = [
         'column' => 'format',
-        'value' => $_SESSION['upfileTransmission'][$nb]['format'] ,
+        'value' => $_SESSION['upfileTransmission'][$nb]['format'],
         'type' => 'string'
     ];
     $transmissionData[] = [
@@ -158,14 +158,6 @@ function setTransmissionData($nb, $storeResult) {
         ];
     }
 
-//    if (!empty($_REQUEST["transmissionExpectedDate{$nb}"])) {
-//        $transmissionData[] = [
-//            'column' => 'expected_return',
-//            'value' => $_REQUEST["transmissionExpectedDate{$nb}"],
-//            'type' => 'string'
-//        ];
-//    }
-
     if (!empty($_REQUEST["transmissionContactidAttach{$nb}"])) {
         $transmissionData[] = [
             'column' => 'dest_contact_id',
@@ -183,6 +175,79 @@ function setTransmissionData($nb, $storeResult) {
     }
 
     return $transmissionData;
+}
+
+function setTransmissionDataPdf($nb, $storeResult) {
+    $transmissionDataPdf = [];
+
+    $_SESSION['new_id'] = $id;
+    $file    = $_SESSION['config']['tmppath'] . $_SESSION['upfileTransmission'][$nb]['fileNamePdfOnTmp'];
+    $newfile = $storeResult['path_template'] . str_replace('#',"/",$storeResult['destination_dir']) . substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )) . '.pdf';
+
+    copy($file, $newfile);
+
+    $transmissionDataPdf[] = [
+        'column' => 'typist',
+        'value' => $_SESSION['user']['UserId'],
+        'type' => 'string'
+    ];
+    $transmissionDataPdf[] = [
+        'column' => 'format',
+        'value' => 'pdf',
+        'type' => 'string'
+    ];
+    $transmissionDataPdf[] = [
+        'column' => 'docserver_id',
+        'value' => $storeResult['docserver_id'],
+        'type' => 'string'
+    ];
+    $transmissionDataPdf[] = [
+        'column' => 'status',
+        'value' => 'TRA',
+        'type' => 'string'
+    ];
+    $transmissionDataPdf[] = [
+        'column' => 'offset_doc',
+        'value' => ' ',
+        'type' => 'string'
+    ];
+    $transmissionDataPdf[] = [
+        'column' => 'logical_adr',
+        'value' => ' ',
+        'type' => 'string'
+    ];
+    $transmissionDataPdf[] = [
+        'column' => 'title',
+        'value' => str_replace("&#039;", "'", $_REQUEST["transmissionTitle{$nb}"]),
+        'type' => 'string'
+    ];
+    $transmissionDataPdf[] = [
+        'column' => 'attachment_type',
+        'value' => 'converted_pdf',
+        'type' => 'string'
+    ];
+    $transmissionDataPdf[] = [
+        'column' => 'coll_id',
+        'value' => $_SESSION['collection_id_choice'],
+        'type' => 'string'
+    ];
+    $transmissionDataPdf[] = [
+        'column' => 'res_id_master',
+        'value' => $_SESSION['doc_id'],
+        'type' => 'integer'
+    ];
+    $transmissionDataPdf[] = [
+        'column' => 'type_id',
+        'value' => 0,
+        'type' => 'int'
+    ];
+    $transmissionDataPdf[] = [
+        'column' => 'relation',
+        'value' => 1,
+        'type' => 'int'
+    ];
+
+    return $transmissionDataPdf;
 }
 
 if (isset($_POST['add']) && $_POST['add']) {
@@ -467,6 +532,18 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 setTransmissionData($nb, $storeResultTr),
                                 $_SESSION['config']['databasetype']
                             );
+
+                            if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfileTransmission'][$nb]['fileNamePdfOnTmp'] != '') {
+                                $resAttach->load_into_db(
+                                    RES_ATTACHMENTS_TABLE,
+                                    $storeResultTr['destination_dir'],
+                                    substr($storeResultTr['file_destination_name'], 0, strrpos($storeResultTr['file_destination_name'], "." )) . '.pdf' ,
+                                    $storeResultTr['path_template'],
+                                    $storeResultTr['docserver_id'],
+                                    setTransmissionDataPdf($nb, $storeResultTr),
+                                    $_SESSION['config']['databasetype']
+                                );
+                            }
                         }
                         unset($_SESSION['transmissionContacts']);
                         
