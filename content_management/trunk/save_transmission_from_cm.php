@@ -39,6 +39,6 @@ $_SESSION['upfileTransmission'][$i]['upAttachment']         = true;
 $_SESSION['m_admin']['templates']['applet']                 = true;
 
 
-//if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true){
-//    $_SESSION['upfile']['fileNamePdfOnTmp'] = $tmpFilePdfName;
-//}
+if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true) {
+    $_SESSION['upfileTransmission'][$i]['fileNamePdfOnTmp'] = $tmpFilePdfName;
+}

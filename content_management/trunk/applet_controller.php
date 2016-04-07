@@ -249,7 +249,7 @@ if (!empty($_REQUEST['action'])
             fclose($inF);
 			
 			//Récupération de la version pdf du document
-			if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true" && ($objectType == 'attachmentFromTemplate' || $objectType == 'attachment' || $objectType == 'attachmentUpVersion' || $objectType == 'attachmentVersion' || $objectType == 'outgoingMail' || $objectType == 'resourceEdit') && isset($_REQUEST['pdfContent'])){
+			if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true" && ($objectType == 'attachmentFromTemplate' || $objectType == 'attachment' || $objectType == 'attachmentUpVersion' || $objectType == 'attachmentVersion' || $objectType == 'outgoingMail' || $objectType == 'resourceEdit' || $objectType == 'transmission') && isset($_REQUEST['pdfContent'])){
 				$pdfEncodedContent = str_replace(
 					' ',
 					'+',
