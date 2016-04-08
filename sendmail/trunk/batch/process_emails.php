@@ -41,6 +41,7 @@ while ($state <> 'END') {
     case 'SEND_AN_EMAIL' :
 		if($currentEmail < $totalEmailsToProcess) {
 			$email = $GLOBALS['emails'][$currentEmail];
+			//var_dump($email);exit;
 			$GLOBALS['mailer'] = new htmlMimeMail();
 			$GLOBALS['mailer']->setSMTPParams(
 				$host = (string)$mailerParams->smtp_host, 
@@ -50,38 +51,57 @@ while ($state <> 'END') {
 				$user = (string)$mailerParams->smtp_user,
 				$pass = (string)$mailerParams->smtp_password
 				);
-		//Composing email	
+			$mailfrom_generic = (string)$mailerParams->mailfrom;
+			
+			//Composing email	
 			//--> Set from
 			$userInfo = $users->get_user($email->user_id);
-			
-			if ($userInfo->mail == $email->sender_email) {
-				$GLOBALS['logger']->write("Sending e-mail from : " 
-					. '"' . $userInfo['firstname'].' ' .$userInfo['lastname'] 
-					. '" <'.$email->sender_email.'>', 'INFO');
-					
-	            $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
-					. $userInfo['lastname'].' <'.$email->sender_email.'> ');
-
-	            $GLOBALS['mailer']->setReplyTo($email->sender_email);
+			//var_dump($userInfo);
+			//echo 'userInfo : ' . $userInfo['mail'] . '==' . ' sender_email : ' . $email->sender_email . PHP_EOL;
+			if ($userInfo['mail'] == $email->sender_email) {
+				if (!empty($mailfrom_generic)) {
+					$GLOBALS['logger']->write("Sending e-mail from : " 
+						. '"' . $userInfo['firstname'].' ' .$userInfo['lastname'] 
+						. '" <'.$mailfrom_generic.'>', 'INFO');
+		            $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
+						. $userInfo['lastname'].' <'.$mailfrom_generic.'> ');
+				} else {
+					$GLOBALS['logger']->write("Sending e-mail from : " 
+						. '"' . $userInfo['firstname'].' ' .$userInfo['lastname'] 
+						. '" <'.$email->sender_email.'>', 'INFO');
+		            $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
+						. $userInfo['lastname'].' <'.$email->sender_email.'> ');
+				}
+				$GLOBALS['mailer']->setReplyTo($email->sender_email);
+				
 			} else {
-				$mailsEntities = $sendmail_tools->getAttachedEntitiesMails();
-				$entityShortLabel = substr($mailsEntities[$email->sender_email], 0, strrpos($mailsEntities[$email->sender_email], "("));
-				$GLOBALS['logger']->write("Sending e-mail from : " . $entityShortLabel
-					. ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '>', 'INFO');
-					
-	            $GLOBALS['mailer']->setFrom($entityShortLabel . ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '> ');				
-
-	            $GLOBALS['mailer']->setReplyTo($sendmail_tools->explodeSenderEmail($email->sender_email));
+				if (!empty($mailfrom_generic)) {
+					$mailsEntities = $sendmail_tools->getAttachedEntitiesMails();
+					$entityShortLabel = substr($mailsEntities[$email->sender_email], 0, strrpos($mailsEntities[$email->sender_email], "("));
+					$GLOBALS['logger']->write("Sending e-mail from : " . $entityShortLabel
+						. ' <' . $mailfrom_generic . '>', 'INFO');
+						
+		            $GLOBALS['mailer']->setFrom($entityShortLabel . ' <' . $mailfrom_generic. '> ');				
+				} else {
+					$mailsEntities = $sendmail_tools->getAttachedEntitiesMails();
+					$entityShortLabel = substr($mailsEntities[$email->sender_email], 0, strrpos($mailsEntities[$email->sender_email], "("));
+					$GLOBALS['logger']->write("Sending e-mail from : " . $entityShortLabel
+						. ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '>', 'INFO');
+		            $GLOBALS['mailer']->setFrom($entityShortLabel . ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '> ');				
+				}
+				$GLOBALS['mailer']->setReplyTo($sendmail_tools->explodeSenderEmail($email->sender_email));
 			}
-
-			//
+			
 			$GLOBALS['logger']->write("Sending e-mail to : " . $email->to_list, 'INFO');
 			if (!empty($email->cc_list))$GLOBALS['logger']->write("Copy e-mail to : " . $email->cc_list, 'INFO');
 			if (!empty($email->cci_list))$GLOBALS['logger']->write("Copy invisible e-mail to : " . $email->cci_list, 'INFO');
 			
 			//--> Set the return path
 			$GLOBALS['mailer']->setReturnPath($userInfo['mail']);
-			$GLOBALS['mailer']->setReplyTo($userInfo['mail']);
+			/*$GLOBALS['mailer']->setReturnPath(
+				$userInfo['firstname'] . ' ' .  $userInfo['lastname'] . ' <' . $mailfrom_generic . '> '
+			);*/
+			
 			//--> To
 			$to = array();
 			$to = explode(',', $email->to_list);
