@@ -33,9 +33,11 @@ if (!empty($_POST['size']) && isset($_POST['contactId'])) {
         if (!isset($_SESSION['transmissionContacts']))
             $_SESSION['transmissionContacts'] = [];
 
+        foreach($contact as $key => $value) {
+            $_SESSION['transmissionContacts'][$nb][$key] = $value;
+        }
         $_SESSION['transmissionContacts'][$nb]['firstname'] = $contact->contact_firstname == '' ? $contact->firstname : $contact->contact_firstname;
         $_SESSION['transmissionContacts'][$nb]['lastname']  = $contact->contact_lastname == '' ? $contact->lastname : $contact->contact_lastname;
-        $_SESSION['transmissionContacts'][$nb]['society']   = $contact->society;
         $_SESSION['transmissionContacts'][$nb]['title']     = $contact->contact_title == '' ? $contact->title : $contact->contact_title;
     }
 }
