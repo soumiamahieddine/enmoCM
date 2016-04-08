@@ -54,8 +54,10 @@ if (empty($docserver)) {
 			$db = new Database();
 			writeLogIndex("Relation = ".$_SESSION['visa']['repSignRel']);
 			if ($_SESSION['visa']['repSignRel'] > 1) {
+                $target_table = 'res_version_attachments';
                 $stmt = $db->query("UPDATE res_version_attachments set status = 'SIGN' WHERE res_id = ?",array($_SESSION['visa']['repSignId']));
             } else {
+                $target_table = 'res_attachments';
 				$stmt = $db->query("UPDATE res_attachments set status = 'SIGN' WHERE res_id = ?",array($_SESSION['visa']['repSignId']));
             }
 			unset($_SESSION['visa']['repSignRel']);
@@ -169,6 +171,15 @@ if (empty($docserver)) {
                 array(
                     'column' => 'attachment_type',
                     'value' => 'signed_response',
+                    'type' => 'string',
+                )
+            );
+
+            array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'origin',
+                    'value' => $_REQUEST['id'].','.$target_table,
                     'type' => 'string',
                 )
             );
