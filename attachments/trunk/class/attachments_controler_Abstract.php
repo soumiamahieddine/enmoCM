@@ -270,11 +270,16 @@ abstract class attachments_controler_Abstract
             $docserver = $lineDoc->path_template;
             $file = $docserver . $path . $filename;
             $file = str_replace("#", DIRECTORY_SEPARATOR, $file);
+            $origin = explode(',', $line->origin);
+            $target_table_origin = $origin[1];
+            $res_id_origin = $origin[0];
 			
 			$file_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION),'pdf',$file);
 			$infos['pathfile'] = $file;
 			$infos['path'] = $path;
 			$infos['pathfile_pdf'] = $file_pdf;
+            $infos['res_id_origin'] = $res_id_origin;
+            $infos['target_table_origin'] = $target_table_origin;
 			$infos['status'] = $line->status;
 			$infos['attachment_type'] = $line->attachment_type;
 			$infos['creation_date'] = $line->creation_date;
@@ -309,75 +314,27 @@ abstract class attachments_controler_Abstract
         $infos = $this->getAttachmentInfos($resId);
         $db2 = new Database();
         $result = 0;
-        $stmt2 = $db2->query(
-            "SELECT res_id
-                FROM res_view_attachments 
-                WHERE res_id_master = ? and identifier = ? and (identifier <> '' and identifier is not null) "
-                . "and attachment_type <> 'converted_pdf' and attachment_type <> 'signed_response' and res_id <> ? "
-                . "ORDER BY relation desc", 
-                array(
-                    $infos['res_id_master'], 
-                    $infos['identifier'],
-                    $resId
-                )
-        );
-        $line = $stmt2->fetchObject();
-        if ($line->res_id != 0) $result = $line->res_id;
+        //var_dump($infos);
+        if($infos['res_id_origin'] != ''){
+            if($infos['target_table_origin']=='res_attachments'){
+                $res = 'res_id';
+            }else{
+                $res = 'res_id_version';
+            }
+            $stmt2 = $db2->query(
+                "SELECT res_id, res_id_version, relation
+                    FROM res_view_attachments 
+                    WHERE ".$res." = ? "
+                    . "ORDER BY relation desc", 
+                    array(
+                        $infos['res_id_origin']
+                    )
+            );
+            $line = $stmt2->fetchObject();
+            
+            if ($line->res_id != 0 || $line->res_id_version != 0) $result = $line;
+        }
+        
         return $result;
     }
-
-    /**
-     * Remove temporary attachment file on docserver
-     * @param   bigint $resIdAttachment id of the attachment resource
-     * @param   bigint $resIdMaster id of the master document
-     * @param   string $userId user id who created the temporary attachment
-     * @return  boolean if ok, return true.
-     */
-    public function removeTemporaryAttachmentOnDocserver(
-        $resIdAttachment,
-        $resIdMaster,
-        $userId
-    ) {
-
-        $db = new Database();
-        $stmt = $db->query(
-            "SELECT docserver_id, path, filename, fingerprint
-                FROM res_view_attachments 
-                WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? AND status = 'TMP' AND typist = ? ORDER BY relation desc", 
-                array($resIdAttachment, $resIdAttachment, $resIdMaster, $userId)
-        );
-
-        if ($stmt->rowCount() == 0) {
-            $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS;
-            return false;
-        } else {
-            $line           = $stmt->fetchObject();
-            $docserverOld   = $line->docserver_id;
-            $pathOld        = $line->path;
-            $filenameOld    = $line->filename;
-            $fingerprintOld = $line->fingerprint;
-
-            $stmt = $db->query("SELECT path_template FROM " . _DOCSERVERS_TABLE_NAME . " WHERE docserver_id = ?", array($docserverOld) );
-            $lineDoc   = $stmt->fetchObject();
-            $docserver = $lineDoc->path_template;
-            $file      = $docserver . $pathOld . $filenameOld;
-            $file      = str_replace("#", DIRECTORY_SEPARATOR, $file);
-
-            require_once 'core/class/docservers_controler.php';
-            require_once 'core/class/docserver_types_controler.php';
-            $docserverControler = new docservers_controler();
-            $docserverTypeControler = new docserver_types_controler();
-
-            require_once 'core/docservers_tools.php';
-
-            $docserver           = $docserverControler->get($docserverOld);
-            $docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
-            $fingerprintOldFile  = Ds_doFingerprint($file, $docserverTypeObject->fingerprint_mode);
-            if ($fingerprintOld == $fingerprintOldFile) {
-                unlink($file);
-            }
-            return true;
-        }
-    }
-
 }
