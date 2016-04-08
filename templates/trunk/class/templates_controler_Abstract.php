@@ -571,13 +571,11 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
     public function getAllTemplatesForProcess($entityId) 
     {
         $db = new Database();
-        $stmt = $db->query(
-            "select * from " 
-            . _TEMPLATES_TABLE_NAME . " t, " 
-            . _TEMPLATES_ASSOCIATION_TABLE_NAME . " ta where "
-            . "t.template_id = ta.template_id and ta.what = 'destination' and ta.value_field = ? ", array($entityId)
+        $stmt = $db->query('select * from ' . _TEMPLATES_TABLE_NAME . ' t, ' . _TEMPLATES_ASSOCIATION_TABLE_NAME . ' ta '
+                . 'where t.template_id = ta.template_id and ta.what = ? and ta.value_field = ? ORDER BY t.template_label',
+                ['destination', $entityId]
         );
-        $templates = array();
+        $templates = [];
         while ($res = $stmt->fetchObject()) {
             array_push(
                 $templates, array(
