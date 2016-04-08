@@ -33,20 +33,25 @@ $ac = new attachments_controler();
 
 $db = new Database();
 
+$info_doc = $ac->getAttachmentInfos($_REQUEST['id']);
+
 if ($_REQUEST['relation'] == 1) {
     $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($_REQUEST['id']) );
 	$pdf_id = $ac->getCorrespondingPdf($_REQUEST['id']);
 	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id));
 	$document = $ac->getCorrespondingDocument($_REQUEST['id']);
-
-	if($document->relation == 1){
+	$document_relation = $document->relation;
+	if($document_relation == 1){
 		$target_table = "res_attachments";
 		$document_id = $document->res_id;
+		$is_version = 0;
 
 	}else{
 		$target_table = "res_version_attachments";
 		$document_id = $document->res_id_version;
+		$is_version = 1;
 	}
+
 	if (isset($document_id) && $document_id != 0) $stmt = $db->query("UPDATE " . $target_table . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
 	
 } else {
@@ -59,7 +64,8 @@ if ($_REQUEST['relation'] == 1) {
 	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id));
 	$document = $ac->getCorrespondingDocument($_REQUEST['id']);
 	$document_id = $document->res_id;
-	if($document->relation == 1){
+	$document_relation = $document->relation;
+	if($document_relation == 1){
 		$target_table = "res_attachments";
 		$document_id = $document->res_id;
 
@@ -67,6 +73,7 @@ if ($_REQUEST['relation'] == 1) {
 		$target_table = "res_version_attachments";
 		$document_id = $document->res_id_version;
 	}
+
 	if (isset($document_id) && $document_id != 0) $stmt = $db->query("UPDATE " . $target_table . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
 }
 
@@ -138,14 +145,36 @@ if ($stmt->rowCount() > 0) {
 		
 		var res_id_doc = <?php functions::xecho($_REQUEST['id']); ?>;
 		var num_rep = get_num_rep(res_id_doc);
+		var document_type = '<?php functions::xecho($info_doc['attachment_type']); ?>';
+		var is_version = '<?php functions::xecho($is_version); ?>';
+
 		
 		if(window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc)) {
 			var tab = window.parent.top.document.getElementById('tabricatorRight');
-			tab.removeChild(window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc));
+			if(document_type == 'signed_response'){
+				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).innerHTML = window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).textContent;
+				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).setAttribute('onclick','updateFunctionModifRep(\'<?php echo $document_id; ?>\', '+num_rep+', '+is_version+')');
+				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).id = 'ans_'+num_rep+'_<?php echo $document_id; ?>';
+
+			}else{
+				tab.removeChild(window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc));
+			}
+
 		}
 		if(window.parent.top.document.getElementById('content_'+num_rep+'_'+res_id_doc)) {
 			var tab = window.parent.top.document.getElementById('tabricatorRight');
-			tab.removeChild(window.parent.top.document.getElementById('content_'+num_rep+'_'+res_id_doc));
+			
+			if(document_type == 'signed_response'){
+				window.parent.top.document.getElementById('viewframevalidRep'+num_rep+'_'+res_id_doc).src = '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=<?php echo $resIdMaster; ?>&id=<?php echo $document_id; ?>';
+
+				window.parent.top.document.getElementById('content_'+num_rep+'_'+res_id_doc).id = 'content_'+num_rep+'_<?php echo $document_id; ?>';
+
+				window.parent.top.document.getElementById('viewframevalidRep'+num_rep+'_'+res_id_doc).id = 'viewframevalidRep'+num_rep+'_<?php echo $document_id; ?>';
+
+			}else{
+				tab.removeChild(window.parent.top.document.getElementById('content_'+num_rep+'_'+res_id_doc));
+			}
+			
 		}
 		
 	}
