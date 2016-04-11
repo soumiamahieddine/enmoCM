@@ -1311,9 +1311,11 @@ class Install extends functions
             return true;
         }elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 
-            $res = "cd ".realpath('.')."\modules\full_text\\";
-            $res .= '"C:\xampp\php\php.exe" '.realpath('.').'\modules\full_text\lucene_full_text_engine.php  '.realpath('.')."/custom/cs_".$_SESSION['config']['databasename'].'\modules\full_text\xml\config_batch_letterbox.xml';
-            $res .= "c:";
+            $res = "cd ".realpath('.')."\modules\\full_text\\";
+			$res .= "\n";
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\full_text\lucene_full_text_engine.php  '.realpath('.')."/custom/cs_".$_SESSION['config']['databasename'].'\modules\full_text\xml\config_batch_letterbox.xml';
+            $res .= "\n";
+
 
             $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/scripts/launch_fulltext.bat", "w+");
             if (!$fp) {
@@ -1370,20 +1372,14 @@ class Install extends functions
     {
         
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			
+			$res = "cd ".realpath('.')."\modules\\thumbnails\\"; 
+			$res .= "\n";
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\thumbnails\create_tnl.php  '.realpath('.')."\custom\cs_".$_SESSION['config']['databasename'].'\modules\\thumbnails\xml\config_batch_letterbox.xml';
+            $res .= "\n";
 
-            $res = 'cd "'.realpath('.');
-            $res .= "\n";
-            $res .= "cd ../../";
-            $res .= "\n";
-            $res .= "cd php";
-            $res .= "\n";
-            $res .= "\"php.exe\" ".realpath('.')."\modules\\thumbnails\create_tnl.php  ".realpath('.')."\custom\cs_".$_SESSION['config']['databasename']."\modules\\thumbnails\xml\config_batch_letterbox.xml";
-            $res .= "\n";
-            $res .= "c:";
-            $res .= "\n";
-            $res .= "pause";
 
-                $fp = @fopen(realpath('.')."\custom\cs_".$_SESSION['config']['databasename']."\modules\\thumbnails\scripts\launch_batch_thumbnails.sh", "w+");
+                $fp = @fopen(realpath('.')."\custom\cs_".$_SESSION['config']['databasename']."\modules\\thumbnails\scripts\launch_batch_thumbnails.bat", "w+");
             if (!$fp) {
                 return false;
                 exit;
@@ -1425,21 +1421,17 @@ class Install extends functions
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 
-            $res = 'cd "'.realpath('.');
+            $res = "cd ".realpath('.')."\modules\\notifications\\";
             $res .= "\n";
-            $res .= "cd ../../";
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\notifications\batch\process_event_stack.php -c '.realpath('.')."\custom/cs_".$_SESSION['config']['databasename'].'\modules\\notifications\batch\config\config.xml\ -n NCT';
             $res .= "\n";
-            $res .= "cd php";
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\notifications\batch\process_event_stack.php -c '.realpath('.')."\custom/cs_".$_SESSION['config']['databasename'].'\modules\\notifications\batch\config\config.xml\ -n NCC';            
+			$res .= "\n";
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\notifications\batch\process_event_stack.php -c '.realpath('.')."\custom/cs_".$_SESSION['config']['databasename'].'\modules\\notifications\batch\config\config.xml\ -n ANC';
             $res .= "\n";
-            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_event_stack.php\" -c \"".realpath('.')."\custom/cs_".$_SESSION['config']['databasename']."\modules\\notifications\batch\config\config.xml\" -n NCT";
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\notifications\batch\process_event_stack.php -c '.realpath('.')."\custom/cs_".$_SESSION['config']['databasename'].'\modules\\notifications\batch\config\config.xml\ -n AND';
             $res .= "\n";
-            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_event_stack.php\" -c \"".realpath('.')."\custom/cs_".$_SESSION['config']['databasename']."\modules\\notifications\batch\config\config.xml\" -n NCC";
-            $res .= "\n";
-            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_event_stack.php\" -c \"".realpath('.')."\custom/cs_".$_SESSION['config']['databasename']."\modules\\notifications\batch\config\config.xml\" -n ANC";
-            $res .= "\n";
-            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_event_stack.php\" -c \"".realpath('.')."\custom/cs_".$_SESSION['config']['databasename']."\modules\\notifications\batch\config\config.xml\" -n AND";
-            $res .= "\n";
-            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_event_stack.php\" -c \"".realpath('.')."\custom/cs_".$_SESSION['config']['databasename']."\modules\\notifications\batch\config\config.xml\" -n RED";
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\notifications\batch\process_event_stack.php -c '.realpath('.')."\custom/cs_".$_SESSION['config']['databasename'].'\modules\\notifications\batch\config\config.xml\ -n RED';
 
                 $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/notifications/batch/scripts/nct-ncc-and-anc.bat", "w+");
             if (!$fp) {
@@ -1495,16 +1487,11 @@ class Install extends functions
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 
-            $res = 'cd "'.realpath('.');
+			$res = "cd ".realpath('.')."\modules\\notifications\\";
             $res .= "\n";
-            $res .= "cd ../../";
-            $res .= "\n";
-            $res .= "cd php";
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\notifications\batch\process_email_stack.php -c '.realpath('.')."\custom\cs_".$_SESSION['config']['databasename'].'\modules\\notifications\batch\config\config.xml';
             $res .= "\n";
 
-            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_email_stack.php\" -c \"".realpath('.')."\custom\cs_".$_SESSION['config']['databasename']."\modules\\notifications\batch\config\config.xml";
-            $res .= "\n";
-            $res .= "PAUSE";
                 $fp = fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/notifications/batch/scripts/sendmail.bat", "w+");
             if (!$fp) {
                 //var_dump('FALSE');
@@ -1551,13 +1538,10 @@ class Install extends functions
     private function setScriptSendmailSendmailSh()
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $res = "cd ".realpath('.');
+			
+            $res = "cd ".realpath('.')."\modules\\sendmail\\";
             $res .= "\n";
-            $res .= "cd ../../";
-            $res .= "\n";
-            $res .= "cd php";
-            $res .= "\n";
-            $res .= "\"php.exe\" \"".realpath('.')."\modules\sendmail\batch\process_emails.php\" -c \"".realpath('.')."\custom/cs_".$_SESSION['config']['databasename']."\modules\sendmail\batch\config\config.xml\"";
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\sendmail\batch\process_emails.php -c '.realpath('.')."\custom/cs_".$_SESSION['config']['databasename'].'\modules\sendmail\batch\config\config.xml';
             
             $fp = fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/sendmail/batch/scripts/sendmail.bat", "w+");
             if (!$fp) {
