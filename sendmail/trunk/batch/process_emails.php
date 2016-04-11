@@ -65,6 +65,8 @@ while ($state <> 'END') {
 						. '" <'.$mailfrom_generic.'>', 'INFO');
 		            $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
 						. $userInfo['lastname'].' <'.$mailfrom_generic.'> ');
+		            $email->email_body = 'Courriel envoyé par : ' . $userInfo['firstname'].' '
+						. $userInfo['lastname'] . ' ' . $email->sender_email . ' ' .  '.<br/><br/>' . $email->email_body;
 				} else {
 					$GLOBALS['logger']->write("Sending e-mail from : " 
 						. '"' . $userInfo['firstname'].' ' .$userInfo['lastname'] 
@@ -81,17 +83,20 @@ while ($state <> 'END') {
 					$GLOBALS['logger']->write("Sending e-mail from : " . $entityShortLabel
 						. ' <' . $mailfrom_generic . '>', 'INFO');
 						
-		            $GLOBALS['mailer']->setFrom($entityShortLabel . ' <' . $mailfrom_generic. '> ');				
+		            $GLOBALS['mailer']->setFrom($entityShortLabel . ' <' . $mailfrom_generic. '> ');
+		            $email->email_body = 'Courriel envoyé par : ' . $entityShortLabel . ' ' . $sendmail_tools->explodeSenderEmail($email->sender_email) . ' ' .  '.<br/><br/>' . $email->email_body;
 				} else {
 					$mailsEntities = $sendmail_tools->getAttachedEntitiesMails();
 					$entityShortLabel = substr($mailsEntities[$email->sender_email], 0, strrpos($mailsEntities[$email->sender_email], "("));
 					$GLOBALS['logger']->write("Sending e-mail from : " . $entityShortLabel
 						. ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '>', 'INFO');
-		            $GLOBALS['mailer']->setFrom($entityShortLabel . ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '> ');				
+		            $GLOBALS['mailer']->setFrom($entityShortLabel . ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '> ');
 				}
 				$GLOBALS['mailer']->setReplyTo($sendmail_tools->explodeSenderEmail($email->sender_email));
 			}
-			
+
+			//echo $email->email_body . PHP_EOL;exit;
+
 			$GLOBALS['logger']->write("Sending e-mail to : " . $email->to_list, 'INFO');
 			if (!empty($email->cc_list))$GLOBALS['logger']->write("Copy e-mail to : " . $email->cc_list, 'INFO');
 			if (!empty($email->cci_list))$GLOBALS['logger']->write("Copy invisible e-mail to : " . $email->cci_list, 'INFO');
