@@ -1680,7 +1680,7 @@ if (isset($_REQUEST['id'])) {
 }
 $content .= '<p>';
 $content .= '<label>'. _OBJECT .'</label>';
-$content .= '<input type="text" name="title" id="title" value="';
+$content .= '<input type="text" name="title" id="title" maxlength="250" value="';
 if (isset($_REQUEST['id'])) {
     $content .= str_replace('"', '&quot;', $data_attachment->title);
 } else {

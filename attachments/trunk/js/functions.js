@@ -132,7 +132,7 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
                     "</p>" +
                     "<p>" +
                       "<label>" + "Objet" + "</label>" +
-                      "<input type='text' name='transmissionTitle" + size + "' id='transmissionTitle" + size + "' value='' />" +
+                      "<input type='text' name='transmissionTitle" + size + "' id='transmissionTitle" + size + "' maxlength='250' value='' />" +
                       "&nbsp;<span class='red_asterisk'><i class='fa fa-star'></i></span>" +
                     "</p>" +
                     "<p>" +
