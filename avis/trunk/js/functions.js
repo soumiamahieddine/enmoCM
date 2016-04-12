@@ -751,14 +751,14 @@ function checkRealDate() {
     }
 
     if(d4_processLimitDate != "" && avisLimitDate != "" && d5_avisLimitDate > d4_processLimitDate) {          
-        alert("La date limite d'avis doit être antérieure à la date date limite du courrier ");
+        alert("La date limite d'avis doit être antérieure à la date limite du courrier ");
         $('recommendation_limit_date').value = "";
         $('recommendation_limit_date_tr').value = "";
 
     }
 
     if (d2_docDate > d5_avisLimitDate && avisLimitDate != "") {
-        alert("La date limite d'avis doit être supérieur à la date date du courrier ");
+        alert("La date limite d'avis doit être supérieur à la date du courrier ");
         $('recommendation_limit_date').value = "";
         $('recommendation_limit_date_tr').value = "";
         

@@ -172,7 +172,7 @@ abstract class avis_controler_Abstract
                     $str .= '</tr>';
                 }
                 else{
-
+                    var_dump($myPosAvis);
                     if ($isAvisStep)
                         $myPosAvis = $this->myPosAvis($res_id, $coll_id, $typeList);
                     if (isset($circuitAvis['avis']['users'])){
