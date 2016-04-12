@@ -180,11 +180,11 @@ public class FileManager {
     */
     public String findGoodProgramWithExt(String ext) {
         String program = "";
-        if ((ext.equalsIgnoreCase("docx") || ext.equalsIgnoreCase("doc"))) {
+        if ((ext.equalsIgnoreCase("docx") || ext.equalsIgnoreCase("doc") || ext.equalsIgnoreCase("docm"))) {
             program = "winword.exe";
-        } else if (ext.equalsIgnoreCase("xlsx") || ext.equalsIgnoreCase("xls")) {
+        } else if (ext.equalsIgnoreCase("xlsx") || ext.equalsIgnoreCase("xls") || ext.equalsIgnoreCase("xlsm")) {
             program = "excel.exe";
-        } else if (ext.equalsIgnoreCase("pptx") || ext.equalsIgnoreCase("ppt")) {
+        } else if (ext.equalsIgnoreCase("pptx") || ext.equalsIgnoreCase("ppt") || ext.equalsIgnoreCase("pptm") || ext.equalsIgnoreCase("ppsm")) {
             program = "powerpnt.exe";
         } else {
             program = "soffice.exe";
@@ -238,8 +238,8 @@ public class FileManager {
         }
         
         return options;
-    }
-    
+    } 
+   
     /**
     * Deletes file in the tmp dir
     * @param directory path of the tmp dir
