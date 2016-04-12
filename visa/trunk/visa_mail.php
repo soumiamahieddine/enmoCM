@@ -195,11 +195,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		}
 		else $classLine = ' class="unselectedId " ';
 
-		if(_ID_TO_DISPAY == 'res_id'){
-			$id_to_display = '';
-		} else if (_ID_TO_DISPAY == 'chrono_number'){
-	    	$id_to_display = $chrono_number_doc;
-		}
+		$id_to_display = _ID_TO_DISPAY;
+
 		$frm_str .= '<div '.$classLine.' onmouseover="this.style.cursor=\'pointer\';" onclick="loadNewId(\'index.php?display=true&module=visa&page=update_visaPage\','.$res_id_doc.',\''.$coll_id.'\',\''.$id_to_display.'\');" id="list_doc_'.$res_id_doc.'">';
 		check_category($coll_id, $res_id_doc);
 		$data = get_general_data($coll_id, $res_id_doc, 'minimal');
@@ -212,7 +209,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		
 		$frm_str .= '<ul>';
 		$frm_str .= '<li><b>';
-		$frm_str .= $chrono_number_doc . ' <i class="fa fa-certificate" id="signedDoc_'.$res_id_doc.'" style="'.$classSign.'" ></i> '/*. ' - ' .$res_id_doc*/;
+		$frm_str .= '<span id = "chrn_id_' . $res_id_doc . '">' . $chrono_number_doc . '</span> <i class="fa fa-certificate" id="signedDoc_'.$res_id_doc.'" style="'.$classSign.'" ></i> '/*. ' - ' .$res_id_doc*/;
 		$frm_str .= '</b></li>';
 		
 		$frm_str .= '<li>';
@@ -400,7 +397,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				. '</dt><dd id="page_pj">';
 		} else {*/
 			$frm_str .= '<dt title="' . _ATTACHED_DOC . ' (' . $stmt->rowCount() 
-				. ')" id="onglet_pj" onclick="$(\'cur_idAffich\').value=0;">PJ ' .$nb_attach
+				. ')" id="onglet_pj" onclick="$(\'cur_idAffich\').value=0;updateFunctionModifRep(0,0,0);">PJ ' .$nb_attach
 				. '</dt><dd id="page_pj">';
 		//}
 		if ($core_tools->is_module_loaded('attachments')) {
@@ -410,9 +407,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $templates = $templatesControler->getAllTemplatesForProcess($curdest);
         $_SESSION['destination_entity'] = $curdest;
         //var_dump($templates);
-        $frm_str .= '<div id="list_answers_div" onmouseover="this.style.cursor=\'pointer\';" style="width:920px;">';
-            $frm_str .= '<div class="block" style="margin-top:-2px;">';
-                $frm_str .= '<div id="processframe" name="processframe">';
+        $frm_str .= '<div id="list_answers_div" onmouseover="this.style.cursor=\'pointer\';" style="width:100%;height:100%;">';
+            $frm_str .= '<div class="block" style="margin-top:-2px;height:95%;">';
+                $frm_str .= '<div id="processframe" name="processframe" style="height:100%;">';
                     $frm_str .= '<center><h2>' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
                    
                     $stmt = $db->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
@@ -433,12 +430,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     }
                     $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder" '
-                    . 'frameborder="0" width="900px" scrolling="yes" height="600px" scrolling="yes" ></iframe>';
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder" '
+                    . 'frameborder="0" width="100%" scrolling="yes" height="600px" scrolling="yes" ></iframe>';
                     $frm_str .= '</div>';
                 $frm_str .= '</div>';
             $frm_str .= '</div>';
-            $frm_str .= '<hr />';
+            //$frm_str .= '<hr />';
         $frm_str .= '</div>';
     }
 	
@@ -561,6 +558,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	/*** Extra javascript ***/
 	$frm_str .= '<script type="text/javascript">launchTabri();window.scrollTo(0,0);$(\'divList\').style.display = \'none\';';
+	$frm_str .='var height = (parseInt($(\'visa_left\').parentElement.style.height.replace(/px/,""))-65)+"px";$(\'visa_listDoc\').style.height=height;$(\'visa_left\').style.height=height;$(\'visa_right\').style.height=height;$(\'tabricatorRight\').style.height=(parseInt($(\'tabricatorRight\').offsetHeight)-20)+"px";height = (parseInt($(\'tabricatorRight\').offsetHeight)-150)+"px";$(\'list_attach\').style.height=height;';
 	$frm_str .='</script>';
 	return addslashes($frm_str);
 }

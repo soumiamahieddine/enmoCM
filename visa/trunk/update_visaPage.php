@@ -138,7 +138,7 @@ for ($i=0; $i<count($tab_path_rep_file);$i++) {
 	        $templates = $templatesControler->getAllTemplatesForProcess($curdest);
 	        $_SESSION['destination_entity'] = $curdest;
 	        //var_dump($templates);
-	        $right_html .= '<div id="list_answers_div" onmouseover="this.style.cursor=\'pointer\';" style="width:920px;">';
+	        $right_html .= '<div id="list_answers_div" onmouseover="this.style.cursor=\'pointer\';" style="width:100%;">';
             $right_html .= '<div class="block" style="margin-top:-2px;">';
                 $right_html .= '<div id="processframe" name="processframe">';
                     $right_html .= '<center><h2>' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
@@ -159,12 +159,12 @@ for ($i=0; $i<count($tab_path_rep_file);$i++) {
                     }
                     $right_html .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder&resId='.$res_id.'" '
-                    . 'frameborder="0" width="900px" scrolling="yes" height="600px"></iframe>';
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder&template_selected=documents_list_attachments_simple&resId='.$res_id.'" '
+                    . 'frameborder="0" width="100%" scrolling="yes" height="600px"></iframe>';
                     $right_html .= '</div>';
                 $right_html .= '</div>';
             $right_html .= '</div>';
-            $right_html .= '<hr />';
+            //$right_html .= '<hr />';
         	$right_html .= '</div>';
     	}
 	
@@ -174,6 +174,7 @@ for ($i=0; $i<count($tab_path_rep_file);$i++) {
 		
 
 	$valid_but = 'valid_action_form( \'index_file\', \'index.php?display=true&page=manage_action&module=core\', \''.$_REQUEST['action'].'\', \''.$res_id.'\', \'res_letterbox\', \'null\', \''.$coll_id.'\', \'page\');';
+
 //echo "{status : 1,avancement:'".$avancement_html."',circuit:'".$circuit_html."',notes_dt:'".$notes_html_dt."',notes_dd:'".$notes_html_dd."'}";
 echo "{status : 1,left_html:'".addslashes($left_html)."',right_html:'".addslashes($right_html)."',valid_button:'".addslashes($valid_but)."',id_rep:'".$tab_path_rep_file[0]['res_id']."',is_vers_rep:'".$tab_path_rep_file[0]['is_version']."'}";
 exit();

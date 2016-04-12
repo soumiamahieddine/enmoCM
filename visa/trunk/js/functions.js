@@ -473,12 +473,13 @@ function loadNewId(path_update,newId, collId, idToDisplay){
 	
 	$('cur_resId').value=newId;
 
-	if(idToDisplay != ''){
-		$('numIdDocPage').innerHTML=idToDisplay;
+	if(idToDisplay == 'chrono_number'){
+		$('numIdDocPage').innerHTML=$('chrn_id_'+newId).innerHTML;
 	}else{
 		$('numIdDocPage').innerHTML=newId;
 	}
-	//console.log($("send"));
+
+	//console.log('display: '+idToDisplay);
 	
 	/****************************************/
 	
@@ -561,53 +562,71 @@ function nextDoc(path_update,collId){
 }
 
 function updateFunctionModifRep(idReponse, num_rep, is_version){
-	new Ajax.Request("index.php?display=true&page=checkSignFile&module=visa&res_id="+idReponse,
-	{
-		method:'post',
-		onSuccess: function(answer){
-			eval("response = "+answer.responseText);
-			if (response.status == 1){
-				if (document.getElementById("sign_link")){
-					document.getElementById("sign_link").setAttribute('onclick','');	
-					document.getElementById("sign_link").style.color = 'green';
-					document.getElementById("sign_link_img").src = 'static.php?filename=sign_valid.png';
-
-				}
-				if (document.getElementById("sign_link_certif")){
-					document.getElementById("sign_link_certif").setAttribute('onclick','');	
-					document.getElementById("sign_link_certif").style.color = 'green';
-				}
-				
-				if (document.getElementById("update_rep_link")) {
-					document.getElementById("update_rep_link").style.display = 'none';
-				}
-			}
-			else if (response.status == 0){
-				if (document.getElementById("sign_link")){
-					document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+','+is_version+',2);');	
-					document.getElementById("sign_link").style.color = '';
-				}
-				if (document.getElementById("sign_link_certif")){
-					document.getElementById("sign_link_certif").setAttribute('onclick','signFile('+idReponse+','+is_version+',0);');	
-					document.getElementById("sendPIN").setAttribute('onclick','signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
-					document.getElementById("valuePIN").setAttribute('onKeyPress','if (event.keyCode == 13) signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
-					document.getElementById("sign_link_certif").style.color = '';
-				}
-				if (document.getElementById("update_rep_link")) {
-					document.getElementById("update_rep_link").style.display = '';
-					console.log("is_version = "+is_version);
-					/*if (is_version == 2) document.getElementById("update_rep_link").style.display = 'none';
-					else */if (is_version != 1) document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=1&fromDetail=\',\'98%\',\'auto\');');	
-					else document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=2&fromDetail=\',\'98%\',\'auto\');');	
-					
-				}
-			}
+	if(idReponse == 0){
+		if (document.getElementById("update_rep_link")) {
+			document.getElementById("update_rep_link").style.display = 'none';
 		}
-	});
-	
-	
-	document.getElementById("cur_idAffich").setAttribute('value',num_rep);
-	document.getElementById("cur_rep").setAttribute('value',idReponse);
+		if (document.getElementById("sign_link")) {
+			document.getElementById("sign_link").style.display = 'none';
+		}
+
+	}else{
+		new Ajax.Request("index.php?display=true&page=checkSignFile&module=visa&res_id="+idReponse,
+		{
+			method:'post',
+			onSuccess: function(answer){
+				eval("response = "+answer.responseText);
+				if (response.status == 1){
+					if (document.getElementById("sign_link")){
+						document.getElementById("sign_link").style.display = '';
+						document.getElementById("sign_link").setAttribute('onclick','');	
+						document.getElementById("sign_link").style.color = 'green';
+						document.getElementById("sign_link_img").src = 'static.php?filename=sign_valid.png';
+						document.getElementById("sign_link_img").title= 'Le document a été signé';
+						document.getElementById("sign_link_img").style.cursor = 'not-allowed';
+						document.getElementById("sign_link").setAttribute('disabled','disabled');
+
+					}
+					if (document.getElementById("sign_link_certif")){
+						document.getElementById("sign_link_certif").setAttribute('onclick','');	
+						document.getElementById("sign_link_certif").style.color = 'green';
+					}
+					
+					if (document.getElementById("update_rep_link")) {
+						document.getElementById("update_rep_link").style.display = 'none';
+					}
+				}
+				else if (response.status == 0){
+					if (document.getElementById("sign_link")){
+						document.getElementById("sign_link").style.display = '';
+						document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+','+is_version+',2);');	
+						document.getElementById("sign_link").style.color = '';
+						document.getElementById("sign_link_img").src = 'static.php?filename=sign.png';
+						document.getElementById("sign_link_img").title= 'Signer ces projets de réponse (sans certificat)';
+						document.getElementById("sign_link_img").style.cursor = 'pointer';
+						document.getElementById("sign_link").removeAttribute('disabled');
+					}
+					if (document.getElementById("sign_link_certif")){
+						document.getElementById("sign_link_certif").setAttribute('onclick','signFile('+idReponse+','+is_version+',0);');	
+						document.getElementById("sendPIN").setAttribute('onclick','signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
+						document.getElementById("valuePIN").setAttribute('onKeyPress','if (event.keyCode == 13) signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
+						document.getElementById("sign_link_certif").style.color = '';
+						document.getElementById("sign_link_img").src = 'static.php?filename=sign.png';
+					}
+					if (document.getElementById("update_rep_link")) {
+						document.getElementById("update_rep_link").style.display = '';
+						console.log("is_version = "+is_version);
+						/*if (is_version == 2) document.getElementById("update_rep_link").style.display = 'none';
+						else */if (is_version != 1) document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=1&fromDetail=\',\'98%\',\'auto\');');	
+						else document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=2&fromDetail=\',\'98%\',\'auto\');');	
+						
+					}
+				}
+			}
+		});
+		document.getElementById("cur_idAffich").setAttribute('value',num_rep);
+		document.getElementById("cur_rep").setAttribute('value',idReponse);
+	}
 }
 
 function hasAllAnsSigned(id_doc){
@@ -686,7 +705,11 @@ function signFile(res_id,isVersion, mode, pinCode){
 					
 					if($('ans_'+num_rep+'_'+oldRep)) {
 						$('ans_'+num_rep+'_'+oldRep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');		
-						$('ans_'+num_rep+'_'+oldRep).id = 'ans_'+num_rep+'_'+newId;						
+						$('ans_'+num_rep+'_'+oldRep).id = 'ans_'+num_rep+'_'+newId;							
+					}
+
+					if($('content_'+num_rep+'_'+oldRep)) {
+						$('content_'+num_rep+'_'+oldRep).id = 'content_'+num_rep+'_'+newId;							
 					}
 					var zone_id = 'signedDoc_'+$('cur_resId').value;
 					if (hasAllAnsSigned($('cur_resId').value) == 1){
@@ -695,10 +718,13 @@ function signFile(res_id,isVersion, mode, pinCode){
 					else{
 						$(zone_id).style.visibility = 'hidden';
 					}
+					$('ans_'+num_rep+'_'+newId).innerHTML='<i class="fa fa-certificate fa-lg fa-fw" style="color:#fdd16c"></i>'+$('ans_'+num_rep+'_'+newId).textContent;
+					$('ans_'+num_rep+'_'+newId).title='Réponse signée : '+$('ans_'+num_rep+'_'+newId).textContent;
+					$('list_attach').src = 'index.php?display=true&module=attachments&page=frame_list_attachments&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder';
 				}
 				else{
 					alert(response.error);
-				}
+				}		
 			}
 		});
 	}
