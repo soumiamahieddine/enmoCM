@@ -69,7 +69,12 @@ $func = new functions();
 $db = new Database();
 
 //Templates
-$defaultTemplate = 'documents_list_attachments';
+if(isset($_REQUEST['template_selected'])){
+	$template_select = $_REQUEST['template_selected'];
+}else{
+	$template_select = 'documents_list_attachments';
+}
+$defaultTemplate = $template_select;
 $selectedTemplate = $list->getTemplate();
 if  (empty($selectedTemplate)) {
     if (!empty($defaultTemplate)) {
@@ -78,7 +83,8 @@ if  (empty($selectedTemplate)) {
     }
 }
 $template_list = array();
-array_push($template_list, 'documents_list_attachments');
+
+array_push($template_list, $template_select);
 
 $select['res_view_attachments'] = array();
 
@@ -100,7 +106,7 @@ if (isset($whereAttach) && $whereAttach <> '') $where .= $whereAttach;
     else  {
         $list->setOrder();
         $list->setOrderField('identifier');
-        $orderstr = "order by identifier asc";
+        $orderstr = "order by identifier desc, attachment_type desc";
     }
 
 $parameters = '';
@@ -110,6 +116,7 @@ if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) $parameters .= '&or
 if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters .= '&order_field='.$_REQUEST['order_field'];
 if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
 if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
+if (isset($_REQUEST['template_selected']) && !empty($_REQUEST['template_selected'])) $parameters .= '&template_selected='.$_REQUEST['template_selected'];
 
 //test si le paramètre attach_type existe
 if (isset($_REQUEST['attach_type']) && $_REQUEST['attach_type'] <> '')	$parameters .= "&attach_type=".$_REQUEST['attach_type'];

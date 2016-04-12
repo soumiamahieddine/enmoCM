@@ -66,7 +66,7 @@ if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') 
 	$js .= 'eleframe1[1].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load';
 	$js .= '&attach_type=response_project,outgoing_mail_signed&fromDetail=response\';';
 } else {
-	$js .= 'eleframe1[0].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder\';';
+	$js .= 'eleframe1[0].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&template_selected=documents_list_attachments_simple&attach_type_exclude=converted_pdf,print_folder\';';
 }
 
 echo "{status: ".$status_ajax.", exec_js : '".addslashes($js)."'}";
