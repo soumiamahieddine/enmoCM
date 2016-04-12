@@ -44,7 +44,7 @@ Mods
     ##showIconDocument##    : view document icon
     ##showIconDetails##     : view detail's page icon
     ##getBusinessAppUrl##   : get business app url
-    
+	
 
 -->
 
@@ -58,56 +58,36 @@ Mods
              <thead border ="1">
                 <tr>
                     <th width="100%" colspan="2" style="clear:both;">
-                    <div style="border:1px solid; height:20px;margin-bottom:10px;padding:10px;padding-top:0px;vertical-align:middle;">
-                        <div style="white-space: nowrap;display: table-cell;text-align: center;float:left;">
+                    <div style="border:1px solid; height:20px;vertical-align:middle;margin: 0px;padding: 0px;display: table;width:100%;">
+                        <div style="white-space: nowrap;display: table-cell;text-align: center;">
                             ##defineLang|_CHRONO_NUMBER##
                             <br/>
                             ##sortColumn|identifier##
                         </div>
-                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;float:left;">
+                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;">
                             ##defineLang|_TYPES##
                             <br/>
                             ##sortColumn|attachment_type##
                         </div>
-                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;float:left;">
+                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;">
                             ##defineLang|_OBJECT##
                             <br/>
                             ##sortColumn|title##
                         </div>
-                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;float:left;">
-                            ##defineLang|_DEST##
-                            <br/>
-                            ##sortColumn|dest_contact_id##
-                        </div>
-                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;float:left;">
+                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;">
                             ##defineLang|_CREATION_DATE##
                             <br/>
                             ##sortColumn|creation_date##
                         </div>
-                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;float:left;">
-                            ##defineLang|_UPDATED_DATE##
-                            <br/>
-                            ##sortColumn|doc_date##
-                        </div>
-                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;float:left;">
-                            ##defineLang|_MODIFY_BY##
-                            <br/>
-                            ##sortColumn|updated_by##
-                        </div>
-                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;float:left;">
+                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;">
                             ##defineLang|_BACK_DATE##
                             <br/>
                             ##sortColumn|validation_date##
                         </div>
-                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;float:right;">
-                            ##defineLang|_FORMAT##
+                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;">
+                            ##defineLang|_DEST##
                             <br/>
-                            ##sortColumn|format##
-                        </div>
-                        <div style="white-space: nowrap;display: table-cell;text-align: center;padding-left: 10px;float:right;">
-                            ##defineLang|_TYPIST##
-                            <br/>
-                            ##sortColumn|typist##
+                            ##sortColumn|dest_contact_id##
                         </div>
                         </div>
                     </th>
@@ -207,15 +187,13 @@ Mods
                                         <td width="11%" style="text-align:right">##func_previous_version##</td>
                                     </table>
                                 </td>-->
-                                <td style="text-align:left;width:20%;" title="##defineLang|_CREATION_DATE##"><i class="fa fa-calendar"></i>
+                                <td style="text-align:left;width:100px;" title="##defineLang|_CREATION_DATE## / ##defineLang|_UPDATED_DATE## : ##loadValue|doc_date## ##defineLang|_BBY## : ##loadValue|updated_by##"><i class="fa fa-calendar"></i>
  ##loadValue|creation_date##</td>
-                                <td style="text-align:left;width:20%;" title="##defineLang|_UPDATED_DATE##"><i class="fa fa-calendar-check-o"></i>
- ##loadValue|doc_date##<i title="##defineLang|_MODIFY_BY##" style="font-size:10px;cursor: pointer;">&nbsp;##defineLang|_MODIFY_BY## : ##loadValue|updated_by##</i></td>
                                 <!--<td style="text-align:left" width="17%" title="##defineLang|_TYPIST##">##loadValue|typist##</td>-->
                                 <!--<td style="text-align:center" width="10%">##loadValue|doc_date##</td>-->
-                                <td style="text-align:left;width:20%;" title="##defineLang|_BACK_DATE##"><i class="fa fa-calendar-times-o"></i>
+                                <td style="text-align:left;width:100px;" title="##defineLang|_BACK_DATE##"><i class="fa fa-calendar-check-o"></i>
  ##loadValue|validation_date##</td>
-                                <td style="text-align:right;width:200px;">##func_final_version##
+                                <td style="text-align:right">##func_final_version##
  ##func_modify## ##func_delete##</td>
                                 <!--<td style="text-align:left" width="17%">##loadValue|updated_by##</td>-->
                             </tr>
