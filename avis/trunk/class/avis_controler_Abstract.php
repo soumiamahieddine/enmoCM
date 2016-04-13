@@ -172,6 +172,8 @@ abstract class avis_controler_Abstract
                     $str .= '</tr>';
                 }
                 else{
+                    //var_dump($myPosAvis);
+                    $isAvisStep = true;
                     if ($isAvisStep)
                         $myPosAvis = $this->myPosAvis($res_id, $coll_id, $typeList);
                     if (isset($circuitAvis['avis']['users'])){
@@ -182,13 +184,18 @@ abstract class avis_controler_Abstract
                                 $color = ' class="col"';
                             }
 
-                            $str .= '<tr ' . $color . '>';
+                            if (($isAvisStep && $myPosAvis >= $seq || $step['process_date'] != '') && $circuitAvis['avis']['users'][$seq]['user_id'] == $_SESSION['user']['UserId'])
+                                    $title = ' Vous ne pouvez pas modifier votre propre étape ';
+                                else
+                                    $title = '';
+
+                            $str .= '<tr ' . $color . ' title="'.$title.'">';
 
                             if ($bool_modif){
                                 $str .= '<td>';
                                 $tab_users = $this->getUsersAvis();
 
-                                if ($isAvisStep && $myPosAvis >= $seq || $step['process_date'] != '')
+                                if ($isAvisStep && $myPosAvis >= $seq || $step['process_date'] != '' && $circuitAvis['avis']['users'][$seq]['user_id'] == $_SESSION['user']['UserId'])
                                     $disabled = ' disabled ';
                                 else
                                     $disabled = '';
@@ -469,7 +476,6 @@ abstract class avis_controler_Abstract
                     $str .= '</tr>';
                 }
                 else{
-
                     if ($isAvisStep)
                         $myPosAvis = $this->myPosAvis($res_id, $coll_id, $typeList);
                     if (isset($circuitAvis['avis']['users'])){
@@ -711,9 +717,8 @@ abstract class avis_controler_Abstract
     public function myPosAvis($res_id, $coll_id, $listDiffType){
         $db = new Database();
         $stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date ISNULL ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
-        
-        /*$res = $stmt->fetchObject();
-        if ($res->item_mode == 'sign'){
+        $res = $stmt->fetchObject();
+        /*if ($res->item_mode == 'sign'){
             return $this->nbVisa($res_id, $coll_id);
         }*/
         return $res->sequence;
