@@ -1361,7 +1361,6 @@ if (isset($_POST['add']) && $_POST['add']) {
 						$storeResult['docserver_id'], $_SESSION['data_pdf'],
 						$_SESSION['config']['databasetype']
 					);
-                    unset($_SESSION['upfile']['fileNamePdfOnTmp']);
                 }
             }
 
@@ -1380,14 +1379,19 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $arrayPDO = array_merge($arrayPDO, array(":res_id" => $_REQUEST['res_id']));
                 if ((int)$_REQUEST['relation'] == 1) {
 					$pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
-					if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE res_attachments SET status = 'DEL' WHERE res_id = ?", array($pdf_id) );
+					if (isset($pdf_id) && $pdf_id != 0 && (!empty($_SESSION['upfile']['fileNamePdfOnTmp']))){
+                        $stmt = $db->query("UPDATE res_attachments SET status = 'DEL' WHERE res_id = ?", array($pdf_id) );
+                    }
                     $stmt = $db->query("UPDATE res_attachments SET " . $set_update . " WHERE res_id = :res_id", $arrayPDO);
                 } else {
 					$pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
-					if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", array($pdf_id) );
+					if (isset($pdf_id) && $pdf_id != 0 && (!empty($_SESSION['upfile']['fileNamePdfOnTmp']))){
+                        $stmt = $db->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", array($pdf_id) );
+                    }
                     $stmt = $db->query("UPDATE res_version_attachments SET " . $set_update . " WHERE res_id = :res_id", $arrayPDO);
                 }
             }
+            unset($_SESSION['upfile']['fileNamePdfOnTmp']);
         }
 
         // Delete temporary backup
@@ -1816,7 +1820,7 @@ $content .= '</div>';
             } else {
                 $content .= '" name="add" id="add" class="button" onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;
             }
-            $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\')"/>';
+            $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\',\''._ID_TO_DISPAY.'\')"/>';
 
             $content .= '&nbsp;';
             $content .= '&nbsp;';
