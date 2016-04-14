@@ -129,7 +129,8 @@ abstract class visa_Abstract extends Database
 		}
 		
 		$db = new Database();
-		$stmt = $db->query("select docserver_id from res_view_attachments where res_id_master = ? order by res_id desc", 
+		$stmt = $db->query("select docserver_id from res_view_attachments where res_id_master = ?" 
+			. "AND status <> 'DEL' order by res_id desc", 
 			array($res_id));
 		while ($res = $stmt->fetchObject()){
 			$docserver_id = $res->docserver_id;
@@ -145,7 +146,7 @@ abstract class visa_Abstract extends Database
 		$stmt = $db->query("select filename, format, path, title, res_id, res_id_version, attachment_type "
 			. "from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' "
 			. "AND status <> 'DEL' and attachment_type IN "
-			. "('response_project','signed_response','outgoing_mail','waybill','transfer', 'transmission') order by creation_date asc",
+			. "('response_project','signed_response','outgoing_mail','waybill','transfer', 'simple_attachment', 'transmission') order by creation_date asc",
 			array($res_id));
 
 		$array_reponses = array();
