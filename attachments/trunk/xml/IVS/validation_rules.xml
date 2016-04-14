@@ -34,6 +34,7 @@
 		<parameter name="module" type="identifier" />
 		<parameter name="fromDetail" type="identifier" />
 		<parameter name="attach_type" type="string" />
+		<parameter name="template_selected" type="string" />
 		<parameter name="url" type="url" />
 		<parameter name="attach_type_exclude" type="string" />
 		<parameter name="load" type="string" />
