@@ -395,10 +395,11 @@ for ($i=0;$i<$tabI;$i++)
                 $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
                 $statusCmp = $tab[$i][$j]['value'];
                 //$tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
+                $img_class = substr($res_status['IMG_SRC'], 0, 2);
                 if (!isset($res_status['IMG_SRC']) ||  empty($res_status['IMG_SRC'])){
                  $tab[$i][$j]['value'] = "<i  ".$style." class = 'fm fm-letter-status-new fm-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
 				} else {
-					$tab[$i][$j]['value'] = "<i ".$style." class = 'fm ".$res_status['IMG_SRC']." fm-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
+					$tab[$i][$j]['value'] = "<i ".$style." class = '".$img_class." ".$res_status['IMG_SRC']." ".$img_class."-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
 				}
                 $tab[$i][$j]["label"]=_STATUS;
                 $tab[$i][$j]["size"]="4";
