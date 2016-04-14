@@ -59,7 +59,7 @@ $uniqueId = (isset($_REQUEST['transmissionNumber']) ? $_REQUEST['transmissionNum
 
 ?>
 <style type="text/css">html{overflow:hidden}</style>
-<body style="height:179px;width:231px;">
+<body>
     <div id="container">
         <div id="content">
             <div class="error" id="divError" name="divError"></div>
@@ -86,7 +86,7 @@ $uniqueId = (isset($_REQUEST['transmissionNumber']) ? $_REQUEST['transmissionNum
                     functions::xecho($_SESSION['custom_override_id']);
                     ?>');
             </script>
-            <style type="text/css">#CMApplet{top:5% !important;left:3% !important;}</style>
+            <style type="text/css">#CMApplet{width: 100%;height: 100%;text-align: center;padding: 0px;margin: 0px;padding-top: 10px;}</style>
         </div>
     </div>
 </body>
