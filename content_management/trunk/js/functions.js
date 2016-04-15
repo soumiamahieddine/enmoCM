@@ -26,8 +26,16 @@ function sendAppletMsg(theMsg)
             window.opener.$('divErrorAttachment').setStyle({display: 'none'});
         }
     }else{
-        window.opener.$('main_info').setStyle({display: 'inline'});
-        window.opener.$('main_info').innerHTML = theMsg;
+        if(error){
+            window.opener.$('main_info').setStyle({display: 'none'});
+            window.opener.$('main_error').setStyle({display: 'inline'});
+            window.opener.$('main_error').innerHTML = theMsg;
+            window.close();
+        }else{
+            window.opener.$('main_info').setStyle({display: 'inline'});
+            window.opener.$('main_error').setStyle({display: 'none'});
+            window.opener.$('main_info').innerHTML = theMsg;
+        }
     }
     //$('divError').innerHTML = theMsg;
     //$('divError').setStyle({display: 'inline'});
