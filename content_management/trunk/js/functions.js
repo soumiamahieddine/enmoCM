@@ -14,15 +14,20 @@ function sendAppletMsg(theMsg)
     //console.log(window.opener.$('divErrorAttachment'));
 
     var error = /^ERREUR/.test(theMsg);
-    if(error){
-        window.opener.$('divErrorAttachment').innerHTML = theMsg;
-        window.opener.$('divInfoAttachment').setStyle({display: 'none'});
-        window.opener.$('divErrorAttachment').setStyle({display: 'inline'});
-        window.close();
+    if (window.opener.$('divErrorAttachment')) {
+        if(error){
+            window.opener.$('divErrorAttachment').innerHTML = theMsg;
+            window.opener.$('divInfoAttachment').setStyle({display: 'none'});
+            window.opener.$('divErrorAttachment').setStyle({display: 'inline'});
+            window.close();
+        }else{
+            window.opener.$('divInfoAttachment').innerHTML = theMsg;
+            window.opener.$('divInfoAttachment').setStyle({display: 'inline'});
+            window.opener.$('divErrorAttachment').setStyle({display: 'none'});
+        }
     }else{
-        window.opener.$('divInfoAttachment').innerHTML = theMsg;
-        window.opener.$('divInfoAttachment').setStyle({display: 'inline'});
-        window.opener.$('divErrorAttachment').setStyle({display: 'none'});
+        window.opener.$('main_info').setStyle({display: 'inline'});
+        window.opener.$('main_info').innerHTML = theMsg;
     }
     //$('divError').innerHTML = theMsg;
     //$('divError').setStyle({display: 'inline'});
