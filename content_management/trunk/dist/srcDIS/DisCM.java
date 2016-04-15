@@ -311,9 +311,9 @@ public class DisCM extends JApplet {
             }
         } catch (SAXException | IOException e) {
             
-            this.logger.log("ERROR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que les droits d'écriture sont bien appliqués sur le répertoire maarchtmp du poste client.", Level.INFO);
+            this.logger.log("ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.", Level.SEVERE);
             this.messageStatus = "ERROR";
-            this.messageResult.put("ERROR","ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que les droits d'écriture sont bien appliqués sur le répertoire maarchtmp du poste client");
+            this.messageResult.put("ERROR","ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.");
         }
         this.logger.log("----------END PARSE XML----------", Level.INFO);
     }
@@ -400,7 +400,7 @@ public class DisCM extends JApplet {
         this.userLocalDirTmp = System.getProperty("user.home");
         
         this.fM = new FileManager();
-        this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
+        
         if (isWindows) {
             System.out.println("This is Windows");
             this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
@@ -422,15 +422,35 @@ public class DisCM extends JApplet {
         } else {
             System.out.println("Your OS is not supported!!");
         }
-        System.out.println("APP PATH: " + this.appPath);
-        System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
-        
-        this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
-        System.out.println("----------END LOCAL DIR TMP IF NOT EXISTS----------");
-        
         
         System.out.println("Create the logger");
         this.logger = new MyLogger(this.userLocalDirTmp);
+        
+        String info = this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
+        
+        if(info == "ERROR"){
+            this.logger.log("ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch", Level.SEVERE);   
+            this.messageStatus = "ERROR";
+            this.messageResult.clear();
+            this.messageResult.put("ERROR","ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch");
+        }
+        
+        System.out.println("APP PATH: " + this.appPath);
+        System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
+        
+        System.out.println("AVANT RESULT INFO WRITE : "+info);
+        info = this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
+        System.out.println("APRES RESULT INFO WRITE : "+info);
+        
+        if(info == "ERROR"){
+            this.logger.log("ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch", Level.SEVERE);
+            this.messageStatus = "ERROR";
+            this.messageResult.clear();
+            this.messageResult.put("ERROR","ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch");
+            this.processReturn(this.messageResult);
+        }
+        
+        System.out.println("----------END LOCAL DIR TMP IF NOT EXISTS----------");
         
         this.logger.log("Delete thefile if exists", Level.INFO);
         FileManager.deleteFilesOnDir(this.userLocalDirTmp, "thefile");
@@ -528,7 +548,7 @@ public class DisCM extends JApplet {
             }
             else {
             	this.pdfContentTosend = "null";
-            	this.logger.log("ERREUR DE CONVERSION PDF !", Level.INFO);                
+            	this.logger.log("ERREUR DE CONVERSION PDF !", Level.WARNING);                
             }
             
             this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
@@ -636,7 +656,7 @@ public class DisCM extends JApplet {
         //String theMessage;
         //theMessage = String.valueOf(message);
         String[] theMessage = {String.valueOf(message), message};
-        this.logger.log("Envoi du message d'erreur à MAARCH", Level.INFO);
+        this.logger.log("Envoi du message à MAARCH", Level.INFO);
         jso.call("sendAppletMsg", (Object[]) theMessage);
         this.logger.log("----------END OF JS CALL----------", Level.INFO);
     }

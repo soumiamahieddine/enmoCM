@@ -29,27 +29,33 @@ public class FileManager {
     * Creates the tmp dir
     * @param path path to the tmp dir
     */
-    public void createUserLocalDirTmp(String path) throws IOException {
+    public String createUserLocalDirTmp(String path) throws IOException {
         File file=new File(path);
+        String msg = "";
         if (!file.exists()) {
             System.out.println("directory " + path + " not exists so the applet will create it");
             if (file.mkdir()) {
                 System.out.println("Directory: " + path + " created");
             } else {
                 System.out.println("Directory: " + path + " not created");
+                msg = "ERROR";
             }
         } else {
             System.out.println("directory " + path + " already exists");
         }
         if (!file.setReadable(true, false)) {
             System.out.println("set permission readable failed on : " + path);
+            msg = "ERROR";
         }
         if (!file.setWritable(true, false)) {
             System.out.println("set permission writable failed on : " + path);
+            msg = "ERROR";
         }
         if (!file.setExecutable(true, false)) {
             System.out.println("set permission executable failed on : " + path);
+            msg = "ERROR";
         }
+        return msg;
     }
     
     /**
