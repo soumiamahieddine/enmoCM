@@ -252,8 +252,10 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<div id="general_infos_div"  style="display:inline">';
     $frmStr .= '<div class="ref-unit">';
     
+    $frmStr .= '<table width="100%" align="center" border="0" '
+        . 'id="indexing_fields" style="display:block;">';
+
     if ($core->test_service('add_links', 'apps', false)) {
-        $frmStr .= '<table width="100%" align="center" border="0" >';
         $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
                 . ';">';
         $frmStr .= '<td>'
@@ -269,7 +271,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 . ' /> '
                 . _NO . '</td>';
         $frmStr .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
-                . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span>&nbsp;</td>';
+                . 'style="display:inline;vertical-align:middle;"><i class="fa fa-star"></i></span></td>';
         $frmStr .= '</tr>';
 
         $frmStr .= '<tr id="attach_show" style="display:none;">';
@@ -300,22 +302,13 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 $frmStr .= '/>';
             $frmStr .= '</td>';
             $frmStr .= '<td>';
-                $frmStr .= '<span class="red_asterisk" id="category_id_mandatory" style="display:inline;">';
-                    $frmStr .= '*';
-                $frmStr .= '</span>';
+                $frmStr .= '<span class="red_asterisk" id="attachment_link_mandatory" '
+                . 'style="display:inline;vertical-align:middle;"><i class="fa fa-star"></i></span>';
             $frmStr .= '</td>';
         $frmStr .= '</tr>';
 
-        //
-
-        $frmStr .= '</table>';
     }
     
-    $frmStr .= '<table width="100%" align="center" '
-        . 'border="0"  id="indexing_fields" style="display:block;">';
-    
-    $frmStr .= '<table width="100%" align="center" border="0" '
-            . 'id="indexing_fields" style="display:block;">';
     /*** Category ***/
     $frmStr .= '<tr id="category_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td style="width:200px;"><label for="category_id" '
