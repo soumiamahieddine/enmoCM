@@ -1,3 +1,7 @@
+function setRturnForEffectiveDate() {
+  $('effectiveDateStatus').selectedIndex = 1;
+}
+
 function saveContactToSession(size, prePath) {
   var contactId = $("transmissionContactidAttach" + size).value;
 

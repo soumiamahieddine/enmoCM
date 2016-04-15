@@ -1703,7 +1703,7 @@ if (isset($_REQUEST['id'])) {
     $content .= '</p>';
     $content .= '<p>';
     $content .= '<label>'. "Date de retour effective".'</label>';
-    $content .= '<input type="text" name="effectiveDate" id="effectiveDate" onClick="showCalender(this);" style="width: 75px" value="';
+    $content .= '<input type="text" name="effectiveDate" id="effectiveDate" onblur="setRturnForEffectiveDate()" onClick="showCalender(this);" style="width: 75px" value="';
     $content .= $req->format_date_db($data_attachment->effective_date);
     $content .= '" />';
     if ($data_attachment->attachment_type == 'transmission' && ($data_attachment->status == "RTURN" || $data_attachment->status == "EXP_RTURN")) {
