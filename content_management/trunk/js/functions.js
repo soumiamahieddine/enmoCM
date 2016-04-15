@@ -10,13 +10,30 @@ function loadApplet(url, value)
 //applet send a message (error) to Maarch
 function sendAppletMsg(theMsg)
 {
-    if (theMsg != '' && theMsg != ' ') {
+    //theMsg = 'erreur!';
+    //console.log(window.opener.$('divErrorAttachment'));
+
+    var error = /^ERREUR/.test(theMsg);
+    if(error){
+        window.opener.$('divErrorAttachment').innerHTML = theMsg;
+        window.opener.$('divInfoAttachment').setStyle({display: 'none'});
+        window.opener.$('divErrorAttachment').setStyle({display: 'inline'});
+        window.close();
+    }else{
+        window.opener.$('divInfoAttachment').innerHTML = theMsg;
+        window.opener.$('divInfoAttachment').setStyle({display: 'inline'});
+        window.opener.$('divErrorAttachment').setStyle({display: 'none'});
+    }
+    //$('divError').innerHTML = theMsg;
+    //$('divError').setStyle({display: 'inline'});
+    //window.close();
+    /*if (theMsg != '' && theMsg != ' ') {
         if (window.opener.$('divError')) {
             window.opener.$('divError').innerHTML = theMsg;
         } else if ($('divError')) {
             $('divError').innerHTML = theMsg;
         }
-    }
+    }*/
 }
 
 //destroy the modal of the applet and launch an ajax script
