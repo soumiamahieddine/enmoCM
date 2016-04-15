@@ -1364,66 +1364,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 }
                 ?>
                 <dt class="fa fa-paperclip" style="<?php echo $style2; ?>" title="<?php echo _ATTACHMENTS; ?>"> <sup><span id="nb_attach" class="<?php echo $class; ?>" style="<?php echo $style; ?>"><?php echo $nb_attach; ?></span></sup></dt>
-                <dd>
-                    <div>
-                        <table width="100%">
-                            <tr>
-                                <td><label for="answer_types"><?php echo _ANSWER_TYPES_DONE;?> : </label></td>
-                                <td>
-                                    <?php
-                                    /*$detailsExport .= "<table width='100%'>";
-                                    $detailsExport .= "<tr>";
-                                    $detailsExport .= "<td><label for='answer_types'>"._ANSWER_TYPES_DONE." : </label></td>";*/
-                                    $answer_type = "";
-                                    if ($process_data['simple_mail'] == true)
-                                    {
-                                        $answer_type .=  _SIMPLE_MAIL.', ';
-                                    }
-                                    if ($process_data['registered_mail'] == true)
-                                    {
-                                        $answer_type .=  _REGISTERED_MAIL.', ';
-                                    }
-                                    if ($process_data['direct_contact'] == true)
-                                    {
-                                        $answer_type .=  _DIRECT_CONTACT.', ';
-                                    }
-                                    if ($process_data['email'] == true)
-                                    {
-                                        $answer_type .=  _EMAIL.', ';
-                                    }
-                                    if ($process_data['fax'] == true)
-                                    {
-                                        $answer_type .=  _FAX.', ';
-                                    }
-                                    if ($process_data['no_answer'] == true)
-                                    {
-                                        $answer_type =  _NO_ANSWER.', ';
-                                    }
-                                    if ($process_data['other'] == true)
-                                    {
-                                        $answer_type .=  " ".$process_data['other_answer_desc']."".', ';
-                                    }
-                                    $answer_type = preg_replace('/, $/', '', $answer_type);
-                                    //$detailsExport .= $answer_type."</td></tr>";
-                                    ?>
-                                    <input name="answer_types" type="text" readonly="readonly" class="readonly" value="<?php functions::xecho($answer_type);?>" style="width:500px;" />
-                                </td>
-                            </tr>
-
-                            <?php
-                            if (isset($closing_date) && !empty($closing_date))
-                            {
-                                ?>
-                                <tr>
-                                    <td><label for="closing_date"><?php echo _CLOSING_DATE;?> : </label></td>
-                                    <td><input name="closing_date" type="text" readonly="readonly" class="readonly" value="<?php functions::xecho($closing_date);?>" /></td></td>
-                                </tr>
-                                <?php
-                            }
-
-                            ?>
-                        </table>
-                    </div>
+                <dd id="other_attachments">
                     <?php
                     if ($core->is_module_loaded('attachments'))
                     {
@@ -1440,7 +1381,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 
                         ?>
                         <div>
-					<br />
 				<center>
 					<?php
                 /*if ($core->is_module_loaded('templates') && (!isset($_SESSION['current_basket']['id']) && $core->test_service('edit_attachments_from_detail', 'attachments', false)) || isset($_SESSION['current_basket']['id'])) { */
@@ -1452,8 +1392,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
              
                 <?php } ?>
                 </center>
-                        <label><?php echo _ATTACHED_DOC;?> : </label>
-                    <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&view_only=true&load&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder&fromDetail=attachments" frameborder="0" width="100%" height="510px"></iframe>
+                    <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&view_only=true&load&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder&fromDetail=attachments" frameborder="0" width="100%" style="height:510px"></iframe>
+                    <script type="text/javascript">
+                        var height = $('other_attachments').offsetHeight;
+                        $('list_attach').style.height = height+"px";
+                    </script>
                         </div>
                         <?php
  					}
@@ -1490,10 +1433,14 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 
                     <?php } ?>
                     </center>
-                    <iframe name="list_attach" id="list_attach" src="<?php echo
+                    <iframe name="list_attach" id="list_attach2" src="<?php echo
                      $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,outgoing_mail&fromDetail=response';?>" 
                     frameborder="0" width="100%" height="600px">
                     </iframe>
+                    <script type="text/javascript">
+                        var height = $('page_rep').offsetHeight-70;
+                        $('list_attach2').style.height = height+"px";
+                    </script>
                 </dd>
 
                 <?php
