@@ -426,21 +426,19 @@ public class DisCM extends JApplet {
         System.out.println("Create the logger");
         this.logger = new MyLogger(this.userLocalDirTmp);
         
-        String info = this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
+        /*String info = this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
         
         if(info == "ERROR"){
             this.logger.log("ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch", Level.SEVERE);   
             this.messageStatus = "ERROR";
             this.messageResult.clear();
             this.messageResult.put("ERROR","ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch");
-        }
+        }*/
         
         System.out.println("APP PATH: " + this.appPath);
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         
-        System.out.println("AVANT RESULT INFO WRITE : "+info);
-        info = this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
-        System.out.println("APRES RESULT INFO WRITE : "+info);
+        String info = this.fM.createUserLocalDirTmp(this.userLocalDirTmp, this.os);
         
         if(info == "ERROR"){
             this.logger.log("ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch", Level.SEVERE);

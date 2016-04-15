@@ -29,7 +29,7 @@ public class FileManager {
     * Creates the tmp dir
     * @param path path to the tmp dir
     */
-    public String createUserLocalDirTmp(String path) throws IOException {
+    public String createUserLocalDirTmp(String path, String os) throws IOException {
         File file=new File(path);
         String msg = "";
         if (!file.exists()) {
@@ -47,7 +47,7 @@ public class FileManager {
             System.out.println("set permission readable failed on : " + path);
             msg = "ERROR";
         }
-        if (!file.setWritable(true, false)) {
+        if (!file.setWritable(true, false) && !"win".equals(os)) {
             System.out.println("set permission writable failed on : " + path);
             msg = "ERROR";
         }
