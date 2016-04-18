@@ -908,7 +908,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         <tr class="col">
                             <th align="left" class="picto">
                                 <!--img alt="<?php echo _STATUS.' : '.$res_status['LABEL'];?>" src="<?php functions::xecho($res_status['IMG_SRC']);?>" title="<?php functions::xecho($res_status['LABEL']);?>" alt="<?php functions::xecho($res_status['LABEL']);?>"/-->
-                                <i class = "fm <?php functions::xecho($res_status['IMG_SRC']);?> fm-2x" alt = "<?php functions::xecho($res_status['LABEL']);?>" title = "<?php functions::xecho($res_status['LABEL']);?>"></i>
+                                <?php 
+                                $img_class = substr($res_status['IMG_SRC'], 0, 2);
+                                ?>
+                                <i class = "<?php echo $img_class; ?> <?php functions::xecho($res_status['IMG_SRC']);?> <?php echo $img_class; ?>-2x" alt = "<?php functions::xecho($res_status['LABEL']);?>" title = "<?php functions::xecho($res_status['LABEL']);?>"></i>
                             </th>
                             <td align="left" width="200px">
                                 <?php echo _STATUS;?>
