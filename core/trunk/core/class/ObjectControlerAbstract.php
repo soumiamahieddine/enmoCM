@@ -292,7 +292,12 @@ abstract class ObjectControler
         }
 
         $database = new Database();
-        $theQuery = "SELECT * FROM $table_name WHERE $table_id = :id " . $whereComp;
+        if($table_name == 'users'){ 
+            $theQuery = "SELECT * FROM $table_name WHERE upper($table_id) = upper(:id) " . $whereComp;
+        }else{
+            $theQuery = "SELECT * FROM $table_name WHERE $table_id = :id " . $whereComp;
+        }
+        //$theQuery = "SELECT * FROM $table_name WHERE $table_id = :id " . $whereComp;
         $queryParams = array(':id' => $id);
 
         if (count($params > 0)) {
