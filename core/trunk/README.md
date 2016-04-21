@@ -3,8 +3,7 @@ Maarch Courrier : Gestionnaire Électronique de Courrier
 
 **/!\ Version de développement**
 
-Dernière version stable V 1.5.1 : http://wiki.maarch.org/Maarch_Courrier/1.5/fr
-
+Dernière version stable V1.5.1 : http://wiki.maarch.org/Maarch_Courrier/1.5/fr
 Démonstration en ligne : http://demo.maarch.org/gec/
 
 ## Requis techniques
