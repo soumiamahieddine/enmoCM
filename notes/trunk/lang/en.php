@@ -50,3 +50,7 @@ if (!defined('_NOTE_TEMPLATE'))
 if (!defined('_SELECT_NOTE_TEMPLATE'))
     define('_SELECT_NOTE_TEMPLATE', 'Select a template for the note');
 
+//SERVICES FOR NOTES
+if (!defined("_NOTES_RESTRICTION"))
+    define("_NOTES_RESTRICTION", "Restrict notes for your entity");
+

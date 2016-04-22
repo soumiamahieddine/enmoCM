@@ -171,8 +171,20 @@ switch ($mode) {
             $content .= '<tr><td width="20%" align="center">';
             $content .= '<select name="entitieslist[]" id="entitieslist" size="7" style="width: 206px" ';
             $content .= 'ondblclick=\'moveclick($(entitieslist), $(entities_chosen));\' multiple="multiple">';
+            $primaryEntityForRestriction = null;
+            if ($core_tools->test_service('notes_restriction', 'notes', false)) {
+                if (!empty($_SESSION['user']['primaryentity'])) {
+                    $primaryEntityForRestriction = $_SESSION['user']['primaryentity']['id'];
+                }
+            }
             for ($i=0;$i<count($entitiesList);$i++) {
-                $state_entity = false;
+                if ($primaryEntityForRestriction && $primaryEntityForRestriction == $entitiesList[$i]->entity_id) {
+                    $state_entity = true;
+                    $primaryEntityLabelForRestriction = $entitiesList[$i]->short_label;
+                } else {
+                    $state_entity = false;
+                }
+
                 if ($state_entity == false) {
                     $content .= '<option value="'
                         .$entitiesList[$i]->entity_id.'" alt="'
@@ -192,7 +204,7 @@ switch ($mode) {
             $content .= 'ondblclick=\'moveclick($(entities_chosen), $(entitieslist));\' multiple="multiple">';
             for ($i=0;$i<count($entitiesList);$i++) {
                $state_entity = false;
-               if ($state_entity == true) {
+               if ($state_entity == true || ($primaryEntityForRestriction && $primaryEntityForRestriction == $entitiesList[$i]->entity_id)) {
                     $content .= '<option value="'
                         .$entitiesList[$i]->entity_id.'" alt="'
                         .$entitiesList[$i]->short_label.'" title="'

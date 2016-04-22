@@ -25,6 +25,14 @@
      <nature>include</nature>
    </WHEREAMIUSED>-->
  </SERVICE>
+<SERVICE>
+    <id>notes_restriction</id>
+    <name>_NOTES_RESTRICTION</name>
+    <comment>_NOTES_RESTRICTION</comment>
+    <servicetype>use</servicetype>
+    <system_service>false</system_service>
+    <enabled>true</enabled>
+</SERVICE>
 <!--<SERVICE>
 	Beta!!
    <id>show_notes_list</id>

@@ -51,3 +51,7 @@ if (!defined("_NOTE_TEMPLATE"))
     define("_NOTE_TEMPLATE", "Modèle de note");
 if (!defined("_SELECT_NOTE_TEMPLATE"))
     define("_SELECT_NOTE_TEMPLATE", "Sélectionner un modèle de note");
+
+//SERVICES FOR NOTES
+if (!defined("_NOTES_RESTRICTION"))
+    define("_NOTES_RESTRICTION", "Restreindre par défaut les notes à votre entité");
