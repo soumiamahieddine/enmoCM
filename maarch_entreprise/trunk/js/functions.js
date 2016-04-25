@@ -3,6 +3,11 @@ var isAlreadyClick = false;
 
 page_result_final = '';
 
+function capitalizeFirstLetter(theString)
+{
+    return theString && theString[0].toUpperCase() + theString.slice(1);
+}
+
 function whatIsTheDivStatus(theDiv, divStatus)
 {
     if ($(theDiv).style.display == 'none') {

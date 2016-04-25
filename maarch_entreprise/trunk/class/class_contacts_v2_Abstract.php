@@ -567,7 +567,7 @@ abstract class contacts_v2_Abstract extends Database
                     </tr>
                     <tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ functions::xecho($display_value);}?>">
                         <td><label for="firstname"><?php echo _FIRSTNAME;?> : </label></td>
-                        <td class="indexing_field"><input name="firstname" type="text" id="firstname" value="<?php if(isset($_SESSION['m_admin']['contact']['FIRSTNAME'])){ functions::xecho($func->show_str($_SESSION['m_admin']['contact']['FIRSTNAME']));} ?>"/></td>
+                        <td class="indexing_field"><input name="firstname" type="text" id="firstname" onkeyup="this.value=capitalizeFirstLetter(this.value)" value="<?php if(isset($_SESSION['m_admin']['contact']['FIRSTNAME'])){ functions::xecho($func->show_str($_SESSION['m_admin']['contact']['FIRSTNAME']));} ?>"/></td>
                         <td><span id="firstname_mandatory" class="red_asterisk" style="visibility:none;"><i class="fa fa-star"></i></span></td>
                     </tr>
                     <tr id="function_p" style="display:<?php if(isset($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']) && $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ functions::xecho($display_value);}?>">
@@ -1184,7 +1184,7 @@ abstract class contacts_v2_Abstract extends Database
                         <tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ functions::xecho($display_value);}?>">
                             <td><label for="firstname"><?php echo _FIRSTNAME;?>&nbsp;: </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="firstname" type="text"  id="firstname" value="<?php if(isset($_SESSION['m_admin']['address']['FIRSTNAME'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['FIRSTNAME']));} ?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="firstname" type="text"  id="firstname" onkeyup="this.value=capitalizeFirstLetter(this.value)" value="<?php if(isset($_SESSION['m_admin']['address']['FIRSTNAME'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['FIRSTNAME']));} ?>"/>
                             </td>
                         </tr>
                         <tr id="function_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ functions::xecho($display_value);}?>">
