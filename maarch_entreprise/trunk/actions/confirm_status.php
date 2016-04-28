@@ -65,7 +65,7 @@ $frm_height = 'auto';
     }
     $values_str = preg_replace('/, $/', '', $values_str);
   
-    /*require 'modules/templates/class/templates_controler.php';
+    require 'modules/templates/class/templates_controler.php';
     $templatesControler = new templates_controler();
     $templates = array();
 
@@ -73,10 +73,10 @@ $frm_height = 'auto';
             $templates = $templatesControler->getAllTemplatesForProcess($destination);
         } else {
             $templates = $templatesControler->getAllTemplatesForSelect();
-        }*/
+        }
         $frm_str .='<center style="font-size:15px;">'._ACTION_CONFIRM.'<br/><br/><b>'.strtoupper($labelAction).' ?</b></center><br/>';
-        //$frm_str .='<b>'._NOTE.':</b><br/>';
-        /*$frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
+        $frm_str .='<b>'._NOTE.':</b><br/>';
+        $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
                     . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''
                     . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
                     . '&module=templates&page=templates_ajax_content_for_notes\');document.getElementById(\'notes\').focus();">';
@@ -90,7 +90,7 @@ $frm_height = 'auto';
                 }
                 $frm_str .= '</option>';
             }
-        $frm_str .= '</select><br />';*/
+        $frm_str .= '</select><br />';
 
         $frm_str .= '<textarea placeholder="motif de l\'action (optionnel) ..." style="width:98%;height:60px;resize:none;" name="notes"  id="notes" onblur="document.getElementById(\'note_content_to_users\').value=document.getElementById(\'notes\').value;"></textarea>';
         $frm_str .='<div id="form2" style="border:none;">';
