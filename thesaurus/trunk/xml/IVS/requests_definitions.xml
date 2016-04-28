@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<inputValidation xmlns:xi="http://www.w3.org/2001/XInclude">
+<requestDefinitions>
+
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="tag_manage_add" >
+      <parameter name="display" value="true"/>
+      <parameter name="module" value="tags"/>
+      <parameter name="page" value="manage_tag_list_controller"/> 
+    </requestDefinition>
+</requestDefinitions>
+</inputValidation>
