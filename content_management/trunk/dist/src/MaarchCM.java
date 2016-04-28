@@ -8,6 +8,7 @@
 
 package com.maarch;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -109,9 +110,9 @@ public class MaarchCM extends JApplet {
         System.out.println("----------END PARAMETERS----------");
         try {
             this.editObject();
-            //this.destroy();
-            //this.stop();
-            //System.exit(0);
+            this.destroy();
+            this.stop();
+            System.exit(0);
         } catch (Exception ex) {
             Logger.getLogger(MaarchCM.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -210,22 +211,30 @@ public class MaarchCM extends JApplet {
     {
         this.logger.log("----------BEGIN PARSE XML----------", Level.INFO);
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document doc = builder.parse(flux_xml);
-        this.messageResult.clear();
-        NodeList level_one_list = doc.getChildNodes();
-        for (Integer i=0; i < level_one_list.getLength(); i++) {
-            NodeList level_two_list = level_one_list.item(i).getChildNodes();
-            if ("SUCCESS".equals(level_one_list.item(i).getNodeName())) {
-                for(Integer j=0; j < level_one_list.item(i).getChildNodes().getLength(); j++ ) {
-                    this.messageResult.put(level_two_list.item(j).getNodeName(),level_two_list.item(j).getTextContent());
+
+        try {
+            Document doc = builder.parse(flux_xml);
+            this.messageResult.clear();
+            NodeList level_one_list = doc.getChildNodes();
+            for (Integer i=0; i < level_one_list.getLength(); i++) {
+                NodeList level_two_list = level_one_list.item(i).getChildNodes();
+                if ("SUCCESS".equals(level_one_list.item(i).getNodeName())) {
+                    for(Integer j=0; j < level_one_list.item(i).getChildNodes().getLength(); j++ ) {
+                        this.messageResult.put(level_two_list.item(j).getNodeName(),level_two_list.item(j).getTextContent());
+                    }
+                    this.messageStatus = "SUCCESS";
+                } else if ("ERROR".equals(level_one_list.item(i).getNodeName()) ) {
+                    for(Integer j=0; j < level_one_list.item(i).getChildNodes().getLength(); j++ ) {
+                        this.messageResult.put(level_two_list.item(j).getNodeName(),level_two_list.item(j).getTextContent());
+                    }
+                    this.messageStatus = "ERROR";
                 }
-                this.messageStatus = "SUCCESS";
-            } else if ("ERROR".equals(level_one_list.item(i).getNodeName()) ) {
-                for(Integer j=0; j < level_one_list.item(i).getChildNodes().getLength(); j++ ) {
-                    this.messageResult.put(level_two_list.item(j).getNodeName(),level_two_list.item(j).getTextContent());
-                }
-                this.messageStatus = "ERROR";
             }
+        } catch (SAXException | IOException e) {
+            
+            this.logger.log("ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.", Level.SEVERE);
+            this.messageStatus = "ERROR";
+            this.messageResult.put("ERROR","ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.");
         }
         this.logger.log("----------END PARSE XML----------", Level.INFO);
     }
@@ -275,6 +284,9 @@ public class MaarchCM extends JApplet {
         //send message error to Maarch if necessary
         if (!this.error.isEmpty()) {
             this.sendJsMessage(this.error);
+            this.destroy();
+            this.stop();
+            System.exit(0);
         }
     }
     
@@ -286,7 +298,7 @@ public class MaarchCM extends JApplet {
      * @throws java.lang.Exception
      */
     public String editObject() throws Exception {
-        System.out.println("SECURE VERSION 2409 ----------BEGIN EDIT OBJECT----------LGI 07/12/2015");
+        System.out.println("----------BEGIN EDIT OBJECT----------LGI 28/04/2016");
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         String os = System.getProperty("os.name").toLowerCase();
         boolean isUnix = os.contains("nix") || os.contains("nux");
@@ -295,7 +307,7 @@ public class MaarchCM extends JApplet {
         this.userLocalDirTmp = System.getProperty("user.home");
         
         this.fM = new FileManager();
-        this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
+        
         if (isWindows) {
             System.out.println("This is Windows");
             this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
@@ -314,15 +326,33 @@ public class MaarchCM extends JApplet {
         } else {
             System.out.println("Your OS is not supported!!");
         }
-        System.out.println("APP PATH: " + this.appPath);
-        System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
-        
-        this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
-        System.out.println("----------END LOCAL DIR TMP IF NOT EXISTS----------");
-        
         
         System.out.println("Create the logger");
         this.logger = new MyLogger(this.userLocalDirTmp);
+        
+        /*String info = this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
+        
+        if(info == "ERROR"){
+            this.logger.log("ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch", Level.SEVERE);   
+            this.messageStatus = "ERROR";
+            this.messageResult.clear();
+            this.messageResult.put("ERROR","ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch");
+        }*/
+        
+        System.out.println("APP PATH: " + this.appPath);
+        System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
+        
+        String info = this.fM.createUserLocalDirTmp(this.userLocalDirTmp, this.os);
+        
+        if(info == "ERROR"){
+            this.logger.log("ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch", Level.SEVERE);
+            this.messageStatus = "ERROR";
+            this.messageResult.clear();
+            this.messageResult.put("ERROR","ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch");
+            this.processReturn(this.messageResult);
+        }
+        
+        System.out.println("----------END LOCAL DIR TMP IF NOT EXISTS----------");
         
         this.logger.log("Delete thefile if exists", Level.INFO);
         FileManager.deleteFilesOnDir(this.userLocalDirTmp, "thefile");
@@ -371,17 +401,22 @@ public class MaarchCM extends JApplet {
             String actualContent;
             this.fileContentTosend = "";
             do {
-                theThread.sleep(1000);
-                actualContent = FileManager.encodeFile(this.userLocalDirTmp + this.fileToEdit);
-                if (!this.fileContentTosend.equals(actualContent)) {
-                    this.fileContentTosend = actualContent;
-                    this.logger.log("----------[SECURITY BACKUP] BEGIN SEND OF THE OBJECT----------", Level.INFO);
-                    String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
-                                + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
-                                + "&uniqueId=" + this.uniqueId;
-                    this.logger.log("[SECURITY BACKUP] URL TO SAVE : " + urlToSave, Level.INFO);
-                    sendHttpRequest(urlToSave, this.fileContentTosend);
-                    this.logger.log("[SECURITY BACKUP] MESSAGE STATUS : " + this.messageStatus, Level.INFO);
+                theThread.sleep(3000);
+                File fileTotest = new File(this.userLocalDirTmp + this.fileToEdit);
+                if(fileTotest.canRead()) {
+                    actualContent = FileManager.encodeFile(this.userLocalDirTmp + this.fileToEdit);
+                    if (!this.fileContentTosend.equals(actualContent)) {
+                        this.fileContentTosend = actualContent;
+                        this.logger.log("----------[SECURITY BACKUP] BEGIN SEND OF THE OBJECT----------", Level.INFO);
+                        String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
+                                    + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
+                                    + "&uniqueId=" + this.uniqueId;
+                        this.logger.log("[SECURITY BACKUP] URL TO SAVE : " + urlToSave, Level.INFO);
+                        sendHttpRequest(urlToSave, this.fileContentTosend);
+                        this.logger.log("[SECURITY BACKUP] MESSAGE STATUS : " + this.messageStatus, Level.INFO);
+                    }
+                } else {
+                    this.logger.log(this.userLocalDirTmp + this.fileToEdit + "FILE NOT READABLE !!!!!!", Level.INFO);
                 }
             }
             while (theThread.isAlive());
@@ -490,9 +525,12 @@ public class MaarchCM extends JApplet {
         JSObject jso;
         jso = JSObject.getWindow(this);
         this.logger.log("----------JS CALL sendAppletMsg TO MAARCH----------", Level.INFO);
-        String theMessage;
-        theMessage = String.valueOf(message);
-        jso.call("sendAppletMsg", theMessage);
+        //String theMessage;
+        //theMessage = String.valueOf(message);
+        String[] theMessage = {String.valueOf(message), message};
+        this.logger.log("Envoi du message à MAARCH", Level.INFO);
+        jso.call("sendAppletMsg", (Object[]) theMessage);
+        this.logger.log("----------END OF JS CALL----------", Level.INFO);
     }
     
     /**
@@ -505,6 +543,7 @@ public class MaarchCM extends JApplet {
         this.logger.log("----------JS CALL endOfApplet TO MAARCH----------", Level.INFO);
         String[] theMessage = {String.valueOf(this.objectType), this.endMessage};
         jso.call("endOfApplet", (Object[]) theMessage);
+        this.logger.log("----------END OF JS CALL----------", Level.INFO);
     }
     
     /**
