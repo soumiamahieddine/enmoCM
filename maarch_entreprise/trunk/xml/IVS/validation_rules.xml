@@ -456,6 +456,7 @@
       <parameter name="signatory_name" type="string" />
       <parameter name="doc_notes" type="string" />
       <parameter name="process_notes" type="string" />
+      <parameter name="thesaurus_chosen" type="string" />
       <parameter name="chrono" type="string" />
       <parameter name="reference_number" type="identifier" />
       <parameter name="identifier" type="string" />
