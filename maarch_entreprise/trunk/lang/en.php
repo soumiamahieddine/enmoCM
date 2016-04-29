@@ -18,7 +18,10 @@
  *   You should have received a copy of the GNU General Public License
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+if (!defined("_SAVE_CONFIRM"))    define("_SAVE_CONFIRM", "Save");
+if (!defined("_SAVED_ALREADY_EXIST"))    define("_SAVED_ALREADY_EXIST", "Save already exist");
+if (!defined("_OK_FOR_CONFIRM"))    define("_OK_FOR_CONFIRM", "Are you sure to save ");
+if (!defined("_ACTIONS"))    define("_ACTIONS", "Action(s)");
 if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
 if (!defined("_GED"))    define("_GED", "n° Ged");
 if (!defined('_SENDER'))    define( '_SENDER', 'Sender');

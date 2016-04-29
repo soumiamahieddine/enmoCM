@@ -105,7 +105,9 @@ if (!defined("_ACTIONS"))    define("_ACTIONS", "Action(s)");
 if (!defined("_ACTION_PAGE"))    define("_ACTION_PAGE", "Page de résultat de l'action");
 if (!defined("_DO_NOT_MODIFY_UNLESS_EXPERT"))    define("_DO_NOT_MODIFY_UNLESS_EXPERT", " Ne pas modifier cette section à moins de savoir ce que vous faites. Un mauvais paramètrage peut entrainer des dysfonctionnements de l'application!");
 if (!defined("_INFOS_ACTIONS"))    define("_INFOS_ACTIONS", "Vous devez choisir au moins un statut et / ou un script.");
-
+if (!defined("_SAVE_CONFIRM"))    define("_SAVE_CONFIRM", "Confirmation Enregistrement");
+if (!defined("_SAVED_ALREADY_EXIST"))    define("_SAVED_ALREADY_EXIST", "Enregistrement déjà existant");
+if (!defined("_OK_FOR_CONFIRM"))    define("_OK_FOR_CONFIRM", "Confirmez-vous l\'enregistrement? ");
 
 /************** Intitulés formulaires et listes **************/
 if (!defined("_ID"))    define("_ID", "Identifiant");

@@ -33,6 +33,9 @@ $core_tools->load_lang();
 $db = new Database();
 $req = new request();
 $tmp = false;
+// var_dump($_POST['action']);
+// var_dump($_POST['name']);
+
 if ($_POST['action'] == 'creation') {
     if (isset($_POST['name']) && !empty($_POST['name'])) {
         $name = preg_replace('/[\'"]/', '', $_POST['name']);
@@ -51,6 +54,12 @@ if ($_POST['action'] == 'creation') {
                 array($_SESSION['user']['UserId'], $_POST['name'], $_SESSION['user']['UserId'], $_SESSION['current_search_query']), true
             );
         } else {
+            if($stmt->rowCount() >= 1){
+                //si il existe déjà une ligne dans la base avec les mêmes infos, on va demander confirmation
+                $_SESSION['seekName'] = $_POST['name'];
+                echo '{status : 4}';
+                exit(); 
+            }
             $res = $stmt->fetchObject();
             $id = $res->query_id;
             $tmp = $db->query(
@@ -94,6 +103,15 @@ if ($_POST['action'] == 'creation') {
     } else {
         echo "{'status' : 0}";
     }
+} else if($_POST['action'] == 'creation_ok') {
+
+            $tmp = $db->query(
+                'UPDATE ' . $_SESSION['tablename']['saved_queries']
+                . " SET query_txt = ?, last_modification_date = CURRENT_TIMESTAMP WHERE user_id = ? and query_name= ?"
+                , array($_SESSION['current_search_query'], $_SESSION['user']['UserId'], $_SESSION['seekName']), true
+            );
+          $_SESSION['seekName'] = null;  
+        echo "{'status' : 0}";
 } else {
     echo "{status : 1}";
  }

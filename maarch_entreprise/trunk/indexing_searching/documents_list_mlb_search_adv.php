@@ -764,25 +764,23 @@ if (count($tab) > 0) {
     /*************************Extra javascript***********************/
     ?>
     <script type="text/javascript">
-        var form_txt='<form name="frm_save_query" id="frm_save_query" action="#" method="post" class="forms" onsubmit="send_request(this.id);" ><h2><?php 
+        var form_txt='<form name="frm_save_query" id="frm_save_query" action="#" method="post" class="forms" onsubmit="send_request(this.id, <?php echo "\'creation\'";?>);" ><h2><?php 
 			echo _SAVE_QUERY_TITLE;?></h2><p><label for="query_name"><?php echo _QUERY_NAME;
 			?></label><input type="text" name="query_name" id="query_name" style="width:200px;" value=""/></p><br/><p class="buttons"><input type="submit" name="submit" id="submit" value="<?php 
 			echo _VALIDATE;?>" class="button"/> <input type="button" name="cancel" id="cancel" value="<?php echo _CANCEL;
 			?>" class="button" onclick="destroyModal();"/></p></form>';
 
-        function send_request(form_id)
+        function send_request(form_id,form_action)
         {
-            var form = $(form_id);
-            if(form)
-            {
-                var q_name = form.query_name.value;
+        if(form_action == 'creation_ok'){
+            var q_name = form_id;
+            var q_creation = form_action;
                 $('modal').innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
 
                 new Ajax.Request('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=manage_query',
                 {
                     method:'post',
-                    parameters: {name: q_name,
-                                action : "creation"},
+                    parameters: {action : q_creation},
                     onSuccess: function(answer){
                         eval("response = "+answer.responseText)
                         if(response.status == 0)
@@ -798,6 +796,55 @@ if (count($tab) > 0) {
                         {
                             $('modal').innerHTML = '<div class="error"><?php echo _QUERY_NAME.' '._IS_EMPTY;?></div>'+form_txt;
                             form.query_name.value = this.name;
+                        }
+                        else
+                        {
+                            $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR;?></div>'+form_txt;
+                            form.query_name.value = this.name;
+                        }
+                    },
+                    onFailure: function(){
+                        $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR;?></div>'+form_txt;
+                        form.query_name.value = this.name;
+                       }
+                });
+
+
+        }
+            var form = $(form_id);
+            if(form)
+            {
+                var q_name = form.query_name.value;
+                var q_creation = form_action;
+                $('modal').innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
+
+                new Ajax.Request('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=manage_query',
+                {
+                    method:'post',
+                    parameters: {name: q_name,
+                                action : q_creation},
+                    onSuccess: function(answer){
+                        eval("response = "+answer.responseText)
+                        if(response.status == 0)
+                        {
+                            $('modal').innerHTML ='<h2><?php echo _QUERY_SAVED;?></h2><br/><input type="button" name="close" value="<?php echo _CLOSE_WINDOW;?>" onclick="destroyModal();" class="button" />';
+                        }
+                        else if(response.status == 2)
+                        {
+                            $('modal').innerHTML = '<div class="error"><?php echo _SQL_ERROR;?></div>'+form_txt;
+                            form.query_name.value = this.name;
+                        }
+                        else if(response.status == 3)
+                        {
+                            $('modal').innerHTML = '<div class="error"><?php echo _QUERY_NAME.' '._IS_EMPTY;?></div>'+form_txt;
+                            form.query_name.value = this.name;
+                        }
+                        else if(response.status == 4)
+                        {
+                            $('modal').innerHTML = '<form name="frm_save_query" id="<?php echo $_SESSION['seekName'];?>" action="#" method="post" class="forms" onsubmit="send_request(this.id, <?php echo "\'creation_ok\'";?>);" ><h2><?php 
+            echo _SAVE_CONFIRM;?></h2><p><b><?php echo _SAVED_ALREADY_EXIST;?></b></p><p><?php echo _OK_FOR_CONFIRM;?></p><br/><p class="buttons"><input type="submit" name="submit" id="submit" value="<?php 
+            echo _VALIDATE;?>" class="button"/> <input type="button" name="cancel" id="cancel" value="<?php echo _CANCEL;
+            ?>" class="button" onclick="destroyModal();"/></p></form>';
                         }
                         else
                         {
