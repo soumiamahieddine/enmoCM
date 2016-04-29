@@ -80,6 +80,15 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
         } else {
             $templates = $templatesControler->getAllTemplatesForSelect();
         }
+
+        if (!empty($_SESSION['process']['diff_list']['avis'])) {
+            $_SESSION['redirect']['diff_list']['avis'] = $_SESSION['process']['diff_list']['avis'];
+        } 
+
+        if (!empty($_SESSION['process']['diff_list']['avis_copy'])) {
+            $_SESSION['redirect']['diff_list']['avis_copy'] = $_SESSION['process']['diff_list']['avis_copy'];
+        }   
+        
         $frm_str .='<br/><b>'._RECOMMENDATION_NOTE.':</b><br/>';
         $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
                     . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''

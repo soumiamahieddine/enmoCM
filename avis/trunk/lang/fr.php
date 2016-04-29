@@ -15,6 +15,9 @@ if (!defined("_VALIDATE_RECOMMENDATION"))
 if (!defined("_AVIS_USER"))
     define("_AVIS_USER", "Pour avis");
 
+if (!defined("_AVIS_USER_COPY"))
+    define("_AVIS_USER_COPY", "Pour suivi avis");
+
 if (!defined("_RECOMMENDATION_USER"))
     define("_RECOMMENDATION_USER", "Personne pour avis");
 
