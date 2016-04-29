@@ -1592,13 +1592,13 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
 }
 
 unset($_SESSION['transmissionContacts']);
-$content .= '<div class="error" id="divErrorAttachment">' . $_SESSION['error'];
+$content .= '<div class="error" style="left:10px;" id="divErrorAttachment" onClick="this.style.display=\'none\'">' . $_SESSION['error'];
 
 $_SESSION['error'] = "";
 
 $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
 $content .= '</div>';
-$content .= '<div class="info" id="divInfoAttachment">' . $_SESSION['info'].'</div>';
+$content .= '<div class="info" style="left:10px;" id="divInfoAttachment" onClick="this.style.display=\'none\'">' . $_SESSION['info'].'</div>';
 if (isset($_REQUEST['id'])) {
     $title = _MODIFY_ANSWER;
 } else {
