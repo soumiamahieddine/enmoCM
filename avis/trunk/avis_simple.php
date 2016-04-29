@@ -127,6 +127,11 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
         $_SESSION['action_error'] = _AVIS_NOTE. " " . _MANDATORY;
         return false;
     }
+
+    if(empty($_SESSION['process']['diff_list']['avis']['users'])){
+        $_SESSION['action_error'] = _AVIS_USER. " " . _IS_EMPTY;
+        return false;
+    }
     return true;
  }
 

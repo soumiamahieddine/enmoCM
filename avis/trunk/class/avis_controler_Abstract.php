@@ -786,7 +786,12 @@ abstract class avis_controler_Abstract
 
     public function getCurrentStepAvis($res_id, $coll_id, $listDiffType){
         $db = new Database();
-        $stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and process_date ISNULL ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, $listDiffType));
+        if($listDiffType == 'entity_id'){
+            $order = 'DESC';
+        }else{
+            $order = 'ASC';
+        }
+        $stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and process_date ISNULL ORDER BY listinstance_id ".$order." LIMIT 1", array($res_id, $coll_id, $listDiffType));
         $res = $stmt->fetchObject();
         /*if ($res->item_mode == 'avis'){
             return $this->nbAvis($res_id, $coll_id);
