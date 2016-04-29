@@ -21,5 +21,9 @@
 			<id>avis</id>
 			<label>_AVIS_USER</label>
 		</ROLE>
+		<ROLE>
+			<id>avis_copy</id>
+			<label>_AVIS_USER_COPY</label>
+		</ROLE>
 	</ROLES>
 </root>

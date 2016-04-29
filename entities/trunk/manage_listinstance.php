@@ -729,7 +729,7 @@ $linkwithwhat =
 			if (count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0
 			 || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
 			) { 
-                if($specific_role == $role_id || !isset($_REQUEST['specific_role'])){
+                if(($specific_role == $role_id || $specific_role.'_copy' == $role_id)|| !isset($_REQUEST['specific_role'])){
                 ?>
 				<h3 class="sstit" style="font-size:1.5em; text-align:left; margin-left:230px; margin-bottom: -10px"><?php functions::xecho($role_label);?></h3>
 				<table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
@@ -764,7 +764,7 @@ $linkwithwhat =
 						<td><?php functions::xecho($user['entity_label']);?></td>
 						<td class="action_entities" style="width:5%;"><?php 
 							/*if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { */
-							if (!$noDelete && (!$onlyCc || ($onlyCc && $role_id == 'copy'))) { ?>
+							if (!$noDelete && (!$onlyCc || ($onlyCc && $role_id != 'dest'))) { ?>
 								<a href="<?php echo($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id);?>&rank=<?php functions::xecho($i);?>&id=<?php functions::xecho($user['user_id']);?>"><i class="fa fa-times fa-lg" title="<?php echo _DEL_USER_LISTDIFF ;?>"></i></a><?php
 							} ?>
 						</td>
@@ -849,9 +849,9 @@ $linkwithwhat =
 			<div align="center">
 				<input align="middle" type="button" value="<?php echo _VALIDATE;?>" class="button" name="valid" onclick="change_diff_list('<?php functions::xecho($origin);?>', <?php echo "'" . $displayValue . "'";
 					if ($_REQUEST['origin'] == 'redirect'){
-                        echo ",'diff_list_div_redirect','','avis'";
+                        echo ",'diff_list_div_redirect','','','avis'";
                     }else{
-                        echo ",'','','".$cat."'";
+                        echo ",'','','".$cat."'",'';
                     } 
 				?>);" />
 				<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
@@ -964,7 +964,7 @@ $linkwithwhat =
                                         $role_label = _SHIPPER;
                                     }
 
-									if((($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) && (!isset($_REQUEST['specific_role']))) || ($role_id == $specific_role)) { ?>
+									if((($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) && (!isset($_REQUEST['specific_role']))) || ($role_id == $specific_role || $role_id == $specific_role.'_copy')) { ?>
 									<option value="<?php functions::xecho($role_id);?>"><?php functions::xecho($role_label);?></option><?php 
 									} 
 								}?>
