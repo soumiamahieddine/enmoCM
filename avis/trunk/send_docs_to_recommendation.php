@@ -252,20 +252,22 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             );
         }
 
-        foreach ($_SESSION['redirect']['diff_list']['avis_copy']['users'] as $key => $value) {
-            //print_r($value);
-            array_push(
-                $new_difflist['avis_copy']['users'], 
-                array(
-                    'user_id' => $value['user_id'], 
-                    'firstname' => $value['firstname'],
-                    'entity_id' => $value['entity_id'],
-                    'entity_label' => $value['entity_label'],
-                    'visible' => $value['visible']
-                )
-            );
+        if(!empty($_SESSION['redirect']['diff_list']['avis_copy']['users'])){
+            foreach ($_SESSION['redirect']['diff_list']['avis_copy']['users'] as $key => $value) {
+                //print_r($value);
+                array_push(
+                    $new_difflist['avis_copy']['users'], 
+                    array(
+                        'user_id' => $value['user_id'], 
+                        'firstname' => $value['firstname'],
+                        'entity_id' => $value['entity_id'],
+                        'entity_label' => $value['entity_label'],
+                        'visible' => $value['visible']
+                    )
+                );
+            }
         }
-        
+           
         # save note
         if($formValues['note_content_to_users'] != ''){
             //Add notes
