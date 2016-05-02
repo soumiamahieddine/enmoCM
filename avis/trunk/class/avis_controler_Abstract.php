@@ -160,7 +160,9 @@ abstract class avis_controler_Abstract
                         $str .= '</optgroup>';
                         $str .= '</select>';
                     }
-                    $str .= '<span id="lastavis_' . $j . '"> <i title="'._LAST_AVIS.'" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
+                    $str .= '<span id="lastavis_' . $j . '"> ';
+                    //$str .= '<i title="'._LAST_AVIS.'" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i>';
+                    $str .= '</span></td>';
                     $str .= '<td><a href="javascript://" id="avis_down_'.$j.'" name="avis_down_'.$j.'" style="visibility:hidden;" onclick="deplacerLigneAvis(0,1,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x" title="'.DOWN_USER_WORKFLOW.'"></i></a></td>';
                     $str .= '<td><a href="javascript://" id="avis_up_'.$j.'" name="avis_up_'.$j.'" style="visibility:hidden;" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
                     $str .= '<td><a href="javascript://" onclick="delRowAvis(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="avis_suppr_'.$j.'" name="avis_suppr_'.$j.'" style="visibility:hidden;" ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';

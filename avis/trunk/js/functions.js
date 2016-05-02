@@ -168,7 +168,7 @@ function refreshIconesAvis(id_tableau){
 			document.getElementById("avis_add_"+num).style.visibility="visible";
 			document.getElementById("avis_isSign_"+num).style.visibility="hidden";
 			document.getElementById("avis_isSign_"+num).checked=true;
-			document.getElementById("lastAvis_" + num).innerHTML = " <i title='Conseiller décideur' style='color : #fdd16c' class='fa fa-certificate fa-lg fa-fw'></i>";
+			//document.getElementById("lastAvis_" + num).innerHTML = " <i title='Conseiller décideur' style='color : #fdd16c' class='fa fa-certificate fa-lg fa-fw'></i>";
 
 			document.getElementById("avis_down_"+num).style.visibility="hidden";
 
@@ -264,7 +264,7 @@ function refreshIconesAvisPopup(id_tableau){
             document.getElementById("avisPopup_add_"+num).style.visibility="visible";
             document.getElementById("avisPopup_isSign_"+num).style.visibility="hidden";
             document.getElementById("avisPopup_isSign_"+num).checked=true;
-            document.getElementById("lastAvisPopup_" + num).innerHTML = " <i title='Conseiller décideur' style='color : #fdd16c' class='fa fa-certificate fa-lg fa-fw'></i>";
+            //document.getElementById("lastAvisPopup_" + num).innerHTML = " <i title='Conseiller décideur' style='color : #fdd16c' class='fa fa-certificate fa-lg fa-fw'></i>";
 
             document.getElementById("avisPopup_down_"+num).style.visibility="hidden";
 
