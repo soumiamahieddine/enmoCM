@@ -10,6 +10,10 @@
     echo '<div style="max-height:490px;overflow:auto;">';
     $empty = 0;
     $nb_roles = 0;
+    if($origin == 'indexing' && $category == 'outgoing'){
+        $difflist['copy'] = array();
+    }
+
     foreach($roles as $role_id => $role_label) {
         $nb_role++;
         if($category == 'outgoing' && $role_label == 'Destinataire'){
