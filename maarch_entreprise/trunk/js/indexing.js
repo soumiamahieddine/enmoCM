@@ -680,6 +680,13 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                         var destination = response.destination;
                         $('destination').value = destination;
                     }
+
+                    if(cat_id != 'outgoing'){
+                        $('choose_file_div').show();
+                    }else{
+                        $('choose_file_div').hide();
+                    }
+
                     if(origin != 'init'){
                        document.getElementById("destination").onchange();
                        Event.fire($("destination"), "chosen:updated");
