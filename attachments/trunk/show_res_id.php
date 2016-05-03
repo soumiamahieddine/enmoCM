@@ -26,13 +26,13 @@ $core->test_user();
 
 <script type="text/javascript">
 var input_res = window.opener.$('res_id_link');
-//console.log(input_res);
+
+//VALIDATE_MAIL
 if (input_res) {
-	input_res.value=<?php echo json_encode(functions::xssafe($_SESSION['stockCheckbox']));?>;
-}
-else {
-	var tab = <?php echo json_encode(functions::xssafe($_SESSION['stockCheckbox']));?>;
-	window.opener.$('res_id').value=tab;
+	input_res.value=<?php echo json_encode($_SESSION['stockCheckbox']);?>;
+	window.opener.$('attach_link').click();
+} else { //INDEX_MLB
+	window.opener.$('res_id').value=<?php echo json_encode($_SESSION['stockCheckbox']);?>;
 }
 
 <?php
