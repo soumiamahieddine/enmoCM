@@ -58,7 +58,7 @@ $page_id = "search_adv_result_apps";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 }
-elseif($mode == 'popup' || $mode == 'frame' || $mode == 'iframe')
+elseif($mode == 'popup' || $mode == 'frame')
 {
     $core_tools->load_html();
     $core_tools->load_header();
@@ -74,9 +74,7 @@ elseif($mode == 'popup' || $mode == 'frame' || $mode == 'iframe')
             </div><?php
 }
 ?>
-<?php if($mode != 'iframe'){ ?>
 <h1><i class="fa fa-search fa-2x"></i> <?php echo _ADV_SEARCH_TITLE;?></h1>
-<?php } ?>
 <div id="inner_content">
     <p>&nbsp;</p>
     <p>&nbsp;</p>
@@ -88,7 +86,7 @@ elseif($mode == 'popup' || $mode == 'frame' || $mode == 'iframe')
     $_SESSION['error_search'] = "";
     ?>
 </div>
-<?php if($mode == 'popup' || $mode == 'frame' || $mode == 'iframe')
+<?php if($mode == 'popup' || $mode == 'frame')
 {
     echo '</div>';
     if($mode == 'popup')
