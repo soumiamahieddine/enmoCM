@@ -200,7 +200,7 @@
 		<parameter name="what_services" type="string" />
 		<parameter name="what_users" type="string" />
 		<parameter name="action" type="string" />
-		<parameter name="id" type="identifierPoint" />
+		<parameter name="id" type="login" />
 		<parameter name="role" type="identifier" />
 		<parameter name="no_filter" type="string" />
 		<parameter name="rank" type="integer" />
