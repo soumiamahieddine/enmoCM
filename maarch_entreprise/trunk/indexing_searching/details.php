@@ -1676,14 +1676,17 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         // $Links .= '<h2>';
                             // $Links .= _LINK_TAB;
                         // $Links .= '</h2>';
+                        if ($core->test_service('add_links', 'apps', false)) {
+                            include_once 'apps/'.$_SESSION['config']['app_id'].'/add_links.php';
+                        }
                         $Links .= '<div id="loadLinks">';
+
                             $nbLinkDesc = $Class_LinkController->nbDirectLink(
                                 $_SESSION['doc_id'],
                                 $_SESSION['collection_id_choice'],
                                 'desc'
                             );
                             if ($nbLinkDesc > 0) {
-                                $Links .= '<i class="fa fa-long-arrow-right fa-2x"></i>';
                                 $Links .= $Class_LinkController->formatMap(
                                     $Class_LinkController->getMap(
                                         $_SESSION['doc_id'],
@@ -1701,7 +1704,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 'asc'
                             );
                             if ($nbLinkAsc > 0) {
-                                $Links .= '<i class="fa fa-long-arrow-left fa-2x"></i>';
+                                //$Links .= '<i class="fa fa-long-arrow-left fa-2x"></i>';
                                 $Links .= $Class_LinkController->formatMap(
                                     $Class_LinkController->getMap(
                                         $_SESSION['doc_id'],
@@ -1713,10 +1716,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 $Links .= '<br />';
                             }
                         $Links .= '</div>';
-
-                    if ($core->test_service('add_links', 'apps', false)) {
-                        include_once 'apps/'.$_SESSION['config']['app_id'].'/add_links.php';
-                    }
 
                     $Links .= '</dd>';
                 //}

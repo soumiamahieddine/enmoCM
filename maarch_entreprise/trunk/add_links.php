@@ -130,7 +130,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
             'desc'
         );
         if ($nbLinkDesc > 0) {
-            $formatText .= '<i class="fa fa-long-arrow-right fa-2x"></i>';
+            //$formatText .= '<i class="fa fa-long-arrow-right fa-2x"></i>';
             $formatText .= $Class_LinkController->formatMap(
                 $Class_LinkController->getMap(
                     $_SESSION['doc_id'],
@@ -148,7 +148,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
             'asc'
         );
         if ($nbLinkAsc > 0) {
-            $formatText .= '<i class="fa fa-long-arrow-left fa-2x"></i>';
+            //$formatText .= '<i class="fa fa-long-arrow-left fa-2x"></i>';
             $formatText .= $Class_LinkController->formatMap(
                 $Class_LinkController->getMap(
                     $_SESSION['doc_id'],
@@ -186,18 +186,17 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
     //header("Location: index.php?page=".$_REQUEST['pageHeader']."&dir=".$_REQUEST['dirHeader']."&id=".$res_child);
 }
 } else {
-    $Links .= '<h2>';
+   /* $Links .= '<h2>';
         $Links .= _ADD_A_LINK;
     $Links .= '</h2>';
-    $Links .= '<br />';
-    
+    $Links .= '<br />';*/
     $searchAdv = 'search_adv';
     
     //formulaire
     $Links .= '<form action="index.php" method="">';
-        $Links .= '<table width="50%" border="0" >';
+        $Links .= '<table width="100%" border="0" >';
             $Links .= '<tr>';
-                $Links .= '<td style="text-align: left;">';
+                $Links .= '<td style="text-align: center;">';
                     $Links .= '<input ';
                       $Links .= 'onclick="window.open(';
                         $Links .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page='
@@ -206,11 +205,12 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                         $Links .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
                         $Links .= ');"';
                       $Links .= 'type="button" ';
-                      $Links .= 'value="Rechercher un document"';
+                      //$Links .= 'value="Rechercher un document"';
+                      $Links .= 'value="'._ADD_A_LINK.'"';
                       $Links .= 'class="button" ';
                     $Links .= '/>';
                 $Links .= '</td>';
-                $Links .= '<td style="text-align: left;">';
+                $Links .= '<td style="text-align: left;display:none;">';
                     $Links .= '<input ';
                       $Links .= 'type="hidden" ';
                       $Links .= 'name="res_id_child" ';
@@ -238,9 +238,9 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                 $Links .= '</td>';
             $Links .= '</tr>';
             $Links .= '<tr>';
-                $Links .= '<td>';
+                $Links .= '<td style="display:none;">';
                     $Links .= '<input ';
-                      $Links .= 'type="button" ';
+                      $Links .= 'type="button" id="attach_link"';
                       $Links .= 'class="button" ';
                       $Links .= 'onClick="if($(\'res_id_link\').value != \'\') addLinks(\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', \''.$_SESSION['doc_id'].'\', $(\'res_id_link\').value, \'add\', $(\'tableHist\').value);';
                       $Links .= '$(\'res_id_link\').setValue(\'\');"';
