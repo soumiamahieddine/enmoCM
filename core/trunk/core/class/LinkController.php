@@ -52,55 +52,61 @@ class LinkController
             $infos = $this->getDocInfos($key, $_SESSION['current_basket']['coll_id']);
             $infos['subject'] = preg_replace("/\r\n|\r|\n/",'<br/>',$infos['subject']);
             $return .= '<div id="ged_'.$key.$sens.'" class="linkDiv">';
-                $return .= '<table>';
+                $return .= '<table style="width:100%;text-align:left;font-size:15px;cursor:pointer;" title="accéder à la fiche détaillée">';
                     $return .= '<tr>';
-                        $return .= '<td>';
-                            $return .= '<a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=' . $key . '" target="_blank">';
+                        $status = $this->getStatus($infos['status']);
+                        $img_class = substr($status['img_filename'], 0, 2);
+                        $return .= '<td style="width:14%;text-align:center;" title="'.$status['label_status'].'" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                            /*$return .= '<a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=' . $key . '" target="_blank">';
                                 $return .= '<i class="fa fa-download fa-2x"></i>';
-                            $return .= '</a>';
+                            $return .= '</a>';*/
+                            $return .= '<i class="'.$img_class.' '.$status['img_filename'].' '.$img_class.'-2x" ></i> ';
                         $return .= '</td>';
-                        $return .= '<td>';
-                        if ($_SESSION['current_basket']['coll_id'] == 'letterbox_coll') {
-                            $return .= '<a href="index.php?page=details&dir=indexing_searching&id='.$key.'">';
-                        } elseif ($_SESSION['current_basket']['coll_id'] == 'business_coll') {
-                            $return .= '<a href="index.php?page=details_business&dir=indexing_searching&id='.$key.'">';
-                        }
-                                $return .=  '<b>'.$key.'</b>' ;
-                            $return .= '</a>';
+                        $return .= '<td colspan="2" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                            $return .=  '<b>'.$infos['subject'].'</b>';
                         $return .= '</td>';
-                        $return .= '<td class="barreLinks" width="2">';
+                    $return .= '</tr>';
+                    $return .= '<tr>';
+                        $return .= '<td style="width:14%;text-align:center;" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                            $return .=  $infos['res_id'];
                         $return .= '</td>';
-                        $return .= '<td align="center">';
+                        $return .= '<td style="font-size:12px;width:16%;" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
                         if ($_SESSION['current_basket']['coll_id'] == 'letterbox_coll') {
                             $return .= $_SESSION['coll_categories']['letterbox_coll'][$infos['category_id']];
                         } elseif ($_SESSION['current_basket']['coll_id'] == 'business_coll') {
                             $return .= $_SESSION['coll_categories']['business_coll'][$infos['category_id']];
                         }
-                        $return .= '</td>';
-                        $return .= '<td class="barreLinks" width="2">';
-                        $return .= '</td>';
-                        $return .= '<td align="center">';
+                         $return .= '</td>';
+                         $return .= '<td style="font-size:12px;width:14%" title="'._DOC_DATE.'" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                                $return .= '<i class="fa fa-calendar-o fa-2x" style="font-size:10px;"></i> ';
                                 $date = explode('-', substr($infos['doc_date'], 0, 10));
                                 $return .= $date[2].' '.$date[1].' '.$date[0];
                         $return .= '</td>';
-                        $return .= '<td class="barreLinks" width="2">';
+                        $return .= '<td style="font-size:12px;width:14%" title="'._DEST_USER.'" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                                $return .= '<i class="fa fa-user fa-2x" style="font-size:10px;"></i> ';
+                                $return .= $infos['dest_user'];
                         $return .= '</td>';
-                        $return .= '<td align="center">';
-                            $return .= '<a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=' . $key . '" target="_blank">';
-                                $return .= $infos['subject'];
-                            $return .= '</a>';
+                        $return .= '<td style="font-size:12px;width:24%" title="'._DESTINATION.'" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                                $return .= '<i class="fa fa-sitemap fa-2x" style="font-size:10px;"></i> ';
+                                $return .= $infos['entity_label'];
                         $return .= '</td>';
-                        $return .= '<td class="barreLinks" width="2">';
-                        $return .= '</td>';
-                        $return .= '<td align="center">';
-                                $return .= $infos['entity_label'].' ('.$infos['destination'].')';
-                        $return .= '</td>';
-                        $return .= '<td class="barreLinks" width="2">';
-                        $return .= '</td>';
-                        $return .= '<td align="center">';
-                                $status = $this->getStatus($infos['status']);
-                                $return .= $status;
-                        $return .= '</td>';
+                        if ($core->is_module_loaded('visa')) {
+                            require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
+                            . "class" . DIRECTORY_SEPARATOR
+                            . "class_modules_tools.php";
+                            $return .= '<td style="font-size:12px;width:16%" title="'._VISA_USERS.'">';
+
+                            $visa = new visa();
+
+                            $users_visa_list = $visa->getUsersCurrentVis($infos['res_id']);
+                            if(!empty($users_visa_list)){
+                                $users_visa_list = implode(', ', $users_visa_list);
+                                $return .= '<i class="fa fa-certificate fa-2x" style="font-size:10px;"></i> ';
+                                $return .= $users_visa_list;
+                            }
+                            $return .= '</td>';
+                        }
+                   
                         if ($core->test_service('add_links', 'apps', false) && $this->level <= 1) {
                             if ($sens == 'asc') {
                                 $delParent = $key;
@@ -109,9 +115,7 @@ class LinkController
                                 $delParent = $_SESSION['doc_id'];
                                 $delChild = $key;
                             }
-                            $return .= '<td class="barreLinks" width="2">';
-                            $return .= '</td>';
-                            $return .= '<td align="center">';
+                            $return .= '<td align="right">';
                                 $return .= '<span onclick="';
                                   $return .= 'addLinks(';
                                     $return .= '\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', ';
@@ -128,7 +132,7 @@ class LinkController
                                 }
                                 $return .= ');';
                                 $return .= '">';
-                                    $return .= '<i class="fa fa-remove fa-2x" style="cursor:pointer;"></i>';
+                                    $return .= '<i class="fa fa-unlink fa-2x" title="supprimer la liaison" style="cursor:pointer;"></i>';
                                 $return .= '</span>';
                             $return .= '</td>';
                         }
@@ -240,13 +244,15 @@ class LinkController
 
     public function getStatus($status)
     {
+        //$return->label_status = 'BAD';
+        //$return->img_filename = '';
         $db = new Database();
-        $query = "SELECT label_status FROM status WHERE id = ?";
+        $query = "SELECT label_status, img_filename FROM status WHERE id = ?";
         $stmt = $db->query($query,array($status));
         if ($stmt) {
             $i = 0;
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $return = $row['label_status'];
+                $return = $row;
                 $i++;
             }
         }
