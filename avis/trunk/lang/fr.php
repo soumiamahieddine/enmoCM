@@ -1,5 +1,7 @@
 <?php
-// CIRCUIT AVIS
+if (!defined("_AVIS"))
+    define("_AVIS", "avis");
+
 if (!defined("_AVIS_WORKFLOW"))
     define("_AVIS_WORKFLOW", "Circuit d'avis");
 

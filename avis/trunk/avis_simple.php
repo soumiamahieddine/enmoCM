@@ -228,7 +228,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $content_note = str_replace(";", ".", $content_note);
             $content_note = str_replace("--", "-", $content_note);
             $content_note = $content_note;
-            $content_note = '[' . _AVIS_NB . $nb_avis . '] ' . $content_note;
+            $content_note = '[' . _AVIS . '] ' . $content_note;
             $note->addNote($res_id, $coll_id, $content_note);
             
         }
