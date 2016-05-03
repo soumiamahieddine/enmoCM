@@ -1727,8 +1727,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 </div>
 </div>
 <script type="text/javascript">
-document.getElementById('attach').setAttribute("onClick","showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
-                                . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create&cat=outgoing';?>','98%','auto')");
   var item  = $('details_div');
     <?php if($_SESSION['indexation'] == true && $category == 'outgoing'){ 
             $selectAttachments = "SELECT attachment_type FROM res_view_attachments"
@@ -1739,6 +1737,8 @@ document.getElementById('attach').setAttribute("onClick","showAttachmentsForm('<
 
             
         ?>
+        document.getElementById('attach').setAttribute("onClick","showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
+                                . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create&cat=outgoing';?>','98%','auto')");
         var tabricator1 = new Tabricator('tabricator1', 'DT', 'other_attachments_tab');
         $('attach').click();
 
