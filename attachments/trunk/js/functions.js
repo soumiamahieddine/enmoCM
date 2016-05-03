@@ -1,3 +1,32 @@
+function checkBackDate(inputDate) {
+
+  var dataCreationDate;
+  var dateToCheck = inputDate.value;
+
+  if($('dataCreationDate')) {
+    dataCreationDate = $('dataCreationDate').value;
+    var t = dataCreationDate.split(/[- :.]/);
+    var tmpDate = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+    var d1_dataCreationDate = tmpDate.getTime();
+  }
+
+  if (dateToCheck != "") {
+    var tmpDate = new Date();
+    tmpDate.setFullYear(dateToCheck.substr(6,4));
+    tmpDate.setMonth(dateToCheck.substr(3,2) - 1);
+    tmpDate.setDate(dateToCheck.substr(0,2));
+    tmpDate.setHours(0);
+    tmpDate.setMinutes(0);
+    var d2_dateToCheck = tmpDate.getTime();
+  }
+
+  if (dateToCheck != "" && d1_dataCreationDate > d2_dateToCheck) {
+    alert("La date de retour doit être supérieur à la date du courrier");
+    inputDate.value = "";
+  }
+
+}
+
 function setRturnForEffectiveDate() {
   $('effectiveDateStatus').selectedIndex = 1;
 }

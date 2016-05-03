@@ -1504,6 +1504,8 @@ if (isset($_REQUEST['id'])) {
 
 }
 
+$stmt = $db->query('SELECT creation_date FROM res_letterbox WHERE res_id = ?', [$_SESSION['doc_id']]);
+$dataForDate = $stmt->fetchObject();
 
 if ($data_attachment->dest_contact_id <> "") {
     $stmt = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
@@ -1697,16 +1699,16 @@ $content .= '</p>';
 $content .= '<p>';
 $content .= '<label>'. _BACK_DATE.'</label>';
 if (isset($_REQUEST['id'])) {
-    $content .= '<input type="text" name="back_date" id="back_date" onClick="showCalender(this);" value="';
+    $content .= '<input type="text" name="back_date" id="back_date" onClick="showCalender(this);" onfocus="checkBackDate(this)" value="';
     $content .= $req->format_date_db($data_attachment->validation_date);
     $content .= '"/>';
     $content .= '</p>';
-    $content .= '<p>';
-    $content .= '<label>'. "Date de retour effective".'</label>';
-    $content .= '<input type="text" name="effectiveDate" id="effectiveDate" onblur="setRturnForEffectiveDate()" onClick="showCalender(this);" style="width: 75px" value="';
-    $content .= $req->format_date_db($data_attachment->effective_date);
-    $content .= '" />';
     if ($data_attachment->attachment_type == 'transmission' && ($data_attachment->status == "RTURN" || $data_attachment->status == "EXP_RTURN")) {
+        $content .= '<p>';
+        $content .= '<label>'. "Date de retour effective".'</label>';
+        $content .= '<input type="text" name="effectiveDate" id="effectiveDate" onblur="setRturnForEffectiveDate()" onClick="showCalender(this);" onfocus="checkBackDate(this)" style="width: 75px" value="';
+        $content .= $req->format_date_db($data_attachment->effective_date);
+        $content .= '" />';
         $content .= '<select name="effectiveDateStatus" id="effectiveDateStatus" style="margin-left: 20px;width: 105px" />';
         $content .= '<option value="EXP_RTURN">Attente retour</option>';
         if ($data_attachment->status == "RTURN")
@@ -1716,8 +1718,9 @@ if (isset($_REQUEST['id'])) {
         $content .= '</select>';
     }
 } else {
-    $content .= '<input type="text" name="back_date" id="back_date" onClick="showCalender(this);" value="" />';
+    $content .= '<input type="text" name="back_date" id="back_date" onClick="showCalender(this);" onfocus="checkBackDate(this)" value="" />';
 }
+$content .= "<input type='hidden' name='dataCreationDate' id='dataCreationDate' value='{$dataForDate->creation_date}' />";
 $content .= '</p>';
 $content .= '<p>';
 $content .= '<label>'. _DEST_USER;
