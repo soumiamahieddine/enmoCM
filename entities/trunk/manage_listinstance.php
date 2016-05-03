@@ -609,6 +609,7 @@ case 'make_entity_unvisible':
 // 1.4 create indexed array of existing diffusion to search for users/entities easily
 $user_roles = array();
 $entity_roles = array();
+
 foreach($roles as $role_id => $role_label) {
     for($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id]['users']); 
         $i<$l; $i++
@@ -1045,5 +1046,6 @@ $linkwithwhat =
 			<input align="middle" type="button" value="<?php echo _CANCEL;?>" class="button"  onclick="self.close();"/>
 		</div> <?php
 	} */?>
+    <script type="text/javascript">$('no_filter').click();</script>
 </body>
 </html>
