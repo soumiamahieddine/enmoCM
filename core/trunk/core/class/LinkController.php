@@ -117,6 +117,7 @@ class LinkController
                             }
                             $return .= '<td align="right">';
                                 $return .= '<span onclick="';
+                                    $return .= 'if(confirm(\'Voulez-vous supprimer la liaison ?\')){';
                                   $return .= 'addLinks(';
                                     $return .= '\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', ';
                                     $return .= '\''.$delChild.'\' ,';
@@ -130,7 +131,7 @@ class LinkController
                                 } else {
                                     $return .= '\'\'';
                                 }
-                                $return .= ');';
+                                $return .= ');}';
                                 $return .= '">';
                                     $return .= '<i class="fa fa-unlink fa-2x" title="supprimer la liaison" style="cursor:pointer;"></i>';
                                 $return .= '</span>';
