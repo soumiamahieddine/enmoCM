@@ -1366,7 +1366,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     }
                 }
                 ?>
-                <dt class="fa fa-paperclip" style="<?php echo $style2; ?>" title="<?php echo _ATTACHMENTS; ?>"> <sup><span id="nb_attach" class="<?php echo $class; ?>" style="<?php echo $style; ?>"><?php echo $nb_attach; ?></span></sup></dt>
+                <dt class="fa fa-paperclip" id="other_attachments_tab" style="<?php echo $style2; ?>" title="<?php echo _ATTACHMENTS; ?>"> <sup><span id="nb_attach" class="<?php echo $class; ?>" style="<?php echo $style; ?>"><?php echo $nb_attach; ?></span></sup></dt>
                 <dd id="other_attachments">
                     <?php
                     if ($core->is_module_loaded('attachments'))
@@ -1727,8 +1727,30 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 </div>
 </div>
 <script type="text/javascript">
-    var item  = $('details_div');
-    var tabricator1 = new Tabricator('tabricator1', 'DT');
+document.getElementById('attach').setAttribute("onClick","showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
+                                . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create&cat=outgoing';?>','98%','auto')");
+  var item  = $('details_div');
+    <?php if($_SESSION['indexation'] == true && $category == 'outgoing'){ 
+            $selectAttachments = "SELECT attachment_type FROM res_view_attachments"
+                                ." WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type = 'outgoing_mail'";
+            $stmt = $db->query($selectAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice']));
+            
+            if(!$stmt->fetchObject()){
+
+            
+        ?>
+        var tabricator1 = new Tabricator('tabricator1', 'DT', 'other_attachments_tab');
+        $('attach').click();
+
+    <?php }else{ ?>
+        document.getElementById('attach').setAttribute("onClick","showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
+                                . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>','98%','auto')");
+        var tabricator1 = new Tabricator('tabricator1', 'DT', 'other_attachments_tab');
+    <?php }
+    }else{ ?>
+        var tabricator1 = new Tabricator('tabricator1', 'DT');
+    <?php } ?>
+    
     if (item) {
         item.style.display='block';
     }
