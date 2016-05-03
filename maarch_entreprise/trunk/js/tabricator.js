@@ -16,8 +16,19 @@ Tabricator.prototype = {
         root.insert(targ);
       }
     });
-    trigs[0].addClassName('open');
-    targs[0].show();
+    var i = trigs.length;
+    if(deep != null){
+      while (i--) {   
+        if(trigs[i].id == deep){
+          trigs[i].addClassName('open');
+          targs[i].show();
+          break;
+        }
+      }
+    }else{
+      trigs[0].addClassName('open');
+      targs[0].show();
+    }
     this.root.observe('click',this.swap.bindAsEventListener(this));
   },
   swap : function (event) {
