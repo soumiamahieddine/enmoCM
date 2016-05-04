@@ -1,6 +1,6 @@
 <?php
 
- function setConfigSendmail_batch_config_Xml($from,$to,$host,$user,$pass,$type,$port,$auth,$charset,$smtpSecure,$mailfrom)
+ function setConfigSendmail_batch_config_Xml($from,$to,$host,$user,$pass,$type,$port,$auth,$charset,$smtpSecure,$mailfrom,$smtpDomains)
     {
 
         $xmlconfig = simplexml_load_file(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/config/config.xml');
@@ -21,6 +21,7 @@
         $MAILER->smtp_user = $user;
         $MAILER->smtp_password = $pass;
         $MAILER->mailfrom = $mailfrom;
+        $MAILER->domains = $smtpDomains;
         if($auth == 1){
         $MAILER->smtp_auth = "true";
         }else{
@@ -48,7 +49,7 @@
     }
 
 
- function setConfigNotification_batch_config_Xml($from,$to,$host,$user,$pass,$type,$port,$auth,$charset,$smtpSecure,$mailfrom)
+ function setConfigNotification_batch_config_Xml($from,$to,$host,$user,$pass,$type,$port,$auth,$charset,$smtpSecure,$mailfrom,$smtpDomains)
     {
 
         $xmlconfig = simplexml_load_file(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/config/config.xml');
@@ -67,6 +68,7 @@
         $MAILER->smtp_user = $user;
         $MAILER->smtp_password = $pass;
         $MAILER->mailfrom = $mailfrom;
+        $MAILER->domains = $smtpDomains;
         if($auth == 1){
         $MAILER->smtp_auth = "true";
         }else{
@@ -100,7 +102,7 @@ $email = $GLOBALS['emails'][$currentEmail];
             $GLOBALS['mailer']->setSMTPParams(
                 $host = $_REQUEST['smtpHost'], 
                 $port = $_REQUEST['smtpPort'],
-                $helo = (string)$mailerParams->domains,
+                $helo = $_REQUEST['smtpDomains'],
                 $auth = filter_var($_REQUEST['smtpAuth'], FILTER_VALIDATE_BOOLEAN),
                 $user = $_REQUEST['smtpUser'],
                 $pass = $_REQUEST['smtpPassword'],
@@ -119,7 +121,8 @@ $email = $GLOBALS['emails'][$currentEmail];
             
 
         if($_REQUEST['type'] == 'test'){
-            
+            // var_dump($_REQUEST['smtpMailTo']);
+            // var_dump($_REQUEST['smtpType']);
             $return = $GLOBALS['mailer']->send(array($_REQUEST['smtpMailTo']), $_REQUEST['smtpType']);
 
             if ($return == false) {
@@ -137,9 +140,9 @@ $email = $GLOBALS['emails'][$currentEmail];
 
             	require_once 'install/class/Class_Install.php';
                 
-            setConfigSendmail_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from);
+            setConfigSendmail_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from,$_REQUEST['smtpDomains']);
 
-            setConfigNotification_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from);
+            setConfigNotification_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from,$_REQUEST['smtpDomains']);
 
                     $return2['status'] = 2;
                     $return2['text'] = _SMTP_OK;
@@ -152,9 +155,9 @@ $email = $GLOBALS['emails'][$currentEmail];
             }
         }elseif($_REQUEST['type'] == 'add'){
 
-            setConfigSendmail_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from);
+            setConfigSendmail_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from,$_REQUEST['smtpDomains']);
 
-            setConfigNotification_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from);
+            setConfigNotification_batch_config_Xml($from,$to,$host,$user,$pass,$_REQUEST['smtpType'],$port,$auth,$charset,$smtpSecure,$from,$_REQUEST['smtpDomains']);
             
                     $return2['status'] = 2;
                     $return2['text'] = _INFO_SMTP_OK;

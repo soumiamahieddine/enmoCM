@@ -416,3 +416,8 @@ if (!defined('_SMTP_INFO')) {
     define('_SMTP_INFO', "Configuration du SMTP");
 }
 
+
+if (!defined('_SMTP_DOMAINS')) {
+    define('_SMTP_DOMAINS', "Domaines");
+}
+

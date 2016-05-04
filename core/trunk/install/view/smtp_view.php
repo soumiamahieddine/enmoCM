@@ -31,7 +31,7 @@
 <!--script type="text/javascript" src="js/prototype.js"></script-->
 <script>
    
-    function envoiMailTestSmtp(url,type,smtpHost,smtpType,smtpPort,smtpUser,smtpPassword,smtpAuth,smtpMailTo,smtpMailFrom){
+    function envoiMailTestSmtp(url,type,smtpHost,smtpType,smtpPort,smtpUser,smtpPassword,smtpAuth,smtpMailTo,smtpDomains,smtpMailFrom){
         //alert(type);
 
         $(document).ready(function() {
@@ -78,6 +78,7 @@
                   +'|smtpPassword|'+smtpPassword
                   +'|smtpAuth|'+smtpAuth
                   +'|smtpMailTo|'+smtpMailTo
+                  +'|smtpDomains|'+smtpDomains
                   +'|smtpMailFrom|'+smtpMailFrom,
                 'ajaxReturn_testConnect',
                 'false'
@@ -168,11 +169,11 @@
                         <td>:</td>
                         <td><input type="text" name="smtpCharset" id="smtpCharset" value="utf-8"/></td>
                     </tr-->
-                    <!--tr>
-                        <td><?php echo _SMTP_SECURE;?></td>
+                    <tr>
+                        <td><?php echo _SMTP_DOMAINS;?></td>
                         <td>:</td>
-                        <td><input type="text" name="smtpSecure" id="smtpSecure" value="tls or ssl"/></td>
-                    </tr-->
+                        <td><input type="text" name="smtpDomains" id="smtpDomains" value="gmail"/></td>
+                    </tr>
                     <tr>
                         <td><?php echo _SMTP_MAILFROM;?></td>
                         <td>:</td>
@@ -197,7 +198,8 @@
                                                                                                                 $('#smtpPassword').val(),
                                                                                                                 $('#smtpAuth').val(),
                                                                                                                 $('#smtpMailTo').val(),
-                                                                                                                $('#smtpMailFrom').val()"; value="<?php echo _VERIF_SMTP;?>"/>
+                                                                                                                $('#smtpDomains').val(),
+                                                                                                                $('#smtpMailFrom').val())"; value="<?php echo _VERIF_SMTP;?>"/>
                         </td>
     <td>
         <input type="button" id="ajaxReturn_testConnect_button" onClick="$('.wait').css('display','block');envoiMailTestSmtp( 'testSmtp','add',
@@ -208,6 +210,7 @@
                                                                                             $('#smtpPassword').val(),
                                                                                             $('#smtpAuth').val(),
                                                                                             $('#smtpMailTo').val(),
+                                                                                            $('#smtpDomains').val(),
                                                                                             $('#smtpMailFrom').val())"; value="<?php echo _ADD_INFO_SMTP;?>"/>
     </td>
                     </tr>

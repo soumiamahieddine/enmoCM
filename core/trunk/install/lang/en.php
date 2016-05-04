@@ -26,6 +26,10 @@ if (!defined('_DESC_INSTALL')) {
 
 //LICENCE
 
+if (!defined('_SMTP_DOMAINS')) {
+    define('_SMTP_DOMAINS', "Domains");
+}
+
 if (!defined('_SET_CONFIG')) {
     define('_SET_CONFIG', "set");
 }
