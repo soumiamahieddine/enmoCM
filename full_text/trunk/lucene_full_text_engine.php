@@ -221,6 +221,9 @@ function prepareIndexFullTextTxt($pathToFile, $indexFileDirectory, $Id)
 */
 function launchIndexFullText($fileContent, $tempIndexFileDirectory, $Id) // $IndexFileDirectory is replace by tempIndexFileDirectory
 {
+    $func = new functions();
+
+    $fileContent = $func->normalize($fileContent);
     $indexFileDirectory = (string) $tempIndexFileDirectory; // with version 1.12, we need a string, not an XML element
     $result = -1;
     if (strlen($fileContent) > 20) {
@@ -335,9 +338,16 @@ while ($queryResult=$stmt->fetch(PDO::FETCH_NUM)) {
   $pathToDocServer[$queryResult[0]] = $queryResult[1];
   $_ENV['logger']->write($queryResult[1]);
 }
-$queryIndexFullText = "SELECT res_id, docserver_id, path, filename, format FROM "
-    . $_ENV['tablename'] . " WHERE " . $fulltextColumnName . " = '0' or "
-    . $fulltextColumnName . " = '' or " . $fulltextColumnName . " is null ";
+if ($_ENV['tablename'] == 'res_attachments' || $_ENV['tablename'] == 'res_version_attachments') {
+    $queryIndexFullText = "SELECT res_id, docserver_id, path, filename, format FROM "
+        . $_ENV['tablename'] . " WHERE (" . $fulltextColumnName . " = '0' or "
+        . $fulltextColumnName . " = '' or " . $fulltextColumnName . " is null) AND format = 'pdf'";
+} else {
+    $queryIndexFullText = "SELECT res_id, docserver_id, path, filename, format FROM "
+        . $_ENV['tablename'] . " WHERE " . $fulltextColumnName . " = '0' or "
+        . $fulltextColumnName . " = '' or " . $fulltextColumnName . " is null ";
+}
+
 $_ENV['logger']->write("query to found document with no full text : ".$queryIndexFullText);
 $stmt = $_ENV['db']->query($queryIndexFullText);
 $cpt_batch_size=0;
