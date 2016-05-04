@@ -559,6 +559,21 @@ WITH (
 ALTER TABLE baskets DROP COLUMN IF EXISTS flag_notif;
 ALTER TABLE baskets ADD flag_notif character varying(1);
 
+-- Full Text
+DROP TABLE IF EXISTS adr_attachments;
+CREATE TABLE adr_attachments
+(
+  res_id bigint NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  adr_priority integer NOT NULL,
+  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
+  CONSTRAINT adr_attachments_pkey PRIMARY KEY (res_id, docserver_id)
+)
+WITH (OIDS=FALSE);
 
 -- ************************************************************************* --
 --                               RECREATE VIEWS                              --

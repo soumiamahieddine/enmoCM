@@ -3178,6 +3178,21 @@ CREATE TABLE adr_log
 )
 WITH (OIDS=FALSE);
 
+DROP TABLE IF EXISTS adr_attachments;
+CREATE TABLE adr_attachments
+(
+  res_id bigint NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  adr_priority integer NOT NULL,
+  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
+  CONSTRAINT adr_attachments_pkey PRIMARY KEY (res_id, docserver_id)
+)
+WITH (OIDS=FALSE);
+
 DROP VIEW IF EXISTS res_view_log;
 CREATE OR REPLACE VIEW res_view_log AS
  select * from res_log;
