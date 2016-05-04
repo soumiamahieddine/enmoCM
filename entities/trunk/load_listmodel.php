@@ -42,7 +42,19 @@ if ($objectId <> '') {
 $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel($objectType, $objectId);
 
 if($category == 'outgoing' && $origin == 'indexing'){
-    $_SESSION[$origin]['diff_list']['copy'] = '';
+    $_SESSION[$origin]['diff_list']['dest']['users'] = array();
+    $diffListOutgoing = array(
+        'user_id' => $_SESSION['user']['UserId'],
+        'lastname' => $_SESSION['user']['LastName'],
+        'firstname' => $_SESSION['user']['FirstName'],
+        'entity_id' => $_SESSION['user']['entities'][0]['ENTITY_ID'],
+        'entity_label' => $_SESSION['user']['entities'][0]['ENTITY_LABEL'],
+        'visible' => 'Y',
+        'process_comment' => ''
+    );
+
+    $_SESSION[$origin]['diff_list']['dest']['users'][]=$diffListOutgoing;
+    $_SESSION[$origin]['diff_list']['copy'] = array();
 }
 
 $_SESSION[$origin]['diff_list']['difflist_type'] = $_SESSION[$origin]['diff_list']['object_type'];
