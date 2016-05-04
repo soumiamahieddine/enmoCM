@@ -2518,26 +2518,37 @@ function showVille(url,value){
 
         }
     })
-    };
+    }
 
 }
 
 
-function loadRepList(id)
+function loadRepList(id, isFullText)
 {
-    new Effect.toggle('repList_'+id, 'appear' , {delay:0.2});
+    if ($('repList_' + id).style.display != 'none') {
+        new Effect.toggle('repList_'+id, 'appear' , {delay:0.2});
+    } else {
+        new Effect.toggle('repList_'+id, 'appear' , {delay:0.2});
 
-    var path_manage_script = 'index.php?page=loadRepList&display=true';
+        var path_manage_script = 'index.php?page=loadRepList&display=true';
 
-    new Ajax.Request(path_manage_script,
-    {
-        method:'post',
-        parameters: { res_id_master : id},
-        onSuccess: function(answer){
-            eval("response = "+answer.responseText);
-            $('divRepList_'+id).innerHTML = response.toShow;
-        }
-    });
+        if (typeof isFullText == 'undefined')
+            isFullText = '';
+
+        new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: {
+                res_id_master : id,
+                isFullText : isFullText
+            },
+            onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                $('divRepList_'+id).innerHTML = response.toShow;
+            }
+        });
+    }
+
 }
 
 function checkBeforeOpenBlank (url, value)

@@ -577,6 +577,8 @@ if (!defined('_LAST_QUERY')) define('_LAST_QUERY', 'Latest query');
 if (!defined('_LATE')) define('_LATE', 'Late');
 if (!defined('_LATE_PROCESS')) define('_LATE_PROCESS', 'Late');
 if (!defined('_LETTERBOX')) define('_LETTERBOX', 'Main collection');
+if (!defined("_ATTACHMENTS_COLL")) define("_ATTACHMENTS_COLL", "Attachments collection");
+if (!defined("_ATTACHMENTS_VERS_COLL")) define("_ATTACHMENTS_VERS_COLL", "Version attachments collection");
 if (!defined('_LETTER_INFO')) define('_LETTER_INFO','Information on document');
 if (!defined('_LIMIT_DATE_PROCESS')) define('_LIMIT_DATE_PROCESS','Processing deadline');
 if (!defined('_LINK')) define('_LINK', 'Link');

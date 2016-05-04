@@ -73,7 +73,29 @@ if (isset($_REQUEST['res_id_master'])) {
                 $stmt = $db->query($query, $arrayPDO);
 
                 while ($return_db = $stmt->fetchObject()) {
-                    $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
+                    if (!empty($_REQUEST['isFullText']))
+                    {
+                        if ($return_db->format != 'pdf') {
+                            $t = str_replace('.' . $return_db->format, '.pdf', $return_db->filename);
+                            $stmtFullText = $db->query('SELECT res_id FROM res_view_attachments WHERE filename = ? and attachment_type = ? ORDER BY relation desc',
+                                                        [str_replace('.' . $return_db->format, '.pdf', $return_db->filename), 'converted_pdf']);
+                            $lineFullText = $stmtFullText->fetchObject();
+                            if ($lineFullText && $lineFullText->res_id != 0)
+                                $resIdConverted = $lineFullText->res_id;
+                        }
+
+                        if ((!empty($_SESSION['fullTextAttachments']['attachments']) && in_array($return_db->res_id, $_SESSION['fullTextAttachments']['attachments'])) ||
+                            (!empty($_SESSION['fullTextAttachments']['versionAttachments']) && in_array($return_db->res_id_version, $_SESSION['fullTextAttachments']['versionAttachments']))) {
+                            $return .= '<tr style="border: 1px solid;color: #009dc5;font-weight: bold" style="background-color: #FFF;">';
+                        } else if (!empty($resIdConverted) && in_array($resIdConverted, $_SESSION['fullTextAttachments']['attachments'])) {
+                            $return .= '<tr style="border: 1px solid;color: #009dc5;font-weight: bold" style="background-color: #FFF;">';
+                        } else {
+                            $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
+
+                        }
+                    } else {
+                        $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
+                    }
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
                             $return .= functions::xssafe($return_db->identifier);

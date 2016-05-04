@@ -855,6 +855,8 @@ if (!defined("_DOWNLOADED_FILE")) define("_DOWNLOADED_FILE", "Fichier chargé");
 if (!defined("_WRONG_FILE_TYPE")) define("_WRONG_FILE_TYPE", "Ce type de fichier n'est pas permis");
 
 if (!defined("_LETTERBOX")) define("_LETTERBOX", "Collection des courriers");
+if (!defined("_ATTACHMENTS_COLL")) define("_ATTACHMENTS_COLL", "Collection des attachements");
+if (!defined("_ATTACHMENTS_VERS_COLL")) define("_ATTACHMENTS_VERS_COLL", "Collection des version d'attachements");
 if (!defined("_APA_COLL")) define("_APA_COLL", "Collection de l'archivage physique");
 if (!defined("_REDIRECT_TO_ACTION")) define("_REDIRECT_TO_ACTION", "Rediriger vers une action");
 if (!defined("_DOCUMENTS_LIST")) define("_DOCUMENTS_LIST", "Liste");

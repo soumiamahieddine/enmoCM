@@ -52,6 +52,7 @@ $indexes = $type->get_all_indexes($coll_id);
 $_SESSION['error_search'] = '';
 $_SESSION['searching']['comp_query'] = '';
 $_SESSION['save_list']['fromDetail'] = "false";
+$_SESSION['fullTextAttachments'] = [];
 
 
 // define the row of the start
@@ -324,8 +325,8 @@ if (count($_REQUEST['meta']) > 0) {
                     $_SESSION['error_search'] = _FULLTEXT_ERROR;
                 } else {
                     // FULLTEXT
-                    $fulltext_request = $_REQUEST['fulltext'];
-                    $json_txt .= " 'fulltext' : ['" 
+                    $fulltext_request = $func->normalize($_REQUEST['fulltext']);
+                    $json_txt .= " 'fulltext' : ['"
                         . addslashes(trim($_REQUEST['fulltext'])) . "'],";
                     set_include_path('apps' . DIRECTORY_SEPARATOR 
                         . $_SESSION['config']['app_id'] 
@@ -341,27 +342,90 @@ if (count($_REQUEST['meta']) > 0) {
                     
                     $_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
 
-                    $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
-                    if (is_dir($path_to_lucene_index))
-                    {
-                        if (!$func->isDirEmpty($path_to_lucene_index)) {
-                            $index = Zend_Search_Lucene::open($path_to_lucene_index);
-                            $hits = $index->find(urldecode($fulltext_request));
-                            $Liste_Ids = "0";
-                            $cptIds = 0;
-                            foreach ($hits as $hit) {
-                                if ($cptIds < 500) {
-                                    $Liste_Ids .= ", '". $hit->Id ."'";
-                                } else {
-                                    break;
+                    foreach ($_SESSION['collections'] as $key => $tmpCollection) {
+                        $path_to_lucene_index = $tmpCollection['path_to_lucene_index'];
+
+                        if (is_dir($path_to_lucene_index))
+                        {
+                            if (!$func->isDirEmpty($path_to_lucene_index)) {
+                                $index = Zend_Search_Lucene::open($path_to_lucene_index);
+                                $hits = $index->find(urldecode($fulltext_request));
+                                $Liste_Ids = "0";
+                                $cptIds = 0;
+                                foreach ($hits as $hit) {
+                                    if ($cptIds < 500) {
+                                        $Liste_Ids .= ", '". $hit->Id ."'";
+                                    } else {
+                                        break;
+                                    }
+                                    $cptIds ++;
                                 }
-                                $cptIds ++;
+
+                                if ($tmpCollection['table'] == 'res_attachments') {
+                                    $tmpArray = preg_split("/[,' ]/", $Liste_Ids);
+                                    array_splice($tmpArray, 0, 1);
+                                    $_SESSION['fullTextAttachments']['attachments'] = $tmpArray;
+                                    $db = new Database();
+                                    $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_attachments WHERE res_id IN ($Liste_Ids)");
+                                    $idMasterDatas = [];
+                                    while ($tmp = $stmt->fetchObject())
+                                        $idMasterDatas[] = $tmp;
+
+                                    $Liste_Ids = '0';
+                                    foreach ($idMasterDatas as $tmpIdMaster) {
+                                        $Liste_Ids .= ", '{$tmpIdMaster->res_id_master}'";
+                                        $_SESSION['fullTextAttachments']['letterbox'][] = $tmpIdMaster->res_id_master;
+                                    }
+                                } elseif ($tmpCollection['table'] == 'res_version_attachments') {
+                                    $tmpArray = preg_split("/[,' ]/", $Liste_Ids);
+                                    array_splice($tmpArray, 0, 1);
+                                    $_SESSION['fullTextAttachments']['versionAttachments'] = $tmpArray;
+                                    $db = new Database();
+                                    $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_version_attachments WHERE res_id IN ($Liste_Ids)");
+                                    $idMasterDatas = [];
+                                    while ($tmp = $stmt->fetchObject())
+                                        $idMasterDatas[] = $tmp;
+
+                                    $Liste_Ids = '0';
+                                    foreach ($idMasterDatas as $tmpIdMaster) {
+                                        $Liste_Ids .= ", '{$tmpIdMaster->res_id_master}'";
+                                        $_SESSION['fullTextAttachments']['letterbox'][] = $tmpIdMaster->res_id_master;
+                                    }
+                                }
+
+                                if ($key == 0)
+                                    $where_request .= ' (';
+
+                                $where_request .= " res_id IN ($Liste_Ids) ";
+
+                                if (empty($_SESSION['collections'][$key + 1]))
+                                    $where_request .= ') and ';
+                                else
+                                    $where_request .= ' or ';
+                            } else {
+                                if ($key == 0)
+                                    $where_request .= ' (';
+
+                                $where_request .= " 1=-1 ";
+
+                                if (empty($_SESSION['collections'][$key + 1]))
+                                    $where_request .= ') and ';
+                                else
+                                    $where_request .= ' or ';
                             }
-                            $where_request .= " res_id IN ($Liste_Ids) and ";
+                        } else {
+                            if ($key == 0)
+                                $where_request .= ' (';
+
+                            $where_request .= " 1=-1 ";
+
+                            if (empty($_SESSION['collections'][$key + 1]))
+                                $where_request .= ') and ';
+                            else
+                                $where_request .= ' or ';
                         }
-                    } else {
-                        $where_request .= " 1=-1 and ";
-                    }                    
+                    }
+
                 }
             }
             // TAGS

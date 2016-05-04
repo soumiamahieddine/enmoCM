@@ -1243,6 +1243,41 @@ abstract class lists_Abstract extends Database
             }
         }
     }
+
+    protected function _tmplt_showActionAdvResultFA($parameter, $resultTheLine) {
+        //var_dump($parameter);exit;
+        $my_explode= explode ("|", $parameter);
+
+        if (!$my_explode[1]) {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
+            if (count($my_explode) >= 4 ) {
+                //Init
+                $actionIsDisabled = false;
+
+                //Check if action is disabled
+                if (isset($my_explode[4]) && !empty($my_explode[4])) {
+                    $actionIsDisabled = $this->_checkDisabledRules($my_explode[4], $resultTheLine);
+                }
+                //If disabled, return blank
+                if ($actionIsDisabled) {
+                    return '&nbsp;';
+                } else {
+                    //return action icon
+                    $color = '';
+                    if (!empty($_SESSION['fullTextAttachments']['letterbox']) &&
+                        in_array($resultTheLine[1]['res_id'], $_SESSION['fullTextAttachments']['letterbox'])) {
+                        $color = 'style="color: #009dc5"';
+                    }
+                    return '<a href="javascript://" onClick="'.$my_explode[3]
+                    .'" title="'.$my_explode[1].'"><i class="fa fa-'
+                    . $my_explode[2] . ' fa-2x" '. $color .' title="' . $my_explode[1] . '"></i></a>';
+                }
+            } else {
+                return _WRONG_PARAM_FOR_LOAD_VALUE;
+            }
+        }
+    }
     
     protected function _tmplt_clickOnLine($resultTheLine, $listKey, $lineIsDisabled) {
         
@@ -1582,6 +1617,9 @@ abstract class lists_Abstract extends Database
         ##showActionFA## : show action Font Awesome
         } elseif (preg_match("/^showActionFA\|/", $parameter)) {
             $var = $this->_tmplt_showActionFA($parameter, $resultTheLine);
+        ##showActionAdvResultFA## : show action Font Awesome
+        } elseif (preg_match("/^showActionAdvResultFA\|/", $parameter)) {
+            $var = $this->_tmplt_showActionAdvResultFA($parameter, $resultTheLine);
         ##clickOnLine## : Action on click under the line
         } elseif (preg_match("/^clickOnLine$/", $parameter)) {
             $var = $this->_tmplt_clickOnLine($resultTheLine, $listKey, $lineIsDisabled);

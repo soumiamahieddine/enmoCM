@@ -75,6 +75,54 @@
             <default_category>incoming</default_category>
         </categories>
     </COLLECTION>
+    <COLLECTION>
+        <id>attachments_coll</id>
+        <label>_ATTACHMENTS_COLL</label>
+        <table>res_attachments</table>
+        <version_table>res_version_attachments</version_table>
+        <view>res_view_attachments</view>
+        <adr>adr_attachments</adr>
+        <index_file>index_attachments.xml</index_file>
+        <script_add>index_attachments.php</script_add>
+        <script_search>search_attachments.php</script_search>
+        <script_search_result>list_results_attachments.php</script_search_result>
+        <script_details>details_attachments.php</script_details>
+        <extensions>
+            <table/>
+        </extensions>
+        <path_to_lucene_index>C:\Maarch\docservers\indexes\attachments_coll\</path_to_lucene_index>
+        <categories>
+            <category>
+                <id>incoming</id>
+                <label>_INCOMING</label>
+            </category>
+            <default_category>incoming</default_category>
+        </categories>
+    </COLLECTION>
+    <COLLECTION>
+        <id>version_attachments_coll</id>
+        <label>_ATTACHMENTS_VERS_COLL</label>
+        <table>res_version_attachments</table>
+        <version_table>res_version_attachments</version_table>
+        <view>res_view_attachments</view>
+        <adr>adr_attachments</adr>
+        <index_file>index_attachments.xml</index_file>
+        <script_add>index_attachments.php</script_add>
+        <script_search>search_attachments.php</script_search>
+        <script_search_result>list_results_attachments.php</script_search_result>
+        <script_details>details_attachments.php</script_details>
+        <extensions>
+            <table/>
+        </extensions>
+        <path_to_lucene_index>C:\Maarch\docservers\indexes\version_attachments_coll\</path_to_lucene_index>
+        <categories>
+            <category>
+                <id>incoming</id>
+                <label>_INCOMING</label>
+            </category>
+            <default_category>incoming</default_category>
+        </categories>
+    </COLLECTION>
     <HISTORY>
         <usersdel>true</usersdel>
         <usersban>true</usersban>
