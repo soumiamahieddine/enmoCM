@@ -1,5 +1,6 @@
 
 var isAlreadyClick = false;
+var chronoExpiration;
 
 page_result_final = '';
 
@@ -933,7 +934,7 @@ function redirect_to_url(url)
  */
 function session_expirate(expiration, url)
 {
-    var chronoExpiration = setTimeout('redirect_to_url(\''+url+'\')', expiration*60*1000);
+    chronoExpiration = setTimeout('redirect_to_url(\''+url+'\')', expiration*60*1000);
 }
 
 /*************** Tabs functions *****************/
