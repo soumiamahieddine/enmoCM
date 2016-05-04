@@ -40,6 +40,11 @@ if ($objectId <> '') {
 
 // Fill session with listmodel
 $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel($objectType, $objectId);
+
+if($category == 'outgoing' && $origin == 'indexing'){
+    $_SESSION[$origin]['diff_list']['copy'] = '';
+}
+
 $_SESSION[$origin]['diff_list']['difflist_type'] = $_SESSION[$origin]['diff_list']['object_type'];
 $roles = $diffList->list_difflist_roles();
 $difflist = $_SESSION[$origin]['diff_list'];
