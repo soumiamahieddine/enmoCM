@@ -85,6 +85,8 @@ $uniqueId = (isset($_REQUEST['transmissionNumber']) ? $_REQUEST['transmissionNum
                     ?>&custom_override_id=<?php 
                     functions::xecho($_SESSION['custom_override_id']);
                     ?>');
+                //reset auto deco
+                setInterval(function(){ window.opener.clearTimeout(window.opener.chronoExpiration);window.opener.chronoExpiration=window.opener.setTimeout('redirect_to_url(\'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true\')', '<?php echo $_SESSION['config']['cookietime']; ?>'*60*1000); }, 3000);
             </script>
             <style type="text/css">#CMApplet{width: 100%;height: 100%;text-align: center;padding: 0px;margin: 0px;padding-top: 10px;}</style>
         </div>
