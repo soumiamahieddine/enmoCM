@@ -209,12 +209,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $sequence = $circuit_avis->getCurrentStepAvis($res_id, $coll_id, 'entity_id');
     $message = '';
     $itDiff=0;
-    foreach ($_SESSION['process']['diff_list']['avis']['users'] as $key => $value) {
-        if($value['user_id'] == $_SESSION['user']['UserId']){
-            $_SESSION['process']['diff_list']['avis']['users'][$itDiff]['process_date'] = date('d-m-Y G:i:s');
-        }
-        $itDiff++;
-    }
+    
+
+    $stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
+            . " WHERE item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?"
+            , array('avis', $res_id, $_SESSION['user']['UserId'], 'entity_id'));
+
+
     $message = _AVIS_BY . " " . $_SESSION['user']['UserId'];
 
     $circuit_avis->processAvis($res_id);
@@ -233,6 +234,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $note->addNote($res_id, $coll_id, $content_note);
             
         }
+
     return array('result' => $res_id.'#', 'history_msg' => '');
 }
 
