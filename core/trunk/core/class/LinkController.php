@@ -57,9 +57,6 @@ class LinkController
                         $status = $this->getStatus($infos['status']);
                         $img_class = substr($status['img_filename'], 0, 2);
                         $return .= '<td style="width:14%;text-align:center;" title="'.$status['label_status'].'" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
-                            /*$return .= '<a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=' . $key . '" target="_blank">';
-                                $return .= '<i class="fa fa-download fa-2x"></i>';
-                            $return .= '</a>';*/
                             $return .= '<i class="'.$img_class.' '.$status['img_filename'].' '.$img_class.'-2x" ></i> ';
                         $return .= '</td>';
                         $return .= '<td colspan="2" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
@@ -115,6 +112,24 @@ class LinkController
                                 $delParent = $_SESSION['doc_id'];
                                 $delChild = $key;
                             }
+                        $return .= '<td align="right">';
+                        if ($core->is_module_loaded('thumbnails') === true){
+                            require_once "modules" . DIRECTORY_SEPARATOR . "thumbnails" . DIRECTORY_SEPARATOR
+                            . "class" . DIRECTORY_SEPARATOR
+                            . "class_modules_tools.php";
+                                        
+                            $tnl = new thumbnails();
+                            $path = $tnl->getPathTnl($infos['res_id'], 'letterbox_coll');
+                            if (is_file($path)) {
+                                $return .= '<div align="center" class="iconDoc"><a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$infos['res_id'].'" target="_blank" title="'._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span><img src="index.php?page=doc_thumb&module=thumbnails&res_id='.$res_id.'&coll_id=letterbox_coll&display=true"></span></a></div>';
+                            
+                            }else{
+                                $return .= '<div align="center" class="iconDoc"><a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$infos['res_id'].'" target="_blank" title="'._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span id="no_doc"><i class="fa fa-eye-slash fa-2x"></i> </span></a></div>';
+                            
+                            }
+                            
+                        }
+                        $return .= '</td>';
                             $return .= '<td align="right">';
                                 $return .= '<span onclick="';
                                     $return .= 'if(confirm(\'Voulez-vous supprimer la liaison ?\')){';
