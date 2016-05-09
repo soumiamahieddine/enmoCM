@@ -106,7 +106,7 @@ require_once("modules/entities/class/class_manage_entities.php");
             }
         $frm_str .= '</select><br />';
 
-        $frm_str .= '<textarea style="width:98%;height:60px;resize:none;" name="notes"  id="notes" onblur="document.getElementById(\'note_content_to_users\').value=document.getElementById(\'notes\').value;"></textarea>';
+        $frm_str .= '<textarea style="width:98%;height:60px;resize:none;" name="notes"  id="notes" onblur="document.getElementById(\'note_content_to_users\').value=document.getElementById(\'notes\').value.replace(/[\n]/gi, \'##\' );"></textarea>';
         //var_dump($allEntitiesTree);
         $frm_str .= '<hr />';
         $frm_str .='<div id="form2" style="border:none;">';
@@ -273,6 +273,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             //Add notes
             $userIdTypist = $_SESSION['user']['UserId'];
             $content_note = $formValues['note_content_to_users'];
+            $content_note = str_replace("##", "\n", $content_note);
             $content_note = str_replace(";", ".", $content_note);
             $content_note = str_replace("--", "-", $content_note);
             $content_note = $content_note;

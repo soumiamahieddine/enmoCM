@@ -97,7 +97,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
             }
         $frm_str .= '</select><br />';
 
-        $frm_str .= '<textarea style="width:98%;height:60px;resize:none;" name="notes"  id="notes" onblur="document.getElementById(\'note_content_to_users\').value=document.getElementById(\'notes\').value;"></textarea>';
+        $frm_str .= '<textarea style="width:98%;height:60px;resize:none;" name="notes"  id="notes" onblur="document.getElementById(\'note_content_to_users\').value=document.getElementById(\'notes\').value.replace(/[\n]/gi, \'##\' );"></textarea>';
         //var_dump($allEntitiesTree);
         /*$frm_str .= '<hr />';
         $frm_str .= '<div class="error" id="divError" name="divError"></div>';
@@ -189,6 +189,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         //Add notes
         $userIdTypist = $_SESSION['user']['UserId'];
         $content_note = $formValues['note_content_to_users'];
+        $content_note = str_replace("##", "\n", $content_note);
         $content_note = str_replace(";", ".", $content_note);
         $content_note = str_replace("--", "-", $content_note);
         $content_note = $content_note;
