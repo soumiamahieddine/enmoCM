@@ -119,3 +119,6 @@ if (!defined("DEL_USER_WORKFLOW"))
 
 if (!defined("_NO_NEXT_STEP_VISA"))
     define("_NO_NEXT_STEP_VISA", "Impossible d'effectuer cette action. Le circuit ne contient pas d'étape supplémentaire.");
+
+if (!defined("_VISA_USERS"))
+    define("_VISA_USERS", "Personne(s) pour visa / signature");

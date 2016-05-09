@@ -54,6 +54,12 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
 		$_SESSION['visa']['last_resId_signed']['title'] = $line->title;
 		$_SESSION['visa']['last_resId_signed']['identifier'] = $line->identifier;
 		$_SESSION['visa']['last_resId_signed']['type_id'] = $line->type_id;
+
+		if (isset($_REQUEST['isOutgoing'])) {
+			//Update outgoing date
+	        $date = date("Y-m-d");
+	        $db->query("update res_letterbox SET custom_d1 = ? where res_id = ?", array($date,$line->res_id_master));
+		}
 		
 		include 'modules/visa/retrieve_attachment_from_cm.php';
 		
