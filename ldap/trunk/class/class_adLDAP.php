@@ -256,7 +256,35 @@ class LDAP {
 
         $filter = "(&(objectClass=user)(objectCategory=person)".$filter.")";
         $sr=ldap_search($this->_conn,$dn,$filter,$fields);
-        $entries = array_merge(ldap_get_entries($this->_conn, $sr),$entries);
+        
+        /*Condition qui permet de  parcourir tout l'annuaire en prenant les utilisateurs par ordres alphabétiques. Ainsi, on peut surpasser les 1000 utilisateurs*/
+        $countResult=ldap_count_entries($this->_conn,$sr); 
+
+        if($countResult == 1000)
+        {
+            // loop trough the number 97-122 (ASCII number for the characters a-z)
+            for($a=97;$a<=122;$a++)
+            {
+                // translate the number to a character
+                $character = chr($a);
+                // the new search filter withs returns all users with a last name starting with $character
+                $filterNew = "(&(sn=$character*)(objectClass=user)(objectCategory=person)".$filter.")";
+                $results = ldap_search($this->_conn, $dn, $filterNew);
+
+                $users = array();
+                $users = ldap_get_entries($this->_conn,$results);
+                $entries = array_merge($entries, $users);                
+            }
+        }
+        else
+        {
+             $users = ldap_get_entries($this->_conn,$sr);
+             $entries = array_merge($entries, $users);
+        }
+                
+        
+        /*permet de récupérer les utilisateurs (va prendre que les 1000 premiers. Il faudra commenter la condition ci-dessus*/
+        //$entries = array_merge(ldap_get_entries($this->_conn, $sr),$entries);
 
         $ad_users = array();
 
