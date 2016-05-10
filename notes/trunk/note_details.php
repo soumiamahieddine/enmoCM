@@ -274,7 +274,7 @@ echo _CLOSE_WINDOW;
 if ($canModify) {
     ?>
     <div>
-        <h3 class="sstit" style="color: red">toto<?php echo _THIS_NOTE_IS_VISIBLE_BY;?></h3>
+        <h3 class="sstit" style="color: red"><?php echo _THIS_NOTE_IS_VISIBLE_BY;?></h3>
     </div>
     <table>
         <tr>
@@ -290,15 +290,16 @@ if ($canModify) {
                                 $_SESSION['notes']['entities'] = $notes_mod_tools->getNotesEntities($sId);
                                 //$notesEntities = $notes_mod_tools->getNotesEntities($sId);
                                 $entitiesList = $ent->getAllEntities();
-                                $primaryEntityForRestriction = null;
+                                $entitiesForRestriction = null;
                                 if ($core_tools->test_service('notes_restriction', 'notes', false)) {
-                                    if (!empty($_SESSION['primaryentity'])) {
-                                        $primaryEntityForRestriction = $_SESSION['primaryentity']['id'];
+                                    if (!empty($_SESSION['user']['entities'])) {
+                                        foreach ($_SESSION['user']['entities'] as $tmpEntity) {
+                                            $entitiesForRestriction[] = $tmpEntity['ENTITY_ID'];
+                                            $entitiesLabelForRestriction[] = $tmpEntity['SHORT_LABEL'];
+                                        }
                                     }
                                 }
                                 echo "<pre>";
-                                //print_r($notesEntities);
-                                //print_r($entitiesList);
                                 echo "</pre>";
                                 if ($canModify) {
                             ?>
@@ -310,8 +311,7 @@ if ($canModify) {
                                             $state_entity = false;
                                             
                                             if (in_array($entitiesList[$j], $_SESSION['notes']['entities']) ||
-                                                ($primaryEntityForRestriction && $primaryEntityForRestriction == $entitiesList[$j]->entity_id)) {
-                                                $primaryEntityLabelForRestriction = $entitiesList[$i]->short_label;
+                                                ($entitiesForRestriction && in_array($entitiesList[$j]->entity_id, $entitiesForRestriction))) {
                                                 $state_entity = true;
                                             } else {
                                                 $state_entity = false;
@@ -360,11 +360,14 @@ if ($canModify) {
                                         <?php
                                             }
                                         }
-                                        if ($primaryEntityForRestriction) { ?>
-                                            <option value="<?php echo $primaryEntityForRestriction ?>" selected="selected" >
-                                                <?php echo $primaryEntityLabelForRestriction ?>
-                                            </option>
-                                        <?php }
+                                        if ($entitiesForRestriction) {
+                                            foreach ($entitiesForRestriction as $key => $tmpEntityForRestriction) { ?>
+                                                <option value="<?php echo $tmpEntityForRestriction ?>" >
+                                                    <?php echo $entitiesLabelForRestriction[$key] ?>
+                                                </option>
+                                        <?php
+                                            }
+                                        }
                                     ?>
                                 </select>
                             </td>
