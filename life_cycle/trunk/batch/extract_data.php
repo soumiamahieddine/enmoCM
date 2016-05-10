@@ -247,23 +247,39 @@ try {
 
             $contactId = $stmt2->fetchObject();
 
-            $stmt2 = Bt_doQuery(
-                $GLOBALS['db'], 
-                "SELECT lastname, firstname, title, society, contact_type FROM contacts_v2 WHERE contact_id = ?", array($contactId->contact_id)
-            );
 
-            $contact_1 = $stmt2->fetchObject();
-            $contact_lastname = $contact_1->lastname;
-            $contact_firstname = $contact_1->firstname;
-            $contact_title = $contact_1->title;
-            $contact_society = $contact_1->society;
+            if(is_int($contactId->contact_id)){
+                $stmt2 = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    "SELECT lastname, firstname, title, society, contact_type FROM contacts_v2 WHERE contact_id = ?", array($contactId->contact_id)
+                );
+                $contact_1 = $stmt2->fetchObject();
+                $contact_lastname = $contact_1->lastname;
+                $contact_firstname = $contact_1->firstname;
+                $contact_title = $contact_1->title;
+                $contact_society = $contact_1->society;
 
-            $stmt2 = Bt_doQuery(
-                $GLOBALS['db'], 
-                "SELECT label FROM contact_types WHERE id = ?", array($contact_1->contact_type)
-            );
-            $contactType = $stmt2->fetchObject();
-            $contact_type = $contactType->label;
+                $stmt2 = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    "SELECT label FROM contact_types WHERE id = ?", array($contact_1->contact_type)
+                );
+                $contactType = $stmt2->fetchObject();
+                $contact_type = $contactType->label;
+            }else{
+                 $stmt2 = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    "SELECT lastname, firstname, entity_id FROM users, users_entities WHERE users.user_id = ? AND users.user_id = users_entities.user_id AND users_entities.primary_entity = ? ", array($contactId->contact_id,'Y')
+                );
+                $contact_1 = $stmt2->fetchObject();
+                $contact_lastname = $contact_1->lastname;
+                $contact_firstname = $contact_1->firstname;
+                $contact_title = '';
+                $contact_society = $contact_1->entity_id;
+                $contact_type = 'Interne';
+            }
+            
+
+            
         }
 
         #### Service destinataire ####
