@@ -2,6 +2,14 @@
 <root>
 	<ROLES>
 		<ROLE>
+			<id>avis</id>
+			<label>_AVIS_USER</label>
+		</ROLE>
+		<ROLE>
+			<id>avis_copy</id>
+			<label>_AVIS_USER_COPY</label>
+		</ROLE>
+		<ROLE>
 			<id>dest</id>
 			<label>_DEST_USER</label>
 		</ROLE>
@@ -16,14 +24,6 @@
 		<ROLE>
 			<id>sign</id>
 			<label>_TO_SIGN</label>
-		</ROLE>
-		<ROLE>
-			<id>avis</id>
-			<label>_AVIS_USER</label>
-		</ROLE>
-		<ROLE>
-			<id>avis_copy</id>
-			<label>_AVIS_USER_COPY</label>
 		</ROLE>
 	</ROLES>
 </root>
