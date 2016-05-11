@@ -77,6 +77,49 @@ while($note = $stmt->fetch(PDO::FETCH_ASSOC)) {
 $datasources['attachments'] = array();
 $myAttachment['chrono'] = $chronoAttachment;
 
+//thirds
+$stmt = $dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = ? AND mode = ? ", [$doc['res_id'], 'third']);
+$datasources['thirds']= [];
+$countThird = 1;
+while ($third = $stmt->fetchObject()) {
+    if (is_numeric($third->contact_id)) {
+        $stmt2 = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? ", [$third->contact_id]);
+        $thirdContact = $stmt2->fetchObject();
+        if ($thirdContact) {
+            $datasources['thirds'][0]['firstname' . $countThird] = ($thirdContact->contact_firstname ?: $thirdContact->firstname);
+            $datasources['thirds'][0]['lastname' . $countThird] = ($thirdContact->contact_lastname ?: $thirdContact->lastname);
+        }
+    } else {
+        $stmt2 = $dbDatasource->query("SELECT * FROM users WHERE user_id = ? ", [$third->contact_id]);
+        $thirdContact = $stmt2->fetchObject();
+        if ($thirdContact) {
+            $datasources['thirds'][0]['firstname' . $countThird] = $thirdContact->firstname;
+            $datasources['thirds'][0]['lastname' . $countThird] = $thirdContact->lastname;
+        }
+    }
+    $countThird++;
+}
+
+//visa
+$stmt = $dbDatasource->query("SELECT * FROM listinstance WHERE res_id = ? AND difflist_type = ? ", [$doc['res_id'], 'VISA_CIRCUIT']);
+$datasources['visa']= [];
+$countVisa = 1;
+while ($visa = $stmt->fetchObject()) {
+    $stmt2 = $dbDatasource->query("SELECT * FROM users WHERE user_id = ? ", [$visa->item_id]);
+    $visaContact = $stmt2->fetchObject();
+    if ($visaContact) {
+        if ($visa->item_mode == 'sign') {
+            $datasources['visa'][0]['firstnameSign'] = $visaContact->firstname;
+            $datasources['visa'][0]['lastnameSign'] = $visaContact->lastname;
+        } else {
+            $datasources['visa'][0]['firstname' . $countVisa] = $visaContact->firstname;
+            $datasources['visa'][0]['lastname' . $countVisa] = $visaContact->lastname;
+            $countVisa++;
+        }
+    }
+
+}
+
 // Transmissions
 $datasources['transmissions'] = [];
 if (isset($_SESSION['transmissionContacts'])) {
