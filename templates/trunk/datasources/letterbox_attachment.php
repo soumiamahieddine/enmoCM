@@ -107,13 +107,17 @@ $countVisa = 1;
 while ($visa = $stmt->fetchObject()) {
     $stmt2 = $dbDatasource->query("SELECT * FROM users WHERE user_id = ? ", [$visa->item_id]);
     $visaContact = $stmt2->fetchObject();
+    $stmt3 = $dbDatasource->query("SELECT en.entity_id, en.entity_label FROM entities en, users_entities ue WHERE ue.user_id = ? AND primary_entity = ? AND ue.entity_id = en.entity_id", [$visa->item_id, 'Y']);
+    $visaEntity = $stmt3->fetchObject();
     if ($visaContact) {
         if ($visa->item_mode == 'sign') {
             $datasources['visa'][0]['firstnameSign'] = $visaContact->firstname;
             $datasources['visa'][0]['lastnameSign'] = $visaContact->lastname;
+            $datasources['visa'][0]['entitySign'] = str_replace($visaEntity->entity_id . ': ', '', $visaEntity->entity_label);
         } else {
             $datasources['visa'][0]['firstname' . $countVisa] = $visaContact->firstname;
             $datasources['visa'][0]['lastname' . $countVisa] = $visaContact->lastname;
+            $datasources['visa'][0]['entity' . $countVisa] = str_replace($visaEntity->entity_id . ': ', '', $visaEntity->entity_label);
             $countVisa++;
         }
     }
