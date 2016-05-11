@@ -873,3 +873,6 @@ SELECT group_id,'associate_folder' from usergroups;
 -- Add limit date avis column 
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS recommendation_limit_date;
 ALTER TABLE mlb_coll_ext ADD COLUMN recommendation_limit_date timestamp without time zone default NULL;
+
+-- Change date_note type
+ALTER TABLE notes ALTER COLUMN date_note TYPE timestamp without time zone;
