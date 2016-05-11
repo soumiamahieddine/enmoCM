@@ -228,6 +228,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 					}
 					if ($tabNotes[$indNotes1][$indNotes2][$value] == "date_note") {
 						$tabNotes[$indNotes1][$indNotes2]["date_note"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+                        $tabNotes[$indNotes1][$indNotes2]["value"] = $core_tools->format_date_db($tabNotes[$indNotes1][$indNotes2]['value'], false, '', true);
 						$tabNotes[$indNotes1][$indNotes2]["label"] = _DATE;
 						$tabNotes[$indNotes1][$indNotes2]["size"] = 5;
 						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
