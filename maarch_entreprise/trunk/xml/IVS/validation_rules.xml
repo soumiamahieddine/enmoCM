@@ -718,7 +718,7 @@
 
     <validationRule name="res_id_master" extends="standardForm" mode="error">  
       <parameter name="res_id_master" type="integer" />
-      <parameter name="isFullText" type="string" />
+      <parameter name="option" type="string" />
     </validationRule>
 
     <validationRule name="identifier_integer" extends="standardForm" mode="error">  

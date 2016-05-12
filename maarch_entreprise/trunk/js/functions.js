@@ -2524,7 +2524,7 @@ function showVille(url,value){
 }
 
 
-function loadRepList(id, isFullText)
+function loadRepList(id, option)
 {
     if ($('repList_' + id).style.display != 'none') {
         new Effect.toggle('repList_'+id, 'appear' , {delay:0.2});
@@ -2533,15 +2533,15 @@ function loadRepList(id, isFullText)
 
         var path_manage_script = 'index.php?page=loadRepList&display=true';
 
-        if (typeof isFullText == 'undefined')
-            isFullText = '';
+        if (typeof option == 'undefined')
+            option = '';
 
         new Ajax.Request(path_manage_script,
         {
             method:'post',
             parameters: {
                 res_id_master : id,
-                isFullText : isFullText
+                option : option
             },
             onSuccess: function(answer){
                 eval("response = "+answer.responseText);

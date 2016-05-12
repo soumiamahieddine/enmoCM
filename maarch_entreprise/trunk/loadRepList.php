@@ -35,7 +35,7 @@ $return = '';
 if (isset($_REQUEST['res_id_master'])) {
 
     $status = 0;
-    $return .= '<td colspan="6" style="background-color: #FFF;">';
+    $return .= '<td colspan="7" style="background-color: #FFF;">';
         $return .= '<div align="center">';
             $return .= '<table width="100%" style="background-color: rgba(100, 200, 213, 0.2);">';
                 $return .= '<tr style="font-weight: bold;">';
@@ -45,16 +45,19 @@ if (isset($_REQUEST['res_id_master'])) {
                     $return .= '<th style="font-weight: bold; color: black;" width="130px">';
                         $return .= _STATUS;
                     $return .= '</th>';
-                    $return .= '<th style="font-weight: bold; color: black;" width="200px">';
+                    $return .= '<th style="font-weight: bold; color: black;" width="180px">';
                         $return .= _ATTACHMENT_TYPE;
                     $return .= '</th>';
-                    $return .= '<th style="font-weight: bold; color: black;" width="200px">';
+                    $return .= '<th style="font-weight: bold; color: black;" width="120px">';
                         $return .= _CREATION_DATE;
+                    $return .= '</th>';
+                    $return .= '<th style="font-weight: bold; color: black;" width="120px">';
+                        $return .= _BACK_DATE;
                     $return .= '</th>';
                     $return .= '<th style="font-weight: bold; color: black;">';
                         $return .= _SUBJECT;
                     $return .= '</th>';
-                    $return .= '<th style="font-weight: bold; color: black;" width="200px">';
+                    $return .= '<th style="font-weight: bold; color: black;" width="180px">';
                         $return .= _AUTHOR;
                     $return .= '</th>';
                     $return .= '<th style="font-weight: bold; color: black;" width="40px">';
@@ -73,26 +76,29 @@ if (isset($_REQUEST['res_id_master'])) {
                 $stmt = $db->query($query, $arrayPDO);
 
                 while ($return_db = $stmt->fetchObject()) {
-                    if (!empty($_REQUEST['isFullText']))
-                    {
+                    if (!empty($_REQUEST['option']) && $_REQUEST['option'] == 'FT') {
                         if ($return_db->format != 'pdf') {
                             $t = str_replace('.' . $return_db->format, '.pdf', $return_db->filename);
                             $stmtFullText = $db->query('SELECT res_id FROM res_view_attachments WHERE filename = ? and attachment_type = ? ORDER BY relation desc',
-                                                        [str_replace('.' . $return_db->format, '.pdf', $return_db->filename), 'converted_pdf']);
+                                [str_replace('.' . $return_db->format, '.pdf', $return_db->filename), 'converted_pdf']);
                             $lineFullText = $stmtFullText->fetchObject();
                             if ($lineFullText && $lineFullText->res_id != 0)
                                 $resIdConverted = $lineFullText->res_id;
                         }
 
                         if ((!empty($_SESSION['fullTextAttachments']['attachments']) && in_array($return_db->res_id, $_SESSION['fullTextAttachments']['attachments'])) ||
-                            (!empty($_SESSION['fullTextAttachments']['versionAttachments']) && in_array($return_db->res_id_version, $_SESSION['fullTextAttachments']['versionAttachments']))) {
+                            (!empty($_SESSION['fullTextAttachments']['versionAttachments']) && in_array($return_db->res_id_version, $_SESSION['fullTextAttachments']['versionAttachments']))
+                        ) {
                             $return .= '<tr style="border: 1px solid;color: #009dc5;font-weight: bold" style="background-color: #FFF;">';
-                        } else if (!empty($resIdConverted) && in_array($resIdConverted, $_SESSION['fullTextAttachments']['attachments'])) {
+                        } else if (!empty($resIdConverted) && !empty($_SESSION['fullTextAttachments']['attachments']) && in_array($resIdConverted, $_SESSION['fullTextAttachments']['attachments'])) {
                             $return .= '<tr style="border: 1px solid;color: #009dc5;font-weight: bold" style="background-color: #FFF;">';
                         } else {
                             $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
 
                         }
+                    } else if (!empty($_REQUEST['option']) && $_REQUEST['option'] == 'baskets'
+                                && $return_db->status == 'EXP_RTURN' && $return_db->validation_date && $return_db->validation_date < date('Y-m-d')) {
+                        $return .= '<tr style="border: 1px solid;color: red;" style="background-color: #FFF;">';
                     } else {
                         $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
                     }
@@ -134,6 +140,31 @@ if (isset($_REQUEST['res_id_master'])) {
                                 default: $date_m_txt = $date_m;
                             }
                             $return .= functions::xssafe($date_d.' '.$date_m_txt.' '.$date_Y);
+                        $return .= '</td>';
+                        $return .= '<td>';
+                            $return .= '&nbsp;&nbsp;';
+                            if ($return_db->validation_date) {
+                                sscanf(substr($return_db->validation_date, 0, 10), "%4s-%2s-%2s", $date_Y, $date_m, $date_d);
+                                switch ($date_m)
+                                {
+                                    case '01': $date_m_txt = _JANUARY; break;
+                                    case '02': $date_m_txt = _FEBRUARY; break;
+                                    case '03': $date_m_txt = _MARCH; break;
+                                    case '04': $date_m_txt = _APRIL; break;
+                                    case '05': $date_m_txt = _MAY; break;
+                                    case '06': $date_m_txt = _JUNE; break;
+                                    case '07': $date_m_txt = _JULY; break;
+                                    case '08': $date_m_txt = _AUGUST; break;
+                                    case '09': $date_m_txt = _SEPTEMBER; break;
+                                    case '10': $date_m_txt = _OCTOBER; break;
+                                    case '11': $date_m_txt = _NOVEMBER; break;
+                                    case '12': $date_m_txt = _DECEMBER; break;
+                                    default: $date_m_txt = $date_m;
+                                }
+                                $return .= functions::xssafe($date_d.' '.$date_m_txt.' '.$date_Y);
+                            } else {
+                                $return .= '-';
+                            }
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
