@@ -125,6 +125,7 @@ if ($mode == 'list') {
                 ?>
                 <select id="thesaurus_parent_id" name="thesaurus_parent_id" onchange="load_specific_thesaurus(this.value);">
                     <?php 
+                        echo '<option value="">-- Aucun Terme générique --</option>';
                         echo'<optgroup label="Terme(s) générique(s)">';
                                 foreach ($allThesaurusTree['generic_terme'] as $key => $value) {
 
@@ -207,7 +208,7 @@ if ($mode == 'list') {
             $thesaurus_name_associate = explode('/', $_SESSION['m_admin']['thesaurus']['thesaurus_name_associate']);
 
             ?>
-            <select multiple="multiple" id="thesaurus_name_associate" name="thesaurus_name_associate[]">
+            <select multiple="multiple" id="thesaurus_name_associate" name="thesaurus_name_associate[]" data-placeholder=" ">
             <?php
                 echo'<optgroup label="Terme(s) générique(s)">';
                 foreach ($allThesaurusTree['generic_terme'] as $key => $value) {
