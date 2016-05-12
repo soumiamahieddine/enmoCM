@@ -40,6 +40,7 @@ require_once 'modules/attachments/attachments_tables.php';
 require_once "core/class/class_history.php";
 require_once 'modules/attachments/class/attachments_controler.php';
 
+
 $core               = new core_tools();
 $core->load_lang();
 $sec                = new security();
@@ -1644,7 +1645,13 @@ if (!isset($_REQUEST['id'])) {
     $content .= '<option value="">' . _CHOOSE_ATTACHMENT_TYPE . '</option>';
     foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
         if($_SESSION['attachment_types_show'][$attachmentType] == "true"){
-            $content .= '<option value="' . $attachmentType . '" with_chrono = "'. $_SESSION['attachment_types_with_chrono'][$attachmentType].'" get_chrono = "'. $_SESSION['attachment_types_get_chrono'][$attachmentType].'">';
+            $content .= '<option value="' . $attachmentType . '" with_chrono = "'. $_SESSION['attachment_types_with_chrono'][$attachmentType].'" get_chrono = "'. $_SESSION['attachment_types_get_chrono'][$attachmentType].'"';
+
+            if(isset($_GET['cat']) && $_GET['cat'] == 'outgoing' && $attachmentType == 'outgoing_mail'){
+                $content .= ' selected = "selected"';
+                $content .= '<script>$("attachment_types").onchange();</script>';
+            }
+            $content .= '>';
             $content .= $_SESSION['attachment_types'][$attachmentType];
             $content .= '</option>';
         }

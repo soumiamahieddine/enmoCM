@@ -188,7 +188,7 @@ if ($stmt->rowCount() > 0) {
 		eleframe1[1].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,outgoing_mail&fromDetail=response';?>";
 		window.parent.top.document.getElementById('answer_number').innerHTML = " ("+nb_attach+")";
 	<?php } else { ?>
-		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder';?>";
+		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&template_selected=documents_list_attachments_simple&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder';?>";
 		window.parent.top.document.getElementById('nb_attach').innerHTML = nb_attach;
 	<?php } ?>
     // window.parent.top.document.getElementById('nb_attach').innerHTML = nb_attach;
