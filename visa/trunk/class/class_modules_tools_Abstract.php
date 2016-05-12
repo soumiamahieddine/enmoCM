@@ -307,7 +307,7 @@ abstract class visa_Abstract extends Database
 	public function getUsersCurrentVis($res_id){
 		$db = new Database();
 		$result = array();
-		$stmt = $db->query("SELECT item_id from listinstance WHERE res_id= ? and difflist_type = 'AVIS_CIRCUIT'  ORDER BY sequence ASC", array($res_id));
+		$stmt = $db->query("SELECT item_id from listinstance WHERE res_id= ? and difflist_type = 'VISA_CIRCUIT'  ORDER BY sequence ASC", array($res_id));
 		while ( $res = $stmt->fetchObject()) {
 			$result[] = $res->item_id;
 		}	
