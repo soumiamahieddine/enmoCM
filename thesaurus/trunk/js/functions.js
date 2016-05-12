@@ -12,11 +12,11 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 		 	var json = JSON.parse(answer.responseText);
 			//eval("response = "+answer.responseText);
 			if (json.info.thesaurus_parent_id) {
-				content += '<h2 title="terme parent" style="width:500px;">'+json.info.thesaurus_parent_id+'</h2>';
+				content += '<h2 title="terme parent">'+json.info.thesaurus_parent_id+'</h2>';
 			}
 			content += '<ul style="padding-left:20px;">';
 			content += '<li style="list-style-type:initial;">';
-			content += '<fieldset style="border: solid 1px;"><legend><b>'+json.info.thesaurus_name+'</b></legend>';
+			content += '<fieldset style="border: solid 1px;width:400px;"><legend><b>'+json.info.thesaurus_name+'</b></legend>';
 			if(json.info.thesaurus_description != null){
 				content += '<p style="padding:5px;" title="description">'+json.info.thesaurus_description+'</p>';
 
@@ -37,17 +37,17 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 					if(json.info.thesaurus_name != json.info_children[i]){
 						//console.log(document.getElementById('thesaurus_'+json.info_annexe[i].thesaurus_id));
 						if(document.getElementById('thesaurus_'+json.info_children[i].thesaurus_id+'').selected == true){
-							content += '<li style="list-style-type:initial;cursor:text;color:grey;font-style:italic;">';
+							content += '<li style="list-style-type:initial;cursor:text;color:grey;font-style:italic;text-decoration: line-through;">';
 
 						}else{
-							content += '<li style="list-style-type:initial;cursor:pointer;" onclick="document.getElementById(\'thesaurus_'+json.info_children[i].thesaurus_id+'\').selected = true;Event.fire($(\'thesaurus\'), \'chosen:updated\');">';
+							content += '<li style="list-style-type:initial;cursor:pointer;" >';
 						}
-						content += json.info_children[i].thesaurus_name;				
+						content += '<a onclick="document.getElementById(\'thesaurus_'+json.info_children[i].thesaurus_id+'\').selected = true;Event.fire($(\'thesaurus\'), \'chosen:updated\');">'+json.info_children[i].thesaurus_name+'</a>';				
 						content += '</li>';
 					}
 				} 
 			}else{
-				content += '<p style="text-align:center;font-style:italic;padding:5px;color:grey;" title="description">aucun terme spécifique</p>';		
+				content += '<p style="text-align:center;font-style:italic;padding:5px;color:grey;" title="terme(s) spécique(s) à :  « '+json.info.thesaurus_name+' »">aucun terme spécifique</p>';		
 			}
 			
 			content += '</ul>';
@@ -60,12 +60,12 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 					if(json.info.thesaurus_name != json.info_annexe[i]){
 						//console.log(document.getElementById('thesaurus_'+json.info_annexe[i].thesaurus_id));
 						if(document.getElementById('thesaurus_'+json.info_annexe[i].thesaurus_id+'').selected == true){
-							content += '<li style="list-style-type:initial;cursor:text;color:grey;font-style:italic;">';
+							content += '<li style="list-style-type:initial;cursor:text;color:grey;font-style:italic;text-decoration: line-through;">';
 
 						}else{
-							content += '<li style="list-style-type:initial;cursor:pointer;" onclick="document.getElementById(\'thesaurus_'+json.info_annexe[i].thesaurus_id+'\').selected = true;Event.fire($(\'thesaurus\'), \'chosen:updated\');">';
+							content += '<li style="list-style-type:initial;cursor:pointer;">';
 						}
-						content += json.info_annexe[i].thesaurus_name;				
+						content += '<a onclick="document.getElementById(\'thesaurus_'+json.info_annexe[i].thesaurus_id+'\').selected = true;Event.fire($(\'thesaurus\'), \'chosen:updated\');">'+json.info_annexe[i].thesaurus_name+'</a>';				
 						content += '</li>';
 					}
 				} 
