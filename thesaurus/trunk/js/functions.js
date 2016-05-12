@@ -12,7 +12,7 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 		 	var json = JSON.parse(answer.responseText);
 			//eval("response = "+answer.responseText);
 			if (json.info.thesaurus_parent_id) {
-				content += '<h2 title="terme parent" style="width:300px;">'+json.info.thesaurus_parent_id+'</h2>';
+				content += '<h2 title="terme parent" style="width:500px;">'+json.info.thesaurus_parent_id+'</h2>';
 			}
 			content += '<ul style="padding-left:20px;">';
 			content += '<li style="list-style-type:initial;">';
@@ -30,6 +30,27 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 			}else{
 				content += '<p style="text-align:center;font-style:italic;padding:5px;color:grey;" title="terme(s) associé(s)">aucun terme associé</p>';		
 			}
+			content += '<hr/>';
+			content += '<ul title="terme(s) spécique(s) à :  « '+json.info.thesaurus_name+' »" style="margin-top:5px;padding-left:20px;max-height: 200px;overflow: hidden;overflow-y: auto;float:rightwidth:49%;">';
+			if(json.info_children){
+				for (var i = json.info_children.length - 1; i >= 0; i--) {
+					if(json.info.thesaurus_name != json.info_children[i]){
+						//console.log(document.getElementById('thesaurus_'+json.info_annexe[i].thesaurus_id));
+						if(document.getElementById('thesaurus_'+json.info_children[i].thesaurus_id+'').selected == true){
+							content += '<li style="list-style-type:initial;cursor:text;color:grey;font-style:italic;">';
+
+						}else{
+							content += '<li style="list-style-type:initial;cursor:pointer;" onclick="document.getElementById(\'thesaurus_'+json.info_children[i].thesaurus_id+'\').selected = true;Event.fire($(\'thesaurus\'), \'chosen:updated\');">';
+						}
+						content += json.info_children[i].thesaurus_name;				
+						content += '</li>';
+					}
+				} 
+			}else{
+				content += '<p style="text-align:center;font-style:italic;padding:5px;color:grey;" title="description">aucun terme spécifique</p>';		
+			}
+			
+			content += '</ul>';
 			content += '</fieldset>';
 			content += '</li>';
 			content += '</ul>';

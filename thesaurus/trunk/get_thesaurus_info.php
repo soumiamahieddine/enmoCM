@@ -49,5 +49,13 @@ if($res->thesaurus_parent_id != ''){
     }
 }
 
+$query = "SELECT thesaurus_name,thesaurus_id from thesaurus where thesaurus_parent_id = ? ORDER BY thesaurus_name DESC";
+
+    $stmt = $db->query($query, array($_REQUEST['thesaurus_name']));
+
+    while($res = $stmt->fetchObject()){
+        $result['info_children'][] = $res;
+    }
+
 echo json_encode($result);
 //$_SESSION['is_multi_contact'] = '';

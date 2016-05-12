@@ -22,6 +22,8 @@
 
 abstract class thesaurus_Abstract
 {
+    var $array_thesaurus;
+
 	public function build_modules_tables()
 	{
 		if (file_exists(
@@ -169,31 +171,77 @@ abstract class thesaurus_Abstract
     */
     public function getShortThesaurusTreeAdvanced($thesaurus)
     {      
-
-	    /*$thesaurus = $this->getThesaurusChildrenTreeAdvanced(
-	        $thesaurus,
-	        '',
-	        ''
-	    );
-        return $thesaurus;*/
-
         $db = new Database();
-        $stmt = $db->query("SELECT * FROM thesaurus ORDER BY thesaurus_name ASC");
-        while ($line = $stmt->fetchObject()) {                                        
-            array_push(
-                $thesaurus, 
-                array(
+
+        $thesaurus_tmp = array();
+        $stmt = $db->prepare("SELECT * FROM thesaurus WHERE thesaurus_parent_id is not null ORDER BY thesaurus_name  ASC");
+        $stmt->execute(array());
+        $lines = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            foreach ($lines as $key => $line) {
+                $thesaurus_tmp['AZ_terme'][] = array(
                     'ID' => $line->thesaurus_id, 
-                    'LABEL' => $espace.$line->thesaurus_name,
+                    'LABEL' => $line->thesaurus_name,
                     'DESC' => $line->thesaurus_description, 
+                    'PARENT' => $line->thesaurus_parent_id, 
                     'ASSOC' => $line->thesaurus_name_associate,
                     'CREATION' => $line->creation_date
-                )
-            );
+                );
+
+            //$thesaurus_tmp = array_merge((array)$thesaurus_tmp,(array)$this->getChildren($line->thesaurus_name,''));
         }
-        return $thesaurus;
+
+        $stmt = $db->prepare("SELECT * FROM thesaurus WHERE thesaurus_parent_id is null ORDER BY thesaurus_name  ASC");
+        $stmt->execute(array());
+        $lines = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            foreach ($lines as $key => $line) {
+                $thesaurus_tmp['generic_terme'][] = array(
+                    'ID' => $line->thesaurus_id, 
+                    'LABEL' => $line->thesaurus_name,
+                    'DESC' => $line->thesaurus_description, 
+                    'PARENT' => $line->thesaurus_parent_id, 
+                    'ASSOC' => $line->thesaurus_name_associate,
+                    'CREATION' => $line->creation_date
+                );
+
+            //$thesaurus_tmp = array_merge((array)$thesaurus_tmp,(array)$this->getChildren($line->thesaurus_name,''));
+        }
+
+        return $thesaurus_tmp;
     }
 
+    public function getChildren($parent, $level = '')
+    {  
+        $db = new Database();
+
+        $thesaurus_tmp = array();
+        $level=$level."&nbsp;&nbsp;&nbsp;&nbsp;";
+ 
+        $stmt = $db->query("SELECT * FROM thesaurus WHERE thesaurus_parent_id = '".$db->protect_string_db($parent)."' ORDER BY thesaurus_name  ASC");
+
+        $lines = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        if(count($lines) == 0){
+            return [];
+        }
+        foreach ($lines as $key => $line) {
+ 
+            $thesaurus_tmp[] = array(
+                    'ID' => $line->thesaurus_id, 
+                    'LABEL' => $level.$line->thesaurus_name,
+                    'DESC' => $line->thesaurus_description, 
+                    'PARENT_ID' => $line->thesaurus_parent_id, 
+                    'ASSOC' => $line->thesaurus_name_associate,
+                    'CREATION' => $line->creation_date
+            );
+
+            $thesaurus_tmp = array_merge((array)$thesaurus_tmp,(array)$this->getChildren($line->thesaurus_name,$level));
+
+                
+        }
+        return $thesaurus_tmp;
+    }
     /**
     * Gets all children of a thesaurus in an array
     *
@@ -246,7 +294,6 @@ abstract class thesaurus_Abstract
             }
             return $thesaurus;
         }
-        //return $thesaurus;
     }
 
     public function saveResThesaurusList($thesaurus_list,$res_id)
