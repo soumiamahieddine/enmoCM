@@ -339,6 +339,23 @@ abstract class lists_Abstract extends Database
                 }
                 $filters .='</select>&nbsp;';
             break;
+
+            case 'priority':
+                $filters .='<select name="priority_id_list" id="priority_id_list" onChange="loadList(\''.$this->link
+                         .'&filter=priority&value=\' + document.filters.priority_id_list.value, \''
+                         .$this->divListId.'\', '.$this->modeReturn.');">';
+                $filters .='<option value="none">'._CHOOSE_PRIORITY.'</option>';
+                foreach (array_keys($_SESSION['mail_priorities']) as $priorityId) {                 
+                        if (isset($_SESSION['mail_priorities']) && $_SESSION['mail_priorities'] == $priorityId){
+                            $selected = 'selected="selected"';
+                        } else{ 
+                            $selected =  '';
+                        }
+                        $filters .='<option value="'.$priorityId.'" '.$selected.'>'.$_SESSION['mail_priorities'][$priorityId].'</option>';
+                    
+                }
+                $filters .='</select>&nbsp;';
+            break;
             
             case 'isViewed':
                 $isViewedArray = array('yes' =>_YES, 'no' => _NO);
@@ -818,8 +835,14 @@ abstract class lists_Abstract extends Database
                         }
                         
                         $_SESSION['filters']['creation_date']['CLAUSE'] = join(' and ', $creation_date);
+                    } else if($_REQUEST['filter'] == 'priority' && isset($_REQUEST['value']) &&  $_REQUEST['value'] != 0) {
+                        $_SESSION['filters']['priority']['CLAUSE'] = "priority = '".$_REQUEST['value']."'";
+
                     }
                 }
+            } elseif($_REQUEST['filter'] == 'priority' && isset($_REQUEST['value']) &&  $_REQUEST['value'] == 0) {
+                //j'ai créé cette condition pour le filtre des priorités parce que lorsque la valeur de $_request[value] est égale à 0, on ne rentre pas dans la condition et donc le filtre ne fonctionne pas lorsque c'est égale à 0.
+                        $_SESSION['filters']['priority']['CLAUSE'] = "priority = '".$_REQUEST['value']."'";
             }
         }
     }

@@ -86,6 +86,11 @@
             <LABEL>_CHRONO_NUMBER</LABEL>
             <ENABLED>true</ENABLED>
         </FILTER>
+        <FILTER>
+            <ID>priority</ID>
+            <LABEL>_PRIORITY</LABEL>
+            <ENABLED>true</ENABLED>
+        </FILTER>
     </FILTERS>
     <TEMPLATES>
         <TEMPLATE>
