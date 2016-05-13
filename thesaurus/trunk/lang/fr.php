@@ -76,6 +76,9 @@ if (!defined("_THESAURUS_NAME_IS_EMPTY"))
 if (!defined("_THESAURUS_ADDED"))
     define("_THESAURUS_ADDED", "Terme ajouté");
 
+if (!defined("_THESAURUS_UPDATED"))
+    define("_THESAURUS_UPDATED", "Terme mis à jour");
+
 if (!defined("_THESAURUS_DELETED"))
     define("_THESAURUS_DELETED", "Terme supprimé");
 

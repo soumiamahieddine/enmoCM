@@ -413,6 +413,45 @@ abstract class thesaurus_Abstract
         
     }
 
+     public function update($new_thesaurus)
+    {
+        $db = new Database();
+
+        if(!empty($new_thesaurus['thesaurus_parent_id'])){
+            $stmt = $db->query("SELECT thesaurus_name FROM thesaurus WHERE thesaurus_id = ?", array($new_thesaurus['thesaurus_parent_id']));
+            $line = $stmt->fetchObject();
+            $new_thesaurus_parent_id = $line->thesaurus_name;
+            $new_thesaurus_name_associate = array();
+        }else{
+            $new_thesaurus_parent_id = $new_thesaurus['thesaurus_parent_id'];
+        }
+        
+
+        if(!empty($new_thesaurus['thesaurus_name_associate'])){
+            foreach ($new_thesaurus['thesaurus_name_associate'] as $key => $value) {
+                $stmt = $db->query("SELECT thesaurus_name FROM thesaurus WHERE thesaurus_id = ?", array($value));
+                $line = $stmt->fetchObject();
+                $new_thesaurus_name_associate[] = $line->thesaurus_name;
+            }
+            $new_thesaurus_name_associate = implode(',', $new_thesaurus_name_associate);
+        }else{
+            $new_thesaurus_name_associate = $new_thesaurus['thesaurus_name_associate'];
+        }
+
+        $stmt = $db->query(
+            "UPDATE thesaurus SET thesaurus_name=?, thesaurus_description=?, thesaurus_name_associate=?, thesaurus_parent_id=? WHERE thesaurus_id=?"
+          ,array($new_thesaurus['thesaurus_name'],$new_thesaurus['thesaurus_description'],$new_thesaurus_name_associate,$new_thesaurus_parent_id,$new_thesaurus['thesaurus_id']));
+        $hist = new history();
+        $hist->add(
+            "thesaurus", $new_thesaurus['thesaurus_name'], "UP", 'thesaurusup', _THESAURUS_UPDATED.' : "'.
+            substr(functions::protect_string_db($new_thesaurus['thesaurus_name']), 0, 254) .'"',
+            $_SESSION['config']['databasetype'], 'thesaurus'
+        );
+
+
+        
+    }
+
     public function delete($thesaurus_id)
     {
         /*

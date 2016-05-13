@@ -446,19 +446,19 @@ function validate_thesaurus_submit() {
     switch ($mode) {
         case 'up':
             if ($_SESSION['error'] == "")
-                $_SESSION['info'] = _TAG_UPDATED.' : '.str_replace("''", "'", $new_tag_label);
+                $_SESSION['info'] = _TAG_UPDATED.' : '.str_replace("''", "'", $new_thesaurus_label);
             
-            if (!empty($_SESSION['m_admin']['tag']['dddtag_label'])) {
+            if (!empty($_SESSION['m_admin']['thesaurus']['thesaurus_label'])) {
                 header(
                     'location: ' . $_SESSION['config']['businessappurl']
                     . 'index.php?page=' . $pageName . '&mode=up&id='
-                    . $tag->tag_label . '&module=tags'
+                    . $thesaurus->thesaurus_label . '&module=thesaurus'
                 );
             } else {
                 header(
                     'location: ' . $_SESSION['config']['businessappurl']
                     . 'index.php?page=' . $pageName . '&mode=list&module='
-                    .'tags&order=' . $status['order'] . '&order_field='
+                    .'thesaurus&order=' . $status['order'] . '&order_field='
                     . $status['order_field'] . '&start=' . $status['start']
                     . '&what=' . $status['what']
                 );
