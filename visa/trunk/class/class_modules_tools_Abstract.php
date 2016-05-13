@@ -546,7 +546,7 @@ abstract class visa_Abstract extends Database
 								$str .= '<td>';
 								$tab_users = $this->getUsersVis();
 
-								if (($isVisaStep && $myPosVisa != null && $myPosVisa >= $seq) || ($step['process_date'] && $step['process_date'] != ''))
+								if (($isVisaStep && !is_null($myPosVisa) && $myPosVisa >= $seq) || ($step['process_date'] && $step['process_date'] != ''))
 									$disabled = ' disabled ';
 								else
 									$disabled = '';
