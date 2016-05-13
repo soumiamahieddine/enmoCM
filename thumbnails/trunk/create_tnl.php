@@ -210,7 +210,7 @@ while ($queryResult=$stmt1->fetchObject()) {
 			
 			$command = '';
 			if (strtoupper($fileFormat) == 'PDF') {
-				$command = "convert -thumbnail 200x300 -background white -alpha remove " . escapeshellarg($pathToFile) . "[0] " 
+				$command = "convert -thumbnail 400x600 -background white -alpha remove " . escapeshellarg($pathToFile) . "[0] "
 					. escapeshellarg($outputPathFile);
 			} else {
 				$posPoint = strpos($pathToFile, '.');
@@ -222,12 +222,12 @@ while ($queryResult=$stmt1->fetchObject()) {
 					}else{
 						echo "La copie $pathToFile du fichier a réussi...\n";
 						$cheminComplet = $chemin.".html";
-						$command = "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " . escapeshellarg($cheminComplet) . " " 
+						$command = "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " . escapeshellarg($cheminComplet) . " "
 						. escapeshellarg($outputPathFile);
 
 					}
 				}else{
-					$command = "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " . escapeshellarg($pathToFile) . " " 
+					$command = "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " . escapeshellarg($pathToFile) . " "
 					. escapeshellarg($outputPathFile);
 				}
 			}
