@@ -446,7 +446,7 @@ function validate_thesaurus_submit() {
     switch ($mode) {
         case 'up':
             if ($_SESSION['error'] == "")
-                $_SESSION['info'] = _TAG_UPDATED.' : '.str_replace("''", "'", $new_thesaurus_label);
+                $_SESSION['info'] = _THESAURUS_UPDATED.' : '.str_replace("''", "'", $new_thesaurus_label);
             
             if (!empty($_SESSION['m_admin']['thesaurus']['thesaurus_label'])) {
                 header(
