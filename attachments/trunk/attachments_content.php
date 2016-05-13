@@ -181,7 +181,7 @@ function setTransmissionData($nb, $storeResult) {
 function setTransmissionDataPdf($nb, $storeResult) {
     $transmissionDataPdf = [];
 
-    $_SESSION['new_id'] = $id;
+//    $_SESSION['new_id'] = $id;
     $file    = $_SESSION['config']['tmppath'] . $_SESSION['upfileTransmission'][$nb]['fileNamePdfOnTmp'];
     $newfile = $storeResult['path_template'] . str_replace('#',"/",$storeResult['destination_dir']) . substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )) . '.pdf';
 
