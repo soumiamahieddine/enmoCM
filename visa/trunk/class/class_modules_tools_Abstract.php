@@ -580,11 +580,11 @@ abstract class visa_Abstract extends Database
 								$up = ' style="visibility:visible"';
 								$displayCB = ' style="visibility:hidden"';
 								$checkCB = '';
-								if ($isVisaStep && $myPosVisa != null && $myPosVisa >= $seq || $step['process_date'] != '')
+								if ($isVisaStep && !is_null($myPosVisa) && $myPosVisa >= $seq || $step['process_date'] != '')
 									$down = ' style="visibility:hidden"';
 								else
 									$down = ' style="visibility:visible"';
-								if ($isVisaStep && $myPosVisa != null && $myPosVisa >= $seq || $step['process_date'] != '')
+								if ($isVisaStep && !is_null($myPosVisa) && $myPosVisa >= $seq || $step['process_date'] != '')
 									$del = ' style="visibility:hidden"';
 								else
 									$del = ' style="visibility:visible"';
