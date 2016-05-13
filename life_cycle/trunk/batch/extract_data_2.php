@@ -138,7 +138,7 @@ try {
     
     $GLOBALS['logger']->write('Select incoming mails created from last ' . $fromdatelist['FromDate'], 'INFO');
     $querySelectedFile = "SELECT *  
-                        FROM " . $GLOBALS['view'] . " WHERE (cast(res_id as character varying) IN (select distinct(record_id) as record_id from history where event_type like 'ACTION%' AND event_date > current_timestamp - interval '".$fromdatelist['FromDate']."')) AND destination = '".$fromdatelist['EntityId']."'";
+                        FROM " . $GLOBALS['view'] . " WHERE (cast(res_id as character varying) IN (select distinct(record_id) as record_id from history where event_type like 'ACTION%' AND event_date < current_timestamp - interval '".$fromdatelist['FromDate']."')) AND destination = '".$fromdatelist['EntityId']."'";
     $stmt = Bt_doQuery(
         $GLOBALS['db'], 
         $querySelectedFile
