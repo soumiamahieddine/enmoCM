@@ -127,28 +127,32 @@ if ($mode == 'list') {
                     <?php 
                         echo '<option value="">-- Aucun Terme générique --</option>';
                         echo'<optgroup label="Terme(s) générique(s)">';
-                                foreach ($allThesaurusTree['generic_terme'] as $key => $value) {
+                                if(!empty($allThesaurusTree['generic_terme'])){
+                                    foreach ($allThesaurusTree['generic_terme'] as $key => $value) {
 
-                                    echo '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
-                                    if($value['LABEL'] == $_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']){
-                                        echo ' selected="selected"'; 
-                                    }
-                                    echo '>' 
-                                        .  functions::show_string($value['LABEL']) 
-                                        . '</option>';
-
-                                }
-                                 echo '</optgroup>';
-                                 echo '<optgroup label="Terme(s) A-Z">';
-                                foreach ($allThesaurusTree['AZ_terme'] as $key => $value) {
-                                    echo '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
-                                    if($value['LABEL'] == $_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']){
-                                        echo ' selected="selected"'; 
-                                    }
-                                    echo  '>' 
+                                        echo '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
+                                        if($value['LABEL'] == $_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']){
+                                            echo ' selected="selected"'; 
+                                        }
+                                        echo '>' 
                                             .  functions::show_string($value['LABEL']) 
                                             . '</option>';
 
+                                    }
+                                }
+                                 echo '</optgroup>';
+                                 echo '<optgroup label="Terme(s) A-Z">';
+                                if(!empty($allThesaurusTree['AZ_terme'])){
+                                    foreach ($allThesaurusTree['AZ_terme'] as $key => $value) {
+                                        echo '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
+                                        if($value['LABEL'] == $_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']){
+                                            echo ' selected="selected"'; 
+                                        }
+                                        echo  '>' 
+                                                .  functions::show_string($value['LABEL']) 
+                                                . '</option>';
+
+                                    }
                                 }
                                  echo '</optgroup>';
                      ?>
@@ -211,28 +215,32 @@ if ($mode == 'list') {
             <select multiple="multiple" id="thesaurus_name_associate" name="thesaurus_name_associate[]" data-placeholder=" ">
             <?php
                 echo'<optgroup label="Terme(s) générique(s)">';
-                foreach ($allThesaurusTree['generic_terme'] as $key => $value) {
+                if(!empty($allThesaurusTree['generic_terme'])){
+                    foreach ($allThesaurusTree['generic_terme'] as $key => $value) {
 
-                    echo '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
-                    if(in_array($value['LABEL'], $thesaurus_name_associate)){
-                        echo ' selected="selected"'; 
-                    }
-                    echo '>' 
-                        .  functions::show_string($value['LABEL']) 
-                        . '</option>';
-
-                }
-                 echo '</optgroup>';
-                 echo '<optgroup label="Terme(s) A-Z">';
-                foreach ($allThesaurusTree['AZ_terme'] as $key => $value) {
-                    echo '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
-                    if(in_array($value['LABEL'], $thesaurus_name_associate)){
-                        echo ' selected="selected"'; 
-                    }
-                    echo  '>' 
+                        echo '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
+                        if(in_array($value['LABEL'], $thesaurus_name_associate)){
+                            echo ' selected="selected"'; 
+                        }
+                        echo '>' 
                             .  functions::show_string($value['LABEL']) 
                             . '</option>';
 
+                    }
+                }
+                 echo '</optgroup>';
+                 echo '<optgroup label="Terme(s) A-Z">';
+                if(!empty($allThesaurusTree['AZ_terme'])){
+                    foreach ($allThesaurusTree['AZ_terme'] as $key => $value) {
+                        echo '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
+                        if(in_array($value['LABEL'], $thesaurus_name_associate)){
+                            echo ' selected="selected"'; 
+                        }
+                        echo  '>' 
+                                .  functions::show_string($value['LABEL']) 
+                                . '</option>';
+
+                    }
                 }
                  echo '</optgroup>'; ?>
             </select>
