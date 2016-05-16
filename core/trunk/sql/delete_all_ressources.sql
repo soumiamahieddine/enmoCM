@@ -22,6 +22,7 @@ TRUNCATE TABLE res_letterbox;
 TRUNCATE TABLE res_version_letterbox;
 TRUNCATE TABLE res_x;
 TRUNCATE TABLE res_attachments;
+TRUNCATE TABLE res_version_attachments;
 
 TRUNCATE TABLE saved_queries;
 TRUNCATE TABLE lc_stack;
