@@ -159,7 +159,7 @@ function setTransmissionData($nb, $storeResult) {
         ];
     }
 
-    if (!empty($_REQUEST["transmissionContactidAttach{$nb}"])) {
+    if (!empty($_REQUEST["transmissionContactidAttach{$nb}"]) && is_numeric($_REQUEST["transmissionContactidAttach{$nb}"])) {
         $transmissionData[] = [
             'column' => 'dest_contact_id',
             'value' => $_REQUEST["transmissionContactidAttach{$nb}"],
@@ -167,7 +167,7 @@ function setTransmissionData($nb, $storeResult) {
         ];
     }
 
-    if (!empty($_REQUEST["transmissionAddressidAttach{$nb}"])) {
+    if (!empty($_REQUEST["transmissionAddressidAttach{$nb}"]) && is_numeric($_REQUEST["transmissionAddressidAttach{$nb}"])) {
         $transmissionData[] = [
             'column' => 'dest_address_id',
             'value' => $_REQUEST["transmissionAddressidAttach{$nb}"],
@@ -457,7 +457,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                             );
                         }
 
-                        if (isset($_REQUEST['contactidAttach']) && $_REQUEST['contactidAttach'] <> '') {
+                        if (isset($_REQUEST['contactidAttach']) && $_REQUEST['contactidAttach'] <> '' && is_numeric($_REQUEST['contactidAttach'])) {
                             array_push(
                                 $_SESSION['data'],
                                 array(
@@ -468,7 +468,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                             );
                         }
 
-                        if (isset($_REQUEST['addressidAttach']) && $_REQUEST['addressidAttach'] <> '') {
+                        if (isset($_REQUEST['addressidAttach']) && $_REQUEST['addressidAttach'] <> '' && is_numeric($_REQUEST['addressidAttach'])) {
                             array_push(
                                 $_SESSION['data'],
                                 array(
