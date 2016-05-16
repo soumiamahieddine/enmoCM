@@ -102,7 +102,7 @@ $select[$table]= array();
 array_push($select[$table],"res_id", "status", "category_id as category_img", 
                         "contact_firstname", "contact_lastname", "contact_society", "user_lastname", 
                         "user_firstname", "priority", "creation_date", 'modification_date', "admission_date", "subject",
-                        "process_limit_date", "entity_label", "dest_user", "category_id", "type_label", 
+                        "process_limit_date", 'recommendation_limit_date', "entity_label", "dest_user", "category_id", "type_label",
                         "exp_user_id", "count_attachment", "alt_identifier","is_multicontacts", "locker_user_id", "locker_time");
                         
 if($core_tools->is_module_loaded("cases") == true) {
@@ -288,6 +288,17 @@ for ($i=0;$i<$tabI;$i++)
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='process_limit_date';
+            }
+            if($tab[$i][$j][$value]=="recommendation_limit_date")
+            {
+                $tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false);
+                $tab[$i][$j]["label"]=_RECOMMENDATION_LIMIT_DATE;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]["order"]='recommendation_limit_date';
             }
             if($tab[$i][$j][$value]=="category_id")
             {
