@@ -1622,7 +1622,7 @@ abstract class lists_Abstract extends Database
         $db = new Database();
         //Load action name   
         $stmt = $db->query(
-            "SELECT count(*) as total FROM notes WHERE identifier = ? and note_text like '[Avis%'", array($res_id)
+            "SELECT count(*) as total FROM notes WHERE identifier = ? and note_text like '[avis%'", array($res_id)
         );
         $note = $stmt->fetchObject();
 
