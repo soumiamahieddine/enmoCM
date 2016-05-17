@@ -597,7 +597,24 @@ abstract class visa_Abstract extends Database
 								$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
 								$str .= '<option value="" >Sélectionnez un utilisateur</option>';
 								
-								$tab_usergroups = $this->getGroupVis();
+								$tab_userentities = $this->getEntityVis();
+								/** CUSTOM CABPM **/
+								foreach ($tab_userentities as $key => $value) {
+									$str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+									$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
+									foreach($tab_users as $user){
+										if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+											$selected = " ";
+											if ($user['id'] == $step['user_id'])
+												$selected = " selected";
+											$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+										}
+										
+									}
+									$str .= '</optgroup>';
+								}
+
+								/*$tab_usergroups = $this->getGroupVis();
 								foreach ($tab_usergroups as $key => $value) {
 									$str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
 									$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
@@ -610,7 +627,7 @@ abstract class visa_Abstract extends Database
 									}
 									$str .= '</optgroup>';
 								}
-								$str .= '</select>';
+								$str .= '</select>';*/
 
 								$str .= "<span id=\"signatory_" . $seq . "\">";
 								if (empty($circuit['sign']['users']) && $seq == count ($circuit['visa']['users'])-1)
@@ -696,7 +713,25 @@ abstract class visa_Abstract extends Database
 							$str .= '<span id="rank_' . $seq . '">'.$actual_sign.' <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) . '</span> </span>';
 							$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
 							$str .= '<option value="" >Sélectionnez un utilisateur</option>';
-							$tab_usergroups = $this->getGroupVis();
+							
+
+							$tab_userentities = $this->getEntityVis();
+							/** CUSTOM CABPM **/
+							foreach ($tab_userentities as $key => $value) {
+								$str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+								$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
+								foreach($tab_users as $user){
+									if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+										$selected = " ";
+										if ($user['id'] == $circuit['sign']['users'][0]['user_id'])
+											$selected = " selected";
+										$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+									}
+									
+								}
+								$str .= '</optgroup>';
+							}
+							/*$tab_usergroups = $this->getGroupVis();
 							foreach ($tab_usergroups as $key => $value) {
 								$str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
 								$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
@@ -707,7 +742,7 @@ abstract class visa_Abstract extends Database
 									$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
 								}
 								$str .= '</optgroup>';
-							}
+							}*/
 							$str .= '</select>';
 
 							$str .= '<span id="signatory_' . $seq . '"><i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
