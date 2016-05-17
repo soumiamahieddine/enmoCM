@@ -359,16 +359,21 @@ abstract class visa_Abstract extends Database
 		$db = new Database();
 		
 		if($group_id <> null){
-			$stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ? AND group_id = ?)  order by users.lastname", array('visa_documents',$group_id));
+			$stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id,entities.entity_id from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and 
+				users_entities.primary_entity <> 'Y' and users.user_id = usergroup_content.user_id AND entities.entity_id = users_entities.entity_id AND group_id IN 
+				(SELECT group_id FROM usergroups_services WHERE service_id = ? AND group_id = ?)  order by users.lastname", array('visa_documents',$group_id));
 		}else{
-			$stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)  order by users.lastname", array('visa_documents'));
+			$stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id,entities.entity_id from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and 
+				users_entities.primary_entity <> 'Y' and users.user_id = usergroup_content.user_id AND entities.entity_id = users_entities.entity_id AND group_id IN 
+				(SELECT group_id FROM usergroups_services WHERE service_id = ?)  
+				order by users.lastname", array('visa_documents'));
 		}
 		
 		$tab_users = array();
 		
 		
 		while($res = $stmt->fetchObject()){
-			array_push($tab_users,array('id'=>$res->user_id, 'firstname'=>$res->firstname,'lastname'=>$res->lastname,'group_id'=>$res->group_id));
+			array_push($tab_users,array('id'=>$res->user_id, 'firstname'=>$res->firstname,'lastname'=>$res->lastname,'group_id'=>$res->group_id,'entity_id'=>$res->entity_id));
 		}
 		return $tab_users;
 	}
@@ -386,6 +391,24 @@ abstract class visa_Abstract extends Database
 		}
 		//print_r($tab_usergroup);
 		return $tab_usergroup;
+	}
+
+	public function getEntityVis(){
+		$db = new Database();
+		
+		$stmt = $db->query("SELECT distinct(entities.entity_id) from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and 
+			users_entities.primary_entity <> 'Y' and users.user_id = usergroup_content.user_id AND entities.entity_id = users_entities.entity_id AND group_id IN 
+			(SELECT group_id FROM usergroups_services WHERE service_id = ?)  
+			order by entities.entity_id", array('visa_documents'));
+		
+		$tab_userentities = array();
+		
+		
+		while($res = $stmt->fetchObject()){
+			array_push($tab_userentities,array('entity_id'=>$res->entity_id));
+		}
+		//print_r($tab_userentities);
+		return $tab_userentities;
 	}
 	
 	public function allUserVised($res_id, $coll_id, $typeList){
@@ -506,15 +529,31 @@ abstract class visa_Abstract extends Database
 					if ($bool_modif){
 						$str .= '<select id="conseiller_'.$j.'" name="conseiller_'.$j.'" >';
 						$str .= '<option value="" >Sélectionnez un utilisateur</option>';
-						$tab_usergroups = $this->getGroupVis();
+						
+						$tab_userentities = $this->getEntityVis();
+
+						/** CUSTOM CABPM **/
+						foreach ($tab_userentities as $key => $value) {
+							$str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+							$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
+							foreach($tab_users as $user){
+								if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+									$str .= '<option value="'.$user['id'].'" >'.$user['lastname'].', '.$user['firstname'].'</option>';
+								}
+								
+							}
+							$str .= '</optgroup>';
+						}
+						/**************/
+						/*$tab_usergroups = $this->getGroupVis();
 						foreach ($tab_usergroups as $key => $value) {
 							$str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
 							$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
 							foreach($tab_users as $user){
-								$str .= '<option value="'.$user['id'].'" >'.$user['lastname'].', '.$user['firstname'].'</option>';
+								$str .= '<option value="'.$user['id'].'" >'.$user['lastname'].', '.$user['firstname'].' ('.$user['entity_id'].')</option>';
 							}
 						}
-						$str .= '</optgroup>';
+						$str .= '</optgroup>';*/
 						$str .= '</select>';
 					}
 					$str .= '<span id="signatory_' . $j . '"> <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
