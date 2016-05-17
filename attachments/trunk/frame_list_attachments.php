@@ -106,7 +106,7 @@ if (isset($whereAttach) && $whereAttach <> '') $where .= $whereAttach;
     else  {
         $list->setOrder();
         $list->setOrderField('identifier');
-        $orderstr = "order by identifier desc, attachment_type desc";
+        $orderstr = "order by attachment_type asc, identifier desc";
     }
 
 $parameters = '';
