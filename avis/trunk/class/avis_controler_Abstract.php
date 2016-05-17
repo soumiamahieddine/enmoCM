@@ -149,7 +149,22 @@ abstract class avis_controler_Abstract
                     if ($bool_modif){
                         $str .= '<select id="avis_'.$j.'" name="avis_'.$j.'" >';
                         $str .= '<option value="" >Sélectionnez un utilisateur</option>';
-                        $tab_usergroups = $this->getGroupAvis();
+
+                        $tab_userentities = $this->getEntityAvis();
+
+                        /** Order by parent entity **/
+                        foreach ($tab_userentities as $key => $value) {
+                            $str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+                            $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
+                            foreach($tab_users as $user){
+                                if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+                                    $str .= '<option value="'.$user['id'].'" >'.$user['lastname'].', '.$user['firstname'].'</option>';
+                                }
+                                
+                            }
+                            $str .= '</optgroup>';
+                        }
+                        /*$tab_usergroups = $this->getGroupAvis();
                         foreach ($tab_usergroups as $key => $value) {
                             $str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
                             $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
@@ -157,7 +172,7 @@ abstract class avis_controler_Abstract
                                 $str .= '<option value="'.$user['id'].'" >'.$user['lastname'].', '.$user['firstname'].'</option>';
                             }
                         }
-                        $str .= '</optgroup>';
+                        $str .= '</optgroup>';*/
                         $str .= '</select>';
                     }
                     $str .= '<span id="lastavis_' . $j . '"> ';
@@ -204,8 +219,25 @@ abstract class avis_controler_Abstract
                                 $str .= '<span id="avis_rank_' . $seq . '"><span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) . '</span> </span>';
                                 $str .= '<select id="avis_'.$seq.'" name="avis_'.$seq.'" '.$disabled.'>';
                                 $str .= '<option value="" >Sélectionnez un utilisateur</option>';
-                                
-                                $tab_usergroups = $this->getGroupAvis();
+        
+
+                                /** Order by parent entity **/
+                                $tab_userentities = $this->getEntityAvis();
+                                foreach ($tab_userentities as $key => $value) {
+                                    $str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+                                    $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
+                                    foreach($tab_users as $user){
+                                        if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+                                            $selected = " ";
+                                            if ($user['id'] == $step['user_id'])
+                                                $selected = " selected";
+                                            $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+                                        }
+                                        
+                                    }
+                                    $str .= '</optgroup>';
+                                }
+                                /*$tab_usergroups = $this->getGroupAvis();
                                 foreach ($tab_usergroups as $key => $value) {
                                     $str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
                                     $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
@@ -217,7 +249,7 @@ abstract class avis_controler_Abstract
 
                                     }
                                     $str .= '</optgroup>';
-                                }
+                                }*/
                                 $str .= '</select>';
 
                                 $str .= "<span id=\"lastAvis_" . $seq . "\">";
@@ -296,7 +328,24 @@ abstract class avis_controler_Abstract
                             $str .= '<span id="rank_' . $seq . '"><strong>'. ($seq + 1) . ' </strong></span>';
                             $str .= '<select id="avis_'.$seq.'" name="avis_'.$seq.'" '.$disabled.'>';
                             $str .= '<option value="" >Sélectionnez un utilisateur</option>';
-                            $tab_usergroups = $this->getGroupAvis();
+                            
+                            /** Order by parent entity **/
+                            $tab_userentities = $this->getEntityAvis();
+                            foreach ($tab_userentities as $key => $value) {
+                                $str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+                                $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
+                                foreach($tab_users as $user){
+                                    if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+                                        $selected = " ";
+                                        if ($user['id'] == $circuitAvis['lastAvis']['users'][0]['user_id'])
+                                            $selected = " selected";
+                                        $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+                                    }
+                                    
+                                }
+                                $str .= '</optgroup>';
+                            }
+                            /*$tab_usergroups = $this->getGroupAvis();
                             foreach ($tab_usergroups as $key => $value) {
                                 $str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
                                 $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
@@ -307,7 +356,7 @@ abstract class avis_controler_Abstract
                                     $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
                                 }
                                 $str .= '</optgroup>';
-                            }
+                            }*/
                             $str .= '</select>';
 
                             $str .= '<span id="lastAvis_' . $seq . '"> <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
@@ -455,7 +504,21 @@ abstract class avis_controler_Abstract
                     if ($bool_modif){
                         $str .= '<select style="width:150px;" id="avisPopup_'.$j.'" name="avisPopup_'.$j.'" >';
                         $str .= '<option value="" >Sélectionnez un utilisateur</option>';
-                        $tab_usergroups = $this->getGroupAvis();
+                        
+                        /** Order by parent entity **/
+                        $tab_userentities = $this->getEntityAvis();
+                        foreach ($tab_userentities as $key => $value) {
+                            $str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+                            $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
+                            foreach($tab_users as $user){
+                                if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+                                    $str .= '<option value="'.$user['id'].'" >'.$user['lastname'].', '.$user['firstname'].'</option>';
+                                }
+                                
+                            }
+                            $str .= '</optgroup>';
+                        }
+                        /*$tab_usergroups = $this->getGroupAvis();
                         foreach ($tab_usergroups as $key => $value) {
                             $str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
                             $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
@@ -463,7 +526,7 @@ abstract class avis_controler_Abstract
                                 $str .= '<option value="'.$user['id'].'" >'.$user['lastname'].', '.$user['firstname'].'</option>';
                             }
                         }
-                        $str .= '</optgroup>';
+                        $str .= '</optgroup>';*/
                         $str .= '</select>';
                     }
                     $str .= '<span id="lastavisPopup_' . $j . '"> <i title="'._LAST_AVIS.'" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
@@ -502,7 +565,24 @@ abstract class avis_controler_Abstract
                                 $str .= '<select style="width:150px;" id="avisPopup_'.$seq.'" name="avisPopup_'.$seq.'" '.$disabled.'>';
                                 $str .= '<option value="" >Sélectionnez un utilisateur</option>';
                                 
-                                $tab_usergroups = $this->getGroupAvis();
+                                /** Order by parent entity **/
+                                $tab_userentities = $this->getEntityAvis();
+                                foreach ($tab_userentities as $key => $value) {
+                                    $str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+                                    $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
+                                    foreach($tab_users as $user){
+                                        if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+                                            $selected = " ";
+                                            if ($user['id'] == $step['user_id']){
+                                                $selected = " selected";
+                                            }
+                                            $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+                                        }
+                                        
+                                    }
+                                    $str .= '</optgroup>';
+                                }
+                                /*$tab_usergroups = $this->getGroupAvis();
                                 foreach ($tab_usergroups as $key => $value) {
                                     $str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
                                     $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
@@ -515,7 +595,7 @@ abstract class avis_controler_Abstract
 
                                     }
                                     $str .= '</optgroup>';
-                                }
+                                }*/
                                 $str .= '</select>';
 
                                 $str .= "<span id=\"lastAvisPopup_" . $seq . "\">";
@@ -594,7 +674,24 @@ abstract class avis_controler_Abstract
                             $str .= '<span id="rank_' . $seq . '"><strong>'. ($seq + 1) . ' </strong></span>';
                             $str .= '<select id="avisPopup_'.$seq.'" name="avisPopup_'.$seq.'" '.$disabled.'>';
                             $str .= '<option value="" >Sélectionnez un utilisateur</option>';
-                            $tab_usergroups = $this->getGroupAvis();
+                            
+                            /** Order by parent entity **/
+                            $tab_userentities = $this->getEntityAvis();
+                            foreach ($tab_userentities as $key => $value) {
+                                $str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+                                $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
+                                foreach($tab_users as $user){
+                                    if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+                                        $selected = " ";
+                                        if ($user['id'] == $circuitAvis['lastAvis']['users'][0]['user_id'])
+                                            $selected = " selected";
+                                        $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+                                    }
+                                    
+                                }
+                                $str .= '</optgroup>';
+                            }
+                            /*$tab_usergroups = $this->getGroupAvis();
                             foreach ($tab_usergroups as $key => $value) {
                                 $str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
                                 $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
@@ -605,7 +702,7 @@ abstract class avis_controler_Abstract
                                     $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
                                 }
                                 $str .= '</optgroup>';
-                            }
+                            }*/
                             $str .= '</select>';
 
                             $str .= '<span id="lastAvisPopup_' . $seq . '"> <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
@@ -683,6 +780,24 @@ abstract class avis_controler_Abstract
         return $circuitAvis;
     }
 
+    public function getEntityAvis(){
+        $db = new Database();
+        
+        $stmt = $db->query("SELECT distinct(entities.entity_id) from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and 
+            users_entities.primary_entity <> 'Y' and users.user_id = usergroup_content.user_id AND entities.entity_id = users_entities.entity_id AND group_id IN 
+            (SELECT group_id FROM usergroups_services WHERE service_id = ?)  
+            order by entities.entity_id", array('avis_documents'));
+        
+        $tab_userentities = array();
+        
+        
+        while($res = $stmt->fetchObject()){
+            array_push($tab_userentities,array('entity_id'=>$res->entity_id));
+        }
+        //print_r($tab_userentities);
+        return $tab_userentities;
+    }
+
     public function getGroupAvis(){
         $db = new Database();
         
@@ -702,16 +817,21 @@ abstract class avis_controler_Abstract
         $db = new Database();
         
         if($group_id <> null){
-            $stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ? AND group_id = ?)  order by users.lastname", array('avis_documents',$group_id));
+            $stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id,entities.entity_id from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and 
+                users_entities.primary_entity <> 'Y' and users.user_id = usergroup_content.user_id AND entities.entity_id = users_entities.entity_id AND group_id IN 
+                (SELECT group_id FROM usergroups_services WHERE service_id = ? AND group_id = ?)  order by users.lastname", array('avis_documents',$group_id));
         }else{
-            $stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)  order by users.lastname", array('avis_documents'));
+            $stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id,entities.entity_id from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and 
+                users_entities.primary_entity <> 'Y' and users.user_id = usergroup_content.user_id AND entities.entity_id = users_entities.entity_id AND group_id IN 
+                (SELECT group_id FROM usergroups_services WHERE service_id = ?)  
+                order by users.lastname", array('avis_documents'));
         }
         
         $tab_users = array();
         
         
         while($res = $stmt->fetchObject()){
-            array_push($tab_users,array('id'=>$res->user_id, 'firstname'=>$res->firstname,'lastname'=>$res->lastname,'group_id'=>$res->group_id));
+            array_push($tab_users,array('id'=>$res->user_id, 'firstname'=>$res->firstname,'lastname'=>$res->lastname,'group_id'=>$res->group_id,'entity_id'=>$res->entity_id));
         }
         return $tab_users;
     }
