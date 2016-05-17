@@ -532,7 +532,7 @@ abstract class visa_Abstract extends Database
 						
 						$tab_userentities = $this->getEntityVis();
 
-						/** CUSTOM CABPM **/
+						/** Order by parent entity **/
 						foreach ($tab_userentities as $key => $value) {
 							$str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
 							$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
@@ -598,7 +598,7 @@ abstract class visa_Abstract extends Database
 								$str .= '<option value="" >Sélectionnez un utilisateur</option>';
 								
 								$tab_userentities = $this->getEntityVis();
-								/** CUSTOM CABPM **/
+								/** Order by parent entity **/
 								foreach ($tab_userentities as $key => $value) {
 									$str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
 									$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
@@ -716,7 +716,7 @@ abstract class visa_Abstract extends Database
 							
 
 							$tab_userentities = $this->getEntityVis();
-							/** CUSTOM CABPM **/
+							/** Order by parent entity **/
 							foreach ($tab_userentities as $key => $value) {
 								$str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
 								$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
