@@ -1270,7 +1270,7 @@ function process_category_check($catId, $values)
 
         if ($contact_field <> "" && empty($contact)) {
             $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
-                . ' ' . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
+                . ' ' . _WRONG_FORMAT . ". " . _USE_AUTOCOMPLETION;
             return false;
         }
 
