@@ -81,13 +81,19 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
             $templates = $templatesControler->getAllTemplatesForSelect();
         }
 
+        $_SESSION['redirect']['diff_list']['difflist_type'] = 'entity_id';
+
         if (!empty($_SESSION['process']['diff_list']['avis'])) {
             $_SESSION['redirect']['diff_list']['avis'] = $_SESSION['process']['diff_list']['avis'];
         } 
 
         if (!empty($_SESSION['process']['diff_list']['avis_copy'])) {
             $_SESSION['redirect']['diff_list']['avis_copy'] = $_SESSION['process']['diff_list']['avis_copy'];
-        }   
+        }  
+
+        if (!empty($_SESSION['process']['diff_list']['avis_info'])) {
+            $_SESSION['redirect']['diff_list']['avis_info'] = $_SESSION['process']['diff_list']['avis_info'];
+        }  
         
         $frm_str .='<br/><b>'._RECOMMENDATION_NOTE.':</b><br/>';
         $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
@@ -212,7 +218,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     
 
     $stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
-            . " WHERE (item_mode = ? or item_mode = ?) AND res_id = ? AND item_id = ? AND difflist_type = ?"
+            . " WHERE (item_mode = ? OR item_mode = ?) AND res_id = ? AND item_id = ? AND difflist_type = ?"
             , array('avis', 'avis_copy', $res_id, $_SESSION['user']['UserId'], 'entity_id'));
 
 

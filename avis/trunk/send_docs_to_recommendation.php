@@ -76,12 +76,19 @@ require_once("modules/entities/class/class_manage_entities.php");
         } else {
             $templates = $templatesControler->getAllTemplatesForSelect();
         } 
+
+        $_SESSION['redirect']['diff_list']['difflist_type'] = 'entity_id';
+
         if (!empty($_SESSION['process']['diff_list']['avis'])) {
             $_SESSION['redirect']['diff_list']['avis'] = $_SESSION['process']['diff_list']['avis'];
         } 
 
         if (!empty($_SESSION['process']['diff_list']['avis_copy'])) {
             $_SESSION['redirect']['diff_list']['avis_copy'] = $_SESSION['process']['diff_list']['avis_copy'];
+        }  
+
+        if (!empty($_SESSION['process']['diff_list']['avis_info'])) {
+            $_SESSION['redirect']['diff_list']['avis_info'] = $_SESSION['process']['diff_list']['avis_info'];
         }    
 
         $frm_str .='<b>'._RECOMMENDATION_LIMIT_DATE.':</b><br/>';
@@ -234,9 +241,11 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         # Reset users in specific role
         $new_difflist['avis'] = array();
         $new_difflist['avis_copy'] = array();
+        $new_difflist['avis_info'] = array();
 
         $new_difflist['avis']['users'] = array();
         $new_difflist['avis_copy']['users'] = array();
+        $new_difflist['avis_info']['users'] = array();
         
         foreach ($_SESSION['redirect']['diff_list']['avis']['users'] as $key => $value) {
             //print_r($value);
@@ -257,6 +266,22 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 //print_r($value);
                 array_push(
                     $new_difflist['avis_copy']['users'], 
+                    array(
+                        'user_id' => $value['user_id'], 
+                        'firstname' => $value['firstname'],
+                        'entity_id' => $value['entity_id'],
+                        'entity_label' => $value['entity_label'],
+                        'visible' => $value['visible']
+                    )
+                );
+            }
+        }
+
+        if(!empty($_SESSION['redirect']['diff_list']['avis_info']['users'])){
+            foreach ($_SESSION['redirect']['diff_list']['avis_info']['users'] as $key => $value) {
+                //print_r($value);
+                array_push(
+                    $new_difflist['avis_info']['users'], 
                     array(
                         'user_id' => $value['user_id'], 
                         'firstname' => $value['firstname'],

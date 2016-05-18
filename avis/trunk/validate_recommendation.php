@@ -80,13 +80,19 @@ require_once('modules/avis/class/avis_controler.php');
             $templates = $templatesControler->getAllTemplatesForSelect();
         }
 
+        $_SESSION['redirect']['diff_list']['difflist_type'] = 'entity_id';
+
         if (!empty($_SESSION['process']['diff_list']['avis'])) {
             $_SESSION['redirect']['diff_list']['avis'] = $_SESSION['process']['diff_list']['avis'];
         } 
 
         if (!empty($_SESSION['process']['diff_list']['avis_copy'])) {
             $_SESSION['redirect']['diff_list']['avis_copy'] = $_SESSION['process']['diff_list']['avis_copy'];
-        }   
+        }  
+
+        if (!empty($_SESSION['process']['diff_list']['avis_info'])) {
+            $_SESSION['redirect']['diff_list']['avis_info'] = $_SESSION['process']['diff_list']['avis_info'];
+        }  
          
         $frm_str .='<b>'._RECOMMENDATION_LIMIT_DATE.':</b><br/>';
         $frm_str .= '<input name="recommendation_limit_date_tr" type="text" '

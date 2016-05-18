@@ -18,7 +18,10 @@ if (!defined("_AVIS_USER"))
     define("_AVIS_USER", "Pour avis");
 
 if (!defined("_AVIS_USER_COPY"))
-    define("_AVIS_USER_COPY", "Pour suivi avis");
+    define("_AVIS_USER_COPY", "En copie (avis)");
+
+if (!defined("_AVIS_USER_INFO"))
+    define("_AVIS_USER_INFO", "Pour information (avis)");
 
 if (!defined("_RECOMMENDATION_USER"))
     define("_RECOMMENDATION_USER", "Personne pour avis");
