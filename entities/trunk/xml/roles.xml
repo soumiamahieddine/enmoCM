@@ -10,6 +10,10 @@
 			<label>_AVIS_USER_COPY</label>
 		</ROLE>
 		<ROLE>
+			<id>avis_info</id>
+			<label>_AVIS_USER_INFO</label>
+		</ROLE>
+		<ROLE>
 			<id>dest</id>
 			<label>_DEST_USER</label>
 		</ROLE>
