@@ -59,7 +59,7 @@ if (!defined("_THESAURUS_LIST"))
     define("_THESAURUS_LIST", "Liste des termes");
 
 if (!defined("_ALL_THESAURUS"))
-    define("_ALL_THESAURUS", "Tout les termes");
+    define("_ALL_THESAURUS", "Tous les termes");
 
 if (!defined("_MANAGE_THESAURUS"))
     define("_MANAGE_THESAURUS", "Gérer le thesaurus");
