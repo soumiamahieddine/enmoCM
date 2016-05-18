@@ -1303,6 +1303,19 @@ abstract class lists_Abstract extends Database
         }
     }
 
+    protected function _tmplt_func_isConfidential($resultTheLine) {
+
+            $db = new Database();
+            $stmt = $db->query("SELECT confidentiality FROM res_view_letterbox WHERE res_id = ?",
+                                [$resultTheLine[0]['res_id']]);
+            $color = '';
+            $result = $stmt->fetchObject();
+            if ($result->confidentiality == 'Y') {
+                return '<span style="position: absolute;transform: rotate(-20deg);color: red;-ms-transform: rotate(7deg);-webkit-transform: rotate(7deg);font-weight: bold;margin-left:-80px;margin-top:10px;">'.strtoupper (_CONFIDENTIAL).'</span>';
+            }
+        
+    }
+
     protected function _tmplt_showActionAdvResultFA($parameter, $resultTheLine) {
         $my_explode= explode ("|", $parameter);
 
@@ -1669,7 +1682,6 @@ abstract class lists_Abstract extends Database
         ##showIconDetails## : show details icon and link
         } elseif (preg_match("/^showIconDetails$/", $parameter)) {
             $var = $this->_tmplt_showIconDetails($resultTheLine, $listKey);
-        ##showActionIcon## : show action icon
         } elseif (preg_match("/^showActionIcon\|/", $parameter)) {
             $var = $this->_tmplt_showActionIcon($parameter, $resultTheLine);
         ##showActionFA## : show action Font Awesome
@@ -1720,6 +1732,9 @@ abstract class lists_Abstract extends Database
             $var = $this->tmplt_showDefaultAction($parameter);
         }elseif (preg_match("/^nbNoteAvis\|/", $parameter)){
             $var = $this->tmplt_nbNoteAvis($parameter);
+        } elseif (preg_match("/^func_isConfidential$/", $parameter)) {
+            $var = $this->_tmplt_func_isConfidential($resultTheLine);
+        ##showActionIcon## : show action icon
         } else {
             $var = _WRONG_FUNCTION_OR_WRONG_PARAMETERS;
         }
