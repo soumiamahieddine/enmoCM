@@ -226,7 +226,7 @@ if($mode == 'normal') {
 
 //Fields
     //Documents
-    array_push($select[$view],  "res_id as is_labeled", "res_id", "status", "subject", "category_id as category_img", 
+    array_push($select[$view],  "res_id", "res_id as is_labeled", "status", "subject", "category_id as category_img", 
                                 "contact_firstname", "contact_lastname", "contact_society", 
                                 "user_lastname", "user_firstname", "dest_user", "type_label", 
                                 "creation_date", "entity_label", "category_id, exp_user_id", "alt_identifier", "count_attachment", "is_multicontacts");
