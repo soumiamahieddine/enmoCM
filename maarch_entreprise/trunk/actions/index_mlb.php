@@ -371,7 +371,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 for ($k = 0; $k < count($doctypes[$i]['level2'][$j]['types']);
                     $k ++
                 ) {
-                    $frmStr .= '<option style="color: #666;" value="'
+                    $frmStr .= '<option value="'
                             . functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['id'])
                             . '" title="'
                             . functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['label'])

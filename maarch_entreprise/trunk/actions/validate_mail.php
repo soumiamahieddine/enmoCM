@@ -375,7 +375,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                             $k ++
                                         ) {
                                             if (!in_array($doctypes[$i]['level2'][$j]['types'][$k]['id'],$hidden_doctypes)) {
-                                                $frm_str .='<option style="color:#666;" value="'.functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['id']).'" ';
+                                                $frm_str .='<option value="'.functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['id']).'" ';
                                                 if (isset($data['type_id']) && !empty($data['type_id']) && $data['type_id'] == $doctypes[$i]['level2'][$j]['types'][$k]['id']) {
                                                     $frm_str .= ' selected="selected" ';
                                                 }
