@@ -146,7 +146,7 @@ abstract class visa_Abstract extends Database
 		$stmt = $db->query("select filename, format, path, title, res_id, res_id_version, attachment_type "
 			. "from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' "
 			. "AND status <> 'DEL' and attachment_type IN "
-			. "('response_project','signed_response','outgoing_mail','waybill','transfer', 'simple_attachment', 'transmission') order by creation_date asc",
+			. "('response_project','signed_response','outgoing_mail','waybill','transfer', 'simple_attachment', 'envelope', 'transmission') order by creation_date asc",
 			array($res_id));
 
 		$array_reponses = array();
@@ -1188,6 +1188,26 @@ abstract class visa_Abstract extends Database
 				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check 
 				. '/>' . $joined_files[$i]['viewLink']. '</td></tr>';
         }
+
+		// ENVELOPE
+		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'envelope');
+		if (count ($joined_files) > 0)
+			$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['envelope'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
+		for($i=0; $i < count($joined_files); $i++) {
+			//Get data
+			$id_doc = $joined_files[$i]['id'];
+			$description = $joined_files[$i]['label'];
+			$format = $joined_files[$i]['format'];
+			$contact = $users_tools->get_user($joined_files[$i]['typist']);
+			$dateFormat = explode(" ",$joined_files[$i]['creation_date']);
+			$creation_date = $request->dateformat($dateFormat[0]);
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+			//Show data
+			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
+				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc
+				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
+				. '/>' . $joined_files[$i]['viewLink']. '</td></tr>';
+		}
 
 		// TRANSMISSION
 		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'transfer');
