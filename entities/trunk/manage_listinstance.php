@@ -71,11 +71,12 @@ else
 # Manage SESSION paramaters
 # *****************************************************************************
 /// Object/list type
-$objectType = $_SESSION[$origin]['diff_list']['difflist_type'];
+//$objectType = $_SESSION[$origin]['diff_list']['difflist_type'];
 
 # Load roles
 $difflistType = $difflist->get_difflist_type($objectType);
 $roles = $difflist->get_difflist_type_roles($difflistType);
+
 $available_roles = $difflist->list_difflist_roles();
 
 if($difflistType->allow_entities == 'Y')
@@ -730,7 +731,7 @@ $linkwithwhat =
 			if (count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0
 			 || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
 			) { 
-                if(($specific_role == $role_id || $specific_role.'_copy' == $role_id)|| !isset($_REQUEST['specific_role'])){
+                if(($specific_role == $role_id || $specific_role.'_copy' == $role_id || $specific_role.'_info' == $role_id)|| !isset($_REQUEST['specific_role'])){
                 ?>
 				<h3 class="sstit" style="font-size:1.5em; text-align:left; margin-left:230px; margin-bottom: -10px"><?php functions::xecho($role_label);?></h3>
 				<table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
@@ -951,6 +952,7 @@ $linkwithwhat =
                           }
                         } 
 						
+                        //var_dump($roles);
 						if ($color == ' class="col"') $color = '';
 						else $color = ' class="col"';?>
 						<tr <?php echo $color;?> id="user_<?php functions::xecho($j);?>">
@@ -965,7 +967,7 @@ $linkwithwhat =
                                         $role_label = _SHIPPER;
                                     }
 
-									if((($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) && (!isset($_REQUEST['specific_role']))) || ($role_id == $specific_role || $role_id == $specific_role.'_copy')) { ?>
+									if((($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) && (!isset($_REQUEST['specific_role']))) || ($role_id == $specific_role || $role_id == $specific_role.'_copy' || $role_id == $specific_role.'_info')) { ?>
 									<option value="<?php functions::xecho($role_id);?>"><?php functions::xecho($role_label);?></option><?php 
 									} 
 								}?>

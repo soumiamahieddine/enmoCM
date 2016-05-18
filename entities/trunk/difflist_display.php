@@ -19,7 +19,7 @@
         if($category == 'outgoing' && $role_label == 'Destinataire'){
             $role_label = _SHIPPER;
         }
-        if(($specific_role != $role_id && $specific_role.'_copy' != $role_id) && isset($specific_role) && $specific_role <> '') 
+        if(($specific_role != $role_id && $specific_role.'_copy' != $role_id && $specific_role.'_info' != $role_id) && isset($specific_role) && $specific_role <> '') 
             continue;
         if(count($difflist[$role_id]['users']) > 0
             || count($difflist[$role_id]['entities']) > 0
