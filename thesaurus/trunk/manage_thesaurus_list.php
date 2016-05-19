@@ -93,7 +93,7 @@ if ($mode == 'list') {
             . '&amp;module=thesaurus&amp;page=manage_thesaurus_list_controller&amp;mode='
             . $mode;?>" class="forms addforms" style="width:100%;">
     <div class="block" style="width:50%;height:300px;float:left;">
-        <div style="width:400px;">
+        <div style="width:450px;">
             <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="thesaurus" />
             <input type="hidden" name="page" value="manage_thesaurus_list_controler" />
@@ -111,7 +111,7 @@ if ($mode == 'list') {
                 functions::xecho($_REQUEST['start']);?>" />
 
             <p>
-                <label for="thesaurus_parent_id"><?php echo _THESAURUS_PARENT_ID;?> : </label>
+                <label for="thesaurus_parent_id" style="width:110px;"><?php echo _THESAURUS_PARENT_ID;?> : </label>
                 <?php
                 require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
                             . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
@@ -123,7 +123,7 @@ if ($mode == 'list') {
                 $countAllThesaurus = count($allThesaurusTree);
 
                 ?>
-                <select id="thesaurus_parent_id" name="thesaurus_parent_id" onchange="load_specific_thesaurus(this.value);">
+                <select id="thesaurus_parent_id" name="thesaurus_parent_id" style="width:300px;" onchange="load_specific_thesaurus(this.value);">
                     <?php 
                         echo '<option value="">-- Aucun Terme générique --</option>';
                         echo'<optgroup label="Terme(s) générique(s)">';
@@ -165,15 +165,15 @@ if ($mode == 'list') {
             </p>
 
             <p>
-                <label for="thesaurus_name"><?php echo _THESAURUS_NAME;?> : </label>
-                <input name="thesaurus_name" type="text"  id="thesaurus_name" value="<?php
+                <label for="thesaurus_name" style="width:110px;"><?php echo _THESAURUS_NAME;?> : </label>
+                <input name="thesaurus_name" type="text"  style="width:300px;" id="thesaurus_name" value="<?php
                     echo functions::show_str(
                         $_SESSION['m_admin']['thesaurus']['thesaurus_name']
                     );?>"/>
             </p>
 
             <p>
-                <label for="thesaurus_description"><?php echo _DESC;?> : </label>
+                <label for="thesaurus_description" style="width:110px;"><?php echo _DESC;?> : </label>
                 <textarea name="thesaurus_description" id="thesaurus_description" style="width:100%;height:150px;"><?php echo $_SESSION['m_admin']['thesaurus']['thesaurus_description']; ?></textarea>
             </p>
 
