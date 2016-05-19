@@ -35,7 +35,6 @@ function addTemplateToEmail(templateMails, path){
                 var strContentReplace = strContent.replace(/\\n/g, '');
                 //tinyMCE.execCommand('mceInsertContent',false,strContentReplace); 
                 tinyMCE.execCommand('mceSetContent',false,strContentReplace);
-     
             } 
 
             /*
