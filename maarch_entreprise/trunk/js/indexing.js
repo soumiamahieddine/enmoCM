@@ -167,6 +167,26 @@ function updateProcessDate(path_manage_script)
     }
 }
 
+function displayFatherFolder(select)
+{
+    if ($(select) && $('parentFolderSpan') && $('parentFolderTr')) {
+        var tmpParSpan = $('parentFolderSpan');
+        var tmpParTr = $('parentFolderTr');
+        var selectFolders = $(select);
+    } else {
+        return ;
+    }
+
+    for (var i = 0; i < selectFolders.options.length; i++) {
+        if (selectFolders.options[i].getAttribute('value') == selectFolders.options[selectFolders.selectedIndex].getAttribute('parent')) {
+            tmpParTr.style.display = "";
+            tmpParSpan.innerText = "Dossier Parent : " + selectFolders.options[i].label;
+            return;
+        }
+    }
+    tmpParTr.style.display = "none";
+}
+
 function checkRealDate(arg) {
 
     var cat = $('category_id').options[$('category_id').selectedIndex].value
