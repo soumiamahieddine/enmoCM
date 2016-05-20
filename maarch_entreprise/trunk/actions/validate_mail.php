@@ -297,7 +297,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . functions::xssafe($res_id) . '}, onSuccess: function(answer){window.location.href=\'' 
                 . $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets=' 
                 . $_SESSION['current_basket']['id'] . '\';} });$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"'
-             .' class="fa fa-times-circle fa-2x closeModale" title="'._BACK.'"/>';
+             .' class="fa fa-times-circle fa-2x closeModale" title="'._CLOSE.'"/>';
     $frm_str .='</i>';
     $frm_str .= '<div id="validleft">';
     $frm_str .= '<div id="valid_div" style="display:none;";>';
