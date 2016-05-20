@@ -85,7 +85,8 @@ if($_POST['FOLDER_TREE']){
 	exit();
 }else if($_POST['FOLDER_TREE_DOCS']){
 	$docs = array();
-	if (empty($sec->getEntitiesForCurrentUser())) {
+	$entitiesForCurrentUser = $sec->getEntitiesForCurrentUser();
+	if (empty($entitiesForCurrentUser)) {
 		$stmt = $db->query('SELECT res_id, type_label, subject,doctypes_first_level_label,doctypes_second_level_label, folder_level
 							FROM res_view_letterbox
 							WHERE folders_system_id in (?) AND (' .$whereClause. ') AND status NOT IN (?)',
