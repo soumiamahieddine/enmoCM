@@ -943,7 +943,12 @@ function getWindowSize(){
  */
 function redirect_to_url(url)
 {
-   location.href=url;
+    var localTime = new Date();
+    var hours = localTime.getHours();
+    var minutes = localTime.getMinutes();
+    var text = hours+":"+minutes;
+    alert('Vous avez été déconnecté à '+text+' (temps d\'inactivité trop longue)\n\nVeuillez vous reconnecter');
+    location.href=url;
 }
 
 /**
@@ -1322,9 +1327,9 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                     else //  Form Params errors
                     {
                         //console.log(response.error_txt);
-                        alert(response.error_txt);
                         try{
                                 $('frm_error_'+id_action).innerHTML = response.error_txt;
+                                alert($('frm_error_'+id_action).innerHTML);
                             }
                         catch(e){}
                     }
