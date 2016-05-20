@@ -908,13 +908,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER . '</label></td>';
             $frm_str .= '<td>&nbsp;</td>';
             
-            $frm_str .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder"><option value="">Sélectionnez un dossier</option>';
+            $frm_str .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">Sélectionnez un dossier</option>';
 
             foreach ($folder_info as $key => $value) {
                 if($value['folders_system_id'] == $folder_id){
-                    $frm_str .= '<option selected="selected" value="'.$value['folders_system_id'].'">'.$value['folder_name'].'</option>';
+                    $frm_str .= '<option selected="selected" value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
                 }else{
-                    $frm_str .= '<option value="'.$value['folders_system_id'].'">'.$value['folder_name'].'</option>';
+                    $frm_str .= '<option value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
                 }
                 
             }
@@ -929,6 +929,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . _CREATE_FOLDER . '"></i></a>';
             }
             $frm_str .= '</tr>';
+            $frm_str .= '<tr id="parentFolderTr" style="display: none"><td>&nbsp;</td><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
         }
 
         if ($core_tools->is_module_loaded('tags') &&
@@ -1360,7 +1361,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</div>';
 
         /*** Extra javascript ***/
-        $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'.$id_action.'", "viewframevalid", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);';
+        $frm_str .= '<script type="text/javascript">displayFatherFolder(\'folder\');resize_frame_process("modal_'.$id_action.'", "viewframevalid", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);';
 
     	// DocLocker constantly	
     	$frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';

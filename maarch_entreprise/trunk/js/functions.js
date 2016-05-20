@@ -4,6 +4,26 @@ var chronoExpiration;
 
 page_result_final = '';
 
+function displayFatherFolder(select)
+{
+    if ($(select) && $('parentFolderSpan') && $('parentFolderTr')) {
+        var tmpParSpan = $('parentFolderSpan');
+        var tmpParTr = $('parentFolderTr');
+        var selectFolders = $(select);
+    } else {
+        return ;
+    }
+
+    for (var i = 0; i < selectFolders.options.length; i++) {
+        if (selectFolders.options[i].getAttribute('value') == selectFolders.options[selectFolders.selectedIndex].getAttribute('parent')) {
+            tmpParTr.style.display = "";
+            tmpParSpan.innerText = "Parent : " + selectFolders.options[i].label;
+            return;
+        }
+    }
+    tmpParTr.style.display = "none";
+}
+
 function capitalizeFirstLetter(theString)
 {
     return theString && theString[0].toUpperCase() + theString.slice(1);

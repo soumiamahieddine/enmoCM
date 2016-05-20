@@ -813,10 +813,10 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . '</label></td>';
         $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
 
-        $frmStr .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder"><option value="">Sélectionnez un dossier</option>';
+        $frmStr .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">Sélectionnez un dossier</option>';
 
         foreach ($folder_info as $key => $value) {
-             $frmStr .= '<option value="'.$value['folders_system_id'].'">'.$value['folder_name'].'</option>';
+             $frmStr .= '<option value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
         }
 
         $frmStr .= '</select></td>';
@@ -836,6 +836,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" '
                 . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
+        $frmStr .= '<tr id="parentFolderTr" style="display: none"><td>&nbsp;</td><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
     }
 
     /*** Tags ***/
@@ -968,7 +969,6 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'var item  = $(\'index_div\'); if(item)'
             . '{item.style.display=\'block\';}</script>';
     $frmStr .= '<style>#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}</style>';
-    $frm_str .='<script>$("#tag_userform").chosen().change( console.log("ok"); );</script>';
 
     return addslashes($frmStr);
 

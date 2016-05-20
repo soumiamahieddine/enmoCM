@@ -502,7 +502,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
 
     //FOLDERS
-    if ($core_tools->is_module_loaded('folder')  && ($core->test_service('associate_folder', 'folder',false) == 1)) {
+    if ($core_tools->is_module_loaded('folder')  && ($core_tools->test_service('associate_folder', 'folder',false) == 1)) {
         require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
             . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
         $folders = new folder();
@@ -528,19 +528,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<div>';
                 $frm_str .= '<table width="98%" align="center" border="0">';
                         $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
-                    $frm_str .= '<td class="indexing_field"><select id="folder" name="folder" style="width:95%;"><option value="">Sélectionnez un dossier</option>';
+                    $frm_str .= '<td class="indexing_field"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')" style="width:95%;"><option value="">Sélectionnez un dossier</option>';
                      foreach ($folder_info as $key => $value) {
                 if($value['folders_system_id'] == $folder_id){
-                    $frm_str .= '<option selected="selected" value="'.$value['folders_system_id'].'">'.$value['folder_name'].'</option>';
+                    $frm_str .= '<option selected="selected" value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
                 }else{
-                    $frm_str .= '<option value="'.$value['folders_system_id'].'">'.$value['folder_name'].'</option>';
+                    $frm_str .= '<option value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
                 }
                 
             }
 
             $frm_str .= '</select></td>';
                 $frm_str .= '</tr>';
-                $frm_str .= '</table>';
+        $frm_str .= '<tr id="parentFolderTr" style="display: none"><td><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
+        $frm_str .= '</table>';
             $frm_str .= '</div>';
         $frm_str .= '</div>';
         $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
@@ -1278,7 +1279,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
 
     //SCRIPT
-    $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'
+    $frm_str .= '<script type="text/javascript">displayFatherFolder(\'folder\');resize_frame_process("modal_'
         . $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
 	$curr_visa_wf = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
 	if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0){
