@@ -218,8 +218,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     
 
     $stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
-            . " WHERE (item_mode = ? OR item_mode = ?) AND res_id = ? AND item_id = ? AND difflist_type = ?"
-            , array('avis', 'avis_copy', $res_id, $_SESSION['user']['UserId'], 'entity_id'));
+            . " WHERE (item_mode = ? OR item_mode = ? OR item_mode = ?) AND res_id = ? AND item_id = ? AND difflist_type = ?"
+            , array('avis', 'avis_copy', 'avis_info', $res_id, $_SESSION['user']['UserId'], 'entity_id'));
 
 
     $message = _AVIS_BY . " " . $_SESSION['user']['UserId'];
