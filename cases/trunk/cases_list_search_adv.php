@@ -118,7 +118,7 @@ $arrayPDO = array();
     else  {
         $list->setOrder('asc');
         $list->setOrderField('case_label');
-        $orderstr = "order by case_label asc";
+        $orderstr = "order by ". $_SESSION['tablename']['cases'].".case_label asc";
     }
     
 //Query       
