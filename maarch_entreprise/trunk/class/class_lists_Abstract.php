@@ -1337,8 +1337,8 @@ abstract class lists_Abstract extends Database
                     //return action icon
                     $color = '';
                     if (!empty($_SESSION['fullTextAttachments']['letterbox']) &&
-                        in_array($resultTheLine[1]['res_id'], $_SESSION['fullTextAttachments']['letterbox'])) {
-                        $color = 'style="color: #009dc5"';
+                        in_array($resultTheLine[0]['res_id'], $_SESSION['fullTextAttachments']['letterbox'])) {
+			$color = 'style="color: #009dc5"';
                     }
                     return '<a href="javascript://" onClick="'.$my_explode[3]
                     .'" title="'.$my_explode[1].'"><i class="fa fa-'
