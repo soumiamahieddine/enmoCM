@@ -4029,3 +4029,27 @@ CREATE VIEW res_view_attachments AS
   envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0'
   FROM res_attachments;
+
+-- thesaurus
+CREATE TABLE thesaurus
+(
+  thesaurus_id bigint NOT NULL DEFAULT nextval('thesaurus_id_seq'::regclass),
+  thesaurus_name character varying(255) NOT NULL,
+  thesaurus_description text,
+  thesaurus_name_associate character varying(255),
+  thesaurus_parent_id character varying(255),
+  creation_date timestamp without time zone,
+  CONSTRAINT thesaurus_pkey PRIMARY KEY (thesaurus_id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE thesaurus_res
+(
+  res_id bigint NOT NULL,
+  thesaurus_id bigint NOT NULL
+)
+WITH (
+  OIDS=FALSE
+);
