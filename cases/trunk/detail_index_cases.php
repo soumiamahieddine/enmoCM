@@ -75,7 +75,8 @@ else
                     </tr>
                     <tr>
                         <td>
-                            <h2 style="color:#1B99C4"><p align="center"><?php echo _NUM_CASE." ".functions::xssafe($case_id);?></p></h2>
+                            <!--<h2 style="color:#1B99C4"><p align="center"><?php /*echo _NUM_CASE." ".functions::xssafe($case_id)*/;?></p></h2>-->
+                            <h2 style="color:#1B99C4"><p align="center"><?php functions::xecho(functions::show_string($case_indexes['case_label']));?></p></h2>
                             <p style="color:#1B99C4" align="center"><?php functions::xecho(functions::show_string($case_indexes['case_description']));?> </p>
                         </td>
                     </tr>
