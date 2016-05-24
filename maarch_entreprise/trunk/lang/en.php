@@ -43,6 +43,8 @@ if (!defined('_ACTION_PAGE_MISSING')) define('_ACTION_PAGE_MISSING', 'The result
 if (!defined('_ACTIVEX_LOGIN')) define( '_ACTIVEX_LOGIN', 'Ms Ie - ActiveX authentification');
 if (!defined('_ACTUAL_INSTALLATION'))     define( '_ACTUAL_INSTALLATION', 'actual installation');
 if (!defined('_ACTUAL_SIZE'))  define('_ACTUAL_SIZE', 'Actual size');
+if (!defined("_ADD_ATTACHMENT_OR_NOTE")) define("_ADD_ATTACHMENT_OR_NOTE", "Add an attachment or a note for this mail");
+if (!defined("_CLOSE_MAIL_WITH_ATTACHMENT")) define("_CLOSE_MAIL_WITH_ATTACHMENT", "Close with attachment");
 if (!defined('_ADD')) define('_ADD', 'Add');
 if (!defined('_ADDITION')) define('_ADDITION', 'Addition');
 if (!defined('_ADDRESS')) define('_ADDRESS', 'Address');

@@ -681,6 +681,8 @@ if (!defined("_NUM_GED")) define("_NUM_GED", "N° GED");
 ///// Manage action error
 if (!defined("_AJAX_PARAM_ERROR")) define("_AJAX_PARAM_ERROR", "Erreur passage paramètres Ajax");
 if (!defined("_ACTION_CONFIRM")) define("_ACTION_CONFIRM", "Voulez-vous effectuer l'action suivante : ");
+if (!defined("_ADD_ATTACHMENT_OR_NOTE")) define("_ADD_ATTACHMENT_OR_NOTE", "Ajoutez une pièce jointe ou une note pour ce(s) courrier(s)");
+if (!defined("_CLOSE_MAIL_WITH_ATTACHMENT")) define("_CLOSE_MAIL_WITH_ATTACHMENT", "Clôture avec pièce jointe");
 if (!defined("_ACTION_NOT_IN_DB")) define("_ACTION_NOT_IN_DB", "Action non enregistrée en base");
 if (!defined("_ERROR_PARAM_ACTION")) define("_ERROR_PARAM_ACTION", "Erreur paramètrage de l'action");
 if (!defined("_SQL_ERROR")) define("_SQL_ERROR", "Erreur SQL");
