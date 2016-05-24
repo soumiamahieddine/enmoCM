@@ -3,9 +3,13 @@
 }
 .iconDoc:hover span { 
 	display: inline;
-	position:absolute;
-	margin-left:-420px;
-	margin-top:-110px;
+	position:fixed;
+	/*position:absolute;*/
+	left:10px;
+	top:10px;
+	/*margin-left:-420px;*/
+	/*margin-top:-110px;*/
+	border: solid 1px rgb(0, 157, 197);
 	-moz-box-shadow: 0px 0px 5px 0px #656565;
 	-webkit-box-shadow: 0px 0px 5px 0px #656565;
 	-o-box-shadow: 0px 0px 5px 0px #656565;
@@ -28,4 +32,14 @@
 	box-shadow: 0px 0px 5px 0px #656565;
 	filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
 	z-index:100;
+}
+
+.iconDoc span:after { 
+        content: 'APERÇU';
+	font-size:20px;
+	font-weight:bold;
+	position: absolute;
+	left:35%;
+	color: rgb(0, 157, 197);
+	opacity:0.2;
 }
