@@ -257,6 +257,18 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom";
 				$tabNotes[$ind_notes1][$ind_notes2]["show"]=true;
 			}
+			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="subject")
+			{
+				$tabNotes[$ind_notes1][$ind_notes2]["subject"]=$tabNotes[$ind_notes1][$ind_notes2]['value'];
+				$tabNotes[$ind_notes1][$ind_notes2]["label"]=_SUBJECT;
+				$tabNotes[$ind_notes1][$ind_notes2]["size"]=30;
+				$tabNotes[$ind_notes1][$ind_notes2]["label_align"]="left";
+				$tabNotes[$ind_notes1][$ind_notes2]["align"]="left";
+				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom";
+				$tabNotes[$ind_notes1][$ind_notes2]["show"]=true;
+			}
+			//var_dump($size_full);
+			//var_dump($tabNotes[$ind_notes1][$ind_notes2][$value]);
 		}
 	}
 }
