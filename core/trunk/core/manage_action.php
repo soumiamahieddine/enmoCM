@@ -300,6 +300,12 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
             echo "{status : 2, confirm_content : '".addslashes(_ACTION_CONFIRM." ".functions::xssafe($label_action))."', validate : '"._VALIDATE."', cancel : '"._CANCEL."', label_action : '".addslashes(functions::xssafe($label_action))."', 'action_status' : '".functions::xssafe($status)."'}";
             exit();
         }
+        elseif( $_POST['req'] == 'first_request' && $confirm == false && $action_page == 'close_mail_with_attachment')
+        {
+            echo "{status : 3, form_content : '<div class=\"h2_title\">" . addslashes(_ADD_ATTACHMENT_OR_NOTE) .
+                "</div><p class=\"buttons\"><input type=\"button\" class=\"button\" value=\""._CANCEL."\" onclick=\"destroyModal(\'modal_" .$id_action . "\')\" id=\"submit\" name=\"submit\"></p>', height : '250px', width : '300px', 'mode_frm' : '', validate : 'OK', 'action_status' : '".functions::xssafe($status)."'}";
+            exit();
+        }
         else
         {
             if($confirm == false)
