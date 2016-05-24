@@ -354,21 +354,24 @@ abstract class thesaurus_Abstract
             );
         }
 
-        foreach ($thesaurus_list as $key => $value) {
-            $arrayPDO = array($value,$res_id);
-            $stmt = $db->query(
-            'INSERT INTO thesaurus_res(thesaurus_id, res_id) VALUES(?,?)'
-            ,$arrayPDO);
+	if(!empty($thesaurus_list[0])){
 
-            if ($stmt){ 
-                $hist = new history();
-                $hist->add(
-                    "thesaurus_res", $res_id, "ADD", 'thesauruslinkadd', _THESAURUS . ' : « '. $value .' » ' . _ADDED_TO_RES.' : « '.
-                    $res_id .' »',
-                    $_SESSION['config']['databasetype'], 'thesaurus'
-                );
-            }
-        }
+        	foreach ($thesaurus_list as $key => $value) {
+            	$arrayPDO = array($value,$res_id);
+            	$stmt = $db->query(
+            	'INSERT INTO thesaurus_res(thesaurus_id, res_id) VALUES(?,?)'
+            	,$arrayPDO);
+
+            	if ($stmt){ 
+                	$hist = new history();
+                	$hist->add(
+                    	"thesaurus_res", $res_id, "ADD", 'thesauruslinkadd', _THESAURUS . ' : « '. $value .' » ' . _ADDED_TO_RES.' : « '.
+                    	$res_id .' »',
+                    	$_SESSION['config']['databasetype'], 'thesaurus'
+                	);
+            	}
+        	}
+	}
         
         return true;
     }
