@@ -44,11 +44,9 @@ $_SESSION['tagsuser'] = array();
 $tags = new tag_controler();
 $tags->load_sessiontag($s_id,$coll_id);	
 //--------------------------------------
-$frm_str .= '<tr><th colspan="6" style="text-align:center;">';
-$frm_str .= '<br/><span><i class="fa fa-tags fa-2x"></i>';               
+$frm_str .= '<tr><th colspan="6" style="text-align:center;width:20%;">';
+$frm_str .= '<span><i class="fa fa-tags fa-2x"></i>';               
 $frm_str .= _TAGS.'</span></th>';
-$frm_str .= '</tr>';
-$frm_str .= '<tr>';
 
 $frm_str .= '<td colspan="6" style="text-align:center;">';
 if ($modify_doc)
@@ -59,7 +57,7 @@ $tag_customsize = '950px';
 $tag_customcols = '120';
 include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS		
 
-$frm_str .= '</td></tr><style>#tag_userform_chosen{width:600px !important;}</style>';
+$frm_str .= '</td></tr><style>#tag_userform_chosen{width:auto;}</style>';
 
 
 
