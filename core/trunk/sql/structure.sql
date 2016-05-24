@@ -4031,6 +4031,15 @@ CREATE VIEW res_view_attachments AS
   FROM res_attachments;
 
 -- thesaurus
+
+
+CREATE SEQUENCE thesaurus_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
 CREATE TABLE thesaurus
 (
   thesaurus_id bigint NOT NULL DEFAULT nextval('thesaurus_id_seq'::regclass),
