@@ -96,7 +96,7 @@ require_once('modules/avis/class/avis_controler.php');
          
         $frm_str .='<b>'._RECOMMENDATION_LIMIT_DATE.':</b><br/>';
         $frm_str .= '<input name="recommendation_limit_date_tr" type="text" '
-            . 'id="recommendation_limit_date_tr" value="'.functions::format_date_db($avisContent->recommendation_limit_date).'" placeholder="JJ-MM-AAAA" onfocus="checkRealDate();" onChange="checkRealDate();"  onclick="clear_error(\'frm_error_'
+            . 'id="recommendation_limit_date_tr" value="'.functions::format_date_db($avisContent->recommendation_limit_date).'" placeholder="JJ-MM-AAAA" onfocus="checkRealDateAvis();" onChange="checkRealDateAvis();"  onclick="clear_error(\'frm_error_'
             . $actionId . '\');showCalender(this);"  onblur="document.getElementById(\'recommendation_limit_date\').value=document.getElementById(\'recommendation_limit_date_tr\').value;"/>';
         $frm_str .='<br/>';
         /*$frm_str .='<br/><b>'._RECOMMENDATION_NOTE.':</b><br/>';

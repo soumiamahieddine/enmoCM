@@ -710,7 +710,7 @@ function saveAvisWorkflowPopup(res_id, coll_id, id_tableau, fromDetail){
 	});
 }
 
-function checkRealDate() {
+function checkRealDateAvis() {
 
     var docDate;
     var processLimitDate;
