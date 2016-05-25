@@ -1535,6 +1535,15 @@ function process_category_check($cat_id, $values)
     }
 
     ///////////////////////// Other cases
+    //doc date
+    $doc_date = get_value_fields($values, 'doc_date');
+    $admission_date = get_value_fields($values, 'admission_date');
+    if ($admission_date < $doc_date)
+    {
+		$_SESSION['action_error'] = "La date du courrier doit être antérieure à la date d'arrivée du courrier ";
+		return false;
+	}
+	
     // Process limit Date
     $_SESSION['store_process_limit_date'] = "";
     if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))
