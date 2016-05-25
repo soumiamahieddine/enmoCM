@@ -1083,11 +1083,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     ON fp_fileplan_positions.position_id = fp_res_fileplan_positions.position_id
                                     WHERE fp_res_fileplan_positions.res_id=?",array($idCourrier));
 
-                        while($res= $stmt->fetchObject()){
+                        while($res_fileplan= $stmt->fetchObject()){
                             if(!isset($positionLabel)){
-                                $positionLabel=$res->position_label;
+                                $positionLabel=$res_fileplan->position_label;
                             }else{
-                                $positionLabel=$positionLabel." / ".$res->position_label;
+                                $positionLabel=$positionLabel." / ".$res_fileplan->position_label;
                             }  
                         }
 
