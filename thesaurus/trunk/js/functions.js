@@ -10,6 +10,7 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 		},
 		 onSuccess: function(answer){
 		 	var json = JSON.parse(answer.responseText);
+		 	console.log(json);
 			//eval("response = "+answer.responseText);
 			if (json.info.thesaurus_parent_id) {
 				content += '<h2 title="terme parent">'+json.info.thesaurus_parent_id+'</h2>';
@@ -22,6 +23,9 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 
 			}else{
 				content += '<p style="text-align:center;font-style:italic;padding:5px;color:grey;" title="description">aucune description</p>';		
+			}
+			if (json.info.used_for) {
+				content += '<p style="text-align: center;font-style: italic;padding: 5px 5px 0px;color: rgb(0, 157, 197);margin-bottom: -10px;font-size: 10px;" title="'+json.info.used_for+'"><u>Utilisé pour</u> : '+json.info.used_for+'</p>';		
 			}
 			content += '<hr/>';
 			if(json.info.thesaurus_name_associate != null){

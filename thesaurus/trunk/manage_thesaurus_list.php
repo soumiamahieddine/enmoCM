@@ -171,7 +171,13 @@ if ($mode == 'list') {
                         $_SESSION['m_admin']['thesaurus']['thesaurus_name']
                     );?>"/>
             </p>
-
+                <p>
+                <label for="used_for" style="width:110px;"><?php echo _USED_FOR;?> : </label>
+                <input name="used_for" type="text"  style="width:300px;" id="used_for" value="<?php
+                    echo functions::show_str(
+                        $_SESSION['m_admin']['thesaurus']['used_for']
+                    );?>"/>
+            </p>
             <p>
                 <label for="thesaurus_description" style="width:110px;"><?php echo _DESC;?> : </label>
                 <textarea name="thesaurus_description" id="thesaurus_description" style="width:100%;height:150px;"><?php echo $_SESSION['m_admin']['thesaurus']['thesaurus_description']; ?></textarea>

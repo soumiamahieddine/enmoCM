@@ -182,6 +182,7 @@ function display_up($thesaurus_id)
         $_SESSION['m_admin']['thesaurus']['thesaurus_description'] = $thesaurus_info->thesaurus_description;
         $_SESSION['m_admin']['thesaurus']['thesaurus_name_associate'] = $thesaurus_info->thesaurus_name_associate;
         $_SESSION['m_admin']['thesaurus']['thesaurus_parent_id'] = $thesaurus_info->thesaurus_parent_id;
+        $_SESSION['m_admin']['thesaurus']['used_for'] = $thesaurus_info->used_for;
                                                                                                       
     }   
 }
@@ -384,7 +385,8 @@ function init_session()
         'thesaurus_id'                  => '',
         'thesaurus_name'                => '',
         'thesaurus_description'         => '',
-        'thesaurus_name_associate'      => ''
+        'thesaurus_name_associate'      => '',
+        'used_for'                      => ''
    
     );
 }
@@ -412,6 +414,7 @@ function validate_thesaurus_submit() {
     array_push($params, $_REQUEST['thesaurus_name_associate']);
     array_push($params, $_REQUEST['thesaurus_parent_id']);
     array_push($params, $_REQUEST['thesaurus_id']);
+    array_push($params, $_REQUEST['used_for']);
     
     // var_dump($new_tag_label);
     if ($new_thesaurus_name == '' || !$new_thesaurus_name || empty($new_thesaurus_name))

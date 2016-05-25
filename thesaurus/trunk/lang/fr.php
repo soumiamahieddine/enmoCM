@@ -105,3 +105,6 @@ if (!defined("_ADD_THESAURUS_TO_RES"))
 
 if (!defined("_ADD_THESAURUS_TO_RES_DESC"))
     define("_ADD_THESAURUS_TO_RES_DESC", "Permet de pouvoir utiliser les termes disponibles du thésaurus afin de référencer les documents");
+
+if (!defined("_USED_FOR"))
+    define("_USED_FOR", "Utilisé pour");

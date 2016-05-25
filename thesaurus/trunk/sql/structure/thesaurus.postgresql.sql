@@ -1,11 +1,13 @@
+DROP TABLE IF EXISTS thesaurus;
+DROP TABLE IF EXISTS thesaurus_res;
+DROP SEQUENCE IF EXISTS thesaurus_id_seq;
+
 CREATE SEQUENCE thesaurus_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-
-DROP TABLE thesaurus;
 
 CREATE TABLE thesaurus
 (
@@ -15,10 +17,18 @@ CREATE TABLE thesaurus
   thesaurus_name_associate character varying(255),
   thesaurus_parent_id character varying(255),
   creation_date timestamp without time zone,
+  used_for text,
   CONSTRAINT thesaurus_pkey PRIMARY KEY (thesaurus_id)
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE thesaurus
-  OWNER TO maarch;
+
+CREATE TABLE thesaurus_res
+(
+  res_id bigint NOT NULL,
+  thesaurus_id bigint NOT NULL
+)
+WITH (
+  OIDS=FALSE
+);
