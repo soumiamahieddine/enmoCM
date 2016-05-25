@@ -27,7 +27,11 @@ if (!empty($_POST['size']) && isset($_POST['contactId'])) {
     } else {
         $db = new Database();
 
-        $stmt = $db->query('SELECT * FROM view_contacts WHERE contact_id = ? ', [$_POST['contactId']]);
+        if (is_numeric($_POST['contactId'])) {
+            $stmt = $db->query('SELECT * FROM view_contacts WHERE contact_id = ? ', [$_POST['contactId']]);
+        } else {
+            $stmt = $db->query('SELECT firstname, lastname, user_id, mail, phone, initials FROM users WHERE user_id = ?', [$_POST['contactId']]);
+        }
 
         $contact = $stmt->fetchObject();
         if (!isset($_SESSION['transmissionContacts']))
@@ -36,8 +40,10 @@ if (!empty($_POST['size']) && isset($_POST['contactId'])) {
         foreach($contact as $key => $value) {
             $_SESSION['transmissionContacts'][$nb][$key] = $value;
         }
-        $_SESSION['transmissionContacts'][$nb]['firstname'] = $contact->contact_firstname == '' ? $contact->firstname : $contact->contact_firstname;
-        $_SESSION['transmissionContacts'][$nb]['lastname']  = $contact->contact_lastname == '' ? $contact->lastname : $contact->contact_lastname;
-        $_SESSION['transmissionContacts'][$nb]['title']     = $contact->contact_title == '' ? $contact->title : $contact->contact_title;
+        if (is_numeric($_POST['contactId'])) {
+            $_SESSION['transmissionContacts'][$nb]['firstname'] = $contact->contact_firstname == '' ? $contact->firstname : $contact->contact_firstname;
+            $_SESSION['transmissionContacts'][$nb]['lastname']  = $contact->contact_lastname == '' ? $contact->lastname : $contact->contact_lastname;
+            $_SESSION['transmissionContacts'][$nb]['title']     = $contact->contact_title == '' ? $contact->title : $contact->contact_title;
+        }
     }
 }

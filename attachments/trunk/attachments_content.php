@@ -165,6 +165,12 @@ function setTransmissionData($nb, $storeResult) {
             'value' => $_REQUEST["transmissionContactidAttach{$nb}"],
             'type' => 'integer'
         ];
+    } else if (!empty($_REQUEST["transmissionContactidAttach{$nb}"]) && !is_numeric($_REQUEST["transmissionContactidAttach{$nb}"])) {
+        $transmissionData[] = [
+            'column' => 'dest_user',
+            'value' => $_REQUEST["transmissionContactidAttach{$nb}"],
+            'type' => 'string'
+        ];
     }
 
     if (!empty($_REQUEST["transmissionAddressidAttach{$nb}"]) && is_numeric($_REQUEST["transmissionAddressidAttach{$nb}"])) {
@@ -466,6 +472,12 @@ if (isset($_POST['add']) && $_POST['add']) {
                                     'type' => "integer",
                                 )
                             );
+                        } else if (isset($_REQUEST['contactidAttach']) && $_REQUEST['contactidAttach'] != '' && !is_numeric($_REQUEST['contactidAttach'])) {
+                            $_SESSION['data'][] = [
+                                'column' => 'dest_user',
+                                'value' => $_REQUEST['contactidAttach'],
+                                'type' => 'string',
+                            ];
                         }
 
                         if (isset($_REQUEST['addressidAttach']) && $_REQUEST['addressidAttach'] <> '' && is_numeric($_REQUEST['addressidAttach'])) {
@@ -944,15 +956,18 @@ if (isset($_POST['add']) && $_POST['add']) {
                     ];
                 }
 
-                if (isset($_REQUEST['contactidAttach']) && $_REQUEST['contactidAttach'] <> '') {
-                    array_push(
-                        $_SESSION['data'],
-                        array(
-                            'column' => "dest_contact_id",
+                if (isset($_REQUEST['contactidAttach']) && $_REQUEST['contactidAttach'] != '' && is_numeric($_REQUEST['contactidAttach'])) {
+                        $_SESSION['data'][] = [
+                            'column' => 'dest_contact_id',
                             'value' => $_REQUEST['contactidAttach'],
-                            'type' => "integer",
-                        )
-                    );
+                            'type' => 'integer'
+                        ];
+                } else if (isset($_REQUEST['contactidAttach']) && $_REQUEST['contactidAttach'] != '' && !is_numeric($_REQUEST['contactidAttach'])) {
+                        $_SESSION['data'][] = [
+                            'column' => 'dest_user',
+                            'value' => $_REQUEST['contactidAttach'],
+                            'type' => 'string'
+                        ];
                 }
 
                 if (isset($_REQUEST['addressidAttach']) && $_REQUEST['addressidAttach'] <> '') {
@@ -1167,10 +1182,12 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $set_update .= ", effective_date = '".$req->format_date_db($_REQUEST['effectiveDate'])."'";
             }
 
-            if (isset($_REQUEST['contactidAttach']) && $_REQUEST['contactidAttach'] <> "") {
-                $set_update .= ", dest_contact_id = ".$_REQUEST['contactidAttach'].", dest_address_id = ".$_REQUEST['addressidAttach'];
+            if (isset($_REQUEST['contactidAttach']) && $_REQUEST['contactidAttach'] != '' && is_numeric($_REQUEST['contactidAttach'])) {
+                $set_update .= ", dest_user = null, dest_contact_id = ".$_REQUEST['contactidAttach'].", dest_address_id = ".$_REQUEST['addressidAttach'];
+            } else if (isset($_REQUEST['contactidAttach']) && $_REQUEST['contactidAttach'] != '' && !is_numeric($_REQUEST['contactidAttach'])) {
+                $set_update .= ", dest_user = '".$_REQUEST['contactidAttach']."', dest_contact_id = null, dest_address_id = null";
             } else {
-                $set_update .= ", dest_contact_id = null, dest_address_id = null";
+                $set_update .= ", dest_user = null, dest_contact_id = null, dest_address_id = null";
             }
 
             if ((int)$_REQUEST['relation'] > 1) {
@@ -1468,7 +1485,7 @@ if (isset($_REQUEST['id'])) {
         $column_res = 'res_id';
     }
     
-    $stmt = $db->query("SELECT validation_date, effective_date, attachment_type, title, dest_contact_id, dest_address_id, dest_address_id as address_id, relation, format, identifier, status
+    $stmt = $db->query("SELECT validation_date, effective_date, attachment_type, title, dest_user, dest_contact_id, dest_address_id, dest_address_id as address_id, relation, format, identifier, status
                         FROM res_view_attachments 
                         WHERE ".$column_res." = ? and res_id_master = ?
                         ORDER BY relation desc", array($_REQUEST['id'], $_SESSION['doc_id']));
@@ -1497,7 +1514,7 @@ if (isset($_REQUEST['id'])) {
 } else {
     $_SESSION['targetAttachment'] = 'add';
 
-    $stmt = $db->query("SELECT subject, exp_contact_id, dest_contact_id, address_id, alt_identifier FROM res_view_letterbox WHERE res_id = ?",array($_SESSION['doc_id']));
+    $stmt = $db->query("SELECT subject, exp_contact_id, dest_contact_id, exp_user_id, address_id, alt_identifier FROM res_view_letterbox WHERE res_id = ?",array($_SESSION['doc_id']));
     $data_attachment = $stmt->fetchObject();
 
     unset($_SESSION['upfile']);
@@ -1516,6 +1533,10 @@ if ($data_attachment->dest_contact_id <> "") {
     $stmt = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
                         FROM view_contacts 
                         WHERE contact_id = ? and ca_id = ?', array($data_attachment->exp_contact_id,$data_attachment->address_id));       
+} else if ($data_attachment->dest_user != '') {
+    $stmt = $db->query('SELECT lastname, firstname FROM users WHERE user_id = ?', [$data_attachment->dest_user]);
+} else if ($data_attachment->exp_user_id != '') {
+    $stmt = $db->query('SELECT lastname, firstname FROM users WHERE user_id = ?', [$data_attachment->exp_user_id]);
 }
 
 if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id <> '') {
@@ -1537,12 +1558,17 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
         $data_contact .= ', ';
     }
     if ($res->is_private == 'Y') {
-        $data_contact .= '('._CONFIDENTIAL_ADDRESS.')';
+        $data_contact .= '(' . _CONFIDENTIAL_ADDRESS . ')';
     } else {
-        $data_contact .= $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);                         
+        $data_contact .= $res->address_num . ' ' . $res->address_street . ' ' . strtoupper($res->address_town);
+    }
+} else if ($data_attachment->exp_user_id != '' || $data_attachment->dest_user != '') {
+    $res = $stmt->fetchObject();
+    if (!empty($res->lastname) || !empty($res->firstname)) {
+        $data_contact .= $res->lastname . ' ' . $res->firstname;
     }
 //si multicontact
-}else{
+} else {
     $stmt = $db->query("SELECT cr.address_id, c.contact_id, c.is_corporate_person, c.society, c.society_short, c.firstname, c.lastname,ca.is_private,ca.address_street, ca.address_num, ca.address_town 
                         FROM contacts_res cr, contacts_v2 c, contact_addresses ca 
                         WHERE cr.res_id = ? and cast(c.contact_id as char) = cast(cr.contact_id as char) and ca.contact_id=c.contact_id and ca.id=cr.address_id",array($_SESSION['doc_id']));
@@ -1748,12 +1774,16 @@ $content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" oncli
 $content .= '<div id="show_contacts_attach" class="autocomplete autocompleteIndex"></div>';
 $content .= '</p>';
 $content .= '<input type="hidden" id="contactidAttach" name="contactidAttach" value="';
-if (isset($_REQUEST['id'])) {
+if (isset($_REQUEST['id']) && !empty($data_attachment->dest_contact_id)) {
     $content .= $data_attachment->dest_contact_id;
+} else if (isset($_REQUEST['id']) && !empty($data_attachment->dest_user)){
+    $content .= $data_attachment->dest_user;
 } else if ($data_attachment->exp_contact_id){
     $content .= $data_attachment->exp_contact_id;
 } else if ($data_attachment->dest_contact_id) {
     $content .= $data_attachment->dest_contact_id;
+} else if ($data_attachment->exp_user_id) {
+    $content .= $data_attachment->exp_user_id;
 }
 
 $content .= '"/>';
