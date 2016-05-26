@@ -84,7 +84,7 @@ try {
             "Type du courrier", 
             "Nature", 
             "Département",  //5
-            "Mots clés", 
+            "Thésaurus", 
             "Thème", 
             "Sous Thème", 
             "Classement",
@@ -94,6 +94,7 @@ try {
             "Nom de l'expéditeur", 
             "Organisme de l'expéditeur", 
             "Type de contact",  //15
+            "Nombre de tiers bénéficiaire",//10
             "Prénom tiers bénéficiaire",
             "Nom tiers bénéficiaire",
             "Destinataire", 
@@ -104,30 +105,24 @@ try {
             "Priorité", 
             "Nombre de réponses", 
             "Numéro chrono réponse", //25 
-            "Nature de réponse", 
             "Signataire", 
             "Date de signature", 
             "Date de départ", 
-            "Modèle de réponse", //30 
             "Nombre de transmissions", 
             "Numéro chrono transmission 1", 
             "Destinataire transmission 1", 
-            "Modèle de réponse 1", 
             "Date de retour attendue 1", //35
             "Date de retour 1", 
             "Numéro chrono transmission 2", 
             "Destinataire transmission 2", 
-            "Modèle de réponse 2", 
             "Date de retour attendue 2", //40
             "Date de retour 2", 
             "Numéro chrono transmission 3", 
             "Destinataire transmission 3", 
-            "Modèle de réponse 3", 
             "Date de retour attendue 3", //45
             "Date de retour 3", 
             "Numéro chrono transmission 4", 
             "Destinataire transmission 4", 
-            "Modèle de réponse 4", 
             "Date de retour attendue 4", //50
             "Date de retour 4", 
         ),
@@ -146,20 +141,21 @@ try {
 
     $countMail = 0;
     while($selectedFile = $stmt->fetchObject()) {
-        #### TAGS ####
+
+        #### THESAURUS ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
-            "SELECT tag_label FROM tags WHERE res_id = ? and coll_id = ?", array($selectedFile->res_id, $GLOBALS['collections'][0]['id'])
+            "SELECT thesaurus_name FROM thesaurus_res,thesaurus WHERE res_id = ? AND thesaurus_res.thesaurus_id = thesaurus.thesaurus_id", array($selectedFile->res_id)
         );
 
-        $labelTags = "";
-        $iTags = 0;
-        while($resTags = $stmt2->fetchObject()){
-            if ($iTags >0) {
-                $labelTags .= ", ";
+        $labelThesaurus = "";
+        $iThesaurus = 0;
+        while($resThesaurus = $stmt2->fetchObject()){
+            if ($iThesaurus >0) {
+                $labelThesaurus .= ", ";
             }
-            $labelTags .= $resTags->tag_label;
-            $iTags++;
+            $labelThesaurus .= $resThesaurus->thesaurus_name;
+            $iThesaurus++;
         }
 
         #### Contact type ####
@@ -170,6 +166,16 @@ try {
 
         $resContactType = $stmt2->fetchObject();
         $contactType = $resContactType->label;
+
+	#### Parent Folder ####
+        $stmt2 = Bt_doQuery(
+            $GLOBALS['db'], 
+            "SELECT folder_name FROM folders WHERE folders_system_id = ?", array($selectedFile->fold_parent_id)
+        );
+
+        $resParentFolder = $stmt2->fetchObject();
+        $parentFolder = $resParentFolder->folder_name;
+
 
         #### User Name ####
         $stmt2 = Bt_doQuery(
@@ -207,7 +213,7 @@ try {
         #### Info contacts ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
-            "SELECT count(*) as nb FROM contacts_res WHERE coll_id = 'letterbox_coll' and res_id = ?", array($selectedFile->res_id)
+            "SELECT count(*) as nb FROM contacts_res WHERE coll_id = 'letterbox_coll' and res_id = ? and mode <> 'third'", array($selectedFile->res_id)
         );
 
         $Nb_contact = $stmt2->fetchObject();
@@ -235,6 +241,24 @@ try {
                 $contact_title = $LabelCivility;
                 $contact_society = $selectedFile->contact_society;
                 $contact_type = $contactType;
+
+		 $stmt2 = Bt_doQuery(
+                        $GLOBALS['db'], 
+                        "SELECT contact_target FROM contact_types WHERE label like ?", array($contact_type)
+                );
+                $contactType = $stmt2->fetchObject();
+
+                if($contactType->contact_target == 'corporate'){
+                        $stmt2 = Bt_doQuery(
+                                $GLOBALS['db'], 
+                                "SELECT lastname, firstname, title FROM contact_addresses WHERE id = ? and contact_id = ?", array($selectedFile->address_id, $contact_id)
+                        );
+                        $contact_1 = $stmt2->fetchObject();
+                        $contact_lastname = $contact_1->lastname;
+                        $contact_firstname = $contact_1->firstname;
+                        $contact_title = $contact_1->title;
+                }
+
             } else {
                 $Nb_contact = 0;
             }
@@ -242,13 +266,13 @@ try {
 
             $stmt2 = Bt_doQuery(
                 $GLOBALS['db'], 
-                "SELECT contact_id FROM contacts_res WHERE coll_id = 'letterbox_coll' and res_id = ?", array($selectedFile->res_id)
+                "SELECT contact_id FROM contacts_res WHERE coll_id = 'letterbox_coll' and res_id = ? and mode <> 'third'", array($selectedFile->res_id)
             );
 
             $contactId = $stmt2->fetchObject();
 
 
-            if(is_int($contactId->contact_id)){
+            if(is_numeric($contactId->contact_id)){
                 $stmt2 = Bt_doQuery(
                     $GLOBALS['db'], 
                     "SELECT lastname, firstname, title, society, contact_type FROM contacts_v2 WHERE contact_id = ?", array($contactId->contact_id)
@@ -259,12 +283,23 @@ try {
                 $contact_title = $contact_1->title;
                 $contact_society = $contact_1->society;
 
-                $stmt2 = Bt_doQuery(
-                    $GLOBALS['db'], 
-                    "SELECT label FROM contact_types WHERE id = ?", array($contact_1->contact_type)
-                );
-                $contactType = $stmt2->fetchObject();
-                $contact_type = $contactType->label;
+		$stmt2 = Bt_doQuery(
+    			$GLOBALS['db'], 
+    			"SELECT label, contact_target FROM contact_types WHERE id = ?", array($contact_1->contact_type)
+		);
+		$contactType = $stmt2->fetchObject();
+		$contact_type = $contactType->label;
+		
+		if($contactType->contact_target == 'corporate'){
+        		$stmt2 = Bt_doQuery(
+        			$GLOBALS['db'], 
+        			"SELECT lastname, firstname, title FROM contact_addresses WHERE id = ? and contact_id = ?", array($selectedFile->address_id, $contactId->contact_id)
+        		);
+        		$contact_1 = $stmt2->fetchObject();
+        		$contact_lastname = $contact_1->lastname;
+        		$contact_firstname = $contact_1->firstname;
+        		$contact_title = $contact_1->title;
+		}
             }else{
                  $stmt2 = Bt_doQuery(
                     $GLOBALS['db'], 
@@ -281,6 +316,70 @@ try {
 
             
         }
+
+        #### Info tiers beneficaires ####
+        $stmt2 = Bt_doQuery(
+            $GLOBALS['db'], 
+            "SELECT count(*) as nb FROM contacts_res WHERE coll_id = 'letterbox_coll' and res_id = ? and mode = 'third'", array($selectedFile->res_id)
+        );
+
+        $Nb_contact_third = $stmt2->fetchObject();
+        $Nb_contact_third = $Nb_contact_third->nb;
+
+        $contactThird_lastname = "";
+        $contactThird_firstname = "";
+        $contactThird_title = "";
+        $contactThird_society = "";
+        $contactThird_type = "";
+
+        $stmt2 = Bt_doQuery(
+                $GLOBALS['db'], 
+                "SELECT * FROM contacts_res WHERE coll_id = 'letterbox_coll' and res_id = ? and mode = 'third'", array($selectedFile->res_id)
+            );
+
+            $contactThirdId = $stmt2->fetchObject();
+
+
+            if(is_numeric($contactThirdId->contact_id)){
+                $stmt2 = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    "SELECT lastname, firstname, title, society, contact_type FROM contacts_v2 WHERE contact_id = ?", array($contactThirdId->contact_id)
+                );
+                $contactThird_1 = $stmt2->fetchObject();
+                $contactThird_lastname = $contactThird_1->lastname;
+                $contactThird_firstname = $contactThird_1->firstname;
+                $contactThird_title = $contactThird_1->title;
+                $contactThird_society = $contactThird_1->society;
+
+        $stmt2 = Bt_doQuery(
+                $GLOBALS['db'], 
+                "SELECT label, contact_target FROM contact_types WHERE id = ?", array($contactThird_1->contact_type)
+        );
+        $contactThirdType = $stmt2->fetchObject();
+        $contactThird_type = $contactThirdType->label;
+        
+        if($contactThirdType->contact_target == 'corporate'){
+                $stmt2 = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    "SELECT lastname, firstname, title FROM contact_addresses WHERE id = ? and contact_id = ?", array($contactThirdId->address_id, $contactThirdId->contact_id)
+                );
+                $contactThird_1 = $stmt2->fetchObject();
+                $contactThird_lastname = $contactThird_1->lastname;
+                $contactThird_firstname = $contactThird_1->firstname;
+                $contactThird_title = $contactThird_1->title;
+        }
+            }else{
+                 $stmt2 = Bt_doQuery(
+                    $GLOBALS['db'], 
+                    "SELECT lastname, firstname, entity_id FROM users, users_entities WHERE users.user_id = ? AND users.user_id = users_entities.user_id AND users_entities.primary_entity = ? ", array($contactThirdId->contact_id,'Y')
+                );
+                $contactThird_1 = $stmt2->fetchObject();
+                $contactThird_lastname = $contactThird_1->lastname;
+                $contactThird_firstname = $contactThird_1->firstname;
+                $contactThird_title = '';
+                $contactThird_society = $contactThird_1->entity_id;
+                $contactThird_type = 'Interne';
+            }
 
         #### Service destinataire ####
         $stmt2 = Bt_doQuery(
@@ -361,7 +460,7 @@ try {
         #### Nb Transmission ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
-            "SELECT count(*) as total FROM res_view_attachments WHERE attachment_type = 'transfer' and res_id_master = ? and status <> 'DEL' and status <> 'OBS'", array($selectedFile->res_id)
+            "SELECT count(*) as total FROM res_view_attachments WHERE attachment_type = 'transmission' and res_id_master = ? and status <> 'DEL' and status <> 'OBS'", array($selectedFile->res_id)
         );
 
         $NbTransmission = $stmt2->fetchObject();
@@ -370,7 +469,7 @@ try {
         #### Transmission ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
-            "SELECT identifier, dest_contact_id, validation_date FROM res_view_attachments WHERE attachment_type = 'transfer' and res_id_master = ? and status <> 'DEL' and status <> 'OBS' ORDER BY creation_date DESC LIMIT 4", array($selectedFile->res_id)
+            "SELECT identifier, dest_contact_id, validation_date, effective_date, dest_address_id FROM res_view_attachments WHERE attachment_type = 'transmission' and res_id_master = ? and status <> 'DEL' and status <> 'OBS' ORDER BY creation_date DESC LIMIT 4", array($selectedFile->res_id)
         );
 
         $arrayTransmission = array();
@@ -379,11 +478,21 @@ try {
 
             $stmt3 = Bt_doQuery(
                 $GLOBALS['db'], 
-                "SELECT lastname, firstname, society FROM contacts_v2 WHERE contact_id = ? ", array($signed_response->dest_contact_id)
+                "SELECT lastname, firstname, society, is_corporate_person FROM contacts_v2 WHERE contact_id = ? ", array($signed_response->dest_contact_id)
             );
             $dest_contact = $stmt3->fetchObject();
 
-            array_push($arrayTransmission, array( "identifier" => $signed_response->identifier, "dest_contact" => strtoupper($dest_contact->lastname) . " " . ucfirst($dest_contact->firstname) . " " . $dest_contact->society, "validation_date" => format_date_db($signed_response->validation_date, "", $GLOBALS['databasetype'])));
+	    if($dest_contact->is_corporate_person == 'Y'){
+		$stmt3 = Bt_doQuery(
+                $GLOBALS['db'], 
+                "SELECT lastname, firstname FROM contact_addresses WHERE contact_id = ? and id = ?", array($signed_response->dest_contact_id,$signed_response->dest_address_id)
+            );
+		$dest_contact2 = $stmt3->fetchObject();
+
+		array_push($arrayTransmission, array( "identifier" => $signed_response->identifier, "dest_contact" => $dest_contact->society . " - " . strtoupper($dest_contact2->lastname) . " " . ucfirst($dest_contact2->firstname), "validation_date" => format_date_db($signed_response->validation_date, "", $GLOBALS['databasetype']), "effective_date" => format_date_db($signed_response->effective_date, "", $GLOBALS['databasetype'])));
+	    }else{
+		array_push($arrayTransmission, array( "identifier" => $signed_response->identifier, "dest_contact" => strtoupper($dest_contact->lastname) . " " . ucfirst($dest_contact->firstname) . " " . $dest_contact->society, "validation_date" => format_date_db($signed_response->validation_date, "", $GLOBALS['databasetype']), "effective_date" => format_date_db($signed_response->effective_date, "", $GLOBALS['databasetype'])));
+	    }
         }
                 
         fputcsv(
@@ -395,9 +504,9 @@ try {
                 $selectedFile->type_label,
                 $GLOBALS['mail_natures'][$selectedFile->nature_id],
                 $department_name,  //5
-                $labelTags,
-                $selectedFile->folder_name, 
-                "",//"Sous Thème", 
+                $labelThesaurus,
+                $parentFolder,
+                $selectedFile->folder_name,//"Sous Thème", 
                 $selectedFile->doc_custom_t2,
                 $Nb_contact, //nombre d'expéditeur   //10
                 $GLOBALS['mail_titles'][$contact_title],//"Civilité de l'expéditeur"
@@ -405,8 +514,9 @@ try {
                 $contact_lastname, 
                 $contact_society,
                 $contact_type,  //15
-                "", //prenom tiers benef
-                "", //nom tiers benef
+                $Nb_contact_third, //nb tiers benef
+                $contactThird_firstname, //prenom tiers benef
+                $contactThird_lastname, //nom tiers benef
                 $userName,
                 $destination,
                 $txt_entities_cc,// "Services en copie", 
@@ -415,32 +525,26 @@ try {
                 $GLOBALS['mail_priorities'][$selectedFile->priority],
                 $NbResponseProject, 
                 $arrayAttachments[0]['identifier'], //25 
-                $answer, 
                 $arrayAttachments[0]['typist'], 
                 $arrayAttachments[0]['creation_date'], 
                 format_date_db(str_replace("/", "-",$selectedFile->closing_date), "", $GLOBALS['databasetype']), // date de départ
-                "", // Modèle de réponse //30 
                 $NbTransmission, 
                 $arrayTransmission[0]['identifier'], //"Numéro chrono transmission 1", 
                 $arrayTransmission[0]['dest_contact'], //"Destinataire transmission 1", 
-                "",//"Modèle de réponse 1", 
-                "",//"Date de retour attendue 1", //35
                 $arrayTransmission[0]['validation_date'],//"Date de retour 1", 
+                $arrayTransmission[0]['effective_date'],//"Date de retour 1", 
                 $arrayTransmission[1]['identifier'], //"Numéro chrono transmission 2", 
                 $arrayTransmission[1]['dest_contact'], //"Destinataire transmission 2", 
-                "",//"Modèle de réponse 2", 
-                "",//"Date de retour attendue 2", //40
                 $arrayTransmission[1]['validation_date'], //"Date de retour 2", 
+                $arrayTransmission[1]['effective_date'], //"Date de retour 2", 
                 $arrayTransmission[2]['identifier'], //"Numéro chrono transmission 3", 
                 $arrayTransmission[2]['dest_contact'], //"Destinataire transmission 3", 
-                "",// "Modèle de réponse 3", 
-                "",// "Date de retour attendue 3", //45
                 $arrayTransmission[2]['validation_date'], //"Date de retour 3", 
+                $arrayTransmission[2]['effective_date'], //"Date de retour 3", 
                 $arrayTransmission[3]['identifier'], //"Numéro chrono transmission 4", 
                 $arrayTransmission[3]['dest_contact'], //"Destinataire transmission 4", 
-                "",// "Modèle de réponse 4", 
-                "",// "Date de retour attendue 4", //50
-                $arrayTransmission[3]['validation_date'] //"Date de retour 4", */
+                $arrayTransmission[3]['validation_date'], //"Date de retour 4", */
+                $arrayTransmission[3]['effective_date'] //"Date de retour 4", */
             ), 
             $delimiteur
         );
