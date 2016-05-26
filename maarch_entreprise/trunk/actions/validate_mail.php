@@ -928,6 +928,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . 'style="display:inline;" ><i class="fa fa-plus-circle" title="' 
                         . _CREATE_FOLDER . '"></i></a>';
             }
+            $frm_str .= '</td>';
             $frm_str .= '</tr>';
             $frm_str .= '<tr id="parentFolderTr" style="display: none"><td>&nbsp;</td><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
         }
