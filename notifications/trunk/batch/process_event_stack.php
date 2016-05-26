@@ -122,7 +122,8 @@ while ($state <> 'END') {
                         $dbAbs = new Database();
                         $stmt = $dbAbs->query($query, array($user_id));
                         if($stmt->rowCount() > 0) {
-                            $recipient = $dbAbs->fetchObject($user_id);
+                            //$recipient = $dbAbs->fetchObject($user_id);
+                            $recipient = $stmt->fetchObject();
                             $user_id = $recipient->user_id;
                             $logger->write($user_id .' is the replacent', 'INFO');
                             $recipients[] = $recipient;
