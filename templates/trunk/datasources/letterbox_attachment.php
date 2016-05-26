@@ -47,13 +47,18 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
     $datasources['contact'][] = $myContact;
 
     // single Contact
-}else if (isset($doc['contact_id']) && isset($doc['address_id'])) {
+} else if (isset($res_contact_id) && isset($res_address_id) && is_numeric($res_contact_id)) {
     $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ", array($res_contact_id, $res_address_id));
     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
     $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
     $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
     $datasources['contact'][] = $myContact;
     
+} else if (!empty($res_contact_id) && !is_numeric($res_contact_id)) {
+    $stmt = $dbDatasource->query("SELECT firstname, lastname, user_id, mail, phone, initials FROM users WHERE user_id = ?", [$res_contact_id]);
+    $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
+    $datasources['contact'][] = $myContact;
+
 } else {
     $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = 0");
     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
