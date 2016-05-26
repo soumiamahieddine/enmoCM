@@ -152,8 +152,14 @@ if ($arrayIsAllowed['status'] == false) {
                     array_push($_SESSION['data'], array( 'column' => "validation_date", 'value' => $func->format_date_db($_SESSION['attachmentInfo']['back_date']), 'type' => "date", ) );
                 }
 
-                if (isset($_SESSION['attachmentInfo']['contactId']) && $_SESSION['attachmentInfo']['contactId'] <> '') {
-                    array_push($_SESSION['data'], array( 'column' => "dest_contact_id", 'value' => $_SESSION['attachmentInfo']['contactId'], 'type' => "integer" ) );
+                if (isset($_SESSION['attachmentInfo']['contactId']) && $_SESSION['attachmentInfo']['contactId'] != '' && is_numeric($_SESSION['attachmentInfo']['contactId'])) {
+                    array_push($_SESSION['data'], array( 'column' => 'dest_contact_id', 'value' => $_SESSION['attachmentInfo']['contactId'], 'type' => 'integer' ) );
+                } else if (isset($_SESSION['attachmentInfo']['contactId']) && $_SESSION['attachmentInfo']['contactId'] != '' && !is_numeric($_SESSION['attachmentInfo']['contactId'])) {
+                    $_SESSION['data'][] = [
+                            'column' => 'dest_user',
+                            'value' => $_SESSION['attachmentInfo']['contactId'],
+                            'type' => 'string',
+                        ];
                 }
 
                 if (isset($_SESSION['attachmentInfo']['addressId']) && $_SESSION['attachmentInfo']['addressId'] <> '') {
