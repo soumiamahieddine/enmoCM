@@ -320,6 +320,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     #   if process, $_SESSION['process']['diff_list'] will override this one
     
     $_SESSION['process']['diff_list'] = $new_difflist;
+    $_SESSION['indexing']['diff_list'] = $new_difflist;
     $_SESSION['action_error'] = $message;
     return array('result' => implode('#', $arr_id), 'history_msg' => $message);
 }
