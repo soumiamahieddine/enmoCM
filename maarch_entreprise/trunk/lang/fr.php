@@ -879,7 +879,7 @@ if (!defined("_ADD_NEW_CONTACT")) define("_ADD_NEW_CONTACT", "Ajouter un nouveau
 if (!defined("_UPDATE_CONTACT")) define("_UPDATE_CONTACT", "Modification des contacts");
 if (!defined("_PHONE")) define("_PHONE", "Téléphone");
 if (!defined("_ADDRESS")) define("_ADDRESS", "Adresse");
-if (!defined("_STREET")) define("_STREET", "Rue");
+if (!defined("_STREET")) define("_STREET", "Voie");
 if (!defined("_COMPLEMENT")) define("_COMPLEMENT", "Complément");
 if (!defined("_TOWN")) define("_TOWN", "Ville");
 if (!defined("_COUNTRY")) define("_COUNTRY", "Pays");
