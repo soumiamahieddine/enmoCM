@@ -201,7 +201,7 @@ abstract class avis_controler_Abstract
                                 $color = ' class="col"';
                             }
 
-                            if (($isAvisStep && $myPosAvis >= $seq || $step['process_date'] != '') && $circuitAvis['avis']['users'][$seq]['user_id'] == $_SESSION['user']['UserId'])
+                            if (($isAvisStep && !is_null($myPosAvis) && $myPosAvis >= $seq || $step['process_date'] != '') && $circuitAvis['avis']['users'][$seq]['user_id'] == $_SESSION['user']['UserId'])
                                     $title = ' Vous ne pouvez pas modifier votre propre étape ';
                                 else
                                     $title = '';
@@ -212,7 +212,7 @@ abstract class avis_controler_Abstract
                                 $str .= '<td>';
                                 $tab_users = $this->getUsersAvis();
 
-                                if ($isAvisStep && $myPosAvis >= $seq || $step['process_date'] != '' && $circuitAvis['avis']['users'][$seq]['user_id'] == $_SESSION['user']['UserId'])
+                                if ($isAvisStep && !is_null($myPosAvis) && $myPosAvis >= $seq || $step['process_date'] != '' && $circuitAvis['avis']['users'][$seq]['user_id'] == $_SESSION['user']['UserId'])
                                     $disabled = ' disabled ';
                                 else
                                     $disabled = '';
@@ -259,11 +259,11 @@ abstract class avis_controler_Abstract
                                 $up = ' style="visibility:visible"';
                                 $displayCB = ' style="visibility:hidden"';
                                 $checkCB = '';
-                                if ($isAvisStep && $myPosAvis >= $seq || $step['process_date'] != '')
+                                if ($isAvisStep && !is_null($myPosAvis) && $myPosAvis >= $seq || $step['process_date'] != '')
                                     $down = ' style="visibility:hidden"';
                                 else
                                     $down = ' style="visibility:visible"';
-                                if ($isAvisStep && $myPosAvis >= $seq || $step['process_date'] != '')
+                                if ($isAvisStep && !is_null($myPosAvis) && $myPosAvis >= $seq || $step['process_date'] != '')
                                     $del = ' style="visibility:hidden"';
                                 else
                                     $del = ' style="visibility:visible"';
