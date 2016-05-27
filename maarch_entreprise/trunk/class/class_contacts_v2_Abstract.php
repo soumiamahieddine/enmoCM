@@ -412,9 +412,8 @@ abstract class contacts_v2_Abstract extends Database
         $tmp = $business->get_titles();
         $titles = $tmp['titles'];
 
-        ?>
-        <h1>
-            <?php
+        if($iframe != true){
+            echo '<h1>';
             if($mode == "up") {
                 ?><i class="fa fa-edit fa-2x"></i><?php
                 echo '&nbsp;' . _MODIFY_CONTACT;
@@ -427,10 +426,23 @@ abstract class contacts_v2_Abstract extends Database
                 ?><i class="fa fa-users fa-2x"></i><?php
                 echo '&nbsp;' . _VIEW;
             }
-            ?>
-        </h1>
-        <div id="inner_content_contact" class="clearfix" align="center" style="margin-bottom:15px;">
-        <div class="block">
+            echo '</h1><br/><div class="block">';
+        }else{
+            echo '<div class="block"><h2>';
+            if($mode == "up") {
+                echo _CONTACT;
+            }
+            elseif($mode == "add") {
+                echo _ADD_NEW_CONTACT;
+            }
+            elseif($mode == "view") {
+                ?><i class="fa fa-users fa-2x"></i><?php
+                echo '&nbsp;' . _VIEW;
+            }
+            echo '</h2>';
+        }
+        ?>
+        <div id="inner_content_contact" class="clearfix" align="center" style="margin-bottom:15px;width:100% !important;"> 
             <?php
             if($state == false)
             {
@@ -448,7 +460,7 @@ abstract class contacts_v2_Abstract extends Database
                     }
                 }
                 ?>
-                <form name="frmcontact" id="frmcontact" method="post" action="<?php functions::xecho($action);?>" class="forms">
+                <form name="frmcontact" id="frmcontact" method="post" action="<?php functions::xecho($action);?>" class="forms" style="width:700px">
                     <input type="hidden" name="display"  value="true" />
                     <?php if(!$admin)
                     {?>
@@ -466,7 +478,7 @@ abstract class contacts_v2_Abstract extends Database
                     <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])) { functions::xecho($_REQUEST['order_field']);}?>" />
                     <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){functions::xecho($_REQUEST['what']);}?>" />
                     <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){functions::xecho($_REQUEST['start']);}?>" />
-                <table width="65%" id="frmcontact_table">
+                <table id="frmcontact_table">
                     <tr>
                         <td>&nbsp;</td>
                         <td class="indexing_field">
@@ -630,8 +642,10 @@ abstract class contacts_v2_Abstract extends Database
             }
             ?>
         </div>
-        </div>
     <?php
+        if($iframe != true){
+            echo '</div><br/>';
+        }
     }
 
     public function chooseContact($clean = true){
@@ -640,21 +654,20 @@ abstract class contacts_v2_Abstract extends Database
         if ($clean) {
             $this->clearcontactinfos();
         }
-        
         ?>
-        <h1><i class="fa fa-plus fa-2x"></i>
+        <div class="block"><h2></i>
             <?php
                 echo '&nbsp;' . _ADD_ADDRESS_TO_CONTACT;
             ?>
-        </h1>
+        </h2>
         <br/>
             <span style="margin-left:30px;">
                 <?php echo '&nbsp;'. _ADD_ADDRESS_TO_CONTACT_DESC;?>
             </span>
             <br/>
             <br/>
-                <form class="forms" method="post" style="margin-left:30px;">
-                    <table width="60%">
+                <form class="forms" method="post" style="margin-left:30px;width:80%;">
+                    <table style="margin:auto;">
                         <tr>
                             <td><?php echo '&nbsp;'. _TYPE_OF_THE_CONTACT;?></td>
                             <td>
@@ -695,6 +708,7 @@ abstract class contacts_v2_Abstract extends Database
                     </table>
                     <div style="text-align:center;"><input class="button" type="button" value="<?php echo _CHOOSE_THIS_CONTACT;?>" onclick="putInSessionContact('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=my_contacts&page=put_in_session');" /></div>
                 </form>
+                </div>
                 </div>
             <!-- <input id="contactid" type="hidden"/> -->
             <?php
@@ -1005,9 +1019,8 @@ abstract class contacts_v2_Abstract extends Database
             $contact_purposes[$res->id] = functions::show_string($res->label); 
         }
 
-        ?>
-        <h1>
-            <?php
+        if($iframe != true){
+            echo '<h1>';
             if($mode == "up")
             {?><i class="fa fa-edit fa-2x"></i> <?php
                 echo _MODIFY_ADDRESS;
@@ -1016,11 +1029,26 @@ abstract class contacts_v2_Abstract extends Database
             {?><i class="fa fa-plus fa-2x"></i> <?php
                 echo _ADDITION_ADDRESS;
             }
-            ?>
-        </h1>
-        <div id="inner_content_contact" class="clearfix" align="center">
-        <div class="block">
-            <?php
+            echo '</h1>';
+        }else{
+            echo '<div class="block"><h2>';
+            if($mode == "up")
+            {
+                echo _MODIFY_ADDRESS;
+            }
+            elseif($mode == "add")
+            {
+                echo _ADDITION_ADDRESS;
+            }
+            echo '</h2>';
+        }
+
+
+        if($iframe != true){
+                echo '<div id="inner_content_contact" class="clearfix" align="center">';
+            }else{
+                echo '<div id="inner_content_contact" class="clearfix" align="center">';
+            } 
             if($state == false)
             {
                 echo "<br /><br /><br /><br />"._THE_ADDRESS." "._UNKOWN."<br /><br /><br /><br />";
@@ -1387,7 +1415,6 @@ abstract class contacts_v2_Abstract extends Database
                 }
             }
             ?>
-        </div>
         </div>
     <?php
     }
