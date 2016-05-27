@@ -851,7 +851,7 @@ function resize_frame_contact(mode) {
         if ($('inner_content')) {
             $('inner_content').style.width = "700px";            
         } else if ($('inner_content_contact')) {
-            $('inner_content_contact').style.width = "700px"; 
+            //$('inner_content_contact').style.width = "700px"; 
         }
     }
     if (mode == 'contact') {
