@@ -1,6 +1,6 @@
 function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_info&module=thesaurus";
-	var content='';
+	var content='<i id="close_thesaurus_tooltips" class="fa fa-times-circle" style="cursor:pointer;position: absolute;top: -1px;right: 0px;font-size: 15px;" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></i>';
 	new Ajax.Request(path_to_script,
 	{
 		method:'post',
