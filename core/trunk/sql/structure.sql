@@ -4048,6 +4048,7 @@ CREATE TABLE thesaurus
   thesaurus_name_associate character varying(255),
   thesaurus_parent_id character varying(255),
   creation_date timestamp without time zone,
+  used_for text,
   CONSTRAINT thesaurus_pkey PRIMARY KEY (thesaurus_id)
 )
 WITH (
