@@ -42,7 +42,8 @@
     $db = new Database();
     $sec = new security();
 
-    $stmt = $db->query("SELECT distinct identifier FROM res_view_attachments WHERE res_id_master = ? and attachment_type = ? and status <> 'DEL' and status <> 'OBS'", array($_SESSION['doc_id'], $_SESSION['attachment_types_get_chrono'][$_REQUEST['type_id']]));
+    $array_attachment_types_get_chrono = "'".implode("','", $_SESSION['attachment_types_get_chrono'][$_REQUEST['type_id']])."'";
+    $stmt = $db->query("SELECT distinct identifier FROM res_view_attachments WHERE res_id_master = ? and attachment_type IN (".$array_attachment_types_get_chrono.") and status <> 'DEL' and status <> 'OBS'", array($_SESSION['doc_id']));
     
     $listIdentifier = array();
 
