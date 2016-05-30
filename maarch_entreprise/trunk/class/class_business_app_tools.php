@@ -98,10 +98,12 @@ class business_app_tools extends business_app_tools_Abstract
                 ) {
                     $label = constant($label);
                 }
+
+                $array_get_chrono = explode(',', $get_chrono);
                 $_SESSION['attachment_types'][(string) $type->id] = $label;
                 $_SESSION['attachment_types_with_chrono'][(string) $type->id] = $with_chrono;
                 $_SESSION['attachment_types_show'][(string) $type->id] = $show_attachment_type;
-                $_SESSION['attachment_types_get_chrono'][(string) $type->id] = $get_chrono;
+                $_SESSION['attachment_types_get_chrono'][(string) $type->id] = $array_get_chrono;
                 $_SESSION['attachment_types_attach_in_mail'][(string) $type->id] = $attach_in_mail;
             }
         }

@@ -494,6 +494,7 @@ abstract class business_app_tools_Abstract extends dbquery
         $_SESSION['mail_natures'] = array();
         $_SESSION['mail_natures_attribute'] = array();
         $mailNatures = $xmlfile->mail_natures;
+
         if (count($mailNatures) > 0) {
             foreach ($mailNatures->nature as $nature ) {
                 $label = (string) $nature->label;
@@ -525,14 +526,15 @@ abstract class business_app_tools_Abstract extends dbquery
                  ) {
                     $label = constant($label);
                 }
+                $array_get_chrono = explode(',', $get_chrono);
                 $_SESSION['attachment_types'][(string) $type->id] = $label;
                 $_SESSION['attachment_types_with_chrono'][(string) $type->id] = $with_chrono;
                 $_SESSION['attachment_types_show'][(string) $type->id] = $show_attachment_type;
-                $_SESSION['attachment_types_get_chrono'][(string) $type->id] = $get_chrono;
+                $_SESSION['attachment_types_get_chrono'][(string) $type->id] = $array_get_chrono;
                 $_SESSION['attachment_types_attach_in_mail'][(string) $type->id] = $attach_in_mail;
             }
         }
-        
+        var_dump($_SESSION['attachment_types_show']);
         $_SESSION['mail_priorities'] = array();
         $_SESSION['mail_priorities_attribute'] = array();
         $_SESSION['mail_priorities_wdays'] = array();
