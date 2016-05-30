@@ -198,7 +198,7 @@ $_ENV['categories']['incoming']['confidentiality'] = array (
         'N'
     ),
     'img' => 'exclamation-triangle',
-    'modify' => false,
+    'modify' => true,
 );
 
 ///////////////////////////// OUTGOING ////////////////////////////////////////////////
@@ -328,7 +328,7 @@ $_ENV['categories']['outgoing']['confidentiality'] = array (
         'N'
     ),
     'img' => 'exclamation-triangle',
-    'modify' => false,
+    'modify' => true,
 );
 
 ///////////////////////////// INTERNAL ////////////////////////////////////////////////
