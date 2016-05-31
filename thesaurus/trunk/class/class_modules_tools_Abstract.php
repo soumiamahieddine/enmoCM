@@ -353,7 +353,7 @@ abstract class thesaurus_Abstract
                 $_SESSION['config']['databasetype'], 'thesaurus'
             );
         }
-
+		if(!empty($thesaurus_list[0])){
         foreach ($thesaurus_list as $key => $value) {
             $arrayPDO = array($value,$res_id);
             $stmt = $db->query(
@@ -369,6 +369,7 @@ abstract class thesaurus_Abstract
                 );
             }
         }
+		}
         
         return true;
     }
