@@ -36,7 +36,7 @@ if (empty($_REQUEST['table'])) {
     exit();
 }
 $table = $_REQUEST['table'];
-
+$_SESSION['is_multi_contact'] = 'OK';
 $multi_sessions_address_id = $_SESSION['adresses']['addressid'];
 $user_ids = array();
 // $user_ids = '';
@@ -90,7 +90,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     $timestart=microtime(true);
    
    $arrayPDO = array();
-   if (isset($_REQUEST['contact_type']) && $_REQUEST['contact_type'] <> '') {
+   if ((isset($_REQUEST['contact_type']) && $_REQUEST['contact_type'] <> '') && $_SESSION['is_multi_contact'] =! 'OK') {
        $contactTypeRequest = " AND contact_type = ?";
        $arrayPDOtype = array($_REQUEST['contact_type']);
    }
@@ -212,7 +212,6 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     $query .= ") matches" 
         . " GROUP BY result, contact_id, address, ca_id "
         . " ORDER BY score DESC, result ASC";
-    
     $stmt = $db->query($query, $arrayPDO);
     $nb = $stmt->rowCount();
     
