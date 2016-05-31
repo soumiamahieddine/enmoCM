@@ -24,23 +24,24 @@
 	$core_tools = new core_tools();
 	$core_tools->test_user();
 	$core_tools->test_service('reports', 'reports');
-
+	
 	if(isset($_POST["data"])){
 		try{
 			$functions = new functions();
 			$_POST['data'] = urldecode($_POST['data']);
+			
 			$data = json_decode($_POST['data']);
+			//var_dump($data);
 			$contenu = '';
 			$fp = fopen('apps/maarch_entreprise/tmp/export_reports_maarch.csv', 'w');
 			
-			foreach($data as $key => $value){
-				//conversion en html
-				$value['LABEL'] = $functions->wash_html($value['LABEL'], "UTF-16LE");
+            $data_to_array = $functions->object2array($data);
+			
+			foreach($data_to_array as $line){
 				//conversion en UTF-8
-				$value['LABEL'] = mb_convert_encoding($value['LABEL'], 'UTF-16LE', 'UTF-8');
-				$value['VALUE'] = $functions->wash_html($value['VALUE'], "UTF-8");
-				$value['VALUE'] = mb_convert_encoding($value['VALUE'], 'UTF-16LE', 'UTF-8');
-				fputcsv($fp, $value, ';');
+				$line['LABEL'] = $functions->wash_html($line['LABEL'], "UTF-8");
+				$line['VALUE'] = $functions->wash_html($line['VALUE'], "UTF-8");
+				fputcsv($fp, $line, ';');
 			}
 			
 			fclose($fp);
