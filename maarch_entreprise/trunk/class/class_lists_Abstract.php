@@ -1182,7 +1182,7 @@ abstract class lists_Abstract extends Database
             
             }else{
                 $return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
-                    ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span id="no_doc"><i class="fa fa-eye-slash fa-2x"></i>
+                    ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span id="no_doc"><i class="fa fa-ban" style="font-size: 460px;color: grey;opacity: 0.2;margin-top: 30px;"></i>
 </span></a></div>';
             
             }
