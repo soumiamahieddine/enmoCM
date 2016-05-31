@@ -78,9 +78,8 @@ if (isset($_REQUEST['res_id_master'])) {
                 while ($return_db = $stmt->fetchObject()) {
                     if (!empty($_REQUEST['option']) && $_REQUEST['option'] == 'FT') {
                         if ($return_db->format != 'pdf') {
-                            $t = str_replace('.' . $return_db->format, '.pdf', $return_db->filename);
-                            $stmtFullText = $db->query('SELECT res_id FROM res_view_attachments WHERE filename = ? and attachment_type = ? ORDER BY relation desc',
-                                [str_replace('.' . $return_db->format, '.pdf', $return_db->filename), 'converted_pdf']);
+                            $stmtFullText = $db->query('SELECT res_id FROM res_view_attachments WHERE filename = ? and attachment_type = ? and path = ? ORDER BY relation desc',
+                                [str_replace('.' . $return_db->format, '.pdf', $return_db->filename), 'converted_pdf', $return_db->path]);
                             $lineFullText = $stmtFullText->fetchObject();
                             if ($lineFullText && $lineFullText->res_id != 0)
                                 $resIdConverted = $lineFullText->res_id;
