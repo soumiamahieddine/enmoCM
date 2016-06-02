@@ -1,6 +1,330 @@
+function lauch_thesaurus_list(e){
+	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_parents&module=thesaurus";
+	var content='<i id="close_thesaurus_tooltips" class="fa fa-times-circle" style="cursor:pointer;position: fixed;top: 0px;left: 0px;font-size: 15px;" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></i>';
+	new Ajax.Request(path_to_script,
+	{
+		method:'post',
+		 onSuccess: function(answer){
+		 	var json = JSON.parse(answer.responseText);
+		 	//console.log(json);
+			//eval("response = "+answer.responseText);
+			if(json){
+				content += '<ul id="thesaurus_list">';
+				for (var i = json.length - 1; i >= 0; i--) {
+					content += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'"><i onclick="getChildThes(\''+json[i].thesaurus_id+'\',\'0\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i> <span onclick="add_thes(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span><li>';
+				} 
+				content += '</ul>';
+			}else{
+				content += '<p style="text-align:center;font-style:italic;padding:5px;color:grey;" >aucun terme</p>';		
+			}
+			content += '<style>#thesaurus_list span:hover{font-weight:bold;cursor:pointer;}</style>';
+			toolTipThes(e, content);
+		}
+	});
+
+}
+
+function lauch_thesaurus_list_admin(e){
+	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_parents&module=thesaurus";
+	var content='<i id="close_thesaurus_tooltips" class="fa fa-times-circle" style="cursor:pointer;position: fixed;top: 0px;left: 0px;font-size: 15px;" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></i>';
+	new Ajax.Request(path_to_script,
+	{
+		method:'post',
+		 onSuccess: function(answer){
+		 	var json = JSON.parse(answer.responseText);
+		 	//console.log(json);
+			//eval("response = "+answer.responseText);
+			if(json){
+				content += '<ul id="thesaurus_list">';
+				for (var i = json.length - 1; i >= 0; i--) {
+					content += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'"><i onclick="getChildThesAdmin(\''+json[i].thesaurus_id+'\',\'0\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i> <span onclick="add_thes_admin(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span><li>';
+				} 
+				content += '</ul>';
+			}else{
+				content += '<p style="text-align:center;font-style:italic;padding:5px;color:grey;" >aucun terme</p>';		
+			}
+			content += '<style>#thesaurus_list span:hover{font-weight:bold;cursor:pointer;}</style>';
+			toolTipThes(e, content);
+		}
+	});
+
+}
+
+function lauch_thesaurus_list_admin_assoc(e){
+	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_parents&module=thesaurus";
+	var content='<i id="close_thesaurus_tooltips" class="fa fa-times-circle" style="cursor:pointer;position: fixed;top: 0px;left: 0px;font-size: 15px;" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></i>';
+	new Ajax.Request(path_to_script,
+	{
+		method:'post',
+		 onSuccess: function(answer){
+		 	var json = JSON.parse(answer.responseText);
+		 	//console.log(json);
+			//eval("response = "+answer.responseText);
+			if(json){
+				content += '<ul id="thesaurus_list">';
+				for (var i = json.length - 1; i >= 0; i--) {
+					content += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'"><i onclick="getChildThesAdminAssoc(\''+json[i].thesaurus_id+'\',\'0\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i> <span onclick="add_thes_admin_assoc(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span><li>';
+				} 
+				content += '</ul>';
+			}else{
+				content += '<p style="text-align:center;font-style:italic;padding:5px;color:grey;" >aucun terme</p>';		
+			}
+			content += '<style>#thesaurus_list span:hover{font-weight:bold;cursor:pointer;}</style>';
+			toolTipThes(e, content);
+		}
+	});
+
+}
+
+function add_thes(thesaurus_id,thesaurus_name){
+	select = document.getElementById('thesaurus');
+	var opt_array = [];
+	//console.log(select.options.length);
+	if(select.options.length == 0){
+		select.options[select.options.length] = new Option (thesaurus_name, thesaurus_id);
+		select.options[0].id  = 'thesaurus_'+thesaurus_id;
+		select.options[0].selected = true;
+	}else{
+		for (var i=0; i < select.options.length; i++)
+		{
+			if(select.options[i].selected == true){
+				opt_array.push(select.options[i].value);
+			}else{
+				select.removeChild(select.options[i]);
+			}
+			
+		}
+		
+		if(opt_array.indexOf(thesaurus_id) == -1){
+			select.options[select.options.length] = new Option (thesaurus_name, thesaurus_id);
+			select.options[select.options.length-1].selected = true;
+		}
+	}
+    
+	Event.fire($("thesaurus"), "chosen:updated"); 
+	$('return_previsualise_thes').style.display='none';
+}
+
+function add_thes_admin_assoc(thesaurus_id,thesaurus_name){
+	select = document.getElementById('thesaurus_name_associate');
+	var opt_array = [];
+	//console.log(select.options.length);
+	if(select.options.length == 0){
+		select.options[select.options.length] = new Option (thesaurus_name, thesaurus_id);
+		select.options[0].id  = 'thesaurus_'+thesaurus_id;
+		select.options[0].selected = true;
+	}else{
+		for (var i=0; i < select.options.length; i++)
+		{
+			if(select.options[i].selected == true){
+				opt_array.push(select.options[i].value);
+			}else{
+				select.removeChild(select.options[i]);
+			}
+			
+		}
+		
+		if(opt_array.indexOf(thesaurus_id) == -1){
+			select.options[select.options.length] = new Option (thesaurus_name, thesaurus_id);
+			select.options[select.options.length-1].selected = true;
+		}
+	}
+    
+	Event.fire($("thesaurus_name_associate"), "chosen:updated"); 
+	$('return_previsualise_thes').style.display='none';
+}
+
+function add_thes_admin(thesaurus_id,thesaurus_name){
+	document.getElementById('thesaurus_parent_id').value=thesaurus_id;
+	document.getElementById('thesaurus_parent_label').value=thesaurus_name;
+	$('return_previsualise_thes').style.display='none';
+	load_specific_thesaurus(thesaurus_id);
+}
+
+
+
+function getChildThes(thesaurus_id,level) {
+	var indent ='';
+	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_childs&module=thesaurus";
+	if(document.getElementById('dev_list_'+thesaurus_id).className == 'fa fa-plus-square-o'){
+		for (var i = level; i >= 0; i--) {
+			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
+		}
+		level++;
+		new Ajax.Request(path_to_script,
+		{
+			method:'post',
+			parameters:
+			{
+				thesaurus_id : thesaurus_id
+			},
+			 onSuccess: function(answer){
+			 	var json = JSON.parse(answer.responseText);
+			 	//console.log(json);
+			 	if(json){
+			 		document.getElementById('list_'+thesaurus_id+'_span').style.fontWeight = "bold";
+			 		document.getElementById('list_'+thesaurus_id+'_span').style.color = "rgb(22, 173, 235)";
+			 		document.getElementById('dev_list_'+thesaurus_id).style.color = "rgb(22, 173, 235)";
+			 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-minus-square-o';
+					for (var i = json.length - 1; i >= 0; i--) {
+						if(json[i].total != 0){
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i onclick="getChildThes(\''+json[i].thesaurus_id+'\',\''+level+'\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';
+
+						}else{
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';	
+						}
+						//console.log(json[i].thesaurus_name);
+					} 
+				}else{
+					alert('Aucun éléments présent');
+					document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+				}
+				
+			},
+			onLoading: function(answer){
+		 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-spinner fa-spin';
+			
+			},
+		});
+	}else{
+		level--;
+		for (var i = level; i >= 0; i--) {
+			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
+		}
+		level++;
+		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+		//console.log(document.getElementById('list_'+thesaurus_id));
+		document.getElementById('list_'+thesaurus_id).innerHTML = indent+'<i onclick="getChildThes(\''+thesaurus_id+'\',\''+level+'\')" id="dev_list_'+thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes(\''+thesaurus_id+'\',\''+addslashes(document.getElementById('list_'+thesaurus_id).getAttribute("data-value"))+'\')" id="list_'+thesaurus_id+'_span">'+document.getElementById('list_'+thesaurus_id).getAttribute("data-value")+'</span>';
+	}
+	
+
+	
+}
+
+function getChildThesAdmin(thesaurus_id,level) {
+	var indent ='';
+	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_childs&module=thesaurus";
+	if(document.getElementById('dev_list_'+thesaurus_id).className == 'fa fa-plus-square-o'){
+		for (var i = level; i >= 0; i--) {
+			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
+		}
+		level++;
+		new Ajax.Request(path_to_script,
+		{
+			method:'post',
+			parameters:
+			{
+				thesaurus_id : thesaurus_id
+			},
+			 onSuccess: function(answer){
+			 	var json = JSON.parse(answer.responseText);
+			 	//console.log(json);
+			 	if(json){
+			 		document.getElementById('list_'+thesaurus_id+'_span').style.fontWeight = "bold";
+			 		document.getElementById('list_'+thesaurus_id+'_span').style.color = "rgb(22, 173, 235)";
+			 		document.getElementById('dev_list_'+thesaurus_id).style.color = "rgb(22, 173, 235)";
+			 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-minus-square-o';
+					for (var i = json.length - 1; i >= 0; i--) {
+						if(json[i].total != 0){
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i onclick="getChildThesAdmin(\''+json[i].thesaurus_id+'\',\''+level+'\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';
+
+						}else{
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';	
+						}
+						//console.log(json[i].thesaurus_name);
+					} 
+				}else{
+					alert('Aucun éléments présent');
+					document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+				}
+				
+			},
+			onLoading: function(answer){
+		 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-spinner fa-spin';
+			
+			},
+		});
+	}else{
+		level--;
+		for (var i = level; i >= 0; i--) {
+			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
+		}
+		level++;
+		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+		//console.log(document.getElementById('list_'+thesaurus_id));
+		document.getElementById('list_'+thesaurus_id).innerHTML = indent+'<i onclick="getChildThesAdmin(\''+thesaurus_id+'\',\''+level+'\')" id="dev_list_'+thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin(\''+thesaurus_id+'\',\''+addslashes(document.getElementById('list_'+thesaurus_id).getAttribute("data-value"))+'\')" id="list_'+thesaurus_id+'_span">'+document.getElementById('list_'+thesaurus_id).getAttribute("data-value")+'</span>';
+	}
+	
+
+	
+}
+function getChildThesAdminAssoc(thesaurus_id,level) {
+	var indent ='';
+	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_childs&module=thesaurus";
+	if(document.getElementById('dev_list_'+thesaurus_id).className == 'fa fa-plus-square-o'){
+		for (var i = level; i >= 0; i--) {
+			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
+		}
+		level++;
+		new Ajax.Request(path_to_script,
+		{
+			method:'post',
+			parameters:
+			{
+				thesaurus_id : thesaurus_id
+			},
+			 onSuccess: function(answer){
+			 	var json = JSON.parse(answer.responseText);
+			 	//console.log(json);
+			 	if(json){
+			 		document.getElementById('list_'+thesaurus_id+'_span').style.fontWeight = "bold";
+			 		document.getElementById('list_'+thesaurus_id+'_span').style.color = "rgb(22, 173, 235)";
+			 		document.getElementById('dev_list_'+thesaurus_id).style.color = "rgb(22, 173, 235)";
+			 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-minus-square-o';
+					for (var i = json.length - 1; i >= 0; i--) {
+						if(json[i].total != 0){
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i onclick="getChildThesAdminAssoc(\''+json[i].thesaurus_id+'\',\''+level+'\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin_assoc(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';
+
+						}else{
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin_assoc(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';	
+						}
+						//console.log(json[i].thesaurus_name);
+					} 
+				}else{
+					alert('Aucun éléments présent');
+					document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+				}
+				
+			},
+			onLoading: function(answer){
+		 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-spinner fa-spin';
+			
+			},
+		});
+	}else{
+		level--;
+		for (var i = level; i >= 0; i--) {
+			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
+		}
+		level++;
+		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+		//console.log(document.getElementById('list_'+thesaurus_id));
+		document.getElementById('list_'+thesaurus_id).innerHTML = indent+'<i onclick="getChildThesAdminAssoc(\''+thesaurus_id+'\',\''+level+'\')" id="dev_list_'+thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin_assoc(\''+thesaurus_id+'\',\''+addslashes(document.getElementById('list_'+thesaurus_id).getAttribute("data-value"))+'\')" id="list_'+thesaurus_id+'_span">'+document.getElementById('list_'+thesaurus_id).getAttribute("data-value")+'</span>';
+	}
+	
+
+	
+}
+function addslashes(ch) {
+	ch = ch.replace(/\\/g,"\\\\")
+	ch = ch.replace(/\'/g,"\\'")
+	ch = ch.replace(/\"/g,"\\\"")
+	return ch
+}
+
 function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_info&module=thesaurus";
-	var content='<i id="close_thesaurus_tooltips" class="fa fa-times-circle" style="cursor:pointer;position: absolute;top: -1px;right: 0px;font-size: 15px;" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></i>';
+	var content='<i id="close_thesaurus_tooltips" class="fa fa-times-circle" style="cursor:pointer;position: fixed;top: 0px;left: 0px;font-size: 15px;" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></i>';
 	new Ajax.Request(path_to_script,
 	{
 		method:'post',
@@ -11,80 +335,63 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 		 onSuccess: function(answer){
 		 	var json = JSON.parse(answer.responseText);
 		 	console.log(json);
-			//eval("response = "+answer.responseText);
-			if (json.info.thesaurus_parent_id) {
-				content += '<h2 title="terme parent">'+json.info.thesaurus_parent_id+'</h2>';
-			}
-			content += '<ul style="padding-left:20px;">';
-			content += '<li style="list-style-type:initial;">';
-			content += '<fieldset style="border: solid 1px;width:400px;"><legend><b>'+json.info.thesaurus_name+'</b></legend>';
-			if(json.info.thesaurus_description != null){
-				content += '<p style="padding:5px;" title="description">'+json.info.thesaurus_description+'</p>';
 
+			//eval("response = "+answer.responseText);
+			content += '<ul id="thesaurus_list">';
+			if (json.info.thesaurus_parent_id) {
+				level = 2;
+				indent = '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
+				content += '<li title="terme parent" style="font-weight:bold;color:rgb(22, 173, 235)"><i class="fa fa-minus-square-o" aria-hidden="true" style="font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span>'+json.info.thesaurus_parent_id+'</span><li>';
+				content += '<li title="terme" style="font-weight:bold;color:rgb(22, 173, 235)"><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i class="fa fa-minus-square-o" aria-hidden="true" style="font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span>'+json.info.thesaurus_name+'</span><li>';
 			}else{
-				content += '<p style="text-align:center;font-style:italic;padding:5px;color:grey;" title="description">aucune description</p>';		
+				indent = '';
+				level = 1;
+				content += '<li title="terme" style="font-weight:bold;color:rgb(22, 173, 235)">'+indent+'<i class="fa fa-minus-square-o" aria-hidden="true" style="font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span>'+json.info.thesaurus_name+'</span><li>';
+			}
+			if(json.info.thesaurus_description != null){
+				content += '<li style="font-style:italic;text-align:center;padding:10px;white-space:nowrap;" title="description">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <span style="border: 1px dashed;padding: 5px;">'+json.info.thesaurus_description+'</span><li>';
+			}else{
+				content += '<li style="font-style:italic;color:grey;text-align:center;padding:10px;" title="description">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <span style="border: 1px dashed;padding: 5px;">aucune description</span><li>';
 			}
 			if (json.info.used_for) {
-				content += '<p style="text-align: center;font-style: italic;padding: 5px 5px 0px;color: rgb(0, 157, 197);margin-bottom: -10px;font-size: 10px;" title="'+json.info.used_for+'"><u>Utilisé pour</u> : '+json.info.used_for+'</p>';		
+				content += '<li style="text-align: center;font-style: italic;padding: 10px;color: rgb(0, 157, 197);margin-bottom: -10px;font-size: 10px;" title="'+json.info.used_for+'"><u>Utilisé pour</u> : '+json.info.used_for+'</li>';		
 			}
-			content += '<hr/>';
 			if(json.info.thesaurus_name_associate != null){
-				content += '<p style="text-align:center;padding:5px;" title="terme(s) associé(s)">'+json.info.thesaurus_name_associate+'</p>';
+				content += '<li style="font-style:italic;text-align:center;padding:10px;" title="terme(s) associé(s)">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <span style="border: 1px dashed;padding: 5px;">'+json.info.thesaurus_name_associate+'</span><li>';
 
 			}else{
-				content += '<p style="text-align:center;font-style:italic;padding:5px;color:grey;" title="terme(s) associé(s)">aucun terme associé</p>';		
+				content += '<li style="font-style:italic;color:grey;text-align:center;padding:10px;" title="terme(s) associé(s)">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <span style="border: 1px dashed;padding: 5px;">aucun terme associé</span><li>';
 			}
-			content += '<hr/>';
-			content += '<ul title="terme(s) spécique(s) à :  « '+json.info.thesaurus_name+' »" style="margin-top:5px;padding-left:20px;max-height: 200px;overflow: hidden;overflow-y: auto;float:rightwidth:49%;">';
+
 			if(json.info_children){
 				for (var i = json.info_children.length - 1; i >= 0; i--) {
 					if(json.info.thesaurus_name != json.info_children[i]){
-						//console.log(document.getElementById('thesaurus_'+json.info_annexe[i].thesaurus_id));
-						if(document.getElementById('thesaurus_'+json.info_children[i].thesaurus_id+'').selected == true){
-							content += '<li style="list-style-type:initial;cursor:text;color:grey;font-style:italic;text-decoration: line-through;">';
+						if(json.info_children[i].total != 0){
+							content += '<li id="list_'+json.info_children[i].thesaurus_id+'" title="terme(s) spécique(s) à :  « '+json.info.thesaurus_name+' »" data-value="'+json.info_children[i].thesaurus_name+'">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i id="dev_list_'+json.info_children[i].thesaurus_id+'" onclick="getChildThes(\''+json.info_children[i].thesaurus_id+'\',\''+level+'\')" class="fa fa-plus-square-o" aria-hidden="true" style="cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_children[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_children[i].thesaurus_id+'\', \''+addslashes(json.info_children[i].thesaurus_name)+'\');">'+json.info_children[i].thesaurus_name+'</span><li>';
 
 						}else{
-							content += '<li style="list-style-type:initial;cursor:pointer;" >';
+							content += '<li id="list_'+json.info_children[i].thesaurus_id+'" title="terme(s) spécique(s) à :  « '+json.info.thesaurus_name+' »" data-value="'+json.info_children[i].thesaurus_name+'">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i id="dev_list_'+json.info_children[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_children[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_children[i].thesaurus_id+'\', \''+addslashes(json.info_children[i].thesaurus_name)+'\');">'+json.info_children[i].thesaurus_name+'</span><li>';
 						}
-						content += '<a onclick="document.getElementById(\'thesaurus_'+json.info_children[i].thesaurus_id+'\').selected = true;Event.fire($(\'thesaurus\'), \'chosen:updated\');">'+json.info_children[i].thesaurus_name+'</a>';				
-						content += '</li>';
 					}
 				} 
-			}else{
-				content += '<p style="text-align:center;font-style:italic;padding:5px;color:grey;" title="terme(s) spécique(s) à :  « '+json.info.thesaurus_name+' »">aucun terme spécifique</p>';		
 			}
-			
-			content += '</ul>';
-			content += '</fieldset>';
-			content += '</li>';
-			content += '</ul>';
-			content += '<ul title="autre(s) terme(s) lié(s) à :  « '+json.info.thesaurus_parent_id+' »" style="margin-top:5px;padding-left:20px;max-height: 200px;overflow: hidden;overflow-y: auto;">';
+
 			if(json.info_annexe){
 				for (var i = json.info_annexe.length - 1; i >= 0; i--) {
 					if(json.info.thesaurus_name != json.info_annexe[i]){
-						//console.log(document.getElementById('thesaurus_'+json.info_annexe[i].thesaurus_id));
-						if(document.getElementById('thesaurus_'+json.info_annexe[i].thesaurus_id+'').selected == true){
-							content += '<li style="list-style-type:initial;cursor:text;color:grey;font-style:italic;text-decoration: line-through;">';
+						if(json.info_annexe[i].total != 0){
+							content += '<li id="list_'+json.info_annexe[i].thesaurus_id+'" title="autre(s) terme(s) lié(s) à :  « '+json.info.thesaurus_parent_id+' »" data-value="'+json.info_annexe[i].thesaurus_name+'" >'+indent+'<i id="dev_list_'+json.info_annexe[i].thesaurus_id+'" onclick="getChildThes(\''+json.info_annexe[i].thesaurus_id+'\',\'1\')" class="fa fa-plus-square-o" aria-hidden="true" style="cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_annexe[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_annexe[i].thesaurus_id+'\', \''+addslashes(json.info_annexe[i].thesaurus_name)+'\');">'+json.info_annexe[i].thesaurus_name+'</span><li>';
 
 						}else{
-							content += '<li style="list-style-type:initial;cursor:pointer;">';
+							content += '<li id="list_'+json.info_annexe[i].thesaurus_id+'" title="autre(s) terme(s) lié(s) à :  « '+json.info.thesaurus_parent_id+' »" data-value="'+json.info_annexe[i].thesaurus_name+'" >'+indent+'<i id="dev_list_'+json.info_annexe[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_annexe[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_annexe[i].thesaurus_id+'\', \''+addslashes(json.info_annexe[i].thesaurus_name)+'\');">'+json.info_annexe[i].thesaurus_name+'</span><li>';
 						}
-						content += '<a onclick="document.getElementById(\'thesaurus_'+json.info_annexe[i].thesaurus_id+'\').selected = true;Event.fire($(\'thesaurus\'), \'chosen:updated\');">'+json.info_annexe[i].thesaurus_name+'</a>';				
-						content += '</li>';
 					}
 				} 
 			}
-			
+
 			content += '</ul>';
+			content += '<style>#thesaurus_list span:hover{font-weight:bold;cursor:pointer;}</style>';
 			document.getElementById("thesaurus_chosen_"+json.info.thesaurus_id).onclick=function(e){toolTipThes(e, content)}; 
-			//console.log(document.getElementById("thesaurus_chosen_"+json.info.thesaurus_id));
-			//console.log(document.getElementById("thesaurus_chosen_"+json.info.thesaurus_id));
-			/*new Opentip(trigger, content, '', {
-			    target: target,
-			    showOn: 'click',
-			    hideTrigger: 'closeButton',
-			    tipJoint: 'left top',
-			    fixed: true });Opentip.lastZIndex = 1500;*/
 			}
 	});
 
@@ -94,7 +401,7 @@ function load_specific_thesaurus(thesaurus_id) {
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_childs&module=thesaurus";
 	var content='';
 
-	if(document.getElementById('thesaurus_parent_id').selectedOptions[0].value != ""){
+	if(document.getElementById('thesaurus_parent_id').value != ""){
 		new Ajax.Request(path_to_script,
 		{
 			method:'post',
@@ -103,7 +410,7 @@ function load_specific_thesaurus(thesaurus_id) {
 				thesaurus_id : thesaurus_id
 			},
 			 onSuccess: function(answer){
-			 	thesaurus_parent_label=document.getElementById('thesaurus_parent_id').selectedOptions[0].innerHTML.replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/&nbsp;/gi,'');
+			 	thesaurus_parent_label=document.getElementById('thesaurus_parent_label').value;
 
 			 	var json = JSON.parse(answer.responseText);
 				//eval("response = "+answer.responseText);
@@ -135,9 +442,8 @@ function load_specific_thesaurus(thesaurus_id) {
 }
 
 function toolTipThes(e, content){
-    
     var DocRef;
-    console.log(e);
+    //console.log(e);
     if(e){
         mouseX = e.pageX;
         mouseY = e.pageY;
@@ -189,11 +495,13 @@ function toolTipThes(e, content){
         topPosition = scrollY + 10;
     }
     
-    $('return_previsualise_thes').style.top=topPosition-10+'px';
-    $('return_previsualise_thes').style.left=mouseX+'px';
+    $('return_previsualise_thes').style.top='5px';
+    $('return_previsualise_thes').style.left='5px';
     
-    $('return_previsualise_thes').style.maxWidth='600px';
+    //$('return_previsualise_thes').style.maxWidth='600px';
+    $('return_previsualise_thes').style.minWidth='400px';
     $('return_previsualise_thes').style.maxHeight='600px';
     $('return_previsualise_thes').style.display='block';
+    //document.getElementById("thesaurus_chosen").onclick=function(e){$('return_previsualise_thes').style.display='none';};
     
 }

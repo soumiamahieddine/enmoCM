@@ -152,11 +152,11 @@ abstract class thesaurus_Abstract
         $db = new Database();
         $arrayPDO = array($res_id);
         $stmt = $db->query(
-            'SELECT thesaurus.thesaurus_name from thesaurus, thesaurus_res WHERE thesaurus_res.res_id = ? AND thesaurus.thesaurus_id = thesaurus_res.thesaurus_id'
+            'SELECT thesaurus.thesaurus_id,thesaurus.thesaurus_name from thesaurus, thesaurus_res WHERE thesaurus_res.res_id = ? AND thesaurus.thesaurus_id = thesaurus_res.thesaurus_id'
             ,$arrayPDO);
 
         while($thesaurus=$stmt->fetchObject()){
-            $array_thesaurus[]=$thesaurus->thesaurus_name;
+            $array_thesaurus[]=array("LABEL" => $thesaurus->thesaurus_name, "ID" => $thesaurus->thesaurus_id);
         }
         return $array_thesaurus;
     }
@@ -340,7 +340,7 @@ abstract class thesaurus_Abstract
 
         $db = new Database();
         $thesaurus_list=explode('__', $thesaurus_list);
-
+		//var_dump($thesaurus_list);
         $arrayPDO = array($res_id);
         $stmt = $db->query(
         'DELETE FROM thesaurus_res WHERE res_id = ?'
@@ -534,6 +534,19 @@ abstract class thesaurus_Abstract
         }
         
         return false;
+    }
+
+    public function getThesIdByLabel($thesaurus_name){
+        $array = array();
+        
+        $db = new Database();
+        $stmt = $db->query(
+                "SELECT thesaurus_id FROM thesaurus"
+                . " WHERE thesaurus_name LIKE ?"
+        ,array($thesaurus_name));
+        
+        $result = $stmt->fetchObject();
+        return $result->thesaurus_id; 
     }
 
 }

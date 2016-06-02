@@ -31,25 +31,12 @@ $db = new Database();
 
 $arrayPDO = array();
 
-$query = "SELECT thesaurus_name from thesaurus where thesaurus_id = ?";
+$query = "SELECT * from thesaurus where thesaurus_parent_id IS NULL ORDER BY thesaurus_name DESC";
 
-$stmt = $db->query($query, array($_REQUEST['thesaurus_id']));
+$stmt = $db->query($query, array());
 
-$res = $stmt->fetchObject();
-
-if($res->thesaurus_name != ''){
-    $query = "SELECT * from thesaurus where thesaurus_parent_id = ? ORDER BY thesaurus_name DESC";
-
-    $stmt = $db->query($query, array($res->thesaurus_name));
-
-    while($res = $stmt->fetchObject()){
-        $query = "SELECT count(*) as total from thesaurus where thesaurus_parent_id = ?";
-        $stmt2 = $db->query($query, array($res->thesaurus_name));
-        $res2 = $stmt2->fetchObject();
-        $res->total = $res2->total;
-        $result[] = $res;
-    }
+while($res = $stmt->fetchObject()){
+    $result[] = $res;
 }
 
 echo json_encode($result);
-//$_SESSION['is_multi_contact'] = '';

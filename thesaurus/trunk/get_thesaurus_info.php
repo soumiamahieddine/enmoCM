@@ -45,6 +45,10 @@ if($res->thesaurus_parent_id != ''){
     $stmt = $db->query($query, array($res->thesaurus_parent_id));
 
     while($res = $stmt->fetchObject()){
+        $query = "SELECT count(*) as total from thesaurus where thesaurus_parent_id = ?";
+        $stmt2 = $db->query($query, array($res->thesaurus_name));
+        $res2 = $stmt2->fetchObject();
+        $res->total = $res2->total;
         $result['info_annexe'][] = $res;
     }
 }
@@ -54,6 +58,10 @@ $query = "SELECT thesaurus_name,thesaurus_id from thesaurus where thesaurus_pare
     $stmt = $db->query($query, array($_REQUEST['thesaurus_name']));
 
     while($res = $stmt->fetchObject()){
+        $query = "SELECT count(*) as total from thesaurus where thesaurus_parent_id = ?";
+        $stmt2 = $db->query($query, array($res->thesaurus_name));
+        $res2 = $stmt2->fetchObject();
+        $res->total = $res2->total;
         $result['info_children'][] = $res;
     }
 
