@@ -93,14 +93,13 @@ if  (empty($selectedTemplate)) {
 }
 $template_list = array();
 array_push($template_list, 'documents_list_with_attachments');
-if($core_tools->is_module_loaded('cases')) array_push($template_list, 'cases_list');
-        
+if($core_tools->is_module_loaded('cases')) array_push($template_list, 'cases_list');      
 $arrayPDO = array();
 //Request  
     if(!empty($_SESSION['current_basket'])){
-        $tab = $request->PDOselect($select, $where . $where_concat, $arrayPDO, 'order by case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", false, false, true);
+        $tab = $request->PDOselect($select, $where . $where_concat, $arrayPDO, 'order by '. $_SESSION['tablename']['cases'] .'.case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", false, false, true);
     }else{
-        $tab = $request->PDOselect($select, $where . $where_concat, $arrayPDO, 'order by case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+        $tab = $request->PDOselect($select, $where . $where_concat, $arrayPDO, 'order by '. $_SESSION['tablename']['cases'] .'.case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
 
     }
     //$request->show();
