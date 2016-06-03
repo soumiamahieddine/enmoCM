@@ -590,9 +590,6 @@ abstract class visa_Abstract extends Database
 								else
 									$disabled = '';
 
-								if (($circuit['visa']['users'][$seq-1]['process_date'] != '' AND $circuit['visa']['users'][$seq]['process_date'] == '') || ($circuit['visa']['users'][0]['process_date'] == '')){
-									$actual_vis = '<i class="fa fa-caret-right" title="actuel viseur" style="cursor:help;"></i>';
-								}
 								$str .= '<span id="rank_' . $seq . '">'.$actual_vis.' <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) .'</span> </span>';
 								$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
 								$str .= '<option value="" >Sélectionnez un utilisateur</option>';
@@ -705,9 +702,6 @@ abstract class visa_Abstract extends Database
 							else
 								$disabled = '';
 
-							if ($circuit['visa']['users'][$seq-1]['process_date'] != ''){
-								$actual_sign = '<i class="fa fa-caret-right" title="actuel signataire" style="cursor:help;"></i>';
-							}
 							$str .= '<td style="white-space: nowrap;">';
 							$tab_users = $this->getUsersVis();
 							$str .= '<span id="rank_' . $seq . '">'.$actual_sign.' <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) . '</span> </span>';
