@@ -88,7 +88,6 @@ function refreshIcones(id_tableau){
 	var arrayLignes = tableau.rows; //l'array est stocké dans une variable
 	var longueur = arrayLignes.length;//on peut donc appliquer la propriété length
 	var i=1; //on définit un incrémenteur qui représentera la clé
-	
 	while(i<longueur)
 	{
 		var disabledLine = false;
@@ -103,7 +102,6 @@ function refreshIcones(id_tableau){
 		}
 		
 		var num = i-1;
-		
 		if (arrayLignes[i].cells[0].childNodes[1].disabled == true)
 			disabledLine = true;
 		//MAJ id et name
@@ -111,7 +109,9 @@ function refreshIcones(id_tableau){
 		arrayLignes[i].cells[0].childNodes[0].id = "rank_" + num;
 		arrayLignes[i].cells[0].childNodes[1].name = "conseiller_"+num;
 		arrayLignes[i].cells[0].childNodes[1].id="conseiller_"+num;
-		arrayLignes[i].cells[0].childNodes[2].id = "signatory_" + num;
+		if(arrayLignes[i].cells[0].childNodes[2]){
+			arrayLignes[i].cells[0].childNodes[2].id = "signatory_" + num;
+		}
 		arrayLignes[i].cells[1].childNodes[0].name = "down_"+num;
 		arrayLignes[i].cells[1].childNodes[0].id="down_"+num;
 		document.getElementById("down_"+num).setAttribute('onclick','deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2, \''+id_tableau+'\');');
@@ -137,11 +137,14 @@ function refreshIcones(id_tableau){
 			document.getElementById("up_"+num).style.visibility="hidden";
 		
 		if (i != longueur-1){
+			if(arrayLignes[i].cells[0].childNodes[2]){
+				arrayLignes[i].cells[0].childNodes[2].style.visibility = "hidden";
+			}
 			document.getElementById("add_"+num).style.visibility="hidden";
 
 			document.getElementById("isSign_"+num).style.visibility="hidden";
 			document.getElementById("isSign_"+num).checked=false;
-			document.getElementById("signatory_" + num).innerHTML = "";
+			//document.getElementById("signatory_" + num).innerHTML = "";
 
 			document.getElementById("down_"+num).style.visibility="visible";
 		}
@@ -150,7 +153,9 @@ function refreshIcones(id_tableau){
 			
 			document.getElementById("isSign_"+num).style.visibility="hidden";
 			document.getElementById("isSign_"+num).checked=true;
-			document.getElementById("signatory_" + num).innerHTML = " <i title='Signataire' style='color : #fdd16c' class='fa fa-certificate fa-lg fa-fw'></i>";
+			if(document.getElementById("signatory_"+num)){
+				document.getElementById("signatory_"+num).innerHTML = " <i title='Signataire' style='color : #fdd16c' class='fa fa-certificate fa-lg fa-fw'></i>";
+			}
 
 			document.getElementById("down_"+num).style.visibility="hidden";
 
@@ -160,15 +165,24 @@ function refreshIcones(id_tableau){
 		if (disabledLine){
 			document.getElementById("suppr_"+num).style.visibility="hidden";
 			document.getElementById("down_"+num).style.visibility="hidden";
-			document.getElementById("up_"+num).style.visibility="hidden";
+			//document.getElementById("up_"+num).style.visibility="hidden";
 			document.getElementById("isSign_"+num).style.visibility="hidden";
 		}
+
+		/* si la ligne précédente est désactive */
 		if (num > 0) {
-			if (arrayLignes[i-1].cells[0].childNodes[0].disabled == true)
+			if (arrayLignes[i-1].cells[0].childNodes[1].disabled == true){
 				document.getElementById("up_"+num).style.visibility="hidden";
+			}
 		}
 		/*************************************************/
+
+		if (i == longueur-1 && document.getElementById("signatory_"+num)){
+				document.getElementById("signatory_"+num).style.visibility="visible";
+		}
+
 		i++;
+
 	}
 }
 
@@ -191,7 +205,7 @@ function addRow(id_tableau)
 	
 	listOptions=listeDeroulante.innerHTML;
 
-	colonne2.innerHTML += "<span id='rank_" + position + "'></span><select>"+listOptions+"</select><span id='signatory_" + position + "'></span>";
+	colonne2.innerHTML += "<span id='rank_" + position + "'></span><select>"+listOptions+"</select><span id='signatory_" + position + "'><i title=\"Signataire\" style=\"color : #fdd16c;visibility:visible;\" class=\"fa fa-certificate fa-lg fa-fw\"></i></span>";
 	//colonne2.innerHTML += "</select>";
 
 	var colonne3 = ligne.insertCell(1);
@@ -220,6 +234,10 @@ function addRow(id_tableau)
 	var colonne9 = ligne.insertCell(7);
 	colonne9.style.display = 'none';
 	colonne9.innerHTML += "<input type=\"checkbox\" id=\"isSign_"+position+"\" name=\"isSign_"+position+"\"/>";
+
+	var colonne10 = ligne.insertCell(8);
+	//colonne10.style.display = 'none';
+	colonne10.innerHTML += '<i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i>';
 	
 	refreshIcones(id_tableau);
 }
@@ -243,14 +261,17 @@ function deplacerLigne(source, cible, id_tableau)
 	for(var i=0; i<cellules.length; i++)
 	{
 		nouvelle.insertCell(-1).innerHTML += cellules[i].innerHTML;//on copie chaque cellule de l'ancienne à la nouvelle ligne
-		if (i == 5 && cellules[i].childNodes[0].value != ""){
+		/*if (i == 6 && cellules[i].childNodes[0].value != ""){
 			nouvelle.cells[5].childNodes[0].value = cellules[i].childNodes[0].value;
 		}
 		if (i == 0){
 			nouvelle.cells[0].childNodes[1].selectedIndex = cellules[i].childNodes[1].selectedIndex;
 		}
-		if (i > 5)
+		if (i > 6)
+			nouvelle.cells[i].style.display = 'none';*/
+		if (i == 7 || i == 6){
 			nouvelle.cells[i].style.display = 'none';
+		}
 	}
 
 	//on supprimer l'ancienne ligne
