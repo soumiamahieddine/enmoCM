@@ -925,6 +925,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //DIFFUSION FRAME
     if ($core_tools->is_module_loaded('entities')) {
         $category = $data['category_id']['value'];
+        if($core->test_service('add_copy_in_indexing_validation', 'entities', false)){
+            $onlyCC = '&only_cc';
+        }
 
         $frm_str .= '<div id="diff_list_div" style="display:none;" onmouseover="this.style.cursor=\'pointer\';">';
             $frm_str .= '<div class="block" style="margin-top:-2px;">';
@@ -935,7 +938,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<div style="text-align:center;"><input type="button" class="button" title="'._UPDATE_LIST_DIFF.'" value="'._UPDATE_LIST_DIFF.'" onclick="window.open(\''
                         . $_SESSION['config']['businessappurl']
                         . 'index.php?display=true&module=entities&cat='.$category.'&page=manage_listinstance'
-                        . '&origin=process&only_cc\', \'\', \'scrollbars=yes,menubar=no,'
+                        . '&origin=process'.$onlyCC.'\', \'\', \'scrollbars=yes,menubar=no,'
                         . 'toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" /></div>';    
                 }
                 # Get content from buffer of difflist_display 
