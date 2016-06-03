@@ -186,7 +186,7 @@ if ($mode == 'list') {
                         . 'class_modules_tools.php';
             $thesaurus = new thesaurus();
 
-            $thesaurus_name_associate = explode(',', $_SESSION['m_admin']['thesaurus']['thesaurus_name_associate']);
+            $thesaurus_name_associate = explode('/', $_SESSION['m_admin']['thesaurus']['thesaurus_name_associate']);
 
             ?>
             <select multiple="multiple" id="thesaurus_name_associate" name="thesaurus_name_associate[]" data-placeholder=" ">
