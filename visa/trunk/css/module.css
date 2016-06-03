@@ -105,3 +105,7 @@
 .listDocsBasket li{
 	padding:5px;
 }
+
+#tab_visaSetWorkflow td{
+	white-space: pre;
+}
