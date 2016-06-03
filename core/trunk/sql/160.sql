@@ -1,11 +1,10 @@
 -- *************************************************************************--
 --                                                                          --
 --                                                                          --
---        THIS SCRIPT IS USE TO PASS FROM MAARCH 1.4 TO MAARCH 1.6          --
+--        THIS SCRIPT IS USE TO PASS FROM MAARCH 1.5.1 TO MAARCH 1.6        --
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
-
 
 -- ************************************************************************* --
 --                               ALL VIEWS DROP                              --
@@ -18,134 +17,12 @@ DROP VIEW IF EXISTS res_view;
 DROP VIEW IF EXISTS view_contacts;
 DROP VIEW IF EXISTS res_view_attachments;
 
--- ************************************************************************* --
---                               MULTICONTACTS                               --
--- ************************************************************************* --
-
--- multicontacts
-DROP TABLE IF EXISTS contacts_res;
-CREATE TABLE contacts_res
-(
-  coll_id character varying(32) NOT NULL,
-  res_id bigint NOT NULL,
-  contact_id character varying(128) NOT NULL,
-  address_id bigint NOT NULL,
-  mode character varying NOT NULL DEFAULT 'multi'::character varying
-);
 
 -- ************************************************************************* --
---                          NEW CONTACTS MANAGEMENTS                         --
+--                      NEW TABLE FOR SIGNATURE TEMPLATE                     --
 -- ************************************************************************* --
-
--- Contact types
-DROP TABLE IF EXISTS contact_types;
-DROP SEQUENCE IF EXISTS contact_types_id_seq;
-
-CREATE SEQUENCE contact_types_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 100
-  CACHE 1;
-
-CREATE TABLE contact_types 
-(
-    id bigint NOT NULL DEFAULT nextval('contact_types_id_seq'::regclass),
-    label character varying(255) NOT NULL,
-    can_add_contact character varying(1) NOT NULL DEFAULT 'Y'::character varying,
-    contact_target character varying(50),
-    CONSTRAINT contact_types_pkey PRIMARY KEY  (id)
-) WITH (OIDS=FALSE);
-
--- Contacts v2
-DROP TABLE IF EXISTS contacts_v2;
-DROP SEQUENCE IF EXISTS contact_v2_id_seq;
-
-CREATE SEQUENCE contact_v2_id_seq
-  INCREMENT 1
-  MINVALUE 14
-  MAXVALUE 9223372036854775807
-  START 200
-  CACHE 1;
-
-CREATE TABLE contacts_v2 
-(
-    contact_id bigint NOT NULL DEFAULT nextval('contact_v2_id_seq'::regclass),
-    contact_type bigint NOT NULL,
-    is_corporate_person character(1) DEFAULT 'Y'::bpchar,
-    society character varying(255),
-    society_short character varying(32),
-    firstname character varying(255),
-    lastname character varying(255),
-    title character varying(255),
-    function character varying(255),
-    other_data character varying(255),
-    user_id character varying(255) NOT NULL,
-    entity_id character varying(32) NOT NULL,
-    creation_date timestamp without time zone NOT NULL,
-    update_date timestamp without time zone,
-    enabled character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
-    CONSTRAINT contacts_v2_pkey PRIMARY KEY  (contact_id)
-) WITH (OIDS=FALSE);
-
--- Contact purposes
-DROP TABLE IF EXISTS contact_purposes;
-DROP SEQUENCE IF EXISTS contact_purposes_id_seq;
-
-CREATE SEQUENCE contact_purposes_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 100
-  CACHE 1;
-
-CREATE TABLE contact_purposes 
-(
-    id bigint NOT NULL DEFAULT nextval('contact_purposes_id_seq'::regclass),
-    label character varying(255) NOT NULL,
-    CONSTRAINT contact_purposes_pkey PRIMARY KEY  (id)
-) WITH (OIDS=FALSE);
-
--- Contact addresses
-DROP TABLE IF EXISTS contact_addresses;
-DROP SEQUENCE IF EXISTS contact_addresses_id_seq;
-
-CREATE SEQUENCE contact_addresses_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 100
-  CACHE 1;
-
-CREATE TABLE contact_addresses 
-(
-    id bigint NOT NULL DEFAULT nextval('contact_addresses_id_seq'::regclass),
-    contact_id bigint NOT NULL,
-    contact_purpose_id bigint DEFAULT 1,
-    departement character varying(255),
-    firstname character varying(255),
-    lastname character varying(255),
-    title character varying(255),
-    function character varying(255),
-    occupancy character varying(1024),
-    address_num character varying(32)  ,
-    address_street character varying(255),
-    address_complement character varying(255),
-    address_town character varying(255),
-    address_postal_code character varying(255),
-    address_country character varying(255),
-    phone character varying(20),
-    email character varying(255),
-    website character varying(255),
-    salutation_header character varying(255),
-    salutation_footer character varying(255),
-    other_data character varying(255),
-    user_id character varying(255) NOT NULL,
-    entity_id character varying(32) NOT NULL,
-    is_private character(1) NOT NULL DEFAULT 'N'::bpchar,
-    enabled character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
-    CONSTRAINT contact_addresses_pkey PRIMARY KEY  (id)
-) WITH (OIDS=FALSE);
+DROP TABLE IF EXISTS users_email_signatures;
+DROP SEQUENCE IF EXISTS email_signatures_id_seq;
 
 CREATE SEQUENCE email_signatures_id_seq
   INCREMENT 1
@@ -166,400 +43,10 @@ WITH (
   OIDS=FALSE
 );
 
--- ************************************************************************* --
---                               ACTIONS IN RELATION WITH CATEGORIES         --
--- ************************************************************************* --
-
-
--- actions / category
-ALTER TABLE actions DROP COLUMN IF EXISTS category_id; 
---ALTER TABLE actions ADD category_id character varying(255);
-
-DROP TABLE IF EXISTS actions_categories;
-CREATE TABLE actions_categories
-(
-  action_id bigint NOT NULL,
-  category_id character varying(255) NOT NULL,
-  CONSTRAINT actions_categories_pkey PRIMARY KEY (action_id,category_id)
-);
 
 -- ************************************************************************* --
---                  RELATION BETWEEN USERS AND BASKETS OF SECONDARY PROFILES --
+--                          NEW TABLE FOR FULL TEXT PJ                       --
 -- ************************************************************************* --
-
-DROP TABLE IF EXISTS user_baskets_secondary;
-DROP SEQUENCE IF EXISTS user_baskets_secondary_seq;
-CREATE SEQUENCE user_baskets_secondary_seq
-INCREMENT 1
-MINVALUE 1
-MAXVALUE 9223372036854775807
-START 1
-CACHE 1;
-
-CREATE TABLE user_baskets_secondary
-(
-  system_id bigint NOT NULL DEFAULT nextval('user_baskets_secondary_seq'::regclass),
-  user_id character varying(128) NOT NULL,
-  group_id character varying(32) NOT NULL,
-  basket_id character varying(32) NOT NULL,
-  CONSTRAINT user_baskets_secondary_pkey PRIMARY KEY (system_id)
-);
-
--- ************************************************************************* --
---                                VIEWED MAIL                                --
--- ************************************************************************* --
-
-DROP TABLE IF EXISTS res_mark_as_read;
-CREATE TABLE res_mark_as_read
-(
-  coll_id character varying(32),
-  res_id bigint,
-  user_id character varying(32),
-  basket_id character varying(32)
-);
-
--- ************************************************************************* --
---                               NEW COLUMNS IN EXTENSIONS TABLE             --
--- ************************************************************************* --
-
-ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS address_id;
-ALTER TABLE mlb_coll_ext ADD address_id bigint;
-
-ALTER TABLE business_coll_ext DROP COLUMN IF EXISTS address_id;
-ALTER TABLE business_coll_ext ADD address_id bigint;
-
-
--- ************************************************************************* --
---                               NEW COLUMNS INTO TABLES                     --
--- ************************************************************************* --
-
-ALTER TABLE templates DROP COLUMN IF EXISTS template_target; 
-ALTER TABLE templates ADD template_target character varying(255);
-
-ALTER TABLE entities DROP COLUMN IF EXISTS entity_path;
-ALTER TABLE entities ADD entity_path character varying(2048);
-
-ALTER TABLE entities DROP COLUMN IF EXISTS ldap_id;
-ALTER TABLE entities ADD ldap_id character varying(255);
-
-ALTER TABLE baskets DROP COLUMN IF EXISTS basket_order;
-ALTER TABLE baskets ADD basket_order integer;
-
-ALTER TABLE baskets DROP COLUMN IF EXISTS except_notif;
-ALTER TABLE baskets ADD COLUMN except_notif text default NULL;
-
-ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS is_multicontacts; 
-ALTER TABLE mlb_coll_ext ADD is_multicontacts character(1);
-
-ALTER TABLE res_x DROP COLUMN IF EXISTS reference_number; 
-ALTER TABLE res_x ADD reference_number character varying(255) DEFAULT NULL::character varying;
-
-ALTER TABLE res_x DROP COLUMN IF EXISTS locker_user_id; 
-ALTER TABLE res_x ADD locker_user_id character varying(255) DEFAULT NULL::character varying;
-
-ALTER TABLE res_x DROP COLUMN IF EXISTS locker_time; 
-ALTER TABLE res_x ADD locker_time timestamp without time zone;
-
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS reference_number; 
-ALTER TABLE res_letterbox ADD reference_number character varying(255) DEFAULT NULL::character varying;
-
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS locker_user_id; 
-ALTER TABLE res_letterbox ADD locker_user_id character varying(255) DEFAULT NULL::character varying;
-
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS locker_time; 
-ALTER TABLE res_letterbox ADD locker_time timestamp without time zone;
-
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS modification_date;
-ALTER TABLE res_letterbox ADD modification_date timestamp without time zone DEFAULT NOW();
-
-ALTER TABLE res_business DROP COLUMN IF EXISTS reference_number; 
-ALTER TABLE res_business ADD reference_number character varying(255) DEFAULT NULL::character varying;
-
-ALTER TABLE res_business DROP COLUMN IF EXISTS locker_user_id; 
-ALTER TABLE res_business ADD locker_user_id character varying(255) DEFAULT NULL::character varying;
-
-ALTER TABLE res_business DROP COLUMN IF EXISTS locker_time; 
-ALTER TABLE res_business ADD locker_time timestamp without time zone;
-
-ALTER TABLE lc_stack DROP COLUMN IF EXISTS work_batch;
-ALTER TABLE lc_stack ADD COLUMN work_batch bigint;
-
-ALTER TABLE lc_stack DROP COLUMN IF EXISTS regex;
-ALTER TABLE lc_stack ADD COLUMN regex character varying(32);
-
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS confidentiality; 
-ALTER TABLE res_letterbox ADD confidentiality character(1);
-
-ALTER TABLE listinstance DROP COLUMN IF EXISTS process_comment;
-ALTER TABLE listinstance ADD process_comment character varying(255);
-
-ALTER TABLE listinstance DROP COLUMN IF EXISTS process_date;
-ALTER TABLE listinstance ADD process_date timestamp without time zone;
-
-ALTER TABLE listmodels DROP COLUMN IF EXISTS title;
-ALTER TABLE listmodels ADD COLUMN title varchar(255);
-
-ALTER TABLE sendmail DROP COLUMN IF EXISTS sender_email;
-ALTER TABLE sendmail ADD COLUMN sender_email varchar(255);
-
--- ALTER TABLE listmodels DROP COLUMN IF EXISTS description;
--- ALTER TABLE listmodels ADD COLUMN description varchar(255);
-
-ALTER TABLE listmodels DROP COLUMN IF EXISTS process_comment;
-ALTER TABLE listmodels ADD COLUMN process_comment varchar(255);
-
-DROP TABLE IF EXISTS listinstance_history;
-DROP SEQUENCE IF EXISTS listinstance_history_id_seq;
-CREATE SEQUENCE listinstance_history_id_seq
-INCREMENT 1
-MINVALUE 1
-MAXVALUE 9223372036854775807
-START 1
-CACHE 1;
-
-CREATE TABLE listinstance_history
-(
-listinstance_history_id bigint NOT NULL DEFAULT nextval('listinstance_history_id_seq'::regclass),
-coll_id character varying(50) NOT NULL,
-res_id bigint NOT NULL,
-updated_by_user character varying(128) NOT NULL,
-updated_date timestamp without time zone NOT NULL,
-CONSTRAINT listinstance_history_pkey PRIMARY KEY (listinstance_history_id)
-)
-WITH ( OIDS=FALSE );
-
-DROP TABLE IF EXISTS listinstance_history_details;
-DROP SEQUENCE IF EXISTS listinstance_history_details_id_seq;
-CREATE SEQUENCE listinstance_history_details_id_seq
-INCREMENT 1
-MINVALUE 1
-MAXVALUE 9223372036854775807
-START 1
-CACHE 1;
-
-CREATE TABLE listinstance_history_details
-(
-listinstance_history_details_id bigint NOT NULL DEFAULT nextval('listinstance_history_details_id_seq'::regclass),
-listinstance_history_id bigint NOT NULL,
-coll_id character varying(50) NOT NULL,
-res_id bigint NOT NULL,
-listinstance_type character varying(50) DEFAULT 'DOC'::character varying,
-sequence bigint NOT NULL,
-item_id character varying(128) NOT NULL,
-item_type character varying(255) NOT NULL,
-item_mode character varying(50) NOT NULL,
-added_by_user character varying(128) NOT NULL,
-added_by_entity character varying(50) NOT NULL,
-visible character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
-viewed bigint,
-difflist_type character varying(50),
-process_date timestamp without time zone,
-process_comment character varying(255),
-CONSTRAINT listinstance_history_details_pkey PRIMARY KEY (listinstance_history_details_id)
-) WITH ( OIDS=FALSE );
-
- -- nouvelle gestion des pj
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS attachment_type; 
-ALTER TABLE res_attachments ADD attachment_type character varying(255) DEFAULT NULL::character varying;
-
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS dest_contact_id; 
-ALTER TABLE res_attachments ADD dest_contact_id bigint;
-
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS dest_address_id; 
-ALTER TABLE res_attachments ADD dest_address_id bigint;
-
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS updated_by; 
-ALTER TABLE res_attachments ADD updated_by character varying(128) DEFAULT NULL::character varying;
-
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multicontacts; 
-ALTER TABLE res_attachments ADD is_multicontacts character(1);
-
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multi_docservers; 
-ALTER TABLE res_attachments ADD is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar;
-
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS effective_date;
-ALTER TABLE res_attachments ADD effective_date timestamp without time zone;
-
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS effective_date;
-ALTER TABLE res_version_attachments ADD effective_date timestamp without time zone;
-
-ALTER TABLE templates DROP COLUMN IF EXISTS template_attachment_type; 
-ALTER TABLE templates ADD template_attachment_type character varying(255) DEFAULT NULL::character varying;
-
-ALTER TABLE users DROP COLUMN IF EXISTS thumbprint;
-ALTER TABLE users ADD thumbprint text;
-
-ALTER TABLE users DROP COLUMN IF EXISTS signature_path;
-ALTER TABLE users ADD signature_path character varying(255) DEFAULT NULL::character varying;
-
-ALTER TABLE users DROP COLUMN IF EXISTS signature_file_name;
-ALTER TABLE users ADD signature_file_name character varying(255) DEFAULT NULL::character varying;
-
-ALTER TABLE users DROP COLUMN IF EXISTS initials;
-ALTER TABLE users ADD COLUMN initials character varying(32);
-
-DELETE FROM status WHERE id = 'A_TRA';
-INSERT INTO status (id, label_status, is_system) VALUES ('A_TRA', 'A traiter', 'N');
-
-DELETE FROM status WHERE id = 'TRA';
-INSERT INTO status (id, label_status, is_system) VALUES ('TRA', 'Traité', 'N');
-
-DELETE FROM status WHERE id = 'OBS';
-INSERT INTO status (id, label_status, is_system) VALUES ('OBS', 'Obsolète', 'N');
-
-UPDATE status SET img_filename = 'fm-letter-status-inprogress' WHERE id = 'COU'; 
-UPDATE status SET img_filename = 'fm-letter-del' WHERE id = 'DEL'; 
-UPDATE status SET img_filename = 'fm-letter-status-end' WHERE id = 'END'; 
-UPDATE status SET img_filename = 'fm-letter-status-new' WHERE id = 'NEW'; 
-UPDATE status SET img_filename = 'fm-letter-status-rejected' WHERE id = 'RET'; 
-UPDATE status SET img_filename = 'fm-file-fingerprint' WHERE id = 'SIG'; 
-UPDATE status SET img_filename = 'fm-letter-status-rejected' WHERE id = 'UNS'; 
-UPDATE status SET img_filename = 'fm-letter-status-aval' WHERE id = 'VAL'; 
-UPDATE status SET img_filename = 'fm-letter-status-attr' WHERE id = 'INIT'; 
-UPDATE status SET img_filename = 'fm-letter-status-aval' WHERE id = 'VIS';
-
--- tumbnails
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_path;
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_filename;
-ALTER TABLE res_letterbox ADD tnl_path character varying(255) DEFAULT NULL::character varying;
-ALTER TABLE res_letterbox ADD tnl_filename character varying(255) DEFAULT NULL::character varying;
-ALTER TABLE res_business DROP COLUMN IF EXISTS tnl_path;
-ALTER TABLE res_business DROP COLUMN IF EXISTS tnl_filename;
-ALTER TABLE res_business ADD tnl_path character varying(255) DEFAULT NULL::character varying;
-ALTER TABLE res_business ADD tnl_filename character varying(255) DEFAULT NULL::character varying;
-ALTER TABLE res_x DROP COLUMN IF EXISTS tnl_path;
-ALTER TABLE res_x DROP COLUMN IF EXISTS tnl_filename;
-ALTER TABLE res_x ADD tnl_path character varying(255) DEFAULT NULL::character varying;
-ALTER TABLE res_x ADD tnl_filename character varying(255) DEFAULT NULL::character varying;
-
-DROP TABLE IF EXISTS res_version_attachments;
-DROP SEQUENCE IF EXISTS res_id_version_attachments_seq;
-
-CREATE SEQUENCE res_id_version_attachments_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 100
-  CACHE 1;
-
-CREATE TABLE res_version_attachments
-(
-  res_id bigint NOT NULL DEFAULT nextval('res_id_version_attachments_seq'::regclass),
-  title character varying(255) DEFAULT NULL::character varying,
-  subject text,
-  description text,
-  publisher character varying(255) DEFAULT NULL::character varying,
-  contributor character varying(255) DEFAULT NULL::character varying,
-  type_id bigint NOT NULL,
-  format character varying(50) NOT NULL,
-  typist character varying(128) NOT NULL,
-  creation_date timestamp without time zone NOT NULL,
-  fulltext_result character varying(10) DEFAULT NULL::character varying,
-  ocr_result character varying(10) DEFAULT NULL::character varying,
-  converter_result character varying(10) DEFAULT NULL::character varying,
-  author character varying(255) DEFAULT NULL::character varying,
-  author_name text,
-  identifier character varying(255) DEFAULT NULL::character varying,
-  source character varying(255) DEFAULT NULL::character varying,
-  doc_language character varying(50) DEFAULT NULL::character varying,
-  relation bigint,
-  coverage character varying(255) DEFAULT NULL::character varying,
-  doc_date timestamp without time zone,
-  docserver_id character varying(32) NOT NULL,
-  folders_system_id bigint,
-  arbox_id character varying(32) DEFAULT NULL::character varying,
-  path character varying(255) DEFAULT NULL::character varying,
-  filename character varying(255) DEFAULT NULL::character varying,
-  offset_doc character varying(255) DEFAULT NULL::character varying,
-  logical_adr character varying(255) DEFAULT NULL::character varying,
-  fingerprint character varying(255) DEFAULT NULL::character varying,
-  filesize bigint,
-  is_paper character(1) DEFAULT NULL::bpchar,
-  page_count integer,
-  scan_date timestamp without time zone,
-  scan_user character varying(50) DEFAULT NULL::character varying,
-  scan_location character varying(255) DEFAULT NULL::character varying,
-  scan_wkstation character varying(255) DEFAULT NULL::character varying,
-  scan_batch character varying(50) DEFAULT NULL::character varying,
-  burn_batch character varying(50) DEFAULT NULL::character varying,
-  scan_postmark character varying(50) DEFAULT NULL::character varying,
-  envelop_id bigint,
-  status character varying(10) NOT NULL,
-  destination character varying(50) DEFAULT NULL::character varying,
-  approver character varying(50) DEFAULT NULL::character varying,
-  validation_date timestamp without time zone,
-  work_batch bigint,
-  origin character varying(50) DEFAULT NULL::character varying,
-  is_ingoing character(1) DEFAULT NULL::bpchar,
-  priority smallint,
-  arbatch_id bigint,
-  policy_id character varying(32),
-  cycle_id character varying(32),
-  is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
-  is_frozen character(1) NOT NULL DEFAULT 'N'::bpchar,
-  custom_t1 text,
-  custom_n1 bigint,
-  custom_f1 numeric,
-  custom_d1 timestamp without time zone,
-  custom_t2 character varying(255) DEFAULT NULL::character varying,
-  custom_n2 bigint,
-  custom_f2 numeric,
-  custom_d2 timestamp without time zone,
-  custom_t3 character varying(255) DEFAULT NULL::character varying,
-  custom_n3 bigint,
-  custom_f3 numeric,
-  custom_d3 timestamp without time zone,
-  custom_t4 character varying(255) DEFAULT NULL::character varying,
-  custom_n4 bigint,
-  custom_f4 numeric,
-  custom_d4 timestamp without time zone,
-  custom_t5 character varying(255) DEFAULT NULL::character varying,
-  custom_n5 bigint,
-  custom_f5 numeric,
-  custom_d5 timestamp without time zone,
-  custom_t6 character varying(255) DEFAULT NULL::character varying,
-  custom_d6 timestamp without time zone,
-  custom_t7 character varying(255) DEFAULT NULL::character varying,
-  custom_d7 timestamp without time zone,
-  custom_t8 character varying(255) DEFAULT NULL::character varying,
-  custom_d8 timestamp without time zone,
-  custom_t9 character varying(255) DEFAULT NULL::character varying,
-  custom_d9 timestamp without time zone,
-  custom_t10 character varying(255) DEFAULT NULL::character varying,
-  custom_d10 timestamp without time zone,
-  custom_t11 character varying(255) DEFAULT NULL::character varying,
-  custom_t12 character varying(255) DEFAULT NULL::character varying,
-  custom_t13 character varying(255) DEFAULT NULL::character varying,
-  custom_t14 character varying(255) DEFAULT NULL::character varying,
-  custom_t15 character varying(255) DEFAULT NULL::character varying,
-  tablename character varying(32) DEFAULT 'res_version_attachments'::character varying,
-  initiator character varying(50) DEFAULT NULL::character varying,
-  dest_user character varying(128) DEFAULT NULL::character varying,
-  video_batch integer,
-  video_time integer,
-  video_user character varying(128) DEFAULT NULL::character varying,
-  video_date timestamp without time zone,
-  cycle_date timestamp without time zone,
-  coll_id character varying(32) NOT NULL,
-  attachment_type character varying(255) DEFAULT NULL::character varying,
-  dest_contact_id bigint,
-  dest_address_id bigint,
-  updated_by character varying(128) DEFAULT NULL::character varying,
-  is_multicontacts character(1),
-  res_id_master bigint,
-  attachment_id_master bigint,
-  CONSTRAINT res_version_attachments_pkey PRIMARY KEY (res_id)
-)
-WITH (
-  OIDS=FALSE
-);
-
-
--- baskets notifications
-ALTER TABLE baskets DROP COLUMN IF EXISTS flag_notif;
-ALTER TABLE baskets ADD flag_notif character varying(1);
-
--- Full Text
 DROP TABLE IF EXISTS adr_attachments;
 CREATE TABLE adr_attachments
 (
@@ -575,9 +62,87 @@ CREATE TABLE adr_attachments
 )
 WITH (OIDS=FALSE);
 
+
 -- ************************************************************************* --
---                               RECREATE VIEWS                              --
+--                       NEW TABLE FOR THESAURUS MODULE                      --
 -- ************************************************************************* --
+DROP TABLE IF EXISTS thesaurus;
+DROP TABLE IF EXISTS thesaurus_res;
+DROP SEQUENCE IF EXISTS thesaurus_id_seq;
+
+CREATE SEQUENCE thesaurus_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE thesaurus
+(
+  thesaurus_id bigint NOT NULL DEFAULT nextval('thesaurus_id_seq'::regclass),
+  thesaurus_name character varying(255) NOT NULL,
+  thesaurus_description text,
+  thesaurus_name_associate character varying(255),
+  thesaurus_parent_id character varying(255),
+  creation_date timestamp without time zone,
+  used_for text,
+  CONSTRAINT thesaurus_pkey PRIMARY KEY (thesaurus_id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE thesaurus_res
+(
+  res_id bigint NOT NULL,
+  thesaurus_id bigint NOT NULL
+)
+WITH (
+  OIDS=FALSE
+);
+
+
+-- ************************************************************************* --
+--                          NEW COLUMNS FOR NOTIFICATION                     --
+-- ************************************************************************* --
+
+ALTER TABLE baskets DROP COLUMN IF EXISTS except_notif;
+ALTER TABLE baskets ADD COLUMN except_notif text default NULL;
+
+ALTER TABLE baskets DROP COLUMN IF EXISTS flag_notif;
+ALTER TABLE baskets ADD flag_notif character varying(1);
+
+
+-- ************************************************************************* --
+--                          NEW COLUMNS FOR MODIFICATION                     --
+-- ************************************************************************* --
+
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS modification_date;
+ALTER TABLE res_letterbox ADD modification_date timestamp without time zone DEFAULT NOW();
+
+
+-- ************************************************************************* --
+--                     NEW COLUMNS FOR FULL AVIS MODULE                       --
+-- ************************************************************************* --
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS recommendation_limit_date;
+ALTER TABLE mlb_coll_ext ADD COLUMN recommendation_limit_date timestamp without time zone default NULL;
+
+
+-- ************************************************************************* --
+--                           NEW COLUMNS FOR PJ                              --
+-- ************************************************************************* --
+
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS effective_date;
+ALTER TABLE res_attachments ADD effective_date timestamp without time zone;
+
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS effective_date;
+ALTER TABLE res_version_attachments ADD effective_date timestamp without time zone;
+
+
+-- ************************************************************************* --
+--                      CHANGE COLUMNS TYPE FOR NOTE                         --
+-- ************************************************************************* --
+ALTER TABLE notes ALTER COLUMN date_note TYPE timestamp without time zone;
 
 
 -- view for letterbox
@@ -637,7 +202,7 @@ CREATE VIEW res_view_letterbox AS
     mlb.process_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date,
     mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, mlb.is_multicontacts, r.video_user, r.video_time,
     r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes,
-	r.locker_user_id, r.locker_time,
+	  r.locker_user_id, r.locker_time,
     ca.case_id, ca.case_label, ca.case_description, en.entity_label, en.entity_type AS entityType,
     cont.contact_id AS contact_id,
     cont.firstname AS contact_firstname, cont.lastname AS contact_lastname,
@@ -719,7 +284,7 @@ CREATE VIEW res_view_business AS
     f.parent_id AS fold_parent_id, f.folder_level, f.folder_name,
     f.creation_date AS fold_creation_date, r.initiator, r.destination,
     r.dest_user, busi.category_id, busi.contact_id, busi.address_id, busi.currency,
-	r.locker_user_id, r.locker_time,	
+	  r.locker_user_id, r.locker_time,	
     busi.net_sum, busi.tax_sum, busi.total_sum, 
     busi.process_limit_date, busi.closing_date, busi.alarm1_date, busi.alarm2_date,
     busi.flag_notif, busi.flag_alarm1, busi.flag_alarm2, r.video_user, r.video_time,
@@ -741,7 +306,7 @@ CREATE VIEW res_view_business AS
     AND d.doctypes_first_level_id = dfl.doctypes_first_level_id
     AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
 
-
+--view for res_view
 CREATE VIEW res_view AS
  SELECT r.tablename, r.is_multi_docservers, r.res_id, r.title, r.subject, r.page_count, r.identifier, r.doc_date, r.type_id,
  d.description AS type_label, d.doctypes_first_level_id, dfl.doctypes_first_level_label, dfl.css_style as doctype_first_level_style,
@@ -818,92 +383,4 @@ CREATE VIEW res_view_attachments AS
 -- ************************************************************************* --
 --                               DATABASE VERSION                            --
 -- ************************************************************************* --
-
-
-
-UPDATE parameters SET param_value_int = 151 where id='database_version';
-
-
-
--- ************************************************************************* --
---                               DATA MIGRATION                              --
--- ************************************************************************* --
-
--- confidentiality
-UPDATE res_letterbox SET confidentiality = 'N';
-
--- contacts_v2
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short,firstname,lastname,title,function,other_data,user_id,entity_id,creation_date,update_date,enabled)
-SELECT contact_id, '1', is_corporate_person, society, '', firstname, lastname, title,function, other_data,'superadmin','',CURRENT_DATE,CURRENT_DATE,enabled FROM contacts;
-
-INSERT INTO contact_addresses (contact_id, contact_purpose_id, departement,firstname,lastname,title,function,occupancy,address_num,address_street, address_complement, address_town, address_postal_code,address_country,phone,email,website,salutation_header,salutation_footer,other_data,user_id,entity_id,is_private, enabled)
-SELECT contact_id,'1','','','','','','',address_num,address_street,address_complement,address_town,address_postal_code,address_country,phone,email,'','','','','superadmin','',is_private,enabled from contacts;
-
-INSERT INTO contact_purposes (id,label) VALUES ('1','Adresse Principale');
-
-INSERT INTO contact_types (id,label,can_add_contact,contact_target) VALUES ('1','Courriers', 'Y', 'both');
-
-UPDATE mlb_coll_ext m SET address_id = adr.id FROM contact_addresses adr WHERE m.exp_contact_id = adr.contact_id OR m.dest_contact_id = adr.contact_id;
-
--- attachments
-UPDATE res_attachments SET relation = 1, attachment_type='response_project';
-
-
--- templates
-UPDATE templates SET template_target = 'attachments', template_attachment_type = 'response_project';
-
-UPDATE templates SET template_target = 'notifications', template_attachment_type = NULL WHERE lower(template_label) LIKE '%notification%';
-
--- listmodels
-UPDATE listmodels SET title=description, description='';
-
--- passwords SHA512
-UPDATE users SET password = '65d1d802c2c5e7e9035c5cef3cfc0902b6d0b591bfa85977055290736bbfcdd7e19cb7cfc9f980d0c815bbf7fe329a4efd8da880515ba520b22c0aa3a96514cc', change_password = 'Y' WHERE user_id != 'superadmin';
-UPDATE users SET password = '964a5502faec7a27f63ab5f7bddbe1bd8a685616a90ffcba633b5ad404569bd8fed4693cc00474a4881f636f3831a3e5a36bda049c568a89cfe54b1285b0c13e' WHERE user_id = 'superadmin';
-
--- Docservers for thumbnails
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('TNL', 'Thumbnails', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TNL', 'TNL', 'Server for thumbnails of documents', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_mlb/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'letterbox_coll', 11, 'NANTERRE', 3);
-
---Add service associate_folder by default
-INSERT INTO usergroups_services(group_id,service_id)
-SELECT group_id,'associate_folder' from usergroups;
-
-
--- Add limit date avis column 
-ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS recommendation_limit_date;
-ALTER TABLE mlb_coll_ext ADD COLUMN recommendation_limit_date timestamp without time zone default NULL;
-
--- Change date_note type
-ALTER TABLE notes ALTER COLUMN date_note TYPE timestamp without time zone;
-
-CREATE SEQUENCE thesaurus_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-
-CREATE TABLE thesaurus
-(
-  thesaurus_id bigint NOT NULL DEFAULT nextval('thesaurus_id_seq'::regclass),
-  thesaurus_name character varying(255) NOT NULL,
-  thesaurus_description text,
-  thesaurus_name_associate character varying(255),
-  thesaurus_parent_id character varying(255),
-  creation_date timestamp without time zone,
-  thesaurus_description text,
-  CONSTRAINT thesaurus_pkey PRIMARY KEY (thesaurus_id)
-)
-WITH (
-  OIDS=FALSE
-);
-
-CREATE TABLE thesaurus_res
-(
-  res_id bigint NOT NULL,
-  thesaurus_id bigint NOT NULL
-)
-WITH (
-  OIDS=FALSE
-);
+UPDATE parameters SET param_value_int = 160 where id='database_version';
