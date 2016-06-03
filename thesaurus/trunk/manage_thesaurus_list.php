@@ -124,10 +124,10 @@ if ($mode == 'list') {
                 $thesaurus_parent_id = $thesaurus->getThesIdByLabel($_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']);
                 ?>
                  <input type="hidden" id="thesaurus_parent_id" value="<?php echo $thesaurus_parent_id; ?>" name="thesaurus_parent_id" style="width:260px;" onchange="load_specific_thesaurus(this.value);" />
-                <input type="text" readonly="readonly" id="thesaurus_parent_label" value="<?php
+                <input type="text" readonly="readonly" class="readonly" id="thesaurus_parent_label" value="<?php
                     echo functions::show_str(
                         $_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']
-                    );?>" name="thesaurus_parent_label" style="width:260px;" /> <i onclick="lauch_thesaurus_list_admin(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i>
+                    );?>" name="thesaurus_parent_label" style="width:270px;" /> <i onclick="lauch_thesaurus_list_admin(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i> <i onclick="document.getElementById('thesaurus_parent_id').value = '';document.getElementById('thesaurus_parent_label').value = '';" class="fa fa-eraser" title="<?php echo _RESET; ?>" aria-hidden="true" style="cursor:pointer;"></i>
                 <script type="text/javascript">document.getElementById("thesaurus_parent_id").onchange();</script>
                 <!--<input name="thesaurus_parent_id" type="text"  id="thesaurus_parent_id" value="<?php
                     echo functions::show_str(
@@ -191,7 +191,7 @@ if ($mode == 'list') {
             ?>
             <select multiple="multiple" id="thesaurus_name_associate" name="thesaurus_name_associate[]" data-placeholder=" ">
             <?php
-                if(!empty($thesaurus_name_associate)){
+                if(!empty($thesaurus_name_associate[0])){
                     foreach ($thesaurus_name_associate as $key => $value) {
                         $thesaurus_name_associate_id = $thesaurus->getThesIdByLabel($value);
                         echo '<option title="'.functions::show_string($value).'" data-object_type="thesaurus_id" id="thesaurus_'.$thesaurus_name_associate_id.'"  value="' . $thesaurus_name_associate_id . '"';

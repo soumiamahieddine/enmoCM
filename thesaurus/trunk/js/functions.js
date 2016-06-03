@@ -1,6 +1,6 @@
 function lauch_thesaurus_list(e){
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_parents&module=thesaurus";
-	var content='<i id="close_thesaurus_tooltips" class="fa fa-times-circle" style="cursor:pointer;position: fixed;top: 0px;left: 0px;font-size: 15px;" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></i>';
+	var content='<div style="text-align:center;margin-top:-10px;"><input id="close_thesaurus_tooltips" class="button" value="Fermer" name="close_thesaurus_tooltips" type="button" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></div>';
 	new Ajax.Request(path_to_script,
 	{
 		method:'post',
@@ -26,7 +26,7 @@ function lauch_thesaurus_list(e){
 
 function lauch_thesaurus_list_admin(e){
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_parents&module=thesaurus";
-	var content='<i id="close_thesaurus_tooltips" class="fa fa-times-circle" style="cursor:pointer;position: fixed;top: 0px;left: 0px;font-size: 15px;" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></i>';
+	var content='<div style="text-align:center;margin-top:-10px;"><input id="close_thesaurus_tooltips" class="button" value="Fermer" name="close_thesaurus_tooltips" type="button" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></div>';
 	new Ajax.Request(path_to_script,
 	{
 		method:'post',
@@ -52,7 +52,7 @@ function lauch_thesaurus_list_admin(e){
 
 function lauch_thesaurus_list_admin_assoc(e){
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_parents&module=thesaurus";
-	var content='<i id="close_thesaurus_tooltips" class="fa fa-times-circle" style="cursor:pointer;position: fixed;top: 0px;left: 0px;font-size: 15px;" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></i>';
+	var content='<div style="text-align:center;margin-top:-10px;"><input id="close_thesaurus_tooltips" class="button" value="Fermer" name="close_thesaurus_tooltips" type="button" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></div>';
 	new Ajax.Request(path_to_script,
 	{
 		method:'post',
@@ -324,7 +324,7 @@ function addslashes(ch) {
 
 function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_info&module=thesaurus";
-	var content='<i id="close_thesaurus_tooltips" class="fa fa-times-circle" style="cursor:pointer;position: fixed;top: 0px;left: 0px;font-size: 15px;" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></i>';
+	var content='<div style="text-align:center;margin-top:-10px;"><input id="close_thesaurus_tooltips" class="button" value="Fermer" name="close_thesaurus_tooltips" type="button" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></div>';
 	new Ajax.Request(path_to_script,
 	{
 		method:'post',
@@ -334,7 +334,7 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 		},
 		 onSuccess: function(answer){
 		 	var json = JSON.parse(answer.responseText);
-		 	console.log(json);
+		 	//console.log(json);
 
 			//eval("response = "+answer.responseText);
 			content += '<ul id="thesaurus_list">';
@@ -349,18 +349,18 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 				content += '<li title="terme" style="font-weight:bold;color:rgb(22, 173, 235)">'+indent+'<i class="fa fa-minus-square-o" aria-hidden="true" style="font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span>'+json.info.thesaurus_name+'</span><li>';
 			}
 			if(json.info.thesaurus_description != null){
-				content += '<li style="font-style:italic;text-align:center;padding:10px;white-space:nowrap;" title="description">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <span style="border: 1px dashed;padding: 5px;">'+json.info.thesaurus_description+'</span><li>';
+				content += '<li style="font-style:italic;text-align:center;padding:10px;white-space:nowrap;" title="description">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <div style="border: 1px dashed;padding: 5px;white-space: normal;display: block;width:95%;">'+json.info.thesaurus_description+'</div><li>';
 			}else{
-				content += '<li style="font-style:italic;color:grey;text-align:center;padding:10px;" title="description">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <span style="border: 1px dashed;padding: 5px;">aucune description</span><li>';
+				content += '<li style="font-style:italic;color:grey;text-align:center;padding:10px;" title="description">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <div style="border: 1px dashed;padding: 5px;white-space: normal;display: block;width:95%;">aucune description</div><li>';
 			}
 			if (json.info.used_for) {
 				content += '<li style="text-align: center;font-style: italic;padding: 10px;color: rgb(0, 157, 197);margin-bottom: -10px;font-size: 10px;" title="'+json.info.used_for+'"><u>Utilisé pour</u> : '+json.info.used_for+'</li>';		
 			}
 			if(json.info.thesaurus_name_associate != null){
-				content += '<li style="font-style:italic;text-align:center;padding:10px;" title="terme(s) associé(s)">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <span style="border: 1px dashed;padding: 5px;">'+json.info.thesaurus_name_associate+'</span><li>';
+				content += '<li style="font-style:italic;text-align:center;padding:10px;" title="terme(s) associé(s)">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <div style="border: 1px dashed;padding: 5px;white-space: normal;display: block;width:95%;">'+json.info.thesaurus_name_associate+'</div><li>';
 
 			}else{
-				content += '<li style="font-style:italic;color:grey;text-align:center;padding:10px;" title="terme(s) associé(s)">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <span style="border: 1px dashed;padding: 5px;">aucun terme associé</span><li>';
+				content += '<li style="font-style:italic;color:grey;text-align:center;padding:10px;" title="terme(s) associé(s)">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <div style="border: 1px dashed;padding: 5px;white-space: normal;display: block;width:95%;">aucun terme associé</div><li>';
 			}
 
 			if(json.info_children){
@@ -377,16 +377,25 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 			}
 
 			if(json.info_annexe){
+				//console.log(json.info_annexe);
+				opt_array = [];
+				content_tab = [];
 				for (var i = json.info_annexe.length - 1; i >= 0; i--) {
+					opt_array.push(json.info_annexe[i].thesaurus_id);
 					if(json.info.thesaurus_name != json.info_annexe[i]){
 						if(json.info_annexe[i].total != 0){
-							content += '<li id="list_'+json.info_annexe[i].thesaurus_id+'" title="autre(s) terme(s) lié(s) à :  « '+json.info.thesaurus_parent_id+' »" data-value="'+json.info_annexe[i].thesaurus_name+'" >'+indent+'<i id="dev_list_'+json.info_annexe[i].thesaurus_id+'" onclick="getChildThes(\''+json.info_annexe[i].thesaurus_id+'\',\'1\')" class="fa fa-plus-square-o" aria-hidden="true" style="cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_annexe[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_annexe[i].thesaurus_id+'\', \''+addslashes(json.info_annexe[i].thesaurus_name)+'\');">'+json.info_annexe[i].thesaurus_name+'</span><li>';
+							content_tab[json.info_annexe[i].thesaurus_id] = '<li id="list_'+json.info_annexe[i].thesaurus_id+'" title="autre(s) terme(s) lié(s) à :  « '+json.info.thesaurus_parent_id+' »" data-value="'+json.info_annexe[i].thesaurus_name+'" >'+indent+'<i id="dev_list_'+json.info_annexe[i].thesaurus_id+'" onclick="getChildThes(\''+json.info_annexe[i].thesaurus_id+'\',\'1\')" class="fa fa-plus-square-o" aria-hidden="true" style="cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_annexe[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_annexe[i].thesaurus_id+'\', \''+addslashes(json.info_annexe[i].thesaurus_name)+'\');">'+json.info_annexe[i].thesaurus_name+'</span><li>';
 
 						}else{
-							content += '<li id="list_'+json.info_annexe[i].thesaurus_id+'" title="autre(s) terme(s) lié(s) à :  « '+json.info.thesaurus_parent_id+' »" data-value="'+json.info_annexe[i].thesaurus_name+'" >'+indent+'<i id="dev_list_'+json.info_annexe[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_annexe[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_annexe[i].thesaurus_id+'\', \''+addslashes(json.info_annexe[i].thesaurus_name)+'\');">'+json.info_annexe[i].thesaurus_name+'</span><li>';
+							content_tab[json.info_annexe[i].thesaurus_id] = '<li id="list_'+json.info_annexe[i].thesaurus_id+'" title="autre(s) terme(s) lié(s) à :  « '+json.info.thesaurus_parent_id+' »" data-value="'+json.info_annexe[i].thesaurus_name+'" >'+indent+'<i id="dev_list_'+json.info_annexe[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_annexe[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_annexe[i].thesaurus_id+'\', \''+addslashes(json.info_annexe[i].thesaurus_name)+'\');">'+json.info_annexe[i].thesaurus_name+'</span><li>';
 						}
 					}
-				} 
+				}
+				if(opt_array.indexOf(json.info.thesaurus_id) != -1){
+					content_tab.splice(json.info.thesaurus_id, 1);
+					content += content_tab.join("");
+				}
+
 			}
 
 			content += '</ul>';

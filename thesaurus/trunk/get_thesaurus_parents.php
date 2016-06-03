@@ -31,7 +31,7 @@ $db = new Database();
 
 $arrayPDO = array();
 
-$query = "SELECT * from thesaurus where thesaurus_parent_id IS NULL ORDER BY thesaurus_name DESC";
+$query = "SELECT * from thesaurus where (thesaurus_parent_id IS NULL OR thesaurus_parent_id = '') ORDER BY thesaurus_name DESC";
 
 $stmt = $db->query($query, array());
 
