@@ -213,7 +213,7 @@ abstract class lists_Abstract extends Database
                     );
                     while ($res = $stmt->fetchObject()) {
                         
-                        if (isset($_SESSION['filters']['entity']['VALUE']) 
+                        if ((isset($_SESSION['filters']['entity']['VALUE']) || isset($_SESSION['filters']['entity_subentities']))
                             && $_SESSION['filters']['entity']['VALUE'] == $res->entity_id
                             )  $selected = 'selected="selected"'; else $selected =  '';
                             
@@ -225,8 +225,9 @@ abstract class lists_Abstract extends Database
                 $filters .='<select name="entity_id" id="entity_id" onChange="loadList(\''.$this->link
                             .'&filter=entity&value=\' + document.filters.entity_id.value, \''
                             .$this->divListId.'\', '.$this->modeReturn.');">'
-                            .'<option value="none">'._CHOOSE_ENTITY.'</option>'
-                            .$options.'</select>&nbsp;';
+                            .'<option value="none" style="text-align:center;">'._ENTITY.'</option>'
+                            .$options.'</select>';
+                $filters .= '<script>new Chosen($(\'entity_id\'));</script>';
             break;
 
             case 'entity_subentities':
@@ -283,11 +284,20 @@ abstract class lists_Abstract extends Database
                         $options .='<option value="'.$res->entity_id.'" '.$selected.' '.$style.'>'.$res->short_label.' ('.$res2->total.')</option>';
                     }
                 }
-                $filters .='<select name="entity_subentities" id="entity_subentities" onChange="loadList(\''.$this->link
+                  if (isset($_SESSION['filters']['entity']['VALUE']) && $_SESSION['filters']['entity_subentities']['checked'] == true && $_SESSION['filters']['entity']['VALUE'] != ''){
+                    $checked = 'checked="checked"';
+                  }else{
+                        $checked =  '';
+                  }
+                    
+                $filters .='<input type="checkbox" '.$checked.' style="margin-left:0px" title="inclure les sous-entités" onclick="loadList(\''.$this->link
+                            .'&filter=entity_subentities&value=\' + document.filters.entity_id.value, \''
+                            .$this->divListId.'\', '.$this->modeReturn.');" />&nbsp;';
+                /*$filters .='<select name="entity_subentities" id="entity_subentities" onChange="loadList(\''.$this->link
                             .'&filter=entity_subentities&value=\' + document.filters.entity_subentities.value, \''
                             .$this->divListId.'\', '.$this->modeReturn.');">'
                             .'<option value="none">'._CHOOSE_ENTITY_SUBENTITIES.'</option>'
-                            .$options.'</select>&nbsp;';
+                            .$options.'</select>&nbsp;';*/
             break;
             
             case 'typist':
@@ -328,7 +338,7 @@ abstract class lists_Abstract extends Database
                 $filters .='<select name="category_id_list" id="category_id_list" onChange="loadList(\''.$this->link
                          .'&filter=category&value=\' + document.filters.category_id_list.value, \''
                          .$this->divListId.'\', '.$this->modeReturn.');">';
-                $filters .='<option value="none">'._CHOOSE_CATEGORY.'</option>';
+                $filters .='<option value="none" style="text-align:center;">'._CATEGORY.'</option>';
                 foreach (array_keys($_SESSION['coll_categories'][$this->collId]) as $catId) {
                     if ($catId <> 'default_category') {
                         if (isset($_SESSION['filters']['category']['VALUE']) 
@@ -338,15 +348,16 @@ abstract class lists_Abstract extends Database
                     }
                 }
                 $filters .='</select>&nbsp;';
+                $filters .= '<script>new Chosen($(\'category_id_list\'));</script>';
             break;
 
             case 'priority':
                 $filters .='<select name="priority_id_list" id="priority_id_list" onChange="loadList(\''.$this->link
                          .'&filter=priority&value=\' + document.filters.priority_id_list.value, \''
                          .$this->divListId.'\', '.$this->modeReturn.');">';
-                $filters .='<option value="none">'._CHOOSE_PRIORITY.'</option>';
+                $filters .='<option value="none" style="text-align:center;">'._PRIORITY.'</option>';
                 foreach (array_keys($_SESSION['mail_priorities']) as $priorityId) {                 
-                        if (isset($_SESSION['mail_priorities']) && $_SESSION['mail_priorities'] == $priorityId){
+                        if (is_numeric($_SESSION['filters']['priority']['VALUE']) && $_SESSION['filters']['priority']['VALUE'] == $priorityId){
                             $selected = 'selected="selected"';
                         } else{ 
                             $selected =  '';
@@ -355,6 +366,7 @@ abstract class lists_Abstract extends Database
                     
                 }
                 $filters .='</select>&nbsp;';
+                $filters .= '<script>new Chosen($(\'priority_id_list\'),{width: "150px"});</script>';
             break;
             
             case 'isViewed':
@@ -370,6 +382,7 @@ abstract class lists_Abstract extends Database
                     $filters .='<option value="'.$key.'" '.$selected.'>'.$value.'</option>';
                 }
                 $filters .='</select>&nbsp;';
+                $filters .= '<script>new Chosen($(\'isViewed\'),{width: "auto", disable_search: true,});</script>';
             break;
             
             case 'folder':
@@ -391,12 +404,40 @@ abstract class lists_Abstract extends Database
             break;
             
             case 'contact':
-                if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
-                    //var_dump('coucou');
+                //if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
 
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
-                    if (is_numeric($_SESSION['filters']['contact']['VALUE'])) {
+                    $query = "SELECT distinct(r.contact_id),society, firstname, lastname FROM "
+                            . $_SESSION['tablename']['contacts_v2'] . " c, res_view_letterbox r WHERE c.contact_id = r.contact_id and ".$this->params['basketClause'];
+                        
+                    $stmt = $db->query($query, array());
+                                            
+                    $filters .='<select id="contact_id_list" onChange="loadList(\''.$this->link
+                                             .'&filter=contact&value=\' + document.filters.contact_id_list.value, \''
+                                             .$this->divListId.'\', '.$this->modeReturn.');">';
+                        $filters .='<option value="none" style="text-align:center;">' . _CONTACT . '</option>';
+
+                    while($line = $stmt->fetchObject()){
+                        $filters .='<option value="'.$line->contact_id.'" title="'.$line->society.'"';
+                        if(empty($line->lastname)){
+                            $person = $line->society;
+                        }else{
+                            $person = $line->firstname.' '.$line->lastname.' ('.$line->society.')';
+                        }
+                        
+                        if($_SESSION['filters']['contact']['VALUE'] == $line->contact_id){
+                            $filters .=' selected="selected" ';    
+                        }
+                        $filters .='>'.$person.'</option>';
+
+                    }
+                    $filters .='</select>&nbsp;';
+                    $filters .= '<script>new Chosen($(\'contact_id_list\'),{width: "150px",max_shown_results: "10"});</script>';
+
+
+
+                    /*if (is_numeric($_SESSION['filters']['contact']['VALUE'])) {
                         $query = "SELECT society, lastname, firstname, is_corporate_person, society_short FROM "
                             . $_SESSION['tablename']['contacts_v2'] . " WHERE contact_id = ?";
                         
@@ -440,12 +481,12 @@ abstract class lists_Abstract extends Database
                 if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
                     $filters .= 'value="'.$_SESSION['filters']['contact']['VALUE'].'"';
                 }
-                $filters .='/>';
+                $filters .='/>';*/
             break;
 
             case 'res_id':
 
-                $res_id = '['._GED.']';
+                /*$res_id = '['._GED.']';
                 $filters .='<input type="text" name="res_id" id="res_id" placeholder="'.$res_id.'" size="15" '
                             .'onChange="myFunction(), loadList(\''.$this->link
                             .'&filter=res_id&value=\' + $(\'residFilters\').value, \''.$this->divListId.'\', '
@@ -459,12 +500,32 @@ abstract class lists_Abstract extends Database
                 if(isset($_SESSION['filters']['res_id']['VALUE']) && !empty($_SESSION['filters']['res_id']['VALUE'])) {
                     $filters .= 'value="'.$_SESSION['filters']['res_id']['VALUE'].'"';
                 }
-                $filters .='/>';
+                $filters .='/>';*/
             break;
 
             case 'subject':
 
-                $subject = '['._SUBJECT.']';
+                $query = "SELECT distinct(r.subject), res_id FROM "
+                            . "res_view_letterbox r WHERE ".$this->params['basketClause'] . " ORDER BY subject ASC";
+                        
+                $stmt = $db->query($query, array());
+                                        
+                $filters .='<select id="subjectFilters" name="subjectFilters" onChange="loadList(\''.$this->link
+                             .'&filter=res_id&value=\' + document.filters.subjectFilters.value, \''
+                             .$this->divListId.'\', '.$this->modeReturn.');">';
+                $filters .='<option value="none" style="text-align:center;">' . _SUBJECT . '</option>';
+
+                while($line = $stmt->fetchObject()){
+                    $filters .='<option value="'.$line->res_id.'" title="'.$line->subject.'"';
+                    if($_SESSION['filters']['res_id']['VALUE'] == $line->res_id){
+                        $filters .=' selected="selected" ';    
+                    }
+                    $filters .='>'.$line->subject.'</option>';
+
+                }
+                $filters .='</select>&nbsp;';
+                $filters .= '<script>new Chosen($(\'subjectFilters\'),{width: "150px",max_shown_results: "10"});</script>';
+                /*$subject = '['._SUBJECT.']';
                 $filters .='<input type="text" name="subject" id="subject" placeholder="'.$subject.'" size="40" '
                             .'onChange="myFunction(), loadList(\''.$this->link
                             .'&filter=subject&value=\' + $(\'subjectFilters\').value, \''.$this->divListId.'\', '
@@ -478,7 +539,7 @@ abstract class lists_Abstract extends Database
                 if(isset($_SESSION['filters']['subject']['VALUE']) && !empty($_SESSION['filters']['subject']['VALUE'])) {
                     $filters .= 'value="'.$_SESSION['filters']['subject']['VALUE'].'"';
                 }
-                $filters .='/>';
+                $filters .='/>';*/
             break;
             
             case 'type':
@@ -696,13 +757,15 @@ abstract class lists_Abstract extends Database
 
                         $_SESSION['filters']['entity_subentities']['VALUE'] = '';
                         $_SESSION['filters']['entity_subentities']['CLAUSE'] = '';
+                        $_SESSION['filters']['entity_subentities']['checked'] = false;
                     
                        $_SESSION['filters']['entity']['CLAUSE'] = "destination = '".$_SESSION['filters']['entity']['VALUE']."'";
                     
                     } else if ($_REQUEST['filter'] == 'entity_subentities') {
 
-                        $_SESSION['filters']['entity']['VALUE'] = '';
+                        //$_SESSION['filters']['entity']['VALUE'] = '';
                         $_SESSION['filters']['entity']['CLAUSE'] = '';
+                        $_SESSION['filters']['entity_subentities']['checked'] = true;
 
                         require_once "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR
                             . "class" . DIRECTORY_SEPARATOR . "class_manage_entities.php";
@@ -842,6 +905,7 @@ abstract class lists_Abstract extends Database
                 }
             } elseif($_REQUEST['filter'] == 'priority' && isset($_REQUEST['value']) &&  $_REQUEST['value'] == 0) {
                 //j'ai créé cette condition pour le filtre des priorités parce que lorsque la valeur de $_request[value] est égale à 0, on ne rentre pas dans la condition et donc le filtre ne fonctionne pas lorsque c'est égale à 0.
+                        $_SESSION['filters']['priority']['VALUE'] = '0';
                         $_SESSION['filters']['priority']['CLAUSE'] = "priority = '".$_REQUEST['value']."'";
             }
         }
@@ -2310,7 +2374,7 @@ abstract class lists_Abstract extends Database
             }
             sort($nbLinesSelect);
             
-            $linesDropdownList .= _SHOW.' <select name="nbLines" onChange="loadList(\''.$this->link
+            $linesDropdownList .= '<i class="fa fa-bars fa-2x" aria-hidden="true" title="'._SHOW.'"></i> <select name="nbLines" id="nbLines" onChange="loadList(\''.$this->link
                                 .'&order='.$this->order.'&order_field='
                                 .$this->orderField.'&lines=\' + this.value, \''
                                 .$this->divListId.'\', '.$this->modeReturn.');">';
@@ -2326,6 +2390,7 @@ abstract class lists_Abstract extends Database
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
             $linesDropdownList .= '</select>';
+            $linesDropdownList .= '<script>new Chosen($(\'nbLines\'),{width: "auto"});</script>';
         }
         
         //If there are more than 1 page, pagination
@@ -2486,7 +2551,7 @@ abstract class lists_Abstract extends Database
             }
             sort($nbLinesSelect);
             
-            $linesDropdownList .= _SHOW.' <select name="nbLines" onChange="loadList(\''.$this->link
+            $linesDropdownList .= '<i class="fa fa-bars fa-2x" aria-hidden="true" title="'._SHOW.'"></i> <select name="nbLines" id="nbLines" onChange="loadList(\''.$this->link
                                 .'&order='.$this->order.'&order_field='
                                 .$this->orderField.'&lines=\' + this.value, \''
                                 .$this->divListId.'\', '.$this->modeReturn.');">';
@@ -2502,6 +2567,7 @@ abstract class lists_Abstract extends Database
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
             $linesDropdownList .= '</select>';
+            $linesDropdownList .= '<script>new Chosen($(\'nbLines\'),{width: "auto"});</script>';
         }
         
         //If there are more than 1 page, pagination
@@ -2640,7 +2706,8 @@ abstract class lists_Abstract extends Database
             sort($nbLinesSelect);
             
             $linesDropdownList = '<form name="nbLinesToShow" method="get" >';
-            $linesDropdownList .= _SHOW.' <select name="nbLines" onChange="loadList(\''.$this->link
+            $linesDropdownList .= '<i class="fa fa-bars fa-2x" aria-hidden="true" title="'._SHOW.'"></i>
+ <select name="nbLines" id="nbLines" onChange="loadList(\''.$this->link
                                 .'&order='.$this->order.'&order_field='
                                 .$this->orderField.'&lines=\' + document.nbLinesToShow.nbLines.value, \''
                                 .$this->divListId.'\', '.$this->modeReturn.');">';
@@ -2656,6 +2723,7 @@ abstract class lists_Abstract extends Database
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
             $linesDropdownList .= '</select>';
+            $linesDropdownList .= '<script>new Chosen($(\'nbLines\'),{width: "auto"});</script>';
             $linesDropdownList .= '</form>' ;
         }
         
@@ -2738,14 +2806,14 @@ abstract class lists_Abstract extends Database
             if ($found) {
                 //Display filter
                 $filters .='<div style="padding-bottom: 15px;"><form name="filters" id="filters" '
-                        .'onsubmit="return false;" action="#" method="post">'._FILTER_BY.': ';
+                        .'onsubmit="return false;" action="#" method="post"><i class="fa fa-filter fa-2x" title="'._FILTER_BY.'" aria-hidden="true" style="position: relative;top: 3px;"></i>: ';
                 $filters .= $filtersControl;
                 //Clear icon
-                $filters .='&nbsp;&nbsp;<a href="javascript://"  title="'._CLEAR_SEARCH.'" onfocus="this.blur()" '
+                $filters .='|&nbsp;&nbsp;<a href="javascript://"  title="'._CLEAR_SEARCH.'" onfocus="this.blur()" '
                             .'onclick="javascript:loadList2(\''.$this->link
                             .'&filter=reset\', \''.$this->divListId.'\', '
                             .$this->modeReturn.');">'
-                            .'<i class="fa fa-refresh fa-2x" title="' . _CLEAR_SEARCH . '"></i></a>';
+                            .'<i class="fa fa-refresh fa-2x" style="position: relative;top: 6px;" title="' . _CLEAR_SEARCH . '"></i></a>';
                 $filters .='</form></div>';
             } else {
                 $filters = _NO_CORRESPONDING_FILTERS;

@@ -3581,3 +3581,7 @@ a.actionList {
   top: -7px;
   position: absolute;
 }
+
+#nbLines_chosen{
+    margin-top: -11px;
+}

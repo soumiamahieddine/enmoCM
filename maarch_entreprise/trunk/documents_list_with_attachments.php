@@ -459,27 +459,39 @@ for ($i=0;$i<$tabI;$i++)
         }
     }
 }
-//Cl� de la liste
+//Cle de la liste
 $listKey = 'res_id';
 
 //Initialiser le tableau de param�tres
-$paramsTab = array();
-$paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_DOCS;              //Titre de la page
-$paramsTab['listCss'] = 'listing largerList spec';                                  //css
-$paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
-$paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
-$paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
-$paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
-$paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id']
-            .$urlParameters;                                                        //Parametres d'url supplementaires
-$paramsTab['filters'] = array('entity_subentities', 'entity', 'category', 'contact', 'res_id', 'subject', 'priority');                     //Filtres    
-if (count($template_list) > 0 ) {                                                   //Templates
-    $paramsTab['templates'] = array();
-    $paramsTab['templates'] = $template_list;
+$paramsTab                                 = array();
+$paramsTab['pageTitle']                    =  _RESULTS." : ".count($tab).' '._FOUND_DOCS;   //Titre de la page
+$paramsTab['listCss']                      = 'listing largerList spec';                     //css
+$paramsTab['bool_sortColumn']              = true;                                          //Affichage Tri
+$paramsTab['bool_bigPageTitle']            = false;                                         //Affichage du titre en grand
+$paramsTab['bool_showIconDocument']        = true;                                          //Affichage de l'icone du document
+$paramsTab['bool_showIconDetails']         = true;                                          //Affichage de l'icone de la page de details
+$paramsTab['urlParameters']                = 'baskets='.$_SESSION['current_basket']['id']   //Parametres d'url supplementaires
+                                             .$urlParameters;                                                        
+$paramsTab['filters']                      = array(                                         //Filtres 
+                                                'entity', 
+                                                'entity_subentities', 
+                                                'category', 
+                                                'contact', 
+                                                'res_id', 
+                                                'subject', 
+                                                'priority'
+                                            );    
+
+if (count($template_list) > 0 ) {                                                           //Templates
+    $paramsTab['templates']                = array();
+    $paramsTab['templates']                = $template_list;
 }
-$paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
-$paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
-$paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
+
+$paramsTab['bool_showTemplateDefaultList'] = true;                                          //Default list (no template)
+$paramsTab['defaultTemplate']              = $defaultTemplate;                              //Default template
+$paramsTab['tools']                        = array();                                       //Icones dans la barre d'outils
+
+
 //Fileplan
 if ($core_tools->test_service('fileplan', 'fileplan', false)) {
     require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
