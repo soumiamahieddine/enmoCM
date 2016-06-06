@@ -44,11 +44,14 @@ $_SESSION['tagsuser'] = array();
 $tags = new tag_controler();
 $tags->load_sessiontag($s_id,$coll_id);	
 //--------------------------------------
-$frm_str .= '<tr><th colspan="6" style="text-align:center;width:20%;">';
-$frm_str .= '<span><i class="fa fa-tags fa-2x"></i>';               
-$frm_str .= _TAGS.'</span></th>';
+$frm_str .= '<tr><th class="picto" align="left">';
+$frm_str .= '<i class="fa fa-tags fa-2x"></i></th>';
 
-$frm_str .= '<td colspan="6" style="text-align:center;">';
+$frm_str .= '<td align="left" width="200px">'._TAGS.'</td>';
+                                               
+
+
+$frm_str .= '<td colspan="6">';
 if ($modify_doc)
 {
 	$modify_keyword = true;
