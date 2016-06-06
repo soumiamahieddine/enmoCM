@@ -696,7 +696,7 @@ if(isset($_REQUEST['nodetails']))
                         <div id="contactInternalListByName" class="autocomplete"></div>
                         <script type="text/javascript">
                             initList_hidden_input('contactid_internal', 'contactInternalListByName', '<?php 
-                                echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=users_list_by_name_search', 'what', '2', 'contact_internal_id');
+                                echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=users_list_by_name_search', 'what', '2', 'contact_internal_id');
                         </script>
                         <input id="contact_internal_id" name="contact_internal_id" type="hidden" />
                     </td>

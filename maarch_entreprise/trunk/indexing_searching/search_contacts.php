@@ -184,7 +184,7 @@ $core_tools->load_js();
                             <div id="contactListByName" class="autocomplete"></div>
                             <script type="text/javascript">
                                 initList_hidden_input('created_by', 'contactListByName', '<?php 
-                                    echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=users_list_by_name_search', 'what', '2', 'created_by_id');
+                                    echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=users_list_by_name_search', 'what', '2', 'created_by_id');
                             </script>
                             <input id="created_by_id" name="created_by_id" type="hidden" />
                         </td>
