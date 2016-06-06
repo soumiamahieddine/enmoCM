@@ -97,13 +97,13 @@ $upFileOK = false;
                 <input type="button" id="fileButton" onclick="$$('#file')[0].click();" class="button"
                        value="<?php if($_REQUEST['with_file'] == 'true'){ echo _WITHOUT_FILE; } else {echo $_FILES['file']['name']; }?>"
                        title="<?php if($_REQUEST['with_file'] == 'true'){ echo _WITHOUT_FILE; } else {echo $_FILES['file']['name']; }?>"
-                       style="width: 88%;margin: 0px;margin-top: -10px;font-size: 12px;text-align: center;text-overflow: ellipsis;overflow: hidden;">
+                       style="width: 85%;margin: 0px;margin-top: -10px;font-size: 12px;text-align: center;text-overflow: ellipsis;overflow: hidden;">
             <?php } elseif (!empty($_SESSION['error'])) { ?>
                 <i class="fa fa-remove fa-2x" title="<?php echo $_SESSION['error']; ?>"></i>
-                <input type="button" id="fileButton" onclick="$$('#file')[0].click();" class="button" value="<?php echo $_SESSION['error']; ?>" style="width: 88%;margin: 0px;margin-top: -10px;font-size: 12px;text-align: center;text-overflow: ellipsis;overflow: hidden;">
+                <input type="button" id="fileButton" onclick="$$('#file')[0].click();" class="button" value="<?php echo $_SESSION['error']; ?>" style="width: 85%;margin: 0px;margin-top: -10px;font-size: 12px;text-align: center;text-overflow: ellipsis;overflow: hidden;">
             <?php } else { ?>
                 <i class="fa fa-remove fa-2x" title="<?php echo _NO_FILE_SELECTED; ?>"></i>
-                <input type="button" id="fileButton" onclick="$$('#file')[0].click();" class="button" value="<?php echo _CHOOSE_FILE; ?>" style="width: 88%;margin: 0px;margin-top: -10px;font-size: 12px;text-align: center;text-overflow: ellipsis;overflow: hidden;">
+                <input type="button" id="fileButton" onclick="$$('#file')[0].click();" class="button" value="<?php echo _CHOOSE_FILE; ?>" style="width: 85%;margin: 0px;margin-top: -10px;font-size: 12px;text-align: center;text-overflow: ellipsis;overflow: hidden;">
             <?php } ?>
         <p style="display:none">
         <!-- window.parent.$('title').value = this.value.substring(0,this.value.indexOf('.')); -->
