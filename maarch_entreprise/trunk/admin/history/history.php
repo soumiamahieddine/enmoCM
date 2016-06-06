@@ -271,7 +271,7 @@ $list->admin_list($tab, $nb, '&nbsp;', 'id','history','history','id', true, '', 
 ?>
 <br/>
 <div id="search_hist" class="block">
-<form id ="frm_search_hist" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=history&amp;admin=history" method="post" class="form">
+<form id ="frm_search_hist" style="position:relative;" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=history&amp;admin=history" method="post" class="form">
 <div>
     <input type="hidden" name="page" value="history"/>
     <input type="hidden" name="admin" value="history" />
