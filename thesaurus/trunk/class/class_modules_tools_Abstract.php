@@ -398,10 +398,9 @@ abstract class thesaurus_Abstract
         }else{
             $new_thesaurus_name_associate = $new_thesaurus['thesaurus_name_associate'];
         }
-
         $stmt = $db->query(
             "INSERT INTO thesaurus(thesaurus_name, thesaurus_description, thesaurus_name_associate, thesaurus_parent_id, used_for)"
-            . " VALUES (?, ?, ?, ?)"
+            . " VALUES (?, ?, ?, ?, ?)"
           ,array($new_thesaurus['thesaurus_name'],$new_thesaurus['thesaurus_description'],$new_thesaurus_name_associate,$new_thesaurus_parent_id, $new_thesaurus['used_for']));
         $hist = new history();
         $hist->add(
@@ -417,7 +416,6 @@ abstract class thesaurus_Abstract
      public function update($new_thesaurus)
     {
         $db = new Database();
-
         if(!empty($new_thesaurus['thesaurus_parent_id'])){
             $stmt = $db->query("SELECT thesaurus_name FROM thesaurus WHERE thesaurus_id = ?", array($new_thesaurus['thesaurus_parent_id']));
             $line = $stmt->fetchObject();
@@ -428,7 +426,7 @@ abstract class thesaurus_Abstract
         }
         
 
-        if(!empty($new_thesaurus['thesaurus_name_associate'])){
+        if(!empty($new_thesaurus['thesaurus_name_associate'][0])){
             foreach ($new_thesaurus['thesaurus_name_associate'] as $key => $value) {
                 $stmt = $db->query("SELECT thesaurus_name FROM thesaurus WHERE thesaurus_id = ?", array($value));
                 $line = $stmt->fetchObject();
@@ -438,7 +436,6 @@ abstract class thesaurus_Abstract
         }else{
             $new_thesaurus_name_associate = $new_thesaurus['thesaurus_name_associate'];
         }
-
         $stmt = $db->query(
             "UPDATE thesaurus SET thesaurus_name=?, thesaurus_description=?, thesaurus_name_associate=?, thesaurus_parent_id=?, used_for=? WHERE thesaurus_id=?"
           ,array($new_thesaurus['thesaurus_name'],$new_thesaurus['thesaurus_description'],$new_thesaurus_name_associate,$new_thesaurus_parent_id,$new_thesaurus['used_for'],$new_thesaurus['thesaurus_id']));
@@ -486,7 +483,7 @@ abstract class thesaurus_Abstract
             $new_thesaurus['thesaurus_description'] = $params[1];
             $new_thesaurus['thesaurus_name_associate'] = $params[2];
             $new_thesaurus['thesaurus_parent_id'] = $params[3];
-            $new_thesaurus['thesaurus_used_for'] = $params[4];
+            $new_thesaurus['used_for'] = $params[5];
             $this->insert($new_thesaurus);  
             
             return true;
