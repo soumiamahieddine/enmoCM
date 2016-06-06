@@ -311,9 +311,9 @@ abstract class lists_Abstract extends Database
                     if (! empty($this->params['basketClause'])) $where = 'where '.$this->params['basketClause'];
 
                     $stmt = $db->query(
-                        "SELECT distinct(typist) as typist, count(distinct r.res_id)"
+                        "SELECT distinct(typist) as typist, count(distinct res_id)"
                         . " as total FROM " 
-                        . $view. " r " .$where
+                        . $view. " " .$where
                         . " group by typist order by typist"
                     );
                     while ($res = $stmt->fetchObject()) {
@@ -408,8 +408,8 @@ abstract class lists_Abstract extends Database
 
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
-                    $query = "SELECT distinct(r.contact_id),society, firstname, lastname FROM "
-                            . $_SESSION['tablename']['contacts_v2'] . " c, res_view_letterbox r WHERE c.contact_id = r.contact_id and ".$this->params['basketClause'];
+                    $query = "SELECT distinct(res_view_letterbox.contact_id),society, firstname, lastname FROM "
+                            . $_SESSION['tablename']['contacts_v2'] . " c, res_view_letterbox WHERE c.contact_id = res_view_letterbox.contact_id and ".$this->params['basketClause'];
                         
                     $stmt = $db->query($query, array());
                                             
