@@ -198,6 +198,9 @@ function change_diff_list(
                     {
                         diff_list_tr.style.display = tr_display_val;
                     }
+                    if(window.opener.$('save_list_diff')){
+                        window.opener.$('save_list_diff').click();
+                    }
                     window.close();
                 }
                 else
