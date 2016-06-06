@@ -600,10 +600,10 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 				if (response.status == 1){
 					if (document.getElementById("sign_link")){
 						document.getElementById("sign_link").style.display = '';
-						document.getElementById("sign_link").setAttribute('onclick','');	
+						document.getElementById("sign_link").setAttribute('onclick','document.getElementById("list_attach").src="index.php?display=true&module=attachments&page=del_attachment&relation=1&id='+idReponse+'&fromDetail="');	
 						document.getElementById("sign_link").style.color = 'green';
 						document.getElementById("sign_link_img").src = 'static.php?filename=sign_valid.png';
-						document.getElementById("sign_link_img").title= 'Le document a été signé';
+						document.getElementById("sign_link_img").title= 'Enlever la signature';
 						document.getElementById("sign_link_img").style.cursor = 'not-allowed';
 						document.getElementById("sign_link").setAttribute('disabled','disabled');
 
@@ -710,9 +710,15 @@ function signFile(res_id,isVersion, mode, pinCode){
 						$('update_rep_link').style.display = 'none';
 					}
 					if ($('sign_link')){
-						$('sign_link').style.color = 'green';
-						document.getElementById("sign_link_img").src = 'static.php?filename=sign_valid.png';
-						$('sign_link').setAttribute('onclick','');	
+						$("sign_link").style.display = '';
+						link = 'index.php?display=true&module=attachments&page=del_attachment&relation=1&id='+newId;
+						$("sign_link").setAttribute('onclick','document.getElementById(\'list_attach\').src="'+link+'"');	
+						$("sign_link").style.color = 'green';
+						$("sign_link_img").src = 'static.php?filename=sign_valid.png';
+						$("sign_link_img").title= 'Enlever la signature';
+						$("sign_link_img").style.cursor = 'not-allowed';
+						$("sign_link").setAttribute('disabled','disabled');	
+						//console.log($('sign_link').style);
 					}
 					if ($('sign_link_certif')){
 						$('sign_link_certif').style.color = 'green';
@@ -723,7 +729,10 @@ function signFile(res_id,isVersion, mode, pinCode){
 						$('viewframevalidRep'+num_rep+'_'+oldRep).src = "index.php?display=true&module=attachments&page=view_attachment&res_id_master="+num_idMaster+"&id="+newId;			
 						$('viewframevalidRep'+num_rep+'_'+oldRep).id = 'viewframevalidRep'+num_rep+'_'+newId;
 					}
-					
+
+					if(oldRep == newId-1){
+						oldRep = res_id;
+					}
 					if($('ans_'+num_rep+'_'+oldRep)) {
 						$('ans_'+num_rep+'_'+oldRep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');		
 						$('ans_'+num_rep+'_'+oldRep).id = 'ans_'+num_rep+'_'+newId;							
@@ -742,10 +751,26 @@ function signFile(res_id,isVersion, mode, pinCode){
 					$('ans_'+num_rep+'_'+newId).innerHTML='<i class="fa fa-certificate fa-lg fa-fw" style="color:#fdd16c"></i>'+$('ans_'+num_rep+'_'+newId).textContent;
 					$('ans_'+num_rep+'_'+newId).title='Réponse signée : '+$('ans_'+num_rep+'_'+newId).textContent;
 					$('list_attach').src = 'index.php?display=true&module=attachments&page=frame_list_attachments&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder';
+				
+					nb_atach = $("nb_attach").textContent;
+					nb_atach ++;
+					document.getElementById("nb_attach").innerHTML='<b>'+nb_atach+'</b>';
 				}
 				else{
 					alert(response.error);
-				}		
+				}	
+				//$("sign_link").removeAttribute("onclick");
+				//$("sign_link_img").style.display = 'none';
+				//$('sign_link').className = 'fa fa-spinner fa-2x fa-spin';
+				document.getElementById("sign_link").className = document.getElementById("sign_link").className.replace( /(?:^|\s)fa fa-spinner fa-2x fa-spin(?!\S)/g , "" )
+				$('sign_link').title="";
+				$("sign_link_img").style.display = '';
+			},
+			onLoading: function(answer){
+				$("sign_link").removeAttribute("onclick");
+				$("sign_link_img").style.display = 'none';
+				$('sign_link').className = 'fa fa-spinner fa-2x fa-spin';
+				$('sign_link').title="en cours de traitement..."
 			}
 		});
 	}
