@@ -2390,7 +2390,7 @@ abstract class lists_Abstract extends Database
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
             $linesDropdownList .= '</select>';
-            $linesDropdownList .= '<script>new Chosen($(\'nbLines\'),{width: "auto"});</script>';
+            $linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new Chosen($(\'nbLines\'),{width: "auto"});}</script>';
         }
         
         //If there are more than 1 page, pagination
@@ -2567,7 +2567,7 @@ abstract class lists_Abstract extends Database
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
             $linesDropdownList .= '</select>';
-            $linesDropdownList .= '<script>new Chosen($(\'nbLines\'),{width: "auto"});</script>';
+            $linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new Chosen($(\'nbLines\'),{width: "auto"});}</script>';
         }
         
         //If there are more than 1 page, pagination
@@ -2723,7 +2723,7 @@ abstract class lists_Abstract extends Database
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
             $linesDropdownList .= '</select>';
-            $linesDropdownList .= '<script>new Chosen($(\'nbLines\'),{width: "auto"});</script>';
+            $linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new Chosen($(\'nbLines\'),{width: "auto"});}</script>';
             $linesDropdownList .= '</form>' ;
         }
         
