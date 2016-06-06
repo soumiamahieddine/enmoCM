@@ -1,4 +1,3 @@
-
 var isAlreadyClick = false;
 var chronoExpiration;
 
@@ -17,6 +16,7 @@ function whatIsTheDivStatus(theDiv, divStatus)
         $(divStatus).innerHTML = '<i class="fa fa-plus-square-o"></i>';
     }
 }
+
 
 function resetInlineDisplay(theDiv)
 {
