@@ -1181,7 +1181,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     .$_SESSION['config']['businessappurl']
                                     .'index.php?display=true&module=entities&page=manage_listinstance&cat='.$category.'&origin=details'.$onlyCC.'\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" />';
                                 ?>
-                                <input type="button" class="button" onClick="saveListDiff('listinstance', '<?php 
+                                <input type="button" style="display:none;" id="save_list_diff" class="button" onClick="saveListDiff('listinstance', '<?php 
                                     functions::xecho($_SESSION['tablename']['ent_listinstance']);?>', '<?php 
                                     functions::xecho($coll_id);?>', '<?php 
                                     functions::xecho($s_id);?>','<?php 
