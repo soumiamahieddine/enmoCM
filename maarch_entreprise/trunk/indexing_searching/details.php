@@ -545,7 +545,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 								}
 								echo ');" class="back">' .  _BACK . '</a>';
 							}*/
-	 		    echo '<a href="#" onclick="history.back();return false;"><i class="fa fa-backward fa-2x" title="' .  _BACK . '"></i></a>';
+	 		    echo '<a href="#" onclick="document.getElementById(\'ariane\').childNodes[document.getElementById(\'ariane\').childNodes.length-2].click();"><i class="fa fa-backward fa-2x" title="' .  _BACK . '"></i></a>';
                         }
                     }
 		    
