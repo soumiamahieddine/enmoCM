@@ -1650,7 +1650,7 @@ if (!empty($contacts)) {
 
 $content .= '</h2>';
 
-$content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:30%;float:left;margin-left:-5px;background-color:#deedf3">';
+$content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:400px;float:left;margin-left:-5px;background-color:#deedf3">';
 $content .= '<div class="transmissionDiv">';
 $content .= '<hr style="width:85%;margin-left:0px">';
 $content .= '<input type="hidden" id="category_id" value="outgoing"/>';
@@ -1904,7 +1904,7 @@ $content .= '</div>';
                 . ' scrolling="auto" frameborder="0" style="display:block;">'
                 . '</iframe>';
     $content .= '</div>';
-$content .= '<div style="float: right; width: 70%">';
+$content .= '<div style="float: right; width: 65%">';
 $content .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
     . functions::xssafe($_SESSION['doc_id']) . '&coll_id=' . $coll_id .
     '" name="viewframevalid_attachment" id="viewframevalid_attachment"  scrolling="auto" frameborder="0" style="width:100% !important;height:900px;" onmouseover="this.focus()"></iframe>';
