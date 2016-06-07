@@ -1102,7 +1102,7 @@ abstract class contacts_v2_Abstract extends Database
                     </tr>
                 </table>
                 <div id="address_div"  style="display:inline">
-                    <table width="65%" id="frmaddress_table1">
+                    <table width="65%" id="frmaddress_table1" style="position:relative;">
                     <?php
                     if ($mode == "add") { ?>
                         <tr id="previous_address_tr" >
