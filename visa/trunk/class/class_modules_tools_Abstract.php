@@ -805,9 +805,9 @@ abstract class visa_Abstract extends Database
 				$str .= '<input type="button" name="reset" id="reset" value="Reinitialiser" class="button" ';
 
 					if ($fromDetail == "Y") {
-						$str .= 'onclick="resetVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'Y\');" /> ';
+						$str .= 'onclick="if(confirm(\'Voulez-vous réinitialiser le circuit ?\')){resetVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'Y\');}" /> ';
 					} else {
-						$str .= 'onclick="resetVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'N\');" /> ';
+						$str .= 'onclick="if(confirm(\'Voulez-vous réinitialiser le circuit ?\')){resetVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'N\');}" /> ';
 					}
 
 					$str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'block\';" />';
