@@ -20,8 +20,11 @@
 
 .iconDoc:hover #no_doc { 
 	display: inline;
-	position:absolute;
-	margin-top:0px;
+	position:fixed;
+	/*position:absolute;*/
+	left:10px;
+	top:10px;
+	/*margin-top:0px;*/
 	padding: 10px;
 	background: #ffffff;
 	color: #AD5453;
