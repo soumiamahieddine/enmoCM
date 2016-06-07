@@ -69,6 +69,34 @@ while($line = $stmt->fetchObject())
 	}
 
 }
+
+$query = "SELECT ca.id, c.lastname as tag, c.firstname, ca.contact_purpose_id, cp.label 
+			FROM ".$_SESSION['tablename']['contact_addresses']." ca
+			LEFT JOIN contact_purposes cp on ca.contact_purpose_id = cp.id LEFT JOIN contacts_v2 c on c.contact_id = ca.contact_id 
+			WHERE (lower(c.lastname) like lower(?)
+			or lower(c.firstname) like lower(?)
+			or lower(address_town) like lower(?)
+			or lower(label) like lower(?))";
+	$arrayPDO = array('%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%');
+
+$query .= " order by c.lastname";
+$stmt = $db->query($query, $arrayPDO);
+
+while($line = $stmt->fetchObject())
+{
+	$listArray[$line->id] = $contact->get_label_contact($line->contact_purpose_id, $_SESSION['tablename']['contact_purposes']);
+	
+	if ($line->tag <> "" || $line->firstname) {
+		$listArray[$line->id] .= " :";
+		if ($line->tag <> "") {
+			$listArray[$line->id] .= " " . $line->tag;
+		}
+		if ($line->firstname <> "") {
+			$listArray[$line->id] .= " " . $line->firstname;
+		}
+	}
+
+}
 echo "<ul>\n";
 $authViewList = 0;
 
