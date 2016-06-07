@@ -565,6 +565,7 @@ abstract class visa_Abstract extends Database
 					$str .= '<td style="display:none"><input type="hidden" id="date_'.$j.'" name="date_'.$j.'"/></td>';
 
 					$str .= '<td style="display:none"><input type="checkbox" id="isSign_'.$j.'" name="isSign_'.$j.'" style="visibility:hidden;" /></td>';
+					$str .= '<td><i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i></td>';
 					$str .= '</tr>';
 				}
 				else{
@@ -799,6 +800,14 @@ abstract class visa_Abstract extends Database
 						$str .= 'onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'Y\');" /> ';
 					} else {
 						$str .= 'onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'N\');" /> ';
+					}
+
+				$str .= '<input type="button" name="reset" id="reset" value="Reinitialiser" class="button" ';
+
+					if ($fromDetail == "Y") {
+						$str .= 'onclick="resetVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'Y\');" /> ';
+					} else {
+						$str .= 'onclick="resetVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'N\');" /> ';
 					}
 
 					$str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'block\';" />';

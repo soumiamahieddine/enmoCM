@@ -356,6 +356,66 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau, fromDetail){
 	});
 }
 
+function resetVisaWorkflow(res_id, coll_id, id_tableau, fromDetail){
+	var tableau = document.getElementById(id_tableau);
+	
+	var arrayLignes = tableau.rows; //l'array est stocké dans une variable
+	var longueur = arrayLignes.length;//on peut donc appliquer la propriété length
+	var i=1; //on définit un incrémenteur qui représentera la clé
+	
+	var conseillers = "";
+	var consignes = "";
+	var dates = "";
+	var isSign = "";
+	
+	var cons_empty = false;
+
+	var detail = "";
+
+	if (fromDetail == undefined || fromDetail == "N" ) {
+		detail = "N";
+	} else if (fromDetail == "Y") {
+		detail = "Y";
+	}
+
+	while(i<longueur)
+	{
+		
+		var num = i-1;
+		if (document.getElementById("conseiller_"+num).value == "" ) cons_empty = true;
+		conseillers += document.getElementById("conseiller_"+num).value + "#";
+		consignes += document.getElementById("consigne_"+num).value + "#";
+		dates += document.getElementById("date_"+num).value + "#";
+		if (document.getElementById("isSign_"+num).checked == true) isSign += "1#";
+		else isSign += "0#";
+		
+		
+		i++;
+	}
+
+	new Ajax.Request("index.php?display=true&module=visa&page=resetVisaWF",
+	{
+		
+			method:'post',
+			parameters: { 
+				res_id : res_id,
+				coll_id : coll_id,
+				conseillers : conseillers,
+				consignes : consignes,
+				dates : dates,
+				list_sign : isSign,
+				fromDetail : detail,
+				cons_empty : cons_empty
+			},
+			onSuccess: function(answer){
+				eval("response = "+answer.responseText);
+                    location.reload(); 
+				}
+
+
+	});
+}
+
 function	load_listmodel_visa(selectedOption, objectType, diff_list_id, save_auto) {
 	if (save_auto == undefined || save_auto == '') {
 		save_auto = false;
