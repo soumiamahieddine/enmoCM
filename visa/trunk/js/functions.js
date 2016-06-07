@@ -199,7 +199,11 @@ function addRow(id_tableau)
 	colonne1.innerHTML += position;//on y met la position
 	*/
 	var id_Cons = "conseiller_0";
-	var listeDeroulante = document.getElementById(id_Cons);
+	var last_select = tableau.rows.length-3;
+	
+	console.log(document.getElementById('conseiller_'+last_select));
+	//var listeDeroulante = document.getElementById(id_Cons);
+	var listeDeroulante = document.getElementById('conseiller_'+last_select);
 	var colonne2 = ligne.insertCell(0);//on ajoute la seconde cellule
 	var listOptions = "";
 	
