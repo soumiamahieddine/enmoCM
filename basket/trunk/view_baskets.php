@@ -134,7 +134,7 @@ if (isset($_REQUEST['level'])
     $level = $_REQUEST['level'];
 }
 $pagePath = $_SESSION['config']['businessappurl']
-    . 'index.php?page=view_baskets&module=basket';
+    . 'index.php?page=view_baskets&module=basket&baskets='.$_REQUEST['baskets'];
 $pageLabel = _MY_BASKETS;
 $pageId = "my_baskets";
 $core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
