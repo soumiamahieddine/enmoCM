@@ -450,6 +450,7 @@
       <parameter name="doc_custom_t14" type="string" />
       <parameter name="doc_custom_t15" type="string" />
       <parameter name="signatory_group" type="identifier" />
+      <parameter name="signatory_name_id" type="identifier" />
       <parameter name="tags_chosen" type="string" />
       <parameter name="tags_available" type="string" />
       <parameter name="mail_nature" type="identifier" />
@@ -613,6 +614,7 @@
       <parameter name="coll_id" type="collection_list" />
       <parameter name="dir" type="identifier" />
       <parameter name="collid" type="collection_list" />
+      <parameter name="cat" type="identifier" />
     </validationRule>
     
     <validationRule name="multiLink" extends="standardForm" mode="error">  
