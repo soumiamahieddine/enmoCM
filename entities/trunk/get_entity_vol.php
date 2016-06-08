@@ -15,7 +15,7 @@ $db = new Database();
 $sec = new security();
 
 $entities_chosen=explode("#",$_POST['entities_chosen']);
-$entities_chosen=join(",",$entities_chosen);
+$entities_chosen="'".join("','",$entities_chosen)."'";
 
 $period_type = $_REQUEST['period_type'];
 $status_obj = new manage_status();
@@ -41,7 +41,7 @@ $str_status = preg_replace('/,$/', ')', $str_status);
 if (!$_REQUEST['entities_chosen']){
 	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
 }else{
-	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (?) order by short_label",array($entities_chosen));
+	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label",array());
 }
 
 

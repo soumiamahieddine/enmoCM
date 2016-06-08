@@ -13,7 +13,7 @@ $req = new request();
 $sec = new security();
 $db = new Database();
 $entities_chosen=explode("#",$_POST['entities_chosen']);
-$entities_chosen=join(",",$entities_chosen);
+$entities_chosen="'".join("','",$entities_chosen)."'";
 
 $period_type = $_REQUEST['period_type'];
 $status_obj = new manage_status();
@@ -130,15 +130,15 @@ $db = new Database();
 if (!$_REQUEST['entities_chosen']){
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
 }else{
-    $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (?) order by short_label",array($entities_chosen));
+    $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label",array());
 }
 
 $doctypes = array();
 while($res = $stmt->fetchObject())
 {
+
     array_push($doctypes, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
 }
-
 
 if($report_type == 'graph')
 {

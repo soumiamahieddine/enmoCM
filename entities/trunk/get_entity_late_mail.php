@@ -36,7 +36,7 @@ $sec = new security();
 
 
 $entities_chosen=explode("#",$_POST['entities_chosen']);
-$entities_chosen=join(",",$entities_chosen);
+$entities_chosen="'".join("','",$entities_chosen)."'";
 
 
 $status_obj = new manage_status();
