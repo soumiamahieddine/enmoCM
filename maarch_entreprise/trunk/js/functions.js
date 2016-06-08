@@ -232,6 +232,7 @@ function repost(php_file,update_divs,fields,action,timeout)
                     var res = str.split(",");
                     $(new_value).value = res[1];
                     $(actual_value).value = res[0];
+                    $('country').value = 'FRANCE';
                 }
             });
     };
@@ -250,6 +251,7 @@ function repost(php_file,update_divs,fields,action,timeout)
                     var res = str.split(",");
                     $(new_value).value = res[0];
                     $(actual_value).value = res[1];
+                    $('country').value = 'FRANCE';
                 }
             });
     };
@@ -2104,10 +2106,10 @@ function valid_report_by_period(url)
         for (var i = 0; i < entities_chosen_list.options.length; i++) {
             //if(entities_chosen_list.options[i].selected ==true){
                 if(i==0){
-                  entities_chosen = "'"+entities_chosen_list.options[i].value+"'";
+                  entities_chosen = entities_chosen_list.options[i].value;
                   //entities_chosen = "'"+entities_chosen_list.options[i].value+"'";
                 }else{
-                   entities_chosen += "#'"+entities_chosen_list.options[i].value+"'";
+                   entities_chosen += "#"+entities_chosen_list.options[i].value;
                    //entities_chosen += ","+"'"+entities_chosen_list.options[i].value+"'";
                    
                     }
