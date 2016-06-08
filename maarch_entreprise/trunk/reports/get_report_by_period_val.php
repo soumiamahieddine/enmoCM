@@ -386,21 +386,18 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 				} else {
 					 $period = substr($where_date, -19);
 				}
-				// var_dump($arrayPDO);
-				$stmt = $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date')." FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$view.".status not in ('DEL','BAD') 
+				$stmt = $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date')." as diff_date FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$view.".status not in ('DEL','BAD') 
 					AND ".$view.".closing_date is NOT NULL 
-					AND date_part( 'month', ".$view.".creation_date)  = ".$i." 
-					and date_part( 'year', ".$view.".creation_date)  = ".$period, $arrayPDO);
-
+					AND date_part( 'month', ".$view.".closing_date)  = ?
+					and date_part( 'year', ".$view.".closing_date)  = ?", array($i,$_POST['the_year']));
 				if( $stmt->rowCount() > 0)
 				{
-					
 					$tmp = 0;
 					$nbDoc = 0;
 					while($elm = $stmt->fetch(PDO::FETCH_ASSOC))
 					{
-						if ($elm[0] <> "") {
-							$tmp = $tmp + $elm[0];
+						if ($elm['diff_date'] <> "") {
+							$tmp = $tmp + $elm['diff_date'];
 							$nbDoc++;
 						}
 					}
@@ -459,18 +456,15 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 			{
 				$data = array();
 			}
-			
-		//$max = date("t", $_REQUEST['the_month']);
-			
+
 			$mois = mktime( 0, 0, 0, $_REQUEST['the_month'], 1, date("Y") );
 			$max = date("t",$mois);
 			
-			$arrayPDOStatus = array_merge($arrayPDOStatus, array($_REQUEST['the_month']));
 
 			for($i=1; $i<= $max; $i++)
 			{
 				
-				$stmt = $db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." and date_part( 'month', creation_date)  = ? and date_part( 'year', creation_date)  = ".date('Y')." and date_part( 'day', creation_date)  = ".$i." and ".$view.".closing_date is not null", $arrayPDOStatus);
+				$stmt = $db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." as diff_date FROM ".$view." WHERE status not in ('DEL','BAD') and date_part( 'month', closing_date)  = ? and date_part( 'year', closing_date)  = ".date('Y')." and date_part( 'day', closing_date)  = ".$i." and ".$view.".closing_date is not null", array($_REQUEST['the_month']));
 				
 				if( $stmt->rowCount() > 0)
 				{
@@ -478,8 +472,8 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 					$nbDoc = 0;
 					while($elm = $stmt->fetch(PDO::FETCH_ASSOC))
 					{
-						if ($elm[0] <> "") {
-							$tmp = $tmp + $elm[0];
+						if ($elm['diff_date'] <> "") {
+							$tmp = $tmp + $elm['diff_date'];
 							$nbDoc++;
 						}
 					}
