@@ -2193,35 +2193,53 @@ function valid_report_by_period(url)
                 {
 
                     if (type_report == 'array') {
-                        div_to_fill.innerHTML = answer.responseText;
-                        document.getElementById('src1').src = document.getElementById('src1').src + '?unique=' + new Date().valueOf();
+                        if(response.status == 2){
+                            eval("response = "+answer.responseText);
+                            //console.log($('main_error_popup'));
+                            $('main_error_popup').innerHTML = response.error_txt;
+                            $('main_error_popup').style.display = 'table-cell';
+                            Element.hide.delay(3, 'main_error_popup');
+                        }else{
+                            div_to_fill.innerHTML = answer.responseText;
+                            document.getElementById('src1').src = document.getElementById('src1').src + '?unique=' + new Date().valueOf();
+                        }
                     } else if (type_report == 'graph') {
-
                         eval("response = "+answer.responseText);
 
-                        div_to_fill.innerHTML = '<div style="text-align:center;"><b>'+response.title+
+                        //console.log(response.status);
+
+                        if(response.status == 2){
+                            //console.log($('main_error_popup'));
+                            $('main_error_popup').innerHTML = response.error_txt;
+                            $('main_error_popup').style.display = 'table-cell';
+                            Element.hide.delay(3, 'main_error_popup');
+                        }else{
+                            div_to_fill.innerHTML = '<div style="text-align:center;"><b>'+response.title+
                                                 '</b><canvas id="src1" height="100px"></canvas>'+
                                             '</div>';
 
-                        var barChartData = {
-                            labels : response.label,
-                            datasets : [
-                                {
-                                    fillColor : "rgba(151,187,205,0.5)",
-                                    strokeColor : "rgba(151,187,205,0.8)",
-                                    highlightFill : "rgba(151,187,205,0.75)",
-                                    highlightStroke : "#fdd16c",
-                                    data : response.data
-                                }
-                            ]
+                            var barChartData = {
+                                labels : response.label,
+                                datasets : [
+                                    {
+                                        fillColor : "rgba(151,187,205,0.5)",
+                                        strokeColor : "rgba(151,187,205,0.8)",
+                                        highlightFill : "rgba(151,187,205,0.75)",
+                                        highlightStroke : "#fdd16c",
+                                        data : response.data
+                                    }
+                                ]
 
+                            }
+                            
+                            var ctx = document.getElementById("src1").getContext("2d");
+                            window.myBar = new Chart(ctx).Bar(barChartData, {
+                                responsive : true,
+                                scaleShowVerticalLines: false
+                            });
                         }
+
                         
-                        var ctx = document.getElementById("src1").getContext("2d");
-                        window.myBar = new Chart(ctx).Bar(barChartData, {
-                            responsive : true,
-                            scaleShowVerticalLines: false
-                        });
                     }
                 }
             }

@@ -340,7 +340,8 @@ $str_status = '(';
 		}
 		else
 		{
-			echo '<br/><br/><div class="error">'._NO_DATA_MESSAGE.'</div>';
+			$error = _NO_DATA_MESSAGE;
+echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 		}
 
 	}
@@ -572,7 +573,8 @@ $str_status = '(';
 			}
 			else
 			{
-				echo '<br/><br/><div class="error">'._NO_DATA_MESSAGE.'</div>';
+				$error = _NO_DATA_MESSAGE;
+				echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 			}
 
 			
@@ -685,7 +687,8 @@ $str_status = '(';
 			}
 			else
 			{
-				echo '<br/><br/><div class="error">'._NO_DATA_MESSAGE.'</div>';
+				$error = _NO_DATA_MESSAGE;
+				echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 			}
 			exit();
 		}
@@ -778,7 +781,8 @@ $str_status = '(';
 			}
 			else
 			{
-				echo '<br/><br/><div class="error">'._NO_DATA_MESSAGE.'</div>';
+				$error = _NO_DATA_MESSAGE;
+				echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 			}
 			exit();
 		}
