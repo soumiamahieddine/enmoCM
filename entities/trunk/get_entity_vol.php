@@ -215,7 +215,7 @@ for($i=0; $i<count($entities);$i++)
 		
 		if($report_type == 'graph')
 		{
-				array_push($_SESSION['labels1'], utf8_decode($db->wash_html($entities[$i]['LABEL'], 'NO_ACCENT')));
+				array_push($_SESSION['labels1'], addslashes(utf8_decode($db->wash_html($entities[$i]['LABEL'], 'NO_ACCENT'))));
 				array_push($vol_an, $res->total);
 		}
 		elseif($report_type == 'array')
@@ -261,7 +261,10 @@ if($has_data)
 {
 	if($report_type == 'graph')
 	{
-		echo "{label: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['labels1']))))."'] ".
+		$labels1 = "'".implode("','", $_SESSION['labels1'])."'";
+		//var_dump($labels1);
+
+		echo "{label: [".utf8_encode($labels1)."] ".
 			", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
 			", title: '".addslashes($title)."'}";
 		exit;

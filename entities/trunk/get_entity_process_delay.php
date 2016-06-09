@@ -218,7 +218,7 @@ for($i=0; $i<count($doctypes);$i++)
         }
         if($report_type == 'graph')
         {
-            array_push($_SESSION['labels1'], $db->show_string($doctypes[$i]['LABEL']));
+            array_push($_SESSION['labels1'], addslashes($db->show_string($doctypes[$i]['LABEL'])));
         }
     }
 }
@@ -251,7 +251,8 @@ if ( $has_data)
 {
     if($report_type == 'graph')
     {
-        echo "{label: ['".str_replace(",", "','", addslashes(implode(",", $_SESSION['labels1'])))."'] ".
+        $labels1 = "'".implode("','", $_SESSION['labels1'])."'";
+        echo "{label: [".$labels1."] ".
             ", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
             ", title: '".addslashes($title)."'}";
         exit;
