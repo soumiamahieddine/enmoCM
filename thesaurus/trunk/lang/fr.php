@@ -32,10 +32,10 @@
 
 /*********************** THESAURUS ***********************************/
 if (!defined("_THESAURUS"))
-    define("_THESAURUS", "Thesaurus");
+    define("_THESAURUS", "Thesaurus (Mots-clés)");
 
 if (!defined("_ADMIN_THESAURUS"))
-    define("_ADMIN_THESAURUS", "Thesaurus");
+    define("_ADMIN_THESAURUS", "Thesaurus (Mots-clés)");
 
 if (!defined("_ADMIN_THESAURUS_DESC"))
     define("_ADMIN_THESAURUS_DESC", "Le thésaurus est un outil linguistique qui permet de mettre en relation le langage naturel des utilisateurs et celui contenu dans les ressources.");
