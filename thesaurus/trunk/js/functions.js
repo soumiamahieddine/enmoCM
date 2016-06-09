@@ -1,4 +1,5 @@
 function lauch_thesaurus_list(e){
+	document.getElementById('return_previsualise_thes').style.background='rgb(255, 241, 143)';
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_parents&module=thesaurus";
 	var content='<div style="text-align:center;margin-top:-10px;"><input id="close_thesaurus_tooltips" class="button" value="Fermer" name="close_thesaurus_tooltips" type="button" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></div>';
 	new Ajax.Request(path_to_script,
@@ -323,6 +324,7 @@ function addslashes(ch) {
 }
 
 function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
+	document.getElementById('return_previsualise_thes').style.background='rgb(206, 233, 241)';
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_info&module=thesaurus";
 	var content='<div style="text-align:center;margin-top:-10px;"><input id="close_thesaurus_tooltips" class="button" value="Fermer" name="close_thesaurus_tooltips" type="button" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></div>';
 	new Ajax.Request(path_to_script,
