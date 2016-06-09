@@ -129,6 +129,33 @@ while ($visa = $stmt->fetchObject()) {
 
 }
 
+//AVIS CICUIT
+$stmt = $dbDatasource->query("SELECT * FROM listinstance WHERE res_id = ? AND difflist_type = ? ", [$doc['res_id'], 'AVIS_CIRCUIT']);
+$datasources['avis']= [];
+$countVisa = 1;
+$i = 1;
+while ($avis = $stmt->fetchObject()) {
+    $stmt2 = $dbDatasource->query("SELECT * FROM users WHERE user_id = ? ", [$avis->item_id]);
+    $avisContact = $stmt2->fetchObject();
+    $stmt3 = $dbDatasource->query("SELECT en.entity_id, en.entity_label FROM entities en, users_entities ue WHERE ue.user_id = ? AND primary_entity = ? AND ue.entity_id = en.entity_id", [$avis->item_id, 'Y']);
+    $stmt4 = $dbDatasource->query("SELECT note_text FROM notes WHERE user_id = ? AND identifier = ? AND note_text LIKE ? ", [$avis->item_id, $doc['res_id'], '[Avis n°%']);
+
+    $avisEntity = $stmt3->fetchObject();
+    $avisContent = $stmt4->fetchObject();
+    if ($avisContact) {
+        if ($avis->item_mode == 'avis') {
+            $datasources['avis'][0]['firstname'.$i] = $avisContact->firstname;
+            $datasources['avis'][0]['lastname'.$i] = $avisContact->lastname;
+            $datasources['avis'][0]['entity'.$i] = str_replace($avisEntity->entity_id . ': ', '', $avisEntity->entity_label);
+            if($avisContent){
+                $datasources['avis'][0]['note'.$i] = $avisContent->note_text;
+            }
+            
+        }
+    }
+    $i++;
+}
+
 // Transmissions
 $datasources['transmissions'] = [];
 if (isset($_SESSION['transmissionContacts'])) {
