@@ -32,6 +32,7 @@
 			
 			$data = json_decode($_POST['data']);
 			//var_dump($data);
+			$_SESSION['export']['filename'] = 'export_reports_maarch.csv';
 			$contenu = '';
 			$fp = fopen('apps/maarch_entreprise/tmp/export_reports_maarch.csv', 'w');
 			

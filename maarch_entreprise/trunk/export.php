@@ -1,6 +1,8 @@
 <?php
-require_once('core/class/ExportControler.php');
-$export = new ExportControler();
+if($_REQUEST['origin'] != 'graph'){
+    require_once('core/class/ExportControler.php');
+    $export = new ExportControler();
+}
 if (!empty($_SESSION['error'])) {
     
     ?>
