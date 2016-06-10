@@ -105,7 +105,7 @@ abstract class tag_controler_Abstract extends ObjectControler
          * Searching a tag by label
          * @If tag exists, return this value, else, return false
          */
-        
+        $tag_label = str_replace("''", "'", $tag_label);
         if (empty($tag_label) || empty($coll_id) ) {
            
             return null;
@@ -342,6 +342,8 @@ abstract class tag_controler_Abstract extends ObjectControler
          * Update in the memory [Session] the tag value for one ressource
          */
         $new_tag_label = $this->control_label($new_tag_label);
+        $new_tag_label = str_replace("''", "'", $new_tag_label);
+        $old_taglabel = str_replace("''", "'", $old_taglabel);
         
         $db = new Database();
         $stmt = $db->query(
@@ -374,6 +376,8 @@ abstract class tag_controler_Abstract extends ObjectControler
         /*
          * Add in the memory [Session] the tag value for one ressource
          */
+
+        $new_tag_label = str_replace("''", "'", $new_tag_label);
         $new_tag_label = $this->control_label($new_tag_label);
         
         $db = new Database();
