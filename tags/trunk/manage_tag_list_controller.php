@@ -216,19 +216,20 @@ function display_list() {
     $where = '';
     $where_what = array();
     $what = '';
+    //var_dump($_REQUEST['what']);exit;
     if (isset($_REQUEST['what'])) {
-        $what = $func->protect_string_db($_REQUEST['what']);
+        $what = $_REQUEST['what'];
 
     }
     if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
         $where .= " (tag_label ilike ? or tag_label ilike ? ) ";
-        $where_what[] = $what.'%';
-        $where_what[] = $what.'%';
+        $where_what[] = '%'.$what.'%';
+        $where_what[] = '%'.$what.'%';
 
     } else {
         $where .= " (tag_label like ?  or tag_label like ? ) ";
-        $where_what[] = $what.'%';
-        $where_what[] = $what.'%';
+        $where_what[] = '%'.$what.'%';
+        $where_what[] = '%'.$what.'%';
     }
 
     // Checking order and order_field values

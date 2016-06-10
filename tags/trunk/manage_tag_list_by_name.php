@@ -31,7 +31,7 @@
 $db = new Database();
 $stmt = $db->query(
     "SELECT distinct tag_label as tag FROM tags WHERE lower(tag_label) like lower(?) order by tag_label",
-    array($_REQUEST['what'].'%')
+    array('%'.$_REQUEST['what'].'%')
 );
 
 $listArray = array();
@@ -48,15 +48,12 @@ foreach($listArray as $what)
     {
         $flagAuthView = true;
     }
-    if(stripos($what, $_REQUEST['what']) === 0)
+    echo "<li>".$what."</li>\n";
+    if(isset($flagAuthView))
     {
-        echo "<li>".$what."</li>\n";
-        if(isset($flagAuthView))
-        {
-            echo "<li>...</li>\n";
-            break;
-        }
-        $authViewList++;
+        echo "<li>...</li>\n";
+        break;
     }
+    $authViewList++;
 }
 echo "</ul>";
