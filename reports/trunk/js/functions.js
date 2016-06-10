@@ -45,7 +45,8 @@ function record_data(url, donnees)
 		onSuccess: function(response){
 			eval("result = "+response.responseText);
 			if(result.status == 1){
-				window.location.assign("tmp/export_reports_maarch.csv");			
+				//window.location.assign("tmp/export_reports_maarch.csv");	
+				window.location.assign("index.php?page=export&display=true&origin=graph");		
 			} else {
 				console.log(result.response);
 			}
