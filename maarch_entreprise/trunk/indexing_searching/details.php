@@ -1171,7 +1171,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         <?php
                             $onlyCC = '';
                             if ($core->test_service('update_list_diff_in_details', 'entities', false) || $core->test_service('add_copy_in_indexing_validation', 'entities', false)) {
-                                if($core->test_service('add_copy_in_indexing_validation', 'entities', false)){
+                                if($core->test_service('add_copy_in_indexing_validation', 'entities', false) && $_SESSION['user']['UserId'] != 'superadmin'){
                                     $onlyCC = '&only_cc';
                                 }
                                 echo '<br />';
