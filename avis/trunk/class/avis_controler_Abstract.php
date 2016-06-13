@@ -255,7 +255,7 @@ abstract class avis_controler_Abstract
 
                                 $str .= "<span id=\"lastAvis_" . $seq . "\">";
                                 if (empty($circuitAvis['lastAvis']['users']) && $seq == count ($circuitAvis['avis']['users'])-1)
-                                    $str .= " <i title=\""._LAST_AVIS."\" style=\"color : #fdd16c\" class=\"fa fa-certificate fa-lg fa-fw\"></i>";
+                                    $str .= " <i title=\""._LAST_AVIS."\" style=\"color : #fdd16c;visibility:hidden;\" class=\"fa fa-certificate fa-lg fa-fw\"></i>";
                                 $str .= "</span></td>";
                                 $up = ' style="visibility:visible"';
                                 $displayCB = ' style="visibility:hidden"';
@@ -364,7 +364,7 @@ abstract class avis_controler_Abstract
                             }*/
                             $str .= '</select>';
 
-                            $str .= '<span id="lastAvis_' . $seq . '"> <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
+                            $str .= '<span id="lastAvis_' . $seq . '"> <i title="Signataire" style="color : #fdd16c;visibility:hidden;" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
                             if ($isAvisStep && ($myPosAvis+1 == $seq || $myPosAvis == $seq))
                                 $up = ' style="visibility:hidden"';
                             else
@@ -398,7 +398,7 @@ abstract class avis_controler_Abstract
                             $str .= '<td style="display:none"><input type="checkbox" id="avis_isSign_'.$seq.'" name="avis_isSign_'.$seq.'" '.$displayCB.' checked/></td>';
                         } else {
                             $str .= '<td><span><strong>' . ($seq + 1) . ' </strong></span>' . $circuitAvis['lastAvis']['users'][0]['firstname'].' '.$circuitAvis['lastAvis']['users'][0]['lastname'];
-                            $str .= ' <i title="'._LAST_AVIS.'" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></td>';
+                            $str .= ' <i title="'._LAST_AVIS.'" style="color : #fdd16c;visibility:hidden;" class="fa fa-certificate fa-lg fa-fw"></i></td>';
                             $str .= '<td>'.$circuitAvis['lastAvis']['users'][0]['process_comment'].'</td>'; 
                             if ($circuitAvis['lastAvis']['users'][0]['process_date'] != '')
                                 $str .= '<td><i class="fa fa-check fa-2x" title="'._SIGNED.'"></i></td>';
@@ -540,7 +540,7 @@ abstract class avis_controler_Abstract
                         $str .= '</optgroup>';*/
                         $str .= '</select>';
                     }
-                    $str .= '<span id="lastavisPopup_' . $j . '"> <i title="'._LAST_AVIS.'" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
+                    $str .= '<span id="lastavisPopup_' . $j . '"> <i title="'._LAST_AVIS.'" style="color : #fdd16c;visibility:hidden;" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
                     $str .= '<td><a href="javascript://" id="avisPopup_down_'.$j.'" name="avisPopup_down_'.$j.'" style="visibility:hidden;" onclick="deplacerLigneAvisPopup(0,1,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x" title="'.DOWN_USER_WORKFLOW.'"></i></a></td>';
                     $str .= '<td><a href="javascript://" id="avisPopup_up_'.$j.'" name="avisPopup_up_'.$j.'" style="visibility:hidden;" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
                     $str .= '<td><a href="javascript://" onclick="delRowAvisPopup(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="avisPopup_suppr_'.$j.'" name="avisPopup_suppr_'.$j.'" style="visibility:hidden;" ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
@@ -611,7 +611,7 @@ abstract class avis_controler_Abstract
 
                                 $str .= "<span id=\"lastAvisPopup_" . $seq . "\">";
                                 if (empty($circuitAvis['lastAvis']['users']) && $seq == count ($circuitAvis['avis']['users'])-1)
-                                    $str .= " <i title=\""._LAST_AVIS."\" style=\"color : #fdd16c\" class=\"fa fa-certificate fa-lg fa-fw\"></i>";
+                                    $str .= " <i title=\""._LAST_AVIS."\" style=\"color : #fdd16c;visibility:hidden;\" class=\"fa fa-certificate fa-lg fa-fw\"></i>";
                                 $str .= "</span></td>";
                                 $up = ' style="visibility:visible"';
                                 $displayCB = ' style="visibility:hidden"';
@@ -716,7 +716,7 @@ abstract class avis_controler_Abstract
                             }*/
                             $str .= '</select>';
 
-                            $str .= '<span id="lastAvisPopup_' . $seq . '"> <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
+                            $str .= '<span id="lastAvisPopup_' . $seq . '"> <i title="Signataire" style="color : #fdd16c;visibility:hidden;" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
                             if ($isAvisStep && ($myPosAvis+1 == $seq || $myPosAvis == $seq))
                                 $up = ' style="visibility:hidden"';
                             else
@@ -750,7 +750,7 @@ abstract class avis_controler_Abstract
                             $str .= '<td style="display:none"><input type="checkbox" id="avisPopup_isSign_'.$seq.'" name="avisPopup_isSign_'.$seq.'" '.$displayCB.' checked/></td>';
                         } else {
                             $str .= '<td><span><strong>' . ($seq + 1) . ' </strong></span>' . $circuitAvis['lastAvis']['users'][0]['firstname'].' '.$circuitAvis['lastAvis']['users'][0]['lastname'];
-                            $str .= ' <i title="'._LAST_AVIS.'" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></td>';
+                            $str .= ' <i title="'._LAST_AVIS.'" style="color : #fdd16c;visibility:hidden;" class="fa fa-certificate fa-lg fa-fw"></i></td>';
                             $str .= '<td>'.$circuitAvis['lastAvis']['users'][0]['process_comment'].'</td>'; 
                             if ($circuitAvis['lastAvis']['users'][0]['process_date'] != '')
                                 $str .= '<td><i class="fa fa-check fa-2x" title="'._SIGNED.'"></i></td>';
