@@ -999,7 +999,7 @@ abstract class visa_Abstract extends Database
 		$stmt = $this->query("select subject, contact_society, category_id from $view where res_id = ?",array($id));
 		$res = $stmt->fetchObject();
 		$str = '';
-		$str .= '<div align="left">';
+		$str .= '<div align="left" class="block">';
 		$str .= '<div class="error" id="divErrorPrint" name="divErrorPrint" onclick="this.hide();"></div>';
 	
 		$str .= '<p><b>Requérant</b> : '.$res->contact_society.'</p>';
