@@ -120,7 +120,7 @@ abstract class avis_controler_Abstract
                 $str .= '</select>';
             }
 
-            $str .= '<table class="listing spec detailtabricatordebug" cellspacing="0" border="0" id="'.$id_tab.'">';
+            $str .= '<table class="listing spec detailtabricatordebug" style="width:100%;" cellspacing="0" border="0" id="'.$id_tab.'">';
             $str .= '<thead><tr>';
             $str .= '<th style="width:40%;" align="left" valign="bottom"><span>Avis</span></th>';
             if ($bool_modif){
@@ -145,7 +145,7 @@ abstract class avis_controler_Abstract
                     $j=0;
                     $str .= '<tr class="col" id="lineAvisWorkflow_'.$j.'">';
                     $str .= '<td>';
-                    $str .= '<span id="avis_rank_' . $j . '"><strong>1 </strong></span>';
+                    $str .= '<span id="rank_' . $j . '"><span class="nbResZero" style="font-weight:bold;opacity:0.5;">1</span> </span>';
                     if ($bool_modif){
                         $str .= '<select id="avis_'.$j.'" name="avis_'.$j.'" >';
                         $str .= '<option value="" >Sélectionnez un utilisateur</option>';
@@ -186,6 +186,7 @@ abstract class avis_controler_Abstract
                     $str .= '<td style="display:none"><input type="hidden" id="avis_date_'.$j.'" name="avis_date_'.$j.'"/></td>';
 
                     $str .= '<td style="display:none"><input type="checkbox" id="avis_isSign_'.$j.'" name="avis_isSign_'.$j.'" style="visibility:hidden;" /></td>';
+                    $str .= '<td><i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i></td>';
                     $str .= '</tr>';
                 }
                 else{
@@ -279,7 +280,7 @@ abstract class avis_controler_Abstract
                                 if ($isAvisStep && $myPosAvis >= $seq || $step['process_date'] != '')
                                     $displayCB = ' style="visibility:hidden"';
 
-                                if ($seq == 0 || ($isAvisStep && $myPosAvis+1 >= $seq) || $circuitAvis['avis']['users'][$seq-1]['process_date'] != ''){
+                                if ($seq == 0 || ($isAvisStep && $myPosAvis >= $seq) || $circuitAvis['avis']['users'][$seq]['process_date'] != ''){
                                     $up = ' style="visibility:hidden"';
                                 }
                                 $str .= '<td><a href="javascript://"  '.$down.' id="avis_down_'.$seq.'" name="avis_down_'.$seq.'" onclick="deplacerLigneAvis(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x" title="'.DOWN_USER_WORKFLOW.'"></i></a></td>';
@@ -291,6 +292,10 @@ abstract class avis_controler_Abstract
 
 
                                 $str .= '<td style="display:none"><input type="checkbox" id="avis_isSign_'.$seq.'" name="avis_isSign_'.$seq.'" '.$displayCB.' '.$checkCB.'/></td>';
+                                if ($step['process_date'] != '')
+                                    $str .= '<td><i class="fa fa-check fa-2x" title="'._AVIS_SENT.'"></i></td>';
+                                else
+                                    $str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_AVIS.'"></i></td>';
 
                             }
                             else{
@@ -417,6 +422,12 @@ abstract class avis_controler_Abstract
                         $str .= 'onclick="saveAvisWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'N\');" /> ';
                     }
 
+                if ($fromDetail == "Y") {
+                    $str .= '<input type="button" name="reset" id="reset" value="Reinitialiser" class="button" ';
+
+                    $str .= 'onclick="if(confirm(\'Voulez-vous réinitialiser le circuit ?\')){resetAvisWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'Y\');}" /> ';
+                }
+
                     $str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveAvisModel\').style.display = \'block\';" />';
                     $str .= '<div id="modalSaveAvisModel" >';
                     $str .= '<h3>Sauvegarder le circuit de avis</h3>';
@@ -475,7 +486,7 @@ abstract class avis_controler_Abstract
                 $str .= '</select>';
             }
 
-            $str .= '<table class="listing spec detailtabricatordebug" cellspacing="0" border="0" id="'.$id_tab.'">';
+            $str .= '<table class="listing spec detailtabricatordebug" style="width:100%;" cellspacing="0" border="0" id="'.$id_tab.'">';
             $str .= '<thead><tr>';
             $str .= '<th style="width:40%;" align="left" valign="bottom"><span>Avis</span></th>';
             if ($bool_modif){

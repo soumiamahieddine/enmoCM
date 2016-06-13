@@ -11,7 +11,10 @@ function addRowAvis(id_tableau)
 	colonne1.innerHTML += position;//on y met la position
 	*/
 	var id_Cons = "avis_0";
-	var listeDeroulante = document.getElementById(id_Cons);
+	var last_select = tableau.rows.length-3;
+	
+	//var listeDeroulante = document.getElementById(id_Cons);
+	var listeDeroulante = document.getElementById('avis_'+last_select);
 	var colonne2 = ligne.insertCell(0);//on ajoute la seconde cellule
 	var listOptions = "";
 
@@ -42,6 +45,10 @@ function addRowAvis(id_tableau)
 	var colonne9 = ligne.insertCell(7);
 	colonne9.style.display = 'none';
 	colonne9.innerHTML += "<input type=\"checkbox\" id=\"avis_isSign_"+position+"\" name=\"avis_isSign_"+position+"\"/>";
+
+	var colonne10 = ligne.insertCell(8);
+	//colonne10.style.display = 'none';
+	colonne10.innerHTML += '<i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i>';
 	
 	refreshIconesAvis(id_tableau);
 }
@@ -59,9 +66,12 @@ function addRowAvisPopup(id_tableau)
     colonne1.innerHTML += position;//on y met la position
     */
     var id_Cons = "avisPopup_0";
-    var listeDeroulante = document.getElementById(id_Cons);
-    var colonne2 = ligne.insertCell(0);//on ajoute la seconde cellule
-    var listOptions = "";
+	var last_select = tableau.rows.length-3;
+	
+	//var listeDeroulante = document.getElementById(id_Cons);
+	var listeDeroulante = document.getElementById('avisPopup_'+last_select);
+	var colonne2 = ligne.insertCell(0);//on ajoute la seconde cellule
+	var listOptions = "";
     
     listOptions=listeDeroulante.innerHTML;
 
@@ -91,6 +101,10 @@ function addRowAvisPopup(id_tableau)
     colonne9.style.display = 'none';
     colonne9.innerHTML += "<input type=\"checkbox\" id=\"avisPopup_isSign_"+position+"\" name=\"avisPopup_isSign_"+position+"\"/>";
     
+    var colonne10 = ligne.insertCell(8);
+	//colonne10.style.display = 'none';
+	colonne10.innerHTML += '<i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i>';
+
     refreshIconesAvisPopup(id_tableau);
 }
 
@@ -311,14 +325,17 @@ function deplacerLigneAvis(source, cible, id_tableau)
 	for(var i=0; i<cellules.length; i++)
 	{
 		nouvelle.insertCell(-1).innerHTML += cellules[i].innerHTML;//on copie chaque cellule de l'ancienne à la nouvelle ligne
-		if (i == 5 && cellules[i].childNodes[0].value != ""){
+		/*if (i == 6 && cellules[i].childNodes[0].value != ""){
 			nouvelle.cells[5].childNodes[0].value = cellules[i].childNodes[0].value;
 		}
 		if (i == 0){
 			nouvelle.cells[0].childNodes[1].selectedIndex = cellules[i].childNodes[1].selectedIndex;
 		}
-		if (i > 5)
+		if (i > 6)
+			nouvelle.cells[i].style.display = 'none';*/
+		if (i == 7 || i == 6){
 			nouvelle.cells[i].style.display = 'none';
+		}
 	}
 
 	//on supprimer l'ancienne ligne
@@ -330,28 +347,31 @@ function deplacerLigneAvisPopup(source, cible, id_tableau)
 {
 
     var tableau = document.getElementById(id_tableau);
-    //on initialise nos variables
-    var ligne = tableau.rows[source];//on copie la ligne
-    var nouvelle = tableau.insertRow(cible);//on insère la nouvelle ligne
-    var cellules = ligne.cells;
+	//on initialise nos variables
+	var ligne = tableau.rows[source];//on copie la ligne
+	var nouvelle = tableau.insertRow(cible);//on insère la nouvelle ligne
+	var cellules = ligne.cells;
 
-    //on boucle pour pouvoir agir sur chaque cellule
-    for(var i=0; i<cellules.length; i++)
-    {
-        nouvelle.insertCell(-1).innerHTML += cellules[i].innerHTML;//on copie chaque cellule de l'ancienne à la nouvelle ligne
-        if (i == 5 && cellules[i].childNodes[0].value != ""){
-            nouvelle.cells[5].childNodes[0].value = cellules[i].childNodes[0].value;
-        }
-        if (i == 0){
-            nouvelle.cells[0].childNodes[1].selectedIndex = cellules[i].childNodes[1].selectedIndex;
-        }
-        if (i > 5)
-            nouvelle.cells[i].style.display = 'none';
-    }
+	//on boucle pour pouvoir agir sur chaque cellule
+	for(var i=0; i<cellules.length; i++)
+	{
+		nouvelle.insertCell(-1).innerHTML += cellules[i].innerHTML;//on copie chaque cellule de l'ancienne à la nouvelle ligne
+		/*if (i == 6 && cellules[i].childNodes[0].value != ""){
+			nouvelle.cells[5].childNodes[0].value = cellules[i].childNodes[0].value;
+		}
+		if (i == 0){
+			nouvelle.cells[0].childNodes[1].selectedIndex = cellules[i].childNodes[1].selectedIndex;
+		}
+		if (i > 6)
+			nouvelle.cells[i].style.display = 'none';*/
+		if (i == 7 || i == 6){
+			nouvelle.cells[i].style.display = 'none';
+		}
+	}
 
-    //on supprimer l'ancienne ligne
-    tableau.deleteRow(ligne.rowIndex);//on met ligne.rowIndex et non pas source car le numéro d'index a pu changer
-    refreshIconesAvisPopup(id_tableau);
+	//on supprimer l'ancienne ligne
+	tableau.deleteRow(ligne.rowIndex);//on met ligne.rowIndex et non pas source car le numéro d'index a pu changer
+	refreshIconesAvisPopup(id_tableau);
 }
 
 function saveAvisModelPopup(id_tableau) {
@@ -707,6 +727,126 @@ function saveAvisWorkflowPopup(res_id, coll_id, id_tableau, fromDetail){
 				}
 
 			}
+	});
+}
+
+function resetAvisWorkflow(res_id, coll_id, id_tableau, fromDetail){
+	var tableau = document.getElementById(id_tableau);
+	
+	var arrayLignes = tableau.rows; //l'array est stocké dans une variable
+	var longueur = arrayLignes.length;//on peut donc appliquer la propriété length
+	var i=1; //on définit un incrémenteur qui représentera la clé
+	
+	var conseillers = "";
+	var consignes = "";
+	var dates = "";
+	var isSign = "";
+	
+	var cons_empty = false;
+
+	var detail = "";
+
+	if (fromDetail == undefined || fromDetail == "N" ) {
+		detail = "N";
+	} else if (fromDetail == "Y") {
+		detail = "Y";
+	}
+
+	while(i<longueur)
+	{
+		
+		var num = i-1;
+		if (document.getElementById("avis_"+num).value == "" ) cons_empty = true;
+		conseillers += document.getElementById("avis_"+num).value + "#";
+		consignes += document.getElementById("avis_consigne_"+num).value + "#";
+		dates += document.getElementById("avis_date_"+num).value + "#";
+		if (document.getElementById("avis_isSign_"+num).checked == true) isSign += "1#";
+		else isSign += "0#";
+		
+		
+		i++;
+	}
+
+	new Ajax.Request("index.php?display=true&module=avis&page=resetAvisWF",
+	{
+		
+			method:'post',
+			parameters: { 
+				res_id : res_id,
+				coll_id : coll_id,
+				conseillers : conseillers,
+				consignes : consignes,
+				dates : dates,
+				list_sign : isSign,
+				fromDetail : detail,
+				cons_empty : cons_empty
+			},
+			onSuccess: function(answer){
+				eval("response = "+answer.responseText);
+                    location.reload(); 
+				}
+
+
+	});
+}
+
+function resetAvisWorkflowPopup(res_id, coll_id, id_tableau, fromDetail){
+	var tableau = document.getElementById(id_tableau);
+	
+	var arrayLignes = tableau.rows; //l'array est stocké dans une variable
+	var longueur = arrayLignes.length;//on peut donc appliquer la propriété length
+	var i=1; //on définit un incrémenteur qui représentera la clé
+	
+	var conseillers = "";
+	var consignes = "";
+	var dates = "";
+	var isSign = "";
+	
+	var cons_empty = false;
+
+	var detail = "";
+
+	if (fromDetail == undefined || fromDetail == "N" ) {
+		detail = "N";
+	} else if (fromDetail == "Y") {
+		detail = "Y";
+	}
+
+	while(i<longueur)
+	{
+		
+		var num = i-1;
+		if (document.getElementById("avisPopup_"+num).value == "" ) cons_empty = true;
+		conseillers += document.getElementById("avisPopup_"+num).value + "#";
+		consignes += document.getElementById("avisPopup_consigne_"+num).value + "#";
+		dates += document.getElementById("avisPopup_date_"+num).value + "#";
+		if (document.getElementById("avisPopup_isSign_"+num).checked == true) isSign += "1#";
+		else isSign += "0#";
+		
+		
+		i++;
+	}
+
+	new Ajax.Request("index.php?display=true&module=avis&page=resetAvisWF",
+	{
+		
+			method:'post',
+			parameters: { 
+				res_id : res_id,
+				coll_id : coll_id,
+				conseillers : conseillers,
+				consignes : consignes,
+				dates : dates,
+				list_sign : isSign,
+				fromDetail : detail,
+				cons_empty : cons_empty
+			},
+			onSuccess: function(answer){
+				eval("response = "+answer.responseText);
+                    location.reload(); 
+				}
+
+
 	});
 }
 
