@@ -168,13 +168,19 @@ function refreshIcones(id_tableau){
 			//document.getElementById("up_"+num).style.visibility="hidden";
 			document.getElementById("isSign_"+num).style.visibility="hidden";
 		}
-
+	
 		/* si la ligne précédente est désactive */
 		if (num > 0) {
+			prev_num = num-1;
+			//console.log(document.getElementById('conseiller_'+prev_num));
 			if (arrayLignes[i-1].cells[0].childNodes[1].disabled == true){
 				document.getElementById("up_"+num).style.visibility="hidden";
+				if(i == longueur-1){
+					document.getElementById("suppr_"+num).style.visibility="hidden";
+				}
 			}
 		}
+		
 		/*************************************************/
 
 		if (i == longueur-1 && document.getElementById("signatory_"+num)){
@@ -201,7 +207,7 @@ function addRow(id_tableau)
 	var id_Cons = "conseiller_0";
 	var last_select = tableau.rows.length-3;
 	
-	console.log(document.getElementById('conseiller_'+last_select));
+	//console.log(document.getElementById('conseiller_'+last_select));
 	//var listeDeroulante = document.getElementById(id_Cons);
 	var listeDeroulante = document.getElementById('conseiller_'+last_select);
 	var colonne2 = ligne.insertCell(0);//on ajoute la seconde cellule

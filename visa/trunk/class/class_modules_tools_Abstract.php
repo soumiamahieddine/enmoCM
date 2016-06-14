@@ -698,7 +698,7 @@ abstract class visa_Abstract extends Database
 
 						$str .= '<tr ' . $color . '>';
 						if ($bool_modif){
-							if ($isVisaStep && $myPosVisa >= $seq)
+							if (($isVisaStep && $myPosVisa >= $seq) || $circuit['sign']['users'][0]['process_date'] != '')
 								$disabled = ' disabled ';
 							else
 								$disabled = '';
@@ -741,7 +741,8 @@ abstract class visa_Abstract extends Database
 							$str .= '</select>';
 
 							$str .= '<span id="signatory_' . $seq . '"><i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
-							if ($isVisaStep && ($myPosVisa+1 == $seq || $myPosVisa == $seq))
+
+							if (($isVisaStep && ($myPosVisa+1 == $seq || $myPosVisa == $seq)) || $circuit['sign']['users'][0]['process_date'] != '' || $circuit['visa']['users'][$seq-1]['process_date'] != '')
 								$up = ' style="visibility:hidden"';
 							else
 								$up = ' style="visibility:visible"';
@@ -751,10 +752,16 @@ abstract class visa_Abstract extends Database
 							// else $add = ' style="visibility:visible"';
 							$add = ' style="visibility:visible"';
 
-							if ($isVisaStep && $myPosVisa == $seq)
+							if (($isVisaStep && $myPosVisa == $seq) || $circuit['sign']['users'][0]['process_date'] != '' || $circuit['visa']['users'][$seq-1]['process_date'] != '')
 								$del = ' style="visibility:hidden"';
 							else
 								$del = ' style="visibility:visible"';
+
+							if ($circuit['sign']['users'][0]['process_date'] != '')
+                                                                $add = ' style="visibility:hidden"';
+                                                        else
+                                                                $add = ' style="visibility:visible"';
+
 
 							if (count ($circuit['visa']['users']) == 0){
 								$up 	= 'style="visibility:hidden"';
