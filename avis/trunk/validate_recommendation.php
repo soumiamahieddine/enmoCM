@@ -252,6 +252,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $new_difflist['avis']['users'] = array();
         $new_difflist['avis_copy']['users'] = array();
         $new_difflist['avis_info']['users'] = array();
+
+        $new_difflist['difflist_type'] = 'entity_id';
         
         foreach ($_SESSION['redirect']['diff_list']['avis']['users'] as $key => $value) {
             //print_r($value);
