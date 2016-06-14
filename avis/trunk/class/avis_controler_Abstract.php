@@ -145,7 +145,7 @@ abstract class avis_controler_Abstract
                     $j=0;
                     $str .= '<tr class="col" id="lineAvisWorkflow_'.$j.'">';
                     $str .= '<td>';
-                    $str .= '<span id="rank_' . $j . '"><span class="nbResZero" style="font-weight:bold;opacity:0.5;">1</span> </span>';
+                    $str .= '<span id="avis_rank_' . $j . '"><span class="nbResZero" style="font-weight:bold;opacity:0.5;">1</span> </span>';
                     if ($bool_modif){
                         $str .= '<select id="avis_'.$j.'" name="avis_'.$j.'" >';
                         $str .= '<option value="" >Sélectionnez un utilisateur</option>';
@@ -213,7 +213,7 @@ abstract class avis_controler_Abstract
                                 $str .= '<td>';
                                 $tab_users = $this->getUsersAvis();
 
-                                if ($isAvisStep && !is_null($myPosAvis) && $myPosAvis >= $seq || $step['process_date'] != '' && $circuitAvis['avis']['users'][$seq]['user_id'] == $_SESSION['user']['UserId'])
+                                if ($isAvisStep && !is_null($myPosAvis) && $myPosAvis >= $seq || $step['process_date'] != '' /*&& $circuitAvis['avis']['users'][$seq]['user_id'] == $_SESSION['user']['UserId']*/)
                                     $disabled = ' disabled ';
                                 else
                                     $disabled = '';
@@ -264,7 +264,7 @@ abstract class avis_controler_Abstract
                                     $down = ' style="visibility:hidden"';
                                 else
                                     $down = ' style="visibility:visible"';
-                                if ($isAvisStep && !is_null($myPosAvis) && $myPosAvis >= $seq || $step['process_date'] != '')
+                                if ($isAvisStep && !is_null($myPosAvis) && $myPosAvis >= $seq || $step['process_date'] != '' || count($circuitAvis['avis']['users']) == '1')
                                     $del = ' style="visibility:hidden"';
                                 else
                                     $del = ' style="visibility:visible"';
@@ -280,7 +280,7 @@ abstract class avis_controler_Abstract
                                 if ($isAvisStep && $myPosAvis >= $seq || $step['process_date'] != '')
                                     $displayCB = ' style="visibility:hidden"';
 
-                                if ($seq == 0 || ($isAvisStep && $myPosAvis >= $seq) || $circuitAvis['avis']['users'][$seq]['process_date'] != ''){
+                                if ($seq == 0 || ($isAvisStep && $myPosAvis >= $seq) || $circuitAvis['avis']['users'][$seq-1]['process_date'] != ''){
                                     $up = ' style="visibility:hidden"';
                                 }
                                 $str .= '<td><a href="javascript://"  '.$down.' id="avis_down_'.$seq.'" name="avis_down_'.$seq.'" onclick="deplacerLigneAvis(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x" title="'.DOWN_USER_WORKFLOW.'"></i></a></td>';
@@ -620,7 +620,7 @@ abstract class avis_controler_Abstract
                                     $down = ' style="visibility:hidden"';
                                 else
                                     $down = ' style="visibility:visible"';
-                                if ($isAvisStep && $myPosAvis >= $seq || $step['process_date'] != '')
+                                if ($isAvisStep && $myPosAvis >= $seq || $step['process_date'] != '' || count($circuitAvis['avis']['users']) == '1')
                                     $del = ' style="visibility:hidden"';
                                 else
                                     $del = ' style="visibility:visible"';

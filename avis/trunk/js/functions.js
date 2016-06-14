@@ -196,7 +196,7 @@ function refreshIconesAvis(id_tableau){
 			document.getElementById("avis_isSign_"+num).style.visibility="hidden";
 		}
 		if (num > 0) {
-			if (arrayLignes[i-1].cells[0].childNodes[0].disabled == true)
+			if (arrayLignes[i-1].cells[0].childNodes[1].disabled == true)
 				document.getElementById("avis_up_"+num).style.visibility="hidden";
 		}
 		/*************************************************/
