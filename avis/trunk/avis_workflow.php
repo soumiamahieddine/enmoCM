@@ -246,6 +246,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $nb_avis = $sequence +1;
             $userIdTypist = $_SESSION['user']['UserId'];
             $content_note = $formValues['note_content_to_users'];
+            $content_note = str_replace("##", "\n", $content_note);
             $content_note = str_replace(";", ".", $content_note);
             $content_note = str_replace("--", "-", $content_note);
             $content_note = $content_note;
