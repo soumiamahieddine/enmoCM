@@ -29,7 +29,7 @@ $content .='<form id="form" name="form" method="get" action="">';
 	$content .='<table width="95%"  border="0" align="center">';
 		$content .= '<tr>';
 			$content .= '<td width="25">&nbsp;</td>';
-			$content .= '<td align="left"><input type="text" name="user_id" id="user_id" value="" />&nbsp;<em><label for="user_id"><a href="javascript://" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=reports&page=select_user_report\',\'select_user_report\',\'width=800,height=700,resizable=yes\');" >'._CHOOSE_USER2.'</a></label></em></td>';
+			$content .= '<td align="left"><input type="text" class="readonly" disabled="disabled" name="user_id" id="user_id" value="" />&nbsp;<em><label for="user_id"><a href="javascript://" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=reports&page=select_user_report\',\'select_user_report\',\'scrollbars=yes,width=800,height=700,resizable=yes\');" > <i class="fa fa-search" aria-hidden="true" title="'._CHOOSE_USER2.'"></i></a></label></em></td>';
 			$content .= '<td align="right" valign="middle"><input type="button" onclick="valid_userlogs(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=reports&page=get_user_logs_stats_val\');" class="button" name="Submit1" value="'._VALIDATE.'" /></td>';
 		$content .= '</tr>';
 	$content .= '</table>';
