@@ -207,9 +207,10 @@ function addRow(id_tableau)
 	var id_Cons = "conseiller_0";
 	var last_select = tableau.rows.length-3;
 	
-	//console.log(document.getElementById('conseiller_'+last_select));
 	//var listeDeroulante = document.getElementById(id_Cons);
 	var listeDeroulante = document.getElementById('conseiller_'+last_select);
+
+
 	var colonne2 = ligne.insertCell(0);//on ajoute la seconde cellule
 	var listOptions = "";
 	
@@ -235,7 +236,7 @@ function addRow(id_tableau)
 	colonne6.innerHTML += "<a href=\"javascript://\" id=\"add_"+position+"\" name=\"add_"+position+"\" onclick=\"addRow('"+id_tableau+"')\"style=\"visibility:visible;\" ><i class=\"fa fa-user-plus fa-2x\" title=\"Ajouter un utilisateur dans le circuit\"></i></a>";
 	
 	var colonne7 = ligne.insertCell(5);
-	colonne7.innerHTML += "<input type=\"text\" id=\"consigne_"+position+"\" name=\"consigne_"+position+"\" style=\"width:95%;\"/>";
+	colonne7.innerHTML += "<input type=\"text\" id=\"consigne_"+position+"\" name=\"consigne_"+position+"\" value=\""+document.getElementById('consigne_'+last_select).value+"\" style=\"width:95%;\"/>";
 	
 	var colonne8 = ligne.insertCell(6);
 	colonne8.style.display = 'none';
@@ -249,6 +250,7 @@ function addRow(id_tableau)
 	//colonne10.style.display = 'none';
 	colonne10.innerHTML += '<i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i>';
 	
+	document.getElementById('consigne_'+last_select).value = "";
 	refreshIcones(id_tableau);
 }
 
@@ -279,6 +281,12 @@ function deplacerLigne(source, cible, id_tableau)
 		if (i == 0){
 			nouvelle.cells[0].childNodes[1].selectedIndex = cellules[i].childNodes[1].selectedIndex;
 		}
+
+		if(i == 5){
+			nouvelle.cells[5].childNodes[0].value = cellules[i].childNodes[0].value;
+			//console.log(cellules[i].childNodes[0].value);
+		}
+		
 		/*if (i > 6)
 			nouvelle.cells[i].style.display = 'none';*/
 		if (i == 7 || i == 6){
