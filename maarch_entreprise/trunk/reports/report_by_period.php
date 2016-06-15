@@ -50,7 +50,7 @@ $content .='<div id="params">';
 
           if($id <> 'mail_vol_by_cat' && $id <> 'process_delay_generic_evaluation'){
           $content.='<p class="double" style="margin-left:10px">';
-          $content.= _CHOOSE_ONE_ENTITY.' :<br /><br />';
+          $content.= _CHOOSE.' :<br /><br />';
           $content.='<select style="width:300px" name="entitieslist[]" id="entitieslist" size="7" ondblclick="moveclick($(entitieslist), $(entities_chosen))" multiple="multiple">';
 
           $db = new Database();
