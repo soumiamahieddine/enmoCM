@@ -270,14 +270,16 @@ function deplacerLigne(source, cible, id_tableau)
 	//on boucle pour pouvoir agir sur chaque cellule
 	for(var i=0; i<cellules.length; i++)
 	{
+		//console.log(cellules[i].innerHTML);
+		//console.log(cellules[i].);
 		nouvelle.insertCell(-1).innerHTML += cellules[i].innerHTML;//on copie chaque cellule de l'ancienne à la nouvelle ligne
 		/*if (i == 6 && cellules[i].childNodes[0].value != ""){
 			nouvelle.cells[5].childNodes[0].value = cellules[i].childNodes[0].value;
-		}
+		}*/
 		if (i == 0){
 			nouvelle.cells[0].childNodes[1].selectedIndex = cellules[i].childNodes[1].selectedIndex;
 		}
-		if (i > 6)
+		/*if (i > 6)
 			nouvelle.cells[i].style.display = 'none';*/
 		if (i == 7 || i == 6){
 			nouvelle.cells[i].style.display = 'none';
