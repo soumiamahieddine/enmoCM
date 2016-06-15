@@ -388,8 +388,8 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 				}
 				$stmt = $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date')." as diff_date FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$view.".status not in ('DEL','BAD') 
 					AND ".$view.".closing_date is NOT NULL 
-					AND date_part( 'month', ".$view.".closing_date)  = ?
-					and date_part( 'year', ".$view.".closing_date)  = ?", array($i,$_POST['the_year']));
+					AND date_part( 'month', ".$view.".creation_date)  = ?
+					and date_part( 'year', ".$view.".creation_date)  = ?", array($i,$_POST['the_year']));
 				if( $stmt->rowCount() > 0)
 				{
 					$tmp = 0;
