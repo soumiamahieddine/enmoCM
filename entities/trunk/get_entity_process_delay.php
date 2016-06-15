@@ -177,7 +177,7 @@ for($i=0; $i<count($doctypes);$i++)
         $stmt = $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay, res_view_letterbox.creation_date
                     FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id 
                     WHERE ".$view.".destination = ? ".$where_date." and ".$view.".status not in ('DEL','BAD')",array($doctypes[$i]['ID']));
-        //$db->show();
+        
 
         if( $stmt->rowCount() > 0)
         {
@@ -194,7 +194,7 @@ for($i=0; $i<count($doctypes);$i++)
             if ($nbDoc == 0) $nbDoc = 1;
             if($report_type == 'graph')
             {
-                array_push($val_an, (string)$tmp / $nbDoc);
+                array_push($val_an, (string)round($tmp / $nbDoc,2));
             }
             elseif($report_type == 'array')
             {
