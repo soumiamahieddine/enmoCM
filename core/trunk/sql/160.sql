@@ -145,6 +145,13 @@ ALTER TABLE res_version_attachments ADD effective_date timestamp without time zo
 ALTER TABLE notes ALTER COLUMN date_note TYPE timestamp without time zone;
 
 
+-- ************************************************************************* --
+--                      NOUVEAU STATUS TRANSMISSION                          --
+-- ************************************************************************* --
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES('EXP_RTURN', 'Retour attendu', 'N', 'N', '', 'apps','Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES('NO_RTURN', 'Pas de retour', 'N', 'N', '', 'apps','Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES('RTURN', 'Retourné', 'N', 'N', '', 'apps','Y', 'Y');
+
 -- view for letterbox
 CREATE VIEW res_view_letterbox AS
     SELECT r.tablename, r.is_multi_docservers, r.res_id, r.type_id, r.policy_id, r.cycle_id, 
@@ -384,3 +391,4 @@ CREATE VIEW res_view_attachments AS
 --                               DATABASE VERSION                            --
 -- ************************************************************************* --
 UPDATE parameters SET param_value_int = 160 where id='database_version';
+
