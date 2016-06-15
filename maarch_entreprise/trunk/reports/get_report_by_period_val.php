@@ -308,7 +308,6 @@ $str_status = '(';
 		}
 		elseif($report_type == 'array')
 		{
-			array_unshift($data, array('SSCHEMISE' => _SSCHEMISE, 'LABEL' => _DOCTYPE, 'VALUE' => _PROCESS_DELAY));
 
 			// Tri du tableau $data
 			foreach ($data as $key => $value) {
@@ -316,6 +315,7 @@ $str_status = '(';
 				$document[$key]  = $value['LABEL'];
 			}
 			array_multisort($ssChemise, SORT_ASC, $document, SORT_ASC, $data);
+			array_unshift($data, array('SSCHEMISE' => _SUBFOLDER, 'LABEL' => _DOCTYPE, 'VALUE' => _PROCESS_DELAY));
 		}
 
 		
@@ -652,13 +652,13 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 			}
 			elseif($report_type == 'array')
 			{
-				array_unshift($data, array('SSCHEMISE'=> _SSCHEMISE, 'LABEL' => _DOCTYPE, 'VALUE' => _NB_MAILS1));
 				// Tri du tableau $data
 				foreach ($data as $key => $value) {
 					$ssChemise[$key] = $value['SSCHEMISE'];
 					$document[$key]  = $value['LABEL'];
 				}
 				array_multisort($ssChemise, SORT_ASC, $document, SORT_ASC, $data);
+				array_unshift($data, array('SSCHEMISE'=> _SUBFOLDER, 'LABEL' => _DOCTYPE, 'VALUE' => _NB_MAILS1));
 			}
 		
 			if($has_data)
