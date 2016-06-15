@@ -241,7 +241,7 @@ function display_list() {
     $where_what = array();
     $what = '';
     if (isset($_REQUEST['what'])) {
-        $what = $func->protect_string_db($_REQUEST['what']);
+        $what = $_REQUEST['what'];
 
     }
     if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
@@ -415,7 +415,7 @@ function validate_thesaurus_submit() {
     array_push($params, $_REQUEST['thesaurus_parent_id']);
     array_push($params, $_REQUEST['thesaurus_id']);
     array_push($params, $_REQUEST['used_for']);
-    
+
     // var_dump($new_tag_label);
     if ($new_thesaurus_name == '' || !$new_thesaurus_name || empty($new_thesaurus_name))
     {

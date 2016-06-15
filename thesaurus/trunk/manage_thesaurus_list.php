@@ -64,11 +64,14 @@ if ($mode == 'list') {
     echo '<script>
     $(\'what\').onblur=function(){
         var str = $(\'what\').value;
-        str = str.split(\'\').reverse().join(\'\');
-        index = str.indexOf("(",-1);
-        str = str.substring(index+2, str.length);
-        str = str.split(\'\').reverse().join(\'\');
-        $(\'what\').value = str;
+        if(str.indexOf("(",-1)!=-1){
+            str = str.split(\'\').reverse().join(\'\');
+            index = str.indexOf("(",-1);
+            str = str.substring(index+2, str.length);
+            str = str.split(\'\').reverse().join(\'\');
+            $(\'what\').value = str; 
+        }
+        
     };
 </script>';
 } elseif ($mode == 'up' || $mode == 'add') {
