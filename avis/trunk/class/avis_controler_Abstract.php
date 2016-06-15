@@ -511,7 +511,7 @@ abstract class avis_controler_Abstract
                     $j=0;
                     $str .= '<tr class="col" id="lineAvisWorkflowPopup_'.$j.'">';
                     $str .= '<td>';
-                    $str .= '<span id="avisPopup_rankPopup_' . $j . '"><strong>1 </strong></span>';
+                    $str .= '<span id="avisPopup_rankPopup_' . $j . '"> <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) . '</span> </span>';
                     if ($bool_modif){
                         $str .= '<select style="width:150px;" id="avisPopup_'.$j.'" name="avisPopup_'.$j.'" >';
                         $str .= '<option value="" >Sélectionnez un utilisateur</option>';
