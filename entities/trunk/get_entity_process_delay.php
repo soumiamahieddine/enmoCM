@@ -194,11 +194,11 @@ for($i=0; $i<count($doctypes);$i++)
             if ($nbDoc == 0) $nbDoc = 1;
             if($report_type == 'graph')
             {
-                array_push($val_an, (string)round($tmp / $nbDoc,2));
+                array_push($val_an, (string)round($tmp / $nbDoc,0));
             }
             elseif($report_type == 'array')
             {
-                array_push($data, array('LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,2)));
+                array_push($data, array('LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,0)));
             }
             if($tmp / $nbDoc > 0)
             {
