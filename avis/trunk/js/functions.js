@@ -36,7 +36,7 @@ function addRowAvis(id_tableau)
 	colonne6.innerHTML += "<a href=\"javascript://\" id=\"avis_add_"+position+"\" name=\"avis_add_"+position+"\" onclick=\"addRowAvis('"+id_tableau+"')\"style=\"visibility:visible;\" ><i class=\"fa fa-user-plus fa-2x\" title=\"Ajouter un utilisateur dans le circuit\"></i></a>";
 	
 	var colonne7 = ligne.insertCell(5);
-	colonne7.innerHTML += "<input type=\"text\" id=\"avis_consigne_"+position+"\" name=\"avis_consigne_"+position+"\" style=\"width:95%;\"/>";
+	colonne7.innerHTML += "<input type=\"text\" id=\"avis_consigne_"+position+"\" name=\"avis_consigne_"+position+"\" value=\""+document.getElementById('avis_consigne_'+last_select).value+"\" style=\"width:95%;\"/>";
 	
 	var colonne8 = ligne.insertCell(6);
 	colonne8.style.display = 'none';
@@ -93,7 +93,7 @@ function addRowAvisPopup(id_tableau)
     colonne6.innerHTML += "<a href=\"javascript://\" id=\"avisPopup_add_"+position+"\" name=\"avisPopup_add_"+position+"\" onclick=\"addRowAvisPopup('"+id_tableau+"')\"style=\"visibility:visible;\" ><i class=\"fa fa-user-plus fa-2x\" title=\"Ajouter un utilisateur dans le circuit\"></i></a>";
     
     var colonne7 = ligne.insertCell(5);
-    colonne7.innerHTML += "<input type=\"text\" id=\"avisPopup_consigne_"+position+"\" name=\"avisPopup_consigne_"+position+"\" style=\"width:95%;\"/>";
+    colonne7.innerHTML += "<input type=\"text\" id=\"avisPopup_consigne_"+position+"\" name=\"avisPopup_consigne_"+position+"\" value=\""+document.getElementById('avisPopup_consigne_'+last_select).value+"\" style=\"width:95%;\"/>";
     
     var colonne8 = ligne.insertCell(6);
     colonne8.style.display = 'none';
