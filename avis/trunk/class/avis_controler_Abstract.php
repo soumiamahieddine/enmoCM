@@ -434,7 +434,7 @@ abstract class avis_controler_Abstract
                     $str .= '<input type="hidden" value="'.$typeList . '_' . strtoupper(base_convert(date('U'), 10, 36)).'" name="objectId_inputAvis" id="objectId_inputAvis"/><br/>';
                     $str .= '<label for="titleModel">Titre</label> ';
                     $str .= '<input type="text" name="titleModelAvis" id="titleModelAvis"/><br/>';
-                    $str .= '<input type="button" name="saveModelAvis" id="saveModelAvis" value="'._VALIDATE.'" class="button" onclick="saveAvisModelPopup(\''.$id_tab.'\');" /> ';
+                    $str .= '<input type="button" name="saveModelAvis" id="saveModelAvis" value="'._VALIDATE.'" class="button" onclick="saveAvisModel(\''.$id_tab.'\');" /> ';
                     $str .= '<input type="button" name="cancelModelAvis" id="cancelModelAvis" value="'._CANCEL.'" class="button" onclick="$(\'modalSaveAvisModel\').style.display = \'none\';" />';
                     $str .= '</div>';
             }
