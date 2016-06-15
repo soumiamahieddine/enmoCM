@@ -312,8 +312,8 @@ abstract class lists_Abstract extends Database
 
                     $stmt = $db->query(
                         "SELECT distinct(typist) as typist, count(distinct res_id)"
-                        . " as total FROM " 
-                        . $view. " " .$where
+                        . " as total FROM res_view_letterbox r" 
+                        . $view. " r " .$where
                         . " group by typist order by typist"
                     );
                     while ($res = $stmt->fetchObject()) {
