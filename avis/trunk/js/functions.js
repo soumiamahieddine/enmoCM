@@ -49,7 +49,9 @@ function addRowAvis(id_tableau)
 	var colonne10 = ligne.insertCell(8);
 	//colonne10.style.display = 'none';
 	colonne10.innerHTML += '<i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i>';
-	
+
+	document.getElementById('avis_consigne_'+last_select).value = "";
+
 	refreshIconesAvis(id_tableau);
 }
 
@@ -104,6 +106,8 @@ function addRowAvisPopup(id_tableau)
     var colonne10 = ligne.insertCell(8);
 	//colonne10.style.display = 'none';
 	colonne10.innerHTML += '<i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i>';
+
+	document.getElementById('avisPopup_consigne_'+last_select).value = "";
 
     refreshIconesAvisPopup(id_tableau);
 }
@@ -327,11 +331,17 @@ function deplacerLigneAvis(source, cible, id_tableau)
 		nouvelle.insertCell(-1).innerHTML += cellules[i].innerHTML;//on copie chaque cellule de l'ancienne à la nouvelle ligne
 		/*if (i == 6 && cellules[i].childNodes[0].value != ""){
 			nouvelle.cells[5].childNodes[0].value = cellules[i].childNodes[0].value;
-		}
+		}*/
 		if (i == 0){
 			nouvelle.cells[0].childNodes[1].selectedIndex = cellules[i].childNodes[1].selectedIndex;
 		}
-		if (i > 6)
+
+		if(i == 5){
+			nouvelle.cells[5].childNodes[0].value = cellules[i].childNodes[0].value;
+			//console.log(cellules[i].childNodes[0].value);
+		}
+		
+		/*if (i > 6)
 			nouvelle.cells[i].style.display = 'none';*/
 		if (i == 7 || i == 6){
 			nouvelle.cells[i].style.display = 'none';
