@@ -549,6 +549,7 @@ abstract class avis_controler_Abstract
                     $str .= '<td style="display:none"><input type="hidden" id="avisPopup_date_'.$j.'" name="avisPopup_date_'.$j.'"/></td>';
 
                     $str .= '<td style="display:none"><input type="checkbox" id="avisPopup_isSign_'.$j.'" name="avisPopup_isSign_'.$j.'" style="visibility:hidden;" /></td>';
+                    $str .= '<td><i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i></td>';
                     $str .= '</tr>';
                 }
                 else{
@@ -648,6 +649,10 @@ abstract class avis_controler_Abstract
 
 
                                 $str .= '<td style="display:none"><input type="checkbox" id="avisPopup_isSign_'.$seq.'" name="avisPopup_isSign_'.$seq.'" '.$displayCB.' '.$checkCB.'/></td>';
+                                if ($step['process_date'] != '')
+                                    $str .= '<td><i class="fa fa-check fa-2x" title="'._AVIS_SENT.'"></i></td>';
+                                else
+                                    $str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_AVIS.'"></i></td>';
 
                             }
                             else{
