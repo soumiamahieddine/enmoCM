@@ -82,7 +82,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
 			$content .= '<td>';
 
 			$tab_users = $avis->getUsersAvis();
-			$content .= '<span id="avisPopup_rank_' . $seq . '"><strong>' . ($seq + 1) . ' </strong></span>';
+			$content .= '<span id="avisPopup_rank_' . $seq . '"> <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) .'</span> </span>';
 			$content .= '<select id="avisPopup_'.$seq.'" name="avisPopup_'.$seq.'" >';
 			$content .= '<option value="" >S&eacute;lectionnez un utilisateur</option>';
 			foreach($tab_users as $user){
@@ -116,7 +116,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
 			$content .= '<td><input type="text" id="avisPopup_consigne_'.$seq.'" name="avisPopup_consigne_'.$seq.'" value="'.$step['process_comment'].'" onmouseover="setTitle(this);" style="width:95%;"/></td>';
 			$content .= '<td style="display:none"><input type="hidden" value="'.$step['process_date'].'" id="avisPopup_date_'.$seq.'" name="avisPopup_date_'.$seq.'"/></td>';
 			$content .= '<td style="display:none"><input type="checkbox" style="visibility:hidden" id="avisPopup_isSign_'.$seq.'" name="avisPopup_isSign_'.$seq.'" /></td>';
-
+			$content .= '<td><i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i></td>';
 			$content .= "</tr>";
 		}
 	}
