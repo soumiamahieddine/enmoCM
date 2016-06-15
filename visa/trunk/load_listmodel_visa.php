@@ -86,7 +86,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 			$content .= '<td>';
 
 			$tab_users = $visa->getUsersVis();
-			$content .= '<span id="rank_' . $seq . '"><strong>' . ($seq + 1) . ' </strong></span>';
+			$content .= '<span id="rank_' . $seq . '"> <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) .'</span> </span>';
 			$content .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
 			$content .= '<option value="" >S&eacute;lectionnez un utilisateur</option>';
 			foreach($tab_users as $user){
@@ -120,7 +120,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 			$content .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$step['process_comment'].'" onmouseover="setTitle(this);" style="width:95%;"/></td>';
 			$content .= '<td style="display:none"><input type="hidden" value="'.$step['process_date'].'" id="date_'.$seq.'" name="date_'.$seq.'"/></td>';
 			$content .= '<td style="display:none"><input type="checkbox" style="visibility:hidden" id="isSign_'.$seq.'" name="isSign_'.$seq.'" /></td>';
-
+			$content .= '<td><i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i></td>';
 			$content .= "</tr>";
 		}
 	}
@@ -139,7 +139,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 
 		$content .= '<td>';
 		$tab_users = $visa->getUsersVis();
-		$content .= '<span id="rank_' . $seq . '"><strong>' . ($seq + 1) . ' </strong></span>';
+		$content .= '<span id="rank_' . $seq . '"> <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) .'</span> </span>';
 		$content .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
 		$content .= '<option value="" >S&eacute;lectionnez un utilisateur</option>';
 		foreach($tab_users as $user){
@@ -168,7 +168,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 		$content .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_comment'].'" onmouseover="setTitle(this);" style="width:95%;"/></td>';
 		$content .= '<td style="display:none"><input type="hidden" id="date_'.$seq.'" name="date_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_date'].'" /></td>';
 		$content .= '<td style="display:none"><input type="checkbox" style="visibility:hidden" id="isSign_'.$seq.'" name="isSign_'.$seq.'" checked/></td>';
-
+		$content .= '<td><i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i></td>';
 		$content .= "</tr>";
 	}
 
