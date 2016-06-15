@@ -258,11 +258,11 @@ $str_status = '(';
 				if ($nbDoc == 0) $nbDoc = 1;
 				if($report_type == 'graph')
 				{
-					array_push($val_an, (string)$tmp / $nbDoc);
+					array_push($val_an, (string)round($tmp / $nbDoc,0));
 				}
 				elseif($report_type == 'array')
 				{
-					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => functions::show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,2)));
+					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => functions::show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,0)));
 				}
 				if($tmp / $nbDoc > 0)
 				{
@@ -404,11 +404,11 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 					if ($nbDoc == 0) $nbDoc = 1;
 					if($report_type == 'graph')
 					{
-						array_push($val_an, (string)$tmp / $nbDoc);
+						array_push($val_an, (string)round($tmp / $nbDoc,0));
 					}
 					elseif($report_type == 'array')
 					{
-						array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)round($tmp / $nbDoc,2)));
+						array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)round($tmp / $nbDoc,0)));
 					}
 					if($tmp / $nbDoc > 0)
 					{
