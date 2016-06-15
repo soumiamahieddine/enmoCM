@@ -316,6 +316,7 @@ abstract class lists_Abstract extends Database
                         . $view. " r " .$where
                         . " group by typist order by typist"
                     );
+            
                     while ($res = $stmt->fetchObject()) {
                         
                         if (isset($_SESSION['filters']['typist']['VALUE']) 
@@ -405,11 +406,20 @@ abstract class lists_Abstract extends Database
             
             case 'contact':
                 //if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
-
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+                    $sec = new security();
+                    $pos = strpos($this->params['basketClause'], 'r.');
 
-                    $query = "SELECT distinct(res_view_letterbox.contact_id),society, firstname, lastname FROM "
-                            . $_SESSION['tablename']['contacts_v2'] . " c, res_view_letterbox WHERE c.contact_id = res_view_letterbox.contact_id and ".$this->params['basketClause'];
+                    if($pos){
+                        $ext = 'r';
+                        $view = 'res_view_letterbox r';
+                    }else {
+                        $ext = 'res_view_letterbox';
+                        $view = 'res_view_letterbox';
+                    }
+
+                    $query = "SELECT distinct(".$ext.".contact_id),society, firstname, lastname FROM "
+                            . $_SESSION['tablename']['contacts_v2'] . " c, ".$view." WHERE c.contact_id = ".$ext.".contact_id and ".$this->params['basketClause'];
                         
                     $stmt = $db->query($query, array());
                                             
