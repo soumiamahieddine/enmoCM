@@ -140,6 +140,14 @@ ALTER TABLE res_version_attachments ADD effective_date timestamp without time zo
 
 
 -- ************************************************************************* --
+--                           NEW COLUMNS FOR CONTACTS                        --
+-- ************************************************************************* --
+
+ALTER TABLE contacts_res DROP COLUMN IF EXISTS mode;
+ALTER TABLE contacts_res ADD mode character varying NOT NULL DEFAULT 'multi'::character varying;
+
+
+-- ************************************************************************* --
 --                      CHANGE COLUMNS TYPE FOR NOTE                         --
 -- ************************************************************************* --
 ALTER TABLE notes ALTER COLUMN date_note TYPE timestamp without time zone;
@@ -148,8 +156,11 @@ ALTER TABLE notes ALTER COLUMN date_note TYPE timestamp without time zone;
 -- ************************************************************************* --
 --                      NOUVEAU STATUS TRANSMISSION                          --
 -- ************************************************************************* --
+DELETE FROM STATUS where id ='EXP_RTURN';
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES('EXP_RTURN', 'Retour attendu', 'N', 'N', '', 'apps','Y', 'Y');
+DELETE FROM STATUS where id ='NO_RTURN';
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES('NO_RTURN', 'Pas de retour', 'N', 'N', '', 'apps','Y', 'Y');
+DELETE FROM STATUS where id ='RTURN';
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES('RTURN', 'Retourné', 'N', 'N', '', 'apps','Y', 'Y');
 
 -- view for letterbox
@@ -209,7 +220,7 @@ CREATE VIEW res_view_letterbox AS
     mlb.process_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date,
     mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, mlb.is_multicontacts, r.video_user, r.video_time,
     r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes,
-	  r.locker_user_id, r.locker_time,
+    r.locker_user_id, r.locker_time,
     ca.case_id, ca.case_label, ca.case_description, en.entity_label, en.entity_type AS entityType,
     cont.contact_id AS contact_id,
     cont.firstname AS contact_firstname, cont.lastname AS contact_lastname,
@@ -291,7 +302,7 @@ CREATE VIEW res_view_business AS
     f.parent_id AS fold_parent_id, f.folder_level, f.folder_name,
     f.creation_date AS fold_creation_date, r.initiator, r.destination,
     r.dest_user, busi.category_id, busi.contact_id, busi.address_id, busi.currency,
-	  r.locker_user_id, r.locker_time,	
+    r.locker_user_id, r.locker_time,  
     busi.net_sum, busi.tax_sum, busi.total_sum, 
     busi.process_limit_date, busi.closing_date, busi.alarm1_date, busi.alarm2_date,
     busi.flag_notif, busi.flag_alarm1, busi.flag_alarm2, r.video_user, r.video_time,
@@ -391,4 +402,3 @@ CREATE VIEW res_view_attachments AS
 --                               DATABASE VERSION                            --
 -- ************************************************************************* --
 UPDATE parameters SET param_value_int = 160 where id='database_version';
-
