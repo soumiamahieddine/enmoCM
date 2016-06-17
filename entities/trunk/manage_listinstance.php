@@ -851,7 +851,7 @@ $linkwithwhat =
 			<div align="center">
 				<input align="middle" type="button" value="<?php echo _VALIDATE;?>" class="button" name="valid" onclick="change_diff_list('<?php functions::xecho($origin);?>', <?php echo "'" . $displayValue . "'";
 					if ($_REQUEST['origin'] == 'redirect'){
-                        echo ",'diff_list_div_redirect','','','avis'";
+                        echo ",'diff_list_div_redirect','','','".$specific_role."'";
                     }else{
                         echo ",'','','".$cat."'",'';
                     } 
