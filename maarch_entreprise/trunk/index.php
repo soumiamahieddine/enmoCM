@@ -212,25 +212,22 @@ $core->load_html();
 $core->load_header();
 $time = $core->get_session_time_expire();
 
-if (!isset($_REQUEST['display'])) { ?>
-    <script>
-
-    var element = document;
-
-
-    element.addEventListener('click', function() {
-        window.clearTimeout(window.chronoExpiration);
-        window.chronoExpiration=window.setTimeout('redirect_to_url(\'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true\')', '<?php echo $_SESSION['config']['cookietime']; ?>'*60*1000);
-
-    });
-
-    </script>
-<?php } ?>
+ ?>
 <body style="background: #f2f2f2;" onload="session_expirate(<?php echo $time;?>, '<?php 
     echo $_SESSION['config']['businessappurl'];
     ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
 
 <?php
+if (!isset($_REQUEST['display'])) { ?>
+    <script>
+        var element = document;
+        element.addEventListener('click', function() {
+            window.clearTimeout(window.chronoExpiration);
+            window.chronoExpiration=window.setTimeout('redirect_to_url(\'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true\')', '<?php echo $_SESSION['config']['cookietime']; ?>'*60*1000);
+        });
+    </script>
+<?php }
+
 $path = $_SESSION['config']['corepath'] . 'custom/'
       . $_SESSION['custom_override_id'] . '/apps/maarch_entreprise/template/header.html';
 
