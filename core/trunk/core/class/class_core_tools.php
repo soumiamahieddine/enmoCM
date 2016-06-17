@@ -1535,7 +1535,7 @@ class core_tools extends functions
             <link href="index.php?display&page=generate_search_xml" title="Maarch <?php 
                 echo functions::xssafe($_SESSION['config']['applicationname']) . ' ' 
                     . _GLOBAL_SEARCH
-                ;?>" type="application/opensearchdescription+xml" rel="search">
+                ;?>" type="application/opensearchdescription+xml" rel="search"/>
             <?php
             if($load_css)
             {
