@@ -7,8 +7,11 @@ function change_entity(
 	origin_keyword, 
 	display_value_tr, 
 	load_listmodel,
-    category =''
+    category
 ) {
+    if(category === undefined){
+        category = '';
+    }
     var div_id = diff_list_id || 'diff_list_div';
     var tr_display_val = display_value_tr || 'table-row';
     var origin_arg = origin_keyword || '';
@@ -119,8 +122,11 @@ function load_listmodel(
 	selectedOption,
 	diff_list_id, 
 	origin_keyword,
-    category = ''
+    category
 ) {
+    if(category === undefined){
+        category = '';
+    }
     var div_id = diff_list_id || 'diff_list_div';
     var origin = origin_keyword || '';
 	
@@ -160,9 +166,15 @@ function change_diff_list(
 	display_value_tr, 
 	difflist_div, 
 	difflist_tr,
-    category = '',
-    specific_role = ''
+    category,
+    specific_role
 ) {
+    if(category === undefined){
+        category = '';
+    }
+    if(specific_role === undefined){
+        specific_role = '';
+    }
     var list_div = difflist_div || 'diff_list_div';
     var list_div_from_action = 'diff_list_div_from_action';
     var list_tr = difflist_tr || 'diff_list_tr';
