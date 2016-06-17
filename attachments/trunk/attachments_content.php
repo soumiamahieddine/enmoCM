@@ -1670,6 +1670,9 @@ if (!isset($_REQUEST['id'])) {
         . 'select_templates\', this.options[this.selectedIndex].value);"/>';
     $content .= '<option value="">' . _CHOOSE_ATTACHMENT_TYPE . '</option>';
     foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
+        if(empty($_SESSION['attachment_types_get_chrono'][$attachmentType][0])){
+            $_SESSION['attachment_types_get_chrono'][$attachmentType] = '';
+        }
         if($_SESSION['attachment_types_show'][$attachmentType] == "true"){
             $content .= '<option value="' . $attachmentType . '" with_chrono = "'. $_SESSION['attachment_types_with_chrono'][$attachmentType].'" get_chrono = "'. $_SESSION['attachment_types_get_chrono'][$attachmentType].'"';
 
