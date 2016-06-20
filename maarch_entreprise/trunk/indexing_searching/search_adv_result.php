@@ -160,14 +160,14 @@ if (count($_REQUEST['meta']) > 0) {
                 // CASE_LABEL
                 $json_txt .= "'labelcase' : ['".addslashes(trim($_REQUEST['labelcase']))."'],";
                 //$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
-                $where_request .= " lower(".$_SESSION['collections'][0]['view'].".case_label) like lower(:labelCase) and ";
+                $where_request .= " lower(translate(".$_SESSION['collections'][0]['view'].".case_label,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:labelCase) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":labelCase" => "%".$func->wash($_REQUEST['labelcase'], "no", _CASE_LABEL,"no")."%"));
                 $case_view=true;
             } elseif ($tab_id_fields[$j] == 'descriptioncase' && !empty($_REQUEST['descriptioncase'])) {
                 // CASE_DESCRIPTION
                 $json_txt .= "'descriptioncase' : ['".addslashes(trim($_REQUEST['descriptioncase']))."'],";
                 //$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
-                $where_request .= " lower(".$_SESSION['collections'][0]['view'].".case_description) like lower(:descriptionCase) and ";
+                $where_request .= " lower(translate(".$_SESSION['collections'][0]['view'].".case_description,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:descriptionCase) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":descriptionCase" => "%".$func->wash($_REQUEST['descriptioncase'], "no", _CASE_DESCRIPTION,"no")."%"));
                 $case_view=true;
             } elseif ($tab_id_fields[$j] == 'chrono' && !empty($_REQUEST['chrono'])) {
