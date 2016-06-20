@@ -1416,7 +1416,7 @@ abstract class lists_Abstract extends Database
                     }
                     $db = new Database();
                     $stmt = $db->query(
-                        "SELECT count(*) as total FROM res_view_attachments WHERE res_id_master = ? and status not in ('DEL','OBS') and lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(?)", array($resultTheLine[0]['res_id'],$_SESSION['searching']['where_request_parameters'][':subject'])
+                        "SELECT count(*) as total FROM res_view_attachments WHERE res_id_master = ? and status not in ('DEL','OBS','TMP') and lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(?)", array($resultTheLine[0]['res_id'],$_SESSION['searching']['where_request_parameters'][':subject'])
                     );
                     $res_attach = $stmt->fetchObject();
                     if($res_attach->total > 0){
