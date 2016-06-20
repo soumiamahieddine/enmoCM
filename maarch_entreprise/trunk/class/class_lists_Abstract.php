@@ -1390,6 +1390,20 @@ abstract class lists_Abstract extends Database
         
     }
 
+    protected function _tmplt_func_load_case_status($resultTheLine) {
+            $db = new Database();
+            $stmt = $db->query("SELECT count(*) as total FROM cases WHERE case_closing_date is not NULL and case_id = ?",
+                                [$resultTheLine[0]['case_id']]);
+            $result = $stmt->fetchObject();
+            if($result->total > 0){
+                return '<i class="fa fa-briefcase fa-2x" title="'._CLOSED.'"><sup> <i class="fa fa-lock" aria-hidden="true" style="color:red;font-size:10px;"></i></sup></i>';
+            }else{
+                return '<i class="fa fa-briefcase fa-2x"></i>';
+            }
+            var_dump($resultTheLine[0]);
+        
+    }
+
     protected function _tmplt_showActionAdvResultFA($parameter, $resultTheLine) {
         $my_explode= explode ("|", $parameter);
 
@@ -1819,6 +1833,8 @@ abstract class lists_Abstract extends Database
         } elseif (preg_match("/^func_isConfidential$/", $parameter)) {
             $var = $this->_tmplt_func_isConfidential($resultTheLine);
         ##showActionIcon## : show action icon
+        } elseif (preg_match("/^func_load_case_status$/", $parameter)) {
+            $var = $this->_tmplt_func_load_case_status($resultTheLine);
         } else {
             $var = _WRONG_FUNCTION_OR_WRONG_PARAMETERS;
         }
