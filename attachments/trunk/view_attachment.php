@@ -91,7 +91,7 @@ if (! empty($_SESSION['error'])) {
         exit();
     } else {
         $stmt = $db->query(
-            "SELECT docserver_id, path, filename, format 
+            "SELECT docserver_id, path, filename, format, title 
                 FROM res_view_attachments 
                 WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc", array($sId,$sId,$_REQUEST['res_id_master'])
         );
@@ -108,6 +108,9 @@ if (! empty($_SESSION['error'])) {
             $docserver = $line->docserver_id;
             $path = $line->path;
             $filename = $line->filename;
+	    $nameShow = $function->normalize($line->title);
+	    $nameShow = preg_replace('/([^.a-z0-9]+)/i', '_', $nameShow);
+	    $nameShow .= '_'. date("j_m_Y__G_i");
             $format = $line->format;
             $stmt = $db->query(
                 "select path_template from " . _DOCSERVERS_TABLE_NAME
@@ -178,7 +181,7 @@ if (! empty($_SESSION['error'])) {
                     header("Content-Type: " . $arrayIsAllowed['mime_type']);
                     header(
                         "Content-Disposition: inline; filename="
-                        . basename('maarch.' . $format) . ";"
+                        . basename($nameShow . '.' . $format) . ";"
                     );
                     header("Content-Transfer-Encoding: binary");
                     readfile($file);
