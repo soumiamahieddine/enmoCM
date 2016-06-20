@@ -208,11 +208,27 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		}
 		
 		$frm_str .= '<ul>';
-		$frm_str .= '<li><b>';
+		$frm_str .= '<li><b style="float:left;">';
 		$frm_str .= '<span id = "chrn_id_' . $res_id_doc . '">' . $chrono_number_doc . '</span> <i class="fa fa-certificate" id="signedDoc_'.$res_id_doc.'" style="'.$classSign.'" ></i> '/*. ' - ' .$res_id_doc*/;
-		$frm_str .= '</b></li>';
+
+		//priority
+		$color='';
+		switch ($data['priority']) {
+		    case 0:
+		        $color = 'color:red;';
+		        break;
+		    case 1:
+		        $color = 'color:orange;';
+		        break;
+		    case 2:
+		        $color = 'color:rgb(0, 157, 197);';
+		        break;
+	        default:
+		        $color = 'color:rgb(0, 157, 197);';
+		}
+		$frm_str .= '</b><i class="fa fa-circle" aria-hidden="true" style="float:right;'.$color.'" title="'.$_SESSION['mail_priorities'][$data['priority']].'"></i></li>';
 		
-		$frm_str .= '<li>';
+		$frm_str .= '<li style="clear:both;">';
 		$frm_str .= '<i class="fa fa-user" title="Contact"></i> ';
 		if(isset($data['contact']) && !empty($data['contact']))
         {
@@ -344,7 +360,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
 		if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
 		//Notes iframe
-		$frm_str .= '<dt id="onglet_notes">'. _NOTES.$nbr_notes .'</dt><dd id="page_notes" style="overflow-x: hidden;"><h2>'. _NOTES .'</h2><iframe name="list_notes_doc" id="list_notes_doc" src="'. $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=notes&identifier='. $res_id .'&origin=document&coll_id='.$coll_id.'&load&size=full" frameborder="0" scrolling="no" width="99%" height="570px"></iframe></dd> ';	
+		$frm_str .= '<dt id="onglet_notes">'. _NOTES.$nbr_notes .'</dt><dd id="page_notes" style="overflow-x: hidden;"><h2>'. _NOTES .'</h2><iframe name="list_notes_doc" id="list_notes_doc" src="'. $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=notes&identifier='. $res_id .'&origin=document&coll_id='.$coll_id.'&load&size=full" frameborder="0" scrolling="yes" width="99%" height="570px"></iframe></dd> ';	
 	}
 		
 	
@@ -495,11 +511,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '<td style="width:25%";">';	
 		//if ($core->test_service('sign_document', 'visa', false) && $currentStatus == 'ESIG') {
 		if ($core->test_service('sign_document', 'visa', false) ) {
-			$color = ' style="float:left;" ';
+			$color = ' style="float:left;color:#666;" ';
 			$img = '<img id="sign_link_img" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=sign.png" title="Signer ces projets de réponse (sans certificat)" />';
 			if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response'){
-				$color = ' style="float:left;color:green;" ';
-				$img = '<img id="sign_link_img" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=sign_valid.png" title="Signer ces projets de réponse (sans certificat)" />';
+				$color = ' style="float:left;color:green;cursor:not-allowed;" ';
+				$img = '<img id="sign_link_img" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=sign_valid.png" title="Enlever la signature" />';
 			} 
 
 			if ($_SESSION['modules_loaded']['visa']['showAppletSign'] == "true"){
@@ -507,9 +523,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',0);';
 				$frm_str .= '"><i class="fm fm-file-fingerprint fm-3x" title="Signer ces projets de réponse (avec certificat)"></i></a>';
 			}
-			$frm_str .= ' <a href="javascript://" id="sign_link" '.$color.' onclick="';
-			if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',2);';
-			$frm_str .= '">'.$img.'</a>';
+			if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response'){
+				$frm_str .= ' <a href="javascript://" id="sign_link" '.$color.' onclick="';
+				$frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',2);';
+			}else{
+				$frm_str .= ' <a target="list_attach" href="';
+				$frm_str .= 'index.php?display=true&module=attachments&page=del_attachment&relation=1&id='.$tab_path_rep_file[0]['res_id'];
+			} 
+			$frm_str .= '" id="sign_link" '.$color.'>'.$img.'</a>';
 		}
 		
 		$displayModif = ' style="float:right;" ';
