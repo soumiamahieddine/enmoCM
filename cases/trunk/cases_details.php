@@ -117,6 +117,7 @@ if ($stmt->rowCount() >0)
 	 while ($ext_result=$stmt->fetchObject())
 	 {
 					$res_status = $status_obj->get_status_data($ext_result->status);
+					$img_class = substr($res_status['IMG_SRC'], 0, 2);
 		 
 		 
 					$my_action = 'onclick="validForm( \'page\', \''.$ext_result->res_id.'\', \''.$default_action.' \');"';
@@ -129,7 +130,15 @@ if ($stmt->rowCount() >0)
 					
 
 					$external .='<td width="8%" >&nbsp;</td>';
-					$external .='<td width="40px"><i class="fm '.$res_status['IMG_SRC'].'" title="'.$res_status['LABEL'].'"></i></td>';
+					$external .='<td width="40px" style="vertical-align:top;">';
+
+					if (!isset($res_status['IMG_SRC']) ||  empty($res_status['IMG_SRC'])){
+                 		$external .= "<i  ".$style." class = 'fm fm-letter-status-new' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
+					} else {
+						$external .= "<i ".$style." class = '".$img_class." ".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
+					}
+
+					$external .='</td>';
 					//$external .='<td width="40px"><p><img src="'. get_img_cat($ext_result->category_id,$extension_icon).'" title="'.$_SESSION['mail_categories'][$ext_result->category_id].'" alt="'.$_SESSION['mail_categories'][$ext_result->category_id].'"></p></td>';
 					$external .='<td width="40px" ><b><p align="center" title="'._GED_NUM.' : '.functions::xssafe($ext_result->res_id).'" alt="'._GED_NUM.' : '.functions::xssafe($ext_result->res_id).'">'.functions::xssafe($func->cut_string($ext_result->res_id,50)).'</td></b></p>';
 					$external .='<td ><p title="'._SUBJECT.' : '.functions::xssafe(functions::show_string($ext_result->subject)).'" alt="'.SUBJECT.' : '.functions::xssafe(functions::show_string($ext_result->subject)).'">'.functions::xssafe($func->cut_string(functions::show_string($ext_result->subject),70)).'</p></td>';
