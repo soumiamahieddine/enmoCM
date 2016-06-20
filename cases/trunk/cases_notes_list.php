@@ -85,7 +85,7 @@ $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice'] );
 
 
 $select[$view] = array();
-array_push($select[$view], "res_id",  "subject", "dest_user", "type_label", "creation_date", "destination", "category_id, exp_user_id", "category_id as category_img" );
+array_push($select[$view], "res_id", "alt_identifier", "subject", "dest_user", "type_label", "creation_date", "destination", "category_id, exp_user_id", "category_id as category_img");
 $select[$_SESSION['tablename']['not_notes']] = array();
 array_push($select[$_SESSION['tablename']['not_notes']],"id", "date_note", "note_text", "user_id");
 
@@ -202,7 +202,28 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 				$tabNotes[$ind_notes1][$ind_notes2]["label_align"]="left";
 				$tabNotes[$ind_notes1][$ind_notes2]["align"]="left";
 				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom";
-				$tabNotes[$ind_notes1][$ind_notes2]["show"]=true;
+				if(_ID_TO_DISPAY == 'res_id'){
+					$display=true;
+				}else{
+					$display=false;
+				}
+				$tabNotes[$ind_notes1][$ind_notes2]["show"]=$display;
+				$ind_notes1d = $tabNotes[$ind_notes1][$ind_notes2]['value'];
+			}
+			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="alt_identifier")
+			{
+				$tabNotes[$ind_notes1][$ind_notes2]["id"]=$tabNotes[$ind_notes1][$ind_notes2]['value'];
+				$tabNotes[$ind_notes1][$ind_notes2]["label"]= _CHRONO_NUMBER;
+				$tabNotes[$ind_notes1][$ind_notes2]["size"]=$size_small;
+				$tabNotes[$ind_notes1][$ind_notes2]["label_align"]="left";
+				$tabNotes[$ind_notes1][$ind_notes2]["align"]="left";
+				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom";
+				if(_ID_TO_DISPAY == 'chrono_number'){
+					$display=true;
+				}else{
+					$display=false;
+				}
+				$tabNotes[$ind_notes1][$ind_notes2]["show"]=$display;
 				$ind_notes1d = $tabNotes[$ind_notes1][$ind_notes2]['value'];
 			}
 			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="user_id")
@@ -229,6 +250,7 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="date_note")
 			{
 				$tabNotes[$ind_notes1][$ind_notes2]["date_note"]=$tabNotes[$ind_notes1][$ind_notes2]['value'];
+				$tabNotes[$ind_notes1][$ind_notes2]["value"] = $core_tools->format_date_db($tabNotes[$ind_notes1][$ind_notes2]['value'], false, '', true);
 				$tabNotes[$ind_notes1][$ind_notes2]["label"]=_DATE;
 				$tabNotes[$ind_notes1][$ind_notes2]["size"]=$size_small;
 				$tabNotes[$ind_notes1][$ind_notes2]["label_align"]="left";
