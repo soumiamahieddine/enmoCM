@@ -127,7 +127,7 @@ if (count($_REQUEST['meta']) > 0) {
             } elseif ($tab_id_fields[$j] == 'multifield' && !empty($_REQUEST['multifield'])) {
                 // MULTIFIELD : subject, title, doc_custom_t1, process notes
                 $json_txt .= "'multifield' : ['".addslashes(trim($_REQUEST['multifield']))."'],";
-                $where_request .= "(lower(subject) LIKE lower(:multifield) "
+                $where_request .= "(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield) "
                     ."or lower(alt_identifier) LIKE lower(:multifield) "
                     ."or lower(title) LIKE lower(:multifield) "
                     ."or lower(doc_custom_t1) LIKE lower(:multifield) ";
@@ -152,7 +152,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $arrayPDO = array_merge($arrayPDO, array(":numCase" => $_REQUEST['numcase']));
                 $case_view=true;
 
-                if (!ctype_digit($_REQUEST['numcase'])) {
+                if (!is_numeric($_REQUEST['numcase'])) {
                     $_SESSION['error_search'] = _CASE_NUMBER_ERROR;
                 }
 
@@ -278,7 +278,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= $view . "res_id = :numGed and ";
                 $arrayPDO = array_merge($arrayPDO, array(":numGed" => $_REQUEST['numged']));
 
-                if (!ctype_digit($_REQUEST['numged'])) {
+                if (!is_numeric($_REQUEST['numged'])) {
                     $_SESSION['error_search'] = _NUMERO_GED;
                 }
             }
@@ -302,9 +302,11 @@ if (count($_REQUEST['meta']) > 0) {
             // SUBJECT
             elseif ($tab_id_fields[$j] == 'subject' && !empty($_REQUEST['subject']))
             {
+                //var_dump($_REQUEST['subject']);exit();
+                $_REQUEST['subject'] = $func->normalize($_REQUEST['subject']);
                 $json_txt .= " 'subject' : ['".addslashes(trim($_REQUEST['subject']))."'],";
-                $where_request .= " (lower(subject) like lower(:subject) "
-                    ."or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE coll_id = 'letterbox_coll' AND lower(title) like lower(:subject) ))) and ";
+                $where_request .= " (lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:subject) "
+                    ."or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE coll_id = 'letterbox_coll' AND lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))  like lower(:subject) ))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":subject" => "%".$_REQUEST['subject']."%"));
             } elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
             ) {
@@ -326,7 +328,7 @@ if (count($_REQUEST['meta']) > 0) {
                 } else {
                     // FULLTEXT
                     $fulltext_request = $func->normalize($_REQUEST['fulltext']);
-                    $json_txt .= " 'fulltext' : ['"
+                    $json_txt .= " 'fulltext' : ['" 
                         . addslashes(trim($_REQUEST['fulltext'])) . "'],";
                     set_include_path('apps' . DIRECTORY_SEPARATOR 
                         . $_SESSION['config']['app_id'] 
@@ -425,7 +427,6 @@ if (count($_REQUEST['meta']) > 0) {
                                 $where_request .= ' or ';
                         }
                     }
-
                 }
             }
             // TAGS
@@ -444,7 +445,7 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_request_welcome .= "(res_id = :resIdWelcome) or ";
                     $arrayPDO = array_merge($arrayPDO, array(":resIdWelcome" => $_REQUEST['welcome']));
                 }
-                $where_request_welcome .= "( lower(subject) LIKE lower(:multifieldWelcome) "
+                $where_request_welcome .= "( lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifieldWelcome) "
                     ."or lower(identifier) LIKE lower(:multifieldWelcome) "
                     ."or lower(alt_identifier) LIKE lower(:multifieldWelcome) "
                     ."or lower(title) LIKE lower(:multifieldWelcome)) "
@@ -862,6 +863,7 @@ $json_txt .= '}';
 $_SESSION['current_search_query'] = $json_txt;
 if (!empty($_SESSION['error_search'])) {
     $_SESSION['error'] = _MUST_CORRECT_ERRORS.' : '.$_SESSION['error_search'];
+
     if ($mode == 'normal') {
         ?>
         <script  type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>

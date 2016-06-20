@@ -414,8 +414,15 @@ if($mode == 'normal') {
                 }
                 if($tab[$i][$j][$value]=="type_label")
                 {
+
+                    if(!empty($_SESSION['searching']['where_request_parameters'][':doctypesChosen'])){
+                    
+                        $doctype = '<i style="background: #009dc5 none repeat scroll 0 0;border-radius: 4px;color: white;padding: 3px;" title="mot cible">'.$tab[$i][$j]['value'].'</i>';    
+                    }else{
+                        $doctype = $tab[$i][$j]['value'];
+                    }
                     $tab[$i][$j]["label"]=_TYPE;
-                    $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                    $tab[$i][$j]['value'] = $doctype;
                     $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
@@ -427,14 +434,22 @@ if($mode == 'normal') {
                 
                 if($tab[$i][$j][$value]=="status")
                 {
+                    if($tab[$i][18]["value"]=='0'){
+                        $style="style='color:red;'";
+                    }else if($tab[$i][18]["value"]=='1'){
+                        $style="style='color:orange;'";
+                    }else{
+                        $style="style='color:#009DC5;'";
+                    }
                     $tab[$i][$j]["label"]=_STATUS;
                     $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
+                    $statusCmp = $tab[$i][$j]['value'];
                     $img_class = substr($res_status['IMG_SRC'], 0, 2);
-                    //$tab[$i][$j]['value'] = '<img src = "'.$res_status['IMG_SRC'].'" alt = "'.$res_status['LABEL'].'" title = "'.$res_status['LABEL'].'">';
+                    // $tab[$i][$j]['value'] = '<img src = "'.$res_status['IMG_SRC'].'" alt = "'.$res_status['LABEL'].'" title = "'.$res_status['LABEL'].'">';
                     if (!isset($res_status['IMG_SRC']) ||  empty($res_status['IMG_SRC'])){
-                        $tab[$i][$j]['value'] = "<i class = 'fm fm-letter-status-new fm-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
+                        $tab[$i][$j]['value'] = "<i ".$style." class = 'fm fm-letter-status-new fm-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
                     } else {
-                        $tab[$i][$j]['value'] = "<i class = '".$img_class." ".$res_status['IMG_SRC']." ".$img_class."-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
+                        $tab[$i][$j]['value'] = "<i ".$style." class = '".$img_class." ".$res_status['IMG_SRC']." ".$img_class."-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
                     }
                     $tab[$i][$j]["size"]="5";
                     $tab[$i][$j]["label_align"]="left";
@@ -447,8 +462,41 @@ if($mode == 'normal') {
                 
                 if($tab[$i][$j][$value]=="subject")
                 {
+                    mb_internal_encoding("UTF-8");
+
+                    $target_subj = $_SESSION['searching']['where_request_parameters'][':subject'];
+
+                    $target_subj = str_replace('%', '', trim($target_subj));
+
+                    if(!empty($target_subj)){
+                        $subj = $request->cut_string($request->show_string($tab[$i][$j]["value"]), 250);
+
+                        $subj_no_accent = functions::normalize($subj);
+
+
+                        $begin_pos_subj = mb_strpos($subj_no_accent, $target_subj);
+
+                        if($begin_pos_subj != false || $begin_pos_subj === 0){
+                            $result = strlen($subj) - strlen($subj_no_accent);
+
+                            $subj_length = mb_strlen($target_subj);
+
+
+                            $target_subj_new = mb_substr($subj, $begin_pos_subj, $subj_length);
+
+
+                            $subj = str_replace($target_subj_new, '<i style="background: #009dc5 none repeat scroll 0 0;border-radius: 4px;color: white;padding: 3px;" title="mot cible">'.$target_subj_new.'</i>', $subj);
+                        }else{
+                            $subj = $request->show_string($tab[$i][$j]["value"]);
+                        }
+                    }else{
+                        $subj = $request->show_string($tab[$i][$j]["value"]);
+                    }
+
+                    
+
                     $tab[$i][$j]["label"]=_SUBJECT;
-                    $tab[$i][$j]["value"] = $request->cut_string($request->show_string($tab[$i][$j]["value"]), 250);
+                    $tab[$i][$j]["value"] = $subj;
                     $tab[$i][$j]["size"]="25";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
@@ -473,8 +521,14 @@ if($mode == 'normal') {
                 
                 if($tab[$i][$j][$value]=="entity_label")
                 {
+                    if(!empty($_SESSION['searching']['where_request_parameters'][':serviceChosen'])){
+                    
+                        $service = '<i style="background: #009dc5 none repeat scroll 0 0;border-radius: 4px;color: white;padding: 3px;" title="mot cible">'.$tab[$i][$j]['value'].'</i>';    
+                    }else{
+                        $service = $tab[$i][$j]['value'];
+                    }
                     $tab[$i][$j]["label"]=_ENTITY;
-                    $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                    $tab[$i][$j]['value'] = $request->show_string($service);
                     $tab[$i][$j]["size"]="10";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
@@ -487,8 +541,14 @@ if($mode == 'normal') {
                 if($tab[$i][$j][$value]=="category_id")
                 {
                     $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]['value'];
-                    $cat = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["value"] = $_SESSION['coll_categories']['letterbox_coll'][$tab[$i][$j]['value']];
+                    if(!empty($_SESSION['searching']['where_request_parameters'][':category'])){
+                    
+                        $cat = '<i style="background: #009dc5 none repeat scroll 0 0;border-radius: 4px;color: white;padding: 3px;" title="mot cible">'.$_SESSION['coll_categories']['letterbox_coll'][$tab[$i][$j]['value']].'</i>';    
+                    }else{
+                        $cat = $_SESSION['coll_categories']['letterbox_coll'][$tab[$i][$j]['value']];
+                    }
+                    $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]["value"] = $cat;
                     $tab[$i][$j]["label"]=_CATEGORY;
                     $tab[$i][$j]["size"]="10";
                     $tab[$i][$j]["label_align"]="left";
@@ -650,22 +710,22 @@ if($mode == 'normal') {
     }
 
 if (count($tab) > 0) {
+
     /************Construction de la liste*******************/
-    //key de la liste
+    //Clé de la liste
     $listKey = 'res_id';
 
-    //Initialiser le tableau de param�tres
+    //Initialiser le tableau de paramètres
     $paramsTab = array();
     $paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
     $paramsTab['listCss'] = 'listing largerList spec';                                  //css
-    $paramsTab['urlParameters'] =  $urlParameters.'&dir=indexing_searching';            //Parametres suppl�mentaires
+    $paramsTab['urlParameters'] =  $urlParameters.'&dir=indexing_searching';            //Parametres supplémentaires
     $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_DOCS;              //Titre de la page
     $paramsTab['pagePicto'] =  'search';                                      //Image de la page
     $paramsTab['bool_bigPageTitle'] = $bigPageTitle;                                    //Titre de la page en grand
     $paramsTab['bool_showIconDocument'] =  true;                                        //Affichage de l'icone du document
     $paramsTab['bool_showIconDetails'] =  $showIconDetails;                             //Affichage de l'icone de la page de details
-    $paramsTab['bool_showAttachment'] = true;                                           //Affichage du nombre de document attach� (mode �tendu)
-    
+    $paramsTab['bool_showAttachment'] = true;                                           //Affichage du nombre de document attaché (mode étendu)
     if ($radioButton) {                                                                 //Boutton radio
         $paramsTab['bool_radioButton'] = $radioButton;
     }                                 
@@ -684,7 +744,7 @@ if (count($tab) > 0) {
         //Action
         if (isset($formAction) && !empty($formAction)) $paramsTab['formAction'] = $formAction;
         //Hiden fields
-        if (isset($hiddenFormFields) && count($hiddenFormFields) > 0) {                 //Champs hidden suppl�mentaire | mots cl�s = id, name, value
+        if (isset($hiddenFormFields) && count($hiddenFormFields) > 0) {                 //Champs hidden supplémentaire | mots clés = id, name, value
             $paramsTab['hiddenFormFields'] = array();                             
             $paramsTab['hiddenFormFields'] = $hiddenFormFields;                             
         }
