@@ -101,6 +101,8 @@ if (count($_SESSION['user']['baskets']) > 0) {
 	            ) {
 	                $where_request .=" or "; 
 	            }
+	        }else{
+	        	$where_request .=" or "; 
 	        }
 	    }
         $j++;
