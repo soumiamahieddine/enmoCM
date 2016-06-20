@@ -130,7 +130,7 @@ if ($stmt->rowCount() >0)
 					
 
 					$external .='<td width="8%" >&nbsp;</td>';
-					$external .='<td width="40px" style="vertical-align:top;">';
+					$external .='<td width="40px" style="vertical-align:top;text-align:center;">';
 
 					if (!isset($res_status['IMG_SRC']) ||  empty($res_status['IMG_SRC'])){
                  		$external .= "<i  ".$style." class = 'fm fm-letter-status-new' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
