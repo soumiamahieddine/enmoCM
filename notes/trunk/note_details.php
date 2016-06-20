@@ -222,7 +222,7 @@ $error = '';
 ?></div>
 <h2 class="tit" style="padding:10px;"><?php echo _NOTES;?> </h2>
     <h2 class="sstit" style="padding:10px;"><?php
-echo _NOTES . " " . _OF . " " . $user . " (" . $date . ") ";
+echo _NOTES . " " . _OF . " " . $user . " (" . $core->format_date_db($date, false, '', true) . ") ";
 ?></h2>
 
     <div class="block" style="padding:10px">
@@ -291,7 +291,7 @@ if ($canModify) {
                                 //$notesEntities = $notes_mod_tools->getNotesEntities($sId);
                                 $entitiesList = $ent->getAllEntities();
                                 $entitiesForRestriction = null;
-                                if ($core_tools->test_service('notes_restriction', 'notes', false)) {
+                                if ($core->test_service('notes_restriction', 'notes', false)) {
                                     if (!empty($_SESSION['user']['entities'])) {
                                         foreach ($_SESSION['user']['entities'] as $tmpEntity) {
                                             $entitiesForRestriction[] = $tmpEntity['ENTITY_ID'];
