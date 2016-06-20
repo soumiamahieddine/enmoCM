@@ -84,12 +84,18 @@ if (isset($_REQUEST['res_id_master'])) {
                             if ($lineFullText && $lineFullText->res_id != 0)
                                 $resIdConverted = $lineFullText->res_id;
                         }
+                         $stmt2 = $db->query(
+                        "SELECT count(*) as total FROM res_view_attachments WHERE res_id = ? and status not in ('DEL','OBS','TMP') and lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(?)", array($return_db->res_id,$_SESSION['searching']['where_request_parameters'][':subject'])
+                        );
+                        $res_attach = $stmt2->fetchObject();
 
                         if ((!empty($_SESSION['fullTextAttachments']['attachments']) && in_array($return_db->res_id, $_SESSION['fullTextAttachments']['attachments'])) ||
                             (!empty($_SESSION['fullTextAttachments']['versionAttachments']) && in_array($return_db->res_id_version, $_SESSION['fullTextAttachments']['versionAttachments']))
                         ) {
                             $return .= '<tr style="border: 1px solid;color: #009dc5;font-weight: bold" style="background-color: #FFF;">';
                         } else if (!empty($resIdConverted) && !empty($_SESSION['fullTextAttachments']['attachments']) && in_array($resIdConverted, $_SESSION['fullTextAttachments']['attachments'])) {
+                            $return .= '<tr style="border: 1px solid;color: #009dc5;font-weight: bold" style="background-color: #FFF;">';
+                        } elseif($res_attach->total > 0){
                             $return .= '<tr style="border: 1px solid;color: #009dc5;font-weight: bold" style="background-color: #FFF;">';
                         } else {
                             $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
