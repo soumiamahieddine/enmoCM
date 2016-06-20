@@ -1412,12 +1412,22 @@ abstract class lists_Abstract extends Database
                     $color = '';
                     if (!empty($_SESSION['fullTextAttachments']['letterbox']) &&
                         in_array($resultTheLine[0]['res_id'], $_SESSION['fullTextAttachments']['letterbox'])) {
-			$color = 'style="color: #009dc5"';
+			             $color = 'style="color: #009dc5;"';
+                    }
+                    $db = new Database();
+                    $stmt = $db->query(
+                        "SELECT count(*) as total FROM res_view_attachments WHERE res_id_master = ? and status not in ('DEL','OBS') and lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(?)", array($resultTheLine[0]['res_id'],$_SESSION['searching']['where_request_parameters'][':subject'])
+                    );
+                    $res_attach = $stmt->fetchObject();
+                    if($res_attach->total > 0){
+                        $color = 'style="color: #009dc5;"';
                     }
                     return '<a href="javascript://" onClick="'.$my_explode[3]
                     .'" title="'.$my_explode[1].'"><i class="fa fa-'
                     . $my_explode[2] . ' fa-2x" '. $color .' title="' . $my_explode[1] . '"></i></a>';
+
                 }
+
             } else {
                 return _WRONG_PARAM_FOR_LOAD_VALUE;
             }
