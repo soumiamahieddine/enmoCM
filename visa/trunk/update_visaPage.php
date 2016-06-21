@@ -26,21 +26,6 @@ if ($data['category_id']['value'] != 'outgoing'){
 	$left_html .= '</dd>';
 }
 	
-// AVANCEMENT
-$left_html .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
-$left_html .= '<h2>'. _WF .'</h2>';
-$left_html .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_workflow_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="workflow_history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>';
-$left_html .= '<br/>';
-$left_html .= '<br/>';
-
-$left_html .= '<span style="cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'history_document\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'history_document\', \'divStatus_all_history_div\');return false;">';
-$left_html .= '<span id="divStatus_all_history_div" style="color:#1C99C5;"><<</span>';
-$left_html .= '<b>&nbsp;'. _ALL_HISTORY .'</b>';
-$left_html .= '</span>';
-
-$left_html .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="history_document" width="100%" height="620px;" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>';
-$left_html .= '</dd>';
-
 
 //CIRCUIT 
 $left_html .= '<dt id="onglet_circuit">'._VISA_WORKFLOW.'</dt><dd id="page_circuit" style="overflow-x: hidden;">';
@@ -74,6 +59,21 @@ $left_html .= '<br/>';
 $left_html .= '</div>';
 $left_html .= '</dd>';
 
+// AVANCEMENT
+$left_html .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
+$left_html .= '<h2>'. _WF .'</h2>';
+$left_html .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_workflow_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="workflow_history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>';
+$left_html .= '<br/>';
+$left_html .= '<br/>';
+
+$left_html .= '<span style="cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'history_document\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'history_document\', \'divStatus_all_history_div\');return false;">';
+$left_html .= '<span id="divStatus_all_history_div" style="color:#1C99C5;"><<</span>';
+$left_html .= '<b>&nbsp;'. _ALL_HISTORY .'</b>';
+$left_html .= '</span>';
+
+$left_html .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="history_document" width="100%" height="620px;" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>';
+$left_html .= '</dd>';
+
 //NOTES	
 if ($core->is_module_loaded('notes')){
 	require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
@@ -103,18 +103,18 @@ for ($i=0; $i<count($tab_path_rep_file);$i++) {
 	if ($viewMode == 'verysmall') {
 		$titleRep = $i + 1;
 	} elseif ($viewMode == 'small') {
-		$titleRep = substr($tab_path_rep_file[$i]['title'],0,10);
+		$titleRep = substr($_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']],0,10);
 	} else {
-		if (strlen($tab_path_rep_file[$i]['title']) > 15) $titleRep = substr($tab_path_rep_file[$i]['title'],0,15) . '...';
-		else $titleRep = $tab_path_rep_file[$i]['title'];
+		if (strlen($tab_path_rep_file[$i]['title']) > 15) $titleRep = substr($_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']],0,15) . '...';
+		else $titleRep = $_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']];
 	}
 	if ($tab_path_rep_file[$i]['attachment_type'] == 'signed_response') {
-		$titleRep = '<i style="color:#fdd16c" class="fa fa-certificate fa-lg fa-fw"></i>' . $titleRep;
+		$titleRep = '<i style="color:#fdd16c" class="fa fa-certificate fa-lg fa-fw"></i>' . $_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']];
 	}
 	//if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
 	//else $titleRep = $tab_path_rep_file[$i]['title'];
 	$titleRep = str_replace("'", "'",$titleRep);
-	$right_html .= '<dt title="' . $_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']] . ' : '  
+	$right_html .= '<dt title="'  
 				. $tab_path_rep_file[$i]['title'] . '" id="ans_' . $num_rep . '_' 
 				. $tab_path_rep_file[$i]['res_id'] 
 				. '" onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.', '.$tab_path_rep_file[$i]['is_version'].');">'

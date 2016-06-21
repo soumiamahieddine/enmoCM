@@ -391,11 +391,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			else $titleRep = $tab_path_rep_file[$i]['title'];
 		}
 		if ($tab_path_rep_file[$i]['attachment_type'] == 'signed_response') {
-			$titleRep = '<i style="color:#fdd16c" class="fa fa-certificate fa-lg fa-fw"></i>' . $titleRep;
+			$titleRep = '<i style="color:#fdd16c" class="fa fa-certificate fa-lg fa-fw"></i>' . $_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']];
 		}
-		$frm_str .= '<dt title="' . $_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']] . ' : '  
+		$frm_str .= '<dt title="'  
 				. $tab_path_rep_file[$i]['title'] . '" id="ans_'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'" onclick="updateFunctionModifRep(\''
-				. $tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.', '.$tab_path_rep_file[$i]['is_version'].');">'.$titleRep
+				. $tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.', '.$tab_path_rep_file[$i]['is_version'].');">'.$_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']]
 				. '</dt><dd id="content_'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'">';
 		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master='.$res_id.'&id='.$tab_path_rep_file[$i]['res_id'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'_'.$tab_path_rep_file[$i]['res_id'].'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
 		$frm_str .= '</dd>';
