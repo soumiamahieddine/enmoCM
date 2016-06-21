@@ -322,7 +322,7 @@ abstract class attachments_controler_Abstract
                 $res = 'res_id_version';
             }
             $stmt2 = $db2->query(
-                "SELECT res_id, res_id_version, relation
+                "SELECT res_id, res_id_version, relation, attachment_type
                     FROM res_view_attachments 
                     WHERE ".$res." = ? "
                     . "ORDER BY relation desc", 

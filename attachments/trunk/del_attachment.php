@@ -41,6 +41,7 @@ if ($_REQUEST['relation'] == 1) {
 	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id));
 	$document = $ac->getCorrespondingDocument($_REQUEST['id']);
 	$document_relation = $document->relation;
+	$attach_type = $_SESSION['attachment_types'][$document->attachment_type];
 	if($document_relation == 1){
 		$target_table = "res_attachments";
 		$document_id = $document->res_id;
@@ -65,6 +66,8 @@ if ($_REQUEST['relation'] == 1) {
 	$document = $ac->getCorrespondingDocument($_REQUEST['id']);
 	$document_id = $document->res_id;
 	$document_relation = $document->relation;
+	$attach_type = $_SESSION['attachment_types'][$document->attachment_type];
+	
 	if($document_relation == 1){
 		$target_table = "res_attachments";
 		$document_id = $document->res_id;
@@ -74,7 +77,9 @@ if ($_REQUEST['relation'] == 1) {
 		$document_id = $document->res_id_version;
 	}
 
-	if (isset($document_id) && $document_id != 0) $stmt = $db->query("UPDATE " . $target_table . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
+	if (isset($document_id) && $document_id != 0){
+		$stmt = $db->query("UPDATE " . $target_table . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
+	} 
 }
 
 if ($_SESSION['history']['attachdel'] == "true") {
@@ -150,7 +155,7 @@ if ($stmt->rowCount() > 0) {
 		if(window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc)) {
 			var tab = window.parent.top.document.getElementById('tabricatorRight');
 			if(document_type == 'signed_response'){
-				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).innerHTML = window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).textContent;
+				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).innerHTML = '<?php echo $attach_type; ?>';
 				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).setAttribute('onclick','updateFunctionModifRep(\'<?php echo $document_id; ?>\', '+num_rep+', '+is_version+')');
 				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).id = 'ans_'+num_rep+'_<?php echo $document_id; ?>';
 
@@ -183,6 +188,7 @@ if ($stmt->rowCount() > 0) {
 			window.parent.top.document.getElementById("sign_link_img").title= 'Signer ces projets de réponse (sans certificat)';
 			window.parent.top.document.getElementById("sign_link_img").style.cursor = 'pointer';
 			window.parent.top.document.getElementById("sign_link").removeAttribute('disabled');
+			window.parent.top.document.getElementById("sign_link").removeAttribute('href');
 		}
 
 		if (window.parent.top.document.getElementById("update_rep_link")) {
