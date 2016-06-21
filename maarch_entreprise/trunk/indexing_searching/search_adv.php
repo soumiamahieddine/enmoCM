@@ -423,11 +423,15 @@ $param['signatory_name'] = $arr_tmp2;
     $arr_tmp2 = array('label' => _ADDRESSES_MAJ, 'type' => 'input_text', 'param' => array('field_label' => _ADDRESSES_MAJ));
     $param['addresses_id'] = $arr_tmp2;
 
-//Answers types
-$arr_tmp = array(array('ID' => 'simple_mail','VALUE'=> 'true', 'LABEL' =>_SIMPLE_MAIL),array('ID' => 'AR','VALUE'=> 'true', 'LABEL' =>_REGISTERED_MAIL),array('ID' => 'fax','VALUE'=> 'true', 'LABEL' =>_FAX),array('ID' => 'courriel','VALUE'=> 'true', 'LABEL' =>_MAIL)
-,array('ID' => 'direct','VALUE'=> 'true', 'LABEL' =>_DIRECT_CONTACT),array('ID' => 'autre','VALUE'=> 'true', 'LABEL' =>_OTHER),array('ID' => 'norep','VALUE'=> 'true', 'LABEL' =>_NO_ANSWER));
-$arr_tmp2 = array('label' => _ANSWER_TYPE, 'type' => 'checkbox', 'param' => array('field_label' => _ANSWER_TYPE, 'checkbox_data' => $arr_tmp));
-$param['answer_type'] = $arr_tmp2;
+//contact_type
+$stmt = $conn->query("SELECT id, label  FROM  contact_types order by label asc", array());
+$arr_tmp = array();
+while ($res=$stmt->fetchObject())
+{
+    array_push($arr_tmp, array('VALUE' => $res->id, 'LABEL' => functions::show_string($res->label)));
+}
+$arr_tmp2 = array('label' => _CONTACT_TYPE, 'type' => 'select_simple', 'param' => array('field_label' => _CONTACT_TYPE,'label_title' => _CONTACT_TYPE, 'id' => 'contact_type', 'options' => $arr_tmp));
+$param['contact_type'] = $arr_tmp2;
 
 // Sorts the param array
 function cmp($a, $b)

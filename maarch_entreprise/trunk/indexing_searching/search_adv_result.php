@@ -240,6 +240,13 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " res_id in(select identifier from ".$_SESSION['tablename']['not_notes']." where lower(note_text) LIKE lower(:referenceNumber)) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$s_doc_notes."%"));
             }
+            // CONTACT TYPE
+            elseif ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type']))
+            {
+                $json_txt .= " 'contact_type' : ['".addslashes(trim($_REQUEST['contact_type']))."'],";
+                $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType)) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
+            }
             // FOLDER : MARKET
             elseif ($tab_id_fields[$j] == 'market' && !empty($_REQUEST['market']))
             {

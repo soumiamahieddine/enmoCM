@@ -401,6 +401,7 @@
       <parameter name="contact_internal_id" type="identifier" />
       <parameter name="contactid" type="string" />
       <parameter name="contactid_external" type="identifier" />
+      <parameter name="contact_type" type="identifier" />
       <parameter name="contactid_internal" type="keyword_id" />
       <parameter name="descriptioncase" type="string" />
       <parameter name="dir" type="identifier" />
