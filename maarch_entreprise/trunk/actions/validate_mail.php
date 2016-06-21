@@ -1390,7 +1390,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             {
                 $frm_str .= ',\'false\',$(\'category_id\').value';
             }
-            $frm_str .= ',$(\'category_id\').value);';
+            $frm_str .= ',\'true\',$(\'category_id\').value);';
         }
         if ($data['confidentiality'] == 'Y') {
             $frm_str .='$(\'confidential\').checked=true;';
