@@ -96,13 +96,19 @@ if (count($_SESSION['tree_entities']) < 1) {
                 }
             }
         }
-        $stmt = $db->query("select u.user_id, u.lastname, u.firstname, ue.entity_id as entity_id from  " 
+        $stmt = $db->query("select u.user_id, u.lastname, u.firstname, u.enabled, ue.entity_id as entity_id from  " 
             . ENT_USERS_ENTITIES . " ue, " . $_SESSION['tablename']['users'] 
             . " u where ue.entity_id  = ? and ue.user_id = u.user_id and u.status <> 'DEL' order by u.lastname, u.firstname",array($_SESSION['entities_chosen_tree']));
         while ($res = $stmt->fetchObject()) {
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
-                $labelValue = '<span class="entity_tree_element_ok">' . functions::show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
+                if($res->enabled == 'N'){
+                    $labelValue = '<span class="entity_tree_element_ok">' . functions::show_string('<a style="color:red;" href="index.php?page=users_management_controler&mode=up&admin=users&id='
                             . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>';
+                }else{
+                   $labelValue = '<span class="entity_tree_element_ok">' . functions::show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
+                            . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>'; 
+                }
+
             } else {
                 $labelValue = '<small><i>' . functions::show_string($res->lastname . ' ' . $res->firstname, true) . '</i></small>';
             }

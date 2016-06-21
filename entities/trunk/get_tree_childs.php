@@ -9,7 +9,7 @@ if (isset($_POST['branch_id'])) {
     $children = array();
     $db = new Database();
     
-    $stmt = $db->query("select u.user_id, u.lastname, u.firstname, ue.entity_id as entity_id from " . ENT_USERS_ENTITIES 
+    $stmt = $db->query("select u.user_id, u.lastname, u.firstname, u.enabled, ue.entity_id as entity_id from " . ENT_USERS_ENTITIES 
         . " ue," . ENT_ENTITIES . " e, " . $_SESSION['tablename']['users'] 
         . " u where e.parent_entity_id = ?" 
         . " and e.parent_entity_id = ue.entity_id and u.user_id = ue.user_id and u.status <> 'DEL' order by u.lastname, u.firstname",array($_POST['branch_id']));
@@ -17,8 +17,14 @@ if (isset($_POST['branch_id'])) {
         while ($res = $stmt->fetchObject()) {
             $canhavechildren = 'canhavechildren:false, ';
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
-                $labelValue = '<span class="entity_tree_element_ok">' . functions::show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
+                //Condition qui vérifie si l'utilisateur est actif ou pas. Si pas actif, il est affiché en rouge 
+                if($res->enabled == 'N'){
+                    $labelValue = '<span class="entity_tree_element_ok">' . functions::show_string('<a style="color:red;" href="index.php?page=users_management_controler&mode=up&admin=users&id='
                             . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>';
+                }else{
+                    $labelValue = '<span class="entity_tree_element_ok">' . functions::show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
+                            . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>';  
+                }
             } else {
                 $labelValue = '<small><i>' . functions::show_string($res->lastname . ' ' . $res->firstname, true) . '</i></small>';
             }
