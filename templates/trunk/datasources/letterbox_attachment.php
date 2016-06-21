@@ -138,7 +138,7 @@ while ($avis = $stmt->fetchObject()) {
     $stmt2 = $dbDatasource->query("SELECT * FROM users WHERE user_id = ? ", [$avis->item_id]);
     $avisContact = $stmt2->fetchObject();
     $stmt3 = $dbDatasource->query("SELECT en.entity_id, en.entity_label FROM entities en, users_entities ue WHERE ue.user_id = ? AND primary_entity = ? AND ue.entity_id = en.entity_id", [$avis->item_id, 'Y']);
-    $stmt4 = $dbDatasource->query("SELECT note_text FROM notes WHERE user_id = ? AND identifier = ? AND note_text LIKE ? ", [$avis->item_id, $doc['res_id'], '[Avis n°%']);
+    $stmt4 = $dbDatasource->query("SELECT note_text FROM notes WHERE user_id = ? AND identifier = ? AND note_text LIKE ? ORDER BY date_note ASC", [$avis->item_id, $doc['res_id'], '[Avis n°%']);
 
     $avisEntity = $stmt3->fetchObject();
     $avisContent = $stmt4->fetchObject();
