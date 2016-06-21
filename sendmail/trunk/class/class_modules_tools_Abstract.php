@@ -207,14 +207,26 @@ abstract class SendmailAbstract extends Database
         } else {
             require_once 'modules/attachments/attachments_tables.php';
             $stmt = $db->query(
-                "SELECT rva.res_id, rva.description, rva.subject, rva.title, rva.format, rva.filesize, rva.res_id_master, rva.attachment_type, rva.identifier, cv2.society, cv2.firstname, cv2.lastname
-                FROM res_view_attachments rva LEFT JOIN contacts_v2 cv2 ON rva.dest_contact_id = cv2.contact_id WHERE rva.res_id_master = ? and rva.coll_id = ? and rva.status <> 'DEL' and rva.status <> 'OBS' ORDER BY rva.attachment_type, rva.description",
+                "SELECT rva.res_id, rva.description, rva.subject, rva.title, rva.format, rva.filesize, rva.res_id_master, rva.attachment_type, rva.identifier, cv2.society, cv2.firstname, cv2.lastname, rva.filename, rva.path
+                FROM res_view_attachments rva LEFT JOIN contacts_v2 cv2 ON rva.dest_contact_id = cv2.contact_id WHERE rva.res_id_master = ? and rva.coll_id = ? and rva.status <> 'DEL' and rva.status <> 'OBS' and rva.attachment_type <> 'converted_pdf' ORDER BY rva.attachment_type, rva.description",
                 array($id, $coll_id)
             );
         }
         // $db->show();
 
         while($res = $stmt->fetchObject()) {
+
+            //check converted_pdf
+            $pathConvert = $res->path;
+            $realFilename = explode('.', $res->filename);
+            $filenameConvert = $realFilename[0].'.pdf';
+            //var_dump($filenameConvert);
+            $stmt2 = $db->query(
+                "SELECT rva.res_id
+                FROM res_view_attachments rva  WHERE rva.path = ? and rva.filename = ? and rva.attachment_type = 'converted_pdf'",
+                array($pathConvert, $filenameConvert)
+            );
+            $converted = $stmt2->fetchObject();
             $label = '';
             //Tile, or subject or description
             if (strlen(trim($res->title)) > 0)
@@ -235,7 +247,8 @@ abstract class SendmailAbstract extends Database
                     'identifier' => $res->identifier,
                     'society' => $res->society,
                     'firstname' => $res->firstname,
-                    'lastname' => $res->lastname
+                    'lastname' => $res->lastname,
+                    'converted_pdf' => $converted->res_id
                 )
             );
         }
