@@ -746,6 +746,7 @@ function hasAllAnsSigned(id_doc){
 
 function signFile(res_id,isVersion, mode, pinCode){
 	var reg = /^[0-9]{4}$/;
+	var func_onclic;
 	if(pinCode == undefined || pinCode=='')
     {
         pinCode='';
@@ -828,8 +829,8 @@ function signFile(res_id,isVersion, mode, pinCode){
 					else{
 						$(zone_id).style.visibility = 'hidden';
 					}
-					$('ans_'+num_rep+'_'+newId).innerHTML='<i class="fa fa-certificate fa-lg fa-fw" style="color:#fdd16c"></i>'+$('ans_'+num_rep+'_'+newId).textContent;
-					$('ans_'+num_rep+'_'+newId).title='Réponse signée : '+$('ans_'+num_rep+'_'+newId).textContent;
+					$('ans_'+num_rep+'_'+newId).innerHTML='<i class="fa fa-certificate fa-lg fa-fw" style="color:#fdd16c"></i>Réponse signée';
+					$('ans_'+num_rep+'_'+newId).title=$('ans_'+num_rep+'_'+newId).title;
 					$('list_attach').src = 'index.php?display=true&module=attachments&page=frame_list_attachments&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder';
 				
 					nb_atach = $("nb_attach").textContent;
@@ -838,6 +839,8 @@ function signFile(res_id,isVersion, mode, pinCode){
 				}
 				else{
 					alert(response.error);
+					console.log(func_onclic);
+					$("sign_link").setAttribute('onclick',func_onclic);
 				}	
 				//$("sign_link").removeAttribute("onclick");
 				//$("sign_link_img").style.display = 'none';
@@ -847,6 +850,7 @@ function signFile(res_id,isVersion, mode, pinCode){
 				$("sign_link_img").style.display = '';
 			},
 			onLoading: function(answer){
+				func_onclic = $("sign_link").getAttribute("onclick");
 				$("sign_link").removeAttribute("onclick");
 				$("sign_link_img").style.display = 'none';
 				$('sign_link').className = 'fa fa-spinner fa-2x fa-spin';
