@@ -19,6 +19,7 @@ include('apps/maarch_entreprise/js/effects.js');
 include('apps/maarch_entreprise/js/controls.js');
 include('apps/maarch_entreprise/js/tabricator.js');
 include('apps/maarch_entreprise/js/indexing.js');
+include('apps/maarch_entreprise/js/search_adv.js');
 include('apps/maarch_entreprise/js/maarch.js');
 include('apps/maarch_entreprise/js/keypress.js');
 include('apps/maarch_entreprise/js/Chart.js');
