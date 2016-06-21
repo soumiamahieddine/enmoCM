@@ -10,13 +10,13 @@ require_once("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."class".D
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
+
 if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_tools->test_service('join_res_case_in_process', 'cases', false) == 1))
 {
     $cases = new cases();
     
     if ($_GET['searched_item'] == "case")
     {
-
             $res_id_to_insert = $_POST['field'];
             $actual_case_id = $_GET['searched_value'];
 
@@ -46,7 +46,6 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
     }
     elseif ($_GET['searched_item'] == "res_id")
     {
-
             $case_id_to_insert = $_POST['field'];
             $actual_res_id = $_GET['searched_value'];
 
@@ -99,7 +98,6 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
                 $cases_return = new cases();
                 $return_description = array();
                 $return_description = $cases_return->get_case_info($case_id_to_insert);
-
                 ?>
                 <script type="text/javascript">	
                 var case_id = window.opener.$('case_id');
@@ -108,9 +106,9 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
                 
                 if(case_id)
                 {
-                    case_id.value = '<?php functions::xecho($return_description['case_id'] );?>';
-                    case_label.value = '<?php functions::xecho($return_description['case_label'] );?>';
-                    case_description.value = '<?php functions::xecho($return_description['case_description'] );?>';
+                    case_id.value = '<?php functions::xecho($return_description['case_id'] ); ?>';
+                    case_label.value = '<?php echo addslashes($return_description['case_label']); ?>';
+                    case_description.value = '<?php echo addslashes($return_description['case_description']); ?>';
                     
                 }
                 //self.close();

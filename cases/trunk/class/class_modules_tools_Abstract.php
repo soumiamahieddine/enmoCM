@@ -89,8 +89,8 @@ abstract class cases_Abstract
 		$func = new functions();
 
 		//Create a new batch when this box is empty
-		array_push($data, array('column' => "case_description", 'value' => $func->protect_string_db($desc), "type" => "string"));
-		array_push($data, array('column' => "case_label", 'value' => $func->protect_string_db($label), "type" => "string"));
+		array_push($data, array('column' => "case_description", 'value' => $desc, "type" => "string"));
+		array_push($data, array('column' => "case_label", 'value' => $label, "type" => "string"));
 		array_push($data, array('column' => "case_creation_date", 'value' => $current_date, "type" => ""));
 		array_push($data, array('column' => "case_last_update_date", 'value' => $current_date, "type" => ""));
 		array_push($data, array('column' => "case_typist", 'value' => $_SESSION['user']['UserId'], "type" => "string"));
