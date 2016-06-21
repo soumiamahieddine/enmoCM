@@ -55,7 +55,7 @@ abstract class contacts_v2_Abstract extends Database
                 $_REQUEST['lastname'], 'no', _LASTNAME, 'yes', 0, 255
             );
             $_SESSION['m_admin']['contact']['FIRSTNAME'] = $func->wash(
-                $_REQUEST['firstname'], 'no', _FIRSTNAME, 'yes', 0, 255
+                $_REQUEST['firstname'], 'no', _FIRSTNAME, 'no', 0, 255
             );
             if ($_REQUEST['society'] <> '') {
                 $_SESSION['m_admin']['contact']['SOCIETY'] = $func->wash(
@@ -580,7 +580,7 @@ abstract class contacts_v2_Abstract extends Database
                     <tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ functions::xecho($display_value);}?>">
                         <td><label for="firstname"><?php echo _FIRSTNAME;?> : </label></td>
                         <td class="indexing_field"><input name="firstname" type="text" id="firstname" onkeyup="this.value=capitalizeFirstLetter(this.value)" value="<?php if(isset($_SESSION['m_admin']['contact']['FIRSTNAME'])){ functions::xecho($func->show_str($_SESSION['m_admin']['contact']['FIRSTNAME']));} ?>"/></td>
-                        <td><span id="firstname_mandatory" class="red_asterisk" style="visibility:none;"><i class="fa fa-star"></i></span></td>
+                        <td><span id="firstname_mandatory" class="red_asterisk" style="visibility:hidden;"><i class="fa fa-star"></i></span></td>
                     </tr>
                     <tr id="function_p" style="display:<?php if(isset($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']) && $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ functions::xecho($display_value);}?>">
                         <td><label for="function"><?php echo _FUNCTION;?> : </label></td>
