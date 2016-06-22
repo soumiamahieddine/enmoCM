@@ -21,7 +21,7 @@ function checkBackDate(inputDate) {
   }
 
   if (dateToCheck != "" && d1_dataCreationDate > d2_dateToCheck) {
-    alert("La date de retour doit être supérieur à la date du courrier");
+    alert("La date de retour doit être supérieure à la date du courrier");
     inputDate.value = "";
   }
 
