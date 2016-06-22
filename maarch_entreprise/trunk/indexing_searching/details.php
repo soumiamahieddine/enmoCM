@@ -1450,7 +1450,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     //SERVICE TO VIEW DOC HISTORY
                     if ($viewDocHistory) {
                 ?>
-                <dt class="fa fa-history" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _DOC_HISTORY;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
+                <dt class="fa fa-line-chart" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _DOC_HISTORY;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
                 <dd>
                     <!--<h2><?php echo _HISTORY;?></h2>-->
                     <h2><?php echo _WF ;?></h2>

@@ -613,7 +613,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');hideOtherDiv(\'history_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
-            . '&nbsp;<i class="fa fa-history fa-2x" title="'._DOC_HISTORY.'"></i> <sup><span style="display:none;"></span></sup>';
+            . '&nbsp;<i class="fa fa-line-chart fa-2x" title="'._DOC_HISTORY.'"></i> <sup><span style="display:none;"></span></sup>';
         $frm_str .= '</b></span>';
         $frm_str .= '</td>';
     }
