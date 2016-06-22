@@ -290,22 +290,30 @@ public class DisCM extends JApplet {
     {
         this.logger.log("----------BEGIN PARSE XML----------", Level.INFO);
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document doc = builder.parse(flux_xml);
-        this.messageResult.clear();
-        NodeList level_one_list = doc.getChildNodes();
-        for (Integer i=0; i < level_one_list.getLength(); i++) {
-            NodeList level_two_list = level_one_list.item(i).getChildNodes();
-            if ("SUCCESS".equals(level_one_list.item(i).getNodeName())) {
-                for(Integer j=0; j < level_one_list.item(i).getChildNodes().getLength(); j++ ) {
-                    this.messageResult.put(level_two_list.item(j).getNodeName(),level_two_list.item(j).getTextContent());
+
+        try {
+            Document doc = builder.parse(flux_xml);
+            this.messageResult.clear();
+            NodeList level_one_list = doc.getChildNodes();
+            for (Integer i=0; i < level_one_list.getLength(); i++) {
+                NodeList level_two_list = level_one_list.item(i).getChildNodes();
+                if ("SUCCESS".equals(level_one_list.item(i).getNodeName())) {
+                    for(Integer j=0; j < level_one_list.item(i).getChildNodes().getLength(); j++ ) {
+                        this.messageResult.put(level_two_list.item(j).getNodeName(),level_two_list.item(j).getTextContent());
+                    }
+                    this.messageStatus = "SUCCESS";
+                } else if ("ERROR".equals(level_one_list.item(i).getNodeName()) ) {
+                    for(Integer j=0; j < level_one_list.item(i).getChildNodes().getLength(); j++ ) {
+                        this.messageResult.put(level_two_list.item(j).getNodeName(),level_two_list.item(j).getTextContent());
+                    }
+                    this.messageStatus = "ERROR";
                 }
-                this.messageStatus = "SUCCESS";
-            } else if ("ERROR".equals(level_one_list.item(i).getNodeName()) ) {
-                for(Integer j=0; j < level_one_list.item(i).getChildNodes().getLength(); j++ ) {
-                    this.messageResult.put(level_two_list.item(j).getNodeName(),level_two_list.item(j).getTextContent());
-                }
-                this.messageStatus = "ERROR";
             }
+        } catch (SAXException | IOException e) {
+            
+            this.logger.log("ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.", Level.SEVERE);
+            this.messageStatus = "ERROR";
+            this.messageResult.put("ERROR","ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.");
         }
         this.logger.log("----------END PARSE XML----------", Level.INFO);
     }
@@ -370,6 +378,9 @@ public class DisCM extends JApplet {
         //send message error to Maarch if necessary
         if (!this.error.isEmpty()) {
             this.sendJsMessage(this.error);
+            this.destroy();
+            this.stop();
+            System.exit(0);
         }
     }
     
@@ -389,7 +400,7 @@ public class DisCM extends JApplet {
         this.userLocalDirTmp = System.getProperty("user.home");
         
         this.fM = new FileManager();
-        this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
+
         if (isWindows) {
             System.out.println("This is Windows");
             this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
@@ -411,12 +422,28 @@ public class DisCM extends JApplet {
         } else {
             System.out.println("Your OS is not supported!!");
         }
+        
+        /*String info = this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
+        
+        if(info == "ERROR"){
+            this.logger.log("ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch", Level.SEVERE);   
+            this.messageStatus = "ERROR";
+            this.messageResult.clear();
+            this.messageResult.put("ERROR","ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch");
+        }*/
+        
         System.out.println("APP PATH: " + this.appPath);
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         
-        this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
-        System.out.println("----------END LOCAL DIR TMP IF NOT EXISTS----------");
+        String info = this.fM.createUserLocalDirTmp(this.userLocalDirTmp, this.os);
         
+        if(info == "ERROR"){
+            this.logger.log("ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch", Level.SEVERE);
+            this.messageStatus = "ERROR";
+            this.messageResult.clear();
+            this.messageResult.put("ERROR","ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch");
+            this.processReturn(this.messageResult);
+        }
         
         System.out.println("Create the logger");
         this.logger = new MyLogger(this.userLocalDirTmp);
@@ -522,7 +549,7 @@ public class DisCM extends JApplet {
             }
             else {
             	this.pdfContentTosend = "null";
-            	this.logger.log("ERREUR DE CONVERSION PDF !", Level.INFO);
+            	this.logger.log("ERREUR DE CONVERSION PDF !", Level.WARNING);                
             }
             
             this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
@@ -538,6 +565,10 @@ public class DisCM extends JApplet {
             this.logger.log("MESSAGE STATUS : " + this.messageStatus, Level.INFO);
             this.logger.log("LAST MESSAGE RESULT : ", Level.INFO);
             this.processReturn(this.messageResult);
+            
+            if(this.pdfContentTosend == "null"){
+                this.endMessage = this.endMessage + " mais la conversion pdf n'a pas fonctionné (le document ne pourra pas être signé)";
+            }
             //send message to Maarch at the end
             if (!this.endMessage.isEmpty()) {
                 this.sendJsMessage(this.endMessage);
@@ -623,9 +654,12 @@ public class DisCM extends JApplet {
         JSObject jso;
         jso = JSObject.getWindow(this);
         this.logger.log("----------JS CALL sendAppletMsg TO MAARCH----------", Level.INFO);
-        String theMessage;
-        theMessage = String.valueOf(message);
-        jso.call("sendAppletMsg", theMessage);
+        //String theMessage;
+        //theMessage = String.valueOf(message);
+        String[] theMessage = {String.valueOf(message), message};
+        this.logger.log("Envoi du message à MAARCH", Level.INFO);
+        jso.call("sendAppletMsg", (Object[]) theMessage);
+        this.logger.log("----------END OF JS CALL----------", Level.INFO);
     }
     
     /**
@@ -638,12 +672,14 @@ public class DisCM extends JApplet {
         this.logger.log("----------JS CALL endOfApplet TO MAARCH----------", Level.INFO);
         String[] theMessage = {String.valueOf(this.objectType), this.endMessage};
         jso.call("endOfApplet", (Object[]) theMessage);
+        this.logger.log("----------END OF JS CALL----------", Level.INFO);
     }
     
     /**
      * Send an http request to Maarch
-     * @param url url to contact Maarch
+     * @param theUrl url to contact Maarch
      * @param postRequest the request
+     * @param endProcess end request
      */
     public void sendHttpRequest(String theUrl, String postRequest, boolean endProcess) throws Exception {
         URL UrlOpenRequest = new URL(theUrl);
