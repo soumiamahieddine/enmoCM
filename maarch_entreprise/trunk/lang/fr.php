@@ -171,6 +171,8 @@ if (!defined("_QUALIFY"))    define("_QUALIFY", "Qualification");
 
 
 /************** Messages pop up **************/
+if (!defined("_AND")) define("_AND", " et ");
+if (!defined("_PLEASE_CHECK_LISTDIFF")) define("_PLEASE_CHECK_LISTDIFF", " est dans une ou des listes de diffusion. Veuillez le remplacer dans la ou les listes de ");
 if (!defined("_REALLY_SUSPEND")) define("_REALLY_SUSPEND", "Voulez-vous vraiment suspendre ");
 if (!defined("_REALLY_AUTHORIZE")) define("_REALLY_AUTHORIZE", "Voulez-vous vraiment autoriser ");
 if (!defined("_REALLY_DELETE")) define("_REALLY_DELETE", "Voulez-vous vraiment supprimer ");
@@ -559,8 +561,10 @@ if (!defined("_USER_UPDATE")) define("_USER_UPDATE", "Modification d'un utilisat
 if (!defined("_USER_ADDED")) define("_USER_ADDED", "Nouvel utilisateur ajouté");
 if (!defined("_NO_PRIMARY_GROUP")) define("_NO_PRIMARY_GROUP", "Aucun groupe primaire sélectionné !");
 if (!defined("_THE_USER")) define("_THE_USER", "L'utilisateur ");
+if (!defined("_THE_USER_JS")) define("_THE_USER_JS", "L utilisateur ");
 if (!defined("_USER_ID")) define("_USER_ID", "L'identifiant de l'utilisateur");
 if (!defined("_MY_INFO")) define("_MY_INFO", "Mon Profil");
+
 
 
 //class types

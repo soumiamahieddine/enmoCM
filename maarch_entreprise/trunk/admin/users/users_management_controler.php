@@ -3,7 +3,8 @@ $core_tools = new core_tools();
 $core_tools->test_admin('admin_users', 'apps');
 
 core_tools::load_lang();
-
+// var_dump($_REQUEST['mode']);
+// var_dump($_REQUEST['page']);
 $entities_loaded = false;
 if(core_tools::is_module_loaded('entities')){
     $entities_loaded = true;
@@ -64,7 +65,17 @@ if(isset($_REQUEST['user_submit'])){
             display_enable($user_id);
             break;
         case "ban" :
-            display_disable($user_id);
+            $result_Check_Dest = check_dest_listmodels($user_id);
+            if($result_Check_Dest == true){
+               display_disable($user_id); 
+           }elseif($result_Check_Dest == false){
+
+            ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
+        <?php
+        exit();
+
+           }
+            
             break;
         case "list" :
             $users_list=display_list();
@@ -79,7 +90,18 @@ if(isset($_REQUEST['user_submit'])){
 }
 
 
+function check_dest_listmodels($user_id){
+    //permet de vérifier si l'utilisateur fait partie d'une liste de diffusion. Si il fait parti d'une liste de diffusion, dans l'administration, il ne pourra etre mis en pause sauf si il n'est plus destinataire.
+    $db = new Database();
+    $stmt = $db->query("select item_id, item_mode from  listmodels where item_id = ? and item_mode = 'dest'",array($user_id));
+    $res = $stmt->fetchObject();
+        if($res->item_mode == 'dest'){
+            return false;
+        }else{
+            return true;
+        }
 
+    }
 /**
  * Management of the location bar
  */
