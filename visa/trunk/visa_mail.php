@@ -388,7 +388,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$titleRep = substr($_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']],0,10);
 		} else {
 			if (strlen($tab_path_rep_file[$i]['title']) > 15) $titleRep = substr($_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']],0,15) . '...';
-			else $titleRep = $tab_path_rep_file[$i]['title'];
+			else $titleRep = $_SESSION['attachment_types'][$tab_path_rep_file[$i]['attachment_type']];
 		}
 		if ($tab_path_rep_file[$i]['attachment_type'] == 'signed_response') {
 			$titleRep = '<i style="color:#fdd16c" class="fa fa-certificate fa-lg fa-fw"></i>' . $titleRep;
