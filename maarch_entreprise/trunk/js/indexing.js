@@ -180,7 +180,7 @@ function displayFatherFolder(select)
     for (var i = 0; i < selectFolders.options.length; i++) {
         if (selectFolders.options[i].getAttribute('value') == selectFolders.options[selectFolders.selectedIndex].getAttribute('parent')) {
             tmpParTr.style.display = "";
-            tmpParSpan.innerText = "Dossier Parent : " + selectFolders.options[i].label;
+            tmpParSpan.innerHTML = "Dossier Parent : " + selectFolders.options[i].label;
             return;
         }
     }
