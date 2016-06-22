@@ -1728,7 +1728,7 @@ $content .= '<input type="text" name="title" id="title" maxlength="250" value="'
 if (isset($_REQUEST['id'])) {
     $content .= str_replace('"', '&quot;', $data_attachment->title);
 } else {
-    $content .= $req->show_string($data_attachment->subject);
+    $content .= $req->show_string(substr($data_attachment->subject, 0, 250));
 }
 $content .= '"/>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
 $content .= '</p>';
