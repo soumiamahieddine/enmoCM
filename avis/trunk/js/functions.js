@@ -908,7 +908,7 @@ function checkRealDateAvis() {
     }
 
     if (d2_docDate > d5_avisLimitDate && avisLimitDate != "") {
-        alert("La date limite d'avis doit être supérieur à la date du courrier ");
+        alert("La date limite d'avis doit être supérieure à la date du courrier ");
         $('recommendation_limit_date').value = "";
         $('recommendation_limit_date_tr').value = "";
         
