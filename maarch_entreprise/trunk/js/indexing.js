@@ -276,7 +276,7 @@ function checkRealLimitDate(arg) {
         }
 
         if(process_limit_date != "" && admission_date != "" && d2_admission_date > d1_process_limit_date) {          
-            alert("La date limite de traitement doit être supérieur à la date d'arrivée du courrier ");
+            alert("La date limite de traitement doit être supérieure à la date d'arrivée du courrier ");
             if(arg == 'process_limit_date'){
                 $('process_limit_date').value = "";
             }
