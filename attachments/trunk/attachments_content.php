@@ -1759,7 +1759,7 @@ if (isset($_REQUEST['id'])) {
 $content .= "<input type='hidden' name='dataCreationDate' id='dataCreationDate' value='{$dataForDate->creation_date}' />";
 $content .= '</p>';
 $content .= '<p>';
-$content .= '<label>'. _DEST_USER;
+$content .= '<label>'. _DEST_USER_PJ;
 if ($core->test_admin('my_contacts', 'apps', false)) {
     $content .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
             . '" onclick="new Effect.toggle(\'create_contact_div_attach\', '
@@ -1806,7 +1806,7 @@ $langArrayForTransmission = [
     _FILE,
     _OBJECT,
     _BACK_DATE,
-    _DEST_USER,
+    _DEST_USER_PJ,
     _EDIT_MODEL,
     _CREATE_CONTACT
 ];
