@@ -138,3 +138,6 @@ if (!defined("_VIEW_MAIN_DOC"))
     define( "_VIEW_MAIN_DOC", "Voir le courrier principal");
 if (!defined("_RETRIEVE_BACK_UP"))
     define( "_RETRIEVE_BACK_UP", "Reprise du dernier document car celui ci n'a pas été fermé correctement");
+
+if (!defined("_DEST_USER_PJ"))
+    define( "_DEST_USER_PJ", "Destinataire");
