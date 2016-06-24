@@ -1184,7 +1184,7 @@ VALUES ('FASTHD_AI', 'FASTHD', 'Fast internal disc bay for autoimport', 'N', 'Y'
 
 -- ************************************************************************* --
 --                                                                           --
---                  VISAS AND E-SIGNATURE                                --
+--                  VISAS AND E-SIGNATURE                                    --
 --                                                                           --
 -- ************************************************************************* --
 -- AJOUT DU TYPE DE LISTE DE DIFFUSION POUR LE CIRCUIT DE VISA
@@ -1214,21 +1214,21 @@ INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename,
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('AREVVI', 'À réviser (circuit)', 'N', 'N', 'fm-letter-internal', 'apps', 'Y', 'Y');
 
 -- AJOUT DES ACTIONS
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (400, '', 'Envoyer le projet de réponse', 'PVAL', 'N', 'Y', '', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (400, '', 'Envoyer le projet de réponse', 'PVAL', 'N', 'Y', '', 'Y', 'visa', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (401, '', 'Préparer le circuit de visa', '_NOSTATUS_', 'N', 'Y', 'prepare_visa', 'Y', 'visa', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (402, '', 'Transmettre le circuit de visa', 'CVAL', 'N', 'Y', '', 'Y', 'apps', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (403, '', 'Envoyer pour e-visa et signature papier', 'EVIS', 'N', 'Y', '', 'Y', 'apps', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (404, '', 'Valider et envoyer pour impression', 'DIMP', 'N', 'Y', '', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (402, '', 'Transmettre le circuit de visa', 'CVAL', 'N', 'Y', '', 'Y', 'visa', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (403, '', 'Envoyer pour e-visa et signature papier', 'EVIS', 'N', 'Y', '', 'Y', 'visa', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (404, '', 'Valider et envoyer pour impression', 'DIMP', 'N', 'Y', '', 'Y', 'visa', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (405, '', 'Viser le courrier', '_NOSTATUS_', 'N', 'Y', 'visa_mail', 'Y', 'visa', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (407, '', 'Renvoyer pour traitement', 'COU', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (408, '', 'Demander une révision mineure', 'REV', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (407, '', 'Renvoyer pour traitement', 'COU', 'N', 'Y', 'confirm_status', 'Y', 'visa', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (408, '', 'Demander une révision mineure', 'REV', 'N', 'Y', 'confirm_status', 'Y', 'visa', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (409, '', 'E-Parapheur à imprimer', 'DIMP', 'N', 'Y', '', 'Y', 'apps', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (410, '', 'Transmettre la réponse signée', 'EENV', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (411, '', 'Transmettre pour classement', 'CLAS', 'N', 'Y', '', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (410, '', 'Transmettre la réponse signée', 'EENV', 'N', 'Y', 'confirm_status', 'Y', 'visa', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (411, '', 'Transmettre pour classement', 'CLAS', 'N', 'Y', '', 'Y', 'visa', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (412, '', 'Imprimer le dossier', 'WAIT', 'N', 'Y', 'print_folder', 'Y', 'visa', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (413, '', 'E-envoyer un dossier', '_NOSTATUS_', 'N', 'Y', 'send_email', 'Y', 'visa', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (414, '', 'Envoyer pour e-visa et e-signature', '_NOSTATUS_', 'N', 'Y', 'send_to_visa', 'Y', 'apps', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (415, '', 'Envoyer pour e-signature', 'ESIG', 'N', 'Y', 'redirect_visa_sign', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (414, '', 'Envoyer pour e-visa et e-signature', '_NOSTATUS_', 'N', 'Y', 'send_to_visa', 'Y', 'visa', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (415, '', 'Envoyer pour e-signature', 'ESIG', 'N', 'Y', 'redirect_visa_sign', 'Y', 'visa', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (416, '', 'Viser et poursuivre le circuit', '_NOSTATUS_', 'N', 'Y', 'visa_workflow', 'Y', 'visa', 'N');
 
 -- SERVICES POUR VISA
