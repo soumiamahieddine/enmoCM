@@ -270,7 +270,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
         $paramsTab['urlParameters'] = 'identifier='.$identifier
                 ."&origin=".$origin.'&display=true'.$parameters;                            //Parametres d'url supplementaires
-        $paramsTab['filters'] = array('user');                                              //Filtres    
+        $paramsTab['filters'] = array();                                                   //Filtres    
         $paramsTab['listHeight'] = '100%';                                                 //Hauteur de la liste
         // $paramsTab['bool_showSmallToolbar'] = true;                                         //Mini barre d'outils
         // $paramsTab['linesToShow'] = 15;                                                     //Nombre de ligne a afficher
