@@ -2367,6 +2367,7 @@ abstract class lists_Abstract extends Database
                     . '<i class="fa fa-spinner fa-2x" style="vertical-align: middle;" title="loading..."></i></div>';
         
         //Lines to show
+        $nbLines = $this->params['linesToShow'];
         if(isset($_REQUEST['lines']) && !empty($_REQUEST['lines'])) {
             $nbLines = $this->params['linesToShow'] = strip_tags($_REQUEST['lines']);
             $_SESSION['save_list']['lines'] = $nbLines;
