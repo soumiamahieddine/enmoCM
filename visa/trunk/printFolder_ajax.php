@@ -47,7 +47,13 @@ function concat_files($folder){
 	require_once("modules".DIRECTORY_SEPARATOR."visa".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 	$pdf = new ConcatPdf();
 	$pdf->setFiles($folder);
-	$pdf->concat();
+	try {
+		$pdf->concat();
+	} catch (Exception $e) {
+		return $e->getMessage();
+	}
+
+	
 
 	$tmpFileName = 'tmp_print_folder_' . rand() . '.pdf';
 	$filePathOnTmp = $_SESSION['config']['tmppath'] . $tmpFileName;
@@ -306,7 +312,7 @@ if (count($list_path_folder) == 0){
 } 
 else{
 	$out_file = concat_files($list_path_folder);
-	if (!file_exists($out_file)) echo "{status : -1}";
+	if (!file_exists($out_file)) echo "{status : -1, error_txt : '".$out_file."'}";
 	else{ 
 		$id_folder = ajout_bdd($out_file,$_SESSION['doc_id']);
 		echo "{status : 0, id_folder : $id_folder}";

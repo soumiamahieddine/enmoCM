@@ -1060,11 +1060,11 @@ function printFolder(res_id, coll_id, form_id, path){
 							/*winPrint.focus();
 							winPrint.print();*/
             } 
-						else if (response.status == 1) {
-							$('divErrorPrint').innerHTML = response.error_txt;
-							$('divErrorPrint').style.display = 'table-cell';
-							Element.hide.delay(5, 'divErrorPrint');
-						}
+			else if (response.status == 1 || response.status == -1) {
+				$('divErrorPrint').innerHTML = response.error_txt;
+				$('divErrorPrint').style.display = 'table-cell';
+				Element.hide.delay(5, 'divErrorPrint');
+			}
         }
     });
 
