@@ -33,9 +33,9 @@ if (isset($_REQUEST['res_id'])) {
 
                 $db = new Database();
                       
-                $query = "SELECT c.is_corporate_person, c.is_private, c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society, c.society_short, c.contact_purpose_label, c.address_num, c.address_street, c.address_complement, c.address_town, c.address_postal_code, c.address_country ";
+                $query = "SELECT c.is_corporate_person, c.is_private, c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society, c.society_short, c.contact_purpose_label, c.address_num, c.address_street, c.address_complement, c.address_town, c.address_postal_code, c.address_country, cres.mode ";
                         $query .= "FROM view_contacts c, contacts_res cres  ";
-                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id";
+                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id ORDER BY cres.mode ASC";
                 $arrayPDO = array($_REQUEST['res_id']);
                 $stmt = $db->query($query, $arrayPDO);
 
@@ -46,7 +46,11 @@ if (isset($_REQUEST['res_id'])) {
                         $return .= '<td style="background: transparent; border: 0px dashed rgb(200, 200, 200);">';
                             
                                 $return .= '<div style="text-align: left; background-color: rgb(230, 230, 230); padding: 3px; margin-left: 20px; margin-top: -6px;">';
-                                    $return .= '(contact) ';
+                                    if($res->mode == 'third'){
+                                        $return .= '<span style="font-size:10px;color:#16ADEB;">'._THIRD_DEST.'</span> - ';
+                                    }else{
+                                        $return .= '<span style="font-size:10px;color:#16ADEB;">'._CONTACT.'</span> - ';
+                                    }
 
                                     if ($res->is_corporate_person == 'Y') {
                                         $return .= functions::xssafe($res->society) . ' ' ;
