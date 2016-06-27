@@ -1773,7 +1773,7 @@ $content .= '<input type="text" name="contact_attach" onblur="display_contact_ca
 $content .= $data_contact;
 $content .= '"/>';
 $content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe_attach\').src=\'' . $_SESSION['config']['businessappurl']
-    . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'&fromAttachmentContact=Y\';new Effect.toggle(\'info_contact_div_attach\', '
+    . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'\';new Effect.toggle(\'info_contact_div_attach\', '
     . '\'blind\', {delay:0.2});return false;"'
     . ' style="visibility:hidden;"> <i class="fa fa-book fa-lg"></i></a>';
 $content .= '<div id="show_contacts_attach" class="autocomplete autocompleteIndex"></div>';
