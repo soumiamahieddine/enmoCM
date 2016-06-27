@@ -1514,7 +1514,7 @@ if (isset($_REQUEST['id'])) {
 } else {
     $_SESSION['targetAttachment'] = 'add';
 
-    $stmt = $db->query("SELECT subject, exp_contact_id, dest_contact_id, exp_user_id, address_id, alt_identifier FROM res_view_letterbox WHERE res_id = ?",array($_SESSION['doc_id']));
+    $stmt = $db->query("SELECT subject, exp_contact_id, dest_contact_id, exp_user_id, address_id, dest_user_id, alt_identifier FROM res_view_letterbox WHERE res_id = ?",array($_SESSION['doc_id']));
     $data_attachment = $stmt->fetchObject();
 
     unset($_SESSION['upfile']);
@@ -1537,6 +1537,8 @@ if ($data_attachment->dest_contact_id <> "") {
     $stmt = $db->query('SELECT lastname, firstname FROM users WHERE user_id = ?', [$data_attachment->dest_user]);
 } else if ($data_attachment->exp_user_id != '') {
     $stmt = $db->query('SELECT lastname, firstname FROM users WHERE user_id = ?', [$data_attachment->exp_user_id]);
+} else if ($data_attachment->dest_user_id != '') {
+    $stmt = $db->query('SELECT lastname, firstname FROM users WHERE user_id = ?', [$data_attachment->dest_user_id]);
 }
 
 if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id <> '') {
@@ -1562,7 +1564,7 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
     } else {
         $data_contact .= $res->address_num . ' ' . $res->address_street . ' ' . strtoupper($res->address_town);
     }
-} else if ($data_attachment->exp_user_id != '' || $data_attachment->dest_user != '') {
+} else if ($data_attachment->exp_user_id != '' || $data_attachment->dest_user != '' || $data_attachment->dest_user_id != '') {
     $res = $stmt->fetchObject();
     if (!empty($res->lastname) || !empty($res->firstname)) {
         $data_contact .= $res->lastname . ' ' . $res->firstname;
@@ -1787,6 +1789,8 @@ if (isset($_REQUEST['id']) && !empty($data_attachment->dest_contact_id)) {
     $content .= $data_attachment->dest_contact_id;
 } else if ($data_attachment->exp_user_id) {
     $content .= $data_attachment->exp_user_id;
+} else if ($data_attachment->dest_user_id) {
+    $content .= $data_attachment->dest_user_id;
 }
 
 $content .= '"/>';
