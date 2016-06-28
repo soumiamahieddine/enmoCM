@@ -1009,6 +1009,8 @@ th.ref {
     height:38px;
     float: left;
     margin-right: 0px;
+    padding: 0px;
+    margin: -5px 0px 0px;
 }
 
 #back_list img {
