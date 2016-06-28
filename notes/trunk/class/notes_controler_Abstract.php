@@ -39,8 +39,11 @@ abstract class notes_controler_Abstract
     #####################################
     ## add note on a resource
     #####################################
-    public function addNote($resId, $collId, $noteContent)
+    public function addNote($resId, $collId, $noteContent, $typist='')
     {
+        if(empty($typist)){
+            $typist = $_SESSION['user']['UserId'];
+        }
         $status = 'ok';
         $error = '';
         //control parameters
@@ -75,13 +78,13 @@ abstract class notes_controler_Abstract
                     . "date_note, user_id, coll_id, tablename) values"
                     . " (?, ?, CURRENT_TIMESTAMP, ?, ?, ?)";
                     
-                    $stmt = $db->query($query, array($resId, $noteContent, $_SESSION['user']['UserId'], $collId, $table));
+                    $stmt = $db->query($query, array($resId, $noteContent, $typist, $collId, $table));
 
                     $hist = new history();
                     $stmt = $db->query(
                         "SELECT id FROM " . NOTES_TABLE . " WHERE "
                         . "identifier = ? and user_id = ? and coll_id = ? order by id desc",
-                        array($resId, $_SESSION['user']['UserId'], $collId)
+                        array($resId, $typist, $collId)
                     );
                     $res = $stmt->fetchObject();
                     $id = $res->id;
