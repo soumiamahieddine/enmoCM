@@ -244,14 +244,14 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         if($formValues['note_content_to_users'] != ''){
             //Add notes
             $nb_avis = $sequence +1;
-            $userIdTypist = $_SESSION['user']['UserId'];
+            $userIdTypist = $stepDetails['item_id'];
             $content_note = $formValues['note_content_to_users'];
             $content_note = str_replace("##", "\n", $content_note);
             $content_note = str_replace(";", ".", $content_note);
             $content_note = str_replace("--", "-", $content_note);
             $content_note = $content_note;
             $content_note = '[' . _AVIS_NB . $nb_avis . '] ' . $content_note;
-            $note->addNote($res_id, $coll_id, $content_note);
+            $note->addNote($res_id, $coll_id, $content_note, $userIdTypist);
             
         }
     return array('result' => $res_id.'#', 'history_msg' => $message);
