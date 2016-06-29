@@ -31,7 +31,9 @@
 */
 
 //$_SESSION['stockCheckbox'] = null;
-  if (isset($_REQUEST['courrier_purpose'])) {
+if(isset($_REQUEST['uncheckAll'])){
+  unset($_SESSION['stockCheckbox']);
+}else if (isset($_REQUEST['courrier_purpose'])) {
 	  $key=false;
     # Append something onto the $name variable so that you can see that it passed through your PHP script.
    $courrier = functions::xssafe($_REQUEST['courrier_purpose']);
