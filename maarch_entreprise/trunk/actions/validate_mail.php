@@ -219,6 +219,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
             $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
         );
+
+        //diffusion list in this basket ?
+        if($_SESSION['current_basket']['difflist_type'] == 'entity_id'){
+            $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
+            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $(\'category_id\').value);';
+        }else if($_SESSION['current_basket']['difflist_type'] == 'type_id'){
+            $target_model = 'document.getElementById(\'type_id\').options[document.getElementById(\'type_id\').selectedIndex]';
+            $func_load_listdiff_by_type = 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value);';
+        }else{
+            $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
+            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $(\'category_id\').value);';
+        }
+
         //LOADING LISTMODEL
         require_once('modules/entities/class/class_manage_listdiff.php');
         $diff_list = new diffusion_list();
@@ -360,7 +373,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                   $frm_str .= '<tr id="type_id_tr" style="display:'.$display_value.';">';
                     $frm_str .='<td class="indexing_label"><span class="form_title" id="doctype_res" style="display:none;">'._DOCTYPE.'</span><span class="form_title" id="doctype_mail" style="display:inline;" >'._DOCTYPE_MAIL.'</span></td>';
                     $frm_str .='<td>&nbsp;</td>';
-                    $frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\','.$res_id.', \''.$coll_id.'\');">';
+                    $frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\','.$res_id.', \''.$coll_id.'\');'.$func_load_listdiff_by_type.'">';
                             $frm_str .='<option value="">'._CHOOSE_TYPE.'</option>';
                             if ($_SESSION['features']['show_types_tree'] == 'true') {
                                 for ($i = 0; $i < count($doctypes); $i ++) {
@@ -375,7 +388,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                             $k ++
                                         ) {
                                             if (!in_array($doctypes[$i]['level2'][$j]['types'][$k]['id'],$hidden_doctypes)) {
-                                                $frm_str .='<option value="'.functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['id']).'" ';
+                                                $frm_str .='<option data-object_type="type_id" value="'.functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['id']).'" ';
                                                 if (isset($data['type_id']) && !empty($data['type_id']) && $data['type_id'] == $doctypes[$i]['level2'][$j]['types'][$k]['id']) {
                                                     $frm_str .= ' selected="selected" ';
                                                 }
@@ -724,7 +737,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<tr id="department_tr" style="display:'.$display_value.';">';
                     $frm_str .='<td class="indexing_label"><label for="department" class="form_title" id="label_dep_dest" style="display:inline;" >'._DEPARTMENT_DEST.'</label><label for="department" class="form_title" id="label_dep_exp" style="display:none;" >'._DEPARTMENT_EXP.'</label></td>';
                     $frm_str .='<td>&nbsp;</td>';
-                    $frm_str .='<td class="indexing_field"><select name="destination" id="destination" onchange="clear_error(\'frm_error_'.$id_action.'\');change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $(\'category_id\').value);">';
+                    $frm_str .='<td class="indexing_field"><select name="destination" id="destination" onchange="clear_error(\'frm_error_'.$id_action.'\');'.$func_load_listdiff_by_entity.'">';
                     $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
                     
                     $countAllEntities = count($allEntitiesTree);
@@ -1385,12 +1398,32 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
            }
         if($core_tools->is_module_loaded('entities') )
         {
-            $frm_str .='change_entity(\''.$data['destination'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
-            if(!$load_listmodel)
-            {
-                $frm_str .= ',\'false\',$(\'category_id\').value';
+            if($_SESSION['current_basket']['difflist_type'] == 'entity_id'){
+                $frm_str .='change_entity(\''.$data['destination'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
+                if(!$load_listmodel)
+                {
+                    $frm_str .= ',\'false\',$(\'category_id\').value);';
+                }else{
+                    $frm_str .= ',\'true\',$(\'category_id\').value);';
+                }
+                
+            }else if($_SESSION['current_basket']['difflist_type'] == 'type_id'){
+                if(!$load_listmodel){
+                    $frm_str .='change_entity(\''.$data['destination'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
+                    $frm_str .= ',\'false\',$(\'category_id\').value);';     
+                }else{
+                    $frm_str .= 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value);';
+                    $frm_str .= '$(\'diff_list_tr\').style.display=\''.$display_value.'\';';
+                }  
+            }else{
+                $frm_str .='change_entity(\''.$data['destination'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
+                if(!$load_listmodel)
+                {
+                    $frm_str .= ',\'false\',$(\'category_id\').value);';
+                }else{
+                    $frm_str .= ',\'true\',$(\'category_id\').value);';
+                }
             }
-            $frm_str .= ',\'true\',$(\'category_id\').value);';
         }
         if ($data['confidentiality'] == 'Y') {
             $frm_str .='$(\'confidential\').checked=true;';
@@ -1415,7 +1448,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
         $frm_str .= 'affiche_reference();';
 
-        $frm_str .= '$$(\'select\').each(function(element) { new Chosen(element,{width: "226px", disable_search_threshold: 10}); });';
+        $frm_str .= '$$(\'select\').each(function(element) { new Chosen(element,{width: "226px", disable_search_threshold: 10,search_contains: true}); });';
         $frm_str .='</script>';
         $frm_str .= '<style>#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}</style>';
 

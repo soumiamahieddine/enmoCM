@@ -1288,8 +1288,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0){
 		$frm_str .= 'load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);';
 	}
-    $frm_str .= 'new Chosen($(\'folder\'),{width: "95%", disable_search_threshold: 10});';
-    $frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10});';
+    $frm_str .= 'new Chosen($(\'folder\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
+    $frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
 
 	// DocLocker constantly	
 	$frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';

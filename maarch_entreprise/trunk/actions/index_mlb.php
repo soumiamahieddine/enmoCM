@@ -158,6 +158,16 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             }
         }
     }
+    //diffusion list in this basket ?
+    if($_SESSION['current_basket']['difflist_type'] == 'entity_id'){
+        $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
+    }else if($_SESSION['current_basket']['difflist_type'] == 'type_id'){
+        $target_model = 'document.getElementById(\'type_id\').options[document.getElementById(\'type_id\').selectedIndex]';
+        $func_load_listdiff = 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value);';
+    }else{
+        $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
+    }
+
     //var_dump($EntitiesIdExclusion);
     require_once 'modules' . DIRECTORY_SEPARATOR . 'entities'
         . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
@@ -357,7 +367,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . '&dir=indexing_searching&page=change_doctype\', \''
             . _ERROR_DOCTYPE . '\', \'' . $actionId . '\', \''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&page=get_content_js\', \'' . $displayValue . '\');">';
+            . '&page=get_content_js\', \'' . $displayValue . '\');'.$func_load_listdiff.'">';
     $frmStr .= '<option value="">' . _CHOOSE_TYPE . '</option>';
 if ($_SESSION['features']['show_types_tree'] == 'true') {
         for ($i = 0; $i < count($doctypes); $i ++) {
@@ -371,7 +381,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 for ($k = 0; $k < count($doctypes[$i]['level2'][$j]['types']);
                     $k ++
                 ) {
-                    $frmStr .= '<option value="'
+                    $frmStr .= '<option data-object_type="type_id" value="'
                             . functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['id'])
                             . '" title="'
                             . functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['label'])
@@ -678,7 +688,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<td class="indexing_field">';
         $frmStr .= '<select name="destination" id="destination" onchange="'
                     . 'clear_error(\'frm_error_' . $actionId . '\');'
-                    . 'load_listmodel(this.options[this.selectedIndex], \'diff_list_div\', \'indexing\', $(\'category_id\').value);'
+                    . 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value);'
                     . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
                 . ';" >';
         $frmStr .= '<option value="">' . _CHOOSE_DEPARTMENT . '</option>';
@@ -964,7 +974,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'true&module=folder&page=autocomplete_folders&mode=folder\','
                 . ' \'Input\', \'2\');';*/
     }
-    $frmStr .= '$$(\'select\').each(function(element) { new Chosen(element,{width: "226px", disable_search_threshold: 10}); });';
+    $frmStr .= '$$(\'select\').each(function(element) { new Chosen(element,{width: "226px", disable_search_threshold: 10,search_contains: true}); });';
     $frmStr .= '$(\'baskets\').style.visibility=\'hidden\';'
             . 'var item  = $(\'index_div\'); if(item)'
             . '{item.style.display=\'block\';}</script>';
