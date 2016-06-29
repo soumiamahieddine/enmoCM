@@ -85,16 +85,28 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 			$content .= '<tr ' . $color . '>';
 			$content .= '<td>';
 
-			$tab_users = $visa->getUsersVis();
 			$content .= '<span id="rank_' . $seq . '"> <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) .'</span> </span>';
 			$content .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
-			$content .= '<option value="" >S&eacute;lectionnez un utilisateur</option>';
-			foreach($tab_users as $user){
-				$selected = " ";
-				if ($user['id'] == $step['user_id'])
-					$selected = " selected";
-				$content .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+			$content .= '<option value="" >Sélectionnez un utilisateur</option>';
+			
+			$tab_userentities = $visa->getEntityVis();
+
+			/** Order by parent entity **/
+			foreach ($tab_userentities as $key => $value) {
+				$content .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+				$tab_users = $visa->getUsersVis($tab_usergroups[$key]['group_id']);
+				foreach($tab_users as $user){
+					if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+						$selected = " ";
+						if ($user['id'] == $step['user_id'])
+							$selected = " selected";
+						$content .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+					}
+					
+				}
+				$content .= '</optgroup>';
 			}
+			$content .= '</select>';
 
 			$content .= "</select>";
 			$content .= "<span id=\"signatory_" . $seq . "\">";
@@ -141,14 +153,26 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 		$tab_users = $visa->getUsersVis();
 		$content .= '<span id="rank_' . $seq . '"> <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) .'</span> </span>';
 		$content .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
-		$content .= '<option value="" >S&eacute;lectionnez un utilisateur</option>';
-		foreach($tab_users as $user){
-			$selected = " ";
-			if ($user['id'] == $circuit['sign']['users'][0]['user_id'])
-				$selected = " selected";
-			$content .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+		$content .= '<option value="" >Sélectionnez un utilisateur</option>';
+		
+		$tab_userentities = $visa->getEntityVis();
+
+		/** Order by parent entity **/
+		foreach ($tab_userentities as $key => $value) {
+			$content .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+			$tab_users = $visa->getUsersVis($tab_usergroups[$key]['group_id']);
+			foreach($tab_users as $user){
+				if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+					$selected = " ";
+					if ($user['id'] == $circuit['sign']['users'][0]['user_id'])
+						$selected = " selected";
+					$content .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+				}
+				
+			}
+			$content .= '</optgroup>';
 		}
-		$content .= "</select>";
+		$content .= '</select>';
 		$content .= "<span id=\"signatory_' . $j . '\"> <i title=\"Signataire\" style=\"color : #fdd16c\" class=\"fa fa-certificate fa-lg fa-fw\"></i></span>";
 		$content .= "</td>";
 
