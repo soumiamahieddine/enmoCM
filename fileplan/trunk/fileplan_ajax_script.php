@@ -1404,9 +1404,9 @@ switch ($mode) {
                     }
                     
                     //Reload list and show message
-					$js .= "destroyModal('modal_fileplan');uncheckAll();";
+					$js .= "destroyModal('modal_fileplan');unCheckAll();";
 					$js .= $list_origin;
-					$js .= "window.top.$('main_info').innerHTML = '"._DOC_ADDED_TO_POSITION."';";
+					$js .= "window.top.$('main_info').innerHTML = '"._DOC_ADDED_TO_POSITION."';main_info.style.display = 'table-cell';Element.hide.delay(10, 'main_info');";
 
                 /*} else {
                     $error = functions::wash_html(_CHOOSE_ONE_POSITION.'!','NONE');
