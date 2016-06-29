@@ -313,21 +313,28 @@ abstract class basket_Abstract extends Database
 
     public function load_basket_abs($userId)
     { 
-        $db = new Database();
+	$db = new Database();
         $arr = array();
         $stmt = $db->query(
-            "select system_id, basket_id from " . USER_ABS_TABLE
+            "select system_id, basket_id, user_abs from " . USER_ABS_TABLE
             . " where new_user = ?",array($userId));
         //$db->show();
         while ($res = $stmt->fetchObject()) {
-            array_push(
-                $arr ,
-                $this->get_abs_baskets_data(
-                    $res->basket_id, $userId, $res->system_id
-                )
-            );
-        }
+            $stmt2 = $db->query(
+            "select status from users"
+            . " where user_id = ?",array($res->user_abs));
 
+            $res2 = $stmt2->fetchObject();
+
+            if($res2->status <> 'DEL'){
+               array_push(
+                    $arr ,
+                    $this->get_abs_baskets_data(
+                        $res->basket_id, $userId, $res->system_id
+                    )
+                ); 
+            }
+        }
         return $arr;
     }
 
