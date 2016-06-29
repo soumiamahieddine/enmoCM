@@ -405,13 +405,13 @@ if ($mode == 'list') {
                     <?php
                     if ($mode == "up") {
                         ?>
-                        <input class="button" type="submit" name="submit" value="<?php
+                        <input class="button" type="submit" name="submit" onclick="selectall($('entities_chosen'));" value="<?php
                             echo _MODIFY;
                         ?>" />
                         <?php
                     } elseif ($mode == "add") {
                         ?>
-                        <input type="submit" class="button"  name="submit" value="<?php
+                        <input type="submit" class="button"  name="submit" onclick="selectall($('entities_chosen'));" value="<?php
                             echo _ADD;
                         ?>" />
                         <?php
