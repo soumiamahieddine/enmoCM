@@ -71,6 +71,11 @@ if (isset($datasources['contact'][0]['firstname']) && $datasources['contact'][0]
     $datasources['contact'][0]['firstname'] = $datasources['contact'][0]['contact_firstname'];
 if (isset($datasources['contact'][0]['lastname']) && $datasources['contact'][0]['lastname'] == '')
     $datasources['contact'][0]['lastname'] = $datasources['contact'][0]['contact_lastname'];
+if (isset($datasources['contact'][0]['function']) && $datasources['contact'][0]['function'] == '')
+    $datasources['contact'][0]['function'] = $datasources['contact'][0]['contact_function'];
+if (isset($datasources['contact'][0]['other_data']) && $datasources['contact'][0]['other_data'] == '')
+    $datasources['contact'][0]['other_data'] = $datasources['contact'][0]['contact_other_data'];
+
 // Notes
 $datasources['notes'] = array();
 $stmt = $dbDatasource->query("SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.user_id WHERE coll_id = ? AND identifier = ? ", array($coll_id, $res_id));
