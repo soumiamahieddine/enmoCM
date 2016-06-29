@@ -2429,11 +2429,11 @@ function checkAll() {
 }
 
 
-function uncheckAll(){
+function unCheckAll(){
     $$('input[type=checkbox]').without($('all')).each(
         function(e) {
             e.checked = false;
-            stockCheckbox('index.php?display=true&dir=indexing_searching&page=multiLink',e.value);
+            stockCheckbox('index.php?display=true&dir=indexing_searching&page=multiLink&uncheckAll',e.value);
         }
     )
 }
