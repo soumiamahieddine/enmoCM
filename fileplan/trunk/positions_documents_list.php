@@ -106,7 +106,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 				
 				//Query 
 				$stmt2 = $db->query(
-					"SELECT res_id, res_id as right_doc, status, type_label,"
+					"SELECT res_id, alt_identifier, res_id as right_doc, status, type_label,"
 					." category_id, subject, creation_date FROM "
                     . $view . " WHERE res_id = ?"
 				,array($line->res_id));
@@ -155,13 +155,31 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 							}
 							if($tab[$i][$j][$value]=="res_id")
 							{
+								$display = false;
 								$tab[$i][$j]["label"]=_GED_NUM;
 								$tab[$i][$j]["size"]="1";
 								$tab[$i][$j]["label_align"]="left";
 								$tab[$i][$j]["align"]="left";
 								$tab[$i][$j]["valign"]="bottom";
-								$tab[$i][$j]["show"]=true;
+								if(_ID_TO_DISPAY == 'res_id'){
+									$display = true;
+								}
+								$tab[$i][$j]["show"]=$display;
 								$tab[$i][$j]["order"]='res_id';
+							}
+							if($tab[$i][$j][$value]=="alt_identifier")
+							{
+								$display = false;
+								$tab[$i][$j]["label"]=_CHRONO_NUMBER;
+								$tab[$i][$j]["size"]="1";
+								$tab[$i][$j]["label_align"]="left";
+								$tab[$i][$j]["align"]="left";
+								$tab[$i][$j]["valign"]="bottom";
+								if(_ID_TO_DISPAY == 'chrono_number'){
+									$display = true;
+								}
+								$tab[$i][$j]["show"]=$display;
+								$tab[$i][$j]["order"]='alt_identier';
 							}
 							if($tab[$i][$j][$value]=="coll_id")
 							{
@@ -181,7 +199,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 								$tab[$i][$j]["label_align"]="left";
 								$tab[$i][$j]["align"]="left";
 								$tab[$i][$j]["valign"]="bottom";
-								$tab[$i][$j]["show"]=true;
+								$tab[$i][$j]["show"]=false;
 								$tab[$i][$j]["order"]='coll_label';
 							}							
 							if($tab[$i][$j][$value]=="page_details")
@@ -217,7 +235,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 								$tab[$i][$j]["align"]="left";
 								$tab[$i][$j]["valign"]="bottom";
 								$tab[$i][$j]["show"]=true;
-								$tab[$i][$j]["order"]=false;
+								$tab[$i][$j]["order"]=true;
 							}             
 							if($tab[$i][$j][$value]=="subject")
 							{
@@ -228,7 +246,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 								$tab[$i][$j]["align"]="left";
 								$tab[$i][$j]["valign"]="bottom";
 								$tab[$i][$j]["show"]=true;
-								$tab[$i][$j]["order"]=false;
+								$tab[$i][$j]["order"]=true;
 							}
 							if($tab[$i][$j][$value]=="category_id")
 							{
@@ -251,7 +269,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 								$tab[$i][$j]["align"]="left";
 								$tab[$i][$j]["valign"]="bottom";
 								$tab[$i][$j]["show"]=true;
-								$tab[$i][$j]["order"]=false;
+								$tab[$i][$j]["order"]=true;
 							}
 							if($tab[$i][$j][$value]=="creation_date")
 							{
@@ -272,7 +290,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 				$listKey = 'list_id';                                                               //Clé de la liste
 				$paramsTab = array();                                                               //Initialiser le tableau de paramètres
 				$paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
-				$paramsTab['pageTitle'] = $change_fileplan.$description.':<br/> '
+				$paramsTab['pageTitle'] = '<h2 style="margin-left:0px;">'.$description.':</h2><br/> '
 					.count($tab).' '._FOUND_DOC.'<br/>';     										//Titre de la page
 				$paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
 				// $paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
