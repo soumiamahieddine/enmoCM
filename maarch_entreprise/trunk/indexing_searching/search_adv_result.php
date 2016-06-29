@@ -244,7 +244,8 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type']))
             {
                 $json_txt .= " 'contact_type' : ['".addslashes(trim($_REQUEST['contact_type']))."'],";
-                $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType)) and ";
+                $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar) from view_contacts where contact_type = :contactType)) or ";
+                $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
             }
             // FOLDER : MARKET
@@ -441,6 +442,12 @@ if (count($_REQUEST['meta']) > 0) {
             {
                 include_once("modules".DIRECTORY_SEPARATOR."tags".
                    DIRECTORY_SEPARATOR."tags_search.php");              
+            }
+            // THESAURUS
+            elseif ($tab_id_fields[$j] == 'thesaurus_chosen' && !empty($_REQUEST['thesaurus_chosen']))
+            {
+                include_once("modules".DIRECTORY_SEPARATOR."thesaurus".
+                   DIRECTORY_SEPARATOR."thesaurus_search.php");              
             }
             //WELCOME PAGE
             elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
