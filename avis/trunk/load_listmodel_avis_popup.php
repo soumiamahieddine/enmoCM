@@ -84,14 +84,25 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
 			$tab_users = $avis->getUsersAvis();
 			$content .= '<span id="avisPopup_rank_' . $seq . '"> <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) .'</span> </span>';
 			$content .= '<select id="avisPopup_'.$seq.'" name="avisPopup_'.$seq.'" >';
-			$content .= '<option value="" >S&eacute;lectionnez un utilisateur</option>';
-			foreach($tab_users as $user){
-				$selected = " ";
-				if ($user['id'] == $step['user_id'])
-					$selected = " selected";
-				$content .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
-			}
+			$content .= '<option value="" >Sélectionnez un utilisateur</option>';
+			
+			$tab_userentities = $avis->getEntityAvis();
 
+			/** Order by parent entity **/
+			foreach ($tab_userentities as $key => $value) {
+				$content .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+				$tab_users = $avis->getUsersAvis($tab_usergroups[$key]['group_id']);
+				foreach($tab_users as $user){
+					if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+						$selected = " ";
+						if ($user['id'] == $step['user_id'])
+							$selected = " selected";
+						$content .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+					}
+					
+				}
+				$content .= '</optgroup>';
+			}
 			$content .= "</select>";
 			$content .= "<span id=\"lastAvisPopup_" . $seq . "\">";
 			if (empty($circuit['sign']['users']) && $seq == count ($circuit['avis']['users'])-1)
