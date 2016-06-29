@@ -248,6 +248,21 @@ if (isset($_POST['submit_index_doc'])) {
         $tags_list = $tags;
         include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR."tags_update.php");
     }
+
+    //thesaurus
+    if ($core->is_module_loaded('thesaurus')) {
+        require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
+                    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+                    . 'class_modules_tools.php';
+        $thesaurus = new thesaurus();
+
+        if (! empty($_POST['thesaurus'])) {
+            $thesaurusList = implode('__',$_POST['thesaurus']);
+        }else{
+	       $thesaurusList = '';
+        }
+	$thesaurus->updateResThesaurusList($thesaurusList,$s_id);
+    }
 }
 
 //delete the doctype
@@ -545,7 +560,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 								}
 								echo ');" class="back">' .  _BACK . '</a>';
 							}*/
-	 		    echo '<a href="#" onclick="document.getElementById(\'ariane\').childNodes[document.getElementById(\'ariane\').childNodes.length-2].click();"><i class="fa fa-backward fa-2x" title="' .  _BACK . '"></i></a>';
+	 		    echo '<a href="#" onclick="document.getElementById(\'ariane\').childNodes[document.getElementById(\'ariane\').childNodes.length-2].click();"><i class="fa fa-arrow-circle-left fa-2x" title="' .  _BACK . '"></i></a>';
                         }
                     }
 		    
@@ -969,7 +984,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     ?>
 
                     <div id="opt_indexes">
-                    <?php if (count($indexes) > 0 || ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)))
+                    <?php if (count($indexes) > 0 || ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) || ($core->is_module_loaded('thesaurus') && ($core->test_service('thesaurus_view', 'thesaurus', false) == 1)))
                     {
                         ?><br/>
                         <h2>
@@ -1067,15 +1082,52 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
                                     include_once('modules/tags/templates/details/index.php');
                                     echo '<script>new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10});</script>';
-                            } ?>
-                        </table>
-                        <?php  } ?>
-                    </div>
-                    <br/>
-                    <br/>
-                    
-							</form><br><br>
-						<?php
+                            }
+
+                            if ($core->is_module_loaded('thesaurus') && ($core->test_service('thesaurus_view', 'thesaurus', false) == 1))   
+                            {  
+                                require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
+                                . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+                                . 'class_modules_tools.php';
+                                $thesaurus = new thesaurus();
+
+                                $thesaurusListRes = array();
+
+                                $thesaurusListRes = $thesaurus->getThesaursusListRes($s_id);
+
+                                echo '<tr id="thesaurus_tr_label" >';
+                                echo '<th align="left" class="picto" ><i class="fa fa-bookmark fa-2x" title="' . _THESAURUS . '"></i></th>';
+                                echo '<td style="font-weight:bold;width:200px;">'._THESAURUS.'</td>';
+                                echo '<td id="thesaurus_field" colspan="6"><select multiple="multiple" id="thesaurus" name="thesaurus[]" data-placeholder=" "';
+
+                                if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
+                                    echo 'disabled="disabled"';
+                                }
+
+                                echo '>';
+                                if(!empty($thesaurusListRes)){
+                                    foreach ($thesaurusListRes as $key => $value) {
+
+                                        echo '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
+                                            echo ' selected="selected"'; 
+                                        echo '>' 
+                                            .  functions::show_string($value['LABEL']) 
+                                            . '</option>';
+
+                                    }
+                                }
+
+                                echo '</select> <i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
+                                echo '</tr>';
+                                echo '<div onClick="$(\'return_previsualise_thes\').style.display=\'none\';" id="return_previsualise_thes" style="cursor: pointer; display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; color: #4f4b47; text-shadow: -1px -1px 0px rgba(255,255,255,0.2);background:#FFF18F;border-radius:5px;overflow:auto;">\';
+                                                <input type="hidden" id="identifierDetailFrame" value="" />
+                                            </div>';
+                                echo '<script>new Chosen($(\'thesaurus\'),{width: "95%", disable_search_threshold: 10});</script>';
+                                echo '<style>#thesaurus_chosen .chosen-drop{display:none;}</style>';
+
+                                /*****************/
+                            }
+
                         //Identifiant du courrier en cours
                         $idCourrier=$_GET['id'];
                         //Requete pour récupérer position_label
@@ -1094,36 +1146,34 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         //Requete pour récuperer fileplan_label
                         $stmt = $db->query("SELECT fileplan_label FROM fp_fileplan INNER JOIN fp_res_fileplan_positions
                                     ON fp_fileplan.fileplan_id = fp_res_fileplan_positions.fileplan_id
-                                    WHERE fp_res_fileplan_positions.res_id=?", array($idCourrier));
+                                    WHERE fp_res_fileplan_positions.res_id=? AND fp_fileplan.user_id = ?", array($idCourrier,$_SESSION['user']['UserId']));
                         $res2 = $stmt->fetchObject();
                         $fileplanLabel=$res2->fileplan_label;
                         $planClassement= $fileplanLabel." / ".$positionLabel;
                     ?>
              
-					<?php if ($core->is_module_loaded('fileplan') && ($core->test_service('put_doc_in_fileplan', 'fileplan', false) == 1) && $fileplanLabel <> "") { ?>
-                    <div>
-                        <h2><?php echo _FILEPLAN;?></h2><br>
-                        <div class="block">                              
-                            <table>
-                                <tr class="col">
-                                    <th align="left" class="picto">
-                                        <i class="fa fa-bookmark fa-2x" title="<?php echo _FILEPLAN;?>"></i>
-                                    </th>
-                                    <td align="left" width="200px">
-                                        <?php echo _FILEPLAN;?> :
-                                    </td>
-                                    <td>
-                                        <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($planClassement);?>" size="110"  />
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                    <?php if ($core->is_module_loaded('fileplan') && ($core->test_service('put_doc_in_fileplan', 'fileplan', false) == 1) && $fileplanLabel <> "") { ?>
+                            <tr class="col">
+                                <th align="left" class="picto">
+                                    <i class="fa fa-bookmark fa-2x" title="<?php echo _FILEPLAN;?>"></i>
+                                </th>
+                                <td align="left" width="200px">
+                                    <?php echo _FILEPLAN;?> :
+                                </td>
+                                <td colspan="6">
+                                    <input type="text" class="readonly" readonly="readonly" style="width:95%;" value="<?php functions::xecho($planClassement);?>" size="110"  />
+                                </td>
+                            </tr>
+                    <?php } ?>
+                        </table>
+                        <?php  } ?>
                     </div>
-                    <br><br>
-					<?php } ?>
+							</form><br><br>
          
                     <?php
-                    
+                    if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
+                            include_once('modules/tags/templates/details/index.php');
+                    }
         }
 		
         ?>
@@ -1181,7 +1231,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     .$_SESSION['config']['businessappurl']
                                     .'index.php?display=true&module=entities&page=manage_listinstance&cat='.$category.'&origin=details'.$onlyCC.'\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" />';
                                 ?>
-                                <input type="button" style="display:none;" id="save_list_diff" class="button" onClick="saveListDiff('listinstance', '<?php 
+                                <input type="button" class="button" style="display:none;" id="save_list_diff" onClick="saveListDiff('listinstance', '<?php 
                                     functions::xecho($_SESSION['tablename']['ent_listinstance']);?>', '<?php 
                                     functions::xecho($coll_id);?>', '<?php 
                                     functions::xecho($s_id);?>','<?php 
@@ -1212,9 +1262,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             //if (($core->test_service('update_list_diff_in_details', 'entities', false)) && (!$core->test_service('add_copy_in_process', 'entities', false))) {
                             ?>
                         </div>
-                        <?php
-                        }
-                        ?>
                         <div>
                 
                             <br/>
@@ -1723,10 +1770,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 echo $Links;
                 ?>
             </dl>
+    <?php
+}
+?> 
 </div>
 </div>
 <script type="text/javascript">
-  var item  = $('details_div');
+var item  = $('details_div');
     <?php if($_SESSION['indexation'] == true && $category == 'outgoing'){ 
             $selectAttachments = "SELECT attachment_type FROM res_view_attachments"
                                 ." WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type = 'outgoing_mail'";
@@ -1736,15 +1786,20 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 
             
         ?>
-        document.getElementById('attach').setAttribute("onClick","showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
+
+        if($('attach')){
+            document.getElementById('attach').setAttribute("onClick","showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
                                 . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create&cat=outgoing';?>','98%','auto')");
-        var tabricator1 = new Tabricator('tabricator1', 'DT', 'other_attachments_tab');
-        $('attach').click();
+  
+            var tabricator1 = new Tabricator('tabricator1', 'DT', 'onglet_rep');
+            $('attach').click();
+        }
+        
 
     <?php }else{ ?>
         document.getElementById('attach').setAttribute("onClick","showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
                                 . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>','98%','auto')");
-        var tabricator1 = new Tabricator('tabricator1', 'DT', 'other_attachments_tab');
+        var tabricator1 = new Tabricator('tabricator1', 'DT');
     <?php }
     }else{ ?>
         var tabricator1 = new Tabricator('tabricator1', 'DT');
