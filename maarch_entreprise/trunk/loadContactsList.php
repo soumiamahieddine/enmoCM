@@ -86,7 +86,7 @@ if (isset($_REQUEST['res_id'])) {
                     $return .= '</tr>';
                 }
                       
-                $query = "SELECT u.firstname, u.lastname, u.user_id ";
+                $query = "SELECT u.firstname, u.lastname, u.user_id, cres.mode ";
                         $query .= "FROM users u, contacts_res cres  ";
                         $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id";
                 $arrayPDO = array($_REQUEST['res_id']);
@@ -99,8 +99,12 @@ if (isset($_REQUEST['res_id'])) {
                         $return .= '<td style="background: transparent; border: 0px dashed rgb(200, 200, 200);">';
                             
                                 $return .= '<div style="text-align: left; background-color: rgb(230, 230, 230); padding: 3px; margin-left: 20px; margin-top: -6px;">';
-                                    $return .= ' (utilisateur) ' 
-                                        . functions::xssafe($res->firstname) . ' ' . functions::xssafe($res->lastname);
+                                    if($res->mode == 'third'){
+                                        $return .= '<span style="font-size:10px;color:#16ADEB;">'._THIRD_DEST.' (interne)</span> - ';
+                                    }else{
+                                        $return .= '<span style="font-size:10px;color:#16ADEB;">'._CONTACT.' (interne)</span> - ';
+                                    } 
+                                        $return .= functions::xssafe($res->firstname) . ' ' . functions::xssafe($res->lastname);
                                                 
                                 $return .= '</div>';
                                 //$return .= '<br />';
