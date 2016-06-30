@@ -13,6 +13,16 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
+if(empty($_COOKIE)){
+    $_SESSION['error'] = 'Le cache utilisateur à été réinitialisé veuillez re-saisir vos identifiants';
+    header(
+        'location: ' . $_SESSION['config']['businessappurl']
+        . 'index.php?display=true&page=login'
+    );
+    exit;
+
+}
+
 if (file_exists('../../core/init.php')) {
     include_once '../../core/init.php';
 }
