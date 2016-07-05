@@ -2,6 +2,11 @@ function lauch_thesaurus_list(e){
 	document.getElementById('return_previsualise_thes').style.background='rgb(255, 241, 143)';
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_parents&module=thesaurus";
 	var content='<div style="text-align:center;margin-top:-10px;"><input id="close_thesaurus_tooltips" class="button" value="Fermer" name="close_thesaurus_tooltips" type="button" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></div>';
+	content += '<br/><div><input type="text" value="" autocomplete="off" id="search_thes" name="search_thes" style="width:95%;"/></div>';
+	content += '<input type="hidden" value="" id="thesaurus_id" name="thesaurus_id"/>';
+	content += '<div id="show_thes" class="autocomplete"></div>';
+	content += '<script>launch_autocompleter_contacts_v2(\'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=thesaurus&page=autocomplete_thesaurus\', \'search_thes\', \'show_thes\', \'\', \'thesaurus_id\', \'thesaurus_id\');$(\'search_thes\').onblur=function(){var str = $(\'search_thes\').value;if(str.indexOf("(",-1)!=-1){str = str.split(\'\').reverse().join(\'\');index = str.indexOf("(",-1);str = str.substring(index+2, str.length);str = str.split(\'\').reverse().join(\'\');$(\'search_thes\').value = str;}};</script>';
+
 	new Ajax.Request(path_to_script,
 	{
 		method:'post',
@@ -104,6 +109,52 @@ function add_thes(thesaurus_id,thesaurus_name){
     
 	Event.fire($("thesaurus"), "chosen:updated"); 
 	$('return_previsualise_thes').style.display='none';
+}
+
+function add_thes_by_autocomplete(thesaurus_id){
+	select = document.getElementById('thesaurus');
+	var opt_array = [];
+
+	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_name&module=thesaurus";
+	new Ajax.Request(path_to_script,
+	{
+		method:'post',
+		parameters:
+			{
+				thesaurus_id : thesaurus_id
+			},
+		 onSuccess: function(answer){
+		 	var json = JSON.parse(answer.responseText);
+		 	//console.log(json.info);
+			//eval("response = "+answer.responseText);
+			if(json){
+				thesaurus_name = json.info.thesaurus_name;
+				if(select.options.length == 0){
+					select.options[select.options.length] = new Option (thesaurus_name, thesaurus_id);
+					select.options[0].id  = 'thesaurus_'+thesaurus_id;
+					select.options[0].selected = true;
+				}else{
+					for (var i=0; i < select.options.length; i++)
+					{
+						if(select.options[i].selected == true){
+							opt_array.push(select.options[i].value);
+						}else{
+							select.removeChild(select.options[i]);
+						}
+						
+					}
+					
+					if(opt_array.indexOf(thesaurus_id) == -1){
+						select.options[select.options.length] = new Option (thesaurus_name, thesaurus_id);
+						select.options[select.options.length-1].selected = true;
+					}
+				}
+			    
+				Event.fire($("thesaurus"), "chosen:updated"); 
+				$('return_previsualise_thes').style.display='none';
+			}
+		}
+	});
 }
 
 function add_thes_admin_assoc(thesaurus_id,thesaurus_name){
