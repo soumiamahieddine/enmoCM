@@ -158,6 +158,11 @@ if (isset($_REQUEST['load'])) {
 
 	for ($i = 0; $i < count($attachArr); $i ++) {
 	    //$modifyValue = false;
+	    if ($attachArr[$i][2]['value'] == 'TMP'){
+	    	$is_tmp=true;
+	    }else{
+			$is_tmp=false;
+	    }
 	    for ($j = 0; $j < count($attachArr[$i]); $j ++) {
 	        foreach (array_keys($attachArr[$i][$j]) as $value) {
 	            if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'res_id') {
@@ -187,7 +192,7 @@ if (isset($_REQUEST['load'])) {
 	                $attachArr[$i][$j]['label_align'] = 'left';
 	                $attachArr[$i][$j]['align'] = 'left';
 	                $attachArr[$i][$j]['valign'] = 'bottom';
-	                $attachArr[$i][$j]['show'] = true;
+	                $attachArr[$i][$j]['show'] = false;
 	                $attachArr[$i][$j]['order'] = 'identifier';
 	            }
 	            if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'attachment_type') {
@@ -305,7 +310,11 @@ if (isset($_REQUEST['load'])) {
 	                $stmt = $db->query("SELECT label_status FROM status WHERE id = ?", array($attachArr[$i][$j]['value']));
 	                $res = $stmt->fetchObject();
 	                $attachArr[$i][$j]['value_bis'] = $attachArr[$i][$j]['value'];
-	                $attachArr[$i][$j]['value'] = functions::protect_string_db($res->label_status);
+	                if($is_tmp == true){
+	                	$attachArr[$i][$j]['value'] = '<span style="color:green;">'.functions::protect_string_db($res->label_status).'</span>';
+	                }else{
+	                	$attachArr[$i][$j]['value'] = functions::protect_string_db($res->label_status);
+	                }
 	                $attachArr[$i][$j]['status'] = $attachArr[$i][$j]['value'];
 	                $attachArr[$i][$j]['label'] = _STATUS;
 	                $attachArr[$i][$j]['size'] = '30';
