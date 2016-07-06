@@ -175,9 +175,9 @@ function refreshIcones(id_tableau){
 			//console.log(document.getElementById('conseiller_'+prev_num));
 			if (arrayLignes[i-1].cells[0].childNodes[1].disabled == true){
 				document.getElementById("up_"+num).style.visibility="hidden";
-				if(i == longueur-1){
+				/*if(i == longueur-1){
 					document.getElementById("suppr_"+num).style.visibility="hidden";
-				}
+				}*/
 			}
 		}
 		
