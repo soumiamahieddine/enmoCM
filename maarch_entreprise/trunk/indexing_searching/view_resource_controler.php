@@ -188,11 +188,12 @@ if ($s_id == '') {
 		$_SESSION['origin'] = '';
 	}	
     if (!$right) {
+        $_SESSION['error'] = _NO_RIGHT_TXT;
         ?>
         <script type="text/javascript">
         window.top.location.href = '<?php
             echo $_SESSION['config']['businessappurl'];
-            ?>index.php?page=no_right';
+            ?>index.php';
         </script>
         <?php
         exit();
