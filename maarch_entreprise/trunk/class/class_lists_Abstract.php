@@ -515,8 +515,18 @@ abstract class lists_Abstract extends Database
 
             case 'subject':
 
-                $query = "SELECT distinct(r.subject), res_id FROM "
-                            . "res_view_letterbox r WHERE ".$this->params['basketClause'] . " ORDER BY subject ASC";
+                $pos = strpos($this->params['basketClause'], 'r.');
+
+                if($pos){
+                    $ext = 'r';
+                    $view = 'res_view_letterbox r';
+                }else {
+                    $ext = 'res_view_letterbox';
+                    $view = 'res_view_letterbox';
+                }
+
+                $query = "SELECT distinct(".$ext.".subject), res_id FROM "
+                            . $view . " WHERE ".$this->params['basketClause'] . " ORDER BY subject ASC";
                         
                 $stmt = $db->query($query, array());
                                         
