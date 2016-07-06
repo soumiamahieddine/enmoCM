@@ -1665,9 +1665,16 @@ if (isset($_REQUEST['id'])) {
 $content .= '<input type="hidden" name="fromDetail" id="fromDetail" value="'.$_REQUEST['fromDetail'].'"/>';
 
 if (!isset($_REQUEST['id'])) {
+    if(isset($_SESSION['attachment_types']['transmission'])){
+        $function_transmssion = 'disableTransmissionButton(this.options[this.selectedIndex].value);';
+        $function_transmssion2 = 'showOrButtonForAttachment();';
+    }else{
+        $function_transmssion = '';
+        $function_transmssion2 = '';
+    }
     $content .= '<p>';
     $content .= '<label>' . _ATTACHMENT_TYPES . '</label>';
-    $content .= '<select name="attachment_types" id="attachment_types" onchange="affiche_chrono();disableTransmissionButton(this.options[this.selectedIndex].value);select_template(\'' . $_SESSION['config']['businessappurl']
+    $content .= '<select name="attachment_types" id="attachment_types" onchange="affiche_chrono();'.$function_transmssion.'select_template(\'' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&module=templates&page='
         . 'select_templates\', this.options[this.selectedIndex].value);"/>';
     $content .= '<option value="">' . _CHOOSE_ATTACHMENT_TYPE . '</option>';
@@ -1699,7 +1706,7 @@ if (!isset($_REQUEST['id'])) {
     $content .= '<p style="text-align:left;margin-left:74.5%;"></p>';
     $content .= '<p>';
     $content .= '<label>'. _FILE.' <span><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});document.getElementById(\'choose_file\').contentDocument.getElementById(\'file\').click();"></i> <i class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
-    $content .= '<select name="templateOffice" id="templateOffice" style="display:inline-block;" onchange="showEditButton();showOrButtonForAttachment()">';
+    $content .= '<select name="templateOffice" id="templateOffice" style="display:inline-block;" onchange="showEditButton();'.$function_transmssion2.'">';
     $content .= '<option value="">'. _CHOOSE_MODEL.'</option>';
 
     $content .= '</select>';
@@ -1829,8 +1836,10 @@ if(!isset($_REQUEST['id'])) {
     $content .= '</div>';
 
     $content .= '<div style="float: left">';
-    $content .= '<i id="newTransmissionButton0" disabled="disabled" title="Nouvelle transmission" style="opacity: 0.5;cursor: pointer;" class="fa fa-plus-circle fa-2x"
+    if(isset($_SESSION['attachment_types']['transmission'])){
+        $content .= '<i id="newTransmissionButton0" disabled="disabled" title="Nouvelle transmission" style="opacity: 0.5;cursor: pointer;" class="fa fa-plus-circle fa-2x"
                          onclick="addNewTransmission(\'' . $_SESSION['config']['businessappurl'] . '\', \'' . $_SESSION['doc_id'] . '\', ' . $canCreateContact . ', \'' . addslashes(implode('#', $langArrayForTransmission)) . '\')"></i>';
+    }
     $content .= '</div>';
 }
 
