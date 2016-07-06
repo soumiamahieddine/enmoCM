@@ -46,6 +46,14 @@ echo '<div class="info" id="main_info">';
 functions::xecho($_SESSION['info']);
 echo '</div>';
 
+if(!empty($_SESSION['error'])){
+	echo "<script>var main_error = document.getElementById('main_error');if (main_error != null) {main_error.style.display = 'table-cell';}</script>";
+}
+
+if(!empty($_SESSION['info'])){
+	echo "<script>var main_info = document.getElementById('main_info');if (main_info != null) {main_info.style.display = 'table-cell';}</script>";
+}
+
 $_SESSION['error'] = '';
 $_SESSION['info'] = '';
 
