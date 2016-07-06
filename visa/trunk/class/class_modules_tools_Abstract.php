@@ -146,7 +146,7 @@ abstract class visa_Abstract extends Database
 		$stmt = $db->query("select filename, format, path, title, res_id, res_id_version, attachment_type "
 			. "from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' "
 			. "AND status <> 'DEL' and attachment_type IN "
-			. "('response_project','signed_response','outgoing_mail','waybill','transfer', 'simple_attachment', 'envelope', 'transmission', 'aihp') order by creation_date desc",
+			. "('response_project','signed_response','outgoing_mail','waybill','transfer', 'simple_attachment', 'envelope', 'transmission', 'aihp', 'record_traffic') order by creation_date desc",
 			array($res_id));
 
 		$array_reponses = array();
