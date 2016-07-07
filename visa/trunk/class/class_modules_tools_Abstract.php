@@ -208,7 +208,7 @@ abstract class visa_Abstract extends Database
 		$resFirstFiles = [];
 
 		while($res = $stmt->fetchObject()){
-			if ($res->format !== 'pdf')
+			if ($res->format == 'doc' || $res->format == 'docx' || $res->format == 'odt')
 				array_push($resFirstFiles, $res);
 		}
 
