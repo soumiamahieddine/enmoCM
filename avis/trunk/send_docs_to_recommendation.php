@@ -148,35 +148,12 @@ require_once("modules/entities/class/class_manage_entities.php");
         $_SESSION['action_error'] = _RECOMMENDATION_LIMIT_DATE. " " . _MANDATORY;
         return false;
     }
-    /*if($form_id == 'frm_redirect_dep') {
-        $dep = get_value_fields($values, 'department');
-        if($dep == '') {
-            $_SESSION['action_error'] = _MUST_CHOOSE_DEP;
-            return false;
-        } else if (empty($_SESSION['redirect']['diff_list']['dest']['users'][0])
-                || ! isset($_SESSION['redirect']['diff_list']['dest']['users'][0])
-            ) {
-                $_SESSION['action_error'] = _DEST
-                    . " " . _MANDATORY;
-                return false;
-        } else {
-            return true;
-        }
-    } else if($form_id == 'frm_redirect_user') {
-        $user = get_value_fields($values, 'user');
-        if($user == '')
-        {
-            $_SESSION['action_error'] = _MUST_CHOOSE_USER;
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    } else {
-        $_SESSION['action_error'] = _FORM_ERROR;
+
+    $notes_content = get_value_fields($values, 'note_content_to_users');
+    if($notes_content == null || $notes_content == ''){
+        $_SESSION['action_error'] = _NOTE. " " . _MANDATORY;
         return false;
-    }*/
+    }
     return true;
  }
 
