@@ -173,12 +173,13 @@ switch ($mode) {
             $content .= 'ondblclick=\'moveclick($(entitieslist), $(entities_chosen));\' multiple="multiple">';
             $entitiesForRestriction = null;
             if ($core_tools->test_service('notes_restriction', 'notes', false)) {
-                /*if (!empty($_SESSION['user']['entities'])) {
+                if (!empty($_SESSION['user']['entities'])) {
                     foreach ($_SESSION['user']['entities'] as $tmpEntity) {
-                        $entitiesForRestriction[] = $tmpEntity['ENTITY_ID'];
+                        if($tmpEntity['ENTITY_ID'] <> $_SESSION['user']['primaryentity']['id']){
+                            $entitiesForRestriction[] = $tmpEntity['ENTITY_ID'];
+                        }
                     }
-                }*/
-                $entitiesForRestriction[] = $_SESSION['user']['primaryentity']['id'];
+                }
             }
             for ($i=0;$i<count($entitiesList);$i++) {
                 if ($entitiesForRestriction && in_array($entitiesList[$i]->entity_id, $entitiesForRestriction)) {

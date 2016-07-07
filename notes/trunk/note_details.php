@@ -290,15 +290,6 @@ if ($canModify) {
                                 $_SESSION['notes']['entities'] = $notes_mod_tools->getNotesEntities($sId);
                                 //$notesEntities = $notes_mod_tools->getNotesEntities($sId);
                                 $entitiesList = $ent->getAllEntities();
-                                $entitiesForRestriction = null;
-                                if ($core->test_service('notes_restriction', 'notes', false)) {
-                                    if (!empty($_SESSION['user']['entities'])) {
-                                        foreach ($_SESSION['user']['entities'] as $tmpEntity) {
-                                            $entitiesForRestriction[] = $tmpEntity['ENTITY_ID'];
-                                            $entitiesLabelForRestriction[] = $tmpEntity['SHORT_LABEL'];
-                                        }
-                                    }
-                                }
                                 echo "<pre>";
                                 echo "</pre>";
                                 if ($canModify) {
@@ -310,8 +301,7 @@ if ($canModify) {
                                     for ($j=0;$j<count($entitiesList);$j++) {
                                             $state_entity = false;
                                             
-                                            if (in_array($entitiesList[$j], $_SESSION['notes']['entities']) ||
-                                                ($entitiesForRestriction && in_array($entitiesList[$j]->entity_id, $entitiesForRestriction))) {
+                                            if (in_array($entitiesList[$j], $_SESSION['notes']['entities'])) {
                                                 $state_entity = true;
                                             } else {
                                                 $state_entity = false;
@@ -357,14 +347,6 @@ if ($canModify) {
                                                 ?>" selected="selected" ><?php 
                                                     echo $_SESSION['notes']['entities'][$i]->entity_label; 
                                                 ?></option>
-                                        <?php
-                                            }
-                                        }
-                                        if ($entitiesForRestriction) {
-                                            foreach ($entitiesForRestriction as $key => $tmpEntityForRestriction) { ?>
-                                                <option value="<?php echo $tmpEntityForRestriction ?>" >
-                                                    <?php echo $entitiesLabelForRestriction[$key] ?>
-                                                </option>
                                         <?php
                                             }
                                         }
