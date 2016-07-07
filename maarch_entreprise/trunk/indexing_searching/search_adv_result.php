@@ -131,15 +131,13 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifield) OR lower(alt_identifier) like lower(:multifield)) "
                     ."or lower(title) LIKE lower(:multifield) "
                     ."or lower(doc_custom_t1) LIKE lower(:multifield) "
+                    ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield)) "                    
                     ."or res_id in (select res_id_master from res_view_attachments where lower(translate(identifier,'/','')) like lower(:multifield) OR lower(identifier) like lower(:multifield)) ";
                     
                 if (ctype_digit($_REQUEST['multifield']))
                 {
-                    $where_request .= "or res_id = :multifield2 "
-                    ."or lower(process_notes) like lower(:multifield)) ";
+                    $where_request .= "or res_id = :multifield2 ";
                     $arrayPDO = array_merge($arrayPDO, array(":multifield2" => $_REQUEST['multifield'])); 
-                }else{
-                    $where_request .= "or lower(process_notes) like lower(:multifield)) ";
                 }
                 
                 $arrayPDO = array_merge($arrayPDO, array(":multifield" => "%".$_REQUEST['multifield']."%")); 
@@ -464,6 +462,7 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or lower(identifier) LIKE lower(:multifieldWelcome) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifieldWelcome) OR lower(alt_identifier) like lower(:multifieldWelcome)) "
                     ."or lower(title) LIKE lower(:multifieldWelcome) "
+                    ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifieldWelcome)) "
                     ."or res_id in (select res_id_master from res_view_attachments where lower(translate(identifier,'/','')) like lower(:multifieldWelcome) OR lower(identifier) like lower(:multifieldWelcome)) "
                     ."or contact_id in (select contact_id from view_contacts where society ilike :multifieldWelcome or contact_firstname ilike :multifieldWelcome or contact_lastname ilike :multifieldWelcome) or (exp_user_id in (select user_id from users where firstname ilike :multifieldWelcome or lastname ilike :multifieldWelcome ))";
                 $arrayPDO = array_merge($arrayPDO, array(":multifieldWelcome" => "%".$_REQUEST['welcome']."%"));
