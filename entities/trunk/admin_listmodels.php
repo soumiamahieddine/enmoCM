@@ -71,7 +71,7 @@ if($_SESSION['user']['UserId'] != 'superadmin') {
     $my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
     if (count($my_tab_entities_id)>0) {
         //we need all entities that are managed by connected user
-        $where.= '('.ENT_LISTMODELS.'.object_id in ('.join(',', $my_tab_entities_id).')) and';
+        $where.= '('.ENT_LISTMODELS.'.object_id in ('.join(',', $my_tab_entities_id).') OR '.ENT_LISTMODELS.'.object_id LIKE \'VISA_%\' OR '.ENT_LISTMODELS.'.object_id LIKE \'AVIS_%\') and';
     }
 }
 
