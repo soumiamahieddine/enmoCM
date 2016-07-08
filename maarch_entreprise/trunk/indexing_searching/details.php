@@ -1397,7 +1397,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 {
                     $countAttachments = "SELECT res_id, creation_date, title, format FROM " 
                         . $_SESSION['tablename']['attach_res_attachments'] 
-                        . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','outgoing_mail_signed','converted_pdf','outgoing_mail','print_folder') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                        . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','signed_response','outgoing_mail_signed','converted_pdf','outgoing_mail','print_folder') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
                     $db = new Database();
                     $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']));
                     if ($stmt->rowCount() > 0) {
@@ -1426,7 +1426,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 
                         $detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
                         $selectAttachments = "SELECT res_id, creation_date, title, format FROM ".$_SESSION['tablename']['attach_res_attachments']
-                                ." WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','outgoing_mail_signed','converted_pdf','outgoing_mail','print_folder') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                                ." WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','outgoing_mail_signed', 'signed_response','converted_pdf','outgoing_mail','print_folder') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
                         $stmt = $db->query($selectAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']));
 
                         ?>
@@ -1442,7 +1442,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
              
                 <?php } ?>
                 </center>
-                    <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&view_only=true&load&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder&fromDetail=attachments" frameborder="0" width="100%" style="height:510px"></iframe>
+                    <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&view_only=true&load&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder&fromDetail=attachments" frameborder="0" width="100%" style="height:510px"></iframe>
                     <script type="text/javascript">
                         var height = $('other_attachments').offsetHeight;
                         $('list_attach').style.height = height+"px";
@@ -1457,7 +1457,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         
                         $countAttachments = "SELECT res_id, creation_date, title, format FROM " 
                                 . $_SESSION['tablename']['attach_res_attachments'] 
-                                . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed' or attachment_type = 'outgoing_mail') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                                . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed' or attachment_type = 'outgoing_mail' or attachment_type = 'signed_response') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
                             $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']));
                             if ($stmt->rowCount() > 0) {
                                 $nb_rep = $stmt->rowCount();
@@ -1484,7 +1484,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <?php } ?>
                     </center>
                     <iframe name="list_attach" id="list_attach2" src="<?php echo
-                     $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,outgoing_mail&fromDetail=response';?>" 
+                     $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail&fromDetail=response';?>" 
                     frameborder="0" width="100%" height="600px">
                     </iframe>
                     <script type="text/javascript">
