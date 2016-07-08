@@ -250,7 +250,7 @@ function addRow(id_tableau)
 	//colonne10.style.display = 'none';
 	colonne10.innerHTML += '<i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i>';
 	
-	document.getElementById('consigne_'+last_select).value = "";
+	//document.getElementById('consigne_'+last_select).value = "";
 	refreshIcones(id_tableau);
 }
 
