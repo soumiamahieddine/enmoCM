@@ -132,8 +132,7 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or lower(title) LIKE lower(:multifield) "
                     ."or lower(doc_custom_t1) LIKE lower(:multifield) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield)) "                    
-                    ."or res_id in (select res_id_master from res_view_attachments where lower(translate(identifier,'/','')) like lower(:multifield) OR lower(identifier) like lower(:multifield)) ";
-                    
+                    ."or res_id in (select res_id_master from res_view_attachments where lower(translate(identifier,'/','')) like lower(:multifield) OR lower(identifier) like lower(:multifield))) ";       
                 if (ctype_digit($_REQUEST['multifield']))
                 {
                     $where_request .= "or res_id = :multifield2 ";
