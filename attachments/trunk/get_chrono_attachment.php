@@ -68,7 +68,8 @@
             } else {
                 $chronoX = new chrono();
                 $myVars = array(
-                    'category_id' => 'outgoing'
+                    'category_id' => 'outgoing',
+                    'entity_id' => $_SESSION['user']['primaryentity']['id']
                 );
 
                 $myChrono = $chronoX->generate_chrono('outgoing', $myVars);
