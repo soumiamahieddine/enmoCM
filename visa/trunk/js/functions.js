@@ -806,14 +806,15 @@ function signFile(res_id,isVersion, mode, pinCode){
 						$('sign_link_certif').setAttribute('onclick','');	
 					}
 					
+					if(oldRep == newId-1){
+						oldRep = res_id;
+					}
 					if($('viewframevalidRep'+num_rep+'_'+oldRep)) {
 						$('viewframevalidRep'+num_rep+'_'+oldRep).src = "index.php?display=true&module=attachments&page=view_attachment&res_id_master="+num_idMaster+"&id="+newId;			
 						$('viewframevalidRep'+num_rep+'_'+oldRep).id = 'viewframevalidRep'+num_rep+'_'+newId;
 					}
 
-					if(oldRep == newId-1){
-						oldRep = res_id;
-					}
+					
 					if($('ans_'+num_rep+'_'+oldRep)) {
 						$('ans_'+num_rep+'_'+oldRep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');		
 						$('ans_'+num_rep+'_'+oldRep).id = 'ans_'+num_rep+'_'+newId;							
