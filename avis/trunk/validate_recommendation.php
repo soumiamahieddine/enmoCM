@@ -80,6 +80,7 @@ require_once('modules/avis/class/avis_controler.php');
             $templates = $templatesControler->getAllTemplatesForSelect();
         }
 
+        $_SESSION['redirect']['diff_list'] = array();
         $_SESSION['redirect']['diff_list']['difflist_type'] = 'entity_id';
 
         if (!empty($_SESSION['process']['diff_list']['avis'])) {
