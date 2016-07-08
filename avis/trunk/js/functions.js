@@ -50,7 +50,7 @@ function addRowAvis(id_tableau)
 	//colonne10.style.display = 'none';
 	colonne10.innerHTML += '<i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i>';
 
-	document.getElementById('avis_consigne_'+last_select).value = "";
+	//document.getElementById('avis_consigne_'+last_select).value = "";
 
 	refreshIconesAvis(id_tableau);
 }
@@ -107,7 +107,7 @@ function addRowAvisPopup(id_tableau)
 	//colonne10.style.display = 'none';
 	colonne10.innerHTML += '<i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i>';
 
-	document.getElementById('avisPopup_consigne_'+last_select).value = "";
+	//document.getElementById('avisPopup_consigne_'+last_select).value = "";
 
     refreshIconesAvisPopup(id_tableau);
 }
