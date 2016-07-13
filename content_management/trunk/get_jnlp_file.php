@@ -9,7 +9,7 @@ $filename = $_SESSION['config']['tmppath'].$_GET['filename'].'.jnlp';
 $name = 'DisCM.jnlp';
 $size = filesize($filename);
 // force le téléchargement du fichier avec un beau nom
-header("Content-Type: application/force-download");
+header("Content-Type: application/x-java-jnlp-file");
 header('Content-Disposition: attachment; filename="'.$name.'"');
  
 // indique la taille du fichier à télécharger
