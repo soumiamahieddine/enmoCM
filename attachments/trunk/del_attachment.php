@@ -205,11 +205,11 @@ if ($stmt->rowCount() > 0) {
 	var eleframe1 =  window.top.document.getElementsByName('list_attach');
 	var nb_attach = '<?php functions::xecho($new_nb_attach);?>';
 	<?php if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') { ?>
-		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf,print_folder&fromDetail=attachments';?>";
-		window.parent.top.document.getElementById('nb_attach').innerHTML = " ("+nb_attach+")";
+		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp&fromDetail=attachments';?>";
+		window.parent.top.document.getElementById('nb_attach').innerHTML = nb_attach;
 	<?php } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){ ?>
-		eleframe1[1].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,outgoing_mail&fromDetail=response';?>";
-		window.parent.top.document.getElementById('answer_number').innerHTML = " ("+nb_attach+")";
+		eleframe1[1].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp&fromDetail=response';?>";
+		window.parent.top.document.getElementById('answer_number').innerHTML = nb_attach;
 	<?php } else { ?>
 		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&template_selected=documents_list_attachments_simple&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder';?>";
 		window.parent.top.document.getElementById('nb_attach').innerHTML = nb_attach;
