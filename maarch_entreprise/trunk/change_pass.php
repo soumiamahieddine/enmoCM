@@ -22,10 +22,12 @@ $time = $core_tools->get_session_time_expire();
 <body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 	<div id="container">
 		<div id="content" >
-			<div class="error">
-				<?php functions::xecho($_SESSION['error']);  $_SESSION['error'] = "";?>
-			</div>
-
+			<?php
+			if (!empty($_SESSION['error'])) {
+			echo '<div class="error" style="display:block;">' . $_SESSION['error']. '</div>';
+			} 
+			$_SESSION['error'] = "";
+			?>
 			<div id="inner_content" class="clearfix">
 				<h2 class="tit" >
 					<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=default_maarch.gif" >
