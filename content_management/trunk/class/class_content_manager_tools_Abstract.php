@@ -531,7 +531,7 @@ abstract class content_management_tools_Abstract
 
         $docXML->save($filename); 
 
-        $file = "http://192.168.21.36/maarch_courrier_trunk/apps/maarch_entreprise/tmp/".$_SESSION['user']['UserId']."_DisCM.jnlp";
+        $file = $_SESSION['config']['coreurl']."tmp/".$_SESSION['user']['UserId']."_DisCM.jnlp";
 
         echo '<a id="jnlp_file" href="'.$file.'"></a>';
         echo '<script>setTimeout(function() {this.window.close();}, 5000);document.getElementById("jnlp_file").click();</script>';
