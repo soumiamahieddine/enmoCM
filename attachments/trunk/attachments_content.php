@@ -1451,10 +1451,10 @@ if (isset($_POST['add']) && $_POST['add']) {
             $js .= 'var eleframe1 =  window.top.document.getElementsByName(\'list_attach\');';
             if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') {
                 $js .= 'eleframe1[0].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load';
-                $js .= '&attach_type_exclude=response_project,outgoing_mail_signed,converted_pdf,print_folder&fromDetail=attachments';
+                $js .= '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp&fromDetail=attachments';
             } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){
                 $js .= 'eleframe1[1].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load';
-                $js .= '&attach_type=response_project,outgoing_mail_signed,outgoing_mail&fromDetail=response';
+                $js .= '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp&fromDetail=response';
             } else {
                 $js .= 'eleframe1[0].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf,print_folder&load';
             }
