@@ -2908,7 +2908,7 @@ function CheckUncheckAll(id)
         checkAll();
 
     } else {
-        uncheckAll();
+        unCheckAll();
     }
 }
 
