@@ -82,8 +82,8 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     $res = $req->PDOselect($select, $where, $arrayPDO, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
     //echo "<ul>\n";
     echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
-    for ($i=0; $i< min(count($res), 10)  ;$i++) {
-        echo "<li id='".$res[$i][2]['value'].", '>".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</li>\n";
+    for ($i=0; $i< min(count($res), 5)  ;$i++) {
+        echo "<li id='".$res[$i][2]['value'].", '><i class='fa fa-users fa-1x'></i> ".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</li>\n";
     }
 
     //CONTACTS
@@ -232,7 +232,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         }
         if ($i%2==1) $color = 'LightYellow';
         else $color = 'white';
-        echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>"
+        echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'><i class='fa fa-book fa-1x'></i> "
                 . str_replace($args, $args_bold, $res->result) 
                 ."<br/> "
                 . str_replace($args, $args_bold, $res->address)
@@ -255,7 +255,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         $res = $req->PDOselect($select, $where, $arrayPDO, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
         echo "<ul>\n";
         for ($i=0; $i< min(count($res), 10)  ;$i++) {
-            echo "<li id='".$res[$i][2]['value'].", '>".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</li>\n";
+            echo "<li id='".$res[$i][2]['value'].", '>".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</li>?><i class='fa fa-users fa-1x'></i>\n";
         }
         if (count($res) == 11) {
                 echo "<li>...</li>\n";
@@ -407,7 +407,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                     . str_replace($args, $args_bold, $res->result) 
                     ."<br/> "
                     . str_replace($args, $args_bold, $res->address)
-                ."</li>";
+                ."<i class='fa fa-book fa-1x'></i></li>";
         }
         if($nb == 0) echo "<li></li>";
         echo "</ul>";
