@@ -11,7 +11,7 @@
     $empty = 0;
     $nb_roles = 0;
     if($origin == 'indexing' && $category == 'outgoing'){
-        $difflist['copy'] = array();
+        //$difflist['copy'] = array();
     }
 
     foreach($roles as $role_id => $role_label) {
