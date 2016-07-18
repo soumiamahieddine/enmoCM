@@ -89,10 +89,12 @@
       <parameter name="idbis" type="integer" />
       <parameter name="label" type="string" />
       <parameter name="process_delay" type="integer" />
+      <parameter name="process" type="string" />
       <parameter name="sous_dossier" type="integer" />
       <parameter name="template" type="string" />
       <parameter name="templates" type="integer" />
       <parameter name="fields" type="identifier" />
+      <parameter name="fields_attachments" type="identifier" />
       <parameter name="mandatory_fields" type="identifier" />
     </validationRule>
 
