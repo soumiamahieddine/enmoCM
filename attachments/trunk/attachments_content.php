@@ -1672,13 +1672,42 @@ if (!isset($_REQUEST['id'])) {
         $function_transmssion = '';
         $function_transmssion2 = '';
     }
+    //On recherche le type de document attaché à ce courrier
+    //var_dump($_SESSION['doc_id']);
+    $stmt = $db->query("SELECT type_id FROM res_letterbox WHERE res_id = ?",array($_SESSION['doc_id']));
+    $type_id = $stmt->fetchObject();
+    //var_dump ($type_id->type_id);
+    $type_id = $type_id->type_id;
+    //On recherche le sve_type
+    $stmt = $db->query("SELECT * FROM mlb_doctype_ext WHERE type_id = ?",array($type_id));
+    $sve = $stmt->fetchObject();
+    $sve_type = $sve->sve_type;
+    //On met tous les attachments ayant le type_sve attaché au courrier dans un tableau
+    $attachments_types_for_process = array();
+    foreach($_SESSION['attachment_types_with_process'] as $key => $value){
+        // var_dump($key);
+        // var_dump($value);
+        if($sve_type == $value){
+            //var_dump($_SESSION['attachment_types'][$key]);
+            //$attachments_types_for_process[] = $key;
+            //$attachments_types_for_process = array($key => $attachments_types_for_process);
+            $attachments_types_for_process[$key] = $_SESSION['attachment_types'][$key];
+
+        }
+
+    }
+    //var_dump($attachments_types_for_process);
+    //var_dump($_SESSION['attachment_types']);
+
     $content .= '<p>';
     $content .= '<label>' . _ATTACHMENT_TYPES . '</label>';
     $content .= '<select name="attachment_types" id="attachment_types" onchange="affiche_chrono();'.$function_transmssion.'select_template(\'' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&module=templates&page='
         . 'select_templates\', this.options[this.selectedIndex].value);"/>';
     $content .= '<option value="">' . _CHOOSE_ATTACHMENT_TYPE . '</option>';
-    foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
+    
+
+    foreach(array_keys($attachments_types_for_process) as $attachmentType) {
         if(empty($_SESSION['attachment_types_get_chrono'][$attachmentType][0])){
             $_SESSION['attachment_types_get_chrono'][$attachmentType] = '';
         }
