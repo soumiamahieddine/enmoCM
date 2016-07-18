@@ -82,9 +82,23 @@ class business_app_tools extends business_app_tools_Abstract
             $_SESSION['default_mail_nature'] = (string) $mailNatures->default_nature;
         }
 
+
+        $_SESSION['processing_modes'] = array();
+        $processingModes = $xmlfile->processing_modes;
+        if(count($processingModes) > 0) {
+            foreach ($processingModes->process as $process ) {
+                $label = (string) $process->label;
+                $_SESSION['processing_modes'][(string) $process->label] = $label;
+            }
+
+        }
+        //var_dump($_SESSION['processing_modes']);
+        //exit;
+
         $_SESSION['attachment_types'] = array();
         $_SESSION['attachment_types_with_chrono'] = array();
         $_SESSION['attachment_types_show'] = array();
+        $_SESSION['attachment_types_with_process'] = array();
         $attachmentTypes = $xmlfile->attachment_types;
         if (count($attachmentTypes) > 0) {
             foreach ($attachmentTypes->type as $type ) {
@@ -93,6 +107,7 @@ class business_app_tools extends business_app_tools_Abstract
                 $get_chrono = (string) $type['get_chrono'];
                 $attach_in_mail = (string) $type['attach_in_mail'];
                 $show_attachment_type = (string) $type['show'];
+                $process = (string) $type->process;
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
                 ) {
@@ -105,8 +120,12 @@ class business_app_tools extends business_app_tools_Abstract
                 $_SESSION['attachment_types_show'][(string) $type->id] = $show_attachment_type;
                 $_SESSION['attachment_types_get_chrono'][(string) $type->id] = $array_get_chrono;
                 $_SESSION['attachment_types_attach_in_mail'][(string) $type->id] = $attach_in_mail;
+                $_SESSION['attachment_types_with_process'][(string) $type->id] = $process;
             }
         }
+
+
+
 
         $_SESSION['mail_priorities'] = array();
         $_SESSION['mail_priorities_attribute'] = array();
