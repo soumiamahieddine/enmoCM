@@ -688,29 +688,29 @@ INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (1
 ------------
 --MLB_DOCTYPES_EXT--
 ------------
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (1, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (10, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (15, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (16, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (17, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (20, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (25, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (26, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (27, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (28, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (30, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (35, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (40, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (55, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (60, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (65, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (66, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (70, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (75, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (76, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (80, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (85, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (90, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (1, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (10, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (15, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (16, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (17, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (20, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (25, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (26, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (27, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (28, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (30, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (35, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (40, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (55, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (60, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (65, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (66, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (70, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (75, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (76, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (80, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (85, 21, 14, 1, 'normal');
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2, sve_type) VALUES (90, 21, 14, 1, 'normal');
 
 
 ------------

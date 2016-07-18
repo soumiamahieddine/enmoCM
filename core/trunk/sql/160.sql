@@ -415,3 +415,12 @@ CREATE VIEW res_view_attachments AS
 --                               DATABASE VERSION                            --
 -- ************************************************************************* --
 UPDATE parameters SET param_value_int = 160 where id='database_version';
+
+
+
+
+-- ************************************************************************* --
+--                               sve mlb_doctype_ext                         --
+-- ************************************************************************* --
+
+ALTER TABLE mlb_doctype_ext ADD COLUMN sve_type varchar(255);
