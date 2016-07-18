@@ -191,6 +191,17 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>send_attachments_to_contact</ID>
+        <LABEL>_SEND_ATTACHMENTS_TO_CONTACT</LABEL>
+        <NAME>send_attachments_to_contact</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
 	<!-- ACTIONS AJOUTEES PAR DIS -->
 	<ACTIONPAGE>
         <ID>visa_mail</ID>
