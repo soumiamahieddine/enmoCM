@@ -34,17 +34,17 @@ if($_SESSION['service_tag'] == 'group_basket') {
     <table align="center" width="100%" id="index_difflist_types_baskets" >
         <tr>
             <td width="40%" align="center">
-                <select name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_typeslist[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_typeslist" size="7" ondblclick='moveclick(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_typeslist"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_types_chosen"));' multiple="multiple"  class="difflist_types" style="width:100%;">
+                <select data-placeholder=" " name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_types_chosen[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_types_chosen" multiple="multiple" size="7"  class="difflist_types" style="width:100%;">
                 <?php
                 // Browse all the difflist_types
                 foreach($difflist_types as $difflist_type_id => $difflist_type_label) {
-                    $state_status = false;
+                    $state_difflist_type = "";
                     if (! $is_default_action ) {
                         if (isset($current_groupbasket['ACTIONS'])) {
                             for ($j = 0; $j < count($current_groupbasket['ACTIONS']); $j ++) {
                                 for ($k = 0; $k < count($current_groupbasket['ACTIONS'][$j]['difflist_types']); $k ++) {
                                     if ($difflist_type_id == $current_groupbasket['ACTIONS'][$j]['difflist_types'][$k]['difflist_type_id']) {
-                                        $state_difflist_type = true;
+                                        $state_difflist_type = 'selected="selected"';
                                     }
                                 }
                             }
@@ -52,70 +52,19 @@ if($_SESSION['service_tag'] == 'group_basket') {
                     } else {
                         for ($k = 0; $k < count($current_groupbasket['PARAM_DEFAULT_ACTION']['difflist_types']); $k ++)
                         {
-                            if ($difflist_type_id == $current_groupbasket['PARAM_DEFAULT_ACTION']['difflist_types'][$k]['ID']) {
-                                $state_difflist_type = true;
+                            if ($difflist_type_id == $current_groupbasket['PARAM_DEFAULT_ACTION']['difflist_types'][$k]['difflist_type_id']) {
+                                $state_difflist_type = 'selected="selected"';
                             }
                         }
                     }
-                    if($state_difflist_type == false)
-                    {
-                        ?>
-                        <option value="<?php functions::xecho($difflist_type_id);?>"><?php functions::xecho($difflist_type_label);?></option>
-                    <?php
-                    }
-                }
-                ?>
-                </select>
-                <br/>
-                <em><a href='javascript:selectall(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_typeslist"));' ><?php echo _SELECT_ALL;?></a></em>
-            </td>
-            <td width="20%" align="center">
-                <input type="button" class="button" value="<?php echo _ADD;?> &gt;&gt;" onclick='Move(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_typeslist"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_types_chosen"));' />
-                <br />
-                <br />
-                <input type="button" class="button" value="&lt;&lt; <?php echo _REMOVE;?>" onclick='Move(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_types_chosen"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_typeslist"));' />
-            </td>
-            <td width="40%" align="center">
-                <select name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_types_chosen[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_types_chosen" size="7" ondblclick='moveclick(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_types_chosen"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_typeslist"));' multiple="multiple"   class="difflist_types" style="width:100%;">
-                <?php
-                foreach($difflist_types as $difflist_type_id => $difflist_type_label) {
-                    $state_difflist_type = false;
-                    if (! $is_default_action) {
-                        if (isset($current_groupbasket['ACTIONS'])) {
-                            for($j=0;$j<count($current_groupbasket['ACTIONS']);$j++)
-                            {
-                                for($k=0; $k<count($current_groupbasket['ACTIONS'][$j]['difflist_types']);$k++)
-                                {
-                                    if($difflist_type_id == $current_groupbasket['ACTIONS'][$j]['difflist_types'][$k]['difflist_type_id'])
-                                    {
-                                        $state_difflist_type = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        for($k=0; $k<count($current_groupbasket['PARAM_DEFAULT_ACTION']['difflist_types']);$k++)
-                        {
-                            if($difflist_type_id == $current_groupbasket['PARAM_DEFAULT_ACTION']['difflist_types'][$k]['difflist_type_id'])
-                            {
-                                $state_difflist_type = true;
-                            }
-                        }
-                    }
-                    if($state_difflist_type == true)
-                    {
                     ?>
-                        <option value="<?php functions::xecho($difflist_type_id);?>" selected="selected" ><?php functions::xecho($difflist_type_label);?></option>
+                    <option <?php echo $state_difflist_type; ?> value="<?php functions::xecho($difflist_type_id);?>"><?php functions::xecho($difflist_type_label);?></option>
                     <?php
-                    }
+                
                 }
                 ?>
                 </select>
-                <br/>
-                <em><a href="javascript:selectall(document.getElementById('<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_difflist_types_chosen'));" >
-                <?php echo _SELECT_ALL;?></a></em>
+                <style>#index_difflist_types_baskets .chosen-container{width:95% !important;}</style>
             </td>
         </tr>
     </table>
