@@ -606,7 +606,7 @@ if($mode == 'normal') {
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
                     $tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]['value'] = $return_count->total;
+					$tab[$i][$j]['value'] = "$return_count->total";
                     $tab[$i][$j]["show"]=false;
                     $tab[$i][$j]["order"]='count_attachment';
                 }
