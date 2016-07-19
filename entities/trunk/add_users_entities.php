@@ -74,9 +74,9 @@ function in_session_array($entity_id)
 ?>
 <div class="popup_content">
 <h2 class="tit"><?php echo USER_ADD_ENTITY;?></h2>
-<form name="chooseEntity" id="chooseEntity" method="get" action="#" class="forms">
+<form name="chooseEntity" id="chooseEntity" method="get" action="#" class="forms" style="height:350px;">
 <p>
-    <label for="entity_id"> <?php echo _CHOOSE_ENTITY;?> : </label>
+    <label for="entity_id" style="width:90%;"> <?php echo _CHOOSE_ENTITY;?> : </label>
     <select name="entity_id" id="entity_id" size="30" style="width: auto" >
     <?php
 		
@@ -100,14 +100,15 @@ function in_session_array($entity_id)
 		
     ?>
     </select>
+    <script type="text/javascript">new Chosen($('entity_id'),{width: "95%", disable_search_threshold: 10, search_contains: true});</script>
 </p>
 <br/>
 <p>
     <label for="role"><?php echo _ROLE;?> : </label>
-    <input type="text"  name="role" id="role" />
+    <input type="text"  name="role" id="role" style="width:90%;" />
 </p>
 <br/>
-<p class="buttons">
+<p class="buttons" style="position:absolute;bottom:5px;margin:0px;padding:0px;left:0px;text-align:center;width:100%;">
     <input type="button" name="Submit" value="<?php echo _VALIDATE;?>" class="button" onclick="checkUserEntity('chooseEntity', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=check_user_entities';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_user_entities';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=users_entities_form';?>');"  />
     <input type="button" name="cancel" value="<?php echo _CANCEL;?>" class="button"  onclick="destroyModal('add_user_entities');"/>
 </p>
