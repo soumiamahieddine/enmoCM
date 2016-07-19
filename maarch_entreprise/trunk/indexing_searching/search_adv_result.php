@@ -463,7 +463,7 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or lower(title) LIKE lower(:multifieldWelcome) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifieldWelcome)) "
                     ."or res_id in (select res_id_master from res_view_attachments where lower(translate(identifier,'/','')) like lower(:multifieldWelcome) OR lower(identifier) like lower(:multifieldWelcome)) "
-                    ."or contact_id in (select contact_id from view_contacts where society ilike :multifieldWelcome or contact_firstname ilike :multifieldWelcome or contact_lastname ilike :multifieldWelcome) or (exp_user_id in (select user_id from users where firstname ilike :multifieldWelcome or lastname ilike :multifieldWelcome ))";
+                    ."or contact_id in (select contact_id from view_contacts where society ilike :multifieldWelcome or contact_firstname ilike :multifieldWelcome or contact_lastname ilike :multifieldWelcome) or (exp_user_id in (select user_id from users where firstname ilike :multifieldWelcome or lastname ilike :multifieldWelcome )))";
                 $arrayPDO = array_merge($arrayPDO, array(":multifieldWelcome" => "%".$_REQUEST['welcome']."%"));
                 $welcome = $_REQUEST['welcome'];
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
