@@ -250,7 +250,7 @@ function valid_actions_param(id_form)
     var selects = frm.getElementsByTagName('select'); //Array
     for(var i=0; i< selects.length;i++)
     {
-        if(selects[i].multiple && selects[i].id.indexOf('_chosen') >= 0)
+        if(selects[i].multiple && selects[i].id.indexOf('_chosen') >= 0 && selects[i].attributes.selected)
         {
             selectall_ext(selects[i].id);
         }

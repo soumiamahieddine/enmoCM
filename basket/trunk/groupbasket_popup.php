@@ -67,7 +67,7 @@ for($i=0;$i<count($_SESSION['groups']);$i++)
     }
 }
 $core_tools->load_html();
-$core_tools->load_header(_TITLE_GROUP_BASKET, true, false);
+$core_tools->load_header(_TITLE_GROUP_BASKET, true, true);
 $time = $core_tools->get_session_time_expire();
 //$core_tools->show_array( $_SESSION['m_admin']['basket']['groups']);
 //$core_tools->show_array( $_SESSION['m_admin']['basket']['all_actions']);
@@ -274,7 +274,7 @@ $time = $core_tools->get_session_time_expire();
                 <div  align="center">&nbsp;&nbsp;&nbsp;<i><?php echo _NO_ACTIONS_DEFINED;?></i></div><?php
             } ?>
         </div>
-        <div  id="config_actions" style="width:600px; display:inline; margin-left:auto; margin-right:auto; height:800px; border: 1px;"><?php
+        <div  id="config_actions" style="width:600px; display:inline; margin-left:auto; margin-right:auto; height:800px; border: 1px;float:left;"><?php
         for($_SESSION['m_admin']['compteur']=0; $_SESSION['m_admin']['compteur'] < count($_SESSION['m_admin']['basket']['all_actions']); $_SESSION['m_admin']['compteur']++)
         {
             $_SESSION['m_admin']['show_where_clause'] = true;
@@ -335,5 +335,7 @@ $time = $core_tools->get_session_time_expire();
     </form>
 </div>
 </div>
+<script type="text/javascript">$$('select').each(function(element) { new Chosen(element,{width: "226px", disable_search_threshold: 10,search_contains: true}); });</script>
+
 </body>
 </html>

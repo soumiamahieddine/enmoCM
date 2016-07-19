@@ -435,6 +435,21 @@ abstract class basket_Abstract extends Database
             }
         }
         if ($ind > -1) {
+            //selection du type de diffusion
+            $db = new Database();
+            $stmt = $db->query(
+                "select difflist_type_id from groupbasket_difflist_types "
+                . " where basket_id = ? "
+                . "and group_id = ? "
+                . "and action_id = ?",array($basketId,$_SESSION['user']['baskets'][$ind]['group_id'],$_SESSION['user']['baskets'][$ind]['default_action']));
+
+            if ($stmt->rowCount() <= 0) {
+                $_SESSION['current_basket']['difflist_type'] = 'entity_id';
+            } else {
+                $res = $stmt->fetchObject();
+                $_SESSION['current_basket']['difflist_type'] = $res->difflist_type_id;
+            }
+
             $_SESSION['current_basket']['table'] = $_SESSION['user']['baskets'][$ind]['table'];
             $_SESSION['current_basket']['view'] = $_SESSION['user']['baskets'][$ind]['view'];
             $_SESSION['current_basket']['coll_id'] = $_SESSION['user']['baskets'][$ind]['coll_id'];
