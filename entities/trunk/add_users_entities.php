@@ -83,7 +83,9 @@ function in_session_array($entity_id)
         $countAllEntities = count($allEntitiesTree);
         for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
             if (!$allEntitiesTree[$cptEntities]['KEYWORD']) {
-                $optionStr .= '<option data-object_type="entity_id" value="' 
+                $optionStr .= '<option title="' 
+                    .  str_replace('&emsp;', '', $ent->show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL'])) 
+                    . '" data-object_type="entity_id" value="' 
                     . $allEntitiesTree[$cptEntities]['ID'] . '"';
                 if ($allEntitiesTree[$cptEntities]['DISABLED']) {
                     $optionStr .= ' disabled="disabled" class="disabled_entity"';
