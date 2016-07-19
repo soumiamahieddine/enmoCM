@@ -21,88 +21,50 @@ if($_SESSION['service_tag'] == 'group_basket')
     <table align="center" width="100%" id="index_entity_baskets" >
         <tr>
             <td width="40%" align="center">
-                <select name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist" size="7" ondblclick='moveclick(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen"));' multiple="multiple"  class="entities_list" style="width:100%;">
+                <select data-placeholder=" " name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen" size="7" multiple="multiple"  class="entities_list" style="width:150px;">
                 <?php
+                $state_opt = true;
                 // Browse all the entities
                 for ($cpt = 0; $cpt < count($_SESSION['m_admin']['entities']); $cpt ++) {
-                    $state_entity = false;
+                    if($_SESSION['m_admin']['entities'][$cpt]['KEYWORD'] == '1' && $state_opt == true){
+                        echo '<optgroup label="Périmètre">';
+                        $state_opt = false;
+                    }else if($_SESSION['m_admin']['entities'][$cpt]['KEYWORD'] != '1' && $state_opt == true){
+                        echo '<optgroup label="'._ENTITY_TREE.'">';
+                        $state_opt = false;
+                    }
+                    $state_entity = "";
                     if (! $is_default_action ) {
                         if (isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'])) {
                             for ($j = 0; $j < count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS']); $j ++) {
                                 for ($k = 0; $k < count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST']); $k ++) {
                                     if ($_SESSION['m_admin']['entities'][$cpt]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST'][$k]['ID']) {
-                                        $state_entity = true;
+                                        $state_entity = 'selected="selected"';
                                     }
                                 }
                             }
                         }
                     } else {
-                    for ($k = 0; $k < count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['PARAM_DEFAULT_ACTION']['ENTITIES_LIST']); $k ++)
-                    {
-                        if ($_SESSION['m_admin']['entities'][$cpt]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['PARAM_DEFAULT_ACTION']['ENTITIES_LIST'][$k]['ID']) {
-                            $state_entity = true;
-                        }
-                    }
-                }
-                if($state_entity == false)
-                {
-                    ?>
-                    <option value="<?php functions::xecho($_SESSION['m_admin']['entities'][$cpt]['ID']);?>"><?php echo $_SESSION['m_admin']['entities'][$cpt]['LABEL'];?></option>
-                <?php
-                }
-            }
-                ?>
-                </select>
-                <br/>
-                <em><a href='javascript:selectall(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist"));' ><?php echo _SELECT_ALL;?></a></em>
-            </td>
-            <td width="20%" align="center">
-                <input type="button" class="button" value="<?php echo _ADD;?> &gt;&gt;" onclick='Move(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen"));' />
-                <br />
-                <br />
-                <input type="button" class="button" value="&lt;&lt; <?php echo _REMOVE;?>" onclick='Move(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist"));' />
-            </td>
-            <td width="40%" align="center">
-                <select name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen" size="7" ondblclick='moveclick(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist"));' multiple="multiple"   class="entities_list" style="width:100%;">
-                <?php
-                for ($cpt = 0; $cpt < count($_SESSION['m_admin']['entities']); $cpt ++) {
-                    $state_entity = false;
-                    if (! $is_default_action) {
-                        if (isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'])) {
-                            for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS']);$j++)
-                            {
-                                for($k=0; $k<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST']);$k++)
-                                {
-                                    if($_SESSION['m_admin']['entities'][$cpt]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST'][$k]['ID'])
-                                    {
-                                        $state_entity = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        for($k=0; $k<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['PARAM_DEFAULT_ACTION']['ENTITIES_LIST']);$k++)
+                        for ($k = 0; $k < count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['PARAM_DEFAULT_ACTION']['ENTITIES_LIST']); $k ++)
                         {
-                            if($_SESSION['m_admin']['entities'][$cpt]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['PARAM_DEFAULT_ACTION']['ENTITIES_LIST'][$k]['ID'])
-                            {
-                                $state_entity = true;
+                            if ($_SESSION['m_admin']['entities'][$cpt]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['PARAM_DEFAULT_ACTION']['ENTITIES_LIST'][$k]['ID']) {
+                                $state_entity = 'selected="selected"';
                             }
                         }
                     }
-                    if($state_entity == true)
-                    {
+                    
                     ?>
-                        <option value="<?php functions::xecho($_SESSION['m_admin']['entities'][$cpt]['ID']);?>" selected="selected" ><?php echo $_SESSION['m_admin']['entities'][$cpt]['LABEL'];?></option>
+                    <option <?php echo $state_entity; ?> title="<?php echo str_replace("&emsp;", "", $_SESSION['m_admin']['entities'][$cpt]['LABEL']);?>" value="<?php functions::xecho($_SESSION['m_admin']['entities'][$cpt]['ID']);?>"><?php echo $_SESSION['m_admin']['entities'][$cpt]['LABEL'];?></option>
                     <?php
+                    
+                    if($_SESSION['m_admin']['entities'][$cpt+1]['KEYWORD'] != $_SESSION['m_admin']['entities'][$cpt]['KEYWORD']){
+                        echo '</optgroup>';
+                        $state_opt = true;
                     }
                 }
                 ?>
                 </select>
-                <br/>
-                <em><a href="javascript:selectall(document.getElementById('<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen'));" >
-                <?php echo _SELECT_ALL;?></a></em>
+                <style>#index_entity_baskets .chosen-container{width:95% !important;}</style>
             </td>
         </tr>
     </table>
