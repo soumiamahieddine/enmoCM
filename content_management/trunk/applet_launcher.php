@@ -220,7 +220,15 @@ else if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
 
     <div id="maarchcm_error" class="error"></div>
     <?php   
-    $cM->generateJNLP($_SESSION['config']['coreurl'].'modules/content_management/dist/DisCM.jar',$_SESSION['config']['coreurl'].$path,$objectType,$objectTable,$objectId,$uniqueId,$cookieKey,$cMFeatures['CONFIG']['userMaarchOnClient'],$cMFeatures['CONFIG']['userPwdMaarchOnClient'],$cMFeatures['CONFIG']['psExecMode'],'mayscript');
+    $path_appli = explode('/', $_SESSION['config']['coreurl']);
+    if(count($path_appli) <> 5){
+        $path_appli = array_slice($path_appli, 0, 4);
+        $path_appli = implode('/', $path_appli);
+    }else{
+        $path_appli = implode('/', $path_appli);
+    }
+
+    $cM->generateJNLP($path_appli.'modules/content_management/dist/DisCM.jar',$_SESSION['config']['coreurl'].$path,$objectType,$objectTable,$objectId,$uniqueId,$cookieKey,$cMFeatures['CONFIG']['userMaarchOnClient'],$cMFeatures['CONFIG']['userPwdMaarchOnClient'],$cMFeatures['CONFIG']['psExecMode'],'mayscript');
     exit();
     ?>
     <resources>
