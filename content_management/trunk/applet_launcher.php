@@ -227,8 +227,7 @@ else if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
     }else{
         $path_appli = implode('/', $path_appli);
     }
-
-    $cM->generateJNLP($path_appli.'modules/content_management/dist/DisCM.jar',$_SESSION['config']['coreurl'].$path,$objectType,$objectTable,$objectId,$uniqueId,$cookieKey,$cMFeatures['CONFIG']['userMaarchOnClient'],$cMFeatures['CONFIG']['userPwdMaarchOnClient'],$cMFeatures['CONFIG']['psExecMode'],'mayscript');
+    $cM->generateJNLP($path_appli,$path_appli.'/'.$path,$objectType,$objectTable,$objectId,$uniqueId,$cookieKey,$cMFeatures['CONFIG']['userMaarchOnClient'],$cMFeatures['CONFIG']['userPwdMaarchOnClient'],$cMFeatures['CONFIG']['psExecMode'],'mayscript');
     exit();
     ?>
     <resources>

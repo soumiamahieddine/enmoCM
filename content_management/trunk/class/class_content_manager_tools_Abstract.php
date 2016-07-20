@@ -351,7 +351,7 @@ abstract class content_management_tools_Abstract
         $jnlp_attribute1->value = '6.0+';
         $jnlp_balise->appendChild($jnlp_attribute1); 
         $jnlp_attribute2 = $docXML->createAttribute('codebase'); 
-        $jnlp_attribute2->value = $_SESSION['config']['businessappurl']."tmp/";
+        $jnlp_attribute2->value = $jar_url.'/apps/maarch_entreprise/tmp/';
         $jnlp_balise->appendChild($jnlp_attribute2);
         $jnlp_attribute3 = $docXML->createAttribute('href'); 
         $jnlp_attribute3->value = $_SESSION['user']['UserId'].'_DisCM.jnlp';
@@ -390,7 +390,7 @@ abstract class content_management_tools_Abstract
 
         $jar_balise=$docXML->createElement("jar");
         $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $_SESSION['config']['coreurl'].'modules/content_management/dist/DisCM.jar';
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/DisCM.jar';
         $jar_balise->appendChild($jar_attribute);
 
         $applet_balise=$docXML->createElement("applet-desc");
@@ -531,7 +531,7 @@ abstract class content_management_tools_Abstract
 
         $docXML->save($filename); 
 
-        $file = $_SESSION['config']['coreurl']."tmp/".$_SESSION['user']['UserId']."_DisCM.jnlp";
+        //$file = $_SESSION['config']['coreurl']."tmp/".$_SESSION['user']['UserId']."_DisCM.jnlp";
 
         //echo '<a id="jnlp_file" href="'.$file.'"></a>';
         echo '<a id="jnlp_file" href="'.$_SESSION['config']['businessappurl'].'index.php?page=get_jnlp_file&module=content_management&display=true&filename='.$_SESSION['user']['UserId'].'_DisCM"></a>';
