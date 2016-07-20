@@ -534,7 +534,7 @@ abstract class content_management_tools_Abstract
         $file = $jar_url."/apps/maarch_entreprise/tmp/".$_SESSION['user']['UserId']."_DisCM.jnlp";
 
         echo '<a id="jnlp_file" href="'.$file.'">toto</a>';
-        echo '<script>setTimeout(function() {this.window.close();}, 1000);document.getElementById("jnlp_file").click();</script>';
+        echo '<script>setTimeout(function() {this.window.close();}, 10000);document.getElementById("jnlp_file").click();</script>';
         exit();
         /*echo '<a id="jnlp_file" href="'.$_SESSION['config']['businessappurl'].'index.php?page=get_jnlp_file&module=content_management&display=true&filename='.$_SESSION['user']['UserId'].'_DisCM"></a>';
         echo '<script>setTimeout(function() {this.window.close();}, 5000);document.getElementById("jnlp_file").click();</script>';
