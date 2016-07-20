@@ -95,6 +95,9 @@ if (isset($_REQUEST['origin']) && !empty($_REQUEST['origin'])) {
 $path_to_script = $_SESSION['config']['businessappurl']
     ."index.php?display=true&module=sendmail&page=sendmail_ajax_content&identifier="
     .$identifier."&origin=".$origin.$parameters;
+$path_to_script_ajax = $_SESSION['config']['businessappurl']
+    ."index.php?display=true&module=sendmail&page=sendmail_to_contact_ajax&identifier="
+    .$identifier."&origin=".$origin.$parameters;
     
 $core_tools->load_lang();
 $core_tools->load_html();
@@ -463,7 +466,7 @@ if ($mode == 'add') {
     //Send
     $id_action = 500;
     $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_EMAIL
-                .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''.$path_to_script.'&mode=added&for=send\', \'formEmail\');window.parent.destroyModal(\'modal_'.$id_action.'\');" />&nbsp;';
+                .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''.$path_to_script.'&mode=added&for=send\', \'formEmail\');changeStatusForActionSendToContact(\''.$path_to_script_ajax.'&mode=added&for=send\', \''.$_SESSION['status'].'\');window.parent.destroyModal(\'modal_'.$id_action.'\');" />&nbsp;';
     // //Save
     // $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_EMAIL
     //             .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''

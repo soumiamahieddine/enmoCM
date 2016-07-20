@@ -156,6 +156,19 @@ function validEmailForm (path, form_id) {
     });
 }
 
+ function changeStatusForActionSendToContact(path, status){
+    new Ajax.Request(path,
+    {
+        asynchronous:false,
+        method:'post',
+        parameters: {status : status},   
+        encoding: 'UTF-8',                       
+        onSuccess : function(){
+                  window.top.location.reload();
+              }
+    });
+ }
+
 function extractEmailAdress(field, item) {
     var fullAdress = item.innerHTML;
     var email = fullAdress.match(/\(([^)]+)\)/)[1];
