@@ -55,7 +55,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                             }
                             
                             ?>
-                            <option <?php echo $state_entity; ?> title = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" alt = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>"><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?></option>
+                            <option <?php echo $state_entity; ?> title = "<?php echo str_replace('&emsp;', '', $_SESSION['m_admin']['entities'][$i]['LABEL']);?>" alt = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>"><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?></option>
                             <?php
                             if($_SESSION['m_admin']['entities'][$i+1]['KEYWORD'] != $_SESSION['m_admin']['entities'][$i]['KEYWORD']){
                                 echo '</optgroup>';
@@ -65,7 +65,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                         }
                         ?>
                     </select>
-                    <style>#redirect_entity_baskets_1 .chosen-container{width:95% !important;}</style>
+                    <style>.scrollbox_content .chosen-container{width:95% !important;}</style>
                 </td>
             </tr>
         </table>
@@ -119,7 +119,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                                 }
                             }
                             ?>
-                            <option <?php echo $state_usersentities; ?> title = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" alt = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>"><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?></option>
+                            <option <?php echo $state_usersentities; ?> title = "<?php echo str_replace('&emsp;', '', $_SESSION['m_admin']['entities'][$i]['LABEL']);?>" alt = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>"><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?></option>
                             <?php
                             if($_SESSION['m_admin']['entities'][$i+1]['KEYWORD'] != $_SESSION['m_admin']['entities'][$i]['KEYWORD']){
                                 echo '</optgroup>';
@@ -128,7 +128,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                         }
                         ?>
                     </select>
-                    <style>#redirect_usersentities_baskets_1 .chosen-container{width:95% !important;}</style>
+                    <style>.scrollbox_content .chosen-container{width:95% !important;}</style>
                 </td>
             </tr>
         </table>
