@@ -85,25 +85,23 @@ echo '<div class="block" style="text-align:center;">';
 $db->query("UPDATE contacts_v2 SET user_id='' WHERE user_id IS NULL");
 
 //duplicates by society
-$selectDuplicatesBySociety = "SELECT contacts_v2.contact_id, contacts_v2.user_id, society, lower(society) as lowsoc, society_short,
-    is_corporate_person, contact_addresses.title,contact_addresses.lastname, contact_addresses.firstname, address_num||' '||address_street||' '||address_postal_code||' '||address_town as address 
-    from contacts_v2, contact_addresses 
-    WHERE contacts_v2.contact_id = contact_addresses.contact_id AND lower(society) in (
-    SELECT lower(society) FROM contacts_v2 GROUP BY lower(society) 
-    HAVING Count(lower(society)) > 1 and lower(society) <> '' ) AND is_corporate_person = 'Y'
-    order by lower(society)";
-$htmlTabSoc = '<table style="width:100%;">';
+$selectDuplicatesBySociety = "SELECT tab1.contact_id, tab1.society
+FROM contacts_v2 tab1, contacts_v2  tab2
+WHERE lower(translate(tab1.society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE CONCAT(lower(translate(tab2.society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')), '%')
+AND (tab2.society IS NOT NULL AND tab2.society <> '')
+  AND (tab1.society IS NOT NULL AND tab1.society <> '')
+  AND tab1.contact_id<>tab2.contact_id
+GROUP BY tab1.contact_id,tab1.society
+ORDER BY tab1.society ASC";
+
+$htmlTabSoc = '<form name="manage_duplicate_society" action="#" onsubmit="return linkDuplicate(\'manage_duplicate_society\')" method="post">';
+$htmlTabSoc .= '<table style="width:100%;">';
 $htmlTabSoc .= '<CAPTION>' . _DUPLICATES_BY_SOCIETY . '</CAPTION>';
 $htmlTabSoc .= '<tr>';
 $htmlTabSoc .= '<th style="width:60px">&nbsp;</th>';
 $htmlTabSoc .= '<th style="width:200px">' . _ID . '</th>';
 $htmlTabSoc .= '<th>' . _STRUCTURE_ORGANISM . '</th>';
-$htmlTabSoc .= '<th>' . _SOCIETY_SHORT . '</th>';
-$htmlTabSoc .= '<th>' . _ADDRESS . '</th>';
-$htmlTabSoc .= '<th>' . _TITLE2 . '</th>';
-$htmlTabSoc .= '<th>' . _LASTNAME . '</th>';
-$htmlTabSoc .= '<th>' . _FIRSTNAME . '</th>';
-$htmlTabSoc .= '<th>&nbsp;</th>';
+$htmlTabSoc .= '<th style="width:60px">&nbsp;</th>';
 $htmlTabSoc .= '</tr>';
 
 $tabSoc = array();
@@ -131,21 +129,12 @@ while($lineDoublSoc = $stmt->fetchObject()) {
         $corporatePeople = ($lineDoublSoc->is_corporate_person == "Y")? _YES : _NO;
         $socCompare = $lineDoublSoc->lowsoc;
         $htmlTabSoc .= '<tr style="background-color: #ffffff;" id="tr_' . $lineDoublSoc->contact_id . '">';
+        $htmlTabSoc .= '<td><input type="checkbox" id="fusion_id_'.$lineDoublSoc->contact_id.'" name="fusion_id" value="'.$lineDoublSoc->contact_id.'"/> <input type="radio" id="master_fusion_id_'.$lineDoublSoc->contact_id.'" name="master_fusion_id" value="'.$lineDoublSoc->contact_id.'"/></td>';
+        $htmlTabSoc .= '<td>' . $lineDoublSoc->contact_id . '</td>';
+        $htmlTabSoc .= '<td>' . $lineDoublSoc->society . '</td>';
         $htmlTabSoc .= '<td><i onclick="loadDocList('
             . $lineDoublSoc->contact_id . ');" class="fa fa-search fa-2x" title="'._IS_ATTACHED_TO_DOC.'" title="'
             . _IS_ATTACHED_TO_DOC . '" style="cursor: pointer;"></i></td>';
-        $htmlTabSoc .= '<td>' . $lineDoublSoc->contact_id . '</td>';
-        $htmlTabSoc .= '<td>' . $lineDoublSoc->society . '</td>';
-        $htmlTabSoc .= '<td align="center">' . $lineDoublSoc->society_short . '</td>';
-        $htmlTabSoc .= '<td>' . $lineDoublSoc->address . '</td>';
-        $htmlTabSoc .= '<td>' . $business->get_label_title($lineDoublSoc->title) . '</td>';
-        $htmlTabSoc .= '<td>' . $lineDoublSoc->lastname . '</td>';
-        $htmlTabSoc .= '<td>' . $lineDoublSoc->firstname . '</td>';
-        $htmlTabSoc .= '<td><i onclick="loadDeleteContactDiv('
-            . $lineDoublSoc->contact_id . ', \'' 
-            . addslashes($lineDoublSoc->society) . '\', \'\');" class="fa fa-close fa-2x" title="'._DELETE.'" title="'
-            . _DELETE . ' ' . $lineDoublSoc->contact_id . ' '
-            . $lineDoublSoc->society . ' ?" style="cursor: pointer;"></i></td>';
         $htmlTabSoc .= '</tr>';
         $htmlTabSoc .= '<tr id="deleteContactDiv_' . $lineDoublSoc->contact_id
             . '" name="deleteContactDiv_' . $lineDoublSoc->contact_id
@@ -175,6 +164,8 @@ while($lineDoublSoc = $stmt->fetchObject()) {
 }
 //$func->show_array($tabSoc);
 $htmlTabSoc .= '</table>';
+$htmlTabSoc .= '<input type="submit" value="fusionner!" class="button"/>';
+$htmlTabSoc .= '</form>';
 if ($cptSoc == 0) {
     echo _NO_SOCIETY_DUPLICATES . '<br>';
 } else {
@@ -183,14 +174,18 @@ if ($cptSoc == 0) {
 ?><br><?php
 /***********************************************************************/
 //duplicates by name
-$selectDuplicatesByName = "SELECT contacts_v2.contact_id, lower(contacts_v2.lastname||' '||contacts_v2.firstname) as lastname_firstname, society, society_short,
-    is_corporate_person, contacts_v2.lastname, contacts_v2.firstname, contacts_v2.title, address_num||' '||address_street||' '||address_postal_code||' '||address_town as address
-    from contacts_v2, contact_addresses
-    WHERE contacts_v2.contact_id = contact_addresses.contact_id AND is_corporate_person = 'N' AND lower(contacts_v2.lastname||' '||contacts_v2.firstname) in (
-    SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts_v2 GROUP BY lastname_firstname 
-    HAVING Count(lower(lastname||' '||firstname)) > 1 and lower(lastname||' '||firstname) <> ' ') 
-    order by lower(contacts_v2.lastname||' '||contacts_v2.firstname)";
-$htmlTabName = '<table style="width:100%;">';
+$selectDuplicatesByName = "SELECT tab1.title, tab1.contact_id, tab1.lastname, tab1.firstname
+FROM contacts_v2 tab1, contacts_v2  tab2
+WHERE lower(translate(tab1.lastname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE CONCAT(lower(translate(tab2.lastname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')), '%')
+AND lower(translate(tab1.firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE CONCAT(lower(translate(tab2.firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')), '%')
+  AND tab1.contact_id<>tab2.contact_id
+  AND (tab2.lastname IS NOT NULL AND tab2.lastname <> '')
+  AND (tab1.lastname IS NOT NULL AND tab1.lastname <> '')
+GROUP BY tab1.title, tab1.contact_id,tab1.lastname, tab1.firstname 
+ORDER BY tab1.lastname ASC
+";
+$htmlTabName = '<form name="manage_duplicate_person" action="#" onsubmit="return linkDuplicate(\'manage_duplicate_person\')" method="post">';
+$htmlTabName .= '<table style="width:100%;">';
 $htmlTabName .= '<CAPTION>' . _DUPLICATES_BY_NAME . '</CAPTION>';
 $htmlTabName .= '<tr>';
 $htmlTabName .= '<th style="width:60px">&nbsp;</th>';
@@ -198,9 +193,6 @@ $htmlTabName .= '<th style="width:200px">' . _ID . '</th>';
 $htmlTabName .= '<th>' . _TITLE2 . '</th>';
 $htmlTabName .= '<th>' . _LASTNAME . '</th>';
 $htmlTabName .= '<th>' . _FIRSTNAME . '</th>';
-$htmlTabName .= '<th>' . _STRUCTURE_ORGANISM . '</th>';
-$htmlTabName .= '<th>' . _SOCIETY_SHORT . '</th>';
-$htmlTabName .= '<th>' . _ADDRESS . '</th>';
 $htmlTabName .= '<th style="width:50px">&nbsp;</th>';
 $htmlTabName .= '</tr>';
 $tabName = array();
@@ -211,10 +203,7 @@ $stmt = $db->query($selectDuplicatesByName);
 $cptName = 0;
 while($lineDoublName = $stmt->fetchObject()) {
 
-    $stmt2 = $db->query("SELECT id FROM contact_addresses WHERE contact_id = ? ", array($lineDoublName->contact_id));
-    $result_address = $stmt2->fetchObject();
-
-    if ($lineDoublName->contact_id <> '' && $result_address->id <> '') {
+    if ($lineDoublName->contact_id <> '') {
         $cptName++;
 
         if ($nameCompare == $lineDoublName->lastname_firstname) {
@@ -229,23 +218,14 @@ while($lineDoublName = $stmt->fetchObject()) {
 
         $nameCompare = $lineDoublName->lastname_firstname;
         $htmlTabName .= '<tr style="background-color: #ffffff;" id="tr_' . $lineDoublName->contact_id . '">';
-        $htmlTabName .= '<td><i onclick="loadDocList('
-            . $lineDoublName->contact_id . ');" class="fa fa-search fa-2x" title="'._IS_ATTACHED_TO_DOC.'" title="'
-            . _IS_ATTACHED_TO_DOC . '" style="cursor: pointer;"></i></td>';
+        $htmlTabName .= '<td><input type="checkbox" id="fusion_id_'.$lineDoublName->contact_id.'" name="fusion_id" value="'.$lineDoublName->contact_id.'"/> <input type="radio" id="master_fusion_id_'.$lineDoublName->contact_id.'" name="master_fusion_id" value="'.$lineDoublName->contact_id.'"/></td>';
         $htmlTabName .= '<td>' . $lineDoublName->contact_id . '</td>';
         $htmlTabName .= '<td>' . $business->get_label_title($lineDoublName->title) . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->lastname . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->firstname . '</td>';
-        $htmlTabName .= '<td>' . $lineDoublName->society . '</td>';
-        $htmlTabName .= '<td>' . $lineDoublName->society_short . '</td>';
-        $htmlTabName .= '<td>' . $lineDoublName->address;
-        $htmlTabName .= '</td>';
-        $htmlTabName .= '<td><i onclick="loadDeleteContactDiv('
-            . $lineDoublName->contact_id . ', \'\', \'' 
-            . addslashes($lineDoublName->lastname_firstname) . '\');" class="fa fa-close fa-2x" title="'._DELETE . ' ' . $lineDoublName->contact_id . ' '
-            . $lineDoublName->society . ' ?" title="'
-            . _DELETE . ' ' . $lineDoublName->contact_id . ' '
-            . $lineDoublName->society . ' ?" style="cursor: pointer;"></i></td>';
+        $htmlTabName .= '<td><i onclick="loadDocList('
+            . $lineDoublName->contact_id . ');" class="fa fa-search fa-2x" title="'._IS_ATTACHED_TO_DOC.'" title="'
+            . _IS_ATTACHED_TO_DOC . '" style="cursor: pointer;"></i></td>';
         $htmlTabName .= '</tr>';
         $htmlTabName .= '<tr id="deleteContactDiv_' . $lineDoublName->contact_id
             . '" name="deleteContactDiv_' . $lineDoublName->contact_id
@@ -275,6 +255,8 @@ while($lineDoublName = $stmt->fetchObject()) {
 }
 //$func->show_array($tabName);
 $htmlTabName .= '</table>';
+$htmlTabName .= '<input type="submit" value="fusionner!" class="button"/>';
+$htmlTabName .= '</form>';
 if ($cptName == 0) {
     echo '<hr/>'; 
     echo _NO_NAME_DUPLICATES . '<br>';

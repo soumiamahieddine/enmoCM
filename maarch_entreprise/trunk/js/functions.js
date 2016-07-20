@@ -3121,3 +3121,53 @@ function setPreviousAddress(address) {
         $('website').value  = allCoordoate[6];
     }
 }
+
+function linkDuplicate(id_form) {
+    console.log(id_form);
+    elem = document.forms[id_form];
+    var slave = [];
+    var master = '';
+    for(var i=0; i < elem.length; i++)
+    {
+        if(document.forms[id_form][i].name == 'fusion_id' && document.forms[id_form][i].checked == true){
+            slave.push(document.forms[id_form][i].value);
+            console.log(document.forms[id_form][i].value);
+        }
+        if(document.forms[id_form][i].name == 'master_fusion_id' && document.forms[id_form][i].checked == true){
+            master = document.forms[id_form][i].value;
+            console.log(document.forms[id_form][i].value);
+        }
+    }
+    var index = slave.indexOf(master);
+    slave.splice(index, 1);
+
+    if(slave.length == 0){
+        alert('Aucun contact à fusionner !');
+        return false;
+    }
+
+    if(master == ''){
+        alert('Aucun contact Maitre sélectionné !');
+        return false;
+    }
+    console.log(slave);
+    if(confirm('Vous etes sur le point de substituer les contacts suivants : '+slave.join()+'\navec le contact : '+master)){
+        var path_manage_script = 'index.php?admin=contacts&page=fusionContact&display=true';
+        new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { 
+                slave_contact_id : slave.join(),
+                master_contact_id : master},
+            onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                if (response.status == 0) {
+                    console.log(response);
+                } else if (response.status == 1){
+                    alert('Erreur!');
+                }
+            }
+        });
+    }
+    alert('Opération terminé!');
+}
