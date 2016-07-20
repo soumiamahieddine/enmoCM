@@ -103,7 +103,7 @@ function showTransmissionEditButton(currentValue, editParagraph, size) {
 
 function hideEditAndAddButton(editParagraph) {
   $(editParagraph).style.display = "none";
-  $("add").style.display = "none";
+  //$("add").style.display = "none";
 }
 
 function delLastTransmission() {
