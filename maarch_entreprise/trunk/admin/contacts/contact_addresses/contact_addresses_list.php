@@ -64,7 +64,10 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 $select["view_contacts"] = array();
 array_push(
     $select["view_contacts"],
-    "ca_id", "contact_id", "society", "contact_purpose_id"
+    "ca_id"
+    , "contact_id
+    , case when view_contacts.is_corporate_person <> 'Y' then view_contacts.contact_id || ' - ' || view_contacts.contact_lastname || ' ' || view_contacts.contact_firstname|| ' - physique' else view_contacts.contact_id || ' - ' || view_contacts.society || ' - moral' end as \"society\""
+    , "contact_purpose_id"
     , "departement
     , case when view_contacts.contact_lastname <> '' then view_contacts.contact_lastname else view_contacts.lastname end as \"lastname\"
     , case when view_contacts.contact_firstname <> '' then view_contacts.contact_firstname else view_contacts.firstname end as \"firstname\"
@@ -113,7 +116,7 @@ array_push(
     "lastname", "firstname", "function"
 );
 
-$field = 'contact_purpose_id';
+$field = 'society';
 if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field']) && in_array($_REQUEST['order_field'], $select["view_contacts"])) {
     $field = trim($_REQUEST['order_field']);
 }
@@ -154,8 +157,12 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["order"] = 'contact_id';
             }
             if ($tab[$i][$j][$value] == "society") {
-                $tab[$i][$j]["society"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"] = _STRUCTURE_ORGANISM;
+                $show_string = explode(' - ', $tab[$i][$j]['value']);
+                $show_string[2] = '<i style="font-size:10px;color:#16ADEB;">'.$show_string[2].'</i>';
+                $show_string  = implode(' - ', $show_string);
+                $tab[$i][$j]["value"] = $show_string;
+                $tab[$i][$j]["society"] = $tab[$i][$j]["value"];
+                $tab[$i][$j]["label"] = _LINKED_CONTACT;
                 $tab[$i][$j]["size"] = "30";
                 $tab[$i][$j]["label_align"] = "left";
                 $tab[$i][$j]["align"] = "left";
