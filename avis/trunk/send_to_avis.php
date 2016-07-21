@@ -136,11 +136,18 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
 
  function check_form($form_id,$values)
  {
+	 //var_dump($values);
     $recommendation_limit_date = get_value_fields($values, 'recommendation_limit_date');
+    $note_content_to_users = get_value_fields($values, 'note_content_to_users');
+    
     if($recommendation_limit_date == null || $recommendation_limit_date == ''){
         $_SESSION['action_error'] = _RECOMMENDATION_LIMIT_DATE. " " . _MANDATORY;
         return false;
-    }
+    } else if ($note_content_to_users == null || $note_content_to_users == '') {
+		$_SESSION['action_error'] = _NOTE. " " . _MANDATORY;
+		return false;
+	}
+    
 
     $avis = new avis_controler();
 	$curr_avis_wf = $avis->getWorkflow($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'], 'AVIS_CIRCUIT');
