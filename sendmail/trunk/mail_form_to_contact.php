@@ -459,21 +459,21 @@ if ($mode == 'add') {
     $content .= '<textarea name="body_from_raw" id="body_from_raw" class="emailInput" cols="60" rows="14">'
         ._DEFAULT_BODY.$sendmail_tools->htmlToRaw($all_joined_files).'</textarea>';
     $content .='</div>';
-    
+    //$content .='<input name="Macible"></input>';
     //Buttons
     $content .='<hr style="margin-top:2px;" />';
     $content .='<div align="center">';
     //Send
     $id_action = 500;
-    $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_EMAIL
-                .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''.$path_to_script.'&mode=added&for=send\', \'formEmail\');changeStatusForActionSendToContact(\''.$path_to_script_ajax.'&mode=added&for=send\', \''.$_SESSION['status'].'\');window.parent.destroyModal(\'modal_'.$id_action.'\');" />&nbsp;';
+    $content .=' <input style="display:none;" type="button" name="valid" value="&nbsp;'._SEND_EMAIL
+                .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''.$path_to_script.'&mode=added&for=send\', \'formEmail\');changeStatusForActionSendToContact(\''.$path_to_script_ajax.'&mode=added&for=send\', \''.$_SESSION['status'].'\');" />&nbsp;';
     // //Save
     // $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_EMAIL
     //             .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
     //             .$path_to_script.'&mode=added&for=save\', \'formEmail\');" />&nbsp;';
     //Cancel
     $id_action = 500;
-    $content .='<input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();window.parent.destroyModal(\'modal_'.$id_action.'\');"/>';
+    // $content .='<input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();window.parent.destroyModal(\'modal_'.$id_action.'\');"/>';
     $content .='</div>';
     $content .= '</form>';
     $content .= '</div>';

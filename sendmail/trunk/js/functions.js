@@ -164,7 +164,7 @@ function validEmailForm (path, form_id) {
         parameters: {status : status},   
         encoding: 'UTF-8',                       
         onSuccess : function(){
-                  window.top.location.reload();
+                  //window.top.location.reload();
               }
     });
  }
