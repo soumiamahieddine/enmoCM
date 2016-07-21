@@ -42,7 +42,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
             . $tableName 
             . " where attachment_type = ? and res_id = ?", array('outgoing_mail', $objectId));
     } else {
-        $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from ".$tableName." where (attachment_type = ? or attachment_type = ? or attachment_type = ? or attachment_type = 'transfer') and res_id = ?", array('sva', 'response_project','waybill', $objectId));
+        $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from ".$tableName." where (attachment_type = ? or attachment_type = ? or attachment_type = ? or attachment_type = ? or attachment_type = 'transfer') and res_id = ?", array('svr','sva', 'response_project','waybill', $objectId));
     }
 	
     if ($stmt->rowCount() < 1) {
