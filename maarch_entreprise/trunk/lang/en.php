@@ -18,6 +18,7 @@
  *   You should have received a copy of the GNU General Public License
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
+if (!defined("_PROCESSING_MODE")) define("_PROCESSING_MODE", "Processing Mode");
 if (!defined("_SAVE_CONFIRM"))    define("_SAVE_CONFIRM", "Save");
 if (!defined("_SAVED_ALREADY_EXIST"))    define("_SAVED_ALREADY_EXIST", "Save already exist");
 if (!defined("_OK_FOR_CONFIRM"))    define("_OK_FOR_CONFIRM", "Are you sure to save ");

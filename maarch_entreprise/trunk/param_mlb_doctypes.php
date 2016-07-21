@@ -48,7 +48,7 @@ elseif($_SESSION['service_tag'] == 'frm_doctype')
     </p>
     
     <p>
-        <label for="label"><?php echo _PROCESSING_MODE2;?> : </label>
+        <label for="label"><?php echo _PROCESSING_MODE;?> : </label>
         
     <?php
         // Variable qui ajoutera l'attribut selected de la liste déroulante
