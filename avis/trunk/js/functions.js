@@ -865,9 +865,16 @@ function checkRealDateAvis() {
     var docDate;
     var processLimitDate;
     var avisLimitDate;
+    
+    var nowDate = new Date ();
+    var date3 = new Date();
+    nowDate.setFullYear(date3.getFullYear());
+    nowDate.setMonth(date3.getMonth()+1);
+    nowDate.setDate(date3.getDate()); 
+    current_date = nowDate.getTime();
 
 
-    if($('doc_date')) {
+   /* if($('doc_date')) {
         docDate = $('doc_date').value;
 		var date2 = new Date();
 		date2.setFullYear(docDate.substr(6,4));
@@ -876,7 +883,7 @@ function checkRealDateAvis() {
 		date2.setHours(0);
 		date2.setMinutes(0);
 		var d2_docDate=date2.getTime();
-    }
+    } */
 
     if($('process_limit_date')) {
         processLimitDate = $('process_limit_date').value;
@@ -906,9 +913,10 @@ function checkRealDateAvis() {
         $('recommendation_limit_date_tr').value = "";
 
     }
-
-    if (d2_docDate > d5_avisLimitDate && avisLimitDate != "") {
-        alert("La date limite d'avis doit être supérieure à la date du courrier ");
+	//alert(nowDate);
+	
+    if (current_date > d5_avisLimitDate && avisLimitDate != "") {
+        alert("La date limite d'avis doit être supérieure à la date du jour ");
         $('recommendation_limit_date').value = "";
         $('recommendation_limit_date_tr').value = "";
         
