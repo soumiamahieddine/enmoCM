@@ -3122,6 +3122,28 @@ function setPreviousAddress(address) {
     }
 }
 
+function checkOthersDuplicate(id_form,checkbox_name,radio_name) {
+
+    elem = document.forms[id_form];
+    var state = false;
+    for(var i=0; i < elem.length; i++)
+    {
+        if(document.forms[id_form][i].name == checkbox_name){
+            document.forms[id_form][i].checked = true;
+        }else if(document.forms[id_form][i].name == radio_name && state == false){
+            document.forms[id_form][i].checked = true;
+            state = true;
+        }else{
+            document.forms[id_form][i].checked = false;
+        }
+
+        if(document.forms[id_form][i] == radio_name && state == false){
+            document.forms[id_form][i].checked = true;
+            state = true;
+        }
+    }
+    
+}
 function linkDuplicate(id_form) {
     console.log(id_form);
     elem = document.forms[id_form];
@@ -3129,11 +3151,11 @@ function linkDuplicate(id_form) {
     var master = '';
     for(var i=0; i < elem.length; i++)
     {
-        if(document.forms[id_form][i].name == 'fusion_id' && document.forms[id_form][i].checked == true){
+        if(document.forms[id_form][i].type == 'checkbox' && document.forms[id_form][i].checked == true){
             slave.push(document.forms[id_form][i].value);
             console.log(document.forms[id_form][i].value);
         }
-        if(document.forms[id_form][i].name == 'master_fusion_id' && document.forms[id_form][i].checked == true){
+        if(document.forms[id_form][i].type == 'radio' && document.forms[id_form][i].checked == true){
             master = document.forms[id_form][i].value;
             console.log(document.forms[id_form][i].value);
         }

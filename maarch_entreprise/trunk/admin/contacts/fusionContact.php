@@ -22,6 +22,16 @@ foreach ($contacts_id as $key => $value) {
     $arrayPDO = array($master_contact_id,$value);
     $db->query($query, $arrayPDO);
 
+    //mise à jour des pièces jointes
+    $query = "UPDATE res_attachments SET dest_contact_id = ? WHERE dest_contact_id = ?";
+    $arrayPDO = array($master_contact_id,$value);
+    $db->query($query, $arrayPDO);
+
+    //mise à jour des pièces jointes versionnée
+    $query = "UPDATE res_version_attachments SET dest_contact_id = ? WHERE dest_contact_id = ?";
+    $arrayPDO = array($master_contact_id,$value);
+    $db->query($query, $arrayPDO);
+
     //deplace adresse au master
     $query = "UPDATE contact_addresses SET contact_id = ? WHERE contact_id = ?";
     $arrayPDO = array($master_contact_id,$value);

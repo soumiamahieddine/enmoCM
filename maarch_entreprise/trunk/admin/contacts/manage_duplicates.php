@@ -62,7 +62,7 @@ $page_label = _MANAGE_DUPLICATES;
 $page_id = "manage_duplicates";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-$color = array('#DFE3E0','#EAF2F1','#CDDCDA','#A8BCB9');
+$color = array('#254e7b','#5584b1','#85c1e5','#a2adc3');
 function randomColor($lastColor)
 {
     if ($lastColor <> 0) {
@@ -85,25 +85,25 @@ echo '<div class="block" style="text-align:center;">';
 $db->query("UPDATE contacts_v2 SET user_id='' WHERE user_id IS NULL");
 
 //duplicates by society
-$selectDuplicatesBySociety = "SELECT tab1.contact_id, tab1.society
-FROM contacts_v2 tab1, contacts_v2  tab2
-WHERE lower(translate(tab1.society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr ')) LIKE lower(translate(tab2.society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr '))
-AND (tab2.society IS NOT NULL AND tab2.society <> '')
-  AND (tab1.society IS NOT NULL AND tab1.society <> '')
-  AND tab1.contact_id<>tab2.contact_id
-GROUP BY tab1.contact_id,tab1.society
-ORDER BY tab1.society ASC LIMIT 500";
+$selectDuplicatesBySociety = "SELECT contact_id, society, lower(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr ')) as society_comp from contacts_v2 
+WHERE lower(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr ')) in (
+SELECT lower(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr ')) FROM contacts_v2 GROUP BY lower(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr '))
+HAVING Count(lower(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr '))) > 1 and lower(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr ')) <> '' ) 
+order by lower(society)";
 
 $htmlTabSoc = '<form name="manage_duplicate_society" action="#" onsubmit="return linkDuplicate(\'manage_duplicate_society\')" method="post">';
-$htmlTabSoc .= '<table style="width:100%;">';
+$htmlTabSoc .= '<table style="width:100%;" id="duplicates_society">';
 $htmlTabSoc .= '<CAPTION>' . _DUPLICATES_BY_SOCIETY . '</CAPTION>';
-$htmlTabSoc .= '<tr>';
-$htmlTabSoc .= '<th style="width:60px">&nbsp;</th>';
-$htmlTabSoc .= '<th style="width:200px">' . _ID . '</th>';
-$htmlTabSoc .= '<th>' . _STRUCTURE_ORGANISM . '</th>';
-$htmlTabSoc .= '<th style="width:60px">&nbsp;</th>';
-$htmlTabSoc .= '</tr>';
+$htmlTabSoc .= '<thead style="display:block;">';
+$htmlTabSoc .= '<tr style="display:table;width:100%;">';
 
+$htmlTabSoc .= '<th style="width:10%;">&nbsp;</th>';
+$htmlTabSoc .= '<th style="width:20%;">' . _ID . '</th>';
+$htmlTabSoc .= '<th style="width:60%;">' . _STRUCTURE_ORGANISM . '</th>';
+$htmlTabSoc .= '<th style="width:10%;">&nbsp;</th>';
+$htmlTabSoc .= '</tr>';
+$htmlTabSoc .= '</thead>';
+$htmlTabSoc .= '<tbody style="width:100%;display:block;height: 400px;overflow-y: auto;overflow-x: hidden;color:white;">';
 $tabSoc = array();
 $socCompare = '';
 $colorToUse = '';
@@ -111,42 +111,31 @@ $colorNumber = '2';
 $stmt = $db->query($selectDuplicatesBySociety);
 
 $cptSoc = 0;
+$i = 0;
 while($lineDoublSoc = $stmt->fetchObject()) {
-
     //$stmt2 = $db->query("SELECT id FROM contact_addresses WHERE contact_id = ?", array($lineDoublSoc->contact_id));
     //$result_address = $stmt2->fetchObject();
 
     if ($lineDoublSoc->contact_id <> ''/* && $result_address->id <> '' */) {
         $cptSoc++;
 
-        if ($socCompare == $lineDoublSoc->lowsoc) {
+        if ($socCompare == $lineDoublSoc->society_comp) {
             //echo 'doublon<br>';
         } else {
+            $i++;
             //echo 'new doublon<br>';
+            $class = 'duplicate_'.$i;
             $colorNumber = randomColor($colorNumber);
             $colorToUse = $color[$colorNumber];
         }
-        $corporatePeople = ($lineDoublSoc->is_corporate_person == "Y")? _YES : _NO;
-        $socCompare = $lineDoublSoc->lowsoc;
-        $htmlTabSoc .= '<tr style="background-color: #ffffff;" id="tr_' . $lineDoublSoc->contact_id . '">';
-        $htmlTabSoc .= '<td><input type="checkbox" id="fusion_id_'.$lineDoublSoc->contact_id.'" name="fusion_id" value="'.$lineDoublSoc->contact_id.'"/> <input type="radio" id="master_fusion_id_'.$lineDoublSoc->contact_id.'" name="master_fusion_id" value="'.$lineDoublSoc->contact_id.'"/></td>';
-        $htmlTabSoc .= '<td>' . $lineDoublSoc->contact_id . '</td>';
-        $htmlTabSoc .= '<td>' . $lineDoublSoc->society . '</td>';
-        $htmlTabSoc .= '<td><i onclick="loadDocList('
+        $socCompare = $lineDoublSoc->society_comp;
+        $htmlTabSoc .= '<tr style="background-color: '.$colorToUse.';display:table;width:100%;" id="tr_' . $lineDoublSoc->contact_id . '">';
+        $htmlTabSoc .= '<td style="width:10%;"><input type="checkbox" class="'.$class.'" title="contact à fusionner" id="fusion_id_'.$lineDoublSoc->contact_id.'" name="slave_'.$class.'" value="'.$lineDoublSoc->contact_id.'" onclick="checkOthersDuplicate(\'manage_duplicate_society\',\'slave_'.$class.'\',\'master_'.$class.'\');" /> <input type="radio" title="contact maître servant de fusion" id="master_fusion_id_'.$lineDoublSoc->contact_id.'" name="master_'.$class.'" value="'.$lineDoublSoc->contact_id.'"/></td>';
+        $htmlTabSoc .= '<td style="width:20%;">' . $lineDoublSoc->contact_id . '</td>';
+        $htmlTabSoc .= '<td style="width:60%;">' . $lineDoublSoc->society . '</td>';
+        $htmlTabSoc .= '<td style="width:10%;"><i onclick="loadDocList('
             . $lineDoublSoc->contact_id . ');" class="fa fa-search fa-2x" title="'._IS_ATTACHED_TO_DOC.'" title="'
             . _IS_ATTACHED_TO_DOC . '" style="cursor: pointer;"></i></td>';
-        $htmlTabSoc .= '</tr>';
-        $htmlTabSoc .= '<tr id="deleteContactDiv_' . $lineDoublSoc->contact_id
-            . '" name="deleteContactDiv_' . $lineDoublSoc->contact_id
-            . '" style="display: none; border-bottom: solid 1px black; '
-            . 'background-color: #FFF;">';
-        $htmlTabSoc .= '<td style="background-color: white;" colspan="9">';
-        $htmlTabSoc .= '<div id="divDeleteContact_' . $lineDoublSoc->contact_id
-            . '" align="center" style="color: grey;" width="100%">';
-        $htmlTabSoc .= '<img width="10%" style="background-color: white; '
-            . 'margin: 0; padding: 0;" src="static.php?filename=loading_big.gif">';
-        $htmlTabSoc .= '</div>';
-        $htmlTabSoc .= '</td>';
         $htmlTabSoc .= '</tr>';
         $htmlTabSoc .= '<tr id="docList_' . $lineDoublSoc->contact_id
             . '" name="docList_' . $lineDoublSoc->contact_id
@@ -161,9 +150,12 @@ while($lineDoublSoc = $stmt->fetchObject()) {
         $htmlTabSoc .= '</td>';
         $htmlTabSoc .= '</tr>';
     }
+    $comp_society = $lineDoublSoc->contact_id;
 }
+$htmlTabSoc .= '</tbody>';
 //$func->show_array($tabSoc);
 $htmlTabSoc .= '</table>';
+$htmlTabSoc .= '<style>#duplicates_society tbody tr:hover{opacity:0.5 !important;}</style>';
 $htmlTabSoc .= '<input type="submit" value="fusionner!" class="button"/>';
 $htmlTabSoc .= '</form>';
 if ($cptSoc == 0) {
@@ -174,33 +166,33 @@ if ($cptSoc == 0) {
 ?><br><?php
 /***********************************************************************/
 //duplicates by name
-$selectDuplicatesByName = "SELECT tab1.title, tab1.contact_id, tab1.lastname, tab1.firstname
-FROM contacts_v2 tab1, contacts_v2  tab2
-WHERE lower(translate(tab1.lastname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr ')) LIKE lower(translate(tab2.lastname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr '))
-AND lower(translate(tab1.firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr ')) LIKE lower(translate(tab2.firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr '))
-  AND tab1.contact_id<>tab2.contact_id
-  AND (tab2.lastname IS NOT NULL AND tab2.lastname <> '')
-  AND (tab1.lastname IS NOT NULL AND tab1.lastname <> '')
-GROUP BY tab1.title, tab1.contact_id,tab1.lastname, tab1.firstname 
-ORDER BY tab1.lastname ASC LIMIT 500
-";
+$selectDuplicatesByName = "SELECT contact_id, lower(translate(lastname||' '||firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr ')) as lastname_firstname, society, society_short,is_corporate_person, lastname, firstname, title 
+from contacts_v2 
+WHERE lower(translate(lastname||' '||firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr ')) in (
+SELECT lower(translate(lastname||' '||firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr ')) as lastname_firstname FROM contacts_v2 GROUP BY lastname_firstname 
+HAVING Count(lower(translate(lastname||' '||firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr '))) > 1 and lower(translate(lastname||' '||firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr ')) <> ' ') 
+order by lower(translate(lastname||' '||firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ-','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr '))";
 $htmlTabName = '<form name="manage_duplicate_person" action="#" onsubmit="return linkDuplicate(\'manage_duplicate_person\')" method="post">';
 $htmlTabName .= '<table style="width:100%;">';
 $htmlTabName .= '<CAPTION>' . _DUPLICATES_BY_NAME . '</CAPTION>';
-$htmlTabName .= '<tr>';
-$htmlTabName .= '<th style="width:60px">&nbsp;</th>';
-$htmlTabName .= '<th style="width:200px">' . _ID . '</th>';
-$htmlTabName .= '<th>' . _TITLE2 . '</th>';
-$htmlTabName .= '<th>' . _LASTNAME . '</th>';
-$htmlTabName .= '<th>' . _FIRSTNAME . '</th>';
-$htmlTabName .= '<th style="width:50px">&nbsp;</th>';
+$htmlTabName .= '<thead style="display:block;">';
+$htmlTabName .= '<tr style="display:table;width:100%;">';
+$htmlTabName .= '<th style="width:10%;">&nbsp;</th>';
+$htmlTabName .= '<th style="width:10%;">' . _ID . '</th>';
+$htmlTabName .= '<th style="width:20%;">' . _TITLE2 . '</th>';
+$htmlTabName .= '<th style="width:25%;">' . _LASTNAME . '</th>';
+$htmlTabName .= '<th style="width:25%;">' . _FIRSTNAME . '</th>';
+$htmlTabName .= '<th style="width:10%;">&nbsp;</th>';
 $htmlTabName .= '</tr>';
+$htmlTabName .= '</thead>';
+$htmlTabName .= '<tbody style="width:100%;display:block;height: 400px;overflow-y: auto;overflow-x: hidden;color:white;">';
 $tabName = array();
 $nameCompare = '';
 $colorToUse = '';
 $colorNumber = '2';
 $stmt = $db->query($selectDuplicatesByName);
 $cptName = 0;
+$i++;
 while($lineDoublName = $stmt->fetchObject()) {
 
     if ($lineDoublName->contact_id <> '') {
@@ -210,6 +202,8 @@ while($lineDoublName = $stmt->fetchObject()) {
             //echo 'doublon<br>';
         } else {
             //echo 'new doublon<br>';
+            $i++;
+            $class = 'duplicate_person_'.$i;
             $colorNumber = randomColor($colorNumber);
             $colorToUse = $color[$colorNumber];
         }
@@ -217,13 +211,13 @@ while($lineDoublName = $stmt->fetchObject()) {
         $corporatePeople = ($lineDoublName->is_corporate_person == "Y")? _YES : _NO;
 
         $nameCompare = $lineDoublName->lastname_firstname;
-        $htmlTabName .= '<tr style="background-color: #ffffff;" id="tr_' . $lineDoublName->contact_id . '">';
-        $htmlTabName .= '<td><input type="checkbox" id="fusion_id_'.$lineDoublName->contact_id.'" name="fusion_id" value="'.$lineDoublName->contact_id.'"/> <input type="radio" id="master_fusion_id_'.$lineDoublName->contact_id.'" name="master_fusion_id" value="'.$lineDoublName->contact_id.'"/></td>';
-        $htmlTabName .= '<td>' . $lineDoublName->contact_id . '</td>';
-        $htmlTabName .= '<td>' . $business->get_label_title($lineDoublName->title) . '</td>';
-        $htmlTabName .= '<td>' . $lineDoublName->lastname . '</td>';
-        $htmlTabName .= '<td>' . $lineDoublName->firstname . '</td>';
-        $htmlTabName .= '<td><i onclick="loadDocList('
+        $htmlTabName .= '<tr style="background-color: '.$colorToUse.';display:table;width:100%;" id="tr_' . $lineDoublName->contact_id . '">';
+        $htmlTabName .= '<td style="width:10%;"><input type="checkbox" class="'.$class.'" id="fusion_id_'.$lineDoublName->contact_id.'" name="slave_'.$class.'" title="contact à fusionner" value="'.$lineDoublName->contact_id.'" onclick="checkOthersDuplicate(\'manage_duplicate_person\',\'slave_'.$class.'\',\'master_'.$class.'\');"/> <input type="radio" id="master_fusion_id_'.$lineDoublName->contact_id.'" name="master_'.$class.'" title="contact maître servant de fusion" value="'.$lineDoublName->contact_id.'"/></td>';
+        $htmlTabName .= '<td style="width:10%;">' . $lineDoublName->contact_id . '</td>';
+        $htmlTabName .= '<td style="width:20%;">' . $business->get_label_title($lineDoublName->title) . '</td>';
+        $htmlTabName .= '<td style="width:25%;">' . $lineDoublName->lastname . '</td>';
+        $htmlTabName .= '<td style="width:25%;">' . $lineDoublName->firstname . '</td>';
+        $htmlTabName .= '<td style="width:10%;"><i onclick="loadDocList('
             . $lineDoublName->contact_id . ');" class="fa fa-search fa-2x" title="'._IS_ATTACHED_TO_DOC.'" title="'
             . _IS_ATTACHED_TO_DOC . '" style="cursor: pointer;"></i></td>';
         $htmlTabName .= '</tr>';
@@ -253,6 +247,7 @@ while($lineDoublName = $stmt->fetchObject()) {
         $htmlTabName .= '</tr>';
     }
 }
+$htmlTabName .= '</tbody>';
 //$func->show_array($tabName);
 $htmlTabName .= '</table>';
 $htmlTabName .= '<input type="submit" value="fusionner!" class="button"/>';
