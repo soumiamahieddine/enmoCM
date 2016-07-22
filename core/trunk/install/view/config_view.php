@@ -125,7 +125,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><?php echo _DATABASETYPE;?></td>
+                        <td><?php echo _SMTP_PORT;?></td>
                         <td>:</td>
                         <td><input type="text" name="databasetype" id="databasetype" disabled="disabled" value= <?php echo $databasetype; ?> /></td>
                     </tr>
