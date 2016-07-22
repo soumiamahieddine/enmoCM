@@ -319,7 +319,7 @@ if (!defined('_RESUME')) {
 }
 
 if (!defined('_START_MEP_1_3')) {
-    define('_START_MEP_1_3', "Start with Maarch 1.5.1");
+    define('_START_MEP_1_3', "Start with Maarch");
 }
 
 //ERROR
