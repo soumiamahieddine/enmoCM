@@ -179,6 +179,10 @@ if (!defined("_REALLY_SUSPEND")) define("_REALLY_SUSPEND", "Voulez-vous vraiment
 if (!defined("_REALLY_AUTHORIZE")) define("_REALLY_AUTHORIZE", "Voulez-vous vraiment autoriser ");
 if (!defined("_REALLY_DELETE")) define("_REALLY_DELETE", "Voulez-vous vraiment supprimer ");
 if (!defined("_DEFINITIVE_ACTION")) define("_DEFINITIVE_ACTION", "Cette action est définitive");
+if (!defined("_AND")) define("_AND", " et ");
+if (!defined("_PLEASE_CHECK_LISTDIFF")) define("_PLEASE_CHECK_LISTDIFF", " est dans une ou des listes de diffusion. Veuillez le remplacer dans la ou les listes de ");
+if (!defined("_THE_USER_JS")) define("_THE_USER_JS", "L\'utilisateur ");
+
 
 /************** Divers **************/
 if (!defined("_YES")) define("_YES", "Oui");
