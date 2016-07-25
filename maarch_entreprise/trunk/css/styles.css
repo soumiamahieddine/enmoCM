@@ -2324,7 +2324,8 @@ text-align:left;
         padding-left: 5px;
 }
 .selected{
-    font-weight: bold;
+    /*font-weight: bold;*/
+    color:rgb(22, 173, 235);
     font-size:12px;
 }
 
