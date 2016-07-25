@@ -570,7 +570,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .=' <input type="text" name="contact" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');"'
             . 'id="contact" onblur="clear_error(\'frm_error_' . $actionId . '\');'
             . 'display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\', \''.$path_check_date_link.'\');}" /><div id="show_contacts" '
-            . 'class="autocomplete autocompleteIndex"></div></td>';
+            . 'class="autocomplete autocompleteIndex"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></td>';
     $frmStr .= '<td><span class="red_asterisk" id="contact_mandatory" '
             . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
@@ -616,7 +616,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .=' <i class="fa fa-users" title="'._MULTI.'" style="cursor:pointer;color:#009DC5;" id="type_multi_contact_external_icon" onclick="$$(\'#type_multi_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#009DC5\'});"></i>';
  
     $frmStr .='<input type="text" name="email" id="email" value="" onblur="clear_error(\'frm_error_' . $actionId . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
-    $frmStr .= '<div id="multiContactList" class="autocomplete"></div>';
+    $frmStr .= '<div id="multiContactList" class="autocomplete"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete_multi" style="display: none;text-align:left;padding:5px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div>';
     $frmStr .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\', \'contactid\', \'addressid\');</script>';

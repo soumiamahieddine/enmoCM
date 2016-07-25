@@ -856,6 +856,12 @@ function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, 
             paramName:'Input',
             parameters: params,
             minChars: 2,
+            //loading
+            frequency: 0.5, // NOTICE THIS
+             indicator: 'searching_autocomplete', // AND THIS
+             onShow : function(element, update) {
+                Effect.Appear(update,{duration:0});
+            },
             afterUpdateElement: function (text, li){
                 var all_li = li.id;
                 var res = all_li.split(",");
@@ -1372,6 +1378,12 @@ var addMultiContacts = function (idField, idList, theUrlToListScript, paramNameS
              tokens : ',',
              //afterUpdateElement : extractEmailAdress,
 			parameters : 'table=contacts',
+            //loading
+            frequency: 0.5, // NOTICE THIS
+             indicator: 'searching_autocomplete_multi', // AND THIS
+             onShow : function(element, update) {
+                Effect.Appear(update,{duration:0});
+            },
             afterUpdateElement: function (text, li){
                 var all_li = li.id;
                 var res = all_li.split(",");

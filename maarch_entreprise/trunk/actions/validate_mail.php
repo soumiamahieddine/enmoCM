@@ -601,7 +601,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                    {
                       $frm_str .= ' value="'.$data['contact'].'" ';
                     }
-                   $frm_str .=  ' /><div id="show_contacts" class="autocomplete autocompleteIndex"></div></td>';
+                   $frm_str .=  ' /><div id="show_contacts" class="autocomplete autocompleteIndex"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></td>';
                    $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
                      $frm_str .= '</tr>';
 		   $frm_str .= '<tr style="display:none" id="contact_check"><td></td></tr>';
@@ -652,7 +652,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .=' <i class="fa fa-users" title="'._MULTI.'" style="cursor:pointer;color:#009DC5;" id="type_multi_contact_external_icon" onclick="$$(\'#type_multi_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#009DC5\'});"></i>';
                      
                     $frm_str .='<input type="text" name="email" id="email" onblur="clear_error(\'frm_error_' . $id_action . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
-					$frm_str .= '<div id="multiContactList" class="autocomplete"></div>';
+					$frm_str .= '<div id="multiContactList" class="autocomplete"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete_multi" style="display: none;text-align:left;padding:5px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div>';
 					$frm_str .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
 						.$_SESSION['config']['businessappurl']
 						.'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\', \'contactid\', \'addressid\');</script>';
