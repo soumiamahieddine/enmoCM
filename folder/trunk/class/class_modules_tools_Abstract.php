@@ -419,13 +419,14 @@ abstract class folder_Abstract extends request
 				}
 
 				$_SESSION['info'] = _FOLDER_ADDED;
-				unset($_SESSION['m_admin']);
+				//unset($_SESSION['m_admin']);
 				if($iframe == true){
 					header(
 					"location: " . $_SESSION['config']['businessappurl']
 				    . "index.php?page=create_folder_form_iframe&module=folder&display=false"
 					);
 				}else{
+					unset($_SESSION['m_admin']);
 					header(
 					"location: " . $_SESSION['config']['businessappurl']
 				    . "index.php?page=show_folder&module=folder&id=" . $id

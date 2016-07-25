@@ -56,7 +56,14 @@ if(isset($_SESSION['error'])) { ?>
 }
 if($_SESSION['info'] == _FOLDER_ADDED){
     $_SESSION['info'] = '';
-    echo "<script>new Effect.BlindUp(parent.document.getElementById('create_folder_div'));</script>";
+    echo "<script>var select = parent.document.getElementById('folder');"
+    . "var newOption = new Option ('".$_SESSION['m_admin']['folder']['folder_id']."', '".$_SESSION['m_admin']['folder']['folder_name']."');"
+    . "select.options.add (newOption);"
+    . "select.value = '".$_SESSION['m_admin']['folder']['folder_id']."';";
+    echo "Event.fire(select, 'chosen:updated');";
+    unset($_SESSION['m_admin']);
+    echo "new Effect.BlindUp(parent.document.getElementById('create_folder_div'));";
+    echo "</script>";
 }
 $db = new Database();
 
@@ -75,10 +82,9 @@ while ($res = $stmt->fetchObject()) {
 }
 $init = false;
 ?>
-
-<h1><i class="fa fa-folder-open fa-2x" title="" ></i> <?php echo _CREATE_FOLDER;?></h1>
-<div id="inner_content">
+<div id="inner_content" style="padding:0px;">
     <div class="block">
+        <h2><i class="fa fa-folder-open fa-2x" title="" ></i> <?php echo _CREATE_FOLDER;?></h2>
         <form name="create_folder" id="create_folder" method="post" class="forms"
               action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=manage_create_folder&iframe=true" >
             <input type="hidden" name="display"  value="true" />
@@ -134,6 +140,7 @@ $init = false;
             </p>
         </form>
     </div>
+    <style type="text/css">p{padding: 5px;}</style>
     <?php
     if ((isset($_SESSION['m_admin']['folder']['foldertype_id'])
             && ! empty($_SESSION['m_admin']['folder']['foldertype_id'] )) || $init)
