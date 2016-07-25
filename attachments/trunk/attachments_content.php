@@ -1796,7 +1796,7 @@ if (isset($_REQUEST['id'])) {
 }
 $content .= "<input type='hidden' name='dataCreationDate' id='dataCreationDate' value='{$dataForDate->creation_date}' />";
 $content .= '</p>';
-$content .= '<p>';
+$content .= '<div>';
 $content .= '<label>'. _DEST_USER_PJ;
 if ($core->test_admin('my_contacts', 'apps', false)) {
     $content .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
@@ -1805,15 +1805,15 @@ if ($core->test_admin('my_contacts', 'apps', false)) {
             . 'style="display:inline;" ><i class="fa fa-pencil fa-lg" title="' . _CREATE_CONTACT . '"></i></a>';
 }
 $content .= '</label>';
-$content .= '<input type="text" name="contact_attach" onblur="display_contact_card(\'visible\', \'contact_card_attach\');" onkeyup="erase_contact_external_id(\'contact_attach\', \'contactidAttach\');erase_contact_external_id(\'contact_attach\', \'addressidAttach\');" id="contact_attach" value="';
+$content .= '<span><input type="text" name="contact_attach" onblur="display_contact_card(\'visible\', \'contact_card_attach\');" onkeyup="erase_contact_external_id(\'contact_attach\', \'contactidAttach\');erase_contact_external_id(\'contact_attach\', \'addressidAttach\');" id="contact_attach" value="';
 $content .= $data_contact;
-$content .= '"/>';
+$content .= '"/><div id="show_contacts_attach" class="autocomplete autocompleteIndex"></div></span>';
 $content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe_attach\').src=\'' . $_SESSION['config']['businessappurl']
     . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'\';new Effect.toggle(\'info_contact_div_attach\', '
     . '\'blind\', {delay:0.2});return false;"'
     . ' style="visibility:hidden;"> <i class="fa fa-book fa-lg"></i></a>';
-$content .= '<div id="show_contacts_attach" class="autocomplete autocompleteIndex"></div>';
-$content .= '</p>';
+$content .= '<div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div>';
+$content .= '</div>';
 $content .= '<input type="hidden" id="contactidAttach" name="contactidAttach" value="';
 if (isset($_REQUEST['id']) && !empty($data_attachment->dest_contact_id)) {
     $content .= $data_attachment->dest_contact_id;
