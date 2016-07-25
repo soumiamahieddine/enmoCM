@@ -932,7 +932,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 
             }
 
-            $frm_str .= '</select></td>';
+            $frm_str .= '</select>';
 
             if ($core->test_service('create_folder', 'folder', false) == 1) {
                 $frm_str .=' <a href="#" id="create_folder" title="' . _CREATE_FOLDER
