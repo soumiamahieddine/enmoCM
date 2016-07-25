@@ -766,7 +766,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	//VISA CIRCUIT
 	if ($core->test_service('config_visa_workflow', 'visa', false)){
         $visa = new visa();
-        if($visa->nbVisa($$res_id,$coll_id) == 0){
+        if($visa->nbVisa($res_id,$coll_id) == 0){
             $style = 'opacity:0.5;';
         }else{
             $style = '';
