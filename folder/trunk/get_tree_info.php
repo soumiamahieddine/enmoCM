@@ -104,7 +104,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$html.="<span onclick='get_folders(".functions::xssafe($folders_system_id).")'>"
 		.functions::xssafe($row['folder_name'])
 		."</span><b>(<span>".functions::xssafe($row3['total'])
-		." sous-dossier(s)</span>, <span onclick='get_folder_docs(".functions::xssafe($folders_system_id).")'>"
+		." "._MARKET."</span>, <span onclick='get_folder_docs(".functions::xssafe($folders_system_id).")'>"
 		.functions::xssafe($row2['total'])." document(s)</span>)</b>";
 	$html.="</li>";
 }

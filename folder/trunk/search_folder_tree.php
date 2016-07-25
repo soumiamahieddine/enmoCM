@@ -167,7 +167,7 @@ $_SESSION['origin'] = "search_folder_tree";
                         for (var i = 0; i <= folders.length; i++) {
                             level=folders[i].folder_level*10;
 
-                            $(''+folders_system_id).innerHTML ='<span onclick="get_folders('+folders[i].folders_system_id+')">'+folders[i].nom_folder+'</span><b>('+folders[i].nb_subfolder+' sous-dossier(s), <span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nb_doc+' document(s)</span>)</b>';
+                            $(''+folders_system_id).innerHTML ='<span onclick="get_folders('+folders[i].folders_system_id+')">'+folders[i].nom_folder+'</span><b>('+folders[i].nb_subfolder+' <?php echo _MARKET; ?>, <span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nb_doc+' document(s)</span>)</b>';
                             $(''+folders_system_id).addClassName('mt_fclosed');
                             $(''+folders_system_id).removeClassName('mt_fopened');
                             $(''+folders_system_id).removeClassName('link_open');
@@ -193,7 +193,7 @@ $_SESSION['origin'] = "search_folder_tree";
                         for (var i = 0; i <= folders.length; i++) {
                             level=folders[i].folder_level*10;
                             var style='style="margin-left:'+level+'px;"';
-                            $(''+folders_system_id).innerHTML +='<li '+style+' class="folder" id="'+folders[i].folders_system_id+'"><span onclick="get_folders('+folders[i].folders_system_id+')" class="folder">'+folders[i].nom_folder+'</span><b>('+folders[i].nb_subfolder+' sous-dossier(s), <span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nb_doc+' document(s)</span>)</b></li>';
+                            $(''+folders_system_id).innerHTML +='<li '+style+' class="folder" id="'+folders[i].folders_system_id+'"><span onclick="get_folders('+folders[i].folders_system_id+')" class="folder">'+folders[i].nom_folder+'</span><b>('+folders[i].nb_subfolder+' <?php echo _MARKET; ?>, <span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nb_doc+' document(s)</span>)</b></li>';
 
                             $(''+folders_system_id).addClassName('mt_fopened');
                             $(''+folders_system_id).removeClassName('mt_fclosed');
@@ -364,7 +364,7 @@ $_SESSION['origin'] = "search_folder_tree";
 
                         for (var i = 0; i <= folders.length; i++) {
                             level=folders[i].folder_level*10;
-                            $(''+folders_system_id).innerHTML ='<span onclick="get_folders('+folders[i].folders_system_id+')">'+folders[i].nom_folder+'</span><b>('+folders[i].nb_subfolder+' sous-dossier(s), <span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nb_doc+' document(s)</span>)</b>';
+                            $(''+folders_system_id).innerHTML ='<span onclick="get_folders('+folders[i].folders_system_id+')">'+folders[i].nom_folder+'</span><b>('+folders[i].nb_subfolder+' <?php echo _MARKET; ?>, <span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nb_doc+' document(s)</span>)</b>';
                             $(''+folders_system_id).addClassName('mt_fclosed');
                             $(''+folders_system_id).removeClassName('mt_fopened');
                             $(''+folders_system_id).removeClassName('link_open');
