@@ -384,10 +384,6 @@ abstract class business_app_tools_Abstract extends dbquery
                 . $_SESSION['custom_override_id'] . 'modules' . DIRECTORY_SEPARATOR . $value['moduleid']
                 . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
                 . 'actions_pages.xml'
-                ||
-                $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . $value['moduleid']
-                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
-                . 'actions_pages.xml'
             )
             ) {
                 $path = $_SESSION['config']['corepath'] . 'custom'
@@ -395,17 +391,9 @@ abstract class business_app_tools_Abstract extends dbquery
                       . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $value['moduleid'] . DIRECTORY_SEPARATOR
                       . 'xml' . DIRECTORY_SEPARATOR . 'actions_pages.xml';
 
-                $langPath = $_SESSION['config']['corepath'] . 'custom'
-                      . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-                      . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $value['moduleid'] . DIRECTORY_SEPARATOR
-                      . 'lang' . DIRECTORY_SEPARATOR. $_SESSION['config']['lang'] . '.php';
-
             } else {
                 $path = 'modules' . DIRECTORY_SEPARATOR . $value['moduleid'] . DIRECTORY_SEPARATOR . 'xml'
                       . DIRECTORY_SEPARATOR . 'actions_pages.xml';
-
-                $langPath = 'modules' . DIRECTORY_SEPARATOR . $value['moduleid'] . DIRECTORY_SEPARATOR
-                      . 'lang' . DIRECTORY_SEPARATOR. $_SESSION['config']['lang'] . '.php';
             }
 
             if (file_exists(
@@ -422,6 +410,10 @@ abstract class business_app_tools_Abstract extends dbquery
             ) {
             $xmlfile = simplexml_load_file($path);
 
+            $langPath = 'modules' . DIRECTORY_SEPARATOR . $value['moduleid'] . DIRECTORY_SEPARATOR
+                      . 'lang' . DIRECTORY_SEPARATOR. $_SESSION['config']['lang'] . '.php';
+
+            include_once($langPath);
             foreach ($xmlfile->ACTIONPAGE as $actionPage) {
                 $label = (string) $actionPage->LABEL;
                 if (!empty($label) && defined($label)
