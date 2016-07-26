@@ -175,8 +175,7 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
                         "<option value='EXP_RTURN'>Attente retour</option>" +
                         "<option value='NO_RTURN'>Pas de retour</option>" +
                       "</select>" +
-                    "</p>" +
-                    "<p>";
+                    "</p>";
 
                     if (canCreateContact) {
     content +=        "<label>" + "Destinataire" +
@@ -190,14 +189,14 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
     content +=        "<label>Destinataire</label>";
                     }
 
-    content +=        "<input type='text' name='transmissionContact_attach" + size + "' id='transmissionContact_attach" + size + "' value='' " +
+    content +=        "<span style='position:relative'><input type='text' name='transmissionContact_attach" + size + "' id='transmissionContact_attach" + size + "' value='' " +
                         "onblur='displayTransmissionContactCard(\"visible\", \"transmissionContactCard" + size + "\", " + size + ");' " +
                         "onkeyup='erase_contact_external_id(\"transmissionContact_attach" + size + "\", \"transmissionContactidAttach" + size + "\");erase_contact_external_id(\"transmissionContact_attach" + size + "\", \"transmissionAddressidAttach" + size + "\");' />" +
                       "<a href='#' id='transmissionContactCard" + size + "' title='Fiche contact' onclick='document.getElementById(\"info_contact_iframe_attach\").src=\"" + prePath + "index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid=\"+document.getElementById(\"transmissionContactidAttach"+size+"\").value+\"&addressid=\"+document.getElementById(\"transmissionAddressidAttach"+size+"\").value+\"\";new Effect.toggle(\"info_contact_div_attach\", \"blind\", {delay:0.2});return false;' style='visibility:hidden;'> " +
                         "<i class='fa fa-book fa-lg'></i>" +
                       "</a>" +
-                    "</p>" +
-                    "<div id='transmission_show_contacts_attach" + size + "' class='autocomplete autocompleteIndex' style='display: none'></div>" +
+                    "<div id='transmission_show_contacts_attach" + size + "' class='autocomplete autocompleteIndex' style='display: none;width:100%;left:0px;'></div></span>" +
+
                     "<input type='hidden' id='transmissionContactidAttach" + size + "' name='transmissionContactidAttach" + size + "' value='' onchange='saveContactToSession(\"" + size + "\", \"" + prePath + "\")' />" +
                     "<input type='hidden' id='transmissionAddressidAttach" + size + "' name='transmissionAddressidAttach" + size + "' value='' />" +
                     "<div style='float: left;display: none;margin-bottom: 5px' id='paraEdit" + size + "'>" +
