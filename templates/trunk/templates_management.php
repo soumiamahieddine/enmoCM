@@ -296,7 +296,7 @@ if ($mode == 'list') {
                                     . $objectId
                                     . '&objectTable='
                                     . $objectTable
-                                    . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');';
+                                    . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');$(\'add\').value=\'Edition en cours ...\';setInterval(function() {checkEditingDoc(\''.$_SESSION['user']['UserId'].'\')}, 5000);$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';';
                                 ?>
                                 <a href="#" onClick="<?php functions::xecho($strAction);?>">
                                 
@@ -405,13 +405,13 @@ if ($mode == 'list') {
                     <?php
                     if ($mode == "up") {
                         ?>
-                        <input class="button" type="submit" name="submit" onclick="selectall($('entities_chosen'));" value="<?php
+                        <input class="button" type="submit" name="submit" id="add" onclick="selectall($('entities_chosen'));" value="<?php
                             echo _MODIFY;
                         ?>" />
                         <?php
                     } elseif ($mode == "add") {
                         ?>
-                        <input type="submit" class="button"  name="submit" onclick="selectall($('entities_chosen'));" value="<?php
+                        <input type="submit" class="button"  name="submit" id="add" onclick="selectall($('entities_chosen'));" value="<?php
                             echo _ADD;
                         ?>" />
                         <?php
