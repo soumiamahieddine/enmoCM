@@ -531,6 +531,8 @@ abstract class content_management_tools_Abstract
 
         $docXML->save($filename); 
 
+        $fp = fopen($_SESSION['config']['tmppath']."applet_".$_SESSION['user']['UserId'].".lck", 'w+');
+
         $file = $jar_url."/apps/maarch_entreprise/tmp/".$_SESSION['user']['UserId']."_DisCM.jnlp";
 
         echo '<a id="jnlp_file" href="'.$file.'">toto</a>';

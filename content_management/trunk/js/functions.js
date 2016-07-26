@@ -194,3 +194,34 @@ function showDiv(divName, spanNb, divCreate, path_manage_script)
         }
     });
 }
+
+function checkEditingDoc(userId) {
+    var lck_name = "applet_<?php echo $_SESSION['user']['UserId'] ?>";
+    if($('add')){
+        var target = $('add');
+    }else{
+        var target = $('edit');
+    }
+    var path_manage_script = "index.php?display=true&page=checkEditingDoc&module=content_management";
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: {
+            lck_name : lck_name},
+            onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            if(response.status == 0) {
+                console.log('no lck found!');
+                target.removeAttribute('disabled');
+                target.style.opacity='1';
+                target.value='valider';
+            } else {
+                console.log('lck found! Editing in progress !');
+                target.disabled='disabled';
+                target.style.opacity='0.5';
+                target.value='Edition en cours ...';
+            }
+        }
+    });
+
+}

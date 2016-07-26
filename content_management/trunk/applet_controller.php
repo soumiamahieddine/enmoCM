@@ -294,6 +294,10 @@ if (!empty($_REQUEST['action'])
                 } elseif ($objectType == 'transmission') {
                     include 'modules/content_management/save_transmission_from_cm.php';
                 }
+
+                $file = $_SESSION['config']['tmppath'].'applet_'.$_REQUEST['userMaarch'].'.lck';
+                unlink($file);
+                
                 //THE RETURN
                 if (!empty($_SESSION['error'])) {
                     $result = array(
