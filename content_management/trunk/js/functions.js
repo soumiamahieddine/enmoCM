@@ -196,7 +196,7 @@ function showDiv(divName, spanNb, divCreate, path_manage_script)
 }
 
 function checkEditingDoc(userId) {
-    var lck_name = "applet_<?php echo $_SESSION['user']['UserId'] ?>";
+    //var lck_name = "applet_<?php echo $_SESSION['user']['UserId'] ?>";
     if($('add')){
         var target = $('add');
     }else{
@@ -207,7 +207,7 @@ function checkEditingDoc(userId) {
     {
         method:'post',
         parameters: {
-            lck_name : lck_name},
+            lck_name : userId},
             onSuccess: function(answer){
             eval("response = "+answer.responseText);
             if(response.status == 0) {
