@@ -56,10 +56,12 @@ if(isset($_SESSION['error'])) { ?>
 }
 if($_SESSION['info'] == _FOLDER_ADDED){
     $_SESSION['info'] = '';
+    var_dump($_SESSION['m_admin']);
     echo "<script>var select = parent.document.getElementById('folder');"
-    . "var newOption = new Option ('".$_SESSION['m_admin']['folder']['folder_id']."', '".$_SESSION['m_admin']['folder']['folder_name']."');"
+    . "var newOption = new Option ('".$_SESSION['m_admin']['folder']['folder_name']."', '".$_SESSION['m_admin']['folder']['folders_system_id']."');"
+    . "newOption.setAttribute('parent','".$_SESSION['m_admin']['folder']['folder_parent']."');"
     . "select.options.add (newOption);"
-    . "select.value = '".$_SESSION['m_admin']['folder']['folder_id']."';";
+    . "select.value = '".$_SESSION['m_admin']['folder']['folders_system_id']."';";
     echo "Event.fire(select, 'chosen:updated');";
     unset($_SESSION['m_admin']);
     echo "new Effect.BlindUp(parent.document.getElementById('create_folder_div'));";

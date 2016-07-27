@@ -396,6 +396,8 @@ abstract class folder_Abstract extends request
 				$res = $stmt->fetchObject();
 				$id = $res->folders_system_id;
 
+				$_SESSION['m_admin']['folder']['folders_system_id'] = $id;
+
 				$foldertype = new foldertype();
 
 				$query = $foldertype->get_sql_update(
