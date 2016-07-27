@@ -62,7 +62,6 @@ function manage_markAsRead($arr_id, $history, $id_action, $label_action, $status
         while ($result1 = $stmt->fetchObject()) {
             $lineExist = true;
         }
-
         if (!$lineExist) {
             $query = "INSERT INTO res_mark_as_read VALUES(?, ?, ?, ?)";
             $db->query($query, array($_POST['coll_id'], $arr_id[$i], $_SESSION['user']['UserId'], $_SESSION['current_basket']['id']));
