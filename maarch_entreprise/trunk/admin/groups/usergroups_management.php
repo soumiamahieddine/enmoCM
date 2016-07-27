@@ -255,7 +255,7 @@ if ($mode == 'list') {
         <div class="center_text">
             <i><?php echo _AVAILABLE_SERVICES;?> :</i>
             <a href="#" onclick="checkAll();" ><?php echo _CHECK_ALL;?></a>
-            &nbsp;<a href="#" onclick="uncheckAll();" ><?php echo _UNCHECK_ALL;?></a>
+            &nbsp;<a href="#" onclick="unCheckAll();" ><?php echo _UNCHECK_ALL;?></a>
         </div>
         <?php
         $enabledServicesSortByParent = array();
