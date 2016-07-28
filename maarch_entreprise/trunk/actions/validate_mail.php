@@ -946,6 +946,54 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<tr id="parentFolderTr" style="display: none"><td>&nbsp;</td><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
         }
 
+        /*** thesaurus ***/
+        if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
+            require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
+                            . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+                            . 'class_modules_tools.php';
+            $thesaurus = new thesaurus();
+
+            $thesaurusListRes = array();
+
+            $thesaurusListRes = $thesaurus->getThesaursusListRes($res_id);
+
+
+            $frm_str .= '<tr id="thesaurus_tr" style="display:' . $displayValue
+                    . ';">';
+            $frm_str .= '<td>'
+                    . _THESAURUS . '</td>';
+            $frm_str .= '<td>&nbsp;</td>';
+            $frm_str .= '</tr>';
+
+            $frm_str .= '<tr id="thesaurus_tr" style="display:' . $displayValue . ';">';
+            $frm_str .= '<td colspan="3" class="indexing_field" id="thesaurus_field"><select multiple="multiple" id="thesaurus" data-placeholder=" "';
+
+            if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
+                $frm_str .= 'disabled="disabled"';
+            }
+
+            $frm_str .= '>';
+            if(!empty($thesaurusListRes)){
+                foreach ($thesaurusListRes as $key => $value) {
+
+                    $frm_str .= '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
+                        $frm_str .= ' selected="selected"'; 
+                    $frm_str .= '>' 
+                        .  functions::show_string($value['LABEL']) 
+                        . '</option>';
+
+                }
+            }
+            $frm_str .= '</optgroup>';
+
+            $frm_str .= '</select> <i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
+            $frm_str .= ' <td></td>';
+            $frm_str .= '</tr>';
+            $frm_str .= '<style>#thesaurus_chosen{width:95% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
+
+            /*****************/
+        }
+
         if ($core_tools->is_module_loaded('tags') &&
                     ($core_tools->test_service('tag_view', 'tags',false) == 1)) {
             $tags = get_value_fields($formValues, 'tag_userform');
@@ -989,8 +1037,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<span onclick="hideOtherDiv(\'history_div\');new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
-               . '&nbsp;<small>' . _DOC_HISTORY . '</small>';
+            $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>';
+           $frm_str .= '<b>&nbsp;<i class="fa fa-line-chart fa-2x" title="'. _DOC_HISTORY.'"></i><sup><span style="display:none;"></span></sup></b>';
             $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
@@ -1148,7 +1196,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<script type="text/javascript">show_admin_contacts(true);</script>';
         
         //HISTORY FRAME
-        $frm_str .= '<div class="desc" id="history_div" style="display:none">';
+        $frm_str .= '<div class="block" id="history_div" style="display:none">';
         $frm_str .= '<div class="ref-unit">';
         $frm_str .= '<center><h2 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});';
         $frm_str .= 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');';
@@ -1570,13 +1618,13 @@ function process_category_check($cat_id, $values)
 
     ///////////////////////// Other cases
     //doc date
-    $doc_date = get_value_fields($values, 'doc_date');
+    /*$doc_date = get_value_fields($values, 'doc_date');
     $admission_date = get_value_fields($values, 'admission_date');
     if ($admission_date < $doc_date)
     {
 		$_SESSION['action_error'] = "La date du courrier doit être antérieure à la date d'arrivée du courrier ";
 		return false;
-	}
+	}*/
 	
     // Process limit Date
     $_SESSION['store_process_limit_date'] = "";
@@ -1763,7 +1811,6 @@ function get_value_fields($values, $field)
 function manage_form($arr_id, $history, $id_action, $label_action, $status,  $coll_id, $table, $values_form )
 {
 //var_dump("manage_form");
-
     if(empty($values_form) || count($arr_id) < 1 || empty($coll_id))
     {
         $_SESSION['action_error'] = _ERROR_MANAGE_FORM_ARGS;
@@ -1787,8 +1834,19 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     if ($core->is_module_loaded('tags')) {
         $tags_list = get_value_fields($values_form, 'tag_userform');
         $tags_list = explode('__', $tags_list);
+
         include_once("modules".DIRECTORY_SEPARATOR."tags"
         .DIRECTORY_SEPARATOR."tags_update.php");
+    }
+
+    //thesaurus
+    if ($core->is_module_loaded('thesaurus')) {
+        require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
+                    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+                    . 'class_modules_tools.php';
+        $thesaurus = new thesaurus();
+        $thesaurusList = get_value_fields($values_form, 'thesaurus');
+	   $thesaurus->updateResThesaurusList($thesaurusList,$res_id);
     }
 
     $query_ext = "update ".$table_ext." set ";
@@ -1801,7 +1859,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     $query_ext .= " category_id = ? " ;
     $arrayPDOext = array_merge($arrayPDOext, array($cat_id));
     //$query_res .= " status = 'NEW' " ;
-
 
     // Specific indexes : values from the form
     // Simple cases

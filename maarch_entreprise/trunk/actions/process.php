@@ -547,7 +547,50 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
         $frm_str .= '<br>';
     }
+        /*** thesaurus ***/
+        if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
+            require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
+                            . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+                            . 'class_modules_tools.php';
+            $thesaurus = new thesaurus();
 
+            $thesaurusListRes = array(); 
+
+            $thesaurusListRes = $thesaurus->getThesaursusListRes($res_id);
+
+
+            $frm_str .= '<tr id="thesaurus_tr" style="display:' . $displayValue
+                    . ';">';
+            $frm_str .= '<td>'
+                    . _THESAURUS . '</td>';
+            $frm_str .= '<td>&nbsp;</td>';
+            $frm_str .= '</tr>';
+
+            $frm_str .= '<tr id="thesaurus_tr" style="display:' . $displayValue . ';">';
+            $frm_str .= '<td colspan="3" class="indexing_field" id="thesaurus_field"><select multiple="multiple" id="thesaurus" data-placeholder=" "';
+
+            if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
+                $frm_str .= 'disabled="disabled"';
+            }
+
+            $frm_str .= '>';
+            if(!empty($thesaurusListRes)){
+                foreach ($thesaurusListRes as $key => $value) {
+
+                    $frm_str .= '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
+                        $frm_str .= ' selected="selected"'; 
+                    $frm_str .= '>' 
+                        .  functions::show_string($value['LABEL']) 
+                        . '</option>';
+
+                }
+            }
+            $frm_str .= '</select> <i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
+            $frm_str .= ' <td></td>';
+            $frm_str .= '</tr>';
+            $frm_str .= '<style>#thesaurus_chosen{width:95% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
+            /*****************/
+        }
     //TAGS
     if (
         $core_tools->is_module_loaded('tags') && (
@@ -1289,8 +1332,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= 'load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);';
 	}
     $frm_str .= 'new Chosen($(\'folder\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
-    $frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
+    
+	if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
+        $frm_str .= 'new Chosen($(\'thesaurus\'),{width: "95%", disable_search_threshold: 10});';
+    }
 
+	if ($core->is_module_loaded('tags')){
+        $frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
+    }
 	// DocLocker constantly	
 	$frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';
         $frm_str .= '$(\'entity\').style.visibility=\'hidden\';';
@@ -1443,6 +1492,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     $other_txt = '';
     $process_notes = '';
     $folder = '';
+    $thesaurusList = '';
 
     for ($j=0; $j<count($values_form); $j++) {
         if ($values_form[$j]['ID'] == "simple_mail" && $values_form[$j]['VALUE'] == "true") {
@@ -1478,6 +1528,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         if ($values_form[$j]['ID'] == "tag_userform") {
             $tags = $values_form[$j]['VALUE'];
         }
+        if ($values_form[$j]['ID'] == "thesaurus") {
+            $thesaurusList = $values_form[$j]['VALUE'];
+        }
     }
     if ($no_answer == '1') {
         $bitmask = '000000';
@@ -1490,6 +1543,16 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         include_once("modules".DIRECTORY_SEPARATOR."tags".
                     DIRECTORY_SEPARATOR."tags_update.php");
     }
+
+    //thesaurus
+    if ($core->is_module_loaded('thesaurus')) {
+        require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
+                    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+                    . 'class_modules_tools.php';
+        $thesaurus = new thesaurus();
+        $thesaurus->updateResThesaurusList($thesaurusList,$arr_id[0]);
+    }
+
     if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
         $folder_id = '';
         $old_folder_id = '';

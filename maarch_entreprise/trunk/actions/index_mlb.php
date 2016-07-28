@@ -848,7 +848,39 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '</tr>';
         $frmStr .= '<tr id="parentFolderTr" style="display: none"><td>&nbsp;</td><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
     }
+    
+    /*** thesaurus ***/
+    if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
+        require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
+                        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+                        . 'class_modules_tools.php';
+        $thesaurus = new thesaurus();
 
+
+        $frmStr .= '<tr id="thesaurus_tr" style="display:' . $displayValue
+                . ';">';
+        $frmStr .= '<td>'
+                . _THESAURUS . '</td>';
+        $frmStr .= '<td>&nbsp;</td>';
+        $frmStr .= '</tr>';
+
+        $frmStr .= '<tr id="thesaurus_tr" style="display:' . $displayValue . ';">';
+        $frmStr .= '<td colspan="3" class="indexing_field" id="thesaurus_field"><select multiple="multiple" id="thesaurus" data-placeholder=" " onselect="alert(\'ok\')"';
+        
+        if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
+            $frmStr .= 'disabled="disabled"';
+        }
+
+        $frmStr .= '>';
+
+        $frmStr .= '</select> <i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
+        $frmStr .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
+                . 'style="display:inline;vertical-align:middle;"></td>';
+        $frmStr .= '</tr>';
+        $frmStr .= '<style>#thesaurus_chosen{width:95% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
+
+        /*****************/
+    }
     /*** Tags ***/
     if ($core->is_module_loaded('tags') 
         && ($core->test_service('tag_view', 'tags',false) == 1)
@@ -1328,17 +1360,17 @@ function process_category_check($catId, $values)
         $db = new Database();
         $folderId = '';
         
-        $folder = get_value_fields($values, 'folder');
+        $folderId = get_value_fields($values, 'folder');
         if (isset($_ENV['categories'][$catId]['other_cases']['folder'])
             && $_ENV['categories'][$catId]['other_cases']['folder']['mandatory'] == true
         ) {
-            if (empty($folder)) {
+            if (empty($folderId)) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['folder']['label']
                     . ' ' . _IS_EMPTY;
                 return false;
             }
         }
-        if (! empty($folder)) {
+        /*if (! empty($folder)) {
             if (! preg_match('/\([0-9]+\)$/', $folder)) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['folder']['label']
                     . " " . _WRONG_FORMAT;
@@ -1356,7 +1388,7 @@ function process_category_check($catId, $values)
                                           . _UNKNOWN;
                 return false;
             }
-        }
+        }*/
 
         if (! empty($typeId ) && ! empty($folderId)) {
             $foldertypeId = '';
@@ -1699,10 +1731,8 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 
     if ($core->is_module_loaded('folder')) {
         $folderId = '';
-        $folder = get_value_fields($formValues, 'folder');
-        $folderId = str_replace(
-            ')', '', substr($folder, strrpos($folder, '(') + 1)
-        );
+        $folderId = get_value_fields($formValues, 'folder');
+
         
         if (! empty($folderId)) {
             array_push(
@@ -1881,6 +1911,20 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             $tags_list = explode('__', $tags);
                 include_once("modules".DIRECTORY_SEPARATOR."tags"
                 .DIRECTORY_SEPARATOR."tags_update.php");
+        }
+
+        //thesaurus
+        if ($core->is_module_loaded('thesaurus')) {
+            require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
+                        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+                        . 'class_modules_tools.php';
+            $thesaurus = new thesaurus();
+            $thesaurusList = '';
+            $thesaurusList = get_value_fields($formValues, 'thesaurus');
+            
+            if (! empty($thesaurusList)) {
+                $thesaurus->saveResThesaurusList($thesaurusList,$resId);
+            }
         }
         
     } else {
