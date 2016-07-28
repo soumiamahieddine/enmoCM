@@ -122,3 +122,9 @@ if (!defined("_NO_NEXT_STEP_VISA"))
 
 if (!defined("_VISA_USERS"))
     define("_VISA_USERS", "Personne(s) pour visa / signature");
+
+if (!defined("_TMP_SIGNED_FILE_FAILED"))
+    define("_TMP_SIGNED_FILE_FAILED", "Echec de la génération document avec signature");
+
+if (!defined("_ENCRYPTED"))
+    define("_ENCRYPTED", "crypté");

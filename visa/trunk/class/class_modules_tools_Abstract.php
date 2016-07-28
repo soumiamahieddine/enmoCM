@@ -145,8 +145,8 @@ abstract class visa_Abstract extends Database
 		
 		$stmt = $db->query("select filename, format, path, title, res_id, res_id_version, attachment_type "
 			. "from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' "
-			. "AND status <> 'DEL' and attachment_type IN "
-			. "('response_project','signed_response','outgoing_mail','waybill','transfer', 'simple_attachment', 'envelope', 'transmission', 'aihp', 'record_traffic', 'sva', 'svr') order by creation_date desc",
+			. "AND status <> 'DEL' and attachment_type NOT IN "
+			. "('converted_pdf','print_folder') order by creation_date desc",
 			array($res_id));
 
 		$array_reponses = array();
@@ -199,7 +199,7 @@ abstract class visa_Abstract extends Database
 		$this->errorMessageVisa = null;
 
 		$db = new Database();
-		$stmt = $db->query("SELECT * FROM res_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS') AND attachment_type IN ('response_project', 'print_folder', 'signed_response','outgoing_mail','waybill','transfer', 'simple_attachment', 'envelope', 'transmission', 'aihp', 'sva', 'svr') ", array($res_id, $coll_id));
+		$stmt = $db->query("SELECT * FROM res_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS') AND attachment_type NOT IN ('converted_pdf','print_folder') ", array($res_id, $coll_id));
 		if ($stmt->rowCount() <= 0) {
 			$this->errorMessageVisa = _NO_RESPONSE_PROJECT_VISA;
 			return false;

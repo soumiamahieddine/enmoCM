@@ -21,13 +21,16 @@ $docserver = $docserverControler->getDocserverToInsert(
 );
 
 
-
-
 if (empty($docserver)) {
     $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
-        . _NO_AVAILABLE_DOCSERVER . '. ' . _MORE_INFOS;
+        . _IMG_SIGN_MISSING . '. ' . _MORE_INFOS;
 } else {
     // some checking on docserver size limit
+    if(!is_file($_SESSION['config']['tmppath'] . $tmpFileName)){
+        echo "{status:1, error : '". _TMP_SIGNED_FILE_FAILED . ': ' ._FILE . ' ' . _ENCRYPTED .' ' . _OR .' ' . _MISSING ."'}";
+        exit;
+    }
+    
     $newSize = $docserverControler->checkSize(
         $docserver, filesize($_SESSION['config']['tmppath'] . $tmpFileName)
     );

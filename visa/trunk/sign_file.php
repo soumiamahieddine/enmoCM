@@ -35,14 +35,15 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
 
         $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type from "
             . $tableName 
-            . " where (attachment_type = ? or attachment_type = ? or attachment_type = ? or attachment_type = ? or attachment_type = 'transfer') and res_id_version = ?", array('response_project', 'outgoing_mail', 'sva', 'waybill', $objectId));
+            . " where attachment_type NOT IN ('converted_pdf','print_folder') and res_id_version = ?", array($objectId));
+
     } elseif (isset($_REQUEST['isOutgoing'])) {
 
         $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from " 
             . $tableName 
             . " where attachment_type = ? and res_id = ?", array('outgoing_mail', $objectId));
     } else {
-        $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from ".$tableName." where (attachment_type = ? or attachment_type = ? or attachment_type = ? or attachment_type = ? or attachment_type = 'transfer') and res_id = ?", array('svr','sva', 'response_project','waybill', $objectId));
+        $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from ".$tableName." where (attachment_type NOT IN ('converted_pdf','print_folder')) and res_id = ?", array($objectId));
     }
 	
     if ($stmt->rowCount() < 1) {
