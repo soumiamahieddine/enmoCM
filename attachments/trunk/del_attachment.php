@@ -119,7 +119,7 @@ if ($_REQUEST['relation'] == 1) {
 
 $res = $stmt->fetchObject();
 $resIdMaster = $res->res_id_master;
-$query = "SELECT title FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' and res_id_master = ?";
+$query = "SELECT title FROM res_view_attachments WHERE status NOT IN ('DEL','OBS','TMP') and res_id_master = ?";
     if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') {
         $query .= " and (attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed' and attachment_type <> 'signed_response' and attachment_type <> 'converted_pdf' and attachment_type <> 'outgoing_mail' and attachment_type <> 'print_folder' and attachment_type <> 'aihp')";
     } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){
