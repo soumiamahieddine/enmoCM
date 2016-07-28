@@ -124,7 +124,7 @@ for ($i=0; $i<count($tab_path_rep_file);$i++) {
 }
 	
 		$db = new Database();
-		$stmt = $db->query("select res_id from res_view_attachments where status NOT IN ('DEL','OBS') and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ?",array($res_id,$coll_id));
+		$stmt = $db->query("select res_id from res_view_attachments where status NOT IN ('DEL','OBS','TMP') and attachment_type NOT IN ('converted_pdf','print_folder') and res_id_master = ? and coll_id = ?",array($res_id,$coll_id));
 		if ($stmt->rowCount() > 0) {
 			$nb_attach = ' (<span id="nb_attach"><b>' . $stmt->rowCount(). '</b></span>)';
 		}
