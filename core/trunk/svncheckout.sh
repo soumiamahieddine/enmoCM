@@ -18,3 +18,5 @@ svn checkout http://svn.maarch.org/templates/trunk                  modules/temp
 svn checkout http://svn.maarch.org/thumbnails/trunk                 modules/thumbnails
 svn checkout http://svn.maarch.org/visa/trunk                       modules/visa
 svn checkout http://svn.maarch.org/avis/trunk                       modules/avis
+svn checkout http://svn.maarch.org/thesaurus/trunk                  modules/thesaurus
+
