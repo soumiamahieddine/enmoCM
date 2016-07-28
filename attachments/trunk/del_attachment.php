@@ -155,7 +155,7 @@ if ($stmt->rowCount() > 0) {
 		if(window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc)) {
 			var tab = window.parent.top.document.getElementById('tabricatorRight');
 			if(document_type == 'signed_response'){
-				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).innerHTML = '<?php echo $attach_type; ?>';
+				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).innerHTML = "<?php echo $attach_type; ?>";
 				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).setAttribute('onclick','updateFunctionModifRep(\'<?php echo $document_id; ?>\', '+num_rep+', '+is_version+')');
 				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).id = 'ans_'+num_rep+'_<?php echo $document_id; ?>';
 
