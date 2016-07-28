@@ -126,7 +126,7 @@ $query = "SELECT title FROM res_view_attachments WHERE status <> 'DEL' and statu
         $query .= " and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed' or attachment_type = 'outgoing_mail' or attachment_type = 'signed_response' or attachment_type = 'aihp')";
     }
 	else{
-		$query .= " and (attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder')";
+		$query .= " and attachment_type NOT IN ('converted_pdf','print_folder')";
 	}
 $stmt = $db->query($query, array($resIdMaster));
 if ($stmt->rowCount() > 0) {
