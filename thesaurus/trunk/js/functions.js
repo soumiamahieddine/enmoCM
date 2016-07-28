@@ -2,9 +2,9 @@ function lauch_thesaurus_list(e){
 	document.getElementById('return_previsualise_thes').style.background='rgb(255, 241, 143)';
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_parents&module=thesaurus";
 	var content='<div style="text-align:center;margin-top:-10px;"><input id="close_thesaurus_tooltips" class="button" value="Fermer" name="close_thesaurus_tooltips" type="button" onClick="$(\'return_previsualise_thes\').style.display=\'none\';"></div>';
-	content += '<br/><div><input type="text" value="" autocomplete="off" id="search_thes" name="search_thes" style="width:95%;"/></div>';
+	content += '<br/><span style="position:relative;"><input type="text" value="" autocomplete="off" id="search_thes" name="search_thes" style="width:95%;"/>';
 	content += '<input type="hidden" value="" id="thesaurus_id" name="thesaurus_id"/>';
-	content += '<div id="show_thes" class="autocomplete"></div>';
+	content += '<div id="show_thes" class="autocomplete" style="width: 100%;left: 0px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;width: 100%;left: 0px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
 	content += '<script>launch_autocompleter_contacts_v2(\'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=thesaurus&page=autocomplete_thesaurus\', \'search_thes\', \'show_thes\', \'\', \'thesaurus_id\', \'thesaurus_id\');$(\'search_thes\').onblur=function(){var str = $(\'search_thes\').value;if(str.indexOf("(",-1)!=-1){str = str.split(\'\').reverse().join(\'\');index = str.indexOf("(",-1);str = str.substring(index+2, str.length);str = str.split(\'\').reverse().join(\'\');$(\'search_thes\').value = str;}};</script>';
 
 	new Ajax.Request(path_to_script,
