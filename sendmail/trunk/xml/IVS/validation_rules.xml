@@ -10,7 +10,7 @@
 		<parameter name="for" type="identifier" />
 		<parameter name="email" type="email" />
 		<parameter name="field" type="identifier" />
-		<parameter name="index" type="boolean" />
+		<parameter name="index" type="identifier" />
 		<parameter name="is_html" type="YN" />
 		<parameter name="add" type="string" />
 		<parameter name="target" type="identifier" />
