@@ -164,6 +164,11 @@ ALTER TABLE contacts_res ADD mode character varying NOT NULL DEFAULT 'multi'::ch
 -- ************************************************************************* --
 ALTER TABLE notes ALTER COLUMN date_note TYPE timestamp without time zone;
 
+-- ************************************************************************* --
+--                      CHANGE COLUMNS TYPE FOR SENDMAIL                     --
+-- ************************************************************************* --
+ALTER TABLE sendmail ALTER COLUMN to_list TYPE text;
+
 
 -- ************************************************************************* --
 --                      NOUVEAU STATUS TRANSMISSION                          --
