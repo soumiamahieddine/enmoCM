@@ -1,8 +1,3 @@
-
-
-
-
-
 -- core/sql/structure/core.postgresql.sql
 
 SET client_encoding = 'UTF8';
@@ -3470,9 +3465,9 @@ CREATE TABLE sendmail
   coll_id character varying(32) NOT NULL,
   res_id bigint NOT NULL,
   user_id character varying(128) NOT NULL,
-  to_list character varying(255) NOT NULL,
-  cc_list character varying(255) DEFAULT NULL,
-  cci_list character varying(255) DEFAULT NULL,
+  to_list text DEFAULT NULL,
+  cc_list text DEFAULT NULL,
+  cci_list text DEFAULT NULL,
   email_object character varying(255) DEFAULT NULL,
   email_body text,
   is_res_master_attached character varying(1) NOT NULL DEFAULT 'Y',

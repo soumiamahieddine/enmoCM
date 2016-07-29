@@ -168,6 +168,8 @@ ALTER TABLE notes ALTER COLUMN date_note TYPE timestamp without time zone;
 --                      CHANGE COLUMNS TYPE FOR SENDMAIL                     --
 -- ************************************************************************* --
 ALTER TABLE sendmail ALTER COLUMN to_list TYPE text;
+ALTER TABLE sendmail ALTER COLUMN cc_list TYPE text;
+ALTER TABLE sendmail ALTER COLUMN cci_list TYPE text;
 
 
 -- ************************************************************************* --
@@ -426,5 +428,4 @@ UPDATE parameters SET param_value_int = 160 where id='database_version';
 -- ************************************************************************* --
 --                               sve mlb_doctype_ext                         --
 -- ************************************************************************* --
-
 ALTER TABLE mlb_doctype_ext ADD COLUMN sve_type varchar(255) DEFAULT 'normal'::character varying;
