@@ -5,8 +5,8 @@
 		<dest_to_copy_during_redirection>false</dest_to_copy_during_redirection> <!-- If true, the dest of the mail is automatically put in copy during redirection to another user or entity -->
 		<show_types_tree>true</show_types_tree> <!-- If true, types are displayed with their classification scheme -->
 		<watermark>
-			<enabled>false</enabled> <!-- If true, a watermark is applied on the document -->
-			<text>Copie conforme de [alt_identifier] au statut [status] le [date_now] [hour_now]</text> <!-- text with fusion fields [column_name] or [date_now], ex : [alt_identifier] with status [status] the [date_now] [hour_now]-->
+			<enabled>true</enabled> <!-- If true, a watermark is applied on the document -->
+			<text>Copie conforme de [alt_identifier] le [date_now] [hour_now]</text> <!-- text with fusion fields [column_name] or [date_now], ex : [alt_identifier] with status [status] the [date_now] [hour_now]-->
 			<position>5,15,0,0.5</position> <!-- Setup position with X, Y, angle, opacity ; ex : 50,450,30,0.5 -->
 			<font>helvetica,10</font> <!-- Setup the font name and her size, ex: helvetica,10 -->
 			<text_color>20,192,30</text_color> <!-- Setup the color of the text, ex: 192,192,192 -->
