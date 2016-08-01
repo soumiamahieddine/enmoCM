@@ -131,7 +131,6 @@ if ($mode == 'list') {
                     echo functions::show_str(
                         $_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']
                     );?>" name="thesaurus_parent_label" style="width:270px;" /> <i onclick="lauch_thesaurus_list_admin(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i> <i onclick="document.getElementById('thesaurus_parent_id').value = '';document.getElementById('thesaurus_parent_label').value = '';" class="fa fa-eraser" title="<?php echo _RESET; ?>" aria-hidden="true" style="cursor:pointer;"></i>
-                <script type="text/javascript">document.getElementById("thesaurus_parent_id").onchange();</script>
                 <!--<input name="thesaurus_parent_id" type="text"  id="thesaurus_parent_id" value="<?php
                     echo functions::show_str(
                         $_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']
@@ -211,6 +210,7 @@ if ($mode == 'list') {
         <style type="text/css">#thesaurus_name_associate_chosen .chosen-drop{display:none;}.search-choice{padding: 5px !important;}</style>
         <script type="text/javascript">new Chosen($('thesaurus_name_associate'),{width: "95%", disable_search_threshold: 10});
         </script>
+        <script type="text/javascript">document.getElementById("thesaurus_parent_id").onchange();</script>
     <?php
     }
     ?></div><?php
