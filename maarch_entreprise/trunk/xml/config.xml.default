@@ -72,6 +72,10 @@
                 <id>internal</id>
                 <label>_INTERNAL</label>
             </category>
+            <category>
+                <id>ged_doc</id>
+                <label>_GED_DOC</label>
+            </category>
             <default_category>incoming</default_category>
         </categories>
     </COLLECTION>
