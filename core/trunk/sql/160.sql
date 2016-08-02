@@ -428,4 +428,4 @@ UPDATE parameters SET param_value_int = 160 where id='database_version';
 -- ************************************************************************* --
 --                               sve mlb_doctype_ext                         --
 -- ************************************************************************* --
-ALTER TABLE mlb_doctype_ext ADD COLUMN sve_type varchar(255) DEFAULT 'normal'::character varying;
+ALTER TABLE mlb_doctype_ext ADD COLUMN process_mode varchar(255) DEFAULT 'NORMAL'::character varying;
