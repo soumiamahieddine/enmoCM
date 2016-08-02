@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *    Copyright 2008-2015 Maarch
+ *  Copyright 2008-2015 Maarch
  *
  *  This file is part of Maarch Framework.
  *
@@ -29,7 +29,7 @@ if (!defined("_SVR")) define("_SVR", "svr");
 if (!defined("_SVA")) define("_SVA", "sva");
 if (!defined("_SEND_ATTACHMENTS_TO_CONTACT")) define("_SEND_ATTACHMENTS_TO_CONTACT", "Envoyer au contact");
 if (!defined("_PROCESSING_MODE")) define("_PROCESSING_MODE", "Mode de traitement");
-if (!defined("_VIEW_LAST_COURRIERS")) define("_VIEW_LAST_COURRIERS", "Mes derniers courriers");
+if (!defined("_VIEW_LAST_COURRIERS")) define("_VIEW_LAST_COURRIERS", "Mes derniers courriers/doc");
 if (!defined("_ADMIN_USERS"))    define("_ADMIN_USERS", "Utilisateurs");
 if (!defined("_ADMIN_DOCSERVERS"))    define("_ADMIN_DOCSERVERS", "Zones de stockage");
 if (!defined("_ADMIN_USERS_DESC"))    define("_ADMIN_USERS_DESC", "Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d'appartenance et définir leur groupe primaire.");
@@ -764,8 +764,8 @@ if (!defined("_LOW")) define("_LOW", "Basse");
 if (!defined("_VERY_LOW")) define("_VERY_LOW", "Très Basse");
 
 
-if (!defined("_INDEXING_MLB")) define("_INDEXING_MLB", "Enregistrer un courrier");
-if (!defined("_ADV_SEARCH_MLB")) define("_ADV_SEARCH_MLB", "Rechercher un courrier");
+if (!defined("_INDEXING_MLB")) define("_INDEXING_MLB", "Enregistrer un courrier/doc");
+if (!defined("_ADV_SEARCH_MLB")) define("_ADV_SEARCH_MLB", "Rechercher");
 if (!defined("_ADV_SEARCH_INVOICES")) define("_ADV_SEARCH_INVOICES", "[cold] Rechercher une facture client");
 
 if (!defined("_ADV_SEARCH_TITLE")) define("_ADV_SEARCH_TITLE", "Recherche avancée de document");
