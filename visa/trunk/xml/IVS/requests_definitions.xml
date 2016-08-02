@@ -47,8 +47,17 @@
         <parameter name="page" value="saveVisaModel"/>
         <parameter name="module" value="visa"/>
     </requestDefinition>
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="vi_getVisaModelByTitle" >
+      <parameter name="display" value="true"/>
+      <parameter name="module" value="visa"/>
+      <parameter name="page" value="getVisaModelByTitle"/> 
+    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="vi_saveVisaWF" >
         <parameter name="page" value="saveVisaWF"/>
+        <parameter name="module" value="visa"/>
+    </requestDefinition>
+    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="vi_resetVisaWF" >
+        <parameter name="page" value="resetVisaWF"/>
         <parameter name="module" value="visa"/>
     </requestDefinition>
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="vi_saveVisaWF" >
