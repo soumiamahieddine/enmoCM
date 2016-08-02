@@ -557,7 +557,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '</tr>';
 					 
 					$frm_str .= '<tr id="contact_id_tr" style="display:'.$display_value.';">';
-                   $frm_str .='<td class="indexing_label"><label for="contact" class="form_title" ><span id="exp_contact">'._SHIPPER.'</span><span id="dest_contact">'._DEST.'</span>';
+                   $frm_str .='<td class="indexing_label"><label for="contact" class="form_title" ><span id="exp_contact">'._SHIPPER.'</span><span id="dest_contact">'._DEST.'</span>'
+                            . '<span id="author_contact">' . _AUTHOR_DOC . '</span>';
                     if ($core->test_admin('my_contacts', 'apps', false)) {
                         $frm_str .=' <a href="#" id="create_contact" title="'._CREATE_CONTACT.'" onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});return false;" style="display:inline;" >'
                             .'<i class="fa fa-pencil" title="' . _CREATE_CONTACT . '"></i></a>';
@@ -735,7 +736,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 if ($core_tools->is_module_loaded('entities')) {
                     $_SESSION['validStep'] = "ok";
                     $frm_str .= '<tr id="department_tr" style="display:'.$display_value.';">';
-                    $frm_str .='<td class="indexing_label"><label for="department" class="form_title" id="label_dep_dest" style="display:inline;" >'._DEPARTMENT_DEST.'</label><label for="department" class="form_title" id="label_dep_exp" style="display:none;" >'._DEPARTMENT_EXP.'</label></td>';
+                    $frm_str .='<td class="indexing_label"><label for="department" class="form_title" id="label_dep_dest" style="display:inline;" >'._DEPARTMENT_DEST.'</label><label for="department" class="form_title" id="label_dep_exp" style="display:none;" >'._DEPARTMENT_EXP.'</label><label for="department" '
+                        . 'class="form_title" id="label_dep_owner" style="display:none;" >'
+                        . _DEPARTMENT_OWNER . '</label></td>';
                     $frm_str .='<td>&nbsp;</td>';
                     $frm_str .='<td class="indexing_field"><select name="destination" id="destination" onchange="clear_error(\'frm_error_'.$id_action.'\');'.$func_load_listdiff_by_entity.'">';
                     $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
@@ -966,7 +969,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</tr>';
 
             $frm_str .= '<tr id="thesaurus_tr" style="display:' . $displayValue . ';">';
-            $frm_str .= '<td colspan="3" class="indexing_field" id="thesaurus_field"><select multiple="multiple" id="thesaurus" data-placeholder=" "';
+            $frm_str .= '<td colspan="3" class="indexing_field" id="thesaurus_field" style="text-align:left;"><select multiple="multiple" id="thesaurus" data-placeholder=" "';
 
             if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
                 $frm_str .= 'disabled="disabled"';
@@ -2007,7 +2010,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			// $contact_id = str_replace(')', '', substr($contact, strrpos($contact,'(')+1));
 			if($contact_type == 'internal')
 			{
-				if($cat_id == 'incoming' || $cat_id == 'internal')
+				if($cat_id == 'incoming' || $cat_id == 'internal'  || $cat_id == 'ged_doc')
 				{
 					$query_ext .= ", exp_user_id = ?";
                     $arrayPDOext = array_merge($arrayPDOext, array($contact_id));
@@ -2022,7 +2025,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			}
 			elseif($contact_type == 'external')
 			{
-				if($cat_id == 'incoming')
+				if($cat_id == 'incoming' || $cat_id == 'ged_doc')
 				{
 					$query_ext .= ", exp_contact_id = ?";
                     $arrayPDOext = array_merge($arrayPDOext, array($contact_id));

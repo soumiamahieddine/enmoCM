@@ -41,41 +41,44 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
                 //alert(answer.responseText);
                 if(response.status == 0  || response.status == 1)
                 {
-                    if(response.status == 0)
-                    {
-                        var limit_use = $('process_limit_date_use_yes');
-                        if(limit_use)
+                    if($('process_limit_date_tr').style.display != 'none'){
+                        if(response.status == 0)
                         {
-                            limit_use.checked = true;
+                            var limit_use = $('process_limit_date_use_yes');
+                            if(limit_use)
+                            {
+                                limit_use.checked = true;
+                            }
+                            var process_date_tr = $('process_limit_date_tr');
+                            if(process_date_tr != null)
+                            {
+                                Element.setStyle(process_date_tr, {display : display_value_tr})
+                            }
+                            var process_date = $('process_limit_date');
+                            if(process_date != null && !from_valid_qualif)
+                            {
+                                process_date.value = response.process_date;
+                            }
+                            if (process_date.value == '') {
+                                process_date.value = response.process_date;
+                            }
                         }
-                        var process_date_tr = $('process_limit_date_tr');
-                        if(process_date_tr != null)
+                        else
                         {
-                            Element.setStyle(process_date_tr, {display : display_value_tr})
-                        }
-                        var process_date = $('process_limit_date');
-                        if(process_date != null && !from_valid_qualif)
-                        {
-                            process_date.value = response.process_date;
-                        }
-                        if (process_date.value == '') {
-                            process_date.value = response.process_date;
-                        }
-                    }
-                    else
-                    {
 
-                        var limit_use = $('process_limit_date_use_no');
-                        if(limit_use)
-                        {
-                            limit_use.checked = true;
-                        }
-                        var process_date_tr = $('process_limit_date_tr');
-                        if(process_date_tr != null)
-                        {
-                            Element.setStyle(process_date_tr, {display : 'none'})
+                            var limit_use = $('process_limit_date_use_no');
+                            if(limit_use)
+                            {
+                                limit_use.checked = true;
+                            }
+                            var process_date_tr = $('process_limit_date_tr');
+                            if(process_date_tr != null)
+                            {
+                                Element.setStyle(process_date_tr, {display : 'none'})
+                            }
                         }
                     }
+                    
                     var indexes = response.opt_indexes;
                     var div_indexes = $('comp_indexes');
                     if(div_indexes )
@@ -375,9 +378,11 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'nature_id_tr', type:'tr', state:'display'},
         {id:'label_dep_dest', type:'label', state:'display'},
         {id:'label_dep_exp', type:'label', state:'hide'},
+        {id:'label_dep_owner', type:'label', state:'hide'},
         {id:'process_limit_date_use_tr', type:'tr', state:'display'},
         {id:'process_limit_date_tr', type:'tr', state:'display'},
         {id:'department_tr', type:'tr', state:'display'},
+        {id:'difflist_tr', type:'tr', state:'display'},
         {id:'box_id_tr', type:'tr', state:'display'},
         {id:'contact_choose_tr', type:'tr', state:'hide'},
         {id:'contact_choose_2_tr', type:'tr', state:'hide'},
@@ -387,6 +392,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'dest_contact', type:'label', state:'hide'},
         {id:'exp_contact', type:'label', state:'display'},
+        {id:'author_contact', type:'label', state:'hide'},
         {id:'type_multi_contact_external_icon', type:'label', state:'hide'},
         {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
         {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
@@ -411,6 +417,61 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }
+    //Category = GED DOC
+    else if(cat_id == 'ged_doc')
+    {
+        var category = [
+        {id:'doctype_mail', type:'label', state:'hide'},
+        {id:'doctype_res', type:'label', state:'display'},
+        {id:'priority_tr', type:'tr', state:'hide'},
+        {id:'doc_date_label', type:'label', state:'display'},
+        {id:'mail_date_label', type:'label', state:'hide'},
+        {id:'author_tr', type:'tr', state:'hide'},
+        {id:'admission_date_tr', type:'tr', state:'hide'},
+        {id:'contact_check', type:'tr', state:'hide'},
+        {id:'nature_id_tr', type:'tr', state:'hide'},
+        {id:'label_dep_dest', type:'label', state:'hide'},
+        {id:'label_dep_exp', type:'label', state:'hide'},
+        {id:'label_dep_owner', type:'label', state:'display'},
+        {id:'process_limit_date_use_tr', type:'tr', state:'hide'},
+        {id:'process_limit_date_tr', type:'tr', state:'hide'},
+        {id:'department_tr', type:'tr', state:'display'},
+        {id:'diff_list_tr', type:'tr', state:'hide'},
+        {id:'box_id_tr', type:'tr', state:'hide'},
+        {id:'contact_choose_tr', type:'tr', state:'hide'},
+        {id:'contact_choose_2_tr', type:'tr', state:'hide'},
+        {id:'contact_choose_3_tr', type:'tr', state:'hide'},
+        {id:'dest_contact_choose_label', type:'label', state:'hide'},
+        {id:'exp_contact_choose_label', type:'label', state:'display'},
+        {id:'contact_id_tr', type:'tr', state:'display'},
+        {id:'dest_contact', type:'label', state:'hide'},
+        {id:'exp_contact', type:'label', state:'hide'},
+        {id:'author_contact', type:'label', state:'display'},
+        {id:'type_multi_contact_external_icon', type:'label', state:'hide'},
+        {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
+        {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
+        {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
+        {id:'folder_tr', type:'tr', state:'display'},
+        {id:'category_id_mandatory', type:'label', state:'display'},
+        {id:'type_id_mandatory', type:'label', state:'display'},
+        {id:'priority_mandatory', type:'label', state:'hide'},
+        {id:'doc_date_mandatory', type:'label', state:'display'},
+        {id:'author_mandatory', type:'label', state:'hide'},
+        {id:'admission_date_mandatory', type:'label', state:'display'},
+        {id:'type_contact_mandatory', type:'label', state:'display'},
+        {id:'contact_mandatory', type:'label', state:'display'},
+        {id:'nature_id_mandatory', type:'label', state:'display'},
+        {id:'subject_mandatory', type:'label', state:'display'},
+        {id:'destination_mandatory', type:'label', state:'display'},
+        {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
+        {id:'process_limit_date_mandatory', type:'label', state:'display'},
+        {id:'chrono_number', type:'label', state:'hide'},
+        {id:'chrono_number_mandatory', type:'label', state:'hide'},
+        {id:'confidentiality_mandatory', type:'label', state:'hide'},
+        {id:'chrono_number_tr', type:'tr', state:'hide'},
+        {id:'folder_mandatory', type:'label', state:'hide'}
+        ];
+    }
     //Category = OUTGOING
     else if(cat_id == 'outgoing')
     {
@@ -427,6 +488,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'department_tr', type:'tr', state:'display'},
         {id:'label_dep_dest', type:'label', state:'hide'},
         {id:'label_dep_exp', type:'label', state:'display'},
+        {id:'label_dep_owner', type:'label', state:'hide'},
+        {id:'difflist_tr', type:'tr', state:'display'},
         {id:'process_limit_date_use_tr', type:'tr', state:'display'},
         {id:'process_limit_date_tr', type:'tr', state:'display'},
         {id:'box_id_tr', type:'tr', state:'display'},
@@ -438,6 +501,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'dest_contact', type:'label', state:'display'},
         {id:'exp_contact', type:'label', state:'hide'},
+        {id:'author_contact', type:'label', state:'hide'},
         {id:'type_multi_contact_external_icon', type:'label', state:'display'},
         {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
         {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
@@ -478,6 +542,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'department_tr', type:'tr', state:'display'},
         {id:'label_dep_dest', type:'label', state:'display'},
         {id:'label_dep_exp', type:'label', state:'hide'},
+        {id:'label_dep_owner', type:'label', state:'hide'},
+        {id:'difflist_tr', type:'tr', state:'display'},
         {id:'process_limit_date_use_tr', type:'tr', state:'display'},
         {id:'process_limit_date_tr', type:'tr', state:'display'},
         {id:'box_id_tr', type:'tr', state:'display'},
@@ -489,6 +555,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'dest_contact', type:'label', state:'hide'},
         {id:'exp_contact', type:'label', state:'display'},
+        {id:'author_contact', type:'label', state:'hide'},
         {id:'type_multi_contact_external_icon', type:'label', state:'hide'},
         {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
         {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
@@ -708,10 +775,17 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                     }
 
                     if(origin != 'init'){
-                       document.getElementById("destination").onchange();
-                       Event.fire($("destination"), "chosen:updated");
+                        document.getElementById("diff_list_tr").style.display='table-row';
+                        document.getElementById("destination").onchange();
+                        Event.fire($("destination"), "chosen:updated");
                     }
-                    //console.log('3 '+print_r(services_to_exec));
+
+                    if(cat_id == 'ged_doc'){
+                        document.getElementById("diff_list_tr").style.display = 'none';
+                    }else{
+                        document.getElementById("diff_list_tr").style.display = 'table-row';
+                    }
+
                     var path_scripts = '';
                     var call_func = '';
 

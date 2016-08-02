@@ -732,6 +732,7 @@ if (!defined("_CHOOSE_CATEGORY")) define("_CHOOSE_CATEGORY", "Choisissez une cat
 if (!defined("_RECEIVING_DATE")) define("_RECEIVING_DATE", "Date d'arrivée");
 if (!defined("_SUBJECT")) define("_SUBJECT", "Objet");
 if (!defined("_AUTHOR")) define("_AUTHOR", "Auteur");
+if (!defined("_AUTHOR_DOC")) define("_AUTHOR_DOC", "Auteur du document");
 if (!defined("_DOCTYPE_MAIL")) define("_DOCTYPE_MAIL", "Type de courrier");
 if (!defined("_PROCESS_LIMIT_DATE_USE")) define("_PROCESS_LIMIT_DATE_USE", "Activer la date limite");
 if (!defined("_DEPARTMENT_DEST")) define("_DEPARTMENT_DEST", "Service traitant");
@@ -772,6 +773,7 @@ if (!defined("_MAIL_OBJECT")) define("_MAIL_OBJECT", "Objet du courrier");
 
 if (!defined("_N_GED")) define("_N_GED","Numéro GED ");
 if (!defined("_GED_NUM")) define("_GED_NUM", "N° GED");
+if (!defined("_GED_DOC")) define("_GED_DOC", "Document GED");
 if (!defined("_CHOOSE_TYPE_MAIL")) define("_CHOOSE_TYPE_MAIL","Choisissez un type de courrier");
 
 if (!defined("_REG_DATE")) define("_REG_DATE","Date d'enregistrement");
@@ -1745,7 +1747,7 @@ if (!defined("_ADDRESS_MOVED")) define("_ADDRESS_MOVED", "Adresse déplacée");
 
 if (!defined("_SAVE_MODIFICATION")) define("_SAVE_MODIFICATION", "Enregistrer les modifications");
 
-if (!defined("_CONFIDENTIALITY")) define("_CONFIDENTIALITY", "Courrier confidentiel");
+if (!defined("_CONFIDENTIALITY")) define("_CONFIDENTIALITY", "Confidentiel");
 if (!defined("_CONFIDENTIAL")) define("_CONFIDENTIAL", "Confidentiel");
 
 if (!defined("_SIGNATORY_NAME")) define("_SIGNATORY_NAME", "Nom du signataire");

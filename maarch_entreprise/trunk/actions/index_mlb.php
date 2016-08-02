@@ -536,7 +536,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<tr id="contact_id_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td><label for="contact" class="form_title" >'
             . '<span id="exp_contact">' . _SHIPPER . '</span>'
-            . '<span id="dest_contact">' . _DEST . '</span>';
+            . '<span id="dest_contact">' . _DEST . '</span>'
+            . '<span id="author_contact">' . _AUTHOR_DOC . '</span>';
     if ($core->test_admin('my_contacts', 'apps', false)) {
         $frmStr .= ' <a href="#" id="create_contact" title="' . _CREATE_CONTACT
                 . '" onclick="new Effect.toggle(\'create_contact_div\', '
@@ -683,13 +684,15 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'id="label_dep_dest" style="display:inline;" >'
                 . _DEPARTMENT_DEST . '</label><label for="department" '
                 . 'class="form_title" id="label_dep_exp" style="display:none;" >'
-                . _DEPARTMENT_EXP . '</label></td>';
+                . _DEPARTMENT_EXP . '</label><label for="department" '
+                . 'class="form_title" id="label_dep_owner" style="display:none;" >'
+                . _DEPARTMENT_OWNER . '</label></td>';
         $frmStr .= '<td>&nbsp;</td>';
         $frmStr .= '<td class="indexing_field">';
         $frmStr .= '<select name="destination" id="destination" onchange="'
                     . 'clear_error(\'frm_error_' . $actionId . '\');'
-                    . 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value);'
-                    . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
+                    . 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value)'
+          
                 . ';" >';
         $frmStr .= '<option value="">' . _CHOOSE_DEPARTMENT . '</option>';
         $countAllEntities = count($allEntitiesTree);
@@ -865,7 +868,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '</tr>';
 
         $frmStr .= '<tr id="thesaurus_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td colspan="3" class="indexing_field" id="thesaurus_field"><select multiple="multiple" id="thesaurus" data-placeholder=" " onselect="alert(\'ok\')"';
+        $frmStr .= '<td colspan="3" class="indexing_field" id="thesaurus_field" style="text-align:left;"><select multiple="multiple" id="thesaurus" data-placeholder=" " onselect="alert(\'ok\')"';
         
         if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
             $frmStr .= 'disabled="disabled"';
@@ -1815,7 +1818,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                 $formValues, 'contactid'
             );
 			if ($contactType == 'internal') {
-				if ($catId == 'incoming' || $catId == 'internal') {
+				if ($catId == 'incoming' || $catId == 'internal' || $catId == 'ged_doc') {
 					$queryExtFields .= 'exp_user_id,';
 					$queryExtValues .= " ?,";
                     $arrayPDO = array_merge($arrayPDO, array($contactId));
@@ -1825,7 +1828,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     $arrayPDO = array_merge($arrayPDO, array($contactId));
 				}
 			} else if ($contactType == 'external') {
-				if ($catId == 'incoming') {
+				if ($catId == 'incoming' || $catId == 'ged_doc') {
 					$queryExtFields .= 'exp_contact_id,';
 					$queryExtValues .= " ?,";
                     $arrayPDO = array_merge($arrayPDO, array($contactId));
