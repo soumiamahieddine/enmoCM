@@ -258,7 +258,6 @@ function setTransmissionDataPdf($nb, $storeResult) {
 }
 
 if (isset($_POST['add']) && $_POST['add']) {
-
     if (empty($_SESSION['upfile']['tmp_name'])) {
         $_SESSION['error'] .= _FILE_MISSING . ". ";
     } elseif ($_SESSION['upfile']['size'] == 0) {
@@ -561,7 +560,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                         unset($_SESSION['transmissionContacts']);
                         
                         //copie de la version PDF de la pièce si mode de conversion sur le client
-                        if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
+                        if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != '' && isset($_REQUEST['templateOffice'])){
 							$_SESSION['new_id'] = $id;
                             $file    = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
                             $newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
@@ -1734,7 +1733,7 @@ if (!isset($_REQUEST['id'])) {
     $content .= '</p>';
     $content .= '<p style="text-align:left;margin-left:74.5%;"></p>';
     $content .= '<p>';
-    $content .= '<label>'. _FILE.' <span><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});document.getElementById(\'choose_file\').contentDocument.getElementById(\'file\').click();"></i> <i class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
+    $content .= '<label>'. _FILE.' <span><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'templateOffice\').disabled=true;$(\'edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});document.getElementById(\'choose_file\').contentDocument.getElementById(\'file\').click();"></i> <i class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'templateOffice\').disabled=false;$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
     $content .= '<select name="templateOffice" id="templateOffice" style="display:inline-block;" onchange="showEditButton();'.$function_transmssion2.'">';
     $content .= '<option value="">'. _CHOOSE_MODEL.'</option>';
 
