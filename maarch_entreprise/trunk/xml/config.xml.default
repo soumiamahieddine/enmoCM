@@ -14,7 +14,7 @@
         <adminmail>dev@maarch.org</adminmail>
         <adminname>maarch</adminname>
         <debug>false</debug>
-        <applicationname>MAARCH 1.5.1</applicationname>
+        <applicationname>MAARCH 1.6</applicationname>
         <defaultPage>welcome</defaultPage>
         <exportdirectory></exportdirectory>
         <CookieTime>20</CookieTime> <!-- minutes -->
@@ -290,5 +290,9 @@
     <MODULES>
         <moduleid>avis</moduleid>
         <comment>_AVIS_WORKFLOW_COMMENT</comment>
+    </MODULES>
+    <MODULES>
+        <moduleid>thesaurus</moduleid>
+        <comment>_THESAURUS_COMMENT</comment>
     </MODULES>
 </ROOT>
