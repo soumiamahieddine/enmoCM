@@ -2294,7 +2294,7 @@ CREATE TABLE mlb_doctype_ext (
   process_delay bigint NOT NULL DEFAULT '21',
   delay1 bigint NOT NULL DEFAULT '14',
   delay2 bigint NOT NULL DEFAULT '1',
-  process_mode character varying(255) NOT NULL DEFAULT 'NORMAL'::character varying,
+  process_mode character varying(255),
   CONSTRAINT type_id PRIMARY KEY (type_id)
 )
 WITH (OIDS=FALSE);
