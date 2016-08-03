@@ -1686,7 +1686,7 @@ if (!isset($_REQUEST['id'])) {
     foreach($_SESSION['attachment_types_with_process'] as $key => $value){
         // var_dump($key);
         // var_dump($value);
-        if($sve_type == $value){
+        if($sve_type == $value or $value == ''){
             //var_dump($_SESSION['attachment_types'][$key]);
             //$attachments_types_for_process[] = $key;
             //$attachments_types_for_process = array($key => $attachments_types_for_process);
