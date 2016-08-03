@@ -77,7 +77,7 @@ class thumbnails
 		$isOutgoingPj = $stmt->fetchObject()->total;
 
 		if($catId == 'outgoing' && $isOutgoingPj > 0){
-			$stmt = $db->query("SELECT tnl_path, tnl_filename FROM res_attachments WHERE res_id_master = ? AND status NOT IN ('DEL','OBS','TMP')", array($res_id));
+			$stmt = $db->query("SELECT tnl_path, tnl_filename FROM res_attachments WHERE res_id_master = ? AND status NOT IN ('DEL','OBS','TMP') AND type_id = '1'", array($res_id));
 		}else{
 			$stmt = $db->query("SELECT tnl_path, tnl_filename FROM $table WHERE res_id = ?", array($res_id));
 		}
