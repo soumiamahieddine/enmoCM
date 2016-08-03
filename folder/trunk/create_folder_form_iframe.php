@@ -56,7 +56,6 @@ if(isset($_SESSION['error'])) { ?>
 }
 if($_SESSION['info'] == _FOLDER_ADDED){
     $_SESSION['info'] = '';
-    var_dump($_SESSION['m_admin']);
     echo "<script>var select = parent.document.getElementById('folder');"
     . "var newOption = new Option ('".$_SESSION['m_admin']['folder']['folder_name']."', '".$_SESSION['m_admin']['folder']['folders_system_id']."');"
     . "newOption.setAttribute('parent','".$_SESSION['m_admin']['folder']['folder_parent']."');"
