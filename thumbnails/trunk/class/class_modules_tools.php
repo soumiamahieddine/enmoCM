@@ -62,7 +62,26 @@ class thumbnails
 		$docserver = $docserversControler->get($docserverId);
 		
 		
-		$stmt = $db->query("SELECT tnl_path, tnl_filename FROM $table WHERE res_id = ?", array($res_id));
+		$query = "select category_id from mlb_coll_ext"
+			   . " where res_id = ?";
+			   
+		$stmt = $db->query($query, array($res_id));
+
+		$catId = $stmt->fetchObject()->category_id;
+
+		$query = "select count(*) as total from res_view_attachments"
+			   . " where res_id_master = ? AND status NOT IN ('DEL','OBS','TMP') AND attachment_type = ?";
+			   
+		$stmt = $db->query($query, array($res_id,'outgoing_mail'));
+
+		$isOutgoingPj = $stmt->fetchObject()->total;
+
+		if($catId == 'outgoing' && $isOutgoingPj > 0){
+			$stmt = $db->query("SELECT tnl_path, tnl_filename FROM res_attachments WHERE res_id_master = ? AND status NOT IN ('DEL','OBS','TMP')", array($res_id));
+		}else{
+			$stmt = $db->query("SELECT tnl_path, tnl_filename FROM $table WHERE res_id = ?", array($res_id));
+		}
+
 		$data = $stmt->fetchObject();
 		
 		$tnlPath = str_replace("#", DIRECTORY_SEPARATOR , $data->tnl_path);
