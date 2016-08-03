@@ -180,7 +180,7 @@ switch ($mode) {
                     // print_r($_REQUEST);exit;
                     
                     //Check adress for to
-                    $to =  join(', ', $_SESSION['adresses']['to']);
+                    $to =  join(',', $_SESSION['adresses']['to']);
                     $error = $sendmail_tools->CheckEmailAdress($to);
                     
                     if (empty($error)) {
