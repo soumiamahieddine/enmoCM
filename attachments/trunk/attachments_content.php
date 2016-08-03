@@ -1680,7 +1680,7 @@ if (!isset($_REQUEST['id'])) {
     //On recherche le sve_type
     $stmt = $db->query("SELECT * FROM mlb_doctype_ext WHERE type_id = ?",array($type_id));
     $sve = $stmt->fetchObject();
-    $sve_type = $sve->sve_type;
+    $sve_type = $sve->process_mode;
     //On met tous les attachments ayant le type_sve attaché au courrier dans un tableau
     $attachments_types_for_process = array();
     foreach($_SESSION['attachment_types_with_process'] as $key => $value){
