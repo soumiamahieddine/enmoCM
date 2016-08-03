@@ -148,6 +148,7 @@ class business_app_tools extends business_app_tools_Abstract
                 $i++;
             }
             $_SESSION['default_mail_priority'] = (string) $mailPriorities->default_priority;
+            $_SESSION['default_sve_priority'] = (string) $mailPriorities->default_sve_priority;
         }
 
         $contact_check = $xmlfile->contact_check;

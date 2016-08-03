@@ -367,7 +367,9 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . '&dir=indexing_searching&page=change_doctype\', \''
             . _ERROR_DOCTYPE . '\', \'' . $actionId . '\', \''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&page=get_content_js\', \'' . $displayValue . '\');'.$func_load_listdiff.'">';
+            . '&page=get_content_js\', \'' . $displayValue . '\');changePriorityForSve(this.options[this.selectedIndex].value,\''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&dir=indexing_searching&page=priority_for_sve\')'.$func_load_listdiff.'">';
     $frmStr .= '<option value="">' . _CHOOSE_TYPE . '</option>';
 if ($_SESSION['features']['show_types_tree'] == 'true') {
         for ($i = 0; $i < count($doctypes); $i ++) {

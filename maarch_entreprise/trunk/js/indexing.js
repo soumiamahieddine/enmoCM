@@ -128,6 +128,38 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
     }
 }
 
+function changePriorityForSve(doctype_id, path_script){
+    new Ajax.Request(path_script,
+    {
+        method:'post',
+        parameters: { type_id : doctype_id,
+                      address_id : path_script
+                    },
+            onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+                if(response.status == 0 )
+                {
+                    //alert(response.value);
+                    document.getElementById("priority").selectedIndex = response.value+1;
+                    Event.fire($("priority"), "chosen:updated");
+                    
+                }else if(response.status == 1 ){
+                    //alert(response.value);
+                    document.getElementById("priority").selectedIndex = response.value+1;
+                    Event.fire($("priority"), "chosen:updated");
+                }
+                else
+                {
+                    if(console)
+                    {
+                        console.log('Erreur Ajax');
+                    }
+                }
+            },
+            onFailure: function(){ alert('Something went wrong...'); }
+    });
+}
+
 /**
  * Compute process limit date from the admission date
  *
