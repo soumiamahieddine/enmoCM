@@ -84,9 +84,9 @@ class business_app_tools extends business_app_tools_Abstract
 
 
         $_SESSION['processing_modes'] = array();
-        $processingModes = $xmlfile->processing_modes;
+        $processingModes = $xmlfile->processing_modes; 
         if(count($processingModes) > 0) {
-            foreach ($processingModes->process as $process ) {
+            foreach ($processingModes->processing_mode as $process ) {
                 $label = (string) $process->label;
                 $_SESSION['processing_modes'][(string) $process->label] = $label;
             }
@@ -107,7 +107,7 @@ class business_app_tools extends business_app_tools_Abstract
                 $get_chrono = (string) $type['get_chrono'];
                 $attach_in_mail = (string) $type['attach_in_mail'];
                 $show_attachment_type = (string) $type['show'];
-                $process = (string) $type->process;
+                $process = (string) $type->processing_mode;
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
                 ) {
