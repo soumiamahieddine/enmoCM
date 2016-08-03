@@ -214,6 +214,8 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     
                     if($tab[$i][$j][$value]=="email_destinataire")
                     {
+                        $tab_dest = explode(',', $tab[$i][$j]['value']);
+                        $tab[$i][$j]['value'] = implode(', ', $tab_dest);
                         $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
                         $tab[$i][$j]["label"]=_RECIPIENT;
                         $tab[$i][$j]["size"]=$sizeObject;
