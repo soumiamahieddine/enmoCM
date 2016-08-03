@@ -39,85 +39,88 @@
         <type show="true" with_chrono="true" attach_in_mail="true">
             <id>response_project</id>
             <label>_RESPONSE_PROJECT</label>
-            <processing_mode></processing_mode>
+            <process_mode></process_mode>
         </type>
         <type show="true" with_chrono="true">
             <id>transmission</id>
             <label>Transmission</label>
-            <processing_mode></processing_mode>
+            <process_mode></process_mode>
         </type>
 		<type show="false" with_chrono="true" attach_in_mail="true">
             <id>signed_response</id>
             <label>_SIGNED_RESPONSE</label>
-            <processing_mode></processing_mode>
+            <process_mode></process_mode>
         </type>
         <type show="true" with_chrono="true">
             <id>outgoing_mail_signed</id>
             <label>_OUTGOING_MAIL_SIGNED</label>
-            <processing_mode></processing_mode>
+            <process_mode></process_mode>
         </type>
         <type show="true" with_chrono="false">
             <id>simple_attachment</id>
             <label>_A_PJ</label>
-            <processing_mode></processing_mode>
+            <process_mode></process_mode>
         </type>
         <type show="true" with_chrono="true" get_chrono="response_project">
             <id>waybill</id>
             <label>_WAYBILL</label>
-            <processing_mode></processing_mode>
+            <process_mode></process_mode>
         </type>
 	<type show="false" with_chrono="true">
             <id>routing</id>
             <label>_ROUTING</label>
-            <processing_mode></processing_mode>
+            <process_mode></process_mode>
         </type>
 		<type show="true" with_chrono="true">
             <id>outgoing_mail</id>
             <label>_OUTGOING_MAIL</label>
-            <processing_mode></processing_mode>
+            <process_mode></process_mode>
         </type>
 	<type show="false" with_chrono="false">
             <id>converted_pdf</id>
             <label>_CONVERTED_PDF</label>
-            <processing_mode></processing_mode>
+            <process_mode></process_mode>
         </type>
 	<type show="false" with_chrono="false">
             <id>print_folder</id>
             <label>_PRINT_FOLDER</label>
-            <processing_mode></processing_mode>
+            <process_mode></process_mode>
         </type>
         <type show="true" with_chrono="false">
             <id>sva</id>
             <label>_SVA</label>
-            <processing_mode>SVA</processing_mode>
+            <process_mode>SVA</process_mode>
         </type>
         <type show="true" with_chrono="false">
             <id>svr</id>
             <label>_SVR</label>
-            <processing_mode>SVR</processing_mode>
+            <process_mode>SVR</process_mode>
         </type>
     </attachment_types>
-    <processing_modes>
-        <processing_mode>
+    <process_modes>
+        <process_mode>
             <label>NORMAL</label>
-        </processing_mode>
-        <processing_mode>
+            <process_mode_priority with_delay="false" working_days="true">2</process_mode_priority>
+        </process_mode>
+        <process_mode>
             <label>SVA</label>
-        </processing_mode>
-        <processing_mode>
+            <process_mode_priority with_delay="false" working_days="true">3</process_mode_priority>
+        </process_mode>
+        <process_mode>
             <label>SVR</label>
-        </processing_mode>
-    </processing_modes>
+            <process_mode_priority with_delay="false" working_days="true">1</process_mode_priority>
+        </process_mode>
+    </process_modes>
     <priorities>
         <!-- Tag working_days "true" = Jours ouvrés // "false" = Jours calendaires -->
         <priority with_delay="4" working_days="true">Très urgent</priority> <!-- 0 -->
         <priority with_delay="8" working_days="true">Urgent</priority> <!-- 1 -->
         <priority with_delay="false" working_days="true">Normal</priority> <!-- 2 -->
-        <priority with_delay="false" working_days="true">_LOW</priority> <!-- 3 -->
-        <priority with_delay="false" working_days="true">SVA/SVR</priority> <!-- 4 -->
-        <!--<priority with_delay="false" working_days="true">_VERY_LOW</priority>  4 -->
+        <priority with_delay="false" working_days="true">SVA/SVR</priority> <!-- 3 -->
+        <!--<priority with_delay="false" working_days="true">_LOW</priority> 4 -->
+        
+        <!--<priority with_delay="false" working_days="true">_VERY_LOW</priority>  5 -->
         <default_priority with_delay="false" working_days="true">2</default_priority>
-        <default_sve_priority with_delay="false" working_days="true">4</default_sve_priority>
     </priorities>
     <contact_check>
         <check_days_before>1</check_days_before> <!-- 0 if you want to disabled -->
