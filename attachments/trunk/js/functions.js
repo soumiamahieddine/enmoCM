@@ -362,13 +362,13 @@ function ValidAttachmentsForm (path, form_id) {
 					loadNewId('index.php?display=true&module=visa&page=update_visaPage',res_id_master, $('coll_id').value);
 				}
                 eval(response.exec_js);
-                var height = (parseInt($('visa_left').style.height.replace(/px/,""))-65)+"px";
+                /*var height = (parseInt($('visa_left').style.height.replace(/px/,""))-65)+"px";
                 $('visa_listDoc').style.height=height;
                 $('visa_left').style.height=height;
                 $('visa_right').style.height=height;
                 $('tabricatorRight').style.height=(parseInt($('tabricatorRight').offsetHeight)-40)+"px";
                 height = (parseInt($('tabricatorRight').offsetHeight)-150)+"px";
-                $('list_attach').style.height=height;
+                $('list_attach').style.height=height;*/
             } else {
                 alert(response.error);
             }
