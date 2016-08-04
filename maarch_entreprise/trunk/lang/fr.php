@@ -25,8 +25,8 @@ if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.5.1");
 if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
 
 /************** Administration **************/
-if (!defined("_SVR")) define("_SVR", "svr");
-if (!defined("_SVA")) define("_SVA", "sva");
+if (!defined("_SVR")) define("_SVR", "SVR");
+if (!defined("_SVA")) define("_SVA", "SVA");
 if (!defined("_SEND_ATTACHMENTS_TO_CONTACT")) define("_SEND_ATTACHMENTS_TO_CONTACT", "Envoyer au contact");
 if (!defined("_PROCESSING_MODE")) define("_PROCESSING_MODE", "Mode de traitement");
 if (!defined("_VIEW_LAST_COURRIERS")) define("_VIEW_LAST_COURRIERS", "Mes derniers courriers/doc");
