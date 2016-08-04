@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>  <!-- If id are numbers, always start with 1, never with 0 -->
-    
+<!--    
     <INDEX>   
         <column>custom_t6</column>
         <label>Utilisateur contributeur</label>
@@ -15,47 +15,28 @@
         </table>
         <default_value></default_value>
     </INDEX>
-        <INDEX>   
-        <column>custom_t7</column>
-        <label>Service contributeur</label>
-        <type>string</type>
-        <img>sitemap</img> 
-        <table>
-            <table_name>entities</table_name>
-            <foreign_key>entity_id</foreign_key>
-            <foreign_label>entity_label</foreign_label>
-            <where_clause>enabled = 'Y'</where_clause>
-            <order>order by entity_label</order>
-        </table>
-        <default_value></default_value>
-    </INDEX>
+-->
     <INDEX>
-        <column>custom_t10</column>
-        <label>_EMAIL_FROM_ADDRESS</label>
+        <column>custom_t1</column>
+        <label>PO#</label>
         <type>string</type>
         <img>arrow-right</img>
     </INDEX>
     <INDEX>
-        <column>custom_t11</column>
-        <label>_EMAIL_TO_ADDRESS</label>
+        <column>custom_t2</column>
+        <label>Imput</label>
         <type>string</type>
         <img>arrow-right</img>
     </INDEX>
     <INDEX>
-        <column>custom_t12</column>
-        <label>_EMAIL_CC_ADDRESS</label>
-        <type>string</type>
+        <column>custom_f1</column>
+        <label>Mnt</label>
+        <type>float</type>
         <img>arrow-right</img>
     </INDEX>
     <INDEX>
-        <column>custom_t13</column>
-        <label>_EMAIL_ID</label>
-        <type>string</type>
-        <img>arrow-right</img>
-    </INDEX>
-    <INDEX>
-        <column>custom_t14</column>
-        <label>_EMAIL_ACCOUNT</label>
+        <column>custom_t3</column>
+        <label>Id/Matricule</label>
         <type>string</type>
         <img>arrow-right</img>
     </INDEX>
