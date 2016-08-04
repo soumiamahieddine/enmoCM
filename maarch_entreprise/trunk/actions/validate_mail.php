@@ -373,7 +373,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                   $frm_str .= '<tr id="type_id_tr" style="display:'.$display_value.';">';
                     $frm_str .='<td class="indexing_label"><span class="form_title" id="doctype_res" style="display:none;">'._DOCTYPE.'</span><span class="form_title" id="doctype_mail" style="display:inline;" >'._DOCTYPE_MAIL.'</span></td>';
                     $frm_str .='<td>&nbsp;</td>';
-                    $frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\','.$res_id.', \''.$coll_id.'\');'.$func_load_listdiff_by_type.'">';
+                    $frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\','.$res_id.', \''.$coll_id.'\');changePriorityForSve(this.options[this.selectedIndex].value,\''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&dir=indexing_searching&page=priority_for_sve\')'.$func_load_listdiff_by_type.'">';
                             $frm_str .='<option value="">'._CHOOSE_TYPE.'</option>';
                             if ($_SESSION['features']['show_types_tree'] == 'true') {
                                 for ($i = 0; $i < count($doctypes); $i ++) {
