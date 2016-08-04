@@ -100,15 +100,15 @@
     <process_modes>
         <process_mode>
             <label>NORMAL</label>
-            <process_mode_priority with_delay="false" working_days="true">2</process_mode_priority>
+            <process_mode_priority>2</process_mode_priority>
         </process_mode>
         <process_mode>
             <label>SVA</label>
-            <process_mode_priority with_delay="false" working_days="true">3</process_mode_priority>
+            <process_mode_priority>3</process_mode_priority>
         </process_mode>
         <process_mode>
             <label>SVR</label>
-            <process_mode_priority with_delay="false" working_days="true">1</process_mode_priority>
+            <process_mode_priority>1</process_mode_priority>
         </process_mode>
     </process_modes>
     <priorities>
@@ -117,10 +117,7 @@
         <priority with_delay="8" working_days="true">Urgent</priority> <!-- 1 -->
         <priority with_delay="false" working_days="true">Normal</priority> <!-- 2 -->
         <priority with_delay="false" working_days="true">SVA/SVR</priority> <!-- 3 -->
-        <!--<priority with_delay="false" working_days="true">_LOW</priority> 4 -->
-        
-        <!--<priority with_delay="false" working_days="true">_VERY_LOW</priority>  5 -->
-        <default_priority with_delay="false" working_days="true">2</default_priority>
+        <default_priority>2</default_priority>
     </priorities>
     <contact_check>
         <check_days_before>1</check_days_before> <!-- 0 if you want to disabled -->
