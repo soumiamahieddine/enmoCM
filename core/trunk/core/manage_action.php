@@ -273,10 +273,17 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
                 exit();
             }
         }
+
         if($_POST['req'] == 'first_request' && in_array('form', $etapes))
         {
             $frm_test = get_form_txt($arr_id, $_SESSION['config']['businessappurl'].'index.php?display=true&page=manage_action&module=core', $id_action, $_POST['table'],$_POST['module'], $_POST['coll_id'],  $_POST['mode'] );
             echo "{status : 3, form_content : '".$frm_test."', height : '".$frm_height."', width : '".$frm_width."', 'mode_frm' : '".$mode_form."', 'action_status' : '".functions::xssafe($status)."'}";
+            exit();
+        }
+        elseif( $_POST['req'] == 'first_request' && in_array('no_attachment',$etapes))
+        {
+            echo "{status : 3, form_content : '<div class=\"h2_title\">" . addslashes(_ADD_ATTACHMENT_TO_SEND_TO_CONTACT) .
+                "</div><p class=\"buttons\"><input type=\"button\" class=\"button\" value=\""._CANCEL."\" onclick=\"destroyModal(\'modal_" .$id_action . "\')\" id=\"submit\" name=\"submit\"></p>', height : '250px', width : '300px', 'mode_frm' : '', validate : 'OK', 'action_status' : '".functions::xssafe($status)."'}";
             exit();
         }
 		elseif( $_POST['req'] == 'first_request' && $error_visa == true)

@@ -202,6 +202,17 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>send_to_contact_with_mandatory_attachment</ID>
+        <LABEL>_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT</LABEL>
+        <NAME>send_to_contact_with_mandatory_attachment</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
 	<!-- ACTIONS AJOUTEES PAR DIS -->
 	<ACTIONPAGE>
         <ID>visa_mail</ID>
