@@ -108,7 +108,7 @@
         </process_mode>
         <process_mode>
             <label>SVR</label>
-            <process_mode_priority>1</process_mode_priority>
+            <process_mode_priority>3</process_mode_priority>
         </process_mode>
     </process_modes>
     <priorities>
@@ -120,7 +120,7 @@
         <default_priority>2</default_priority>
     </priorities>
     <contact_check>
-        <check_days_before>1</check_days_before> <!-- 0 if you want to disabled -->
+        <check_days_before>5</check_days_before> <!-- 0 if you want to disabled -->
     </contact_check>
     <titles>
         <title>
