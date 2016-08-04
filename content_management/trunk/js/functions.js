@@ -214,7 +214,7 @@ function checkEditingDoc(userId) {
                 console.log('no lck found!');
                 target.removeAttribute('disabled');
                 target.style.opacity='1';
-                target.value='valider';
+                target.value='Valider';
             } else {
                 console.log('lck found! Editing in progress !');
                 target.disabled='disabled';
