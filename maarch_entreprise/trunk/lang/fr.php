@@ -27,7 +27,7 @@ if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_i
 /************** Administration **************/
 if (!defined("_SVR")) define("_SVR", "SVR");
 if (!defined("_SVA")) define("_SVA", "SVA");
-if (!defined("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT")) define("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT", "Ajoutez une pièce jointe avant d'envoyer ce courrier au contact");
+if (!defined("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT")) define("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT", "Veuillez ajouter une pièce jointe avant d'envoyer ce courrier au contact");
 if (!defined("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT")) define("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT", "Envoyer au contact avec une pièce jointe obligatoire");
 if (!defined("_SEND_ATTACHMENTS_TO_CONTACT")) define("_SEND_ATTACHMENTS_TO_CONTACT", "Envoyer au contact");
 if (!defined("_PROCESSING_MODE")) define("_PROCESSING_MODE", "Mode de traitement");

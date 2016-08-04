@@ -21,7 +21,7 @@
 if (!defined("_SVR")) define("_SVR", "svr");
 if (!defined("_SVA")) define("_SVA", "sva");
 if (!defined("_SEND_ATTACHMENTS_TO_CONTACT")) define("_SEND_ATTACHMENTS_TO_CONTACT", "Send to contact");
-if (!defined("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT")) define("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT", "Add an attachment for send to the contact");
+if (!defined("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT")) define("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT", "Please, add an attachment for send to the contact");
 if (!defined("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT")) define("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT", "Send to contact with mandatory attachment");
 if (!defined("_PROCESSING_MODE")) define("_PROCESSING_MODE", "Processing Mode");
 if (!defined("_SAVE_CONFIRM"))    define("_SAVE_CONFIRM", "Save");
