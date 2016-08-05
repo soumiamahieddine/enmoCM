@@ -1444,11 +1444,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . $_SESSION['config']['businessappurl'] 
             . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
             . '&resId=' . $res_id . '&collId=' . $coll_id . '\');';
-        if($data['process_limit_date'] != null){
         $frm_str .='if(type_id){change_doctype(type_id.options[type_id.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\', '.$res_id.', \''. $coll_id.'\', true);}';
-         }else{
+        if($data['process_limit_date'] == null){
+        
             $frm_str .="activate_process_date(false, '".$display_value."');";
-           }
+        }
         if($core_tools->is_module_loaded('entities') )
         {
             if($_SESSION['current_basket']['difflist_type'] == 'entity_id'){
