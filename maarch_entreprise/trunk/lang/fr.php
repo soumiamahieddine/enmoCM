@@ -916,7 +916,8 @@ if (!defined("_CONTACT_REAFFECT"))  define("_CONTACT_REAFFECT", "Réaffectation 
 if (!defined("_UPDATE_CONTACTS")) define("_UPDATE_CONTACTS", "Mise à jour contact depuis indexation/qualification");
 if (!defined("_CONTACT_TYPE")) define("_CONTACT_TYPE", "Type de contact");
 if (!defined("_MULTI_EXTERNAL")) define("_MULTI_EXTERNAL", "Multi externe");
-if (!defined("_MULTI_CONTACT")) define("_MULTI_CONTACT", "<b><i>Multi contacts<i><b>");
+if (!defined("_MULTI_CONTACT")) define("_MULTI_CONTACT", "Multi contacts");
+if (!defined("_SINGLE_CONTACT")) define("_SINGLE_CONTACT", "Mono contact");
 if (!defined("_SHOW_MULTI_CONTACT")) define("_SHOW_MULTI_CONTACT", "Voir les contacts");
 if (!defined("_STRUCTURE_ORGANISM")) define("_STRUCTURE_ORGANISM", "Structure");
 if (!defined("_TYPE_OF_THE_CONTACT")) define("_TYPE_OF_THE_CONTACT", "Quel est le type du contact ?");
