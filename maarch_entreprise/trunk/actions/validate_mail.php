@@ -559,7 +559,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '</tr>';
 					 
 					$frm_str .= '<tr id="contact_id_tr" style="display:'.$display_value.';">';
-                   $frm_str .='<td class="indexing_label"><label for="contact" class="form_title" ><span id="exp_contact">'._SHIPPER.'</span><span id="dest_contact">'._DEST.'</span>'
+                   $frm_str .='<td class="indexing_label" style="vertical-align:bottom;"><label for="contact" class="form_title" ><span id="exp_contact">'._SHIPPER.'</span><span id="dest_contact">'._DEST.'</span>'
                             . '<span id="author_contact">' . _AUTHOR_DOC . '</span>';
                     if ($core->test_admin('my_contacts', 'apps', false)) {
                         $frm_str .=' <a href="#" id="create_contact" title="'._CREATE_CONTACT.'" onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});return false;" style="display:inline;" >'
@@ -570,10 +570,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                      $frm_str .= '</label></td>';
                     $contact_mode = "view";
                     if($core_tools->test_service('update_contacts','apps', false)) $contact_mode = 'up';
-                   $frm_str .='<td><a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
+                   $frm_str .='<td style="vertical-align:bottom;"><a href="#" id="contact_card" class="fa fa-book fa-2x" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
                         . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                         . '\'blind\', {delay:0.2});return false;"'
-                        . ' style="visibility:hidden;" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>&nbsp;</td>';
+                        . ' style="visibility:hidden;display:inline;" ></a>&nbsp;</td>';
 		//Path to actual script
     $path_to_script = $_SESSION['config']['businessappurl']
 		."index.php?display=true&dir=indexing_searching&page=contact_check&coll_id=".$collId;
@@ -586,14 +586,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
                    $frm_str .='<td class="indexing_field">';
                     if($data['type_contact'] == 'internal'){
-                        $frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;color:#009DC5;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+                        //$frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;color:#009DC5;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
-                        $frm_str .=' <i class="fa fa-book" title="'._EXTERNAL.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+                        $frm_str .=' <i class="fa fa-user" title="'._SINGLE.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
                     }elseif ($data['type_contact'] == 'external') {
-                        $frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+                        //$frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
-                        $frm_str .=' <i class="fa fa-book" title="'._EXTERNAL.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+                        $frm_str .=' <i class="fa fa-user" title="'._SINGLE.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
                     }
                    
@@ -635,22 +635,21 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 						$frm_str .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
 								. '" onclick="new Effect.toggle(\'create_contact_div\', '
 								. '\'blind\', {delay:0.2});return false;" '
-								. 'style="display:inline;" ><i class="fa fa-pencil fa-2x" title="' . _CREATE_CONTACT . '"></i></a>';
+								. 'style="display:inline;" ><i class="fa fa-pencil" title="' . _CREATE_CONTACT . '"></i></a>';
 					}
 					$frm_str .= '</label></td>';
 					$contact_mode = "view";
 					if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update';
-					$frm_str .= '<td><a href="#" id="multi_contact_card" title="' . _CONTACT_CARD
+					$frm_str .= '<td><a href="#" id="multi_contact_card" class="fa fa-book fa-2x" title="' . _CONTACT_CARD
 							. '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;" '
-							. 'style="visibility:hidden;" ><i class="fa fa-book fa-2x" title="' 
-                            . _CONTACT_CARD . '"></i></a>&nbsp;</td>';
+							. 'style="visibility:hidden;display:inline;text-align:right;" ></a>&nbsp;</td>';
 					$frm_str .= '<td class="indexing_field">';
 
-                    $frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+                    //$frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
-                    $frm_str .=' <i class="fa fa-book" title="'._EXTERNAL.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+                    $frm_str .=' <i class="fa fa-user" title="'._SINGLE.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
                     $frm_str .=' <i class="fa fa-users" title="'._MULTI.'" style="cursor:pointer;color:#009DC5;" id="type_multi_contact_external_icon" onclick="$$(\'#type_multi_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#009DC5\'});"></i>';
                      
