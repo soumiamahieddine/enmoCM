@@ -620,10 +620,7 @@ abstract class business_app_tools_Abstract extends dbquery
             if (($_SESSION['maarch_entreprise']['xml_versionbase'] > $_SESSION['maarch_entreprise']['database_version'])
                 || ($_SESSION['maarch_entreprise']['database_version'] == 'none')
             ) {
-                $_SESSION['error'] .= '<p style="color:#346DC4;border:1px'
-                                    . 'solid blue">'
-                                    . _VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH
-                                    . '</p>';
+                $_SESSION['error'] .= _VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH;
             }
         }
     }
