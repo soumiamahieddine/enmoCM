@@ -82,7 +82,7 @@ unset($_SESSION['fromContactTree']);
         </td>
         <?php } ?>
         <td align="left">
-            <input class="button" type="button" value="<?php echo _EXPORT_CONTACT;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=admin&page=export_admin_list'?>');"/>      
+            <input class="button" type="button" value="<?php echo _EXPORT_CONTACT;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=admin&page=export_admin_list'?>');window.location.reload();"/>      
         </td>
         <td align="right">
             <input class="button" type="button" value="<?php echo _MANAGE_CONTACT_ADDRESSES_LIST;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] . 'index.php?page=contact_addresses_list'?>'"/>      
