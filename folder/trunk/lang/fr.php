@@ -279,7 +279,7 @@ if (!defined("_MIN"))
 if (!defined("_FOLDER_OR_SUBFOLDER"))
     define("_FOLDER_OR_SUBFOLDER", "Dossier/Sous-dossier");
 if (!defined("_ERROR_COMPATIBILITY_FOLDER"))
-    define("_ERROR_COMPATIBILITY_FOLDER", "Problème de compatibilité entre<br/>le dossier et le type de document");
+    define("_ERROR_COMPATIBILITY_FOLDER", "Problème de compatibilité entre le dossier et le type de document");
 if (!defined("_ADDED_TO_FOLDER"))
     define("_ADDED_TO_FOLDER", " ajouté au dossier");
 if (!defined("_DELETED_FROM_FOLDER"))
