@@ -559,7 +559,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         .'index.php?display=true&dir=indexing_searching&page=documents_list_mlb_search_adv&mode=popup&action_form=show_res_id&modulename=attachments&init_search&nodetails&fromContactCheck';
     $frmStr .= '<td style="vertical-align:bottom;"><a href="#" class="fa fa-book fa-2x" id="contact_card" title="' . _CONTACT_CARD
             . '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
+                . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;"'
             . 'style="visibility:hidden;display:inline;" ></a>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field">';
@@ -606,7 +606,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update';
     $frmStr .= '<td><a href="#" id="multi_contact_card" class="fa fa-book fa-2x" title="' . _CONTACT_CARD
             . '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
+                . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;" '
             . 'style="visibility:hidden;" ></a>&nbsp;</td>';
 	$frmStr .= '<td class="indexing_field">';

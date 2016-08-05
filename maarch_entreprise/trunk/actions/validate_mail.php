@@ -571,7 +571,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $contact_mode = "view";
                     if($core_tools->test_service('update_contacts','apps', false)) $contact_mode = 'up';
                    $frm_str .='<td style="vertical-align:bottom;"><a href="#" id="contact_card" class="fa fa-book fa-2x" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
-                        . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
+                        . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                         . '\'blind\', {delay:0.2});return false;"'
                         . ' style="visibility:hidden;display:inline;" ></a>&nbsp;</td>';
 		//Path to actual script
@@ -642,7 +642,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update';
 					$frm_str .= '<td><a href="#" id="multi_contact_card" class="fa fa-book fa-2x" title="' . _CONTACT_CARD
 							. '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
+                        . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;" '
 							. 'style="visibility:hidden;display:inline;text-align:right;" ></a>&nbsp;</td>';
 					$frm_str .= '<td class="indexing_field">';
