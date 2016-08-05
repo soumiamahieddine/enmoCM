@@ -2007,7 +2007,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		else{
             $contact_id = get_value_fields(
                 $values_form, 'contactid'
-            );		
+            );	
+            if(!is_integer($contactId)){
+                $contactType = 'internal';
+            }	
 			// $contact_id = str_replace(')', '', substr($contact, strrpos($contact,'(')+1));
 			if($contact_type == 'internal')
 			{

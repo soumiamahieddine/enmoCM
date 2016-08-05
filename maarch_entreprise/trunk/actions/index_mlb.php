@@ -1817,6 +1817,10 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             $contactId = get_value_fields(
                 $formValues, 'contactid'
             );
+            if(!is_integer($contactId)){
+                $contactType = 'internal';
+            }
+            
 			if ($contactType == 'internal') {
 				if ($catId == 'incoming' || $catId == 'internal' || $catId == 'ged_doc') {
 					$queryExtFields .= 'exp_user_id,';
