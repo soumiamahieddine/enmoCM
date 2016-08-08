@@ -567,8 +567,8 @@
     </validationRule>
 
     <validationRule name="contact_check" extends="standardForm" mode="error">  
-      <parameter name="address_id" type="integer" />
-      <parameter name="contact_id" type="identifier" />
+      <parameter name="address_id" type="string" />
+      <parameter name="contact_id" type="string" />
       <parameter name="res_id" type="alnum" />
       <parameter name="dir" type="identifier" />
       <parameter name="coll_id" type="collection_list" />

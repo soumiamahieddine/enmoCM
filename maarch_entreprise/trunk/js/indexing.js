@@ -1831,3 +1831,16 @@ function showEditButton(){
         // $('title').value = '';
     }
 }
+
+function loadInfoContact(){
+    var reg = /^\d+$/;
+    //console.log(contactId);
+    if(!reg.test(document.getElementById('contactid').value)){
+        console.log("contactInterne");
+        document.getElementById('info_contact_iframe').src='index.php?display=false&page=user_info&id='+document.getElementById('contactid').value;
+    
+    }else{
+        console.log("contactExterne");
+        document.getElementById('info_contact_iframe').src='index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid='+document.getElementById('contactid').value+'&addressid='+document.getElementById('addressid').value;
+    }
+}
