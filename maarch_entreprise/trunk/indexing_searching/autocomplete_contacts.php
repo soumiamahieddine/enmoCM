@@ -71,6 +71,9 @@ if(count($multi_sessions_address_id) > 0){
 }
 
 if ($_SESSION['is_multi_contact'] == 'OK') {
+    $noResultUsers = false;
+    $noResultContacts = false;
+
     //USERS
     $select = array();
     $select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
@@ -84,6 +87,9 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
     for ($i=0; $i< min(count($res), 5)  ;$i++) {
         echo "<li id='".$res[$i][2]['value'].", '><i class='fa fa-users fa-1x'></i> ".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</li>\n";
+    }
+    if($i == 0){
+        $noResultUsers = true;
     }
 
     //CONTACTS
@@ -240,8 +246,15 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     }
     if($nb == 0) echo "<li></li>";
     echo "</ul>";
-    if($nb == 0) echo "<p align='left' style='background-color:LemonChiffon;' title=\"Aucun résultat trouvé, veuillez compléter votre recherche.\" >...</p>"; 
+    //if($nb == 0) echo "<p align='left' style='background-color:LemonChiffon;' title=\"Aucun résultat trouvé, veuillez compléter votre recherche.\" >...</p>"; 
+    if($nb == 0){
+        $noResultContacts = true;
+    }
     if ($nb > $m) echo "<p align='left' style='background-color:LemonChiffon;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...</p>";
+
+    if($noResultUsers && $noResultContacts){
+        echo "<p align='left' style='background-color:LemonChiffon;text-align:center;color:grey;font-style:italic;' title=\"Aucun résultat trouvé, veuillez compléter votre recherche.\" >Aucun résultat trouvé.</p>";
+    }
 
 } else {
     if ($table == 'users') {
