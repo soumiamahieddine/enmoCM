@@ -1,6 +1,6 @@
 <validationRules>
     <validationRule name="bk_ajax_nb_res" extends="standardForm" mode="error">
-      <parameter name="id_basket" type="identifier" />
+      <parameter name="id_basket" type="string" />
       <parameter name="template_content" type="string" />
     </validationRule>
     <validationRule name="bk_ajax_update_coll_action" extends="standardForm" mode="error">
@@ -84,7 +84,7 @@
       <parameter name="basketId" type="string" />
     </validationRule>
     <validationRule name="bk_view_baskets" extends="standardForm" mode="lax">
-      <parameter name="baskets" type="identifier" />
+      <parameter name="baskets" type="string" />
       <parameter name="extension" type="identifier" />
       <parameter name="taille_fichier" type="integer" />
       <parameter name="md5" type="string" />
