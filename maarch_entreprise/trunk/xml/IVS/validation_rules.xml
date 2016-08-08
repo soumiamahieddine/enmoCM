@@ -635,7 +635,7 @@
     <validationRule name="search_contacts_result" extends="standardForm" mode="error">  
       <parameter name="contact_type" type="integer" />
       <parameter name="created_by" type="string" />
-      <parameter name="created_by_id" type="identifierPoint" />
+      <parameter name="created_by_id" type="string" />
       <parameter name="dir" type="identifier" />
       <parameter name="firstname" type="string" />
       <parameter name="lastname" type="personname" />
