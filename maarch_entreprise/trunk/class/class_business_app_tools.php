@@ -139,6 +139,7 @@ class business_app_tools extends business_app_tools_Abstract
                 $label = (string) $priority;
                 $attribute = (string) $priority['with_delay'];
                 $workingDays = (string) $priority['working_days'];
+                $color = (string) $priority['color'];
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
                 ) {
@@ -147,6 +148,7 @@ class business_app_tools extends business_app_tools_Abstract
                 $_SESSION['mail_priorities'][$i] = $label;
                 $_SESSION['mail_priorities_attribute'][$i] = $attribute;
                 $_SESSION['mail_priorities_wdays'][$i] = ($workingDays != 'false' ? 'true' : 'false');
+                $_SESSION['mail_priorities_color'][$i] = $color;
                 $i++;
             }
             $_SESSION['default_mail_priority'] = (string) $mailPriorities->default_priority;
