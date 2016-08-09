@@ -392,7 +392,7 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["order"]='type_label';
             }
             if($tab[$i][$j][$value]=="status")
-            {
+            {   //couleurs des priorités
                 if($tab[$i][8]["value"]=='0'){
                     $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
                 }else if($tab[$i][8]["value"]=='1'){
