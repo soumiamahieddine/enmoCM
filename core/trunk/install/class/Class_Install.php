@@ -1105,7 +1105,7 @@ class Install extends functions
             return false;
             exit;
         }
-        
+
         $write = fwrite($fp,$res);
         if (!$write) {
             return false;
@@ -1782,6 +1782,13 @@ class Install extends functions
                 return false;
             }
         }
+
+        //copy template files
+        $dir2copy = 'install' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . '0000'. DIRECTORY_SEPARATOR;
+        $dir_paste = $docserverPath . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . '0000' . DIRECTORY_SEPARATOR;
+        
+        copy_dir($dir2copy,$dir_paste);
+
         return true;
     }
 
@@ -1812,5 +1819,34 @@ class Install extends functions
         $db->connect();
         $query = "UPDATE users SET password='" . $sec->getPasswordHash($newPass) . "' WHERE user_id='superadmin'";
         $db->query($query);
+    }
+}
+
+function copy_dir($dir2copy,$dir_paste)
+{
+    // On vérifie si $dir2copy est un dossier
+    if (is_dir($dir2copy))
+    {
+
+        // Si oui, on l'ouvre
+        if ($dh = opendir($dir2copy))
+        {
+
+            // On liste les dossiers et fichiers de $dir2copy
+            while (($file = readdir($dh)) !== false)
+            {
+                // Si le dossier dans lequel on veut coller n'existe pas, on le cree
+                if (!is_dir($dir_paste)) mkdir ($dir_paste, 0777);
+
+                // S'il s'agit d'un dossier, on relance la fonction recursive
+                if(is_dir($dir2copy.$file) && $file != '..' && $file != '.') copy_dir ( $dir2copy.$file.'/' , $dir_paste.$file.'/' );
+
+                // S'il sagit d'un fichier, on le copue simplement
+                elseif($file != '..' && $file != '.') copy ( $dir2copy.$file , $dir_paste.$file );
+            }
+
+            // On ferme $dir2copy
+            closedir($dh);
+        }
     }
 }
