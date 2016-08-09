@@ -147,11 +147,11 @@ for ($cpt=1;$cpt<=$nbPages;$cpt++) {
     $pdf->SetAlpha($position['opacity']);
     //Add Watermark
      for ($i=0; $i< 5; $i++) {
-		$position['Y'] = $position['Y']+10;
+		//$position['Y'] = $position['Y']+10;
 		$pdf->TextWithRotation(
 			$position['X'], 
 			$position['Y'], 
-			$stringWatermark[$i], 
+			utf8_decode($stringWatermark[$i]), 
 			$position['angle']
 		);
 	}
