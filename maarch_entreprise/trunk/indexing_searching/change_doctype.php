@@ -78,7 +78,8 @@ if (!isset($_REQUEST['priority_id']) || $_REQUEST['priority_id'] == '') {
     echo "{status : 1, error_txt : '".addslashes(_PRIORITY . ' ' . _IS_EMPTY)."'}";
     exit();
 } else {
-    $priorityId = $_REQUEST['priority_id'];
+    $priorityId = $_SESSION['process_mode_priority'][$_SESSION['process_mode']];
+    $_SESSION['process_mode'] = NULL;
     if ($_SESSION['mail_priorities_attribute'][$priorityId] <> 'false') {
         $priorityDelay = $_SESSION['mail_priorities_attribute'][$priorityId];
     }
