@@ -684,9 +684,14 @@ class Install extends functions
     {
         $xmlconfig = simplexml_load_file(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/apps/maarch_entreprise/xml/config.xml");
         //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
-        $COLLECTION = $xmlconfig->COLLECTION;
+        $COLLECTION_1 = $xmlconfig->COLLECTION[0];
+        $COLLECTION_1->path_to_lucene_index = $docserverPath."indexes/letterbox_coll/";
 
-        $COLLECTION->path_to_lucene_index = $docserverPath."indexes/letterbox_coll/";
+        $COLLECTION_2 = $xmlconfig->COLLECTION[1];
+        $COLLECTION_2->path_to_lucene_index = $docserverPath."indexes/attachments_coll/";
+
+        $COLLECTION_3 = $xmlconfig->COLLECTION[2];
+        $COLLECTION_3->path_to_lucene_index = $docserverPath."indexes/version_attachments_coll/";
         
         $res = $xmlconfig->asXML();
         // $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
