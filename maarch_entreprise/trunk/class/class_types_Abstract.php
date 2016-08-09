@@ -1084,6 +1084,8 @@ abstract class types_Abstract extends database
         // Checks type indexes
         $datePattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
         foreach (array_keys($values) as $key) {
+            //var_dump($values);
+            //exit;
             if ($indexes[$key]['type'] == 'date' && ! empty($values[$key])) {
                 if (preg_match($datePattern, $values[$key]) == 0) {
                     $_SESSION['error'] .= $indexes[$key]['label']
@@ -1097,11 +1099,13 @@ abstract class types_Abstract extends database
                     $values[$key], "no", $indexes[$key]['label']
                 );
             } elseif ($indexes[$key]['type'] == 'float'
-                && preg_match("/^[0-9.]+$/", $values[$key]) == 1
-            ) {
-                $fieldValue = $this->wash(
+                && preg_match("/^[0-9.,]+$/", $values[$key]) == 1
+            ) {     
+                    $values[$key] = str_replace( ",", ".", $values[$key] );
+                    $fieldValue = $this->wash(
                     $values[$key], "float", $indexes[$key]['label']
                 );
+
             } elseif ($indexes[$key]['type'] == 'integer'
                 && preg_match("/^[0-9]+$/", $values[$key]) == 1
             ) {
@@ -1209,8 +1213,9 @@ abstract class types_Abstract extends database
                     )
                 );
             } else if ($indexes[$key]['type'] == 'float'
-                && preg_match("/^[0-9.]+$/", $values[$key]) == 1
+                && preg_match("/^[0-9.,]+$/", $values[$key]) == 1
             ) {
+                $values[$key] = str_replace( ",", ".", $values[$key] );
                 array_push(
                     $data,
                     array(
