@@ -1053,7 +1053,7 @@ class Install extends functions
         return true;
     }
 
-        private function setConfigXmlThumbnails()
+    private function setConfigXmlThumbnails()
     {
         //var_dump("setConfigXmlThumbnails");
         $xmlconfig = simplexml_load_file('modules/thumbnails/xml/config.xml.default');
@@ -1076,7 +1076,8 @@ class Install extends functions
         }
         return true;
     }
-            private function setConfig_batch_XmlThumbnails()
+
+    private function setConfig_batch_XmlThumbnails()
     {
         $xmlconfig = simplexml_load_file('modules/thumbnails/xml/config_batch_letterbox.xml.default');
 
@@ -1104,6 +1105,38 @@ class Install extends functions
             return false;
             exit;
         }
+        
+        $write = fwrite($fp,$res);
+        if (!$write) {
+            return false;
+            exit;
+        }
+        $xmlconfig = simplexml_load_file('modules/thumbnails/xml/config_batch_attachments.xml.default');
+
+        $CONFIG = $xmlconfig->CONFIG;
+
+        $chemin_core = realpath('.').'/core/';
+
+        $CONFIG->MaarchDirectory = realpath('.')."/";
+        
+        $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
+        $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
+        $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
+        $CONFIG_BASE->databasename = $_SESSION['config']['databasename'];
+        $CONFIG_BASE->databaseuser = $_SESSION['config']['databaseuser'];
+        $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
+
+        $LOG4PHP = $xmlconfig->LOG4PHP;
+        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/apps/maarch_entreprise/xml/log4php.xml';
+
+
+
+        $res = $xmlconfig->asXML();
+        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/thumbnails/xml/config_batch_attachments.xml", "w+");
+        if (!$fp) {
+            return false;
+            exit;
+        }
         $write = fwrite($fp,$res);
         if (!$write) {
             return false;
@@ -1112,7 +1145,7 @@ class Install extends functions
         return true;
     }
 
-                private function setConfig_batch_XmlNotifications()
+    private function setConfig_batch_XmlNotifications()
     {
         $xmlconfig = simplexml_load_file('modules/notifications/batch/config/config.xml.default');
 
@@ -1377,6 +1410,8 @@ class Install extends functions
 			$res .= "\n";
             $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\thumbnails\create_tnl.php  '.realpath('.')."\custom\cs_".$_SESSION['config']['databasename'].'\modules\\thumbnails\xml\config_batch_letterbox.xml';
             $res .= "\n";
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\thumbnails\create_tnl.php  '.realpath('.')."\custom\cs_".$_SESSION['config']['databasename'].'\modules\\thumbnails\xml\config_batch_attachments.xml';
+            $res .= "\n";
 
 
                 $fp = @fopen(realpath('.')."\custom\cs_".$_SESSION['config']['databasename']."\modules\\thumbnails\scripts\launch_batch_thumbnails.bat", "w+");
@@ -1398,6 +1433,8 @@ class Install extends functions
             $res .= 'cd '.realpath('.').'/modules/thumbnails/';
             $res .= "\n\n";
             $res .= "php ".realpath('.')."/modules/thumbnails/create_tnl.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/thumbnails/xml/config_batch_letterbox.xml";
+            $res .= "\n\n";
+            $res .= "php ".realpath('.')."/modules/thumbnails/create_tnl.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/thumbnails/xml/config_batch_attachments.xml";
 
                 $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/thumbnails/scripts/launch_batch_thumbnails.sh", "w+");
             if (!$fp) {
