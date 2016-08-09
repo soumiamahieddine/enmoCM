@@ -1815,8 +1815,10 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             $contactId = get_value_fields(
                 $formValues, 'contactid'
             );
-            if(!is_integer($contactId)){
+            if(!ctype_digit($contactId)){
                 $contactType = 'internal';
+            }else{
+                $contactType = 'external';
             }
             
 			if ($contactType == 'internal') {
