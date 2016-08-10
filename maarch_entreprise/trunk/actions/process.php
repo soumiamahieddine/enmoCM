@@ -500,7 +500,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
     $frm_str .= '<br>';*/
 
-
+    $frm_str .= '<h3 onclick="new Effect.toggle(\'complementary_fields\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'complementary_fields\', \'divStatus_complementary_fields\');" '
+            . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+        $frm_str .= ' <span id="divStatus_complementary_fields" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;' 
+            . _OPT_INDEXES;
+        $frm_str .= '</h3>';
+        $frm_str .= '<div id="complementary_fields"  style="display:block">';
+        $frm_str .= '<div>';
     //FOLDERS
     if ($core_tools->is_module_loaded('folder')  && ($core_tools->test_service('associate_folder', 'folder',false) == 1)) {
         require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
@@ -519,14 +526,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
         }
 
-        $frm_str .= '<div id="folder_div">';
-        $frm_str .= '<h3 class="categorie" style="width:90%;">';
-                $frm_str .= ' <span id="divStatus_general_datas_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;<b>'
-                        . _FOLDER . '</b>';
-            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
-            $frm_str .= '<div>';
-                $frm_str .= '<table width="98%" align="center" border="0">';
+                $frm_str .= '<table width="98%" align="center" border="0" id="folder_div">';
+                    $frm_str .= '<tr>';
+                    $frm_str .= '<td>'. _FOLDER . '</td>';
+                    $frm_str .= '</tr>';
+
                         $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
                     $frm_str .= '<td class="indexing_field"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')" style="width:95%;"><option value="">Sélectionnez un dossier</option>';
                      foreach ($folder_info as $key => $value) {
@@ -542,10 +546,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '</tr>';
         $frm_str .= '<tr id="parentFolderTr" style="display: none"><td><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
         $frm_str .= '</table>';
-            $frm_str .= '</div>';
-        $frm_str .= '</div>';
         $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
-        $frm_str .= '<br>';
     }
         /*** thesaurus ***/
         if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
@@ -558,7 +559,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
             $thesaurusListRes = $thesaurus->getThesaursusListRes($res_id);
 
-
+            $frm_str .= '<table width="98%" align="center" border="0" id="thesaurus_div">';
             $frm_str .= '<tr id="thesaurus_tr" style="display:' . $displayValue
                     . ';">';
             $frm_str .= '<td>'
@@ -585,10 +586,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
                 }
             }
-            $frm_str .= '</select> <i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
-            $frm_str .= ' <td></td>';
+            $frm_str .= '</select></td>';
+            $frm_str .= ' <td><i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
             $frm_str .= '</tr>';
-            $frm_str .= '<style>#thesaurus_chosen{width:95% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
+            $frm_str .= '</table>';
+            $frm_str .= '<style>#thesaurus_chosen{width:100% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
             /*****************/
         }
     //TAGS
@@ -600,6 +602,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         include_once("modules".DIRECTORY_SEPARATOR."tags".
         DIRECTORY_SEPARATOR."templates/process/index.php");
     }
+    $frm_str .= '</div>';
+    $frm_str .= '</div>';
 
 	
     //ACTIONS
