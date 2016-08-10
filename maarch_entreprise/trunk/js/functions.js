@@ -1437,7 +1437,6 @@ function get_form_values(form_id, return_string, include_buttons)
             else if(frm.elements[i].tagName == 'SELECT')
             {
                 if(frm.elements[i].type != 'select-multiple'){
-
                     if(in_string == true)
                     {
                         val += frm.elements[i].id+'#'+frm.elements[i].options[frm.elements[i].selectedIndex].value+'$$';
@@ -1449,18 +1448,20 @@ function get_form_values(form_id, return_string, include_buttons)
                 }else{
                     if(in_string == true)
                     {
-                        val += frm.elements[i].id+'#';
-                       
-                        for(var mult=0; mult < frm.elements[i].selectedOptions.length;mult++)
-                        {
-                            if (mult==0) {
-                                val += frm.elements[i].selectedOptions[mult].value;
-                            }else{
-                                val += '__'+frm.elements[i].selectedOptions[mult].value;
+                        if(frm.elements[i].selectedOptions){
+                            val += frm.elements[i].id+'#';
+                            for(var mult=0; mult < frm.elements[i].selectedOptions.length;mult++)
+                            {
+                                if (mult==0) {
+                                    val += frm.elements[i].selectedOptions[mult].value;
+                                }else{
+                                    val += '__'+frm.elements[i].selectedOptions[mult].value;
+                                }
+                                
                             }
-                            
+                            val += '$$';
                         }
-                        val += '$$';
+                        
                     }else{
                         var val_s;
                         for(var mult=0; mult< frm.elements[i].selectedOptions.length;mult++)
@@ -1471,7 +1472,6 @@ function get_form_values(form_id, return_string, include_buttons)
                                 val_s += '__'+frm.elements[i].selectedOptions[mult].value;
                             }
                             
-                            //console.log(frm.elements[i].selectedOptions[mult]);
                         }
                         val[frm.elements[i].id] = val_s;
                     }
