@@ -1686,13 +1686,16 @@ function check_date_exp(path_manage_script, path_link){
         var contact_id = $('contactid').value;
         var address_id = $('addressid').value;
         var res_id = $('values').value;
+        var e = $("category_id");
+        var category = e.options[e.selectedIndex].value;
         new Ajax.Request(path_manage_script,
         {
             method:'post',
             parameters: {
                 contact_id : contact_id,
                 address_id : address_id,
-                res_id : res_id
+                res_id : res_id,
+                category : category
             },
             onSuccess: function(answer){
                 if(answer.responseText == "success"){

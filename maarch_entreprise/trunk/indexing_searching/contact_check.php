@@ -27,7 +27,7 @@
 * @version  $Revision$
 */
 
-if(empty($_POST['contact_id'])){
+if(empty($_POST['contact_id']) || $_POST['category'] == 'outgoing'){
 	echo "success";
 } else {
 	$db = new Database();

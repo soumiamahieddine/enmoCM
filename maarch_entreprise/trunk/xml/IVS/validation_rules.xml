@@ -568,6 +568,7 @@
 
     <validationRule name="contact_check" extends="standardForm" mode="error">  
       <parameter name="address_id" type="string" />
+      <parameter name="category" type="string" />
       <parameter name="contact_id" type="string" />
       <parameter name="res_id" type="alnum" />
       <parameter name="dir" type="identifier" />
