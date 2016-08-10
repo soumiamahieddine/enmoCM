@@ -44,32 +44,24 @@ $tags->load_sessiontag($res_id,$coll_id);
 //--------------------------------------
 
 
-
-$frm_str .= '<h3 onclick="new Effect.toggle(\'tag_div\', \'blind\', {delay:0.2});';
-$frm_str .= 'whatIsTheDivStatus(\'tag_div\', \'divStatus_tag_div\');return false;" '
-    . 'onmouseover="this.style.cursor=\'pointer\';" class="tag" style="width:90%;">';
-$frm_str .= ' <span id="divStatus_tag_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>';
-$frm_str .= '&nbsp;<b>'._TAGS.'</b>';
-$frm_str .= '<span class="lb1-details">&nbsp;</span>';
-$frm_str .= '</h3>';
-$frm_str .= '<div id="tag_div">';
-$frm_str .= '<div>';
- 
-$frm_str .= '<table width="98%" align="center" border="0" align="center"><tr><td colspan="3">';
+$frm_str .= '<table width="98%" align="center" border="0" id="tag_div">';
+$frm_str .= '<tr>';
+$frm_str .= '<td>'. _TAGS . '</td>';
+$frm_str .= '</tr>';
 
 $tag_customsize = '200px';
 $tag_customcols = '26';
+
+$frm_str .='<tr><td>';
 if ($core->test_service('add_tag_to_res', 'tags',false) == 1)
 {
 	$modify_keyword = true;
 }
 include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS 
 
-$frmStr .='</td></tr><style>#tag_userform_chosen{width:95% !important;}</style>';
+$frm_str .='</td></tr><style>#tag_userform_chosen{width:95% !important;}</style>';
 
 $frm_str .= '</table>';
-$frm_str .= '</div>';
-$frm_str .= '</div>';
 $frm_str .= '<br/>';
 $frm_str .= '<input type="hidden" name="res_id" id="res_id"  value="'.$res_id.'" />';
 
