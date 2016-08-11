@@ -156,6 +156,32 @@ function validEmailForm (path, form_id) {
     });
 }
 
+function validEmailFormForSendToContact (path, form_id, path2, status) {
+    // var content = tinyMCE.get('body_from_html').getContent(); // 
+    // alert(content);
+    tinyMCE.triggerSave();
+    new Ajax.Request(path,
+    {
+        asynchronous:false,
+        method:'post',
+        // parameters: Form.serialize(form_id)+ '&body_from_html=' + content,   
+        parameters: Form.serialize(form_id),   
+        encoding: 'UTF-8',                       
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            if(response.status == 0){
+                eval(response.exec_js);
+                changeStatusForActionSendToContact(path2, status)
+                window.parent.destroyModal('form_email'); 
+
+            } else {
+                alert(response.error);
+                eval(response.exec_js);
+            }
+        }
+    });
+}
+
  function changeStatusForActionSendToContact(path, status){
     new Ajax.Request(path,
     {
@@ -165,6 +191,7 @@ function validEmailForm (path, form_id) {
         encoding: 'UTF-8',                       
         onSuccess : function(){
                   //window.top.location.reload();
+                  parent.document.getElementById('storage').click();
               }
     });
  }
