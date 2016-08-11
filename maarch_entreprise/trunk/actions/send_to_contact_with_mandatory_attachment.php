@@ -33,20 +33,27 @@
 /**
 * $confirm  bool false
 */
-require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
-$db = new Database();
-$stmt = $db->query("SELECT count(res_id_master) FROM res_attachments WHERE res_id_master = ?", array($_POST['values']));
-$nbAttachments = $stmt->fetchObject(); 
-$nbAttachments = json_decode(json_encode($nbAttachments), True);
 
-if($nbAttachments['count'] == 0){
-    $confirm = false;
-    $etapes = array('no_attachment');
+if($_SESSION['features']['send_to_contact_with_mandatory_attachment'] == true){
+    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
+    $db = new Database();
+    $stmt = $db->query("SELECT count(res_id_master) FROM res_attachments WHERE res_id_master = ?", array($_POST['values']));
+    $nbAttachments = $stmt->fetchObject(); 
+    $nbAttachments = json_decode(json_encode($nbAttachments), True);
 
-}elseif($nbAttachments['count'] != 0){
-    $confirm = false; 
-    $etapes = array('form');
+    if($nbAttachments['count'] == 0){
+        $confirm = false;
+        $etapes = array('no_attachment');
+
+    }elseif($nbAttachments['count'] != 0){
+        $confirm = false; 
+        $etapes = array('form');
+    }
+}elseif($_SESSION['features']['send_to_contact_with_mandatory_attachment'] == false){
+        $etapes = array('form'); 
 }
+
+
 
 
 $confirm = false;
@@ -75,11 +82,6 @@ $mode='add';
 $parameters = '&coll_id='.$_REQUEST['coll_id'].'&size=full';
         $frm_str .='<iframe name="form_mail" id="form_mail" src="'. $_SESSION['config']['businessappurl'].'index.php?display=true&module=sendmail&page=mail_form_to_contact&identifier='.$_REQUEST['values'].'&origin=document&coll_id=letterbox_coll&mode='.$mode.$parameters.'" frameborder="0" width="100%" style="height:540px;padding:0px;overflow-x:hidden;overflow-y: auto;"></iframe>';
 
-
-	// $frm_str .='<div align="center">';
-	// $frm_str .=' <input type="button" name="redirect_dep" value="'._VALIDATE.'" id="redirect_dep" class="button" onclick="valid_action_form( \'frm_redirect_dep\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$values_str.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');" />';
-	// $frm_str .=' <input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
-	// $frm_str .='</div>';
 $mode='page';
  
         $frm_str .='<div id="form2" style="border:none;">';
@@ -88,21 +90,15 @@ $mode='page';
         $frm_str .= '<input type="hidden" name="note_content_to_users" id="note_content_to_users" />';
             $frm_str .='</form>';
         $frm_str .='</div>';
-    $frm_str .='<div align="center">';
-
-// $frm_str .= '<script type="text/javascript">function test() {';
-// $frm_str .= 'var f= window.frames.form_mail;';
-// $frm_str .= 'var e=f.document.getElementsByName("Macible");';
-// $frm_str .= 'e[0].value=\'Mavaleurc\';';
-// // $frm_str .= 'var e=f.document.getElementsByName("valid");';
-// // $frm_str .= 'e[0].value=\'Mavaleurc\';';
-// $frm_str .= '} </script>';
-//$frm_str .= '<a href="javascript:test();">remplir</a>';
+        $frm_str .='<div align="center">';
 
 
-        $frm_str .=' <input type="button" name="redirect_dep" value="'._VALIDATE.'" id="redirect_dep" class="button" onclick="window.frames.form_mail.document.getElementsByName(\'valid\')[0].click();valid_action_form( \'frm_redirect_dep\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$_REQUEST['values'].'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');" />';
+
+        $frm_str .=' <input type="button" name="redirect_dep" value="'._VALIDATE.'" id="redirect_dep" class="button" onclick="window.frames.form_mail.document.getElementsByName(\'valid\')[0].click();" />';
+        // $frm_str .=' <input type="button" name="storage" class="button" id="storage" onclick="alert(\'TEST\')";/>';
+        $frm_str .=' <input style="display:none;" type="button" name="storage" class="button" id="storage" onclick="valid_action_form( \'frm_redirect_dep\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$_REQUEST['values'].'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');";/>';
         $frm_str .=' <input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
-    $frm_str .='</div>';
+        $frm_str .='</div>';
 
     return addslashes($frm_str);
  }
