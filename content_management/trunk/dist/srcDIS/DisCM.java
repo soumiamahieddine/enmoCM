@@ -8,6 +8,7 @@
 
 package com.dis;
 
+import java.applet.Applet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -15,7 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.PrivilegedActionException;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -36,6 +36,8 @@ import netscape.javascript.JSObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Writer;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 
 /**
@@ -43,6 +45,7 @@ import java.io.Writer;
  * @author DIS
  */
 public class DisCM extends JApplet {
+    
     //INIT PARAMETERS
     protected String url;
     protected String objectType;
@@ -51,6 +54,7 @@ public class DisCM extends JApplet {
     protected String cookie;
     protected String uniqueId;
     protected String userLocalDirTmp;
+    protected String userMaarch;
     
     protected String messageStatus;
     
@@ -90,6 +94,7 @@ public class DisCM extends JApplet {
         objectId = getParameter("objectId");
         uniqueId = getParameter("uniqueId");
         cookie = getParameter("cookie");
+        userMaarch = getParameter("userMaarch");
         
         System.out.println("URL : " + url);
         System.out.println("OBJECT TYPE : " + objectType);
@@ -219,12 +224,22 @@ public class DisCM extends JApplet {
             boolean conversion = true;
             String cmd = "";
             if (docxFile.contains(".odt") || docxFile.contains(".ods") || docxFile.contains(".ODT") || docxFile.contains(".ODS")) {
-                String convertProgram;
-                convertProgram = this.fM.findPathProgramInRegistry("soffice.exe");
-                cmd = convertProgram+" -env:UserInstallation=$SYSUSERCONFIG --headless --convert-to pdf --outdir \""+this.userLocalDirTmp.substring(0,this.userLocalDirTmp.length()-1)+"\" \""+docxFile+"\" \r\n";
+                this.logger.log("This is opendocument ! ", Level.INFO);
+                if (isUnix){
+                    cmd = "libreoffice --headless --convert-to pdf --outdir \""+this.userLocalDirTmp.substring(0,this.userLocalDirTmp.length()-1)+"\" \""+docxFile+"\"";
+                }else{
+                    String convertProgram;
+                    convertProgram = this.fM.findPathProgramInRegistry("soffice.exe");
+                    cmd = convertProgram+" -env:UserInstallation=$SYSUSERCONFIG --headless --convert-to pdf --outdir \""+this.userLocalDirTmp.substring(0,this.userLocalDirTmp.length()-1)+"\" \""+docxFile+"\" \r\n";
+                }
+                
             } else if (docxFile.contains(".doc") || docxFile.contains(".docx") || docxFile.contains(".DOC") || docxFile.contains(".DOCX")) {
                 if (this.useExeConvert.equals("false")) {
-                        cmd = "cmd /C cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
+                        if (isUnix){
+                            cmd = "libreoffice --headless --convert-to pdf --outdir \""+this.userLocalDirTmp.substring(0,this.userLocalDirTmp.length()-1)+"\" \""+docxFile+"\"";
+                        }else{
+                            cmd = "cmd /C cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
+                        }
                 } else {
 
                         StringBuffer buffer = new StringBuffer(docxFile);
@@ -243,12 +258,12 @@ public class DisCM extends JApplet {
 
                 Process proc_vbs;
                 if (isUnix){
-                    cmd = "cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
+                    //cmd = "cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
                     final Writer outBat;
                     outBat = new OutputStreamWriter(new FileOutputStream(this.appPath_convert), "CP850");
-                    this.logger.log("--- cmd bat  --- "+cmd, Level.INFO);
+                    this.logger.log("--- cmd sh  --- "+cmd, Level.INFO);
                     outBat.write(cmd);
-                    outBat.write("exit \r\n");
+                    //outBat.write("exit \r\n");
                     outBat.close();
 
                     File myFileBat = new File(this.appPath_convert);
@@ -256,20 +271,19 @@ public class DisCM extends JApplet {
                     myFileBat.setWritable(true, false);
                     myFileBat.setExecutable(true, false);
 
-                    //String cmd2 = "start /B /MIN "+this.appPath_convert+" \r\n";
-                    String cmd2 = "start /WAIT /MIN "+this.appPath_convert+" \r\n";
+                    /*String cmd2 = "start /WAIT /MIN "+this.appPath_convert+" \r\n";
                     final Writer outBat2 = new OutputStreamWriter(new FileOutputStream(this.appPath), "CP850");
                     outBat2.write(cmd2);
                     outBat2.write("exit \r\n");
-                    outBat2.close();
+                    outBat2.close();*/
 
-                    File myFileBat2 = new File(this.appPath);
+                    /*File myFileBat2 = new File(this.appPath);
                     myFileBat2.setReadable(true, false);
                     myFileBat2.setWritable(true, false);
-                    myFileBat2.setExecutable(true, false);
+                    myFileBat2.setExecutable(true, false);*/
 
                     final String exec_vbs = "\""+this.appPath+"\"";
-                    proc_vbs = fM.launchApp(exec_vbs);
+                    proc_vbs = fM.launchApp(this.appPath_convert);
                 } else {
                     proc_vbs = fM.launchApp(cmd);
                 }
@@ -277,7 +291,7 @@ public class DisCM extends JApplet {
             }
 
         } catch (Throwable e) {
-            this.logger.log("--- Erreur dans la conversion --- ", Level.INFO);
+            this.logger.log("Erreur ! : "+e, Level.SEVERE);
             e.printStackTrace();
         }
     }
@@ -377,7 +391,7 @@ public class DisCM extends JApplet {
         }
         //send message error to Maarch if necessary
         if (!this.error.isEmpty()) {
-            this.sendJsMessage(this.error);
+            //this.sendJsMessage(this.error);
             this.destroy();
             this.stop();
             System.exit(0);
@@ -391,6 +405,7 @@ public class DisCM extends JApplet {
      * @throws java.lang.Exception
      */
     public String editObject() throws Exception, InterruptedException, JSException {
+        
         System.out.println("----------BEGIN EDIT OBJECT---------- LGI 28/04/2016");
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         String os = System.getProperty("os.name").toLowerCase();
@@ -558,7 +573,7 @@ public class DisCM extends JApplet {
             
             String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
                             + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
-                            + "&uniqueId=" + this.uniqueId;
+                            + "&uniqueId=" + this.uniqueId + "&userMaarch=" + this.userMaarch;
             this.logger.log("----------BEGIN SEND OF THE OBJECT----------", Level.INFO);
             this.logger.log("URL TO SAVE : " + urlToSave, Level.INFO);
             sendHttpRequest(urlToSave, this.fileContentTosend, true);
@@ -571,9 +586,9 @@ public class DisCM extends JApplet {
             }
             //send message to Maarch at the end
             if (!this.endMessage.isEmpty()) {
-                this.sendJsMessage(this.endMessage);
+                //this.sendJsMessage(this.endMessage);
             }
-            this.sendJsEnd();
+            //this.sendJsEnd();
             this.logger.log("----------END SEND OF THE OBJECT----------", Level.INFO);
         } else {
             this.logger.log("RESPONSE KO", Level.WARNING);
@@ -618,7 +633,7 @@ public class DisCM extends JApplet {
         Process proc;
 
         this.logger.log("LAUNCH THE EDITOR !", Level.INFO);
-        if ("linux".equals(this.os)) {
+        if ("linux".equals(this.os) || "mac".equals(this.os)) {
             proc = this.fM.launchApp(this.appPath);
         } else {
             this.logger.log("FILE TO EDIT : " + this.userLocalDirTmp + this.fileToEdit, Level.INFO);
@@ -652,7 +667,7 @@ public class DisCM extends JApplet {
     public void sendJsMessage(String message) throws JSException
     {
         JSObject jso;
-        jso = JSObject.getWindow(this);
+        jso = JSObject.getWindow((Applet)this);
         this.logger.log("----------JS CALL sendAppletMsg TO MAARCH----------", Level.INFO);
         //String theMessage;
         //theMessage = String.valueOf(message);
@@ -668,7 +683,7 @@ public class DisCM extends JApplet {
     public void sendJsEnd() throws InterruptedException, JSException
     {
         JSObject jso;
-        jso = JSObject.getWindow(this);
+        jso = JSObject.getWindow((Applet)this);
         this.logger.log("----------JS CALL endOfApplet TO MAARCH----------", Level.INFO);
         String[] theMessage = {String.valueOf(this.objectType), this.endMessage};
         jso.call("endOfApplet", (Object[]) theMessage);
@@ -682,6 +697,7 @@ public class DisCM extends JApplet {
      * @param endProcess end request
      */
     public void sendHttpRequest(String theUrl, String postRequest, boolean endProcess) throws Exception {
+        System.out.println("URL request : " + theUrl);
         URL UrlOpenRequest = new URL(theUrl);
         HttpURLConnection HttpOpenRequest = (HttpURLConnection) UrlOpenRequest.openConnection();
         HttpOpenRequest.setDoOutput(true);
