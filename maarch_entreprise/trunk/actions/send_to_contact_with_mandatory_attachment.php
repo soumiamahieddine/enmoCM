@@ -33,6 +33,7 @@
 /**
 * $confirm  bool false
 */
+$_SESSION['id_action'] = $id_action;
 
 if($_SESSION['features']['send_to_contact_with_mandatory_attachment'] == true){
     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');

@@ -660,6 +660,7 @@ abstract class business_app_tools_Abstract extends dbquery
             $_SESSION['features']['watermark']['font'] = (string) $watermark->font;
             $_SESSION['features']['watermark']['text_color'] = (string) $watermark->text_color;
             $_SESSION['features']['type_calendar'] = (string) $feats->type_calendar;
+            $_SESSION['features']['send_to_contact_with_mandatory_attachment'] = (string) $feats->send_to_contact_with_mandatory_attachment;
         }
     }
 
