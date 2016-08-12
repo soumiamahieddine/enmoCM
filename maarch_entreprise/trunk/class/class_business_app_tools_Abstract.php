@@ -660,7 +660,18 @@ abstract class business_app_tools_Abstract extends dbquery
             $_SESSION['features']['watermark']['font'] = (string) $watermark->font;
             $_SESSION['features']['watermark']['text_color'] = (string) $watermark->text_color;
             $_SESSION['features']['type_calendar'] = (string) $feats->type_calendar;
-            $_SESSION['features']['send_to_contact_with_mandatory_attachment'] = (string) $feats->send_to_contact_with_mandatory_attachment;
+            $send_to_contact_with_mandatory_attachment = (string) $feats->send_to_contact_with_mandatory_attachment;
+            if(strtoupper($send_to_contact_with_mandatory_attachment) == 'TRUE'){
+                //var_dump($send_to_contact_with_mandatory_attachment);
+                $_SESSION['features']['send_to_contact_with_mandatory_attachment'] = TRUE;
+                //var_dump($_SESSION['features']['send_to_contact_with_mandatory_attachment']);
+                //exit;
+            }elseif(strtoupper($send_to_contact_with_mandatory_attachment) == 'FALSE'){
+                //var_dump($send_to_contact_with_mandatory_attachment);
+                $_SESSION['features']['send_to_contact_with_mandatory_attachment'] = FALSE;
+                //var_dump($_SESSION['features']['send_to_contact_with_mandatory_attachment']);
+                //exit;
+            }
         }
     }
 

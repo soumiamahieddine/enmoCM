@@ -20,6 +20,7 @@
  */
 if (!defined("_SVR")) define("_SVR", "svr");
 if (!defined("_SVA")) define("_SVA", "sva");
+if (!defined("_PLEASE_CHOOSE_AN_ATTACHMENT")) define("_PLEASE_CHOOSE_AN_ATTACHMENT", "Please add an attachment.");
 if (!defined("_SEND_ATTACHMENTS_TO_CONTACT")) define("_SEND_ATTACHMENTS_TO_CONTACT", "Send to contact");
 if (!defined("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT")) define("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT", "Please, add an attachment for send to the contact");
 if (!defined("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT")) define("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT", "Send to contact with mandatory attachment");
