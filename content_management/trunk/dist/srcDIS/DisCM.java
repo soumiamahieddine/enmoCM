@@ -38,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.Writer;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -102,7 +103,6 @@ public class DisCM extends JApplet {
         System.out.println("OBJECT ID : " + objectId);
         System.out.println("UNIQUE ID : " + uniqueId);
         System.out.println("COOKIE : " + cookie);
-        
         System.out.println("----------CONTROL PARAMETERS----------");
         
         if (
@@ -328,6 +328,7 @@ public class DisCM extends JApplet {
             this.logger.log("ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.", Level.SEVERE);
             this.messageStatus = "ERROR";
             this.messageResult.put("ERROR","ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.");
+            JOptionPane.showMessageDialog(null,"ERREUR ! L'édition de votre document a échoué. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des modèles soit correct.");
         }
         this.logger.log("----------END PARSE XML----------", Level.INFO);
     }
@@ -457,6 +458,7 @@ public class DisCM extends JApplet {
             this.messageStatus = "ERROR";
             this.messageResult.clear();
             this.messageResult.put("ERROR","ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch");
+            JOptionPane.showMessageDialog(null,"ERREUR ! Permissions insuffisante sur votre répertoire temporaire maarch.");
             this.processReturn(this.messageResult);
         }
         
@@ -564,7 +566,8 @@ public class DisCM extends JApplet {
             }
             else {
             	this.pdfContentTosend = "null";
-            	this.logger.log("ERREUR DE CONVERSION PDF !", Level.WARNING);                
+            	this.logger.log("ERREUR DE CONVERSION PDF !", Level.WARNING);
+                JOptionPane.showMessageDialog(null,"Attention ! La conversion PDF a échoué mais le document a bien été transféré.");
             }
             
             this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
@@ -699,25 +702,31 @@ public class DisCM extends JApplet {
     public void sendHttpRequest(String theUrl, String postRequest, boolean endProcess) throws Exception {
         System.out.println("URL request : " + theUrl);
         URL UrlOpenRequest = new URL(theUrl);
-        HttpURLConnection HttpOpenRequest = (HttpURLConnection) UrlOpenRequest.openConnection();
-        HttpOpenRequest.setDoOutput(true);
-        HttpOpenRequest.setRequestMethod("POST");
-        HttpOpenRequest.setRequestProperty("Cookie", this.cookie);
-        if (!"none".equals(postRequest)) {
-            OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
-            if (endProcess){
-            	if (!this.pdfContentTosend.equals("null"))
-            		writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension+ "&pdfContent=" + this.pdfContentTosend);
-            	else writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension);
+        try {
+            HttpURLConnection HttpOpenRequest = (HttpURLConnection) UrlOpenRequest.openConnection();
+            HttpOpenRequest.setDoOutput(true);
+            HttpOpenRequest.setRequestMethod("POST");
+            HttpOpenRequest.setRequestProperty("Cookie", this.cookie);
+            if (!"none".equals(postRequest)) {
+                OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
+                if (endProcess){
+                    if (!this.pdfContentTosend.equals("null"))
+                            writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension+ "&pdfContent=" + this.pdfContentTosend);
+                    else writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension);
+                }
+                else writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension);
+                writer.flush();
+            } else {
+                OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
+                writer.write("foo=bar");
+                writer.flush();
             }
-            else writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension);
-            writer.flush();
-        } else {
-            OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
-            writer.write("foo=bar");
-            writer.flush();
+            this.parse_xml(HttpOpenRequest.getInputStream());
+            HttpOpenRequest.disconnect();
+        } catch (Exception ex) {
+            this.logger.log("erreur: "+ex, Level.SEVERE);
+            JOptionPane.showMessageDialog(null,"ERREUR ! La connexion au serveur a été interrompue, le document édité n'a pas été sauvegardé !");
         }
-        this.parse_xml(HttpOpenRequest.getInputStream());
-        HttpOpenRequest.disconnect();
+        
     }
 }
