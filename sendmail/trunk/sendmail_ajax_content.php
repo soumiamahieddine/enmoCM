@@ -51,6 +51,26 @@ $is             = new indexing_searching_app();
 $users_tools    = new class_users();
 $sendmail_tools = new sendmail();
 
+
+    // require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
+    // $db = new Database();
+    // $stmt = $db->query("SELECT action_page FROM actions WHERE id = ?", array($_SESSION['id_action']));
+    // $action_page = $stmt->fetchObject(); 
+    // $action_page = $action_page->action_page;
+    //var_dump($action_page);
+
+
+if($_SESSION['features']['send_to_contact_with_mandatory_attachment'] == true && !isset($_REQUEST['join_attachment']) && $_REQUEST['action'] == 'send_to_contact_with_mandatory_attachment'){
+
+
+    $error = $request->wash_html(_SEND_TOEEEEE.' '._IS_EMPTY.'!','NONE');
+    $status = 1;
+    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes(_parse_error($error)) . "', exec_js : '".addslashes($js)."'}";
+exit ();
+
+}
+
+
 function _parse($text) {
     //...
     $text = str_replace("\r\n", PHP_EOL, $text);
