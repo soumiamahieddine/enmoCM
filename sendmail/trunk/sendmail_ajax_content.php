@@ -62,11 +62,10 @@ $sendmail_tools = new sendmail();
 
 if($_SESSION['features']['send_to_contact_with_mandatory_attachment'] == true && !isset($_REQUEST['join_attachment']) && $_REQUEST['action'] == 'send_to_contact_with_mandatory_attachment'){
 
-
-    $error = $request->wash_html(_SEND_TOEEEEE.' '._IS_EMPTY.'!','NONE');
+    $error = $request->wash_html(_PLEASE_CHOOSE_AN_ATTACHMENT,'NONE');
     $status = 1;
     echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes(_parse_error($error)) . "', exec_js : '".addslashes($js)."'}";
-exit ();
+    exit ();
 
 }
 
