@@ -115,7 +115,7 @@
         <!-- Tag working_days "true" = Jours ouvrés // "false" = Jours calendaires -->
         <priority color="red" with_delay="4" working_days="true">Très urgent</priority> <!-- 0 -->
         <priority color="orange" with_delay="8" working_days="true">Urgent</priority> <!-- 1 -->
-        <priority color="#009DC5" with_delay="false" working_days="true">Normal</priority> <!-- 2 -->
+        <priority color="" with_delay="false" working_days="true">Normal</priority> <!-- 2 -->
         <priority color="orange" with_delay="false" working_days="true">SVA/SVR</priority> <!-- 3 -->
         <default_priority>2</default_priority>
     </priorities>

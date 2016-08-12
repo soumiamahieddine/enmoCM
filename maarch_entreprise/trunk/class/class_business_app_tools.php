@@ -140,6 +140,9 @@ class business_app_tools extends business_app_tools_Abstract
                 $attribute = (string) $priority['with_delay'];
                 $workingDays = (string) $priority['working_days'];
                 $color = (string) $priority['color'];
+                if($color == "" || $color == NULL){
+                    $color = '#009DC5';
+                }
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
                 ) {
