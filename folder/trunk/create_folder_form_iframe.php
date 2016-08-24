@@ -57,9 +57,27 @@ if(isset($_SESSION['error'])) { ?>
 if($_SESSION['info'] == _FOLDER_ADDED){
     $_SESSION['info'] = '';
     echo "<script>var select = parent.document.getElementById('folder');"
-    . "var newOption = new Option ('".$_SESSION['m_admin']['folder']['folder_name']."', '".$_SESSION['m_admin']['folder']['folders_system_id']."');"
+    ."if('".$_SESSION['m_admin']['folder']['folder_parent']."' != 0){
+            var folderName = '       ".$_SESSION['m_admin']['folder']['folder_name']."';
+        } else {
+            var folderName = '".$_SESSION['m_admin']['folder']['folder_name']."';
+        }
+        "
+    . "var newOption = new Option (folderName, '".$_SESSION['m_admin']['folder']['folders_system_id']."');"
     . "newOption.setAttribute('parent','".$_SESSION['m_admin']['folder']['folder_parent']."');"
-    . "select.options.add (newOption);"
+    . "var oSelect = select.options;"
+    . "if('".$_SESSION['m_admin']['folder']['folder_parent']."' != 0){
+            for(var i = 0; i < oSelect.length; i++) {
+                if(oSelect[i].value === '".$_SESSION['m_admin']['folder']['folder_parent']."') {
+                    var index = i+1;
+                    break;
+                }
+            }
+            select.options.add (newOption, index);
+        } else {
+            select.options.add (newOption);
+        }
+        "
     . "select.value = '".$_SESSION['m_admin']['folder']['folders_system_id']."';";
     echo "Event.fire(select, 'chosen:updated');";
     unset($_SESSION['m_admin']);
