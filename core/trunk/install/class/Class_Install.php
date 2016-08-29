@@ -1439,7 +1439,7 @@ class Install extends functions
             $res = '#!/bin/bash';
             $res .= "\n";
             //$res .= "file='".realpath('.')."/modules/full_text/lucene_full_text_engine.php'";
-            $res .= "\n\n";
+            $res .= "\n";
             $res .= "cd ".realpath('.')."/modules/full_text/";
             $res .= "\n";
             $res .= "php ".realpath('.')."/modules/full_text/lucene_full_text_engine.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_letterbox.xml";
@@ -1461,7 +1461,7 @@ class Install extends functions
             $res2 = '#!/bin/bash';
             $res2 .= "\n";
             //$res .= "file='".realpath('.')."/modules/full_text/lucene_full_text_engine.php'";
-            $res2 .= "\n\n";
+            $res2 .= "\n";
             $res2 .= "cd ".realpath('.')."/modules/full_text/";
             $res2 .= "\n";
             $res2 .= "php ".realpath('.')."/modules/full_text/lucene_full_text_engine.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_attachments.xml";
@@ -1483,7 +1483,7 @@ class Install extends functions
             $res3 = '#!/bin/bash';
             $res3 .= "\n";
             //$res .= "file='".realpath('.')."/modules/full_text/lucene_full_text_engine.php'";
-            $res3 .= "\n\n";
+            $res3 .= "\n";
             $res3 .= "cd ".realpath('.')."/modules/full_text/";
             $res3 .= "\n";
             $res3 .= "php ".realpath('.')."/modules/full_text/lucene_full_text_engine.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_version_attachments.xml";
