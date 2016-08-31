@@ -796,8 +796,12 @@ abstract class diffusion_list_Abstract extends dbquery
         $query .= " ORDER BY ug.group_desc ASC";
         
         $db = new Database();
-        $stmt = $db->query($query,array($user_id));
-
+        
+        if ($user_id) {
+            $stmt = $db->query($query,array($user_id));
+        } else {
+            $stmt = $db->query($query);
+        }
 
         //load roles difflist
         if (file_exists(
