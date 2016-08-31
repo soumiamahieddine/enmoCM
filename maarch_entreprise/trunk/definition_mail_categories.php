@@ -1,7 +1,7 @@
 <?php
 
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008-2016 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -1012,8 +1012,8 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
     for ($i = 0; $i < count($arr); $i++) {
         if ($mode == 'full' || $mode == 'form') {
             // Normal Cases
-            if (isset($line-> $arr[$i])) {
-                $data[$arr[$i]]['value'] = $line-> $arr[$i];
+            if (isset($line->{$arr[$i]})) {
+                $data[$arr[$i]]['value'] = $line->{$arr[$i]};
             }
             if ($arr[$i] <> 'folder') {
                 $data[$arr[$i]]['show_value'] = functions::show_string($data[$arr[$i]]['value']);
@@ -1021,32 +1021,32 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
                 && $_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date'
             ) {
-                $data[$arr[$i]]['show_value'] = functions::format_date_db($line-> $arr[$i], false);
+                $data[$arr[$i]]['show_value'] = functions::format_date_db($line->{$arr[$i]}, false);
             } else if (isset($_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'])
                 && $_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'] == 'date'
             ) {
-                $data[$arr[$i]]['show_value'] = functions::format_date_db($line-> $arr[$i], false);
+                $data[$arr[$i]]['show_value'] = functions::format_date_db($line->{$arr[$i]}, false);
             } else if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
                 && $_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'string'
             ) {
-                $data[$arr[$i]]['show_value'] = functions::show_string($line-> $arr[$i], true, '', '', false);
+                $data[$arr[$i]]['show_value'] = functions::show_string($line->{$arr[$i]}, true, '', '', false);
             }
             // special cases :
             if ($arr[$i] == 'priority') {
-                $data[$arr[$i]]['show_value'] = $_SESSION['mail_priorities'][$line-> $arr[$i]];
+                $data[$arr[$i]]['show_value'] = $_SESSION['mail_priorities'][$line->{$arr[$i]}];
             }
             elseif ($arr[$i] == 'destination') {
-                $stmt2 = $db->query('SELECT entity_label FROM ' . $_SESSION['tablename']['ent_entities'] . " WHERE entity_id = ?", array($line-> $arr[$i]));
+                $stmt2 = $db->query('SELECT entity_label FROM ' . $_SESSION['tablename']['ent_entities'] . " WHERE entity_id = ?", array($line->{$arr[$i]}));
                 if ($stmt2->rowCount() == 1) {
                     $res2 = $stmt2->fetchObject();
                     $data[$arr[$i]]['show_value'] = functions::show_string($res2->entity_label, true);
                 }
             }
             elseif ($arr[$i] == 'nature_id') {
-                $data[$arr[$i]]['show_value'] = $_SESSION['mail_natures'][$line-> $arr[$i]];
+                $data[$arr[$i]]['show_value'] = $_SESSION['mail_natures'][$line->{$arr[$i]}];
             }
             elseif ($arr[$i] == 'reference_number') {
-                if (empty ($line-> $arr[$i])) {
+                if (empty ($line->{$arr[$i]})) {
                     unset ($data[$arr[$i]]);
                 }
             }
@@ -1055,21 +1055,21 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             }
             // Contact
             elseif ($arr[$i] == 'dest_user_id' || $arr[$i] == 'exp_user_id') {
-                if (!empty ($line-> $arr[$i])) {
-                    $stmt2 = $db->query('SELECT lastname, firstname FROM ' . $_SESSION['tablename']['users'] . " WHERE user_id = ?", array($line-> $arr[$i]));
+                if (!empty ($line->{$arr[$i]})) {
+                    $stmt2 = $db->query('SELECT lastname, firstname FROM ' . $_SESSION['tablename']['users'] . " WHERE user_id = ?", array($line->{$arr[$i]}));
                     $res = $stmt2->fetchObject();
                     $data[$arr[$i]]['show_value'] = $res->lastname . ' ' . $res->firstname;
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=400, width=600,scrollbars=yes,resizable=yes\');" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>';
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line->{$arr[$i]} . '\', \'contact_info\', \'height=400, width=600,scrollbars=yes,resizable=yes\');" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }
             }
             elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
-                if (!empty ($line-> $arr[$i])) {
+                if (!empty ($line->{$arr[$i]})) {
                     $stmt2 = $db->query("SELECT address_id FROM mlb_coll_ext WHERE res_id = ?", array($res_id));
                     $resAddress = $stmt2->fetchObject();
                     $addressId = $resAddress->address_id;
-                    $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_postal_code, address_town, lastname, firstname FROM view_contacts WHERE contact_id = ? and ca_id = ?', array($line-> $arr[$i], $addressId));
+                    $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_postal_code, address_town, lastname, firstname FROM view_contacts WHERE contact_id = ? and ca_id = ?', array($line->{$arr[$i]}, $addressId));
                     $res = $stmt2->fetchObject();
                     if ($res->is_corporate_person == 'Y') {
                         $data[$arr[$i]]['show_value'] = $res->society . ' ' ;
@@ -1095,7 +1095,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                             $data[$arr[$i]]['show_value'] .= ', '.$res->address_num .' ' . $res->address_street .' ' . $res->address_postal_code .' ' . strtoupper($res->address_town);
                         }         
                     }
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&popup&contactid=' . $line-> $arr[$i] . '&addressid='.$addressId.'\', \'contact_info\', \'height=800, width=1000,scrollbars=yes,resizable=yes\');" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>';
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&popup&contactid=' . $line->{$arr[$i]} . '&addressid='.$addressId.'\', \'contact_info\', \'height=800, width=1000,scrollbars=yes,resizable=yes\');" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }
@@ -1115,36 +1115,36 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         } else // 'mimimal' mode
             {
             // Normal cases
-            $data[$arr[$i]] = $line-> $arr[$i];
+            $data[$arr[$i]] = $line->{$arr[$i]};
             if ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date') {
-                $data[$arr[$i]] = functions::format_date_db($line-> $arr[$i], false);
+                $data[$arr[$i]] = functions::format_date_db($line->{$arr[$i]}, false);
             }
             elseif ($_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'] == 'date') {
-                $data[$arr[$i]] = functions::format_date_db($line-> $arr[$i], false);
+                $data[$arr[$i]] = functions::format_date_db($line->{$arr[$i]}, false);
             }
             elseif ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'string') {
-                $data[$arr[$i]] = functions::show_string($line-> $arr[$i], true, '', '', false);
+                $data[$arr[$i]] = functions::show_string($line->{$arr[$i]}, true, '', '', false);
             }
             // special cases :
             // Contact
             if ($arr[$i] == 'dest_user_id' || $arr[$i] == 'exp_user_id') {
-                if (!empty ($line-> $arr[$i])) {
+                if (!empty ($line->{$arr[$i]})) {
                     $data['type_contact'] = 'internal';
-                    $stmt2 = $db->query('SELECT lastname, firstname FROM ' . $_SESSION['tablename']['users'] . " WHERE user_id = ?", array($line-> $arr[$i]));
+                    $stmt2 = $db->query('SELECT lastname, firstname FROM ' . $_SESSION['tablename']['users'] . " WHERE user_id = ?", array($line->{$arr[$i]}));
                     $res = $stmt2->fetchObject();
                     $data['contact'] = $res->lastname . ' ' . $res->firstname;
-                    $data['contactId'] = $line-> $arr[$i];
+                    $data['contactId'] = $line->{$arr[$i]};
                 }
                 unset ($data[$arr[$i]]);
 
             }
             elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
-                if (!empty ($line-> $arr[$i])) {
+                if (!empty ($line->{$arr[$i]})) {
                     $data['type_contact'] = 'external';
                     $stmt2 = $db->query("SELECT address_id FROM mlb_coll_ext WHERE res_id = ?", array($res_id));
                     $resAddress = $stmt2->fetchObject();
                     $addressId = $resAddress->address_id;
-                    $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_postal_code, address_town, lastname, firstname FROM view_contacts WHERE contact_id = ? and ca_id = ?', array($line-> $arr[$i], $addressId));
+                    $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_postal_code, address_town, lastname, firstname FROM view_contacts WHERE contact_id = ? and ca_id = ?', array($line->{$arr[$i]}, $addressId));
                     $res = $stmt2->fetchObject();
                     if ($res->is_corporate_person == 'Y') {
                         $data['contact'] = $res->society . ' ' ;
@@ -1170,13 +1170,13 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                             $data['contact'] .= ', '.$res->address_num .' ' . $res->address_street .' ' . $res->address_postal_code .' ' . strtoupper($res->address_town);
                         }         
                     }
-                    $data['contactId'] = $line-> $arr[$i];
+                    $data['contactId'] = $line->{$arr[$i]};
                     $data['addressId'] = $addressId;
                 }
                 unset ($data[$arr[$i]]);
                 
             } else if ($arr[$i] == 'is_multicontacts') {
-                if (!empty ($line-> $arr[$i])) {
+                if (!empty ($line->{$arr[$i]})) {
                     $data['type_contact'] = 'multi_external';
                 }
                 unset ($data[$arr[$i]]);			

@@ -168,11 +168,11 @@ if (
         . '%' . date('dmYHmi') . '%'
     );
 
-    $db->query(
-        'UPDATE ' . $_SESSION['tablename']['users'] 
-            . " SET cookie_key = ?, cookie_date = CURRENT_TIMESTAMP WHERE user_id = ? and mail = ?", 
-        array($key, $_SESSION['user']['UserId'], $_SESSION['user']['Mail']),1
-    );
+    // $db->query(
+    //     'UPDATE ' . $_SESSION['tablename']['users'] 
+    //         . " SET cookie_key = ?, cookie_date = CURRENT_TIMESTAMP WHERE user_id = ? and mail = ?", 
+    //     array($key, $_SESSION['user']['UserId'], $_SESSION['user']['Mail']),1
+    // );
 }
 
 if (

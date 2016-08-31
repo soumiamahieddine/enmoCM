@@ -871,11 +871,15 @@ abstract class types_Abstract extends database
     {
         $fields = array();
         $db = new Database();
-        $stmt = $db->query(
-            "SELECT field_name FROM " . DOCTYPES_INDEXES_TABLE
-            . " WHERE coll_id = ? and type_id = ?",
-            array($collId, $typeId)
-        );
+        if (!empty($typeId)) {
+            $stmt = $db->query(
+                "SELECT field_name FROM " . DOCTYPES_INDEXES_TABLE
+                . " WHERE coll_id = ? and type_id = ?",
+                array($collId, $typeId)
+            );
+        } else {
+            return array();
+        }
 
         while ($res = $stmt->fetchObject()) {
             array_push($fields, $res->field_name);
