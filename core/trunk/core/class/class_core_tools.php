@@ -118,29 +118,31 @@ class core_tools extends functions
             if (file_exists('modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php')) {
                 include_once 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
             }
+            if (file_exists($configPath)) {
+                // Reads the config.xml file of the current module
+                $xmlconfig = simplexml_load_file($configPath);
             
-            // Reads the config.xml file of the current module
-            $xmlconfig = simplexml_load_file($configPath);
-            // Loads into $_SESSION['modules_loaded'] module's informations
-            foreach ($xmlconfig->CONFIG as $CONFIG) {
-                $_SESSION['modules_loaded'][$modules[$i]['moduleid']]['name'] =
-                    (string) $CONFIG->name;
-                $_SESSION['modules_loaded'][$modules[$i]['moduleid']]['path'] =
-                    'modules' . DIRECTORY_SEPARATOR . $modules[$i]['moduleid']
-                    . DIRECTORY_SEPARATOR;
-                $comment = (string) $CONFIG->comment;
-                if ( !empty($comment) && defined($comment)
-                    && constant($comment) <> NULL
-                ) {
-                    $comment = constant($comment);
+                // Loads into $_SESSION['modules_loaded'] module's informations
+                foreach ($xmlconfig->CONFIG as $CONFIG) {
+                    $_SESSION['modules_loaded'][$modules[$i]['moduleid']]['name'] =
+                        (string) $CONFIG->name;
+                    $_SESSION['modules_loaded'][$modules[$i]['moduleid']]['path'] =
+                        'modules' . DIRECTORY_SEPARATOR . $modules[$i]['moduleid']
+                        . DIRECTORY_SEPARATOR;
+                    $comment = (string) $CONFIG->comment;
+                    if ( !empty($comment) && defined($comment)
+                        && constant($comment) <> NULL
+                    ) {
+                        $comment = constant($comment);
+                    }
+                    $_SESSION['modules_loaded'][$modules[$i]['moduleid']]['comment'] =
+                        $comment;
+
+                    $_SESSION['modules_loaded'][$modules[$i]['moduleid']]['fileprefix'] = (string) $CONFIG->fileprefix;
+                    $_SESSION['modules_loaded'][$modules[$i]['moduleid']]['loaded'] = (string) $CONFIG->loaded;
                 }
-                $_SESSION['modules_loaded'][$modules[$i]['moduleid']]['comment'] =
-                    $comment;
-
-                $_SESSION['modules_loaded'][$modules[$i]['moduleid']]['fileprefix'] = (string) $CONFIG->fileprefix;
-                $_SESSION['modules_loaded'][$modules[$i]['moduleid']]['loaded'] = (string) $CONFIG->loaded;
             }
-
+            
             if (file_exists(
                 $_SESSION['config']['corepath'] . 'custom'
                     . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']

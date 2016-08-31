@@ -285,11 +285,13 @@ class Database extends functions
         if ($parameters) {
             foreach ($parameters as $key => $value) {
                 if (is_array($value)) {
+                    //echo $key . $value. '<br />';
                     if (is_int($key)) {
                         $placeholders = implode(',', array_fill(0, count($value), '?'));
                         preg_match_all("/\?/", $queryString, $matches, PREG_OFFSET_CAPTURE);
                         $match = $matches[0][$key];
-                        $queryString = substr($queryString, 0, $match[1]) . $placeholders . substr($queryString, $match[1]+1);
+                        $queryString = substr($queryString, 0, $match[1]) 
+                            . $placeholders . substr($queryString, $match[1]+1);
                         $parameters1 = array_slice($parameters, 0, $key);
                         $parameters2 = array_slice($parameters, $key+1);
                         $parameters = array_merge($parameters1, $value, $parameters2);
@@ -306,20 +308,36 @@ class Database extends functions
                     }
                     // var_dump($queryString);
                     // var_dump($parameters);
+                } else {
+                    //echo $key . $value. '<br />';
+                    if (empty($parameters[$value])) {
+
+                    }
                 }
             }
         }
 
         try {
             $this->stmt = $this->prepare($queryString);
+            preg_match_all("/\?|\:/", $queryString, $matches, PREG_OFFSET_CAPTURE);
+            if (empty($matches[0])) {
+                //echo $queryString;
+                $executed = $this->stmt->execute();
+            } else {
+                $executed = $this->stmt->execute($parameters);
+            }
 
-            $executed = $this->stmt->execute($parameters);
+            
         } catch (PDOException $PDOException) {
             if ($catchExceptions) {
                 $this->error = $PDOException->getMessage();
 
                 return false;
             } else {
+                if ($_SESSION['config']['debug'] == 'true') {
+                    echo $queryString;
+                    var_export($parameters);
+                }
                 throw $PDOException;
             }
         }
