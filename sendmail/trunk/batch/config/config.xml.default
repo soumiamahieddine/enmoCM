@@ -44,7 +44,7 @@
         <charset>utf-8</charset><!-- Default : iso-8859-1 -->
         <domains></domains><!-- Rewrite Recipient with config->adminmail if mailfrom and mailto is out of the domains -->
         <x-mailer></x-mailer><!-- Rewrite X-Mailer header,  default : PHP/[phpversion] -->
-        <mailfrom>notifications@maarch.fr</mailfrom>
+        <mailfrom>notifications@maarch.fr</mailfrom> <!-- if not empty we use this address to send the mail -->
     </MAILER>
     <LOG4PHP>
         <enabled>true</enabled>
