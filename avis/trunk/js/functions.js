@@ -868,10 +868,9 @@ function checkRealDateAvis() {
     
     var nowDate = new Date ();
     var date3 = new Date();
-    nowDate.setFullYear(date3.getFullYear());
-    nowDate.setMonth(date3.getMonth()+1);
-    nowDate.setDate(date3.getDate()); 
-    current_date = nowDate.getTime();
+    
+    var current_date = Date.now();
+    
 
 
    /* if($('doc_date')) {
@@ -889,23 +888,27 @@ function checkRealDateAvis() {
         processLimitDate = $('process_limit_date').value;
 		var date4 = new Date();
 		date4.setFullYear(processLimitDate.substr(6,4));
-		date4.setMonth(processLimitDate.substr(3,2));
+		date4.setMonth(processLimitDate.substr(3,2)-1);
 		date4.setDate(processLimitDate.substr(0,2));
 		date4.setHours(0);
 		date4.setMinutes(0);
+                date4.setSeconds(0);
 		var d4_processLimitDate=date4.getTime();
     }
+
 
     if($('recommendation_limit_date')) {
         avisLimitDate = $('recommendation_limit_date_tr').value;
 		var date5 = new Date();
 		date5.setFullYear(avisLimitDate.substr(6,4));
-		date5.setMonth(avisLimitDate.substr(3,2));
+		date5.setMonth(avisLimitDate.substr(3,2)-1);
 		date5.setDate(avisLimitDate.substr(0,2));
 		date5.setHours(0);
 		date5.setMinutes(0);
+		date5.setSeconds(0);
+		var d5_avisLimitDate;
 		var d5_avisLimitDate=date5.getTime();
-    }
+	 }
 
     if(d4_processLimitDate != "" && avisLimitDate != "" && d5_avisLimitDate > d4_processLimitDate) {          
         alert("La date limite d'avis doit être antérieure à la date limite du courrier ");
@@ -913,10 +916,9 @@ function checkRealDateAvis() {
         $('recommendation_limit_date_tr').value = "";
 
     }
-	//alert(nowDate);
 	
-    if (current_date > d5_avisLimitDate && avisLimitDate != "") {
-        alert("La date limite d'avis doit être supérieure à la date du jour ");
+    if (current_date > d5_avisLimitDate && avisLimitDate != "") {        
+	alert("La date d'avis doit être supérieure à la date du jour ");
         $('recommendation_limit_date').value = "";
         $('recommendation_limit_date_tr').value = "";
         
