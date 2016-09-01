@@ -675,7 +675,7 @@ if (!defined('_MAY')) define('_MAY', 'May');
 if (!defined('_MB'))  define('_MB', 'Megabytes ');
 if (!defined('_MD5')) define('_MD5', 'fingerprint');
 if (!defined('_MENU')) define('_MENU', 'Menu');
-if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch v1.5.1');
+if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch v1.6');
 if (!defined('_MESSAGE')) define('_MESSAGE', 'Message');
 if (!defined('_META_TEMPLATE'))  define('_META_TEMPLATE', 'Meta template');
 if (!defined('_MINUS')) define( '_MINUS', 'Minus');
