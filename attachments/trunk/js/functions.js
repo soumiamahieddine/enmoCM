@@ -207,13 +207,13 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
                         "&nbsp;ou&nbsp;" +
                       "</span>" +
                     "</div>" +
-                    "<div style='float: left'>" +
+                    "<p><div style='float: left'>" +
                       "<i id='newTransmissionButton" + size + "' title='Nouvelle transmission' style='opacity: 1;cursor: pointer;' class='fa fa-plus-circle fa-2x' " +
                         "onclick='addNewTransmission(\"" + prePath + "\", " + docId + ", " + canCreateContact + ")'></i>" +
                       "&nbsp;" +
                       "<i id='delTransmissionButton" + size + "' title='Supprimer la dernière transmission' style='opacity: 1;cursor: pointer;' class='fa fa-minus-circle fa-2x' " +
                         "onclick='delLastTransmission()'></i>" +
-                    "</div>";
+                    "</div></p>";
 
     div.innerHTML = content;
     $('transmissionChrono' + size).value = $('chrono').value + "." + String.fromCharCode(64 + size);

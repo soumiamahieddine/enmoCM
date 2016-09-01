@@ -1651,7 +1651,7 @@ if (!empty($contacts)) {
 
 $content .= '</h2>';
 
-$content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:400px;float:left;margin-left:-5px;background-color:#deedf3">';
+$content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:500px;float:left;margin-left:-5px;background-color:#deedf3">';
 $content .= '<div class="transmissionDiv">';
 $content .= '<hr style="width:85%;margin-left:0px">';
 $content .= '<input type="hidden" id="category_id" value="outgoing"/>';
