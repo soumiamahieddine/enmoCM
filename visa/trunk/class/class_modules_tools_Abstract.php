@@ -1338,9 +1338,8 @@ abstract class PdfNotes_Abstract extends FPDI
                 $user = $request->show_string($line->lastname . " " . $line->firstname);
                 $notes = $line->note_text;
                 $userId = $line->user_id;
-                $date = explode("-",$line->date_note);
-                $date = $date[2]."/".$date[1]."/".$date[0];
-				
+                $date = explode("-",date("d-m-Y", strtotime($line->date_note)));
+                $date = $date[0]."/".$date[1]."/".$date[2]." ".date("H:i", strtotime($line->date_note));
                 $identifier = $line->identifier;
 			}
 			$data[] = array(utf8_decode($user),$date,utf8_decode($notes));
