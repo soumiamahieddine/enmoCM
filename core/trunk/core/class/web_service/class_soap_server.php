@@ -124,10 +124,16 @@ class MaarchSoapServer extends webService {
      * generate SOAP server
      */
     function makeSOAPServer() {
-        global $HTTP_RAW_POST_DATA;
+        //global $HTTP_RAW_POST_DATA;
+        $data = file_get_contents("php://input");
+        //var_export($HTTP_RAW_POST_DATA);
+//         echo "
+// ------------------------------------------------
+//         ";
+        //var_export($data);
         $this->importSOAPLibs();
         $server = $this->launchSOAPServer();
-        $server->service($HTTP_RAW_POST_DATA);
+        $server->service($data);
     }
     
     /**
