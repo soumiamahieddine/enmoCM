@@ -1853,7 +1853,7 @@ if (!$canCreateContact)
     $canCreateContact = 0;
 
 if(!isset($_REQUEST['id'])) {
-    $content .= '<div style="float: left;margin-bottom: 5px">';
+    $content .= '<p><div style="float: left;margin-bottom: 5px">';
     $content .= '<input type="button" value="';
     $content .= _EDIT_MODEL;
     $content .= '" name="edit" id="edit" style="display:none;margin-top: 0" class="button" '
@@ -1867,7 +1867,7 @@ if(!isset($_REQUEST['id'])) {
         $content .= '<i id="newTransmissionButton0" disabled="disabled" title="Nouvelle transmission" style="opacity: 0.5;cursor: pointer;" class="fa fa-plus-circle fa-2x"
                          onclick="addNewTransmission(\'' . $_SESSION['config']['businessappurl'] . '\', \'' . $_SESSION['doc_id'] . '\', ' . $canCreateContact . ', \'' . addslashes(implode('#', $langArrayForTransmission)) . '\')"></i>';
     }
-    $content .= '</div>';
+    $content .= '</div></p>';
 }
 
 if (isset($_REQUEST['id']) && ($data_attachment->status <> 'TMP' || ($data_attachment->status == 'TMP' && $data_attachment->relation > 1))) {

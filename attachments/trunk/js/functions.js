@@ -199,7 +199,7 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
 
                     "<input type='hidden' id='transmissionContactidAttach" + size + "' name='transmissionContactidAttach" + size + "' value='' onchange='saveContactToSession(\"" + size + "\", \"" + prePath + "\")' />" +
                     "<input type='hidden' id='transmissionAddressidAttach" + size + "' name='transmissionAddressidAttach" + size + "' value='' />" +
-                    "<div style='float: left;display: none;margin-bottom: 5px' id='paraEdit" + size + "'>" +
+                    "<p><div style='float: left;display: none;margin-bottom: 5px' id='paraEdit" + size + "'>" +
                       "<input type='button' style='margin-top: 0' value='" + "Editer" + "' name='transmissionEdit" + size + "' id='transmissionEdit" + size + "' class='button' " +
                         "onclick='window.open(\"" + prePath + "index.php?display=true&module=content_management&page=applet_popup_launcher&transmissionNumber=" + size + "&objectType=transmission&objectId=\"+$(\"transmissionTemplate" + size + "\").value+\"&attachType=transmission&objectTable=res_letterbox&contactId=\"+$(\"contactidAttach\").value+\"&addressId=\"+$(\"addressidAttach\").value+\"&chronoAttachment=\"+$(\"transmissionChrono" + size + "\").value+\"&titleAttachment=\"+$(\"transmissionTitle" + size + "\").value+\"&back_date=\"+$(\"transmissionBackDate" + size + "\").value+\"&resMaster=" + docId + "\", \"\", \"height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\");" +
                         "hideEditAndAddButton(paraEdit" + size + ")' />" +
@@ -213,7 +213,7 @@ function addNewTransmission(prePath, docId, canCreateContact, langString) {
                       "&nbsp;" +
                       "<i id='delTransmissionButton" + size + "' title='Supprimer la dernière transmission' style='opacity: 1;cursor: pointer;' class='fa fa-minus-circle fa-2x' " +
                         "onclick='delLastTransmission()'></i>" +
-                    "</div>";
+                    "</div></p>";
 
     div.innerHTML = content;
     $('transmissionChrono' + size).value = $('chrono').value + "." + String.fromCharCode(64 + size);
