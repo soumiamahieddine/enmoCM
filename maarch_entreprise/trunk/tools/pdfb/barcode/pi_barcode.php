@@ -332,7 +332,7 @@ if ( !class_exists( "pi_barcode" ) ) {
 		/**
 		* Constructeur // est appelé automatiquement à l'instanciation de l'objet
 		*/
-		function pi_barcode()
+		public function __construct()
 		{
 			$this->CODE = '';
 			$this->FULLCODE = 'NO CODE SET';
