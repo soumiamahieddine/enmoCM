@@ -792,7 +792,7 @@ class functions
     * @param  $insert bool If true format the date to insert in the database (true by default)
     * @return Formated date or empty string if any error
     */
-    function format_date_db($date, $insert=true, $databasetype= '', $withTimeZone=false)
+    public static function format_date_db($date, $insert=true, $databasetype= '', $withTimeZone=false)
     {
         if (isset($_SESSION['config']['databasetype'])
             && ! empty($_SESSION['config']['databasetype'])) {
@@ -901,7 +901,7 @@ class functions
     * @param  $string string String to format
     * @return Formated string
     */
-    public function show_string($string, $replace_CR = false, $chars_to_escape = array(), $databasetype = '', $escape_quote = true)
+    public static function show_string($string, $replace_CR = false, $chars_to_escape = array(), $databasetype = '', $escape_quote = true)
     {
         if(isset($string) && !empty($string) && is_string($string))
         {

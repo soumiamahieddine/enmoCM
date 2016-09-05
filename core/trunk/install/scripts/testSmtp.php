@@ -110,7 +110,7 @@ $email = $GLOBALS['emails'][$currentEmail];
                 );
 //var_dump($from);
             $GLOBALS['mailer']->setReturnPath($email->sender);
-            $GLOBALS['mailer']->setFrom("notifications@maarch.fr");
+            $GLOBALS['mailer']->setFrom($from);
             $GLOBALS['mailer']->setSubject("Test smtp Maarch");
             $GLOBALS['mailer']->setHtml($email->html_body);
             $GLOBALS['mailer']->setHtml(str_replace('#and#', '&', $email->html_body));
