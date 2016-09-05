@@ -9,7 +9,7 @@
 	define('SMTP_STATUS_NOT_CONNECTED', 1, TRUE);
 	define('SMTP_STATUS_CONNECTED', 2, TRUE);
 
-	class smtp{
+	class smtpHtmlMimeMail{
 
 		var $authenticated;
 		var $connection;
@@ -43,14 +43,14 @@
 		*             to fsockopen()
         */
 
-		function smtp($params = array()){
+		public function __construct($params = array()){
 
 			if(!defined('CRLF'))
 				define('CRLF', "\r\n", TRUE);
 
 			$this->authenticated	= FALSE;			
 			$this->timeout			= 5;
-			$this->status			= SMTP_STATUS_NOT_CONNECTED;
+			//$this->status			= SMTP_STATUS_NOT_CONNECTED;
 			$this->host				= 'localhost';
 			$this->port				= 25;
 			$this->helo				= 'localhost';
@@ -58,10 +58,15 @@
 			$this->user				= '';
 			$this->pass				= '';
 			$this->errors   		= array();
-
-			foreach($params as $key => $value){
-				$this->$key = $value;
+			// echo 'debut params<br />';
+			// var_export($params);
+			// echo 'fin params<br />';
+			foreach ($params as $key => $value) {
+				$this->{$key} = $value;
+				//echo 'key ' . $key . ' value ' . $value . '<br />';
 			}
+			//var_export($this);
+
 		}
 
 		/**
@@ -73,29 +78,21 @@
 		* the HELO command.
         */
 
-		function &connect($params = array()){
+		public function &connect($params = array()){
+			$obj = new smtpHtmlMimeMail($params);
+			//var_dump($obj);
+			$this->connection = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
+			if(function_exists('socket_set_timeout')){
+				@socket_set_timeout($this->connection, 5, 0);
+			}
 
-			if(!isset($this->status)){
-				$obj = new smtp($params);
-				if($obj->connect()){
-					$obj->status = SMTP_STATUS_CONNECTED;
-				}
-
-				return $obj;
-
+			$greeting = $this->get_data();
+			if(is_resource($this->connection)){
+				$this->status = SMTP_STATUS_CONNECTED;
+				return $this->auth ? $this->ehlo() : $this->helo();
 			}else{
-				$this->connection = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
-				if(function_exists('socket_set_timeout')){
-					@socket_set_timeout($this->connection, 5, 0);
-				}
-
-				$greeting = $this->get_data();
-				if(is_resource($this->connection)){
-					return $this->auth ? $this->ehlo() : $this->helo();
-				}else{
-					$this->errors[] = 'Failed to connect to server: '.$errstr;
-					return FALSE;
-				}
+				$this->errors[] = 'Failed to connect to server: '.$errstr;
+				return FALSE;
 			}
 		}
 
@@ -113,13 +110,14 @@
 		*            function
         */
 
-		function send($params = array()){
+		function send($params = array()) {
 
-			foreach($params as $key => $value){
+
+			foreach ($params as $key => $value) {
 				$this->set($key, $value);
 			}
 
-			if($this->is_connected()){
+			if ($this->is_connected()) {
 
 				// Do we auth or not? Note the distinction between the auth variable and auth() function
 				if($this->auth AND !$this->authenticated){
@@ -237,7 +235,8 @@
 					AND $this->send_data(base64_encode($this->user))			// Send username
 					AND substr(trim($error = $this->get_data()),0,3) === '334'
 					AND $this->send_data(base64_encode($this->pass))			// Send password
-					AND substr(trim($error = $this->get_data()),0,3) === '235' ){
+					AND substr(trim($error = $this->get_data()),0,3) === '235' )
+			{
 
 				$this->authenticated = TRUE;
 				return TRUE;

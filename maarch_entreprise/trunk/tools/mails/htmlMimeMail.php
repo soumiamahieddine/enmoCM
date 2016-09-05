@@ -102,7 +102,7 @@ class htmlMimeMail
     * Constructor function. Sets the headers
     * if supplied.
     */
-    function htmlMimeMail()
+    public function __construct()
     {
         /**
         * Initialise some variables.
@@ -301,13 +301,20 @@ class htmlMimeMail
     }
 
     /**
+    * Accessor to set the Disposition-Notification-To
+    */
+    function setDispositionNotificationTo($email)
+    {
+        $this->headers['Disposition-Notification-To'] = $email;
+    }
+
+    /**
     * Accessor to set the reply-to
     */
     function setReplyTo($replyTo)
     {
         $this->headers['Reply-To'] = $replyTo;
     }
-    
 
     /**
     * Accessor to add a Cc: header
@@ -757,11 +764,17 @@ class htmlMimeMail
             case 'smtp':
                 require_once(dirname(__FILE__) . '/smtp.php');
                 require_once(dirname(__FILE__) . '/RFC822.php');
-                $smtp = &smtp::connect($this->smtp_params);
+                $smtpObj = new smtpHtmlMimeMail($this->smtp_params);
+                $RFC822Obj = new Mail_RFC822();
+                $smtp = $smtpObj->connect();
+                
+                if (!$smtp) {
+                    return false;
+                }
                 
                 // Parse recipients argument for internet addresses
                 foreach ($recipients as $recipient) {
-                    $addresses = Mail_RFC822::parseAddressList($recipient, $this->smtp_params['helo'], null, false);
+                    $addresses = $RFC822Obj->parseAddressList($recipient, $this->smtp_params['helo'], null, false);
                     foreach ($addresses as $address) {
                         $smtp_recipients[] = sprintf('%s@%s', $address->mailbox, $address->host);
                     }
@@ -773,7 +786,7 @@ class htmlMimeMail
                 // Cc and Bcc as we go
                 foreach ($this->headers as $name => $value) {
                     if ($name == 'Cc' OR $name == 'Bcc') {
-                        $addresses = Mail_RFC822::parseAddressList($value, $this->smtp_params['helo'], null, false);
+                        $addresses = $RFC822Obj->parseAddressList($value, $this->smtp_params['helo'], null, false);
                         foreach ($addresses as $address) {
                             $smtp_recipients[] = sprintf('%s@%s', $address->mailbox, $address->host);
                         }
@@ -791,7 +804,7 @@ class htmlMimeMail
                 $send_params['recipients'] = array_values(array_unique($smtp_recipients));
                 $send_params['body']       = $this->output;
 
-				// Add Notification To
+                // Add Notification To
                 if (isset($this->headers['Disposition-Notification-To'])) {
                     $send_params['Disposition-Notification-To'] = $this->headers['Disposition-Notification-To'];
                 }
@@ -800,15 +813,15 @@ class htmlMimeMail
                 if (isset($this->return_path)) {
                     $send_params['from'] = $this->return_path;
                 } elseif (!empty($this->headers['From'])) {
-                    $from = Mail_RFC822::parseAddressList($this->headers['From']);
+                    $from = $RFC822Obj->parseAddressList($this->headers['From']);
                     $send_params['from'] = sprintf('%s@%s', $from[0]->mailbox, $from[0]->host);
                 } else {
                     $send_params['from'] = 'postmaster@' . $this->smtp_params['helo'];
                 }
 
                 // Send it
-                if (!$smtp->send($send_params)) {
-                    $this->errors = $smtp->errors;
+                if (!$smtpObj->send($send_params)) {
+                    $this->errors = $smtpObj->errors;
                     return false;
                 }
                 return true;
