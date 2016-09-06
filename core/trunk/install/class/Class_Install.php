@@ -1037,7 +1037,7 @@ class Install extends functions
 
         $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/log4php.default.xml');
         $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.')."/apps/maarch_entreprise/xml/log4php.xml", "w+");
+        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/apps/maarch_entreprise/xml/log4php.xml", "w+");
         if (!$fp) {
             return false;
             exit;
@@ -1140,7 +1140,7 @@ class Install extends functions
         $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
 
         $LOG4PHP = $xmlconfig->LOG4PHP;
-        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/apps/maarch_entreprise/xml/log4php.xml';
+        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
 
 
@@ -1172,7 +1172,7 @@ class Install extends functions
         $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
 
         $LOG4PHP = $xmlconfig->LOG4PHP;
-        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/apps/maarch_entreprise/xml/log4php.xml';
+        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
 
 
@@ -1214,7 +1214,7 @@ class Install extends functions
         $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
 
         $LOG4PHP = $xmlconfig->LOG4PHP;
-        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/apps/maarch_entreprise/xml/log4php.xml';
+        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
 
 
@@ -1255,7 +1255,7 @@ class Install extends functions
         $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
 
         $LOG4PHP = $xmlconfig->LOG4PHP;
-        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/apps/maarch_entreprise/xml/log4php.xml';
+        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
 
 
@@ -1344,7 +1344,7 @@ class Install extends functions
         $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
 
         $LOG4PHP = $xmlconfig->LOG4PHP;
-        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/apps/maarch_entreprise/xml/log4php.xml';
+        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
 
 
@@ -1378,7 +1378,7 @@ class Install extends functions
         $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
 
         $LOG4PHP = $xmlconfigattachments->LOG4PHP;
-        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/apps/maarch_entreprise/xml/log4php.xml';
+        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
 
 
@@ -1412,7 +1412,7 @@ class Install extends functions
         $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
 
         $LOG4PHP = $xmlconfigversionattachments->LOG4PHP;
-        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/apps/maarch_entreprise/xml/log4php.xml';
+        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
 
 
