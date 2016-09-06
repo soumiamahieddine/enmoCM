@@ -654,7 +654,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('CopyMailBasket', 'Courriers en copie', 'Corbeille d''information', '(res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''user_id'' and item_id = @user and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))) and status <> ''DEL'' and res_id not in (select res_id from res_mark_as_read WHERE user_id = @user)', 'letterbox_coll', 'Y', 'N', 'Y',30);
 INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('RetourCourrier', 'Retours Courrier', 'Courriers retournés au service Courrier', 'STATUS=''RET''', 'letterbox_coll', 'Y', 'N', 'Y',40);
 INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('InitBasket', 'Courriers pour validation DSG', 'Courriers en attente d envoi en validation', 'STATUS=''INIT''', 'letterbox_coll', 'Y', 'N', 'Y',50);
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('DdeAvisBasket', 'Avis : Avis à émettre', 'Courriers nécessitant un avis', 'status = ''EAVIS'' AND res_id IN (SELECT res_id FROM listinstance WHERE coll_id = ''letterbox_coll'' AND item_type = ''user_id'' AND item_id = @user AND item_mode = ''avis'')', 'letterbox_coll', 'Y', 'N', 'Y',60);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('DdeAvisBasket', 'Avis : Avis à émettre', 'Courriers nécessitant un avis', 'status = ''EAVIS'' AND res_id IN (SELECT res_id FROM listinstance WHERE coll_id = ''letterbox_coll'' AND item_type = ''user_id'' AND item_id = @user AND item_mode = ''avis'' and process_date is NULL)', 'letterbox_coll', 'Y', 'N', 'Y',60);
 INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('SupAvisBasket', 'Avis : En attente de réponse', 'Courriers en attente d''avis', 'status=''EAVIS'' and ((DEST_USER = @user) OR (DEST_USER IN (select user_id from users_entities WHERE entity_id = @my_primary_entity) or DESTINATION in (@subentities[@my_primary_entity]))) and res_id NOT IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is not NULL and res_view_letterbox.res_id = res_id group by res_id) AND res_id IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is NULL and res_view_letterbox.res_id = res_id group by res_id)', 'letterbox_coll', 'Y', 'N', 'Y',70);
 INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('RetAvisBasket', 'Avis : Retours partiels', 'Courriers avec avis reçus', 'status=''EAVIS'' and ((DEST_USER = @user) OR (DEST_USER IN (select user_id from users_entities WHERE entity_id = @my_primary_entity) or DESTINATION in (@subentities[@my_primary_entity]))) and res_id IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is not NULL and res_view_letterbox.res_id = res_id group by res_id)', 'letterbox_coll', 'Y', 'N', 'Y',80);
 INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('ValidationBasket', 'Courriers à valider', 'Corbeille de validation', '(status = ''VAL'' and destination <>''COU'')', 'letterbox_coll', 'Y', 'N', 'Y',90);
@@ -731,18 +731,6 @@ INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_inser
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) values ('ELU', 'letterbox_coll', 'DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])', 'Les courriers de mes services et sous-services','N','N','N', 0, NULL, NULL, 'DOC');
 
 -- Donnees manuelles
---
--- PostgreSQL database
--- Maarch Courrier 1.6 demo data - FR langage
--- Maarch SAS
---
-SET statement_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = off;
-SET check_function_bodies = false;
-SET client_min_messages = warning;
-SET escape_string_warning = off;
-SET search_path = public, pg_catalog;
 ------------
 --DOCSERVERS
 ------------
@@ -819,6 +807,10 @@ INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename,
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('EENVAR', 'AR à e-envoyer', 'N', 'N', 'fm-letter-status-aenv', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SVX', 'En attente  de traitement SVE', 'N', 'N', 'fm-letter-status-wait', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SSUITE', 'Sans suite', 'Y', 'N', 'fm-letter-del', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('A_TRA', '[attachments]-A traiter', 'Y', 'N', 'fm-letter-new', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('TRA', '[attachments]-Traité', 'Y', 'N', 'fm-letter-end', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('OBS', '[attachments]-Obsolète', 'Y', 'N', 'fm-letter-end', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('tmp', '[attachments]-Brouillon', 'Y', 'N', 'fm-letter-cou', 'apps', 'N', 'N');
 ------------
 --PARAMETERS
 ------------
@@ -875,7 +867,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (404, '', 'Valider et envoyer pour impression', 'DIMP', 'N', 'N', 'Y', '', 'Y', 'visa', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (405, '', 'Viser le courrier', '_NOSTATUS_', 'N', 'N', 'Y', 'visa_mail', 'Y', 'visa', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (407, '', 'Renvoyer pour traitement', 'COU', 'N', 'N', 'Y', 'confirm_status', 'Y', 'visa', 'N', NULL);
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (410, '', 'Transmettre la réponse signée', 'EENV', 'N', 'N', 'Y', 'confirm_status', 'Y', 'visa', 'N', NULL);
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (410, '', 'Transmettre la réponse signée', 'EENV', 'N', 'N', 'Y', 'interrupt_visa', 'Y', 'visa', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (411, '', 'Transmettre pour classement', 'CLAS', 'N', 'N', 'Y', '', 'Y', 'visa', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (412, '', 'Imprimer le dossier', 'WAIT', 'N', 'N', 'Y', 'print_folder', 'Y', 'visa', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (413, '', 'E-envoyer un dossier', '_NOSTATUS_', 'N', 'N', 'Y', 'send_email', 'Y', 'visa', 'N', NULL);
@@ -902,6 +894,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'COURRIER', 'AlloMairieBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'COURRIER', 'AlloMairieBasket', 'Y', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'COURRIER', 'AlloMairieBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'AGENT', 'CopyMailBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (414, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
@@ -1345,7 +1338,12 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (24, 'Réponse générique MS', 'Modèle de réponse MS Office', '', 'OFFICE', '0000#', 'rep_standard.docx', 'DOCX: standard_sign', 'letterbox_attachment', 'attachments', 'response_project');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (25, 'AR SVA LO', 'AR SVA LO', '', 'OFFICE', '0000#', 'ar_sva.odt', 'ODT: ar_sva', 'letterbox_attachment', 'attachments', 'sva');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (26, 'AR SVR LO', 'AR SVR LO', '', 'OFFICE', '0000#', 'ar_svr.odt', 'ODT: ar_svr', 'letterbox_attachment', 'attachments', 'svr');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (27, 'Réponse avec transmission LO', 'Réponse avec transmission LO', '', 'OFFICE', '0000#', 'rep_transmission.odt', 'ODT: rep_transmission', 'letterbox_attachment', 'attachments', 'response_project');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (28, 'Transmission LO', 'Transmission LO', '', 'OFFICE', '0000#', 'transmission.odt', 'ODT: transmission', 'letterbox_attachment', 'attachments', 'transmission');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (29, 'Courrier invitation PME LO', 'Courrier invitation PME LO', '', 'OFFICE', '0000#', 'invitation.odt', 'ODT: invitation', 'letterbox_attachment', 'attachments', 'outgoing_mail');
 Select setval('templates_seq', (select max(template_id)+1 from templates), false);
+-- Signature pour ppetit
+UPDATE users SET signature_path='0000#', signature_file_name='ppetit.jpeg' WHERE user_id='ppetit';
 ------------
 --NOTIFICATIONS
 ------------
@@ -1575,6 +1573,57 @@ INSERT INTO templates_association (template_id, what, value_field, maarch_module
 INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (26, 'destination', 'COU', 'entities');
 INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (26, 'destination', 'PSF', 'entities');
 INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (26, 'destination', 'DRH', 'entities');
+
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'PE', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'SP', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'COU', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (27, 'destination', 'DRH', 'entities');
+
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'PE', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'SP', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'COU', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (28, 'destination', 'DRH', 'entities');
+
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'PE', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'SP', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'COU', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association (template_id, what, value_field, maarch_module) VALUES (29, 'destination', 'DRH', 'entities');
 
 Select setval('templates_association_seq', (select max(system_id)+1 from templates_association), false);
 
