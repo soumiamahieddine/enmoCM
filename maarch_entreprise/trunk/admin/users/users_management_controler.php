@@ -230,7 +230,7 @@ function display_list(){
 		$what = '';
 		if(isset($_REQUEST['what'])){
 			$what = $_REQUEST['what'];
-			$where .= " and lower(lastname) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?";
+			$where .= " and (lower(lastname) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
             $arrayPDO = array($what.'%',$what);
 		}
 
