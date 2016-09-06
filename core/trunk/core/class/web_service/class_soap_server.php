@@ -92,10 +92,11 @@ class MaarchSoapServer extends webService {
      * import of the SOAP library
      */
     function importSOAPLibs() {
-        require ('SOAP/Server.php');
-/*
-        require ('SOAP/Disco.php');
-*/
+        if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+            require ('apps/maarch_entreprise/tools/PEAR/SOAP/Server.php');
+        } else {
+            require ('SOAP/Server.php');
+        }
     }
     
     /**

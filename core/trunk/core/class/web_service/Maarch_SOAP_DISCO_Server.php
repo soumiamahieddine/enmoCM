@@ -1,16 +1,31 @@
 <?php
 
-require_once('SOAP/Disco.php');
+if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+    require_once('apps/maarch_entreprise/tools/PEAR/SOAP/Disco.php');
+} else {
+    require_once('SOAP/Disco.php');
+}
 require_once('core/class/Url.php');
 
 class Maarch_SOAP_DISCO_Server extends SOAP_DISCO_Server
 {
-    public function __construct() 
+    public function __construct($server, $service_name = 'MaarchSoapServer') 
     {
-        $funcGetArgs = func_get_args();
-        call_user_func_array(array(parent, 'SOAP_DISCO_Server'),
-                             $funcGetArgs);
+        if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+            $SOAP_DISCO_Server = new SOAP_DISCO_Server($server, $service_name);
 
+            $this->soap_server = $SOAP_DISCO_Server->soap_server;
+
+            $this->soap_server->_namespaces = $SOAP_DISCO_Server->namespaces;
+
+            $this->_service_name = $service_name;
+            $this->_service_ns = "urn:$service_name";
+        } else {
+            $funcGetArgs = func_get_args();
+            call_user_func_array(array(parent, 'SOAP_DISCO_Server'),
+                                 $funcGetArgs);
+        }
+        
         $this->host = array_key_exists('HTTP_X_FORWARDED_HOST', $_SERVER) 
                            ? $_SERVER['HTTP_X_FORWARDED_HOST']
                            : $_SERVER['HTTP_HOST'];
