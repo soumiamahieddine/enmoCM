@@ -417,11 +417,11 @@ for ($i=0;$i<$tabI;$i++)
             if($tab[$i][$j][$value]=="status")
             {
                 if($tab[$i][8]["value"]=='0'){
-                    $style="style='color:red;'";
+                    $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
                 }else if($tab[$i][8]["value"]=='1'){
-                    $style="style='color:orange;'";
+                    $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
                 }else{
-                    $style="style='color:#009DC5;'";
+                    $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
                 }
                 $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
                 $statusCmp = $tab[$i][$j]['value'];
