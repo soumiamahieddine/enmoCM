@@ -288,7 +288,28 @@ if($core_tools->is_module_loaded('tags'))
 
 }
 
+//thesaurus 
+if($core_tools->is_module_loaded('thesaurus'))
+{
+    $arr_tmpthesaurus = array();
+    require_once 'modules/thesaurus/class/class_modules_tools.php' ;
+    $thesaurus = new thesaurus;
+    $thesaurus_list = $thesaurus->getList();
+ 
+    if ($thesaurus_list){
+        foreach($thesaurus_list as $key=>$value)
+        {
+            array_push($arr_tmpthesaurus, array('VALUE' => functions::protect_string_db($value->thesaurus_id), 'LABEL' => $value->thesaurus_name));
+        }
+    }
+    else
+    {
+        array_push($arr_tmpthesaurus, array('VALUE' => '', 'LABEL' => _THESAURUSNONE));
+    }
+    $param['thesaurus_mu'] = array('label' => _THESAURUS, 'type' => 'select_multiple', 'param' => array('field_label' => _THESAURUS, 'label_title' => _CHOOSE_THESAURUS,
+    'id' => 'thesaurus','options' => $arr_tmpthesaurus));
 
+}
 
 //destination (department)
 if($core_tools->is_module_loaded('entities'))
