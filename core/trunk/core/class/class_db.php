@@ -513,14 +513,14 @@ class dbquery extends functions
                 foreach ($myObject as $key => $value) {
                     $myKey = strtolower($key);
                     if (oci_field_type($this->query, $key) == 'CLOB') {
-                        $myBlob = $myObject->$key;
+                        $myBlob = $myObject->{$key};
                         if (isset($myBlob)) {
-                            $myLowerObject->$myKey = $myBlob->read(
+                            $myLowerObject->{$myKey} = $myBlob->read(
                                 $myBlob->size()
                             );
                         }
                     } else {
-                        $myLowerObject->$myKey = $myObject->$key;
+                        $myLowerObject->{$myKey} = $myObject->{$key};
                     }
                 }
                 return $myLowerObject;

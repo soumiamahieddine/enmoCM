@@ -517,7 +517,7 @@ class docserver_locations_controler extends ObjectControler
             $array = array();
             $array = $func->object2array($object);
             foreach (array_keys($array) as $key) {
-                $docserverLocationsObject->$key = $array[$key];
+                $docserverLocationsObject->{$key} = $array[$key];
             }
             return $docserverLocationsObject;
         } else {

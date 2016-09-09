@@ -196,7 +196,7 @@ class Maarch_Core_Class_StatusControler
             $array = array();
             $array = $func->object2array($object);
             foreach (array_keys($array) as $key) {
-                $statusObject->$key = $array[$key];
+                $statusObject->{$key} = $array[$key];
             }
             return $statusObject;
         } else {

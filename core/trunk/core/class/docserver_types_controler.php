@@ -391,7 +391,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
             $array = array();
             $array = $func->object2array($object);
             foreach(array_keys($array) as $key) {
-                $docserverTypesObject->$key = $array[$key];
+                $docserverTypesObject->{$key} = $array[$key];
             }
             return $docserverTypesObject;
         } else {

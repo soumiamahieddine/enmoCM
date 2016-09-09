@@ -105,7 +105,7 @@ class ActionControler
 			$action = new Action();
 			$queryResult=$stmt->fetchObject();
 			foreach($queryResult as $key => $value){
-				$action->$key=$value;
+				$action->{$key}=$value;
 			}
 			return $action;
 		}
@@ -134,7 +134,7 @@ class ActionControler
 			while($queryResult=$stmt->fetchObject()){
 				$action = new Action();
 				foreach($queryResult as $key => $value){
-					$action->$key=$value;
+					$action->{$key}=$value;
 				}
 				array_push($actions_list, $action);
 			}

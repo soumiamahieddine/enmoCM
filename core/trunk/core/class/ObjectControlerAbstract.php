@@ -150,7 +150,7 @@ abstract class ObjectControler
 
         $prep_query = self::update_prepare($object, self::$computed_properties);
 
-        $prep_query['arrayValues'][] = $object->$table_id;
+        $prep_query['arrayValues'][] = $object->{$table_id};
 
         $query = "update $tableName set "
                . $prep_query['query']
@@ -263,7 +263,7 @@ abstract class ObjectControler
                 } elseif ($value == 'f') {    /*                        */
                     $value = false;           /*                        */
                 }                            /**************************/
-                $object->$key = $value;
+                $object->{$key} = $value;
             }
         }
 
@@ -322,7 +322,7 @@ abstract class ObjectControler
                     } elseif ($value == 'f') {    /*                        */
                         $value = false;           /*                        */
                     }                            /**************************/
-                    $object->$key = $value;
+                    $object->{$key} = $value;
                 }
             }
         }
@@ -352,7 +352,7 @@ abstract class ObjectControler
     
         $query = "delete from $table_name where $table_id=?";
     
-        $stmt = self::$db->query($query, array($object->$table_id));
+        $stmt = self::$db->query($query, array($object->{$table_id}));
         
         if ($stmt) {
             $result = true;
@@ -385,7 +385,7 @@ abstract class ObjectControler
         
         $query="update $table_name set enabled = 'Y' where $table_id=?";
         
-        $stmt = self::$db->query($query, array($object->$table_id));
+        $stmt = self::$db->query($query, array($object->{$table_id}));
         
         if ($stmt) {
             $result = true;
@@ -417,7 +417,7 @@ abstract class ObjectControler
         
         $query="update $table_name set status = 'OK' where user_id = lower(?)";
                 
-        $stmt = self::$db->query($query, array($object->$table_id));
+        $stmt = self::$db->query($query, array($object->{$table_id}));
         
         if ($stmt) {
             $result = true;
@@ -450,7 +450,7 @@ abstract class ObjectControler
         
         $query = "update $table_name set enabled = 'N' where $table_id=?";
         
-        $stmt = self::$db->query($query, array($object->$table_id));
+        $stmt = self::$db->query($query, array($object->{$table_id}));
         
         if ($stmt) {
             $result = true;

@@ -864,7 +864,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             $array = array();
             $array = $func->object2array($object);
             foreach (array_keys($array) as $key) {
-                $userObject->$key = $array[$key];
+                $userObject->{$key} = $array[$key];
             }
             return $groupObject;
         } else {

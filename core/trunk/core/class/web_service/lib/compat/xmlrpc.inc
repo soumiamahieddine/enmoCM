@@ -3098,7 +3098,7 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 				@reset($t);
 				while(list($id,$cont) = @each($t))
 				{
-					@$b->$id = $cont;
+					@$b->{$id} = $cont;
 				}
 			}
 			// end contrib
@@ -3297,7 +3297,7 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 					$obj = @new $xmlrpc_val->_php_class;
 					while(list($key,$value)=$xmlrpc_val->structeach())
 					{
-						$obj->$key = php_xmlrpc_decode($value, $options);
+						$obj->{$key} = php_xmlrpc_decode($value, $options);
 					}
 					return $obj;
 				}

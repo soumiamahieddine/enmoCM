@@ -81,7 +81,7 @@ class PrintControler extends PrintFunctions
                 $configuration = simplexml_load_file($pathToFile_app);
             
             // Store interesting part of the configuration
-            $this->configuration = $configuration->$collection;
+            $this->configuration = $configuration->{$collection};
         }
         
         private function retrieve_datas($resId = '')
@@ -103,7 +103,7 @@ class PrintControler extends PrintFunctions
             $i = 0;
             $this->object_print = new EmptyObject();
             while($line = $stmt->fetchObject()) {
-                $this->object_print->$i = $line;
+                $this->object_print->{$i} = $line;
                 $i++;
             }
 			//var_dump($this->object_print);exit;

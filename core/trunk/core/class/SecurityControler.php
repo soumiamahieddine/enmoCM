@@ -80,7 +80,7 @@ class SecurityControler
             $access = new SecurityObj();
             $queryResult = $stmt->fetchObject();
             foreach ($queryResult as $key => $value) {
-                $access->$key = $value;
+                $access->{$key} = $value;
             }
             return $access;
         } else {
@@ -110,7 +110,7 @@ class SecurityControler
             while ($queryResult = $stmt->fetchObject()) {
                 $access = new SecurityObj();
                 foreach ($queryResult as $key => $value) {
-                    $access->$key = $value;
+                    $access->{$key} = $value;
                 }
                 array_push($security, $access);
             }

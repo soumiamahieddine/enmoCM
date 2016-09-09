@@ -71,7 +71,7 @@ class ExportControler extends ExportFunctions
                 $configuration = simplexml_load_file($pathToFile_app);
             
             // Store interesting part of the configuration
-            $this->configuration = $configuration->$collection;
+            $this->configuration = $configuration->{$collection};
             $this->delimiter     = end($configuration->CSVOPTIONS->DELIMITER);
             $this->enclosure     = end($configuration->CSVOPTIONS->ENCLOSURE);
             $this->isUtf8 = end($configuration->CSVOPTIONS->IS_UTF8);
@@ -90,7 +90,7 @@ class ExportControler extends ExportFunctions
             $this->object_export = new EmptyObject();
             while($line = $stmt->fetchObject()) {
                 if ($i == 0) {
-                    $this->object_export->$i = $this->retrieve_header();
+                    $this->object_export->{$i} = $this->retrieve_header();
                     $i = 1;
                 }
                 if ($line->doc_date) {
@@ -102,7 +102,7 @@ class ExportControler extends ExportFunctions
                 if ($line->process_limit_date) {
                     $line->process_limit_date = substr($line->process_limit_date, 0,10);
                 }
-                $this->object_export->$i = $line;
+                $this->object_export->{$i} = $line;
                 $i++;
             }
         }
@@ -150,7 +150,7 @@ class ExportControler extends ExportFunctions
             for($i=0; $i<$i_max; $i++) {
                 $field = $fields[$i];
                 $database_field = end(explode('.', $field->DATABASE_FIELD));
-                $return->$database_field = end($field->LIBELLE);
+                $return->{$database_field} = end($field->LIBELLE);
             }
             return $return;
         }
@@ -166,7 +166,7 @@ class ExportControler extends ExportFunctions
                         $column_value = utf8_decode($column_value);
                     }
                     $column_value = $this->unprotect_string($column_value);
-                    $this->object_export->$line_name->$column_name = $column_value;
+                    $this->object_export->{$line_name}->{$column_name} = $column_value;
                 }
             }
         }
@@ -202,7 +202,7 @@ class ExportControler extends ExportFunctions
                 $libelle = end($empty->LIBELLE);
                 $colname = end($empty->COLNAME);
                 foreach($this->object_export as $line_name => $line_value) {
-                    $line_value->$colname = $libelle;
+                    $line_value->{$colname} = $libelle;
                     break;
                 }
             }

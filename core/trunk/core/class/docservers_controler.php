@@ -669,7 +669,7 @@ class docservers_controler
             $array = array();
             $array = $func->object2array($object);
             foreach (array_keys($array) as $key) {
-                $docserverObject->$key = $array[$key];
+                $docserverObject->{$key} = $array[$key];
             }
             return $docserverObject;
         } else {

@@ -932,7 +932,7 @@
 				if($fld != 'debug' && $fld != 'return_type')
 				{
 					$val = var_export($val, true);
-					$code .= "\$client->$fld = $val;\n";
+					$code .= "\$client->{$fld} = $val;\n";
 				}
 			}
 		}
