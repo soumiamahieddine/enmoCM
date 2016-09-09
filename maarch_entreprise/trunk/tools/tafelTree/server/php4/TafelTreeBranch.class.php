@@ -98,8 +98,8 @@ class TafelTreeBranch {
 	function setText ($txt) {$this->txt = $txt;}
 	
 	function getParam ($param) {
-		if (isset($this->$param)) {
-			return $this->$param;
+		if (isset($this->{$param})) {
+			return $this->{$param};
 		}
 	}
 	
@@ -109,7 +109,7 @@ class TafelTreeBranch {
 		} elseif ($param == 'txt') {
 			$this->setText($value);
 		} else {
-			$this->$param = $value;
+			$this->{$param} = $value;
 		}
 	}
 	

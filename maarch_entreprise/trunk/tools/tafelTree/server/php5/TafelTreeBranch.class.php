@@ -105,8 +105,8 @@ class TafelTreeBranch {
 	 * @return 	string									La valeur de la propriété
 	 */
 	public function getParam ($param) {
-		if (isset($this->$param)) {
-			return $this->$param;
+		if (isset($this->{$param})) {
+			return $this->{$param};
 		}
 	}
 	
@@ -123,7 +123,7 @@ class TafelTreeBranch {
 		} elseif ($param == 'txt') {
 			$this->setText($value);
 		} else {
-			$this->$param = $value;
+			$this->{$param} = $value;
 		}
 	}
 	

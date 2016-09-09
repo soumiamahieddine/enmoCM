@@ -59,7 +59,7 @@ class HTMLPurifier_Language
         $factory = HTMLPurifier_LanguageFactory::instance();
         $factory->loadLanguage($this->code);
         foreach ($factory->keys as $key) {
-            $this->$key = $factory->cache[$this->code][$key];
+            $this->{$key} = $factory->cache[$this->code][$key];
         }
         $this->_loaded = true;
     }

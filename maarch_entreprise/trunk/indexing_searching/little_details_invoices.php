@@ -212,14 +212,14 @@ if (! empty($_SESSION['error']) ) {
                 $tmp = $key;
             }
             if ($indexes[$key]['type'] == "date") {
-                $res->$tmp = functions::format_date_db($res->$tmp, false);
+                $res->{$tmp} = functions::format_date_db($res->{$tmp}, false);
             }
-            $indexes[$key]['value'] = $res->$tmp;
-            $indexes[$key]['show_value'] = $res->$tmp;
+            $indexes[$key]['value'] = $res->{$tmp};
+            $indexes[$key]['show_value'] = $res->{$tmp};
             if ($indexes[$key]['type'] == "string") {
-                $indexes[$key]['show_value'] = functions::show_string($res->$tmp);
+                $indexes[$key]['show_value'] = functions::show_string($res->{$tmp});
             } else if ($indexes[$key]['type'] == "date") {
-                $indexes[$key]['show_value'] = functions::format_date_db($res->$tmp, true);
+                $indexes[$key]['show_value'] = functions::format_date_db($res->{$tmp}, true);
             }
         }
 

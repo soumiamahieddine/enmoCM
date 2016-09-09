@@ -987,8 +987,8 @@ abstract class types_Abstract extends database
                          array_push(
                              $values,
                              array(
-                                 'id' => (string) $res->$foreignKey,
-                                 'label' => $res->$foreignLabel,
+                                 'id' => (string) $res->{$foreignKey},
+                                 'label' => $res->{$foreignLabel},
                              )
                          );
                     }

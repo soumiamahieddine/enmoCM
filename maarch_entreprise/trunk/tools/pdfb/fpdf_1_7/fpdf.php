@@ -898,7 +898,7 @@ function Image($file, $x=null, $y=null, $w=0, $h=0, $type='', $link='')
 		$mtd = '_parse'.$type;
 		if(!method_exists($this,$mtd))
 			$this->Error('Unsupported image type: '.$type);
-		$info = $this->$mtd($file);
+		$info = $this->{$mtd}($file);
 		$info['i'] = count($this->images)+1;
 		$this->images[$file] = $info;
 	}
@@ -1611,7 +1611,7 @@ function _putfonts()
 			$mtd = '_put'.strtolower($type);
 			if(!method_exists($this,$mtd))
 				$this->Error('Unsupported font type: '.$type);
-			$this->$mtd($font);
+			$this->{$mtd}($font);
 		}
 	}
 }

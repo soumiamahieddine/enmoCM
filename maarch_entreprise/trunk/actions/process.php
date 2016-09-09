@@ -351,11 +351,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         $frm_str .= '<input type="text" name="' . $key . '" id="'
                                   . $key . '" readonly="readonly" class="readonly" style="border:none;" ';
                         if ($indexes[$key]['type_field'] == 'input') {
-                            $frm_str .= ' value="'.$values_fields->$key.'" ';
+                            $frm_str .= ' value="'.$values_fields->{$key}.'" ';
                         } else {
                             $val = '';
                             for ($i=0; count($indexes[$key]['values']); $i++) {
-                                if ($values_fields->$key == $indexes[$key]['values'][$i]['id']) {
+                                if ($values_fields->{$key} == $indexes[$key]['values'][$i]['id']) {
                                     $val =     $indexes[$key]['values'][$i]['label'];
                                     break;
                                 }

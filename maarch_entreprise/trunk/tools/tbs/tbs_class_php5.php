@@ -242,9 +242,9 @@ public function DataOpen(&$Query,$QryPrms=false) {
 						$f = array(&$Var,$x); unset($Var);
 						$Var = call_user_func_array($f,$ArgLst);
 					} elseif (property_exists(get_class($Var),$x)) {
-						if (isset($Var->$x)) $Var = &$Var->$x;
-					} elseif (isset($Var->$x)) {
-						$Var = $Var->$x; // useful for overloaded property
+						if (isset($Var->{$x})) $Var = &$Var->{$x};
+					} elseif (isset($Var->{$x})) {
+						$Var = $Var->{$x}; // useful for overloaded property
 					} else {
 						$Empty = true;
 					}
@@ -1187,9 +1187,9 @@ function meth_Locator_Replace(&$Txt,&$Loc,&$Value,$SubStart) {
 						$x = '';	
 					}
 				} elseif (property_exists($Value,$x)) {
-					$x = &$Value->$x;
-				} elseif (isset($Value->$x)) {
-					$x = $Value->$x; // useful for overloaded property
+					$x = &$Value->{$x};
+				} elseif (isset($Value->{$x})) {
+					$x = $Value->{$x}; // useful for overloaded property
 				} else {
 					if (!isset($Loc->PrmLst['noerr'])) $this->meth_Misc_Alert($Loc,'item '.$x.'\' is neither a method nor a property in the class \''.get_class($Value).'\'.',true);
 					unset($Value); $Value = ''; break;
@@ -2775,7 +2775,7 @@ function meth_Merge_SectionNormal(&$BDef,&$Src) {
 				// $col_opt cannot be used here because values which are not array nore object are reformated by $Src into an array with keys 'key' and 'val'
 				$data = &$Src->CurrRec;
 			} elseif (is_object($Src->CurrRec)) {
-				$data = &$Src->CurrRec->$col;
+				$data = &$Src->CurrRec->{$col};
 			} else {
 				if (array_key_exists($col, $Src->CurrRec)) {
 					$data = &$Src->CurrRec[$col];
@@ -3102,8 +3102,8 @@ function meth_Misc_UserFctCheck(&$FctInfo,$FctCat,&$FctObj,&$ErrMsg,$FctCheck=fa
 				} elseif ($i===$iMax0) {
 					$ErrMsg = 'Expression \''.$FctStr.'\' is invalid because \''.$x.'\' is not a method in the class \''.get_class($ObjRef).'\'.';
 					return false;
-				} elseif (isset($ObjRef->$x)) {
-					$ObjRef = &$ObjRef->$x;
+				} elseif (isset($ObjRef->{$x})) {
+					$ObjRef = &$ObjRef->{$x};
 				} else {
 					$ErrMsg = 'Expression \''.$FctStr.'\' is invalid because sub-item \''.$x.'\' is neither a method nor a property in the class \''.get_class($ObjRef).'\'.';
 					return false;
@@ -3311,8 +3311,8 @@ function meth_PlugIn_SetEvent($PlugInId, $Event, $NewRef='') {
 
 	if ($NewRef===false) {
 		// Disable the event
-		if (!isset($this->$PropName)) return false;
-		$PropRef = &$this->$PropName;
+		if (!isset($this->{$PropName})) return false;
+		$PropRef = &$this->{$PropName};
 		unset($PropRef[$PlugInId]);
 		return true;
 	}
@@ -3329,8 +3329,8 @@ function meth_PlugIn_SetEvent($PlugInId, $Event, $NewRef='') {
 	}
 
 	// Save information into the corresponding property
-	if (!isset($this->$PropName)) $this->$PropName = array();
-	$PropRef = &$this->$PropName;
+	if (!isset($this->{$PropName})) $this->{$PropName} = array();
+	$PropRef = &$this->{$PropName};
 	$PropRef[$PlugInId] = $FctRef;
 
 	// Flags saying if a plugin is installed

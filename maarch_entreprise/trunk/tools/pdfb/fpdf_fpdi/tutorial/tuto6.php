@@ -77,10 +77,10 @@ function CloseTag($tag)
 function SetStyle($tag,$enable)
 {
 	//Modify style and select corresponding font
-	$this->$tag+=($enable ? 1 : -1);
+	$this->{$tag}+=($enable ? 1 : -1);
 	$style='';
 	foreach(array('B','I','U') as $s)
-		if($this->$s>0)
+		if($this->{$s}>0)
 			$style.=$s;
 	$this->SetFont('',$style);
 }

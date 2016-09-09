@@ -137,8 +137,8 @@ class HTMLPurifier_HTMLModule_Tidy extends HTMLPurifier_HTMLModule
                         $e = $this;
                     }
                     // PHP does some weird parsing when I do
-                    // $e->$type[$attr], so I have to assign a ref.
-                    $f =& $e->$type;
+                    // $e->{$type}[$attr], so I have to assign a ref.
+                    $f =& $e->{$type};
                     $f[$attr] = $fix;
                     break;
                 case 'tag_transform':
@@ -152,7 +152,7 @@ class HTMLPurifier_HTMLModule_Tidy extends HTMLPurifier_HTMLModule
                     } else {
                         $e = $this->info[$element];
                     }
-                    $e->$type = $fix;
+                    $e->{$type} = $fix;
                     break;
                 default:
                     trigger_error("Fix type $type not supported", E_USER_ERROR);

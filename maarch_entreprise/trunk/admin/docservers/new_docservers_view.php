@@ -160,7 +160,7 @@
         
         if ($params['mode'] == 'list') {
             $modeList = true;
-            $titleText = $messageController->getMessageText('docservers_list', false, array(count($dataObjectList->$params['objectName'])));
+            $titleText = $messageController->getMessageText('docservers_list', false, array(count($dataObjectList->{$params['objectName']})));
             
         } elseif ($params['mode'] == 'create') {
             $modeCreate = true;

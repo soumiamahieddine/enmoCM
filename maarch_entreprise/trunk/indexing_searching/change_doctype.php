@@ -160,9 +160,9 @@ if(count($indexes) > 0)
                 if ($indexes[$key]['type'] == 'date') {
                     $opt_indexes .='<input name="' . functions::xssafe($key) . '" type="text" id="' 
                         . $key . '" value="';
-                    if (isset($values_fields->$key)) {
+                    if (isset($values_fields->{$key})) {
                         $opt_indexes .= functions::format_date_db(
-                            functions::xssafe($values_fields->$key), true
+                            functions::xssafe($values_fields->{$key}), true
                         );
                     } elseif ($indexes[$key]['default_value'] <> false) {
                         $opt_indexes .= functions::format_date_db(
@@ -174,9 +174,9 @@ if(count($indexes) > 0)
                 } else {
                     $opt_indexes .= '<input name="'.functions::xssafe($key).'" type="text" id="' 
                         . $key . '" value="';
-                    if (isset($values_fields->$key)) {
+                    if (isset($values_fields->{$key})) {
                         $opt_indexes .= functions::show_string(
-                            functions::xssafe($values_fields->$key), true
+                            functions::xssafe($values_fields->{$key}), true
                         );
                     } else if ($indexes[$key]['default_value'] <> false) {
                         $opt_indexes .= functions::show_string(
@@ -193,7 +193,7 @@ if(count($indexes) > 0)
                         $opt_indexes .= '<option value="' 
                             . functions::xssafe($indexes[$key]['values'][$i]['id']) . '"';
                         if ($indexes[$key]['values'][$i]['id'] 
-                            == $values_fields->$key) {
+                            == $values_fields->{$key}) {
                             $opt_indexes .= 'selected="selected"';
                         } elseif (
                             $indexes[$key]['default_value'] <> false 

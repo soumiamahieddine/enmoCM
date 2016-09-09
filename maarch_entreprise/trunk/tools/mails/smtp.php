@@ -350,7 +350,7 @@
 		
 		function set($var, $value){
 
-			$this->$var = $value;
+			$this->{$var} = $value;
 			return TRUE;
 		}
 

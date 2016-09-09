@@ -51,7 +51,7 @@ class DataTypeRestriction
             case 'maxInclusive':
             case 'minExclusive':    
             case 'maxExclusive':
-                $this->$name = $value;  
+                $this->{$name} = $value;  
                 break;
 
             case 'length':
@@ -60,7 +60,7 @@ class DataTypeRestriction
             case 'totalDigit':
             case 'fractionDigit':
                 if (is_array($value)) {
-                    $this->{$name} = array_merge($this->$name, $value);
+                    $this->{$name} = array_merge($this->{$name}, $value);
                 } else {
                     $this->{$name}[] = $value;
                 }
@@ -82,8 +82,8 @@ class DataTypeRestriction
                 case 'maxInclusive':
                 case 'minExclusive':    
                 case 'maxExclusive':
-                    if (!isset($this->$name)) {
-                        $this->$name = $value;
+                    if (!isset($this->{$name})) {
+                        $this->{$name} = $value;
                     }
                     break;
 

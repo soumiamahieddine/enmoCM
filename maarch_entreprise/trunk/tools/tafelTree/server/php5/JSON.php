@@ -673,7 +673,7 @@ class Services_JSON
                                     if ($this->use & SERVICES_JSON_LOOSE_TYPE) {
                                         $obj[$key] = $val;
                                     } else {
-                                        $obj->$key = $val;
+                                        $obj->{$key} = $val;
                                     }
                                 } elseif (preg_match('/^\s*(\w+)\s*:\s*(\S.*),?$/Uis', $slice, $parts)) {
                                     // name:value pair, where name is unquoted
@@ -683,7 +683,7 @@ class Services_JSON
                                     if ($this->use & SERVICES_JSON_LOOSE_TYPE) {
                                         $obj[$key] = $val;
                                     } else {
-                                        $obj->$key = $val;
+                                        $obj->{$key} = $val;
                                     }
                                 }
 
