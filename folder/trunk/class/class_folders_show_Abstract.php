@@ -304,7 +304,7 @@ abstract class folders_show_Abstract extends functions
 							while($res = $stmt->fetchObject())
 							{
 							?>
-                            <option value="<?php functions::xecho($res->$folder_array['index'][$i]['foreign_key']);?>" <?php  if($res->$folder_array['index'][$i]['foreign_key'] == $folder_array['index'][$i]['value']){ echo 'selected="selected"';}?>><?php functions::xecho($res->$folder_array['index'][$i]['foreign_label']);?></option>
+                            <option value="<?php functions::xecho($res->{$folder_array['index'][$i]['foreign_key']});?>" <?php  if($res->{$folder_array['index'][$i]['foreign_key']} == $folder_array['index'][$i]['value']){ echo 'selected="selected"';}?>><?php functions::xecho($res->{$folder_array['index'][$i]['foreign_label']});?></option>
                             <?php
 							}
 						}

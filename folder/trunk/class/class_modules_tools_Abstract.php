@@ -271,8 +271,8 @@ abstract class folder_Abstract extends request
 
 		foreach(array_keys($tab_index) as $key)
 		{
-			$tab_index[$key]['value'] = $res->$key;
-			$tab_index[$key]['show_value'] = $res->$key;
+			$tab_index[$key]['value'] = $res->{$key};
+			$tab_index[$key]['show_value'] = $res->{$key};
 			if($tab_index[$key]['type_field'] == 'select')
 			{
 				for($i=0;$i<count($tab_index[$key]['values']);$i++)
