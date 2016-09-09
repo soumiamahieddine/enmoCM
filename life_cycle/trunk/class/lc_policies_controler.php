@@ -291,7 +291,7 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
             $array = array();
             $array = $func->object2array($object);
             foreach(array_keys($array) as $key) {
-                $policyObject->$key = $array[$key];
+                $policyObject->{$key} = $array[$key];
             }
             return $policyObject;
         } else {

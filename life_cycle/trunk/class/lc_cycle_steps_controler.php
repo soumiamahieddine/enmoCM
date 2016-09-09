@@ -417,7 +417,7 @@ class lc_cycle_steps_controler
             $array = array();
             $array = $func->object2array($object);
             foreach (array_keys($array) as $key) {
-                $cycleStepsObject->$key = $array[$key];
+                $cycleStepsObject->{$key} = $array[$key];
             }
             return $cycleStepsObject;
         } else {

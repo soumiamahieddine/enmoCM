@@ -357,7 +357,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF
             $array = array();
             $array = $func->object2array($object);
             foreach (array_keys($array) as $key) {
-                $cycleObject->$key = $array[$key];
+                $cycleObject->{$key} = $array[$key];
             }
             return $cycleObject;
         } else {

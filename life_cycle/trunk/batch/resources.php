@@ -172,7 +172,7 @@ function getBreakKeyValue($resId, $breakKey)
         return false;
     } else {
         $resBreakKey = $stmt->fetchObject();
-        $breakKeyValue = $resBreakKey->$breakKey;
+        $breakKeyValue = $resBreakKey->{$breakKey};
     }
     return $breakKeyValue;
 }
