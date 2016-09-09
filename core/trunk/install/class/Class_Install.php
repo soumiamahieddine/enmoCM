@@ -897,6 +897,11 @@ class Install extends functions
             exit;
         }
 
+        if (!$this->setLog4php()) {
+            return false;
+            exit;
+        }
+
         return true;
 
     }
@@ -1034,8 +1039,16 @@ class Install extends functions
     }
 
     private function setLog4php(){
-
         $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/log4php.default.xml');
+        $LOG4PHP = $xmlconfig->log4php;
+        $appender = $xmlconfig->appender;
+        $param = $appender->param;
+        $appender->param['value'] = realpath('.').'/fonctionnel.log';
+
+        $appender = $xmlconfig->appender[1];
+        $param = $appender->param;
+        $appender->param['value'] = realpath('.').'/technique.log';
+
         $res = $xmlconfig->asXML();
         $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/apps/maarch_entreprise/xml/log4php.xml", "w+");
         if (!$fp) {
