@@ -349,7 +349,7 @@ abstract class fileplan_Abstract
              
             $line = $stmt->fetchObject();
             if(!empty($onlyThisField)){
-                return (isset($line->$onlyThisField))? functions::show_string($line->$onlyThisField) : false;
+                return (isset($line->{$onlyThisField}))? functions::show_string($line->{$onlyThisField}) : false;
             } else {
                 $positionArray = array();
                 array_push(
