@@ -436,7 +436,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             $array = array();
             $array = $func->object2array($object);
             foreach (array_keys($array) as $key) {
-                $templateObject->$key = $array[$key];
+                $templateObject->{$key} = $array[$key];
             }
             return $templateObject;
         } else {
