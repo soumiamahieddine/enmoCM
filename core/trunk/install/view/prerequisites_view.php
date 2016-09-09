@@ -238,18 +238,20 @@
                         <?php echo _PEAR;?>
                     </td>
                 </tr>
-                <tr>
+                <!--tr>
                     <td class="voyantPrerequisites">
-                        <?php echo $Class_Install->checkPrerequisites(
-                            $Class_Install->isPearRequirements(
-                                'MIME/Type.php'
-                            )
-                        );?>
+                        <?php 
+                        // echo $Class_Install->checkPrerequisites(
+                        //     $Class_Install->isPearRequirements(
+                        //         'MIME/Type.php'
+                        //     )
+                        // );
+                        ?>
                     </td>
                     <td>
-                        <?php echo _MIMETYPE;?>
+                        <?php //echo _MIMETYPE;?>
                     </td>
-                </tr>
+                </tr-->
                 <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(

@@ -491,8 +491,9 @@ function Ds_setRights($dest)
 */
 function Ds_getMimeType($filePath)
 {
-    require_once 'MIME/Type.php';
-    return MIME_Type::autoDetect($filePath);
+    //require_once 'MIME/Type.php';
+    //return MIME_Type::autoDetect($filePath);
+    return mime_content_type($filePath);
 }
 
 /**
