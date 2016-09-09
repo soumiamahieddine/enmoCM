@@ -82,7 +82,7 @@ abstract class BasketControler_Abstract
 			$basket = new Basket_obj();
 			$queryResult = $stmt->fetchObject();
 			foreach ($queryResult as $key => $value) {
-				$basket->$key = $value;
+				$basket->{$key} = $value;
 			}
 			return $basket;
 		} else {
