@@ -115,7 +115,7 @@ abstract class EntityControler_Abstract
             $entity = new EntityObj();
             $queryResult=$stmt->fetchObject();
             foreach($queryResult as $key => $value){
-                $entity->$key=$value;
+                $entity->{$key}=$value;
             }
             
             return $entity;
