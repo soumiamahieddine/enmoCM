@@ -902,6 +902,16 @@ class Install extends functions
             exit;
         }
 
+        if (!$this->setConfigCron()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setRight()) {
+            return false;
+            exit;
+        }
+
         return true;
 
     }
@@ -1027,14 +1037,89 @@ class Install extends functions
             return false;
             exit;
         }
-        
 
+        if (!$this->setConfigCron()) {
+            return false;
+            exit;
+        }
+        
+        if (!$this->setRight()) {
+            return false;
+            exit;
+        }
 
        /*if (!$this->setDatasourcesXsd()) {
             return false;
             exit;
         }*/
         
+        return true;
+    }
+
+    private function setRight(){
+        exec('chmod -R 700 *');
+        return true;
+
+    }
+
+    private function setConfigCron()
+    {
+
+        mkdir(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/conf_cron/");
+        $output = shell_exec('crontab -l');
+        //var_dump($output);
+        $pathfile = realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/cron_".$_SESSION['config']['databasename'];
+        $file = fopen("custom/cs_".$_SESSION['config']['databasename']."/cron_".$_SESSION['config']['databasename'], "w+");
+        fwrite($file,$output);
+        //ftruncate($file,0);
+        $cron = '
+
+####################################################################################
+#                                                                                  #
+#                                                                                  #
+#                                       '.$_SESSION['config']['databasename'].'                                      #
+#                                                                                  #
+#                                                                                  #
+####################################################################################
+
+
+######################THUMBNAILS####################################################
+* * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/scripts/launch_batch_thumbnails.sh
+15 12 1 * *        rm -Rf '.realpath('.').'/modules/thumbnails/log/*.log
+
+######################notification#################################################
+
+15 10 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 15 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 12 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+
+
+30 10 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.sh
+30 15 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.sh
+30 12 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.sh
+
+10 12 1 * *        rm -Rf '.realpath('.').'/modules/notifications/batch/logs/process_event_stack/*.log
+11 12 1 * *        rm -Rf '.realpath('.').'/modules/notifications/batch/logs/process_email_stack/*.log
+######################sendmail####################################################
+
+* * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
+
+0 12 1 * *     rm -Rf /var/www/html/trunk/modules/sendmail/batch/logs/*.log
+
+######################fulltext###################################################
+
+* * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/scripts/launch_fulltext.sh
+20 12 1 * *        rm -Rf '.realpath('.').'/modules/full_text/log/*.log
+';
+        fwrite($file,$cron);
+        fclose($file);
+        exec('crontab '.$pathfile);
+
+        $output = exec('crontab -l');
+        $fileCrontab = fopen("custom/cs_".$_SESSION['config']['databasename']."/crontabL_".$_SESSION['config']['databasename'], "a+");
+
+        // fwrite($fileCrontab,$output);
+        // fclose($fileCrontab);
         return true;
     }
 
