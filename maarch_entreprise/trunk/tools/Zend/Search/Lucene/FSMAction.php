@@ -61,6 +61,7 @@ class Zend_Search_Lucene_FSMAction
     {
         $methodName = $this->_method;
         $this->_object->{$methodName}();
+        
     }
 }
 
