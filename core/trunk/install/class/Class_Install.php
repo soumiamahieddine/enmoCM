@@ -1057,7 +1057,7 @@ class Install extends functions
     }
 
     private function setRight(){
-        exec('chmod -R 700 *');
+        exec('chmod -R 770 *');
         return true;
 
     }

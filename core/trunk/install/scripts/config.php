@@ -28,7 +28,7 @@
         }
 
         $LOG4PHP = $xmlconfig->LOG4PHP;
-        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/apps/maarch_entreprise/xml/log4php.xml';
+        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
 
         $res = $xmlconfig->asXML();
