@@ -1065,7 +1065,7 @@ class Install extends functions
     private function setConfigCron()
     {
 
-        mkdir(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/conf_cron/");
+        //mkdir(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/conf_cron/");
         $output = shell_exec('crontab -l');
         //var_dump($output);
         $pathfile = realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/cron_".$_SESSION['config']['databasename'];
@@ -1116,7 +1116,7 @@ class Install extends functions
         exec('crontab '.$pathfile);
 
         $output = exec('crontab -l');
-        $fileCrontab = fopen("custom/cs_".$_SESSION['config']['databasename']."/crontabL_".$_SESSION['config']['databasename'], "a+");
+        //$fileCrontab = fopen("custom/cs_".$_SESSION['config']['databasename']."/crontabL_".$_SESSION['config']['databasename'], "a+");
 
         // fwrite($fileCrontab,$output);
         // fclose($fileCrontab);
