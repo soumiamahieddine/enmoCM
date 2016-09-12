@@ -1298,8 +1298,13 @@ class Install extends functions
 
         $CONFIG = $xmlconfig->CONFIG;
         $CONFIG->MaarchDirectory = realpath('.')."/";
-        $chemin = $_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']);
+        //$path = "ifconfig eth2 | grep 'inet addr' | cut -f2 -d: | awk '{print $1}'";
+        //$ipconfig = shell_exec($path);
+        //$ipconfig = trim($ipconfig);
+        //$chemin = $ipconfig . dirname($_SERVER['PHP_SELF'] .'cs_'.$_SESSION['config']['databasename']);
+        $chemin = $_SERVER['SERVER_ADDR'] . dirname($_SERVER['PHP_SELF'] .'cs_'.$_SESSION['config']['databasename']);
         $maarchUrl = rtrim($chemin, "install");
+        $maarchUrl = $maarchUrl.'cs_'.$_SESSION['config']['databasename'].'/';
         $CONFIG->MaarchUrl = $maarchUrl;
         $CONFIG->MaarchApps = 'maarch_entreprise';
         $CONFIG->TmpDirectory = realpath('.').'/modules/notifications/batch/tmp/';

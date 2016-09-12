@@ -8,8 +8,9 @@
         $CONFIG = $xmlconfig->CONFIG;
 
         $CONFIG->MaarchDirectory = realpath('.')."/";
-        $chemin = $_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']);
+        $chemin = $_SERVER['SERVER_ADDR'] . dirname($_SERVER['PHP_SELF']);
         $maarchUrl = rtrim($chemin, "install");
+        $maarchUrl = $maarchUrl . 'cs_'.$_SESSION['config']['databasename'].'/';
         $CONFIG->MaarchUrl = $maarchUrl;
         $CONFIG->MaarchApps = 'maarch_entreprise';
         $CONFIG->TmpDirectory = realpath('.').'/modules/sendmail/batch/tmp/';
@@ -57,6 +58,7 @@
         $CONFIG->MaarchDirectory = realpath('.')."/";
         $chemin = $_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']);
         $maarchUrl = rtrim($chemin, "install");
+        $maarchUrl = $maarchUrl . 'cs_'.$_SESSION['config']['databasename'].'/';
         $CONFIG->MaarchUrl = $maarchUrl;
         $CONFIG->MaarchApps = 'maarch_entreprise';
         $CONFIG->TmpDirectory = realpath('.').'/modules/notifications/batch/tmp/';
