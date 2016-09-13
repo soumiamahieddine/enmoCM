@@ -102,7 +102,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $query = "select firstname from " . USERS_TABLE ." WHERE user_id=?";
 
         $result = $db->query($query, array($userId));
-        $firstname = $db->fetchObject();
+        $firstname = $result->fetchObject();
 
         if (isset($firstname))
             return $firstname->firstname;
