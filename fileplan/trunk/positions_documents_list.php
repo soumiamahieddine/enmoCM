@@ -161,7 +161,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 								$tab[$i][$j]["label_align"]="left";
 								$tab[$i][$j]["align"]="left";
 								$tab[$i][$j]["valign"]="bottom";
-								if(_ID_TO_DISPAY == 'res_id'){
+								if(_ID_TO_DISPLAY == 'res_id'){
 									$display = true;
 								}
 								$tab[$i][$j]["show"]=$display;
@@ -175,7 +175,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 								$tab[$i][$j]["label_align"]="left";
 								$tab[$i][$j]["align"]="left";
 								$tab[$i][$j]["valign"]="bottom";
-								if(_ID_TO_DISPAY == 'chrono_number'){
+								if(_ID_TO_DISPLAY == 'chrono_number'){
 									$display = true;
 								}
 								$tab[$i][$j]["show"]=$display;
