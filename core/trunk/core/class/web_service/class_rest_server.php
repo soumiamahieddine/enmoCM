@@ -82,14 +82,15 @@ class MyRestServer extends webService
             $this->makeAtomEntryRootFolder();
         } else {
             $restRequest = explode('/', $_SERVER['QUERY_STRING']);
+            //var_dump($restRequest);
+            if ($restRequest[1] <> '') {
+                $this->requestedCollection = $restRequest[1];
+            }
+            if ($restRequest[2] <> '') {
+                $this->requestedResource = $restRequest[2];
+            }
             if ($restRequest[3] <> '') {
-                $this->requestedCollection = $restRequest[3];
-            }
-            if ($restRequest[4] <> '') {
-                $this->requestedResource = $restRequest[4];
-            }
-            if ($restRequest[5] <> '') {
-                $this->requestedResourceId = $restRequest[5];
+                $this->requestedResourceId = $restRequest[3];
             }
             if (
                 isset($_REQUEST['atomFileContent']) 
@@ -97,7 +98,7 @@ class MyRestServer extends webService
             ) {
                 $this->atomFileContent = $_REQUEST['atomFileContent'];
             }
-            //var_dump($this);exit;
+            //var_dump($this);
         }
     }
     
@@ -108,6 +109,9 @@ class MyRestServer extends webService
      */
     public function call()
     {
+      // var_dump($this->dispatchMap);
+      // var_dump($this->requestedResource);
+      // var_dump($this->dispatchMap[$this->requestedResource]['pathToController']);
         if (
             file_exists(
                 $this->dispatchMap[$this->requestedResource]['pathToController']
