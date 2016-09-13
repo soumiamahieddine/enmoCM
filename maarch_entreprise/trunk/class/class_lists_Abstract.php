@@ -496,7 +496,7 @@ abstract class lists_Abstract extends Database
 
             case 'res_id':
 
-                /*$res_id = '['._GED.']';
+                $res_id = '['._GED.']';
                 $filters .='<input type="text" name="res_id" id="res_id" placeholder="'.$res_id.'" size="15" '
                             .'onChange="myFunction(), loadList(\''.$this->link
                             .'&filter=res_id&value=\' + $(\'residFilters\').value, \''.$this->divListId.'\', '
@@ -510,7 +510,7 @@ abstract class lists_Abstract extends Database
                 if(isset($_SESSION['filters']['res_id']['VALUE']) && !empty($_SESSION['filters']['res_id']['VALUE'])) {
                     $filters .= 'value="'.$_SESSION['filters']['res_id']['VALUE'].'"';
                 }
-                $filters .='/>';*/
+                $filters .='/>';
             break;
 
             case 'subject':
@@ -531,12 +531,12 @@ abstract class lists_Abstract extends Database
                 $stmt = $db->query($query, array());
                                         
                 $filters .='<select id="subjectFilters" name="subjectFilters" onChange="loadList(\''.$this->link
-                             .'&filter=res_id&value=\' + document.filters.subjectFilters.value, \''
+                             .'&filter=subject&value=\' + document.filters.subjectFilters.value, \''
                              .$this->divListId.'\', '.$this->modeReturn.');">';
                 $filters .='<option value="none" style="text-align:center;">' . _SUBJECT . '</option>';
 
                 while($line = $stmt->fetchObject()){
-                    $filters .='<option value="'.$line->res_id.'" title="'.$line->subject.'"';
+                    $filters .='<option value="'.$line->subject.'" title="'.$line->subject.'"';
                     if($_SESSION['filters']['res_id']['VALUE'] == $line->res_id){
                         $filters .=' selected="selected" ';    
                     }
