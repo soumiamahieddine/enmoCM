@@ -82,12 +82,12 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 
     public function getLastName($userId)
     {
-        $db = new dbquery();
-        $db->connect();
-        $query = "select lastname from " . USERS_TABLE ." WHERE user_id='".$userId."'";
+        $db = new Database();
+        
+        $query = "select lastname from " . USERS_TABLE ." WHERE user_id=?";
 
-        $db->query($query);
-        $lastname = $db->fetch_object();
+        $result = $db->query($query, array($userId));
+        $lastname = $result->fetchObject();
 
         if (isset($lastname))
             return $lastname->lastname;
@@ -97,12 +97,12 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 
     public function getFirstName($userId)
     {
-        $db = new dbquery();
+        $db = new Database();
         $db->connect();
-        $query = "select firstname from " . USERS_TABLE ." WHERE user_id='".$userId."'";
+        $query = "select firstname from " . USERS_TABLE ." WHERE user_id=?";
 
-        $db->query($query);
-        $firstname = $db->fetch_object();
+        $result = $db->query($query, array($userId));
+        $firstname = $db->fetchObject();
 
         if (isset($firstname))
             return $firstname->firstname;
