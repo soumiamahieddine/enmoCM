@@ -98,7 +98,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     public function getFirstName($userId)
     {
         $db = new Database();
-        $db->connect();
+        
         $query = "select firstname from " . USERS_TABLE ." WHERE user_id=?";
 
         $result = $db->query($query, array($userId));
