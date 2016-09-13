@@ -2147,7 +2147,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             'chrono_out' => $cChronoOut,
         );
         $myChrono = $chronoX->generate_chrono($cat_id, $myVars, $myForm);
-        if ($myChrono <> '' && $cChronoOut <> '') {
+        if ($myChrono <> '' && $cChronoOut == '') {
             $db->query("UPDATE " . $table_ext ." SET alt_identifier = ? WHERE res_id = ? ",
                 array($myChrono, $res_id));
         }
