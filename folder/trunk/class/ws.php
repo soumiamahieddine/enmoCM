@@ -16,3 +16,7 @@ $SOAP_dispatch_map['getFolder'] = Array(
     'out' => Array('out' => 'string'),
     'method' => "modules/folder#folder::get"
 );
+
+$REST_dispatch_map['folder'] = Array(
+    'pathToController' => "modules/folder/class/cmis/cmis_folder_controller.php"
+);
