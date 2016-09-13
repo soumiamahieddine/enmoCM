@@ -29,7 +29,8 @@ if (!defined("_SAVE_CONFIRM"))    define("_SAVE_CONFIRM", "Save");
 if (!defined("_SAVED_ALREADY_EXIST"))    define("_SAVED_ALREADY_EXIST", "Save already exist");
 if (!defined("_OK_FOR_CONFIRM"))    define("_OK_FOR_CONFIRM", "Are you sure to save ");
 if (!defined("_ACTIONS"))    define("_ACTIONS", "Action(s)");
-if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
+//if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
+if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "res_id"); // value res_id || chrono_number
 if (!defined("_GED"))    define("_GED", "n° Ged");
 if (!defined('_SENDER'))    define( '_SENDER', 'Sender');
 if (!defined('MUST_BE_LESS_THAN')) define('MUST_BE_LESS_THAN', 'must not be longer than');
