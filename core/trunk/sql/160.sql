@@ -148,8 +148,16 @@ ALTER TABLE mlb_coll_ext ADD sve_start_date timestamp without time zone;
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS sve_identifier;
 ALTER TABLE mlb_coll_ext ADD sve_identifier character varying(255);
 
-ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS sve_type;
-ALTER TABLE mlb_coll_ext ADD sve_type character varying(255);
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS process_mode;
+ALTER TABLE mlb_coll_ext ADD process_mode character varying(255);
+
+
+-- ************************************************************************* --
+--                               sve mlb_doctype_ext                         --
+-- ************************************************************************* --
+
+ALTER TABLE mlb_doctype_ext DROP COLUMN IF EXISTS process_mode;
+ALTER TABLE mlb_doctype_ext ADD process_mode character varying(255);
 
 -- ************************************************************************* --
 --                           NEW COLUMNS FOR CONTACTS                        --
@@ -239,7 +247,7 @@ CREATE VIEW res_view_letterbox AS
     mlb.process_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date,
     mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, mlb.is_multicontacts, r.video_user, r.video_time,
     r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes,
-    mlb.sve_start_date, mlb.sve_identifier, mlb.sve_type,
+    mlb.sve_start_date, mlb.sve_identifier,
     r.locker_user_id, r.locker_time,
     ca.case_id, ca.case_label, ca.case_description, en.entity_label, en.entity_type AS entityType,
     cont.contact_id AS contact_id,
@@ -425,7 +433,3 @@ UPDATE parameters SET param_value_int = 160 where id='database_version';
 
 
 
--- ************************************************************************* --
---                               sve mlb_doctype_ext                         --
--- ************************************************************************* --
-ALTER TABLE mlb_doctype_ext ADD COLUMN process_mode varchar(255);
