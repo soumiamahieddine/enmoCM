@@ -16,3 +16,6 @@ $SOAP_dispatch_map['basketSample'] = Array(
                                      'out' => Array('out' => 'string'),
                                      'method' => "modules/basket#basket::save"
                                      );
+$REST_dispatch_map['basket'] = Array(
+    'pathToController' => "modules/basket/class/cmis/cmis_basket_controller.php"
+);
