@@ -275,12 +275,13 @@ class Database extends functions
      * @param string $queryString     The SQL query string
      * @param array  $parameters      An indexed or associative array of parameters
      * @param bool   $catchExceptions Indicates wheter the PDO exceptions must be caught 
+     * @param bool   $multi Indicates wheter multi queries likes in sql file is required 
      * 
      * @return PDOStatement The prepared and executed statement
      * 
      * @throws PDOException If a PDO error occurs during preparation or execution
      */
-    public function query($queryString, $parameters=null, $catchExceptions=false)
+    public function query($queryString, $parameters=null, $catchExceptions=false, $multi=false)
     {
         if ($parameters) {
             foreach ($parameters as $key => $value) {
@@ -317,32 +318,36 @@ class Database extends functions
             }
         }
 
-        try {
-            $this->stmt = $this->prepare($queryString);
-            preg_match_all("/\?|\:/", $queryString, $matches, PREG_OFFSET_CAPTURE);
-            if (empty($matches[0])) {
-                //echo $queryString;
-                $executed = $this->stmt->execute();
-            } else {
-                $executed = $this->stmt->execute($parameters);
-            }
-
-            
-        } catch (PDOException $PDOException) {
-            if ($catchExceptions) {
-                $this->error = $PDOException->getMessage();
-
-                return false;
-            } else {
-                if ($_SESSION['config']['debug'] == 'true') {
-                    echo $queryString;
-                    var_export($parameters);
+        if ($multi) {
+            $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 0);
+            $this->pdo->exec($queryString);
+            return true;
+        } else {
+            try {
+                $this->stmt = $this->prepare($queryString);
+                preg_match_all("/\?|\:/", $queryString, $matches, PREG_OFFSET_CAPTURE);
+                if (empty($matches[0])) {
+                    //echo $queryString;
+                    $executed = $this->stmt->execute();
+                } else {
+                    $executed = $this->stmt->execute($parameters);
                 }
-                throw $PDOException;
+            } catch (PDOException $PDOException) {
+                if ($catchExceptions) {
+                    $this->error = $PDOException->getMessage();
+
+                    return false;
+                } else {
+                    if ($_SESSION['config']['debug'] == 'true') {
+                        echo $queryString;
+                        var_export($parameters);
+                    }
+                    throw $PDOException;
+                }
             }
         }
-
         return $this->stmt;
+
     }
 
     public function limit_select($start, $count, $select_expr, $table_refs, $where_def='1=1', $other_clauses='', $select_opts='')
