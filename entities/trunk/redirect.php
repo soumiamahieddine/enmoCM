@@ -60,10 +60,10 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
 
    		for($i=0; $i < count($values);$i++)
         {
-        	if(_ID_TO_DISPAY == 'res_id'){
+        	if(_ID_TO_DISPLAY == 'res_id'){
             	$values_str .= $values[$i].', ';
 
-		    } else if (_ID_TO_DISPAY == 'chrono_number'){
+		    } else if (_ID_TO_DISPLAY == 'chrono_number'){
 				$values_str .= $values[$i].', ';
 				$chrono_number = $cr7->get_chrono_number($values[$i], 'res_view_letterbox');
 				$chrono_number_str .= $chrono_number.', ';
@@ -74,10 +74,10 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
 
     	for($i=0; $i < count($_SESSION['stockCheckbox']);$i++)
         {
-            if(_ID_TO_DISPAY == 'res_id'){
+            if(_ID_TO_DISPLAY == 'res_id'){
             	$values_str .= $_SESSION['stockCheckbox'][$i].', ';
 
-		    } else if (_ID_TO_DISPAY == 'chrono_number'){
+		    } else if (_ID_TO_DISPLAY == 'chrono_number'){
 		    	$values_str .= $_SESSION['stockCheckbox'][$i].', ';
 
 		         $chrono_number = $cr7->get_chrono_number($_SESSION['stockCheckbox'][$i], 'res_view_letterbox');
@@ -89,9 +89,9 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
 
 	$values_str = preg_replace('/, $/', '', $values_str);
 
-    if(_ID_TO_DISPAY == 'res_id'){
+    if(_ID_TO_DISPLAY == 'res_id'){
 		$frm_str .= $values_str;
-    } else if (_ID_TO_DISPAY == 'chrono_number'){
+    } else if (_ID_TO_DISPLAY == 'chrono_number'){
     	$values_str_chrn = preg_replace('/, $/', '', $values_str_chrn);
 		$frm_str .= $values_str_chrn;
     }
