@@ -947,8 +947,8 @@ class Install extends functions
         
         pg_close();
 
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
+        
         if (!$db) {
             return false;
             exit;
@@ -1974,8 +1974,8 @@ class Install extends functions
         $dataFile
     )
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
+        
         if (!$db) {
             return false;
             exit;
@@ -1991,9 +1991,9 @@ class Install extends functions
     public function executeSQLScript($filePath)
     {
         $fileContent = fread(fopen($filePath, 'r'), filesize($filePath));
-        $db = new dbquery();
-        $db->connect();
-        $execute = $db->query($fileContent, true, true);
+        $db = new Database();
+        
+        $execute = $db->query($fileContent, null, false, true);
 
         if (!$execute) {
             return false;
@@ -2102,14 +2102,19 @@ class Install extends functions
      */
     public function updateDocserversDB($docserverPath)
     {
-        $db = new dbquery();
-        $db->connect();
+        $db = new Database();
+        
         for ($i=0;$i<count($this->docservers);$i++) {
-          $query = "update docservers set path_template = '"
-            . $db->protect_string_db($docserverPath . DIRECTORY_SEPARATOR
-            . $this->docservers[$i][1] . DIRECTORY_SEPARATOR)
-            . "' where docserver_id = '" . $this->docservers[$i][0] . "'";
-            $db->query($query);
+            $query = "update docservers set path_template = ?"
+                . " where docserver_id = ?";
+            $db->query(
+                $query, 
+                array(
+                    $db->protect_string_db($docserverPath . DIRECTORY_SEPARATOR
+                        . $this->docservers[$i][1] . DIRECTORY_SEPARATOR),
+                    $this->docservers[$i][0]
+                )
+            );
         }
     }
 
@@ -2117,11 +2122,11 @@ class Install extends functions
         $newPass
     )
     {
-        $db = new dbquery();
+        $db = new Database();
         $sec = new security();
-        $db->connect();
-        $query = "UPDATE users SET password='" . $sec->getPasswordHash($newPass) . "' WHERE user_id='superadmin'";
-        $db->query($query);
+        
+        $query = "UPDATE users SET password=? WHERE user_id='superadmin'";
+        $db->query($query, array($sec->getPasswordHash($newPass)));
     }
 }
 
