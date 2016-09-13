@@ -62,8 +62,8 @@ if (empty($docserver)) {
 				. "where res_id = " . $objectId;
 				
 			
-			$dbAttachment = new dbquery();
-			$dbAttachment->connect();
+			$dbAttachment = new Database();
+			
 			$dbAttachment->query($query);
 			
 			//copie de la version PDF de la pièce si mode de conversion sur le client
