@@ -146,9 +146,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$currentStatus = $resChrono->status;
     $frm_str .= '<h2 class="tit" id="action_title">'._VISA_MAIL.' '._NUM.'<span id="numIdDocPage">';
 
-	if(_ID_TO_DISPAY == 'res_id'){
+	if(_ID_TO_DISPLAY == 'res_id'){
 		$frm_str .= $res_id;
-	} else if (_ID_TO_DISPAY == 'chrono_number'){
+	} else if (_ID_TO_DISPLAY == 'chrono_number'){
     	$frm_str .= $chrono_number;
 	}
 
@@ -195,7 +195,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		}
 		else $classLine = ' class="unselectedId " ';
 
-		$id_to_display = _ID_TO_DISPAY;
+		$id_to_display = _ID_TO_DISPLAY;
 
 		$frm_str .= '<div '.$classLine.' onmouseover="this.style.cursor=\'pointer\';" onclick="loadNewId(\'index.php?display=true&module=visa&page=update_visaPage\','.$res_id_doc.',\''.$coll_id.'\',\''.$id_to_display.'\');" id="list_doc_'.$res_id_doc.'">';
 		check_category($coll_id, $res_id_doc);
