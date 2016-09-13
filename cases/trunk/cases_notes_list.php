@@ -202,7 +202,7 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 				$tabNotes[$ind_notes1][$ind_notes2]["label_align"]="left";
 				$tabNotes[$ind_notes1][$ind_notes2]["align"]="left";
 				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom";
-				if(_ID_TO_DISPAY == 'res_id'){
+				if(_ID_TO_DISPLAY == 'res_id'){
 					$display=true;
 				}else{
 					$display=false;
@@ -218,7 +218,7 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 				$tabNotes[$ind_notes1][$ind_notes2]["label_align"]="left";
 				$tabNotes[$ind_notes1][$ind_notes2]["align"]="left";
 				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom";
-				if(_ID_TO_DISPAY == 'chrono_number'){
+				if(_ID_TO_DISPLAY == 'chrono_number'){
 					$display=true;
 				}else{
 					$display=false;
