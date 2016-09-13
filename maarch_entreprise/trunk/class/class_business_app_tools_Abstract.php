@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008-2015 Maarch
+*    Copyright 2008-2016 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -31,7 +31,7 @@
 
 require_once 'core/core_tables.php';
 
-abstract class business_app_tools_Abstract extends dbquery
+abstract class business_app_tools_Abstract extends Database
 {
     public function __construct()
     {
