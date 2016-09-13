@@ -32,18 +32,26 @@ function setRturnForEffectiveDate() {
 }
 
 function saveContactToSession(size, prePath) {
-  var contactId = $("transmissionContactidAttach" + size).value;
 
-  if (contactId) {
-    new Ajax.Request(prePath + "index.php?display=true&module=attachments&page=saveTransmissionContact",
-      {
-        method:'post',
-        parameters: {
-          size      : size,
-          contactId : contactId
-        }
-      });
-  }
+  setTimeout(function() {
+    var contactId = $("transmissionContactidAttach" + size).value;
+    var addressId = $("transmissionAddressidAttach" + size).value;
+    console.log(contactId);
+    console.log(addressId);
+
+    if (contactId) {
+      new Ajax.Request(prePath + "index.php?display=true&module=attachments&page=saveTransmissionContact",
+        {
+          method:'post',
+          parameters: {
+            size      : size,
+            contactId : contactId,
+            addressId : addressId
+          }
+        });
+    }
+
+  }, 500);
 }
 
 function displayTransmissionContactCard(mode, id, size)

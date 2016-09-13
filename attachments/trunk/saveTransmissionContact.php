@@ -28,7 +28,11 @@ if (!empty($_POST['size']) && isset($_POST['contactId'])) {
         $db = new Database();
 
         if (is_numeric($_POST['contactId'])) {
-            $stmt = $db->query('SELECT * FROM view_contacts WHERE contact_id = ? ', [$_POST['contactId']]);
+            if (isset($_POST['addressId'])) {
+                $stmt = $db->query('SELECT * FROM view_contacts WHERE contact_id = ? AND ca_id = ?', [$_POST['contactId'], $_POST['addressId']]);
+            } else {
+                $stmt = $db->query('SELECT * FROM view_contacts WHERE contact_id = ?', [$_POST['contactId']]);
+            }
         } else {
             $stmt = $db->query('SELECT firstname, lastname, user_id, mail, phone, initials FROM users WHERE user_id = ?', [$_POST['contactId']]);
         }
