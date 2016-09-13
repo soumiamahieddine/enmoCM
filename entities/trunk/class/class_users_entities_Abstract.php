@@ -32,7 +32,7 @@
 */
 require("modules/entities/entities_tables.php");
 
-abstract class users_entities_Abstract extends dbquery
+abstract class users_entities_Abstract extends functions
 {
 
     public function service_load_entities($mode)

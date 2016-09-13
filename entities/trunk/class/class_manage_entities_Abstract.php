@@ -21,7 +21,7 @@
 
 require("modules/entities/entities_tables.php");
 
-abstract class entity_Abstract extends dbquery
+abstract class entity_Abstract extends functions
 {
     /**
     * Form for the management of the entities.

@@ -34,7 +34,7 @@
 require_once 'modules/entities/entities_tables.php';
 require_once 'core/core_tables.php';
 
-abstract class entities_Abstract extends dbquery
+abstract class entities_Abstract extends functions
 {
     /**
     * Build Maarch module tables into sessions vars with a xml configuration

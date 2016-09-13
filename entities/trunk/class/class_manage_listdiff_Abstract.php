@@ -41,7 +41,7 @@ require_once 'core/core_tables.php';
 *
 * @ingroup entities
 */
-abstract class diffusion_list_Abstract extends dbquery
+abstract class diffusion_list_Abstract extends functions
 {
     #**************************************************************************
     # LISTMODELS
