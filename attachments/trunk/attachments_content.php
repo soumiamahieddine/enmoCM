@@ -1905,7 +1905,7 @@ $content .= '</div>';
             } else {
                 $content .= '" name="add" id="add" class="button" onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;
             }
-            $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\',\''._ID_TO_DISPAY.'\')"/>';
+            $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\',\''._ID_TO_DISPLAY.'\')"/>';
 
             $content .= '&nbsp;';
             $content .= '&nbsp;';
