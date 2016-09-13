@@ -55,9 +55,9 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
         }
     }
     $values_str = preg_replace('/, $/', '', $values_str);
-    if(_ID_TO_DISPAY == 'res_id'){
+    if(_ID_TO_DISPLAY == 'res_id'){
         $frm_str .= $values_str;
-    } else if (_ID_TO_DISPAY == 'chrono_number'){
+    } else if (_ID_TO_DISPLAY == 'chrono_number'){
         $chrono_number = $cr7->get_chrono_number($values_str, 'res_view_letterbox');
         $frm_str .= $chrono_number;
     }
