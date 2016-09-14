@@ -442,7 +442,7 @@ abstract class users_entities_Abstract extends functions
         $query = 'delete from ' . LISTMODELS_CONTENT_TABLE . " where item_id = ?";
         
         try{
-            $this->query($query,array($userId));
+            $db->query($query,array($userId));
             $control = array(
                 'status' => 'ok',
                 'value'  => $userId,
@@ -454,8 +454,6 @@ abstract class users_entities_Abstract extends functions
                 'error'  => _CANNOT_CLEAN_USERGROUP_CONTENT . ' ' . $userId,
             );
         }
-
-        $this->disconnect();
         return $control;
     }
 
