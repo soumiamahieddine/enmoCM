@@ -912,6 +912,11 @@ class Install extends functions
             exit;
         }
 
+        if (!$this->setSvnUpdateAll()) {
+            return false;
+            exit;
+        }
+
         return true;
 
     }
@@ -1048,6 +1053,11 @@ class Install extends functions
             exit;
         }
 
+        if (!$this->setSvnUpdateAll()) {
+            return false;
+            exit;
+        }
+
        /*if (!$this->setDatasourcesXsd()) {
             return false;
             exit;
@@ -1060,6 +1070,32 @@ class Install extends functions
         exec('chmod -R 770 *');
         return true;
 
+    }
+
+    private function setSvnUpdateAll(){
+        $res = '#!/bin/bash';
+        $res .= "\n";
+        $res .= "svn up ".realpath('.')."/.";
+        $res .= "\n";
+        $res .= "svn up ".realpath('.')."/apps/maarch_entreprise/.";
+        $res .= "\n";
+        $res .= "svn up ".realpath('.')."/core/.";
+        $res .= "\n";
+        $res .= "svn up ".realpath('.')."/modules/*";
+        $res .= "\n";
+
+            $fp = @fopen(realpath('.')."/svnupdateall.sh", "w+");
+        if (!$fp) {
+            var_dump("false error dans setScript_full_text()");
+            return false;
+            exit;
+        }
+        $write = fwrite($fp,$res);
+        if (!$write) {
+            return false;
+            exit;
+        }
+        return true;
     }
 
     private function setConfigCron()
