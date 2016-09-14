@@ -175,7 +175,7 @@ abstract class propertyCMIS{
 
 class PropertyUri extends propertyCMIS{
 
-    public function PropertyUri( $required, $inherited, $propertyType,
+    public function __construct( $required, $inherited, $propertyType,
             $cardinality, $updatability, $choices, $openChoice, $queryable,
             $orderable){
         
@@ -208,7 +208,7 @@ class PropertyUri extends propertyCMIS{
 class PropertyBoolean extends propertyCMIS{
 
 
-    public function PropertyBoolean( $required, $inherited, $propertyType,
+    public function __construct( $required, $inherited, $propertyType,
             $cardinality, $updatability, $choices, $openChoice, $queryable,
             $orderable){
         
@@ -245,7 +245,7 @@ class PropertyDateTime extends propertyCMIS{
 
     private $resolution; // string enum: Year, Date, Time
 
-    public function PropertyDateTime( $required, $inherited, $propertyType,
+    public function __construct( $required, $inherited, $propertyType,
             $cardinality, $updatability, $choices, $openChoice, $queryable,
             $orderable){
         
@@ -281,7 +281,7 @@ class PropertyDecimal extends propertyCMIS{
     private $minValue;  //decimal
     private $maxValue;  //decimal
 
-    public function PropertyDecimal( $required, $inherited, $propertyType,
+    public function __construct( $required, $inherited, $propertyType,
             $cardinality, $updatability, $choices, $openChoice, $queryable,
             $orderable){
         
@@ -313,7 +313,7 @@ class PropertyDecimal extends propertyCMIS{
 
 class PropertyHtml extends propertyCMIS{
 
-    public function PropertyHtml( $required, $inherited, $propertyType,
+    public function __construct( $required, $inherited, $propertyType,
             $cardinality, $updatability, $choices, $openChoice, $queryable,
             $orderable){
         
@@ -347,7 +347,7 @@ class PropertyHtml extends propertyCMIS{
 
 class PropertyId extends propertyCMIS{
 
-    public function PropertyId( $required, $inherited, $propertyType,
+    public function __construct( $required, $inherited, $propertyType,
             $cardinality, $updatability, $choices, $openChoice, $queryable,
             $orderable){
         
@@ -384,7 +384,7 @@ class PropertyInteger extends propertyCMIS{
     private $minValue; //Integer
 
 
-    public function PropertyInteger( $required, $inherited, $propertyType,
+    public function __construct( $required, $inherited, $propertyType,
             $cardinality, $updatability, $choices, $openChoice, $queryable,
             $orderable){
         
@@ -417,7 +417,7 @@ class PropertyString extends propertyCMIS{
     private $maxLength;
     
 
-    public function PropertyString($required, $inherited, $propertyType,
+    public function __construct($required, $inherited, $propertyType,
             $cardinality, $updatability, $choices, $openChoice, $queryable,
             $orderable){
         
