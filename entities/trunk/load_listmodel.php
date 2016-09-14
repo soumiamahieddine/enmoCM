@@ -40,22 +40,22 @@ if ($objectId <> '') {
 
 // Fill session with listmodel
 $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel($objectType, $objectId);
+//Permet de bloquer la liste diffusion avec celle de l'utilisateur qui enregistre le courrier. Si il change le service expéditeur la liste de diffusion ne changera pas.
+// if($category == 'outgoing' && $origin == 'indexing'){
+//     $_SESSION[$origin]['diff_list']['dest']['users'] = array();
+//     $diffListOutgoing = array(
+//         'user_id' => $_SESSION['user']['UserId'],
+//         'lastname' => $_SESSION['user']['LastName'],
+//         'firstname' => $_SESSION['user']['FirstName'],
+//         'entity_id' => $_SESSION['user']['entities'][0]['ENTITY_ID'],
+//         'entity_label' => $_SESSION['user']['entities'][0]['ENTITY_LABEL'],
+//         'visible' => 'Y',
+//         'process_comment' => ''
+//     );
 
-if($category == 'outgoing' && $origin == 'indexing'){
-    $_SESSION[$origin]['diff_list']['dest']['users'] = array();
-    $diffListOutgoing = array(
-        'user_id' => $_SESSION['user']['UserId'],
-        'lastname' => $_SESSION['user']['LastName'],
-        'firstname' => $_SESSION['user']['FirstName'],
-        'entity_id' => $_SESSION['user']['entities'][0]['ENTITY_ID'],
-        'entity_label' => $_SESSION['user']['entities'][0]['ENTITY_LABEL'],
-        'visible' => 'Y',
-        'process_comment' => ''
-    );
-
-    $_SESSION[$origin]['diff_list']['dest']['users'][]=$diffListOutgoing;
-    $_SESSION[$origin]['diff_list']['copy'] = array();
-}
+//     $_SESSION[$origin]['diff_list']['dest']['users'][]=$diffListOutgoing;
+//     $_SESSION[$origin]['diff_list']['copy'] = array();
+// }
 
 $_SESSION[$origin]['diff_list']['difflist_type'] = $_SESSION[$origin]['diff_list']['object_type'];
 $roles = $diffList->list_difflist_roles();
