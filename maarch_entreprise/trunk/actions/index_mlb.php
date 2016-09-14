@@ -798,7 +798,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<div>';
     
     $frmStr .= '<table width="100%" align="center" border="0" '
-            . 'id="indexing_fields" style="display:block;">';
+            . 'id="indexing_fields" style="display:table;">';
     
     /*** Chrono number ***/
     $frmStr .= '<tr id="chrono_number_tr" style="display:' . $displayValue . ';">';
@@ -813,6 +813,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
 
     /*** Folder ***/
+    print_r($core->test_service('associate_folder', 'folder',false));
     if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
         require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
             . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
@@ -820,17 +821,13 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $folder_info = $folders->get_folders_tree('1');
 
         $frmStr .= '<tr id="folder_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER
-                . '</label></td>';
-        $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+            $frmStr .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER. '</label></td>';
+            $frmStr .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">Sélectionnez un dossier</option>';
 
-        $frmStr .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">Sélectionnez un dossier</option>';
-
-        foreach ($folder_info as $key => $value) {
-             $frmStr .= '<option value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
-        }
-
-        $frmStr .= '</select></td>';
+            foreach ($folder_info as $key => $value) {
+                 $frmStr .= '<option value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
+            }
+            $frmStr .= '</select></td>';
         /*$frmStr .= '<td class="indexing_field"><input type="text" '
                 . 'name="folder" id="folder" onblur="clear_error(\'frm_error_'
                 . $actionId . '\');return false;" />';
@@ -844,10 +841,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             }
         $frmStr .= '<div id="show_folder" '
                 . 'class="autocomplete"></div></td>';*/
-        $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" '
-                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+        $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
-        $frmStr .= '<tr id="parentFolderTr" style="display: none"><td>&nbsp;</td><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
+        $frmStr .= '<tr id="parentFolderTr" style="display: none;text-align:center;"><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
     }
     
     /*** thesaurus ***/
@@ -858,27 +854,23 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $thesaurus = new thesaurus();
 
 
-        $frmStr .= '<tr id="thesaurus_tr" style="display:' . $displayValue
-                . ';">';
-        $frmStr .= '<td>'
-                . _THESAURUS . '</td>';
-        $frmStr .= '<td>&nbsp;</td>';
+        $frmStr .= '<tr id="thesaurus_tr" style="display:' . $displayValue . ';">';
+            $frmStr .= '<td colspan="3">' . _THESAURUS . '</td>';
         $frmStr .= '</tr>';
 
         $frmStr .= '<tr id="thesaurus_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td colspan="3" class="indexing_field" id="thesaurus_field" style="text-align:left;"><select multiple="multiple" id="thesaurus" data-placeholder=" " onselect="alert(\'ok\')"';
+            $frmStr .= '<td colspan="2" class="indexing_field" id="thesaurus_field" style="text-align:left;"><select multiple="multiple" id="thesaurus" data-placeholder=" " onselect="alert(\'ok\')"';
         
-        if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
-            $frmStr .= 'disabled="disabled"';
-        }
+            if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
+                $frmStr .= 'disabled="disabled"';
+            }
 
-        $frmStr .= '>';
+            $frmStr .= '>';
 
-        $frmStr .= '</select> <i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
-        $frmStr .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
-                . 'style="display:inline;vertical-align:middle;"></td>';
+            $frmStr .= '</select>';
+            $frmStr .= '<td style="width:5%;"> <i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
         $frmStr .= '</tr>';
-        $frmStr .= '<style>#thesaurus_chosen{width:95% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
+        $frmStr .= '<style>#thesaurus_chosen{width:100% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
 
         /*****************/
     }

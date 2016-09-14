@@ -560,11 +560,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $thesaurusListRes = $thesaurus->getThesaursusListRes($res_id);
 
             $frm_str .= '<table width="98%" align="center" border="0" id="thesaurus_div">';
-            $frm_str .= '<tr id="thesaurus_tr" style="display:' . $displayValue
-                    . ';">';
-            $frm_str .= '<td>'
-                    . _THESAURUS . '</td>';
-            $frm_str .= '<td>&nbsp;</td>';
+            $frm_str .= '<tr id="thesaurus_tr" style="display:' . $display_value. ';">';
+                $frm_str .= '<td>'. _THESAURUS . '</td>';
+                $frm_str .= '<td>&nbsp;</td>';
             $frm_str .= '</tr>';
 
             $frm_str .= '<tr id="thesaurus_tr" style="display:' . $displayValue . ';">';
@@ -1335,8 +1333,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0){
 		$frm_str .= 'load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);';
 	}
-    $frm_str .= 'new Chosen($(\'folder\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
-    
+    if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)){
+        $frm_str .= 'new Chosen($(\'folder\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
+    }
 	if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
         $frm_str .= 'new Chosen($(\'thesaurus\'),{width: "95%", disable_search_threshold: 10});';
     }
