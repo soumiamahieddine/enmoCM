@@ -411,7 +411,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 
             if (self::userDeleted($user->user_id)) {
                 $url = "'".$_SESSION['config']['businessappurl']."index.php?admin=users&page=users_management_controler&mode=up&reactivate=true'";
-                $error .= _USER . '  ' . _ALREADY_CREATED_AND_DELETED . '. ';
+                $error .= _ALREADY_CREATED_AND_DELETED . '. ';
                 $_SESSION['reactivateUser'] = '<input class="button" style="cursor:pointer;text-align: center" onclick="document.getElementById(\'frmuser\').action ='.$url.';document.getElementById(\'user_submit\').click();" value="' . _REACTIVATE .' ?">';
             }
         }
