@@ -53,7 +53,7 @@ if (!defined("_THESAURUS_PARENT_ID"))
     define("_THESAURUS_PARENT_ID", "Terme Générique");
 
 if (!defined("_THESAURUS_NAME_ASSOCIATE"))
-    define("_THESAURUS_NAME_ASSOCIATE", "Terme(s) Associé(s)");
+    define("_THESAURUS_NAME_ASSOCIATE", "Terme(s) associé(s)");
 
 if (!defined("_THESAURUS_LIST"))
     define("_THESAURUS_LIST", "Liste des termes");
