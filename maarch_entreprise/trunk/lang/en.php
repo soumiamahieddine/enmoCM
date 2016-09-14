@@ -802,7 +802,7 @@ if (!defined('_PASSWORD'))    define( '_PASSWORD', 'Password');
 if (!defined('_PASSWORD_FOR_USER')) define('_PASSWORD_FOR_USER', 'the password for the user');
 if (!defined('_PASSWORD_MODIFICATION')) define('_PASSWORD_MODIFICATION', 'PAssword modification');
 if (!defined('_PASSWORD_NOT_CHANGED'))    define('_PASSWORD_NOT_CHANGED', 'Error: Password not changed');
-if (!defined('_ALREADY_CREATED_AND_DELETED')) define( '_ALREADY_CREATED_AND_DELETED', 'already created and deleted');
+if (!defined('_ALREADY_CREATED_AND_DELETED')) define( '_ALREADY_CREATED_AND_DELETED', 'The user has been deleted. Click on the top and left button for reactivate');
 if (!defined('_REACTIVATE')) define( '_REACTIVATE', 'reactivate');
 if (!defined('_PATH_OF_DOCSERVER_UNAPPROACHABLE'))  define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Path not found ');
 if (!defined('_PATH_TEMPLATE'))  define('_PATH_TEMPLATE', 'Path template');
