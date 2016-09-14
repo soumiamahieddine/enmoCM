@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2012 Maarch
+*   Copyright 2008-2016 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -75,8 +75,8 @@ class MyRestServer extends webService
     function parseTheRequest()
     {
         if (
-            $_SERVER['QUERY_STRING'] == 'CMIS/id=workspace://'
-            || $_SERVER['QUERY_STRING'] == 'CMIS&repositoryId=' 
+            strtolower($_SERVER['QUERY_STRING']) == 'cmis/id=workspace://'
+            || strtolower($_SERVER['QUERY_STRING']) == 'cmis&repositoryId=' 
                 . $this->getUuid()
         ) {
             $this->makeAtomEntryRootFolder();
@@ -183,7 +183,7 @@ xmlns:maarch="http://www.maarch.org">
     <app:workspace>
         <atom:title>Maarch main Repository</atom:title>
         <collection href="' . $_SESSION['config']['coreurl'] 
-            . 'ws_server.php?CMIS/root">
+            . 'ws_server.php?CMIS">
             <atom:title>Maarch root collection</atom:title>
             <cmisra:collectionType>root</cmisra:collectionType>
         </collection>
@@ -192,8 +192,8 @@ xmlns:maarch="http://www.maarch.org">
             <cmis:repositoryName>Maarch main Repository</cmis:repositoryName>
             <cmis:repositoryDescription>Maarch main Repository</cmis:repositoryDescription>
             <cmis:vendorName>Maarch</cmis:vendorName>
-            <cmis:productName>Maarch Entreprise</cmis:productName>
-            <cmis:productVersion>1.4.0</cmis:productVersion>
+            <cmis:productName>MaarchCourrier</cmis:productName>
+            <cmis:productVersion>1.6.0</cmis:productVersion>
             <cmis:rootFolderId>workspace://</cmis:rootFolderId>
             <cmis:capabilities>
                 <cmis:capabilityACL>none</cmis:capabilityACL>
@@ -310,8 +310,15 @@ xmlns:maarch="http://www.maarch.org">
       </aspects:aspects>
     </cmis:properties>
   </cmisra:object>
-  <atom:link rel="service" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7?repositoryId=371554cd-ac06-40ba-98b8-e6b60275cca7" type="application/atomsvc+xml"/>
-  <atom:link rel="self" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/entry?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=entry" cmisra:id="workspace://SpacesStore/87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1"/>
+  <atom:link rel="service" href="' . $_SESSION['config']['coreurl'] . 'ws_server.php?cmis&amp;repositoryId=' . $this->getUuid() . '" type="application/atomsvc+xml"/>
+  
+</atom:entry>';
+        exit;
+    }
+}
+
+/*
+'<atom:link rel="self" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/entry?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=entry" cmisra:id="workspace://SpacesStore/87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1"/>
   <atom:link rel="enclosure" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/entry?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=entry"/>
   <atom:link rel="edit" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/entry?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=entry"/>
   <atom:link rel="describedby" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/type?id=cmis%3Afolder" type="application/atom+xml;type=entry"/>
@@ -321,8 +328,5 @@ xmlns:maarch="http://www.maarch.org">
   <atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/foldertree?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/cmistree+xml"/>
   <atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/acl?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/cmisacl+xml"/>
   <atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/policies" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/policies?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=feed"/>
-  <atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/relationships?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=feed"/>
-</atom:entry>';
-        exit;
-    }
-}
+  <atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships" href="http://cmis.alfresco.com/cmisatom/371554cd-ac06-40ba-98b8-e6b60275cca7/relationships?id=workspace%3A%2F%2FSpacesStore%2F87b2f129-3ad0-4a46-a6ea-05ecbfb54aa1" type="application/atom+xml;type=feed"/>';
+  */
