@@ -148,8 +148,12 @@ ALTER TABLE mlb_coll_ext ADD sve_start_date timestamp without time zone;
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS sve_identifier;
 ALTER TABLE mlb_coll_ext ADD sve_identifier character varying(255);
 
-ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS process_mode;
-ALTER TABLE mlb_coll_ext ADD process_mode character varying(255);
+-- ************************************************************************* --
+--                               sve mlb_doctype_ext                         --
+-- ************************************************************************* --
+
+ALTER TABLE mlb_doctype_ext DROP COLUMN IF EXISTS process_mode;
+ALTER TABLE mlb_doctype_ext ADD process_mode character varying(255);
 
 -- ************************************************************************* --
 --                           NEW COLUMNS FOR CONTACTS                        --
