@@ -1370,4 +1370,22 @@ class functions
     {
        echo functions::xssafe($data);
     }
+
+    /*************************************************************************
+    * Returns an empty list for SELECT X WHERE Y IN (------)
+    *
+    * Return
+    *   (string) Empty list
+    *
+    *************************************************************************/
+    public function empty_list()
+    {
+        switch($_SESSION['config']['databasetype'])  {
+            case 'MYSQL'        : return "''";
+            case 'POSTGRESQL'   : return "''";
+            case 'SQLSERVER'    : return "''''";
+            case 'ORACLE'       : return "''''";
+            default             : return "''";
+        }
+    }
 }
