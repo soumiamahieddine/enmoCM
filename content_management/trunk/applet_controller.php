@@ -295,9 +295,11 @@ if (!empty($_REQUEST['action'])
                     include 'modules/content_management/save_transmission_from_cm.php';
                 }
 
-                $file = $_SESSION['config']['tmppath'].'applet_'.$_REQUEST['userMaarch'].'.lck';
-                unlink($file);
-                
+                if ($_REQUEST['step']== 'end') {
+                    $file = $_SESSION['config']['tmppath'].'applet_'.$_REQUEST['userMaarch'].'.lck';
+                    unlink($file);
+                }
+
                 //THE RETURN
                 if (!empty($_SESSION['error'])) {
                     $result = array(

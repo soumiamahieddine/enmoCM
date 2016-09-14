@@ -534,7 +534,7 @@ public class DisCM extends JApplet {
                         this.logger.log("----------[SECURITY BACKUP] BEGIN SEND OF THE OBJECT----------", Level.INFO);
                         String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
                                     + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
-                                    + "&uniqueId=" + this.uniqueId;
+                                    + "&uniqueId=" + this.uniqueId + "&step=backup&userMaarch=" + this.userMaarch;
                         this.logger.log("[SECURITY BACKUP] URL TO SAVE : " + urlToSave, Level.INFO);
                         sendHttpRequest(urlToSave, this.fileContentTosend,false);
                         this.logger.log("[SECURITY BACKUP] MESSAGE STATUS : " + this.messageStatus, Level.INFO);
@@ -576,7 +576,7 @@ public class DisCM extends JApplet {
             
             String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
                             + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
-                            + "&uniqueId=" + this.uniqueId + "&userMaarch=" + this.userMaarch;
+                            + "&uniqueId=" + this.uniqueId + "&step=end&userMaarch=" + this.userMaarch;
             this.logger.log("----------BEGIN SEND OF THE OBJECT----------", Level.INFO);
             this.logger.log("URL TO SAVE : " + urlToSave, Level.INFO);
             sendHttpRequest(urlToSave, this.fileContentTosend, true);
