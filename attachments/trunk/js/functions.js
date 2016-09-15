@@ -502,3 +502,11 @@ function setButtonStyle(radioButton, fileFormat, statusValidateButton) {
         $('edit').style.visibility="visible";
     }
 }
+
+
+function cleanTitle(str) {
+    //permet de supprimer les # dans le titre qui bloque l'ouverture de l'applet java
+    var res = str.replace("#", " ");
+    return(res);
+}
+
