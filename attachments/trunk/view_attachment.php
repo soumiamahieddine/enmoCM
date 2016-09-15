@@ -81,7 +81,7 @@ if (! empty($_SESSION['error'])) {
 
     $table = $sec->retrieve_table_from_coll($collId);
     $stmt = $db->query(
-        "SELECT res_id FROM " . $table . " WHERE res_id = ?",array($resIdMaster));
+        "SELECT res_id FROM " . $table . " WHERE res_id = ? ".$where2,array($resIdMaster));
 
     if ($stmt->rowCount() == 0) {
         $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS;
