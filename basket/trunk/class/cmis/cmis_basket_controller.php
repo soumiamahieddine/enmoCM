@@ -218,7 +218,7 @@ class basketCMIS extends folderCMIS
         require_once('core/class/class_db_pdo.php');
         $db = new Database();
         
-        $userId = $db->escape_string($_SESSION['user']['UserId']);
+        $userId = pg_escape_string($_SESSION['user']['UserId']);
         $statement = "select group_id from usergroup_content where user_id = '" . $userId . "' and primary_group = 'Y'";
         $result = $db->query($statement);
 
@@ -242,7 +242,7 @@ class basketCMIS extends folderCMIS
 
         $cmisBaskets = array();
 
-        foreach( $_SESSION['user']['baskets'] as $key => $basket){
+        foreach($_SESSION['user']['baskets'] as $key => $basket){
             $cmisBaskets[$key] = $this->toCmisBasket($basket);
         }
 
