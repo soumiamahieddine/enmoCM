@@ -9,7 +9,7 @@ class basketCMIS extends folderCMIS
     private $basketId;
 
 
-    public function BasketCMIS(){
+    public function __construct() {
 
         $this->id = "cmis:basket";
         $this->queryName = "cmis:basket";
@@ -252,7 +252,6 @@ class basketCMIS extends folderCMIS
 
     public function toCmisBasket($basket){
         $basketCmis = new basketCMIS();
-        $basketCmis->BasketCMIS();
 
         $basketCmis->basketId->setValue($basket['id']);
         $basketCmis->name->setValue($basket['name']);
