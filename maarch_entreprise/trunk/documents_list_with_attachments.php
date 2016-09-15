@@ -425,12 +425,20 @@ for ($i=0;$i<$tabI;$i++)
             }
             if($tab[$i][$j][$value]=="count_attachment")
             {
+                $query = "SELECT count(*) as total FROM res_view_attachments
+                            WHERE res_id_master = ?
+                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN ('converted_pdf', 'print_folder') AND coll_id = ? AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                $arrayPDO = array($tab[$i][0]['res_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
+                $stmt2 = $db->query($query, $arrayPDO);
+                $return_count = $stmt2->fetchObject();
+
                 $tab[$i][$j]["label"]=_ATTACHMENTS;
                 $tab[$i][$j]["size"]="12";
                 $tab[$i][$j]["label_align"]="left";
                 $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]['value'] = "$return_count->total";
                 $tab[$i][$j]["order"]='count_attachment';
             }
             if($tab[$i][$j][$value]=="case_id" && $core_tools->is_module_loaded("cases") == true)
