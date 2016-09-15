@@ -30,7 +30,7 @@
           </div>
           <!--curl -X GET -ubblier:maarch "http://127.0.0.1/syleam_trunk/ws_server.php?REST/res/101"-->
         <p></p>
-        <form method="post" action="<?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=folder" target="_blank">
+        <!--form method="post" action="<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?cmis/letterbox_coll/folder" target="_blank">
           <p>
             </p><h4>Créer un dossier</h4>
             <div id="liencmis">
@@ -39,29 +39,13 @@
               <br>
               <input class="button" name="submit" value="Créer" type="submit">
             </div>
-            <!--curl -X POST -ubblier:maarch "<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?REST/folder" -d atomFileContent=thexmlcontentfile-->
           <p></p>
-        </form>
-        <p>
-          </p><h4>Consulter un dossier (id = TEST)</h4>
-          <div id="liencmis">
-            <a href="<?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=folder&amp;idResource=TEST" target="_blank">
-              <?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=folder&amp;idResource=TEST
-              </a>
-          </div>
-          <br />
-          <div id="liencmis">
-            <a href="<?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=folder&amp;idResource=SF_0101" target="_blank">
-              <?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=folder&amp;idResource=SF_0101
-              </a>
-          </div>
-          <!--curl -X GET -ubblier:maarch "<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?REST/folder/RH"-->
-        <p></p>
+        </form-->
         <p>
           </p><h4>Voir la liste des corbeilles</h4>
           <div id="liencmis"> 
-            <a href="<?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=basket" target="_blank">
-              <?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=basket
+            <a href="<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?cmis/letterbox_coll/basket" target="_blank">
+              <?php echo $_SESSION['config']['coreurl'];?>ws_server.php?cmis/letterbox_coll/basket
             </a>
           </div>
           <!--curl -X GET -ubblier:maarch "<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?REST/basket"-->
@@ -69,30 +53,34 @@
         <p>
           </p><h4>Liste des documents d'une corbeille</h4>
           <div id="liencmis">
-            <a href="<?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=basket&amp;idResource=MyBasket" target="_blank">
-              <?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=basket&amp;idResource=MyBasket
-            </a>
-          </div>
-          <br />
-          <div id="liencmis">
-            <a href="<?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=basket&amp;idResource=APA_picking" target="_blank">
-              <?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=basket&amp;idResource=APA_picking
+            <a href="<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?cmis/letterbox_coll/basket/InitBasket" target="_blank">
+              <?php echo $_SESSION['config']['coreurl'];?>ws_server.php?cmis/letterbox_coll/basket/InitBasket
             </a>
           </div>
           <!--curl -X GET -ubblier:maarch "<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?REST/basket/MesCourriersATraiter"-->
         <p></p>
-        <form method="post" action="<?php echo $_SESSION['config']['coreurl'];?>core/class/web_service/cmis_test/test_rest.php?resource=res" target="_blank">
+        <!--form method="post" action="<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?cmis/letterbox_coll/res" target="_blank">
           <p>
             </p><h4>Recherche avancée de documents</h4>
             <div id="liencmis">
               <input name="xmlFile" value="query.xml" type="hidden">
-              <!--curl -X POST -ubblier:maarch "<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?REST/res" -d atomFileContent=thexmlcontentfile-->
+              
               Requête : SELECT  cmis:objectId , maarch:type , maarch:entity , maarch:dest_user   FROM cmis:document  ORDER BY cmis:objectId asc 
               <br>
               <input class="button" name="submit" value="Rechercher" type="submit">
-            </div>            
+            </div>
           <p></p>
-        </form>
+        </form-->
+        <!--curl -X POST -ubblier:maarch "<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?REST/res" -d atomFileContent=thexmlcontentfile-->
+        <p>
+          </p><h4>Consulter un dossier (id = TEST)</h4>
+          <div id="liencmis">
+            <a href="<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?cmis/letterbox_coll/folder/TEST" target="_blank">
+              <?php echo $_SESSION['config']['coreurl'];?>ws_server.php?cmis/letterbox_coll/folder/TEST
+              </a>
+          </div>
+          <!--curl -X GET -ubblier:maarch "<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?REST/folder/RH"-->
+        <p></p>
       </div>
     </div>
   </body>
