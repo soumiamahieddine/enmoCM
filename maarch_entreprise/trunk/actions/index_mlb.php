@@ -239,9 +239,9 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
 
     $frmStr .= '<div  style="display:block">';
 
-    if (! isset($_SESSION['FILE']['extension'])
+    /*if (! isset($_SESSION['FILE']['extension'])
         || $_SESSION['FILE']['extension'] == ""
-    ) {
+    ) {*/
 
         $frmStr .= '<div  style="display:block" id="choose_file_div">';
         $frmStr .= '<iframe src="' . $_SESSION['config']['businessappurl']
@@ -250,7 +250,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 . 'frameborder="0" scrolling="no" width="100%" height="30">'
                 . '</iframe>';
         $frmStr .= '</div>';
-    }
+    //}
     $frmStr .= '<hr />';
     
     $frmStr .= '<h4 onclick="new Effect.toggle(\'general_infos_div\', \'blind\', {delay:0.2});'
