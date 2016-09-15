@@ -42,7 +42,10 @@ if (!isset($_REQUEST['transmissionNumber'])) {
 if (isset($_REQUEST['attachType']) && $_REQUEST['attachType'] == 'outgoing_mail'){
 	$objType = 'outgoingMail';
 }
-else $objType = $_REQUEST['objectType'];
+else {
+    $objType = $_REQUEST['objectType'];
+}
+
 if (
     file_exists(
         $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
