@@ -20,7 +20,7 @@ class folderCMIS extends objectCMIS
     //
     protected $propertiesInXml;
 
-    public function FolderCmis(){
+    public function __construct() {
 
         $this->Id = "cmis:folder";
         $this->queryName = "cmis:folder";
@@ -200,7 +200,7 @@ class folderCMIS extends objectCMIS
     public function entryMethod ($atomFileContent, $requestedResourceId)
     {
 
-        if(isset($atomFileContent) && !isset($requestedResourceId)){
+        if(isset($atomFileContentf) && !isset($requestedResourceId)){
             $str = 'AtomFileContent create folder ';
 
             //new parser atom xml file
@@ -255,7 +255,7 @@ class folderCMIS extends objectCMIS
         require_once('core/class/class_db_pdo.php');
         $db = new Database();
 
-        $requestedResourceId = $db->escape_string($requestedResourceId);
+        $requestedResourceId = pg_escape_string($requestedResourceId);
         $statement = "select * from folders where folder_id = '".$requestedResourceId."'";
 
         $result = $db->query($statement);
@@ -267,7 +267,7 @@ class folderCMIS extends objectCMIS
         }
 
         $folder = new folderCMIS();
-        $folder->FolderCmis();
+        //$folder->FolderCmis();
 
         //premier tuple retourne
         if ($recordset = $result->fetchObject()) {
@@ -290,7 +290,7 @@ class folderCMIS extends objectCMIS
         require_once('core/class/class_db_pdo.php');
         $db = new Database();
 
-        $requestedResourceId = $db->escape_string($requestedResourceId);
+        $requestedResourceId = pg_escape_string($requestedResourceId);
 
         //$resArray = null
         $statement = "select * from res_view_letterbox where folder_id = '".$requestedResourceId."'";
@@ -344,10 +344,10 @@ class folderCMIS extends objectCMIS
 
         //insert into folders ( folder_id , foldertype_id , folder_name , creation_date ) values ( 'folderid' , 5 , 'foldername' , current_date)
         $statement = "insert into folders ( folder_id , foldertype_id , folder_name , creation_date ) values ( '"
-                .$db->escape_string($newCmisFolder->getFolderIdValue())."' , '"
-                .$db->escape_string($foldertype_id)."' , '"
-                .$db->escape_string($newCmisFolder->getNameValue())."' , "
-                .$db->escape_string($creation_date)." ) ";
+                .pg_escape_string($newCmisFolder->getFolderIdValue())."' , '"
+                .pg_escape_string($foldertype_id)."' , '"
+                .pg_escape_string($newCmisFolder->getNameValue())."' , "
+                .pg_escape_string($creation_date)." ) ";
 
         $result = $db->query($statement);
 
