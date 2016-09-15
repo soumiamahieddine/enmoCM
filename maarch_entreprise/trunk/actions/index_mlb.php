@@ -813,7 +813,6 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
 
     /*** Folder ***/
-    print_r($core->test_service('associate_folder', 'folder',false));
     if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
         require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
             . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
