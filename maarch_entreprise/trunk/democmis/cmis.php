@@ -72,13 +72,13 @@
           <p></p>
         </form-->
         <!--curl -X POST -ubblier:maarch "<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?REST/res" -d atomFileContent=thexmlcontentfile-->
-        <p>
+        <!--p>
           </p><h4>Consulter un dossier (id = TEST)</h4>
           <div id="liencmis">
             <a href="<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?cmis/letterbox_coll/folder/TEST" target="_blank">
               <?php echo $_SESSION['config']['coreurl'];?>ws_server.php?cmis/letterbox_coll/folder/TEST
               </a>
-          </div>
+          </div-->
           <!--curl -X GET -ubblier:maarch "<?php echo $_SESSION['config']['coreurl'];?>ws_server.php?REST/folder/RH"-->
         <p></p>
       </div>
