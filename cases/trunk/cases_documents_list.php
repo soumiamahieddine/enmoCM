@@ -89,7 +89,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
 	    	//controle for basket that has empty whereclause ' '
 	    	$basketClauseReplace = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j]['clause']);
 
-	        if($basketClauseReplace <> ""){
+	        if($basketClauseReplace <> "") {
 	            $where_request .= "(" . $_SESSION['user']['baskets'][$j]['clause'] . ")";
 	            $basketClause = true;
 	            
@@ -101,14 +101,14 @@ if (count($_SESSION['user']['baskets']) > 0) {
 	            ) {
 	                $where_request .=" or "; 
 	            }
-	        }else{
+	        } else if ($j > 0) {
 	        	$where_request .=" or "; 
 	        }
 	    }
         $j++;
     }
-    // $where_request .= " or ";
 }
+
 if ($_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where'] <> '') {
     
 	if ($basketClause) {
