@@ -617,7 +617,7 @@ abstract class business_app_tools_Abstract extends Database
         }
         //If this two parameters is not find, this is the end of this function
         if ($_SESSION['maarch_entreprise']['xml_versionbase'] <> 'none' ) {
-            if (($_SESSION['maarch_entreprise']['xml_versionbase'] > $_SESSION['maarch_entreprise']['database_version'])
+            if (($_SESSION['maarch_entreprise']['xml_versionbase'] <> $_SESSION['maarch_entreprise']['database_version'])
                 || ($_SESSION['maarch_entreprise']['database_version'] == 'none')
             ) {
                 $_SESSION['error'] .= _VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH;
