@@ -75,18 +75,12 @@ function disableTransmissionButton(currentValue) {
   }
 
   var addButton = $('newTransmissionButton0');
-  //if (size >= 1)
-  //  var delButton = $('delTransmissionButton' + size);
 
   addButton.style.display = "";
   if (currentValue == "" || $("chrono_display").style.display == "none") {
     addButton.style.opacity = 0.5;
-    //if (size >= 1)
-    //  delButton.style.opacity = 0.5;
   } else {
     addButton.style.opacity = 1;
-    //if (size >= 1)
-    //  delButton.style.opacity = 1;
   }
 }
 
@@ -111,7 +105,6 @@ function showTransmissionEditButton(currentValue, editParagraph, size) {
 
 function hideEditAndAddButton(editParagraph) {
   $(editParagraph).style.display = "none";
-  //$("add").style.display = "none";
 }
 
 function delLastTransmission() {
