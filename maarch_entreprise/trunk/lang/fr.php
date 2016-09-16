@@ -1543,7 +1543,7 @@ if (!defined("_CONSULT"))    define("_CONSULT", "Consulter");
 if (!defined("_DOCUMENTS_LIST_WITH_ATTACHMENTS"))    define("_DOCUMENTS_LIST_WITH_ATTACHMENTS", "Liste avec filtre et réponses");
 if (!defined("_DOCUMENTS_LIST_BY_MODIFICATION"))
     define("_DOCUMENTS_LIST_BY_MODIFICATION", "Liste filtrée par date de modification");
-if (!defined("_QUALIFY_FIRST"))    define("_QUALIFY_FIRST", "La fiche détails est vide car le document doit être qualifié");
+if (!defined("_QUALIFY_FIRST"))    define("_QUALIFY_FIRST", "La fiche détaillée est vide car le document doit être qualifié");
 
 /******************** persistent mode ************/
 if (!defined("_SET_PERSISTENT_MODE_ON"))    define("_SET_PERSISTENT_MODE_ON", "Activer la persistance");
