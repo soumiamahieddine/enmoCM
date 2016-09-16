@@ -528,7 +528,8 @@ abstract class indexing_searching_app_Abstract extends Database
             $where = "res_id = ?";
             $arrayPDO = array($idDoc);
             $request->PDOupdate($table, $data, $where, $arrayPDO, $_SESSION['config']['databasetype']);
-            $_SESSION['info'] = _UPDATE_DOC_STATUS." ("._NUM." : ".$idDoc.") "._TO." ".$status;
+            //$_SESSION['info'] = _UPDATE_DOC_STATUS." ("._NUM." : ".$idDoc.") "._TO." ".$status;
+            $_SESSION['info'] = _UPDATE_DOC_STATUS ." ". _TO." ".$status;
             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
             $hist = new history();
             $hist->add($table, $idDoc, $status, 'resup', $_SESSION['error'], $_SESSION['config']['databasetype'],'indexing_searching');
