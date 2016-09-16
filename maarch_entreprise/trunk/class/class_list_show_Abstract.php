@@ -678,7 +678,7 @@ class list_show_Abstract extends functions
     * @return string $words
     * @return string $size
     */
-    protected function thisword($words,$need, $is_split = FALSE, $size = 70)
+    protected static function thisword($words,$need, $is_split = FALSE, $size = 70)
     {
         // mark with a color background the word you're searching in the detail of the row
         if(!$is_split || strlen($words) < $size)
@@ -762,7 +762,7 @@ class list_show_Abstract extends functions
     * @param string $button_text text of button
     * @param string $alpha_text text of the alphabetical list
     */
-    public function listletters($link, $page, $all_text, $button_text, $alpha_list_text, $show_searchbox = true, $autoCompletion = false, $autoCompletionArray2 = array(), $whatinput =  'what', $whatListinput = 'whatList')
+    public static function listletters($link, $page, $all_text, $button_text, $alpha_list_text, $show_searchbox = true, $autoCompletion = false, $autoCompletionArray2 = array(), $whatinput =  'what', $whatListinput = 'whatList')
     {
         $link = preg_replace("/(&(?!amp;))/", "&amp;", $link);
         ?>
@@ -846,7 +846,7 @@ class list_show_Abstract extends functions
     * @param string $show_big_title
     * @param string $flag_not_admin
     */
-    public function admin_list($result, $nb_total, $title, $expr, $name, $admin, $key, $bool_order, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, $bool_history = FALSE, $bool_simple_list = FALSE, $all_sentence='', $whatname='', $picto_path ='', $is_part_of_module = FALSE, $show_big_title = true, $flag_not_admin = false, $show_listletters = true, $what ="", $autoCompletion = false, $autoCompletionArray = array(), $is_in_apps_dir = false, $is_del_page_popup = false, $whatinput = 'what', $whatListinput = 'whatList')
+    public static function admin_list($result, $nb_total, $title, $expr, $name, $admin, $key, $bool_order, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, $bool_history = FALSE, $bool_simple_list = FALSE, $all_sentence='', $whatname='', $picto_path ='', $is_part_of_module = FALSE, $show_big_title = true, $flag_not_admin = false, $show_listletters = true, $what ="", $autoCompletion = false, $autoCompletionArray = array(), $is_in_apps_dir = false, $is_del_page_popup = false, $whatinput = 'what', $whatListinput = 'whatList')
     {
         // show the document list in result of the search
         $page_list1 = "";
@@ -1567,7 +1567,7 @@ class list_show_Abstract extends functions
     }
 
 
-    public function define_order($order, $field)
+    public static function define_order($order, $field)
     {
         // configure the sql argument order by
         $orderby = "";
