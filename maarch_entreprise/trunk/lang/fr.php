@@ -358,7 +358,7 @@ if (!defined("_MUST_CHANGE_PSW")) define("_MUST_CHANGE_PSW", "doit modifier son 
 
 if (!defined("_NEW_PASSWORD_USER")) define("_NEW_PASSWORD_USER", "Réinitialisation du mot de passe de l'utilisateur");
 if (!defined("_PASSWORD_NOT_CHANGED"))    define("_PASSWORD_NOT_CHANGED", "Problème lors du changement de mot de passe");
-if (!defined("_ALREADY_CREATED_AND_DELETED")) define("_ALREADY_CREATED_AND_DELETED", "L'utilisateur demandé a été supprimé. Cliquer sur réactiver en haut en gauche pour le rajouter");
+if (!defined("_ALREADY_CREATED_AND_DELETED")) define("_ALREADY_CREATED_AND_DELETED", "L'utilisateur demandé a été supprimé. Cliquer sur réactiver en haut à gauche pour le rajouter");
 if (!defined("_REACTIVATE")) define("_REACTIVATE", "Réactiver");
 /************** Types de document : Liste + Formulaire**************/
 
