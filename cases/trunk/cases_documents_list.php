@@ -94,15 +94,21 @@ if (count($_SESSION['user']['baskets']) > 0) {
 	            $basketClause = true;
 	            
 	    		$basketClauseReplace1 = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j+1]['clause']);
-	            if(
-	            	$j+1 != count($_SESSION['user']['baskets']) 
-	            	&& $basketClauseReplace1 <> "" 
-	            	&& $_SESSION['user']['baskets'][$j+1]['is_folder_basket'] == 'N'
-	            ) {
-	                $where_request .=" or "; 
+
+				$jplus = $j + 1;
+				$normalBasketsRemaining = false;
+				while ($_SESSION['user']['baskets'][$jplus]) {
+					if ($_SESSION['user']['baskets'][$jplus]['is_folder_basket'] == 'N') {
+						$normalBasketsRemaining = true;
+						break;
+					}
+					$jplus++;
+				}
+	            if ($j + 1 < count($_SESSION['user']['baskets']) && $basketClauseReplace1 != "" && $normalBasketsRemaining) {
+	                $where_request .= " or ";
 	            }
 	        } else if ($j > 0) {
-	        	$where_request .=" or "; 
+	        	$where_request .= " or ";
 	        }
 	    }
         $j++;
