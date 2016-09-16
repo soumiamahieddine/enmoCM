@@ -1858,7 +1858,7 @@ if(!isset($_REQUEST['id'])) {
     $content .= _EDIT_MODEL;
     $content .= '" name="edit" id="edit" style="display:none;margin-top: 0" class="button" '
         . 'onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&attachType=\'+$(\'attachment_types\').value+\'&objectTable=' . $objectTable . '&contactId=\'+$(\'contactidAttach\').value+\'&addressId=\'+$(\'addressidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&titleAttachment=\'+cleanTitle($(\'title\').value)+\'&back_date=\'+$(\'back_date\').value+\'&resMaster=' . $_SESSION['doc_id']
-        . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');$(\'add\').value=\'Edition en cours ...\';setInterval(function() {checkEditingDoc(\''.$_SESSION['user']['UserId'].'\')}, 5000);$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';this.hide();"/>';
+        . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');$(\'add\').value=\'Edition en cours ...\';setInterval(function() {checkEditingDoc(\''.$_SESSION['user']['UserId'].'\')}, 500);$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';this.hide();"/>';
     $content .= '<span style="display: none" id="divOr0">&nbsp;ou&nbsp;</span>';
     $content .= '</div>';
 
