@@ -499,7 +499,7 @@ function setButtonStyle(radioButton, fileFormat, statusValidateButton) {
 
 function cleanTitle(str) {
     //permet de supprimer les # dans le titre qui bloque l'ouverture de l'applet java
-    var res = str.replace("#", " ");
+    var res = str.replace(/#/g, " ");
     return(res);
 }
 
