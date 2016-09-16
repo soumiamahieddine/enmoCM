@@ -1315,9 +1315,9 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                             }
                         catch(e){}
                     }
-                    $('send').disabled=false;
-                    $('send').style.opacity="1";
-                    $('send').value="valider";
+                    $('send').disabled = false;
+                    $('send').style.opacity = "1";
+                    $('send').value = "Valider";
                 },
                 onFailure: function(){
                 }
@@ -1590,9 +1590,9 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                     }
                     //close_action(id_action,  page_result);
                 }
-                $('send_mass').disabled=false;
-                $('send_mass').style.opacity="1";
-                $('send_mass').value="valider";
+                $('send_mass').disabled = false;
+                $('send_mass').style.opacity = "1";
+                $('send_mass').value = "Valider";
             },
             onFailure: function(){
                 //alert('erreur');
