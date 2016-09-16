@@ -72,7 +72,7 @@ class ActionControler
 	/**
 	* Opens a database connexion and values the tables variables
 	*/
-	public function connect()
+	public static function connect()
 	{
 		$db = new Database();
 		
@@ -88,7 +88,7 @@ class ActionControler
 	* @param  $action_id string  Action identifier
 	* @return Action object with properties from the database or null
 	*/
-	public function get($action_id)
+	public static function get($action_id)
 	{
 		
 		if(empty($action_id)) {
@@ -151,7 +151,7 @@ class ActionControler
 	*
 	* @return categories array 
 	*/
-	public function getAllCategoriesLinkedToAction($actionId)
+	public static function getAllCategoriesLinkedToAction($actionId)
 	{
 		self::connect();
 		$query = "select category_id from actions_categories where action_id = ?";
@@ -177,7 +177,7 @@ class ActionControler
 	* @param  $mode string  Saving mode : add or up
 	* @return bool true if the save is complete, false otherwise
 	*/
-	public function save($action, $mode)
+	public static function save($action, $mode)
 	{
 		if(!isset($action)) {
 			return false;
@@ -198,7 +198,7 @@ class ActionControler
 	* 
 	* @return bool true if raz ok
 	*/
-	public function razActionPage()
+	public static function razActionPage()
 	{
         $dbUp = new Database();
         $return = self::update($action);
@@ -214,7 +214,7 @@ class ActionControler
 	* @param  $action Action object
 	* @return bool true if the insertion is complete, false otherwise
 	*/
-	private function insert($action)
+	private static function insert($action)
 	{
 		if(!isset($action))
 			return false;
@@ -239,7 +239,7 @@ class ActionControler
 	* @param  $action Action object
 	* @return bool true if the update is complete, false otherwise
 	*/
-	private function update($action)
+	private static function update($action)
 	{
 		if(!isset($action) )
 			return false;
@@ -264,7 +264,7 @@ class ActionControler
 	* @param  $action_id string  Action identifier
 	* @return bool true if the deletion is complete, false otherwise
 	*/
-	public function delete($action_id)
+	public static function delete($action_id)
 	{
 		if(!isset($action_id)|| empty($action_id) )
 			return false;
@@ -290,7 +290,7 @@ class ActionControler
 	* @param  $action_id string  Action identifier
 	* @return bool true if the cleaning is complete, false otherwise
 	*/
-	public function cleanActionsGroupbasket($action_id)
+	public static function cleanActionsGroupbasket($action_id)
 	{
 		if(!isset($action_id)|| empty($action_id) )
 			return false;
@@ -310,7 +310,7 @@ class ActionControler
 	* @param  $action_id String Action identifier
 	* @return bool true if the action exists, false otherwise
 	*/
-	public function actionExists($action_id)
+	public static function actionExists($action_id)
 	{
 		if(!isset($action_id) || empty($action_id))
 			return false;
@@ -333,7 +333,7 @@ class ActionControler
 	* @param  $action Action object
 	* @return String containing the fields and the values
 	*/
-	private function update_prepare($action)
+	private static function update_prepare($action)
 	{
 		$result=array();
 		$arrayValues=array();

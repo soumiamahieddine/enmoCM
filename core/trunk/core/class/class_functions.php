@@ -387,7 +387,7 @@ class functions
     * @param     $what string Variable to format
     * @return string  Formated variable
     */
-    public function show_str($what)
+    public static function show_str($what)
     {
         return stripslashes($what);
     }

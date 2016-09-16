@@ -269,7 +269,7 @@ class core_tools extends functions
     /**
     * Loads language variables into session
     */
-    public function load_lang($lang = 'fr', $maarch_directory = '', $maarch_apps = '')
+    public static function load_lang($lang = 'fr', $maarch_directory = '', $maarch_apps = '')
     {
         if(isset($_SESSION['config']['lang']) && !empty($_SESSION['config']['lang']))
         {
@@ -307,7 +307,7 @@ class core_tools extends functions
     *
     * @param $modules array Enabled modules of the application
     */
-    private function load_lang_modules($modules)
+    private static function load_lang_modules($modules)
     {
         for ($i=0;$i<count($modules);$i++) {
             $file_path = $_SESSION['config']['corepath'] . 'custom'
@@ -331,7 +331,7 @@ class core_tools extends functions
         }
     }
 
-    private function load_lang_custom_override($custom_id)
+    private static function load_lang_custom_override($custom_id)
     {
         $pathname = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$custom_id.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 
