@@ -361,6 +361,19 @@ for ($i=0;$i<$tabI;$i++)
             }
             if($tab[$i][$j][$value]=="exp_user_id")
             {
+                if (empty($contact_lastname) && empty($contact_firstname) && empty($user_lastname) && empty($user_firstname)) {
+                    $query = "SELECT ca.firstname, ca.lastname FROM contact_addresses ca, res_view_letterbox rvl
+                                WHERE rvl.res_id = ?
+                                AND rvl.address_id = ca.id AND rvl.exp_contact_id = ca.contact_id";
+                    $arrayPDO = array($tab[$i][0]['res_id']);
+                    $stmt2 = $db->query($query, $arrayPDO);
+                    $return_contact = $stmt2->fetchObject();
+                    if (!empty($return_contact)) {
+                        $contact_firstname = $return_contact->firstname;
+                        $contact_lastname = $return_contact->lastname;
+                    }
+                }
+
                 $tab[$i][$j]["label"]=_CONTACT;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="left";
