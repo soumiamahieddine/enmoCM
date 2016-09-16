@@ -199,7 +199,7 @@ abstract class visa_Abstract extends Database
 		$this->errorMessageVisa = null;
 
 		$db = new Database();
-		$stmt = $db->query("SELECT * FROM res_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder') ", array($res_id, $coll_id));
+		$stmt = $db->query("SELECT * FROM res_view_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder') ", array($res_id, $coll_id));
 		if ($stmt->rowCount() <= 0) {
 			$this->errorMessageVisa = _NO_RESPONSE_PROJECT_VISA;
 			return false;
