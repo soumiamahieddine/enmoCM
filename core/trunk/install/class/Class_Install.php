@@ -1077,9 +1077,9 @@ class Install extends functions
         $res .= "\n";
         $res .= "svn up ".realpath('.')."/.";
         $res .= "\n";
-        $res .= "svn up ".realpath('.')."/apps/maarch_entreprise/.";
+        $res .= "svn up ".realpath('.')."/apps/maarch_entreprise/*";
         $res .= "\n";
-        $res .= "svn up ".realpath('.')."/core/.";
+        $res .= "svn up ".realpath('.')."/core/*";
         $res .= "\n";
         $res .= "svn up ".realpath('.')."/modules/*";
         $res .= "\n";
