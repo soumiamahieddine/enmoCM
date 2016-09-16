@@ -1140,7 +1140,8 @@ class Install extends functions
 
 * * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
 
-0 12 1 * *     rm -Rf /var/www/html/trunk/modules/sendmail/batch/logs/*.log
+0 12 1 * *     rm -Rf '.realpath('.').'/modules/sendmail/batch/logs/*.log
+
 
 ######################fulltext###################################################
 
