@@ -664,7 +664,7 @@ if(isset($_REQUEST['nodetails']))
         <td >
         <div class="block">
         <h2><?php echo _LETTER_INFO;?></h2>
-            <table border = "0" width="100%" class="content">
+            <table border = "0" width="100%" class="content" style="position:relative;">
                 <tr>
                     <td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
                         <input type="text" name="subject" id="subject" <?php functions::xecho($size);?>  />
