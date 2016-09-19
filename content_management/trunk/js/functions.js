@@ -215,6 +215,13 @@ function checkEditingDoc(userId) {
                 target.removeAttribute('disabled');
                 target.style.opacity='1';
                 target.value='Valider';
+                //console.log('endoOfApplet!!!');
+                if($('CMApplet')) {
+                    destroyModal('CMApplet');
+                }
+                if($('CMApplet')) {
+                    destroyModal('CMApplet');
+                }
             } else {
                 console.log('lck found! Editing in progress !');
                 target.disabled='disabled';
@@ -224,4 +231,25 @@ function checkEditingDoc(userId) {
         }
     });
 
+}
+
+function showAppletLauncher(path, width, height) {
+
+    new Ajax.Request(path,
+    {
+        method:'post',
+        parameters: { url : path
+                    },  
+        onSuccess: function(answer) {
+            
+            eval("response = "+answer.responseText);
+            
+            if(response.status == 0){
+                var modal_content = convertToTextVisibleNewLine(response.content);
+                createModal(modal_content, 'CMApplet', 300, 300); 
+            } else {
+                window.top.$('main_error').innerHTML = response.error;
+            }
+        }
+    });
 }
