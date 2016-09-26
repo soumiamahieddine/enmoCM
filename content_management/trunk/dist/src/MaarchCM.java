@@ -8,7 +8,7 @@
 
 package com.maarch;
 
-import java.io.File;
+import java.applet.Applet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -16,7 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.PrivilegedActionException;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -34,6 +33,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import netscape.javascript.JSObject;
 
+import java.io.File;
+import javax.swing.JOptionPane;
+
+
 /**
  * MaarchCM class manages webservices between end user desktop and Maarch
  * @author Laurent Giovannoni
@@ -47,6 +50,7 @@ public class MaarchCM extends JApplet {
     protected String cookie;
     protected String uniqueId;
     protected String userLocalDirTmp;
+    protected String userMaarch;
     
     protected String messageStatus;
     
@@ -80,6 +84,7 @@ public class MaarchCM extends JApplet {
         objectId = getParameter("objectId");
         uniqueId = getParameter("uniqueId");
         cookie = getParameter("cookie");
+        userMaarch = getParameter("userMaarch");
         
         System.out.println("URL : " + url);
         System.out.println("OBJECT TYPE : " + objectType);
@@ -87,7 +92,6 @@ public class MaarchCM extends JApplet {
         System.out.println("OBJECT ID : " + objectId);
         System.out.println("UNIQUE ID : " + uniqueId);
         System.out.println("COOKIE : " + cookie);
-        
         System.out.println("----------CONTROL PARAMETERS----------");
         
         if (
@@ -235,6 +239,7 @@ public class MaarchCM extends JApplet {
             this.logger.log("ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.", Level.SEVERE);
             this.messageStatus = "ERROR";
             this.messageResult.put("ERROR","ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.");
+            JOptionPane.showMessageDialog(null,"ERREUR ! L'édition de votre document a échoué. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des modèles soit correct.");
         }
         this.logger.log("----------END PARSE XML----------", Level.INFO);
     }
@@ -283,13 +288,12 @@ public class MaarchCM extends JApplet {
         }
         //send message error to Maarch if necessary
         if (!this.error.isEmpty()) {
-            this.sendJsMessage(this.error);
+            //this.sendJsMessage(this.error);
             this.destroy();
             this.stop();
             System.exit(0);
         }
     }
-    
     
     /**
      * Main function of the class
@@ -307,7 +311,7 @@ public class MaarchCM extends JApplet {
         this.userLocalDirTmp = System.getProperty("user.home");
         
         this.fM = new FileManager();
-        
+
         if (isWindows) {
             System.out.println("This is Windows");
             this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
@@ -349,10 +353,12 @@ public class MaarchCM extends JApplet {
             this.messageStatus = "ERROR";
             this.messageResult.clear();
             this.messageResult.put("ERROR","ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch");
+            JOptionPane.showMessageDialog(null,"ERREUR ! Permissions insuffisante sur votre répertoire temporaire maarch.");
             this.processReturn(this.messageResult);
         }
         
-        System.out.println("----------END LOCAL DIR TMP IF NOT EXISTS----------");
+        System.out.println("Create the logger");
+        this.logger = new MyLogger(this.userLocalDirTmp);
         
         this.logger.log("Delete thefile if exists", Level.INFO);
         FileManager.deleteFilesOnDir(this.userLocalDirTmp, "thefile");
@@ -361,7 +367,7 @@ public class MaarchCM extends JApplet {
         String urlToSend = this.url + "?action=editObject&objectType=" + this.objectType
                         + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
                         + "&uniqueId=" + this.uniqueId;
-        sendHttpRequest(urlToSend, "none");
+        sendHttpRequest(urlToSend, "none", false);
         this.logger.log("MESSAGE STATUS : " + this.messageStatus, Level.INFO);
         this.logger.log("MESSAGE RESULT : ", Level.INFO);
         this.processReturn(this.messageResult);
@@ -410,13 +416,13 @@ public class MaarchCM extends JApplet {
                         this.logger.log("----------[SECURITY BACKUP] BEGIN SEND OF THE OBJECT----------", Level.INFO);
                         String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
                                     + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
-                                    + "&uniqueId=" + this.uniqueId;
+                                    + "&uniqueId=" + this.uniqueId + "&step=backup&userMaarch=" + this.userMaarch;
                         this.logger.log("[SECURITY BACKUP] URL TO SAVE : " + urlToSave, Level.INFO);
-                        sendHttpRequest(urlToSave, this.fileContentTosend);
+                        sendHttpRequest(urlToSave, this.fileContentTosend,false);
                         this.logger.log("[SECURITY BACKUP] MESSAGE STATUS : " + this.messageStatus, Level.INFO);
                     }
                 } else {
-                    this.logger.log(this.userLocalDirTmp + this.fileToEdit + "FILE NOT READABLE !!!!!!", Level.INFO);
+                    this.logger.log(this.userLocalDirTmp + this.fileToEdit + " FILE NOT READABLE !!!!!!", Level.INFO);
                 }
             }
             while (theThread.isAlive());
@@ -433,18 +439,18 @@ public class MaarchCM extends JApplet {
             
             String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
                             + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
-                            + "&uniqueId=" + this.uniqueId;
+                            + "&uniqueId=" + this.uniqueId + "&step=end&userMaarch=" + this.userMaarch;
             this.logger.log("----------BEGIN SEND OF THE OBJECT----------", Level.INFO);
             this.logger.log("URL TO SAVE : " + urlToSave, Level.INFO);
-            sendHttpRequest(urlToSave, this.fileContentTosend);
+            sendHttpRequest(urlToSave, this.fileContentTosend, true);
             this.logger.log("MESSAGE STATUS : " + this.messageStatus, Level.INFO);
             this.logger.log("LAST MESSAGE RESULT : ", Level.INFO);
             this.processReturn(this.messageResult);
             //send message to Maarch at the end
             if (!this.endMessage.isEmpty()) {
-                this.sendJsMessage(this.endMessage);
+                //this.sendJsMessage(this.endMessage);
             }
-            this.sendJsEnd();
+            //this.sendJsEnd();
             this.logger.log("----------END SEND OF THE OBJECT----------", Level.INFO);
         } else {
             this.logger.log("RESPONSE KO", Level.WARNING);
@@ -489,7 +495,7 @@ public class MaarchCM extends JApplet {
         Process proc;
 
         this.logger.log("LAUNCH THE EDITOR !", Level.INFO);
-        if ("linux".equals(this.os)) {
+        if ("linux".equals(this.os) || "mac".equals(this.os)) {
             proc = this.fM.launchApp(this.appPath);
         } else {
             this.logger.log("FILE TO EDIT : " + this.userLocalDirTmp + this.fileToEdit, Level.INFO);
@@ -523,7 +529,7 @@ public class MaarchCM extends JApplet {
     public void sendJsMessage(String message) throws JSException
     {
         JSObject jso;
-        jso = JSObject.getWindow(this);
+        jso = JSObject.getWindow((Applet)this);
         this.logger.log("----------JS CALL sendAppletMsg TO MAARCH----------", Level.INFO);
         //String theMessage;
         //theMessage = String.valueOf(message);
@@ -539,7 +545,7 @@ public class MaarchCM extends JApplet {
     public void sendJsEnd() throws InterruptedException, JSException
     {
         JSObject jso;
-        jso = JSObject.getWindow(this);
+        jso = JSObject.getWindow((Applet)this);
         this.logger.log("----------JS CALL endOfApplet TO MAARCH----------", Level.INFO);
         String[] theMessage = {String.valueOf(this.objectType), this.endMessage};
         jso.call("endOfApplet", (Object[]) theMessage);
@@ -548,25 +554,33 @@ public class MaarchCM extends JApplet {
     
     /**
      * Send an http request to Maarch
-     * @param url url to contact Maarch
+     * @param theUrl url to contact Maarch
      * @param postRequest the request
+     * @param endProcess end request
      */
-    public void sendHttpRequest(String theUrl, String postRequest) throws Exception {
+    public void sendHttpRequest(String theUrl, String postRequest, boolean endProcess) throws Exception {
+        System.out.println("URL request : " + theUrl);
         URL UrlOpenRequest = new URL(theUrl);
-        HttpURLConnection HttpOpenRequest = (HttpURLConnection) UrlOpenRequest.openConnection();
-        HttpOpenRequest.setDoOutput(true);
-        HttpOpenRequest.setRequestMethod("POST");
-        HttpOpenRequest.setRequestProperty("Cookie", this.cookie);
-        if (!"none".equals(postRequest)) {
-            OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
-            writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension);
-            writer.flush();
-        } else {
-            OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
-            writer.write("foo=bar");
-            writer.flush();
+		try {
+		    HttpURLConnection HttpOpenRequest = (HttpURLConnection) UrlOpenRequest.openConnection();
+		    HttpOpenRequest.setDoOutput(true);
+		    HttpOpenRequest.setRequestMethod("POST");
+		    HttpOpenRequest.setRequestProperty("Cookie", this.cookie);
+		    if (!"none".equals(postRequest)) {
+		        OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
+		        writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension);
+		        writer.flush();
+		    } else {
+		        OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
+		        writer.write("foo=bar");
+		        writer.flush();
+		    }
+		    this.parse_xml(HttpOpenRequest.getInputStream());
+		    HttpOpenRequest.disconnect();
+		} catch (Exception ex) {
+            this.logger.log("erreur: "+ex, Level.SEVERE);
+            JOptionPane.showMessageDialog(null,"ERREUR ! La connexion au serveur a été interrompue, le document édité n'a pas été sauvegardé !");
         }
-        this.parse_xml(HttpOpenRequest.getInputStream());
-        HttpOpenRequest.disconnect();
+        
     }
 }

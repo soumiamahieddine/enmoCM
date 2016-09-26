@@ -184,6 +184,17 @@ if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "false"){
     <br><?php echo _DONT_CLOSE;?><br /><br />
 
     <div id="maarchcm_error" class="error"></div>
+    <?php   
+    $path_appli = explode('/', $_SESSION['config']['coreurl']);
+    if(count($path_appli) <> 5){
+        $path_appli = array_slice($path_appli, 0, 4);
+        $path_appli = implode('/', $path_appli);
+    }else{
+        $path_appli = implode('/', $path_appli);
+    }
+    $cM->generateJNLPMaarch($path_appli,$path_appli.'/'.$path,$objectType,$objectTable,$objectId,$uniqueId,$cookieKey,$_SESSION['user']['UserId'],$cMFeatures['CONFIG']['userPwdMaarchOnClient'],$cMFeatures['CONFIG']['psExecMode'],'mayscript');
+    exit();
+    ?>
     <applet ARCHIVE="<?php 
             echo $_SESSION['config']['coreurl'];?>modules/content_management/dist/maarchCM.jar" 
         code="com.maarch.MaarchCM" name="maarchcmapplet" id="maarchcmapplet" 
