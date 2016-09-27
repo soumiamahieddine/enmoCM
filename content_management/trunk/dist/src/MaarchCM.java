@@ -48,6 +48,7 @@ public class MaarchCM extends JApplet {
     protected String objectTable;
     protected String objectId;
     protected String cookie;
+    protected String clientSideCookies;
     protected String uniqueId;
     protected String userLocalDirTmp;
     protected String userMaarch;
@@ -84,6 +85,7 @@ public class MaarchCM extends JApplet {
         objectId = getParameter("objectId");
         uniqueId = getParameter("uniqueId");
         cookie = getParameter("cookie");
+        clientSideCookies = getParameter("clientSideCookies");
         userMaarch = getParameter("userMaarch");
         
         System.out.println("URL : " + url);
@@ -92,6 +94,7 @@ public class MaarchCM extends JApplet {
         System.out.println("OBJECT ID : " + objectId);
         System.out.println("UNIQUE ID : " + uniqueId);
         System.out.println("COOKIE : " + cookie);
+        System.out.println("CLIENTSIDECOOKIES : " + clientSideCookies);
         System.out.println("----------CONTROL PARAMETERS----------");
         
         if (
@@ -273,6 +276,9 @@ public class MaarchCM extends JApplet {
             if ("COOKIE".equals(key)) {
                 this.cookie = value;
             }
+            if ("CLIENTSIDECOOKIES".equals(key)) {
+                this.clientSideCookies = value;
+            }
             if ("FILE_CONTENT".equals(key)) {
                 this.fileContent = value;
             }
@@ -302,7 +308,7 @@ public class MaarchCM extends JApplet {
      * @throws java.lang.Exception
      */
     public String editObject() throws Exception {
-        System.out.println("----------BEGIN EDIT OBJECT----------LGI 28/04/2016");
+        System.out.println("----------BEGIN EDIT OBJECT----------LGI 27/09/2016");
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         String os = System.getProperty("os.name").toLowerCase();
         boolean isUnix = os.contains("nix") || os.contains("nux");
@@ -565,7 +571,14 @@ public class MaarchCM extends JApplet {
 		    HttpURLConnection HttpOpenRequest = (HttpURLConnection) UrlOpenRequest.openConnection();
 		    HttpOpenRequest.setDoOutput(true);
 		    HttpOpenRequest.setRequestMethod("POST");
-		    HttpOpenRequest.setRequestProperty("Cookie", this.cookie);
+                    StringBuffer sb = new StringBuffer(this.cookie);
+                    if(this.clientSideCookies != null && this.clientSideCookies.length() > 0) {
+                        sb.append(';');
+                        //sb.append(this.clientSideCookies.replaceAll(";", ","));
+                        sb.append(this.clientSideCookies);
+                    }
+                    this.logger.log("COOKIES SENDED : " + sb.toString(), Level.INFO);
+		    HttpOpenRequest.setRequestProperty("Cookie", sb.toString());
 		    if (!"none".equals(postRequest)) {
 		        OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
 		        writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension);

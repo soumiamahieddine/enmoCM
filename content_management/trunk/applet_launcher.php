@@ -192,7 +192,19 @@ if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "false"){
     }else{
         $path_appli = implode('/', $path_appli);
     }
-    $cM->generateJNLPMaarch($path_appli,$path_appli.'/'.$path,$objectType,$objectTable,$objectId,$uniqueId,$cookieKey,$_SESSION['user']['UserId'],$cMFeatures['CONFIG']['userPwdMaarchOnClient'],$cMFeatures['CONFIG']['psExecMode'],'mayscript');
+    $cM->generateJNLPMaarch(
+            $path_appli,
+            $path_appli.'/'.$path,$objectType,
+            $objectTable,
+            $objectId,
+            $uniqueId,
+            $cookieKey,
+            $_SESSION['user']['UserId'],
+            $cMFeatures['CONFIG']['userPwdMaarchOnClient'],
+            $cMFeatures['CONFIG']['psExecMode'],
+            'mayscript',
+            $_SESSION['clientSideCookies']
+    );
     exit();
     ?>
     <applet ARCHIVE="<?php 
@@ -238,7 +250,20 @@ else if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
     }else{
         $path_appli = implode('/', $path_appli);
     }
-    $cM->generateJNLP($path_appli,$path_appli.'/'.$path,$objectType,$objectTable,$objectId,$uniqueId,$cookieKey,$_SESSION['user']['UserId'],$cMFeatures['CONFIG']['userPwdMaarchOnClient'],$cMFeatures['CONFIG']['psExecMode'],'mayscript');
+    $cM->generateJNLP(
+        $path_appli,
+        $path_appli.'/'.$path,
+        $objectType,
+        $objectTable,
+        $objectId,
+        $uniqueId,
+        $cookieKey,
+        $_SESSION['user']['UserId'],
+        $cMFeatures['CONFIG']['userPwdMaarchOnClient'],
+        $cMFeatures['CONFIG']['psExecMode'],
+        'mayscript',
+        $_SESSION['clientSideCookies']
+    );
     exit();
     ?>
     <resources>

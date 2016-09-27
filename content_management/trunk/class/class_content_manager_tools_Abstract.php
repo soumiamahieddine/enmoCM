@@ -342,8 +342,20 @@ abstract class content_management_tools_Abstract
     *
     * 
     */
-    public function generateJNLP($jar_url,$maarchcm_url,$objectType,$objectTable,$objectId,$uniqueId,$cookieKey,$user,$pwd,$psExecMode,$mayscript)
-    {
+    public function generateJNLP(
+        $jar_url,
+        $maarchcm_url,
+        $objectType,
+        $objectTable,
+        $objectId,
+        $uniqueId,
+        $cookieKey,
+        $user,
+        $pwd,
+        $psExecMode,
+        $mayscript,
+        $clientSideCookies
+    ) {
         $docXML = new DomDocument('1.0', "UTF-8");
 
         $jnlp_balise=$docXML->createElement("jnlp");
@@ -496,6 +508,13 @@ abstract class content_management_tools_Abstract
         $param10_attribute2->value = $mayscript;
         $param10_balise->appendChild($param10_attribute2);
 
+        $param11_balise=$docXML->createElement("param");
+        $param11_attribute1 = $docXML->createAttribute('name');
+        $param11_attribute1->value = 'clientsidecookies';
+        $param11_balise->appendChild($param11_attribute1);
+        $param11_attribute2 = $docXML->createAttribute('value');
+        $param11_attribute2->value = $clientSideCookies;
+        $param11_balise->appendChild($param11_attribute2);
 
         $jnlp_balise->appendChild($info_balise); 
         $info_balise->appendChild($title_balise); 
@@ -523,6 +542,7 @@ abstract class content_management_tools_Abstract
         $applet_balise->appendChild($param8_balise); 
         $applet_balise->appendChild($param9_balise); 
         $applet_balise->appendChild($param10_balise); 
+        $applet_balise->appendChild($param11_balise); 
 
 
         $docXML->appendChild($jnlp_balise);  
@@ -548,8 +568,20 @@ abstract class content_management_tools_Abstract
     *
     * 
     */
-    public function generateJNLPMaarch($jar_url,$maarchcm_url,$objectType,$objectTable,$objectId,$uniqueId,$cookieKey,$user,$pwd,$psExecMode,$mayscript)
-    {
+    public function generateJNLPMaarch(
+        $jar_url,
+        $maarchcm_url,
+        $objectType,
+        $objectTable,
+        $objectId,
+        $uniqueId,
+        $cookieKey,
+        $user,
+        $pwd,
+        $psExecMode,
+        $mayscript,
+        $clientSideCookies
+    ) {
         $docXML = new DomDocument('1.0', "UTF-8");
 
         $jnlp_balise=$docXML->createElement("jnlp");
@@ -702,6 +734,14 @@ abstract class content_management_tools_Abstract
         $param10_attribute2->value = $mayscript;
         $param10_balise->appendChild($param10_attribute2);
 
+        $param11_balise=$docXML->createElement("param");
+        $param11_attribute1 = $docXML->createAttribute('name');
+        $param11_attribute1->value = 'clientsidecookies';
+        $param11_balise->appendChild($param11_attribute1);
+        $param11_attribute2 = $docXML->createAttribute('value');
+        $param11_attribute2->value = $clientSideCookies;
+        $param11_balise->appendChild($param11_attribute2);
+
 
         $jnlp_balise->appendChild($info_balise); 
         $info_balise->appendChild($title_balise); 
@@ -729,6 +769,7 @@ abstract class content_management_tools_Abstract
         $applet_balise->appendChild($param8_balise); 
         $applet_balise->appendChild($param9_balise); 
         $applet_balise->appendChild($param10_balise); 
+        $applet_balise->appendChild($param11_balise); 
 
 
         $docXML->appendChild($jnlp_balise);  
