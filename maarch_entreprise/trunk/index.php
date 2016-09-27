@@ -217,7 +217,55 @@ $time = $core->get_session_time_expire();
     echo $_SESSION['config']['businessappurl'];
     ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
 
-<?php
+
+    <?php
+    //do it only once
+    if (empty($_SESSION['clientSideCookies'])) {
+        ?>
+        <script type="text/javascript">
+            function getCookies() {
+                
+                //document.cookie = "maarch_cookie_1=thefirstcookie";
+                //document.cookie = "maarch_cookie_2=thesecondcookie";
+                //console.log(document.cookie);
+                return document.cookie;
+            };
+
+            var theCookies;
+            //theCookies = getCookies().split(";");
+            theCookies = getCookies();
+            
+            
+            if (theCookies != undefined) {
+                //console.log('The cookies...');
+                //console.log(theCookies);
+                var path_manage_script = '<?php echo $_SESSION["config"]["businessappurl"];?>' + 'index.php?display=true&page=setProxyCookies';
+
+                new Ajax.Request(path_manage_script,
+                {
+                    method:'post',
+                    parameters: {
+                        cookies : theCookies
+                    },
+                    onSuccess: function(answer)
+                    {
+                        eval('response = ' + answer.responseText);
+                        //console.log(response);
+                        if (response.status == '0') {
+                            //console.log('OK !!! COOKIES FROM PROXY SET');
+                        } else {
+                            //console.log('KO... COOKIES FROM PROXY NOT SET');
+                        }
+                        
+                    }
+                });
+            } else {
+                //console.log('no completements cookies');
+            }
+        </script>  
+        <?php
+    }
+
 if (!isset($_REQUEST['display'])) { ?>
     <script>
         var element = document;
