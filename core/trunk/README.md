@@ -27,3 +27,4 @@ php > 5.4 : error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
 display_errors (On)
 short_open_tags (On)
 magic_quotes_gpc (Off)
+
