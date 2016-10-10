@@ -78,12 +78,17 @@ if (! empty($_SESSION['error'])) {
                     . " ) ";
         }
     }
-
+    //fonction qui va permettre de récupérer les infos auxquels l'utilisateur à la possibilité de voir
+    $security = new security();
+    $right = $security->test_right_doc(
+        $_SESSION['collection_id_choice'], 
+        $resIdMaster
+    );
     $table = $sec->retrieve_table_from_coll($collId);
     $stmt = $db->query(
         "SELECT res_id FROM " . $table . " WHERE res_id = ? ".$where2,array($resIdMaster));
 
-    if ($stmt->rowCount() == 0) {
+    if ($stmt->rowCount() == 0 and !$right) {
         $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS;
         header(
             "location: " . $_SESSION['config']['businessappurl'] . "index.php"
