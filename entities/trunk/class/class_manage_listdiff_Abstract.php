@@ -782,7 +782,7 @@ abstract class diffusion_list_Abstract extends functions
         
         require_once 'core' . DIRECTORY_SEPARATOR . 'core_tables.php';
         
-        $query = 
+        /*$query = 
             "SELECT distinct ug.group_id, ug.group_desc "
             . " FROM " . USERGROUPS_TABLE . " ug "
             . " LEFT JOIN " . USERGROUP_CONTENT_TABLE . " ugc "
@@ -801,7 +801,7 @@ abstract class diffusion_list_Abstract extends functions
             $stmt = $db->query($query,array($user_id));
         } else {
             $stmt = $db->query($query);
-        }
+        }*/
 
         //load roles difflist
         if (file_exists(
@@ -811,7 +811,7 @@ abstract class diffusion_list_Abstract extends functions
             . 'roles.xml'
         )
         ) {
-            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            $path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
             . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
             . DIRECTORY_SEPARATOR . 'entities' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
             . 'roles.xml';
