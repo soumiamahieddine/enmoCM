@@ -264,6 +264,8 @@ if (!defined("_FOLDER_UPDATED"))
     define("_FOLDER_UPDATED", "Mise à jour du dossier effectuée");
 if (!defined("_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED"))
     define("_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED", "tous les documents de ce dossier, ainsi que tous les sous-dossiers seront également supprimés !");
+if (!defined("_NOT_THE_OWNER_OF_THIS_FOLDER"))
+    define("_NOT_THE_OWNER_OF_THIS_FOLDER", "Vous devez être le propriétaire du dossier. Pour supprimer, veuillez consulter l administrateur ou demander à l utilisateur ");
 if (!defined("_STRING"))
     define("_STRING", "Chaine de caractères");
 if (!defined("_INTEGER"))

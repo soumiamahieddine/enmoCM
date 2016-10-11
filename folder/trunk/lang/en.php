@@ -36,6 +36,8 @@ if (!defined('_FOLDER_OUT'))
     define('_FOLDER_OUT', 'Disarchive');
 
 //////////////Recherche dossier
+if (!defined("_NOT_THE_OWNER_OF_THIS_FOLDER"))
+    define("_NOT_THE_OWNER_OF_THIS_FOLDER", "You must be the owner of this folder. To delete this folder, consult administrator or the owner ");
 if (!defined('_SELECT_FOLDER_TITLE'))
     define('_SELECT_FOLDER_TITLE', 'Select a folder');
 if (!defined('_FOLDER_NUM'))

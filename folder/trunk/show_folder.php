@@ -312,9 +312,26 @@ if (isset($_POST['delete_folder'])) {
                         ?><input type="submit" class="button" name="update_folder" id="update_folder" value="<?php echo _UPDATE_FOLDER;?>" /><?php
                     }?>
                     <?php if($deleteRight)
-                        {?>
+                        {
+                    //Vérifie si l'utilisateur est propriétaire du dossier. Si il n'est pas le propriétaire, il ne pourra pas le supprimer. 
+                    $stmt = $db->query("SELECT typist FROM folders WHERE folders_system_id= ?", array($s_id));
+                    $typist = $stmt->fetchObject();
+                    $typist = $typist->typist;
+
+                    if($typist == $_SESSION['user']['UserId'] or $_SESSION['user']['UserId'] == 'superadmin'){
+
+                            ?>
                         <input type="submit" class="button"  value="<?php echo _DELETE_FOLDER;?>" name="delete_folder" onclick="return(confirm('<?php echo _REALLY_DELETE.' '._THIS_FOLDER.'?\n\r\n\r'._WARNING.' '._ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED;?>'));" />
-                        <?php } ?>
+                        <?php
+                            }else{
+
+                                ?>
+                        <input type="submit" class="button" onclick="alert('<?php echo _WARNING.'\n\r\n\r'._NOT_THE_OWNER_OF_THIS_FOLDER.$typist;?>')";  value="<?php echo _DELETE_FOLDER;?>" />
+                        <?php
+
+
+                            }
+                         } ?>
                 </p>
                 </form>
             </dd>
