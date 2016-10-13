@@ -50,15 +50,7 @@ if ($_SESSION['history']['userlogout'] == "true"
 $custom = $_SESSION['custom_override_id'];
 $corePath = $_SESSION['config']['corepath'];
 
-//FIX custom url when logout
-if (!empty($custom) && !in_array($custom, explode('/', $_SESSION['config']['businessappurl']))) {
-	$array_businessappurl = explode('/', $_SESSION['config']['businessappurl']);
-	$array_custom = array($custom);
-	array_splice( $array_businessappurl, 4, 0, $array_custom );
-	$appUrl = implode('/', $array_businessappurl);
-}else{
-	$appUrl = $_SESSION['config']['businessappurl'];
-}
+$appUrl = $_SESSION['config']['businessappurl'];
 
 $appId = $_SESSION['config']['app_id'];
 
