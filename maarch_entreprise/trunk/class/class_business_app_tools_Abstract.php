@@ -64,7 +64,14 @@ abstract class business_app_tools_Abstract extends Database
                   . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
                   . 'config.xml';
         }
-        $xmlconfig = simplexml_load_file($path);
+
+        if(file_exists($path)){
+            $xmlconfig = simplexml_load_file($path);
+        }else{
+            $xmlconfig = false;
+            exit('<i style="color:red;">Fichier de configuration manquant ...</i><br/><br/>Si un custom est utilis&eacute; assurez-vous que l\'url soit correct');
+        }
+
         if ($xmlconfig <> false) {
             $config = $xmlconfig->CONFIG;
 
