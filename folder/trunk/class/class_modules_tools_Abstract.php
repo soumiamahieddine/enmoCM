@@ -1011,7 +1011,7 @@ abstract class folder_Abstract extends request
 			$row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
 			$nbsp ='';
 			for ($i=1; $i < $row['folder_level'] ; $i++) { 
-				$nbsp .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ';
+				$nbsp .= '&emsp;&emsp; ';
 			}
 			$row['folder_name'] = $nbsp.$row['folder_name'];
 
@@ -1044,7 +1044,7 @@ abstract class folder_Abstract extends request
 			$row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
 			$nbsp ='';
 			for ($i=1; $i < $row['folder_level'] ; $i++) { 
-				$nbsp .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ';
+				$nbsp .= '&emsp;&emsp; ';
 			}
 			$row['folder_name'] = $nbsp.$row['folder_name'];
 
