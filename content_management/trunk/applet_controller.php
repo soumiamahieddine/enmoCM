@@ -70,11 +70,29 @@ function createXML($rootName, $parameters)
     }
     header("content-type: application/xml");
     echo $rXml->saveXML();
-    /* for the tests only
-    $text = $rXml->saveXML();
-    $inF = fopen('wsresult.log','a');
-    fwrite($inF, $text);
-    fclose($inF);*/
+    /* for the tests only*/
+    if ($_SESSION['config']['debug']) {
+        $text = $rXml->saveXML();
+        $inF = fopen(
+            $_SESSION['config']['tmppath'] . 'log_jnlp_' . $_SESSION['user']['UserId'] . ' .log',
+            'a'
+        );
+        fwrite(
+            $inF, 
+            '------------------' 
+            . $_SESSION['user']['UserId'] . ' ' . date('D, j M Y H:i:s O') .PHP_EOL
+        );
+        if (is_array($parameters)) {
+            foreach ($parameters as $kPar => $dPar) {
+                if ($kPar <> 'FILE_CONTENT' && $kPar <> 'FILE_CONTENT_VBS') {
+                    fwrite($inF, $kPar . " : " . $dPar . PHP_EOL);
+                }
+            }
+        }
+        //fwrite($inF, $text .PHP_EOL);
+        fclose($inF);    
+    }
+    
     exit;
 }
 
