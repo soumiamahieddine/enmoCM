@@ -74,14 +74,19 @@ function createXML($rootName, $parameters)
     if ($_SESSION['config']['debug']) {
         $text = $rXml->saveXML();
         $inF = fopen(
-            $_SESSION['config']['tmppath'] . 'log_jnlp_' . $_SESSION['user']['UserId'] . ' .log',
+            $_SESSION['config']['tmppath'] . 'log_jnlp_' . $_SESSION['user']['UserId'] . '.log',
             'a'
         );
         fwrite(
             $inF, 
             '------------------' 
-            . $_SESSION['user']['UserId'] . ' ' . date('D, j M Y H:i:s O') .PHP_EOL
+            . $_SERVER['SERVER_NAME'] . ' ' . $_SESSION['user']['UserId'] . ' ' . date('D, j M Y H:i:s O') .PHP_EOL
         );
+        fwrite($inF, '|||||||||||||||||SERVER DETAILS BEGIN|||||||||||||||||' . PHP_EOL);
+        foreach($_SERVER as $key => $value) {
+            fwrite($inF, $key . " : " . $value . PHP_EOL);
+        }
+        fwrite($inF, '|||||||||||||||||SERVER DETAILS END|||||||||||||||||' . PHP_EOL);
         if (is_array($parameters)) {
             foreach ($parameters as $kPar => $dPar) {
                 if ($kPar <> 'FILE_CONTENT' && $kPar <> 'FILE_CONTENT_VBS') {
