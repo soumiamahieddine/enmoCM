@@ -404,7 +404,6 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
                 {
                     $what .= $res_action['history_msg'];
                 }
-                $_SESSION['info_basket'] = $what . ' ';
                 $_SESSION['info'] = $what . ' ';
                 $_SESSION['cpt_info_basket'] = 0;
                 $hist->add(
