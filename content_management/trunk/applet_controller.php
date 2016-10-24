@@ -79,7 +79,8 @@ function createXML($rootName, $parameters)
         );
         fwrite(
             $inF, 
-            '------------------' 
+            '------------------' . PHP_EOL
+            . 'EXECUTE JNLP------------------'
             . $_SERVER['SERVER_NAME'] . ' ' . $_SESSION['user']['UserId'] . ' ' . date('D, j M Y H:i:s O') .PHP_EOL
         );
         fwrite($inF, '|||||||||||||||||SERVER DETAILS BEGIN|||||||||||||||||' . PHP_EOL);
@@ -95,7 +96,7 @@ function createXML($rootName, $parameters)
             }
         }
         //fwrite($inF, $text .PHP_EOL);
-        fclose($inF);    
+        fclose($inF);
     }
     
     exit;

@@ -359,6 +359,39 @@ abstract class content_management_tools_Abstract
         $docXML = new DomDocument('1.0', "UTF-8");
 
         $jnlp_name = $_SESSION['user']['UserId'].'_DisCM_'.rand().'.jnlp';
+
+        if ($_SESSION['config']['debug']) {
+            $inF = fopen(
+                $_SESSION['config']['tmppath'] . 'log_jnlp_' . $_SESSION['user']['UserId'] . '.log',
+                'a'
+            );
+            fwrite(
+                $inF, 
+                '------------------' . PHP_EOL
+                . 'CREATE JNLP------------------'
+                . $_SERVER['SERVER_NAME'] . ' ' . $_SESSION['user']['UserId'] . ' ' . date('D, j M Y H:i:s O') .PHP_EOL
+            );
+            fwrite($inF, '|||||||||||||||||SERVER DETAILS BEGIN FOR CREATE JNLP|||||||||||||||||' . PHP_EOL);
+            foreach($_SERVER as $key => $value) {
+                fwrite($inF, $key . " : " . $value . PHP_EOL);
+            }
+            fwrite($inF, '|||||||||||||||||SERVER DETAILS END FOR CREATE JNLP|||||||||||||||||' . PHP_EOL);
+            fwrite($inF, "jar_url : " . $jar_url . PHP_EOL);
+            fwrite($inF, "jnlp_name : " . $jnlp_name . PHP_EOL);
+            fwrite($inF, "maarchcm_url : " . $maarchcm_url . PHP_EOL);
+            fwrite($inF, "objectType : " . $objectType . PHP_EOL);
+            fwrite($inF, "objectTable : " . $objectTable . PHP_EOL);
+            fwrite($inF, "objectId : " . $objectId . PHP_EOL);
+            fwrite($inF, "uniqueId : " . $uniqueId . PHP_EOL);
+            fwrite($inF, "cookieKey : " . $cookieKey . PHP_EOL);
+            fwrite($inF, "user : " . $user . PHP_EOL);
+            fwrite($inF, "pwd : " . $pwd . PHP_EOL);
+            fwrite($inF, "psExecMode : " . $psExecMode . PHP_EOL);
+            fwrite($inF, "mayscript : " . $mayscript . PHP_EOL);
+            fwrite($inF, "clientSideCookies : " . $clientSideCookies . PHP_EOL);
+            fclose($inF);
+        }
+        
         $jnlp_balise=$docXML->createElement("jnlp");
         $jnlp_attribute1 = $docXML->createAttribute('spec'); 
         $jnlp_attribute1->value = '6.0+';
