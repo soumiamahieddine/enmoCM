@@ -1815,7 +1815,6 @@ $_SESSION['doc_convert'] = array();
 $_SESSION['doc_convert']['details_result'] = $detailsExport;
 $core = new core_tools();
 
-$_SESSION['info_basket'] = '';
 $_SESSION['info'] = '';
 
 /*if ($printDetails) {
