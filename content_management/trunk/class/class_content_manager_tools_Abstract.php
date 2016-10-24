@@ -358,6 +358,7 @@ abstract class content_management_tools_Abstract
     ) {
         $docXML = new DomDocument('1.0', "UTF-8");
 
+        $jnlp_name = $_SESSION['user']['UserId'].'_DisCM_'.rand().'.jnlp';
         $jnlp_balise=$docXML->createElement("jnlp");
         $jnlp_attribute1 = $docXML->createAttribute('spec'); 
         $jnlp_attribute1->value = '6.0+';
@@ -366,7 +367,7 @@ abstract class content_management_tools_Abstract
         $jnlp_attribute2->value = $jar_url.'/apps/maarch_entreprise/tmp/';
         $jnlp_balise->appendChild($jnlp_attribute2);
         $jnlp_attribute3 = $docXML->createAttribute('href'); 
-        $jnlp_attribute3->value = $_SESSION['user']['UserId'].'_DisCM.jnlp';
+        $jnlp_attribute3->value = $jnlp_name;
         $jnlp_balise->appendChild($jnlp_attribute3); 
 
         $info_balise=$docXML->createElement("information");
@@ -547,13 +548,13 @@ abstract class content_management_tools_Abstract
 
         $docXML->appendChild($jnlp_balise);  
 
-        $filename = $_SESSION['config']['tmppath'].$_SESSION['user']['UserId'].'_DisCM.jnlp';
+        $filename = $_SESSION['config']['tmppath'].$jnlp_name;
 
         $docXML->save($filename); 
 
         $fp = fopen($_SESSION['config']['tmppath']."applet_".$_SESSION['user']['UserId'].".lck", 'w+');
 
-        $file = $jar_url."/apps/maarch_entreprise/tmp/".$_SESSION['user']['UserId']."_DisCM.jnlp";
+        $file = $jar_url."/apps/maarch_entreprise/tmp/".$jnlp_name;
 
         echo '<a id="jnlp_file" href="'.$file.'" onclick="window.opener.location.href=\''.$file.'\';self.close();if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};"></a>';
         echo '<script>document.getElementById("jnlp_file").click();</script>';
@@ -584,6 +585,7 @@ abstract class content_management_tools_Abstract
     ) {
         $docXML = new DomDocument('1.0', "UTF-8");
 
+        $jnlp_name = $_SESSION['user']['UserId'].'_DisCM_'.rand().'.jnlp';
         $jnlp_balise=$docXML->createElement("jnlp");
         $jnlp_attribute1 = $docXML->createAttribute('spec'); 
         $jnlp_attribute1->value = '6.0+';
@@ -592,7 +594,7 @@ abstract class content_management_tools_Abstract
         $jnlp_attribute2->value = $jar_url.'/apps/maarch_entreprise/tmp/';
         $jnlp_balise->appendChild($jnlp_attribute2);
         $jnlp_attribute3 = $docXML->createAttribute('href'); 
-        $jnlp_attribute3->value = $_SESSION['user']['UserId'].'_DisCM.jnlp';
+        $jnlp_attribute3->value = $jnlp_name;
         $jnlp_balise->appendChild($jnlp_attribute3); 
 
         $info_balise=$docXML->createElement("information");
@@ -774,13 +776,13 @@ abstract class content_management_tools_Abstract
 
         $docXML->appendChild($jnlp_balise);  
 
-        $filename = $_SESSION['config']['tmppath'].$_SESSION['user']['UserId'].'_DisCM.jnlp';
+        $filename = $_SESSION['config']['tmppath'].$jnlp_name;
 
         $docXML->save($filename); 
 
         $fp = fopen($_SESSION['config']['tmppath']."applet_".$_SESSION['user']['UserId'].".lck", 'w+');
 
-        $file = $jar_url."/apps/maarch_entreprise/tmp/".$_SESSION['user']['UserId']."_DisCM.jnlp";
+        $file = $jar_url."/apps/maarch_entreprise/tmp/".$jnlp_name;
 
         echo '<a id="jnlp_file" href="'.$file.'" onclick="window.opener.location.href=\''.$file.'\';self.close();"></a>';
         echo '<script>document.getElementById("jnlp_file").click();</script>';
