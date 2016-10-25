@@ -101,12 +101,16 @@ if (isset($whereAttach) && $whereAttach <> '') $where .= $whereAttach;
     $order = $order_field = '';
     $order = $list->getOrder();
     $order_field = $list->getOrderField();
-    if (!empty($order_field) && !empty($order)) 
-        $orderstr = "order by ".$order_field." ".$order;
-    else  {
+    if (!empty($order_field) && !empty($order)){
+        if($_REQUEST['order_field'] == 'identifier'){
+	        $orderstr = "order by regexp_replace(identifier, '[^a-zA-Z]', '', 'g') ".$order.", regexp_replace(identifier, '[^0-9]', '', 'g')::int"." ".$order;
+	    }else{
+	        $orderstr = "order by ".$order_field." ".$order;
+	    }
+    } else  {
         $list->setOrder();
         $list->setOrderField('identifier');
-        $orderstr = "order by attachment_type asc, identifier desc";
+        $orderstr = "order by attachment_type asc, regexp_replace(identifier, '[^a-zA-Z]', '', 'g') DESC, regexp_replace(identifier, '[^0-9]', '', 'g')::int DESC";
     }
 
 $parameters = '';
