@@ -134,7 +134,11 @@ $order = $order_field = '';
 $order = $list->getOrder();
 $order_field = $list->getOrderField();
 if (!empty($order_field) && !empty($order)) {
-    $orderstr = "order by ".$order_field." ".$order;
+    if($_REQUEST['order_field'] == 'alt_identifier'){
+        $orderstr = "order by regexp_replace(alt_identifier, '[^a-zA-Z]', '', 'g') ".$order.", regexp_replace(alt_identifier, '[^0-9]', '', 'g')::int"." ".$order;
+    }else{
+        $orderstr = "order by ".$order_field." ".$order;
+    }
 	$_SESSION['last_order_basket'] = $orderstr;
 }
 else  {
