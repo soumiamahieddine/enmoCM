@@ -63,10 +63,6 @@ else
 $opt_indexes  = '';
 if(count($indexes) > 0)
 {
-	$opt_indexes .= '<br/>';
-	$opt_indexes .= '<h2><span class="date"><b>'._OPT_INDEXES.'</b></span></h2>';
-	$opt_indexes .= '<br/>';
-	$opt_indexes .= '<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">';
 	$i=0;
 	foreach(array_keys($indexes) as $key)
 	{
@@ -144,7 +140,6 @@ if(count($indexes) > 0)
 		}
 		$i++;
 	}
-	$opt_indexes .= '</table>';
 }
 
 echo "{status : 0,  new_opt_indexes : '".addslashes($opt_indexes)."'}";

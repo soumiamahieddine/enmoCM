@@ -2347,11 +2347,11 @@ function change_doctype_details(doctype_id, url, error_empty_type)
                         },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);
-            //  alert(answer.responseText);
+                //  alert(answer.responseText);
                 if(response.status == 0 )
                 {
                     var indexes = response.new_opt_indexes;
-                    var div_indexes = $('opt_indexes');
+                    var div_indexes = $('opt_indexes_custom');
                     if(div_indexes )
                     {
                         div_indexes.update(indexes);
@@ -2361,9 +2361,10 @@ function change_doctype_details(doctype_id, url, error_empty_type)
                 else
                 {
                     try{
-                    //  $('main_error').innerHTML = response.error_txt;
-                        }
-                    catch(e){}
+                        //  $('main_error').innerHTML = response.error_txt;
+                    }catch(e){
+
+                    }
                 }
             }
         });

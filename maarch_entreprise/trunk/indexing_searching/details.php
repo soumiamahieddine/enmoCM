@@ -993,7 +993,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         </span>
                         </h2>
                         <br/>
-                        <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
+                        <div class="block forms details">
+                        <table cellpadding="2" cellspacing="2" border="0" id="opt_indexes_custom" width="100%">
                             <?php
                             $i=0;
                             foreach(array_keys($indexes) as $key)
@@ -1078,6 +1079,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 $i++;
                             }
                             ?>
+                            </table>
+                            <table cellpadding="2" cellspacing="2" border="0" width="100%">
                             <?php
                             if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
                                     include_once('modules/tags/templates/details/index.php');
@@ -1166,6 +1169,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             </tr>
                     <?php } ?>
                         </table>
+                        </div>
                         <?php  } ?>
                     </div>
 							</form><br><br>
