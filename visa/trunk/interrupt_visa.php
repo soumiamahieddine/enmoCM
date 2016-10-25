@@ -33,7 +33,6 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
     // People remaining in the workflow
     $db->query('UPDATE listinstance SET process_date = CURRENT_TIMESTAMP, process_comment = ? WHERE res_id = ? AND difflist_type = ? AND process_date IS NULL',
                 ['Circuit Interrompu', $res_id, 'VISA_CIRCUIT']);
-
-    return array('result' => $res_id.'#', 'history_msg' => $label_action);
+    return array('result' => $res_id.'#', 'history_msg' => '');
 }
 ?>
