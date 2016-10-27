@@ -212,6 +212,18 @@ $core->load_html();
 $core->load_header();
 $time = $core->get_session_time_expire();
 
+//reset orders in previous basket list
+if(empty($_SESSION['current_basket'])){
+    
+    $_SESSION['save_list']['start'] = "";
+    $_SESSION['save_list']['lines'] = "";
+    $_SESSION['save_list']['order'] = "";
+    $_SESSION['save_list']['order_field'] = "";
+    $_SESSION['save_list']['template'] = "";
+}
+
+
+
  ?>
 <body style="background: #f2f2f2;" onload="session_expirate(<?php echo $time;?>, '<?php 
     echo $_SESSION['config']['businessappurl'];

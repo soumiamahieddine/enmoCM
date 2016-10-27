@@ -64,13 +64,25 @@ include_once('apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categor
 //Keep some parameters
 $parameters = '';
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
+
     $parameters .= '&order='.$_REQUEST['order'];
-    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters 
-        .= '&order_field='.$_REQUEST['order_field'];
+    $_SESSION['save_list']['order'] = $_REQUEST['order'];
+
+    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])){
+        $parameters .= '&order_field='.$_REQUEST['order_field'];
+        $_SESSION['save_list']['order_field'] = $_REQUEST['order_field'];
+    } 
 }
-if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
-if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])) $parameters .= '&template='.$_REQUEST['template'];
-if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
+if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])){
+    $parameters .= '&what='.$_REQUEST['what'];
+}
+if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])){
+    $parameters .= '&template='.$_REQUEST['template'];
+}
+if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])){
+    $parameters .= '&start='.$_REQUEST['start'];
+    $_SESSION['save_list']['start'] = $_REQUEST['start'];
+}
 
 //URL extra parameters
 $urlParameters = '';
@@ -105,7 +117,7 @@ $arrayPDO = array();
 //Where clause
 $where_tab = array();
     //From basket
-        if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
+		if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
     //From filters
         $filterClause = $list->getFilters(); 
         if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
@@ -130,13 +142,19 @@ if (!empty($order_field) && !empty($order)) {
     }else{
         $orderstr = "order by ".$order_field." ".$order;
     }
+	$_SESSION['last_order_basket'] = $orderstr;
+}else if(!empty($_SESSION['save_list']['order']) && !empty($_SESSION['save_list']['order_field'])){
+    if($_SESSION['save_list']['order_field'] == 'alt_identifier'){
+        $orderstr = "order by regexp_replace(alt_identifier, '[^a-zA-Z]', '', 'g') ".$_SESSION['save_list']['order'].", regexp_replace(alt_identifier, '[^0-9]', '', 'g')::int"." ".$_SESSION['save_list']['order'];
+    }else{
+        $orderstr = "order by ".$_SESSION['save_list']['order_field']." ".$_SESSION['save_list']['order'];
+    }
     $_SESSION['last_order_basket'] = $orderstr;
-}
-else  {
+} else  {
     $list->setOrder();
     $list->setOrderField('creation_date');
     $orderstr = "order by creation_date desc";
-    $_SESSION['last_order_basket'] = $orderstr;
+	$_SESSION['last_order_basket'] = $orderstr;
 }
 
 //Request

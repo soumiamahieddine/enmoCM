@@ -66,12 +66,23 @@ $parameters = '';
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
 
     $parameters .= '&order='.$_REQUEST['order'];
-    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters 
-		.= '&order_field='.$_REQUEST['order_field'];
+    $_SESSION['save_list']['order'] = $_REQUEST['order'];
+
+    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])){
+        $parameters .= '&order_field='.$_REQUEST['order_field'];
+        $_SESSION['save_list']['order_field'] = $_REQUEST['order_field'];
+    } 
 }
-if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
-if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])) $parameters .= '&template='.$_REQUEST['template'];
-if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
+if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])){
+    $parameters .= '&what='.$_REQUEST['what'];
+}
+if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])){
+    $parameters .= '&template='.$_REQUEST['template'];
+}
+if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])){
+    $parameters .= '&start='.$_REQUEST['start'];
+    $_SESSION['save_list']['start'] = $_REQUEST['start'];
+}
 
 //URL extra parameters
 $urlParameters = '';
@@ -106,7 +117,7 @@ $arrayPDO = array();
 //Where clause
 $where_tab = array();
     //From basket
-        if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = '('.stripslashes($_SESSION['current_basket']['clause']).')'; //Basket clause
+		if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = '('.stripslashes($_SESSION['current_basket']['clause']).')'; //Basket clause
     //From filters
         $filterClause = $list->getFilters(); 
         if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
@@ -117,7 +128,7 @@ $where_tab = array();
         ) {
             $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
             $arrayPDO = array_merge($arrayPDO, $_SESSION['searching']['where_request_parameters']);
-        } 
+        }
     //Build where
         $where = implode(' and ', $where_tab);
 
@@ -132,8 +143,14 @@ if (!empty($order_field) && !empty($order)) {
         $orderstr = "order by ".$order_field." ".$order;
     }
 	$_SESSION['last_order_basket'] = $orderstr;
-}
-else  {
+}else if(!empty($_SESSION['save_list']['order']) && !empty($_SESSION['save_list']['order_field'])){
+    if($_SESSION['save_list']['order_field'] == 'alt_identifier'){
+        $orderstr = "order by regexp_replace(alt_identifier, '[^a-zA-Z]', '', 'g') ".$_SESSION['save_list']['order'].", regexp_replace(alt_identifier, '[^0-9]', '', 'g')::int"." ".$_SESSION['save_list']['order'];
+    }else{
+        $orderstr = "order by ".$_SESSION['save_list']['order_field']." ".$_SESSION['save_list']['order'];
+    }
+    $_SESSION['last_order_basket'] = $orderstr;
+} else  {
     $list->setOrder();
     $list->setOrderField('creation_date');
     $orderstr = "order by creation_date desc";
@@ -142,7 +159,6 @@ else  {
 
 //Request
 $tab=$request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
-//var_dump($where);
 // $request->show(); exit;
 //Templates
 $defaultTemplate = 'documents_list_with_attachments';
@@ -412,7 +428,6 @@ for ($i=0;$i<$tabI;$i++)
                 }
                 $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
                 $statusCmp = $tab[$i][$j]['value'];
-                //$tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
                 $img_class = substr($res_status['IMG_SRC'], 0, 2);
                 if (!isset($res_status['IMG_SRC']) ||  empty($res_status['IMG_SRC'])){
                  $tab[$i][$j]['value'] = "<i  ".$style." class = 'fm fm-letter-status-new fm-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
