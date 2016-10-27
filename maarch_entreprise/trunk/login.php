@@ -93,13 +93,6 @@ $core->load_modules_services($_SESSION['modules']);
 //$core->load_menu($_SESSION['modules']);
 // transfer in class_security (login + reopen)
 
-//FIX multi custom url when logout
-if (isset($_SESSION['custom_override_id']) && !in_array($_SESSION['custom_override_id'], explode('/', $_SESSION['config']['businessappurl']))) {
-    $array_businessappurl = explode('/', $_SESSION['config']['businessappurl']);
-    $array_businessappurl[4] = $_SESSION['custom_override_id'];
-    $_SESSION['config']['businessappurl'] = implode('/', $array_businessappurl);
-}
-
 //Reading base version
 $businessAppTools->compare_base_version(
     'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
