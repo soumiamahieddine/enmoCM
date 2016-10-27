@@ -42,8 +42,8 @@ $_SESSION['count_view_baskets']++;
         $ub = "";
     }
 
-if(($_SESSION['save_list']['fromDetail'] == "true" || $_SESSION['save_list']['fromValidateMail'] == "true" || $_SESSION['save_list']['fromProcess'] == "true") && ( ($_SESSION['count_view_baskets'] > 1 && $ub == "Firefox") || $ub != "Firefox" )) {
-    if($_SESSION['save_list']['fromDetail'] == "true" || $_SESSION['save_list']['fromValidateMail'] == "true" || $_SESSION['save_list']['fromProcess'] == "true") {
+/*if(($_SESSION['save_list']['fromDetail'] == "true" || $_SESSION['save_list']['fromValidateMail'] == "true" || $_SESSION['save_list']['fromProcess'] == "true") && ( ($_SESSION['count_view_baskets'] > 1 && $ub == "Firefox") || $ub != "Firefox" )) {
+    if($_SESSION['save_list']['fromDetail'] == "true" || $_SESSION['save_list']['fromValidateMail'] == "true" || $_SESSION['save_list']['fromProcess'] == "true") {*/
         $urlParameters .= '&start='.$_SESSION['save_list']['start'];
         $urlParameters .= '&lines='.$_SESSION['save_list']['lines'];
         $urlParameters .= '&order='.$_SESSION['save_list']['order'];
@@ -55,13 +55,13 @@ if(($_SESSION['save_list']['fromDetail'] == "true" || $_SESSION['save_list']['fr
         $_SESSION['save_list']['fromValidateMail'] = "false";
         $_SESSION['save_list']['fromProcess'] = "false";
         $_SESSION['save_list']['url'] = $urlParameters;
-    }
+    /*}
     $_SESSION['save_list']['start'] = "";
     $_SESSION['save_list']['lines'] = "";
     $_SESSION['save_list']['order'] = "";
     $_SESSION['save_list']['order_field'] = "";
-    $_SESSION['save_list']['template'] = "";  
-}
+    $_SESSION['save_list']['template'] = ""; */ 
+//}
 
 $_SESSION['stockCheckbox']= '';
 
