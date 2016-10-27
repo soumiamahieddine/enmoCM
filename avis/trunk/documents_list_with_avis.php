@@ -53,14 +53,10 @@ include_once('apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categor
  //URL extra Parameters  
     $parameters = '';
     $start = $list->getStart();
-    if (!empty($order_field) && !empty($order))
-        $parameters .= '&order='.$order.'&order_field='.$order_field;
-    if (!empty($what))
-        $parameters .= '&what='.$what;
-    if (!empty($selectedTemplate))
-        $parameters .= '&template='.$selectedTemplate;
-    if (!empty($start))
-        $parameters .= '&start='.$start;
+    if (!empty($order_field) && !empty($order)) $parameters .= '&order='.$order.'&order_field='.$order_field;
+    if (!empty($what)) $parameters .= '&what='.$what;
+    if (!empty($selectedTemplate)) $parameters .= '&template='.$selectedTemplate;
+    if (!empty($start)) $parameters .= '&start='.$start;
     $_SESSION['save_list']['start'] = $start; 
 
 
@@ -68,23 +64,31 @@ include_once('apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categor
 //Keep some parameters
 $parameters = '';
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
+
     $parameters .= '&order='.$_REQUEST['order'];
-    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
+    $_SESSION['save_list']['order'] = $_REQUEST['order'];
+
+    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])){
         $parameters .= '&order_field='.$_REQUEST['order_field'];
+        $_SESSION['save_list']['order_field'] = $_REQUEST['order_field'];
+    } 
 }
-if (isset($_REQUEST['what']) && !empty($_REQUEST['what']))
+if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])){
     $parameters .= '&what='.$_REQUEST['what'];
-if (isset($_REQUEST['template']) && !empty($_REQUEST['template']))
+}
+if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])){
     $parameters .= '&template='.$_REQUEST['template'];
-if (isset($_REQUEST['start']) && !empty($_REQUEST['start']))
+}
+if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])){
     $parameters .= '&start='.$_REQUEST['start'];
+    $_SESSION['save_list']['start'] = $_REQUEST['start'];
+}
 
 //URL extra parameters
 $urlParameters = '';
 
 //origin
-if ($_REQUEST['origin'] == 'searching')
-    $urlParameters .= '&origin=searching';
+if ($_REQUEST['origin'] == 'searching') $urlParameters .= '&origin=searching';
 
 //Basket information
 if(!empty($_SESSION['current_basket']['view'])) {
@@ -113,19 +117,18 @@ $arrayPDO = array();
 //Where clause
 $where_tab = array();
     //From basket
-        if (!empty($_SESSION['current_basket']['clause']))
-            $where_tab[] = '('.stripslashes($_SESSION['current_basket']['clause']).')'; //Basket clause
+		if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = '('.stripslashes($_SESSION['current_basket']['clause']).')'; //Basket clause
     //From filters
         $filterClause = $list->getFilters(); 
-        if (!empty($filterClause))
-            $where_tab[] = $filterClause;//Filter clause
+        if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
     //From search
-        if ((isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching')
-            && !empty($_SESSION['searching']['where_request'])) {
-
+        if (
+            (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') 
+            && !empty($_SESSION['searching']['where_request'])
+        ) {
             $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
             $arrayPDO = array_merge($arrayPDO, $_SESSION['searching']['where_request_parameters']);
-        } 
+        }
     //Build where
         $where = implode(' and ', $where_tab);
 
@@ -140,8 +143,14 @@ if (!empty($order_field) && !empty($order)) {
         $orderstr = "order by ".$order_field." ".$order;
     }
 	$_SESSION['last_order_basket'] = $orderstr;
-}
-else  {
+}else if(!empty($_SESSION['save_list']['order']) && !empty($_SESSION['save_list']['order_field'])){
+    if($_SESSION['save_list']['order_field'] == 'alt_identifier'){
+        $orderstr = "order by regexp_replace(alt_identifier, '[^a-zA-Z]', '', 'g') ".$_SESSION['save_list']['order'].", regexp_replace(alt_identifier, '[^0-9]', '', 'g')::int"." ".$_SESSION['save_list']['order'];
+    }else{
+        $orderstr = "order by ".$_SESSION['save_list']['order_field']." ".$_SESSION['save_list']['order'];
+    }
+    $_SESSION['last_order_basket'] = $orderstr;
+} else  {
     $list->setOrder();
     $list->setOrderField('modification_date');
     $orderstr = "order by modification_date desc";
@@ -432,7 +441,7 @@ for ($i=0;$i<$tabI;$i++)
                 $tab[$i][$j]["order"]='type_label';
             }
             if($tab[$i][$j][$value]=="status")
-            {
+            {   //couleurs des priorités
                 if($tab[$i][8]["value"]=='0'){
                     $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
                 }else if($tab[$i][8]["value"]=='1'){
@@ -443,7 +452,6 @@ for ($i=0;$i<$tabI;$i++)
                 $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
                 $statusCmp = $tab[$i][$j]['value'];
                 $img_class = substr($res_status['IMG_SRC'], 0, 2);
-                //$tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
                 if (!isset($res_status['IMG_SRC']) ||  empty($res_status['IMG_SRC'])){
                  $tab[$i][$j]['value'] = "<i  ".$style." class = 'fm fm-letter-status-new fm-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
 				} else {
@@ -473,12 +481,20 @@ for ($i=0;$i<$tabI;$i++)
             }
             if($tab[$i][$j][$value]=="count_attachment")
             {
+                $query = "SELECT count(*) as total FROM res_view_attachments
+                            WHERE res_id_master = ?
+                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN ('converted_pdf', 'print_folder') AND coll_id = ? AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                $arrayPDO = array($tab[$i][0]['res_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
+                $stmt2 = $db->query($query, $arrayPDO);
+                $return_count = $stmt2->fetchObject();
+
                 $tab[$i][$j]["label"]=_ATTACHMENTS;
                 $tab[$i][$j]["size"]="12";
                 $tab[$i][$j]["label_align"]="left";
                 $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]['value'] = "$return_count->total";
                 $tab[$i][$j]["order"]='count_attachment';
             }
             if($tab[$i][$j][$value]=="case_id" && $core_tools->is_module_loaded("cases") == true)
@@ -507,7 +523,7 @@ for ($i=0;$i<$tabI;$i++)
         }
     }
 }
-//Cl� de la liste
+//Cle de la liste
 $listKey = 'res_id';
 
 //Initialiser le tableau de param�tres
