@@ -60,8 +60,10 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
     $datasources['contact'][] = $myContact;
 
 } else {
-    $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = 0");
+    $stmt = $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ?" , array($datasources['res_letterbox'][0]['contact_id'],$datasources['res_letterbox'][0]['address_id']));
     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
+    $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
+    $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
     $datasources['contact'][] = $myContact;
 }
 
