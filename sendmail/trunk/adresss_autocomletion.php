@@ -44,20 +44,19 @@ $db = new Database();
                 . ' %d AS confidence, mail AS email '
                 . "FROM users"
                 . " WHERE enabled ='Y' AND "
-		. "(LOWER(lastname) LIKE LOWER('%s') OR LOWER(firstname) LIKE LOWER('%s') OR LOWER(user_id) LIKE LOWER('%s') OR LOWER(mail) LIKE LOWER('%s'))";
+		. "(LOWER(lastname) LIKE LOWER('%s') OR LOWER(firstname) LIKE LOWER('%s') OR LOWER(user_id) LIKE LOWER('%s') OR LOWER(user_id) LIKE LOWER('%s') OR LOWER(user_id) LIKE LOWER('%s') OR LOWER(mail) LIKE LOWER('%s'))";
 
     $subQuery[2]= 
-        "SELECT "
-            . "( "
-                . " UPPER(lastname)) || ' '|| firstname || "
+        "SELECT CASE WHEN contact_lastname = '' THEN UPPER(lastname) ELSE UPPER(contact_lastname) END || ' ' || CASE WHEN contact_firstname = '' THEN firstname ELSE contact_firstname END || CASE WHEN society = '' THEN '' ELSE ' - '||society END || "
             . "' (' || email || ')' AS result, "
             . ' %d AS confidence, email'
-        . " FROM contact_addresses"
+        . " FROM view_contacts"
         . " WHERE  "
             . " enabled = 'Y' AND email <> ''"
             . " AND ("
-                . " LOWER(lastname) LIKE LOWER('%s')"
-                . " OR LOWER(firstname) LIKE LOWER('%s')"
+                . " (LOWER(contact_lastname) LIKE LOWER('%s') OR LOWER(lastname) LIKE LOWER('%s'))"
+                . " OR (LOWER(contact_firstname) LIKE LOWER('%s') OR LOWER(firstname) LIKE LOWER('%s'))"
+                . " OR LOWER(society) LIKE LOWER('%s')"
         . " OR LOWER(email) LIKE LOWER('%s')"
             .")"
         ."and (is_private = 'N' or ( user_id = '".$_SESSION['user']['UserId']."' and is_private = 'Y'))";
@@ -71,17 +70,17 @@ for($i=1;$i<3;$i++){
         # Full match of one given arg
         $expr = $arg;
         $conf = 100;
-        $queryParts[] = sprintf($subQuery[$i], $conf, $expr, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery[$i], $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
 
         # Partial match (starts with)
         $expr = $arg . "%"; ;
         $conf = 34; # If found, partial match contains will also be so score is sum of both confidences, i.e. 67)
-        $queryParts[] = sprintf($subQuery[$i], $conf, $expr, $expr, $expr, $expr);
+        $queryParts[] = sprintf($subQuery[$i], $conf, $expr, $expr, $expr, $expr, $expr, $expr);
       
         # Partial match (contains)
         $expr = "%" . $arg . "%";
         $conf = 33;
-        $queryParts[] = sprintf($subQuery[$i], $conf, $expr, $expr, $expr, $expr);
+        $queryParts[] = sprintf($subQuery[$i], $conf, $expr, $expr, $expr, $expr, $expr, $expr);
     }
 }
     $query .= implode (' UNION ALL ', $queryParts);
