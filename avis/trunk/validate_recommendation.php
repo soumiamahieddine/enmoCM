@@ -139,7 +139,7 @@ require_once('modules/avis/class/avis_controler.php');
 
     $frm_str .='<div align="center">';
         $frm_str .=' <input type="button" name="redirect_dep" value="'._VALIDATE.'" id="redirect_dep" class="button" onclick="valid_action_form( \'frm_redirect_dep\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$values_str.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');" />';
-        $frm_str .=' <input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
+        $frm_str .=' <input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();actions_status.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
     $frm_str .='</div>';
     $frm_str .= '<script>document.getElementById(\'notes\').value=document.getElementById(\'notes\').value.replace(/##/gi, \'\n\' );</script>';
     return addslashes($frm_str);
