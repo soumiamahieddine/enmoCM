@@ -375,9 +375,11 @@ for($i=0; $i < count($status); $i++)
 {
     array_push($arr_tmp, array('VALUE' => $status[$i]['ID'], 'LABEL' => $status[$i]['LABEL']));
 }
-array_push($arr_tmp,  array('VALUE'=> 'REL1', 'LABEL' =>_FIRST_WARNING));
+
+/* TO DO : bug a corriger, ne prendre pas en compte les autres statuts selectionnes */
+/*array_push($arr_tmp,  array('VALUE'=> 'REL1', 'LABEL' =>_FIRST_WARNING));
 array_push($arr_tmp,  array('VALUE'=> 'REL2', 'LABEL' =>_SECOND_WARNING));
-array_push($arr_tmp,  array('VALUE'=> 'LATE', 'LABEL' =>_LATE));
+array_push($arr_tmp,  array('VALUE'=> 'LATE', 'LABEL' =>_LATE));*/
 
 // Sorts the $param['status'] array
 function cmp_status($a, $b)
