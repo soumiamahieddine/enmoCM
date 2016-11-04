@@ -374,7 +374,7 @@ if (count($_REQUEST['meta']) > 0) {
                                     array_splice($tmpArray, 0, 1);
                                     $_SESSION['fullTextAttachments']['attachments'] = $tmpArray;
                                     $db = new Database();
-                                    $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_attachments WHERE res_id IN ($Liste_Ids) AND status NOT IN ('DEL','OBS')");
+                                    $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_attachments WHERE res_id IN ($Liste_Ids) AND status NOT IN ('DEL','OBS','TMP')");
                                     $idMasterDatas = [];
                                     while ($tmp = $stmt->fetchObject())
                                         $idMasterDatas[] = $tmp;
