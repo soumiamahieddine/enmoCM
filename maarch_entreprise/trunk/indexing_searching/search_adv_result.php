@@ -374,7 +374,7 @@ if (count($_REQUEST['meta']) > 0) {
                                     array_splice($tmpArray, 0, 1);
                                     $_SESSION['fullTextAttachments']['attachments'] = $tmpArray;
                                     $db = new Database();
-                                    $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_attachments WHERE res_id IN ($Liste_Ids) AND status NOT IN ('DEL','OBS','TMP')");
+                                    $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_attachments WHERE res_id IN ($Liste_Ids) AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('print_folder')");
                                     $idMasterDatas = [];
                                     while ($tmp = $stmt->fetchObject())
                                         $idMasterDatas[] = $tmp;
@@ -389,7 +389,7 @@ if (count($_REQUEST['meta']) > 0) {
                                     array_splice($tmpArray, 0, 1);
                                     $_SESSION['fullTextAttachments']['versionAttachments'] = $tmpArray;
                                     $db = new Database();
-                                    $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_version_attachments WHERE res_id IN ($Liste_Ids) AND status NOT IN ('DEL','OBS','TMP')");
+                                    $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_version_attachments WHERE res_id IN ($Liste_Ids) AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('print_folder')");
                                     $idMasterDatas = [];
                                     while ($tmp = $stmt->fetchObject())
                                         $idMasterDatas[] = $tmp;
