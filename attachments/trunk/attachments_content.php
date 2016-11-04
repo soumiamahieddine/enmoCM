@@ -489,14 +489,16 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 )
                             );
                         }
-                        array_push(
+                        if(!empty($_REQUEST['chrono'])){
+                            array_push(
                             $_SESSION['data'],
                             array(
                                 'column' => "identifier",
                                 'value' => $_REQUEST['chrono'],
                                 'type' => "string",
                             )
-                        );
+                            );
+                        }
                         array_push(
                             $_SESSION['data'],
                             array(
