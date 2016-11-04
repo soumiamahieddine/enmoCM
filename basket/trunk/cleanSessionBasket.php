@@ -1,5 +1,4 @@
 <?php
-$_SESSION['location_bar']['level2'] = '';
 $_SESSION['basket_used'] = '';
 $_SESSION['save_list']['start'] = "";
 $_SESSION['save_list']['lines'] = "";

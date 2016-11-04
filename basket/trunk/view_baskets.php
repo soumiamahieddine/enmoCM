@@ -30,6 +30,7 @@
 */
 
 $_SESSION['count_view_baskets']++;
+unset($_SESSION['location_bar']);
 
  $urlParameters = '';
 
