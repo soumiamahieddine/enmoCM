@@ -175,6 +175,11 @@ ALTER TABLE sendmail ALTER COLUMN to_list TYPE text;
 ALTER TABLE sendmail ALTER COLUMN cc_list TYPE text;
 ALTER TABLE sendmail ALTER COLUMN cci_list TYPE text;
 
+-- ************************************************************************* --
+--                   CHANGE COLUMNS TYPE FOR NOTIFICATIONS                   --
+-- ************************************************************************* --
+ALTER TABLE notifications ALTER COLUMN diffusion_properties TYPE text;
+
 
 -- ************************************************************************* --
 --                      NOUVEAU STATUS TRANSMISSION                          --

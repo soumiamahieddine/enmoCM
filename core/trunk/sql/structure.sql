@@ -1241,7 +1241,7 @@ CREATE TABLE notifications
   template_id bigint,
   rss_url_template text,
   diffusion_type character varying(50) NOT NULL,
-  diffusion_properties character varying(255),
+  diffusion_properties text,
   attachfor_type character varying(50),
   attachfor_properties character varying(2048),
   CONSTRAINT notifications_pkey PRIMARY KEY (notification_sid)
