@@ -1012,7 +1012,9 @@ function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
     var tmp_width = width;
     var tmp_height = height;
 
-    var layer_height = $('container').clientHeight;
+    //aor : ne prend pas toute la hauteur de la fenetre (certain bouton peuvent etre accessible!)
+    //var layer_height = $('container').clientHeight;
+    var layer_height = document.body.clientHeight;
 
     //lgi : à quoi cela sert ?
     /*if(layer_height < $('container').scrollHeight)
@@ -1092,6 +1094,19 @@ function destroyModal(id_mod){
     }
     document.getElementsByTagName('body')[0].removeChild($(id_mod));
     document.getElementsByTagName('body')[0].removeChild($(id_layer));
+    if($('send_action')){
+        $('send_action').disabled = false;
+        $('send_action').style.opacity = "1";
+        $('send_action').value = "Valider";
+    }else if($('send')){
+        $('send').disabled = false;
+        $('send').style.opacity = "1";
+        $('send').value = "Valider";
+    }else if($('send_mass')){
+        $('send_mass').disabled = false;
+        $('send_mass').style.opacity = "1";
+        $('send_mass').value = "Valider";
+    }
 }
 
 /**
@@ -1268,9 +1283,15 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                     },
                     onLoading: function(answer) {
                     //show loading image in toolbar
+                    if($('send_action')){
+                        $('send_action').disabled=true;
+                        $('send_action').style.opacity="0.5";
+                        $('send_action').value="traitement...";
+                    }else if($('send')){
                         $('send').disabled=true;
                         $('send').style.opacity="0.5";
                         $('send').value="traitement...";
+                    }
                     },
                     onSuccess: function(answer){
                     //console.log('valid form answer  '+answer.responseText);
@@ -1285,7 +1306,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 
                             if(chosen_action_id == 'end_action')
                             {
-                            //  alert('last_action');
+	                            //alert('last_action');
                                 //console.log('last_action');
                                 end_actions();
                             }
@@ -1315,9 +1336,15 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                             }
                         catch(e){}
                     }
-                    $('send').disabled = false;
-                    $('send').style.opacity = "1";
-                    $('send').value = "Valider";
+                    /*if($('send_action')){
+                        $('send_action').disabled = false;
+                        $('send_action').style.opacity = "1";
+                        $('send_action').value = "Valider";
+                    }else if($('send')){
+                        $('send').disabled = false;
+                        $('send').style.opacity = "1";
+                        $('send').value = "Valider";
+                    }*/
                 },
                 onFailure: function(){
                 }
@@ -1590,9 +1617,9 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                     }
                     //close_action(id_action,  page_result);
                 }
-                $('send_mass').disabled = false;
+                /*$('send_mass').disabled = false;
                 $('send_mass').style.opacity = "1";
-                $('send_mass').value = "Valider";
+                $('send_mass').value = "Valider";*/
             },
             onFailure: function(){
                 //alert('erreur');
