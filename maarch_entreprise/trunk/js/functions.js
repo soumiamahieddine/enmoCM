@@ -1333,6 +1333,15 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                         try{
                                 $('frm_error_'+id_action).innerHTML = response.error_txt;
                                 alert($('frm_error_'+id_action).innerHTML);
+                                if($('send_action')){
+                                    $('send_action').disabled = false;
+                                    $('send_action').style.opacity = "1";
+                                    $('send_action').value = "Valider";
+                                }else if($('send')){
+                                    $('send').disabled = false;
+                                    $('send').style.opacity = "1";
+                                    $('send').value = "Valider";
+                                }
                             }
                         catch(e){}
                     }
