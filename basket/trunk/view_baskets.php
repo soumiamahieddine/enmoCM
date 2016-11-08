@@ -30,7 +30,7 @@
 */
 
 $_SESSION['count_view_baskets']++;
-unset($_SESSION['location_bar']);
+$_SESSION['location_bar']['level2']['path'] = $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets='.$_REQUEST['baskets'];
 
  $urlParameters = '';
 
