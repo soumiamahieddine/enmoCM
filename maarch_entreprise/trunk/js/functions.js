@@ -1094,7 +1094,8 @@ function destroyModal(id_mod){
     }
     document.getElementsByTagName('body')[0].removeChild($(id_mod));
     document.getElementsByTagName('body')[0].removeChild($(id_layer));
-    if($('send_action')){
+    $$("input[type='button']").each(function(v) {v.disabled = false;v.style.opacity="1";})
+    /*if($('send_action')){
         $('send_action').disabled = false;
         $('send_action').style.opacity = "1";
         $('send_action').value = "Valider";
@@ -1106,7 +1107,11 @@ function destroyModal(id_mod){
         $('send_mass').disabled = false;
         $('send_mass').style.opacity = "1";
         $('send_mass').value = "Valider";
-    }
+    }else if($('submit')){
+        $('submit').disabled = false;
+        $('submit').style.opacity = "1";
+        $('send_mass').value = "Valider";
+    }*/
 }
 
 /**
@@ -1283,7 +1288,8 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                     },
                     onLoading: function(answer) {
                     //show loading image in toolbar
-                    if($('send_action')){
+                    $$("input[type='button']").each(function(v) {v.disabled = true;v.style.opacity="0.5";})
+                    /*if($('send_action')){
                         $('send_action').disabled=true;
                         $('send_action').style.opacity="0.5";
                         $('send_action').value="traitement...";
@@ -1291,7 +1297,15 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                         $('send').disabled=true;
                         $('send').style.opacity="0.5";
                         $('send').value="traitement...";
-                    }
+                    }else if($('submit')){
+                        $('submit').disabled=true;
+                        $('submit').style.opacity="0.5";
+                        $('submit').value="traitement...";
+                    }else if($('redirect_dep')){
+                        $('redirect_dep').disabled=true;
+                        $('redirect_dep').style.opacity="0.5";
+                        $('redirect_dep').value="traitement...";
+                    }*/
                     },
                     onSuccess: function(answer){
                     //console.log('valid form answer  '+answer.responseText);
@@ -1333,7 +1347,8 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                         try{
                                 $('frm_error_'+id_action).innerHTML = response.error_txt;
                                 alert($('frm_error_'+id_action).innerHTML);
-                                if($('send_action')){
+                                $$("input[type='button']").each(function(v) {v.disabled = false;v.style.opacity="1";})
+                                /*if($('send_action')){
                                     $('send_action').disabled = false;
                                     $('send_action').style.opacity = "1";
                                     $('send_action').value = "Valider";
@@ -1341,7 +1356,15 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                                     $('send').disabled = false;
                                     $('send').style.opacity = "1";
                                     $('send').value = "Valider";
-                                }
+                                }else if($('submit')){
+                                    $('submit').disabled=true;
+                                    $('submit').style.opacity="0.5";
+                                    $('submit').value="traitement...";
+                                }else if($('redirect_dep')){
+                                    $('redirect_dep').disabled=true;
+                                    $('redirect_dep').style.opacity="0.5";
+                                    $('redirect_dep').value="traitement...";
+                                }*/
                             }
                         catch(e){}
                     }
@@ -1563,9 +1586,10 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                               },
                 onLoading: function(answer) {
                 //show loading image in toolbar
-                    $('send_mass').disabled=true;
+                    $$("input[type='button']").each(function(v) {v.disabled = true;v.style.opacity="0.5";})
+                    /*$('send_mass').disabled=true;
                     $('send_mass').style.opacity="0.5";
-                    $('send_mass').value="traitement...";
+                    $('send_mass').value="traitement...";*/
                 },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);
@@ -1670,9 +1694,30 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                               module : modulename,
                               form_values : values_new_form
                               },
+                onLoading: function(answer) {
+                    //show loading image in toolbar
+                    $$("input[type='button']").each(function(v) {v.disabled = true;v.style.opacity="0.5";})
+                    /*if($('send_action')){
+                        $('send_action').disabled=true;
+                        $('send_action').style.opacity="0.5";
+                        $('send_action').value="traitement...";
+                    }else if($('send')){
+                        $('send').disabled=true;
+                        $('send').style.opacity="0.5";
+                        $('send').value="traitement...";
+                    }else if($('submit')){
+                        $('submit').disabled=true;
+                        $('submit').style.opacity="0.5";
+                        $('submit').value="traitement...";
+                    }else if($('redirect_dep')){
+                        $('redirect_dep').disabled=true;
+                        $('redirect_dep').style.opacity="0.5";
+                        $('redirect_dep').value="traitement...";
+                    }*/
+                },
                 onSuccess: function(answer){
-                //  console.log('answer '+answer.responseText);
-                //  alert('answer '+answer.responseText);
+                    //  console.log('answer '+answer.responseText);
+                    //alert('answer '+answer.responseText);
                     eval('response='+answer.responseText);
                     if(response.status == 0 ) //Form or confirm processed ok
                     {
@@ -1699,6 +1744,24 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                         try{
                             //$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
                             $('frm_error').innerHTML = response.error_txt;
+                            $$("input[type='button']").each(function(v) {v.disabled = true;v.style.opacity="0.5";})
+                            /*if($('send_action')){
+                                $('send_action').disabled = false;
+                                $('send_action').style.opacity = "1";
+                                $('send_action').value = "Valider";
+                            }else if($('send')){
+                                $('send').disabled = false;
+                                $('send').style.opacity = "1";
+                                $('send').value = "Valider";
+                            }else if($('submit')){
+                                $('submit').disabled=true;
+                                $('submit').style.opacity="0.5";
+                                $('submit').value="traitement...";
+                            }else if($('redirect_dep')){
+                                $('redirect_dep').disabled=true;
+                                $('redirect_dep').style.opacity="0.5";
+                                $('redirect_dep').value="traitement...";
+                            }*/
                             }
                         catch(e){}
                     }
