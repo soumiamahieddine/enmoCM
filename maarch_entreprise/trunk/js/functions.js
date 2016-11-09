@@ -1067,6 +1067,7 @@ function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
     Event.observe(layer, 'mousewheel', function(event){Event.stop(event);}.bindAsEventListener(), true);
     Event.observe(layer, 'DOMMouseScroll', function(event){Event.stop(event);}.bindAsEventListener(), false);
     $(id_mod).focus();
+    $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";})
 }
 
 
@@ -1286,9 +1287,9 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                       req : 'valid_form',
                       form_values : frm_values
                     },
-                    onLoading: function(answer) {
+                    onCreate: function(answer) {
                     //show loading image in toolbar
-                    $$("input[type='button']").each(function(v) {v.disabled = true;v.style.opacity="0.5";})
+                    $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";})
                     /*if($('send_action')){
                         $('send_action').disabled=true;
                         $('send_action').style.opacity="0.5";
@@ -1347,7 +1348,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                         try{
                                 $('frm_error_'+id_action).innerHTML = response.error_txt;
                                 alert($('frm_error_'+id_action).innerHTML);
-                                $$("input[type='button']").each(function(v) {v.disabled = false;v.style.opacity="1";})
+                                $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";})
                                 /*if($('send_action')){
                                     $('send_action').disabled = false;
                                     $('send_action').style.opacity = "1";
@@ -1584,9 +1585,9 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                               coll_id : id_coll,
                               module : modulename
                               },
-                onLoading: function(answer) {
-                //show loading image in toolbar
-                    $$("input[type='button']").each(function(v) {v.disabled = true;v.style.opacity="0.5";})
+                onCreate: function(answer) {
+                    //show loading image in toolbar
+                    $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";})
                     /*$('send_mass').disabled=true;
                     $('send_mass').style.opacity="0.5";
                     $('send_mass').value="traitement...";*/
@@ -1694,9 +1695,9 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                               module : modulename,
                               form_values : values_new_form
                               },
-                onLoading: function(answer) {
+                onCreate: function(answer) {
                     //show loading image in toolbar
-                    $$("input[type='button']").each(function(v) {v.disabled = true;v.style.opacity="0.5";})
+                    $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";})
                     /*if($('send_action')){
                         $('send_action').disabled=true;
                         $('send_action').style.opacity="0.5";
@@ -1744,7 +1745,7 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                         try{
                             //$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
                             $('frm_error').innerHTML = response.error_txt;
-                            $$("input[type='button']").each(function(v) {v.disabled = true;v.style.opacity="0.5";})
+                            $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";})
                             /*if($('send_action')){
                                 $('send_action').disabled = false;
                                 $('send_action').style.opacity = "1";
@@ -2910,7 +2911,7 @@ function loadList(path, inDiv, modeReturn, init) {
         method:'post',
         parameters: { url : path
                     },   
-        onLoading: function(answer) {
+        onCreate: function(answer) {
                 //show loading image in toolbar
             if(document.getElementById("loading")){
             document.getElementById("loading").style.display='block';
