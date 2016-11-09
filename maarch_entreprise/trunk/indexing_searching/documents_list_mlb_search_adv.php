@@ -229,7 +229,7 @@ if($mode == 'normal') {
     array_push($select[$view],  "res_id", "res_id as is_labeled", "status", "subject", "category_id as category_img", 
                                 "contact_firstname", "contact_lastname", "contact_society", 
                                 "user_lastname", "user_firstname", "dest_user", "type_label", 
-                                "creation_date", "entity_label", "category_id, exp_user_id", "alt_identifier", "count_attachment", "is_multicontacts");
+                                "creation_date", "entity_label", "category_id, exp_user_id", "alt_identifier", "count_attachment", "is_multicontacts", "priority");
     //Cases
     if($core_tools->is_module_loaded("cases") == true) {
         array_push($select[$view], "case_id", "case_label", "case_description");
@@ -449,13 +449,8 @@ if($mode == 'normal') {
                 
                 if($tab[$i][$j][$value]=="status")
                 {
-                    if($tab[$i][18]["value"]=='0'){
-                        $style="style='color:red;'";
-                    }else if($tab[$i][18]["value"]=='1'){
-                        $style="style='color:orange;'";
-                    }else{
-                        $style="style='color:#009DC5;'";
-                    }
+                    $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][20]["value"]].";'";
+            
                     $tab[$i][$j]["label"]=_STATUS;
                     $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
                     $statusCmp = $tab[$i][$j]['value'];
@@ -588,6 +583,18 @@ if($mode == 'normal') {
                     $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
                     $tab[$i][$j]["order"]="category_id";
                 }
+
+            if($tab[$i][$j][$value]=="priority")
+            {
+                $tab[$i][$j]["value"] = $_SESSION['mail_priorities'][$tab[$i][$j]["value"]];
+                $tab[$i][$j]["label"]=_PRIORITY;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]["order"]='priority';
+            }
 
                 if($tab[$i][$j][$value]=="dest_user")
                 {
