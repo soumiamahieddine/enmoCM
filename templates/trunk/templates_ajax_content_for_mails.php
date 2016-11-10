@@ -43,6 +43,7 @@ $template->template_content =  $templateController->merge($_REQUEST['templateId'
 $template->template_content = str_replace("\r\n", "\n", $template->template_content);
 $template->template_content = str_replace("\r", "\n", $template->template_content);
 $template->template_content = str_replace("\n", "\\n ", $template->template_content);
+$template->template_content = str_replace("''", "'", $template->template_content);
 
 echo "{status : 0, content : '" . addslashes($template->template_content) . "'}";
 exit();
