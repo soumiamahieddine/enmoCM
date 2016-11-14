@@ -539,7 +539,7 @@
         </tags>
         <impact>5</impact>
     </filter>
-    <filter>
+    <!--<filter>
         <id>55</id>
         <rule><![CDATA[(?:\sexec\s+xp_cmdshell)|(?:"\s*!\s*["\w])|(?:from\W+information_schema\W)|(?:(?:(?:current_)?user|database|schema|connection_id)\s*\([^\)]*)|(?:";?\s*(?:select|union|having)\s*[^\s])|(?:\wiif\s*\()|(?:exec\s+master\.)|(?:union select @)|(?:union[\w(\s]*select)|(?:select.*\w?user\()|(?:into[\s+]+(?:dump|out)file\s*")]]></rule>
         <description>Detects MSSQL code execution and information gathering attempts</description>
@@ -548,7 +548,7 @@
             <tag>id</tag>
         </tags>
         <impact>5</impact>
-    </filter>
+    </filter>-->
     <filter>
         <id>56</id>
         <rule><![CDATA[(?:merge.*using\s*\()|(execute\s*immediate\s*")|(?:\W+\d*\s*having\s*[^\s\-])|(?:match\s*[\w(),+-]+\s*against\s*\()]]></rule>
