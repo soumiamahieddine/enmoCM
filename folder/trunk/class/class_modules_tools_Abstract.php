@@ -995,51 +995,14 @@ abstract class folder_Abstract extends request
     }
 
 
-    public function get_folders_tree()
-	{
-		$folders = array();
-		$db = new Database();
-		$stmt = $db->query('SELECT folders_system_id, folder_name, parent_id, folder_level FROM folders WHERE foldertype_id not in (100) AND status NOT IN (\'DEL\') AND parent_id = 0 order by folder_id asc', array());
-		while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
-			$stmt2 = $db->query(
-					"SELECT count(*) as total FROM res_view_letterbox WHERE status NOT IN ('DEL')", array()
-					);
-			$row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
-			$stmt3 = $db->query(
-				"SELECT count(*) as total FROM folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].")  AND status NOT IN ('DEL')"
-			);
-			$row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
-			$nbsp ='';
-			for ($i=1; $i < $row['folder_level'] ; $i++) { 
-				$nbsp .= '&emsp;&emsp; ';
-			}
-			$row['folder_name'] = $nbsp.$row['folder_name'];
-
-			$folders[] = array(
-				'parent_id' => $row['parent_id'],
-				'folders_system_id' => $row['folders_system_id'],
-				'folder_name' => $row['folder_name'],
-				'folder_level' => $row['folder_level'],
-				'nb_doc' => $row2['total'],
-				'nb_subfolder' => $row3['total']
-			);
-			$folders = array_merge($folders,$this->get_folders_tree_children($row['folders_system_id']));
-		}
-        return $folders;
-    }
-
-    public function get_folders_tree_children($parent_id)
+    public function get_folders_tree($parent_id)
 	{
 		$folders = array();
 		$db = new Database();
 		$stmt = $db->query('SELECT folders_system_id, folder_name, parent_id, folder_level FROM folders WHERE foldertype_id not in (100) AND status NOT IN (\'DEL\') AND parent_id = \''.$parent_id.'\' order by folder_id asc', array());
 		while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
-			$stmt2 = $db->query(
-					"SELECT count(*) as total FROM res_view_letterbox WHERE status NOT IN ('DEL')", array()
-					);
-			$row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
 			$stmt3 = $db->query(
-				"SELECT count(*) as total FROM folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].")  AND status NOT IN ('DEL')"
+				"SELECT count(folders_system_id) as total FROM folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].")  AND status NOT IN ('DEL')"
 			);
 			$row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
 			$nbsp ='';
@@ -1053,9 +1016,9 @@ abstract class folder_Abstract extends request
 				'folders_system_id' => $row['folders_system_id'],
 				'folder_name' => $row['folder_name'],
 				'folder_level' => $row['folder_level'],
-				'nb_doc' => $row2['total'],
 				'nb_subfolder' => $row3['total']
 			);
+			$folders = array_merge($folders,$this->get_folders_tree($row['folders_system_id']));
 		}
         return $folders ;
     }
