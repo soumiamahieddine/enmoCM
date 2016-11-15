@@ -911,7 +911,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
             . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
             $folders = new folder();
-            $folder_info = $folders->get_folders_tree('1');
+            $folder_info = $folders->get_folders_tree('0');
             $folder = '';
             $folder_id = '';
             if(isset($data['folder'])&& !empty($data['folder']))

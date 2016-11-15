@@ -817,7 +817,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
             . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
         $folders = new folder();
-        $folder_info = $folders->get_folders_tree('1');
+        $folder_info = $folders->get_folders_tree('0');
 
         $frmStr .= '<tr id="folder_tr" style="display:' . $displayValue . ';">';
             $frmStr .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER. '</label></td>';
