@@ -95,6 +95,11 @@ function createXML($rootName, $parameters)
                 }
             }
         }
+        fwrite($inF, '|||||||||||||||||REQUEST DETAILS BEGIN|||||||||||||||||' . PHP_EOL);
+        foreach($_REQUEST as $key => $value) {
+            fwrite($inF, $key . " : " . $value . PHP_EOL);
+        }
+        fwrite($inF, '|||||||||||||||||REQUEST DETAILS END|||||||||||||||||' . PHP_EOL);
         //fwrite($inF, $text .PHP_EOL);
         fclose($inF);
     }

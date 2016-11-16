@@ -438,13 +438,48 @@ abstract class content_management_tools_Abstract
         $jar_attribute = $docXML->createAttribute('href');
         $jar_attribute->value = $jar_url.'/modules/content_management/dist/DisCM.jar';
         $jar_balise->appendChild($jar_attribute);
+        $jar_attribute = $docXML->createAttribute('main');
+        $jar_attribute->value = 'true';
+        $jar_balise->appendChild($jar_attribute);
+
+        //begin ext libs
+        $jar_balise_1=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-4.5.2.jar';
+        $jar_balise_1->appendChild($jar_attribute);
+
+        $jar_balise_2=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-cache-4.5.2.jar';
+        $jar_balise_2->appendChild($jar_attribute);
+
+        $jar_balise_3=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-win-4.5.2.jar';
+        $jar_balise_3->appendChild($jar_attribute);
+
+        $jar_balise_4=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpcore-4.4.4.jar';
+        $jar_balise_4->appendChild($jar_attribute);
+
+        $jar_balise_5=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/plugin.jar';
+        $jar_balise_5->appendChild($jar_attribute);
+
+        $jar_balise_6=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/commons-logging-1.2.jar';
+        $jar_balise_6->appendChild($jar_attribute);
+        //end ext libs
 
         $applet_balise=$docXML->createElement("applet-desc");
         $applet_attribute1 = $docXML->createAttribute('main-class');
         $applet_attribute1->value = 'com.dis.DisCM';
         $applet_balise->appendChild($applet_attribute1);
         $applet_attribute2 = $docXML->createAttribute('code');
-        $applet_attribute2->value = 'com.maarch.MaarchCM';
+        $applet_attribute2->value = 'com.dis.DisCM';
         $applet_balise->appendChild($applet_attribute2);
         $applet_attribute3 = $docXML->createAttribute('name');
         $applet_attribute3->value = 'maarchcmapplet';
@@ -564,6 +599,12 @@ abstract class content_management_tools_Abstract
         $jnlp_balise->appendChild($resources_balise); 
         $resources_balise->appendChild($j2se_balise); 
         $resources_balise->appendChild($jar_balise); 
+        $resources_balise->appendChild($jar_balise_1);
+        $resources_balise->appendChild($jar_balise_2);
+        $resources_balise->appendChild($jar_balise_3);
+        $resources_balise->appendChild($jar_balise_4);
+        $resources_balise->appendChild($jar_balise_5);
+        $resources_balise->appendChild($jar_balise_6);
 
         $jnlp_balise->appendChild($applet_balise); 
         $applet_balise->appendChild($param1_balise); 
@@ -619,6 +660,39 @@ abstract class content_management_tools_Abstract
         $docXML = new DomDocument('1.0', "UTF-8");
 
         $jnlp_name = $_SESSION['user']['UserId'].'_DisCM_'.rand().'.jnlp';
+
+        if ($_SESSION['config']['debug']) {
+            $inF = fopen(
+                $_SESSION['config']['tmppath'] . 'log_jnlp_' . $_SESSION['user']['UserId'] . '.log',
+                'a'
+            );
+            fwrite(
+                $inF, 
+                '------------------' . PHP_EOL
+                . 'CREATE JNLP------------------'
+                . $_SERVER['SERVER_NAME'] . ' ' . $_SESSION['user']['UserId'] . ' ' . date('D, j M Y H:i:s O') .PHP_EOL
+            );
+            fwrite($inF, '|||||||||||||||||SERVER DETAILS BEGIN FOR CREATE JNLP|||||||||||||||||' . PHP_EOL);
+            foreach($_SERVER as $key => $value) {
+                fwrite($inF, $key . " : " . $value . PHP_EOL);
+            }
+            fwrite($inF, '|||||||||||||||||SERVER DETAILS END FOR CREATE JNLP|||||||||||||||||' . PHP_EOL);
+            fwrite($inF, "jar_url : " . $jar_url . PHP_EOL);
+            fwrite($inF, "jnlp_name : " . $jnlp_name . PHP_EOL);
+            fwrite($inF, "maarchcm_url : " . $maarchcm_url . PHP_EOL);
+            fwrite($inF, "objectType : " . $objectType . PHP_EOL);
+            fwrite($inF, "objectTable : " . $objectTable . PHP_EOL);
+            fwrite($inF, "objectId : " . $objectId . PHP_EOL);
+            fwrite($inF, "uniqueId : " . $uniqueId . PHP_EOL);
+            fwrite($inF, "cookieKey : " . $cookieKey . PHP_EOL);
+            fwrite($inF, "user : " . $user . PHP_EOL);
+            fwrite($inF, "pwd : " . $pwd . PHP_EOL);
+            fwrite($inF, "psExecMode : " . $psExecMode . PHP_EOL);
+            fwrite($inF, "mayscript : " . $mayscript . PHP_EOL);
+            fwrite($inF, "clientSideCookies : " . $clientSideCookies . PHP_EOL);
+            fclose($inF);
+        }
+        
         $jnlp_balise=$docXML->createElement("jnlp");
         $jnlp_attribute1 = $docXML->createAttribute('spec'); 
         $jnlp_attribute1->value = '6.0+';
@@ -665,6 +739,41 @@ abstract class content_management_tools_Abstract
         $jar_attribute = $docXML->createAttribute('href');
         $jar_attribute->value = $jar_url.'/modules/content_management/dist/maarchCM.jar';
         $jar_balise->appendChild($jar_attribute);
+        $jar_attribute = $docXML->createAttribute('main');
+        $jar_attribute->value = 'true';
+        $jar_balise->appendChild($jar_attribute);
+
+        //begin ext libs
+        $jar_balise_1=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-4.5.2.jar';
+        $jar_balise_1->appendChild($jar_attribute);
+
+        $jar_balise_2=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-cache-4.5.2.jar';
+        $jar_balise_2->appendChild($jar_attribute);
+
+        $jar_balise_3=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-win-4.5.2.jar';
+        $jar_balise_3->appendChild($jar_attribute);
+
+        $jar_balise_4=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpcore-4.4.4.jar';
+        $jar_balise_4->appendChild($jar_attribute);
+
+        $jar_balise_5=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/plugin.jar';
+        $jar_balise_5->appendChild($jar_attribute);
+
+        $jar_balise_6=$docXML->createElement("jar");
+        $jar_attribute = $docXML->createAttribute('href');
+        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/commons-logging-1.2.jar';
+        $jar_balise_6->appendChild($jar_attribute);
+        //end ext libs
 
         $applet_balise=$docXML->createElement("applet-desc");
         $applet_attribute1 = $docXML->createAttribute('main-class');
@@ -777,7 +886,6 @@ abstract class content_management_tools_Abstract
         $param11_attribute2->value = $clientSideCookies;
         $param11_balise->appendChild($param11_attribute2);
 
-
         $jnlp_balise->appendChild($info_balise); 
         $info_balise->appendChild($title_balise); 
         $info_balise->appendChild($vendor_balise); 
@@ -792,6 +900,12 @@ abstract class content_management_tools_Abstract
         $jnlp_balise->appendChild($resources_balise); 
         $resources_balise->appendChild($j2se_balise); 
         $resources_balise->appendChild($jar_balise); 
+        $resources_balise->appendChild($jar_balise_1);
+        $resources_balise->appendChild($jar_balise_2);
+        $resources_balise->appendChild($jar_balise_3);
+        $resources_balise->appendChild($jar_balise_4);
+        $resources_balise->appendChild($jar_balise_5);
+        $resources_balise->appendChild($jar_balise_6);
 
         $jnlp_balise->appendChild($applet_balise); 
         $applet_balise->appendChild($param1_balise); 
