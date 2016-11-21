@@ -32,7 +32,7 @@ if ($viewResourceArr['status'] <> 'ko') {
     $core_tools->load_html();
     $core_tools->load_header('', true, false);
     echo '<body>';
-    echo '<br/><div class="error">' . $viewResourceArr['error'] . '</div>';
+    echo '<br/><div class="indexing_error">' . $viewResourceArr['error'] . '</div>';
     echo '</body></html>';
     exit();
 }
