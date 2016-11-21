@@ -1254,23 +1254,8 @@ abstract class lists_Abstract extends Database
 		
         $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
 		if ($core->is_module_loaded('thumbnails') === true && !$isAttachment){
-			require_once "modules" . DIRECTORY_SEPARATOR . "thumbnails" . DIRECTORY_SEPARATOR
-			. "class" . DIRECTORY_SEPARATOR
-			. "class_modules_tools.php";
-						
-			$tnl = new thumbnails();
-			$path = $tnl->getPathTnl($res_id, 'letterbox_coll');
-            if (is_file($path)) {
-                $return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
-                    ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span><img src="index.php?page=doc_thumb&module=thumbnails&res_id='.$res_id.'&coll_id=letterbox_coll&display=true"></span></a></div>';
-            
-            }else{
-                $return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
-                    ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span id="no_doc"><i class="fa fa-ban" style="font-size: 460px;color: grey;opacity: 0.2;margin-top: 30px;"></i>
-</span></a></div>';
-            
-            }
-			
+            $return .= '<div align="center" class="iconDoc" onmouseover="showThumb(\'thumb_\',\'' . $res_id . '\', \'letterbox_coll\')"><a href="'.$href.'" target="_blank" title="'
+                    ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span id="thumb_' . $res_id . '" name="thumb_' . $res_id . '"></span></a></div>';			
 		}
 		else $return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
 					._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i></a></div>';
