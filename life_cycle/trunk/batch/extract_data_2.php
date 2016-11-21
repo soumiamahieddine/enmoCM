@@ -415,7 +415,7 @@ try {
         #### Signataire Name ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
-            "SELECT lastname, firstname FROM users WHERE user_id in (SELECT item_id FROM listinstance WHERE item_mode = 'sign' and res_id = ?)", array($selectedFile->res_id)
+            "SELECT u.lastname || ' ' || u.firstname as user, l.process_date FROM users u, listinstance l WHERE user_id in (SELECT item_id FROM listinstance WHERE item_mode = 'sign' and res_id = ?) and l.listinstance_id in (SELECT listinstance_id FROM listinstance WHERE item_mode = 'sign' and res_id = ?))", array($selectedFile->res_id,$selectedFile->res_id)
         );
         $signataire = $stmt2->fetchObject();
 
@@ -525,9 +525,9 @@ try {
                 $GLOBALS['mail_priorities'][$selectedFile->priority],
                 $NbResponseProject, 
                 $arrayAttachments[0]['identifier'], //25 
-                $arrayAttachments[0]['typist'], 
-                $arrayAttachments[0]['creation_date'], 
-                format_date_db(str_replace("/", "-",$selectedFile->closing_date), "", $GLOBALS['databasetype']), // date de départ
+                $signataire->user, 
+                $signataire->process_date, 
+                format_date_db(str_replace("/", "-",$selectedFile->doc_custom_d1), "", $GLOBALS['databasetype']), // date de départ
                 $NbTransmission, 
                 $arrayTransmission[0]['identifier'], //"Numéro chrono transmission 1", 
                 $arrayTransmission[0]['dest_contact'], //"Destinataire transmission 1", 
