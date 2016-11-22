@@ -536,7 +536,7 @@ $paramsTab['bool_showIconDocument'] = true;                                     
 $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
 $paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id']
             .$urlParameters;                                                        //Parametres d'url supplementaires
-$paramsTab['filters'] = array('entity', 'entity_subentities', 'category', 'contact');                     //Filtres    
+$paramsTab['filters'] = array('entity', 'entity_subentities', 'category');          //Filtres    
 if (count($template_list) > 0 ) {                                                   //Templates
     $paramsTab['templates'] = array();
     $paramsTab['templates'] = $template_list;
