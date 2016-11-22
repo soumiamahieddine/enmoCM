@@ -1330,7 +1330,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<script type="text/javascript">displayFatherFolder(\'folder\');resize_frame_process("modal_'
         . $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
 	$curr_visa_wf = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
-	if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0){
+	if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0 && $core_tools->is_module_loaded('avis')){
 		$frm_str .= 'load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);';
 	}
     if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)){
