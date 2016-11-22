@@ -113,7 +113,7 @@ while ($third = $stmt->fetchObject()) {
 }
 
 //visa
-$stmt = $dbDatasource->query("SELECT * FROM listinstance WHERE res_id = ? AND difflist_type = ? ", [$doc['res_id'], 'VISA_CIRCUIT']);
+$stmt = $dbDatasource->query("SELECT * FROM listinstance WHERE res_id = ? AND difflist_type = ?  ORDER BY sequence ASC", [$doc['res_id'], 'VISA_CIRCUIT']);
 $datasources['visa']= [];
 $countVisa = 1;
 while ($visa = $stmt->fetchObject()) {
