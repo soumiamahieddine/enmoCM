@@ -514,12 +514,10 @@ $paramsTab['bool_showIconDetails']         = true;                              
 $paramsTab['urlParameters']                = 'baskets='.$_SESSION['current_basket']['id']   //Parametres d'url supplementaires
                                              .$urlParameters;                                                        
 $paramsTab['filters']                      = array(                                         //Filtres 
-                                                'entity', 
-                                                'entity_subentities', 
-                                                'category', 
-                                                'contact', 
-                                                'res_id', 
-                                                'subject', 
+                                                'entity',
+                                                'entity_subentities',
+                                                'category',
+                                                'res_id',
                                                 'priority'
                                             );    
 
