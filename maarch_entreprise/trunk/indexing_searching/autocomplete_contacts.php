@@ -83,18 +83,16 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     $other = 'order by lastname, firstname';
     $arrayPDO = array(":input" => "%".$_REQUEST['Input']."%");
     $res = $req->PDOselect($select, $where, $arrayPDO, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
-    //echo "<ul>\n";
-    echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
+
+    echo "<ul id=\"autocomplete_contacts_ul\" title=\"utilisateur de l'application\">";
     for ($i=0; $i< min(count($res), 5)  ;$i++) {
-        echo "<li id='".$res[$i][2]['value'].", '><i class='fa fa-users fa-1x'></i> ".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</li>\n";
+        echo "<li id='".$res[$i][2]['value'].", '><i class='fa fa-users fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;'></i> <span style=\"display:table-cell;vertical-align:middle;\">".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</span></li>";
     }
     if($i == 0){
         $noResultUsers = true;
     }
 
     //CONTACTS
-    $timestart=microtime(true);
-   
    $arrayPDO = array();
    if ((isset($_REQUEST['contact_type']) && $_REQUEST['contact_type'] <> '') && $_SESSION['is_multi_contact'] =! 'OK') {
        $contactTypeRequest = " AND contact_type = ?";
@@ -115,318 +113,275 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     $num_args = count($args);
     if ($num_args == 0) return "<ul></ul>"; 
        
-    $query = "SELECT result, SUM(confidence) AS score, count(1) AS num, address, contact_id, ca_id FROM (";
-
-    $subQuery = 
-        "SELECT "
-            . "(CASE "
-                . " WHEN is_corporate_person = 'Y' THEN society ||" 
-                    . "(CASE "
-                        . " WHEN society_short <> '' THEN  ' (' || society_short || ') -'"
-                        . " WHEN society_short = '' THEN ' -'"
-                    . " END)"
-                . " WHEN is_corporate_person = 'N' THEN UPPER(contact_lastname) || ' ' || contact_firstname ||"
-                    . "(CASE "
-                        . " WHEN society_short <> '' THEN  ' (' || society_short || ') -'"
-                        . " WHEN society <> '' THEN  ' (' || society || ') -'"
-                        . " WHEN society = '' THEN  '  -'"
-                    . " END)"
-            . " END) AS result, "
-            . " %d AS confidence, "
-            . " contact_id, ca_id, "
-            ."(CASE "
-                . " WHEN is_private = 'N' THEN contact_purpose_label || ' :' ||" 
-                    . "(CASE "
-                        . " WHEN departement <> '' THEN ' ' || departement"
-                        . " WHEN departement = '' THEN ('')"
-                    . " END) || " 
-                    . "(CASE "
-                        . " WHEN is_corporate_person = 'Y' THEN '' ||" 
-                            . "(CASE "
-                                . " WHEN lastname <> '' THEN ' ' || UPPER(lastname)"
-                                . " WHEN lastname = '' THEN ('')"                           
-                            . " END)"
-                        . " WHEN is_corporate_person = 'N' THEN '' "
-                    . " END) || "
-                    . "(CASE "
-                        . " WHEN is_corporate_person = 'Y' THEN '' ||" 
-                            . "(CASE "
-                                . " WHEN firstname <> '' THEN ' ' || UPPER(firstname)"
-                                . " WHEN firstname = '' THEN ('')"                           
-                            . " END)"
-                        . " WHEN is_corporate_person = 'N' THEN '' "
-                    . " END) || "
-                    . "(CASE "
-                        . " WHEN address_num <> '' THEN ' ' || address_num"
-                        . " WHEN address_num = '' THEN ('')"
-                    . " END) || "
-                    . "(CASE "
-                        . " WHEN address_street <> '' THEN ' ' || address_street"
-                        . " WHEN address_street = '' THEN ('')"
-                    . " END) || " 
-                    . "(CASE "
-                        . " WHEN address_postal_code <> '' THEN ' ' || address_postal_code"
-                        . " WHEN address_postal_code = '' THEN ('')"
-                    . " END) || " 
-                    . "(CASE "
-                        . " WHEN address_town <> '' THEN ' ' || address_town"
-                        . " WHEN address_town = '' THEN ('')"
-                    . " END) || "                     
-
-                    . "(CASE "
-                        . " WHEN address_country <> '' THEN ' - ' || UPPER(address_country)"
-                        . " WHEN address_country = '' THEN ('')"
-                    . " END)"
-                . " WHEN is_private = 'Y' THEN ' (coordonnees confidentielles) '"
-            ." END)"   
-            . "AS address"
-        . " FROM view_contacts"
-        . " WHERE (1=1) and enabled = 'Y' "
-            . $contactTypeRequest
-            . " AND ("
-                . " LOWER(contact_lastname) LIKE LOWER('%s')"
-                . " OR LOWER(contact_firstname) LIKE LOWER('%s')"
-                . " OR LOWER(society) LIKE LOWER('%s')"
-                . " OR LOWER(society_short) LIKE LOWER('%s')"
-                . " OR LOWER(lastname) LIKE LOWER('%s')"
-                . " OR LOWER(firstname) LIKE LOWER('%s')"
-                . " OR LOWER(contact_purpose_label) LIKE LOWER('%s')"
-                . " OR LOWER(departement) LIKE LOWER('%s')"
-                . " OR LOWER(address_town) LIKE LOWER('%s')"
-            .")".$request_contact;
-     
-    $queryParts = array();
-    foreach($args as $arg) {
-        $arg = $req->protect_string_db($arg);
-        if(strlen($arg) == 0) continue;
-        # Full match of one given arg
-        $expr = $arg;
-        $conf = 100;
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
-
-        # Partial match (starts with)
-        $expr = $arg . "%"; ;
-        $conf = 34; # If found, partial match contains will also be so score is sum of both confidences, i.e. 67)
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
-      
-        # Partial match (contains)
-        $expr = "%" . $arg . "%";
-        $conf = 33;
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
-    }
-    $query .= implode (' UNION ALL ', $queryParts);
-    $query .= ") matches" 
-        . " GROUP BY result, contact_id, address, ca_id "
-        . " ORDER BY score DESC, result ASC";
+    //STEP 1 : search with lastname (physical contact)
+    $query = "SELECT contact_id,ca_id,contact_firstname, contact_lastname, society,address_num,address_street,is_private,CASE WHEN LOWER(translate(contact_lastname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) THEN contact_lastname END as trust_result FROM view_contacts WHERE is_corporate_person = 'N' AND contact_enabled = 'Y' AND enabled = 'Y' AND (LOWER(translate(contact_lastname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))) ORDER BY contact_lastname,contact_firstname ASC";
+    $arrayPDO = array('%'.$_REQUEST['Input'].'%','%'.$_REQUEST['Input'].'%');
     $stmt = $db->query($query, $arrayPDO);
-    $nb = $stmt->rowCount();
+    $nb_step1 = $stmt->rowCount();
     
     $m = 30;
-    if ($nb >= $m) $l = $m;
-    else $l = $nb;
+    if ($nb_step1 >= $m) $l = $m;
+    else $l = $nb_step1;
     
-    $timeend=microtime(true);
-    $time = number_format(($timeend-$timestart), 3);
-
     $found = false;
-    // echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
+
     for ($i=0; $i<$l; $i++) {
+
         $res = $stmt->fetchObject();
-        $score = round($res->score / $num_args);
-        if ($score > 100) {
-            $score = 100;
+
+        $count_trust = strlen($res->trust_result);
+        $count_input = strlen($_REQUEST['Input']);
+        $confidence_index = round(($count_input*100)/$count_trust);
+
+        if(!empty($res->society)){
+            $arr_contact_info = array($res->contact_firstname,$res->contact_lastname,'('.$res->society.')');
+        }else{
+            $arr_contact_info = array($res->contact_firstname,$res->contact_lastname);
         }
+        $contact_info = implode(' ', $arr_contact_info);
+
+        $address = '';
+
+        if(!empty($res->address_street) && $res->is_private != 'Y'){
+            $arr_address = array($res->address_num,$res->address_street,$res->address_postal_code,$res->address_town);
+            $address = implode(' ', $arr_address);
+        }else if($res->is_private == 'Y'){
+            $address = 'adresse confidentielle';
+        }else{
+            $address = 'aucune information sur l\'adresse';
+        }
+
         if ($i%2==1) $color = 'LightYellow';
         else $color = 'white';
-        echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'><i class='fa fa-book fa-1x'></i> "
-                . str_replace($args, $args_bold, $res->result) 
-                ."<br/> "
-                . str_replace($args, $args_bold, $res->address)
+
+        echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:12px;background-color:$color;' title='confiance : ".$confidence_index."%'><i class='fa fa-user fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='personne physique'></i> "
+                . '<span style="display:table-cell;vertical-align:middle;">' . str_replace($args, $args_bold, $contact_info) . '</span>'
+                . '<div style="font-size:9px;font-style:italic;"> - ' .str_replace($args, $args_bold, $address).'</div>'
             ."</li>";
     }
-    if($nb == 0) echo "<li></li>";
+
+    //STEP 2 : search with lastname(corporate contact)
+    $query = "SELECT contact_id,ca_id,firstname, lastname, society, address_num,address_street,address_postal_code,address_town,is_private,CASE WHEN LOWER(translate(lastname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) THEN lastname END as trust_result FROM view_contacts WHERE is_corporate_person = 'Y' AND contact_enabled = 'Y' AND enabled = 'Y' AND (LOWER(translate(lastname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))) ORDER BY lastname,firstname ASC";
+    $arrayPDO = array('%'.$_REQUEST['Input'].'%','%'.$_REQUEST['Input'].'%');
+    $stmt = $db->query($query, $arrayPDO);
+    $nb_step2 = $stmt->rowCount();
+    
+    $m = 30;
+    if ($nb_step2 >= $m) $l = $m;
+    else $l = $nb_step2;
+    
+    $found = false;
+
+    for ($i=0; $i<$l; $i++) {
+     
+        $res = $stmt->fetchObject();
+
+        $count_trust = strlen($res->trust_result);
+        $count_input = strlen($_REQUEST['Input']);
+        $confidence_index = round(($count_input*100)/$count_trust);
+
+        $address = '';
+        $arr_address = array($res->address_num,$res->address_street,$res->address_postal_code,$res->address_town);
+        $tmp_address = implode(' ', $arr_address);
+
+        if(!empty($res->firstname) || !empty($res->lastname) ){
+            $arr_address = array($res->firstname.' '.$res->lastname,$tmp_address);
+            $address = implode(', ', $arr_address);
+        }else{
+            $address = $tmp_address;
+        }
+
+        if ($i%2==1) $color = 'LightYellow';
+        else $color = 'white';
+
+        echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:12px;background-color:$color;' title='confiance : ".$confidence_index."%'><i class='fa fa-building fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='structure'></i> "
+                . '<span style="display:table-cell;vertical-align:middle;">'. str_replace($args, $args_bold, $res->society) .'</span>'
+                . '<div style="font-size:9px;font-style:italic;"> - ' .str_replace($args, $args_bold, $address).'</div>'
+            ."</li>";
+    }
+
+    //STEP 3 : search with society(physical contact)
+    $query = "SELECT contact_id,ca_id,contact_firstname, contact_lastname, society, address_num,address_street,is_private, CASE WHEN LOWER(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) THEN society END as trust_result FROM view_contacts WHERE is_corporate_person = 'N' AND contact_enabled = 'Y' AND enabled = 'Y' AND (LOWER(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) OR LOWER(translate(society_short,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))) ORDER BY society,contact_lastname,contact_firstname ASC";
+    $arrayPDO = array('%'.$_REQUEST['Input'].'%','%'.$_REQUEST['Input'].'%','%'.$_REQUEST['Input'].'%');
+    $stmt = $db->query($query, $arrayPDO);
+    $nb_step3 = $stmt->rowCount();
+    
+    $m = 30;
+    if ($nb_step3 >= $m) $l = $m;
+    else $l = $nb_step3;
+    
+    $found = false;
+
+    for ($i=0; $i<$l; $i++) {
+
+        $res = $stmt->fetchObject();
+
+        $count_trust = strlen($res->trust_result);
+        $count_input = strlen($_REQUEST['Input']);
+        $confidence_index = round(($count_input*100)/$count_trust);
+
+        if(!empty($res->society)){
+            $arr_contact_info = array($res->contact_firstname,$res->contact_lastname,'('.$res->society.')');
+        }else{
+            $arr_contact_info = array($res->contact_firstname,$res->contact_lastname);
+        }
+        $contact_info = implode(' ', $arr_contact_info);
+
+        $address = '';
+
+        if(!empty($res->address_street) && $res->is_private != 'Y'){
+            $arr_address = array($res->address_num,$res->address_street,$res->address_postal_code,$res->address_town);
+            $address = implode(' ', $arr_address);
+        }else if($res->is_private == 'Y'){
+            $address = 'adresse confidentielle';
+        }else{
+            $address = 'aucune information sur l\'adresse';
+        }
+
+        if ($i%2==1) $color = 'LightYellow';
+        else $color = 'white';
+
+        echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:12px;background-color:$color;' title='confiance : ".$confidence_index."%'><i class='fa fa-user fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='personne physique'></i> "
+                . '<span style="display:table-cell;vertical-align:middle;">' . str_replace($args, $args_bold, $contact_info) . '</span>'
+                . '<div style="font-size:9px;font-style:italic;"> - ' .str_replace($args, $args_bold, $address).'</div>'
+            ."</li>";
+    }
+    ///////////////////////
+
+    //STEP 4 : search with society(corporate contact)
+    $query = "SELECT contact_id,ca_id,firstname, lastname, society, address_num,address_street,address_postal_code,address_town,is_private, CASE WHEN LOWER(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) THEN society END as trust_result FROM view_contacts WHERE is_corporate_person = 'Y' AND contact_enabled = 'Y' AND enabled = 'Y' AND (LOWER(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) OR LOWER(translate(society_short,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))) ORDER BY society,lastname,firstname ASC";
+    $arrayPDO = array('%'.$_REQUEST['Input'].'%','%'.$_REQUEST['Input'].'%','%'.$_REQUEST['Input'].'%');
+    $stmt = $db->query($query, $arrayPDO);
+    $nb_step4 = $stmt->rowCount();
+    
+    $m = 30;
+    if ($nb_step4 >= $m) $l = $m;
+    else $l = $nb_step4;
+    
+    $found = false;
+
+    for ($i=0; $i<$l; $i++) {
+     
+        $res = $stmt->fetchObject();
+
+        $count_trust = strlen($res->trust_result);
+        $count_input = strlen($_REQUEST['Input']);
+        $confidence_index = round(($count_input*100)/$count_trust);
+
+        $address = '';
+        $arr_address = array($res->address_num,$res->address_street,$res->address_postal_code,$res->address_town);
+        $tmp_address = implode(' ', $arr_address);
+
+        if(!empty($res->firstname) || !empty($res->lastname) ){
+            $arr_address = array($res->firstname.' '.$res->lastname,$tmp_address);
+            $address = implode(', ', $arr_address);
+        }else{
+            $address = $tmp_address;
+        }
+
+        if ($i%2==1) $color = 'LightYellow';
+        else $color = 'white';
+        echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:12px;background-color:$color;' title='confiance : ".$confidence_index."%'><i class='fa fa-building fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='structure'></i> "
+                . '<span style="display:table-cell;vertical-align:middle;">'. str_replace($args, $args_bold, $res->society) .'</span>'
+                . '<div style="font-size:9px;font-style:italic;"> - ' .str_replace($args, $args_bold, $address).'</div>'
+            ."</li>";
+    }
+    ///////////////////////
+
+    //STEP 5 : search with other informations (physical contact)
+    $query = "SELECT contact_id,ca_id,contact_firstname, contact_lastname, society, address_num,address_street,address_postal_code,address_town,is_private FROM view_contacts WHERE is_corporate_person = 'N' AND contact_enabled = 'Y' AND enabled = 'Y'"
+                ." AND (LOWER(translate(contact_firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')))";
+    $arrayPDO = array('%'.$_REQUEST['Input'].'%');
+    $stmt = $db->query($query, $arrayPDO);
+    $nb_step5 = $stmt->rowCount();
+    
+    $m = 30;
+    if ($nb_step5 >= $m) $l = $m;
+    else $l = $nb_step5;
+    
+    $found = false;
+
+    for ($i=0; $i<$l; $i++) {
+
+        $res = $stmt->fetchObject();
+
+        if(!empty($res->society)){
+            $arr_contact_info = array($res->contact_firstname,$res->contact_lastname,'('.$res->society.')');
+        }else{
+            $arr_contact_info = array($res->contact_firstname,$res->contact_lastname);
+        }
+        $contact_info = implode(' ', $arr_contact_info);
+
+        $address = '';
+
+        if(!empty($res->address_street) && $res->is_private != 'Y'){
+            $arr_address = array($res->address_num,$res->address_street,$res->address_postal_code,$res->address_town);
+            $address = implode(' ', $arr_address);
+        }else if($res->is_private == 'Y'){
+            $address = 'adresse confidentielle';
+        }else{
+            $address = 'aucune information sur l\'adresse';
+        }
+
+        if ($i%2==1) $color = 'LightYellow';
+        else $color = 'white';
+        echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:12px;background-color:$color;' title=''><i class='fa fa-user fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='personne physique'></i> "
+                . '<span style="display:table-cell;vertical-align:middle;">' . str_replace($args, $args_bold, $contact_info) . '</span>'
+                . '<div style="font-size:9px;font-style:italic;"> - ' .str_replace($args, $args_bold, $address).'</div>'
+            ."</li>";
+    }
+
+
+    ///////////////////////
+
+    //STEP 6 : search with other informations (corporate contact)
+    $query = "SELECT contact_id,ca_id,firstname, lastname, society, address_num,address_street,address_postal_code,address_town,is_private FROM view_contacts WHERE is_corporate_person = 'Y' AND contact_enabled = 'Y' AND enabled = 'Y'"
+                . " AND (LOWER(translate(firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')))";
+    $arrayPDO = array('%'.$_REQUEST['Input'].'%');
+    $stmt = $db->query($query, $arrayPDO);
+    $nb_step6 = $stmt->rowCount();
+    
+    $m = 30;
+    if ($nb_step6 >= $m) $l = $m;
+    else $l = $nb_step6;
+    
+    $found = false;
+
+    for ($i=0; $i<$l; $i++) {
+     
+        $res = $stmt->fetchObject();
+
+        $address = '';
+        $arr_address = array($res->address_num,$res->address_street,$res->address_postal_code,$res->address_town);
+        $tmp_address = implode(' ', $arr_address);
+
+        if(!empty($res->firstname) || !empty($res->lastname) ){
+            $arr_address = array($res->firstname.' '.$res->lastname,$tmp_address);
+            $address = implode(', ', $arr_address);
+        }else{
+            $address = $tmp_address;
+        }
+
+        if ($i%2==1) $color = 'LightYellow';
+        else $color = 'white';
+        echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:12px;background-color:$color;' title=''><i class='fa fa-building fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='structure'></i> "
+                . '<span style="display:table-cell;vertical-align:middle;">'. str_replace($args, $args_bold, $res->society) .'</span>'
+                . '<div style="font-size:9px;font-style:italic;"> - ' .str_replace($args, $args_bold, $address).'</div>'
+            ."</li>";
+    }
+    if($nb_step1 == 0 && $nb_step2 == 0 && $nb_step3 == 0 && $nb_step4 == 0 && $nb_step5 == 0 && $nb_step6 == 0) echo "<li></li>";
     echo "</ul>";
-    //if($nb == 0) echo "<p align='left' style='background-color:LemonChiffon;' title=\"Aucun résultat trouvé, veuillez compléter votre recherche.\" >...</p>"; 
-    if($nb == 0){
+    if($nb_step1 == 0 && $nb_step2 == 0 && $nb_step3 == 0 && $nb_step4 == 0 && $nb_step5 == 0 && $nb_step6 == 0){
         $noResultContacts = true;
     }
-    if ($nb > $m) echo "<p align='left' style='background-color:LemonChiffon;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...</p>";
+
+    $nb_total = $nb_step1+$nb_step2+$nb_step3+$nb_step4+$nb_step5+$nb_step6;
+    if ($nb_step1 > $m || $nb_step2 > $m || $nb_step3 > $m || $nb_step4 > $m || $nb_step5 > $m || $nb_step6 > $m) echo "<p align='right' style='background-color:LemonChiffon;font-size:9px;font-style:italic;padding-right:5px;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...".$nb_total." résulats au total</p>";
 
     if($noResultUsers && $noResultContacts){
         echo "<p align='left' style='background-color:LemonChiffon;text-align:center;color:grey;font-style:italic;' title=\"Aucun résultat trouvé, veuillez compléter votre recherche.\" >Aucun résultat trouvé.</p>";
     }
 
-} else {
-    if ($table == 'users') {
-        $select = array();
-        $select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
-        $where = " (lower(lastname) like lower(:input) "
-            ."or lower(firstname) like lower(:input) "
-            ."or user_id like :input) and (status = 'OK' or status = 'ABS') and enabled = 'Y'";
-        $other = 'order by lastname, firstname';
-        $arrayPDO = array(":input" => "%".$_REQUEST['Input']."%");
-        $res = $req->PDOselect($select, $where, $arrayPDO, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
-        echo "<ul>\n";
-        for ($i=0; $i< min(count($res), 10)  ;$i++) {
-            echo "<li id='".$res[$i][2]['value'].", '>".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</li>?><i class='fa fa-users fa-1x'></i>\n";
-        }
-        if (count($res) == 11) {
-                echo "<li>...</li>\n";
-        }
-        echo "</ul>";
-    } elseif ($table == 'contacts') {
-        $timestart=microtime(true);
-       
-        $Input = $_REQUEST['Input'];
-        $boldInput = strtoupper($Input);
-        $ucwordsInput = ucwords($Input);
-        $Input = $Input . ' ' . $boldInput . ' ' . $ucwordsInput;
-
-        $args = explode(' ', $Input);
-        $args[] = $Input;
-        $args_bold = array();
-        foreach ($args as $key => $value) {
-            $args_bold[$key] = '<b>'. $value . '</b>';
-        }
-        $num_args = count($args);
-
-        if ($num_args == 0) return "<ul></ul>"; 
-           
-        $query = "SELECT result, SUM(confidence) AS score, count(1) AS num, address, contact_id, ca_id FROM (";
-        
-        $subQuery = 
-        "SELECT "
-            . "(CASE "
-                . " WHEN is_corporate_person = 'Y' THEN society ||" 
-                    . "(CASE "
-                        . " WHEN society_short <> '' THEN  ' (' || society_short || ') -'"
-                        . " WHEN society_short = '' THEN ' -'"
-                    . " END)"
-                . " WHEN is_corporate_person = 'N' THEN UPPER(contact_lastname) || ' ' || contact_firstname ||"
-                    . "(CASE "
-                        . " WHEN society_short <> '' THEN  ' (' || society_short || ') -'"
-                        . " WHEN society <> '' THEN  ' (' || society || ') -'"
-                        . " WHEN society = '' THEN  '  -'"
-                    . " END)"
-            . " END) AS result, "
-            . " %d AS confidence, "
-            . " contact_id, ca_id, "
-            ."(CASE "
-                . " WHEN is_private = 'N' THEN contact_purpose_label || ' :' ||" 
-                    . "(CASE "
-                        . " WHEN departement <> '' THEN ' ' || departement"
-                        . " WHEN departement = '' THEN ('')"
-                    . " END) || " 
-                    . "(CASE "
-                        . " WHEN is_corporate_person = 'Y' THEN '' ||" 
-                            . "(CASE "
-                                . " WHEN lastname <> '' THEN ' ' || UPPER(lastname)"
-                                . " WHEN lastname = '' THEN ('')"                           
-                            . " END)"
-                        . " WHEN is_corporate_person = 'N' THEN '' "
-                    . " END) || "
-                    . "(CASE "
-                        . " WHEN is_corporate_person = 'Y' THEN '' ||" 
-                            . "(CASE "
-                                . " WHEN firstname <> '' THEN ' ' || UPPER(firstname)"
-                                . " WHEN firstname = '' THEN ('')"                           
-                            . " END)"
-                        . " WHEN is_corporate_person = 'N' THEN '' "
-                    . " END) || "
-                    . "(CASE "
-                        . " WHEN address_num <> '' THEN ' ' || address_num"
-                        . " WHEN address_num = '' THEN ('')"
-                    . " END) || "
-                    . "(CASE "
-                        . " WHEN address_street <> '' THEN ' ' || address_street"
-                        . " WHEN address_street = '' THEN ('')"
-                    . " END) || " 
-                    . "(CASE "
-                        . " WHEN address_postal_code <> '' THEN ' ' || address_postal_code"
-                        . " WHEN address_postal_code = '' THEN ('')"
-                    . " END) || " 
-                    . "(CASE "
-                        . " WHEN address_town <> '' THEN ' ' || address_town"
-                        . " WHEN address_town = '' THEN ('')"
-                    . " END) || "                     
-
-                    . "(CASE "
-                        . " WHEN address_country <> '' THEN ' - ' || UPPER(address_country)"
-                        . " WHEN address_country = '' THEN ('')"
-                    . " END)"
-                . " WHEN is_private = 'Y' THEN ' (coordonnees confidentielles) '"
-            ." END)"   
-            . "AS address"
-        . " FROM view_contacts"
-            . " WHERE (1=1) and enabled = 'Y' "
-                . $contactTypeRequest
-                . " AND ("
-                    . " LOWER(contact_lastname) LIKE LOWER('%s')"
-                    . " OR LOWER(contact_firstname) LIKE LOWER('%s')"
-                    . " OR LOWER(society) LIKE LOWER('%s')"
-                    . " OR LOWER(society_short) LIKE LOWER('%s')"
-                    . " OR LOWER(lastname) LIKE LOWER('%s')"
-                    . " OR LOWER(firstname) LIKE LOWER('%s')"
-                    . " OR LOWER(contact_purpose_label) LIKE LOWER('%s')"
-                    . " OR LOWER(departement) LIKE LOWER('%s')"
-                    . " OR LOWER(address_town) LIKE LOWER('%s')"
-                .")";
-        
-        $queryParts = array();
-        foreach($args as $arg) {
-            $arg = $req->protect_string_db($arg);
-            if(strlen($arg) == 0) continue;
-            # Full match of one given arg
-            $expr = $arg;
-            $conf = 100;
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
-
-            # Partial match (starts with)
-            $expr = $arg . "%"; ;
-            $conf = 34; # If found, partial match contains will also be so score is sum of both confidences, i.e. 67)
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
-          
-            # Partial match (contains)
-            $expr = "%" . $arg . "%";
-            $conf = 33;
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
-        }
-        $query .= implode (' UNION ALL ', $queryParts);
-        $query .= ") matches" 
-            . " GROUP BY result, contact_id, address, ca_id "
-            . " ORDER BY score DESC, result ASC";
-        
-        $stmt = $db->query($query, $arrayPDOtype);
-        $nb = $stmt->rowCount();
-        
-        $m = 30;
-        if ($nb >= $m) $l = $m;
-        else $l = $nb;
-        
-        $timeend=microtime(true);
-        $time = number_format(($timeend-$timestart), 3);
-
-        $found = false;
-        echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
-        for ($i=0; $i<$l; $i++) {
-            $res = $stmt->fetchObject();
-            $score = round($res->score / $num_args);
-            if ($score > 100) {
-                $score = 100;
-            }
-            if ($i%2==1) $color = 'LightYellow';
-            else $color = 'white';
-            echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>"
-                    . str_replace($args, $args_bold, $res->result) 
-                    ."<br/> "
-                    . str_replace($args, $args_bold, $res->address)
-                ."<i class='fa fa-book fa-1x'></i></li>";
-        }
-        if($nb == 0) echo "<li></li>";
-        echo "</ul>";
-        if($nb == 0) echo "<p align='left' style='background-color:LemonChiffon;' title=\"Aucun résultat trouvé, veuillez compléter votre recherche.\" >...</p>"; 
-        if ($nb > $m) echo "<p align='left' style='background-color:LemonChiffon;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...</p>";
-    }
 }
 
 //$_SESSION['is_multi_contact'] = '';

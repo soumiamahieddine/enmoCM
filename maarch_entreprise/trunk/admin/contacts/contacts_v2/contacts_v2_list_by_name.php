@@ -35,71 +35,150 @@ $contact = new contacts_v2();
 $db = new Database();
 
 $listArray = array();
-$query = "SELECT contact_type, society, lastname, firstname, contact_id, is_corporate_person, society_short FROM "
-	.$_SESSION['tablename']['contacts_v2']." WHERE ((lower(lastname) like lower(?) "
-	."or lower(firstname) like lower(?) "
-    ."or lower(society_short) like lower(?) "
-	."or lower(society) like lower(?))) ";
 
-$arrayPDO = array('%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%');
+$Input = $_REQUEST['what'];
+$boldInput = strtoupper($Input);
+$ucwordsInput = ucwords($Input);
+$Input = $Input . ' ' . $boldInput . ' ' . $ucwordsInput;
 
-if(isset($_GET['id']) &&  $_GET['id'] <> ''){
-    $query .= ' and contact_id <> ?';
-    $arrayPDO = array_merge($arrayPDO, array($_GET['id']));
+$args = explode(' ', $Input);
+$args[] = $Input;
+$args_bold = array();
+foreach ($args as $key => $value) {
+    $args_bold[$key] = '<b>'. $value . '</b>';
 }
+echo "<ul id=\"autocomplete_contacts_ul\">";
+//STEP 1 : search with lastname (physical contact)
+    $query = "SELECT contact_type, society, lastname, firstname, contact_id, is_corporate_person, society_short FROM contacts_v2 WHERE is_corporate_person = 'N' AND enabled = 'Y' AND enabled = 'Y' AND (LOWER(translate(lastname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))) ORDER BY lastname,firstname ASC";
+    $arrayPDO = array('%'.$_REQUEST['what'].'%');
+    $stmt = $db->query($query, $arrayPDO);
+    $nb_step1 = $stmt->rowCount();
+    
+    $m = 30;
+    if ($nb_step1 >= $m) $l = $m;
+    else $l = $nb_step1;
+    
+    $found = false;
 
-if(isset($_GET['my_contact']) &&  $_GET['my_contact'] == 'Y'){
-    $query .= " and user_id = ?";
-    $arrayPDO = array_merge($arrayPDO, array($_SESSION['user']['UserId']));
-}
+    for ($i=0; $i<$l; $i++) {
 
-$query .= " order by lastname";
-$stmt = $db->query($query, $arrayPDO);
+        $res = $stmt->fetchObject();
 
-if(isset($_GET['id']) &&  $_GET['id'] <> ''){
-    while($line = $stmt->fetchObject())
-    {
-        $listArray[$line->contact_id] = $contact->get_label_contact($line->contact_type, $_SESSION['tablename']['contact_types']) . ' : ';
-        if($line->is_corporate_person == 'N'){
-            $listArray[$line->contact_id] = functions::show_string($line->lastname)." ".functions::show_string($line->firstname);
-            if($line->society <> ''){
-                $listArray[$line->contact_id] .= ' ('.$line->society.')';
-            }
-        } else {
-            $listArray[$line->contact_id] .= $line->society;
-            if($line->society_short <> ''){
-                $listArray[$line->contact_id] .= ' ('.$line->society_short.')';
-            }
+        if(!empty($res->society)){
+            $arr_contact_info = array($res->firstname,$res->lastname,'('.$res->society.')');
+        }else{
+            $arr_contact_info = array($res->firstname,$res->lastname);
         }
-    }
-} else {
-    while ($line = $stmt->fetchObject()) {
-        if($line->is_corporate_person == 'N'){
-        	$listArray[$line->contact_id] = functions::show_string($line->lastname)." ".functions::show_string($line->firstname);
-            if($line->society <> ''){
-                $listArray[$line->contact_id] .= ' ('.$line->society.')';
-            }
-        } else {
-            $listArray[$line->contact_id] .= $line->society;
-            if($line->society_short <> ''){
-                $listArray[$line->contact_id] .= ' ('.$line->society_short.')';
-            }
-        }
-    }
-}
+        $contact_info = implode(' ', $arr_contact_info);
 
-echo "<ul>\n";
-$authViewList = 0;
-$flagAuthView = false;
-foreach ($listArray as $key => $what) {
-    if ($authViewList >= 10) {
-        $flagAuthView = true;
+        if ($i%2==1) $color = 'LightYellow';
+        else $color = 'white';
+
+        echo "<li id='".$res->contact_id."' style='font-size:12px;background-color:$color;'><i class='fa fa-user fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='personne physique'></i> "
+                . '<span style="display:table-cell;vertical-align:middle;">' . str_replace($args, $args_bold, $contact_info) . '</span>'
+            ."</li>";
     }
-    echo "<li id=".functions::xssafe($key).">".functions::xssafe($what)."</li>\n";
-    if($flagAuthView) {
-        echo "<li id=".functions::xssafe($key).">...</li>\n";
-        break;
+
+    //STEP 2 : search with society(physical contact)
+    $query = "SELECT contact_id,firstname,lastname,society FROM contacts_v2 WHERE is_corporate_person = 'N' AND enabled = 'Y' AND (LOWER(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) OR LOWER(translate(society_short,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))) ORDER BY society,lastname,firstname ASC";
+    $arrayPDO = array('%'.$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%');
+    $stmt = $db->query($query, $arrayPDO);
+    $nb_step3 = $stmt->rowCount();
+    
+    $m = 30;
+    if ($nb_step3 >= $m) $l = $m;
+    else $l = $nb_step3;
+    
+    $found = false;
+
+    for ($i=0; $i<$l; $i++) {
+
+        $res = $stmt->fetchObject();
+
+        if(!empty($res->society)){
+            $arr_contact_info = array($res->firstname,$res->lastname,'('.$res->society.')');
+        }else{
+            $arr_contact_info = array($res->firstname,$res->lastname);
+        }
+        $contact_info = implode(' ', $arr_contact_info);
+
+        if ($i%2==1) $color = 'LightYellow';
+        else $color = 'white';
+
+        echo "<li id='".$res->contact_id."' style='font-size:12px;background-color:$color;'><i class='fa fa-user fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='personne physique'></i> "
+                . '<span style="display:table-cell;vertical-align:middle;">' . str_replace($args, $args_bold, $contact_info) . '</span>'
+            ."</li>";
     }
-    $authViewList++;
-}
-echo "</ul>";
+    ///////////////////////
+
+    //STEP 3 : search with society(corporate contact)
+    $query = "SELECT contact_id, society FROM contacts_v2 WHERE is_corporate_person = 'Y' AND enabled = 'Y' AND (LOWER(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) OR LOWER(translate(society_short,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))) ORDER BY society ASC";
+    $arrayPDO = array('%'.$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%');
+    $stmt = $db->query($query, $arrayPDO);
+    $nb_step4 = $stmt->rowCount();
+    
+    $m = 30;
+    if ($nb_step4 >= $m) $l = $m;
+    else $l = $nb_step4;
+    
+    $found = false;
+
+    for ($i=0; $i<$l; $i++) {
+     
+        $res = $stmt->fetchObject();
+
+        if ($i%2==1) $color = 'LightYellow';
+        else $color = 'white';
+        echo "<li id='".$res->contact_id."' style='font-size:12px;background-color:$color;'><i class='fa fa-building fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='structure'></i> "
+                . '<span style="display:table-cell;vertical-align:middle;">'. str_replace($args, $args_bold, $res->society) .'</span>'
+            ."</li>";
+    }
+    ///////////////////////
+
+    //STEP 4 : search with other informations (physical contact)
+    $query = "SELECT contact_id,firstname,lastname,function FROM contacts_v2 WHERE is_corporate_person = 'N' AND enabled = 'Y'"
+            ." AND (LOWER(translate(firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))"
+            ." OR LOWER(translate(function,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')))  ORDER BY society,lastname,firstname ASC";
+    $arrayPDO = array('%'.$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%');
+    $stmt = $db->query($query, $arrayPDO);
+    $nb_step5 = $stmt->rowCount();
+    
+    $m = 30;
+    if ($nb_step5 >= $m) $l = $m;
+    else $l = $nb_step5;
+    
+    $found = false;
+
+    for ($i=0; $i<$l; $i++) {
+
+        $res = $stmt->fetchObject();
+
+        if(!empty($res->society)){
+            $arr_contact_info = array($res->firstname,$res->lastname,'('.$res->society.')');
+        }else{
+            $arr_contact_info = array($res->firstname,$res->lastname);
+        }
+        $contact_info = implode(' ', $arr_contact_info);
+
+        if ($i%2==1) $color = 'LightYellow';
+        else $color = 'white';
+        echo "<li id='".$res->contact_id."' style='font-size:12px;background-color:$color;' title=''><i class='fa fa-user fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='personne physique'></i> "
+                . '<span style="display:table-cell;vertical-align:middle;">' . str_replace($args, $args_bold, $contact_info) . '</span>'
+            ."</li>";
+    }
+
+
+    ///////////////////////
+
+    if($nb_step1 == 0 && $nb_step2 == 0 && $nb_step3 == 0 && $nb_step4 == 0 && $nb_step5 == 0 && $nb_step6 == 0) echo "<li></li>";
+    echo "</ul>";
+    if($nb_step1 == 0 && $nb_step2 == 0 && $nb_step3 == 0 && $nb_step4 == 0 && $nb_step5 == 0 && $nb_step6 == 0){
+        $noResultContacts = true;
+    }
+
+    $nb_total = $nb_step1+$nb_step2+$nb_step3+$nb_step4+$nb_step5+$nb_step6;
+    if ($nb_step1 > $m || $nb_step2 > $m || $nb_step3 > $m || $nb_step4 > $m || $nb_step5 > $m || $nb_step6 > $m) echo "<p align='right' style='background-color:LemonChiffon;font-size:9px;font-style:italic;padding-right:5px;padding-bottom:0px;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...".$nb_total." résulats au total</p>";
+
+    if($noResultContacts){
+        echo "<p align='left' style='background-color:LemonChiffon;text-align:center;color:grey;font-style:italic;padding-bottom:0px;' title=\"Aucun résultat trouvé, veuillez compléter votre recherche.\" >Aucun résultat trouvé.</p>";
+    }
