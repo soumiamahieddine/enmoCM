@@ -264,9 +264,15 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
      
         $res = $stmt->fetchObject();
 
-        $count_trust = strlen($res->trust_result);
-        $count_input = strlen($_REQUEST['Input']);
-        $confidence_index = round(($count_input*100)/$count_trust);
+        if($res->trust_result){
+            $count_trust = strlen($res->trust_result);
+            $count_input = strlen($_REQUEST['Input']);
+
+            $confidence_index = round(($count_input*100)/$count_trust);
+        }else{
+            $confidence_index = '??';
+        }
+        
 
         $address = '';
         $arr_address = array($res->address_num,$res->address_street,$res->address_postal_code,$res->address_town);
