@@ -159,6 +159,13 @@ if (!empty($order_field) && !empty($order)) {
 
 //Request
 $tab=$request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
+
+$_SESSION['current_basket']['last_query'] = array();
+$_SESSION['current_basket']['last_query']['select'] = $select;
+$_SESSION['current_basket']['last_query']['where'] = $where;
+$_SESSION['current_basket']['last_query']['arrayPDO'] = $arrayPDO;
+$_SESSION['current_basket']['last_query']['orderstr'] = $orderstr;
+
 // $request->show(); exit;
 //Templates
 $defaultTemplate = 'documents_list_with_attachments';
