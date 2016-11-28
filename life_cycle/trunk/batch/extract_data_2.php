@@ -105,6 +105,7 @@ try {
             "Priorité", 
             "Nombre de réponses", 
             "Numéro chrono réponse", //25 
+            "Viseurs", 
             "Signataire", 
             "Date de signature", 
             "Date de départ", 
@@ -412,10 +413,23 @@ try {
         $arrayAttachments = array();
         $signed_response = $stmt2->fetchObject();
 
+
+        #### Viseur Name ####
+        $stmt2 = Bt_doQuery(
+            $GLOBALS['db'], 
+            "SELECT lastname,firstname,to_char(l.process_date,'DD/MM/YYYY à HH12:MI') as process_date from listinstance l RIGHT JOIN users u ON l.item_id = u.user_id WHERE res_id = ? and item_mode = 'visa' ORDER BY sequence ASC", array($selectedFile->res_id)
+        );
+        $visa_list = array();
+        while ($visa_list = $stmt2->fetchObject()) {
+            $visa_list[] = $visa_list->lastname . ' ' . $visa_list->firstname . ' (date de visa :'.$visa_list->process_date . ')';
+        }
+
+        $visa_list = implode(' → ', $visa_list);
+
         #### Signataire Name ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
-            "SELECT u.lastname || ' ' || u.firstname as user, l.process_date FROM users u, listinstance l WHERE user_id in (SELECT item_id FROM listinstance WHERE item_mode = 'sign' and res_id = ?) and l.listinstance_id in (SELECT listinstance_id FROM listinstance WHERE item_mode = 'sign' and res_id = ?))", array($selectedFile->res_id,$selectedFile->res_id)
+            "SELECT u.lastname || ' ' || u.firstname as user, l.process_date FROM users u, listinstance l WHERE user_id in (SELECT item_id FROM listinstance WHERE item_mode = 'sign' and res_id = ?) and l.listinstance_id in (SELECT listinstance_id FROM listinstance WHERE item_mode = 'sign' and res_id = ?)", array($selectedFile->res_id,$selectedFile->res_id)
         );
         $signataire = $stmt2->fetchObject();
 
@@ -525,6 +539,7 @@ try {
                 $GLOBALS['mail_priorities'][$selectedFile->priority],
                 $NbResponseProject, 
                 $arrayAttachments[0]['identifier'], //25 
+                $visa_list, // viseurs
                 $signataire->user, 
                 $signataire->process_date, 
                 format_date_db(str_replace("/", "-",$selectedFile->doc_custom_d1), "", $GLOBALS['databasetype']), // date de départ
