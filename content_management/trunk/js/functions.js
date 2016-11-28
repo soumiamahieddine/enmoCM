@@ -210,7 +210,21 @@ function checkEditingDoc(userId) {
             lck_name : lck_name},
             onSuccess: function(answer){
             eval("response = "+answer.responseText);
-            if(response.status == 0) {
+            
+            //for transmission
+            var i = 1;
+            var isLaunched = true;
+            while(true){
+                if($('paraEdit'+i)){
+                    if($('paraEdit'+i).style.display != 'none'){
+                        isLaunched = false;
+                    }
+                }else{
+                    break;
+                }
+                i++;
+            }
+            if(response.status == 0 && isLaunched == true) {
                 console.log('no lck found!');
                 target.removeAttribute('disabled');
                 target.style.opacity='1';
