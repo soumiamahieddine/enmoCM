@@ -2787,8 +2787,13 @@ function f_filterResults(n_win, n_docel, n_body) {
 
 function loadDocList(id)
 {
-    new Effect.toggle('docList_'+id, 'appear' , {delay:0.2});
+    //new Effect.toggle('docList_'+id, 'appear' , {delay:0.2});
 
+    if($('docList_'+id).style.display == 'none'){
+        $('docList_'+id).setStyle({display: 'table'});
+    }else{
+        $('docList_'+id).setStyle({display: 'none'});
+    }
     var path_manage_script = 'index.php?admin=contacts&page=ajaxLoadDocList&display=true';
 
     new Ajax.Request(path_manage_script,
@@ -2920,6 +2925,7 @@ function loadList(path, inDiv, modeReturn, init) {
                 
         },                        
         onSuccess: function(answer){
+
                 if (modeReturn !== false) {
                     eval("response = "+answer.responseText);
                     if(response.status == 0){                      
@@ -2930,7 +2936,8 @@ function loadList(path, inDiv, modeReturn, init) {
                             document.getElementById("loading").style.display='none';
                         }
                     }else {
-                        window.top.$('main_error').innerHTML = response.error;
+                        window.top.$('divList').innerHTML = response.error;
+                        window.location.href = 'index.php';
                     } 
                 } else {
                     $(div).innerHTML = answer.responseText;
@@ -3249,16 +3256,23 @@ function linkDuplicate(id_form) {
     console.log(id_form);
     elem = document.forms[id_form];
     var slave = [];
+    var address_del = [];
     var master = '';
+    var master_address = '';
     for(var i=0; i < elem.length; i++)
     {
         if(document.forms[id_form][i].type == 'checkbox' && document.forms[id_form][i].checked == true){
-            slave.push(document.forms[id_form][i].value);
-            console.log(document.forms[id_form][i].value);
+            if (document.forms[id_form][i].name == 'delete_address') {
+                address_del.push(document.forms[id_form][i].value);
+                console.log(document.forms[id_form][i].value);
+            }else{
+                slave.push(document.forms[id_form][i].value);
+            }
         }
         if(document.forms[id_form][i].type == 'radio' && document.forms[id_form][i].checked == true){
             master = document.forms[id_form][i].value;
-            console.log(document.forms[id_form][i].value);
+            master_address = document.getElementById('master_address_fusion_id_'+document.forms[id_form][i].value).value
+            //console.log(document.forms[id_form][i].value);
         }
     }
     var index = slave.indexOf(master);
@@ -3274,14 +3288,17 @@ function linkDuplicate(id_form) {
         return false;
     }
     console.log(slave);
-    if(confirm('Vous etes sur le point de substituer les contacts suivants : '+slave.join()+'\navec le contact : '+master)){
+    if(confirm('Vous etes sur le point de substituer les contacts suivants : '+slave.join()+'\navec le contact : '+master+' (Les adresses suivantes seront effacées : '+address_del.join())){
         var path_manage_script = 'index.php?admin=contacts&page=fusionContact&display=true';
         new Ajax.Request(path_manage_script,
         {
             method:'post',
-            parameters: { 
+            parameters: {
+                master_address_id : master_address,
                 slave_contact_id : slave.join(),
-                master_contact_id : master},
+                del_address_id : address_del.join(),
+                master_contact_id : master
+                },
             onSuccess: function(answer){
                 eval("response = "+answer.responseText);
                 if (response.status == 0) {
