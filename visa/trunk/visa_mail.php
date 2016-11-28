@@ -52,28 +52,6 @@ function writeLogIndex($EventInfo)
     fclose($logFileOpened);
 }
 
-
-function check_category($coll_id, $res_id)
-{
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-    $sec = new security();
-    $view = $sec->retrieve_view_from_coll_id($coll_id);
-
-    $db = new Database();
-    $stmt = $db->query("SELECT category_id FROM ".$view." WHERE res_id = ?", array($res_id));
-    $res = $stmt->fetchObject();
-
-    if(!isset($res->category_id))
-    {
-        $ind_coll = $sec->get_ind_collection($coll_id);
-        $table_ext = $_SESSION['collections'][$ind_coll]['extensions'][0];
-        $db->query("INSERT INTO ".$table_ext." (res_id, category_id) VALUES (?, ?)",
-            array($res_id, $_SESSION['coll_categories']['letterbox_coll']['default_category']));
-    }
-}
-
-
-
 function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
 {
     if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"]))
@@ -129,13 +107,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $type = new types();
     $business = new business_app_tools();
 	$visa = new visa();
-	/*check_category($coll_id, $res_id);
-    $data = get_general_data($coll_id, $res_id, 'minimal');*/
-/*
-    echo '<pre>';
-    print_r($data);
-    echo '</pre>';exit;
-*/
+
 	$db = new Database();
 	$view = $sec->retrieve_view_from_coll_id($coll_id);
 	$stmt = $db->query("select alt_identifier, status from " 
@@ -169,13 +141,30 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	//$frm_str .= '<pre>'.print_r($tab_docs,true).'</pre>';
 	//$selectedCat = '';
 	$list_docs = '';
-	foreach($tab_docs as $num=>$res_id_doc){
+	$data = array();
+	foreach($tab_docs as $num=>$res_id_doc) {
 		
-		$stmt = $db->query("select alt_identifier, status from " 
-		. $view 
-		. " where res_id = ?" , array($res_id_doc));
+		$stmt = $db->query(
+			"select alt_identifier, status, category_id, priority, destination, "
+			. " dest_contact_id, exp_contact_id, dest_user_id, exp_user_id, address_id, "
+			. " subject, admission_date, process_limit_date"
+			. " from " . $view 
+			. " where res_id = ?" , array($res_id_doc)
+		);
 		$resChrono_doc = $stmt->fetchObject();
 		$chrono_number_doc = $resChrono_doc->alt_identifier;
+		$cat_id = $resChrono_doc->category_id;
+		$doc_status = $resChrono_doc->status;
+		$doc_priority = $resChrono_doc->priority;
+		$doc_destination = $resChrono_doc->destination;
+		$doc_dest_contact_id = $resChrono_doc->dest_contact_id;
+		$doc_exp_contact_id = $resChrono_doc->exp_contact_id;
+		$doc_dest_user_id = $resChrono_doc->dest_user_id;
+		$doc_exp_user_id = $resChrono_doc->exp_user_id;
+		$doc_address_id = $resChrono_doc->address_id;
+		$doc_subject = $resChrono_doc->subject;
+		$doc_admission_date = functions::format_date_db($resChrono_doc->admission_date);
+		$doc_process_limit_date = functions::format_date_db($resChrono_doc->process_limit_date);
 		
 		$allAnsSigned = true;
 		$stmt2 = $db->query("SELECT status from res_view_attachments where (attachment_type='response_project' OR attachment_type='outgoing_mail') and res_id_master = ?", array($res_id_doc));
@@ -198,13 +187,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$id_to_display = _ID_TO_DISPLAY;
 
 		$frm_str .= '<div '.$classLine.' onmouseover="this.style.cursor=\'pointer\';" onclick="loadNewId(\'index.php?display=true&module=visa&page=update_visaPage\','.$res_id_doc.',\''.$coll_id.'\',\''.$id_to_display.'\');" id="list_doc_'.$res_id_doc.'">';
-		check_category($coll_id, $res_id_doc);
-		$data = get_general_data($coll_id, $res_id_doc, 'minimal');
+		//check_category($coll_id, $res_id_doc);
+		//$data = get_general_data($coll_id, $res_id_doc, 'minimal', array(), $cat_id);
 		
 		if ($res_id_doc == $res_id){
-			$selectedCat = $data['category_id']['value'];
+			$selectedCat = $cat_id;
 			$curNumDoc = $num;
-			$curdest = $data['destination'];
+			$curdest = $doc_destination;
 		}
 		
 		$frm_str .= '<ul>';
@@ -213,7 +202,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
 		//priority
 		$color='';
-		switch ($data['priority']) {
+		switch ($doc_priority) {
 		    case 0:
 		        $color = 'color:red;';
 		        break;
@@ -226,10 +215,85 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	        default:
 		        $color = 'color:rgb(0, 157, 197);';
 		}
-		$frm_str .= '</b><i class="fa fa-circle" aria-hidden="true" style="float:right;'.$color.'" title="'.$_SESSION['mail_priorities'][$data['priority']].'"></i></li>';
+		$frm_str .= '</b><i class="fa fa-circle" aria-hidden="true" style="float:right;'.$color.'" title="'.$_SESSION['mail_priorities'][$doc_priority].'"></i></li>';
 		
 		$frm_str .= '<li style="clear:both;">';
 		$frm_str .= '<i class="fa fa-user" title="Contact"></i> ';
+
+		//BEGIN CASE OF CONTACT
+		$data = array();
+
+		if ($doc_dest_user_id <> '' || $doc_exp_user_id <> '') {
+		    if ($doc_dest_user_id <> '') {
+		        $contactIdentifier = $doc_dest_user_id;
+		    } elseif ($doc_exp_user_id <> '') {
+		        $contactIdentifier = $doc_exp_user_id;
+		    }
+		    $data['type_contact'] = 'internal';
+		    $stmt2 = $db->query(
+		        'SELECT lastname, firstname FROM ' 
+		            . $_SESSION['tablename']['users'] 
+		            . " WHERE user_id = ?", 
+		        array($contactIdentifier)
+		    );
+		    $res = $stmt2->fetchObject();
+		    $data['contact'] = $res->lastname . ' ' . $res->firstname;
+		    $data['contactId'] = $line->{$contactIdentifier};
+
+		} elseif ($doc_dest_contact_id <> '' || $doc_exp_contact_id <> '') {
+
+		    if ($doc_dest_contact_id <> '') {
+		        $contactIdentifier = $doc_dest_contact_id;
+		    } elseif ($doc_exp_contact_id <> '') {
+		        $contactIdentifier = $doc_exp_contact_id;
+		    }
+
+		    $data['type_contact'] = 'external';
+
+		    // $stmt2 = $db->query("SELECT address_id FROM mlb_coll_ext WHERE res_id = ?", array($res_id));
+		    // $resAddress = $stmt2->fetchObject();
+		    $addressId = $doc_address_id;
+
+		    $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_postal_code, address_town, lastname, firstname FROM view_contacts WHERE contact_id = ? and ca_id = ?', array($contactIdentifier, $addressId));
+		    $res = $stmt2->fetchObject();
+		    
+		    if ($res->is_corporate_person == 'Y') {
+		        $data['contact'] = $res->society . ' ' ;
+		        if (!empty ($res->society_short)) {
+		            $data['contact'] .= '('.$res->society_short.') ';
+		        }
+		    } else {
+		        $data['contact'] = $res->contact_lastname . ' ' . $res->contact_firstname . ' ';
+		        if (!empty ($res->society)) {
+		            $data['contact'] .= '(' .$res->society . ') ';
+		        }                        
+		    }
+
+		    if ($res->is_private == 'Y') {
+		        $data['contact'] .= '('._CONFIDENTIAL_ADDRESS.')';
+		    } else {
+		        require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
+		        $contact = new contacts_v2();
+		        $data['contact'] .= '- ' . $contact->get_label_contact($res->contact_purpose_id, $_SESSION['tablename']['contact_purposes']).' : ';
+		        if (!empty($res->lastname) || !empty($res->firstname)) {
+		            $data['contact'] .= $res->lastname . ' ' . $res->firstname . ' ';
+		        }
+		        if (!empty($res->address_num) || !empty($res->address_street) || !empty($res->address_town) || !empty($res->address_postal_code)) {
+		            $data['contact'] .= ', '.$res->address_num .' ' . $res->address_street .' ' . $res->address_postal_code .' ' . strtoupper($res->address_town);
+		        }         
+		    }
+		    $data['contactId'] = $contactIdentifier;
+		    $data['addressId'] = $addressId;
+		} 
+		//TODO CASE OF MULTICONTACTS
+		// else if ($arr[$i] == 'is_multicontacts') {
+		//     if (!empty ($line->{$arr[$i]})) {
+		//         $data['type_contact'] = 'multi_external';
+		//     }
+		// }
+		//echo $data['contact'];exit;
+		//END CASE OF CONTACT
+
 		if(isset($data['contact']) && !empty($data['contact']))
         {
 			if (strlen($data['contact']) > 25) $contact = substr($data['contact'],0,25).'...';
@@ -242,19 +306,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		
 		$frm_str .= '<li>';
 		$frm_str .= '<i class="fa fa-file" title="Objet"></i> ';
-		if(isset($data['subject']) && !empty($data['subject']))
+		if(isset($doc_subject) && !empty($doc_subject))
         {
-			if (strlen($data['subject']) > 80) $subject = substr($data['subject'],0,80).'...';
-			else $subject = $data['subject'];
+			if (strlen($doc_subject) > 80) $subject = substr($doc_subject,0,80).'...';
+			else $subject = $doc_subject;
 			$frm_str .= $subject;
 		}
 		$frm_str .= '</li>';
 		
 		$frm_str .= '<li>';
 		$frm_str .= '<i class="fa fa-calendar " title="Date d\'arrivée"></i> ';
-		$frm_str .= $data['admission_date'];
+		$frm_str .= $doc_admission_date;
 		$frm_str .= ' <i class="fa fa-bell" title="Date limite"></i> ';
-		$frm_str .= $data['process_limit_date'];
+		$frm_str .= $doc_process_limit_date;
 		$frm_str .= '</li>';
 		
 		$frm_str .= '</ul>';
@@ -286,6 +350,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</div>';
 	
 	$frm_str .= '<div id="visa_left">';
+
+	//TODO BEGIN OF CLEAN
 	$frm_str .= '<dl id="tabricatorLeft" >';
 	
 	//Onglet document
@@ -309,6 +375,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	$frm_str .= '<div class="error" id="divError" name="divError"></div>';
 	$frm_str .= '<div style="text-align:center;">';
+	//CLEAN
 	$frm_str .= $visa->getList($res_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT', true);
                 
 	$frm_str .= '</div><br>';
@@ -501,7 +568,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '<input type="hidden" name="table" id="table" value="'.$table.'" />';
 		$frm_str .= '<input type="hidden" name="coll_id" id="coll_id" value="'.$coll_id.'" />';
 		$frm_str .= '<input type="hidden" name="module" id="module" value="'.$module.'" />';
-		$frm_str .= '<input type="hidden" name="category_id" id="category_id" value="'.$data['category_id']['value'].'" />';
+		$frm_str .= '<input type="hidden" name="category_id" id="category_id" value="'.$cat_id.'" />';
 		$frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
 	
 	

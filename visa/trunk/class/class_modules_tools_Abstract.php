@@ -100,14 +100,39 @@ abstract class visa_Abstract extends Database
                         "exp_user_id", "count_attachment", "alt_identifier","is_multicontacts", "locker_user_id", "locker_time");
 						
 		$where_tab = array();
+
+		// $_SESSION['current_basket']['last_query']['select'] = $select;
+		// $_SESSION['current_basket']['last_query']['where'] = $where;
+		// $_SESSION['current_basket']['last_query']['arrayPDO'] = $arrayPDO;
+		// $_SESSION['current_basket']['last_query']['orderstr'] = $orderstr;
+		// $_SESSION['current_basket']['last_query']['limit'] = $_SESSION['config']['databasesearchlimit'];
+
 		//From basket
-		if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
+		if (!empty($_SESSION['current_basket']['last_query']['where'])) {
+			$where_tab[] = stripslashes($_SESSION['current_basket']['last_query']['where']); //Basket clause
+		} elseif (!empty($_SESSION['current_basket']['clause'])) {
+			$where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
+		}
+
 		//Order
 		$orderstr = "order by creation_date desc";
-		if (isset($_SESSION['last_order_basket'])) $orderstr = $_SESSION['last_order_basket'];
+		if (!empty($_SESSION['current_basket']['last_query']['orderstr'])) {
+			$orderstr = $_SESSION['current_basket']['last_query']['orderstr'];
+		} elseif (isset($_SESSION['last_order_basket'])) {
+			$orderstr = $_SESSION['last_order_basket'];
+		}
+		
 		//Request
 		$where = implode(' and ', $where_tab);
-		$tab=$request->PDOselect($select, $where, array(), $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
+		$tab=$request->PDOselect(
+			$select, 
+			$where, 
+			array(), 
+			$orderstr, 
+			$_SESSION['config']['databasetype'], 
+			$_SESSION['config']['databasesearchlimit'], 
+			false, "", "", "", false, false, 'distinct'
+		);
 			
 		$tab_docs = array();
 		foreach($tab as $doc){
