@@ -126,7 +126,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $res_id = $values[0];
 	
 	// Ouverture de la modal
-
+    $frm_str = '';
 	$docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
     $docLockerPath = $_SESSION['config']['businessappurl'] . '/actions/docLocker.php';
     if (is_file($docLockerCustomPath))
@@ -145,8 +145,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $docLockerscriptError .= '</script>';
         return $docLockerscriptError;
     }
+    // DocLocker constantly 
+    $frm_str .= '<script>';
+    $frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';
+    $frm_str .= '</script>';
+
+    $docLocker->lock();
 	
-    $frm_str = '';
     require_once('core/class/class_security.php');
     require_once('modules/basket/class/class_modules_tools.php');
     require_once('core/class/class_request.php');
@@ -241,7 +246,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frameContacts = substr($frameContacts, 0, -2);
 	$frameContacts .= "}";
 	
-    $frm_str = '<h2 id="action_title">'
+    $frm_str .= '<h2 id="action_title">'
             . _PROCESS . _LETTER_NUM . ' ' . $res_id;
                 $frm_str .= '</h2>';
     $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '
@@ -1343,11 +1348,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	if ($core->is_module_loaded('tags')){
         $frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
     }
-	// DocLocker constantly	
-	$frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';
-        $frm_str .= '$(\'entity\').style.visibility=\'hidden\';';
-        $frm_str .= '$(\'category\').style.visibility=\'hidden\';';
-        $frm_str .= '$(\'baskets\').style.visibility=\'hidden\';';
+    $frm_str .= '$(\'entity\').style.visibility=\'hidden\';';
+    $frm_str .= '$(\'category\').style.visibility=\'hidden\';';
+    $frm_str .= '$(\'baskets\').style.visibility=\'hidden\';';
     $frm_str .= '</script>';
 
     //}

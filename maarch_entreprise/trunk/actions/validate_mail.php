@@ -140,8 +140,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $res_id = $values[0];
     $_SESSION['doc_id'] = $res_id;
 
-		// Ouverture de la modal
-
+	// Ouverture de la modal
+    $frm_str = '';
 	$docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
     $docLockerPath = $_SESSION['config']['businessappurl'] . '/actions/docLocker.php';
     if (is_file($docLockerCustomPath))
@@ -160,7 +160,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         return $docLockerscriptError;
     }
 
-    $frm_str = '';
+    // DocLocker constantly
+    $frm_str .= '<script>';
+    $frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';
+    $frm_str .= '</script>';
+
+    $docLocker->lock();
+
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
     require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
     require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
@@ -1418,9 +1424,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
         /*** Extra javascript ***/
         $frm_str .= '<script type="text/javascript">displayFatherFolder(\'folder\');resize_frame_process("modal_'.$id_action.'", "viewframevalid", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);';
-
-    	// DocLocker constantly	
-    	$frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';
             
         $frm_str .='init_validation(\''.$_SESSION['config']['businessappurl'] 
             . 'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \''
@@ -1493,10 +1496,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '$$(\'select\').each(function(element) { new Chosen(element,{width: "226px", disable_search_threshold: 10,search_contains: true}); });';
         $frm_str .='</script>';
         $frm_str .= '<style>#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}</style>';
-
-
-	// À la fin de la methode d’ouverture de la modale
-	$docLocker->lock();
 	
     return addslashes($frm_str);
 }
