@@ -3,6 +3,22 @@
 
 $res_id = $_REQUEST['res_id'];
 $coll_id = $_REQUEST['coll_id'];
+// Ouverture de la modal
+	$frm_str = '';
+	$docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
+    $docLockerPath = $_SESSION['config']['businessappurl'] . '/actions/docLocker.php';
+    if (is_file($docLockerCustomPath))
+        require_once $docLockerCustomPath;
+    else if (is_file($docLockerPath))
+        require_once $docLockerPath;
+    else
+        exit("can't find docLocker.php");
+
+    $docLocker = new docLocker($res_id);
+    if (!$docLocker->canOpen()) {
+        echo "{status : 0,error:'"._DOC_LOCKER_RES_ID."".$res_id.""._DOC_LOCKER_USER." ".$_SESSION['userLock']."'}";
+        exit();
+    }
 
 require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 			. "class" . DIRECTORY_SEPARATOR

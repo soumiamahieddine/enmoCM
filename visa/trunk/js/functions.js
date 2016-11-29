@@ -1,3 +1,5 @@
+var docLockInterval;
+
 function manageFrame(button) {
 
 	var firstDiv = $("visa_listDoc");
@@ -564,29 +566,7 @@ function launchTabri(){
 
 
 function loadNewId(path_update,newId, collId, idToDisplay){
-	/* Modification dans la liste de gauche */
-	var zone_old = 'list_doc_'+$('cur_resId').value;
-	var zone_new = 'list_doc_'+newId;
-	//console.log(zone_new);
-	
-	$(zone_old).className = 'unselectedId';
-	$(zone_new).className = 'selectedId';
-	
-	$('cur_resId').value=newId;
 
-	if(idToDisplay == 'chrono_number'){
-		$('numIdDocPage').innerHTML=$('chrn_id_'+newId).innerHTML;
-	}else{
-		$('numIdDocPage').innerHTML=newId;
-	}
-
-	//console.log('display: '+idToDisplay);
-	
-	/****************************************/
-	
-	
-	
-	//Modification des autres zones
 	new Ajax.Request(path_update,
 	{
 			method:'post',
@@ -599,6 +579,30 @@ function loadNewId(path_update,newId, collId, idToDisplay){
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
 				//console.log(response);
+				if (response.status == 0){ //document verouillé
+					alert(response.error);
+				}else{
+					/* Modification dans la liste de gauche */
+					var zone_old = 'list_doc_'+$('cur_resId').value;
+					var zone_new = 'list_doc_'+newId;
+					//console.log(zone_new);
+					clearInterval(docLockInterval);
+					//unlock old doc
+					new Ajax.Request('index.php?display=true&dir=actions&page=docLocker',{ method:'post', parameters: {'AJAX_CALL': true, 'unlock': true, 'res_id': $('cur_resId').value}, onSuccess: function(answer){/*var cur_url=window.location.href;*/ if (cur_url.indexOf('&directLinkToAction') != -1) cur_url=cur_url.replace('&directLinkToAction','');window.location.href=cur_url;} });
+					//lock the new doc
+					docLockInterval = setInterval("new Ajax.Request('index.php?display=true&dir=actions&page=docLocker',{ method:'post', parameters: {'AJAX_CALL': true, 'lock': true, 'res_id': "+ newId+" } });", 5000);
+					$(zone_old).className = 'unselectedId';
+					$(zone_new).className = 'selectedId';
+					
+					$('cur_resId').value=newId;
+
+					if(idToDisplay == 'chrono_number'){
+						$('numIdDocPage').innerHTML=$('chrn_id_'+newId).innerHTML;
+					}else{
+						$('numIdDocPage').innerHTML=newId;
+					}
+					//console.log('display: '+idToDisplay);
+				}
 				if (response.status == 1){ //page de visa
 					$('tabricatorLeft').innerHTML = response.left_html;
 					$('tabricatorRight').innerHTML = response.right_html;

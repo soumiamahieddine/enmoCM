@@ -74,8 +74,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $res_id = $values[0];
     $_SESSION['doc_id'] = $res_id;
 
-		// Ouverture de la modal
-
+	// Ouverture de la modal
+	$frm_str = '';
 	$docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
     $docLockerPath = $_SESSION['config']['businessappurl'] . '/actions/docLocker.php';
     if (is_file($docLockerCustomPath))
@@ -94,7 +94,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         return $docLockerscriptError;
     }
 
-    $frm_str = '';
+    // DocLocker constantly 
+    $frm_str .= '<script>';
+    $frm_str .= 'docLockInterval = setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 5000);';
+    $frm_str .= '</script>';
+
+    $docLocker->lock();
+
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
     require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
     require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
@@ -128,7 +134,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $frm_str .= '</h2>';
     $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '.
-             'onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();" class="fa fa-times-circle fa-2x closeModale" title="'._CLOSE.'"/>';
+             'onclick="new Ajax.Request(\'' 
+            . $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '}, onSuccess: function(answer){var cur_url=window.location.href; if (cur_url.indexOf(\'&directLinkToAction\') != -1) cur_url=cur_url.replace(\'&directLinkToAction\',\'\');window.location.href=cur_url;} });javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();" class="fa fa-times-circle fa-2x closeModale" title="'._CLOSE.'"/>';
     $frm_str .= '</i>';
 	$frm_str .= '<div>';
 	$frm_str .= '<i id="firstFrame" class="fa fa-arrow-circle-o-left fa-2x" style="margin-left: 13.8%;cursor: pointer" onclick="manageFrame(this)"></i>';
