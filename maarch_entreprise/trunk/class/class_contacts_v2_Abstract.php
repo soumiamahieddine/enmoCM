@@ -570,12 +570,9 @@ abstract class contacts_v2_Abstract extends Database
                     </tr>
                     <tr id="lastname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ functions::xecho($display_value);}?>">
                         <td><label for="lastname"><?php echo _LASTNAME;?> : </label></td>
-                        <td class="indexing_field"><input name="lastname" type="text" onfocus="$('rule_lastname').style.display='table-row'" onblur="$('rule_lastname').style.display='none';" onkeyup="this.value=this.value.toUpperCase()" id="lastname" value="<?php if(isset($_SESSION['m_admin']['contact']['LASTNAME'])){ functions::xecho($func->show_str($_SESSION['m_admin']['contact']['LASTNAME']));} ?>"/></td>
+                        <td class="indexing_field"><input name="lastname" type="text" onkeyup="this.value=this.value.toUpperCase()" id="lastname" value="<?php if(isset($_SESSION['m_admin']['contact']['LASTNAME'])){ functions::xecho($func->show_str($_SESSION['m_admin']['contact']['LASTNAME']));} ?>"/></td>
                         <td><span id="lastname_mandatory" class="red_asterisk" style="visibility:none;"><i class="fa fa-star"></i></span></td>
                         <td>&nbsp;</td>
-                        <tr style="display:none;" id="rule_lastname">
-                            <td colspan="2" align="right"><i><?php echo _WRITE_IN_UPPER;?></i></td>
-                        </tr>
                     </tr>
                     <tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ functions::xecho($display_value);}?>">
                         <td><label for="firstname"><?php echo _FIRSTNAME;?> : </label></td>
@@ -598,7 +595,7 @@ abstract class contacts_v2_Abstract extends Database
                         <em style="display:none">(<?php echo _YOU_SHOULD_ADD_AN_ADDRESS;?>)</em>
                     <p>
 
-                        <input class="button" type="submit" name="Submit" value="<?php echo _VALIDATE;?>" />
+                        <input class="button" type="submit" name="Submit" onclick='$("frmcontact").submit();this.disabled="disabled";this.style.opacity="0.5";' value="<?php echo _VALIDATE;?>" />
 
                     <?php
                     $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2';
@@ -1265,7 +1262,7 @@ abstract class contacts_v2_Abstract extends Database
                         <tr>
                             <td><label for="town"><?php echo _TOWN;?> : </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="town" type="text" id="town" onfocus="$('rule_town').style.display='table-row'" onblur="$('rule_town').style.display='none';"value="<?php if(isset($_SESSION['m_admin']['address']['ADD_TOWN'])){functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_TOWN'])); }?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="town" type="text" id="town" onkeyup="this.value=this.value.toUpperCase()" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_TOWN'])){functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_TOWN'])); }?>"/>
                                 <span class="blue_asterisk" style="visibility:visible;">*</span>
                             </td>
                             <div id="show_postal_code" class="autocomplete">
@@ -1273,10 +1270,6 @@ abstract class contacts_v2_Abstract extends Database
                                     initList_hidden_input3('town', 'show_postal_code', '<?php $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=ajaxShowCodePostal&id=<?php functions::xecho($id);?>', 'what', '2', 'cp', 'town');
                                 </script>
                             </div>
-                        </tr>
-                        <tr style="display:none;" id="rule_town">
-                            <td>&nbsp;</td>
-                            <td align="left"><i><?php echo _WRITE_IN_UPPER;?></i></td>
                         </tr>
                         <tr>
                             <td><label for="country"><?php echo _COUNTRY;?> : </label></td>
@@ -1358,7 +1351,7 @@ abstract class contacts_v2_Abstract extends Database
                         <input name="mode" type="hidden" value="<?php echo $mode;?>" />
                     <p>
 
-                        <input class="button" type="submit" name="Submit" value="<?php echo _VALIDATE;?>" />
+                        <input class="button" type="submit" name="Submit" onclick='$("frmcontact").submit();this.disabled="disabled";this.style.opacity="0.5";' value="<?php echo _VALIDATE;?>" />
                         <?php
 
                     $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_up';
