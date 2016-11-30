@@ -181,6 +181,11 @@
         <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
+        <name>EML</name>
+        <mime>text/x-pascal</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>
+    <FORMAT>
         <name>MSG</name>
         <mime>application/CDFV2-corrupt</mime>
         <index_frame_show>true</index_frame_show>
