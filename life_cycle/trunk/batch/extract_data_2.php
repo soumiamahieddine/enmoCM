@@ -419,12 +419,16 @@ try {
             $GLOBALS['db'], 
             "SELECT lastname,firstname,to_char(l.process_date,'DD/MM/YYYY à HH12:MI') as process_date from listinstance l RIGHT JOIN users u ON l.item_id = u.user_id WHERE res_id = ? and item_mode = 'visa' ORDER BY sequence ASC", array($selectedFile->res_id)
         );
-        $visa_list = array();
+        $visa_list_arr = array();
         while ($visa_list = $stmt2->fetchObject()) {
-            $visa_list[] = $visa_list->lastname . ' ' . $visa_list->firstname . ' (date de visa :'.$visa_list->process_date . ')';
+            $visa_list_arr[] = $visa_list->lastname . ' ' . $visa_list->firstname . ' (date de visa :'.$visa_list->process_date . ')';
         }
-
-        $visa_list = implode(' → ', $visa_list);
+        if($stmt2->rowCount()<>0){
+            $visa_list_arr = implode(' → ', $visa_list_arr);
+        }else{
+            $visa_list_arr = '';
+        }
+        
 
         #### Signataire Name ####
         $stmt2 = Bt_doQuery(
@@ -539,7 +543,7 @@ try {
                 $GLOBALS['mail_priorities'][$selectedFile->priority],
                 $NbResponseProject, 
                 $arrayAttachments[0]['identifier'], //25 
-                $visa_list, // viseurs
+                $visa_list_arr, // viseurs
                 $signataire->user, 
                 $signataire->process_date, 
                 format_date_db(str_replace("/", "-",$selectedFile->doc_custom_d1), "", $GLOBALS['databasetype']), // date de départ
