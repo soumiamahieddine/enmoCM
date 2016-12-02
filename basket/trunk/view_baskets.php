@@ -64,7 +64,10 @@ $_SESSION['location_bar']['level2']['path'] = $_SESSION['config']['businessappur
     $_SESSION['save_list']['template'] = ""; */ 
 //}
 
-$_SESSION['stockCheckbox']= '';
+if ($_SESSION['current_basket']['id'] <> $_SESSION['current_basket']['lastBasketFromAction']) {
+    $_SESSION['stockCheckbox']= '';
+}
+
 
 if (isset($_SESSION['search']['plain_text'])) {
 
