@@ -74,6 +74,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $res_id = $values[0];
     $_SESSION['doc_id'] = $res_id;
 
+    $_SESSION['current_basket']['lastBasketFromAction'] = $_SESSION['current_basket']['id'];
+
 	// Ouverture de la modal
 	$frm_str = '';
 	$docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
