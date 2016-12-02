@@ -129,9 +129,14 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
 
         $res = $stmt->fetchObject();
 
-        $count_trust = strlen($res->trust_result);
-        $count_input = strlen($_REQUEST['Input']);
-        $confidence_index = round(($count_input*100)/$count_trust);
+        if($res->trust_result){
+            $count_trust = strlen($res->trust_result);
+            $count_input = strlen($_REQUEST['Input']);
+
+            $confidence_index = round(($count_input*100)/$count_trust);
+        }else{
+            $confidence_index = '??';
+        }
 
         if(!empty($res->society)){
             $arr_contact_info = array($res->contact_firstname,$res->contact_lastname,'('.$res->society.')');
@@ -216,9 +221,14 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
 
         $res = $stmt->fetchObject();
 
-        $count_trust = strlen($res->trust_result);
-        $count_input = strlen($_REQUEST['Input']);
-        $confidence_index = round(($count_input*100)/$count_trust);
+        if($res->trust_result){
+            $count_trust = strlen($res->trust_result);
+            $count_input = strlen($_REQUEST['Input']);
+
+            $confidence_index = round(($count_input*100)/$count_trust);
+        }else{
+            $confidence_index = '??';
+        }
 
         if(!empty($res->society)){
             $arr_contact_info = array($res->contact_firstname,$res->contact_lastname,'('.$res->society.')');
