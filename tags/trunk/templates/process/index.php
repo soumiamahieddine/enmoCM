@@ -40,19 +40,14 @@ if (!$core_tools)
 $tags = new tag_controler();
 $tags->load_sessiontag($res_id,$coll_id);   
 
-
-//--------------------------------------
-
-
-$frm_str .= '<table width="98%" align="center" border="0" id="tag_div">';
 $frm_str .= '<tr>';
-$frm_str .= '<td>'. _TAGS . '</td>';
+$frm_str .= '<td colspan="2">'. _TAGS . '</td>';
 $frm_str .= '</tr>';
 
 $tag_customsize = '200px';
 $tag_customcols = '26';
 
-$frm_str .='<tr><td>';
+$frm_str .='<tr><td colspan="2">';
 if ($core->test_service('add_tag_to_res', 'tags',false) == 1)
 {
 	$modify_keyword = true;
@@ -60,11 +55,7 @@ if ($core->test_service('add_tag_to_res', 'tags',false) == 1)
 include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS 
 
 $frm_str .='</td></tr><style>#tag_userform_chosen{width:95% !important;}</style>';
-
-$frm_str .= '</table>';
-$frm_str .= '<br/>';
 $frm_str .= '<input type="hidden" name="res_id" id="res_id"  value="'.$res_id.'" />';
-
 
 $frm_str .= '<script type="text/javascript">load_tags('.$route_tag_ui_script.', \''.$res_id.'\', \''.$coll_id.'\');';
 $frm_str .= '</script>';
