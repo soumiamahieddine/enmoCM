@@ -205,11 +205,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     } else {
     */
 
-//Load multicontacts
+    //Load multicontacts
 	$query = "SELECT c.firstname, c.lastname, c.society, c.contact_id, c.ca_id  ";
-			$query .= "FROM view_contacts c, contacts_res cres  ";
-			$query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id ";
-			$query .= "GROUP BY c.firstname, c.lastname, c.society, c.contact_id, c.ca_id";
+	$query .= "FROM view_contacts c, contacts_res cres  ";
+	$query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id ";
+	$query .= "GROUP BY c.firstname, c.lastname, c.society, c.contact_id, c.ca_id";
 			
 	$stmt = $db->query($query, array($res_id));
 	$nbContacts = 0;
@@ -246,9 +246,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frameContacts = substr($frameContacts, 0, -2);
 	$frameContacts .= "}";
 	
-    $frm_str .= '<h2 id="action_title">'
-            . _PROCESS . _LETTER_NUM . ' ' . $res_id;
-                $frm_str .= '</h2>';
+    //_ID_TO_DISPLAY ?
+    if(_ID_TO_DISPLAY == 'res_id'){
+        $frm_str .= '<h2 id="action_title">'
+            . _PROCESS . _LETTER_NUM . $res_id;
+        $frm_str .= '</h2>';       
+    }else{
+        $frm_str .= '<h2 id="action_title" title="'. _LETTER_NUM . $res_id . '">'
+            . _PROCESS . _DOCUMENT . ' ' . $chrono_number;
+        $frm_str .= '</h2>';
+    }
+
     $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '
              .'onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] 
                 . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' 
@@ -387,134 +395,77 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</div>';
     $frm_str .= '</div><br/>';
 
-    //RESPONSE FORM
-    /*$nb_attach = 0;
-
-    $stmt = $db->query("SELECT answer_type_bitmask FROM "
-        .$_SESSION['collections'][0]['extensions'][0]." WHERE res_id = ?", array($res_id));
-    $res = $stmt->fetchObject();
-    $bitmask = $res->answer_type_bitmask;
-    switch ($bitmask) {
-        case "000000":
-            $answer = '';
-            break;
-        case "000001":
-            $answer = _SIMPLE_MAIL;
-            break;
-        case "000010":
-            $answer = _REGISTERED_MAIL;
-            break;
-        case "000100":
-            $answer = _DIRECT_CONTACT;
-            break;
-        case "001000":
-            $answer = _EMAIL;
-            break;
-        case "010000":
-            $answer = _FAX;
-            break;
-        case "100000":
-            $answer = _ANSWER;
-            break;
-        default:
-            $answer = _ANSWER;
-    }
-
-    if ($core_tools->is_module_loaded('attachments')) {
-        $stmt = $db->query("SELECT res_id FROM "
-            . $_SESSION['tablename']['attach_res_attachments']
-            . " WHERE status <> 'DEL' and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and res_id_master = ? and coll_id = ? and (status <> 'TMP' or (typist = ? and status = 'TMP'))", array($res_id, $coll_id, $_SESSION['user']['UserId']));
-        if ($stmt->rowCount() > 0) {
-            $nb_attach = $stmt->rowCount();
-            $style = '';
-            $style2 = '';
-        }else{
-            $style = 'opacity:0.5;';
-            $style2 = 'display:none;';
-        }
-    }
-
-    if ($answer <> '') {
-        $answer .= ': ';
-    }
-
-    $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
-        $frm_str .= '<div class="ref-unit" style="width:95%;">';
-            $frm_str .= '<table width="95%">';
-                $frm_str .= '<tr>';
-                    $frm_str .= '<td>';
-                    $frm_str .= '<input type="checkbox"  class="check" name="direct_contact" id="direct_contact" value="true"';
-                    if ($process_data['direct_contact']) {
-                        $frm_str .= 'checked="checked"';
-                    }
-                    $frm_str .= ' onclick="unmark_empty_process(\'no_answer\');" />'._DIRECT_CONTACT.'<br/>';
-                    $frm_str .= '<input type="checkbox"  class="check" name="fax" id="fax" value="true"';
-                    if ($process_data['fax']) {
-                        $frm_str .= 'checked="checked"';
-                    }
-                    $frm_str .=' onclick="unmark_empty_process(\'no_answer\');" />'._FAX.'<br/>';
-                    $frm_str .= '<input type="checkbox"  class="check" name="email" id="email"  value="true"';
-                    if ($process_data['email']) {
-                        $frm_str .= 'checked="checked"';
-                    }
-                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._EMAIL.'<br/>';
-                    $frm_str .= '<input type="checkbox"  class="check" name="simple_mail" id="simple_mail"  value="true" ';
-                    if ($process_data['simple_mail']) {
-                        $frm_str .= 'checked="checked"';
-                    }
-                    $frm_str .= 'onclick="unmark_empty_process(\'no_answer\');" />'._SIMPLE_MAIL.'<br/>';
-                    $frm_str .= '<input type="checkbox"  class="check" name="registered_mail" id="registered_mail" value="true" ';
-                    if ($process_data['registered_mail']) {
-                        $frm_str .= 'checked="checked"';
-                    }
-                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._REGISTERED_MAIL.'<br/>';
-                    $frm_str .= '<input type="checkbox"  class="check" name="no_answer" id="no_answer" value="true"';
-                    if ($process_data['no_answer']) {
-                        $frm_str .= 'checked="checked"';
-                    }
-                    $frm_str .='/>'._NO_ANSWER.'<br />';
-                    $frm_str .= '<input type="checkbox"  class="check" name="other" id="other" value="true"';
-                    if ($process_data['other']) {
-                        $frm_str .= 'checked="checked"';
-                    }
-                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'
-                        . _OTHER . ' : <input type="text" name="other_answer" id="other_answer" value="';
-                    if (!empty($process_data['other_answer_desc'])) {
-                        $frm_str .= $process_data['other_answer_desc'];
-                    } else {
-                        $frm_str .='['._DEFINE.']';
-                    }
-                    $frm_str .='"';
-                    if (empty($process_data['other_answer_desc']))
-                    {
-                        $frm_str .= ' onfocus="if (this.value==\'['._DEFINE.']\'){this.value=\'\';}" ';
-                    }
-                    $frm_str .=' /><br/>';
-                    $frm_str .= '</td>';
-                    $frm_str .= '<td>&nbsp;</td>';
-
-                    $frm_str .= '</tr>';
-                    $frm_str .= '<tr>';
-                    /*$frm_str .= '<td><label for="process_notes">'
-                        . _PROCESS_NOTES
-                        . ' : </label><br/><textarea name="process_notes" id="process_notes" style="display:block;" rows="8" cols="30">'
-                        . $process_data['process_notes'].'</textarea></td>';
-                $frm_str .= '</tr>';
-            $frm_str .= '</table>';
-        $frm_str .= '</div>';
-    $frm_str .= '</div>';
-    $frm_str .= '<br>';*/
-
+	/**** Other informations ****/
     $frm_str .= '<h3 onclick="new Effect.toggle(\'complementary_fields\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'complementary_fields\', \'divStatus_complementary_fields\');" '
-            . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+        . 'whatIsTheDivStatus(\'complementary_fields\', \'divStatus_complementary_fields\');" '
+        . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
         $frm_str .= ' <span id="divStatus_complementary_fields" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;' 
             . _OPT_INDEXES;
-        $frm_str .= '</h3>';
-        $frm_str .= '<div id="complementary_fields"  style="display:block">';
-        $frm_str .= '<div>';
+    $frm_str .= '</h3>';
+
+	$frm_str .= '<table style="width:100%;" id="complementary_fields">';
+
+	//TAGS
+	if (
+        $core_tools->is_module_loaded('tags') && (
+        $core_tools->test_service('tag_view', 'tags',false) == 1)
+		)
+	{
+        include_once("modules".DIRECTORY_SEPARATOR."tags".
+        DIRECTORY_SEPARATOR."templates/process/index.php");
+
+		//script
+		$frm_str .= '<script>';
+		$frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
+		$frm_str .= '</script>';
+    }
+
+	/*** thesaurus ***/
+	if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
+		
+		require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+		
+		$thesaurus = new thesaurus();
+        $thesaurusListRes = array();
+
+		$thesaurusListRes = $thesaurus->getThesaursusListRes($res_id);
+
+        $frm_str .= '<tr id="thesaurus_tr" style="display:' . $display_value. ';">';
+            $frm_str .= '<td colspan="2">'. _THESAURUS . '</td>';
+        $frm_str .= '</tr>';
+
+        $frm_str .= '<tr id="thesaurus_tr" style="display:' . $displayValue . ';">';
+            $frm_str .= '<td class="indexing_field" id="thesaurus_field"><select multiple="multiple" id="thesaurus" data-placeholder=" "';
+
+        if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
+            $frm_str .= 'disabled="disabled"';
+        }
+
+        $frm_str .= '>';
+        if(!empty($thesaurusListRes)){
+            foreach ($thesaurusListRes as $key => $value) {
+
+                $frm_str .= '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
+                    $frm_str .= ' selected="selected"'; 
+                $frm_str .= '>' 
+                    .  functions::show_string($value['LABEL']) 
+                    . '</option>';
+
+            }
+        }
+        $frm_str .= '</select></td>';
+        $frm_str .= ' <td style="width:5px;"><i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<style>#thesaurus_chosen{width:100% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
+
+        //script
+        $frm_str .= '<script>';
+            $frm_str .= 'new Chosen($(\'thesaurus\'),{width: "95%", disable_search_threshold: 10});';
+        $frm_str .= '</script>';
+        /*****************/
+    }
     //FOLDERS
-    if ($core_tools->is_module_loaded('folder')  && ($core_tools->test_service('associate_folder', 'folder',false) == 1)) {
+    if ($core_tools->is_module_loaded('folder') && ($core->test_service('view_folder_tree', 'folder',false))) {
         require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
             . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
         $folders = new folder();
@@ -531,84 +482,36 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
         }
 
-                $frm_str .= '<table width="98%" align="center" border="0" id="folder_div">';
-                    $frm_str .= '<tr>';
-                    $frm_str .= '<td>'. _FOLDER . '</td>';
-                    $frm_str .= '</tr>';
-
-                        $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
-                    $frm_str .= '<td class="indexing_field"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')" style="width:95%;"><option value="">Sélectionnez un dossier</option>';
-                     foreach ($folder_info as $key => $value) {
-                if($value['folders_system_id'] == $folder_id){
-                    $frm_str .= '<option selected="selected" value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
-                }else{
-                    $frm_str .= '<option value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
-                }
-                
-            }
-
-            $frm_str .= '</select></td>';
-                $frm_str .= '</tr>';
-        $frm_str .= '<tr id="parentFolderTr" style="display: none"><td><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
-        $frm_str .= '</table>';
-        $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
-    }
-        /*** thesaurus ***/
-        if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
-            require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
-                            . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-                            . 'class_modules_tools.php';
-            $thesaurus = new thesaurus();
-
-            $thesaurusListRes = array(); 
-
-            $thesaurusListRes = $thesaurus->getThesaursusListRes($res_id);
-
-            $frm_str .= '<table width="98%" align="center" border="0" id="thesaurus_div">';
-            $frm_str .= '<tr id="thesaurus_tr" style="display:' . $display_value. ';">';
-                $frm_str .= '<td>'. _THESAURUS . '</td>';
-                $frm_str .= '<td>&nbsp;</td>';
+            $frm_str .= '<tr>';
+                $frm_str .= '<td colspan="2">'. _FOLDER . '</td>';
             $frm_str .= '</tr>';
+            $frm_str .= '<tr>';
+                $frm_str .= '<td class="indexing_field" colspan="2"><select id="folder" name="folder"';
 
-            $frm_str .= '<tr id="thesaurus_tr" style="display:' . $displayValue . ';">';
-            $frm_str .= '<td colspan="3" class="indexing_field" id="thesaurus_field"><select multiple="multiple" id="thesaurus" data-placeholder=" "';
+                if(!$core->test_service('associate_folder', 'folder',false)){
+                    $frm_str .= ' disabled="disabled"';
+				}
 
-            if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
-                $frm_str .= 'disabled="disabled"';
-            }
-
-            $frm_str .= '>';
-            if(!empty($thesaurusListRes)){
-                foreach ($thesaurusListRes as $key => $value) {
-
-                    $frm_str .= '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="' . $value['ID'] . '"';
-                        $frm_str .= ' selected="selected"'; 
-                    $frm_str .= '>' 
-                        .  functions::show_string($value['LABEL']) 
-                        . '</option>';
-
-                }
-            }
-            $frm_str .= '</select></td>';
-            $frm_str .= ' <td><i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
-            $frm_str .= '</tr>';
-            $frm_str .= '</table>';
-            $frm_str .= '<style>#thesaurus_chosen{width:100% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
-            /*****************/
+                $frm_str .= ' onchange="displayFatherFolder(\'folder\')" style="width:95%;"><option value="">Sélectionnez un dossier</option>';
+        foreach ($folder_info as $key => $value) {
+            if($value['folders_system_id'] == $folder_id){
+                $frm_str .= '<option selected="selected" value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
+            }else{
+                $frm_str .= '<option value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
+            }              
         }
-    //TAGS
-    if (
-        $core_tools->is_module_loaded('tags') && (
-        $core_tools->test_service('tag_view', 'tags',false) == 1)
-        )
-    {
-        include_once("modules".DIRECTORY_SEPARATOR."tags".
-        DIRECTORY_SEPARATOR."templates/process/index.php");
-    }
-    $frm_str .= '</div>';
-    $frm_str .= '</div>';
 
-	
+            $frm_str .= '</select></td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr id="parentFolderTr" style="display: none"><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
+        $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
+        
+        //script
+        $frm_str .= '<script>';
+            $frm_str .= 'new Chosen($(\'folder\'),{width: "95%", disable_search_threshold: 10, search_contains: true});displayFatherFolder(\'folder\');';
+        $frm_str .= '</script>';
+    }
+	$frm_str .= '</table>';
     //ACTIONS
     $frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '<p align="center" style="width:90%;">';
@@ -814,23 +717,34 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</td>';
 	
 	//VISA CIRCUIT
-	if ($core->test_service('config_visa_workflow', 'visa', false)){
-        $visa = new visa();
-        if($visa->nbVisa($res_id,$coll_id) == 0){
-            $style = 'opacity:0.5;';
-        }else{
-            $style = '';
+    if($core_tools->is_module_loaded('visa')){
+        if ($core->test_service('config_visa_workflow', 'visa', false)){
+            $visa = new visa();
+            if($visa->nbVisa($res_id,$coll_id) == 0){
+                $style = 'opacity:0.5;';
+            }else{
+                $style = '';
+            }
+            $frm_str .= '<td>';
+            
+            $frm_str .= '<span onclick="new Effect.toggle(\'visa_div\', \'blind\', {delay:0.2});'
+                . 'whatIsTheDivStatus(\'visa_div\', \'divStatus_visa_div\');hideOtherDiv(\'visa_div\');return false;" '
+                . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+            $frm_str .= '<span id="divStatus_visa_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
+                 . '&nbsp;<i class="fa fa-certificate fa-2x" style="'.$style.'" title="'._VISA_WORKFLOW.'"></i><sup><span style="display:none;"></span></sup>';
+            $frm_str .= '</b></span>';
+            $frm_str .= '</td>';
+
+            //script
+            $curr_visa_wf = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
+            if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0){
+                $frm_str .= '<script>';
+                $frm_str .= 'load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);';
+                $frm_str .= '</script>';
+            }
         }
-    $frm_str .= '<td>';
-    
-    $frm_str .= '<span onclick="new Effect.toggle(\'visa_div\', \'blind\', {delay:0.2});'
-        . 'whatIsTheDivStatus(\'visa_div\', \'divStatus_visa_div\');hideOtherDiv(\'visa_div\');return false;" '
-        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= '<span id="divStatus_visa_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>'
-         . '&nbsp;<i class="fa fa-certificate fa-2x" style="'.$style.'" title="'._VISA_WORKFLOW.'"></i><sup><span style="display:none;"></span></sup>';
-    $frm_str .= '</b></span>';
-    $frm_str .= '</td>';
-	}
+    }
+
 	//AVIS CIRCUIT
     if ($core_tools->is_module_loaded('avis')) { 
         require_once('modules'.DIRECTORY_SEPARATOR.'avis'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'avis_controler.php');
@@ -904,13 +818,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<br>';
         $frm_str .= '</td>';
     }
-        $frm_str .= '<td>';
-        $frm_str .= '<span onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'folder_div\', \'divStatus_folder_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_folder_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;<b><i class="fa fa-folder-o fa-2x" style="'.$style.'" title="'. _FOLDER_ATTACH.'"></i><sup><span style="display:none;"></span></sup></b>';
-            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</span>';
         $frm_str .= '<td>';
 
     //PRINT FOLDER
@@ -1331,32 +1238,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $frm_str .= '</div>';
 
-    //SCRIPT
-    $frm_str .= '<script type="text/javascript">displayFatherFolder(\'folder\');resize_frame_process("modal_'
-        . $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
-	$curr_visa_wf = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
-	if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0 && $core_tools->is_module_loaded('avis')){
-		$frm_str .= 'load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);';
-	}
-    if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)){
-        $frm_str .= 'new Chosen($(\'folder\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
-    }
-	if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
-        $frm_str .= 'new Chosen($(\'thesaurus\'),{width: "95%", disable_search_threshold: 10});';
-    }
-
-	if ($core->is_module_loaded('tags')){
-        $frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
-    }
-    $frm_str .= '$(\'entity\').style.visibility=\'hidden\';';
-    $frm_str .= '$(\'category\').style.visibility=\'hidden\';';
-    $frm_str .= '$(\'baskets\').style.visibility=\'hidden\';';
+    //EXTRA SCRIPT
+    $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'. $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
+	$frm_str .= '$(\'entity\').style.visibility=\'hidden\';';
+	$frm_str .= '$(\'category\').style.visibility=\'hidden\';';
+	$frm_str .= '$(\'baskets\').style.visibility=\'hidden\';';
     $frm_str .= '</script>';
 
-    //}
-
-	// À la fin de la methode d’ouverture de la modale
-	$docLocker->lock();
     return addslashes($frm_str);
 }
 
@@ -1376,32 +1264,6 @@ function check_form($form_id,$values)
     $core = new core_tools();
     //print_r($values);
     /*for ($i=0; $i<count($values); $i++) {
-        if ($values[$i]['ID'] == "direct_contact" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "fax" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "email" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "simple_mail" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "registered_mail" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "no_answer" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "other" && $values[$i]['VALUE'] == "true")
-        {
-            $check = true;
-            $other_checked = true;
-        }
-        if ($values[$i]['ID'] == "other_answer"  && trim($values[$i]['VALUE']) <> html_entity_decode('['._DEFINE.']', ENT_NOQUOTES, 'UTF-8')) {
-            $other_txt = $values[$i]['VALUE'];
-        }
         if ($values[$i]['ID'] == "folder") {
             $folder = $values[$i]['VALUE'];
         }
@@ -1415,7 +1277,6 @@ function check_form($form_id,$values)
     if ($core->is_module_loaded('folder')) {
         $db = new Database();
         $folder_id = '';
-
         if (!empty($folder)) {
 
             $folder_id = $folder;
@@ -1450,13 +1311,6 @@ function check_form($form_id,$values)
             }
         }
     }
-    /*if ($other_checked && $other_txt == '') {
-        $_SESSION['action_error'] = _MUST_DEFINE_ANSWER_TYPE;
-        return false;
-    }
-    if ($check == false) {
-        $_SESSION['action_error'] = _MUST_CHECK_ONE_BOX;
-    }*/
     return $check;
 }
 
@@ -1501,30 +1355,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     $thesaurusList = '';
 
     for ($j=0; $j<count($values_form); $j++) {
-        if ($values_form[$j]['ID'] == "simple_mail" && $values_form[$j]['VALUE'] == "true") {
-            $simple_mail = '1';
-        }
-        if ($values_form[$j]['ID'] == "registered_mail" && $values_form[$j]['VALUE'] == "true") {
-            $AR_mail = '1';
-        }
-        if ($values_form[$j]['ID'] == "direct_contact" && $values_form[$j]['VALUE'] == "true") {
-            $contact = '1';
-        }
-        if ($values_form[$j]['ID'] == "email" && $values_form[$j]['VALUE'] == "true") {
-            $email = '1';
-        }
-        if ($values_form[$j]['ID'] == "fax" && $values_form[$j]['VALUE'] == "true") {
-            $fax = '1';
-        }
-        if ($values_form[$j]['ID'] == "other" && $values_form[$j]['VALUE'] == "true") {
-            $other = '1';
-        }
-        if ($values_form[$j]['ID'] == "no_answer" && $values_form[$j]['VALUE'] == "true") {
-            $no_answer = '1';
-        }
-        if ($values_form[$j]['ID'] == "other_answer" && !empty($values_form[$j]['ID']) && trim($values_form[$j]['ID']) <> html_entity_decode('['._DEFINE.']', ENT_NOQUOTES, 'UTF-8')) {
-            $other_txt = $values_form[$j]['VALUE'];
-        }
         if ($values_form[$j]['ID'] == "process_notes") {
             $process_notes = $values_form[$j]['VALUE'];
         }
@@ -1537,11 +1367,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         if ($values_form[$j]['ID'] == "thesaurus") {
             $thesaurusList = $values_form[$j]['VALUE'];
         }
-    }
-    if ($no_answer == '1') {
-        $bitmask = '000000';
-    } else {
-        $bitmask = $other.$fax.$email.$contact.$AR_mail.$simple_mail;
     }
 
     if ($core->is_module_loaded('tags')) {
