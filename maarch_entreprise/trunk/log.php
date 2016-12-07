@@ -116,10 +116,16 @@ if (! empty($_SESSION['error'])) {
         }
 
         //On inclus la class LDAP qui correspond à l'annuaire
-        if (!include $_SESSION['config']['corepath'] . 'modules/ldap/class/class_adLDAP.php') 
+        if (strtolower($type_ldap) == 'openldap') {
+            $classLdap = 'class_openLDAP.php';
+        }else{
+            $classLdap = 'class_adLDAP.php';
+        }
+
+        if (!include $_SESSION['config']['corepath'] . 'modules/ldap/class/'.$classLdap) 
         {
             exit('Impossible de charger class_' . $_SESSION['config']['corepath'] 
-                . 'modules/ldap/class/class_adLDAP.php'."\n");
+                . 'modules/ldap/class/'.$classLdap."\n");
         }
         
         if ($prefix_login <> '') {
