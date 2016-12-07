@@ -133,11 +133,20 @@ if (! empty($_SESSION['error'])) {
         }
         
         //Try to create a new ldap instance
-        try {
-            $ad = new LDAP($domain, $login_admin, $pass, $ssl);
-        } catch(Exception $conFailure) {
-            echo functions::xssafe($conFailure->getMessage());
-            exit;
+        if (strtolower($type_ldap) == 'openldap') {
+            try {
+                $ad = new LDAP($domain, $login_admin, $pass, $ssl, $hostname);
+            } catch(Exception $conFailure) {
+                echo functions::xssafe($conFailure->getMessage());
+                exit;
+            }
+        }else{
+            try {
+                $ad = new LDAP($domain, $login_admin, $pass, $ssl);
+            } catch(Exception $conFailure) {
+                echo functions::xssafe($conFailure->getMessage());
+                exit;
+            }
         }
         
         if ($prefix_login <> '') {
