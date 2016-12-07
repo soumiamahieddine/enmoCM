@@ -95,6 +95,7 @@ if (isset($_REQUEST['taille_fichier'])) {
 }
 //file temporary path
 if (isset($_REQUEST['Ftp_File'])) {
+    $_SESSION['FILE']['index_type'] = $_REQUEST['index_type'];
     $_SESSION['FILE']['Ftp_File'] = $_REQUEST['Ftp_File'];
 }
 //fingerprint of the file
