@@ -1314,15 +1314,21 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                     eval('response='+answer.responseText);
                     if(response.status == 0 ) //form values checked
                     {
+						var hist = '';
+                        if(chosen_action_id == 'end_action')
+                        {
+                            hist = 'Y';
+                        }else{
+                            hist = 'N';
+                        }
                         if(response.manage_form_now == false)
                         {
                             //console.log('manage_form_now false');
-                            pile_actions.action_push("action_send_form_confirm_result( '"+path_manage_script+"', '"+mode+"', '"+id_action+"', '"+values+"','"+table+"', '"+module+"','"+coll_id+"',  '"+frm_values+"');");
-
-                            if(chosen_action_id == 'end_action')
+			    			pile_actions.action_push("action_send_form_confirm_result( '"+path_manage_script+"', '"+mode+"', '"+id_action+"', '"+values+"','"+table+"', '"+module+"','"+coll_id+"',  '"+frm_values+"',  '"+hist+"');");
+                            
+			    			if(chosen_action_id == 'end_action')
                             {
-	                            //alert('last_action');
-                                //console.log('last_action');
+	                        	//alert('last_action');
                                 end_actions();
                             }
                             else
@@ -1338,7 +1344,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                             {
                                 pile_actions.action_push("action_send_first_request( '"+path_manage_script+"', '"+mode+"', '"+chosen_action_id+"', 'to_define','"+table+"', '"+module+"','"+coll_id+"');");
                             }
-                            action_send_form_confirm_result(path_manage_script, mode, id_action, values, table, module, coll_id, frm_values);
+                            action_send_form_confirm_result(path_manage_script, mode, id_action, values, table, module, coll_id, frm_values, hist);
                         }
 
                     }
@@ -1618,7 +1624,7 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                     //alert('confirm');
                     var modal_txt='<div class=h2_title>'+response.confirm_content+'</div>';
                     modal_txt += '<p class="buttons">';
-                    modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="if(response.action_status != \'\' && response.action_status != \'NONE\'){actions_status.action_push(response.action_status);}action_send_form_confirm_result( \''+path_manage_script+'\', \''+mode_req+'\',\''+id_action+'\', \''+res_id_values+'\', \''+tablename+'\', \''+modulename+'\', \''+id_coll+'\');"/>';
+		    		modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="if(response.action_status != \'\' && response.action_status != \'NONE\'){actions_status.action_push(response.action_status);}action_send_form_confirm_result( \''+path_manage_script+'\', \''+mode_req+'\',\''+id_action+'\', \''+res_id_values+'\', \''+tablename+'\', \''+modulename+'\', \''+id_coll+'\', \'\', \'Y\');"/>';
                     modal_txt += ' <input type="button" name="cancel" id="cancel" value="'+response.cancel+'" class="button" onclick="pile_actions.action_pop();destroyModal(\'modal_'+id_action+'\');"/></p>';
                     //console.log(modal_txt);
                     window.top.createModal(modal_txt, 'modal_'+id_action, '150px', '300px');
@@ -1674,7 +1680,7 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
  * @param id_coll String  Collection identifier
  * @param values_new_form String  Values of the form to process
  */
-function action_send_form_confirm_result(path_manage_script, mode_req, id_action, res_id_values, tablename, modulename, id_coll, values_new_form)
+function action_send_form_confirm_result(path_manage_script, mode_req, id_action, res_id_values, tablename, modulename, id_coll, values_new_form, hist)
 {
     //console.log('debut send_form');
     if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
@@ -1693,7 +1699,8 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                               table : tablename,
                               coll_id : id_coll,
                               module : modulename,
-                              form_values : values_new_form
+                              form_values : values_new_form,
+			      			  hist : hist
                               },
                 onCreate: function(answer) {
                     //show loading image in toolbar
