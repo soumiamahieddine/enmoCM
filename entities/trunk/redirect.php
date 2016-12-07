@@ -325,7 +325,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 'visible' => 'Y',
                 'difflist_type' => 'entity_id'
             );
-        $message = _REDIRECT_TO_USER_OK . ' ' . $userId;
+        $message = ' (' . _REDIRECT_TO_USER_OK . ': ' . $userId . ')';
     }
     # 2 : Redirect to departement (+ dest user)
     #   - listinstance has laready been loaded when selecting entity
@@ -337,7 +337,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $stmt = $db->query("SELECT entity_label FROM entities WHERE entity_id = ?", array($entityId));
         $list = $stmt->fetchObject();
         $entity_label = $list->entity_label;
-        $message = _REDIRECT_TO_DEP_OK . " " . $entity_label;
+        $message = " (" . _REDIRECT_TO_DEP_OK . ": " . $entity_label . ')';
 
     }
     
