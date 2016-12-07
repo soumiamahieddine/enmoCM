@@ -318,9 +318,9 @@ if (!defined("_MUST_CHOOSE_DEP"))
 if (!defined("_MUST_CHOOSE_USER"))
     define("_MUST_CHOOSE_USER", "Vous devez sélectionner un utilisateur!");
 if (!defined("_REDIRECT_TO_DEP_OK"))
-    define("_REDIRECT_TO_DEP_OK", "Redirection vers un service effectuée");
+    define("_REDIRECT_TO_DEP_OK", "vers un service");
 if (!defined("_REDIRECT_TO_USER_OK"))
-    define("_REDIRECT_TO_USER_OK", "Redirection vers un utilisateur effectuée");
+    define("_REDIRECT_TO_USER_OK", "vers un utilisateur");
 if (!defined("_SAVE_CHANGES"))
     define("_SAVE_CHANGES", "Enregistrer les modifications");
 if (!defined("_VIEW_BASKETS"))
