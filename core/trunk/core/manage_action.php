@@ -80,7 +80,11 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
     $label_action = $res->label_action;
     $status = $res->id_status;
     $action_page = $res->action_page;
-    $bool_history = $res->history;
+    if($res->history == 'Y' && $_POST['hist']!='N'){
+        $bool_history = $res->history;
+    }else{
+        $bool_history = 'N';
+    }
     $create_id = $res->create_id;
 
         //No script defined for this action
@@ -194,8 +198,11 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
     $label_action = $res->label_action;
     $status = $res->id_status;
     $action_page = $res->action_page;
-    $bool_history = $res->history;
-
+    if($res->history == 'Y' && $_POST['hist']!='N'){
+        $bool_history = $res->history;
+    }else{
+        $bool_history = 'N';
+    }
     //No script defined for this action
     if($action_page == '')
     {
@@ -386,7 +393,7 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
         require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
         $hist = new history();
         $arr_res = explode('#', $res_action['result']);
-        for($i=0; $i<count($arr_res );$i++)
+		for($i=0; $i<count($arr_res );$i++)
         {
             if(!empty($arr_res[$i]))
             {
