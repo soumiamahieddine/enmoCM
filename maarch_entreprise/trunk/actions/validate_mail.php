@@ -1996,11 +1996,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		else{
             $contact_id = get_value_fields(
                 $values_form, 'contactid'
-            );	
-            if(!ctype_digit($contactId)){
-                $contactType = 'internal';
+            );
+
+            if(!ctype_digit($contact_id)){
+                $contact_type = 'internal';
             }else{
-                $contactType = 'external';
+                $contact_type = 'external';
             }	
 			// $contact_id = str_replace(')', '', substr($contact, strrpos($contact,'(')+1));
 			if($contact_type == 'internal')
