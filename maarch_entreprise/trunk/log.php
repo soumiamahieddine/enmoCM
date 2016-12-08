@@ -122,10 +122,12 @@ if (! empty($_SESSION['error'])) {
             $classLdap = 'class_adLDAP.php';
         }
 
-        if (!include $_SESSION['config']['corepath'] . 'modules/ldap/class/'.$classLdap) 
+        //customized or not
+        if (!@include $_SESSION['config']['corepath'] . '/custom/' . $_SESSION['custom_override_id'] . '/modules/ldap/class/'.$classLdap) 
         {
-            exit('Impossible de charger class_' . $_SESSION['config']['corepath'] 
-                . 'modules/ldap/class/'.$classLdap."\n");
+            if(!@include $_SESSION['config']['corepath'] . 'modules/ldap/class/'.$classLdap){
+                exit('Impossible de charger class_' . $_SESSION['config']['corepath'] . '/modules/ldap/class/'.$classLdap."\n"); 
+            }
         }
         
         if ($prefix_login <> '') {
