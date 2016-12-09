@@ -169,7 +169,7 @@ public class FileManager {
     * @param launchCommand the command to launch
     * @return process
     */
-    public Process launchApp(final String launchCommand) throws PrivilegedActionException {
+    /*public Process launchApp(final String launchCommand) throws PrivilegedActionException {
         return (Process) AccessController.doPrivileged(
             new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
@@ -177,7 +177,55 @@ public class FileManager {
                 }
             }
         );
+    }*/
+    
+    /**
+    * Launchs a command to execute
+    * @param launchCommand the command to launch
+    * @return process
+    */
+    public Process launchApp(final String launchCommand) throws PrivilegedActionException {
+        System.out.println("COMMAND : " + launchCommand);
+        Object proc = new Object();
+        try{
+            proc = AccessController.doPrivileged(
+            new PrivilegedExceptionAction() {
+
+                public Object run() throws IOException {
+
+                    Runtime rt = Runtime.getRuntime();
+                    Process proc = rt.exec(launchCommand);
+                    String line;
+                    BufferedReader in = new BufferedReader(
+                        new InputStreamReader(proc.getInputStream()) );
+                    System.out.println("INFO: LAUNCH OF THE COMMAND -->");
+                    while ((line = in.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                    System.out.println("<--");
+                    in.close();
+
+                    in = new BufferedReader(
+                        new InputStreamReader(proc.getErrorStream()) );
+                    System.out.println("INFO: ERROR ON THE COMMAND -->");
+                    while ((line = in.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                    System.out.println("<--");
+                    in.close();
+                    
+                    return  proc;
+                    
+                }
+            }
+        );
+        } catch (Throwable t)
+        {
+            t.printStackTrace();
+        }
+        return (Process) proc;
     }
+    
     
     /**
     * Retrieves the right program to edit the template with his extension
