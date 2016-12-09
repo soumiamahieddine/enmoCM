@@ -90,6 +90,7 @@ function Bt_exitBatch($returnCode, $message='')
         $GLOBALS['logger']->write($message, 'INFO', $returnCode);
         Bt_logInDataBase($GLOBALS['totalProcessedResources'], 0, $message.' (return code: '. $returnCode.')');
     }
+    Bt_updateWorkBatch();
     exit($returnCode);
 }
 
@@ -116,8 +117,9 @@ function Bt_getWorkBatch()
 {
     $req = "SELECT param_value_int FROM parameters WHERE id = ? ";
     $stmt = $GLOBALS['db']->query($req, array($GLOBALS['batchName']."_id"));
-    while ($reqResult = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $GLOBALS['wb'] = $reqResult[0] + 1;
+    
+    while ($reqResult = $stmt->fetchObject()) {
+        $GLOBALS['wb'] = $reqResult->param_value_int + 1;
     }
     if ($GLOBALS['wb'] == '') {
         $req = "INSERT INTO parameters(id, param_value_int) VALUES (?, 1)";

@@ -22,14 +22,16 @@ while ($state <> 'END') {
         $totalEmailsToProcess = $stmt->rowCount();
         $currentEmail = 0;
         if ($totalEmailsToProcess === 0) {
-            Bt_exitBatch(0, 'No e-mail to process');
+            Bt_exitBatch(0, 'No notification to send');
         }
-        $GLOBALS['logger']->write($totalEmailsToProcess . ' e-mails to proceed.', 'INFO');
+        $GLOBALS['logger']->write($totalEmailsToProcess . ' notification(s) to send.', 'INFO');
         $GLOBALS['emails'] = array();
         while ($emailRecordset = $stmt->fetchObject()) {
             $GLOBALS['emails'][] = $emailRecordset;
         }
         $state = 'SEND_AN_EMAIL';
+        $err = 0;
+        $errTxt = '';
         break;
         
     /**********************************************************************/
@@ -48,7 +50,7 @@ while ($state <> 'END') {
                 $user = (string)$mailerParams->smtp_user,
                 $pass = (string)$mailerParams->smtp_password
                 );
-            $GLOBALS['logger']->write("Sending e-mail to : " . $email->recipient, 'INFO');
+            $GLOBALS['logger']->write("sending notification ".($currentEmail+1)."/".$totalEmailsToProcess." (TO => " . $email->recipient.', SUBJECT => '.$email->subject.' ) ...', 'INFO');
             //--> Set the return path
             $email->html_body = str_replace('#and#', '&', $email->html_body);
             $email->html_body = str_replace("\''", "'", $email->html_body);
@@ -57,7 +59,7 @@ while ($state <> 'END') {
 
             $GLOBALS['mailer']->setReturnPath($email->sender);
             $GLOBALS['mailer']->setFrom($email->sender);
-            $GLOBALS['logger']->write("Subject : " . $email->subject, 'INFO');
+            //$GLOBALS['logger']->write("Subject : " . $email->subject, 'INFO');
             $GLOBALS['mailer']->setSubject($email->subject);
             $GLOBALS['mailer']->setHtml($email->html_body);
             $GLOBALS['mailer']->setTextCharset((string)$email->charset);
@@ -82,13 +84,17 @@ while ($state <> 'END') {
                 }
             }
             $return = $GLOBALS['mailer']->send(array($email->recipient), (string)$mailerParams->type);
+
             // if($return == 1) {
             if( ($return == 1 && ((string)$mailerParams->type == "smtp" || (string)$mailerParams->type == "mail" )) || ($return == 0 && (string)$mailerParams->type == "sendmail")) {
                 $exec_result = 'SENT';
+                $GLOBALS['logger']->write("notification sent", 'INFO');
                 
             } else {
                 //$GLOBALS['logger']->write("Errors when sending message through SMTP :" . implode(', ', $GLOBALS['mailer']->errors), 'ERROR');
-                $GLOBALS['logger']->write("Errors when sending message through SMTP :" . $GLOBALS['mailer']->errors[0], 'ERROR', 108);
+                $err++;
+                $GLOBALS['logger']->write("SENDING EMAIL ERROR ! (" . $return[0].")", 'ERROR');
+                $errTxt = ' (Last Error : '.$return[0].')';
                 $exec_result = 'FAILED';
                 $GLOBALS['exitCode'] = 108;
             }   
@@ -104,11 +110,15 @@ while ($state <> 'END') {
         break;
     }
 }
+$emailSent = $totalEmailsToProcess - $err;
 
+$GLOBALS['logger']->write($emailSent.' notification(s) sent', 'INFO');
 $GLOBALS['logger']->write('End of process', 'INFO');
+
 Bt_logInDataBase(
-    $totalEmailsToProcess, 0, 'process without error'
+    $totalEmailsToProcess, $err, $emailSent.' notification(s) sent'.$errTxt
 );
+Bt_updateWorkBatch();
 
 //unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);
