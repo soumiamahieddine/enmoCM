@@ -311,9 +311,9 @@ class Database extends functions
                     // var_dump($parameters);
                 } else {
                     //echo $key . $value. '<br />';
-                    if (empty($parameters[$value])) {
+                    /*if (empty($parameters[$value])) {
 
-                    }
+                    }*/
                 }
             }
         }
@@ -339,8 +339,13 @@ class Database extends functions
                     return false;
                 } else {
                     if ($_SESSION['config']['debug'] == 'true') {
-                        echo $queryString;
-                        var_export($parameters);
+                        $_SESSION['error'] = $PDOException->getMessage();
+                        $_SESSION['error'] .= ' ====================== ';
+                        $_SESSION['error'] .= $queryString;
+                        $_SESSION['error'] .= ' ====================== ';
+                        $_SESSION['error'] .= $PDOException->getTraceAsString();
+                        //echo $queryString;
+                        //var_export($parameters);
                     }
                     throw $PDOException;
                 }
