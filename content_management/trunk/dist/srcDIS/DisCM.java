@@ -296,7 +296,7 @@ public class DisCM extends JApplet {
                     if (isUnix) {
                         cmd = "libreoffice --headless --convert-to pdf --outdir \"" + this.userLocalDirTmp.substring(0, this.userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\"";
                     } else {
-                        cmd = "cmd /C cscript \"" + this.vbsPath + "\" \"" + docxFile + "\" /nologo \r\n";
+                        cmd = "cmd /C c:\\Windows\\System32\\cscript \"" + this.vbsPath + "\" \"" + docxFile + "\" /nologo \r\n";
                     }
                 } else {
 
