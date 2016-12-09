@@ -27,15 +27,22 @@ try {
     echo 'Maarch_CLITools required ! \n (pear.maarch.org)\n';
     exit(106);
 }
+// Load tools
+include('batch_tools.php');
+
+$GLOBALS['batchName'] = 'thumbnails';
+$GLOBALS['wb'] = '';
+$GLOBALS['lckFile'] = '';
+$totalProcessedResources = 0;
 
 // Open Logger
-$_ENV['logger'] = new Logger4Php();
-$_ENV['logger']->set_threshold_level('DEBUG');
+$GLOBALS['logger'] = new Logger4Php();
+$GLOBALS['logger']->set_threshold_level('DEBUG');
 
 $logFile = 'log/' . date('Y-m-d_H-i-s') . '.log';
 
 $file = new FileHandler($logFile);
-$_ENV['logger']->add_handler($file);
+$GLOBALS['logger']->add_handler($file);
 
 //error mode and function
 error_reporting(E_ERROR);
@@ -44,19 +51,19 @@ set_error_handler(errorHandler);
 /**
 * Name of the config (usefull for multi instance)
 */
-$_ENV['config_name'] = "";
+$GLOBALS['config_name'] = "";
 /**
 * Path to the log file
 */
-$_ENV['log'] = "";
+$GLOBALS['log'] = "";
 /**
 * User exit of the program, contains 1 if any problem appears
 */
-$_ENV['ErrorLevel'] = 0;
+$GLOBALS['ErrorLevel'] = 0;
 /**
 * Connection object to database 1
 */
-$_ENV['db'] = "";
+$GLOBALS['db'] = "";
 
 // Class to manage files includes errors
 class IncludeFileError extends Exception
@@ -103,8 +110,8 @@ function r_mkdir($path, $mode = 0777, $recursive = true) {
 */
 function errorHandler($errno, $errstr, $errfile, $errline, $errcontext)
 {
-    $_ENV['logger']->write('from  line ' . $errline . ' : ' . $errstr, 'WARNING', 1);
-    $_ENV['errorLevel'] = 1;
+    $GLOBALS['logger']->write('from  line ' . $errline . ' : ' . $errstr, 'WARNING', 1);
+    $GLOBALS['errorLevel'] = 1;
 }
 
 // Begin
@@ -114,98 +121,130 @@ if ($argc != 2) {
     exit;
 }
 $conf = $argv[1];
-$xmlconfig = simplexml_load_file($conf);
-foreach ($xmlconfig->CONFIG as $CONFIG) {
-    $_ENV['config_name'] = $CONFIG->CONFIG_NAME;
-   
-    $_ENV['tablename'] = $CONFIG->TABLE_NAME;
-    $_ENV['collection'] = $CONFIG->COLLECTION;
-	
-	$_ENV['max_batch_size'] = $CONFIG->MAX_BATCH_SIZE;
-	$maarchDirectory = (string) $CONFIG->MaarchDirectory;
-	$_ENV['core_path'] = $maarchDirectory . 'core' . DIRECTORY_SEPARATOR;
+;
+if(!file_exists($conf)){
+	$GLOBALS['logger']->write("Can't load xml config file ! (".$conf.")","ERROR");
+	exit();
+}else{
+	$xmlconfig = simplexml_load_file($conf);
 }
-$_ENV['databasetype'] = $xmlconfig->CONFIG_BASE->databasetype;
+foreach ($xmlconfig->CONFIG as $CONFIG) {
+    $GLOBALS['config_name'] = $CONFIG->CONFIG_NAME;
+   
+    $GLOBALS['tablename'] = $CONFIG->TABLE_NAME;
+    $GLOBALS['collection'] = $CONFIG->COLLECTION;
+	
+	$GLOBALS['max_batch_size'] = $CONFIG->MAX_BATCH_SIZE;
+	$maarchDirectory = (string) $CONFIG->MaarchDirectory;
+	$GLOBALS['core_path'] = $maarchDirectory . 'core' . DIRECTORY_SEPARATOR;
+}
+$GLOBALS['databasetype'] = $xmlconfig->CONFIG_BASE->databasetype;
 
 $log4phpParams = $xmlconfig->LOG4PHP;
 if ((string) $log4phpParams->enabled == 'true') {
-    $_ENV['logger']->set_log4PhpLibrary(
+    $GLOBALS['logger']->set_log4PhpLibrary(
         $maarchDirectory . 'apps/maarch_entreprise/tools/log4php/Logger.php'
     );
-    $_ENV['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
-    $_ENV['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
-    $_ENV['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
-    $_ENV['logger']->set_log4PhpBatchName('thumbnails');
+    $GLOBALS['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
+    $GLOBALS['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
+    $GLOBALS['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
+    $GLOBALS['logger']->set_log4PhpBatchName('thumbnails');
 }
 
-$_ENV['logger']->write("Launch of process of thumbnails conversion");
-$_ENV['logger']->write("Loading the xml config file");
-$_ENV['logger']->write("Config name : " . $_ENV['config_name']);
-$_ENV['logger']->write("Conversion launched for table : " . $_ENV['tablename']);
+$GLOBALS['logger']->write("Launch of process of thumbnails conversion");
+$GLOBALS['logger']->write("Loading the xml config file");
+$GLOBALS['logger']->write("Config name : " . $GLOBALS['config_name']);
+$GLOBALS['logger']->write("Conversion launched for table : " . $GLOBALS['tablename']);
 
-require($_ENV['core_path']."class/class_functions.php");
-require($_ENV['core_path']."class/class_db_pdo.php");
+require($GLOBALS['core_path']."class/class_functions.php");
+require($GLOBALS['core_path']."class/class_db_pdo.php");
 	
-$_ENV['db'] = new Database($conf);
+$GLOBALS['db'] = new Database($conf);
+
+
+Bt_getWorkBatch();
 
 $query = "select priority_number, docserver_id from docservers where is_readonly = 'N' and "
 	   . " enabled = 'Y' and coll_id = ? and docserver_type_id = 'TNL' order by priority_number";
 	   
-$stmt1 = $_ENV['db']->query($query, array($_ENV['collection']));
-$docserverId = $stmt1->fetchObject()->docserver_id;
+$stmt1 = $GLOBALS['db']->query($query, array($GLOBALS['collection']));
+if($res = $stmt1->fetchObject()){
+	$docserverId = $res->docserver_id;
+}else{
+	$docserverId='';
+}
 
-$_ENV['logger']->write($query);
-$_ENV['logger']->write($docserverId);
-$docServers = "select docserver_id, path_template from docservers";
-$stmt1 = $_ENV['db']->query($docServers);
-$_ENV['logger']->write("docServers found : ");
+if($docserverId <> ''){
+	$GLOBALS['logger']->write("TNL docserver found !");
+}else{
+	$GLOBALS['logger']->write("TNL docserver not found ! (query : ".$query, "ERROR");
+	exit();
+}
 
+$docserversList = array();
+$docServers = "select docserver_id, path_template, device_label from docservers";
+$stmt1 = $GLOBALS['db']->query($docServers);
 while ($queryResult = $stmt1->fetchObject()) {
   $pathToDocServer[$queryResult->docserver_id] = $queryResult->path_template;
-  $_ENV['logger']->write($queryResult->docserver_id. '-' .$queryResult->path_template);
+  $docserversList[] = $queryResult->docserver_id;
 }
+$docserversList = implode(', ', $docserversList);
+//$GLOBALS['logger']->write("List of docServers : " . $docserversList);
+
 
 if (is_dir($pathToDocServer[(string)$docserverId])){
 	$pathOutput = $pathToDocServer[(string)$docserverId];
-	$_ENV['logger']->write("path of output docserver : ".$pathOutput);
+	$GLOBALS['logger']->write("TNL path: ".$pathOutput);
 }
 else {
-	$_ENV['logger']->write("output docserver unknown ! : ".$docserverId, "ERROR");
+	$pathOutput = $pathToDocServer[(string)$docserverId];
+	$GLOBALS['logger']->write("Wrong TNL path ! (".$pathOutput.")","ERROR");
 	exit();
 }
 $cpt_batch_size=0;
 
 $queryMakeThumbnails = "select res_id, docserver_id, path, filename, format from "
-    . $_ENV['tablename'] . " where tnl_filename = '' or tnl_filename is null ";
-$_ENV['logger']->write("query to found document with no thumbnail : ".$queryMakeThumbnails);
-$stmt1 = $_ENV['db']->query($queryMakeThumbnails);
+    . $GLOBALS['tablename'] . " where tnl_filename = '' or tnl_filename is null ";
+
+$stmt1 = $GLOBALS['db']->query($queryMakeThumbnails);
+
+if ($stmt1->rowCount() === 0) {
+    Bt_exitBatch(0, 'No document to process');
+}else{
+	$GLOBALS['logger']->write($stmt1->rowCount()." document(s) to process...");
+}
+
+$i = 1;
+$err = 0;
+$errInfo = '';
 while ($queryResult=$stmt1->fetchObject()) {
-	if ($_ENV['max_batch_size'] >= $cpt_batch_size) {
+	if ($GLOBALS['max_batch_size'] >= $cpt_batch_size) {
 		$fileFormat = $queryResult->format;
-		echo 'format ' . $queryResult->format . PHP_EOL;
 		$pathToFile = $pathToDocServer[$queryResult->docserver_id] 
 			. str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path)
         	. $queryResult->filename;
 		$outputPathFile  = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path) 
 			. str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename);
 		
-		$_ENV['logger']->write("processing of document : " . $pathToFile . " | res_id : "
-        	. $queryResult->res_id);
-		echo "processing of document : " . $pathToFile . " \r\n res_id : "
-        	. $queryResult->res_id . "\n";
+		$GLOBALS['logger']->write('Process n°'.$i.'/'.$stmt1->rowCount().' (RES_ID => '.$queryResult->res_id.', FORMAT => '.$fileFormat.', PATH => '.$pathToFile.')');
+    	
 		
        	if (
        		strtoupper($fileFormat) <> 'PDF' 
        		&& strtoupper($fileFormat) <> 'HTML'
        		&& strtoupper($fileFormat) <> 'MAARCH'
        	) {
-       		$_ENV['logger']->write("file format not allowed : " . $fileFormat);
-			echo "file format not allowed : " . $fileFormat . PHP_EOL;
+			$errTxt = "file format not allowed : " . $fileFormat;
+			$errInfo = ' (Last Error : '.$errTxt.')';
+
+			$stmt2 = $GLOBALS['db']->query("UPDATE ".$GLOBALS['tablename']." SET tnl_path = 'ERR', tnl_filename = 'ERR' WHERE res_id = ?", array($queryResult->res_id));
+		   	$GLOBALS['logger']->write('document not converted ! ('.$errTxt.')',"ERROR");
+			$err++;
        	} else {
 			$racineOut = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path);
 			if (!is_dir($racineOut)){
 				r_mkdir($racineOut,0777);
-				$_ENV['logger']->write("Create $racineOut directory ");
+				$GLOBALS['logger']->write("Create $racineOut directory ");
 			}
 			
 			$command = '';
@@ -222,25 +261,47 @@ while ($queryResult=$stmt1->fetchObject()) {
 					}else{
 						echo "La copie $pathToFile du fichier a réussi...\n";
 						$cheminComplet = $chemin.".html";
-						$command = "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " . escapeshellarg($cheminComplet) . " "
+						$command = "wkhtmltoimage --width 400 --height 600 --quality 100 --zoom 0.2 " . escapeshellarg($cheminComplet) . " "
 						. escapeshellarg($outputPathFile);
 
 					}
 				}else{
-					$command = "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " . escapeshellarg($pathToFile) . " "
+					$command = "wkhtmltoimage --width 400 --height 600 --quality 100 --zoom 0.2 " . escapeshellarg($pathToFile) . " "
 					. escapeshellarg($outputPathFile);
 				}
 			}
-			//echo $command . PHP_EOL;
-			exec($command);
-		}
-		$stmt2 = $_ENV['db']->query("UPDATE ".$_ENV['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename), $queryResult->res_id));		
+			exec($command.' 2>&1', $output, $result);
+			if($result > 0)
+			{
+			   $err++;
+			   $errInfo = ' (Last Error : '.$output[0].')';
+			   $GLOBALS['logger']->write('document not converted ! ('.$output[0].')',"ERROR");
+			}else{
+				$stmt2 = $GLOBALS['db']->query("UPDATE ".$GLOBALS['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename), $queryResult->res_id));	
+				$GLOBALS['logger']->write('document converted');
+			}
+		}	
 	} else {
-        $_ENV['logger']->write("Max batch size ! Stop processing !");
-        echo "\r\nMax batch size ! Stop processing !";
+		$converted_doc = $i - $err;
+        $GLOBALS['logger']->write($converted_doc.' document(s) converted, MAX BATCH SIZE EXCEDEED !'.$errInfo);
+        Bt_logInDataBase(
+		    $i, $err, $i.' document(s) converted, MAX BATCH SIZE EXCEDEED !'.$errInfo
+		);
         break;
   }
+  $i++;
   $cpt_batch_size++;
 }
-$_ENV['logger']->write("End of application !");
+$i--;
+
+$converted_doc = $i - $err;
+$GLOBALS['logger']->write($converted_doc.' document(s) converted');
+
+Bt_logInDataBase(
+    $i, $err, $converted_doc.' document(s) converted'.$errInfo
+);
+
+Bt_updateWorkBatch();
+$GLOBALS['logger']->write("End of application !");
+
 exit();
