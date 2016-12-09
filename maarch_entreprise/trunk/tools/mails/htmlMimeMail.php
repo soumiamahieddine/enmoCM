@@ -769,7 +769,7 @@ class htmlMimeMail
                 $smtp = $smtpObj->connect();
                 
                 if (!$smtp) {
-                    return false;
+                    return $smtpObj->errors;
                 }
                 
                 // Parse recipients argument for internet addresses
@@ -822,7 +822,7 @@ class htmlMimeMail
                 // Send it
                 if (!$smtpObj->send($send_params)) {
                     $this->errors = $smtpObj->errors;
-                    return false;
+                    return $this->errors;
                 }
                 return true;
                 break;
