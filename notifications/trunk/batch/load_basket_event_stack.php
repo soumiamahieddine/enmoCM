@@ -53,16 +53,21 @@ try {
 }
 
 // Globals variables definition
-$GLOBALS['batchName'] = 'process_event_stack';
+$GLOBALS['batchName'] = 'basket_event_stack';
 $GLOBALS['wb'] = '';
 $totalProcessedResources = 0;
 $batchDirectory = '';
 $log4PhpEnabled = false;
 
-
+//Create folder basket_event_stack
+if (!is_dir('logs' . DIRECTORY_SEPARATOR . $GLOBALS['batchName'])) {
+    if (!mkdir('logs' . DIRECTORY_SEPARATOR . $GLOBALS['batchName'], 0775, true)) {
+        die('Create log directory failed...');
+    }
+}
 // Open Logger
 $logger = new Logger4Php();
-$logger->set_threshold_level('DEBUG');
+$logger->set_threshold_level('INFO');
 
 $logFile = 'logs' . DIRECTORY_SEPARATOR . $GLOBALS['batchName']
              . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log';
@@ -186,7 +191,9 @@ if ((string) $log4phpParams->enabled == 'true') {
 	$logger->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
 	$logger->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
 	$logger->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
-	$logger->set_log4PhpBatchName('process_event_stack');
+	$logger->set_log4PhpBatchName('basket_event_stack');
+}else{
+    echo "\n/!\ WARNING /!\ LOG4PHP is disabled ! Informations of batch process will not show !\n\n";
 }
 
 $mailerParams = $xmlconfig->MAILER;

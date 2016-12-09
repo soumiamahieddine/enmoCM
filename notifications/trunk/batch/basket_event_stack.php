@@ -1,14 +1,12 @@
 <?php
 /******************************************************************************
- BATCH PROCESS EVENT STACK
+ BATCH BASKET EVENT STACK
 
  Processes events from table event_stack
  
- 1 - Groups events by 
-    * Recipient
-    * Event
+ 1 - Add events for each basket with notif enabled 
 
- 2 - Merge template for each recipient / event
+ 2 - Scan event
  
  3 - Prepare e-mail and add to e-mail stack
  
@@ -37,14 +35,14 @@ while ($state <> 'END') {
         if ($notification->is_enabled === 'N') {
             Bt_exitBatch(100, "Notification '".$notificationId."' is disabled");
         }
-        $state = 'LOAD_EVENTS';
+        $state = 'ADD_EVENTS';
         break;
         
     /**********************************************************************/
     /*                          LOAD_EVENTS                               */
     /* Checking if the stack has notifications to proceed                 */
     /**********************************************************************/
-    case 'LOAD_EVENTS' :
+    case 'ADD_EVENTS' :
         $db = new Database();
         $secCtrl = new SecurityControler();
         $entities = new entities();
@@ -53,6 +51,7 @@ while ($state <> 'END') {
         );
 
         while ($line = $stmt->fetchObject()) {
+	    $logger->write("BASKET: " . $line->basket_id . " in progess ...", 'INFO');
             $exceptUsers[$line->basket_id] = array();
             if($line->except_notif != '' || $line->except_notif != null){
                 $arrayExceptNotif = explode(',', $line->except_notif);
@@ -60,11 +59,13 @@ while ($state <> 'END') {
             }
             $stmt2 = $db->query("select group_id from groupbasket WHERE basket_id = '".$line->basket_id."'");
             //echo $line->basket_id."\n";
+            $u=1;
             while ($line2 = $stmt2->fetchObject()) {
                 //echo "_".$line2->group_id."\n";
                 $stmt3 = $db->query("select usergroup_content.user_id from usergroup_content,users WHERE group_id = '".$line2->group_id."' and users.status='OK' and usergroup_content.user_id=users.user_id");
                 $baskets_notif = array();
-
+		          $logger->write("GROUP: " . $line2->group_id . " ... " . $stmt3->rowCount() . " user(s) to notify", 'INFO');
+                $z=1;
                 while ($line3 = $stmt3->fetchObject()) {
                     //echo "__".$line3->user_id."\n";
                     $whereClause = $secCtrl->process_security_where_clause(
@@ -74,8 +75,10 @@ while ($state <> 'END') {
                             $whereClause, $line3->user_id
                         );                    
                     $stmt4 = $db->query("select * from res_view_letterbox ".$whereClause);
-
+        		    $logger->write($stmt4->rowCount() . " document(s) to process for ".$line3->user_id, 'INFO');
+        		    $i=1;
                     while ($line4 = $stmt4->fetchObject()) {
+			             echo "DOCUMENT " . $i . "/" . $stmt4->rowCount() . " for USER " . $z . "/" . $stmt3->rowCount()." and GROUP ".$u."/".$stmt2->rowCount()."\n";
                         $stmt6 = $db->query("SELECT user_id FROM notif_event_stack WHERE record_id = '".$line4->res_id."' and  event_info like '%".$line->basket_id."%' and user_id = '".$line3->user_id."'");
                         $line6 = $stmt6->fetchObject();
                         if ($line6) {
@@ -89,35 +92,38 @@ while ($state <> 'END') {
                                 $baskets_notif[] = $basket_id[0];
                             }
                         }
+			         $i++;
                     }
+                    $z++;
                 }
-            
+                $u++;
             }
         }
-        $logger->write("Loading events for notification sid " . $notification->notification_sid, 'INFO');
+        $logger->write("Scanning events for notification sid " . $notification->notification_sid, 'INFO');
         $events = $events_controler->getEventsByNotificationSid('500');
         $totalEventsToProcess = count($events);
         $currentEvent = 0;
         if ($totalEventsToProcess === 0) {
             Bt_exitBatch(0, 'No event to process');
         }
-        $logger->write($totalEventsToProcess . ' events to process', 'INFO');
+        $logger->write($totalEventsToProcess . ' event(s) to scan', 'INFO');
         $tmpNotifs = array();
-        $state = 'MERGE_EVENT';
+        $state = 'SCAN_EVENT';
         break;
         
     /**********************************************************************/
     /*                  MERGE_EVENT                                       */
     /* Process event stack to get recipients                              */
     /**********************************************************************/
-    case 'MERGE_EVENT' :
+    case 'SCAN_EVENT' :
+        $i = 1;
         foreach($events as $event) {
+            $logger->write("scanning EVENT : " .$i."/".$totalEventsToProcess." (BASKET => ".$basket_id[0].", DOCUMENT => ".$res_id.", RECIPIENT => ".$user_id.")", 'INFO');
             preg_match_all( '#\[(\w+)]#', $event->event_info, $result );
             $basket_id = $result[1];
-            $logger->write("Basket => " .$basket_id[0], 'INFO');
+            //$logger->write("Basket => " .$basket_id[0], 'INFO');
 
             // Diffusion type specific res_id
-            //$logger->write("Getting document ids in basket ... '", 'INFO');
             $res_id = false;
             if($event->table_name == $coll_table || $event->table_name == $coll_view) {
                 $res_id = $event->record_id;
@@ -126,9 +132,9 @@ while ($state <> 'END') {
             } 
             $event->res_id = $res_id;
         
-                    $logger->write('Document => ' . $res_id, 'INFO');
+                    //$logger->write('Document => ' . $res_id, 'INFO');
                     $user_id = $event->user_id;
-                    $logger->write('Recipient => ' . $user_id, 'INFO');
+                    //$logger->write('Recipient => ' . $user_id, 'INFO');
 
 
                     if(!isset($tmpNotifs[$user_id])) {
@@ -147,7 +153,7 @@ while ($state <> 'END') {
                     $tmpNotifs[$user_id]['baskets'][$basket_id[0]]['events'][] = $event;
 
                     //print_r($tmpNotifs[$user_id]);
-          
+        $i++;
         }
         $totalNotificationsToProcess = count($tmpNotifs);
         $logger->write($totalNotificationsToProcess .' notifications to process', 'INFO');
@@ -156,6 +162,8 @@ while ($state <> 'END') {
     /*                      FILL_EMAIL_STACK                              */
     /* Merge template and fill notif_email_stack                          */
     /**********************************************************************/
+        $logger->write('STATE:MERGE NOTIF', 'INFO');
+        $i=1;
         foreach($tmpNotifs as $user_id => $tmpNotif) {
             foreach ($tmpNotif['baskets'] as $key => $basket_list) {
                 $basketId = $key;
@@ -164,8 +172,10 @@ while ($state <> 'END') {
                 $subject = $line6->basket_name;
             
             // Merge template with data and style
-            $logger->write('Merging template #' . $notification->template_id 
-                . ' to basket '.$subject.' for user ' . $user_id . ' ('.count($basket_list['events']).' documents)', 'INFO');
+            $logger->write('generate e-mail '.$i.'/'.$totalNotificationsToProcess.' (TEMPLATE =>' . $notification->template_id .', SUBJECT => '.$subject.', RECIPIENT => '.$user_id.', DOCUMENT(S) => '.count($basket_list['events']), 'INFO');
+
+            //$logger->write('Merging template #' . $notification->template_id 
+            //    . ' to basket '.$subject.' for user ' . $user_id . ' ('.count($basket_list['events']).' documents)', 'INFO');
             
             $params = array(
                 'recipient' => $tmpNotif['recipient'],
@@ -221,7 +231,7 @@ while ($state <> 'END') {
                 $logger->write('Notification disabled for '.$user_id, 'WARNING');
             }else{
 
-                $logger->write('Adding e-mail to email stack', 'INFO');
+                $logger->write('... adding e-mail to email stack', 'INFO');
                 if ($_SESSION['config']['databasetype'] == 'ORACLE') {
                     $query = "DECLARE
                                   vString notif_email_stack.html_body%type;
@@ -259,14 +269,20 @@ while ($state <> 'END') {
                 }
             }
             }
+        $i++;
         } 
         $state = 'END';
     }
 }
 
+//clean tmp directory
+echo "clean tmp path ....\n";
+array_map('unlink', glob($_SESSION['config']['tmppath']."/*.html"));
+
 $logger->write('End of process', 'INFO');
 Bt_logInDataBase(
-    $totalEventsToProcess, 0, 'process without error'
-);  
+    $totalEventsToProcess, 0, $totalNotificationsToProcess.' notification(s) processed without error'
+);
+
 //unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);

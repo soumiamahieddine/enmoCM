@@ -85,12 +85,10 @@ function Bt_exitBatch($returnCode, $message='')
             fclose($semaphore);
         }
         $GLOBALS['logger']->write($message, 'ERROR', $returnCode);
-        Bt_logInDataBase($GLOBALS['totalProcessedResources'], 1, 'return code:'
-                         . $returnCode . ', ' . $message);
+        Bt_logInDataBase($GLOBALS['totalProcessedResources'], 1, $message.' (return code: '. $returnCode.')');
     } elseif ($message <> '') {
         $GLOBALS['logger']->write($message, 'INFO', $returnCode);
-        Bt_logInDataBase($GLOBALS['totalProcessedResources'], 0, 'return code:'
-                         . $returnCode . ', ' . $message);
+        Bt_logInDataBase($GLOBALS['totalProcessedResources'], 0, $message.' (return code: '. $returnCode.')');
     }
     exit($returnCode);
 }
@@ -106,6 +104,7 @@ function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
     $query = "INSERT INTO history_batch (module_name, batch_id, event_date, "
            . "total_processed, total_errors, info) values(?, ?, CURRENT_TIMESTAMP, ?, ?, ?)";
     $arrayPDO = array($GLOBALS['batchName'], $GLOBALS['wb'], $totalProcessed, $totalErrors, substr(str_replace('\\', '\\\\', str_replace("'", "`", $info)), 0, 999));
+    $GLOBALS['db']->query($query, $arrayPDO);
 }
 
 /**
