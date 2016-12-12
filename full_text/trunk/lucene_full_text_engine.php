@@ -58,6 +58,14 @@ try {
     exit(106);
 }
 
+// Load tools
+$_ENV['batchName'] = 'fulltext';
+$_ENV['wb'] = '';
+$_ENV['lckFile'] = '';
+$_ENV['totalProcessedResources'] = 0;
+
+include('batch_tools.php');
+
 // Open Logger
 $_ENV['logger'] = new Logger4Php();
 $_ENV['logger']->set_threshold_level('DEBUG');
@@ -134,19 +142,20 @@ function indexFullText($pathToFile, $indexFileDirectory, $format, $Id)
     if (is_file($pathToFile)) {
         switch (strtoupper($format)) {
             case "PDF":
-                $_ENV['logger']->write("it's a PDF file", 'INFO');
+                //$_ENV['logger']->write("it's a PDF file", 'INFO');
                 $result = prepareIndexFullTextPdf($pathToFile, $indexFileDirectory, $Id);
                 break;
             case "HTML":
-                $_ENV['logger']->write("it's a HTML file", 'INFO');
+                libxml_use_internal_errors(true);
+                //$_ENV['logger']->write("it's a HTML file", 'INFO');
                 $result = prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id);
                 break;
             case "MAARCH":
-                $_ENV['logger']->write("it's a MAARCH file", 'INFO');
+                //$_ENV['logger']->write("it's a MAARCH file", 'INFO');
                 $result = prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id);
                 break;
             case "TXT":
-                $_ENV['logger']->write("it's a TXT file", 'INFO');
+                //$_ENV['logger']->write("it's a TXT file", 'INFO');
                 $result = prepareIndexFullTextTxt($pathToFile, $indexFileDirectory, $Id);
                 break;
             default:
@@ -282,6 +291,16 @@ if ($argc != 2) {
 }
 $conf = $argv[1];
 $xmlconfig = simplexml_load_file($conf);
+
+if ($xmlconfig == FALSE) {
+    $_ENV['logger']->write(
+        'Error on loading config file:' 
+        . $_ENV['configFile'], 'ERROR', 103
+    );
+    echo "\nError on loading config file: " . $conf . "\n\n";
+    exit(103);
+}
+
 foreach ($xmlconfig->CONFIG as $CONFIG) {
     $_ENV['config_name'] = $CONFIG->CONFIG_NAME;
     $maarch_directory = $CONFIG->MAARCH_DIRECTORY;
@@ -328,58 +347,95 @@ include_once('html2text/html2text.php');
 
 $_ENV['db'] = new Database($conf);
 
-$_ENV['logger']->write("connection on the DB server OK !");
+Bt_getWorkBatch();
+
+//$_ENV['logger']->write("connection on the DB server OK !");
 $docServers = "SELECT docserver_id, path_template FROM docservers";
 
 $stmt = $_ENV['db']->query($docServers);
 
-$_ENV['logger']->write("docServers found : ");
+$err = 0;
+$errInfo = '';
+
 while ($queryResult=$stmt->fetch(PDO::FETCH_NUM)) {
   $pathToDocServer[$queryResult[0]] = $queryResult[1];
-  $_ENV['logger']->write($queryResult[1]);
+  //$_ENV['logger']->write($queryResult[1]);
 }
 if ($_ENV['tablename'] == 'res_attachments' || $_ENV['tablename'] == 'res_version_attachments') {
+
+    $_ENV['logger']->write("docServers ".$_ENV['tablename']." found !");
+
     $queryIndexFullText = "SELECT res_id, docserver_id, path, filename, format FROM "
         . $_ENV['tablename'] . " WHERE (" . $fulltextColumnName . " = '0' or "
         . $fulltextColumnName . " = '' or " . $fulltextColumnName . " is null) AND format = 'pdf'";
 } else {
+    
+    $_ENV['logger']->write("docServers ".$_ENV['tablename']." found !");
+
     $queryIndexFullText = "SELECT res_id, docserver_id, path, filename, format FROM "
         . $_ENV['tablename'] . " WHERE " . $fulltextColumnName . " = '0' or "
         . $fulltextColumnName . " = '' or " . $fulltextColumnName . " is null ";
 }
 
-$_ENV['logger']->write("query to found document with no full text : ".$queryIndexFullText);
+//$_ENV['logger']->write("query to found document with no full text : ".$queryIndexFullText);
 $stmt = $_ENV['db']->query($queryIndexFullText);
 $cpt_batch_size=0;
-$_ENV['logger']->write("max_batch_size : ".$_ENV['max_batch_size']);
+//$_ENV['logger']->write("max_batch_size : ".$_ENV['max_batch_size']);
+
+if ($stmt->rowCount() === 0) {
+    Bt_exitBatch(0, 'No document to process');
+}else{
+    $_ENV['logger']->write($stmt->rowCount().' document(s) to proceed.');
+}
+
 while ($queryResult=$stmt->fetch(PDO::FETCH_NUM)) {
     if ($_ENV['max_batch_size'] >= $cpt_batch_size) {
         $pathToFile = $pathToDocServer[$queryResult[1]]
             . str_replace("#", DIRECTORY_SEPARATOR, $queryResult[2])
             . DIRECTORY_SEPARATOR . $queryResult[3];
-        $_ENV['logger']->write("processing of document : " . $pathToFile . " | res_id : "
-            . $queryResult[0]);
-        echo "processing of document : " . $pathToFile . " \r\n res_id : "
-            . $queryResult[0] . "\n";
+        $_ENV['logger']->write("processing of document ".($cpt_batch_size+1)."/".$stmt->rowCount()." (RES_ID => ". $queryResult[0] . ", FORMAT => ".$queryResult[4].", FILE => " . $pathToFile.")");
         $result = indexFullText(
             $pathToFile, $indexFileDirectory, $queryResult[4], $queryResult[0]
         );
         if ($result <> 1) {
-            $_ENV['logger']->write("Result of processing : " . $pathToFile 
-                . " " . $result, "ERROR", $result);
+            if($result == -1){
+                $resultTxt = 'document n°'.$queryResult[0].' cannot be converted';
+            }elseif ($result == -2) {
+                $resultTxt = 'document not found';
+            }else{
+                $resultTxt = 'unknow error';
+            }
+            $_ENV['logger']->write("FULLTEXT ERROR : " . $resultTxt, "ERROR", $result);
+            $err++;
+            $errInfo = ' (Last Error : '.$resultTxt.')';
+        }else{
+            $_ENV['logger']->write("FULLTEXT OK");
         }
-        $_ENV['logger']->write("Result of processing : " . $result);
-        echo "Result of processing : " . $result . "\r\n";
-        $updateDoc = "UPDATE " . $_ENV['tablename'] . " SET "
-            . $fulltextColumnName . " = ? WHERE res_id = ?";
+        
+        $updateDoc = "UPDATE " . $_ENV['tablename'] . " SET " . $fulltextColumnName . " = ? WHERE res_id = ?";
         $_ENV['db']->query($updateDoc, array($result, $queryResult[0]));
     } else {
-    $_ENV['logger']->write("Max batch size ! Stop processing !");
-    echo "\r\nMax batch size ! Stop processing !";
-    break;
+        $converted_doc = $cpt_batch_size - $err;
+        $_ENV['logger']->write($converted_doc.' document(s) with fulltext, MAX BATCH SIZE EXCEDEED !'.$errInfo);
+        Bt_logInDataBase(
+            $cpt_batch_size, $err, $cpt_batch_size.' document(s) with fulltext, MAX BATCH SIZE EXCEDEED !'.$errInfo
+        );
+        break;
   }
   $cpt_batch_size++;
 }
-$_ENV['logger']->write("Return execution code : ".$_ENV['ErrorLevel']);
+
+$cpt_batch_size--;
+
+$converted_doc = $cpt_batch_size - $err;
+$_ENV['logger']->write($converted_doc.' document(s) with fulltext');
+
+Bt_logInDataBase(
+    $cpt_batch_size, $err, $converted_doc.' document(s) with fulltext'.$errInfo
+);
+
+Bt_updateWorkBatch();
+
 $_ENV['logger']->write("End of application !");
+
 exit($_ENV['ErrorLevel']);
