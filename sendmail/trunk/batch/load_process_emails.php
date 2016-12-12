@@ -62,7 +62,7 @@ $log4PhpEnabled = false;
 
 // Open Logger
 $GLOBALS['logger'] = new Logger4Php();
-$GLOBALS['logger']->set_threshold_level('DEBUG');
+$GLOBALS['logger']->set_threshold_level('INFO');
 
 $logFile = 'logs' . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log';
 
@@ -120,6 +120,7 @@ if (!file_exists($GLOBALS['configFile'])) {
         'Configuration file ' . $GLOBALS['configFile'] 
         . ' does not exist', 'ERROR', 102
     );
+    echo "\nConfiguration file " . $GLOBALS['configFile'] . " does not exist ! \nThe batch cannot be launched !\n\n";
     exit(102);
 }
 
@@ -159,7 +160,10 @@ if ((string) $log4phpParams->enabled == 'true') {
 	$GLOBALS['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
 	$GLOBALS['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
 	$GLOBALS['logger']->set_log4PhpBatchName($GLOBALS['batchName']);
+}else{
+    echo "\n/!\ WARNING /!\ LOG4PHP is disabled ! Informations of batch process will not show !\n\n";
 }
+
 
 // Mailer
 $mailerParams = $xmlconfig->MAILER;
