@@ -1399,8 +1399,8 @@ abstract class entity_Abstract extends functions
             for($i=0; $i<count($_SESSION['collections']); $i++)
             {
                 // Skip this test if view doesn't have a column named res_id or destination
-                if(!$this->test_column($_SESSION['collections'][$i]['view'], 'res_id')) continue;
-                if(!$this->test_column($_SESSION['collections'][$i]['view'], 'destination')) continue;
+                //if(!$this->test_column($_SESSION['collections'][$i]['view'], 'res_id')) continue;
+                //if(!$this->test_column($_SESSION['collections'][$i]['view'], 'destination')) continue;
                 
                 $db = new Database();
                 if ($_SESSION['collections'][$i]['view'] == 'rm_documents_view') {
