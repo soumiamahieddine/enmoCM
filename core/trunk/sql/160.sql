@@ -135,6 +135,12 @@ ALTER TABLE mlb_coll_ext ADD COLUMN recommendation_limit_date timestamp without 
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS effective_date;
 ALTER TABLE res_attachments ADD effective_date timestamp without time zone;
 
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_path;
+ALTER TABLE res_attachments ADD tnl_path character varying(255);
+
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_filename;
+ALTER TABLE res_attachments ADD tnl_filename character varying(255);
+
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS effective_date;
 ALTER TABLE res_version_attachments ADD effective_date timestamp without time zone;
 
