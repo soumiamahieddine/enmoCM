@@ -164,6 +164,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]['show'] = false;
             }
             if ($tab[$i][$j][$value] == 'event_date') {
+            	$tab[$i][$j]['value'] = $core_tools2->format_date_db($tab[$i][$j]["value"], false, '', true);
                 $tab[$i][$j]['event_date'] = $tab[$i][$j]['value'];
                 $tab[$i][$j]['label'] = _DATE;
                 $tab[$i][$j]['size'] = '12';
