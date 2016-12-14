@@ -910,7 +910,7 @@ function checkRealDateAvis() {
 		var d5_avisLimitDate=date5.getTime();
 	 }
 
-    if(d4_processLimitDate != "" && avisLimitDate != "" && d5_avisLimitDate > d4_processLimitDate) {          
+    if(d4_processLimitDate != "" && avisLimitDate != "" && (d5_avisLimitDate > d4_processLimitDate && d4_processLimitDate > current_date)) {          
         alert("La date limite d'avis doit être antérieure à la date limite du courrier ");
         $('recommendation_limit_date').value = "";
         $('recommendation_limit_date_tr').value = "";
