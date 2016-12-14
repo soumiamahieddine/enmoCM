@@ -94,6 +94,8 @@ require_once("modules/entities/class/class_manage_entities.php");
 
         $_SESSION['redirect']['diff_list']['difflist_type'] = 'entity_id';
 
+        $_SESSION['redirect']['diff_list'] = $difflist->get_listinstance($values_str, false, $coll_id);
+
         if (!empty($_SESSION['process']['diff_list']['avis'])) {
             $_SESSION['redirect']['diff_list']['avis'] = $_SESSION['process']['diff_list']['avis'];
         } 
