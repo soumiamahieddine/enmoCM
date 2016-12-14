@@ -91,3 +91,6 @@ if (!defined("_AVIS_NOTE"))
 
 if (!defined("_VALIDATE_BY"))
     define("_VALIDATE_BY", "Validé par");
+
+if (!defined("_AVIS_ROLE_UNAVAILABLE"))
+    define("_AVIS_ROLE_UNAVAILABLE", "Le rôle \"pour avis\" n'est pas disponible dans la liste de diffusion");

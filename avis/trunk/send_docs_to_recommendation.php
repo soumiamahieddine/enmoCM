@@ -52,6 +52,21 @@ require_once("modules/entities/class/class_manage_entities.php");
         $frm_str .= $chrono_number;
     }
     $frm_str .= '</h2><br/>';
+
+    # Check if role avis is available
+    require_once 'modules/entities/class/class_manage_listdiff.php';
+
+    $difflist = new diffusion_list();
+
+    $roles = array();
+    $difflistType = $difflist->get_difflist_type('entity_id');
+    $roles = $difflist->get_difflist_type_roles($difflistType);
+    if(!in_array('avis',array_keys($roles))){
+       $frm_str .='<p style="color:red;text-align:center;">'._AVIS_ROLE_UNAVAILABLE.'<p>';
+       $frm_str .='<center> <input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();actions_status.action_pop();destroyModal(\'modal_'.$id_action.'\');"/></center>';
+       return addslashes($frm_str);
+    }
+
     require 'modules/templates/class/templates_controler.php';
     $templatesControler = new templates_controler();
     $templates = array();
