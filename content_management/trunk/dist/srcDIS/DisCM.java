@@ -13,6 +13,12 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.PrivilegedActionException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,6 +61,7 @@ public class DisCM extends JApplet {
     //INIT PARAMETERS
     protected String url;
     protected String domain;
+    protected String idApplet;
     protected String objectType;
     protected String objectTable;
     protected String objectId;
@@ -88,6 +95,9 @@ public class DisCM extends JApplet {
     public MyLogger logger;
     public FileManager fM;
     public String fileToEdit;
+    
+    public List<String> fileToDelete = new ArrayList<String>();
+
 
     /**
      * Launch of the applet
@@ -96,6 +106,7 @@ public class DisCM extends JApplet {
         System.out.println("----------BEGIN PARAMETERS----------");
         url = getParameter("url");
         objectType = getParameter("objectType");
+        idApplet = getParameter("idApplet");
         objectTable = getParameter("objectTable");
         objectId = getParameter("objectId");
         uniqueId = getParameter("uniqueId");
@@ -105,6 +116,7 @@ public class DisCM extends JApplet {
 
         System.out.println("URL : " + url);
         System.out.println("OBJECT TYPE : " + objectType);
+        System.out.println("ID APPLET : " + idApplet);
         System.out.println("OBJECT TABLE : " + objectTable);
         System.out.println("OBJECT ID : " + objectId);
         System.out.println("UNIQUE ID : " + uniqueId);
@@ -284,17 +296,17 @@ public class DisCM extends JApplet {
             if (docxFile.contains(".odt") || docxFile.contains(".ods") || docxFile.contains(".ODT") || docxFile.contains(".ODS")) {
                 this.logger.log("This is opendocument ! ", Level.INFO);
                 if (isUnix) {
-                    cmd = "libreoffice --headless --convert-to pdf --outdir \"" + this.userLocalDirTmp.substring(0, this.userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\"";
+                    cmd = "libreoffice -env:UserInstallation=file://"+this.userLocalDirTmp+this.idApplet+"_conv/ --headless --convert-to pdf --outdir \"" + this.userLocalDirTmp.substring(0, this.userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\"";
                 } else {
                     String convertProgram;
                     convertProgram = this.fM.findPathProgramInRegistry("soffice.exe");
-                    cmd = convertProgram + " -env:UserInstallation=$SYSUSERCONFIG --headless --convert-to pdf --outdir \"" + this.userLocalDirTmp.substring(0, this.userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\" \r\n";
+                    cmd = convertProgram + " \"-env:UserInstallation=file:///"+this.userLocalDirTmp.replace("\\", "/")+this.idApplet+"_conv/\" --headless --convert-to pdf --outdir \"" + this.userLocalDirTmp.substring(0, this.userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\" \r\n";
                 }
 
             } else if (docxFile.contains(".doc") || docxFile.contains(".docx") || docxFile.contains(".DOC") || docxFile.contains(".DOCX")) {
                 if (this.useExeConvert.equals("false")) {
                     if (isUnix) {
-                        cmd = "libreoffice --headless --convert-to pdf --outdir \"" + this.userLocalDirTmp.substring(0, this.userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\"";
+                        cmd = "libreoffice -env:UserInstallation=file://"+this.userLocalDirTmp+this.idApplet+"_conv\\ --headless --convert-to pdf --outdir \"" + this.userLocalDirTmp.substring(0, this.userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\"";
                     } else {
                         cmd = "cmd /C c:\\Windows\\System32\\cscript \"" + this.vbsPath + "\" \"" + docxFile + "\" /nologo \r\n";
                     }
@@ -449,23 +461,24 @@ public class DisCM extends JApplet {
             System.out.println("This is Windows");
             this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
             this.appPath = this.userLocalDirTmp + "start.bat";
-            this.appPath_convert = this.userLocalDirTmp + "conversion.bat";
+            this.appPath_convert = this.userLocalDirTmp + "conversion_"+idApplet+".bat";
             this.os = "win";
         } else if (isMac) {
             System.out.println("This is Mac");
             this.userLocalDirTmp = this.userLocalDirTmp + "/maarchTmp/";
             this.appPath = this.userLocalDirTmp + "start.sh";
-            this.appPath_convert = this.userLocalDirTmp + "conversion.sh";
+            this.appPath_convert = this.userLocalDirTmp + "conversion_"+idApplet+".sh";
             this.os = "mac";
         } else if (isUnix) {
             System.out.println("This is Unix or Linux");
             this.userLocalDirTmp = this.userLocalDirTmp + "/maarchTmp/";
             this.appPath = this.userLocalDirTmp + "start.sh";
-            this.appPath_convert = this.userLocalDirTmp + "conversion.sh";
+            this.appPath_convert = this.userLocalDirTmp + "conversion_"+idApplet+".sh";
             this.os = "linux";
         } else {
             System.out.println("Your OS is not supported!!");
         }
+        this.fileToDelete.add(this.appPath_convert);
         
         System.out.println("Create the logger");
         this.logger = new MyLogger(this.userLocalDirTmp);
@@ -487,8 +500,8 @@ public class DisCM extends JApplet {
         System.out.println("Create the logger");
         this.logger = new MyLogger(this.userLocalDirTmp);
 
-        this.logger.log("Delete thefile if exists", Level.INFO);
-        FileManager.deleteFilesOnDir(this.userLocalDirTmp, "thefile");
+        /*this.logger.log("Delete thefile if exists", Level.INFO);
+        FileManager.deleteFilesOnDir(this.userLocalDirTmp, "thefile");*/
 
         this.logger.log("----------BEGIN OPEN REQUEST----------", Level.INFO);
         String urlToSend = this.url + "?action=editObject&objectType=" + this.objectType
@@ -500,20 +513,16 @@ public class DisCM extends JApplet {
         this.processReturn(this.messageResult);
         this.logger.log("----------END OPEN REQUEST----------", Level.INFO);
 
-        Integer randomNum;
-        Integer minimum = 1;
-        Integer maximum = 1000;
-
-        randomNum = minimum + (int) (Math.random() * maximum);
-        this.fileToEdit = "thefile_" + randomNum + "." + this.fileExtension;
-
+        this.fileToEdit = "thefile_" + idApplet + "." + this.fileExtension;
+            
         this.logger.log("----------BEGIN CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
         this.logger.log("create the file : " + this.appPath, Level.INFO);
         this.fM.createBatFile(
                 this.appPath,
                 this.userLocalDirTmp,
                 this.fileToEdit,
-                this.os
+                this.os,
+                this.idApplet
         );
         this.logger.log("----------END CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
 
@@ -535,12 +544,13 @@ public class DisCM extends JApplet {
             this.logger.log("----------BEGIN EXECUTION OF THE EDITOR----------", Level.INFO);
             this.logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
             this.fM.createFile(this.fileContent, this.userLocalDirTmp + this.fileToEdit);
-
+            this.fileToDelete.add(this.userLocalDirTmp + this.fileToEdit);
+            
             Thread theThread;
             theThread = new Thread(new ProcessLoop(this));
 
             theThread.start();
-
+            
             String actualContent;
             this.fileContentTosend = "";
             do {
@@ -577,11 +587,12 @@ public class DisCM extends JApplet {
             this.logger.log("----------CONVERSION PDF----------", Level.INFO);
             createPDF(this.userLocalDirTmp + this.fileToEdit, this.userLocalDirTmp, isUnix);
 
-            String pdfFile = this.userLocalDirTmp + "thefile_" + randomNum + ".pdf";
+            String pdfFile = this.userLocalDirTmp + "thefile_" + idApplet + ".pdf";
 
             this.logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
             if (this.fM.isPsExecFileExists(pdfFile)) {
                 this.pdfContentTosend = FileManager.encodeFile(pdfFile);
+                this.fileToDelete.add(pdfFile);
             } else {
                 this.pdfContentTosend = "null";
                 this.logger.log("ERREUR DE CONVERSION PDF !", Level.WARNING);
@@ -594,7 +605,7 @@ public class DisCM extends JApplet {
 
             String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType
                     + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
-                    + "&uniqueId=" + this.uniqueId + "&step=end&userMaarch=" + this.userMaarch;
+                    + "&uniqueId=" + this.uniqueId + "&idApplet=" + this.idApplet + "&step=end&userMaarch=" + this.userMaarch;
             this.logger.log("----------BEGIN SEND OF THE OBJECT----------", Level.INFO);
             this.logger.log("URL TO SAVE : " + urlToSave, Level.INFO);
             sendHttpRequest(urlToSave, this.fileContentTosend, true);
@@ -615,6 +626,47 @@ public class DisCM extends JApplet {
             this.logger.log("RESPONSE KO", Level.WARNING);
         }
         this.logger.log("----------END EDIT OBJECT----------", Level.INFO);
+        
+        //delete tmp files
+        FileManager.deleteSpecificFilesOnDir(fileToDelete);
+        
+        //delete env libreoffice instance
+        File dir_app = new File(this.userLocalDirTmp+this.idApplet);
+        if (dir_app.exists()) {
+            Path directory = Paths.get(this.userLocalDirTmp+this.idApplet);
+            Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+        //delete env libreoffice convert instance
+        File dir_app_conv = new File(this.userLocalDirTmp+this.idApplet+"_conv");
+        if (dir_app_conv.exists()) {
+            Path directory = Paths.get(this.userLocalDirTmp+this.idApplet+"_conv");
+            Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+
         return "ok";
     }
 
@@ -668,12 +720,13 @@ public class DisCM extends JApplet {
             options = this.fM.findGoodOptionsToEdit(this.fileExtension);
             this.logger.log("OPTION PROGRAM TO EDIT " + options, Level.INFO);
             String pathCommand;
+            if("".equals(options)){
+                options = "\"-env:UserInstallation=file:///" + this.userLocalDirTmp.replace("\\", "/") + idApplet +"/\" ";
+            }
             pathCommand = pathProgram + " " + options + "\"" + this.userLocalDirTmp + this.fileToEdit + "\"";
             this.logger.log("PATH COMMAND TO EDIT " + pathCommand, Level.INFO);
             proc = this.fM.launchApp(pathCommand);
         }
-
-        this.logger.log("WAIT END OF THE PROCESS", Level.INFO);
         proc.waitFor();
         this.logger.log("END OF THE PROCESS", Level.INFO);
 
@@ -714,7 +767,7 @@ public class DisCM extends JApplet {
      * @param postRequest the request
      * @param endProcess end request
      */
-    public void sendHttpRequest(String theUrl, String postRequest, boolean endProcess) throws UnsupportedEncodingException {
+    public void sendHttpRequest(String theUrl, final String postRequest, final boolean endProcess) throws UnsupportedEncodingException {
         System.out.println("URL request : " + theUrl);
 
         // Inner class representing the payload to be posted via HTTP
