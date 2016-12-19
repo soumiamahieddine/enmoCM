@@ -196,7 +196,6 @@ function showDiv(divName, spanNb, divCreate, path_manage_script)
 }
 
 function checkEditingDoc(userId) {
-    var lck_name = "applet_"+userId;
     if($('add')){
         var target = $('add');
     }else{
@@ -206,36 +205,14 @@ function checkEditingDoc(userId) {
     new Ajax.Request(path_manage_script,
     {
         method:'post',
-        parameters: {
-            lck_name : lck_name},
             onSuccess: function(answer){
             eval("response = "+answer.responseText);
-            
-            //for transmission
-            var i = 1;
-            var isLaunched = true;
-            while(true){
-                if($('paraEdit'+i)){
-                    if($('paraEdit'+i).style.display != 'none'){
-                        isLaunched = false;
-                    }
-                }else{
-                    break;
-                }
-                i++;
-            }
-            if(response.status == 0 && isLaunched == true) {
+
+            if(response.status == 0) {
                 console.log('no lck found!');
                 target.removeAttribute('disabled');
                 target.style.opacity='1';
                 target.value='Valider';
-                //console.log('endoOfApplet!!!');
-                if($('CMApplet')) {
-                    destroyModal('CMApplet');
-                }
-                if($('CMApplet')) {
-                    destroyModal('CMApplet');
-                }
             } else {
                 console.log('lck found! Editing in progress !');
                 target.disabled='disabled';

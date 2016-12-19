@@ -325,7 +325,8 @@ if (!empty($_REQUEST['action'])
                 }
 
                 if ($_REQUEST['step']== 'end') {
-                    $file = $_SESSION['config']['tmppath'].'applet_'.$_REQUEST['userMaarch'].'.lck';
+                    $file = $_SESSION['config']['tmppath'].$_REQUEST['idApplet'].'.lck';
+                    unset($_SESSION['cm_applet'][$_SESSION['user']['UserId']][$_REQUEST['idApplet']]);
                     unlink($file);
                 }
 

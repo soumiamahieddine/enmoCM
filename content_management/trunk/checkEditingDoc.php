@@ -27,9 +27,7 @@
 * @version  $Revision$
 */
 
-$filename = $_SESSION['config']['tmppath'].$_POST['lck_name'].".lck";
-
-if (file_exists($filename)) {
+if (!empty($_SESSION['cm_applet'][$_SESSION['user']['UserId']])) {
     echo "{status : 1, status_txt : 'LCK FOUND !'}";
 } else {
     echo "{status : 0, status_txt : 'LCK NOT FOUND !'}";
