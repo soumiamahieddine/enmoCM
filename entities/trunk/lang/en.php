@@ -19,339 +19,421 @@
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /*************************** Entites management *****************/
-if (!defined('_ADD_ENTITY'))
-    define('_ADD_ENTITY','Department added');
-if (!defined('_ENTITY_ADDITION'))
-    define('_ENTITY_ADDITION', 'Add a department');
-if (!defined('_ENTITY_MODIFICATION'))
-    define('_ENTITY_MODIFICATION', 'Modify a department');
-if (!defined('_ENTITY_AUTORIZATION'))
-    define('_ENTITY_AUTORIZATION', 'Enable a department');
-if (!defined('_ENTITY_SUSPENSION'))
-    define('_ENTITY_SUSPENSION', 'disable a department');
-if (!defined('_ENTITY_DELETION'))
-    define('_ENTITY_DELETION', 'Delete a department');
-if (!defined('_ENTITY_DELETED'))
-    define('_ENTITY_DELETED', 'Department deleted');
-if (!defined('_ENTITY_UPDATED'))
-    define('_ENTITY_UPDATED', 'Department modified');
-if (!defined('_ENTITY_AUTORIZED'))
-    define('_ENTITY_AUTORIZED', 'Department enabled');
-if (!defined('_ENTITY_SUSPENDED'))
-    define('_ENTITY_SUSPENDED', 'department disabled');
-if (!defined('_ENTITY'))
-    define('_ENTITY', 'Department');
-if (!defined('_ENTITIES'))
-    define('_ENTITIES', 'Departments');
-if (!defined('_ENTITIES_COMMENT'))
-    define('_ENTITIES_COMMENT', 'Department');
-if (!defined('_ALL_ENTITIES'))
-    define('_ALL_ENTITIES', 'All departments');
-if (!defined('_ENTITIES_LIST'))
-    define('_ENTITIES_LIST', 'List of department');
-if (!defined('_MANAGE_ENTITIES'))
-    define('_MANAGE_ENTITIES', 'Manage departments');
-if (!defined('_MANAGE_ENTITIES_DESC'))
-    define('_MANAGE_ENTITIES_DESC', 'Manage depoartments');
-if (!defined('_ENTITY_MISSING'))
-    define('_ENTITY_MISSING', 'This department does not exist');
-if (!defined('_ENTITY_TREE'))
-    define('_ENTITY_TREE', 'Department tree-view');
-if (!defined('_ENTITY_TREE_DESC'))
-    define('_ENTITY_TREE_DESC', 'Department tree-view');
-if (!defined('_ENTITY_HAVE_CHILD'))
-    define('_ENTITY_HAVE_CHILD', 'This department has sub-departments');
-if (!defined('_ENTITY_IS_RELATED'))
-    define('_ENTITY_IS_RELATED', 'This departments has users');
-if (!defined('_TYPE'))
-    define('_TYPE', 'Type');
-
-if (!defined('_ENTER_DESCRIPTION'))
-    define('_ENTER_DESCRIPTION', 'Description obligatoire');
-if (!defined('_ENTER_TITLE'))
-    define('_ENTER_TITLE', 'Titre obligatoire');
+if (!defined("_ADD_ENTITY"))
+    define("_ADD_ENTITY","Added department");
+if (!defined("_ENTITY_ADDITION"))
+    define("_ENTITY_ADDITION", "Department addition");
+if (!defined("_ENTITY_MODIFICATION"))
+    define("_ENTITY_MODIFICATION", "Department modification");
+if (!defined("_ENTITY_AUTORIZATION"))
+    define("_ENTITY_AUTORIZATION", "Department authorization");
+if (!defined("_ENTITY_SUSPENSION"))
+    define("_ENTITY_SUSPENSION", "Department suspension");
+if (!defined("_ENTITY_DELETION"))
+    define("_ENTITY_DELETION", "Department deletion");
+if (!defined("_ENTITY_DELETED"))
+    define("_ENTITY_DELETED", "Deleted department");
+if (!defined("_ENTITY_UPDATED"))
+    define("_ENTITY_UPDATED", " Modified department");
+if (!defined("_ENTITY_AUTORIZED"))
+    define("_ENTITY_AUTORIZED", "Authorized department");
+if (!defined("_ENTITY_SUSPENDED"))
+    define("_ENTITY_SUSPENDED", "Suspended department");
+if (!defined("_ENTITY"))
+    define("_ENTITY", "Department");
+if (!defined("_ENTITIES"))
+    define("_ENTITIES", "Departments");
+if (!defined("_ENTITIES_COMMENT"))
+    define("_ENTITIES_COMMENT", "Departments");
+if (!defined("_ALL_ENTITIES"))
+    define("_ALL_ENTITIES", "All the departments");
+if (!defined("_ENTITIES_LIST"))
+    define("_ENTITIES_LIST", "Departments list");
+if (!defined("_MANAGE_ENTITIES"))
+    define("_MANAGE_ENTITIES", "Manage the departments");
+if (!defined("_MANAGE_ENTITIES_DESC"))
+    define("_MANAGE_ENTITIES_DESC", "Administer the departments, ...");
+if (!defined("_ENTITY_MISSING"))
+    define("_ENTITY_MISSING", "This department doesn't exist");
+if (!defined("_ENTITY_TREE"))
+    define("_ENTITY_TREE", "Departments tree view");
+if (!defined("_ENTITY_TREE_DESC"))
+    define("_ENTITY_TREE_DESC", "See departments tree view");
+if (!defined("_ENTITY_HAVE_CHILD"))
+    define("_ENTITY_HAVE_CHILD", "This department owns sub-departments");
+if (!defined("_ENTITY_IS_RELATED"))
+    define("_ENTITY_IS_RELATED", "This department is linked to users");
+if (!defined("_TYPE"))
+    define("_TYPE", "Type");
 
 /*************************** Users - Entites management *****************/
-if (!defined('_ENTITY_USER_DESC'))
-    define('_ENTITY_USER_DESC', 'Attach users to departments');
-if (!defined('_ENTITIES_USERS'))
-    define('_ENTITIES_USERS', 'Users - Departments');
-if (!defined('_ENTITIES_USERS_LIST'))
-    define('_ENTITIES_USERS_LIST', 'List of user');
-if (!defined('_USER_ENTITIES_TITLE'))
-    define('_USER_ENTITIES_TITLE', 'The user belongs to following departments');
-if (!defined('_USER_ENTITIES_ADDITION'))
-    define('_USER_ENTITIES_ADDITION', 'Users - Departments');
-if (!defined('_USER_BELONGS_NO_ENTITY'))
-    define('_USER_BELONGS_NO_ENTITY', 'The user belongs to following departments');
-if (!defined('_CHOOSE_ONE_ENTITY'))
-    define('_CHOOSE_ONE_ENTITY', 'Select at least one department');
-if (!defined('_CHOOSE_ENTITY'))
-    define('_CHOOSE_ENTITY', 'Select a department');
-if (!defined('_CHOOSE_PRIMARY_ENTITY'))
-    define('_CHOOSE_PRIMARY_ENTITY', 'Choose as primary department');
-if (!defined('_PRIMARY_ENTITY'))
-    define('_PRIMARY_ENTITY', 'Primary department');
-if (!defined('_DELETE_ENTITY'))
-    define('_DELETE_ENTITY', 'Delete department');
-if (!defined('USER_ADD_ENTITY'))
-    define('USER_ADD_ENTITY', 'Add a department');
-if (!defined('_ADD_TO_ENTITY'))
-    define('_ADD_TO_ENTITY', 'Add to a department');
-if (!defined('_NO_ENTITY_SELECTED'))
-    define('_NO_ENTITY_SELECTED', 'No department selected');
-if (!defined('_NO_PRIMARY_ENTITY'))
-    define('_NO_PRIMARY_ENTITY', 'The primary department is mandatory');
-if (!defined('_NO_ENTITIES_DEFINED_FOR_YOU'))
-    define('_NO_ENTITIES_DEFINED_FOR_YOU', 'No department defined for this user');
-if (!defined('_LABEL_MISSING'))
-    define('_LABEL_MISSING', 'You must enter the name of the department');
-if (!defined('_SHORT_LABEL_MISSING'))
-    define('_SHORT_LABEL_MISSING', 'you must enter a shoirt name for the department');
-if (!defined('_ID_MISSING'))
-    define('_ID_MISSING', 'You must enter an identifier for the department');
-if (!defined('_TYPE_MISSING'))
-    define('_TYPE_MISSING', 'You must select the type of the department');
-if (!defined('_PARENT_MISSING'))
-    define('_PARENT_MISSING', 'You mus select the parent department');
-if (!defined('_ENTITY_UNKNOWN'))
-    define('_ENTITY_UNKNOWN', 'Unknown department');
+if (!defined("_ENTITY_USER_DESC"))
+    define("_ENTITY_USER_DESC", "Connect departments and users");
+if (!defined("_ENTITIES_USERS"))
+    define("_ENTITIES_USERS", "Departments - users relationship");
+if (!defined("_ENTITIES_USERS_LIST"))
+    define("_ENTITIES_USERS_LIST", "Users list");
+if (!defined("_USER_ENTITIES_TITLE"))
+    define("_USER_ENTITIES_TITLE", "The user belongs to the following departments");
+if (!defined("_USER_ENTITIES_ADDITION"))
+    define("_USER_ENTITIES_ADDITION", "User- Departments connections");
+if (!defined("_USER_BELONGS_NO_ENTITY"))
+    define("_USER_BELONGS_NO_ENTITY", "The user doesn't belong to any department");
+if (!defined("_CHOOSE_ONE_ENTITY"))
+    define("_CHOOSE_ONE_ENTITY", "Choose a department at least");
+if (!defined("_CHOOSE_ENTITY"))
+    define("_CHOOSE_ENTITY", "Choose a department");
+if (!defined("_CHOOSE_PRIMARY_ENTITY"))
+    define("_CHOOSE_PRIMARY_ENTITY", "Choose as primary department");
+if (!defined("_PRIMARY_ENTITY"))
+    define("_PRIMARY_ENTITY", "Primary department");
+if (!defined("_DELETE_ENTITY"))
+    define("_DELETE_ENTITY", "Delete department(s)");
+if (!defined("USER_ADD_ENTITY"))
+    define("USER_ADD_ENTITY", "Add a department");
+if (!defined("_ADD_TO_ENTITY"))
+    define("_ADD_TO_ENTITY", "Add to a department");
+if (!defined("_NO_ENTITY_SELECTED"))
+    define("_NO_ENTITY_SELECTED", "No selected entity");
+if (!defined("_NO_PRIMARY_ENTITY"))
+    define("_NO_PRIMARY_ENTITY", "The primary department is mandatory");
+if (!defined("_NO_ENTITIES_DEFINED_FOR_YOU"))
+    define("_NO_ENTITIES_DEFINED_FOR_YOU", " No defined entity for this user");
+if (!defined("_LABEL_MISSING"))
+    define("_LABEL_MISSING", "The department name is missing");
+if (!defined("_SHORT_LABEL_MISSING"))
+    define("_SHORT_LABEL_MISSING", "The department short name is missing");
+if (!defined("_ID_MISSING"))
+    define("_ID_MISSING", "The department ID is missing");
+if (!defined("_TYPE_MISSING"))
+    define("_TYPE_MISSING", "The department type is mandatory");
+if (!defined("_PARENT_MISSING"))
+    define("_PARENT_MISSING", "The relative department is mandatory");
+if (!defined("_ENTITY_UNKNOWN"))
+    define("_ENTITY_UNKNOWN", "Unknown department");
 
 /*************************** Entites form *****************/
-if (!defined('_ENTITY_LABEL'))
-    define('_ENTITY_LABEL', 'Name');
-if (!defined('_SHORT_LABEL'))
-    define('_SHORT_LABEL', 'Short name');
-if (!defined('_ENTITY_ADR_1'))
-    define('_ENTITY_ADR_1', 'Address 1');
-if (!defined('_ENTITY_ADR_2'))
-    define('_ENTITY_ADR_2', 'Address 2');
-if (!defined('_ENTITY_ADR_3'))
-    define('_ENTITY_ADR_3', 'Address 3');
-if (!defined('_ENTITY_ZIPCODE'))
-    define('_ENTITY_ZIPCODE', 'Postal code');
-if (!defined('_ENTITY_CITY'))
-    define('_ENTITY_CITY', 'Town');
-if (!defined('_ENTITY_COUNTRY'))
-    define('_ENTITY_COUNTRY', 'Country');
-if (!defined('_ENTITY_EMAIL'))
-    define('_ENTITY_EMAIL', 'Email');
-if (!defined('_ENTITY_BUSINESS'))
-    define('_ENTITY_BUSINESS', 'Registration number');
-if (!defined('_ENTITY_PARENT'))
-    define('_ENTITY_PARENT', 'Parent department');
-if (!defined('_CHOOSE_ENTITY_PARENT'))
-    define('_CHOOSE_ENTITY_PARENT', 'Select the parent department');
-if (!defined('_CHOOSE_ENTITY_TYPE'))
-    define('_CHOOSE_ENTITY_TYPE', 'Select the department');
-if (!defined('_ENTITY_TYPE'))
-    define('_ENTITY_TYPE', 'Type of entity');
-if (!defined('_TO_USERS_OF_ENTITIES'))
-    define('_TO_USERS_OF_ENTITIES', 'To users of department');
-if (!defined('_ALL_ENTITIES'))
-    define('_ALL_ENTITIES', 'All departments');
-if (!defined('_ENTITIES_JUST_BELOW'))
-    define('_ENTITIES_JUST_BELOW', 'Immediate children of parent department');
-if (!defined('_ALL_ENTITIES_BELOW'))
-    define('_ALL_ENTITIES_BELOW', 'Every children of parent department');
-if (!defined('_ENTITIES_JUST_UP'))
-    define('_ENTITIES_JUST_UP', 'Immediate parent of primary department');
-if (!defined('_MY_ENTITIES'))
-    define('_MY_ENTITIES', 'Every department of the user');
-if (!defined('_MY_PRIMARY_ENTITY'))
-    define('_MY_PRIMARY_ENTITY', 'Primary department');
-if (!defined('_SAME_LEVEL_ENTITIES'))
-    define('_SAME_LEVEL_ENTITIES', 'Every sister departments of primary one');
-if (!defined('_INDEXING_ENTITIES'))
-    define('_INDEXING_ENTITIES', 'Record for departments');
-if (!defined('_SEARCH_DIFF_LIST'))
-    define('_SEARCH_DIFF_LIST', 'Search a department or a user');
-if (!defined('_ADD_CC'))
-    define('_ADD_CC', 'Add in copy');
-if (!defined('_TO_DEST'))
-    define('_TO_DEST', 'To');
-if (!defined('_NO_DIFF_LIST_ASSOCIATED'))
-    define('_NO_DIFF_LIST_ASSOCIATED', 'No mailing list associated');
-if (!defined('_PRINCIPAL_RECIPIENT'))
-    define('_PRINCIPAL_RECIPIENT', 'Main recipient');
-if (!defined('_ADD_COPY_IN_PROCESS'))
-    define('_ADD_COPY_IN_PROCESS', 'Add users in copy in process page');
-if (!defined('_DIFF_LIST_COPY'))
-    define('_DIFF_LIST_COPY', 'Mailing list');
-if (!defined('_NO_COPY'))
-    define('_NO_COPY', 'No user in copy');
-if (!defined('_DIFF_LIST'))
-    define('_DIFF_LIST', 'Mailing list');
-if (!defined('_NO_USER'))
-    define('_NO_USER', 'No user');
-if (!defined('_MUST_CHOOSE_DEST'))
-    define('_MUST_CHOOSE_DEST', 'You must choose the main recipient');
-if (!defined('_ENTITIES__DEL'))
-    define('_ENTITIES__DEL', 'Deletion');
-if (!defined('_ENTITY_DELETION'))
-    define('_ENTITY_DELETION', 'Entity deletion');
-if (!defined('_THERE_ARE_NOW'))
-    define('_THERE_ARE_NOW', 'There are now');
-if (!defined('_DOC_IN_THE_DEPARTMENT'))
-    define('_DOC_IN_THE_DEPARTMENT', 'documenys in the department');
-if (!defined('_DEL_AND_REAFFECT'))
-    define('_DEL_AND_REAFFECT', 'Delete and reaffect');
-if (!defined('_THE_ENTITY'))
-    define('_THE_ENTITY', 'The entity');
+if (!defined("_ENTITY_LABEL"))
+    define("_ENTITY_LABEL", "Name");
+if (!defined("_SHORT_LABEL"))
+    define("_SHORT_LABEL", "Short name");
+if (!defined("_ENTITY_ADR_1"))
+    define("_ENTITY_ADR_1", "Address 1");
+if (!defined("_ENTITY_ADR_2"))
+    define("_ENTITY_ADR_2", "Address 2");
+if (!defined("_ENTITY_ADR_3"))
+    define("_ENTITY_ADR_3", "Address 3");
+if (!defined("_ENTITY_ZIPCODE"))
+    define("_ENTITY_ZIPCODE", "Postal code");
+if (!defined("_ENTITY_CITY"))
+    define("_ENTITY_CITY", "City");
+if (!defined("_ENTITY_COUNTRY"))
+    define("_ENTITY_COUNTRY", " Country");
+if (!defined("_ENTITY_EMAIL"))
+    define("_ENTITY_EMAIL", "E-mail");
+if (!defined("_ENTITY_BUSINESS"))
+    define("_ENTITY_BUSINESS", "SIRET Number");
+if (!defined("_ENTITY_PARENT"))
+    define("_ENTITY_PARENT", "Relative department");
+if (!defined("_CHOOSE_ENTITY_PARENT"))
+    define("_CHOOSE_ENTITY_PARENT", "Choose the relative department");
+if (!defined("_CHOOSE_FILTER_ENTITY"))
+    define("_CHOOSE_FILTER_ENTITY", "Filter by department");
+if (!defined("_CHOOSE_ENTITY_TYPE"))
+    define("_CHOOSE_ENTITY_TYPE", "Choose the department type");
+if (!defined("_ENTITY_TYPE"))
+    define("_ENTITY_TYPE", "Department type");
+if (!defined("_TO_USERS_OF_ENTITIES"))
+    define("_TO_USERS_OF_ENTITIES", "To departments users");
+if (!defined("_ALL_ENTITIES"))
+    define("_ALL_ENTITIES", "All the departments");
+if (!defined("_ENTITIES_JUST_BELOW"))
+    define("_ENTITIES_JUST_BELOW", "Immediatly lower than the primary department");
+if (!defined("_ALL_ENTITIES_BELOW"))
+    define("_ALL_ENTITIES_BELOW", "Lower than the primary department");
+if (!defined("_ENTITIES_JUST_UP"))
+    define("_ENTITIES_JUST_UP", "Immediatly higher than the primary department");
+if (!defined("_ENTITIES_BELOW"))
+    define("_ENTITIES_BELOW", "Lower than all my departments");
+if (!defined("_MY_ENTITIES"))
+    define("_MY_ENTITIES", "All user's departments");
+if (!defined("_MY_PRIMARY_ENTITY"))
+    define("_MY_PRIMARY_ENTITY", "Primary department");
+if (!defined("_SAME_LEVEL_ENTITIES"))
+    define("_SAME_LEVEL_ENTITIES", "Same level than the primary department // Même niveau de l'entité primaire");
+if (!defined("_INDEXING_ENTITIES"))
+    define("_INDEXING_ENTITIES", "Index for departments");
+if (!defined("_SEARCH_DIFF_LIST"))
+    define("_SEARCH_DIFF_LIST", "Search a department or an user");
+if (!defined("_ADD_CC"))
+    define("_ADD_CC", "Add on copy");
+if (!defined("_TO_DEST"))
+    define("_TO_DEST", "Recipient");
+if (!defined("_NO_DIFF_LIST_ASSOCIATED"))
+    define("_NO_DIFF_LIST_ASSOCIATED", "No diffusion list");
+if (!defined("_PRINCIPAL_RECIPIENT"))
+    define("_PRINCIPAL_RECIPIENT", "Main recipient");
+if (!defined("_ADD_COPY_IN_PROCESS"))
+    define("_ADD_COPY_IN_PROCESS", "Add persons on copy in the handling");
+if (!defined("_UPDATE_LIST_DIFF_IN_DETAILS"))
+    define("_UPDATE_LIST_DIFF_IN_DETAILS", "Update diffusion list from the detailed page");
+if (!defined("_UPDATE_LIST_DIFF"))
+    define("_UPDATE_LIST_DIFF", "Modify diffusion list");
+if (!defined("_DIFF_LIST_COPY"))
+    define("_DIFF_LIST_COPY", "Diffusion list");
+if (!defined("_NO_COPY"))
+    define("_NO_COPY", "No copies");
+if (!defined("_DIFF_LIST"))
+    define("_DIFF_LIST", "Diffusion list");
+if (!defined("_NO_USER"))
+    define("_NO_USER", "No user");
+if (!defined("_MUST_CHOOSE_DEST"))
+    define("_MUST_CHOOSE_DEST", "You have to select one recipient at least");
+if (!defined("_ENTITIES__DEL"))
+    define("_ENTITIES__DEL", "Deletion");
+if (!defined("_ENTITY_DELETION"))
+    define("_ENTITY_DELETION", "Department deletion");
+if (!defined("_THERE_ARE_NOW"))
+    define("_THERE_ARE_NOW", "Now, there are ...");
+if (!defined("_DOC_IN_THE_DEPARTMENT"))
+    define("_DOC_IN_THE_DEPARTMENT", "Associated document(s) to the department");
+if (!defined("_DEL_AND_REAFFECT"))
+    define("_DEL_AND_REAFFECT", "Delete and reassign");
+if (!defined("_THE_ENTITY"))
+    define("_THE_ENTITY", "The department");
+if (!defined("_USERS_LINKED_TO"))
+    define("_USERS_LINKED_TO", "user(s) associated to the department");
+if (!defined("_ENTITY_MANDATORY_FOR_REDIRECTION"))
+    define("_ENTITY_MANDATORY_FOR_REDIRECTION", "Mandatory department for the reassigment");
+if (!defined("_WARNING_MESSAGE_DEL_ENTITY"))
+    define("_WARNING_MESSAGE_DEL_ENTITY", "Warning :<br> The department deletion leads to documents and users reassigment to a new department. It also reassigns documents (mails) on pending handling, the diffusion list templates and response templates toward a replacement department.");
 
 /******************** Keywords Helper ************/
-if (!defined('_HELP_KEYWORD1'))
-    define('_HELP_KEYWORD1', 'Every department the user belongs to. Does not include sub-departments');
-if (!defined('_HELP_KEYWORD2'))
-    define('_HELP_KEYWORD2', 'Primary department of the user');
-if (!defined('_HELP_KEYWORD3'))
-    define('_HELP_KEYWORD3', 'Sub-departments of the given list (the list can contain @my_entities or @my_primary_entity)');
-if (!defined('_HELP_KEYWORD4'))
-    define('_HELP_KEYWORD4', 'Parent of the given department');
-if (!defined('_HELP_KEYWORD5'))
-    define('_HELP_KEYWORD5', 'All departments at the same level of a given department');
-if (!defined('_HELP_KEYWORD6'))
-    define('_HELP_KEYWORD6', 'All active departments');
-if (!defined('_HELP_KEYWORD7'))
-    define('_HELP_KEYWORD7', 'Immediate sub-department of given departments');
-if (!defined('_HELP_KEYWORD8'))
-    define('_HELP_KEYWORD8', 'Ancestor entities of the given entity up to the depth given as second argument (no second argument means no max depth)');
+if (!defined("_HELP_KEYWORD1"))
+    define("_HELP_KEYWORD1", "All the departments attached to a connected user. Doesn't include subtitles");
+if (!defined("_HELP_KEYWORD2"))
+    define("_HELP_KEYWORD2", "Connected user's primary department");
+if (!defined("_HELP_KEYWORD3"))
+    define("_HELP_KEYWORD3", "Sub-department from the arguments list, which might be @my_entities or @my_primary_entity");
+if (!defined("_HELP_KEYWORD4"))
+    define("_HELP_KEYWORD4", "Relative department to the department on argument");
+if (!defined("_HELP_KEYWORD5"))
+    define("_HELP_KEYWORD5", "All departments on the same level as the department on arguments");
+if (!defined("_HELP_KEYWORD6"))
+    define("_HELP_KEYWORD6", "All the departments (actives)");
+if (!defined("_HELP_KEYWORD7"))
+    define("_HELP_KEYWORD7", "Immediate sub-departments (n-1) from the departments given on argument");
+if (!defined("_HELP_KEYWORD8"))
+    define("_HELP_KEYWORD8", "Forefather department to the one that is given to the level asked on second argument (or the first one - root- if there is no argument 2");
 if (!defined("_HELP_KEYWORD9"))
-    define("_HELP_KEYWORD9", "All entities with the informed type");
-if (!defined('_HELP_KEYWORDS'))
-    define('_HELP_KEYWORDS', 'Help for keywords');
-if (!defined('_HELP_KEYWORD_EXEMPLE_TITLE'))
-    define('_HELP_KEYWORD_EXEMPLE_TITLE', 'Example of security clause ("where clause"): granting access to ressources of the primary department of the user and its sub-departments.');
-if (!defined('_HELP_KEYWORD_EXEMPLE'))
-    define('_HELP_KEYWORD_EXEMPLE', 'where_clause : (DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity]))');
-if (!defined('_HELP_BY_ENTITY'))
-    define('_HELP_BY_ENTITY', 'Keywords defined by module "Entity"');
+    define("_HELP_KEYWORD9", "All departments of the type put on argument");
+if (!defined("_HELP_KEYWORDS"))
+    define("_HELP_KEYWORDS", "Help on the keywords");
+if (!defined("_HELP_KEYWORD_EXEMPLE_TITLE"))
+    define("_HELP_KEYWORD_EXEMPLE_TITLE", "Example in the goup security definition (where clause) : access on the resources about the connected user's main belongings department, or the subdepartments of this department.");
+if (!defined("_HELP_KEYWORD_EXEMPLE"))
+    define("_HELP_KEYWORD_EXEMPLE", "where_clause : (DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity]))");
+if (!defined("_HELP_BY_ENTITY"))
+    define("_HELP_BY_ENTITY", "Keywords of the department module");
+if (!defined("_BASKET_REDIRECTIONS_OCCURS_LINKED_TO"))
+    define("_BASKET_REDIRECTIONS_OCCURS_LINKED_TO", "Number of basket redirection associated to the department");
+if (!defined("_TEMPLATES_LINKED_TO"))
+    define("_TEMPLATES_LINKED_TO", "Response template(s) associated to a department");
+if (!defined("_LISTISTANCES_OCCURS_LINKED_TO"))
+    define("_LISTISTANCES_OCCURS_LINKED_TO", "Number of mails to handle or on copy associated to a department");
+if (!defined("_LISTMODELS_OCCURS_LINKED_TO"))
+    define("_LISTMODELS_OCCURS_LINKED_TO", "Diffusion template associated to the department");
+if (!defined("_CHOOSE_REPLACEMENT_DEPARTMENT"))
+    define("_CHOOSE_REPLACEMENT_DEPARTMENT", "Choose a replacing department");
 
 /******************** For reports ************/
-if (!defined('_ENTITY_VOL_STAT'))
-    define('_ENTITY_VOL_STAT', 'Amount of mail by entity');
-if (!defined('_ENTITY_VOL_STAT_DESC'))
-    define('_ENTITY_VOL_STAT_DESC', 'Amount of mail by entity');
-if (!defined('_NO_DATA_MESSAGE'))
-    define('_NO_DATA_MESSAGE', 'Not enough data');
-if (!defined('_MAIL_VOL_BY_ENT_REPORT'))
-    define('_MAIL_VOL_BY_ENT_REPORT', 'Amoung of mails by entity');
-if (!defined('_WRONG_DATE_FORMAT'))
-    define('_WRONG_DATE_FORMAT', 'Wrong date format');
-if (!defined('_ENTITY_PROCESS_DELAY'))
-    define('_ENTITY_PROCESS_DELAY', 'Average processing time by entity');
-if (!defined('_ENTITY_LATE_MAIL'))
-    define('_ENTITY_LATE_MAIL', 'Amoung of late mails by entity');
+if (!defined("_ENTITY_VOL_STAT"))
+    define("_ENTITY_VOL_STAT", "Mails volume by department");
+if (!defined("_ENTITY_VOL_STAT_DESC"))
+    define("_ENTITY_VOL_STAT_DESC", "Mails volume by department");
+if (!defined("_NO_DATA_MESSAGE"))
+    define("_NO_DATA_MESSAGE", "No datas enough");
+if (!defined("_MAIL_VOL_BY_ENT_REPORT"))
+    define("_MAIL_VOL_BY_ENT_REPORT", "Mail volume by department");
+if (!defined("_WRONG_DATE_FORMAT"))
+    define("_WRONG_DATE_FORMAT", "Wrong date format");
+if (!defined("_ENTITY_PROCESS_DELAY"))
+    define("_ENTITY_PROCESS_DELAY", "Medium handling time by department");
+if (!defined("_ENTITY_LATE_MAIL"))
+    define("_ENTITY_LATE_MAIL", "Late mail volume by department");
 
 /******************** Action put in copy ************/
-if (!defined('_ADD_COPY_FOR_DOC'))
-    define('_ADD_COPY_FOR_DOC', 'Put in copy for the resource');
-if (!defined('_VALIDATE_PUT_IN_COPY'))
-    define('_VALIDATE_PUT_IN_COPY', 'Validate the list');
-if (!defined('_ALL_LIST'))
-    define('_ALL_LIST', 'View all the list');    
+if (!defined("_ADD_COPY_FOR_DOC"))
+    define("_ADD_COPY_FOR_DOC", "Add on copy for the document");
+if (!defined("_VALIDATE_PUT_IN_COPY"))
+    define("_VALIDATE_PUT_IN_COPY", "Validate the addition on copy");
+if (!defined("_ALL_LIST"))
+    define("_ALL_LIST", "Display all the list");
+
+ /******************** Listinstance roles ***********/
+if (!defined("_DEST_OR_COPY"))
+    define("_DEST_OR_COPY", "Recipient");
+if (!defined("_SUBMIT"))
+    define("_SUBMIT", "Validate");
+if (!defined("_CANCEL"))
+    define("_CANCEL", "Cancel");
+if (!defined("_DIFFLIST_TYPE_ROLES"))
+    define("_DIFFLIST_TYPE_ROLES", "Available roles");
+if (!defined("_NO_AVAILABLE_ROLE"))
+    define("_NO_AVAILABLE_ROLE", "No available role");
+
+
+ /******************** Difflist types ***********/
+ if (!defined("_ALL_DIFFLIST_TYPES"))
+    define("_ALL_DIFFLIST_TYPES", "All the types");
+if (!defined("_DIFFLIST_TYPES_DESC"))
+    define("_DIFFLIST_TYPES_DESC", "Types of diffusion lists");
+if (!defined("_DIFFLIST_TYPES"))
+    define("_DIFFLIST_TYPES", "Types of diffusion lists");
+if (!defined("_DIFFLIST_TYPE"))
+    define("_DIFFLIST_TYPE", "Type(s) of list");
+if (!defined("_ADD_DIFFLIST_TYPE"))
+   define("_ADD_DIFFLIST_TYPE", "Add a type");
+if (!defined("_DIFFLIST_TYPE_ID"))
+   define("_DIFFLIST_TYPE_ID", "ID");
+if (!defined("_DIFFLIST_TYPE_LABEL"))
+   define("_DIFFLIST_TYPE_LABEL", "Description");
+if (!defined("_ALLOW_ENTITIES"))
+    define("_ALLOW_ENTITIES", "Authorize the departments");
+
+ /******************** Listmodels ***********/
+if (!defined("_ALL_LISTMODELS"))
+    define("_ALL_LISTMODELS", "All the lists");
+if (!defined("_LISTMODELS_DESC"))
+    define("_LISTMODELS_DESC", "Diffusion list templates of documents and folders");
+if (!defined("_LISTMODELS"))
+    define("_LISTMODELS", "Diffusion list templates");
+if (!defined("_LISTMODEL"))
+    define("_LISTMODEL", "List template(s)");
+if (!defined("_ADD_LISTMODEL"))
+    define("_ADD_LISTMODEL", "New template");
+if (!defined("_ADMIN_LISTMODEL"))
+    define("_ADMIN_LISTMODEL", "Diffusion list template");
+if (!defined("_ADMIN_LISTMODEL_TITLE"))
+    define("_ADMIN_LISTMODEL_TITLE", " List template identification:");
+if (!defined("_OBJECT_TYPE"))
+    define("_OBJECT_TYPE", "List template type");
+if (!defined("_SELECT_OBJECT_TYPE"))
+    define("_SELECT_OBJECT_TYPE", "Select a type...");
+if (!defined("_SELECT_OBJECT_ID"))
+    define("_SELECT_OBJECT_ID", "Select a link...");
+if (!defined("_USER_DEFINED_ID"))
+    define("_USER_DEFINED_ID", "Free");
+if (!defined("_ALL_OBJECTS_ARE_LINKED"))
+    define("_ALL_OBJECTS_ARE_LINKED", "All the lists are already definied");
+if (!defined("_SELECT_OBJECT_TYPE_AND_ID"))
+    define("_SELECT_OBJECT_TYPE_AND_ID", "You have to specify a list type and an ID!");
+if (!defined("_SAVE_LISTMODEL"))
+    define("_SAVE_LISTMODEL", "Validate");
+if (!defined("_OBJECT_ID_IS_NOT_VALID_ID"))
+    define("_OBJECT_ID_IS_NOT_VALID_ID", "Unavailable ID : they only could contain alphabetical characters, numbers or dashes (A-Z, a-z, 0-9, _)");
+if (!defined("_LISTMODEL_ID_ALREADY_USED"))
+    define("_LISTMODEL_ID_ALREADY_USED", "This ID is already used!");
+if (!defined("_CONFIRM_LISTMODEL_SAVE"))
+    define("_CONFIRM_LISTMODEL_SAVE", "Save the liste ?");
+
+if (!defined("_ENTER_DESCRIPTION"))
+    define("_ENTER_DESCRIPTION", "Mandatory description");
+if (!defined("_ENTER_TITLE"))
+    define("_ENTER_TITLE", "Mandatory title");
+
+
+
+if (!defined("_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS")) define("_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS", "Configure the model types of diffusion list for the indexation");
+if (!defined("_INDEXING_DIFFLIST_TYPES")) define("_INDEXING_DIFFLIST_TYPES", "Diffusion list types");
+
+if (!defined("_ADMIN_DIFFLIST_TYPES")) define("_ADMIN_DIFFLIST_TYPES", "Diffusion list types (Administration)");
+if (!defined("_ADMIN_DIFFLIST_TYPES_DESC")) define("_ADMIN_DIFFLIST_TYPES_DESC", "Administer the different types of diffusion list");
+if (!defined("_ADMIN_LISTMODELS")) define("_ADMIN_LISTMODELS", "Diffusion templates (Administration)");
+if (!defined("_ADMIN_LISTMODELS_DESC")) define("_ADMIN_LISTMODELS_DESC", "Administer the different diffusion templates");
 
 /******************** RM ENTITIES ************/
-if (!defined('_STANDARD'))
-    define('_STANDARD', 'Standard');
-if (!defined('_5_ARCHIVAL'))
-    define('_5_ARCHIVAL', '5 Archival');
-if (!defined('_51_IDENTIFICATION'))
-    define('_51_IDENTIFICATION', '5.1 Identification');
-if (!defined('_52_DESCRIPTION'))
-    define('_52_DESCRIPTION', '5.2 Description');
-if (!defined('_53_RELATIONS'))
-    define('_53_RELATIONS', '5.3 Relations');
-if (!defined('_54_CONTROL'))
-    define('_54_CONTROL', '5.4 Control');
+if (!defined("_STANDARD"))
+    define("_STANDARD", "Standard");
+if (!defined("_5_ARCHIVAL"))
+    define("_5_ARCHIVAL", "5 Archival");
+if (!defined("_51_IDENTIFICATION"))
+    define("_51_IDENTIFICATION", "5.1 Identification");
+if (!defined("_52_DESCRIPTION"))
+    define("_52_DESCRIPTION", "5.2 Description");
+if (!defined("_53_RELATIONS"))
+    define("_53_RELATIONS", "5.3 Connections");
+if (!defined("_54_CONTROL"))
+    define("_54_CONTROL", "5.4 Control");
+
+if (!defined("_VISIBLE"))
+    define("_VISIBLE", "Active");
+if (!defined("_NOT_VISIBLE"))
+    define("_NOT_VISIBLE", "Not active");
 
 /******** NEW WF ************/
-if (!defined('_TARGET_STATUS'))
-    define('_TARGET_STATUS', 'Target status at the end of the step');
-if (!defined('_TARGET_ROLE'))
-    define('_TARGET_ROLE', 'Target role to manage in the workflow');
-if (!defined('_ITS_NOT_MY_TURN_IN_THE_WF'))
-    define('_ITS_NOT_MY_TURN_IN_THE_WF', 'It is not my turn in the workflow');
-if (!defined('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF'))
-    define('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF', 'There is no available role for me in the workflow');
-if (!defined("_NO_AVAILABLE_ROLE"))
-    define("_NO_AVAILABLE_ROLE", "No available roles"); 
+if (!defined("_TARGET_STATUS"))
+    define("_TARGET_STATUS", "Final status on the step validation");
+if (!defined("_TARGET_ROLE"))
+    define("_TARGET_ROLE", "Rôle à faire avancer dans le workflow");
+if (!defined("_ITS_NOT_MY_TURN_IN_THE_WF"))
+    define("_ITS_NOT_MY_TURN_IN_THE_WF", "That is not my turn to process on the workflow");
+if (!defined("_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF"))
+    define("_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF", "There isn't defined role for me in the workflow");
 
-if (!defined('_NO_FILTER')) 
-    define('_NO_FILTER', 'Erase filters');
+if (!defined("_NO_FILTER"))
+    define("_NO_FILTER", "Remove filters");
 
-if (!defined('_AUTO_FILTER')) 
-    define('_AUTO_FILTER', 'Suggested list');
+if (!defined("_AUTO_FILTER"))
+    define("_AUTO_FILTER", "Suggested list");
 
-if (!defined('_STORE_DIFF_LIST'))
-    define('_STORE_DIFF_LIST', 'Store diffusion list');
+if (!defined("_REDIRECT_NOTE"))
+    define("_REDIRECT_NOTE", "Redirection reason (optional)");
 
-if (!defined('_DIFF_LIST_STORED'))
-    define('_DIFF_LIST_STORED', 'Diffusion list stored');
+if (!defined("_STORE_DIFF_LIST"))
+    define("_STORE_DIFF_LIST", "Record the diffusion list");
+
+if (!defined("_DIFF_LIST_STORED"))
+    define("_DIFF_LIST_STORED", "Recorded diffusion list");
 
 /////////////print_sep
-if (!defined('_PRINT_SEP'))
-    define('_PRINT_SEP' , 'Print the separator');
-if (!defined('_PRINT_SEP_TITLE'))
-    define('_PRINT_SEP_TITLE' , 'sub-file separator');
-if (!defined('_COMMENT_FOR_SEP1'))
-    define('_COMMENT_FOR_SEP1' , 'Put this separator on the pile of ');
-if (!defined('_COMMENT_FOR_SEP2'))
-    define('_COMMENT_FOR_SEP2' , 'documents including types : ');
-if (!defined('_PRINT_SEP_WILL_BE_START'))
-    define('_PRINT_SEP_WILL_BE_START', 'Seperator printing will start automatically.');
+if (!defined("_PRINT_SEP"))
+    define("_PRINT_SEP" , "Delimiter printing");
+if (!defined("_PRINT_SEP_TITLE"))
+    define("_PRINT_SEP_TITLE" , "Separateur de type");
+if (!defined("_COMMENT_FOR_SEP1"))
+    define("_COMMENT_FOR_SEP1" , "Put this delimiter on the stack of  ");
+if (!defined("_COMMENT_FOR_SEP2"))
+    define("_COMMENT_FOR_SEP2" , "documents type of")
+if (!defined("_PRINT_SEP_WILL_BE_START"))
+    define("_PRINT_SEP_WILL_BE_START", "Documents printing will automatically start.");
 
 //print sep for mlb
-if (!defined('_PRINT_SEPS'))
-    define('_PRINT_SEPS', 'Print barcode separators');
-if (!defined('_CHOOSE_ENTITIES'))
-    define('_CHOOSE_ENTITIES', 'Select entities');
-if (!defined('_PRINT_SEPS_BUTTON'))
-    define('_PRINT_SEPS_BUTTON', 'Print separator sheets');
-if (!defined('_ENTITIES_PRINT_SEP_MLB'))
-    define('_ENTITIES_PRINT_SEP_MLB', 'Print entities separator sheets');
-if (!defined('_SELECT_BARCODE_TYPE'))
-    define('_SELECT_BARCODE_TYPE', 'Select the barcode type');
+if (!defined("_PRINT_SEPS"))
+    define("_PRINT_SEPS", "Limiters printing");
+if (!defined("_CHOOSE_ENTITIES"))
+    define("_CHOOSE_ENTITIES", "Choose the departments");
+if (!defined("_PRINT_SEPS_BUTTON"))
+    define("_PRINT_SEPS_BUTTON", "Print the delimiters");
+if (!defined("_ENTITIES_PRINT_SEP_MLB"))
+    define("_ENTITIES_PRINT_SEP_MLB", "Print limiters by department/services");
+if (!defined("_ENTITIES_PRINT_SEP_MLB_GENERIC"))
+    define("_ENTITIES_PRINT_SEP_MLB_GENERIC", "Imprimer séparateur générique COURRIER");
+if (!defined("_SELECT_BARCODE_TYPE"))
+    define("_SELECT_BARCODE_TYPE", "Barecode type");
 if (!defined("_ADD_COPY_IN_INDEXING_VALIDATION"))
-    define("_ADD_COPY_IN_INDEXING_VALIDATION", "Add person only in copy in indexing/validation page");
+    define("_ADD_COPY_IN_INDEXING_VALIDATION", "Forbid recipient modification on the diffusion list");
+
 
 if (!defined("_DEL_USER_LISTDIFF"))
-    define("_DEL_USER_LISTDIFF", "Remove user from diffusion list");
+    define("_DEL_USER_LISTDIFF", "Remove the user from the diffusion list");
 
 if (!defined("_DEL_ENTITY_LISTDIFF"))
-    define("_DEL_ENTITY_LISTDIFF", "Remove entity from diffusion list");
+    define("_DEL_ENTITY_LISTDIFF", "Remove the department from the diffusion list");
 
 if (!defined("_ADD_USER_LISTDIFF"))
-    define("_ADD_USER_LISTDIFF", "Add user to diffusion list");
+    define("_ADD_USER_LISTDIFF", "Add the user to the diffusion list");
 
 if (!defined("_ADD_ENTITY_LISTDIFF"))
-    define("_ADD_ENTITY_LISTDIFF", "Add entity to diffusion list");
-
-if (!defined("_ADMIN_DIFFLIST_TYPES")) define("_ADMIN_DIFFLIST_TYPES", "Types of diffusion list (Administration)");
-if (!defined("_ADMIN_DIFFLIST_TYPES_DESC")) define("_ADMIN_DIFFLIST_TYPES_DESC", "Manage types of diffusion list");
-
-if (!defined("_UPDATE_LIST_DIFF_IN_DETAILS"))
-    define("_UPDATE_LIST_DIFF_IN_DETAILS", "Update dffusion list in detail");
-
-if (!defined("_ADMIN_LISTMODELS")) define("_ADMIN_LISTMODELS", "Diffusion models (Administration)");
-if (!defined("_ADMIN_LISTMODELS_DESC")) define("_ADMIN_LISTMODELS_DESC", "Manage diffusion models");
-
-if (!defined("_DIFFLIST_TYPES"))
-    define("_DIFFLIST_TYPES", "Types of diffusion list");
-
-if (!defined("_LISTMODELS"))
-    define("_LISTMODELS", "Models of diffusion list"); 
-
-if (!defined("_LISTMODEL"))
-    define("_LISTMODEL", "model(s)"); 
-
-if (!defined("_ALL_LISTMODELS"))
-    define("_ALL_LISTMODELS", "All Models"); 
-
-if (!defined("_UPDATE_LIST_DIFF"))
-  define("_UPDATE_LIST_DIFF", "Edit diffusion list");
-
-if (!defined("_ENTITIES_PRINT_SEP_MLB_GENERIC"))
-    define("_ENTITIES_PRINT_SEP_MLB_GENERIC", "Print generic separator COURRIER");
+    define("_ADD_ENTITY_LISTDIFF", "Add the department to the diffusion list");
