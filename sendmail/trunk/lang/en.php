@@ -34,7 +34,7 @@ if (!defined("_SENDED_EMAILS"))
 if (!defined("_EMAIL_DRAFT"))
     define("_EMAIL_DRAFT","Draft");
 if (!defined("_EMAIL_WAIT"))
-    define("_EMAIL_WAIT","Wainting to be send");
+    define("_EMAIL_WAIT","Waiting to be send");
 if (!defined("_EMAIL_IN_PROGRESS"))
     define("_EMAIL_IN_PROGRESS","Being send");
 if (!defined("_EMAIL_SENT"))
@@ -124,11 +124,11 @@ if (!defined("_REALLY_REMOVE_EMAIL"))
 if (!defined("_EMAIL_REMOVED"))
     define("_EMAIL_REMOVED", "Email removed");
 
-
 if (!defined('_Label_ADD_TEMPLATE_MAIL'))
     define('_Label_ADD_TEMPLATE_MAIL', 'Model of email');
 if (!defined('_ADD_TEMPLATE_MAIL'))
     define('_ADD_TEMPLATE_MAIL', 'Choose a template');
+
 if (!defined("_EMAIL_OBJECT_ANSWER"))
     define("_EMAIL_OBJECT_ANSWER", "Answer to your email from");
 if (!defined("_USE_MAIL_SERVICES"))
