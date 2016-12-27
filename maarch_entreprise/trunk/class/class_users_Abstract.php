@@ -194,10 +194,8 @@ abstract class class_users_Abstract extends Database
                             . $storeInfos['file_destination_name']
                         )
                     ) {
-                        $_SESSION['error'] = _FILE_NOT_EXISTS . ' : ' . $storeInfos['path_template']
-                            .  str_replace("#", DIRECTORY_SEPARATOR, $storeInfos['destination_dir'])
-                            . $storeInfos['file_destination_name'];
-                        return false;
+                        $_SESSION['error'] = $storeInfos['error'] .' templates';
+                        //return false;
                     } else {
                         $_SESSION['user']['signature_path'] = $storeInfos['destination_dir'];
                         $_SESSION['user']['signature_file_name']  = $storeInfos['file_destination_name'];
@@ -409,14 +407,16 @@ abstract class class_users_Abstract extends Database
                                 $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
 
                                 if (copy($_SESSION['user']['pathToSignature'], $filePathOnTmp)) { ?>
+                                    <div style="text-align:center;">
                                     <img src="<?php echo $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp; ?>"
-                                         alt="signature" id="signFromDs"/>
+                                         alt="signature" id="signFromDs" style="width:150px;height:100px;"/>
+                                    </div>
                                 <?php } else {
                                     echo _COPY_ERROR;
                                 }
                             }
                             ?>
-                            <canvas id="imageCanvas" style="display:none;"></canvas>
+                            <canvas id="imageCanvas" style="margin:auto;display:none;width:150px !important;height:100px !important;"></canvas>
                             <script>
                                 var signature = document.getElementById('signature');
                                 signature.addEventListener('change', handleImage, false);
@@ -480,7 +480,7 @@ abstract class class_users_Abstract extends Database
                                 echo ob_get_clean();
                                 ob_end_flush();
                                 ?>
-                                <div id="html_mode" style="display: block; width:80%;margin-left: 42%">
+                                <div id="html_mode" style="display: block; width:420px;">
                                     <textarea name="emailSignature" id="emailSignature" style="width:100%" rows="15" cols="60"></textarea>
                                 </div>
                             </div>

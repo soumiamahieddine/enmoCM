@@ -33,11 +33,13 @@ function changeSignatureForProfil(selected, mailSignaturesJS)
     if (nb >= 0) {
         body.innerHTML = mailSignaturesJS[nb].signature;
         $('trashButton').style.display = '';
-        $('signatureTitle').style.display = 'none';
+        $('signatureTitle').disabled = true;
+        $('signatureTitle').className = "readonly";
     } else {
         body.innerHTML = '';
         $('trashButton').style.display = 'none';
-        $('signatureTitle').style.display = '';
+        $('signatureTitle').disabled = false;
+        $('signatureTitle').className = "";
     }
 }
 
