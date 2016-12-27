@@ -71,7 +71,7 @@ abstract class contacts_controler_Abstract extends ObjectControler implements Ob
 
     public function CreateContact($data){
 
-        try {
+        //try {
             $func = new functions();
             $data = $func->object2array($data);
             $db = new Database();
@@ -95,25 +95,42 @@ abstract class contacts_controler_Abstract extends ObjectControler implements Ob
             $countData = count($data);
 
             for ($i=0;$i<$countData;$i++) {
-                if (strtoupper($data[$i]['column']) == strtoupper('email') && $data[$i]['value'] <> "") {
+
+                if(strtoupper($data[$i]['column']) == strtoupper('email') && ($data[$i]['value'] == "" || $data[$i]['value'] == null)){
+                    $returnResArray = array(
+                        'returnCode' => (int) 0,
+                        'contactId' => '',
+                        'addressId' => '',
+                        'contactInfo' => 'No email attached to contact, skipped ...',
+                        'error' => '',
+                    ); 
+                    return $returnResArray;
+                }
+
+                if (strtoupper($data[$i]['column']) == strtoupper('email') && ($data[$i]['value'] <> "" || $data[$i]['value'] <> null)) {
                     $theString = str_replace(">", "", $data[$i]['value']);
                     $mail = explode("<", $theString);
-                    $stmt = $db->query("SELECT contact_id, ca_id FROM view_contacts WHERE email = '" . $mail[count($mail) -1] . "' and enabled = '".$enabled."'");
-                    $res = $stmt->fetchObject();
-                    if ($res->ca_id <> "") {
-                        $contact_exists = true;
-
+                    $mail[0] = trim($mail[0]);
+                    try {
+                        $stmt = $db->query("SELECT contact_id, ca_id FROM view_contacts WHERE email = '" . $mail[0] . "' and enabled = '".$enabled."'");
+                        $res = $stmt->fetchObject();
+                        if ($res->ca_id <> "") {
+                            $contact_exists = true;
+                            
+                        } else {
+                            $contact_exists = false;
+                        }
+                    } catch (Exception $e) {
                         $returnResArray = array(
-                            'returnCode' => (int) 0,
-                            'contactId' => $res->contact_id,
-                            'addressId' => $res->ca_id,
-                            'error' => '',
-                        );
+                            'returnCode' => (int) -1,
+                            'contactId' => '',
+                            'addressId' => '',
+                            'contactInfo' => '',
+                            'error' => 'unknown error: ' . $e->getMessage(),
+                        );  
                         return $returnResArray;
-                        
-                    } else {
-                        $contact_exists = false;
                     }
+                    
                 }
 
                 $data[$i]['column'] = strtolower($data[$i]['column']);
@@ -143,40 +160,65 @@ abstract class contacts_controler_Abstract extends ObjectControler implements Ob
             $queryContactValues .= "'superadmin', 'SUPERADMIN', current_timestamp)";
 
             if (!$contact_exists) {
-                $queryContact = " INSERT INTO contacts_v2 " . $queryContactFields
+                try {
+                    $queryContact = " INSERT INTO contacts_v2 " . $queryContactFields
                        . ' values ' . $queryContactValues ;
 
-                $db->query($queryContact);
+                    $db->query($queryContact);
 
-                $currentContactId = $db->lastInsertId('contact_v2_id_seq');
+                    $currentContactId = $db->lastInsertId('contact_v2_id_seq');
 
-                $queryAddressFields .= "contact_id, user_id, entity_id)";
-                $queryAddressValues .=  $currentContactId . ", 'superadmin', 'SUPERADMIN')";
+                } catch (Exception $e) {
+                    $returnResArray = array(
+                        'returnCode' => (int) -1,
+                        'contactId' => 'ERROR',
+                        'addressId' => 'ERROR',
+                        'contactInfo' => '',
+                        'error' => 'contact creation error : '. $e->getMessage(),
+                    );
+                    
+                    return $returnResArray;
+                }
+                try {
+                    $queryAddressFields .= "contact_id, user_id, entity_id)";
+                    $queryAddressValues .=  $currentContactId . ", 'superadmin', 'SUPERADMIN')";
 
-                $queryAddress = " INSERT INTO contact_addresses " . $queryAddressFields
-                       . ' values ' . $queryAddressValues ;
+                    $queryAddress = " INSERT INTO contact_addresses " . $queryAddressFields
+                           . ' values ' . $queryAddressValues ;
 
-                $db->query($queryAddress);
-                $currentAddressId = $db->lastInsertId('contact_addresses_id_seq');
+                    $db->query($queryAddress);
+                    $currentAddressId = $db->lastInsertId('contact_addresses_id_seq');
+                } catch (Exception $e) {
+                    $returnResArray = array(
+                        'returnCode' => (int) -1,
+                        'contactId' => $currentContactId,
+                        'addressId' => 'ERROR',
+                        'contactInfo' => '',
+                        'error' => 'address creation error : '. $e->getMessage(),
+                    );
+                    
+                    return $returnResArray;
+                }
+            }else{
+                $returnResArray = array(
+                    'returnCode' => (int) 0,
+                    'contactId' => $currentContactId,
+                    'addressId' => $currentAddressId,
+                    'contactInfo' => 'contact already exist, attached to doc ... '.$queryContactValues,
+                    'error' => '',
+                );
+                
+                return $returnResArray;
             }
 
             $returnResArray = array(
                 'returnCode' => (int) 0,
                 'contactId' => $currentContactId,
                 'addressId' => $currentAddressId,
+                'contactInfo' => 'contact created and attached to doc ... '.$queryContactValues,
                 'error' => '',
             );
             
             return $returnResArray;
-            
-        } catch (Exception $e) {
-            $returnResArray = array(
-                'returnCode' => (int) -1,
-                'contactId' => '',
-                'addressId' => '',
-                'error' => 'unknown error' . $e->getMessage(),
-            );
-            return $returnResArray;
-        }
     }
 }

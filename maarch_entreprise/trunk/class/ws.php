@@ -19,7 +19,7 @@ $SOAP_dispatch_map['addContact'] = Array(
 
 $SOAP_typedef['returnId'] = array( 'returnCode'=>'int',
                                             'contactId'=>'string',
-                                            'contactId'=>'string',
+                                            'contactInfo'=>'string',
                                             'error'=>'string'
                                            );
 
