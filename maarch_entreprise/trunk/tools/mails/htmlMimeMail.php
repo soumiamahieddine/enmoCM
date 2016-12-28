@@ -794,7 +794,13 @@ class htmlMimeMail
                     if ($name == 'Bcc') {
                         continue;
                     }
-                    $headers[] = $name . ': ' . $this->_encodeHeader($value, $this->build_params['head_charset']);
+                    //ajout d'une condition pour subject, car _encodeHeader ne prend pas les caractères spéciaux avec php7 en revanche fonctionne très bien avec php5.6
+                    if ($name == 'Subject'){
+                        $headers[] = $name . ': ' . $value;
+                    }else{
+                        $headers[] = $name . ': ' . $this->_encodeHeader($value, $this->build_params['head_charset']);
+                    }
+                    
                 }
                 // Add To header based on $recipients argument
                 $headers[] = 'To: ' . $this->_encodeHeader(implode(', ', $recipients), $this->build_params['head_charset']);
