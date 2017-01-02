@@ -584,24 +584,29 @@ public class DisCM extends JApplet {
 
             this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
 
-            this.logger.log("----------CONVERSION PDF----------", Level.INFO);
-            createPDF(this.userLocalDirTmp + this.fileToEdit, this.userLocalDirTmp, isUnix);
+            if ((fileExtension.equalsIgnoreCase("docx") || fileExtension.equalsIgnoreCase("doc") || fileExtension.equalsIgnoreCase("docm") || fileExtension.equalsIgnoreCase("odt") || fileExtension.equalsIgnoreCase("ott"))) {
+                this.logger.log("----------CONVERSION PDF----------", Level.INFO);
+                createPDF(this.userLocalDirTmp + this.fileToEdit, this.userLocalDirTmp, isUnix);
 
-            String pdfFile = this.userLocalDirTmp + "thefile_" + idApplet + ".pdf";
+                String pdfFile = this.userLocalDirTmp + "thefile_" + idApplet + ".pdf";
 
-            this.logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
-            if (this.fM.isPsExecFileExists(pdfFile)) {
-                this.pdfContentTosend = FileManager.encodeFile(pdfFile);
-                this.fileToDelete.add(pdfFile);
-            } else {
-                this.pdfContentTosend = "null";
-                this.logger.log("ERREUR DE CONVERSION PDF !", Level.WARNING);
-                JOptionPane.showMessageDialog(null, "Attention ! La conversion PDF a échoué mais le document a bien été transféré.");
+                this.logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
+                if (this.fM.isPsExecFileExists(pdfFile)) {
+                    this.pdfContentTosend = FileManager.encodeFile(pdfFile);
+                    this.fileToDelete.add(pdfFile);
+                } else {
+                    this.pdfContentTosend = "null";
+                    this.logger.log("ERREUR DE CONVERSION PDF !", Level.WARNING);
+                    JOptionPane.showMessageDialog(null, "Attention ! La conversion PDF a échoué mais le document a bien été transféré.");
+                }
+                this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
+
+                this.logger.log("---------- FIN CONVERSION PDF----------", Level.INFO);
+            }else{
+                this.pdfContentTosend = "not allowed";
+                this.logger.log("Conversion not allowed for this extension : " + fileExtension, Level.INFO);
             }
-
-            this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
-
-            this.logger.log("---------- FIN CONVERSION PDF----------", Level.INFO);
+            
 
             String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType
                     + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
