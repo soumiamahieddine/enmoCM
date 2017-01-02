@@ -89,7 +89,7 @@
         </tags>
         <impact>2</impact>
     </filter>
-    <filter>
+    <!--<filter>
         <id>10</id>
         <rule><![CDATA[(?:(?:\/|\\)?\.+(\/|\\)(?:\.+)?)|(?:\w+\.exe\??\s)|(?:;\s*\w+\s*\/[\w*-]+\/)|(?:\d\.\dx\|)|(?:%(?:c0\.|af\.|5c\.))|(?:\/(?:%2e){2})]]></rule>
         <description>Detects basic directory traversal</description>
@@ -99,7 +99,7 @@
             <tag>lfi</tag>
         </tags>
         <impact>5</impact>
-    </filter>
+    </filter>-->
     <filter>
         <id>11</id>
         <rule><![CDATA[(?:%c0%ae\/)|(?:(?:\/|\\)(home|conf|usr|etc|proc|opt|s?bin|local|dev|tmp|kern|[br]oot|sys|system|windows|winnt|program|%[a-z_-]{3,}%)(?:\/|\\))|(?:(?:\/|\\)inetpub|localstart\.asp|boot\.ini)]]></rule>
