@@ -96,17 +96,31 @@ require_once("modules/entities/class/class_manage_entities.php");
 
         $_SESSION['redirect']['diff_list'] = $difflist->get_listinstance($values_str, false, $coll_id);
 
-        if (!empty($_SESSION['process']['diff_list']['avis'])) {
-            $_SESSION['redirect']['diff_list']['avis'] = $_SESSION['process']['diff_list']['avis'];
-        } 
+        if($_SESSION['save_list']['fromProcess'] == 'true'){
+            if (!empty($_SESSION['process']['diff_list']['avis'])) {
+                $_SESSION['redirect']['diff_list']['avis'] = $_SESSION['process']['diff_list']['avis'];
+            } 
 
-        if (!empty($_SESSION['process']['diff_list']['avis_copy'])) {
-            $_SESSION['redirect']['diff_list']['avis_copy'] = $_SESSION['process']['diff_list']['avis_copy'];
-        }  
+            if (!empty($_SESSION['process']['diff_list']['avis_copy'])) {
+                $_SESSION['redirect']['diff_list']['avis_copy'] = $_SESSION['process']['diff_list']['avis_copy'];
+            }  
 
-        if (!empty($_SESSION['process']['diff_list']['avis_info'])) {
-            $_SESSION['redirect']['diff_list']['avis_info'] = $_SESSION['process']['diff_list']['avis_info'];
-        }    
+            if (!empty($_SESSION['process']['diff_list']['avis_info'])) {
+                $_SESSION['redirect']['diff_list']['avis_info'] = $_SESSION['process']['diff_list']['avis_info'];
+            }
+        }else{
+            if (!empty($_SESSION['indexing']['diff_list']['avis'])) {
+                $_SESSION['redirect']['diff_list']['avis'] = $_SESSION['indexing']['diff_list']['avis'];
+            } 
+
+            if (!empty($_SESSION['indexing']['diff_list']['avis_copy'])) {
+                $_SESSION['redirect']['diff_list']['avis_copy'] = $_SESSION['indexing']['diff_list']['avis_copy'];
+            }  
+
+            if (!empty($_SESSION['indexing']['diff_list']['avis_info'])) {
+                $_SESSION['redirect']['diff_list']['avis_info'] = $_SESSION['indexing']['diff_list']['avis_info'];
+            }
+        }
 
         $frm_str .='<b>'._RECOMMENDATION_LIMIT_DATE.':</b><br/>';
         $frm_str .= '<input name="recommendation_limit_date_tr" type="text" '
