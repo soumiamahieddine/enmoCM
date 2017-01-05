@@ -168,7 +168,12 @@ if ($arrayIsAllowed['status'] == false) {
 
                 if ($_SESSION['targetAttachment'] == 'add'){
 					$relation       = 1;
-					$identifier     = $_SESSION['attachmentInfo']['chrono'];
+                    if(!empty($_SESSION['attachmentInfo']['chrono'])){
+                        $identifier     = $_SESSION['attachmentInfo']['chrono'];
+                    }else{
+                        $identifier     = null;    
+                    }
+					
 					$attachmentType = $_SESSION['attachmentInfo']['type'];
 					$TableName      = RES_ATTACHMENTS_TABLE;
 
@@ -188,7 +193,11 @@ if ($arrayIsAllowed['status'] == false) {
 					$previous_attachment = $stmt->fetchObject();
 					$relation            = (int)$previous_attachment->relation;
 					$relation++;
-					$identifier          = $previous_attachment->identifier;
+                    if(!empty($previous_attachment->identifier)){
+                        $identifier      = $previous_attachment->identifier;
+                    }else{
+                        $identifier      = null;    
+                    }
 					$attachmentType      = $previous_attachment->attachment_type;
 					$TableName           = 'res_version_attachments';
 
