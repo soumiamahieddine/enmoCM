@@ -748,7 +748,21 @@ if (isset($_POST['add']) && $_POST['add']) {
 						$js .= "window.parent.top.location.href = 'index.php?page=view_baskets&module=basket&baskets=MyBasket&resid=".$_SESSION['doc_id']."&directLinkToAction';";
 					}
 					else {
-						$js .= "window.parent.top.location.reload()";
+						//$js .= "window.parent.top.location.reload()";
+                        if($attachment_types == 'response_project' || $attachment_types == 'signed_response'){
+                            $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach2\');';
+                            $js .= 'var nb_attach = parseInt(window.parent.top.document.getElementById(\'answer_number\').innerHTML);';
+                            $js .= 'nb_attach = nb_attach+1;';
+                            $js .= 'window.parent.top.document.getElementById(\'answer_number\').innerHTML = nb_attach;';
+                        }else{
+                            $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach\');';
+                            $js .= 'var nb_attach = parseInt(window.parent.top.document.getElementById(\'nb_attach\').innerHTML);';
+                            $js .= 'nb_attach = nb_attach+1;';
+                            $js .= 'window.parent.top.document.getElementById(\'nb_attach\').innerHTML = nb_attach;';
+
+                        }
+                        $js .= 'eleframe1.src =  eleframe1.src;';
+
 					}
                 } else {
                     $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach\');';
