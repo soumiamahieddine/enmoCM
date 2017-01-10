@@ -210,8 +210,11 @@ function change_diff_list(
                     {
                         diff_list_tr.style.display = tr_display_val;
                     }
-                    if(window.opener.$('save_list_diff')){
-                        window.opener.$('save_list_diff').click();
+                    if(window.opener.document.getElementById('save_list_diff')){ 
+                        window.opener.document.getElementById('save_list_diff').click();
+                    }
+                    if(window.opener.parent.document.getElementById('iframe_tab')){
+                        window.opener.parent.document.getElementById('iframe_tab').src = window.opener.parent.document.getElementById('iframe_tab').src;
                     }
                     window.close();
                 }
@@ -321,6 +324,9 @@ function saveListDiff(
                     if (div_diff_list_message != null) {
                         div_diff_list_message.innerHTML = response.div_content;
                         Element.hide.delay(2, 'div_diff_list_message');
+                    }
+                    if(parent.$('diffList_iframe')){
+                        parent.$('diffList_iframe').src = parent.$('diffList_iframe').src;
                     }
                 }
             }
