@@ -103,7 +103,6 @@ $init = false;
 ?>
 <div id="inner_content" style="padding:0px;">
     <div class="block">
-        <h2><i class="fa fa-folder-open fa-2x" title="" ></i> <?php echo _CREATE_FOLDER;?></h2>
         <form name="create_folder" id="create_folder" method="post" class="forms"
               action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=manage_create_folder&iframe=true" >
             <input type="hidden" name="display"  value="true" />
@@ -155,7 +154,7 @@ $init = false;
             <p class="buttons" style="text-align:center;">
                 <input type="submit" name="validate" id="validate" value="<?php echo _VALIDATE; ?>" class="button"/>
                 <input type="button" name="cancel" id="cancel" value="<?php echo _CANCEL; ?>"
-                       class="button" onclick="new Effect.BlindUp(parent.document.getElementById('create_folder_div'));return false;" />
+                       class="button" onclick="new Effect.BlindUp(parent.document.getElementById('show_tab'));return false;" />
             </p>
         </form>
     </div>
