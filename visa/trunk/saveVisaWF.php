@@ -88,25 +88,17 @@
 			);
 		}
 	}
-	
-	/*array_push(
-			$_SESSION['visa_wf']['diff_list']['sign']['users'], 
-			array(
-			'user_id' => $conseillers[count($conseillers) - 2], 
-			'processComment' => $consignes[count($consignes) - 2], 
-			'processDate' => $dates[count($dates) - 2], 
-			'viewed' => 0,
-			'visible' => 'Y',
-			'difflist_type' => 'VISA_CIRCUIT'
-			)
-		);*/
 		
 	$visa->saveWorkflow($res_id, $coll_id, $_SESSION['visa_wf']['diff_list'], 'VISA_CIRCUIT');
-
+        
+        //LOAD TOOLBAR BADGE
+        $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=visa&page=load_toolbar_visa&origin=parent&resId='.$res_id.'&collId='.$coll_id;
+        $js .='loadToolbarBadge(\'visa_tab\',\''.$toolbarBagde_script.'\');';
+        
 	if ($_POST['fromDetail'] == "Y") {
 		$visa->setStatusVisa($res_id, $coll_id);
 	}
 	
-	echo "{status : 1}";
+	echo "{status : 1, exec_js : '".addslashes($js)."'}";
 	exit();
 ?>

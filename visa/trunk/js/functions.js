@@ -362,8 +362,9 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau, fromDetail){
 				eval("response = "+answer.responseText);
 				if (response.status == 1) {
 					$('divInfoVisa').innerHTML = 'Mise à jour du circuit effectuée';
-                    $('divInfoVisa').style.display = 'table-cell';
-                    Element.hide.delay(5, 'divInfoVisa');
+                                        $('divInfoVisa').style.display = 'table-cell';
+                                        Element.hide.delay(5, 'divInfoVisa');
+                                        eval(response.exec_js);
 				} else if (response.status == 2){
 					$('divErrorVisa').innerHTML = 'Sélectionner au moins un utilisateur';
 					$('divErrorVisa').style.display = 'table-cell';
@@ -565,114 +566,201 @@ function launchTabri(){
 
 
 
-function loadNewId(path_update,newId, collId, idToDisplay){
+function loadNewId(path_update, newId, collId, idToDisplay) {
+    new Ajax.Request(path_update,
+            {
+                method: 'post',
+                parameters: {
+                    res_id: newId,
+                    coll_id: collId,
+                    action: parent.$('action_id').value
+                },
+                asynchronous: false,
+                onSuccess: function (answer) {
+                    eval("response = " + answer.responseText);
+                    //console.log(response);
+                    if (response.status == 0) { //document verouillé
+                        alert(response.error);
+                    } else {
+                        /* Modification dans la liste de gauche */
+                        var zone_old = 'list_doc_' + parent.$('cur_resId').value;
+                        var zone_new = 'list_doc_' + newId;
+                        //console.log(zone_new);
+                        clearInterval(docLockInterval);
+                        //unlock old doc
+                        new Ajax.Request('index.php?display=true&dir=actions&page=docLocker', {method: 'post', parameters: {'AJAX_CALL': true, 'unlock': true, 'res_id': parent.$('cur_resId').value}, onSuccess: function (answer) {/*var cur_url=window.location.href;*/
+                                if (cur_url.indexOf('&directLinkToAction') != -1)
+                                    cur_url = cur_url.replace('&directLinkToAction', '');
+                                window.location.href = cur_url;
+                            }});
+                        //lock the new doc
+                        docLockInterval = setInterval("new Ajax.Request('index.php?display=true&dir=actions&page=docLocker',{ method:'post', parameters: {'AJAX_CALL': true, 'lock': true, 'res_id': " + newId + " } });", 50000);
+                        if ($(zone_new)) {
+                            $(zone_new).className = 'selectedId';
+                        }
+                        if ($(zone_old)) {
+                            $(zone_old).className = 'unselectedId';
+                        }
 
-	new Ajax.Request(path_update,
-	{
-			method:'post',
-			parameters: { 
-				res_id : newId,
-				coll_id : collId,
-				action : $('action_id').value
-						},
-			asynchronous: false,
-			onSuccess: function(answer){
-				eval("response = "+answer.responseText);
-				//console.log(response);
-				if (response.status == 0){ //document verouillé
-					alert(response.error);
-				}else{
-					/* Modification dans la liste de gauche */
-					var zone_old = 'list_doc_'+$('cur_resId').value;
-					var zone_new = 'list_doc_'+newId;
-					//console.log(zone_new);
-					clearInterval(docLockInterval);
-					//unlock old doc
-					new Ajax.Request('index.php?display=true&dir=actions&page=docLocker',{ method:'post', parameters: {'AJAX_CALL': true, 'unlock': true, 'res_id': $('cur_resId').value}, onSuccess: function(answer){/*var cur_url=window.location.href;*/ if (cur_url.indexOf('&directLinkToAction') != -1) cur_url=cur_url.replace('&directLinkToAction','');window.location.href=cur_url;} });
-					//lock the new doc
-					docLockInterval = setInterval("new Ajax.Request('index.php?display=true&dir=actions&page=docLocker',{ method:'post', parameters: {'AJAX_CALL': true, 'lock': true, 'res_id': "+ newId+" } });", 5000);
-					$(zone_old).className = 'unselectedId';
-					$(zone_new).className = 'selectedId';
-					
-					$('cur_resId').value=newId;
+                        parent.$('cur_resId').value = newId;
 
-					if(idToDisplay == 'chrono_number'){
-						$('numIdDocPage').innerHTML=$('chrn_id_'+newId).innerHTML;
-					}else{
-						$('numIdDocPage').innerHTML=newId;
-					}
-					//console.log('display: '+idToDisplay);
-				}
-				if (response.status == 1){ //page de visa
-					$('tabricatorLeft').innerHTML = response.left_html;
-					$('tabricatorRight').innerHTML = response.right_html;
-					$("send_action").setAttribute('onclick',response.valid_button);
-					
-					updateFunctionModifRep(response.id_rep, 1, response.is_vers_rep);
-					
-					//console.log("Initialisation onglets de la partie droite");
-					var tabricatorLeft = new Tabricator('tabricatorLeft', 'DT');
-					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
-				}
-				
-				if (response.status == 2){ //page préparation circuit
-					$('tabricatorRight').innerHTML = response.right_html;
-					$("send_action").setAttribute('onclick',response.valid_button);
-					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
-					//console.log("MAJ OK");
-				}
-				
-				if (response.status == 3){ //page envoi mail
-					$('tabricatorRight').innerHTML = response.right_html;
-					$("send_action").setAttribute('onclick',response.valid_button);
-					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
-					
-					showEmailForm('index.php?display=true&module=sendmail&page=sendmail_ajax_content&mode=add&identifier='+newId+'&origin=document&coll_id='+collId+'&size=medium', '820px', '545px', 'sendmail_iframe');
-				}
-				
-				if (response.status == 4){ //page impression dossier
-					$('tabricatorRight').innerHTML = response.right_html;
-					$("send_action").setAttribute('onclick',response.valid_button);
-					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
-					//console.log("MAJ OK");
-				}
-			},
-			 onFailure: function(){ 
-				//console.log("Probleme de Mise à jour !");
-			 }
-	});
-	
+                        if (idToDisplay == 'chrono_number') {
+                            parent.$('numIdDocPage').innerHTML = parent.$('chrn_id_' + newId).innerHTML;
+                        } else {
+                            parent.$('numIdDocPage').innerHTML = newId;
+                        }
+                        //console.log('display: '+idToDisplay);
+                    }
+                    if (response.status == 1) { //page de visa
+                        parent.$('tabricatorLeft').innerHTML = response.left_html;
+                        parent.$('tabricatorRight').innerHTML = response.right_html;
+                        parent.$("send_action").setAttribute('onclick', response.valid_button);
+                        
+                        updateFunctionModifRep(response.id_rep, 1, response.is_vers_rep);
+
+                        //console.log("Initialisation onglets de la partie droite");
+                        var tabricatorLeft = new Tabricator('tabricatorLeft', 'DT');
+                        var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+                        
+                        eval(response.exec_js);
+
+                    }
+
+                    if (response.status == 2) { //page préparation circuit
+                        parent.$('tabricatorRight').innerHTML = response.right_html;
+                        parent.$("send_action").setAttribute('onclick', response.valid_button);
+                        var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+                        //console.log("MAJ OK");
+                    }
+
+                    if (response.status == 3) { //page envoi mail
+                        parent.$('tabricatorRight').innerHTML = response.right_html;
+                        parent.$("send_action").setAttribute('onclick', response.valid_button);
+                        var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+
+                        showEmailForm('index.php?display=true&module=sendmail&page=sendmail_ajax_content&mode=add&identifier=' + newId + '&origin=document&coll_id=' + collId + '&size=medium', '820px', '545px', 'sendmail_iframe');
+                    }
+
+                    if (response.status == 4) { //page impression dossier
+                        parent.$('tabricatorRight').innerHTML = response.right_html;
+                        parent.$("send_action").setAttribute('onclick', response.valid_button);
+                        var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+                        //console.log("MAJ OK");
+                    }
+                },
+                onFailure: function () {
+                    //console.log("Probleme de Mise à jour !");
+                }
+            });
+
+}
+
+function loadNewId2(path_update, newId, collId, idToDisplay) {
+    new Ajax.Request(path_update,
+            {
+                method: 'post',
+                parameters: {
+                    res_id: newId,
+                    coll_id: collId,
+                    action: $('action_id').value
+                },
+                asynchronous: false,
+                onSuccess: function (answer) {
+                    eval("response = " + answer.responseText);
+                    //console.log(response);
+                    if (response.status == 0) { //document verouillé
+                        alert(response.error);
+                    } else {
+                  
+                        /* Modification dans la liste de gauche */
+                        var zone_old = 'list_doc_' + $('cur_resId').value;
+                        var zone_new = 'list_doc_' + newId;
+                        //console.log(zone_new);
+                        clearInterval(docLockInterval);
+                        //unlock old doc
+                        new Ajax.Request('index.php?display=true&dir=actions&page=docLocker', {method: 'post', parameters: {'AJAX_CALL': true, 'unlock': true, 'res_id': $('cur_resId').value}, onSuccess: function (answer) {/*var cur_url=window.location.href;*/
+                                if (cur_url.indexOf('&directLinkToAction') != -1)
+                                    cur_url = cur_url.replace('&directLinkToAction', '');
+                                window.location.href = cur_url;
+                            }});
+                        //lock the new doc
+                        docLockInterval = setInterval("new Ajax.Request('index.php?display=true&dir=actions&page=docLocker',{ method:'post', parameters: {'AJAX_CALL': true, 'lock': true, 'res_id': " + newId + " } });", 50000);
+
+                        if($(zone_new)){
+                            $(zone_new).className = 'selectedId';
+                        }
+                        if($(zone_old)){
+                            $(zone_old).className = 'unselectedId';
+                        }
+                        $('cur_resId').value = newId;
+
+                        if (idToDisplay == 'chrono_number') {
+                            $('numIdDocPage').innerHTML = $('chrn_id_' + newId).innerHTML;
+                        } else {
+                            $('numIdDocPage').innerHTML = newId;
+                        }
+                        //console.log('display: '+idToDisplay);
+                    }
+                    if (response.status == 1) { //page de visa
+                        $('tabricatorLeft').innerHTML = response.left_html;
+                        $('tabricatorRight').innerHTML = response.right_html;
+                        $("send_action").setAttribute('onclick', response.valid_button);
+
+                        updateFunctionModifRep(response.id_rep, 1, response.is_vers_rep);
+
+                        console.log("Initialisation onglets de la partie droite");
+                        var tabricatorLeft = new Tabricator('tabricatorLeft', 'DT');
+                        var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+
+                    }
+
+                    if (response.status == 2) { //page préparation circuit
+                        $('tabricatorRight').innerHTML = response.right_html;
+                        $("send_action").setAttribute('onclick', response.valid_button);
+                        var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+                        //console.log("MAJ OK");
+                    }
+
+                    if (response.status == 3) { //page envoi mail
+                        $('tabricatorRight').innerHTML = response.right_html;
+                        $("send_action").setAttribute('onclick', response.valid_button);
+                        var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+
+                        showEmailForm('index.php?display=true&module=sendmail&page=sendmail_ajax_content&mode=add&identifier=' + newId + '&origin=document&coll_id=' + collId + '&size=medium', '820px', '545px', 'sendmail_iframe');
+                    }
+
+                    if (response.status == 4) { //page impression dossier
+                        $('tabricatorRight').innerHTML = response.right_html;
+                        $("send_action").setAttribute('onclick', response.valid_button);
+                        var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+                        //console.log("MAJ OK");
+                    }
+                },
+                onFailure: function () {
+                    //console.log("Probleme de Mise à jour !");
+                }
+            });
+
 }
 
 function previousDoc(path_update,collId){
-	var list = $('list_docs').value;
-	var tab_docs = list.split("#");
-	var current = $('cur_resId').value;
-	//console.log(tab_docs);
-	
-	for (var i=0; i < tab_docs.length-1 ; i++){
-		if (tab_docs[i] == current && i != 0) loadNewId(path_update,tab_docs[i-1], collId);
-	}
+	var current = parent.$('cur_resId').value;
+	$('list_doc_'+current).previousSibling.click();
 }
 
 function nextDoc(path_update,collId){
-	var list = $('list_docs').value;
-	var tab_docs = list.split("#");
-	var current = $('cur_resId').value;
-	//console.log(tab_docs);
-	
-	for (var i=0; i < tab_docs.length-1 ; i++){
-		if (tab_docs[i] == current && i != tab_docs.length-2 ) loadNewId(path_update,tab_docs[i+1], collId);
-	}
+	var current = parent.$('cur_resId').value;
+	$('list_doc_'+current).nextSibling.click();
+        
 }
 
 function updateFunctionModifRep(idReponse, num_rep, is_version){
 	if(idReponse == 0){
-		if (document.getElementById("update_rep_link")) {
-			document.getElementById("update_rep_link").style.display = 'none';
+		if (parent.document.getElementById("update_rep_link")) {
+			parent.document.getElementById("update_rep_link").style.display = 'none';
 		}
-		if (document.getElementById("sign_link")) {
-			document.getElementById("sign_link").style.display = 'none';
+		if (parent.document.getElementById("sign_link")) {
+			parent.document.getElementById("sign_link").style.display = 'none';
 		}
 
 	}else{
@@ -682,55 +770,55 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
 				if (response.status == 1){
-					if (document.getElementById("sign_link")){
-						document.getElementById("sign_link").style.display = '';
-						document.getElementById("sign_link").setAttribute('onclick','document.getElementById("list_attach").src="index.php?display=true&module=attachments&page=del_attachment&relation=1&id='+idReponse+'&fromDetail="');	
-						document.getElementById("sign_link").style.color = 'green';
-						document.getElementById("sign_link_img").src = 'static.php?filename=sign_valid.png';
-						document.getElementById("sign_link_img").title= 'Enlever la signature';
-						document.getElementById("sign_link_img").style.cursor = 'not-allowed';
-						document.getElementById("sign_link").setAttribute('disabled','disabled');
+					if (parent.document.getElementById("sign_link")){
+						parent.document.getElementById("sign_link").style.display = '';
+						parent.document.getElementById("sign_link").setAttribute('onclick','document.getElementById("list_attach").src="index.php?display=true&module=attachments&page=del_attachment&relation=1&id='+idReponse+'&fromDetail="');	
+						parent.document.getElementById("sign_link").style.color = 'green';
+						parent.document.getElementById("sign_link_img").src = 'static.php?filename=sign_valid.png';
+						parent.document.getElementById("sign_link_img").title= 'Enlever la signature';
+						parent.document.getElementById("sign_link_img").style.cursor = 'not-allowed';
+						parent.document.getElementById("sign_link").setAttribute('disabled','disabled');
 
 					}
-					if (document.getElementById("sign_link_certif")){
-						document.getElementById("sign_link_certif").setAttribute('onclick','');	
-						document.getElementById("sign_link_certif").style.color = 'green';
+					if (parent.document.getElementById("sign_link_certif")){
+						parent.document.getElementById("sign_link_certif").setAttribute('onclick','');	
+						parent.document.getElementById("sign_link_certif").style.color = 'green';
 					}
 					
-					if (document.getElementById("update_rep_link")) {
-						document.getElementById("update_rep_link").style.display = 'none';
+					if (parent.document.getElementById("update_rep_link")) {
+						parent.document.getElementById("update_rep_link").style.display = 'none';
 					}
 				}
 				else if (response.status == 0){
-					if (document.getElementById("sign_link")){
-						document.getElementById("sign_link").style.display = '';
-						document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+','+is_version+',2);');	
-						document.getElementById("sign_link").style.color = '';
-						document.getElementById("sign_link_img").src = 'static.php?filename=sign.png';
-						document.getElementById("sign_link_img").title= 'Signer ces projets de réponse (sans certificat)';
-						document.getElementById("sign_link_img").style.cursor = 'pointer';
-						document.getElementById("sign_link").removeAttribute('disabled');
+					if (parent.document.getElementById("sign_link")){
+						parent.document.getElementById("sign_link").style.display = '';
+						parent.document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+','+is_version+',2);');	
+						parent.document.getElementById("sign_link").style.color = '';
+						parent.document.getElementById("sign_link_img").src = 'static.php?filename=sign.png';
+						parent.document.getElementById("sign_link_img").title= 'Signer ces projets de réponse (sans certificat)';
+						parent.document.getElementById("sign_link_img").style.cursor = 'pointer';
+						parent.document.getElementById("sign_link").removeAttribute('disabled');
 					}
-					if (document.getElementById("sign_link_certif")){
-						document.getElementById("sign_link_certif").setAttribute('onclick','signFile('+idReponse+','+is_version+',0);');	
-						document.getElementById("sendPIN").setAttribute('onclick','signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
-						document.getElementById("valuePIN").setAttribute('onKeyPress','if (event.keyCode == 13) signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
-						document.getElementById("sign_link_certif").style.color = '';
-						document.getElementById("sign_link_img").src = 'static.php?filename=sign.png';
+					if (parent.document.getElementById("sign_link_certif")){
+						parent.document.getElementById("sign_link_certif").setAttribute('onclick','signFile('+idReponse+','+is_version+',0);');	
+						parent.document.getElementById("sendPIN").setAttribute('onclick','signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
+						parent.document.getElementById("valuePIN").setAttribute('onKeyPress','if (event.keyCode == 13) signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
+						parent.document.getElementById("sign_link_certif").style.color = '';
+						parent.document.getElementById("sign_link_img").src = 'static.php?filename=sign.png';
 					}
-					if (document.getElementById("update_rep_link")) {
-						document.getElementById("update_rep_link").style.display = '';
+					if (parent.document.getElementById("update_rep_link")) {
+						parent.document.getElementById("update_rep_link").style.display = '';
 						console.log("is_version = "+is_version);
 						/*if (is_version == 2) document.getElementById("update_rep_link").style.display = 'none';
-						else */if (is_version != 1) document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=1&fromDetail=\',\'98%\',\'auto\');');	
-						else document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=2&fromDetail=\',\'98%\',\'auto\');');	
+						else */if (is_version != 1) parent.document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=1&fromDetail=\',\'98%\',\'auto\');');	
+						else parent.document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=2&fromDetail=\',\'98%\',\'auto\');');	
 						
 					}
 				}
 			}
 		});
-		document.getElementById("cur_idAffich").setAttribute('value',num_rep);
-		document.getElementById("cur_rep").setAttribute('value',idReponse);
+		parent.document.getElementById("cur_idAffich").setAttribute('value',num_rep);
+		parent.document.getElementById("cur_rep").setAttribute('value',idReponse);
 	}
 }
 
@@ -828,19 +916,21 @@ function signFile(res_id,isVersion, mode, pinCode){
 						$('content_'+num_rep+'_'+oldRep).id = 'content_'+num_rep+'_'+newId;							
 					}
 					var zone_id = 'signedDoc_'+$('cur_resId').value;
-					if (hasAllAnsSigned($('cur_resId').value) == 1){
+                                        
+                                        if($(zone_id)){
+                                            if (hasAllAnsSigned($('cur_resId').value) == 1){
 						$(zone_id).style.visibility = 'visible';
-					}
-					else{
-						$(zone_id).style.visibility = 'hidden';
-					}
-					$('ans_'+num_rep+'_'+newId).innerHTML='<i class="fa fa-certificate fa-lg fa-fw" style="color:#fdd16c"></i>Réponse signée';
+                                            }
+                                            else{
+                                                    $(zone_id).style.visibility = 'hidden';
+                                            }
+                                        }
+					
+					$('ans_'+num_rep+'_'+newId).innerHTML='<sup><i class="fa fa-certificate fa-lg fa-fw" style="color:#fdd16c"></i></sup>Réponse signée';
 					$('ans_'+num_rep+'_'+newId).title=$('ans_'+num_rep+'_'+newId).title;
-					$('list_attach').src = 'index.php?display=true&module=attachments&page=frame_list_attachments&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder';
-				
-					nb_atach = $("nb_attach").textContent;
-					nb_atach ++;
-					document.getElementById("nb_attach").innerHTML='<b>'+nb_atach+'</b>';
+					//$('list_attach').src = 'index.php?display=true&module=attachments&page=frame_list_attachments&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder';
+                                        
+                                        loadToolbarBadge('attachments_tab','index.php?display=true&module=attachments&page=load_toolbar_attachments&origin=document&resId='+$('cur_resId').value+'&collId=letterbox_coll');
 				}
 				else{
 					alert(response.error);
@@ -854,7 +944,7 @@ function signFile(res_id,isVersion, mode, pinCode){
 				$('sign_link').title="";
 				$("sign_link_img").style.display = '';
 			},
-			onLoading: function(answer){
+			onCreate: function(answer){
 				func_onclic = $("sign_link").getAttribute("onclick");
 				$("sign_link").removeAttribute("onclick");
 				$("sign_link_img").style.display = 'none';
