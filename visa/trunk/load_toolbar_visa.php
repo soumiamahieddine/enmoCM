@@ -5,9 +5,9 @@ $coll_id = $_REQUEST['collId'];
 
 require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
 
-$visa = new visa();
-
-$nbVisa = $visa->nbVisa($res_id,$coll_id);
+$db = new Database();
+$stmt = $db->query("SELECT listinstance_id from listinstance WHERE res_id= ? and coll_id = ? and (item_mode = ? OR item_mode = ?)", array($res_id, $coll_id, 'visa', 'sign'));
+$nbVisa = $stmt->rowCount();
 
 if ($nbVisa == 0){
     $class = 'nbResZero';
@@ -16,7 +16,6 @@ if ($nbVisa == 0){
     $styleDetail = '#9AA7AB';
 }
 else{
-    $nbVisa = $nbVisa +1;
     $class = 'nbRes';
     $style = '';
     $style2 = 'display:inherit;';
