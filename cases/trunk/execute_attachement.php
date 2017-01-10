@@ -10,6 +10,7 @@ require_once("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."class".D
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
+$core_tools->load_js();
 
 if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_tools->test_service('join_res_case_in_process', 'cases', false) == 1))
 {
@@ -98,6 +99,8 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
                 $cases_return = new cases();
                 $return_description = array();
                 $return_description = $cases_return->get_case_info($case_id_to_insert);
+                //LOAD TOOLBAR BADGE SCRIPT
+                $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=cases&origin=parent&page=load_toolbar_cases&resId='.$actual_res_id.'&collId=letterbox_coll';
                 ?>
                 <script type="text/javascript">	
                 var case_id = window.opener.$('case_id');
@@ -112,6 +115,8 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
                     
                 }
                 //self.close();
+                
+                loadToolbarBadge('cases_tab','<?php echo $toolbarBagde_script; ?>');
                 window.top.close();
             
                 </script>
