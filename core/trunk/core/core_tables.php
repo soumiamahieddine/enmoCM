@@ -29,6 +29,7 @@
 * @version $Revision$
 * @ingroup core
 */
+
 if (! defined('ACTIONS_TABLE')) {
     define('ACTIONS_TABLE', 'actions');
 }
