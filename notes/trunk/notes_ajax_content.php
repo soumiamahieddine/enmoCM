@@ -312,8 +312,8 @@ switch ($mode) {
                 $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_ADDED."';window.top.$('main_info').style.display = 'table-cell';setTimeout(function(){ window.top.$('main_info').style.display = 'none'; }, 10000);";
 
                 //Count notes
-                $nb_notes = $notesTools->countUserNotes($identifier, $collId); 
-                $js .= "window.parent.top.$('nb_note').innerHTML='".$nb_notes."';";
+                $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=notes&page=load_toolbar_notes&origin=parent&resId='.$identifier.'&collId='.$collId;
+                $js .='loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');';
             }
         } else {
             $error = $request->wash_html(_NOTES.' '._IS_EMPTY.'!','NONE');
@@ -540,8 +540,8 @@ switch ($mode) {
             $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_DELETED."';window.top.$('main_info').style.display = 'table-cell';setTimeout(function(){ window.top.$('main_info').style.display = 'none'; }, 10000);";
             
             //Count notes
-            $nb_notes = $notesTools->countUserNotes($identifier, $collId); 
-            $js .= "window.parent.top.$('nb_note').innerHTML='".$nb_notes."';";
+            $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=notes&page=load_toolbar_notes&origin=parent&resId='.$identifier.'&collId='.$collId;
+            $js .='loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');';
         }
     break;
 }
