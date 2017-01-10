@@ -95,7 +95,7 @@ $contact->formcontact("add", "", false, true);
 if ($_SESSION['AttachmentContact'] == "1") {
 	$createContactDiv = "create_contact_div_attach";
 } else {
-	$createContactDiv = "create_contact_div";
+	$createContactDiv = "show_tab";
 }
 
 if(isset($_GET['created']) && $_GET['created'] <> ''){

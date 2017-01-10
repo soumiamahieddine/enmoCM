@@ -178,8 +178,11 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
             $_SESSION['collection_id_choice'],
             'all'
         );
-
-        echo "{status : 0, links : '" . addslashes($formatText) . "', nb : '".$nb."'}";
+        
+        $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=load_toolbar_links&origin=parent&resId=' . $_SESSION['doc_id'] . '&collId='.$_SESSION['collection_id_choice'];
+        
+        $js .= 'loadToolbarBadge(\'links_tab\',\''.$toolbarBagde_script.'\');';
+        echo "{status : 0, links : '" . addslashes($formatText) . "', nb : '".$nb."', exec_js : '".addslashes($js)."'}";
         //exit ();
 
     

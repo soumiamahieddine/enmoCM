@@ -334,7 +334,7 @@ for ($i = 0; $i < count($tab); $i ++) {
             if ($_SESSION['AttachmentContact'] == "1") {
                 $infoContactDiv = "info_contact_div_attach";
             } else {
-                $infoContactDiv = "info_contact_div";
+                $infoContactDiv = "show_tab";
             }
 	        $use = array(
 	                "script"        => "set_new_contact_address('".$_SESSION['config']['businessappurl'] . "index.php?display=false&dir=my_contacts&page=get_last_contact_address&contactid=".$_SESSION['contact']['current_contact_id']."&addressid=@@id@@', '".$infoContactDiv."', 'true');simpleAjax('".$_SESSION['config']['businessappurl']."index.php?display=true&page=unsetAttachmentContact');",

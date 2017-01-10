@@ -375,9 +375,18 @@ var Autocompleter2 = { };
 
 Autocompleter2.Base2 = Class.create({
   baseInitialize: function(element, update, options) {
-    element          = parent.$(element);
+    if(parent.$(element) != undefined){
+        element = parent.$(element);
+    }else{
+        element = parent.parent.$(element);
+    }
     this.element     = element; 
-    this.update      = parent.$(update);  
+    if(parent.$(update) != undefined){
+        update = parent.$(update);
+    }else{
+        update = parent.parent.$(update);
+    }
+    this.update      = update;  
     this.hasFocus    = false; 
     this.changed     = false; 
     this.active      = false; 

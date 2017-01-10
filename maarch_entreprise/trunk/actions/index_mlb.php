@@ -33,34 +33,19 @@
 */
 
 //$_SESSION['validStep'] = "ko";
-include_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
-require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-        . 'class_security.php';
-require_once 'core/core_tables.php';
-require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'class_request.php';
-require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'class_resource.php';
-require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'class_business_app_tools.php';
-require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_types.php';
-require_once 'modules' . DIRECTORY_SEPARATOR . 'basket' . DIRECTORY_SEPARATOR
-    . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
-require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'class_indexing_searching_app.php';
-require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'docservers_controler.php';
-require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
-require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'class_history.php';
-require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'class_contacts_v2.php';
+include_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
+require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_security.php';
+require_once 'core' . DIRECTORY_SEPARATOR . 'core_tables.php';
+require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_request.php';
+require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_resource.php';
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_business_app_tools.php';
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_types.php';
+require_once 'modules' . DIRECTORY_SEPARATOR . 'basket' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_indexing_searching_app.php';
+require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'docservers_controler.php';
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
+require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_history.php';
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_contacts_v2.php';
 
 $_SESSION['is_multi_contact'] = '';
 unset($_SESSION['m_admin']['contact']);
@@ -122,28 +107,39 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $ieBrowser = false;
         $displayValue = 'table-row';
     }
+    
+    //DECLARATIONS
+    
+    //INSTANTIATE
+    $type = new types();
+    $core = new core_tools();
+    $db = new Database();
+    
+    //INITIALIZE
+    $frmStr = '';
     $_SESSION['req'] = "action";
     $resId = $values[0];
-    $frmStr = '';
+    $today = date('d-m-Y');
+    $statuses = array();
+    $_SESSION['adresses']['to'] = array();
+    $_SESSION['adresses']['contactid'] = array();
+    $_SESSION['adresses']['addressid'] = array();
+    
 
-    $type = new types();
-    $sec = new security();
-    $b = new basket();
-    $core = new core_tools();
-    $business = new business_app_tools();
+    
     if ($_SESSION['features']['show_types_tree'] == 'true') {
         $doctypes = $type->getArrayStructTypes($collId);
     } else {
         $doctypes = $type->getArrayTypes($collId);
     }
-    $today = date('d-m-Y');
-    $tmp = $business->get_titles();
-    $titles = $tmp['titles'];
-    $defaultTitle = $tmp['default_title'];
     
     if ($core->is_module_loaded('entities')) {
+        require_once 'modules' . DIRECTORY_SEPARATOR . 'entities' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_manage_entities.php';
+        
+        $ent = new entity();
+        
+        $allEntitiesTree= array();
         $EntitiesIdExclusion = array();
-        $db = new Database();
 
         if (count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']) > 0) {
             $stmt = $db->query(
@@ -157,31 +153,25 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 array_push($EntitiesIdExclusion, $res->entity_id);
             }
         }
-    }
-    //diffusion list in this basket ?
-    if($_SESSION['current_basket']['difflist_type'] == 'entity_id'){
-        $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
-    }else if($_SESSION['current_basket']['difflist_type'] == 'type_id'){
-        $target_model = 'document.getElementById(\'type_id\').options[document.getElementById(\'type_id\').selectedIndex]';
-        $func_load_listdiff = 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value);';
-    }else{
-        $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
-    }
+    
+        //diffusion list in this basket ?
+        if($_SESSION['current_basket']['difflist_type'] == 'entity_id'){
+            $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
+        }else if($_SESSION['current_basket']['difflist_type'] == 'type_id'){
+            $target_model = 'document.getElementById(\'type_id\').options[document.getElementById(\'type_id\').selectedIndex]';
+            $func_load_listdiff = 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value);';
+        }else{
+            $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
+        }
 
-    //var_dump($EntitiesIdExclusion);
-    require_once 'modules' . DIRECTORY_SEPARATOR . 'entities'
-        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-        . 'class_manage_entities.php';
-    $ent = new entity();
-    $allEntitiesTree= array();
-    $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
-        $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
-    );
-
+        //var_dump($EntitiesIdExclusion);
+        $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
+            $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
+        );
+    }
+    
     // Select statuses from groupbasket
-    $statuses = array();
-    $db = new Database();
-
+ 
     /* Basket of ABS users */
     if($_SESSION['current_basket']['abs_basket']=='1'){
         $query="SELECT group_id FROM usergroup_content WHERE user_id=? AND primary_group='Y'";
@@ -243,13 +233,13 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         || $_SESSION['FILE']['extension'] == ""
     ) {*/
 
-        $frmStr .= '<div  style="display:block" id="choose_file_div">';
-        $frmStr .= '<iframe src="' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&dir=indexing_searching&page='
-                . 'choose_file" name="choose_file" id="choose_file" '
-                . 'frameborder="0" scrolling="no" width="100%" height="30">'
-                . '</iframe>';
-        $frmStr .= '</div>';
+    $frmStr .= '<div  style="display:block" id="choose_file_div">';
+    $frmStr .= '<iframe src="' . $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&dir=indexing_searching&page='
+            . 'choose_file" name="choose_file" id="choose_file" '
+            . 'frameborder="0" scrolling="no" width="100%" height="30">'
+            . '</iframe>';
+    $frmStr .= '</div>';
     //}
     $frmStr .= '<hr />';
     
@@ -344,9 +334,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $catId) {
         if ($catId <> 'default_category') {
             $frmStr .= '<option value="' . functions::xssafe($catId) . '"';
-            if ($_SESSION['coll_categories']['letterbox_coll']['default_category'] == $catId
-                || (isset($_SESSION['indexing']['category_id'])
-                    && $_SESSION['indexing']['category_id'] == $catId)
+            if ($_SESSION['coll_categories']['letterbox_coll']['default_category'] == $catId || (isset($_SESSION['indexing']['category_id']) && $_SESSION['indexing']['category_id'] == $catId)
             ) {
                 $frmStr .= 'selected="selected"';
             }
@@ -358,6 +346,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<td><span class="red_asterisk" id="category_id_mandatory" '
             . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
+    
     /*** Doctype ***/
     $frmStr .= '<tr id="type_id_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td><span class="form_title" '
@@ -377,7 +366,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&page=get_content_js\', \'' . $displayValue . '\')'.$func_load_listdiff.'">';
     $frmStr .= '<option value="">' . _CHOOSE_TYPE . '</option>';
-if ($_SESSION['features']['show_types_tree'] == 'true') {
+    if ($_SESSION['features']['show_types_tree'] == 'true') {
         for ($i = 0; $i < count($doctypes); $i ++) {
             $frmStr .= '<optgroup value="" class="' //doctype_level1
                     . $doctypes[$i]['style'] . '" label="'
@@ -413,6 +402,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="type_id_mandatory" '
             . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
+    
     /*** Priority ***/
     $frmStr .= '<tr id="priority_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td><label for="priority" class="form_title" >' . _PRIORITY
@@ -467,6 +457,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="doc_date_mandatory" '
             . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr >';
+    
     /*** Author ***/
     $frmStr .= '<tr id="author_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td><label for="author" class="form_title" >' . _AUTHOR
@@ -478,6 +469,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="author_mandatory" '
             . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
+    
     /*** Admission date ***/
     $frmStr .= '<tr id="admission_date_tr" style="display:' . $displayValue
             . ';">';
@@ -547,9 +539,10 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '<span id="dest_contact">' . _DEST . '</span>'
             . '<span id="author_contact">' . _AUTHOR_DOC . '</span>';
     if ($core->test_admin('my_contacts', 'apps', false)) {
+        $pathScriptTab = $_SESSION['config']['businessappurl']
+                . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe';
         $frmStr .= ' <a href="#" id="create_contact" title="' . _CREATE_CONTACT
-                . '" onclick="new Effect.toggle(\'create_contact_div\', '
-                . '\'blind\', {delay:0.2});return false;" '
+                . '" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\'\',\''.$pathScriptTab.'\',\'create_contact\');return false;" '
                 . 'style="display:inline;" ><i class="fa fa-pencil" title="' 
                 . _CREATE_CONTACT . '"></i></a>';
     } else {
@@ -564,8 +557,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $path_check_date_link = $_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=documents_list_mlb_search_adv&mode=popup&action_form=show_res_id&modulename=attachments&init_search&nodetails&fromContactCheck';
     $frmStr .= '<td style="vertical-align:bottom;"><a href="#" class="fa fa-book fa-2x" id="contact_card" title="' . _CONTACT_CARD
-            . '" onclick="loadInfoContact();new Effect.toggle(\'info_contact_div\', '
-                . '\'blind\', {delay:0.2});return false;"'
+            . '" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''.urlencode(_CONTACT).'\',loadInfoContact(),\'info_contact\');return false;"'
             . 'style="visibility:hidden;display:inline;" ></a>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field">';
 
@@ -586,15 +578,11 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<input type="hidden" id="addressid" />';
     $frmStr .= '<input type="hidden" id="contactcheck" value="success"/>';
 	
-	/****multicontact***/
+    /****multicontact***/
 	
-	//Path to actual script
-	$path_to_script = $_SESSION['config']['businessappurl']
-		."index.php?display=true&dir=indexing_searching&page=add_multi_contacts&coll_id=".$collId;
- 	
-    $_SESSION['adresses']['to'] = array();
-    $_SESSION['adresses']['contactid'] = array();
-	$_SESSION['adresses']['addressid'] = array();
+    //Path to actual script
+    $path_to_script = $_SESSION['config']['businessappurl']
+        ."index.php?display=true&dir=indexing_searching&page=add_multi_contacts&coll_id=".$collId;
 	
     $frmStr .= '<tr id="add_multi_contact_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="contact" class="form_title" >'
@@ -610,10 +598,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $contact_mode = "view";
     if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update';
     $frmStr .= '<td><a href="#" id="multi_contact_card" class="fa fa-book fa-2x" title="' . _CONTACT_CARD
-            . '" onclick="loadInfoContact();new Effect.toggle(\'info_contact_div\', '
-                . '\'blind\', {delay:0.2});return false;" '
+            . '" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''.urlencode(_CONTACT).'\',loadInfoContact(),\'info_contact\');return false;" '
             . 'style="visibility:hidden;" ></a>&nbsp;</td>';
-	$frmStr .= '<td class="indexing_field">';
+    $frmStr .= '<td class="indexing_field">';
     //$frmStr .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
     $frmStr .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
@@ -667,8 +654,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td ><label for="reference_number" class="form_title" >' ._MONITORING_NUMBER.'</label></td>';
     $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td><input type="text" name="reference_number" id="reference_number"/></td>';
-
     $frmStr .= '</tr>'; 
+    
     /*** Subject ***/
     $frmStr .= '<tr id="subject_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td><label for="subject" class="form_title" >' . _SUBJECT
@@ -680,6 +667,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="subject_mandatory" '
             . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
+    
     /*** Entities : department + diffusion list ***/
     if ($core->is_module_loaded('entities')) {
         $frmStr .= '<tr id="department_tr" style="display:' . $displayValue
@@ -820,44 +808,40 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
 
     /*** Folder ***/
     if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
-        require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
-            . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+        require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+        
         $folders = new folder();
+        
         $folder_info = $folders->get_folders_tree('0');
 
         $frmStr .= '<tr id="folder_tr" style="display:' . $displayValue . ';">';
-            $frmStr .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER. '</label></td>';
-            $frmStr .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">Sélectionnez un dossier</option>';
+        $frmStr .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER. '</label></td>';
+        $frmStr .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">Sélectionnez un dossier</option>';
 
-            foreach ($folder_info as $key => $value) {
-                 $frmStr .= '<option value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
-            }
-            $frmStr .= '</select></td>';
-        /*$frmStr .= '<td class="indexing_field"><input type="text" '
-                . 'name="folder" id="folder" onblur="clear_error(\'frm_error_'
-                . $actionId . '\');return false;" />';
-
+        foreach ($folder_info as $key => $value) {
+             $frmStr .= '<option value="'.$value['folders_system_id'].'" parent="' . $value['parent_id'] . '">'.$value['folder_name'].'</option>';
+        }
+        $frmStr .= '</select></td>';
         if ($core->test_service('create_folder', 'folder', false) == 1) {
-                $frmStr .= ' <a href="#" id="create_folder" title="' . _CREATE_FOLDER
-                        . '" onclick="new Effect.toggle(\'create_folder_div\', '
-                        . '\'blind\', {delay:0.2});return false;" '
-                        . 'style="display:inline;" ><i class="fa fa-plus-circle" title="' 
-                        . _CREATE_FOLDER . '"></i></a>';
-            }
-        $frmStr .= '<div id="show_folder" '
-                . 'class="autocomplete"></div></td>';*/
+
+            $pathScriptTab = $_SESSION['config']['businessappurl']
+                . 'index.php?page=create_folder_form_iframe&module=folder&display=false';
+
+            $frmStr .= '<td style="width:5%;"> <a href="#" id="create_folder" title="' . _CREATE_FOLDER
+                . '" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._CREATE_FOLDER.'\',\''.$pathScriptTab.'\',\'folders\');return false;" '
+                . 'style="display:inline;" ><i class="fa fa-plus-circle" title="' 
+                . _CREATE_FOLDER . '"></i></a></td>';
+        }
         $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
         $frmStr .= '<tr id="parentFolderTr" style="display: none;text-align:center;"><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
     }
     
-    /*** thesaurus ***/
+    /*** Thesaurus ***/
     if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
-        require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
-                        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-                        . 'class_modules_tools.php';
+        require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+        
         $thesaurus = new thesaurus();
-
 
         $frmStr .= '<tr id="thesaurus_tr" style="display:' . $displayValue . ';">';
             $frmStr .= '<td colspan="3">' . _THESAURUS . '</td>';
@@ -880,9 +864,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         /*****************/
     }
     /*** Tags ***/
-    if ($core->is_module_loaded('tags') 
-        && ($core->test_service('tag_view', 'tags',false) == 1)
-        && ($core->test_service('add_tag_to_res', 'tags',false) == 1)
+    if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1) && ($core->test_service('add_tag_to_res', 'tags', false) == 1)
     ) {
         include_once('modules/tags/templates/index_mlb/index.php');
     }
@@ -925,37 +907,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     /*** Frame to display the doc ***/
     $frmStr .= '<div id="validright">';
     
-    /**** Contact form start *******/
-    if ($core->test_admin('my_contacts', 'apps', false)) {
-    $frmStr .= '<div id="create_contact_div" style="display:none">';
-        $frmStr .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe" name="contact_iframe" id="contact_iframe"'
-                . ' scrolling="auto" frameborder="0" style="display:block;">'
-                . '</iframe>';
-    $frmStr .= '</div>';
-    }
+    $frmStr .='<div id =\'show_tab\' module=\'\'></div>';
 
-    /**** Contact form end *******/
-
-    /**** Folder form start *******/
-    if ($core->test_service('create_folder', 'folder', false) == 1) {
-        $frmStr .= '<div id="create_folder_div" style="display:none">';
-            $frmStr .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
-                    . 'index.php?page=create_folder_form_iframe&module=folder&display=false" name="folder_iframe" id="folder_iframe"'
-                    . ' scrolling="auto" frameborder="0" style="display:block;">'
-                    . '</iframe>';
-        $frmStr .= '</div>';
-    }
-    /**** Folder form end *******/
-
-
-    /**** Contact info start *******/
-    $frmStr .= '<div id="info_contact_div" style="display:none">';
-        $frmStr .= '<iframe width="100%" height="800" name="info_contact_iframe" id="info_contact_iframe"'
-                . ' scrolling="auto" frameborder="0" style="display:block;">'
-                . '</iframe>';
-    $frmStr .= '</div>';
-    /**** Contact info end *******/    
     $frmStr .= '<script type="text/javascript">show_admin_contacts( true);</script>';
     //$frmStr .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" style="display:block;" ></iframe>';
     if ($_SESSION['origin'] == "scan") {
@@ -998,12 +951,6 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&dir=indexing_searching&page=autocomplete_contacts\', \'contact\', \'show_contacts\', \'\', \'contactid\', \'addressid\');';
 
-    if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
-        /*$frmStr .= ' initList(\'folder\', \'show_folder\',\''
-                . $_SESSION['config']['businessappurl'] . 'index.php?display='
-                . 'true&module=folder&page=autocomplete_folders&mode=folder\','
-                . ' \'Input\', \'2\');';*/
-    }
     $frmStr .= '$$(\'select\').each(function(element) { new Chosen(element,{width: "226px", disable_search_threshold: 10,search_contains: true}); });';
     $frmStr .= '$(\'baskets\').style.visibility=\'hidden\';'
             . 'var item  = $(\'index_div\'); if(item)'
@@ -1090,20 +1037,17 @@ function check_form($formId, $values)
  * @return Bool true if no error, false otherwise
  **/
 function check_docserver($collId) {
-
-    if (isset($_SESSION['indexing']['path_template'])
-        && ! empty($_SESSION['indexing']['path_template'])
-        && isset($_SESSION['indexing']['destination_dir'])
-        && ! empty($_SESSION['indexing']['destination_dir'])
-        && isset($_SESSION['indexing']['docserver_id'])
-        && ! empty($_SESSION['indexing']['docserver_id'])
-        && isset($_SESSION['indexing']['file_destination_name'])
-        && ! empty($_SESSION['indexing']['file_destination_name'])
+    $core = new core_tools();
+    $docserverControler = new docservers_controler();
+    
+    $storeResult = array();
+    
+    if (isset($_SESSION['indexing']['path_template']) && !empty($_SESSION['indexing']['path_template']) && isset($_SESSION['indexing']['destination_dir']) && !empty($_SESSION['indexing']['destination_dir']) && isset($_SESSION['indexing']['docserver_id']) && !empty($_SESSION['indexing']['docserver_id']) && isset($_SESSION['indexing']['file_destination_name']) && !empty($_SESSION['indexing']['file_destination_name'])
     ) {
         $_SESSION['action_error'] = _CHECK_FORM_OK;
         return true;
     }
-    $core = new core_tools();
+    
     if ($core->is_module_loaded('templates')
         && $_SESSION['upfile']['format'] == "maarch"
     ) {
@@ -1138,7 +1082,6 @@ function check_docserver($collId) {
         $newFileName = $_SESSION['upfile']['name'];
     }
 
-    $docserverControler = new docservers_controler();
     $fileInfos = array(
         "tmpDir"      => $_SESSION['config']['tmppath'],
         "size"        => $_SESSION['upfile']['size'],
@@ -1146,10 +1089,8 @@ function check_docserver($collId) {
         "tmpFileName" => $newFileName,
     );
     //print_r($fileInfos);
-    $storeResult = array();
-    $storeResult = $docserverControler->storeResourceOnDocserver(
-        $collId, $fileInfos
-    );
+    
+    $storeResult = $docserverControler->storeResourceOnDocserver($collId, $fileInfos);
     //print_r($storeResult);
     if (isset($storeResult['error']) && $storeResult['error'] <> "") {
         $_SESSION['action_error'] = $storeResult['error'];
@@ -1173,8 +1114,13 @@ function check_docserver($collId) {
  **/
 function process_category_check($catId, $values)
 {
+    require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_types.php';
+    
     //print_r($values);
     $core = new core_tools();
+    $type = new types();
+    $db = new Database();
+    
     // If No category : Error
     if (! isset($_ENV['categories'][$catId])) {
         $_SESSION['action_error'] = _CATEGORY . ' ' . _UNKNOWN . ': ' . $catId;
@@ -1229,10 +1175,8 @@ function process_category_check($catId, $values)
         }
     }
     ///// Checks the complementary indexes depending on the doctype
-    require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-        . 'class_types.php';
-    $type = new types();
+    
+    
     $typeId = get_value_fields($values, 'type_id');
     $collId = get_value_fields($values, 'coll_id');
     $indexes = $type->get_indexes($typeId, $collId, 'minimal');
@@ -1304,7 +1248,7 @@ function process_category_check($catId, $values)
             return false;
         }
         $contact = get_value_fields($values, 'contactid');
-		$nb_multi_contact = count($_SESSION['adresses']['to']);
+        $nb_multi_contact = count($_SESSION['adresses']['to']);
 
         $contact_field = get_value_fields($values, 'contact');
 
@@ -1313,22 +1257,6 @@ function process_category_check($catId, $values)
                 . ' ' . _WRONG_FORMAT . ". " . _USE_AUTOCOMPLETION;
             return false;
         }
-
-        // if (! empty($contact)) {
-        //     if ($contactType == 'external'
-        //         && preg_match('/\([0-9]+\)$/', $contact) == 0
-        //     ) {
-        //         $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
-        //             . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
-        //         return false;
-        //     } else if ($contactType == 'internal'
-        //         && preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $contact) == 0
-        //     ) {
-        //         $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
-        //             . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
-        //         return false;
-        //     }
-        // }
 
         if ($_ENV['categories'][$catId]['other_cases']['contact']['mandatory'] == true) {
             if ((empty($contact) && $contactType != 'multi_external') || ($nb_multi_contact == 0 && $contactType == 'multi_external')) {
@@ -1355,10 +1283,12 @@ function process_category_check($catId, $values)
         }
     }
     if ($core->is_module_loaded('folder')) {
-        $db = new Database();
+        
         $folderId = '';
+        $foldertypeId = '';
         
         $folderId = get_value_fields($values, 'folder');
+        
         if (isset($_ENV['categories'][$catId]['other_cases']['folder'])
             && $_ENV['categories'][$catId]['other_cases']['folder']['mandatory'] == true
         ) {
@@ -1368,29 +1298,9 @@ function process_category_check($catId, $values)
                 return false;
             }
         }
-        /*if (! empty($folder)) {
-            if (! preg_match('/\([0-9]+\)$/', $folder)) {
-                $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['folder']['label']
-                    . " " . _WRONG_FORMAT;
-                return false;
-            }
-            $folderId = str_replace(
-                ')', '', substr($folder, strrpos($folder, '(') + 1)
-            );
-            $stmt = $db->query(
-                "SELECT folders_system_id FROM " . FOLD_FOLDERS_TABLE
-                . " WHERE folders_system_id = ?", array($folderId)
-            );
-            if ($stmt->rowCount() == 0) {
-                $_SESSION['action_error'] = _FOLDER . ' ' . $folderId . ' '
-                                          . _UNKNOWN;
-                return false;
-            }
-        }*/
 
         if (! empty($typeId ) && ! empty($folderId)) {
-            $foldertypeId = '';
-            
+
             $stmt = $db->query(
                 "SELECT foldertype_id FROM " . FOLD_FOLDERS_TABLE
                 ." WHERE folders_system_id = ?", array($folderId)
@@ -1464,20 +1374,25 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         $_SESSION['action_error'] = _ERROR_MANAGE_FORM_ARGS;
         return false;
     }
-    $resId = '';
+    
     $db = new Database();
     $sec = new security();
     $req = new request();
     $core = new core_tools();
+    $resource = new resource();
+    $type = new types();
+    $arrayPDO = array();
+    $_SESSION['data'] = array();
+    $valIndexes = array();
+    
+    $resId = '';
     $table = $sec->retrieve_table_from_coll($collId);
     $indColl = $sec->get_ind_collection($collId);
     $tableExt = $_SESSION['collections'][$indColl]['extensions'][0];
     $queryExtFields = '(';
     $queryExtValues = '(';
-    $arrayPDO = array();
-    $resource = new resource();
-    $_SESSION['data'] = array();
-
+    $_SESSION['origin'] = "";
+    
     // Load in the $_SESSION['data'] minimal indexes
     array_push(
         $_SESSION['data'],
@@ -1609,7 +1524,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     $queryExtValues .= "?," ;
     $arrayPDO = array_merge($arrayPDO, array($catId));
 
-    $_SESSION['origin'] = "";
     // Specific indexes : values from the form
     // Simple cases
     for ($i = 0; $i < count($formValues); $i ++) {
@@ -1681,10 +1595,9 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         }
     }
     ///// Manages the complementary indexes depending on the doctype
-    $type = new types();
     $typeId = get_value_fields($formValues, 'type_id');
     $indexes = $type->get_indexes($typeId, $collId, 'minimal');
-    $valIndexes = array();
+    
     for ($i = 0; $i < count($indexes); $i ++) {
         $valIndexes[$indexes[$i]] = get_value_fields(
             $formValues, $indexes[$i]
@@ -1793,59 +1706,55 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             );
         }
 
-		$nb_multi_contact = count($_SESSION['adresses']['to']);
+        $nb_multi_contact = count($_SESSION['adresses']['to']);
 		
-		if($nb_multi_contact > 0 && $contactType == 'multi_external'){
-		
-			for($icontact = 0; $icontact<$nb_multi_contact; $icontact++){
-			
-				$db->query("INSERT INTO contacts_res (coll_id, res_id, contact_id, address_id) VALUES (?, ?, ?, ?)",
+        if($nb_multi_contact > 0 && $contactType == 'multi_external'){
+
+            for($icontact = 0; $icontact<$nb_multi_contact; $icontact++){
+
+                $db->query("INSERT INTO contacts_res (coll_id, res_id, contact_id, address_id) VALUES (?, ?, ?, ?)",
                     array($collId, $resId, $_SESSION['adresses']['contactid'][$icontact], $_SESSION['adresses']['addressid'][$icontact]));
-			
-			}
-			
-			$queryExtFields .= 'is_multicontacts,';
-			$queryExtValues .= "'Y',";
+            }
+
+            $queryExtFields .= 'is_multicontacts,';
+            $queryExtValues .= "'Y',";
+
+        } else {
 		
-		} else {
-		
-            $contactId = get_value_fields(
-                $formValues, 'contactid'
-            );
+            $contactId = get_value_fields($formValues, 'contactid');
+            
             if(!ctype_digit($contactId)){
                 $contactType = 'internal';
             }else{
                 $contactType = 'external';
             }
             
-			if ($contactType == 'internal') {
-				if ($catId == 'incoming' || $catId == 'internal' || $catId == 'ged_doc') {
-					$queryExtFields .= 'exp_user_id,';
-					$queryExtValues .= " ?,";
+            if ($contactType == 'internal') {
+                if ($catId == 'incoming' || $catId == 'internal' || $catId == 'ged_doc') {
+                    $queryExtFields .= 'exp_user_id,';
+                    $queryExtValues .= " ?,";
                     $arrayPDO = array_merge($arrayPDO, array($contactId));
-				} else if ($catId == 'outgoing') {
-					$queryExtFields .= 'dest_user_id,';
-					$queryExtValues .= " ?,";
+                } else if ($catId == 'outgoing') {
+                    $queryExtFields .= 'dest_user_id,';
+                    $queryExtValues .= " ?,";
                     $arrayPDO = array_merge($arrayPDO, array($contactId));
-				}
-			} else if ($contactType == 'external') {
-				if ($catId == 'incoming' || $catId == 'ged_doc') {
-					$queryExtFields .= 'exp_contact_id,';
-					$queryExtValues .= " ?,";
+                }
+            } else if ($contactType == 'external') {
+                if ($catId == 'incoming' || $catId == 'ged_doc') {
+                    $queryExtFields .= 'exp_contact_id,';
+                    $queryExtValues .= " ?,";
                     $arrayPDO = array_merge($arrayPDO, array($contactId));
-				} else if ($catId == 'outgoing' || $catId == 'internal') {
-					$queryExtFields .= 'dest_contact_id,';
-					$queryExtValues .= " ?,";
+                } else if ($catId == 'outgoing' || $catId == 'internal') {
+                    $queryExtFields .= 'dest_contact_id,';
+                    $queryExtValues .= " ?,";
                     $arrayPDO = array_merge($arrayPDO, array($contactId));
-				}
-                $addressId = get_value_fields(
-                    $formValues, 'addressid'
-                );
+                }
+                $addressId = get_value_fields($formValues, 'addressid');
                 $queryExtFields .= 'address_id,';
                 $queryExtValues .= " ?,"; 
                 $arrayPDO = array_merge($arrayPDO, array($addressId));
-			}
-		}
+            }
+        }
     }
 	
     if ($resId <> false) {
@@ -1894,9 +1803,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 
         if ($core->is_module_loaded('entities')) {
             if ($loadListDiff) {
-                require_once 'modules' . DIRECTORY_SEPARATOR . 'entities'
-                    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-                    . 'class_manage_listdiff.php';
+                require_once 'modules' . DIRECTORY_SEPARATOR . 'entities' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_manage_listdiff.php';
                 $diffList = new diffusion_list();
                 $params = array(
                     'mode' => 'listinstance',
@@ -1913,17 +1820,17 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         if ($core->is_module_loaded('tags')) {
             $tags = get_value_fields($formValues, 'tag_userform');
             $tags_list = explode('__', $tags);
-                include_once("modules".DIRECTORY_SEPARATOR."tags"
-                .DIRECTORY_SEPARATOR."tags_update.php");
+                include_once("modules" . DIRECTORY_SEPARATOR . "tags" . DIRECTORY_SEPARATOR . "tags_update.php");
         }
 
         //thesaurus
         if ($core->is_module_loaded('thesaurus')) {
-            require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
-                        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-                        . 'class_modules_tools.php';
+            require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+            
             $thesaurus = new thesaurus();
+            
             $thesaurusList = '';
+            
             $thesaurusList = get_value_fields($formValues, 'thesaurus');
             
             if (! empty($thesaurusList)) {
@@ -1939,9 +1846,9 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     if ($attach) {
         $idDoc = get_value_fields($formValues, 'res_id');
         for($i=0;$i<count($_SESSION['stockCheckbox']);$i++){
-        $queryLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES(?, ?, ?)";
-        $arrayPDO = array($_SESSION['stockCheckbox'][$i], $resId, $_SESSION['collection_id_choice']);
-        $db->query($queryLink, $arrayPDO);
+            $queryLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES(?, ?, ?)";
+            $arrayPDO = array($_SESSION['stockCheckbox'][$i], $resId, $_SESSION['collection_id_choice']);
+            $db->query($queryLink, $arrayPDO);
         }
         $hist2 = new history();
         $hist2->add($table,
@@ -1965,8 +1872,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 
     }
     if ($core->is_module_loaded('tags')) {
-        include_once("modules".DIRECTORY_SEPARATOR."tags"
-        .DIRECTORY_SEPARATOR."tags_update.php");
+        include_once("modules" . DIRECTORY_SEPARATOR . "tags" . DIRECTORY_SEPARATOR . "tags_update.php");
     }
 
     // $_SESSION['indexing'] = array();

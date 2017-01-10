@@ -91,6 +91,7 @@ elseif($mode == 'popup' || $mode == 'frame')
 {
     $core_tools->load_html();
     $core_tools->load_header('', true, false);
+    $core_tools->load_js();
     $time = $core_tools->get_session_time_expire();
     $_SESSION['stockCheckbox']= '';
     ?><body>
@@ -469,8 +470,6 @@ $tab = $search_obj->send_criteria_data($param);
 $src_tab = $tab[0];
 
 //$core_tools->show_array($param);
-
-$core_tools->load_js();
 ?>
 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>
 <script type="text/javascript">

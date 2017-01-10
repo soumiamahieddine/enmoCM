@@ -1059,7 +1059,8 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     $stmt2 = $db->query('SELECT lastname, firstname FROM ' . $_SESSION['tablename']['users'] . " WHERE user_id = ?", array($line->{$arr[$i]}));
                     $res = $stmt2->fetchObject();
                     $data[$arr[$i]]['show_value'] = $res->lastname . ' ' . $res->firstname;
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line->{$arr[$i]} . '\', \'contact_info\', \'height=400, width=600,scrollbars=yes,resizable=yes\');" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>';
+                    $pathScriptTab = $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line->{$arr[$i]};
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._CONTACT_CARD.'\',\''.$pathScriptTab.'\',\'contactInfo\');return false;" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }
@@ -1095,7 +1096,8 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                             $data[$arr[$i]]['show_value'] .= ', '.$res->address_num .' ' . $res->address_street .' ' . $res->address_postal_code .' ' . strtoupper($res->address_town);
                         }         
                     }
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&popup&contactid=' . $line->{$arr[$i]} . '&addressid='.$addressId.'\', \'contact_info\', \'height=800, width=1000,scrollbars=yes,resizable=yes\');" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>';
+                    $pathScriptTab = $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&popup&contactid=' . $line->{$arr[$i]} . '&addressid='.$addressId;
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._CONTACT_CARD.'\',\''.$pathScriptTab.'\',\'contactInfo\');return false;" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }

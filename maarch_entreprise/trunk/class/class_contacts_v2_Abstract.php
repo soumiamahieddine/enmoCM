@@ -610,7 +610,7 @@ abstract class contacts_v2_Abstract extends Database
                 <?php   } else if ($_SESSION['AttachmentContact'] == "1") {?>
                             onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div_attach'));new Effect.BlindUp(parent.document.getElementById('info_contact_div_attach'));simpleAjax('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=unsetAttachmentContact');return false;" <?php
                         } else { ?>
-                            onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;"
+                            onclick="new Effect.BlindUp(parent.document.getElementById('show_tab'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;"
                 <?php   } ?>
                         />
               <?php } else {

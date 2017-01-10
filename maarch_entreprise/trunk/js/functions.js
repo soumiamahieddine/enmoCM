@@ -836,7 +836,12 @@ function resize_frame_process(id_modal, id_frame, resize_width, resize_height)
             }
             frame2.style.width =  newwidth + "px";
             if ($('validright')) {
+                $('validright').style.display = "block";
                 $('validright').style.width =  (newwidth - 3) + "px";
+                $('validright').style.display = "block";
+            }
+            if ($('validleftprocess')) {
+                $('validleftprocess').style.display = "block";
             }
             //alert('frame width:' + frame2.getWidth());
         }
@@ -2568,7 +2573,7 @@ function show_attach(state) {
 function addLinks(path_manage_script, child, parent, action, tableHist) {
     //window.alert('child : '+child+', parent : '+parent+', action : '+action);
     var divName = 'loadLinks';
-    var spanNb = 'nbLinks';
+    
     if(child != '' && parent != '' && action != '') {
         new Ajax.Request(path_manage_script,
         {
@@ -2585,7 +2590,8 @@ function addLinks(path_manage_script, child, parent, action, tableHist) {
                 if(response.status == 0 || response.status == 1) {
                     if(response.status == 0) {
                         $(divName).innerHTML = response.links;
-                        $(spanNb).innerHTML = response.nb;
+                        
+                        eval(response.exec_js);
 
                     } else {
                         //

@@ -32,9 +32,7 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-$core = new core_tools();
-$core->test_user();
-$core->load_lang();
+//DECLARATIONS
 require_once 'core/manage_bitmask.php';
 require_once 'core/class/class_request.php';
 require_once 'core/class/class_security.php';
@@ -44,9 +42,6 @@ require_once 'core/class/class_history.php';
 require_once 'core/class/LinkController.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_indexing_searching_app.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php';
-
-$_SESSION['basket_used'] = $_SESSION['current_basket']['id'];
-
 if (file_exists(
     $_SESSION['config']['corepath'] . 'custom/apps/' . $_SESSION['config']['app_id']
     . '/definition_mail_categories.php'
@@ -58,6 +53,50 @@ if (file_exists(
     $path = 'apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categories.php';
 }
 include_once $path;
+
+//INSTANTIATE
+$core = new core_tools();
+$hist = new history();
+$security = new security();
+$func = new functions();
+$request= new request;
+$type = new types();
+$is = new indexing_searching_app();
+$db = new Database();
+
+//INITIALIZE
+$core->test_user();
+$core->load_lang();
+$_SESSION['basket_used'] = $_SESSION['current_basket']['id'];
+if (!isset($_REQUEST['coll_id'])) {
+    $_REQUEST['coll_id'] = '';
+}
+$_SESSION['doc_convert'] = array();
+$_SESSION['save_list']['fromDetail'] = "true";
+$s_id = '';
+$_SESSION['req'] ='details';
+$_SESSION['indexing'] = array();
+$coll_id = '';
+$table = '';
+if (!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id'])) {
+    //$_SESSION['error'] = _COLL_ID.' '._IS_MISSING;
+    $coll_id = $_SESSION['collections'][0]['id'];
+    $table = $_SESSION['collections'][0]['view'];
+    $is_view = true;
+} else {
+    $coll_id = $_REQUEST['coll_id'];
+    $table = $security->retrieve_view_from_coll_id($coll_id);
+    $is_view = true;
+    if (empty($table)) {
+        $table = $security->retrieve_table_from_coll($coll_id);
+        $is_view = false;
+    }
+}
+$_SESSION['collection_id_choice'] = $coll_id;
+$_SESSION['current_basket']['coll_id'] = $coll_id;
+$idCourrier = $_GET['id'];
+
+
 
 //test service print_details
 $printDetails = false;
@@ -93,12 +132,6 @@ if ($core->test_service('add_new_version', 'apps', false)) {
     // $viewEmailsNotifs = true;
 // }
 
-if (!isset($_REQUEST['coll_id'])) {
-    $_REQUEST['coll_id'] = '';
-}
-$_SESSION['doc_convert'] = array();
-$_SESSION['save_list']['fromDetail'] = "true";
-
 /****************Management of the location bar  ************/
 $init = false;
 if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
@@ -127,39 +160,12 @@ $page_label = _DETAILS;
 $page_id = 'details';
 $core->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-$hist = new history();
-$security = new security();
-$func = new functions();
-$request= new request;
-$type = new types();
-$s_id = '';
-$_SESSION['req'] ='details';
-$_SESSION['indexing'] = array();
-$is = new indexing_searching_app();
-$coll_id = '';
-$table = '';
-if (!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id'])) {
-    //$_SESSION['error'] = _COLL_ID.' '._IS_MISSING;
-    $coll_id = $_SESSION['collections'][0]['id'];
-    $table = $_SESSION['collections'][0]['view'];
-    $is_view = true;
-} else {
-    $coll_id = $_REQUEST['coll_id'];
-    $table = $security->retrieve_view_from_coll_id($coll_id);
-    $is_view = true;
-    if (empty($table)) {
-        $table = $security->retrieve_table_from_coll($coll_id);
-        $is_view = false;
-    }
-}
-$_SESSION['collection_id_choice'] = $coll_id;
-$_SESSION['current_basket']['coll_id'] = $coll_id;
+
+
 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $s_id = addslashes($func->wash($_GET['id'], 'num', _THE_DOC));
 }
-
-$db = new Database();
 
 $stmt = $db->query("SELECT res_id FROM mlb_coll_ext WHERE res_id = ?", array($s_id));
 if ($stmt->rowCount() <= 0) {
@@ -220,27 +226,6 @@ $delete_doc = check_right(
 
 //update index with the doctype
 if (isset($_POST['submit_index_doc'])) {
-    /*if (
-        $core->is_module_loaded('entities')
-        && is_array($_SESSION['details']['diff_list'])
-    ) {
-        require_once('modules/entities/class/class_manage_listdiff.php');
-        $list = new diffusion_list();
-        $params = array(
-            'mode'=> 'listinstance',
-            'table' => $_SESSION['tablename']['ent_listinstance'],
-            'coll_id' => $coll_id,
-            'res_id' => $s_id,
-            'user_id' => $_SESSION['user']['UserId'],
-            'concat_list' => true,
-            'only_cc' => false
-        );
-        $list->load_list_db(
-            $_SESSION['details']['diff_list'],
-            $params
-        ); //pb enchainement avec action redirect
-        $_SESSION['details']['diff_list']['key_value'] = md5($res_id);
-    }*/
     $is->update_mail($_POST, 'POST', $s_id, $coll_id);
 
     if ($core->is_module_loaded('tags')) {
@@ -288,46 +273,47 @@ if (isset($_POST['put_doc_on_validation'])) {
 }
 
 //Load multicontacts
-	$query = "SELECT c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society 
-                FROM view_contacts c, contacts_res cres 
-                WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id 
-                GROUP BY c.firstname, c.lastname, c.society, c.contact_firstname, c.contact_lastname";
-			
-	$stmt = $db->query($query, array($_REQUEST['id']));
-	$nbContacts = 0;
-	$frameContacts = "";
-	$frameContacts = "{";
-	while($res = $stmt->fetchObject()){
-		$nbContacts = $nbContacts + 1;
-        $contact_firstname = str_replace("'","\'", $res->contact_firstname);
-        $contact_firstname = str_replace('"'," ", $contact_firstname);
-        $contact_lastname = str_replace("'","\'", $res->contact_lastname);
-        $contact_lastname = str_replace('"'," ", $contact_lastname);
-		$firstname = str_replace("'","\'", $res->firstname);
-		$firstname = str_replace('"'," ", $firstname);
-		$lastname = str_replace("'","\'", $res->lastname);
-		$lastname = str_replace('"'," ", $lastname);
-		$society = str_replace("'","\'", $res->society);
-		$society = str_replace('"'," ", $society);
-		$frameContacts .= "'contact ".$nbContacts."' : '" . $contact_firstname . " " . $contact_lastname . " " . $firstname . " " . $lastname . " " . $society . " (contact)', ";
-	}
-    $query = "SELECT u.firstname, u.lastname, u.user_id ";
-			$query .= "FROM users u, contacts_res cres  ";
-			$query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id ";
-			$query .= "GROUP BY u.firstname, u.lastname, u.user_id";
-			
-	$stmt = $db->query($query, array($_REQUEST['id']));
-	
-	while($res = $stmt->fetchObject()){
-		$nbContacts = $nbContacts + 1;
-		$firstname = str_replace("'","\'", $res->firstname);
-		$firstname = str_replace('"'," ", $firstname);
-		$lastname = str_replace("'","\'", $res->lastname);
-		$lastname = str_replace('"'," ", $lastname);
-		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " (utilisateur)', ";
-	}
-	$frameContacts = substr($frameContacts, 0, -2);
-	$frameContacts .= "}";
+$query = "SELECT c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society 
+        FROM view_contacts c, contacts_res cres 
+        WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id 
+        GROUP BY c.firstname, c.lastname, c.society, c.contact_firstname, c.contact_lastname";
+
+$stmt = $db->query($query, array($_REQUEST['id']));
+$nbContacts = 0;
+$frameContacts = "";
+$frameContacts = "{";
+while ($res = $stmt->fetchObject()) {
+    $nbContacts = $nbContacts + 1;
+    $contact_firstname = str_replace("'", "\'", $res->contact_firstname);
+    $contact_firstname = str_replace('"', " ", $contact_firstname);
+    $contact_lastname = str_replace("'", "\'", $res->contact_lastname);
+    $contact_lastname = str_replace('"', " ", $contact_lastname);
+    $firstname = str_replace("'", "\'", $res->firstname);
+    $firstname = str_replace('"', " ", $firstname);
+    $lastname = str_replace("'", "\'", $res->lastname);
+    $lastname = str_replace('"', " ", $lastname);
+    $society = str_replace("'", "\'", $res->society);
+    $society = str_replace('"', " ", $society);
+    $frameContacts .= "'contact " . $nbContacts . "' : '" . $contact_firstname . " " . $contact_lastname . " " . $firstname . " " . $lastname . " " . $society . " (contact)', ";
+}
+$query = "SELECT u.firstname, u.lastname, u.user_id ";
+$query .= "FROM users u, contacts_res cres  ";
+$query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id ";
+$query .= "GROUP BY u.firstname, u.lastname, u.user_id";
+
+$stmt = $db->query($query, array($_REQUEST['id']));
+
+while($res = $stmt->fetchObject()){
+    $nbContacts = $nbContacts + 1;
+    $firstname = str_replace("'","\'", $res->firstname);
+    $firstname = str_replace('"'," ", $firstname);
+    $lastname = str_replace("'","\'", $res->lastname);
+    $lastname = str_replace('"'," ", $lastname);
+    $frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " (utilisateur)', ";
+}
+$frameContacts = substr($frameContacts, 0, -2);
+$frameContacts .= "}";
+
 if (empty($_SESSION['error']) || $_SESSION['indexation']) {
     $comp_fields = '';
     $stmt = $db->query("SELECT type_id FROM ".$table." WHERE res_id = ?", array($s_id));
@@ -359,7 +345,7 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
 
 }
 ?>
-<div id="details_div" style="display:block;">
+<div id="details_div">
 <h1 class="titdetail">
     <i class="fa fa-info-circle fa-2x"></i>&nbsp;<?php
         echo _DETAILS . " : " . _DOC . ' ' . strtolower(_NUM);
@@ -375,27 +361,27 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 {
     ?>
     <div class="error">
-        <br />
-        <br />
-        <br />
-        <?php echo $_SESSION['error'];  $_SESSION['error'] = "";?>
-        <br />
-        <br />
-        <br />
+    <br />
+    <br />
+    <br />
+    <?php echo $_SESSION['error'];  $_SESSION['error'] = "";?>
+    <br />
+    <br />
+    <br />
     </div>
     <?php
 } else {
     if ($stmt->rowCount() == 0) {
         ?>
         <div align="center">
-                <br />
-                <br />
-                <?php echo _NO_DOCUMENT_CORRESPOND_TO_IDENTIFIER;?>.
-                <br />
-                <br />
-                <br />
-            </div>
-            <?php
+            <br />
+            <br />
+            <?php echo _NO_DOCUMENT_CORRESPOND_TO_IDENTIFIER;?>.
+            <br />
+            <br />
+            <br />
+        </div>
+        <?php
         } else {
             ?>
             <div id="info_detail" class="info" onclick="this.hide();">
@@ -546,20 +532,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 <p id="back_list">
                     <?php
                     if (! isset($_POST['up_res_id']) || ! $_POST['up_res_id']) {
-                        if ($_SESSION['indexation'] == false) {
-						
-							/*if($_SESSION['origin'] == 'show_folder' || $_SESSION['origin'] == 'search_folder_tree'){
-								echo '<a href="#" onclick="history.back();return false;" class="back">' .  _BACK . '</a>';
-								
-							}else{
-								echo '<a href="#" onclick="history.go(';
-								if ($_SESSION['origin'] == 'basket' ) {
-									echo '-2';
-								} else {
-									echo '-1';
-								}
-								echo ');" class="back">' .  _BACK . '</a>';
-							}*/
+                        if ($_SESSION['indexation'] == false) {			
 	 		    echo '<a href="#" onclick="document.getElementById(\'ariane\').childNodes[document.getElementById(\'ariane\').childNodes.length-2].click();"><i class="fa fa-arrow-circle-left fa-2x" title="' .  _BACK . '"></i></a>';
                         }
                     }
@@ -592,44 +565,29 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <br/>
                 <form method="post" name="index_doc" id="index_doc" action="index.php?page=details&dir=indexing_searching&id=<?php functions::xecho($s_id);?>">
                     <div align="center">
-                        <?php if ($printDetails) {
-                            /*if (
-                              isset($_SESSION['custom_override_id'])
-                              && $_SESSION['custom_override_id'] <> ''
-                            ) {
-                               $path = $_SESSION['config']['coreurl']
-                                . '/custom/'
-                                . $_SESSION['custom_override_id']
-                                . '/apps/'
-                                . $_SESSION['config']['app_id'];
-                            } else {*/
-                              $path = $_SESSION['config']['businessappurl'];
-                            //}
-                            ?>
-                            <!-- OLD PRINT DETAILS VERSION -->
-                            <!--<input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php functions::xecho($path . "/tmp/export_details_".$_SESSION['user']['UserId']."_export.html");?>', '_blank');" />-->
-                            <!-- NEW PRINT DETAILS VERSION -->
-                            <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=print&id=<?php functions::xecho($s_id);?>', '_blank');" />
-                            <?php
-                            }
+                        <?php 
+                        //TOOLBAR
+                        $toolBar = '';
+                        if ($printDetails) { 
+                            $toolBar .= '<input type="button" class="button" name="print_details" id="print_details" value="'._PRINT_DETAILS.'" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=print&id='.$s_id.'\', \'_blank\');" /> ';
+                        }
+                        
+                        if ($putInValid) {
+                            $toolBar .= '<input type="submit" class="button"  value="'._PUT_DOC_ON_VALIDATION.'" name="put_doc_on_validation" onclick="return(confirm(\''._REALLY_PUT_DOC_ON_VALIDATION.'\n\r\n\r\'));" /> ';
+                        }
+                        
+                        if ($delete_doc) {
+                            $toolBar .= '<input type="submit" class="button"  value="'._DELETE_DOC.'" name="delete_doc" onclick="return(confirm(\''. _REALLY_DELETE.' '._THIS_DOC.' ?\n\r\n\r\'));" /> ';
+                        }
+                        
+                        if ($modify_doc) {
+                           $toolBar .= '<input type="submit" class="button"  value="'._SAVE_MODIFICATION.'" name="submit_index_doc" /> ';   
+                        }
+                        $toolBar .= '<input type="button" class="button" name="back_welcome" id="back_welcome" value="'._BACK_TO_WELCOME.'" onclick="window.top.location.href=\''.$_SESSION['config']['businessappurl'].'index.php\';" />';
+                        
+                        echo $toolBar;
                         ?>
-                        <?php if ($putInValid) {
-                            ?>
-                            <input type="submit" class="button"  value="<?php echo _PUT_DOC_ON_VALIDATION;?>" name="put_doc_on_validation" onclick="return(confirm('<?php echo _REALLY_PUT_DOC_ON_VALIDATION;?>\n\r\n\r'));" />
-                            <?php
-                            }
-                        ?>
-                        <?php if ($delete_doc)
-                        {?>
-                        <input type="submit" class="button"  value="<?php echo _DELETE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));" />
-                        <?php }
-                        if ($modify_doc)
-                        {?>
-                        <input type="submit" class="button"  value="<?php echo _SAVE_MODIFICATION;?>" name="submit_index_doc" />
-                        <?php  } ?>
-                            <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php echo _BACK_TO_WELCOME;?>" onclick="window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';" />
-
-                            </div>
+                    </div>
                     <h2>
                         <span class="date">
                             <?php $detailsExport .= "<h2>"._FILE_DATA."</h2>";?>
@@ -645,140 +603,113 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         }
                         foreach(array_keys($data) as $key)
                         {
-							if($key != 'is_multicontacts' || ($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y')){
-								if ($i%2 != 1 || $i==0) // pair
-								{
-									$detailsExport .= "<tr class='col'>";
-									?>
-									<tr class="col">
-									<?php
-								}
-								$folder_id = "";
-								if ($key == "folder" && $data[$key]['show_value'] <> "")
-								{
-									$folderTmp = $data[$key]['show_value'];
-									$find1 = strpos($folderTmp, '(');
-									$folder_id = substr($folderTmp, $find1, strlen($folderTmp));
-									$folder_id = str_replace("(", "", $folder_id);
-									$folder_id = str_replace(")", "", $folder_id);
-								}
-								//$detailsExport .= "<th align='left' width='50px'>";
-								?>
-								<th align="left" class="picto" >
-									<?php
-									if (isset($data[$key]['addon']))
-									{
-										echo $data[$key]['addon'];
-										//$detailsExport .= $data[$key]['addon'];
-									}
-									elseif (isset($data[$key]['img']))
-									{
-										//$detailsExport .= "<img alt='".$data[$key]['label']."' title='".$data[$key]['label']."' src='".$data[$key]['img']."'  />";
-										if ($folder_id <> "")
-										{
-											echo "<a href='".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=".$folder_id."'>";
-											?>
-											<i class="fa fa-<?php functions::xecho($data[$key]['img']);?> fa-2x" title="<?php functions::xecho($data[$key]['label']);?>"></i>
-                                            </a>
-											<?php
-										} else if($key == 'is_multicontacts'){
-											?>
-											
-												<i class="fa fa-<?php functions::xecho($data[$key]['img']);?> fa-2x" title="<?php functions::xecho($data[$key]['label']);?>"
-													onclick = "previsualiseAdminRead(event, <?php functions::xecho($frameContacts);?>);" style="cursor: pointer;"></i>
-											</a>
-											<?php
-										}
-										else
-										{
-											?>
-                                            <i class="fa fa-<?php functions::xecho($data[$key]['img']);?> fa-2x" title="<?php functions::xecho($data[$key]['label']);?>"></i>
-											<?php
-										}
-										?>
-
-
-
-										<?php
-									}
-                                //$detailsExport .= "</th>";
+                            if($key != 'is_multicontacts' || ($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y')){
+                                if ($i%2 != 1 || $i==0) // pair
+                                {
+                                    $detailsExport .= "<tr class='col'>"; ?>
+                                    <tr class="col">
+                                <?php
+                                }
+                                $folder_id = "";
+                                if ($key == "folder" && $data[$key]['show_value'] <> "")
+                                {
+                                        $folderTmp = $data[$key]['show_value'];
+                                        $find1 = strpos($folderTmp, '(');
+                                        $folder_id = substr($folderTmp, $find1, strlen($folderTmp));
+                                        $folder_id = str_replace("(", "", $folder_id);
+                                        $folder_id = str_replace(")", "", $folder_id);
+                                }
+                                //$detailsExport .= "<th align='left' width='50px'>";
                                 ?>
-                            </th>
-                            <?php
-							
-                        $detailsExport .= "<td align='left' width='200px'>";
-						
-									?>
-								<td align="left" width="200px">
-									<?php									
-										$detailsExport .= $data[$key]['label'];
-										echo $data[$key]['label'];
-										
-									?>
-									
-								</td>
-								<?php
-							
+                                <th align="left" class="picto" >
+                                <?php
+                                if (isset($data[$key]['addon'])) {
+                                    echo $data[$key]['addon'];
+                                    //$detailsExport .= $data[$key]['addon'];
+                                } elseif (isset($data[$key]['img'])) {
+                                    //$detailsExport .= "<img alt='".$data[$key]['label']."' title='".$data[$key]['label']."' src='".$data[$key]['img']."'  />";
+                                    if ($folder_id <> "") {
+                                        echo "<a href='" . $_SESSION['config']['businessappurl'] . "index.php?page=show_folder&module=folder&id=" . $folder_id . "'>";
+                                        ?>
+                                        <i class="fa fa-<?php functions::xecho($data[$key]['img']); ?> fa-2x" title="<?php functions::xecho($data[$key]['label']); ?>"></i>
+                                        </a>
+                                        <?php
+                                    } else if ($key == 'is_multicontacts') {
+                                        ?>
+
+                                        <i class="fa fa-<?php functions::xecho($data[$key]['img']); ?> fa-2x" title="<?php functions::xecho($data[$key]['label']); ?>"
+                                           onclick = "previsualiseAdminRead(event, <?php functions::xecho($frameContacts); ?>);" style="cursor: pointer;"></i>
+                                        </a>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <i class="fa fa-<?php functions::xecho($data[$key]['img']); ?> fa-2x" title="<?php functions::xecho($data[$key]['label']); ?>"></i>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                                </th>
+                            <?php			
+                            $detailsExport .= "<td align='left' width='200px'>"; ?>
+                            <td align="left" width="200px">
+                            <?php									
+                                $detailsExport .= $data[$key]['label'];
+                                echo $data[$key]['label'];
+                            ?>						
+                            </td>
+                            <?php			
                             $detailsExport .=  "</td>";
-                            $detailsExport .=  "<td>";
-							
+                            $detailsExport .=  "<td>";			
                             ?>
-                            <td>
-							
+                            <td>			
                                 <?php
                                 $detailsExport .=  $data[$key]['show_value'];
                             if (!isset($data[$key]['readonly']) || $data[$key]['readonly'] == true)
-                            {
-							
-								if($key == 'is_multicontacts') {
-									if($data[$key]['show_value'] == 'Y'){
-									?>
-											<input type="hidden" name="<?php functions::xecho($key);?>" id="<?php functions::xecho($key);?>" value="<?php functions::xecho($data[$key]['show_value']);?>" readonly="readonly" class="readonly" size="40"  title="<?php functions::xecho($data[$key]['show_value']);?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" />
-														
-											<div onClick="$('return_previsualise').style.display='none';" id="return_previsualise" style="cursor: pointer; display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
-												<input type="hidden" id="identifierDetailFrame" value="" />
-											</div>
-											
-											<input type="text" value="<?php functions::xecho($nbContacts . ' ' ._CONTACTS);?>" readonly="readonly" class="readonly" size="40"  title="<?php echo _SHOW_MULTI_CONTACT;?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" 
-														onclick = "previsualiseAdminRead(event, <?php functions::xecho($frameContacts);?>);" style="cursor: pointer;"
-														 
-											/>
-									<?php
-									}
-	
-								}elseif ($data[$key]['display'] == 'textinput')
+                            {			
+                                if($key == 'is_multicontacts') {
+                                    if($data[$key]['show_value'] == 'Y'){
+                                    ?>
+                                        <input type="hidden" name="<?php functions::xecho($key);?>" id="<?php functions::xecho($key);?>" value="<?php functions::xecho($data[$key]['show_value']);?>" readonly="readonly" class="readonly" size="40"  title="<?php functions::xecho($data[$key]['show_value']);?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" />
+
+                                        <div onClick="$('return_previsualise').style.display='none';" id="return_previsualise" style="cursor: pointer; display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
+                                            <input type="hidden" id="identifierDetailFrame" value="" />
+                                        </div>
+
+                                        <input type="text" value="<?php functions::xecho($nbContacts . ' ' ._CONTACTS);?>" readonly="readonly" class="readonly" size="40"  title="<?php echo _SHOW_MULTI_CONTACT;?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" 
+                                                                            onclick = "previsualiseAdminRead(event, <?php functions::xecho($frameContacts);?>);" style="cursor: pointer;"/>
+                                    <?php
+                                    }
+
+                                }elseif ($data[$key]['display'] == 'textinput')
                                 {
                                     if($key == 'type_id'){
                                         ?>
                                         <input type="text" name="<?php echo $key;?>"  value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
                                         <input type="hidden" name="<?php echo $key;?>" id="<?php echo $data[$key]['value'];?>" value="<?php echo $data[$key]['value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
                                         <?php
-                                        }else{
-                                        ?>
+                                    }else{
+                                    ?>
                                         <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
-                                        <?php
-                                        }
+                                    <?php
+                                    }
                                 }
                                 elseif ($data[$key]['display'] == 'textarea')
 								
                                 {
                                     echo '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" style="width: 200px; max-width: 200px;">'
                                         .$data[$key]['show_value']
-                                    .'</textarea>';								
+                                        .'</textarea>';								
                                 } else if ($data[$key]['field_type'] == 'radio') {
                                     for($k=0; $k<count($data[$key]['radio']);$k++) {
                                         ?><input name ="<?php functions::xecho($key);?>" <?php if ($data[$key]['value'] ==$data[$key]['radio'][$k]['ID']){ echo 'checked';}?> type="radio" id="<?php functions::xecho($key) .'_' . $data[$key]['radio'][$k]['ID'];?>" value="<?php functions::xecho($data[$key]['radio'][$k]['ID']);?>" disabled ><?php functions::xecho($data[$key]['radio'][$k]['LABEL']);
                                     }
                                 }
-                                else
-								
+                                else				
                                 {
                                     ?>
                                     <input type="text" name="<?php functions::xecho($key);?>" id="<?php functions::xecho($key);?>" value="<?php functions::xecho($data[$key]['show_value']);?>" readonly="readonly" class="readonly" size="40" title="<?php functions::xecho($data[$key]['show_value']);?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" />
                                     <?php
-                                    if (isset($data[$key]['addon']))
-									
-									
+                                    if (isset($data[$key]['addon']))				
                                     {
                                         $frm_str .= $data[$key]['addon'];
                                     }
@@ -902,7 +833,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 }
                             }
                             $i++;
-							}
+                            }
                         }
                         $detailsExport .=  "<tr class='col'>";
                         $detailsExport .=  "<td align='left' width='200px'>";
@@ -972,15 +903,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </table>
                     <?php
                     $detailsExport .=  "</table>";
-                    ?>
-
-                    <?php
-                    /*if ($core->is_module_loaded('tags') &&
-                        ($core->test_service('tag_view', 'tags',false) == 1))
-                    {
-                        include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR
-                        ."templates/details/index.php");
-                    }*/
                     ?>
 
                     <div id="opt_indexes">
@@ -1131,9 +1053,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 /*****************/
                             }
 
-                        //Identifiant du courrier en cours
-                        $idCourrier=$_GET['id'];
-                        //Requete pour récupérer position_label
+                       
+                    if ($core->is_module_loaded('fileplan') && ($core->test_service('put_doc_in_fileplan', 'fileplan', false) == 1) && $fileplanLabel <> "") { 
+                        
+                         //Requete pour récupérer position_label
                         $stmt = $db->query("SELECT position_label FROM fp_fileplan_positions INNER JOIN fp_res_fileplan_positions 
                                     ON fp_fileplan_positions.position_id = fp_res_fileplan_positions.position_id
                                     WHERE fp_res_fileplan_positions.res_id=?",array($idCourrier));
@@ -1153,9 +1076,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         $res2 = $stmt->fetchObject();
                         $fileplanLabel=$res2->fileplan_label;
                         $planClassement= $fileplanLabel." / ".$positionLabel;
-                    ?>
-             
-                    <?php if ($core->is_module_loaded('fileplan') && ($core->test_service('put_doc_in_fileplan', 'fileplan', false) == 1) && $fileplanLabel <> "") { ?>
+                        ?>
                             <tr class="col">
                                 <th align="left" class="picto">
                                     <i class="fa fa-bookmark fa-2x" title="<?php echo _FILEPLAN;?>"></i>
@@ -1185,8 +1106,19 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 <?php
                 //SERVICE TO VIEW TECHNICAL INDEX
                 if ($viewTechnicalInfos) {
-                    include_once('apps/' . $_SESSION['config']['app_id'] . '/view_technical_infos.php');
+                    $technicalInfo_frame = '';
+                    
+                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&page=show_technicalInfo_tab';;    
+                    
+                    $technicalInfo_frame .= '<dt class="fa fa-cogs" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'technicalInfo_iframe\',\''.$pathScriptTab.'\');return false;"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>';
+                    $technicalInfo_frame .= '<dd>';
+                    $technicalInfo_frame .= '<iframe src="" name="technicalInfo_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="technicalInfo_iframe" style="height:100%;"></iframe>';	
+                    $technicalInfo_frame .= '</dd>';
+                    
+                    echo $technicalInfo_frame;
                 }
+                
                 //$core->execute_app_services($_SESSION['app_services'], 'details.php');
                 $detailsExport .= "<h2>"._NOTES."</h2>";
                 $detailsExport .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
@@ -1217,404 +1149,204 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 $detailsExport .= "</table>";
                 if ($core->is_module_loaded('entities'))
                 {
+                    require_once('modules/entities/class/class_manage_listdiff.php');
+                    $diff_list = new diffusion_list();
+                    $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id, false, $coll_id);
+                    $_SESSION['details']['difflist_type'] = $diff_list->get_difflist_type($_SESSION['details']['diff_list']['difflist_type']);
+                    $roles = $diff_list->list_difflist_roles();
+                    json_encode($roles);
+                    $roles_str = json_encode($roles);
+                            
+                    $diffList_frame = '';
                     $category = $data['category_id']['value'];
                     $detailsExport .= "<h2>"._DIFF_LIST."</h2>";
-                    ?>
-                    <dt class="fa fa-gear" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _DIFF_LIST;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
-                    <dd>
-                        <?php
-                            $onlyCC = '';
-                            if ($core->test_service('update_list_diff_in_details', 'entities', false) || $core->test_service('add_copy_in_indexing_validation', 'entities', false)) {
-                                if($core->test_service('add_copy_in_indexing_validation', 'entities', false) && $_SESSION['user']['UserId'] != 'superadmin'){
-                                    $onlyCC = '&only_cc';
-                                }
-                                echo '<br />';
-                                echo '<div style="text-align:center;">';
-                                
-                                echo '<input type="button" class="button" title="'._UPDATE_LIST_DIFF.'" value="'._UPDATE_LIST_DIFF.'" onclick="window.open(\''
-                                    .$_SESSION['config']['businessappurl']
-                                    .'index.php?display=true&module=entities&page=manage_listinstance&cat='.$category.'&origin=details'.$onlyCC.'\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" />';
-                                ?>
-                                <input type="button" class="button" style="display:none;" id="save_list_diff" onClick="saveListDiff('listinstance', '<?php 
-                                    functions::xecho($_SESSION['tablename']['ent_listinstance']);?>', '<?php 
-                                    functions::xecho($coll_id);?>', '<?php 
-                                    functions::xecho($s_id);?>','<?php 
-                                    functions::xecho($_SESSION['user']['UserId']);?>', '<?php 
-                                    echo true;?>','<?php 
-                                    echo false;?>');$('div_diff_list_message').show();" value="<?php 
-                                    echo _STORE_DIFF_LIST;?>" />
-                                </div>
-                                <?php
-                                }
-                                ?>
-                            <br />
-                            <div id="div_diff_list_message" style="color:red;text-align: center;"></div>
-                            <br />
-                            
-                        <div id="diff_list_div">
-                            <?php
-                            require_once('modules/entities/class/class_manage_listdiff.php');
-                            $diff_list = new diffusion_list();
-                            $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id, false, $coll_id);
-                            $_SESSION['details']['difflist_type'] = $diff_list->get_difflist_type($_SESSION['details']['diff_list']['difflist_type']);
-                            # Include display of list
-                            $roles = $diff_list->list_difflist_roles();
-                            $difflist = $_SESSION['details']['diff_list'];
-
-                            require_once 'modules/entities/difflist_display.php';  
-                            
-                            //if (($core->test_service('update_list_diff_in_details', 'entities', false)) && (!$core->test_service('add_copy_in_process', 'entities', false))) {
-                            ?>
-                        </div>
-                        <div>
-                
-                            <br/>
-                            <span class="diff_list_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor='pointer';" onclick="new Effect.toggle('diff_list_history_div', 'blind', {delay:0.2});whatIsTheDivStatus('diff_list_history_div', 'divStatus_diff_list_history_div');return false;">
-                                <span id="divStatus_diff_list_history_div" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>
-                                <b>&nbsp;<small><?php echo _DIFF_LIST_HISTORY;?></small></b>
-                            </span>
-                        </div>
-                        
-                        <br />
-                        <div id="diff_list_history_div" style="display:none">
-                            <?php 
-                            $diffListType = 'entity_id';
-                            require_once('modules/entities/difflist_history_display.php');?>
-                        </div>
-                    </dd>
-                <?php
-                }
-				
-				if ($core->test_service('print_folder_doc', 'visa', false))
-                {
-					require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
-					. "class" . DIRECTORY_SEPARATOR
-					. "class_modules_tools.php";
-                    ?>
-                    <dt class="fa fa-print" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _PRINTFOLDER;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
-                    <dd>
-                        <br/>
-						<?php
-                        $print_folder = new visa();
-						echo $print_folder->showPrintFolder($coll_id, $table, $_SESSION['doc_id']);
-						?>
-                    </dd>
-                <?php
-                }
-				
-				if ($core->is_module_loaded('visa')) {
-					require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
-					. "class" . DIRECTORY_SEPARATOR
-					. "class_modules_tools.php";
-					
-                        $visa = new visa();
-                        if($visa->nbVisa($s_id,$coll_id) == 0){
-                            $style = 'font-size:2em;color:#9AA7AB;padding-left: 15px;padding-right: 15px;';
-                        }else{
-                            $style = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
-                        }
-                    ?>
-				<dt id="onglet_circuit" class="fa fa-certificate" style="<?php echo $style; ?>" title="<?php echo _VISA_WORKFLOW;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt><dd id="page_circuit" style="overflow-x: hidden;">
-				<h2><?php echo _VISA_WORKFLOW;?></h2>
-				<?php
-				$modifVisaWorkflow = false;
-				if ($core->test_service('config_visa_workflow', 'visa', false)) {
-					$modifVisaWorkflow = true;
-				}
-				?>
-				<div class="error" id="divError" name="divError"></div>
-				<div style="text-align:center;">
-				<?php
-				echo $visa->getList($s_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT', '','Y');
-				?>
-				</div>
-				
-				<br/>
-				<br/>
-					<br/>
-					<span class="diff_list_visa_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor='pointer';" onclick="new Effect.toggle('diff_list_visa_history_div', 'blind', {delay:0.2});whatIsTheDivStatus('diff_list_visa_history_div', 'divStatus_diff_list_visa_history_div');return false;">
-						<span id="divStatus_diff_list_visa_history_div" style="color:#1C99C5;"><<</span>
-						<b>&nbsp;<small><?php echo _DIFF_LIST_VISA_HISTORY;?></small></b>
-					</span>
-
-					<div id="diff_list_visa_history_div" style="display:none">
-						<?php
-						//$return_mode = true;
-						$diffListType = 'VISA_CIRCUIT';
-						require_once('modules/entities/difflist_visa_history_display.php');
-						?>
-									
-					</div>
-				</dd>
-				<?php
-				 }
-				 
-				if ($core->is_module_loaded('avis')) {
-                    require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
-                    . "class" . DIRECTORY_SEPARATOR
-                    . "avis_controler.php";
-
-                    $avis = new avis_controler();
-                    if($avis->nbAvis($s_id,$coll_id) == 0){
-                        $style = 'font-size:2em;color:#9AA7AB;padding-left: 15px;padding-right: 15px;';
-                    }else{
-                        $style = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                   
+                    $onlyCC = '';
+                    if($core->test_service('add_copy_in_indexing_validation', 'entities', false) && $_SESSION['user']['UserId'] != 'superadmin'){
+                        $onlyCC = '&only_cc';
                     }
-                    ?>
-                <dt id="onglet_circuit" class="fa fa-check-square" style="<?php echo $style; ?>" title="<?php echo _AVIS_WORKFLOW;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt><dd id="page_circuit_avis" style="overflow-x: hidden;">
-                <h2><?php echo _AVIS_WORKFLOW;?></h2>
-                <?php
-                if ($core->test_service('config_avis_workflow_in_detail', 'avis', false)) {
-                    $modifAvisWorkflow = true;
+                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true&category='.$category.'&roles='.urlencode($roles_str).$onlyCC;    
+                    
+                    $diffList_frame .= '<dt class="fa fa-gear" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'diffList_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>';
+                    $diffList_frame .= '<dd>'; 
+                    $diffList_frame .= '<iframe src="" name="diffList_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="diffList_iframe" style="height:100%;"></iframe>';
+                    $diffList_frame .='</dd>';
+                    
+                    echo $diffList_frame;
                 }
-                ?>
-                <div class="error" id="divError" name="divError"></div>
-                <div style="text-align:center;">
-                <?php
-                echo $avis->getList($s_id, $coll_id, $modifAvisWorkflow, 'AVIS_CIRCUIT', '','Y');
-                ?>
-                </div>
                 
-                <br/>
-                <br/>
-                <br/>
-                    <span class="diff_list_avis_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor='pointer';" onclick="new Effect.toggle('diff_list_avis_history_div', 'blind', {delay:0.2});whatIsTheDivStatus('diff_list_avis_history_div', 'divStatus_diff_list_avis_history_div');return false;">
-                        <span id="divStatus_diff_list_avis_history_div" style="color:#1C99C5;"><<</span>
-                        <b>&nbsp;<small><?php echo _DIFF_LIST_AVIS_HISTORY;?></small></b>
-                    </span>
-
-                    <div id="diff_list_avis_history_div" style="display:none">
-                        <?php
-                        //$return_mode = true;
-                        $diffListType = 'AVIS_CIRCUIT';
-                        require_once('modules/avis/difflist_avis_history_display.php');
-                        ?>
-                                    
-                    </div>
-                </dd>
-                <?php
+                //PRINT FOLDER TAB
+                if ($core->test_service('print_folder_doc', 'visa', false))
+                {
+                    $printFolder_frame = '';
+                    require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
+                        . "class" . DIRECTORY_SEPARATOR
+                        . "class_modules_tools.php";
+  
+                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&page=show_printFolder_tab&module=visa&resId='
+                        . $s_id . '&collId=' . $coll_id . '&table=' . $table;
+                    $printFolder_frame .= '<dt class="fa fa-print" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._PRINTFOLDER.'" onclick="loadSpecificTab(\'printFolder_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>';
+                    $printFolder_frame .= '<dd>';
+                    $printFolder_frame .= '<iframe src="" name="printFolder_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="printFolder_iframe" style="height:100%;"></iframe>';	
+                    $printFolder_frame .= '</dd>';
+                    
+                    echo $printFolder_frame;
                 }
-
-                //$detailsExport .= "<h2>"._PROCESS."</h2>";
-                $nb_attach = '';
+		
+                //VISA TAB
+                if ($core->is_module_loaded('visa')) {
+                    $visa_frame = '';
+                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true';
+                    $visa_frame .= '<dt id="visa_tab" class="fa fa-certificate" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'visa_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="visa_tab_badge"></sup></dt><dd id="page_circuit" style="overflow-x: hidden;">';
+                    $visa_frame .= '<h2>'._VISA_WORKFLOW.'</h2>';
+		    $visa_frame .= '<iframe src="" name="visa_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="visa_iframe" style="height:95%;"></iframe>';	
+                    $visa_frame .='</dd>';
+                    
+                    //LOAD TOOLBAR BADGE
+                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=visa&page=load_toolbar_visa&resId='.$s_id.'&collId='.$coll_id;
+                    $visa_frame .='<script>loadToolbarBadge(\'visa_tab\',\''.$toolbarBagde_script.'\');</script>';
+                    
+                    echo $visa_frame;
+			
+                }
+		
+                //AVIS TAB
+                if ($core->is_module_loaded('avis')) {
+                    $avis_frame = '';
+                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&page=show_avis_tab&module=avis&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true';
+                    $avis_frame .= '<dt id="avis_tab" class="fa fa-check-square" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._AVIS_WORKFLOW.'" onclick="loadSpecificTab(\'avis_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="avis_tab_badge"></sup></dt><dd id="page_circuit_avis" style="overflow-x: hidden;">';
+                    $avis_frame .= '<h2>'._AVIS_WORKFLOW.'</h2>';
+         
+                    $avis_frame .= '<iframe src="" name="avis_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="avis_iframe" style="height:95%;"></iframe>';
+                    $avis_frame .= '</dd>';
+                    
+                    //LOAD TOOLBAR BADGE
+                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=avis&page=load_toolbar_avis&resId='.$s_id.'&collId='.$coll_id;
+                    $avis_frame .='<script>loadToolbarBadge(\'avis_tab\',\''.$toolbarBagde_script.'\');</script>';
+                    
+                    echo $avis_frame;
+            
+                }
+                
+                //ATTACHMENTS TAB
                 if ($core->is_module_loaded('attachments'))
                 {
-                    $countAttachments = "SELECT res_id, creation_date, title, format FROM " 
-                        . $_SESSION['tablename']['attach_res_attachments'] 
-                        . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','signed_response','outgoing_mail_signed','converted_pdf','outgoing_mail','print_folder') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
-                    $db = new Database();
-                    $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']));
-                    if ($stmt->rowCount() > 0) {
-                        $nb_attach = $stmt->rowCount();
-                        $class = 'nbRes';
-                        $style = 'font-size: 10px;';
-                        $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
-                    } else {
-                        $nb_attach = '0';
-                        $class = 'nbResZero';
-                        $style = 'display:none;font-size: 10px;';
-                        $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
-                    }
-                }
-                ?>
-                <dt class="fa fa-paperclip" id="other_attachments_tab" style="<?php echo $style2; ?>" title="<?php echo _ATTACHMENTS; ?>"> <sup><span id="nb_attach" class="<?php echo $class; ?>" style="<?php echo $style; ?>"><?php echo $nb_attach; ?></span></sup></dt>
-                <dd id="other_attachments">
-                    <?php
-                    if ($core->is_module_loaded('attachments'))
-                    {
-
-		            require 'modules/templates/class/templates_controler.php';
-		            $templatesControler = new templates_controler();
-		            $templates = array();
-		            $templates = $templatesControler->getAllTemplatesForProcess($data['destination']['value']);
-
-                        $detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
-                        $selectAttachments = "SELECT res_id, creation_date, title, format FROM ".$_SESSION['tablename']['attach_res_attachments']
-                                ." WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','outgoing_mail_signed', 'signed_response','converted_pdf','outgoing_mail','print_folder') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
-                        $stmt = $db->query($selectAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']));
-
-                        ?>
-                        <div>
-				<center>
-					<?php
-                /*if ($core->is_module_loaded('templates') && (!isset($_SESSION['current_basket']['id']) && $core->test_service('edit_attachments_from_detail', 'attachments', false)) || isset($_SESSION['current_basket']['id'])) { */
-                if ($core->is_module_loaded('templates') && ($core->test_service('edit_attachments_from_detail', 'attachments', false))) {
-
-                        ?><input type="button" name="attach" id="attach" class="button" value="<?php echo _CREATE_PJ;?>"
-                             onclick="showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>','98%','auto')" />
-             
-                <?php } ?>
-                </center>
-                    <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&view_only=true&load&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder&fromDetail=attachments" frameborder="0" width="100%" style="height:510px"></iframe>
-                    <script type="text/javascript">
-                        var height = $('other_attachments').offsetHeight;
-                        $('list_attach').style.height = height+"px";
-                    </script>
-                        </div>
-                        <?php
- 					}
+                    $attachments_frame = '';           
+                    $extraParam = '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder';
+                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId='
+                        . $s_id . '&collId=' . $coll_id.'&fromDetail=attachments'.$extraParam;
+                    
+                    $attachments_frame .= '<dt class="fa fa-paperclip" id="attachments_tab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._ATTACHMENTS .'" onclick="loadSpecificTab(\'attachments_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="attachments_tab_badge"></sup></dt>';
+                    $attachments_frame .= '<dd id="other_attachments">';
+                    $attachments_frame .= '<iframe src="" name="attachments_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="attachments_iframe" style="height:100%;"></iframe>';
+                    $responses_frame .= '</dd>';
+                    $detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
                     $detailsExport .= "<br><br><br>";
-                    ?>
-                </dd>
-                <?php
-                        
-                        $countAttachments = "SELECT res_id, creation_date, title, format FROM " 
-                                . $_SESSION['tablename']['attach_res_attachments'] 
-                                . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed' or attachment_type = 'outgoing_mail' or attachment_type = 'signed_response') and (status <> 'TMP' or (typist = ? and status = 'TMP'))";
-                            $stmt = $db->query($countAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']));
-                            if ($stmt->rowCount() > 0) {
-                                $nb_rep = $stmt->rowCount();
-                                $class = 'nbRes';
-                                $style = 'font-size: 10px;';
-                                $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
-                            }else{
-                                $nb_rep = '0';
-                                $class = 'nbResZero';
-                                $style = 'display:none;font-size: 10px;';
-                                $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
-                            }
                     
-                        ?>
-                <dt id="onglet_rep" class="fa fa-mail-reply" style="<?php echo $style2; ?>" title="<?php echo _DONE_ANSWERS; ?>"> <sup><span id="answer_number" style="<?php echo $style; ?>" class="<?php echo $class; ?>"><?php echo $nb_rep; ?></span></sup></dt>
-                <dd id="page_rep">
-                    <center>
-                        <?php
-                    if ($core->is_module_loaded('templates') && ($core->test_service('edit_attachments_from_detail', 'attachments', false))) {
-                            ?><input type="button" name="attach" id="attach" class="button" value="<?php echo _CREATE_PJ;?>"
-                                 onclick="showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
-                                . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>','98%','auto')" />
-
-                    <?php } ?>
-                    </center>
-                    <iframe name="list_attach" id="list_attach2" src="<?php echo
-                     $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail&fromDetail=response';?>" 
-                    frameborder="0" width="100%" height="600px">
-                    </iframe>
-                    <script type="text/javascript">
-                        var height = $('page_rep').offsetHeight-70;
-                        $('list_attach2').style.height = height+"px";
-                    </script>
-                </dd>
-
-                <?php
-                    //SERVICE TO VIEW DOC HISTORY
-                    if ($viewDocHistory) {
-                ?>
-                <dt class="fa fa-line-chart" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _DOC_HISTORY;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
-                <dd>
-                    <!--<h2><?php echo _HISTORY;?></h2>-->
-                    <h2><?php echo _WF ;?></h2>
-                    <iframe src="<?php echo $_SESSION['config']['businessappurl'];
-                    ?>index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=<?php
-                    functions::xecho($s_id);?>&coll_id=<?php functions::xecho($coll_id);?>&load&size=full" name="workflow_history_document" width="100%" 
-                    height="530px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>
-                    <br/> 
-                    <br/> 
-              
-                    <span style="cursor: pointer;" onmouseover="this.style.cursor='pointer';" onclick="new Effect.toggle('history_document', 'blind', {delay:0.2});whatIsTheDivStatus('history_document', 'divStatus_all_history_div');return false;">
-                        <span id="divStatus_all_history_div" style="color:#1C99C5;"><<</span>
-                        <b>&nbsp;<?php echo _ALL_HISTORY;?></b>
-                    </span>
-                    <iframe src="<?php echo $_SESSION['config']['businessappurl'];
-                    ?>index.php?display=true&dir=indexing_searching&page=document_history&id=<?php
-                    functions::xecho($s_id);?>&coll_id=<?php functions::xecho($coll_id);?>&load&size=full" name="history_document" width="100%" 
-                    height="620px" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>
-                </dd>
-                <?php
-                    }
-                if ($core->is_module_loaded('notes')) {
-                    require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
-                        . "class" . DIRECTORY_SEPARATOR
-                        . "class_modules_tools.php";
-                    $notes_tools    = new notes();
+                    //LOAD TOOLBAR BADGE
+                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=load_toolbar_attachments&resId='.$s_id.'&collId='.$coll_id;
+                    $attachments_frame .='<script>loadToolbarBadge(\'attachments_tab\',\''.$toolbarBagde_script.'\');</script>';
                     
-                    //Count notes
-                    $nbr_notes = $notes_tools->countUserNotes($s_id, $coll_id);
-                    // if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
-                    if ($nbr_notes == 0){
-                        $class = 'nbResZero';
-                        $style = 'display:none;font-size: 10px;';
-                        $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
-                    }else{
-                        $class = 'nbRes';
-                        $style = 'font-size: 10px;';
-                        $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
-                    }
-                    //Notes iframe
-                    ?>
-                    <dt class="fa fa-pencil" style="<?php echo $style2; ?>" title="<?php echo _NOTES; ?>"> <sup><span id="nb_note" style="<?php echo $style; ?>" class="<?php echo $class; ?>"><?php echo $nbr_notes; ?></span></sup></dt>
-                    <dd>
-                        <!--<h2><?php echo _NOTES;?></h2>-->
-                        <iframe name="list_notes_doc" id="list_notes_doc" src="<?php
-                            echo $_SESSION['config']['businessappurl'];
-                            ?>index.php?display=true&module=notes&page=notes&identifier=<?php 
-                            functions::xecho($s_id);?>&origin=document&coll_id=<?php functions::xecho($coll_id);?>&load&size=full" 
-                            frameborder="0" scrolling="yes" width="99%" height="570px"></iframe>
-                    </dd> 
-                    <?php
+                    echo $attachments_frame;
                 }
                 
-                //CASES
-                if ($core->is_module_loaded('cases') == true)
+                //RESPONSES TAB
+                if ($core->is_module_loaded('attachments'))
                 {
-                    if ($res->case_id <> '') {
-                        $style = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
-                    }else{
-                        $style = 'font-size:2em;color:#9AA7AB;padding-left: 15px;padding-right: 15px;';
-                    }
-                    ?>
-                    <dt class="fa fa-suitcase" style="<?php echo $style; ?>" title="<?php echo _CASE;?>"> <sup><span class="nbResZero" style="display: none;"></span></sup></dt>
-                    <dd>
-                    <?php
-                        include('modules'.DIRECTORY_SEPARATOR.'cases'.DIRECTORY_SEPARATOR.'including_detail_cases.php');
-                        if ($core->test_service('join_res_case', 'cases',false) == 1) {
-                        ?><div align="center">
-                            <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if ($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php functions::xecho($s_id);?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/>
-                            <?php if ($res->case_id<>''){ ?>
-                                <input type="button" class="button" name="unlink_case" id="unlink_case" value="<?php echo _UNLINK_CASE;?>" onclick="if(confirm('<?php echo addslashes(_UNLINK_CASE);?> ?')){unlink_case('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=unlink_case','<?php functions::xecho($res->case_id);?>','<?php functions::xecho($res->res_id);?>');}"/>
+                    $responses_frame = '';
+                    $extraParam = '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail';
+                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                            . 'index.php?display=true&page=show_attachments_details_tab&module=attachments&fromDetail=response&resId='
+                            . $s_id . '&collId=' . $coll_id.$extraParam;
+                    $responses_frame .= '<dt id="responses_tab" class="fa fa-mail-reply" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DONE_ANSWERS.'" onclick="loadSpecificTab(\'responses_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="responses_tab_badge"></sup></dt>';
+                    $responses_frame .= '<dd id="page_rep">';
+                    $responses_frame .= '<iframe src="" name="responses_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="responses_iframe" style="height:100%;"></iframe>';
+                    $responses_frame .= '</dd>';
 
-                            <?php } ?>
-                            </div>
-                        <?php
-                        }
-                        ?>
-                    </dd>
-                    <?php
+                    //LOAD TOOLBAR BADGE
+                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=load_toolbar_attachments&responses&resId='.$s_id.'&collId='.$coll_id;
+                    $responses_frame .='<script>loadToolbarBadge(\'responses_tab\',\''.$toolbarBagde_script.'\');</script>';
+                    
+                    echo $responses_frame;
+                }
+                //HISTORY TAB
+                if ($viewDocHistory) {
+                    $history_frame = '';
+                       
+                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&page=show_history_tab&resId='
+                        . $s_id . '&collId=' . $coll_id;
+                    $history_frame .= '<dt class="fa fa-line-chart" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'. _DOC_HISTORY . '" onclick="loadSpecificTab(\'history_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>';
+                    $history_frame .= '<dd>';
+                    $history_frame .= '<iframe src="" name="history_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="history_iframe" style="height:100%;"></iframe>';   
+
+                    $history_frame .= '</dd>';
+                    
+                    echo $history_frame;
+                }
+                
+                //NOTES TAB
+                if ($core->is_module_loaded('notes')) {
+                    $note = '';
+                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&module=notes&page=notes&identifier='
+                        . $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=full';
+                    $note .= '<dt id="notes_tab" class="fa fa-pencil" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'. _NOTES.'" onclick="loadSpecificTab(\'note_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="notes_tab_badge"></sup></dt>';
+                    $note .='<dd>';
+                    $note .= '<iframe src="" name="note_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="note_iframe" style="height:100%;"></iframe>';   
+                    $note .= '</dd>';
+                    
+                    //LOAD TOOLBAR BADGE
+                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=notes&page=load_toolbar_notes&resId='.$s_id.'&collId='.$coll_id;
+                    $note .='<script>loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');</script>';
+                    
+                    echo $note;
+                }
+                
+                //CASES TAB
+                if ($core->is_module_loaded('cases') == true)
+                {   
+                    $case_frame = '';
+                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                    . 'index.php?display=true&page=show_case_tab&module=cases&collId=' . $coll_id . '&resId='.$s_id;
+                    $case_frame .= '<dt id="cases_tab" class="fa fa-suitcase" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="' . _CASE . '" onclick="loadSpecificTab(\'cases_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="cases_tab_badge"></sup></dt>';
+                    $case_frame .= '<dd>';
+                    $case_frame .= '<iframe src="" name="cases_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="cases_iframe" style="height:100%;"></iframe>';   
+                    $case_frame .= '</dd>';
+                    
+                    //LOAD TOOLBAR BADGE
+                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$s_id.'&collId='.$coll_id;
+                    $case_frame .='<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
+                    
+                    echo $case_frame;
+          
                 }
 				
-                //SENDMAILS                
+                //SENDMAILS TAB         
                 if ($core->test_service('sendmail', 'sendmail', false) === true) {
-                    require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
-                        . "class" . DIRECTORY_SEPARATOR
-                        . "class_modules_tools.php";
-                    $sendmail_tools    = new sendmail();
-                     //Count mails
-                    $nbr_emails = $sendmail_tools->countUserEmails($s_id, $coll_id);
-                    if ($nbr_emails > 0 ){
-                        $class = 'nbRes';
-                        $style = 'font-size: 10px;';
-                        $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
-                    } else {
-                        $class = 'nbResZero';
-                        $style = 'display:none;font-size: 10px;';
-                        $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
-                    } 
-                   
-                    ?>
-                    <dt class="fa fa-envelope" style="<?php echo $style2; ?>" title="<?php echo _SENDED_EMAILS;?>"> <sup><span style="<?php echo $style; ?>" class="<?php echo $class; ?>"><?php echo $nbr_emails; ?></span></sup></dt>
-                    <dd>
-                    <?php
-                    //Emails iframe
-                    echo $core->execute_modules_services(
-                        $_SESSION['modules_services'], 'details', 'frame', 'sendmail', 'sendmail'
-                    );
-                    ?>
-                    </dd>
-                <?php
+                    $sendmail = '';
+                    $pathScriptTab = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=sendmail&page=sendmail&identifier='. $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium';    
+                    
+                    $sendmail .= '<dt id="sendmail_tab" class="fa fa-envelope" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._SENDED_EMAILS.'" onclick="loadSpecificTab(\'sendmail_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="sendmail_tab_badge"></sup></dt>';
+                    $sendmail .= '<dd>';           
+                    $sendmail .= '<iframe src="" name="sendmail_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="sendmail_iframe" style="height:100%;"></iframe>';
+                    $sendmail .= '</dd>';
+                    
+                    //LOAD TOOLBAR BADGE
+                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=sendmail&page=load_toolbar_sendmail&resId='.$s_id.'&collId='.$coll_id;
+                    $sendmail .='<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
+                    
+                    echo $sendmail;
+
                 }
                 
-                //VERSIONS
+                //VERSIONS TAB
+                $version = '';
                 $versionTable = $security->retrieve_version_table_from_coll_id(
                     $coll_id
                 );
@@ -1647,129 +1379,30 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
                 }
                 $_SESSION['cm']['resMaster'] = '';
-                ?>
-                <dt  class="fa fa-code-fork" style="<?php echo $style2; ?>" title="<?php echo _VERSIONS; ?>">
-                    <?php echo ' <sup><span id="nbVersions" class="'.$class.'" style="'.$style.'">'
-                        . $extend_title_for_versions . '</span></sup>'; ?>
-                </dt>
-                <dd>
-                    <div class="error" id="divError" name="divError"></div>
-                    <div style="text-align:center;">
-                        <a href="<?php
-                            echo $_SESSION['config']['businessappurl'];
-                            ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
-                            functions::xecho($s_id);
-                            ?>&original" target="_blank">
-                            <i class="fa fa-download fa-2x" title="<?php
-                                echo _VIEW_ORIGINAL;
-                                ?>"></i>&nbsp;<?php
-                            echo _VIEW_ORIGINAL;
-                            ?></a> &nbsp;|&nbsp;
-                        <?php
-                        if ($addNewVersion) {
-                            $_SESSION['cm']['objectTable'] = $objectTable;
-                            ?>
-                            <div id="createVersion" style="display: inline;"></div>
-                            <?php
-                        }
-                        ?>
-                    </div>
-                    <div id="loadVersions"></div>
-                    <script language="javascript">
-                        showDiv("loadVersions", "nbVersions", "createVersion", "<?php
-                            echo $_SESSION['config']['businessappurl'];
-                            ?>index.php?display=false&module=content_management&page=list_versions");
-                    </script>
-                </dd>
-                <?php 
-                //############# NOTIFICATIONS ##############
-				/*
-                $extend_title_for_notifications = 0;
-                ?>
-                <dt>
-                    <?php
-                    echo _NOTIFS . ' (' . $extend_title_for_notifications . ')';
-                    ?>
-                </dt>
-                <dd>
-                    <div class="error" id="divError" name="divError"></div>
-                    <div style="text-align:center;">
-                        test
-                    </div>
-                </dd>
-                <?php 
-				*/
-				$Class_LinkController = new LinkController();
                 
-                $nbLink = $Class_LinkController->nbDirectLink(
-                    $_SESSION['doc_id'],
-                    $_SESSION['collection_id_choice'],
-                    'all'
-                );
-                if($nbLink == 0){
-                    $class="nbResZero";
-                    $style = 'display:none;font-size: 10px;';
-                    $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
-                }else{
-                    $class="nbRes";
-                    $style = 'font-size: 10px;';
-                    $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
-                }
+                $pathScriptTab = $_SESSION['config']['businessappurl']
+                    . 'index.php?display=true&page=show_versions_tab&collId=' . $coll_id . '&resId='.$s_id.'&objectTable='.$objectTable;
+                $version .= '<dt  class="fa fa-code-fork" style="'.$style2.'" title="'. _VERSIONS .'" onclick="loadSpecificTab(\'versions_iframe\',\''.$pathScriptTab.'\');return false;">';
+                $version .= ' <sup><span id="nbVersions" class="'.$class.'" style="'.$style.'">' . $extend_title_for_versions . '</span></sup>';
+                $version .= '</dt>';
+                $version .= '<dd>';
+                $version .= '<iframe src="" name="versions_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="versions_iframe" style="height:100%;"></iframe>';
+                $version .= '</dd>';
+                echo $version;    
+    
+                //LINKS TAB
                 $Links = '';
 
-                //if ($nbLink > 0) {
-                    $Links .= '<dt class="fa fa-link" style="'.$style2.'" title="'._LINK_TAB.'">';
-                        $Links .= ' <sup><span id="nbLinks" class="'.$class.'" style="'.$style.'">';
-                        $Links .= $nbLink;
-                        $Links .= '</span></sup>';
-                    $Links .= '</dt>';
-                    $Links .= '<dd>';
-                        // $Links .= '<h2>';
-                            // $Links .= _LINK_TAB;
-                        // $Links .= '</h2>';
-                        if ($core->test_service('add_links', 'apps', false)) {
-                            include_once 'apps/'.$_SESSION['config']['app_id'].'/add_links.php';
-                        }
-                        $Links .= '<div id="loadLinks">';
-
-                            $nbLinkDesc = $Class_LinkController->nbDirectLink(
-                                $_SESSION['doc_id'],
-                                $_SESSION['collection_id_choice'],
-                                'desc'
-                            );
-                            if ($nbLinkDesc > 0) {
-                                $Links .= $Class_LinkController->formatMap(
-                                    $Class_LinkController->getMap(
-                                        $_SESSION['doc_id'],
-                                        $_SESSION['collection_id_choice'],
-                                        'desc'
-                                    ),
-                                    'desc'
-                                );
-                                $Links .= '<br />';
-                            }
-
-                            $nbLinkAsc = $Class_LinkController->nbDirectLink(
-                                $_SESSION['doc_id'],
-                                $_SESSION['collection_id_choice'],
-                                'asc'
-                            );
-                            if ($nbLinkAsc > 0) {
-                                //$Links .= '<i class="fa fa-long-arrow-left fa-2x"></i>';
-                                $Links .= $Class_LinkController->formatMap(
-                                    $Class_LinkController->getMap(
-                                        $_SESSION['doc_id'],
-                                        $_SESSION['collection_id_choice'],
-                                        'asc'
-                                    ),
-                                    'asc'
-                                );
-                                $Links .= '<br />';
-                            }
-                        $Links .= '</div>';
-
-                    $Links .= '</dd>';
-                //}
+                $pathScriptTab = $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=show_links_tab';  
+                $Links .= '<dt id="links_tab" class="fa fa-link" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._LINK_TAB.'" onclick="loadSpecificTab(\'links_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="links_tab_badge"></sup>';
+                $Links .= '</dt>';
+                $Links .= '<dd>';
+                $Links .= '<iframe src="" name="links_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="links_iframe" style="height:100%;"></iframe>';
+                $Links .= '</dd>';
+                
+                //LOAD TOOLBAR BADGE
+                $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=load_toolbar_links&resId='.$s_id.'&collId='.$coll_id;
+                $Links .='<script>loadToolbarBadge(\'links_tab\',\''.$toolbarBagde_script.'\');</script>';
 
                 echo $Links;
                 ?>
@@ -1779,55 +1412,24 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 ?> 
 </div>
 </div>
-<script type="text/javascript">
-var item  = $('details_div');
-    <?php if($_SESSION['indexation'] == true && $category == 'outgoing'){ 
-            $selectAttachments = "SELECT attachment_type FROM res_view_attachments"
-                                ." WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type = 'outgoing_mail'";
-            $stmt = $db->query($selectAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice']));
-            
-            if(!$stmt->fetchObject()){
-
-            
-        ?>
-
-        if($('attach')){
-            document.getElementById('attach').setAttribute("onClick","showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
-                                . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create&cat=outgoing';?>','98%','auto')");
-  
-            var tabricator1 = new Tabricator('tabricator1', 'DT', 'onglet_rep');
-            $('attach').click();
-        }
-        
-
-    <?php }else{ ?>
-        document.getElementById('attach').setAttribute("onClick","showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
-                                . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>','98%','auto')");
-        var tabricator1 = new Tabricator('tabricator1', 'DT');
-    <?php }
-    }else{ ?>
-        var tabricator1 = new Tabricator('tabricator1', 'DT');
-    <?php } ?>
-    
-    if (item) {
-        item.style.display='block';
-    }
-</script>
 <?php
+//INITIALIZE INDEX TABS
+echo '<script type="text/javascript">var tabricator1 = new Tabricator(\'tabricator1\', \'DT\');</script>';
+
+//OUTGOING CREATION MODE
+if($_SESSION['indexation'] == true && $category == 'outgoing'){
+    $is_outgoing_indexing_mode = false;
+    $selectAttachments = "SELECT attachment_type FROM res_view_attachments"
+        ." WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type = 'outgoing_mail'";
+    $stmt = $db->query($selectAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice']));
+    if($stmt->rowCount()==0){
+        //launch outgoing_mail creation
+        echo '<script type="text/javascript">document.getElementById(\'onglet_rep\').click();showAttachmentsForm(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create&cat=outgoing\',\'98%\',\'auto\');</script>';
+    }
+    
+}
 $detailsExport .= "</body></html>";
 $_SESSION['doc_convert'] = array();
 $_SESSION['doc_convert']['details_result'] = $detailsExport;
-$core = new core_tools();
 
 $_SESSION['info'] = '';
-
-/*if ($printDetails) {
-    $Fnm = $_SESSION['config']['tmppath']. '/export_details_'
-        . $_SESSION['user']['UserId'] . '_export.html';
-    if (file_exists($Fnm)) {
-        unlink($Fnm);
-    }
-    $inF = fopen($Fnm,"w");
-    fwrite($inF, $detailsExport);
-    fclose($inF);
-}*/

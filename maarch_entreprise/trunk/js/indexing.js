@@ -1114,9 +1114,17 @@ function get_contacts_params(name_radio)
     var check = name_radio || 'type_contact';
     var arr = get_checked_values(check);
     var params = '';
+    var cat = '';
     
+    if (parent.document.getElementById('category_id').value != undefined) {
+        cat = parent.document.getElementById('category_id').value;
+    }else if (parent.parent.document.getElementById('category_id').value != undefined) {
+        cat = parent.parent.document.getElementById('category_id').value;
+    }else{
+        cat = document.getElementById('category_id').value;
+    }
     if (arr.length == 0) {
-        var contact_type = get_contact_type($('category_id').value);
+        var contact_type = get_contact_type(cat);
         params = 'table=contacts&contact_type=' + contact_type;
     } else {
         if (arr[0] == 'internal') {
@@ -1441,7 +1449,7 @@ function changeCycle(path_manage_script)
 
 function getIframeContent(path_manage_script)
 {
-    if ($('choose_file_div')) {
+    if ($('choose_file_div') && document.getElementById("file_iframe").contentDocument) {
         var choose_file_div = $('choose_file_div');
         if (choose_file_div.style.display == 'none') {
             var iframe = document.getElementById("file_iframe");
@@ -1660,18 +1668,30 @@ function set_new_contact_address(path_manage_script, id_div, close,transmission)
             eval("response = "+answer.responseText);
             if (parent.$('contact_attach')) {
                 parent.$('contact_attach').value = response.contactName;
+            } else if (parent.parent.$('contact_attach')) {
+                parent.parent.$('contact_attach').value = response.contactName;
             } else if (parent.$('contact')) {
                 parent.$('contact').value = response.contactName;
+            } else if (parent.parent.$('contact')) {
+                parent.parent.$('contact').value = response.contactName;
             }
             if (parent.$('contactidAttach')) {
                 parent.$('contactidAttach').value = response.contactId;
+            } else if (parent.parent.$('contactidAttach')){
+                parent.parent.$('contactidAttach').value = response.contactId;
             } else if (parent.$('contactid')){
                 parent.$('contactid').value = response.contactId;
+            } else if (parent.parent.$('contactid')){
+                parent.parent.$('contactid').value = response.contactId;
             }
             if (parent.$('addressidAttach')) {
                 parent.$('addressidAttach').value = response.addressId;
+            } else if (parent.parent.$('addressidAttach')){
+                parent.parent.$('addressidAttach').value = response.addressId;
             } else if (parent.$('addressid')){
                 parent.$('addressid').value = response.addressId;
+            } else if (parent.parent.$('addressid')){
+                parent.parent.$('addressid').value = response.addressId;
             }
             getDepartment('index.php?display=true&page=getDepartment', response.addressId);
         }       
@@ -1837,13 +1857,16 @@ function showEditButton(){
 
 function loadInfoContact(){
     var reg = /^\d+$/;
+    var pathScript = '';
     //console.log(contactId);
     if(!reg.test(document.getElementById('contactid').value)){
         console.log("contactInterne");
-        document.getElementById('info_contact_iframe').src='index.php?display=false&page=user_info&id='+document.getElementById('contactid').value;
+        pathScript = 'index.php?display=false&page=user_info&id='+document.getElementById('contactid').value;
     
     }else{
         console.log("contactExterne");
-        document.getElementById('info_contact_iframe').src='index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid='+document.getElementById('contactid').value+'&addressid='+document.getElementById('addressid').value;
+        pathScript = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid='+document.getElementById('contactid').value+'&addressid='+document.getElementById('addressid').value;
     }
+    
+    return pathScript;
 }

@@ -4,7 +4,12 @@ Tabricator.prototype = {
   trigtype : null,
   targtype : null,
   initialize : function (lmnt,trig,deep) {
-    var root = this.root = $(lmnt).addClassName('tabricator').cleanWhitespace();
+    if($(lmnt)){
+        var target = $(lmnt);
+    }else{
+        var target = parent.document.getElementById(lmnt);
+    }
+    var root = this.root = target.addClassName('tabricator').cleanWhitespace();
     this.trigtype = trig;
     this.targtype = this.root.select(trig).first().next().nodeName;
     var trigs = this.root.select(this.trigtype).each(function(trig){
