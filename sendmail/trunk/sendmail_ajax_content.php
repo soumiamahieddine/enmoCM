@@ -292,7 +292,8 @@ switch ($mode) {
                                 }
                                 
                                 //Reload and show message
-                                $js =  $list_origin."window.parent.top.$('main_info').innerHTML = '"._EMAIL_ADDED."';"; 
+                                $js =  $list_origin."window.parent.top.$('main_info').innerHTML = '"._EMAIL_ADDED."';";
+            
                             } else {
                                 $status = 1;
                             }
@@ -489,6 +490,11 @@ switch ($mode) {
             //Reload and show message
             $js =  $list_origin."window.parent.top.$('main_info').innerHTML = '"._EMAIL_REMOVED."';";
             
+            
+            
+        
+            
+            
         } else {
             $error = $request->wash_html(_ID.' '._IS_EMPTY.'!','NONE');
             $status = 1;
@@ -527,7 +533,6 @@ switch ($mode) {
         }
     break;
 }
-
 echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes(_parse_error($error)) . "', exec_js : '".addslashes($js)."'}";
 exit ();
 ?>

@@ -324,8 +324,8 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         }
         
         //List
-        $listKey = 'email_id';                                                              //Clé de la liste
-        $paramsTab = array();                                                               //Initialiser le tableau de paramètres
+        $listKey = 'email_id';                                                              //Clï¿½ de la liste
+        $paramsTab = array();                                                               //Initialiser le tableau de paramï¿½tres
         $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
         $paramsTab['pageTitle'] ='';                                                        //Titre de la page
         $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
@@ -384,7 +384,12 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         //Output
         $status = 0;
         $content = $list->showList($tab, $paramsTab, $listKey);
+        
+        $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=sendmail&page=load_toolbar_sendmail&origin=parent&resId=' . $identifier . '&collId=letterbox_coll';
+        
+        $content .= '<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
         // $debug = $list->debug();
 
+        
     echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
 }

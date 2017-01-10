@@ -134,8 +134,8 @@ function updateAdress(path, action, adress, target, array_index, email_format_te
 
 function validEmailForm (path, form_id) {
 	// var content = tinyMCE.get('body_from_html').getContent(); // 
-	// alert(content);
-	tinyMCE.triggerSave();
+        //alert(path);
+        tinyMCE.triggerSave();
     new Ajax.Request(path,
     {
         asynchronous:false,
@@ -147,7 +147,7 @@ function validEmailForm (path, form_id) {
             eval("response = "+answer.responseText);
             if(response.status == 0){
                 eval(response.exec_js);
-                window.parent.destroyModal('form_email'); 
+               window.parent.destroyModal('form_email'); 
             } else {
                 alert(response.error);
                 eval(response.exec_js);
