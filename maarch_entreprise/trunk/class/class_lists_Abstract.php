@@ -155,6 +155,9 @@ abstract class lists_Abstract extends Database
         $this->_manageFilters();
         if (isset($_REQUEST['template'])) $this->template = $_REQUEST['template'];
         if (isset($_REQUEST['coll_id'])) $this->collId = $_REQUEST['coll_id'];
+        if(!isset($_SESSION['previous_basket']['id'])){
+            $_SESSION['previous_basket']['id'] = $_SESSION['current_basket']['id'];
+        }
     }
     
     protected function _buildFilter($filter) {
@@ -222,12 +225,12 @@ abstract class lists_Abstract extends Database
                         $options .='<option value="'.$res->entity_id.'" '.$selected.' '.$style.'>'.$res->short_label.' ('.$res->total.')</option>';
                     }
                 }
-                $filters .='<select name="entity_id" id="entity_id" onChange="loadList(\''.$this->link
+                $filters .='<select data-placeholder="'._ENTITY.'" name="entity_id" id="entity_id" onChange="loadList(\''.$this->link
                             .'&filter=entity&value=\' + document.filters.entity_id.value, \''
                             .$this->divListId.'\', '.$this->modeReturn.');">'
-                            .'<option value="none" style="text-align:center;">'._ENTITY.'</option>'
+                            .'<option value="none" style="text-align:center;"></option>'
                             .$options.'</select>';
-                $filters .= '<script>new Chosen($(\'entity_id\'));</script>';
+                $filters .= '<script>new Chosen($(\'entity_id\'),{width:"300px",allow_single_deselect: true});</script>';
             break;
 
             case 'entity_subentities':
@@ -336,10 +339,10 @@ abstract class lists_Abstract extends Database
             break;
             
             case 'category':
-                $filters .='<select name="category_id_list" id="category_id_list" onChange="loadList(\''.$this->link
+                $filters .='<select data-placeholder="'._CATEGORY.'" name="category_id_list" id="category_id_list" onChange="loadList(\''.$this->link
                          .'&filter=category&value=\' + document.filters.category_id_list.value, \''
                          .$this->divListId.'\', '.$this->modeReturn.');">';
-                $filters .='<option value="none" style="text-align:center;">'._CATEGORY.'</option>';
+                $filters .='<option value="none" style="text-align:center;"></option>';
                 foreach (array_keys($_SESSION['coll_categories'][$this->collId]) as $catId) {
                     if ($catId <> 'default_category') {
                         if (isset($_SESSION['filters']['category']['VALUE']) 
@@ -349,14 +352,14 @@ abstract class lists_Abstract extends Database
                     }
                 }
                 $filters .='</select>&nbsp;';
-                $filters .= '<script>new Chosen($(\'category_id_list\'));</script>';
+                $filters .= '<script>new Chosen($(\'category_id_list\'),{width:"150px",allow_single_deselect: true});</script>';
             break;
 
             case 'priority':
-                $filters .='<select name="priority_id_list" id="priority_id_list" onChange="loadList(\''.$this->link
+                $filters .='<select data-placeholder="'._PRIORITY.'" name="priority_id_list" id="priority_id_list" onChange="loadList(\''.$this->link
                          .'&filter=priority&value=\' + document.filters.priority_id_list.value, \''
                          .$this->divListId.'\', '.$this->modeReturn.');">';
-                $filters .='<option value="none" style="text-align:center;">'._PRIORITY.'</option>';
+                $filters .='<option value="none" style="text-align:center;"></option>';
                 foreach (array_keys($_SESSION['mail_priorities']) as $priorityId) {                 
                         if (is_numeric($_SESSION['filters']['priority']['VALUE']) && $_SESSION['filters']['priority']['VALUE'] == $priorityId){
                             $selected = 'selected="selected"';
@@ -367,15 +370,15 @@ abstract class lists_Abstract extends Database
                     
                 }
                 $filters .='</select>&nbsp;';
-                $filters .= '<script>new Chosen($(\'priority_id_list\'),{width: "150px"});</script>';
+                $filters .= '<script>new Chosen($(\'priority_id_list\'),{width:"150px",allow_single_deselect: true});</script>';
             break;
             
             case 'isViewed':
                 $isViewedArray = array('yes' =>_YES, 'no' => _NO);
-                $filters .='<select name="isViewed" id="isViewed" onChange="loadList(\''.$this->link
+                $filters .='<select data-placeholder="'._VIEWED.'" name="isViewed" id="isViewed" onChange="loadList(\''.$this->link
                          .'&filter=isViewed&value=\' + document.filters.isViewed.value, \''
                          .$this->divListId.'\', '.$this->modeReturn.');">';
-                $filters .='<option value="none">'._VIEWED.'</option>';
+                $filters .='<option value="none"></option>';
                 foreach ($isViewedArray as $key => $value) {
                     if (isset($_SESSION['filters']['isViewed']['VALUE']) 
                         && $_SESSION['filters']['isViewed']['VALUE'] == $key
@@ -383,7 +386,7 @@ abstract class lists_Abstract extends Database
                     $filters .='<option value="'.$key.'" '.$selected.'>'.$value.'</option>';
                 }
                 $filters .='</select>&nbsp;';
-                $filters .= '<script>new Chosen($(\'isViewed\'),{width: "auto", disable_search: true,});</script>';
+                $filters .= '<script>new Chosen($(\'isViewed\'),{width: "150px", disable_search: true,allow_single_deselect: true});</script>';
             break;
             
             case 'folder':
@@ -716,7 +719,7 @@ abstract class lists_Abstract extends Database
     
     protected function _resetFilter() {
 
-        if($_SESSION['basket_used'] != $_SESSION['current_basket']['id']){
+        if($_SESSION['previous_basket']['id'] != $_SESSION['current_basket']['id']){
 
             foreach ($_SESSION['filters'] as $key => $val) {
                 $_SESSION['filters'][$key]['VALUE'] = '';
@@ -2422,7 +2425,7 @@ abstract class lists_Abstract extends Database
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
             $linesDropdownList .= '</select>';
-            $linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new Chosen($(\'nbLines\'),{width: "auto"});}</script>';
+            $linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new Chosen($(\'nbLines\'),{width: "auto", disable_search: true});}</script>';
         }
         
         //If there are more than 1 page, pagination
@@ -2599,7 +2602,7 @@ abstract class lists_Abstract extends Database
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
             $linesDropdownList .= '</select>';
-            $linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new Chosen($(\'nbLines\'),{width: "auto"});}</script>';
+            $linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new Chosen($(\'nbLines\'),{width: "auto", disable_search: true});}</script>';
         }
         
         //If there are more than 1 page, pagination
