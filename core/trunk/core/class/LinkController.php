@@ -56,34 +56,34 @@ class LinkController
                     $return .= '<tr>';
                         $status = $this->getStatus($infos['status']);
                         $img_class = substr($status['img_filename'], 0, 2);
-                        $return .= '<td style="width:14%;text-align:center;" title="'.$status['label_status'].'" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                        $return .= '<td style="width:14%;text-align:center;" title="'.$status['label_status'].'" onclick="window.top.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
                             $return .= '<i class="'.$img_class.' '.$status['img_filename'].' '.$img_class.'-2x" ></i> ';
                         $return .= '</td>';
-                        $return .= '<td colspan="2" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                        $return .= '<td colspan="2" onclick="window.top.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
                             $return .=  '<b>'.$infos['subject'].'</b>';
                         $return .= '</td>';
                     $return .= '</tr>';
                     $return .= '<tr>';
-                        $return .= '<td style="width:14%;text-align:center;" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                        $return .= '<td style="width:14%;text-align:center;" onclick="window.top.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
                             $return .=  $infos['res_id'];
                         $return .= '</td>';
-                        $return .= '<td style="font-size:12px;width:16%;" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                        $return .= '<td style="font-size:12px;width:16%;" onclick="window.top.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
                         if ($_SESSION['current_basket']['coll_id'] == 'letterbox_coll') {
                             $return .= $_SESSION['coll_categories']['letterbox_coll'][$infos['category_id']];
                         } elseif ($_SESSION['current_basket']['coll_id'] == 'business_coll') {
                             $return .= $_SESSION['coll_categories']['business_coll'][$infos['category_id']];
                         }
                          $return .= '</td>';
-                         $return .= '<td style="font-size:12px;width:14%" title="'._DOC_DATE.'" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                         $return .= '<td style="font-size:12px;width:14%" title="'._DOC_DATE.'" onclick="window.top.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
                                 $return .= '<i class="fa fa-calendar-o fa-2x" style="font-size:10px;"></i> ';
                                 $date = explode('-', substr($infos['doc_date'], 0, 10));
                                 $return .= $date[2].' '.$date[1].' '.$date[0];
                         $return .= '</td>';
-                        $return .= '<td style="font-size:12px;width:14%" title="'._DEST_USER.'" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                        $return .= '<td style="font-size:12px;width:14%" title="'._DEST_USER.'" onclick="window.top.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
                                 $return .= '<i class="fa fa-user fa-2x" style="font-size:10px;"></i> ';
                                 $return .= $infos['dest_user'];
                         $return .= '</td>';
-                        $return .= '<td style="font-size:12px;width:24%" title="'._DESTINATION.'" onclick="window.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
+                        $return .= '<td style="font-size:12px;width:24%" title="'._DESTINATION.'" onclick="window.top.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
                                 $return .= '<i class="fa fa-sitemap fa-2x" style="font-size:10px;"></i> ';
                                 $return .= $infos['entity_label'];
                         $return .= '</td>';
