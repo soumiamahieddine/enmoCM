@@ -155,7 +155,7 @@ if ($stmt->rowCount() > 0) {
 		if(window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc)) {
 			var tab = window.parent.top.document.getElementById('tabricatorRight');
 			if(document_type == 'signed_response'){
-				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).innerHTML = "<?php echo $attach_type; ?>";
+				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).innerHTML = "<?php echo $attach_type; ?><sup><span class=\"\" style=\"\" id=\"\"></span></sup>";
 				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).setAttribute('onclick','updateFunctionModifRep(\'<?php echo $document_id; ?>\', '+num_rep+', '+is_version+')');
 				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).id = 'ans_'+num_rep+'_<?php echo $document_id; ?>';
 
@@ -202,18 +202,15 @@ if ($stmt->rowCount() > 0) {
 		
 	}
 	
-	var eleframe1 =  window.top.document.getElementsByName('list_attach');
+	var eleframe1 =  parent.document.getElementsByName('list_attach');
+        console.log(eleframe1);
 	var nb_attach = '<?php functions::xecho($new_nb_attach);?>';
 	<?php if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') { ?>
 		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp&fromDetail=attachments';?>";
-		window.parent.top.document.getElementById('nb_attach').innerHTML = nb_attach;
 	<?php } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){ ?>
-		eleframe1[1].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp&fromDetail=response';?>";
-		window.parent.top.document.getElementById('answer_number').innerHTML = nb_attach;
+		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp&fromDetail=response';?>";
 	<?php } else { ?>
-		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&template_selected=documents_list_attachments_simple&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder';?>";
-		window.parent.top.document.getElementById('nb_attach').innerHTML = nb_attach;
+		parent.document.getElementById('list_attach').src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&template_selected=documents_list_attachments_simple&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder';?>";
 	<?php } ?>
-    // window.parent.top.document.getElementById('nb_attach').innerHTML = nb_attach;
 
 </script>

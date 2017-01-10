@@ -743,32 +743,30 @@ if (isset($_POST['add']) && $_POST['add']) {
                     $new_nb_attach = $stmt->rowCount();
                 }
                 if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'create') {
-					//Redirection vers bannette MyBasket s'il s'agit d'un courrier spontané et que l'utilisateur connecté est le destinataire du courrier
-					if (isset($_SESSION['upfile']['outgoingMail']) && $_SESSION['upfile']['outgoingMail'] && $_SESSION['user']['UserId'] == $_SESSION['details']['diff_list']['dest']['users'][0]['user_id']){
-						$js .= "window.parent.top.location.href = 'index.php?page=view_baskets&module=basket&baskets=MyBasket&resid=".$_SESSION['doc_id']."&directLinkToAction';";
-					}
-					else {
-						//$js .= "window.parent.top.location.reload()";
-                        if($attachment_types == 'response_project' || $attachment_types == 'signed_response'){
-                            $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach2\');';
-                            $js .= 'var nb_attach = parseInt(window.parent.top.document.getElementById(\'answer_number\').innerHTML);';
-                            $js .= 'nb_attach = nb_attach+1;';
-                            $js .= 'window.parent.top.document.getElementById(\'answer_number\').innerHTML = nb_attach;';
-                        }else{
-                            $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach\');';
-                            $js .= 'var nb_attach = parseInt(window.parent.top.document.getElementById(\'nb_attach\').innerHTML);';
-                            $js .= 'nb_attach = nb_attach+1;';
-                            $js .= 'window.parent.top.document.getElementById(\'nb_attach\').innerHTML = nb_attach;';
+			//Redirection vers bannette MyBasket s'il s'agit d'un courrier spontané et que l'utilisateur connecté est le destinataire du courrier
+			if (isset($_SESSION['upfile']['outgoingMail']) && $_SESSION['upfile']['outgoingMail'] && $_SESSION['user']['UserId'] == $_SESSION['details']['diff_list']['dest']['users'][0]['user_id']){
+				$js .= "window.parent.top.location.href = 'index.php?page=view_baskets&module=basket&baskets=MyBasket&resid=".$_SESSION['doc_id']."&directLinkToAction';";
+			}
+			else {
+				//$js .= "window.parent.top.location.reload()";
+			        if($attachment_types == 'response_project' || $attachment_types == 'signed_response'){
+			            $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach2\');';
+			            $js .= 'var nb_attach = parseInt(window.parent.top.document.getElementById(\'answer_number\').innerHTML);';
+			            $js .= 'nb_attach = nb_attach+1;';
+			            $js .= 'window.parent.top.document.getElementById(\'answer_number\').innerHTML = nb_attach;';
+			        }else{
+			            $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach\');';
+			            $js .= 'var nb_attach = parseInt(window.parent.top.document.getElementById(\'nb_attach\').innerHTML);';
+			            $js .= 'nb_attach = nb_attach+1;';
+			            $js .= 'window.parent.top.document.getElementById(\'nb_attach\').innerHTML = nb_attach;';
 
-                        }
-                        $js .= 'eleframe1.src =  eleframe1.src;';
+			        }
+                        	$js .= 'eleframe1.src =  eleframe1.src;';
 
-					}
+			}
                 } else {
                     $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach\');';
                     $js .= 'eleframe1.src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf,print_folder&load\';';
-                    $js .= 'var nb_attach = '. $new_nb_attach.';';
-                    $js .= 'window.parent.top.document.getElementById(\'nb_attach\').innerHTML = nb_attach;';
                 }
             } else {
                 $error = $_SESSION['error'];
@@ -1663,7 +1661,7 @@ if (!empty($contacts)) {
         //$content .= '<input type="hidden" id="format_list_contact_'.$value['contact_id'].'_res" value="'.$value['format_contact'].'"/>';
     }
     $content .= '</select>';
-    $content .= '<script>$("contactidAttach").value='.$contacts[0]['contact_id'].';$("addressidAttach").value='.$contacts[0]['address_id'].';launch_autocompleter2_contacts_v2("'. $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "contact_attach", "show_contacts_attach", "", "contactidAttach", "addressidAttach")</script>';
+    $content .= '<script>parent.$("contactidAttach").value='.$contacts[0]['contact_id'].';parent.$("addressidAttach").value='.$contacts[0]['address_id'].';launch_autocompleter2_contacts_v2("'. $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "contact_attach", "show_contacts_attach", "", "contactidAttach", "addressidAttach")</script>';
 }
 
 $content .= '</h2>';
@@ -1950,7 +1948,7 @@ $content .= '</div>';
     $content .= '</form>';
 
     if (!isset($_REQUEST['id'])) {
-        $content .= '<script>launch_autocompleter_contacts_v2("'. $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "contact_attach", "show_contacts_attach", "", "contactidAttach", "addressidAttach")</script>';
+        $content .= '<script>launch_autocompleter2_contacts_v2("'. $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "contact_attach", "show_contacts_attach", "", "contactidAttach", "addressidAttach")</script>';
     } else {
         $content .= '<script>launch_autocompleter2_contacts_v2("'. $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "contact_attach", "show_contacts_attach", "", "contactidAttach", "addressidAttach")</script>';
     }
@@ -1973,13 +1971,13 @@ $content .= '</div>';
 $content .= '<div style="float: right; width: 65%">';
 $content .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
     . functions::xssafe($_SESSION['doc_id']) . '&coll_id=' . $coll_id .
-    '" name="viewframevalid_attachment" id="viewframevalid_attachment"  scrolling="auto" frameborder="0" style="width:100% !important;height:900px;" onmouseover="this.focus()"></iframe>';
+    '" name="viewframevalid_attachment" id="viewframevalid_attachment"  scrolling="auto" frameborder="0" style="width:100% !important;height:90vh;" onmouseover="this.focus()"></iframe>';
 $content .= '</div>';
-if(!isset($_REQUEST['id'])){
+/*if(!isset($_REQUEST['id'])){
     $content .= '<script>var height = (parseInt($(\'form_attachments\').style.height.replace(/px/,""))-40)+"px";$(\'formAttachment\').style.height = height;$(\'viewframevalid_attachment\').style.height = height;$(\'formAttachment\').style.overflow = "auto";</script>';
 }else{
     $content .= '<script>var height = (parseInt(window.top.window.$(\'form_attachments\').style.height.replace(/px/,""))-40)+"px";window.top.window.$(\'formAttachment\').style.height = height;window.top.window.$(\'viewframevalid_attachment\').style.height = height;window.top.window.$(\'formAttachment\').style.overflow = "auto";</script>';
-}
+}*/
 
 echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
 exit ();
