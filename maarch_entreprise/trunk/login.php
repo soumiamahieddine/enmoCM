@@ -100,10 +100,10 @@ $businessAppTools->compare_base_version(
 );
 
 //LGI TEST FOR SMARTPHONE
-/*if ($core->detectSmartphone()) {
+if ($core->detectSmartphone()) {
     header('location: smartphone/hello.php');
     exit;
-}*/
+}
 
 $core->load_html();
 $core->load_header('', true, false);
