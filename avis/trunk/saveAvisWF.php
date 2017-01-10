@@ -75,11 +75,15 @@
 	}
 
 	$avis->saveWorkflow($res_id, $coll_id, $_SESSION['avis_wf']['diff_list'], 'AVIS_CIRCUIT');
+        
+        //LOAD TOOLBAR BADGE
+        $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=avis&page=load_toolbar_avis&origin=parent&resId='.$res_id.'&collId='.$coll_id;
+        $js .='loadToolbarBadge(\'avis_tab\',\''.$toolbarBagde_script.'\');';
 
 	if ($_POST['fromDetail'] == "Y") {
 		$avis->setStatusAvis($res_id, $coll_id);
 	}
 	
-	echo "{status : 1}";
+	echo "{status : 1, exec_js : '".addslashes($js)."'}";
 	exit();
 ?>

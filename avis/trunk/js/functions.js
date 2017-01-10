@@ -631,12 +631,6 @@ function saveAvisWorkflow(res_id, coll_id, id_tableau, fromDetail){
 		i++;
 	}
 
-	/*if (cons_empty){
-		$('divErrorAvis').innerHTML = 'Sélectionner au moins un utilisateur';
-		$('divErrorAvis').style.display = 'table-cell';
-		Element.hide.delay(5, 'divErrorAvis');
-	}
-	else*/
 	new Ajax.Request("index.php?display=true&module=avis&page=saveAvisWF",
 	{
 		
@@ -654,9 +648,10 @@ function saveAvisWorkflow(res_id, coll_id, id_tableau, fromDetail){
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
 				if (response.status == 1) {
-					$('divInfoAvis').innerHTML = 'Mise à jour du circuit effectuée';
-                    $('divInfoAvis').style.display = 'table-cell';
-                    Element.hide.delay(5, 'divInfoAvis');
+                                    $('divInfoAvis').innerHTML = 'Mise à jour du circuit effectuée';
+                                    $('divInfoAvis').style.display = 'table-cell';
+                                    Element.hide.delay(5, 'divInfoAvis');
+                                    eval(response.exec_js);
 				} else if (response.status == 2){
 					$('divErrorAvis').innerHTML = 'Sélectionner au moins un utilisateur';
 					$('divErrorAvis').style.display = 'table-cell';
