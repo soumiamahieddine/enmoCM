@@ -644,8 +644,8 @@ abstract class content_management_tools_Abstract
 
         $file = $jar_url."/apps/maarch_entreprise/tmp/".$jnlp_name;
 
-        echo '<a id="jnlp_file" href="'.$file.'" onclick="window.opener.location.href=\''.$file.'\';self.close();"></a>';
-        echo '<script>document.getElementById("jnlp_file").click();</script>';
+        echo '<a id="jnlp_file" href="'.$file.'" onclick="window.location.href=\''.$file.'\';self.close();"></a>';
+        echo '<script>console.log(\'ok\');document.getElementById("jnlp_file").click();if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};</script>';
         exit();
         /*echo '<a id="jnlp_file" href="'.$_SESSION['config']['businessappurl'].'index.php?page=get_jnlp_file&module=content_management&display=true&filename='.$_SESSION['user']['UserId'].'_DisCM"></a>';
         echo '<script>setTimeout(function() {this.window.close();}, 5000);document.getElementById("jnlp_file").click();</script>';
@@ -946,7 +946,7 @@ abstract class content_management_tools_Abstract
         $file = $jar_url."/apps/maarch_entreprise/tmp/".$jnlp_name;
 
         echo '<a id="jnlp_file" href="'.$file.'" onclick="window.opener.location.href=\''.$file.'\';self.close();"></a>';
-        echo '<script>document.getElementById("jnlp_file").click();</script>';
+        echo '<script>document.getElementById("jnlp_file").click();if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};</script>';
         exit();
         /*echo '<a id="jnlp_file" href="'.$_SESSION['config']['businessappurl'].'index.php?page=get_jnlp_file&module=content_management&display=true&filename='.$_SESSION['user']['UserId'].'_DisCM"></a>';
         echo '<script>setTimeout(function() {this.window.close();}, 5000);document.getElementById("jnlp_file").click();</script>';
