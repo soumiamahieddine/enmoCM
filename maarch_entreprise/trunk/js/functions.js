@@ -3326,3 +3326,68 @@ function linkDuplicate(id_form) {
     }
     alert('Opération terminé!');
 }
+
+function loadTab(resId,collId,titleTab,pathScriptTab,module){
+    if(document.getElementById('show_tab').getAttribute('module') == module){
+        document.getElementById('show_tab').style.display='none';
+        if(document.getElementById(module+'_tab') != undefined ){
+            document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-plus-square-o"></i>';
+        }
+        document.getElementById('show_tab').setAttribute('module','');
+        return false;
+        
+    }
+    
+    var path_manage_script = 'index.php?display=true&page=display_tab';
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: {
+            resId : resId,
+            collId : collId,
+            titleTab : titleTab,
+            pathScriptTab : pathScriptTab
+            },
+        onSuccess: function(answer){
+            //console.log(answer.responseText);
+            document.getElementById('show_tab').style.display='block';
+            document.getElementById('show_tab').setAttribute('module',module);
+            
+            $$("span[class='tab_module']").each(function(v) {v.innerHTML = '<i class="fa fa-plus-square-o"></i>';})
+            if(document.getElementById(module+'_tab') != undefined ){
+                document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
+            }
+            document.getElementById('show_tab').innerHTML = answer.responseText;
+            /*if (response.status == 0) {
+                console.log(response);
+            } else if (response.status == 1){
+                alert('Erreur!');
+            }*/
+        }
+    });
+}
+
+function loadSpecificTab(id_iframe,pathScriptTab){
+    document.getElementById(id_iframe).src = pathScriptTab;
+}
+
+
+//LOAD BADGES TOOLBAR
+function loadToolbarBadge(targetTab,path_manage_script){
+    new Ajax.Request(path_manage_script,
+    {
+        asynchronous : false,
+        method:'post',
+        parameters: {
+            targetTab : targetTab
+        },
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            if (response.status == 0) {
+                eval(response.exec_js);
+            } else if (response.status == 1){
+                alert('Erreur!');
+            }
+        }
+    });
+}
