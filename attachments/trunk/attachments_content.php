@@ -743,27 +743,18 @@ if (isset($_POST['add']) && $_POST['add']) {
                     $new_nb_attach = $stmt->rowCount();
                 }
                 if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'create') {
-			//Redirection vers bannette MyBasket s'il s'agit d'un courrier spontané et que l'utilisateur connecté est le destinataire du courrier
-			if (isset($_SESSION['upfile']['outgoingMail']) && $_SESSION['upfile']['outgoingMail'] && $_SESSION['user']['UserId'] == $_SESSION['details']['diff_list']['dest']['users'][0]['user_id']){
-				$js .= "window.parent.top.location.href = 'index.php?page=view_baskets&module=basket&baskets=MyBasket&resid=".$_SESSION['doc_id']."&directLinkToAction';";
-			}
-			else {
-				//$js .= "window.parent.top.location.reload()";
-			        if($attachment_types == 'response_project' || $attachment_types == 'signed_response'){
-			            $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach2\');';
-			            $js .= 'var nb_attach = parseInt(window.parent.top.document.getElementById(\'answer_number\').innerHTML);';
-			            $js .= 'nb_attach = nb_attach+1;';
-			            $js .= 'window.parent.top.document.getElementById(\'answer_number\').innerHTML = nb_attach;';
-			        }else{
-			            $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach\');';
-			            $js .= 'var nb_attach = parseInt(window.parent.top.document.getElementById(\'nb_attach\').innerHTML);';
-			            $js .= 'nb_attach = nb_attach+1;';
-			            $js .= 'window.parent.top.document.getElementById(\'nb_attach\').innerHTML = nb_attach;';
-
-			        }
-                        	$js .= 'eleframe1.src =  eleframe1.src;';
-
-			}
+                    //Redirection vers bannette MyBasket s'il s'agit d'un courrier spontané et que l'utilisateur connecté est le destinataire du courrier
+                    if (isset($_SESSION['upfile']['outgoingMail']) && $_SESSION['upfile']['outgoingMail'] && $_SESSION['user']['UserId'] == $_SESSION['details']['diff_list']['dest']['users'][0]['user_id']){
+                            $js .= "window.parent.top.location.href = 'index.php?page=view_baskets&module=basket&baskets=MyBasket&resid=".$_SESSION['doc_id']."&directLinkToAction';";
+                    }
+                    else {
+                        if($attachment_types == 'response_project' || $attachment_types == 'signed_response'){
+                            $js .= 'loadSpecificTab(\'responses_iframe\',\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&view_only=true&load&fromDetail=response&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail\');';
+                        }else{
+                            $js .= 'loadSpecificTab(\'attachments_iframe\',\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId=100&collId=letterbox_coll&fromDetail=attachments&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder\');';
+                        }
+                        
+                    }
                 } else {
                     $js .= 'var eleframe1 =  window.parent.top.document.getElementById(\'list_attach\');';
                     $js .= 'eleframe1.src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf,print_folder&load\';';
