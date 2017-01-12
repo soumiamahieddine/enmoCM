@@ -506,7 +506,7 @@
     <validationRule name="multi_contacts" extends="standardForm" mode="error">  
       <parameter name="addressid" type="integer" />
       <parameter name="contact" type="string" />
-      <parameter name="contactid" type="identifier" />
+      <parameter name="contactid" type="string" />
       <parameter name="field" type="identifier" />
       <parameter name="for" type="identifier" />
       <parameter name="index" type="string" />
