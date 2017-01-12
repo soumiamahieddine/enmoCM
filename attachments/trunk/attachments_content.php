@@ -1874,7 +1874,7 @@ if(!isset($_REQUEST['id'])) {
     $content .= '<div style="float: left">';
     if(isset($_SESSION['attachment_types']['transmission'])){
         $content .= '<i id="newTransmissionButton0" title="Nouvelle transmission" style="opacity: 0.5;cursor: pointer" class="fa fa-plus-circle fa-2x"
-                         onclick="addNewTransmission(\'' . $_SESSION['config']['businessappurl'] . '\', \'' . $_SESSION['doc_id'] . '\', ' . $canCreateContact . ', \'' . addslashes(implode('#', $langArrayForTransmission)) . '\')"></i>';
+                         onclick="addNewTransmission(\'' . $_SESSION['config']['businessappurl'] . '\', \'' . $_SESSION['doc_id'] . '\', ' . $canCreateContact . ', \'' . addslashes(implode('#', $langArrayForTransmission)) . '\', \'' . $_SESSION['user']['UserId'] . '\')"></i>';
     }
     $content .= '</div></p>';
 }
