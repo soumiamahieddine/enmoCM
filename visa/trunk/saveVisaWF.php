@@ -95,9 +95,9 @@
         $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=visa&page=load_toolbar_visa&origin=parent&resId='.$res_id.'&collId='.$coll_id;
         $js .='loadToolbarBadge(\'visa_tab\',\''.$toolbarBagde_script.'\');';
         
-	if ($_POST['fromDetail'] == "Y") {
+	/*if ($_POST['fromDetail'] == "Y") {
 		$visa->setStatusVisa($res_id, $coll_id);
-	}
+	}*/
 	
 	echo "{status : 1, exec_js : '".addslashes($js)."'}";
 	exit();
