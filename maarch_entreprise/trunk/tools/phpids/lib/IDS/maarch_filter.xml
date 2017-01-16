@@ -1,5 +1,5 @@
 <filters>
-    <filter>
+    <!--<filter>
         <id>1</id>
         <rule><![CDATA[(?:"[^"]*[^-]?>)|(?:[^\w\s]\s*\/>)|(?:>")]]></rule>
         <description>finds html breaking injections including whitespace attacks</description>
@@ -8,7 +8,7 @@
             <tag>csrf</tag>
         </tags>
         <impact>4</impact>
-    </filter>
+    </filter>-->
     <filter>
         <id>2</id>
         <rule><![CDATA[(?:"+.*[<=]\s*"[^"]+")|(?:"\s*\w+\s*=)|(?:>\w=\/)|(?:#.+\)["\s]*>)|(?:"\s*(?:src|style|on\w+)\s*=\s*")|(?:[^"]?"[,;\s]+\w*[\[\(])]]></rule>
