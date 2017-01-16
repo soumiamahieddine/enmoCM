@@ -170,9 +170,11 @@ array_push($select[$_SESSION['tablename']['history']], 'id', 'event_date', 'user
 $select[$_SESSION['tablename']['users']] = array();
 array_push($select[$_SESSION['tablename']['users']], 'lastname', 'firstname');
 $list = new list_show();
-$order = 'desc';
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
     $order = trim($_REQUEST['order']);
+}else{
+    $order = 'desc';
+    $_REQUEST['order'] = 'desc';
 }
 $field = 'event_date';
 if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
