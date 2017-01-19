@@ -13,6 +13,12 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.PrivilegedActionException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,6 +60,7 @@ public class MaarchCM extends JApplet {
     //INIT PARAMETERS
     protected String url;
     protected String domain;
+    protected String idApplet;
     protected String objectType;
     protected String objectTable;
     protected String objectId;
@@ -68,12 +75,18 @@ public class MaarchCM extends JApplet {
     //XML PARAMETERS
     protected String status;
     protected String appPath;
+    protected String appPath_convert;
     protected String fileContent;
+    protected String fileContentVbs;
+    protected String vbsPath;
+    protected String fileContentExe;
+    protected String useExeConvert;
     protected String fileExtension;
     protected String error;
     protected String endMessage;
     protected String os;
     protected String fileContentTosend;
+    protected String pdfContentTosend;
 
     private final HttpClientContext httpContext = HttpClientContext.create();
     private CloseableHttpClient httpClient; // Apache HttpClient yet to be instantiated
@@ -81,6 +94,9 @@ public class MaarchCM extends JApplet {
     public MyLogger logger;
     public FileManager fM;
     public String fileToEdit;
+    
+    public List<String> fileToDelete = new ArrayList<String>();
+
 
     /**
      * Launch of the applet
@@ -89,6 +105,7 @@ public class MaarchCM extends JApplet {
         System.out.println("----------BEGIN PARAMETERS----------");
         url = getParameter("url");
         objectType = getParameter("objectType");
+        idApplet = getParameter("idApplet");
         objectTable = getParameter("objectTable");
         objectId = getParameter("objectId");
         uniqueId = getParameter("uniqueId");
@@ -98,6 +115,7 @@ public class MaarchCM extends JApplet {
 
         System.out.println("URL : " + url);
         System.out.println("OBJECT TYPE : " + objectType);
+        System.out.println("ID APPLET : " + idApplet);
         System.out.println("OBJECT TABLE : " + objectTable);
         System.out.println("OBJECT ID : " + objectId);
         System.out.println("UNIQUE ID : " + uniqueId);
@@ -345,7 +363,7 @@ public class MaarchCM extends JApplet {
      */
     public String editObject() throws Exception, InterruptedException, JSException {
 
-        System.out.println("----------BEGIN EDIT OBJECT---------- LGI 16/11/2016");
+        System.out.println("----------BEGIN EDIT OBJECT---------- LGI 19/01/2017");
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         String os = System.getProperty("os.name").toLowerCase();
         boolean isUnix = os.contains("nix") || os.contains("nux");
@@ -394,8 +412,8 @@ public class MaarchCM extends JApplet {
         System.out.println("Create the logger");
         this.logger = new MyLogger(this.userLocalDirTmp);
 
-        this.logger.log("Delete thefile if exists", Level.INFO);
-        FileManager.deleteFilesOnDir(this.userLocalDirTmp, "thefile");
+        /*this.logger.log("Delete thefile if exists", Level.INFO);
+        FileManager.deleteFilesOnDir(this.userLocalDirTmp, "thefile");*/
 
         this.logger.log("----------BEGIN OPEN REQUEST----------", Level.INFO);
         String urlToSend = this.url + "?action=editObject&objectType=" + this.objectType
@@ -407,20 +425,16 @@ public class MaarchCM extends JApplet {
         this.processReturn(this.messageResult);
         this.logger.log("----------END OPEN REQUEST----------", Level.INFO);
 
-        Integer randomNum;
-        Integer minimum = 1;
-        Integer maximum = 1000;
-
-        randomNum = minimum + (int) (Math.random() * maximum);
-        this.fileToEdit = "thefile_" + randomNum + "." + this.fileExtension;
-
+        this.fileToEdit = "thefile_" + idApplet + "." + this.fileExtension;
+            
         this.logger.log("----------BEGIN CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
         this.logger.log("create the file : " + this.appPath, Level.INFO);
         this.fM.createBatFile(
                 this.appPath,
                 this.userLocalDirTmp,
                 this.fileToEdit,
-                this.os
+                this.os,
+                this.idApplet
         );
         this.logger.log("----------END CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
 
@@ -430,12 +444,13 @@ public class MaarchCM extends JApplet {
             this.logger.log("----------BEGIN EXECUTION OF THE EDITOR----------", Level.INFO);
             this.logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
             this.fM.createFile(this.fileContent, this.userLocalDirTmp + this.fileToEdit);
-
+            this.fileToDelete.add(this.userLocalDirTmp + this.fileToEdit);
+            
             Thread theThread;
             theThread = new Thread(new ProcessLoop(this));
 
             theThread.start();
-
+            
             String actualContent;
             this.fileContentTosend = "";
             do {
@@ -471,7 +486,7 @@ public class MaarchCM extends JApplet {
             
             String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType
                     + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
-                    + "&uniqueId=" + this.uniqueId + "&step=end&userMaarch=" + this.userMaarch;
+                    + "&uniqueId=" + this.uniqueId + "&idApplet=" + this.idApplet + "&step=end&userMaarch=" + this.userMaarch;
             this.logger.log("----------BEGIN SEND OF THE OBJECT----------", Level.INFO);
             this.logger.log("URL TO SAVE : " + urlToSave, Level.INFO);
             sendHttpRequest(urlToSave, this.fileContentTosend, true);
@@ -488,6 +503,47 @@ public class MaarchCM extends JApplet {
             this.logger.log("RESPONSE KO", Level.WARNING);
         }
         this.logger.log("----------END EDIT OBJECT----------", Level.INFO);
+        
+        //delete tmp files
+        FileManager.deleteSpecificFilesOnDir(fileToDelete);
+        
+        //delete env libreoffice instance
+        File dir_app = new File(this.userLocalDirTmp+this.idApplet);
+        if (dir_app.exists()) {
+            Path directory = Paths.get(this.userLocalDirTmp+this.idApplet);
+            Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+        //delete env libreoffice convert instance
+        File dir_app_conv = new File(this.userLocalDirTmp+this.idApplet+"_conv");
+        if (dir_app_conv.exists()) {
+            Path directory = Paths.get(this.userLocalDirTmp+this.idApplet+"_conv");
+            Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+
         return "ok";
     }
 
@@ -541,12 +597,13 @@ public class MaarchCM extends JApplet {
             options = this.fM.findGoodOptionsToEdit(this.fileExtension);
             this.logger.log("OPTION PROGRAM TO EDIT " + options, Level.INFO);
             String pathCommand;
+            if("".equals(options)){
+                options = "\"-env:UserInstallation=file:///" + this.userLocalDirTmp.replace("\\", "/") + idApplet +"/\" ";
+            }
             pathCommand = pathProgram + " " + options + "\"" + this.userLocalDirTmp + this.fileToEdit + "\"";
             this.logger.log("PATH COMMAND TO EDIT " + pathCommand, Level.INFO);
             proc = this.fM.launchApp(pathCommand);
         }
-
-        this.logger.log("WAIT END OF THE PROCESS", Level.INFO);
         proc.waitFor();
         this.logger.log("END OF THE PROCESS", Level.INFO);
 
@@ -587,7 +644,7 @@ public class MaarchCM extends JApplet {
      * @param postRequest the request
      * @param endProcess end request
      */
-    public void sendHttpRequest(String theUrl, String postRequest, boolean endProcess) throws UnsupportedEncodingException {
+    public void sendHttpRequest(String theUrl, final String postRequest, final boolean endProcess) throws UnsupportedEncodingException {
         System.out.println("URL request : " + theUrl);
 
         // Inner class representing the payload to be posted via HTTP
@@ -627,6 +684,7 @@ public class MaarchCM extends JApplet {
         };
         HttpPost request = new HttpPost(theUrl); // Construct a HTTP post request
         System.out.println("BUILT REQUEST: " + request);
+        
         
         // Request parameters and other properties.
         List<NameValuePair> params = new ArrayList<NameValuePair>(2);

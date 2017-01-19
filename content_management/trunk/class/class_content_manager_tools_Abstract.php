@@ -673,7 +673,10 @@ abstract class content_management_tools_Abstract
     ) {
         $docXML = new DomDocument('1.0', "UTF-8");
 
-        $jnlp_name = $_SESSION['user']['UserId'].'_DisCM_'.rand().'.jnlp';
+        //create unique id for APPLET
+        $uid_applet_name = $_SESSION['user']['UserId'].'_maarchCM_'.rand();
+
+        $jnlp_name = $uid_applet_name.'.jnlp';
 
         if ($_SESSION['config']['debug']) {
             $inF = fopen(
@@ -900,6 +903,14 @@ abstract class content_management_tools_Abstract
         $param11_attribute2->value = $clientSideCookies;
         $param11_balise->appendChild($param11_attribute2);
 
+        $param12_balise=$docXML->createElement("param");
+        $param12_attribute1 = $docXML->createAttribute('name');
+        $param12_attribute1->value = 'idApplet';
+        $param12_balise->appendChild($param12_attribute1);
+        $param12_attribute2 = $docXML->createAttribute('value');
+        $param12_attribute2->value = $uid_applet_name;
+        $param12_balise->appendChild($param12_attribute2);
+
         $jnlp_balise->appendChild($info_balise); 
         $info_balise->appendChild($title_balise); 
         $info_balise->appendChild($vendor_balise); 
@@ -933,6 +944,7 @@ abstract class content_management_tools_Abstract
         $applet_balise->appendChild($param9_balise); 
         $applet_balise->appendChild($param10_balise); 
         $applet_balise->appendChild($param11_balise); 
+        $applet_balise->appendChild($param12_balise); 
 
 
         $docXML->appendChild($jnlp_balise);  
@@ -941,11 +953,13 @@ abstract class content_management_tools_Abstract
 
         $docXML->save($filename); 
 
-        $fp = fopen($_SESSION['config']['tmppath']."applet_".$_SESSION['user']['UserId'].".lck", 'w+');
+        $fp = fopen($_SESSION['config']['tmppath'].$uid_applet_name.".lck", 'w+');
+
+        $_SESSION['cm_applet'][$_SESSION['user']['UserId']][$uid_applet_name]=$uid_applet_name.'.lck';
 
         $file = $jar_url."/apps/maarch_entreprise/tmp/".$jnlp_name;
 
-        //echo '<a id="jnlp_file" href="'.$file.'" onclick="window.opener.location.href=\''.$file.'\';self.close();"></a>';
+        //echo '<a id="jnlp_file" href="'.$file.'" onclick="window.location.href=\''.$file.'\';self.close();"></a>';
         echo '<script>window.location.href=\''.$file.'\';if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};</script>';
         exit();
         /*echo '<a id="jnlp_file" href="'.$_SESSION['config']['businessappurl'].'index.php?page=get_jnlp_file&module=content_management&display=true&filename='.$_SESSION['user']['UserId'].'_DisCM"></a>';

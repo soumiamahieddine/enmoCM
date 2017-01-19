@@ -18,6 +18,7 @@ import org.apache.commons.codec.binary.Base64;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * FileManager class manages the exchange of files between the applet and the workstation
@@ -56,6 +57,22 @@ public class FileManager {
             msg = "ERROR";
         }
         return msg;
+    }
+    
+    /**
+    * Controls the existance of psExec file in tmp dir
+    * @param path path to the tmp dir
+    * @return boolean
+    */
+    public boolean isPsExecFileExists(String path) throws IOException {
+        File file=new File(path);
+        if (!file.exists()) {
+            System.out.println("psExec on path " + path + " not exists so the applet will create it");
+            return false;
+        } else {
+            System.out.println("psExec on path " + path + " already exists");
+            return true;
+        }
     }
     
     /**
@@ -100,7 +117,8 @@ public class FileManager {
             final String pathToBatFile, 
             final String pathToFileToLaunch, 
             final String fileToLaunch, 
-            final String os
+            final String os,
+            final String idApplet
             ) throws IOException, PrivilegedActionException {
         final Writer out;
         if ("win".equals(os)) {
@@ -114,14 +132,14 @@ public class FileManager {
                         if (fileToLaunch.contains(".odt") || fileToLaunch.contains(".ods")) {
                             //out.write("start /WAIT SOFFICE.exe -env:UserInstallation=file:///" 
                             //    + pathToFileToLaunch.replace("\\", "/")  + " \"" + pathToFileToLaunch + fileToLaunch + "\"");
-                            out.write("start /WAIT SOFFICE.exe -env:UserInstallation=$SYSUSERCONFIG \"" + pathToFileToLaunch + fileToLaunch + "\"");
+                            out.write("start /WAIT SOFFICE.exe \"-env:UserInstallation=file:///" + pathToFileToLaunch.replace("\\", "/") + idApplet +"/\" \"" + pathToFileToLaunch + fileToLaunch + "\"");
                         } else {
                             out.write("start /WAIT \"\" \"" + pathToFileToLaunch + fileToLaunch + "\"");
                         }
                     } else if ("mac".equals(os)) {
                         out.write("open -W " + pathToFileToLaunch + fileToLaunch);
                     } else if ("linux".equals(os)) {
-                        out.write("libreoffice " + pathToFileToLaunch + fileToLaunch + " || ooffice " + pathToFileToLaunch + fileToLaunch +"& wait");
+                        out.write("libreoffice -env:UserInstallation=file://" + pathToFileToLaunch + idApplet +"/ " + pathToFileToLaunch + fileToLaunch + " || ooffice " + pathToFileToLaunch + fileToLaunch +"& wait");
                     }
                     out.close();
                     File file = new File(pathToBatFile);
@@ -169,7 +187,7 @@ public class FileManager {
     * @param launchCommand the command to launch
     * @return process
     */
-    /*public Process launchApp(final String launchCommand) throws PrivilegedActionException {
+    public Process launchApp(final String launchCommand) throws PrivilegedActionException {
         return (Process) AccessController.doPrivileged(
             new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
@@ -177,14 +195,14 @@ public class FileManager {
                 }
             }
         );
-    }*/
+    }
     
     /**
     * Launchs a command to execute
     * @param launchCommand the command to launch
     * @return process
     */
-    public Process launchApp(final String launchCommand) throws PrivilegedActionException {
+    /*public Process launchApp(final String launchCommand) throws PrivilegedActionException {
         System.out.println("COMMAND : " + launchCommand);
         Object proc = new Object();
         try{
@@ -224,8 +242,7 @@ public class FileManager {
             t.printStackTrace();
         }
         return (Process) proc;
-    }
-    
+    }*/
     
     /**
     * Retrieves the right program to edit the template with his extension
@@ -288,7 +305,7 @@ public class FileManager {
         ) {
             options = " ";
         } else {
-            options = " -env:UserInstallation=$SYSUSERCONFIG ";
+            //options = " -env:UserInstallation=$SYSUSERCONFIG ";
         }
         
         return options;
@@ -310,6 +327,21 @@ public class FileManager {
                 child.delete();
             }
           }
+        }
+    }
+    
+    /**
+    * Deletes specific files in the tmp dir
+     * @param files contains alls file to delete
+     * @throws java.io.IOException
+    */
+    public static void deleteSpecificFilesOnDir (List<String> files) throws IOException {
+        for (String file : files) {
+            System.out.println("file to delete : " + file);
+            File theFile = new File(file);
+            if (theFile.exists()) {
+                theFile.delete();
+            }
         }
     }
     
