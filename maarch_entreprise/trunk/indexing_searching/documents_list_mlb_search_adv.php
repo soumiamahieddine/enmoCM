@@ -312,7 +312,7 @@ if($mode == 'normal') {
 
     if (!empty($order_field) && !empty($order)){
         if($_REQUEST['order_field'] == 'alt_identifier'){
-            $orderstr = "order by regexp_replace(alt_identifier, '[^a-zA-Z]', '', 'g') ".$order.", regexp_replace(alt_identifier, '[^0-9]', '', 'g')::int"." ".$order;
+            $orderstr = "order by regexp_replace(alt_identifier, '[^a-zA-Z]', '', 'g') ".$order.", regexp_replace(alt_identifier, '[^0-9]', '', 'g')::bigint"." ".$order;
         }else{
             $orderstr = "order by ".$order_field." ".$order;
         }
