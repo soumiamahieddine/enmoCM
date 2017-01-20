@@ -1,4 +1,7 @@
 <?php
+$js = '';
+$list_origin = '';
+
 if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
 
     $res_child = $_REQUEST['res_id_child'];
@@ -121,6 +124,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                'apps'
             );
         }
+		 $js = "window.top.$('main_info').innerHTML = '"._LINKS_DELETED."';window.top.$('main_info').style.display = 'table-cell';setTimeout(function(){ window.top.$('main_info').style.display = 'none'; }, 10000);";
 
         $formatText = '';
 

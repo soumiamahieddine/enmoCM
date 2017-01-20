@@ -847,13 +847,14 @@ abstract class lists_Abstract extends Database
                             if(is_numeric($_SESSION['filters']['subject']['VALUE'])){
                             $_SESSION['filters']['subject']['CLAUSE'] .= "or res_id = '".$_SESSION['filters']['subject']['VALUE']."'"; 
                             }
-                    } else if ($_REQUEST['filter'] == 'isViewed') {                    
+                    } else if ($_REQUEST['filter'] == 'isViewed') {          
                         if ($_SESSION['filters']['isViewed']['VALUE'] == 'yes') {
                             $_SESSION['filters']['isViewed']['CLAUSE'] = "res_id in (select res_id from listinstance WHERE coll_id = '".$_SESSION['collection_id_choice']."' and item_type = 'user_id' and item_id = '".$_SESSION['user']['UserId']."' and item_mode = 'cc' and viewed > 0)";
+							
                         } else  if ($_SESSION['filters']['isViewed']['VALUE'] == 'no') {
                             $_SESSION['filters']['isViewed']['CLAUSE'] = "res_id in (select res_id from listinstance WHERE coll_id = '".$_SESSION['collection_id_choice']."' and item_type = 'user_id' and item_id = '".$_SESSION['user']['UserId']."' and item_mode = 'cc' and viewed = 0 or viewed is null)";
                         }
-                        
+                                                
                     } else if ($_REQUEST['filter'] == 'user') {
                     
                         $userId = $this->protect_string_db(str_replace(')', '', 
@@ -931,7 +932,8 @@ abstract class lists_Abstract extends Database
                         $_SESSION['filters']['priority']['VALUE'] = '0';
                         $_SESSION['filters']['priority']['CLAUSE'] = "priority = '".$_REQUEST['value']."'";
             }
-        }
+        } 
+        
     }
     
     protected function _resetUrlTemplates() {

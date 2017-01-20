@@ -28,6 +28,7 @@
 * @version $Revision$
 * @ingroup apps
 */
+
 require_once 'core/class/class_request.php';
 require_once 'core/class/class_security.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_contacts_v2.php';

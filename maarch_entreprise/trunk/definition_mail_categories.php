@@ -504,6 +504,76 @@ $_ENV['categories']['internal']['other_cases']['contact'] = array (
     'modify' => false
 );
 
+///////////////////////////// GED DOC ////////////////////////////////////////////////
+$_ENV['categories']['ged_doc'] = array ();
+$_ENV['categories']['ged_doc']['img_cat'] = '<i class="fa fa-arrow-right fa-2x"></i>';
+$_ENV['categories']['ged_doc']['other_cases'] = array ();
+$_ENV['categories']['ged_doc']['type_id'] = array (
+    'type_form' => 'integer',
+    'type_field' => 'integer',
+    'mandatory' => true,
+    'label' => _DOCTYPE,
+    'table' => 'res',
+    'img' => 'file',
+    'modify' => true,
+    'form_show' => 'select'
+);
+$_ENV['categories']['ged_doc']['doc_date'] = array (
+    'type_form' => 'date',
+    'type_field' => 'date',
+    'mandatory' => true,
+    'label' => _DOC_DATE,
+    'table' => 'res',
+    'img' => 'calendar-o',
+    'modify' => true,
+    'form_show' => 'date'
+);
+
+$_ENV['categories']['ged_doc']['subject'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _SUBJECT,
+    'table' => 'res',
+    'img' => 'info',
+    'modify' => true,
+    'form_show' => 'textarea'
+);
+$_ENV['categories']['ged_doc']['type_contact'] = array (
+    'type_form' => 'radio',
+    'mandatory' => true,
+    'label' => _AUTHOR_TYPE,
+    'table' => 'none',
+    'values' => array (
+        'internal',
+        'external'
+    ),
+    'modify' => false
+);
+$_ENV['categories']['ged_doc']['other_cases']['author'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _AUTHOR,
+    'table' => 'coll_ext',
+    'special' => 'exp_user_id,exp_contact_id,author',
+    'modify' => false
+);
+
+$_ENV['categories']['ged_doc']['confidentiality'] = array (
+    'type_form' => 'radio',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _CONFIDENTIALITY,
+    'table' => 'res',
+    'values' => array (
+        'Y',
+        'N'
+    ),
+    'img' => 'exclamation-triangle',
+    'modify' => true,
+);
+
 /////////////////////////////FOLDER DOCUMENT////////////////////////////////////////////////
 $_ENV['categories']['folder_document'] = array ();
 $_ENV['categories']['folder_document']['img_cat'] = '<i class="fa fa-folder fa-2x"></i>';
@@ -649,6 +719,18 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DIFF_LIST,
         'table' => 'special'
+    );
+    
+    //Entities module (ged doc)
+    $_ENV['categories']['ged_doc']['destination'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => true,
+        'label' => _DEPARTMENT_OWNER,
+        'table' => 'res',
+        'img' => 'sitemap',
+        'modify' => false,
+        'form_show' => 'textarea'
     );
 
     $_ENV['categories']['ged_doc']['destination'] = array (

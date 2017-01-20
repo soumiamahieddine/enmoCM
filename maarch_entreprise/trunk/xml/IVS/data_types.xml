@@ -1,6 +1,7 @@
   <dataTypes>
-    <dataType name="identifier" base="graph">
-      <pattern value="/^\w+$/" />
+    <dataType name="identifier" base="string">
+      <!-- pattern value="/^\w+$/" / -->
+      <pattern value="/^[\w.-]*$/" />
     </dataType>
     <dataType name="login" base="graph">
       <!--pattern value="/^\w+$/" /-->
@@ -13,7 +14,7 @@
       <pattern value="/^[\w~@'&quot;;^*\s()+[\]{}|\\,.?: -àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]*$/" />
     </dataType>
     <dataType name="ajax_ids" base="graph">
-      <pattern value="/^[\w#]+$/" />
+      <pattern value="/^[\w#-]+$/" />
     </dataType>
     <dataType name="hex" base="graph">
       <pattern value="/^[A-Fa-f0-9]+$/" />

@@ -2360,7 +2360,8 @@ function valid_report_by_period(url)
                 }
             }
         });
-    }
+    } else
+    alert ("DEBU");
 }
 
 /**

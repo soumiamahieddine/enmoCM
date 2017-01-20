@@ -745,6 +745,7 @@ if (!defined("_DEPARTMENT_EXP")) define("_DEPARTMENT_EXP", "Service expéditeur"
 if (!defined("_INCOMING")) define("_INCOMING", "Courrier Arrivée");
 if (!defined("_OUTGOING")) define("_OUTGOING", "Courrier Départ");
 if (!defined("_INTERNAL")) define("_INTERNAL", "Courrier Interne");
+if (!defined("_GED_DOC")) define("_GED_DOC", "Document GED");
 if (!defined("_MARKET_DOCUMENT")) define("_MARKET_DOCUMENT", "Document de Sous-dossier");
 if (!defined("_EMPTY")) define("_EMPTY", "Vide");
 

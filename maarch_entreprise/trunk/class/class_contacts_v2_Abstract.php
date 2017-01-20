@@ -979,6 +979,7 @@ abstract class contacts_v2_Abstract extends Database
                     $_SESSION['m_admin']['address']['OCCUPANCY'] = functions::show_string($line->occupancy);
                     $_SESSION['m_admin']['address']['ADD_NUM'] = functions::show_string($line->address_num);
                     $_SESSION['m_admin']['address']['ADD_STREET'] = functions::show_string($line->address_street);
+                    $_SESSION['m_admin']['address']['ADD_DISTRICT'] = functions::show_string($line->address_district);
                     $_SESSION['m_admin']['address']['ADD_COMP'] = functions::show_string($line->address_complement);
                     $_SESSION['m_admin']['address']['ADD_TOWN'] = functions::show_string($line->address_town);
                     $_SESSION['m_admin']['address']['ADD_CP'] = functions::show_string($line->address_postal_code);
@@ -1236,10 +1237,27 @@ abstract class contacts_v2_Abstract extends Database
                         <tr>
                             <td><label for="street"><?php echo _STREET;?> : </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="street" type="text"  id="street" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_STREET'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_STREET'])); }?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="street" type="text"  id="street" onfocus="$('rule_purpose').style.display='table-row'" onblur="purposeCheck();$('rule_purpose').style.display='none'";
+                                <?php if(isset($_SESSION['m_admin']['address']['ADD_STREET']) && $_SESSION['m_admin']['address']['ADD_STREET'] <> '')
+                                        {
+                                            echo 'value="'.functions::xssafe($this->get_address_street($_SESSION['m_admin']['address']['ADD_STREET'],$_SESSION['tablename']['contact_addresses'])).'"';
+                                        } else {
+                                            echo 'value="'._MAIN_ADDRESS.'"';
+                                            //echo 'value="'<?php if(isset($_SESSION['m_admin']['address']['ADD_STREET'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_STREET'])); }?>"/>
+                                
+                                        } 
+                                    ?>
+                                />
                                 <span class="blue_asterisk" style="visibility:visible;">*</span>
                             </td>
                         </tr>
+                        <tr>
+                            <td><label for="district"><?php echo _DISTRICT;?> : </label></td>
+                            <td>
+                                <input class="<?php echo $fieldAddressClass;?>" name="district" type="text"  id="district" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_DISTRICT'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_DISTRICT'])); }?>"/>
+                                <span class="blue_asterisk" style="visibility:visible;">*</span>
+                            </td>
+                        </tr>                     
                         <tr>
                             <td><label for="add_comp"><?php echo _COMPLEMENT;?>&nbsp;: </label></td>
                             <td>
@@ -1529,18 +1547,19 @@ abstract class contacts_v2_Abstract extends Database
                 }
                 $query = 'INSERT INTO ' . $_SESSION['tablename']['contact_addresses']
                         . ' (  contact_id, contact_purpose_id, departement, lastname , firstname , function , '
-                        . 'phone , email , address_num, address_street, '
+                        . 'phone , email , address_num, address_street, address_district '
                         . 'address_complement, address_town, '
                         . 'address_postal_code, address_country, other_data,'
-                        . " title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer) VALUES (?, ?, 
+                        . " title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer) VALUES (?, ?, ?,
                             ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 $arrayPDO = array($_SESSION['contact']['current_contact_id'], $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'], $_SESSION['m_admin']['address']['DEPARTEMENT'],
                     $_SESSION['m_admin']['address']['LASTNAME'], $_SESSION['m_admin']['address']['FIRSTNAME'], $_SESSION['m_admin']['address']['FUNCTION'], $_SESSION['m_admin']['address']['PHONE'],
-                    $_SESSION['m_admin']['address']['MAIL'], $_SESSION['m_admin']['address']['ADD_NUM'], $_SESSION['m_admin']['address']['ADD_STREET'], $_SESSION['m_admin']['address']['ADD_COMP'],
-                    $_SESSION['m_admin']['address']['ADD_TOWN'], $_SESSION['m_admin']['address']['ADD_CP'], $_SESSION['m_admin']['address']['ADD_COUNTRY'], $_SESSION['m_admin']['address']['OTHER_DATA'],
-                    $_SESSION['m_admin']['address']['TITLE'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['WEBSITE'], $_SESSION['m_admin']['address']['OCCUPANCY'],
-                    $_SESSION['user']['UserId'], $entity_id, $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER']);
+                    $_SESSION['m_admin']['address']['MAIL'], $_SESSION['m_admin']['address']['ADD_NUM'], $_SESSION['m_admin']['address']['ADD_STREET'], $_SESSION['m_admin']['address']['ADD_DISTRICT'],
+                    $_SESSION['m_admin']['address']['ADD_COMP'], $_SESSION['m_admin']['address']['ADD_TOWN'], $_SESSION['m_admin']['address']['ADD_CP'], $_SESSION['m_admin']['address']['ADD_COUNTRY'],
+                    $_SESSION['m_admin']['address']['OTHER_DATA'], $_SESSION['m_admin']['address']['TITLE'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['WEBSITE'],
+                    $_SESSION['m_admin']['address']['OCCUPANCY'], $_SESSION['user']['UserId'], $entity_id, $_SESSION['m_admin']['address']['SALUTATION_HEADER'],
+                    $_SESSION['m_admin']['address']['SALUTATION_FOOTER']);
 
                 $db->query($query, $arrayPDO);
                 if($_SESSION['history']['addressadd'])
@@ -1586,6 +1605,7 @@ abstract class contacts_v2_Abstract extends Database
                         , occupancy = ?
                         , address_num = ?
                         , address_street = ?
+                        , address_district = ?
                         , address_complement = ?
                         , address_town = ?
                         , address_postal_code = ?
@@ -1600,7 +1620,8 @@ abstract class contacts_v2_Abstract extends Database
 
                 $arrayPDO = array($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'], $_SESSION['m_admin']['address']['DEPARTEMENT'], $_SESSION['m_admin']['address']['FIRSTNAME'],
                     $_SESSION['m_admin']['address']['LASTNAME'], $_SESSION['m_admin']['address']['TITLE'], $_SESSION['m_admin']['address']['FUNCTION'], $_SESSION['m_admin']['address']['PHONE'],
-                    $_SESSION['m_admin']['address']['MAIL'], $_SESSION['m_admin']['address']['OCCUPANCY'], $_SESSION['m_admin']['address']['ADD_NUM'], $_SESSION['m_admin']['address']['ADD_STREET'], $_SESSION['m_admin']['address']['ADD_COMP'],
+                    $_SESSION['m_admin']['address']['MAIL'], $_SESSION['m_admin']['address']['OCCUPANCY'], $_SESSION['m_admin']['address']['ADD_NUM'], $_SESSION['m_admin']['address']['ADD_STREET'],
+                    $_SESSION['m_admin']['address']['ADD_DISTRICT'], $_SESSION['m_admin']['address']['ADD_COMP'],
                     $_SESSION['m_admin']['address']['ADD_TOWN'], $_SESSION['m_admin']['address']['ADD_CP'], $_SESSION['m_admin']['address']['ADD_COUNTRY'], $_SESSION['m_admin']['address']['WEBSITE'], 
                     $_SESSION['m_admin']['address']['OTHER_DATA'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER'],
                     $_SESSION['m_admin']['address']['ID']);
@@ -1699,6 +1720,15 @@ abstract class contacts_v2_Abstract extends Database
         } else {
             $_SESSION['m_admin']['address']['ADD_STREET'] = '';
         }
+        
+         if ($_REQUEST['district'] <> '') {
+            $_SESSION['m_admin']['address']['ADD_DISTRICT'] = $func->wash(
+                $_REQUEST['district'], 'no', _DISTRICT . ' ', 'yes', 0, 255
+            );
+        } else {
+            $_SESSION['m_admin']['address']['ADD_DISTRICT'] = '';
+        }
+
 
         if ($_REQUEST['add_comp'] <> '') {
             $_SESSION['m_admin']['address']['ADD_COMP'] = $func->wash(
@@ -1803,6 +1833,19 @@ abstract class contacts_v2_Abstract extends Database
         $_SESSION['m_admin']['address']['order_field'] = $_REQUEST['order_field'];
         $_SESSION['m_admin']['address']['what'] = $_REQUEST['what'];
         $_SESSION['m_admin']['address']['start'] = $_REQUEST['start'];
+    }
+    
+     /**
+    * Return the label from an id
+    *
+    * @param int $contact_street_id
+    * @param string $table
+    */
+    public function get_address_street($contact_street_id, $table){
+        $db = new Database();
+        $stmt = $db->query('SELECT address_street FROM '.$table . ' WHERE id = ?',array($contact_street_id));
+        $res = $stmt->fetchObject();
+        return functions::show_string($res->address_street);
     }
 
     /**
@@ -2265,6 +2308,11 @@ abstract class contacts_v2_Abstract extends Database
                         <td><label for="street"><?php echo _STREET;?>&nbsp;: </label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field" ><input class="contact_field_margin" disabled name="street" type="text"  id="street" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_STREET'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_STREET'])); }?>"/></td>
+                    </tr>
+                    <tr>
+                        <td><label for="street"><?php echo _DISTRICT;?>&nbsp;: </label></td>
+                        <td>&nbsp;</td>
+                        <td class="indexing_field" ><input class="contact_field_margin" disabled name="district" type="text"  id="district" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_DISTRICT'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_DISTRICT'])); }?>"/></td>
                     </tr>
                     <tr>
                         <td><label for="add_comp"><?php echo _COMPLEMENT;?>&nbsp;: </label></td>

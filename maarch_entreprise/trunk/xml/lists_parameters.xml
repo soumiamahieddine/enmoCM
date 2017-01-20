@@ -21,11 +21,11 @@
             <LABEL>_CATEGORY</LABEL>
             <ENABLED>true</ENABLED>
         </FILTER>
-        <!--FILTER>
+        <!-- FILTER>
             <ID>res_id</ID>
             <LABEL>_GED</LABEL>
             <ENABLED>true</ENABLED>
-        </FILTER-->
+        </FILTER -->
         <FILTER>   <!-- permet la recherche sur le res_id et l objet du courrier -->
             <ID>subject</ID>
             <LABEL>_SUBJECT</LABEL>

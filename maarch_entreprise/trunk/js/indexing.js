@@ -612,6 +612,59 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }
+    //Category = GED_DOC
+    if(cat_id == 'ged_doc')
+    {
+        var category = [
+        {id:'doctype_mail', type:'label', state:'hide'},
+        {id:'doctype_res', type:'label', state:'display'},
+        {id:'priority_tr', type:'tr', state:'hide'},
+        {id:'doc_date_label', type:'label', state:'display'},
+        {id:'mail_date_label', type:'label', state:'hide'},
+        {id:'author_tr', type:'tr', state:'hide'},
+        {id:'admission_date_tr', type:'tr', state:'hide'},
+        {id:'contact_check', type:'tr', state:'hide'},
+        {id:'nature_id_tr', type:'tr', state:'hide'},
+        {id:'label_dep_dest', type:'label', state:'hide'},
+        {id:'label_dep_exp', type:'label', state:'hide'},
+        {id:'label_dep_owner', type:'label', state:'display'},
+        {id:'process_limit_date_use_tr', type:'tr', state:'hide'},
+        {id:'process_limit_date_tr', type:'tr', state:'hide'},
+        {id:'department_tr', type:'tr', state:'display'},
+        {id:'box_id_tr', type:'tr', state:'hide'},
+        {id:'contact_choose_tr', type:'tr', state:'hide'},
+        {id:'contact_choose_2_tr', type:'tr', state:'hide'},
+        {id:'contact_choose_3_tr', type:'tr', state:'hide'},
+        {id:'dest_contact_choose_label', type:'label', state:'hide'},
+        {id:'exp_contact_choose_label', type:'label', state:'display'},
+        {id:'contact_id_tr', type:'tr', state:'display'},
+        {id:'dest_contact', type:'label', state:'hide'},
+        {id:'exp_contact', type:'label', state:'hide'},
+        {id:'author_contact', type:'label', state:'display'},
+        {id:'type_multi_contact_external_icon', type:'label', state:'hide'},
+        {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
+        {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
+        {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
+        {id:'folder_tr', type:'tr', state:'display'},
+        {id:'category_id_mandatory', type:'label', state:'display'},
+        {id:'type_id_mandatory', type:'label', state:'display'},
+        {id:'priority_mandatory', type:'label', state:'display'},
+        {id:'doc_date_mandatory', type:'label', state:'display'},
+        {id:'author_mandatory', type:'label', state:'hide'},
+        {id:'admission_date_mandatory', type:'label', state:'display'},
+        {id:'type_contact_mandatory', type:'label', state:'display'},
+        {id:'contact_mandatory', type:'label', state:'display'},
+        {id:'nature_id_mandatory', type:'label', state:'display'},
+        {id:'subject_mandatory', type:'label', state:'display'},
+        {id:'destination_mandatory', type:'label', state:'display'},
+        {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
+        {id:'process_limit_date_mandatory', type:'label', state:'display'},
+        {id:'chrono_number', type:'label', state:'hide'},
+        {id:'chrono_number_mandatory', type:'label', state:'hide'},
+        {id:'chrono_number_tr', type:'tr', state:'hide'},
+        {id:'folder_mandatory', type:'label', state:'hide'}
+        ];
+    }
     //Category = FOLDER_DOCUMENT
     else if(cat_id == 'folder_document')
     {
@@ -1078,7 +1131,7 @@ function getContacts(path_script, id, mode){
                     $('contacts_created_tr').setStyle({display : 'none'});
                 }
             } else if(mode="set"){
-                $('contactSelect').innerHTML = answer.responseText;
+                //$('contactSelect').innerHTML = answer.responseText;
             }
         }
     });
