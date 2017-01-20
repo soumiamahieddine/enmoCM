@@ -1121,7 +1121,7 @@ class Install extends functions
 
 ######################THUMBNAILS####################################################
 * * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/scripts/launch_batch_thumbnails.sh
-15 12 1 * *        rm -Rf '.realpath('.').'/modules/thumbnails/log/*.log
+15 12 * * 0        rm -Rf '.realpath('.').'/modules/thumbnails/log/*.log
 
 ######################notification#################################################
 
@@ -1134,19 +1134,19 @@ class Install extends functions
 30 15 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.sh
 30 12 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.sh
 
-10 12 1 * *        rm -Rf '.realpath('.').'/modules/notifications/batch/logs/process_event_stack/*.log
-11 12 1 * *        rm -Rf '.realpath('.').'/modules/notifications/batch/logs/process_email_stack/*.log
+10 12 * * 0        rm -Rf '.realpath('.').'/modules/notifications/batch/logs/process_event_stack/*.log
+11 12 * * 0        rm -Rf '.realpath('.').'/modules/notifications/batch/logs/process_email_stack/*.log
 ######################sendmail####################################################
 
 * * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
 
-0 12 1 * *     rm -Rf '.realpath('.').'/modules/sendmail/batch/logs/*.log
+0 12 * * 0     rm -Rf '.realpath('.').'/modules/sendmail/batch/logs/*.log
 
 
 ######################fulltext###################################################
 
 * * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/scripts/launch_fulltext.sh
-20 12 1 * *        rm -Rf '.realpath('.').'/modules/full_text/log/*.log
+20 12 * * 0        rm -Rf '.realpath('.').'/modules/full_text/log/*.log
 ';
         fwrite($file,$cron);
         fclose($file);
