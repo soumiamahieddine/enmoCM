@@ -1,6 +1,6 @@
   <dataTypes>
     <dataType name="identifier" base="string">
-      <!-- pattern value="/^\w+$/" / -->
+		<!-- pattern value="/^\w+$/" / -->
       <pattern value="/^[\w.-]*$/" />
     </dataType>
     <dataType name="login" base="graph">
