@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>  <!-- If id are numbers, always start with 1, never with 0 -->
-<!--    
+<!--      
     <INDEX>   
         <column>custom_t6</column>
         <label>Utilisateur contributeur</label>
