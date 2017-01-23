@@ -41,11 +41,11 @@
             <label>_RESPONSE_PROJECT</label>
             <process_mode></process_mode>
         </type>
-        <!-- type show="true" with_chrono="true">
+        <type show="true" with_chrono="true">
             <id>transmission</id>
             <label>Transmission</label>
             <process_mode></process_mode>
-        </type -->
+        </type>
 		<type show="false" with_chrono="true" attach_in_mail="true">
             <id>signed_response</id>
             <label>_SIGNED_RESPONSE</label>
@@ -116,13 +116,13 @@
         <priority color="red" with_delay="4" working_days="true">Très urgent</priority> <!-- 0 -->
         <priority color="orange" with_delay="8" working_days="true">Urgent</priority> <!-- 1 -->
         <priority color="" with_delay="false" working_days="true">Normal</priority> <!-- 2 -->
-        <priority color="green" with_delay="false" working_days="true">SVA/SVR</priority> <!-- 3 -->
+        <priority color="orange" with_delay="false" working_days="true">SVA/SVR</priority> <!-- 3 -->
         <default_priority>2</default_priority>
     </priorities>
     <contact_check>
-        <check_days_before>5</check_days_before> <!-- 0 if you want to disabled -->
+        <check_days_before>5</check_days_before>  <!-- 0 if you want to disabled -->
     </contact_check>
-    <titles>
+    <titles> 
         <title>
             <id>title1</id>
             <label>Monsieur</label>
