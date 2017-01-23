@@ -376,6 +376,7 @@ abstract class contacts_v2_Abstract extends Database
 
             if($stmt->rowCount() == 0)
             {
+				
                 $_SESSION['error'] = _THE_CONTACT.' '._ALREADY_EXISTS;
                 $state = false;
             }
