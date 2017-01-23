@@ -432,7 +432,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<tr id="confidentiality_tr" style="display:' . $displayValue
             . ';">';
     $frmStr .= '<td><label for="confidentiality" class="form_title" >'
-            . _CONFIDENTIAL . ' </label></td>';
+            . _CONFIDENTIALITY . ' </label></td>';
     $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input type="radio" '
             . 'name="confidentiality" id="confidential" value="Y" />'
