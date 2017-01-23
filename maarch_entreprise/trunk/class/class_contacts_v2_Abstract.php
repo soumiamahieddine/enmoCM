@@ -38,7 +38,7 @@ abstract class contacts_v2_Abstract extends Database
     */
     public function contactinfo($mode)
     {
-        // return the user information in sessions vars
+        //  return the user information in sessions vars
         $func = new functions();
         $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] =
             $_REQUEST['is_corporate'];
