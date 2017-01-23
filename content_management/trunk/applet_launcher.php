@@ -174,66 +174,7 @@ $cookieKey = $_SESSION['sessionName'] . '=' . $_COOKIE[$_SESSION['sessionName']]
 
 //init error session
 $_SESSION['error'] = '';
-if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "false"){
 
-?>
-<div id="maarchcmdiv">
-    <h3><?php echo _MAARCH_CM_APPLET;?></h3>
-    <br><center><i class="fa fa-spinner fa-pulse" style="font-size:90px" title="<?php echo _LOADING;?>"></i></center>
-    <br>
-    <br><?php echo _DONT_CLOSE;?><br /><br />
-
-    <div id="maarchcm_error" class="error"></div>
-    <?php   
-    $path_appli = explode('/', $_SESSION['config']['coreurl']);
-    if(count($path_appli) <> 5){
-        $path_appli = array_slice($path_appli, 0, 4);
-        $path_appli = implode('/', $path_appli);
-    }else{
-        $path_appli = implode('/', $path_appli);
-    }
-    $cM->generateJNLPMaarch(
-            $path_appli,
-            $path_appli.'/'.$path,$objectType,
-            $objectTable,
-            $objectId,
-            $uniqueId,
-            $cookieKey,
-            $_SESSION['user']['UserId'],
-            $cMFeatures['CONFIG']['userPwdMaarchOnClient'],
-            $cMFeatures['CONFIG']['psExecMode'],
-            'mayscript',
-            $_SESSION['clientSideCookies']
-    );
-    exit();
-    ?>
-    <applet ARCHIVE="<?php 
-            echo $_SESSION['config']['coreurl'];?>modules/content_management/dist/maarchCM.jar" 
-        code="com.maarch.MaarchCM" name="maarchcmapplet" id="maarchcmapplet" 
-        WIDTH="1" HEIGHT="1" version = "1.6">
-        <param name="url" value="<?php 
-            echo $_SESSION['config']['coreurl'].$path;
-        ?>">
-        <param name="objectType" value="<?php functions::xecho($objectType);?>">
-        <param name="objectTable" value="<?php functions::xecho($objectTable);?>">
-        <param name="objectId" value="<?php functions::xecho($objectId);?>">
-        <param name="uniqueId" value="<?php functions::xecho($uniqueId);?>">
-        <param name="cookie" value="<?php echo $cookieKey;?>">
-        <param name="userMaarch" value="<?php 
-            echo $cMFeatures['CONFIG']['userMaarchOnClient'];
-        ?>">
-        <param name="userMaarchPwd" value="<?php 
-            echo $cMFeatures['CONFIG']['userPwdMaarchOnClient'];
-        ?>">
-        <param name="psExecMode" value="<?php functions::xecho($cMFeatures['CONFIG']['psExecMode']);?>">
-        <param name="mayscript" value="mayscript" />
-    </applet>
-</div>
-    
-<?php 
-}
-
-else if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
 ?>
 <div id="maarchcmdiv">
     <h3><?php echo _MAARCH_CM_APPLET;?></h3>
@@ -252,25 +193,23 @@ else if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
     }
     $cM->generateJNLP(
         $path_appli,
-        $path_appli.'/'.$path,
+        $path_appli . '/' . $path,
         $objectType,
         $objectTable,
         $objectId,
         $uniqueId,
         $cookieKey,
         $_SESSION['user']['UserId'],
-        $cMFeatures['CONFIG']['userPwdMaarchOnClient'],
-        $cMFeatures['CONFIG']['psExecMode'],
-        'mayscript',
-        $_SESSION['clientSideCookies']
+        $_SESSION['clientSideCookies'], 
+        $_SESSION['modules_loaded']['attachments']['convertPdf']
     );
     exit();
     ?>
     <resources>
       <jar href="<?php 
-            echo $_SESSION['config']['coreurl'];?>modules/content_management/dist/DisCM.jar"/>
+            echo $_SESSION['config']['coreurl'];?>modules/content_management/dist/maarchCM.jar"/>
     </resources>
-    <applet-desc main-class="com.dis.DisCM" name="DisCM" width="625" height="595">
+    <applet-desc main-class="com.maarch.MaarchCM" name="maarchCM" width="625" height="595">
       <param name="url" value="<?php 
             echo $_SESSION['config']['coreurl'].$path;
         ?>">
@@ -289,7 +228,3 @@ else if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
         <param name="mayscript" value="mayscript" />
     </applet-desc>
 </div>
-
-<?php
-}
-

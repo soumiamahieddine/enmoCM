@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2008-2016 Maarch
+*   Copyright 2008-2017 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -338,7 +338,7 @@ abstract class content_management_tools_Abstract
     }
 
     /**
-    * Generate JLNP file to launch the Applet DIS
+    * Generate JLNP file to launch the JNLP
     *
     * 
     */
@@ -351,325 +351,8 @@ abstract class content_management_tools_Abstract
         $uniqueId,
         $cookieKey,
         $user,
-        $pwd,
-        $psExecMode,
-        $mayscript,
-        $clientSideCookies
-    ) {
-        $docXML = new DomDocument('1.0', "UTF-8");
-
-        //create unique id for APPLET
-        $uid_applet_name = $_SESSION['user']['UserId'].'_DisCM_'.rand();
-
-        $jnlp_name = $uid_applet_name.'.jnlp';
-
-        if ($_SESSION['config']['debug']) {
-            $inF = fopen(
-                $_SESSION['config']['tmppath'] . 'log_jnlp_' . $_SESSION['user']['UserId'] . '.log',
-                'a'
-            );
-            fwrite(
-                $inF, 
-                '------------------' . PHP_EOL
-                . 'CREATE JNLP------------------'
-                . $_SERVER['SERVER_NAME'] . ' ' . $_SESSION['user']['UserId'] . ' ' . date('D, j M Y H:i:s O') .PHP_EOL
-            );
-            fwrite($inF, '|||||||||||||||||SERVER DETAILS BEGIN FOR CREATE JNLP|||||||||||||||||' . PHP_EOL);
-            foreach($_SERVER as $key => $value) {
-                fwrite($inF, $key . " : " . $value . PHP_EOL);
-            }
-            fwrite($inF, '|||||||||||||||||SERVER DETAILS END FOR CREATE JNLP|||||||||||||||||' . PHP_EOL);
-            fwrite($inF, "jar_url : " . $jar_url . PHP_EOL);
-            fwrite($inF, "jnlp_name : " . $jnlp_name . PHP_EOL);
-            fwrite($inF, "maarchcm_url : " . $maarchcm_url . PHP_EOL);
-            fwrite($inF, "objectType : " . $objectType . PHP_EOL);
-            fwrite($inF, "objectTable : " . $objectTable . PHP_EOL);
-            fwrite($inF, "objectId : " . $objectId . PHP_EOL);
-            fwrite($inF, "uniqueId : " . $uniqueId . PHP_EOL);
-            fwrite($inF, "cookieKey : " . $cookieKey . PHP_EOL);
-            fwrite($inF, "user : " . $user . PHP_EOL);
-            fwrite($inF, "pwd : " . $pwd . PHP_EOL);
-            fwrite($inF, "psExecMode : " . $psExecMode . PHP_EOL);
-            fwrite($inF, "mayscript : " . $mayscript . PHP_EOL);
-            fwrite($inF, "clientSideCookies : " . $clientSideCookies . PHP_EOL);
-            fclose($inF);
-        }
-        
-        $jnlp_balise=$docXML->createElement("jnlp");
-        $jnlp_attribute1 = $docXML->createAttribute('spec'); 
-        $jnlp_attribute1->value = '6.0+';
-        $jnlp_balise->appendChild($jnlp_attribute1); 
-        $jnlp_attribute2 = $docXML->createAttribute('codebase'); 
-        $jnlp_attribute2->value = $jar_url.'/apps/maarch_entreprise/tmp/';
-        $jnlp_balise->appendChild($jnlp_attribute2);
-        $jnlp_attribute3 = $docXML->createAttribute('href'); 
-        $jnlp_attribute3->value = $jnlp_name;
-        $jnlp_balise->appendChild($jnlp_attribute3); 
-
-        $info_balise=$docXML->createElement("information");
-
-        $title_balise=$docXML->createElement("title","Editeur de modèle de document");
-
-        $vendor_balise=$docXML->createElement("vendor","MAARCH");
-
-        $homepage_balise=$docXML->createElement("homepage");
-        $homepage_attribute = $docXML->createAttribute('href');
-        $homepage_attribute->value = 'http://maarch.com';
-        $homepage_balise->appendChild($homepage_attribute);
-
-        $desc_balise=$docXML->createElement("description","Génère votre document avec méta-données associées au courrier grâce à des champs de fusion.");
-        
-        $descshort_balise=$docXML->createElement("description","Génère votre document avec méta-données.");
-        $descshort_attribute = $docXML->createAttribute('kind');
-        $descshort_attribute->value = 'short';
-        $descshort_balise->appendChild($descshort_attribute);
-
-        $offline_balise=$docXML->createElement("offline-allowed");
-
-        $security_balise=$docXML->createElement("security");
-
-        $permission_balise=$docXML->createElement("all-permissions");
-
-        $resources_balise=$docXML->createElement("resources");
-
-        $j2se_balise=$docXML->createElement("j2se");
-        $j2se_attribute = $docXML->createAttribute('version');
-        $j2se_attribute->value = '1.6+';
-        $j2se_balise->appendChild($j2se_attribute);
-
-        $jar_balise=$docXML->createElement("jar");
-        $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/DisCM.jar';
-        $jar_balise->appendChild($jar_attribute);
-        $jar_attribute = $docXML->createAttribute('main');
-        $jar_attribute->value = 'true';
-        $jar_balise->appendChild($jar_attribute);
-
-        //begin ext libs
-        $jar_balise_1=$docXML->createElement("jar");
-        $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-4.5.2.jar';
-        $jar_balise_1->appendChild($jar_attribute);
-
-        $jar_balise_2=$docXML->createElement("jar");
-        $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-cache-4.5.2.jar';
-        $jar_balise_2->appendChild($jar_attribute);
-
-        $jar_balise_3=$docXML->createElement("jar");
-        $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-win-4.5.2.jar';
-        $jar_balise_3->appendChild($jar_attribute);
-
-        $jar_balise_4=$docXML->createElement("jar");
-        $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpcore-4.4.4.jar';
-        $jar_balise_4->appendChild($jar_attribute);
-
-        $jar_balise_5=$docXML->createElement("jar");
-        $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/plugin.jar';
-        $jar_balise_5->appendChild($jar_attribute);
-
-        $jar_balise_6=$docXML->createElement("jar");
-        $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/commons-logging-1.2.jar';
-        $jar_balise_6->appendChild($jar_attribute);
-        //end ext libs
-
-        $applet_balise=$docXML->createElement("applet-desc");
-        $applet_attribute1 = $docXML->createAttribute('main-class');
-        $applet_attribute1->value = 'com.dis.DisCM';
-        $applet_balise->appendChild($applet_attribute1);
-        $applet_attribute2 = $docXML->createAttribute('code');
-        $applet_attribute2->value = 'com.dis.DisCM';
-        $applet_balise->appendChild($applet_attribute2);
-        $applet_attribute3 = $docXML->createAttribute('name');
-        $applet_attribute3->value = 'maarchcmapplet';
-        $applet_balise->appendChild($applet_attribute3);
-        $applet_attribute4 = $docXML->createAttribute('id');
-        $applet_attribute4->value = 'maarchcmapplet';
-        $applet_balise->appendChild($applet_attribute4);
-        $applet_attribute5 = $docXML->createAttribute('width');
-        $applet_attribute5->value = '1';
-        $applet_balise->appendChild($applet_attribute5);
-        $applet_attribute6 = $docXML->createAttribute('height');
-        $applet_attribute6->value = '1';
-        $applet_balise->appendChild($applet_attribute6);
-        $applet_attribute7 = $docXML->createAttribute('version');
-        $applet_attribute7->value = '1.6';
-        $applet_balise->appendChild($applet_attribute7);
-
-        $param1_balise=$docXML->createElement("param");
-        $param1_attribute1 = $docXML->createAttribute('name');
-        $param1_attribute1->value = 'url';
-        $param1_balise->appendChild($param1_attribute1);
-        $param1_attribute2 = $docXML->createAttribute('value');
-        $param1_attribute2->value = $maarchcm_url;
-        $param1_balise->appendChild($param1_attribute2);
-
-        $param2_balise=$docXML->createElement("param");
-        $param2_attribute1 = $docXML->createAttribute('name');
-        $param2_attribute1->value = 'objectType';
-        $param2_balise->appendChild($param2_attribute1);
-        $param2_attribute2 = $docXML->createAttribute('value');
-        $param2_attribute2->value = $objectType;
-        $param2_balise->appendChild($param2_attribute2);
-
-        $param3_balise=$docXML->createElement("param");
-        $param3_attribute1 = $docXML->createAttribute('name');
-        $param3_attribute1->value = 'objectTable';
-        $param3_balise->appendChild($param3_attribute1);
-        $param3_attribute2 = $docXML->createAttribute('value');
-        $param3_attribute2->value = $objectTable;
-        $param3_balise->appendChild($param3_attribute2);
-
-        $param4_balise=$docXML->createElement("param");
-        $param4_attribute1 = $docXML->createAttribute('name');
-        $param4_attribute1->value = 'objectId';
-        $param4_balise->appendChild($param4_attribute1);
-        $param4_attribute2 = $docXML->createAttribute('value');
-        $param4_attribute2->value = $objectId;
-        $param4_balise->appendChild($param4_attribute2);
-
-        $param5_balise=$docXML->createElement("param");
-        $param5_attribute1 = $docXML->createAttribute('name');
-        $param5_attribute1->value = 'uniqueId';
-        $param5_balise->appendChild($param5_attribute1);
-        $param5_attribute2 = $docXML->createAttribute('value');
-        $param5_attribute2->value = $uniqueId;
-        $param5_balise->appendChild($param5_attribute2);
-
-        $param6_balise=$docXML->createElement("param");
-        $param6_attribute1 = $docXML->createAttribute('name');
-        $param6_attribute1->value = 'cookie';
-        $param6_balise->appendChild($param6_attribute1);
-        $param6_attribute2 = $docXML->createAttribute('value');
-        $param6_attribute2->value = $cookieKey;
-        $param6_balise->appendChild($param6_attribute2);
-
-        $param7_balise=$docXML->createElement("param");
-        $param7_attribute1 = $docXML->createAttribute('name');
-        $param7_attribute1->value = 'userMaarch';
-        $param7_balise->appendChild($param7_attribute1);
-        $param7_attribute2 = $docXML->createAttribute('value');
-        $param7_attribute2->value = $user;
-        $param7_balise->appendChild($param7_attribute2);
-
-        $param8_balise=$docXML->createElement("param");
-        $param8_attribute1 = $docXML->createAttribute('name');
-        $param8_attribute1->value = 'userMaarchPwd';
-        $param8_balise->appendChild($param8_attribute1);
-        $param8_attribute2 = $docXML->createAttribute('value');
-        $param8_attribute2->value = $pwd;
-        $param8_balise->appendChild($param8_attribute2);
-
-        $param9_balise=$docXML->createElement("param");
-        $param9_attribute1 = $docXML->createAttribute('name');
-        $param9_attribute1->value = 'psExecMode';
-        $param9_balise->appendChild($param9_attribute1);
-        $param9_attribute2 = $docXML->createAttribute('value');
-        $param9_attribute2->value = $psExecMode;
-        $param9_balise->appendChild($param9_attribute2);
-
-        $param10_balise=$docXML->createElement("param");
-        $param10_attribute1 = $docXML->createAttribute('name');
-        $param10_attribute1->value = 'mayscript';
-        $param10_balise->appendChild($param10_attribute1);
-        $param10_attribute2 = $docXML->createAttribute('value');
-        $param10_attribute2->value = $mayscript;
-        $param10_balise->appendChild($param10_attribute2);
-
-        $param11_balise=$docXML->createElement("param");
-        $param11_attribute1 = $docXML->createAttribute('name');
-        $param11_attribute1->value = 'clientsidecookies';
-        $param11_balise->appendChild($param11_attribute1);
-        $param11_attribute2 = $docXML->createAttribute('value');
-        $param11_attribute2->value = $clientSideCookies;
-        $param11_balise->appendChild($param11_attribute2);
-
-        $param12_balise=$docXML->createElement("param");
-        $param12_attribute1 = $docXML->createAttribute('name');
-        $param12_attribute1->value = 'idApplet';
-        $param12_balise->appendChild($param12_attribute1);
-        $param12_attribute2 = $docXML->createAttribute('value');
-        $param12_attribute2->value = $uid_applet_name;
-        $param12_balise->appendChild($param12_attribute2);
-
-        $jnlp_balise->appendChild($info_balise); 
-        $info_balise->appendChild($title_balise); 
-        $info_balise->appendChild($vendor_balise); 
-        $info_balise->appendChild($homepage_balise); 
-        $info_balise->appendChild($desc_balise); 
-        $info_balise->appendChild($descshort_balise); 
-        $info_balise->appendChild($offline_balise); 
-
-        $jnlp_balise->appendChild($security_balise); 
-        $security_balise->appendChild($permission_balise); 
-
-        $jnlp_balise->appendChild($resources_balise); 
-        $resources_balise->appendChild($j2se_balise); 
-        $resources_balise->appendChild($jar_balise); 
-        $resources_balise->appendChild($jar_balise_1);
-        $resources_balise->appendChild($jar_balise_2);
-        $resources_balise->appendChild($jar_balise_3);
-        $resources_balise->appendChild($jar_balise_4);
-        $resources_balise->appendChild($jar_balise_5);
-        $resources_balise->appendChild($jar_balise_6);
-
-        $jnlp_balise->appendChild($applet_balise); 
-        $applet_balise->appendChild($param1_balise); 
-        $applet_balise->appendChild($param2_balise); 
-        $applet_balise->appendChild($param3_balise); 
-        $applet_balise->appendChild($param4_balise); 
-        $applet_balise->appendChild($param5_balise); 
-        $applet_balise->appendChild($param6_balise); 
-        $applet_balise->appendChild($param7_balise); 
-        $applet_balise->appendChild($param8_balise); 
-        $applet_balise->appendChild($param9_balise); 
-        $applet_balise->appendChild($param10_balise); 
-        $applet_balise->appendChild($param11_balise); 
-        $applet_balise->appendChild($param12_balise); 
-
-
-        $docXML->appendChild($jnlp_balise);  
-
-        $filename = $_SESSION['config']['tmppath'].$jnlp_name;
-
-        $docXML->save($filename); 
-
-        $fp = fopen($_SESSION['config']['tmppath'].$uid_applet_name.".lck", 'w+');
-
-        $_SESSION['cm_applet'][$_SESSION['user']['UserId']][$uid_applet_name]=$uid_applet_name.'.lck';
-
-        $file = $jar_url."/apps/maarch_entreprise/tmp/".$jnlp_name;
-
-        //echo '<a id="jnlp_file" href="'.$file.'" onclick="window.location.href=\''.$file.'\';self.close();"></a>';
-        echo '<script>window.location.href=\''.$file.'\';if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};</script>';
-        exit();
-        /*echo '<a id="jnlp_file" href="'.$_SESSION['config']['businessappurl'].'index.php?page=get_jnlp_file&module=content_management&display=true&filename='.$_SESSION['user']['UserId'].'_DisCM"></a>';
-        echo '<script>setTimeout(function() {this.window.close();}, 5000);document.getElementById("jnlp_file").click();</script>';
-        exit();*/
-    }
-
-    /**
-    * Generate JLNP file to launch the Applet
-    *
-    * 
-    */
-    public function generateJNLPMaarch(
-        $jar_url,
-        $maarchcm_url,
-        $objectType,
-        $objectTable,
-        $objectId,
-        $uniqueId,
-        $cookieKey,
-        $user,
-        $pwd,
-        $psExecMode,
-        $mayscript,
-        $clientSideCookies
+        $clientSideCookies,
+        $convertPdf = "false"
     ) {
         $docXML = new DomDocument('1.0', "UTF-8");
 
@@ -702,11 +385,21 @@ abstract class content_management_tools_Abstract
             fwrite($inF, "objectId : " . $objectId . PHP_EOL);
             fwrite($inF, "uniqueId : " . $uniqueId . PHP_EOL);
             fwrite($inF, "cookieKey : " . $cookieKey . PHP_EOL);
-            fwrite($inF, "user : " . $user . PHP_EOL);
-            fwrite($inF, "pwd : " . $pwd . PHP_EOL);
-            fwrite($inF, "psExecMode : " . $psExecMode . PHP_EOL);
-            fwrite($inF, "mayscript : " . $mayscript . PHP_EOL);
+            fwrite($inF, "idApplet : " . $idApplet . PHP_EOL);
             fwrite($inF, "clientSideCookies : " . $clientSideCookies . PHP_EOL);
+            fwrite($inF, "user : " . $user . PHP_EOL);
+            fwrite($inF, "convertPdf : " . $convertPdf . PHP_EOL);
+            $listArguments = '?url=' . urlencode($maarchcm_url)
+                . '&objectType=' . $objectType
+                . '&objectTable=' . $objectTable
+                . '&objectId=' . $objectId
+                . '&uniqueId=' . $uniqueId
+                . '&cookie=' . $cookieKey
+                . '&clientSideCookies=' . $clientSideCookies
+                . '&idApplet=' . $uid_applet_name
+                . '&userMaarch=' . $user
+                . '&convertPdf=' . $convertPdf;
+            fwrite($inF, "listArguments : " . $listArguments . PHP_EOL);
             fclose($inF);
         }
         
@@ -718,7 +411,9 @@ abstract class content_management_tools_Abstract
         $jnlp_attribute2->value = $jar_url.'/apps/maarch_entreprise/tmp/';
         $jnlp_balise->appendChild($jnlp_attribute2);
         $jnlp_attribute3 = $docXML->createAttribute('href'); 
+        
         $jnlp_attribute3->value = $jnlp_name;
+
         $jnlp_balise->appendChild($jnlp_attribute3); 
 
         $info_balise=$docXML->createElement("information");
@@ -792,124 +487,59 @@ abstract class content_management_tools_Abstract
         $jar_balise_6->appendChild($jar_attribute);
         //end ext libs
 
-        $applet_balise=$docXML->createElement("applet-desc");
+        //$applet_balise=$docXML->createElement("applet-desc");
+        $applet_balise=$docXML->createElement("application-desc");
         $applet_attribute1 = $docXML->createAttribute('main-class');
         $applet_attribute1->value = 'com.maarch.MaarchCM';
         $applet_balise->appendChild($applet_attribute1);
-        $applet_attribute2 = $docXML->createAttribute('code');
-        $applet_attribute2->value = 'com.maarch.MaarchCM';
-        $applet_balise->appendChild($applet_attribute2);
-        $applet_attribute3 = $docXML->createAttribute('name');
-        $applet_attribute3->value = 'maarchcmapplet';
-        $applet_balise->appendChild($applet_attribute3);
-        $applet_attribute4 = $docXML->createAttribute('id');
-        $applet_attribute4->value = 'maarchcmapplet';
-        $applet_balise->appendChild($applet_attribute4);
-        $applet_attribute5 = $docXML->createAttribute('width');
-        $applet_attribute5->value = '1';
-        $applet_balise->appendChild($applet_attribute5);
-        $applet_attribute6 = $docXML->createAttribute('height');
-        $applet_attribute6->value = '1';
-        $applet_balise->appendChild($applet_attribute6);
-        $applet_attribute7 = $docXML->createAttribute('version');
-        $applet_attribute7->value = '1.6';
-        $applet_balise->appendChild($applet_attribute7);
 
-        $param1_balise=$docXML->createElement("param");
-        $param1_attribute1 = $docXML->createAttribute('name');
-        $param1_attribute1->value = 'url';
-        $param1_balise->appendChild($param1_attribute1);
-        $param1_attribute2 = $docXML->createAttribute('value');
-        $param1_attribute2->value = $maarchcm_url;
-        $param1_balise->appendChild($param1_attribute2);
+        //arguments
+        $param1_balise = $docXML->createElement("argument", $maarchcm_url);
 
-        $param2_balise=$docXML->createElement("param");
-        $param2_attribute1 = $docXML->createAttribute('name');
-        $param2_attribute1->value = 'objectType';
-        $param2_balise->appendChild($param2_attribute1);
-        $param2_attribute2 = $docXML->createAttribute('value');
-        $param2_attribute2->value = $objectType;
-        $param2_balise->appendChild($param2_attribute2);
+        if (empty($objectType)) {
+            $objectType = 'empty';
+        }
+        $param2_balise=$docXML->createElement("argument", htmlentities($objectType));
 
-        $param3_balise=$docXML->createElement("param");
-        $param3_attribute1 = $docXML->createAttribute('name');
-        $param3_attribute1->value = 'objectTable';
-        $param3_balise->appendChild($param3_attribute1);
-        $param3_attribute2 = $docXML->createAttribute('value');
-        $param3_attribute2->value = $objectTable;
-        $param3_balise->appendChild($param3_attribute2);
+        if (empty($objectTable)) {
+            $objectTable = 'empty';
+        }
+        $param3_balise=$docXML->createElement("argument", htmlentities($objectTable));
 
-        $param4_balise=$docXML->createElement("param");
-        $param4_attribute1 = $docXML->createAttribute('name');
-        $param4_attribute1->value = 'objectId';
-        $param4_balise->appendChild($param4_attribute1);
-        $param4_attribute2 = $docXML->createAttribute('value');
-        $param4_attribute2->value = $objectId;
-        $param4_balise->appendChild($param4_attribute2);
+        if (empty($objectId)) {
+            $objectId = 'empty';
+        }
+        $param4_balise=$docXML->createElement("argument", htmlentities($objectId));
 
-        $param5_balise=$docXML->createElement("param");
-        $param5_attribute1 = $docXML->createAttribute('name');
-        $param5_attribute1->value = 'uniqueId';
-        $param5_balise->appendChild($param5_attribute1);
-        $param5_attribute2 = $docXML->createAttribute('value');
-        $param5_attribute2->value = $uniqueId;
-        $param5_balise->appendChild($param5_attribute2);
+        if (empty($uniqueId)) {
+            $uniqueId = 'empty';
+        }
+        $param5_balise=$docXML->createElement("argument", htmlentities($uniqueId));
 
-        $param6_balise=$docXML->createElement("param");
-        $param6_attribute1 = $docXML->createAttribute('name');
-        $param6_attribute1->value = 'cookie';
-        $param6_balise->appendChild($param6_attribute1);
-        $param6_attribute2 = $docXML->createAttribute('value');
-        $param6_attribute2->value = $cookieKey;
-        $param6_balise->appendChild($param6_attribute2);
+        if (empty($cookieKey)) {
+            $cookieKey = 'empty';
+        }
+        $param6_balise=$docXML->createElement("argument", htmlentities($cookieKey));
 
-        $param7_balise=$docXML->createElement("param");
-        $param7_attribute1 = $docXML->createAttribute('name');
-        $param7_attribute1->value = 'userMaarch';
-        $param7_balise->appendChild($param7_attribute1);
-        $param7_attribute2 = $docXML->createAttribute('value');
-        $param7_attribute2->value = $user;
-        $param7_balise->appendChild($param7_attribute2);
+        if (empty($clientSideCookies)) {
+            $clientSideCookies = 'empty';
+        }
+        $param7_balise=$docXML->createElement("argument", htmlentities($clientSideCookies));
 
-        $param8_balise=$docXML->createElement("param");
-        $param8_attribute1 = $docXML->createAttribute('name');
-        $param8_attribute1->value = 'userMaarchPwd';
-        $param8_balise->appendChild($param8_attribute1);
-        $param8_attribute2 = $docXML->createAttribute('value');
-        $param8_attribute2->value = $pwd;
-        $param8_balise->appendChild($param8_attribute2);
+        if (empty($uid_applet_name)) {
+            $uid_applet_name = 'empty';
+        }
+        $param8_balise=$docXML->createElement("argument", htmlentities($uid_applet_name));
 
-        $param9_balise=$docXML->createElement("param");
-        $param9_attribute1 = $docXML->createAttribute('name');
-        $param9_attribute1->value = 'psExecMode';
-        $param9_balise->appendChild($param9_attribute1);
-        $param9_attribute2 = $docXML->createAttribute('value');
-        $param9_attribute2->value = $psExecMode;
-        $param9_balise->appendChild($param9_attribute2);
+        if (empty($user)) {
+            $user = 'empty';
+        }
+        $param9_balise=$docXML->createElement("argument", htmlentities($user));
 
-        $param10_balise=$docXML->createElement("param");
-        $param10_attribute1 = $docXML->createAttribute('name');
-        $param10_attribute1->value = 'mayscript';
-        $param10_balise->appendChild($param10_attribute1);
-        $param10_attribute2 = $docXML->createAttribute('value');
-        $param10_attribute2->value = $mayscript;
-        $param10_balise->appendChild($param10_attribute2);
-
-        $param11_balise=$docXML->createElement("param");
-        $param11_attribute1 = $docXML->createAttribute('name');
-        $param11_attribute1->value = 'clientsidecookies';
-        $param11_balise->appendChild($param11_attribute1);
-        $param11_attribute2 = $docXML->createAttribute('value');
-        $param11_attribute2->value = $clientSideCookies;
-        $param11_balise->appendChild($param11_attribute2);
-
-        $param12_balise=$docXML->createElement("param");
-        $param12_attribute1 = $docXML->createAttribute('name');
-        $param12_attribute1->value = 'idApplet';
-        $param12_balise->appendChild($param12_attribute1);
-        $param12_attribute2 = $docXML->createAttribute('value');
-        $param12_attribute2->value = $uid_applet_name;
-        $param12_balise->appendChild($param12_attribute2);
+        if (empty($convertPdf)) {
+            $convertPdf = 'false';
+        }
+        $param10_balise=$docXML->createElement("argument", htmlentities($convertPdf));
 
         $jnlp_balise->appendChild($info_balise); 
         $info_balise->appendChild($title_balise); 
@@ -932,20 +562,17 @@ abstract class content_management_tools_Abstract
         $resources_balise->appendChild($jar_balise_5);
         $resources_balise->appendChild($jar_balise_6);
 
-        $jnlp_balise->appendChild($applet_balise); 
-        $applet_balise->appendChild($param1_balise); 
-        $applet_balise->appendChild($param2_balise); 
-        $applet_balise->appendChild($param3_balise); 
-        $applet_balise->appendChild($param4_balise); 
-        $applet_balise->appendChild($param5_balise); 
-        $applet_balise->appendChild($param6_balise); 
-        $applet_balise->appendChild($param7_balise); 
-        $applet_balise->appendChild($param8_balise); 
-        $applet_balise->appendChild($param9_balise); 
-        $applet_balise->appendChild($param10_balise); 
-        $applet_balise->appendChild($param11_balise); 
-        $applet_balise->appendChild($param12_balise); 
-
+        $jnlp_balise->appendChild($applet_balise);
+        $applet_balise->appendChild($param1_balise);
+        $applet_balise->appendChild($param2_balise);
+        $applet_balise->appendChild($param3_balise);
+        $applet_balise->appendChild($param4_balise);
+        $applet_balise->appendChild($param5_balise);
+        $applet_balise->appendChild($param6_balise);
+        $applet_balise->appendChild($param7_balise);
+        $applet_balise->appendChild($param8_balise);
+        $applet_balise->appendChild($param9_balise);
+        $applet_balise->appendChild($param10_balise);
 
         $docXML->appendChild($jnlp_balise);  
 
@@ -962,7 +589,7 @@ abstract class content_management_tools_Abstract
         //echo '<a id="jnlp_file" href="'.$file.'" onclick="window.location.href=\''.$file.'\';self.close();"></a>';
         echo '<script>window.location.href=\''.$file.'\';if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};</script>';
         exit();
-        /*echo '<a id="jnlp_file" href="'.$_SESSION['config']['businessappurl'].'index.php?page=get_jnlp_file&module=content_management&display=true&filename='.$_SESSION['user']['UserId'].'_DisCM"></a>';
+        /*echo '<a id="jnlp_file" href="'.$_SESSION['config']['businessappurl'].'index.php?page=get_jnlp_file&module=content_management&display=true&filename='.$_SESSION['user']['UserId'].'_maarchCM"></a>';
         echo '<script>setTimeout(function() {this.window.close();}, 5000);document.getElementById("jnlp_file").click();</script>';
         exit();*/
     }

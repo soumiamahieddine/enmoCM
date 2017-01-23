@@ -6,7 +6,7 @@ header("Pragma: no-cache");
 header("Expires: 0");
 
 $filename = $_SESSION['config']['tmppath'].$_GET['filename'].'.jnlp';
-$name = 'DisCM.jnlp';
+$name = 'maarchCM.jnlp';
 $size = filesize($filename);
 // force le téléchargement du fichier avec un beau nom
 header("Content-Type: application/x-java-jnlp-file");
