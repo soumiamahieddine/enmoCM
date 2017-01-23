@@ -359,6 +359,7 @@ for ($i=0;$i<$tabI;$i++)
             }
             if($tab[$i][$j][$value]=="exp_user_id")
             {
+				
                 //requete supprimée parce qu'elle fait ralentir l'application lorsqu on recherche dans les corbeilles volumineuses
                 // en plus sans cette requête, l'operation fonctionne très bien.
 
