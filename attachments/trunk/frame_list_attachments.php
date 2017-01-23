@@ -122,6 +122,7 @@ if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what
 if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
 if (isset($_REQUEST['template_selected']) && !empty($_REQUEST['template_selected'])) $parameters .= '&template_selected='.$_REQUEST['template_selected'];
 
+
 //test si le paramètre attach_type existe
 if (isset($_REQUEST['attach_type']) && $_REQUEST['attach_type'] <> '')	$parameters .= "&attach_type=".$_REQUEST['attach_type'];
 if (isset($_REQUEST['attach_type_exclude']) && $_REQUEST['attach_type_exclude'] <> '')	$parameters .= "&attach_type_exclude=".$_REQUEST['attach_type_exclude'];
