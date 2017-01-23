@@ -8,7 +8,7 @@
 
 package com.dis;
 
-import java.applet.Applet;
+//import java.applet.Applet;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JApplet;
+//import javax.swing.JApplet;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -56,11 +56,11 @@ import org.apache.http.message.BasicNameValuePair;
  * DisCM class manages webservices between end user desktop and Maarch
  * @author DIS
  */
-public class DisCM extends JApplet {
+//public class DisCM extends JApplet {
+public class DisCM {
 
     //INIT PARAMETERS
     protected String url;
-    protected String domain;
     protected String idApplet;
     protected String objectType;
     protected String objectTable;
@@ -68,10 +68,12 @@ public class DisCM extends JApplet {
     protected String cookie;
     protected String clientSideCookies;
     protected String uniqueId;
+    protected String convertPdf;
+    protected String domain;
     protected String userLocalDirTmp;
     protected String userMaarch;
     protected String messageStatus;
-    Hashtable messageResult = new Hashtable();
+    static Hashtable messageResult = new Hashtable();
 
     //XML PARAMETERS
     protected String status;
@@ -89,7 +91,7 @@ public class DisCM extends JApplet {
     protected String fileContentTosend;
     protected String pdfContentTosend;
 
-    private final HttpClientContext httpContext = HttpClientContext.create();
+    private  final HttpClientContext httpContext = HttpClientContext.create();
     private CloseableHttpClient httpClient; // Apache HttpClient yet to be instantiated
 
     public MyLogger logger;
@@ -97,23 +99,38 @@ public class DisCM extends JApplet {
     public String fileToEdit;
     
     public List<String> fileToDelete = new ArrayList<String>();
-
+    
+    
+    public static void main(String[] args) throws JSException {
+            DisCM DisCM = new DisCM();
+            DisCM.start(args);
+    }
 
     /**
-     * Launch of the applet
+     * Launch of the JNLP
      */
-    public void init() throws JSException {
-        System.out.println("----------BEGIN PARAMETERS----------");
-        url = getParameter("url");
-        objectType = getParameter("objectType");
-        idApplet = getParameter("idApplet");
-        objectTable = getParameter("objectTable");
-        objectId = getParameter("objectId");
-        uniqueId = getParameter("uniqueId");
-        cookie = getParameter("cookie");
-        clientSideCookies = getParameter("clientSideCookies");
-        userMaarch = getParameter("userMaarch");
+    public void start(String[] args) throws JSException {
+        
+        System.out.println("----------BEGIN----------");
+        System.out.println("----------ARGUMENTS----------");
+        
+        int index;
 
+        for (index = 0; index < args.length; ++index)
+        {
+            System.out.println("args[" + index + "]: " + args[index]);
+        }
+        url = args[0];
+        objectType = args[1];
+        objectTable = args[2];
+        objectId = args[3];
+        uniqueId = args[4];
+        cookie = args[5];
+        clientSideCookies = args[6];
+        idApplet = args[7];
+        userMaarch = args[8];
+        convertPdf = args[9];
+        
         System.out.println("URL : " + url);
         System.out.println("OBJECT TYPE : " + objectType);
         System.out.println("ID APPLET : " + idApplet);
@@ -122,8 +139,10 @@ public class DisCM extends JApplet {
         System.out.println("UNIQUE ID : " + uniqueId);
         System.out.println("COOKIE : " + cookie);
         System.out.println("CLIENTSIDECOOKIES : " + clientSideCookies);
+        System.out.println("USERMAARCH : " + userMaarch);
+        System.out.println("CONVERPDF : " + convertPdf);
         System.out.println("----------CONTROL PARAMETERS----------");
-
+        
         if (
                 isURLInvalid() ||
                 isObjectTypeInvalid() ||
@@ -134,7 +153,7 @@ public class DisCM extends JApplet {
             System.out.println("PARAMETERS NOT OK ! END OF APPLICATION");
             //System.exit(0);
             try {
-                this.getAppletContext().showDocument(new URL("error.html"));
+                //DisCM.getAppletContext().showDocument(new URL("error.html"));
                 //Go to an appropriate error page
             } catch (Exception e) {
                 //Nothing
@@ -142,18 +161,31 @@ public class DisCM extends JApplet {
         }
 
         System.out.println("----------END PARAMETERS----------");
-
+        
+        if ("empty".equals(uniqueId)) {
+            uniqueId = null;
+        }
+        
+        if ("empty".equals(clientSideCookies)) {
+            clientSideCookies = null;
+        }
+        
         // The following code is to ensure a high level of management for HTTP cookies
         BasicCookieStore cookieStore = new BasicCookieStore();
         // Loading the cookie store with the Maarch cookie provided by the server
-        cookieStore.addCookie(this.getCookieFromString(this.cookie));
-        if (this.clientSideCookies != null && this.clientSideCookies.length() > 0) {
+        cookieStore.addCookie(getCookieFromString(cookie));
+        if (
+                clientSideCookies != null && 
+                clientSideCookies.length() > 0
+        ) {
+            System.out.println("clientSideCookies : " + clientSideCookies);
             // Within the whole cookie string returned from JavaScript, cookies are separated by a semicolon followed by a space
             // Let's get an array where cookies are stored with a "name=value" pattern
-            String[] cookies = this.clientSideCookies.split(";\\s");
+            String[] cookies = clientSideCookies.split(";\\s");
+            System.out.println("cookies : " + cookies);
             // Iterate through the cookie array to retrieve each cookie name ans value and load the cookie store
             for (String nameValue : cookies) {
-                cookieStore.addCookie(this.getCookieFromString(nameValue)); // Loading the cookie store
+                cookieStore.addCookie(getCookieFromString(nameValue)); // Loading the cookie store
             }
         }
         httpContext.setCookieStore(cookieStore); // Assign all the cookies retrieved from JavaScript
@@ -163,7 +195,7 @@ public class DisCM extends JApplet {
         // Pick up the best Apache HttpClient to do the job
         // which will allows for the automatic retrieval of the user session Kerberos ticket,
         // so this app will be able to properly talk with a proxy
-        if ("win".equals(this.os) && WinHttpClients.isWinAuthAvailable()) {
+        if ("win".equals(os) && WinHttpClients.isWinAuthAvailable()) {
             // Instantiation of the Apache HttpClient for Windows 7
             httpClient = WinHttpClients.custom().setDefaultRequestConfig(globalConfig).setDefaultCookieStore(cookieStore).build();
             System.out.println("The Apache HttpClient for Windows 7 was picked up");
@@ -182,9 +214,10 @@ public class DisCM extends JApplet {
         }
 
         try {
-            this.editObject();
-            this.destroy();
-            this.stop();
+            editObject();
+            //TODO exit of JNLP
+            //DisCM.destroy();
+            //DisCM.stop();
             System.exit(0);
         } catch (Exception ex) {
             Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
@@ -294,21 +327,21 @@ public class DisCM extends JApplet {
             boolean conversion = true;
             String cmd = "";
             if (docxFile.contains(".odt") || docxFile.contains(".ods") || docxFile.contains(".ODT") || docxFile.contains(".ODS")) {
-                this.logger.log("This is opendocument ! ", Level.INFO);
+                logger.log("This is opendocument ! ", Level.INFO);
                 if (isUnix) {
-                    cmd = "libreoffice -env:UserInstallation=file://"+this.userLocalDirTmp+this.idApplet+"_conv/ --headless --convert-to pdf --outdir \"" + this.userLocalDirTmp.substring(0, this.userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\"";
+                    cmd = "libreoffice -env:UserInstallation=file://"+userLocalDirTmp+idApplet+"_conv/ --headless --convert-to pdf --outdir \"" + userLocalDirTmp.substring(0, userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\"";
                 } else {
                     String convertProgram;
-                    convertProgram = this.fM.findPathProgramInRegistry("soffice.exe");
-                    cmd = convertProgram + " \"-env:UserInstallation=file:///"+this.userLocalDirTmp.replace("\\", "/")+this.idApplet+"_conv/\" --headless --convert-to pdf --outdir \"" + this.userLocalDirTmp.substring(0, this.userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\" \r\n";
+                    convertProgram = fM.findPathProgramInRegistry("soffice.exe");
+                    cmd = convertProgram + " \"-env:UserInstallation=file:///"+userLocalDirTmp.replace("\\", "/")+idApplet+"_conv/\" --headless --convert-to pdf --outdir \"" + userLocalDirTmp.substring(0, userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\" \r\n";
                 }
 
             } else if (docxFile.contains(".doc") || docxFile.contains(".docx") || docxFile.contains(".DOC") || docxFile.contains(".DOCX")) {
-                if (this.useExeConvert.equals("false")) {
+                if (useExeConvert.equals("false")) {
                     if (isUnix) {
-                        cmd = "libreoffice -env:UserInstallation=file://"+this.userLocalDirTmp+this.idApplet+"_conv\\ --headless --convert-to pdf --outdir \"" + this.userLocalDirTmp.substring(0, this.userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\"";
+                        cmd = "libreoffice -env:UserInstallation=file://"+userLocalDirTmp+idApplet+"_conv\\ --headless --convert-to pdf --outdir \"" + userLocalDirTmp.substring(0, userLocalDirTmp.length() - 1) + "\" \"" + docxFile + "\"";
                     } else {
-                        cmd = "cmd /C c:\\Windows\\System32\\cscript \"" + this.vbsPath + "\" \"" + docxFile + "\" /nologo \r\n";
+                        cmd = "cmd /C c:\\Windows\\System32\\cscript \"" + vbsPath + "\" \"" + docxFile + "\" /nologo \r\n";
                     }
                 } else {
 
@@ -316,44 +349,44 @@ public class DisCM extends JApplet {
                     buffer.replace(buffer.lastIndexOf("."), buffer.length(), ".pdf");
                     String pdfOut = buffer.toString();
 
-                    cmd = "cmd /C \"" + this.userLocalDirTmp + "Word2Pdf.exe\" \"" + docxFile + "\" \"" + pdfOut + "\" \r\n";
+                    cmd = "cmd /C \"" + userLocalDirTmp + "Word2Pdf.exe\" \"" + docxFile + "\" \"" + pdfOut + "\" \r\n";
                 }
             } else {
                 conversion = false;
             }
 
             if (conversion) {
-                this.logger.log("EXEC PATH : " + cmd, Level.INFO);
+                logger.log("EXEC PATH : " + cmd, Level.INFO);
                 FileManager fM = new FileManager();
 
                 Process proc_vbs;
                 if (isUnix) {
-                    //cmd = "cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
+                    //cmd = "cscript \""+vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
                     final Writer outBat;
-                    outBat = new OutputStreamWriter(new FileOutputStream(this.appPath_convert), "CP850");
-                    this.logger.log("--- cmd sh  --- " + cmd, Level.INFO);
+                    outBat = new OutputStreamWriter(new FileOutputStream(appPath_convert), "CP850");
+                    logger.log("--- cmd sh  --- " + cmd, Level.INFO);
                     outBat.write(cmd);
                     //outBat.write("exit \r\n");
                     outBat.close();
 
-                    File myFileBat = new File(this.appPath_convert);
+                    File myFileBat = new File(appPath_convert);
                     myFileBat.setReadable(true, false);
                     myFileBat.setWritable(true, false);
                     myFileBat.setExecutable(true, false);
 
-                    /*String cmd2 = "start /WAIT /MIN "+this.appPath_convert+" \r\n";
-                    final Writer outBat2 = new OutputStreamWriter(new FileOutputStream(this.appPath), "CP850");
+                    /*String cmd2 = "start /WAIT /MIN "+appPath_convert+" \r\n";
+                    final Writer outBat2 = new OutputStreamWriter(new FileOutputStream(appPath), "CP850");
                     outBat2.write(cmd2);
                     outBat2.write("exit \r\n");
                     outBat2.close();*/
 
-                    /*File myFileBat2 = new File(this.appPath);
+                    /*File myFileBat2 = new File(appPath);
                     myFileBat2.setReadable(true, false);
                     myFileBat2.setWritable(true, false);
                     myFileBat2.setExecutable(true, false);*/
 
-                    final String exec_vbs = "\"" + this.appPath + "\"";
-                    proc_vbs = fM.launchApp(this.appPath_convert);
+                    final String exec_vbs = "\"" + appPath + "\"";
+                    proc_vbs = fM.launchApp(appPath_convert);
                 } else {
                     proc_vbs = fM.launchApp(cmd);
                 }
@@ -361,7 +394,7 @@ public class DisCM extends JApplet {
             }
 
         } catch (Throwable e) {
-            this.logger.log("Erreur ! : " + e, Level.SEVERE);
+            logger.log("Erreur ! : " + e, Level.SEVERE);
             e.printStackTrace();
         }
     }
@@ -371,35 +404,35 @@ public class DisCM extends JApplet {
      * @param flux_xml xml content message
      */
     public void parse_xml(InputStream flux_xml) throws SAXException, IOException, ParserConfigurationException {
-        this.logger.log("----------BEGIN PARSE XML----------", Level.INFO);
+        logger.log("----------BEGIN PARSE XML----------", Level.INFO);
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
         try {
             Document doc = builder.parse(flux_xml);
-            this.messageResult.clear();
+            messageResult.clear();
             NodeList level_one_list = doc.getChildNodes();
             for (Integer i = 0; i < level_one_list.getLength(); i++) {
                 NodeList level_two_list = level_one_list.item(i).getChildNodes();
                 if ("SUCCESS".equals(level_one_list.item(i).getNodeName())) {
                     for (Integer j = 0; j < level_one_list.item(i).getChildNodes().getLength(); j++) {
-                        this.messageResult.put(level_two_list.item(j).getNodeName(), level_two_list.item(j).getTextContent());
+                        messageResult.put(level_two_list.item(j).getNodeName(), level_two_list.item(j).getTextContent());
                     }
-                    this.messageStatus = "SUCCESS";
+                    messageStatus = "SUCCESS";
                 } else if ("ERROR".equals(level_one_list.item(i).getNodeName())) {
                     for (Integer j = 0; j < level_one_list.item(i).getChildNodes().getLength(); j++) {
-                        this.messageResult.put(level_two_list.item(j).getNodeName(), level_two_list.item(j).getTextContent());
+                        messageResult.put(level_two_list.item(j).getNodeName(), level_two_list.item(j).getTextContent());
                     }
-                    this.messageStatus = "ERROR";
+                    messageStatus = "ERROR";
                 }
             }
         } catch (SAXException | IOException e) {
 
-            this.logger.log("ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.", Level.SEVERE);
-            this.messageStatus = "ERROR";
-            this.messageResult.put("ERROR", "ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.");
+            logger.log("ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.", Level.SEVERE);
+            messageStatus = "ERROR";
+            messageResult.put("ERROR", "ERREUR : Le document n'a pas pu être transféré du coté client. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des templates soit correct.");
             JOptionPane.showMessageDialog(null, "ERREUR ! L'édition de votre document a échoué. Assurez-vous que le modèle n'est pas corrompu et que la zone de stockage des modèles soit correct.");
         }
-        this.logger.log("----------END PARSE XML----------", Level.INFO);
+        logger.log("----------END PARSE XML----------", Level.INFO);
     }
 
     /**
@@ -412,29 +445,29 @@ public class DisCM extends JApplet {
         while (itValue.hasNext()) {
             String value = (String) itValue.next();
             String key = (String) itKey.next();
-            this.logger.log(key + " : " + value, Level.INFO);
-            if ("STATUS".equals(key)) this.status = value;
-            if ("OBJECT_TYPE".equals(key)) this.objectType = value;
-            if ("OBJECT_TABLE".equals(key)) this.objectTable = value;
-            if ("OBJECT_ID".equals(key)) this.objectId = value;
-            if ("UNIQUE_ID".equals(key)) this.uniqueId = value;
-            if ("COOKIE".equals(key)) this.cookie = value;
-            if ("CLIENTSIDECOOKIES".equals(key)) this.clientSideCookies = value;
-            if ("APP_PATH".equals(key)) ; //this.appPath = value;
-            if ("FILE_CONTENT".equals(key)) this.fileContent = value;
-            if ("FILE_CONTENT_VBS".equals(key)) this.fileContentVbs = value;
-            if ("VBS_PATH".equals(key)) this.vbsPath = value;
-            if ("FILE_CONTENT_EXE".equals(key)) this.fileContentExe = value;
-            if ("USE_EXE_CONVERT".equals(key)) this.useExeConvert = value;
-            if ("FILE_EXTENSION".equals(key)) this.fileExtension = value;
-            if ("ERROR".equals(key)) this.error = value;
-            if ("END_MESSAGE".equals(key)) this.endMessage = value;
+            logger.log(key + " : " + value, Level.INFO);
+            if ("STATUS".equals(key)) status = value;
+            if ("OBJECT_TYPE".equals(key)) objectType = value;
+            if ("OBJECT_TABLE".equals(key)) objectTable = value;
+            if ("OBJECT_ID".equals(key)) objectId = value;
+            if ("UNIQUE_ID".equals(key)) uniqueId = value;
+            if ("COOKIE".equals(key)) cookie = value;
+            if ("CLIENTSIDECOOKIES".equals(key)) clientSideCookies = value;
+            if ("APP_PATH".equals(key)) ; //appPath = value;
+            if ("FILE_CONTENT".equals(key)) fileContent = value;
+            if ("FILE_CONTENT_VBS".equals(key)) fileContentVbs = value;
+            if ("VBS_PATH".equals(key)) vbsPath = value;
+            if ("FILE_CONTENT_EXE".equals(key)) fileContentExe = value;
+            if ("USE_EXE_CONVERT".equals(key)) useExeConvert = value;
+            if ("FILE_EXTENSION".equals(key)) fileExtension = value;
+            if ("ERROR".equals(key)) error = value;
+            if ("END_MESSAGE".equals(key)) endMessage = value;
         }
         //send message error to Maarch if necessary
-        if (!this.error.isEmpty()) {
-            //this.sendJsMessage(this.error);
-            this.destroy();
-            this.stop();
+        if (!error.isEmpty()) {
+            //TODO exit of the JNLP
+            //destroy();
+            //stop();
             System.exit(0);
         }
     }
@@ -447,104 +480,117 @@ public class DisCM extends JApplet {
      */
     public String editObject() throws Exception, InterruptedException, JSException {
 
-        System.out.println("----------BEGIN EDIT OBJECT---------- LGI by DIS 16/11/2016");
+        System.out.println("----------BEGIN EDIT OBJECT---------- LGI by DIS 22/01/2017");
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         String os = System.getProperty("os.name").toLowerCase();
         boolean isUnix = os.contains("nix") || os.contains("nux");
         boolean isWindows = os.contains("win");
         boolean isMac = os.contains("mac");
-        this.userLocalDirTmp = System.getProperty("user.home");
+        userLocalDirTmp = System.getProperty("user.home");
 
-        this.fM = new FileManager();
+        fM = new FileManager();
 
         if (isWindows) {
             System.out.println("This is Windows");
-            this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
-            this.appPath = this.userLocalDirTmp + "start.bat";
-            this.appPath_convert = this.userLocalDirTmp + "conversion_"+idApplet+".bat";
-            this.os = "win";
+            userLocalDirTmp = userLocalDirTmp + "\\maarchTmp\\";
+            appPath = userLocalDirTmp + "start.bat";
+            appPath_convert = userLocalDirTmp + "conversion_"+idApplet+".bat";
+            os = "win";
         } else if (isMac) {
             System.out.println("This is Mac");
-            this.userLocalDirTmp = this.userLocalDirTmp + "/maarchTmp/";
-            this.appPath = this.userLocalDirTmp + "start.sh";
-            this.appPath_convert = this.userLocalDirTmp + "conversion_"+idApplet+".sh";
-            this.os = "mac";
+            userLocalDirTmp = userLocalDirTmp + "/maarchTmp/";
+            appPath = userLocalDirTmp + "start.sh";
+            appPath_convert = userLocalDirTmp + "conversion_"+idApplet+".sh";
+            os = "mac";
         } else if (isUnix) {
             System.out.println("This is Unix or Linux");
-            this.userLocalDirTmp = this.userLocalDirTmp + "/maarchTmp/";
-            this.appPath = this.userLocalDirTmp + "start.sh";
-            this.appPath_convert = this.userLocalDirTmp + "conversion_"+idApplet+".sh";
-            this.os = "linux";
+            userLocalDirTmp = userLocalDirTmp + "/maarchTmp/";
+            appPath = userLocalDirTmp + "start.sh";
+            appPath_convert = userLocalDirTmp + "conversion_"+idApplet+".sh";
+            os = "linux";
         } else {
             System.out.println("Your OS is not supported!!");
         }
-        this.fileToDelete.add(this.appPath_convert);
+        fileToDelete.add(appPath_convert);
         
         System.out.println("Create the logger");
-        this.logger = new MyLogger(this.userLocalDirTmp);
+        logger = new MyLogger(userLocalDirTmp);
         
-        System.out.println("APP PATH: " + this.appPath);
+        System.out.println("APP PATH: " + appPath);
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
 
-        String info = this.fM.createUserLocalDirTmp(this.userLocalDirTmp, this.os);
+        String info = fM.createUserLocalDirTmp(userLocalDirTmp, os);
 
         if (info == "ERROR") {
-            this.logger.log("ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch", Level.SEVERE);
-            this.messageStatus = "ERROR";
-            this.messageResult.clear();
-            this.messageResult.put("ERROR", "ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch");
+            logger.log("ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch", Level.SEVERE);
+            messageStatus = "ERROR";
+            messageResult.clear();
+            messageResult.put("ERROR", "ERREUR : Permissions insuffisante sur votre répertoire temporaire maarch");
             JOptionPane.showMessageDialog(null, "ERREUR ! Permissions insuffisante sur votre répertoire temporaire maarch.");
-            this.processReturn(this.messageResult);
+            processReturn(messageResult);
         }
 
         System.out.println("Create the logger");
-        this.logger = new MyLogger(this.userLocalDirTmp);
+        logger = new MyLogger(userLocalDirTmp);
 
-        /*this.logger.log("Delete thefile if exists", Level.INFO);
-        FileManager.deleteFilesOnDir(this.userLocalDirTmp, "thefile");*/
+        /*logger.log("Delete thefile if exists", Level.INFO);
+        FileManager.deleteFilesOnDir(userLocalDirTmp, "thefile");*/
+        
+        logger.log("----------PARAM ----------", Level.INFO);
+        logger.log("URL : " + url, Level.INFO);
+        logger.log("OBJECT TYPE : " + objectType, Level.INFO);
+        logger.log("ID APPLET : " + idApplet, Level.INFO);
+        logger.log("OBJECT TABLE : " + objectTable, Level.INFO);
+        logger.log("OBJECT ID : " + objectId, Level.INFO);
+        logger.log("UNIQUE ID : " + uniqueId, Level.INFO);
+        logger.log("COOKIE : " + cookie, Level.INFO);
+        logger.log("CLIENTSIDECOOKIES : " + clientSideCookies, Level.INFO);
+        logger.log("USERMAARCH : " + userMaarch, Level.INFO);
 
-        this.logger.log("----------BEGIN OPEN REQUEST----------", Level.INFO);
-        String urlToSend = this.url + "?action=editObject&objectType=" + this.objectType
-                + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
-                + "&uniqueId=" + this.uniqueId;
+        logger.log("----------BEGIN OPEN REQUEST----------", Level.INFO);
+        String urlToSend = url + "?action=editObject&objectType=" + objectType
+                + "&objectTable=" + objectTable + "&objectId=" + objectId
+                + "&uniqueId=" + uniqueId;
         sendHttpRequest(urlToSend, "none", false);
-        this.logger.log("MESSAGE STATUS : " + this.messageStatus, Level.INFO);
-        this.logger.log("MESSAGE RESULT : ", Level.INFO);
-        this.processReturn(this.messageResult);
-        this.logger.log("----------END OPEN REQUEST----------", Level.INFO);
+        logger.log("MESSAGE STATUS : " + messageStatus, Level.INFO);
+        logger.log("MESSAGE RESULT : ", Level.INFO);
+        processReturn(messageResult);
+        logger.log("----------END OPEN REQUEST----------", Level.INFO);
 
-        this.fileToEdit = "thefile_" + idApplet + "." + this.fileExtension;
+        fileToEdit = "thefile_" + idApplet + "." + fileExtension;
             
-        this.logger.log("----------BEGIN CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
-        this.logger.log("create the file : " + this.appPath, Level.INFO);
-        this.fM.createBatFile(
-                this.appPath,
-                this.userLocalDirTmp,
-                this.fileToEdit,
-                this.os,
-                this.idApplet
+        logger.log("----------BEGIN CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
+        logger.log("create the file : " + appPath, Level.INFO);
+        fM.createBatFile(
+                appPath,
+                userLocalDirTmp,
+                fileToEdit,
+                os,
+                idApplet
         );
-        this.logger.log("----------END CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
+        logger.log("----------END CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
 
-        if ("ok".equals(this.status)) {
-            this.logger.log("RESPONSE OK", Level.INFO);
-
-            this.logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
-            if (this.useExeConvert.equals("false")) {
-                this.logger.log("---------- VBS FILE ----------", Level.INFO);
-                this.logger.log(" Path = " + this.vbsPath, Level.INFO);
-                if (this.vbsPath.equals("")) this.vbsPath = this.userLocalDirTmp + "DOC2PDF_VBS.vbs";
-                boolean isVbsExists = this.fM.isPsExecFileExists(this.vbsPath);
-                if (!isVbsExists) fM.createFile(this.fileContentVbs, this.vbsPath);
-            } else {
-                boolean isConvExecExists = this.fM.isPsExecFileExists(this.userLocalDirTmp + "Word2Pdf.exe");
-                if (!isConvExecExists) fM.createFile(this.fileContentExe, this.userLocalDirTmp + "Word2Pdf.exe");
+        if ("ok".equals(status)) {
+            logger.log("RESPONSE OK", Level.INFO);
+            
+            if ("true".equals(convertPdf)) {
+                logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
+                if (useExeConvert.equals("false")) {
+                    logger.log("---------- VBS FILE ----------", Level.INFO);
+                    logger.log(" Path = " + vbsPath, Level.INFO);
+                    if (vbsPath.equals("")) vbsPath = userLocalDirTmp + "DOC2PDF_VBS.vbs";
+                    boolean isVbsExists = fM.isPsExecFileExists(vbsPath);
+                    if (!isVbsExists) fM.createFile(fileContentVbs, vbsPath);
+                } else {
+                    boolean isConvExecExists = fM.isPsExecFileExists(userLocalDirTmp + "Word2Pdf.exe");
+                    if (!isConvExecExists) fM.createFile(fileContentExe, userLocalDirTmp + "Word2Pdf.exe");
+                }
             }
 
-            this.logger.log("----------BEGIN EXECUTION OF THE EDITOR----------", Level.INFO);
-            this.logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
-            this.fM.createFile(this.fileContent, this.userLocalDirTmp + this.fileToEdit);
-            this.fileToDelete.add(this.userLocalDirTmp + this.fileToEdit);
+            logger.log("----------BEGIN EXECUTION OF THE EDITOR----------", Level.INFO);
+            logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
+            fM.createFile(fileContent, userLocalDirTmp + fileToEdit);
+            fileToDelete.add(userLocalDirTmp + fileToEdit);
             
             Thread theThread;
             theThread = new Thread(new ProcessLoop(this));
@@ -552,93 +598,93 @@ public class DisCM extends JApplet {
             theThread.start();
             
             String actualContent;
-            this.fileContentTosend = "";
+            fileContentTosend = "";
             do {
                 theThread.sleep(3000);
-                File fileTotest = new File(this.userLocalDirTmp + this.fileToEdit);
+                File fileTotest = new File(userLocalDirTmp + fileToEdit);
                 if (fileTotest.canRead()) {
-                    actualContent = FileManager.encodeFile(this.userLocalDirTmp + this.fileToEdit);
-                    if (!this.fileContentTosend.equals(actualContent)) {
-                        this.fileContentTosend = actualContent;
-                        this.logger.log("----------[SECURITY BACKUP] BEGIN SEND OF THE OBJECT----------", Level.INFO);
-                        String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType
-                                + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
-                                + "&uniqueId=" + this.uniqueId + "&step=backup&userMaarch=" + this.userMaarch;
-                        this.logger.log("[SECURITY BACKUP] URL TO SAVE : " + urlToSave, Level.INFO);
-                        sendHttpRequest(urlToSave, this.fileContentTosend, false);
-                        this.logger.log("[SECURITY BACKUP] MESSAGE STATUS : " + this.messageStatus, Level.INFO);
+                    actualContent = FileManager.encodeFile(userLocalDirTmp + fileToEdit);
+                    if (!fileContentTosend.equals(actualContent)) {
+                        fileContentTosend = actualContent;
+                        logger.log("----------[SECURITY BACKUP] BEGIN SEND OF THE OBJECT----------", Level.INFO);
+                        String urlToSave = url + "?action=saveObject&objectType=" + objectType
+                                + "&objectTable=" + objectTable + "&objectId=" + objectId
+                                + "&uniqueId=" + uniqueId + "&step=backup&userMaarch=" + userMaarch;
+                        logger.log("[SECURITY BACKUP] URL TO SAVE : " + urlToSave, Level.INFO);
+                        sendHttpRequest(urlToSave, fileContentTosend, false);
+                        logger.log("[SECURITY BACKUP] MESSAGE STATUS : " + messageStatus, Level.INFO);
                     }
                 } else {
-                    this.logger.log(this.userLocalDirTmp + this.fileToEdit + " FILE NOT READABLE !!!!!!", Level.INFO);
+                    logger.log(userLocalDirTmp + fileToEdit + " FILE NOT READABLE !!!!!!", Level.INFO);
                 }
             }
             while (theThread.isAlive());
 
             theThread.interrupt();
 
-            this.logger.log("----------END EXECUTION OF THE EDITOR----------", Level.INFO);
+            logger.log("----------END EXECUTION OF THE EDITOR----------", Level.INFO);
 
-            this.logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
+            logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
 
-            this.fileContentTosend = FileManager.encodeFile(this.userLocalDirTmp + this.fileToEdit);
+            fileContentTosend = FileManager.encodeFile(userLocalDirTmp + fileToEdit);
 
-            this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
+            logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
 
-            if ((fileExtension.equalsIgnoreCase("docx") || fileExtension.equalsIgnoreCase("doc") || fileExtension.equalsIgnoreCase("docm") || fileExtension.equalsIgnoreCase("odt") || fileExtension.equalsIgnoreCase("ott"))) {
-                this.logger.log("----------CONVERSION PDF----------", Level.INFO);
-                createPDF(this.userLocalDirTmp + this.fileToEdit, this.userLocalDirTmp, isUnix);
+            if ("true".equals(convertPdf)) {
+                if ((fileExtension.equalsIgnoreCase("docx") || fileExtension.equalsIgnoreCase("doc") || fileExtension.equalsIgnoreCase("docm") || fileExtension.equalsIgnoreCase("odt") || fileExtension.equalsIgnoreCase("ott"))) {
+                    logger.log("----------CONVERSION PDF----------", Level.INFO);
+                    createPDF(userLocalDirTmp + fileToEdit, userLocalDirTmp, isUnix);
 
-                String pdfFile = this.userLocalDirTmp + "thefile_" + idApplet + ".pdf";
+                    String pdfFile = userLocalDirTmp + "thefile_" + idApplet + ".pdf";
 
-                this.logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
-                if (this.fM.isPsExecFileExists(pdfFile)) {
-                    this.pdfContentTosend = FileManager.encodeFile(pdfFile);
-                    this.fileToDelete.add(pdfFile);
-                } else {
-                    this.pdfContentTosend = "null";
-                    this.logger.log("ERREUR DE CONVERSION PDF !", Level.WARNING);
-                    JOptionPane.showMessageDialog(null, "Attention ! La conversion PDF a échoué mais le document a bien été transféré.");
+                    logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
+                    if (fM.isPsExecFileExists(pdfFile)) {
+                        pdfContentTosend = FileManager.encodeFile(pdfFile);
+                        fileToDelete.add(pdfFile);
+                    } else {
+                        pdfContentTosend = "null";
+                        logger.log("ERREUR DE CONVERSION PDF !", Level.WARNING);
+                        JOptionPane.showMessageDialog(null, "Attention ! La conversion PDF a échoué mais le document a bien été transféré.");
+                    }
+                    logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
+
+                    logger.log("---------- FIN CONVERSION PDF----------", Level.INFO);
+                }else{
+                    pdfContentTosend = "not allowed";
+                    logger.log("Conversion not allowed for this extension : " + fileExtension, Level.INFO);
                 }
-                this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
-
-                this.logger.log("---------- FIN CONVERSION PDF----------", Level.INFO);
-            }else{
-                this.pdfContentTosend = "not allowed";
-                this.logger.log("Conversion not allowed for this extension : " + fileExtension, Level.INFO);
             }
             
 
-            String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType
-                    + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId
-                    + "&uniqueId=" + this.uniqueId + "&idApplet=" + this.idApplet + "&step=end&userMaarch=" + this.userMaarch;
-            this.logger.log("----------BEGIN SEND OF THE OBJECT----------", Level.INFO);
-            this.logger.log("URL TO SAVE : " + urlToSave, Level.INFO);
-            sendHttpRequest(urlToSave, this.fileContentTosend, true);
-            this.logger.log("MESSAGE STATUS : " + this.messageStatus, Level.INFO);
-            this.logger.log("LAST MESSAGE RESULT : ", Level.INFO);
-            this.processReturn(this.messageResult);
+            String urlToSave = url + "?action=saveObject&objectType=" + objectType
+                    + "&objectTable=" + objectTable + "&objectId=" + objectId
+                    + "&uniqueId=" + uniqueId + "&idApplet=" + idApplet + "&step=end&userMaarch=" + userMaarch;
+            logger.log("----------BEGIN SEND OF THE OBJECT----------", Level.INFO);
+            logger.log("URL TO SAVE : " + urlToSave, Level.INFO);
+            sendHttpRequest(urlToSave, fileContentTosend, true);
+            logger.log("MESSAGE STATUS : " + messageStatus, Level.INFO);
+            logger.log("LAST MESSAGE RESULT : ", Level.INFO);
+            processReturn(messageResult);
 
-            if (this.pdfContentTosend == "null") {
-                this.endMessage = this.endMessage + " mais la conversion pdf n'a pas fonctionné (le document ne pourra pas être signé)";
+            if ("true".equals(convertPdf)) {
+                if (pdfContentTosend == "null") {
+                    endMessage = endMessage + " mais la conversion pdf n'a pas fonctionné (le document ne pourra pas être signé)";
+                }
             }
-            //send message to Maarch at the end
-            if (!this.endMessage.isEmpty()) {
-                //this.sendJsMessage(this.endMessage);
-            }
-            //this.sendJsEnd();
-            this.logger.log("----------END SEND OF THE OBJECT----------", Level.INFO);
+
+            logger.log("----------END SEND OF THE OBJECT----------", Level.INFO);
         } else {
-            this.logger.log("RESPONSE KO", Level.WARNING);
+            logger.log("RESPONSE KO", Level.WARNING);
         }
-        this.logger.log("----------END EDIT OBJECT----------", Level.INFO);
+        logger.log("----------END EDIT OBJECT----------", Level.INFO);
         
         //delete tmp files
         FileManager.deleteSpecificFilesOnDir(fileToDelete);
         
         //delete env libreoffice instance
-        File dir_app = new File(this.userLocalDirTmp+this.idApplet);
+        File dir_app = new File(userLocalDirTmp+idApplet);
         if (dir_app.exists()) {
-            Path directory = Paths.get(this.userLocalDirTmp+this.idApplet);
+            Path directory = Paths.get(userLocalDirTmp+idApplet);
             Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -654,9 +700,9 @@ public class DisCM extends JApplet {
             });
         }
         //delete env libreoffice convert instance
-        File dir_app_conv = new File(this.userLocalDirTmp+this.idApplet+"_conv");
+        File dir_app_conv = new File(userLocalDirTmp+idApplet+"_conv");
         if (dir_app_conv.exists()) {
-            Path directory = Paths.get(this.userLocalDirTmp+this.idApplet+"_conv");
+            Path directory = Paths.get(userLocalDirTmp+idApplet+"_conv");
             Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -676,94 +722,39 @@ public class DisCM extends JApplet {
     }
 
     /**
-     * Class to manage the execution of an external program
-     */
-    public class ProcessLoop extends Thread {
-        public DisCM disCM;
-
-        public ProcessLoop(DisCM DisCM) {
-            this.disCM = DisCM;
-        }
-
-        public void run() {
-            try {
-                disCM.launchProcess();
-            } catch (PrivilegedActionException ex) {
-                Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
-                Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    /**
      * Launch the external program and wait his execution end
      * @return boolean
      */
-    public boolean launchProcess() throws PrivilegedActionException, InterruptedException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+    public Boolean launchProcess() throws PrivilegedActionException, InterruptedException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         Process proc;
 
-        this.logger.log("LAUNCH THE EDITOR !", Level.INFO);
-        if ("linux".equals(this.os) || "mac".equals(this.os)) {
-            proc = this.fM.launchApp(this.appPath);
+        logger.log("LAUNCH THE EDITOR !", Level.INFO);
+        if ("linux".equals(os) || "mac".equals(os)) {
+            proc = fM.launchApp(appPath);
         } else {
-            this.logger.log("FILE TO EDIT : " + this.userLocalDirTmp + this.fileToEdit, Level.INFO);
+            logger.log("FILE TO EDIT : " + userLocalDirTmp + fileToEdit, Level.INFO);
 
             String programName;
-            programName = this.fM.findGoodProgramWithExt(this.fileExtension);
-            this.logger.log("PROGRAM NAME TO EDIT : " + programName, Level.INFO);
+            programName = fM.findGoodProgramWithExt(fileExtension);
+            logger.log("PROGRAM NAME TO EDIT : " + programName, Level.INFO);
             String pathProgram;
-            pathProgram = this.fM.findPathProgramInRegistry(programName);
-            this.logger.log("PROGRAM PATH TO EDIT : " + pathProgram, Level.INFO);
+            pathProgram = fM.findPathProgramInRegistry(programName);
+            logger.log("PROGRAM PATH TO EDIT : " + pathProgram, Level.INFO);
             String options;
-            options = this.fM.findGoodOptionsToEdit(this.fileExtension);
-            this.logger.log("OPTION PROGRAM TO EDIT " + options, Level.INFO);
+            options = fM.findGoodOptionsToEdit(fileExtension);
+            logger.log("OPTION PROGRAM TO EDIT " + options, Level.INFO);
             String pathCommand;
             if("".equals(options)){
-                options = "\"-env:UserInstallation=file:///" + this.userLocalDirTmp.replace("\\", "/") + idApplet +"/\" ";
+                options = "\"-env:UserInstallation=file:///" + userLocalDirTmp.replace("\\", "/") + idApplet +"/\" ";
             }
-            pathCommand = pathProgram + " " + options + "\"" + this.userLocalDirTmp + this.fileToEdit + "\"";
-            this.logger.log("PATH COMMAND TO EDIT " + pathCommand, Level.INFO);
-            proc = this.fM.launchApp(pathCommand);
+            pathCommand = pathProgram + " " + options + "\"" + userLocalDirTmp + fileToEdit + "\"";
+            logger.log("PATH COMMAND TO EDIT " + pathCommand, Level.INFO);
+            proc = fM.launchApp(pathCommand);
         }
         proc.waitFor();
-        this.logger.log("END OF THE PROCESS", Level.INFO);
+        logger.log("END OF THE PROCESS", Level.INFO);
 
         return true;
-    }
-
-    /**
-     * Send a string message to Maarch with javascript
-     * @param message
-     */
-    public void sendJsMessage(String message) throws JSException {
-        JSObject jso;
-        jso = JSObject.getWindow((Applet) this);
-        this.logger.log("----------JS CALL sendAppletMsg TO MAARCH----------", Level.INFO);
-        //String theMessage;
-        //theMessage = String.valueOf(message);
-        String[] theMessage = {String.valueOf(message), message};
-        this.logger.log("Envoi du message à MAARCH", Level.INFO);
-        jso.call("sendAppletMsg", (Object[]) theMessage);
-        this.logger.log("----------END OF JS CALL----------", Level.INFO);
-    }
-
-    /**
-     * Warns Maarch of the end of the execution of the applet
-     */
-    public void sendJsEnd() throws InterruptedException, JSException {
-        JSObject jso;
-        jso = JSObject.getWindow((Applet) this);
-        this.logger.log("----------JS CALL endOfApplet TO MAARCH----------", Level.INFO);
-        String[] theMessage = {String.valueOf(this.objectType), this.endMessage};
-        jso.call("endOfApplet", (Object[]) theMessage);
-        this.logger.log("----------END OF JS CALL----------", Level.INFO);
     }
 
     /**
@@ -799,27 +790,35 @@ public class DisCM extends JApplet {
                     Writer writer = new OutputStreamWriter(out, "UTF-8");
                     // Using a StringBuffer rather than multiple "+" operators results in much better performance!
                     StringBuffer sb = new StringBuffer();
-                    if (endProcess) {
-                        // Prepending "null" saves from testing "if(DisCM.this.pdfContentTosend != null)"
-                        if ("null".equalsIgnoreCase(DisCM.this.pdfContentTosend)) {
-                            sb.append("fileContent=");
-                            sb.append(DisCM.this.fileContentTosend);
-                            sb.append("&fileExtension=");
-                            sb.append(DisCM.this.fileExtension);
+                    if ("true".equals(convertPdf)) {
+                        if (endProcess) {
+                            // Prepending "null" saves from testing "if(pdfContentTosend != null)"
+                            if ("null".equalsIgnoreCase(pdfContentTosend)) {
+                                sb.append("fileContent=");
+                                sb.append(fileContentTosend);
+                                sb.append("&fileExtension=");
+                                sb.append(fileExtension);
+                            } else {
+                                sb.append("fileContent=");
+                                sb.append(fileContentTosend);
+                                sb.append("&fileExtension=");
+                                sb.append(fileExtension);
+                                sb.append("&pdfContent=");
+                                sb.append(pdfContentTosend);
+                            }
                         } else {
                             sb.append("fileContent=");
-                            sb.append(DisCM.this.fileContentTosend);
+                            sb.append(fileContentTosend);
                             sb.append("&fileExtension=");
-                            sb.append(DisCM.this.fileExtension);
-                            sb.append("&pdfContent=");
-                            sb.append(DisCM.this.pdfContentTosend);
+                            sb.append(fileExtension);
                         }
                     } else {
                         sb.append("fileContent=");
-                        sb.append(DisCM.this.fileContentTosend);
+                        sb.append(fileContentTosend);
                         sb.append("&fileExtension=");
-                        sb.append(DisCM.this.fileExtension);
+                        sb.append(fileExtension);
                     }
+                    
                     writer.write(sb.toString());
                     writer.flush();
                 }
@@ -832,36 +831,68 @@ public class DisCM extends JApplet {
         // Request parameters and other properties.
         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
         
-        if (endProcess) {
-            // Prepending "null" saves from testing "if(DisCM.this.pdfContentTosend != null)"
-            if ("null".equalsIgnoreCase(DisCM.this.pdfContentTosend)) {
-                params.add(new BasicNameValuePair("fileContent", DisCM.this.fileContentTosend));
-                params.add(new BasicNameValuePair("fileExtension", DisCM.this.fileExtension));
+        if ("true".equals(convertPdf)) {
+            if (endProcess) {
+                // Prepending "null" saves from testing "if(pdfContentTosend != null)"
+                if ("null".equalsIgnoreCase(pdfContentTosend)) {
+                    params.add(new BasicNameValuePair("fileContent", fileContentTosend));
+                    params.add(new BasicNameValuePair("fileExtension", fileExtension));
+                } else {
+                    params.add(new BasicNameValuePair("fileContent", fileContentTosend));
+                    params.add(new BasicNameValuePair("fileExtension", fileExtension));
+                    params.add(new BasicNameValuePair("pdfContent", pdfContentTosend));
+                }
             } else {
-                params.add(new BasicNameValuePair("fileContent", DisCM.this.fileContentTosend));
-                params.add(new BasicNameValuePair("fileExtension", DisCM.this.fileExtension));
-                params.add(new BasicNameValuePair("pdfContent", DisCM.this.pdfContentTosend));
+                params.add(new BasicNameValuePair("fileContent", fileContentTosend));
+                params.add(new BasicNameValuePair("fileExtension", fileExtension));
             }
         } else {
-            params.add(new BasicNameValuePair("fileContent", DisCM.this.fileContentTosend));
-            params.add(new BasicNameValuePair("fileExtension", DisCM.this.fileExtension));
+            params.add(new BasicNameValuePair("fileContent", fileContentTosend));
+            params.add(new BasicNameValuePair("fileExtension", fileExtension));
         }
         
         request.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
         System.out.println("FULL REQUEST" + request);
         try {
-            System.out.println("COOKIES TO BE SENT: " + this.httpContext.getCookieStore().getCookies()); // Show the cookies to be sent
-            CloseableHttpResponse response = this.httpClient.execute(request, this.httpContext); // Carry out the HTTP post request
+            System.out.println("COOKIES TO BE SENT: " + httpContext.getCookieStore().getCookies()); // Show the cookies to be sent
+            CloseableHttpResponse response = httpClient.execute(request, httpContext); // Carry out the HTTP post request
             System.out.println(response);
             if (response == null) {
                 System.out.println("NO RESPONSE, THE APPLICATION WILL FAIL!");
             } else {
-                this.parse_xml(response.getEntity().getContent()); // Process the response from the server
+                parse_xml(response.getEntity().getContent()); // Process the response from the server
                 response.close();
             }
         } catch (Exception ex) {
-            this.logger.log("erreur: " + ex, Level.SEVERE);
+            logger.log("erreur: " + ex, Level.SEVERE);
             JOptionPane.showMessageDialog(null, "ERREUR ! La connexion au serveur a été interrompue, le document édité n'a pas été sauvegardé !");
+        }
+    }
+    
+    /**
+     * Class to manage the execution of an external program
+     */
+    public class ProcessLoop extends Thread {
+        public DisCM disCM;
+
+        public ProcessLoop(DisCM disCM){
+            this.disCM = disCM;
+        }
+
+        public void run() {
+            try {
+                disCM.launchProcess();
+            } catch (PrivilegedActionException ex) {
+                Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(DisCM.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }
