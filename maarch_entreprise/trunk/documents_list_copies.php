@@ -33,7 +33,7 @@ require_once 'core/class/class_security.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_contacts_v2.php';
 require_once 'core/class/class_manage_status.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_lists.php';
-            
+             
 $status_obj = new manage_status();
 $security   = new security();
 $core_tools = new core_tools();
