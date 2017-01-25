@@ -72,3 +72,21 @@ Explain the problem and include additional details to help maintainers reproduce
 * **If the problem is related to performance**, include a CPU profile capture and a screenshot with your report.
 * **If the Chrome's developer tools pane is shown without you triggering it**, that normally means that an exception was thrown. The Console tab will include an entry for the exception. Expand the exception so that the stack trace is visible, and provide the full exception and stack trace in a [code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines) and as a screenshot.
 * **If the problem wasn't triggered by a specific action**, describe what you were doing before the problem happened and share more information using the guidelines below.
+
+Provide more context by answering these questions:
+
+* **Did the problem start happening recently** (e.g. after updating to a new version of Maarch) or was this always a problem?
+* If the problem started happening recently, **can you reproduce the problem in an older version of Maarch?** What's the most recent version in which the problem doesn't happen?.
+* **Can you reliably reproduce the issue?** If not, provide details about how often the problem happens and under which conditions it normally happens.
+
+Include details about your configuration and environment:
+
+* **Which version of Maarch are you using?**.
+* **What's the name and version of the OS and Maarch prerequisites you're using**?
+* **Are you running Maarch in a virtual machine?** If so, which VM software are you using and which operating systems and versions are used for the host and the guest?
+
+### Suggesting Enhancements
+
+This section guides you through submitting an enhancement suggestion for Maarch, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions :mag_right:.
+
+Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). Fill in [the template](ISSUE_TEMPLATE.md), including the steps that you imagine you would take if the feature you're requesting existed.
