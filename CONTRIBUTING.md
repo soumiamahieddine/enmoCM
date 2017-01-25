@@ -107,5 +107,23 @@ Enhancement suggestions are tracked as [GitHub issues](https://labs.maarch.org/m
 * **Include screenshots and animated GIFs** which help you demonstrate the steps or point out the part of Maarch which the suggestion is related to. You can use [this tool](http://www.cockos.com/licecap/) to record GIFs on macOS and Windows, and [this tool](https://github.com/colinkeenan/silentcast) or [this tool](https://github.com/GNOME/byzanz) on Linux.
 * **Explain why this enhancement would be useful** to most Maarch users and isn't something that can or should be implemented as a [community package](#maarch-and-packages).
 * **List some other text editors or applications where this enhancement exists.**
-* **Specify which version of Atom you're using.
+* **Specify which version of Maarch you're using.**
 * **Specify the name and version of the OS you're using.**
+
+### Your First Code Contribution
+
+Unsure where to begin contributing to Maarch? You can start by looking through these `beginner` and `help-wanted` issues:
+
+* [Beginner issues][beginner] - issues which should only require a few lines of code, and a test or two.
+* [Help wanted issues][help-wanted] - issues which should be a bit more involved than `beginner` issues.
+
+Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
+
+### Pull Requests
+
+* Fill in [the required template](PULL_REQUEST_TEMPLATE.md)
+* Include screenshots and animated GIFs in your pull request whenever possible.
+* Follow the [php](#php-styleguide) [JavaScript](#javascript-styleguide) styleguides.
+* Document new code based on the
+  [Documentation Styleguide](#documentation-styleguide)
+* End files with a newline.
