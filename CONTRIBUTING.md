@@ -98,7 +98,7 @@ Before creating enhancement suggestions, please check [this list](#before-submit
 
 #### How Do I Submit A (Good) Enhancement Suggestion?
 
-Enhancement suggestions are tracked as [GitHub issues](https://labs.maarch.org/maarch/MaarchCourrier/issues/). Create an issue on that repository and provide the following information:
+Enhancement suggestions are tracked as [Maarch Gitlab issues](https://labs.maarch.org/maarch/MaarchCourrier/issues/). Create an issue on that repository and provide the following information:
 
 * **Use a clear and descriptive title** for the issue to identify the suggestion.
 * **Provide a step-by-step description of the suggested enhancement** in as many details as possible.
