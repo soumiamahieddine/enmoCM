@@ -70,7 +70,7 @@ Explain the problem and include additional details to help maintainers reproduce
 * **Include screenshots and animated GIFs** which show you following the described steps and clearly demonstrate the problem. If you use the keyboard while following the steps. You can use [this tool](http://www.cockos.com/licecap/) to record GIFs on macOS and Windows, and [this tool](https://github.com/colinkeenan/silentcast) or [this tool](https://github.com/GNOME/byzanz) on Linux.
 * **If you're reporting that Maarch crashed**, include a crash report with a stack trace from the operating system. Include the crash report in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines), a [file attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/), or put it in a [gist](https://gist.github.com/) and provide link to that gist.
 * **If the problem is related to performance**, include a CPU profile capture and a screenshot with your report.
-* **If the Chrome's developer tools pane is shown without you triggering it**, that normally means that an exception was thrown. The Console tab will include an entry for the exception. Expand the exception so that the stack trace is visible, and provide the full exception and stack trace in a [code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines) and as a screenshot.
+* **If the Firefox or Chrome's developer tools pane is shown without you triggering it**, that normally means that an exception was thrown. The Console tab will include an entry for the exception. Expand the exception so that the stack trace is visible, and provide the full exception and stack trace in a [code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines) and as a screenshot.
 * **If the problem wasn't triggered by a specific action**, describe what you were doing before the problem happened and share more information using the guidelines below.
 
 Provide more context by answering these questions:
@@ -90,3 +90,22 @@ Include details about your configuration and environment:
 This section guides you through submitting an enhancement suggestion for Maarch, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions :mag_right:.
 
 Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). Fill in [the template](ISSUE_TEMPLATE.md), including the steps that you imagine you would take if the feature you're requesting existed.
+
+#### Before Submitting An Enhancement Suggestion
+
+* **Check the [Maarch wiki](http://wiki.maarch.org)** for tips — you might discover that the enhancement is already available. Most importantly, check if you're using the latest version of Maarch.
+* **Perform a [cursory search](https://labs.maarch.org/maarch/MaarchCourrier/issues?q=+is%3Aissue+user%3Amaarch)** to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one.
+
+#### How Do I Submit A (Good) Enhancement Suggestion?
+
+Enhancement suggestions are tracked as [GitHub issues](https://labs.maarch.org/maarch/MaarchCourrier/issues/). Create an issue on that repository and provide the following information:
+
+* **Use a clear and descriptive title** for the issue to identify the suggestion.
+* **Provide a step-by-step description of the suggested enhancement** in as many details as possible.
+* **Provide specific examples to demonstrate the steps**. Include copy/pasteable snippets which you use in those examples, as [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
+* **Describe the current behavior** and **explain which behavior you expected to see instead** and why.
+* **Include screenshots and animated GIFs** which help you demonstrate the steps or point out the part of Maarch which the suggestion is related to. You can use [this tool](http://www.cockos.com/licecap/) to record GIFs on macOS and Windows, and [this tool](https://github.com/colinkeenan/silentcast) or [this tool](https://github.com/GNOME/byzanz) on Linux.
+* **Explain why this enhancement would be useful** to most Maarch users and isn't something that can or should be implemented as a [community package](#maarch-and-packages).
+* **List some other text editors or applications where this enhancement exists.**
+* **Specify which version of Atom you're using.
+* **Specify the name and version of the OS you're using.**
