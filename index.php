@@ -1,6 +1,6 @@
 <?php
 /*
-*   Copyright 2012-2015 Maarch
+*   Copyright 2012-2017 Maarch
 *
 *   This file is part of Maarch Framework.
 *
