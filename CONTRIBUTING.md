@@ -51,3 +51,7 @@ This section guides you through submitting a bug report for Maarch. Following th
 Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report). Fill out [the required template](ISSUE_TEMPLATE.md), the information it asks for helps us resolve issues faster.
 
 #### Before Submitting A Bug Report
+
+* **Check the [FAQs on the wiki](http://wiki.maarch.org/Maarch_Courrier).** You might be able to find the cause of the problem and fix things yourself. Most importantly, check if you can reproduce the problem in the latest version of Maarch. 
+* **Determine which package the problem should be reported in**.
+* **Perform a [cursory search](http://forum.maarch.org/)** to see if the problem has already been reported. If it has, add a comment to the existing issue instead of opening a new one.
