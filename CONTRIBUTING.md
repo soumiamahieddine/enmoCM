@@ -160,7 +160,7 @@ All JavaScript must adhere to [JavaScript Standard Style](http://standardjs.com/
 
 * Prefer the object spread operator (`{...anotherObj}`) to `Object.assign()`
 * Inline `export`s with expressions whenever possible
-  ```js
+  js
   // Use this:
   export default class ClassName {
 
@@ -171,7 +171,6 @@ All JavaScript must adhere to [JavaScript Standard Style](http://standardjs.com/
 
   }
   export default ClassName
-  ```
 
 
 ### Php Styleguide
