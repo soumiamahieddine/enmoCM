@@ -150,26 +150,7 @@ Both issue lists are sorted by total number of comments. While not perfect, numb
     * :arrow_down: `:arrow_down:` when downgrading dependencies
     * :shirt: `:shirt:` when removing linter warnings
 
-### JavaScript Styleguide
-
-All JavaScript must adhere to [JavaScript Standard Style](http://standardjs.com/).
-
-* Prefer the object spread operator (`{...anotherObj}`) to `Object.assign()`
-* Inline `export`s with expressions whenever possible
-  js
-  // Use this:
-  export default class ClassName {
-
-  }
-
-  // Instead of:
-  class ClassName {
-
-  }
-  export default ClassName
-
-
-### Php Styleguide
+### php Styleguide
 
 We are following stadards defined by Framework Interoperability Group - [PHP-FIG](http://www.php-fig.org). The group was bootstrapped by a number of framework developers at php|tek in 2009. Each voting member of the group represents a popular PHP framework (or similar) project. They are working together to create easily reusable code that can be used across other projects. 
 
@@ -201,6 +182,23 @@ This PSR describes a specification for autoloading classes from file paths. It i
 
 For objects properties and variables we are using camelCase convention.
 
+### JavaScript Styleguide
+
+All JavaScript must adhere to [JavaScript Standard Style](http://standardjs.com/).
+
+* Prefer the object spread operator (`{...anotherObj}`) to `Object.assign()`
+* Inline `export`s with expressions whenever possible
+  js
+  // Use this:
+  export default class ClassName {
+
+  }
+
+  // Instead of:
+  class ClassName {
+
+  }
+  export default ClassName
 
 ### Documentation Styleguide
 
