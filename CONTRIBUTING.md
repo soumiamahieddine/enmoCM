@@ -98,7 +98,7 @@ Before creating enhancement suggestions, please check [this list](#before-submit
 
 #### How Do I Submit A (Good) Enhancement Suggestion?
 
-Enhancement suggestions are tracked as [Maarch Gitlab issues](https://labs.maarch.org/maarch/MaarchCourrier/issues/). Create an issue on that repository and provide the following information:
+Enhancement suggestions are tracked as [GitHub issues](https://labs.maarch.org/maarch/MaarchCourrier/issues/). Create an issue on that repository and provide the following information:
 
 * **Use a clear and descriptive title** for the issue to identify the suggestion.
 * **Provide a step-by-step description of the suggested enhancement** in as many details as possible.
@@ -123,7 +123,93 @@ Both issue lists are sorted by total number of comments. While not perfect, numb
 
 * Fill in [the required template](PULL_REQUEST_TEMPLATE.md)
 * Include screenshots and animated GIFs in your pull request whenever possible.
-* Follow the [php](#php-styleguide) [JavaScript](#javascript-styleguide) styleguides.
+* Follow the [php](#php-styleguide) and [JavaScript](#javascript-styleguide) styleguides.
 * Document new code based on the
   [Documentation Styleguide](#documentation-styleguide)
 * End files with a newline.
+
+## Styleguides
+
+### Git Commit Messages
+
+* Use the present tense ("Add feature" not "Added feature")
+* Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
+* Limit the first line to 72 characters or less
+* Reference issues and pull requests liberally
+* When only changing documentation, include `[ci skip]` in the commit description
+* Consider starting the commit message with an applicable emoji:
+    * :art: `:art:` when improving the format/structure of the code
+    * :racehorse: `:racehorse:` when improving performance
+    * :non-potable_water: `:non-potable_water:` when plugging memory leaks
+    * :memo: `:memo:` when writing docs
+    * :penguin: `:penguin:` when fixing something on Linux
+    * :apple: `:apple:` when fixing something on macOS
+    * :checkered_flag: `:checkered_flag:` when fixing something on Windows
+    * :bug: `:bug:` when fixing a bug
+    * :fire: `:fire:` when removing code or files
+    * :green_heart: `:green_heart:` when fixing the CI build
+    * :white_check_mark: `:white_check_mark:` when adding tests
+    * :lock: `:lock:` when dealing with security
+    * :arrow_up: `:arrow_up:` when upgrading dependencies
+    * :arrow_down: `:arrow_down:` when downgrading dependencies
+    * :shirt: `:shirt:` when removing linter warnings
+
+### JavaScript Styleguide
+
+All JavaScript must adhere to [JavaScript Standard Style](http://standardjs.com/).
+
+* Prefer the object spread operator (`{...anotherObj}`) to `Object.assign()`
+* Inline `export`s with expressions whenever possible
+  ```js
+  // Use this:
+  export default class ClassName {
+
+  }
+
+  // Instead of:
+  class ClassName {
+
+  }
+  export default ClassName
+  ```
+
+### Php Styleguide
+
+We are following stadards defined by Framework Interoperability Group - [PHP-FIG](http://www.php-fig.org). The group was bootstrapped by a number of framework developers at php|tek in 2009. Each voting member of the group represents a popular PHP framework (or similar) project. They are working together to create easily reusable code that can be used across other projects. 
+
+####PSR standards
+
+There are five PSR standards described by PHP-FIG.
+
+#### PSR-0 / Autoloading standard
+
+The following describes the mandatory requirements that must be adhered to for autoloader interoperability. More information can be found [here](http://www.php-fig.org/psr/psr-0/).
+
+* * * 
+
+#### PSR-1 / Basic Coding Standard
+
+This standard describes what should be considered the standard coding elements that are required to ensure a high level of technical interoperability between shared PHP code. It describes Class Names, Namespaces, Methods, Constants, Properties naming conventions. More information can be found [here](http://www.php-fig.org/psr/psr-1/).
+
+* * * 
+
+#### PSR-2 / Coding Style Guide
+
+This guide extends and expands on [PSR-1](http://www.php-fig.org/psr/psr-1/), the basic coding standard. Provides a Coding Style Guide for projects looking to standardize their code. It additionaly includes definitions for Control Structures, Closures and other structures. More information can be found [here](http://www.php-fig.org/psr/psr-2/).
+
+* * * 
+
+#### PSR-3 / Logger Interface
+
+Describes a common interface for logging libraries. More information can be found [here](http://www.php-fig.org/psr/psr-3/).
+
+* * * 
+
+#### PSR-4 / Improved Autoloading
+
+This PSR describes a specification for autoloading classes from file paths. It is fully interoperable, and can be used in addition to any other autoloading specification, including [PSR-0](http://www.php-fig.org/psr/psr-0/). More information can be found [here](http://www.php-fig.org/psr/psr-4/).
+
+* * * 
+
+#### Additional notes
+For objects properties and variables we are using camelCase convention.
