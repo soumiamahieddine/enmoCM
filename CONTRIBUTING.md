@@ -21,7 +21,6 @@ These are just guidelines, not rules. Use your best judgment, and feel free to p
   * [Git Commit Messages](#git-commit-messages)
   * [php Styleguide](#maarch-styleguide)
   * [JavaScript Styleguide](#javascript-styleguide)
-  * [Specs Styleguide](#specs-styleguide)
   * [Documentation Styleguide](#documentation-styleguide)
 
 ## What should I know before I get started?
