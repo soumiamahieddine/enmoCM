@@ -24,9 +24,6 @@ These are just guidelines, not rules. Use your best judgment, and feel free to p
   * [Specs Styleguide](#specs-styleguide)
   * [Documentation Styleguide](#documentation-styleguide)
 
-[Additional Notes](#additional-notes)
-  * [Issue and Pull Request Labels](#issue-and-pull-request-labels)
-
 ## What should I know before I get started?
 
 ### Code of Conduct
