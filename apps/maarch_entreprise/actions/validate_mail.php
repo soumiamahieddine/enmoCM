@@ -124,6 +124,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     //INITIALIZE
     $frm_str = '';
+    $_SESSION['stockCheckbox']= '';
     unset($_SESSION['m_admin']['contact']);
     $_SESSION['req'] = "action";
     $res_id = $values[0];

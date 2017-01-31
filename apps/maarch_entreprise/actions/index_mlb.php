@@ -117,6 +117,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     
     //INITIALIZE
     $frmStr = '';
+    $_SESSION['stockCheckbox']= '';
     $_SESSION['req'] = "action";
     $resId = $values[0];
     $today = date('d-m-Y');
@@ -1845,9 +1846,10 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 
     if ($attach) {
         $idDoc = get_value_fields($formValues, 'res_id');
+        $idDocTab = explode(',', $idDoc);
         for($i=0;$i<count($_SESSION['stockCheckbox']);$i++){
             $queryLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES(?, ?, ?)";
-            $arrayPDO = array($_SESSION['stockCheckbox'][$i], $resId, $_SESSION['collection_id_choice']);
+            $arrayPDO = array($idDocTab[$i], $resId, $_SESSION['collection_id_choice']);
             $db->query($queryLink, $arrayPDO);
         }
         $hist2 = new history();

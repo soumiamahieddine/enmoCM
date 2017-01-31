@@ -92,6 +92,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     //INITIALIZE
     $frm_str = '';
+    $_SESSION['stockCheckbox']= '';
     $_SESSION['req'] = "action";
     $res_id = $values[0];
     $doctypes = $type->getArrayTypes($coll_id);
