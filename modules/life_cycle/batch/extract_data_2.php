@@ -79,8 +79,10 @@ try {
         $extractData, 
         array(
             "Num Chrono",  //0
-            "Date d'arrivée", 
+            "Date d'enregistrement", 
+            "Date du courrier", 
             "Objet du courrier", 
+            "Catégorie",
             "Type du courrier", 
             "Nature", 
             "Département",  //5
@@ -134,7 +136,7 @@ try {
     
     $GLOBALS['logger']->write('Select incoming mails created from last ' . $fromdatelist['FromDate'], 'INFO');
     $querySelectedFile = "SELECT *  
-                        FROM " . $GLOBALS['view'] . " WHERE (cast(res_id as character varying) IN (select distinct(record_id) as record_id from history where event_type like 'ACTION%' AND event_date < current_timestamp - interval '".$fromdatelist['FromDate']."')) AND destination = '".$fromdatelist['EntityId']."'";
+                        FROM " . $GLOBALS['view'] . " WHERE (cast(res_id as character varying) NOT IN (select distinct(record_id) as record_id from history where event_type like 'ACTION%' AND event_date >= current_timestamp - interval '".$fromdatelist['FromDate']."')) AND destination = '".$fromdatelist['EntityId']."' AND status <> 'DEL' AND status <> 'END' ORDER BY creation_date";
     $stmt = Bt_doQuery(
         $GLOBALS['db'], 
         $querySelectedFile
@@ -516,9 +518,11 @@ try {
         fputcsv(
             $extractData, 
             array(
-                $selectedFile->alt_identifier, 
-                format_date_db(str_replace("/", "-",$selectedFile->admission_date), "", $GLOBALS['databasetype']),
+                $selectedFile->alt_identifier,
+                format_date_db(str_replace("/", "-",$selectedFile->creation_date), "", $GLOBALS['databasetype']),
+                format_date_db(str_replace("/", "-",$selectedFile->doc_date), "", $GLOBALS['databasetype']),
                 $selectedFile->subject,             
+                $selectedFile->category_id,
                 $selectedFile->type_label,
                 $GLOBALS['mail_natures'][$selectedFile->nature_id],
                 $department_name,  //5
