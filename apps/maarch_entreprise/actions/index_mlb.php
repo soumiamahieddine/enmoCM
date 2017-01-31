@@ -330,7 +330,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . 'index.php?display=true&page=get_content_js\');change_category_actions(\'' 
             . $_SESSION['config']['businessappurl'] 
             . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
-            . '&resId=' . $resId . '&collId=' . $collId . '\');'.$hideSelectFile.'">';
+            . '&resId=' . $resId . '&collId=' . $collId . '\',\'none\',\''.$collId.'\',this.options[this.selectedIndex].value);'.$hideSelectFile.'">';
     $frmStr .= '<option value="">' . _CHOOSE_CATEGORY . '</option>';
     foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $catId) {
         if ($catId <> 'default_category') {
@@ -947,7 +947,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . 'index.php?display=true&page=get_content_js\');change_category_actions(\'' 
             . $_SESSION['config']['businessappurl'] 
             . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
-            . '&resId=' . $resId . '&collId=' . $collId . '\');'
+            . '&resId=' . $resId . '&collId=' . $collId . '\',\'none\',\''.$collId.'\',document.getElementById(\'category_id\').options[document.getElementById(\'category_id\').selectedIndex].value);'
             . 'launch_autocompleter_contacts_v2(\''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&dir=indexing_searching&page=autocomplete_contacts\', \'contact\', \'show_contacts\', \'\', \'contactid\', \'addressid\');';

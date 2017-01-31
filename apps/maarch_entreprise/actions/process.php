@@ -462,27 +462,25 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //ACTIONS
     $frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '<p align="center" style="width:90%;">';
-        $frm_str .= '<b>'._ACTIONS.' : </b>';
-        $actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
-        if (count($actions) > 0) {
-            $frm_str .='<select name="chosen_action" id="chosen_action">';
-                $frm_str .='<option value="">'._CHOOSE_ACTION.'</option>';
-                for ($ind_act = 0;$ind_act<count($actions);$ind_act++) {
-                    $frm_str .='<option value="'.functions::xssafe($actions[$ind_act]['VALUE']).'"';
-                    if ($ind_act==0) {
-                        $frm_str .= 'selected="selected"';
-                    }
-                    $frm_str .= '>'.functions::xssafe($actions[$ind_act]['LABEL']).'</option>';
-                }
-            $frm_str .='</select><br>';
-            $frm_str .= '<input type="button" name="send" id="send" value="'
-                . _VALIDATE
-                . '" class="button" onclick="new Ajax.Request(\'' 
-                . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form(\'process\', \''
-                . $path_manage_action . '\', \'' . $id_action.'\', \''
-                . $res_id . '\', \'' . $table . '\', \'' . $module . '\', \''
-                . $coll_id . '\', \'' . $mode . '\');"/> ';
-        }
+
+    //GET ACTION LIST BY AJAX REQUEST
+    $frm_str .= '<span id="actionSpan"></span>';
+    $frm_str .= '<script>';
+        $frm_str .= 'change_category_actions(\'' 
+            . $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
+            . '&resId=' . $res_id . '&collId=' . $coll_id . '\',\'' . $res_id . '\',\'' . $coll_id . '\',\''.$data['category_id']['value'].'\');';
+    $frm_str .= '</script>';
+    //
+    
+    $frm_str .= '<input type="button" name="send" id="send" value="'
+        . _VALIDATE
+        . '" class="button" onclick="new Ajax.Request(\'' 
+        . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form(\'process\', \''
+        . $path_manage_action . '\', \'' . $id_action.'\', \''
+        . $res_id . '\', \'' . $table . '\', \'' . $module . '\', \''
+        . $coll_id . '\', \'' . $mode . '\');"/> ';
+    
         $frm_str .= '<input name="close" id="close" type="button" value="'
             . _CANCEL . '" class="button" onclick="new Ajax.Request(\'' 
             . $_SESSION['config']['businessappurl'] 

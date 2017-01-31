@@ -1630,15 +1630,15 @@ function update_contact_type_session(path)
     });
 }
 
-function change_category_actions(path_manage_script, resId, collId)
-{
-    var category_id = $('category_id');
-    if(category_id.value != '') {
+function change_category_actions(path_manage_script, resId, collId,category_id)
+{  
+    
+    if(category_id != '') {
         if (resId === undefined && collId === undefined) {
             new Ajax.Request(path_manage_script,
             {
                 method:'post',
-                parameters: { category_id : category_id.value
+                parameters: { category_id : category_id
                             },
                     onSuccess: function(answer){
                     eval("response = "+answer.responseText);
@@ -1660,7 +1660,7 @@ function change_category_actions(path_manage_script, resId, collId)
             new Ajax.Request(path_manage_script,
             {
                 method:'post',
-                parameters: { category_id : category_id.value, resId : resId, collId : collId
+                parameters: { category_id : category_id, resId : resId, collId : collId
                             },
                     onSuccess: function(answer){
                     eval("response = "+answer.responseText);

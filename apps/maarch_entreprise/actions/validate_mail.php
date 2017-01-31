@@ -342,7 +342,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . $_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\');change_category_actions(\'' 
         . $_SESSION['config']['businessappurl'] 
         . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
-        . '&resId=' . $res_id . '&collId=' . $coll_id . '\');">';
+        . '&resId=' . $res_id . '&collId=' . $coll_id . '\',\''.$res_id.'\',\''.$coll_id.'\',this.options[this.selectedIndex].value);">';
     $frm_str .='<option value="">'._CHOOSE_CATEGORY.'</option>';
     foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $cat_id) {
         if ($cat_id <> 'default_category') {
@@ -1162,7 +1162,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='var type_id = $(\'type_id\');change_category_actions(\'' 
         . $_SESSION['config']['businessappurl'] 
         . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
-        . '&resId=' . $res_id . '&collId=' . $coll_id . '\');';
+        . '&resId=' . $res_id . '&collId=' . $coll_id . '\',\''.$res_id.'\',\''.$coll_id.'\',document.getElementById(\'category_id\').options[document.getElementById(\'category_id\').selectedIndex].value);';
     $frm_str .='if(type_id){change_doctype(type_id.options[type_id.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\', '.$res_id.', \''. $coll_id.'\', true);}';
     if($data['process_limit_date'] == null){
 
