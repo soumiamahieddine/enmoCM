@@ -582,5 +582,53 @@ abstract class class_users_Abstract extends Database
             return false;
         }
     }
+
+    /**
+    * Return where clause security for user(include baskets)
+    *
+    */
+    public function get_global_security() {
+        if (!empty($_SESSION['user']['UserId'])) {
+            require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php';
+            $sec = new security();
+            $coll_id = 'letterbox_coll';
+
+            //group clause
+            $group_clause = $sec->get_where_clause_from_coll_id($coll_id);
+
+            //baskets clause
+            $basketQuery = '';
+            for (
+                $ind_bask = 0;
+                $ind_bask < count($_SESSION['user']['baskets']);
+                $ind_bask++
+            ) {
+                if (
+                    $_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id
+                ) {
+                    if(
+                        isset($_SESSION['user']['baskets'][$ind_bask]['clause']) 
+                        && trim($_SESSION['user']['baskets'][$ind_bask]['clause']
+                        ) <> '' 
+                        && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N'
+                    ) {
+                        $basketQuery .= ' or (' 
+                            . $_SESSION['user']['baskets'][$ind_bask]['clause'] 
+                            . ')';
+                    }
+                 }
+            }
+            if ($basketQuery <> '') {
+                $basketQuery = preg_replace('/^ or/', '', $basketQuery);
+            }
+
+            $global_clause = $group_clause . ' OR ' . $basketQuery;
+
+            return $global_clause;
+
+        } else {
+            return false;
+        }
+    }
 }
 
