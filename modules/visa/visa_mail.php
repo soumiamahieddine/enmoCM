@@ -76,10 +76,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $_SESSION['doc_id'] = $res_id;
     $_SESSION['current_basket']['lastBasketFromAction'] = $_SESSION['current_basket']['id'];
     $view = $sec->retrieve_view_from_coll_id($coll_id);
-    $stmt = $db->query("select alt_identifier, status from " . $view . " where res_id = ?", array($res_id));
+    $stmt = $db->query("select alt_identifier,category_id, status from " . $view . " where res_id = ?", array($res_id));
     $resChrono = $stmt->fetchObject();
     $chrono_number = $resChrono->alt_identifier;
-    
+    $cat_id = $resChrono->category_id;
     //LAUNCH DOCLOCKER
     $docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
     $docLockerPath = $_SESSION['config']['businessappurl'] . '/actions/docLocker.php';
@@ -141,7 +141,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<dl id="tabricatorLeft" >';
 	
     //Onglet document
-    if ($selectedCat != 'outgoing'){
+    if ($cat_id != 'outgoing'){
         $pathScriptTab = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='. $res_id.'&collid='.$coll_id;
         $frm_str .= '<dt id="onglet_entrant" style="padding-top: 6px;" onclick="loadSpecificTab(\'viewframevalidDoc\',\''.$pathScriptTab.'\');return false;">'._INCOMING.' <sup><span id="" style="'.$style2.'" class="'.$class.'"></span></sup></dt><dd style="overflow-y: hidden;">';
         $frm_str .= '<iframe src="" name="viewframevalidDoc" id="viewframevalidDoc"  scrolling="auto" frameborder="0"  style="width:100%;height:100%;" ></iframe></dd>';
@@ -284,7 +284,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<td>';	
     $frm_str .= '<form name="index_file" method="post" id="index_file" action="#" class="forms " style="text-align:left;">';
     $frm_str .= 'Consigne &nbsp;<input type="text" value="'.$visa->getConsigne($res_id, $coll_id, $_SESSION['user']['UserId']).'" style="width:50%;" readonly class="readonly"/><br/>';
-    $frm_str .= '<b>'._ACTIONS.' : </b>';
+    
+    //GET ACTION LIST BY AJAX REQUEST
+    $frm_str .= '<span id="actionSpan"></span>';
+    $frm_str .= '<script>';
+        $frm_str .= 'change_category_actions(\'' 
+            . $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
+            . '&resId=' . $res_id . '&collId=' . $coll_id . '\',\'' . $res_id . '\',\'' . $coll_id . '\',\''.$cat_id.'\');';
+    $frm_str .= '</script>';
+    $frm_str .= '<input type="button" name="send" id="send_action" value="'._VALIDATE.'" class="button" onclick="new Ajax.Request(\'' 
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
+    //
+    
+    /*$frm_str .= '<b>'._ACTIONS.' : </b>';
     $actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
     if(count($actions) > 0)
     {
@@ -305,7 +318,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $table = $sec->retrieve_table_from_coll($coll_id);
         $frm_str .= '<input type="button" name="send" id="send_action" value="'._VALIDATE.'" class="button" onclick="new Ajax.Request(\'' 
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
-    }
+    }*/
 
 
     $frm_str .= '<input type="hidden" name="cur_rep" id="cur_rep" value="'.$tab_path_rep_file[0]['res_id'].'" >';
