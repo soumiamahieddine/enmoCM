@@ -39,7 +39,7 @@ if (input_res) {
 if ($_SESSION['current_basket']['id'] == "IndexingBasket") {
 	?>window.opener.$('attach').click();<?php
 }
-$_SESSION['stockCheckbox'] = '';
+//$_SESSION['stockCheckbox'] = '';
 ?>
 self.close();
 </script>
