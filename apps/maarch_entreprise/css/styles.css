@@ -1053,6 +1053,10 @@ th.ref {
     padding-top: 0px;
 }
 
+#logo img{
+    width: 100%;
+}
+
 #nav #logo{
     float: right;
     right: 0px;
@@ -1525,19 +1529,18 @@ vertical-align: middle;
 
 #bodylogin {
     background: White url(static.php?filename=bg_home_home.gif) center center no-repeat;
-    height: 100%;
+    height: auto;
     text-align: left;
 }
 
 
 #loginpage {
     width: 300px;
-    height: 350px;
-    margin-left: -150px;
-    margin-top: -175px;
-    left: 50%;
-    top: 72%;
-    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50vh; /* poussé de la moitié de hauteur de viewport */
+    transform: translateY(-25%); /* tiré de la moitié de sa propre hauteur */
+
 }
 
 #formlogin {
