@@ -55,5 +55,3 @@ if (isset($_GET['origin']) && $_GET['origin'] == 'scan') {
     header('location: apps/'.$_SESSION['config']['app_id']
         . '/index.php?display=true&page=login');
 }
-
-
