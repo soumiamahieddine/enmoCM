@@ -56,3 +56,4 @@ if (isset($_GET['origin']) && $_GET['origin'] == 'scan') {
         . '/index.php?display=true&page=login');
 }
 
+
