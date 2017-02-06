@@ -121,6 +121,27 @@ if (isset($_SESSION['error'])) {
 ?>
 <?php $core->load_js();?>
 <body id="bodylogin" onload="session_expirate(<?php echo $time;?>, '<?php echo $_SESSION['config']['coreurl'];?>');">
+    <?php
+    if(isset($_SESSION['error'])) {
+        ?>
+        <div class="error" id="main_error_popup" onclick="this.hide();">
+            <?php
+            functions::xecho($_SESSION['error']);
+            ?>
+        </div>
+        <?php
+    }
+
+    if(isset($_SESSION['info'])) {
+        ?>
+        <div class="info" id="main_info" onclick="this.hide();">
+            <?php
+            functions::xecho($_SESSION['info']);
+            ?>
+        </div>
+        <?php
+    }
+    ?>
     <div id="loginpage">
         <p id="logo"><img src="<?php
             echo $_SESSION['config']['businessappurl'];
@@ -131,25 +152,6 @@ if (isset($_SESSION['error'])) {
             </h3>
         </div>
         <?php
-            if(isset($_SESSION['error'])) {
-                ?>
-                <div class="error" id="main_error_popup" onclick="this.hide();">
-                    <?php
-                    functions::xecho($_SESSION['error']);
-                    ?>
-                </div>
-                <?php
-            }
-
-            if(isset($_SESSION['info'])) {
-                ?>
-                <div class="info" id="main_info" onclick="this.hide();">
-                    <?php
-                    functions::xecho($_SESSION['info']);
-                    ?>
-                </div>
-                <?php
-            }
 
             if(isset($_SESSION['error']) && $_SESSION['error'] <> '') {
                 ?>

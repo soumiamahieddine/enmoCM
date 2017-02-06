@@ -72,6 +72,7 @@ if (!isset($_REQUEST['coll_id'])) {
     $_REQUEST['coll_id'] = '';
 }
 $_SESSION['doc_convert'] = array();
+$_SESSION['stockCheckbox'] = '';
 $_SESSION['save_list']['fromDetail'] = "true";
 $s_id = '';
 $_SESSION['req'] ='details';
