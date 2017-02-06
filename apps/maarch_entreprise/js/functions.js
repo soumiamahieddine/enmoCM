@@ -73,6 +73,7 @@ function deleteSignature(mailSignaturesJS)
 function addNewRowPriority(buttonRow) {
     var index = buttonRow.rowIndex;
     var indexDiff = index - $("priorityAddField").rowIndex;
+
     if ($("priorityAddField").style.display == "none") {
         $("priorityAddField").style.display = "";
         $("minusButton").style.display = "";
@@ -88,6 +89,7 @@ function addNewRowPriority(buttonRow) {
 function delNewRowPriority(buttonRow) {
     var index = buttonRow.rowIndex;
     var indexDiff = index - $("priorityAddField").rowIndex;
+    
     if (indexDiff <= 1) {
         $("priorityAddField").style.display = "none";
         $("minusButton").style.display = "none";
