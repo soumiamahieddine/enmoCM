@@ -89,7 +89,7 @@ function addNewRowPriority(buttonRow) {
 function delNewRowPriority(buttonRow) {
     var index = buttonRow.rowIndex;
     var indexDiff = index - $("priorityAddField").rowIndex;
-    
+
     if (indexDiff <= 1) {
         $("priorityAddField").style.display = "none";
         $("minusButton").style.display = "none";
@@ -301,6 +301,7 @@ function repost(php_file,update_divs,fields,action,timeout)
     }
     function newElement(type, attrs, content, toNode) {
         var ele=document.createElement(type);
+        
         if(attrs) {
             for(var i=0; i<attrs.length; i++) {
                 eval('ele.'+attrs[i][0]+(attrs[i][2] ? '=\u0027' :'=')+attrs[i][1]+(attrs[i][2] ? '\u0027' :''));
