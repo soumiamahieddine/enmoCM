@@ -130,6 +130,7 @@ function delLastTransmission() {
 
 function addNewTransmission(prePath, docId, canCreateContact, langString, user) {
   var size = $j('#transmission')[0].childElementCount;
+  
   var extra_js = '$("add").value="Edition en cours ...";setInterval(function(){checkEditingDoc("'+user+'")},500);$("add").disabled="disabled";$("add").style.opacity="0.5";';
 
   if ($('newTransmissionButton' + size).style.opacity == 1) {
