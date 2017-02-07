@@ -66,24 +66,24 @@ class core_tools extends functions
 
         // Loads  core tables into session ($_SESSION['tablename'] array)
         $TABLENAME = $xmlconfig->TABLENAME ;
-        $_SESSION['tablename']['actions'] = (string) $TABLENAME->actions;
-        $_SESSION['tablename']['authors'] = (string) $TABLENAME->authors;
-        $_SESSION['tablename']['docservers'] = (string) $TABLENAME->docservers;
-        $_SESSION['tablename']['doctypes'] = (string) $TABLENAME->doctypes;
-        $_SESSION['tablename']['ext_docserver'] = (string) $TABLENAME->extdocserver;
-        $_SESSION['tablename']['fulltext'] = (string) $TABLENAME->fulltext;
-        $_SESSION['tablename']['groupsecurity'] = (string) $TABLENAME->groupsecurity;
-        $_SESSION['tablename']['history'] = (string) $TABLENAME->history;
-        $_SESSION['tablename']['history_batch'] = (string) $TABLENAME->history_batch;
-        $_SESSION['tablename']['param'] = (string) $TABLENAME->param;
-        $_SESSION['tablename']['resgroups'] = (string) $TABLENAME->resgroups;
-        $_SESSION['tablename']['resgroup_content'] = (string) $TABLENAME->resgroup_content;
-        $_SESSION['tablename']['security'] = (string) $TABLENAME->security;
-        $_SESSION['tablename']['status'] = (string) $TABLENAME->status;
-        $_SESSION['tablename']['usergroups'] = (string) $TABLENAME->usergroups;
-        $_SESSION['tablename']['usergroup_content'] = (string) $TABLENAME->usergroupcontent;
+        $_SESSION['tablename']['actions']            = (string) $TABLENAME->actions;
+        $_SESSION['tablename']['authors']            = (string) $TABLENAME->authors;
+        $_SESSION['tablename']['docservers']         = (string) $TABLENAME->docservers;
+        $_SESSION['tablename']['doctypes']           = (string) $TABLENAME->doctypes;
+        $_SESSION['tablename']['ext_docserver']      = (string) $TABLENAME->extdocserver;
+        $_SESSION['tablename']['fulltext']           = (string) $TABLENAME->fulltext;
+        $_SESSION['tablename']['groupsecurity']      = (string) $TABLENAME->groupsecurity;
+        $_SESSION['tablename']['history']            = (string) $TABLENAME->history;
+        $_SESSION['tablename']['history_batch']      = (string) $TABLENAME->history_batch;
+        $_SESSION['tablename']['param']              = (string) $TABLENAME->param;
+        $_SESSION['tablename']['resgroups']          = (string) $TABLENAME->resgroups;
+        $_SESSION['tablename']['resgroup_content']   = (string) $TABLENAME->resgroup_content;
+        $_SESSION['tablename']['security']           = (string) $TABLENAME->security;
+        $_SESSION['tablename']['status']             = (string) $TABLENAME->status;
+        $_SESSION['tablename']['usergroups']         = (string) $TABLENAME->usergroups;
+        $_SESSION['tablename']['usergroup_content']  = (string) $TABLENAME->usergroupcontent;
         $_SESSION['tablename']['usergroup_services'] = (string) $TABLENAME->usergroups_services;
-        $_SESSION['tablename']['users'] = (string) $TABLENAME->users;
+        $_SESSION['tablename']['users']              = (string) $TABLENAME->users;
     }
 
     /**
