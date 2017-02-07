@@ -167,6 +167,7 @@ function changePriorityForSve(doctype_id, path_script){
 function updateProcessDate(path_manage_script)
 {
     var admissionDate;
+    
     if ($('admission_date')) {
         admissionDate = $('admission_date').value;
     }
