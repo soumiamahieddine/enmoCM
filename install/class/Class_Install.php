@@ -847,10 +847,10 @@ class Install extends functions
             exit;
         }
 
-        if (!$this->setConfigXmlVisa()) {
-            return false;
-            exit;
-        }
+        // if (!$this->setConfigXmlVisa()) {
+        //     return false;
+        //     exit;
+        // }
 
         if (!$this->setScriptNotificationSendmailSh()) {
             return false;
@@ -988,10 +988,10 @@ class Install extends functions
             exit;
         }
 
-        if (!$this->setConfigXmlVisa()) {
-            return false;
-            exit;
-        }
+        // if (!$this->setConfigXmlVisa()) {
+        //     return false;
+        //     exit;
+        // }
 
         if (!$this->setScriptNotificationSendmailSh()) {
             return false;
@@ -1213,25 +1213,25 @@ class Install extends functions
         return true;
     }
 
-    private function setConfigXmlVisa()
-    {
-        $xmlconfig = simplexml_load_file('modules/visa/xml/config.xml.default');
-        $CONFIG = $xmlconfig->CONFIG;
-        //TODO fill the file...
+    // private function setConfigXmlVisa()
+    // {
+    //     $xmlconfig = simplexml_load_file('modules/visa/xml/config.xml.default');
+    //     $CONFIG = $xmlconfig->CONFIG;
+    //     //TODO fill the file...
 
-        $res = $xmlconfig->asXML();
-        $fp = @fopen("modules/visa/xml/config.xml", "w+");
-        if (!$fp) {
-            return false;
-            exit;
-        }
-        $write = fwrite($fp,$res);
-        if (!$write) {
-            return false;
-            exit;
-        }
-        return true;
-    }
+    //     $res = $xmlconfig->asXML();
+    //     $fp = @fopen("modules/visa/xml/config.xml", "w+");
+    //     if (!$fp) {
+    //         return false;
+    //         exit;
+    //     }
+    //     $write = fwrite($fp,$res);
+    //     if (!$write) {
+    //         return false;
+    //         exit;
+    //     }
+    //     return true;
+    // }
 
     private function setConfigXmlThumbnails()
     {
