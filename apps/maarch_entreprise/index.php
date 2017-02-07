@@ -241,7 +241,7 @@ if(empty($_SESSION['current_basket'])){
                 //document.cookie = "maarch_cookie_2=thesecondcookie";
                 //console.log(document.cookie);
                 return document.cookie;
-            };
+            }
 
             var theCookies;
             //theCookies = getCookies().split(";");

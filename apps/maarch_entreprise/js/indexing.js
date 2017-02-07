@@ -1,4 +1,6 @@
 
+var $j = jQuery.noConflict();
+
 /**
  * When you choose a doctype, you must calculate the process date limit (Ajax) and execute module services
  *
@@ -167,6 +169,7 @@ function changePriorityForSve(doctype_id, path_script){
 function updateProcessDate(path_manage_script)
 {
     var admissionDate;
+    
     if ($('admission_date')) {
         admissionDate = $('admission_date').value;
     }
