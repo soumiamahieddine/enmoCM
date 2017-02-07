@@ -1425,7 +1425,7 @@ if($_SESSION['indexation'] == true && $category == 'outgoing'){
     $stmt = $db->query($selectAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice']));
     if($stmt->rowCount()==0){
         //launch outgoing_mail creation
-        echo '<script type="text/javascript">document.getElementById(\'onglet_rep\').click();showAttachmentsForm(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create&cat=outgoing\',\'98%\',\'auto\');</script>';
+        echo '<script type="text/javascript">document.getElementById(\'responses_tab\').click();showAttachmentsForm(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create&cat=outgoing\',\'98%\',\'auto\');</script>';
     }
     
 }
