@@ -301,7 +301,7 @@ function repost(php_file,update_divs,fields,action,timeout)
     }
     function newElement(type, attrs, content, toNode) {
         var ele=document.createElement(type);
-        
+
         if(attrs) {
             for(var i=0; i<attrs.length; i++) {
                 eval('ele.'+attrs[i][0]+(attrs[i][2] ? '=\u0027' :'=')+attrs[i][1]+(attrs[i][2] ? '\u0027' :''));
@@ -344,7 +344,7 @@ function repost(php_file,update_divs,fields,action,timeout)
                     hoverEle=false;
                 }
             }
-        }
+        };
         while(parentEle.firstChild) parentEle.removeChild(parentEle.firstChild);
         function check(){
             if(year%4==0&&(year%100!=0||year%400==0))allMonth[1]=29;
