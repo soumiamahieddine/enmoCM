@@ -272,11 +272,12 @@ if(empty($_SESSION['current_basket'])){
             } else {
                 //console.log('no completements cookies');
             }
-        </script>  
+        </script>
         <?php
     }
     ?>
         <script type="text/javascript">
+            //TODO  Ne faire qu'une seule fois cet appel (pas possible pour l'instant à cause des modals qui ne connaissent pas cette variable)
             // Initialise les variables de config dans le js
             InitializeJsGlobalConfig();
         </script>
