@@ -55,6 +55,8 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/Chart.js');
 		readfile('apps/maarch_entreprise/js/chosen.proto.min.js');
 		readfile('apps/maarch_entreprise/js/event.simulate.js');
+
+        echo "\n";
 	}
 
 	public function merge_module() {
