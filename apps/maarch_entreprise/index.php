@@ -249,8 +249,6 @@ if(empty($_SESSION['current_basket'])){
             
             
             if (theCookies != undefined) {
-                //console.log('The cookies...');
-                //console.log(theCookies);
                 var path_manage_script = '<?php echo $_SESSION["config"]["businessappurl"];?>' + 'index.php?display=true&page=setProxyCookies';
 
                 new Ajax.Request(path_manage_script,
@@ -277,6 +275,12 @@ if(empty($_SESSION['current_basket'])){
         </script>  
         <?php
     }
+    ?>
+        <script type="text/javascript">
+            // Initialise les variables de config dans le js
+            InitializeJsGlobalConfig();
+        </script>
+    <?php
 
 if (!isset($_REQUEST['display'])) { ?>
     <script>

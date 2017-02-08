@@ -3395,25 +3395,23 @@ function loadToolbarBadge(targetTab,path_manage_script){
     });
 }
 
-//Utilise pour les appels aux services
-// var config_coreurl = '<?php echo $_SESSION['config']['coreurl'];?>';
+var globalConfig;
+function InitializeJsGlobalConfig(){
+    $j.ajax({
+        dataType: "json",
+        url: 'index.php?display=true&page=initializeJsGlobalConfig', 
+        success: function(result){
+            globalConfig = result;
+        }
+    });
+}
 
 // Exemple appel service
 // function testService(){
-    // $j.ajax({
-    //     url: config_coreurl+'rest.php?module=core&service=Core_Session_Service&method=getUserEntitiesLst', 
-    //     success: function(result){
-    //         console.log(result);
-    //     }
-    // });
-    // new Ajax.Request(config_coreurl+'rest.php?module=core&service=Core_Session_Service&method=getUserEntitiesLst',
-    // {
-    //     method:'post',
-    //     parameters: {
-            
-    //     },
-    //     onSuccess: function(answer){
-    //         console.log(answer);
-    //     }
-    // });
+//     $j.ajax({
+//         url: globalConfig.coreurl+'rest.php?module=core&service=Core_Session_Service&method=getUserEntitiesLst', 
+//         success: function(result){
+//             console.log(result);
+//         }
+//     });
 // }
