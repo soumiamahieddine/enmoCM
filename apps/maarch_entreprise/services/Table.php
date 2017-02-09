@@ -57,7 +57,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
             $args['table'] = $args['from'];
         }
         if ( empty($args['table']) ) {
-            throw new Core_SipolException_Service('table empty');
+            throw new Core_MaarchException_Service('table empty');
         }
         if ( is_array($args['table']) ) {
             if (empty($args['table'][0])) {
@@ -76,9 +76,9 @@ class Apps_Table_Service extends Core_Abstract_Service {
             // Join :
             if ( ! empty($args['join']) ) {
                 if ( ! is_array($args['join']) ) {
-                    throw new Core_SipolException_Service('where must be an array');
+                    throw new Core_MaarchException_Service('where must be an array');
                 } else if (count($tmpTable) - 1 != count($args['join'])) {
-                    throw new Core_SipolException_Service('Number of tables doesn\'t match with number of joins');
+                    throw new Core_MaarchException_Service('Number of tables doesn\'t match with number of joins');
                 }
                 $z = 1;
                 foreach ($args['join'] as $cond) {
@@ -94,7 +94,6 @@ class Apps_Table_Service extends Core_Abstract_Service {
         if ( defined(strtoupper($args['table']).'_TABLE')) {
             $tablename = constant(strtoupper($args['table']).'_TABLE');
         } else {
-            //throw new Core_SipolException_Service('table ('.$args['table'].') not defined');
             $tablename = $args['table'];
         }
         // Select :
@@ -102,7 +101,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
             if ( is_array($args['select']) )
                 $args['select'] = implode(',', $args['select']);
             if ( ! is_string($args['select']) ) {
-                throw new Core_SipolException_Service('select must be : string or array');
+                throw new Core_MaarchException_Service('select must be : string or array');
             }
         }
         $select = empty($args['select']) ? '*' : $args['select'];
@@ -115,20 +114,20 @@ class Apps_Table_Service extends Core_Abstract_Service {
         }
         $aWhere = $args['where'];
         if ( ! is_array($aWhere) ) {
-            throw new Core_SipolException_Service('where must be : string or array');
+            throw new Core_MaarchException_Service('where must be : string or array');
         }
         // Data :
         if ( empty($args['data']) ) {
             $args['data'] = [];
         }
         if ( ! is_array($args['data']) ) {
-            throw new Core_SipolException_Service('data must be an array');
+            throw new Core_MaarchException_Service('data must be an array');
         }
         $data = $args['data'];
         // Conditions :
         if ( ! empty($args['conditions']) ) {
             if ( ! is_array($args['conditions']) ) {
-                throw new Core_SipolException_Service('where must be an array');
+                throw new Core_MaarchException_Service('where must be an array');
             }
             foreach ($args['conditions'] as $cond => $value) {
                 $aWhere[] = $cond;
@@ -145,7 +144,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
             if ( is_array($args['group_by']) )
                 $args['group_by'] = implode(',', $args['group_by']);
             if ( ! is_string($args['group_by']) ) {
-                throw new Core_SipolException_Service('group_by must be : string or array');
+                throw new Core_MaarchException_Service('group_by must be : string or array');
             }
             $group_by = ' GROUP BY '.$args['group_by'];
         }
@@ -156,7 +155,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
             if ( is_array($args['order_by']) )
                 $args['order_by'] = implode(',', $args['order_by']);
             if ( ! is_string($args['order_by']) ) {
-                throw new Core_SipolException_Service('order_by must be : string or array');
+                throw new Core_MaarchException_Service('order_by must be : string or array');
             }
             $order_by = ' ORDER BY '.$args['order_by'];
         }
@@ -165,7 +164,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
             $limit = '';
         } else {
             if ( ! is_numeric($args['limit']) ) {
-                throw new Core_SipolException_Service('limit must be : numeric');
+                throw new Core_MaarchException_Service('limit must be : numeric');
             }
             $limit = ' LIMIT '.$args['limit'];
         }
@@ -178,7 +177,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
         }
         $db = new Database($GLOBALS['configFile']);
         $stmt = empty($data) ? $db->query($queryExt) : $db->query($queryExt, $data);
-        //var_dump($stmt);
+
         $rowset = [];
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $rowset[] = $row;
@@ -195,7 +194,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
      */
     public static function insertInto(array $aData, $table, $getLastId = null){
         if ( ! is_string($table) ) {
-            throw new Core_SipolException_Service('$table is not a string');
+            throw new Core_MaarchException_Service('$table is not a string');
         }
         $queryExtFields = [];
         $queryExtJokers = [];
@@ -225,13 +224,13 @@ class Apps_Table_Service extends Core_Abstract_Service {
     public static function updateTable(array $aData, $table, $aWhere = []){
         // Prés-requis :
         if ( ! is_string($table) ) {
-            throw new Core_SipolException_Service('$table not a string');
+            throw new Core_MaarchException_Service('$table not a string');
         }
         if ( ! is_array($aData) ) {
-            throw new Core_SipolException_Service('$aData not an array');
+            throw new Core_MaarchException_Service('$aData not an array');
         }
         if ( empty($aData) ) {
-            throw new Core_SipolException_Service('$aData empty');
+            throw new Core_MaarchException_Service('$aData empty');
         }
         // Initialisation :
         $queryExtUpdate = [];
@@ -264,7 +263,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
      */
     public static function deleteInto(array $aWhere, $table){
         if ( ! is_string($table) ) {
-            throw new Core_SipolException_Service('$table not a string');
+            throw new Core_MaarchException_Service('$table not a string');
         }
         $queryExtWhere = [];
         $queryExtValues = [];
@@ -282,25 +281,25 @@ class Apps_Table_Service extends Core_Abstract_Service {
     /**
      * Fonction de suppression dans la base de données
      * @param array $args
-     * @throws Core_SipolException_Service if Table Argument is empty or is not a string
-     * @throws Core_SipolException_Service if Where Argument is empty or is not an array
-     * @throws Core_SipolException_Service if Data Argument is not an array
+     * @throws Core_MaarchException_Service if Table Argument is empty or is not a string
+     * @throws Core_MaarchException_Service if Where Argument is empty or is not an array
+     * @throws Core_MaarchException_Service if Data Argument is not an array
      *
      * @return bool
      */
     public static function deleteFrom(array $args = []){
         if (empty($args['table']) || !is_string($args['table'])) {
-            throw new Core_SipolException_Service('Table Argument is empty or is not a string.');
+            throw new Core_MaarchException_Service('Table Argument is empty or is not a string.');
         }
         if (empty($args['where']) || !is_array($args['where'])) {
-            throw new Core_SipolException_Service('Where Argument is empty or is not an array.');
+            throw new Core_MaarchException_Service('Where Argument is empty or is not an array.');
         }
 
         if (empty($args['data'])) {
             $args['data'] = [];
         }
         if (!is_array($args['data'])) {
-            throw new Core_SipolException_Service('Data Argument is not an array.');
+            throw new Core_MaarchException_Service('Data Argument is not an array.');
         }
 
         $queryExt = 'DELETE FROM ' .$args['table']. ' WHERE ' . implode(' AND ', $args['where']);
