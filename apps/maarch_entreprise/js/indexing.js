@@ -238,8 +238,9 @@ function checkRealDate(arg) {
             admissionDate = $('admission_date').value;
 			var date1 = new Date();
 			date1.setFullYear(admissionDate.substr(6,4));
-			date1.setMonth(admissionDate.substr(3,2));
-			date1.setDate(admissionDate.substr(0,2));
+			date1.setMonth(admissionDate.substr(3,2) - 1, admissionDate.substr(0,2));
+			//date1.setMonth(admissionDate.substr(3,2));
+			//date1.setDate(admissionDate.substr(0,2));
 			date1.setHours(0);
 			date1.setMinutes(0);
 
@@ -250,8 +251,9 @@ function checkRealDate(arg) {
             docDate = $('doc_date').value;
 			var date2 = new Date();
 			date2.setFullYear(docDate.substr(6,4));
-			date2.setMonth(docDate.substr(3,2));
-			date2.setDate(docDate.substr(0,2));
+			date2.setMonth(docDate.substr(3,2) - 1, docDate.substr(0,2));
+			//date2.setMonth(docDate.substr(3,2));
+			//date2.setDate(docDate.substr(0,2));
 			date2.setHours(0);
 			date2.setMinutes(0);
 			var d2_docDate=date2.getTime();
@@ -286,42 +288,37 @@ function checkRealLimitDate(arg) {
 
     var process_limit_date;
     var admission_date;
+    if ($('process_limit_date')) {
+        process_limit_date = $('process_limit_date').value;
+        var date1 = new Date();
+        date1.setFullYear(process_limit_date.substr(6,4),process_limit_date.substr(3,2)-1,process_limit_date.substr(0,2));
+        //date1.setMonth(process_limit_date.substr(3,2)-1,process_limit_date.substr(0,2));
+        // date1.setDate(process_limit_date.substr(0,2));
+        // date1.setHours(0);
+        // date1.setMinutes(0);
 
-    var cat = $('category_id').options[$('category_id').selectedIndex].value
+        var d1_process_limit_date=date1.getTime();
+    }
 
-    if (cat == 'incoming') {
-        if ($('process_limit_date')) {
-            process_limit_date = $('process_limit_date').value;
-            var date1 = new Date();
-            date1.setFullYear(process_limit_date.substr(6,4),process_limit_date.substr(3,2)-1,process_limit_date.substr(0,2));
-            //date1.setMonth(process_limit_date.substr(3,2)-1,process_limit_date.substr(0,2));
-            // date1.setDate(process_limit_date.substr(0,2));
-            // date1.setHours(0);
-            // date1.setMinutes(0);
+    if($('admission_date')) {
+        admission_date = $('admission_date').value;
+        var date2 = new Date();
+        date2.setFullYear(admission_date.substr(6,4),admission_date.substr(3,2)-1,admission_date.substr(0,2));
+		//date2.setMonth(admission_date.substr(3,2)-1,admission_date.substr(0,2));
+		// date2.setDate(admission_date.substr(0,2));
+		// date2.setHours(0);
+		// date2.setMinutes(0);
+        var d2_admission_date=date2.getTime();
+    }
 
-            var d1_process_limit_date=date1.getTime();
+    if(process_limit_date != "" && admission_date != "" && d2_admission_date > d1_process_limit_date) {          
+        alert("La date limite de traitement doit être supérieure à la date d'arrivée du courrier ");
+        if(arg == 'process_limit_date'){
+            $('process_limit_date').value = "";
         }
-
-        if($('admission_date')) {
-            admission_date = $('admission_date').value;
-            var date2 = new Date();
-            date2.setFullYear(admission_date.substr(6,4),admission_date.substr(3,2)-1,admission_date.substr(0,2));
-        //date2.setMonth(admission_date.substr(3,2)-1,admission_date.substr(0,2));
-        // date2.setDate(admission_date.substr(0,2));
-        // date2.setHours(0);
-        // date2.setMinutes(0);
-            var d2_admission_date=date2.getTime();
-        }
-
-        if(process_limit_date != "" && admission_date != "" && d2_admission_date > d1_process_limit_date) {          
-            alert("La date limite de traitement doit être supérieure à la date d'arrivée du courrier ");
-            if(arg == 'process_limit_date'){
-                $('process_limit_date').value = "";
-            }
-            if(arg == 'admission_date'){
-                $('admission_date').value = "";
-            }    
-        }
+        if(arg == 'admission_date'){
+        	$('admission_date').value = "";
+        }    
     }
 
 /*    var date = new Date();
@@ -1567,7 +1564,7 @@ var addMultiContacts = function (idField, idList, theUrlToListScript, paramNameS
  };
  
 function updateMultiContacts(path, action, contact, target, array_index, addressid, contactid) {
-        
+
 	new Ajax.Request(path,
 	{
 		method:'post',
@@ -1892,8 +1889,10 @@ function showEditButton(){
         $('edit').setStyle({display: 'inline'});
         if ($('not_enabled')) {
             $('not_enabled').setStyle({display: 'inline'});
-        }
-        $('choose_file').setStyle({display: 'none'});
+		}
+        if ($('choose_file')){
+            $('choose_file').setStyle({display: 'none'});
+		}
         if ($('file_loaded')) {
             $('file_loaded').setStyle({display: 'none'});
         }
