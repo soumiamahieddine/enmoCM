@@ -466,7 +466,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     {
         $frm_str .= $today;
     }
-    $frm_str .= '" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
+    $frm_str .= '" placeholder="JJ-MM-AAAA" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
     $frm_str .= '<td><span class="red_asterisk" id="doc_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr >';
     
@@ -508,7 +508,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . '&dir=indexing_searching&page=update_process_date\');"/></td>';
     $frm_str .= '<td><span class="red_asterisk" id="admission_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
-				  
+     
     /*** Contact ***/
     $frm_str .= '<tr id="contact_choose_tr" style="display:'.$display_value.';">';
     $frm_str .='<td class="indexing_label"><label for="type_contact" class="form_title" ><span id="exp_contact_choose_label">'._SHIPPER_TYPE.'</span><span id="dest_contact_choose_label">'._DEST_TYPE.'</span></label></td>';
@@ -624,7 +624,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					
     //$_SESSION['adresses'] = '';
 					
-    $frm_str .= '<tr id="add_multi_contact_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<tr id="add_multi_contact_tr" style="display:' . $display_value . ';">';
     $frm_str .= '<td><label for="contact" class="form_title" >'
         . '<span id="dest_multi_contact">' . _DEST . '</span>';
     
@@ -737,9 +737,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $countAllEntities = count($allEntitiesTree);
 
         $frm_str .= '<tr id="department_tr" style="display:'.$display_value.';">';
-        $frm_str .='<td class="indexing_label"><label for="department" class="form_title" id="label_dep_dest" style="display:inline;" >'._DEPARTMENT_DEST.'</label><label for="department" class="form_title" id="label_dep_exp" style="display:none;" >'._DEPARTMENT_EXP.'</label><label for="department" '
-            . 'class="form_title" id="label_dep_owner" style="display:none;" >'
-            . _DEPARTMENT_OWNER . '</label></td>';
+        $frm_str .='<td class="indexing_label"><label for="department" class="form_title" id="label_dep_dest" style="display:inline;" >'._DEPARTMENT_DEST.'</label><label for="department" class="form_title" id="label_dep_exp" style="display:none;" >'._DEPARTMENT_EXP.'</label><label for="department" ' . 'class="form_title" id="label_dep_owner" style="display:none;" >'. _DEPARTMENT_OWNER . '</label></td>';
         $frm_str .='<td>&nbsp;</td>';
         $frm_str .='<td class="indexing_field"><select name="destination" id="destination" onchange="clear_error(\'frm_error_'.$id_action.'\');'.$func_load_listdiff_by_entity.'">';
         $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
@@ -1665,7 +1663,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $contact_type = get_value_fields($values_form, 'type_contact_external');
         if(!$contact_type){
             $contact_type = get_value_fields($values_form, 'type_contact_internal');
-        }	
+        }
         if (!$contact_type) {
             $contact_type = get_value_fields($values_form, 'type_multi_contact_external');
         }
@@ -1693,8 +1691,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 $contact_type = 'internal';
             }else{
                 $contact_type = 'external';
-            }	
-            // $contact_id = str_replace(')', '', substr($contact, strrpos($contact,'(')+1));
+            }
+
             if($contact_type == 'internal')
             {
                 if($cat_id == 'incoming' || $cat_id == 'internal'  || $cat_id == 'ged_doc')
