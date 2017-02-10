@@ -210,7 +210,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . $id_action . '\');reinit();"'
         .' class="fa fa-times-circle fa-2x closeModale" title="'._CLOSE.'"/>';
     $frm_str .='</i>';
-    /*     * ******************************* LEFT PART ************************************* */
+    /********************************* LEFT PART **************************************/
     $frm_str .= '<div id="validleftprocess" style="display:none;">';
     $frm_str .= '<div id="frm_error_' . $id_action . '" class="error"></div>';
     $frm_str .= '<form name="process" method="post" id="process" action="#" '
@@ -258,7 +258,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<div onClick="$(\'return_previsualise\').style.display=\'none\';" id="return_previsualise" style="cursor: pointer; display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
                     $frm_str .= '<input type="hidden" id="identifierDetailFrame" value="" />';
                     $frm_str .= '</div>';
-
+ 
                     $frm_str .= '<input type="text" value="' . $nbContacts . ' ' . _CONTACTS . '" readonly="readonly" class="readonly" size="40" style="cursor: pointer; border:none;" title="' . _SHOW_MULTI_CONTACT . '" alt="' . SHOW_MULTI_CONTACT . '"';
                     $frm_str .= 'onClick = "previsualiseAdminRead(event, ' . $frameContacts . ');"';
                     $frm_str .= '/>';
@@ -285,7 +285,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</td>';
             $frm_str .= '</tr>';
         }
-    }
+    } 
     if ($chrono_number <> '') {
         $frm_str .= '<tr>';
         $frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
@@ -347,18 +347,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $frm_str .= '<table style="width:100%;" id="complementary_fields">';
 
-    //TAGS
-    if ($core_tools->is_module_loaded('tags') && ($core_tools->test_service('tag_view', 'tags', false) == 1)) {
-        
-        include_once("modules" . DIRECTORY_SEPARATOR . "tags" . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "process" . DIRECTORY_SEPARATOR . "index.php");
-
-        //script
-        $frm_str .= '<script>';
-        $frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
-        $frm_str .= '</script>';
-    }
-
-    //THESAURUS
+	//THESAURUS
     if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
 		
         require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
@@ -402,6 +391,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</script>';
         /*****************/
     }
+
+    //TAGS
+    if ($core_tools->is_module_loaded('tags') && ($core_tools->test_service('tag_view', 'tags', false) == 1)) {
+        
+        include_once("modules" . DIRECTORY_SEPARATOR . "tags" . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "process" . DIRECTORY_SEPARATOR . "index.php");
+
+        //script
+        $frm_str .= '<script>';
+        $frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
+        $frm_str .= '</script>';
+    }
+
     //FOLDERS
     if ($core_tools->is_module_loaded('folder') && ($core->test_service('view_folder_tree', 'folder',false))) {
         
