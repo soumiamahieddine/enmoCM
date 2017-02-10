@@ -81,7 +81,7 @@ class request extends dbquery
 
                 //fix order by alt_identifier
                 if($field == 'alt_identifier'){
-                    $field_string .= "regexp_replace(alt_identifier, '[^a-zA-Z]', '', 'g')".","."regexp_replace(alt_identifier, '[^0-9]', '', 'g')::int".",";
+                    $field_string .= "order_alphanum(alt_identifier),";
                 }
             }
             //Query fields and table names have been wrote in 2 strings
