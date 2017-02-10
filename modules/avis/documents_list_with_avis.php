@@ -107,7 +107,7 @@ array_push($select[$table],"res_id", "status", "category_id as category_img",
                         "contact_firstname", "contact_lastname", "contact_society", "user_lastname", 
                         "user_firstname", "priority", "creation_date", 'modification_date', "admission_date", "subject",
                         "process_limit_date", 'recommendation_limit_date', "entity_label", "dest_user", "category_id", "type_label",
-                        "exp_user_id", "count_attachment", "alt_identifier","is_multicontacts", "locker_user_id", "locker_time");
+                        "exp_user_id", "count_attachment", "alt_identifier","is_multicontacts", "locker_user_id", "locker_time", "address_id");
                         
 if($core_tools->is_module_loaded("cases") == true) {
     array_push($select[$table], "case_id", "case_label", "case_description");
@@ -138,14 +138,14 @@ $order = $list->getOrder();
 $order_field = $list->getOrderField();
 if (!empty($order_field) && !empty($order)) {
     if($_REQUEST['order_field'] == 'alt_identifier'){
-        $orderstr = "order by regexp_replace(alt_identifier, '[^a-zA-Z]', '', 'g') ".$order.", regexp_replace(alt_identifier, '[^0-9]', '', 'g')::int"." ".$order;
+        $orderstr = "order by order_alphanum(alt_identifier)"." ".$order;
     }else{
         $orderstr = "order by ".$order_field." ".$order;
     }
 	$_SESSION['last_order_basket'] = $orderstr;
 }else if(!empty($_SESSION['save_list']['order']) && !empty($_SESSION['save_list']['order_field'])){
     if($_SESSION['save_list']['order_field'] == 'alt_identifier'){
-        $orderstr = "order by regexp_replace(alt_identifier, '[^a-zA-Z]', '', 'g') ".$_SESSION['save_list']['order'].", regexp_replace(alt_identifier, '[^0-9]', '', 'g')::int"." ".$_SESSION['save_list']['order'];
+        $orderstr = "order by order_alphanum(alt_identifier)"." ".$_SESSION['save_list']['order'];
     }else{
         $orderstr = "order by ".$_SESSION['save_list']['order_field']." ".$_SESSION['save_list']['order'];
     }
