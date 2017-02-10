@@ -229,7 +229,7 @@ if($mode == 'normal') {
     array_push($select[$view],  "res_id", "res_id as is_labeled", "status", "subject", "category_id as category_img", 
                                 "contact_firstname", "contact_lastname", "contact_society", 
                                 "user_lastname", "user_firstname", "dest_user", "type_label", 
-                                "creation_date", "entity_label", "category_id, exp_user_id", "alt_identifier", "count_attachment", "is_multicontacts", "priority");
+                                "creation_date", "entity_label", "category_id, exp_user_id", "alt_identifier", "count_attachment", "is_multicontacts", "priority", "address_id");
     //Cases
     if($core_tools->is_module_loaded("cases") == true) {
         array_push($select[$view], "case_id", "case_label", "case_description");
@@ -312,7 +312,7 @@ if($mode == 'normal') {
 
     if (!empty($order_field) && !empty($order)){
         if($_REQUEST['order_field'] == 'alt_identifier'){
-            $orderstr = "order by regexp_replace(alt_identifier, '[^a-zA-Z]', '', 'g') ".$order.", regexp_replace(alt_identifier, '[^0-9]', '', 'g')::bigint"." ".$order;
+            $orderstr = "order by order_alphanum(alt_identifier)"." ".$order;
         }else{
             $orderstr = "order by ".$order_field." ".$order;
         }
