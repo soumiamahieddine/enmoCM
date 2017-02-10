@@ -33,7 +33,7 @@ require_once 'core/class/class_security.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_contacts_v2.php';
 require_once 'core/class/class_manage_status.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_lists.php';
-             
+            
 $status_obj = new manage_status();
 $security   = new security();
 $core_tools = new core_tools();
@@ -86,9 +86,9 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])){
 
 //URL extra parameters
 $urlParameters = '';
-
 //origin
 if ($_REQUEST['origin'] == 'searching') $urlParameters .= '&origin=searching';
+
 
 //Basket information
 if(!empty($_SESSION['current_basket']['view'])) {
@@ -107,7 +107,7 @@ array_push($select[$table],"res_id", "status", "category_id as category_img",
                         "contact_firstname", "contact_lastname", "contact_society", "user_lastname", 
                         "user_firstname", "priority", "creation_date", "admission_date", "subject", 
                         "process_limit_date", "entity_label", "dest_user", "category_id", "type_label", 
-                        "exp_user_id", "count_attachment", "alt_identifier","is_multicontacts", "locker_user_id", "locker_time","viewed");
+                        "exp_user_id", "count_attachment", "alt_identifier","is_multicontacts", "locker_user_id", "locker_time","viewed", "address_id");
                         
 if($core_tools->is_module_loaded("cases") == true) {
     array_push($select[$table], "case_id", "case_label", "case_description");
@@ -117,7 +117,7 @@ $arrayPDO = array();
 //Where clause
 $where_tab = array();
     //From basket
-		if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
+		if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = '('.stripslashes($_SESSION['current_basket']['clause']).')'; //Basket clause
     //From filters
         $filterClause = $list->getFilters(); 
         if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
@@ -133,6 +133,7 @@ $where_tab = array();
         $where = implode(' and ', $where_tab);
 
 //Order
+
 $order = $order_field = '';
 $order = $list->getOrder();
 $order_field = $list->getOrderField();
@@ -159,7 +160,14 @@ if (!empty($order_field) && !empty($order)) {
 
 //Request
 $tab=$request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
-// $request->show(); exit;
+
+$_SESSION['current_basket']['last_query'] = array();
+$_SESSION['current_basket']['last_query']['select'] = $select;
+$_SESSION['current_basket']['last_query']['where'] = $where;
+$_SESSION['current_basket']['last_query']['arrayPDO'] = $arrayPDO;
+$_SESSION['current_basket']['last_query']['orderstr'] = $orderstr;
+
+//$request->show(); exit;
 //Templates
 $defaultTemplate = 'documents_list_copies';
 $selectedTemplate = $list->getTemplate();
@@ -197,45 +205,45 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='res_id';
                 $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
-                
-                // notes
-                $query = "SELECT ";
-                 $query .= "notes.id ";
-                $query .= "FROM ";
-                 $query .= "notes "; 
-                $query .= "left join "; 
-                 $query .= "note_entities "; 
-                $query .= "on "; 
-                 $query .= "notes.id = note_entities.note_id ";
-                $query .= "WHERE ";
-                  $query .= "tablename = 'res_letterbox' ";
-                 $query .= "AND "; 
-                  $query .= "coll_id = 'letterbox_coll' ";
-                 $query .= "AND ";
+				
+				// notes
+				$query = "SELECT ";
+				 $query .= "notes.id ";
+				$query .= "FROM ";
+				 $query .= "notes "; 
+				$query .= "left join "; 
+				 $query .= "note_entities "; 
+				$query .= "on "; 
+				 $query .= "notes.id = note_entities.note_id ";
+				$query .= "WHERE ";
+				  $query .= "tablename = 'res_letterbox' ";
+				 $query .= "AND "; 
+				  $query .= "coll_id = 'letterbox_coll' ";
+				 $query .= "AND ";
                   $query .= "identifier = ? ";
                   $arrayPDOnotes = array($tab[$i][$j]['value']);
-                 $query .= "AND ";
-                  $query .= "( ";
-                    $query .= "( ";
-                      $query .= "item_id IN (";
-                      
+				 $query .= "AND ";
+				  $query .= "( ";
+					$query .= "( ";
+					  $query .= "item_id IN (";
+					  
                        foreach($_SESSION['user']['entities'] as $entitiestmpnote) {
                         $query .= "?, ";
                         $arrayPDOnotes = array_merge($arrayPDOnotes, array($entitiestmpnote['ENTITY_ID']));
                        }
-                       $query = substr($query, 0, -2);
-                      
-                      $query .= ") ";
-                     $query .= "OR "; 
-                      $query .= "item_id IS NULL ";
-                    $query .= ") ";
-                   $query .= "OR ";
+					   $query = substr($query, 0, -2);
+					  
+					  $query .= ") ";
+					 $query .= "OR "; 
+					  $query .= "item_id IS NULL ";
+					$query .= ") ";
+				   $query .= "OR ";
                     $query .= "user_id = ? ";
                     $arrayPDOnotes = array_merge($arrayPDOnotes, array($_SESSION['user']['UserId']));
                   $query .= ") ";
-                $stmt = $db->query($query, $arrayPDOnotes);
-                $tab[$i][$j]['hasNotes'] = $stmt->fetchObject();             
-                $tab[$i][$j]['res_multi_contacts'] = $_SESSION['mlb_search_current_res_id'];
+				$stmt = $db->query($query, $arrayPDOnotes);
+				$tab[$i][$j]['hasNotes'] = $stmt->fetchObject();				
+				$tab[$i][$j]['res_multi_contacts'] = $_SESSION['mlb_search_current_res_id'];
             }
             if($tab[$i][$j][$value]=="creation_date")
             {
@@ -312,7 +320,7 @@ for ($i=0;$i<count($tab);$i++)
             }
             if($tab[$i][$j][$value]=="subject")
             {
-                $tab[$i][$j]["value"] = $request->cut_string($request->show_string($tab[$i][$j]["value"]), 250);
+                $tab[$i][$j]["value"] = $request->cut_string($request->show_string($tab[$i][$j]["value"], '', '', '', false), 250);
                 $tab[$i][$j]["label"]=_SUBJECT;
                 $tab[$i][$j]["size"]="12";
                 $tab[$i][$j]["label_align"]="left";
@@ -360,19 +368,18 @@ for ($i=0;$i<count($tab);$i++)
             }
             if($tab[$i][$j][$value]=="exp_user_id")
             {
-                if (empty($contact_lastname) && empty($contact_firstname) && empty($user_lastname) && empty($user_firstname)) {
-                    $query = "SELECT ca.firstname, ca.lastname FROM contact_addresses ca, res_view_letterbox rvl
-                                WHERE rvl.res_id = ?
-                                AND rvl.address_id = ca.id AND rvl.exp_contact_id = ca.contact_id";
-                    $arrayPDO = array($tab[$i][0]['res_id']);
+                if (empty($contact_lastname) && empty($contact_firstname) && empty($user_lastname) && empty($user_firstname) && !empty($tab[$i][25]['value'])) {
+                    $query = "SELECT ca.firstname, ca.lastname FROM contact_addresses ca WHERE ca.id = ?";
+                    $arrayPDO = array($tab[$i][25]['value']);
                     $stmt2 = $db->query($query, $arrayPDO);
                     $return_contact = $stmt2->fetchObject();
+                    
                     if (!empty($return_contact)) {
                         $contact_firstname = $return_contact->firstname;
                         $contact_lastname = $return_contact->lastname;
                     }
                 }
-
+                
                 $tab[$i][$j]["label"]=_CONTACT;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="left";
@@ -402,18 +409,18 @@ for ($i=0;$i<count($tab);$i++)
             }
             if($tab[$i][$j][$value]=="is_multicontacts")
             {
-                if($tab[$i][$j]['value'] == 'Y'){
-                    $tab[$i][$j]["label"]=_CONTACT;
-                    $tab[$i][$j]["size"]="10";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=false;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["value"] = _MULTI_CONTACT;
-                    $tab[$i][$j]["order"]=false;
-                    $tab[$i][$j]["is_multi_contacts"] = 'Y';
-                }
+				if($tab[$i][$j]['value'] == 'Y'){
+					$tab[$i][$j]["label"]=_CONTACT;
+					$tab[$i][$j]["size"]="10";
+					$tab[$i][$j]["label_align"]="left";
+					$tab[$i][$j]["align"]="left";
+					$tab[$i][$j]["valign"]="bottom";
+					$tab[$i][$j]["show"]=false;
+					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+					$tab[$i][$j]["value"] = _MULTI_CONTACT;
+					$tab[$i][$j]["order"]=false;
+					$tab[$i][$j]["is_multi_contacts"] = 'Y';
+				}
             }
             if($tab[$i][$j][$value]=="type_label")
             {
@@ -427,7 +434,7 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["order"]='type_label';
             }
             if($tab[$i][$j][$value]=="status")
-            {   //couleurs des priorit�s
+            {   //couleurs des priorités
                 if($tab[$i][8]["value"]=='0'){
                     $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
                 }else if($tab[$i][8]["value"]=='1'){
@@ -438,12 +445,11 @@ for ($i=0;$i<count($tab);$i++)
                 $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
                 $statusCmp = $tab[$i][$j]['value'];
                 $img_class = substr($res_status['IMG_SRC'], 0, 2);
-                //$tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
                 if (!isset($res_status['IMG_SRC']) ||  empty($res_status['IMG_SRC'])){
                  $tab[$i][$j]['value'] = "<i  ".$style." class = 'fm fm-letter-status-new fm-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
-                } else {
-                    $tab[$i][$j]['value'] = "<i ".$style." class = '".$img_class." ".$res_status['IMG_SRC']." ".$img_class."-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
-                }
+				} else {
+					$tab[$i][$j]['value'] = "<i ".$style." class = '".$img_class." ".$res_status['IMG_SRC']." ".$img_class."-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
+				}
                 $tab[$i][$j]["label"]=_STATUS;
                 $tab[$i][$j]["size"]="4";
                 $tab[$i][$j]["label_align"]="left";
@@ -468,12 +474,20 @@ for ($i=0;$i<count($tab);$i++)
             }
             if($tab[$i][$j][$value]=="count_attachment")
             {
+                $query = "SELECT count(res_id) as total FROM res_view_attachments
+                            WHERE res_id_master = ?
+                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN ('converted_pdf', 'print_folder') AND coll_id = ? AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                $arrayPDO = array($tab[$i][0]['res_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
+                $stmt2 = $db->query($query, $arrayPDO);
+                $return_count = $stmt2->fetchObject();
+
                 $tab[$i][$j]["label"]=_ATTACHMENTS;
                 $tab[$i][$j]["size"]="12";
                 $tab[$i][$j]["label_align"]="left";
                 $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]['value'] = "$return_count->total";
                 $tab[$i][$j]["order"]='count_attachment';
             }
             if($tab[$i][$j][$value]=="case_id" && $core_tools->is_module_loaded("cases") == true)
@@ -544,11 +558,11 @@ if ($core_tools->test_service('fileplan', 'fileplan', false)) {
         . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
     $fileplan = new fileplan();
     if (
-        count($fileplan->getUserFileplan()) > 0 
-        || (count($fileplan->getEntitiesFileplan()) > 0 
-            && $core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)
-            )
-    ) {
+		count($fileplan->getUserFileplan()) > 0 
+		|| (count($fileplan->getEntitiesFileplan()) > 0 
+			&& $core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)
+			)
+	) {
         $paramsTab['bool_checkBox'] = true;
         $paramsTab['bool_standaloneForm'] = true;
         $positions = array(
@@ -581,13 +595,13 @@ $export = array(
         );
 array_push($paramsTab['tools'],$export);
 if ($core_tools->test_service('print_doc_details_from_list', 'apps', false)) {
-    $print = array(
-            "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
-            "icon"          =>  'print',
-            "tooltip"       =>  _PRINT_LIST,
-            "disabledRules" =>  count($tab)." == 0"
-            );
-    array_push($paramsTab['tools'], $print);   
+	$print = array(
+			"script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
+			"icon"          =>  'print',
+			"tooltip"       =>  _PRINT_LIST,
+			"disabledRules" =>  count($tab)." == 0"
+			);
+	array_push($paramsTab['tools'], $print);   
 }
 
 //Afficher la liste
