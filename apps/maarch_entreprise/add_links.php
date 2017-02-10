@@ -15,7 +15,6 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
         $Class_LinkController = new LinkController();
         $db = new Database;
 
-
         $res_parent = $_REQUEST['res_id'];
 
         if ($_REQUEST['mode'] == 'add') {
