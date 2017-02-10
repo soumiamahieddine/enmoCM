@@ -28,7 +28,6 @@
 * @version $Revision$
 * @ingroup apps
 */
-
 require_once 'core/class/class_request.php';
 require_once 'core/class/class_security.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_contacts_v2.php';
@@ -87,9 +86,9 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])){
 
 //URL extra parameters
 $urlParameters = '';
-
 //origin
 if ($_REQUEST['origin'] == 'searching') $urlParameters .= '&origin=searching';
+
 
 //Basket information
 if(!empty($_SESSION['current_basket']['view'])) {
@@ -108,7 +107,7 @@ array_push($select[$table],"res_id", "status", "category_id as category_img",
                         "contact_firstname", "contact_lastname", "contact_society", "user_lastname", 
                         "user_firstname", "priority", "creation_date", "admission_date", "subject", 
                         "process_limit_date", "entity_label", "dest_user", "category_id", "type_label", 
-                        "exp_user_id", "count_attachment", "alt_identifier","is_multicontacts", "locker_user_id", "locker_time");
+                        "exp_user_id", "count_attachment", "alt_identifier","is_multicontacts", "locker_user_id", "locker_time", "address_id");
                         
 if($core_tools->is_module_loaded("cases") == true) {
     array_push($select[$table], "case_id", "case_label", "case_description");
@@ -134,6 +133,7 @@ $where_tab = array();
         $where = implode(' and ', $where_tab);
 
 //Order
+
 $order = $order_field = '';
 $order = $list->getOrder();
 $order_field = $list->getOrderField();
@@ -167,7 +167,7 @@ $_SESSION['current_basket']['last_query']['where'] = $where;
 $_SESSION['current_basket']['last_query']['arrayPDO'] = $arrayPDO;
 $_SESSION['current_basket']['last_query']['orderstr'] = $orderstr;
 
-// $request->show(); exit;
+//$request->show(); exit;
 //Templates
 $defaultTemplate = 'documents_list_with_attachments';
 $selectedTemplate = $list->getTemplate();
@@ -359,23 +359,18 @@ for ($i=0;$i<$tabI;$i++)
             }
             if($tab[$i][$j][$value]=="exp_user_id")
             {
-				
-                //requete supprimée parce qu'elle fait ralentir l'application lorsqu on recherche dans les corbeilles volumineuses
-                // en plus sans cette requête, l'operation fonctionne très bien.
-
-                // if (empty($contact_lastname) && empty($contact_firstname) && empty($user_lastname) && empty($user_firstname)) {
-                //     $query = "SELECT ca.firstname, ca.lastname FROM contact_addresses ca, res_view_letterbox rvl
-                //                 WHERE rvl.res_id = ?
-                //                 AND rvl.address_id = ca.id AND rvl.exp_contact_id = ca.contact_id";
-                //     $arrayPDO = array($tab[$i][0]['res_id']);
-                //     $stmt2 = $db->query($query, $arrayPDO);
-                //     $return_contact = $stmt2->fetchObject();
-                //     if (!empty($return_contact)) {
-                //         $contact_firstname = $return_contact->firstname;
-                //         $contact_lastname = $return_contact->lastname;
-                //     }
-                // }
-
+                if (empty($contact_lastname) && empty($contact_firstname) && empty($user_lastname) && empty($user_firstname) && !empty($tab[$i][24]['value'])) {
+                    $query = "SELECT ca.firstname, ca.lastname FROM contact_addresses ca WHERE ca.id = ?";
+                    $arrayPDO = array($tab[$i][24]['value']);
+                    $stmt2 = $db->query($query, $arrayPDO);
+                    $return_contact = $stmt2->fetchObject();
+                    
+                    if (!empty($return_contact)) {
+                        $contact_firstname = $return_contact->firstname;
+                        $contact_lastname = $return_contact->lastname;
+                    }
+                }
+                
                 $tab[$i][$j]["label"]=_CONTACT;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="left";
@@ -470,7 +465,7 @@ for ($i=0;$i<$tabI;$i++)
             }
             if($tab[$i][$j][$value]=="count_attachment")
             {
-                $query = "SELECT count(*) as total FROM res_view_attachments
+                $query = "SELECT count(res_id) as total FROM res_view_attachments
                             WHERE res_id_master = ?
                             AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN ('converted_pdf', 'print_folder') AND coll_id = ? AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
                 $arrayPDO = array($tab[$i][0]['res_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
