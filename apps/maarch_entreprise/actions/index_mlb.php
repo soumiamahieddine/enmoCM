@@ -458,7 +458,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<td><span class="red_asterisk" id="doc_date_mandatory" '
             . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr >';
-    
+  
     /*** Author ***/
     $frmStr .= '<tr id="author_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td><label for="author" class="form_title" >' . _AUTHOR
@@ -691,7 +691,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $countAllEntities = count($allEntitiesTree);
         for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
             if (!$allEntitiesTree[$cptEntities]['KEYWORD']) {
-                $frmStr .= '<option data-object_type="entity_id" value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
+                $frmStr .= '<option title="'.functions::show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL']).'" data-object_type="entity_id" value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
                 if ($allEntitiesTree[$cptEntities]['DISABLED']) {
                     $frmStr .= ' disabled="disabled" class="disabled_entity"';
                 } else {
@@ -1847,7 +1847,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     if ($attach) {
         $idDoc = get_value_fields($formValues, 'res_id');
         $idDocTab = explode(',', $idDoc);
-        for($i=0;$i<count($_SESSION['stockCheckbox']);$i++){
+        for($i=0;$i<count($idDocTab);$i++){
             $queryLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES(?, ?, ?)";
             $arrayPDO = array($idDocTab[$i], $resId, $_SESSION['collection_id_choice']);
             $db->query($queryLink, $arrayPDO);
