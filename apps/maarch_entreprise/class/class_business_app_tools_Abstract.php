@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008-2016 Maarch
+*    Copyright 2008-2017 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -44,7 +44,6 @@ abstract class business_app_tools_Abstract extends Database
     public function build_business_app_config()
     {
         // build Maarch business app configuration into sessions vars
-        $_SESSION['showmenu'] = 'oui';
 
         $core = new core_tools();
         if (file_exists(
@@ -102,18 +101,18 @@ abstract class business_app_tools_Abstract extends Database
                 (string) $config->nblinetoshow;
             $_SESSION['config']['limitcharsearch'] =
                 (string) $config->limitcharsearch;
-            $_SESSION['config']['lang'] = (string) $config->lang;
-            $_SESSION['config']['adminmail'] = (string) $config->adminmail;
-            $_SESSION['config']['adminname'] = (string) $config->adminname;
-            $_SESSION['config']['debug'] = (string) $config->debug;
-            $_SESSION['config']['applicationname'] = (string) $config->applicationname;
-            $_SESSION['config']['defaultPage'] = (string) $config->defaultPage;
-            $_SESSION['config']['exportdirectory'] = (string) $config->exportdirectory;
-            $_SESSION['config']['cookietime'] = (string) $config->CookieTime;
-            $_SESSION['config']['ldap'] = (string) $config->ldap;
+            $_SESSION['config']['lang']                = (string) $config->lang;
+            $_SESSION['config']['adminmail']           = (string) $config->adminmail;
+            $_SESSION['config']['adminname']           = (string) $config->adminname;
+            $_SESSION['config']['debug']               = (string) $config->debug;
+            $_SESSION['config']['applicationname']     = (string) $config->applicationname;
+            $_SESSION['config']['defaultPage']         = (string) $config->defaultPage;
+            $_SESSION['config']['exportdirectory']     = (string) $config->exportdirectory;
+            $_SESSION['config']['cookietime']          = (string) $config->CookieTime;
+            $_SESSION['config']['ldap']                = (string) $config->ldap;
             $_SESSION['config']['userdefaultpassword'] = (string) $config->userdefaultpassword;
-            $_SESSION['config']['usePDO'] = (string) $config->usePDO;
-            $_SESSION['config']['usePHPIDS'] = (string) $config->usePHPIDS;
+            $_SESSION['config']['usePDO']              = (string) $config->usePDO;
+            $_SESSION['config']['usePHPIDS']           = (string) $config->usePHPIDS;
             if (isset($config->showfooter)) {
                 $_SESSION['config']['showfooter'] = (string) $config->showfooter;
             } else {
@@ -122,16 +121,16 @@ abstract class business_app_tools_Abstract extends Database
             //$_SESSION['config']['databaseworkspace'] = (string) $config->databaseworkspace;
 
             $tablename = $xmlconfig->TABLENAME;
-            $_SESSION['tablename']['doctypes_first_level'] = (string) $tablename->doctypes_first_level;
+            $_SESSION['tablename']['doctypes_first_level']  = (string) $tablename->doctypes_first_level;
             $_SESSION['tablename']['doctypes_second_level'] = (string) $tablename->doctypes_second_level;
-            $_SESSION['tablename']['mlb_doctype_ext'] = (string) $tablename->mlb_doctype_ext;
-            $_SESSION['tablename']['doctypes_indexes'] = (string) $tablename->doctypes_indexes;
-            $_SESSION['tablename']['saved_queries'] = (string) $tablename->saved_queries;
-            $_SESSION['tablename']['contacts_v2'] = (string) $tablename->contacts_v2;
-            $_SESSION['tablename']['contact_types'] = (string) $tablename->contact_types;
-            $_SESSION['tablename']['contact_purposes'] = (string) $tablename->contact_purposes;
-            $_SESSION['tablename']['contact_addresses'] = (string) $tablename->contact_addresses;
-            $_SESSION['tablename']['tags'] = (string) $tablename->tags;
+            $_SESSION['tablename']['mlb_doctype_ext']       = (string) $tablename->mlb_doctype_ext;
+            $_SESSION['tablename']['doctypes_indexes']      = (string) $tablename->doctypes_indexes;
+            $_SESSION['tablename']['saved_queries']         = (string) $tablename->saved_queries;
+            $_SESSION['tablename']['contacts_v2']           = (string) $tablename->contacts_v2;
+            $_SESSION['tablename']['contact_types']         = (string) $tablename->contact_types;
+            $_SESSION['tablename']['contact_purposes']      = (string) $tablename->contact_purposes;
+            $_SESSION['tablename']['contact_addresses']     = (string) $tablename->contact_addresses;
+            $_SESSION['tablename']['tags']                  = (string) $tablename->tags;
             
             $_SESSION['config']['tmppath'] = $_SESSION['config']['corepath'] . 'apps' 
                 . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
@@ -174,19 +173,19 @@ abstract class business_app_tools_Abstract extends Database
                 }
                 if (isset($col->table) && ! empty($col->table)) {
                     $_SESSION['collections'][$i] = array(
-                        'id' => (string) $col->id,
-                        'label' => (string) $tmp,
-                        'table' => (string) $col->table,
-                        'version_table' => (string) $col->version_table,
-                        'view' => (string) $col->view,
-                        'adr' => (string) $col->adr,
-                        'index_file' => (string) $col->index_file,
-                        'script_add' => (string) $col->script_add,
-                        'script_search' => (string) $col->script_search,
+                        'id'                   => (string) $col->id,
+                        'label'                => (string) $tmp,
+                        'table'                => (string) $col->table,
+                        'version_table'        => (string) $col->version_table,
+                        'view'                 => (string) $col->view,
+                        'adr'                  => (string) $col->adr,
+                        'index_file'           => (string) $col->index_file,
+                        'script_add'           => (string) $col->script_add,
+                        'script_search'        => (string) $col->script_search,
                         'script_search_result' => (string) $col->script_search_result,
-                        'script_details' => (string) $col->script_details,
+                        'script_details'       => (string) $col->script_details,
                         'path_to_lucene_index' => (string) $col->path_to_lucene_index,
-                        'extensions' => $tab,
+                        'extensions'           => $tab,
                     );
                     
                     $categories = $col->categories;
@@ -221,64 +220,64 @@ abstract class business_app_tools_Abstract extends Database
                 }
             }
             $history = $xmlconfig->HISTORY;
-            $_SESSION['history']['usersdel'] = (string) $history->usersdel;
-            $_SESSION['history']['usersban'] = (string) $history->usersban;
-            $_SESSION['history']['usersadd'] = (string) $history->usersadd;
-            $_SESSION['history']['usersup'] = (string) $history->usersup;
-            $_SESSION['history']['usersval'] = (string) $history->usersval;
-            $_SESSION['history']['doctypesdel'] = (string) $history->doctypesdel;
-            $_SESSION['history']['doctypesadd'] = (string) $history->doctypesadd;
-            $_SESSION['history']['doctypesup'] = (string) $history->doctypesup;
-            $_SESSION['history']['doctypesval'] = (string) $history->doctypesval;
-            $_SESSION['history']['doctypesprop'] = (string) $history->doctypesprop;
-            $_SESSION['history']['usergroupsdel'] = (string) $history->usergroupsdel;
-            $_SESSION['history']['usergroupsban'] = (string) $history->usergroupsban;
-            $_SESSION['history']['usergroupsadd'] = (string) $history->usergroupsadd;
-            $_SESSION['history']['usergroupsup'] = (string) $history->usergroupsup;
-            $_SESSION['history']['usergroupsval'] = (string) $history->usergroupsval;
-            $_SESSION['history']['structuredel'] = (string) $history->structuredel;
-            $_SESSION['history']['structureadd'] = (string) $history->structureadd;
-            $_SESSION['history']['structureup'] = (string) $history->structureup;
-            $_SESSION['history']['subfolderdel'] = (string) $history->subfolderdel;
-            $_SESSION['history']['subfolderadd'] = (string) $history->subfolderadd;
-            $_SESSION['history']['subfolderup'] = (string) $history->subfolderup;
-            $_SESSION['history']['resadd'] = (string) $history->resadd;
-            $_SESSION['history']['resup'] = (string) $history->resup;
-            $_SESSION['history']['resdel'] = (string) $history->resdel;
-            $_SESSION['history']['resview'] = (string) $history->resview;
-            $_SESSION['history']['userlogin'] = (string) $history->userlogin;
-            $_SESSION['history']['userlogout'] = (string) $history->userlogout;
-            $_SESSION['history']['actionadd'] = (string) $history->actionadd;
-            $_SESSION['history']['actionup'] = (string) $history->actionup;
-            $_SESSION['history']['actiondel'] = (string) $history->actiondel;
-            $_SESSION['history']['contactadd'] = (string) $history->contactadd;
-            $_SESSION['history']['contactup'] = (string) $history->contactup;
-            $_SESSION['history']['contactdel'] = (string) $history->contactdel;
-            $_SESSION['history']['statusadd'] = (string) $history->statusadd;
-            $_SESSION['history']['statusup'] = (string) $history->statusup;
-            $_SESSION['history']['statusdel'] = (string) $history->statusdel;
-            $_SESSION['history']['docserversadd'] = (string) $history->docserversadd;
-            $_SESSION['history']['docserversdel'] = (string) $history->docserversdel;
+            $_SESSION['history']['usersdel']        = (string) $history->usersdel;
+            $_SESSION['history']['usersban']        = (string) $history->usersban;
+            $_SESSION['history']['usersadd']        = (string) $history->usersadd;
+            $_SESSION['history']['usersup']         = (string) $history->usersup;
+            $_SESSION['history']['usersval']        = (string) $history->usersval;
+            $_SESSION['history']['doctypesdel']     = (string) $history->doctypesdel;
+            $_SESSION['history']['doctypesadd']     = (string) $history->doctypesadd;
+            $_SESSION['history']['doctypesup']      = (string) $history->doctypesup;
+            $_SESSION['history']['doctypesval']     = (string) $history->doctypesval;
+            $_SESSION['history']['doctypesprop']    = (string) $history->doctypesprop;
+            $_SESSION['history']['usergroupsdel']   = (string) $history->usergroupsdel;
+            $_SESSION['history']['usergroupsban']   = (string) $history->usergroupsban;
+            $_SESSION['history']['usergroupsadd']   = (string) $history->usergroupsadd;
+            $_SESSION['history']['usergroupsup']    = (string) $history->usergroupsup;
+            $_SESSION['history']['usergroupsval']   = (string) $history->usergroupsval;
+            $_SESSION['history']['structuredel']    = (string) $history->structuredel;
+            $_SESSION['history']['structureadd']    = (string) $history->structureadd;
+            $_SESSION['history']['structureup']     = (string) $history->structureup;
+            $_SESSION['history']['subfolderdel']    = (string) $history->subfolderdel;
+            $_SESSION['history']['subfolderadd']    = (string) $history->subfolderadd;
+            $_SESSION['history']['subfolderup']     = (string) $history->subfolderup;
+            $_SESSION['history']['resadd']          = (string) $history->resadd;
+            $_SESSION['history']['resup']           = (string) $history->resup;
+            $_SESSION['history']['resdel']          = (string) $history->resdel;
+            $_SESSION['history']['resview']         = (string) $history->resview;
+            $_SESSION['history']['userlogin']       = (string) $history->userlogin;
+            $_SESSION['history']['userlogout']      = (string) $history->userlogout;
+            $_SESSION['history']['actionadd']       = (string) $history->actionadd;
+            $_SESSION['history']['actionup']        = (string) $history->actionup;
+            $_SESSION['history']['actiondel']       = (string) $history->actiondel;
+            $_SESSION['history']['contactadd']      = (string) $history->contactadd;
+            $_SESSION['history']['contactup']       = (string) $history->contactup;
+            $_SESSION['history']['contactdel']      = (string) $history->contactdel;
+            $_SESSION['history']['statusadd']       = (string) $history->statusadd;
+            $_SESSION['history']['statusup']        = (string) $history->statusup;
+            $_SESSION['history']['statusdel']       = (string) $history->statusdel;
+            $_SESSION['history']['docserversadd']   = (string) $history->docserversadd;
+            $_SESSION['history']['docserversdel']   = (string) $history->docserversdel;
             $_SESSION['history']['docserversallow'] = (string) $history->docserversallow;
-            $_SESSION['history']['docserversban'] = (string) $history->docserversban;
+            $_SESSION['history']['docserversban']   = (string) $history->docserversban;
             //$_SESSION['history']['docserversclose'] = (string) $history->docserversclose;
-            $_SESSION['history']['docserverslocationsadd'] = (string) $history->docserverslocationsadd;
-            $_SESSION['history']['docserverslocationsdel'] = (string) $history->docserverslocationsdel;
+            $_SESSION['history']['docserverslocationsadd']   = (string) $history->docserverslocationsadd;
+            $_SESSION['history']['docserverslocationsdel']   = (string) $history->docserverslocationsdel;
             $_SESSION['history']['docserverslocationsallow'] = (string) $history->docserverslocationsallow;
-            $_SESSION['history']['docserverslocationsban'] = (string) $history->docserverslocationsban;
-            $_SESSION['history']['docserverstypesadd'] = (string) $history->docserverstypesadd;
-            $_SESSION['history']['docserverstypesdel'] = (string) $history->docserverstypesdel;
-            $_SESSION['history']['docserverstypesallow'] = (string) $history->docserverstypesallow;
-            $_SESSION['history']['docserverstypesban'] = (string) $history->docserverstypesban;
-            $_SESSION['history']['contact_types_del'] = (string) $history->contact_types_del;
-            $_SESSION['history']['contact_types_add'] = (string) $history->contact_types_add;
-            $_SESSION['history']['contact_types_up'] = (string) $history->contact_types_up;
-            $_SESSION['history']['contact_purposes_del'] = (string) $history->contact_purposes_del;
-            $_SESSION['history']['contact_purposes_add'] = (string) $history->contact_purposes_add;
-            $_SESSION['history']['contact_purposes_up'] = (string) $history->contact_purposes_up;
-            $_SESSION['history']['contact_addresses_del'] = (string) $history->contact_addresses_del;
-            $_SESSION['history']['contact_addresses_add'] = (string) $history->contact_addresses_add;
-            $_SESSION['history']['contact_addresses_up'] = (string) $history->contact_addresses_up;
+            $_SESSION['history']['docserverslocationsban']   = (string) $history->docserverslocationsban;
+            $_SESSION['history']['docserverstypesadd']       = (string) $history->docserverstypesadd;
+            $_SESSION['history']['docserverstypesdel']       = (string) $history->docserverstypesdel;
+            $_SESSION['history']['docserverstypesallow']     = (string) $history->docserverstypesallow;
+            $_SESSION['history']['docserverstypesban']       = (string) $history->docserverstypesban;
+            $_SESSION['history']['contact_types_del']        = (string) $history->contact_types_del;
+            $_SESSION['history']['contact_types_add']        = (string) $history->contact_types_add;
+            $_SESSION['history']['contact_types_up']         = (string) $history->contact_types_up;
+            $_SESSION['history']['contact_purposes_del']     = (string) $history->contact_purposes_del;
+            $_SESSION['history']['contact_purposes_add']     = (string) $history->contact_purposes_add;
+            $_SESSION['history']['contact_purposes_up']      = (string) $history->contact_purposes_up;
+            $_SESSION['history']['contact_addresses_del']    = (string) $history->contact_addresses_del;
+            $_SESSION['history']['contact_addresses_add']    = (string) $history->contact_addresses_add;
+            $_SESSION['history']['contact_addresses_up']     = (string) $history->contact_addresses_up;
             $_SESSION['history_keywords'] = array();
             foreach ($xmlconfig->KEYWORDS as $keyword) {
                 $tmp = (string) $keyword->label;
@@ -315,7 +314,7 @@ abstract class business_app_tools_Abstract extends Database
     /**
     * Load actions in session
     */
-    protected function _loadActionsPages()
+    public function _loadActionsPages()
     {
         if (isset($_SESSION['config']['corepath'])
             && isset($_SESSION['config']['app_id'])
@@ -370,12 +369,12 @@ abstract class business_app_tools_Abstract extends Database
                     array_push($collections, (string) $collection);
                 }
                 $_SESSION['actions_pages'][$i] = array(
-                    'ID' => (string) $actionPage->ID,
-                    'LABEL' => $label,
-                    'NAME' => (string) $actionPage->NAME,
-                    'ORIGIN' => (string) $actionPage->ORIGIN,
-                    'MODULE' => (string) $actionPage->MODULE,
-                    'KEYWORD' => $keyword,
+                    'ID'          => (string) $actionPage->ID,
+                    'LABEL'       => $label,
+                    'NAME'        => (string) $actionPage->NAME,
+                    'ORIGIN'      => (string) $actionPage->ORIGIN,
+                    'MODULE'      => (string) $actionPage->MODULE,
+                    'KEYWORD'     => $keyword,
                     'FLAG_CREATE' => $createFlag,
                     'COLLECTIONS' => $collections,
                 );
@@ -446,12 +445,12 @@ abstract class business_app_tools_Abstract extends Database
                     array_push($collections, (string) $collection);
                 }
                 $_SESSION['actions_pages'][$i] = array(
-                    'ID' => (string) $actionPage->ID,
-                    'LABEL' => $label,
-                    'NAME' => (string) $actionPage->NAME,
-                    'ORIGIN' => (string) $actionPage->ORIGIN,
-                    'MODULE' => (string) $actionPage->MODULE,
-                    'KEYWORD' => $keyword,
+                    'ID'          => (string) $actionPage->ID,
+                    'LABEL'       => $label,
+                    'NAME'        => (string) $actionPage->NAME,
+                    'ORIGIN'      => (string) $actionPage->ORIGIN,
+                    'MODULE'      => (string) $actionPage->MODULE,
+                    'KEYWORD'     => $keyword,
                     'FLAG_CREATE' => $createFlag,
                     'COLLECTIONS' => $collections,
                 );
@@ -509,9 +508,9 @@ abstract class business_app_tools_Abstract extends Database
             $_SESSION['default_mail_nature'] = (string) $mailNatures->default_nature;
         }
 
-        $_SESSION['attachment_types'] = array();
+        $_SESSION['attachment_types']             = array();
         $_SESSION['attachment_types_with_chrono'] = array();
-        $_SESSION['attachment_types_show'] = array();
+        $_SESSION['attachment_types_show']        = array();
         $attachmentTypes = $xmlfile->attachment_types;
         if (count($attachmentTypes) > 0) {
             foreach ($attachmentTypes->type as $type ) {
@@ -526,17 +525,17 @@ abstract class business_app_tools_Abstract extends Database
                     $label = constant($label);
                 }
                 $array_get_chrono = explode(',', $get_chrono);
-                $_SESSION['attachment_types'][(string) $type->id] = $label;
-                $_SESSION['attachment_types_with_chrono'][(string) $type->id] = $with_chrono;
-                $_SESSION['attachment_types_show'][(string) $type->id] = $show_attachment_type;
-                $_SESSION['attachment_types_get_chrono'][(string) $type->id] = $array_get_chrono;
+                $_SESSION['attachment_types'][(string) $type->id]                = $label;
+                $_SESSION['attachment_types_with_chrono'][(string) $type->id]    = $with_chrono;
+                $_SESSION['attachment_types_show'][(string) $type->id]           = $show_attachment_type;
+                $_SESSION['attachment_types_get_chrono'][(string) $type->id]     = $array_get_chrono;
                 $_SESSION['attachment_types_attach_in_mail'][(string) $type->id] = $attach_in_mail;
             }
         }
-        var_dump($_SESSION['attachment_types_show']);
-        $_SESSION['mail_priorities'] = array();
+
+        $_SESSION['mail_priorities']           = array();
         $_SESSION['mail_priorities_attribute'] = array();
-        $_SESSION['mail_priorities_wdays'] = array();
+        $_SESSION['mail_priorities_wdays']     = array();
         $mailPriorities = $xmlfile->priorities;
         if (count($mailPriorities) > 0) {
             $i = 0;
@@ -636,11 +635,11 @@ abstract class business_app_tools_Abstract extends Database
     {
         $_SESSION['features'] = array();
         //Defines all features by  default at 'false'
-        $_SESSION['features']['search_notes'] = "false";
+        $_SESSION['features']['search_notes']                    = "false";
         $_SESSION['features']['dest_to_copy_during_redirection'] = "false";
-        $_SESSION['features']['show_types_tree'] = "false";
-        $_SESSION['features']['watermark'] = array();
-        $_SESSION['features']['watermark']['enabled'] = "false";
+        $_SESSION['features']['show_types_tree']                 = "false";
+        $_SESSION['features']['watermark']                       = array();
+        $_SESSION['features']['watermark']['enabled']            = "false";
         if (file_exists(
             $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
             . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
@@ -657,27 +656,21 @@ abstract class business_app_tools_Abstract extends Database
         $xmlfeatures = simplexml_load_file($path);
         if ($xmlfeatures) {
             $feats = $xmlfeatures->FEATURES;
-            $_SESSION['features']['search_notes'] = (string) $feats->search_notes;
+            $_SESSION['features']['search_notes']                    = (string) $feats->search_notes;
             $_SESSION['features']['dest_to_copy_during_redirection'] = (string) $feats->dest_to_copy_during_redirection;
-            $_SESSION['features']['show_types_tree'] = (string) $feats->show_types_tree;
+            $_SESSION['features']['show_types_tree']                 = (string) $feats->show_types_tree;
             $watermark = $feats->watermark;
-            $_SESSION['features']['watermark']['enabled'] = (string) $watermark->enabled;
-            $_SESSION['features']['watermark']['text'] = (string) $watermark->text;
-            $_SESSION['features']['watermark']['position'] = (string) $watermark->position;
-            $_SESSION['features']['watermark']['font'] = (string) $watermark->font;
+            $_SESSION['features']['watermark']['enabled']    = (string) $watermark->enabled;
+            $_SESSION['features']['watermark']['text']       = (string) $watermark->text;
+            $_SESSION['features']['watermark']['position']   = (string) $watermark->position;
+            $_SESSION['features']['watermark']['font']       = (string) $watermark->font;
             $_SESSION['features']['watermark']['text_color'] = (string) $watermark->text_color;
-            $_SESSION['features']['type_calendar'] = (string) $feats->type_calendar;
-            $send_to_contact_with_mandatory_attachment = (string) $feats->send_to_contact_with_mandatory_attachment;
+            $_SESSION['features']['type_calendar']           = (string) $feats->type_calendar;
+            $send_to_contact_with_mandatory_attachment       = (string) $feats->send_to_contact_with_mandatory_attachment;
             if(strtoupper($send_to_contact_with_mandatory_attachment) == 'TRUE'){
-                //var_dump($send_to_contact_with_mandatory_attachment);
                 $_SESSION['features']['send_to_contact_with_mandatory_attachment'] = TRUE;
-                //var_dump($_SESSION['features']['send_to_contact_with_mandatory_attachment']);
-                //exit;
             }elseif(strtoupper($send_to_contact_with_mandatory_attachment) == 'FALSE'){
-                //var_dump($send_to_contact_with_mandatory_attachment);
                 $_SESSION['features']['send_to_contact_with_mandatory_attachment'] = FALSE;
-                //var_dump($_SESSION['features']['send_to_contact_with_mandatory_attachment']);
-                //exit;
             }
         }
     }
@@ -945,11 +938,11 @@ abstract class business_app_tools_Abstract extends Database
                 $enabled = (string) $filter->ENABLED;
                 if( trim($enabled) == 'true') {
                     $_SESSION['filters'][$id] = array(
-                        'ID'                => $id,
-                        'LABEL'             => $desc,
-                        'ENABLED'           => $enabled,
-                        'VALUE'             => '',
-                        'CLAUSE'            => ''
+                        'ID'      => $id,
+                        'LABEL'   => $desc,
+                        'ENABLED' => $enabled,
+                        'VALUE'   => '',
+                        'CLAUSE'  => ''
                     );
                 }
             }
@@ -977,11 +970,11 @@ abstract class business_app_tools_Abstract extends Database
                 if (!empty($desc) && defined($desc) && constant($desc) <> NULL) {
                     $desc = constant($desc);
                 }
-                $id = (string) $template->ID;
-                $enabled = (string) $template->ENABLED;
-                $name = (string) $template->NAME;
-                $origin = (string) $template->ORIGIN;
-                $module = (string) $template->MODULE;
+                $id         = (string) $template->ID;
+                $enabled    = (string) $template->ENABLED;
+                $name       = (string) $template->NAME;
+                $origin     = (string) $template->ORIGIN;
+                $module     = (string) $template->MODULE;
                 $listObject = $template->GOTOLIST;
 
                 $pathToList = '';
@@ -1084,12 +1077,12 @@ abstract class business_app_tools_Abstract extends Database
                 //Values of html_templates array
                 if( trim($enabled) == 'true') {
                     $_SESSION['html_templates'][$id] = array(
-                        'ID'                => $id,
-                        'LABEL'             => $desc,
-                        'IMG'               => (string) $template->IMG,
-                        'ENABLED'           => $enabled,
-                        'PATH'              => $path,
-                        'GOTOLIST'          => $pathToList
+                        'ID'       => $id,
+                        'LABEL'    => $desc,
+                        'IMG'      => (string) $template->IMG,
+                        'ENABLED'  => $enabled,
+                        'PATH'     => $path,
+                        'GOTOLIST' => $pathToList
                     );
                 }
             }
@@ -1099,7 +1092,7 @@ abstract class business_app_tools_Abstract extends Database
     /**
     * Load phpids excludes in session
     */
-    protected function _loadPHPIDSExludes()
+    public function _loadPHPIDSExludes()
     {
         if (isset($_SESSION['config']['corepath'])
             && isset($_SESSION['config']['app_id'])

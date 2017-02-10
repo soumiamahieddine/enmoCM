@@ -241,7 +241,7 @@ if(empty($_SESSION['current_basket'])){
                 //document.cookie = "maarch_cookie_2=thesecondcookie";
                 //console.log(document.cookie);
                 return document.cookie;
-            };
+            }
 
             var theCookies;
             //theCookies = getCookies().split(";");
@@ -249,8 +249,6 @@ if(empty($_SESSION['current_basket'])){
             
             
             if (theCookies != undefined) {
-                //console.log('The cookies...');
-                //console.log(theCookies);
                 var path_manage_script = '<?php echo $_SESSION["config"]["businessappurl"];?>' + 'index.php?display=true&page=setProxyCookies';
 
                 new Ajax.Request(path_manage_script,
@@ -274,9 +272,16 @@ if(empty($_SESSION['current_basket'])){
             } else {
                 //console.log('no completements cookies');
             }
-        </script>  
+        </script>
         <?php
     }
+    ?>
+        <script type="text/javascript">
+            //TODO  Ne faire qu'une seule fois cet appel (pas possible pour l'instant à cause des modals qui ne connaissent pas cette variable)
+            // Initialise les variables de config dans le js
+            InitializeJsGlobalConfig();
+        </script>
+    <?php
 
 if (!isset($_REQUEST['display'])) { ?>
     <script>

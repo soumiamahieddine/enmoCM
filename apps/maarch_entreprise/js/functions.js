@@ -3394,3 +3394,24 @@ function loadToolbarBadge(targetTab,path_manage_script){
         }
     });
 }
+
+var globalConfig;
+function InitializeJsGlobalConfig(){
+    $j.ajax({
+        dataType: "json",
+        url: 'index.php?display=true&page=initializeJsGlobalConfig', 
+        success: function(result){
+            globalConfig = result;
+        }
+    });
+}
+
+// Exemple appel service
+// function testService(){
+//     $j.ajax({
+//         url: globalConfig.coreurl+'rest.php?module=core&service=Core_Session_Service&method=getUserEntitiesLst', 
+//         success: function(result){
+//             console.log(result);
+//         }
+//     });
+// }

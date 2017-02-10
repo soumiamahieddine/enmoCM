@@ -1,9 +1,9 @@
 <?php
 
-/*
-*    Copyright 2017 Maarch
+/**
+*   @copyright 2016 capgemini
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -16,15 +16,11 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include_once('../../core/init.php');
-include_once($_SESSION['config']['corepath'].DIRECTORY_SEPARATOR.'apps/maarch_entreprise'.DIRECTORY_SEPARATOR.'merged_jsAbstract.php');
+require_once 'core'. DIRECTORY_SEPARATOR . 'services'. DIRECTORY_SEPARATOR . 'StringAbstract.php';
 
-class MergedJs extends MergedJsAbstract{
-    // Your stuff her
+class Core_String_Service extends Core_StringAbstract_Service {
+	// Do your stuff
 }
-
-$oMergedJs = new MergedJs();
-$oMergedJs->merge();

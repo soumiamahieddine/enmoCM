@@ -19,12 +19,12 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include_once('../../core/init.php');
-include_once($_SESSION['config']['corepath'].DIRECTORY_SEPARATOR.'apps/maarch_entreprise'.DIRECTORY_SEPARATOR.'merged_jsAbstract.php');
+$core_tools = new core_tools();
+$core_tools->test_user();
 
-class MergedJs extends MergedJsAbstract{
-    // Your stuff her
-}
+$aJsGlobal = array();
+$aJsGlobal['coreurl'] = $_SESSION['config']['coreurl'];
 
-$oMergedJs = new MergedJs();
-$oMergedJs->merge();
+echo json_encode($aJsGlobal);
+
+exit;

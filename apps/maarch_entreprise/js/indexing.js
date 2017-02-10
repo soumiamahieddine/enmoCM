@@ -1,4 +1,6 @@
 
+var $j = jQuery.noConflict();
+
 /**
  * When you choose a doctype, you must calculate the process date limit (Ajax) and execute module services
  *
