@@ -1,1 +1,247 @@
-<div style="width:10%">Viser courrier N° {{gto}}</div>
+<style>
+html{
+	overflow: hidden;
+}
+	  label{
+    font-size: 9px;margin-top: 0px;
+  }
+  .thumbnails{
+    
+  }
+  #leftPanelThumbnails{
+  	height:100px;
+  	width:100%;
+  	background:white;
+  	text-align:center;
+  	overflow:auto;
+  }
+  .thumbnails #thumnails_img{
+    border:solid 1px;
+    width:90%;
+  }
+  .thumbnails #thumnails_img:hover{
+    opacity: 0.5;
+  }
+  .thumbnails:hover label{
+    font-weight: bold;
+  }
+  .thumbnails #thumnails_img_selected{
+    border:solid 3px;
+    width:90%;
+  }
+  .thumbnails_mails{
+    height: 100%;
+    display: inline-block;
+    margin: 5px;
+  }
+  .thumbnails_mails #thumnails_img{
+    border:solid 1px;
+    height:60%;
+    position:relative;
+  }
+  .thumbnails_mails #thumnails_img:hover{
+    opacity: 0.5;
+  }
+  .thumbnails_mails:hover label{
+    font-weight: bold;
+  }
+  .thumbnails_mails #thumnails_img_selected{
+    border:solid 3px;
+    height:60%;
+    position:relative;
+  }
+  iframe{
+    width: 95%;
+    height: 80%;
+    border: none;
+  }
+  #headerSignatureBook{
+  	border: solid 1px black;
+  	height:30px;
+  	width:100%;
+  	border-bottom: none;
+  }
+  #signatureBookContent{
+  	border: solid 1px black;
+  	/*display:table;*/
+  	height: 75vh;
+  	width:100%;
+  	overflow: hidden;
+  }
+  #leftPanel, #rightPanel{
+  	position: relative;
+  	display:table-cell;
+  	width:50%;
+  	height:100%;
+  	margin:10px;
+  	background:white;
+  	vertical-align:top;
+  	overflow:hidden;
+  }
+  #leftPanel hr{
+  	margin-top: 5px;
+	margin-bottom: 5px;
+	background-color: #ccc;
+  }
+  #leftPanel .content{
+  	height:98%;
+  	margin:5px;
+  	text-align:center;
+  	overflow:hidden;
+  }
+  #leftPanelShow{
+  	width:95%;
+  	margin:10px;
+  	background:white;
+  	text-align:center;
+  	height:100%;
+  }
+  #tabLeftSignatureBook{
+  	float: left;
+  	display: table;
+  	height: 100%;
+  }
+  #tabRightSignatureBook{
+  	float: right;
+  	display: table;
+  	height: 100%;
+  	width: 25%;
+  	text-align: right;
+  }
+  #tabRightSignatureBook select{
+  	width: 75%;
+  }
+  #tabRightSignatureBook input{
+  	width: 20%;
+  	text-align: center;
+  }
+  .tabSignatureBook{
+  	display: table-cell;
+  	vertical-align: middle;
+  	border: solid 1px;
+  	padding-left: 10px;
+  	padding-right: 10px;
+  	border-top: none;
+  	border-bottom: none;
+  	border-left: none;
+  }
+</style>
+<div id="headerSignatureBook">
+	<div id="tabLeftSignatureBook">
+		<div class="tabSignatureBook" ng-click="changeSignatureBookLeftContent(1)"><i class="fa fa-dashboard fa-2x"></i></div>
+		<div class="tabSignatureBook" ng-click="changeSignatureBookLeftContent(2)"><i class="fa fa-pencil fa-2x"></i></div>
+		<div class="tabSignatureBook" ng-click="changeSignatureBookLeftContent(3)"><i class="fa fa-certificate fa-2x"></i></div>
+		<div class="tabSignatureBook" ng-click="changeSignatureBookLeftContent(4)"><i class="fa fa-line-chart fa-2x"></i></div>
+	</div>
+	<div id="tabRightSignatureBook">
+		<div class="tabSignatureBook" style="border-left: solid 1px;border-right: none;">
+			<select><option>toto</option></select>
+			<input name="send" id="send" value="Valider" class="button" type="button">
+		</div>
+	</div>
+</div>
+    <div id="signatureBookContent">
+      <div id="leftPanel">
+      <!-- MAIN LEFT CONTENT -->
+        <div class="content" ng-if="signatureBook.headerTab == 1">
+          <div id="leftPanelThumbnails">
+	           <div class="thumbnails_mails">
+	            <img id="thumnails_img_selected" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
+	            <label>Courrier arrivé</label> 
+	          </div>
+	          <div class="thumbnails_mails">
+	            <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
+	            <label>PJ1</label> 
+	          </div>
+	          <div class="thumbnails_mails">
+	            <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
+	            <label>PJ2</label> 
+	          </div>
+	          <div class="thumbnails_mails">
+	            <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
+	            <label>PJ3</label> 
+	          </div>  
+          </div>
+          <hr/>
+      		<div id="leftPanelShow">
+            <iframe id="leftPanelShow_iframe" src="http://www.lefigaro.fr/assets/pdf/lettre-v-peillon.pdf"></iframe>
+          </div>
+        </div>
+        <!-- NOTE CONTENT -->
+        <div class="content" ng-if="signatureBook.headerTab == 2">
+        	<iframe id="leftPanelShow_iframe" style="height:100%;" ng-src="{{signatureBook.linkNotes}}"></iframe>
+        </div>
+        <!-- VISA CIRCUIT CONTENT -->
+        <div class="content" ng-if="signatureBook.headerTab == 3">
+        	<iframe id="leftPanelShow_iframe" style="height:100%;" ng-src="{{signatureBook.linkNotes}}"></iframe>
+        </div>
+        <!-- HISTORY CONTENT -->
+        <div class="content" ng-if="signatureBook.headerTab == 4">
+
+        </div>
+
+      </div>
+      <div style="cursor:w-resize;display:table-cell;width:4px;height:100%;margin:10px;background:#ccc;vertical-align:middle;" onclick="hideLeftPanel('leftPanel','rightPanel');">
+          <i class="fa fa-caret-right" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
+          <i class="fa fa-caret-left" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
+      </div>
+      <div id="rightPanel">
+        <div style="display:table;height:98%;margin:5px;">
+          <div id="rightPanelThumbnails" style="display:table-cell;width:15%;height:100%;margin:10px;background:white;vertical-align:top;">
+            <div style="height:68vh;overflow:auto;text-align:center;">
+              <span class="thumbnails">
+                <img id="thumnails_img_selected" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+               <label>projet de réponse</label> 
+              </span>
+              <span class="thumbnails">
+                <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+               <label>projet de réponse</label> 
+              </span>
+              <span class="thumbnails">
+                <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+               <label>projet de réponse</label> 
+              </span>
+              <span class="thumbnails">
+                <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+               <label>projet de réponse</label> 
+              </span>
+              <span class="thumbnails">
+                <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+               <label>projet de réponse</label> 
+              </span>
+              <span class="thumbnails">
+                <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+               <label>projet de réponse</label> 
+              </span>
+              <span class="thumbnails">
+                <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+               <label>projet de réponse</label> 
+              </span>
+              <span class="thumbnails">
+                <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+               <label>projet de réponse</label> 
+              </span>
+              <span class="thumbnails">
+                <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+               <label>projet de réponse</label> 
+              </span>
+            </div>
+            <div style="height:30px;text-align:center;">
+              <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+            </div>
+            
+          </div>
+          <div style="cursor:w-resize;display:table-cell;width:auto;height:100%;margin:10px;background:#ccc;vertical-align:middle;" onclick="hideRightPanelThumnails('rightPanelThumbnails','rightPanelShow');">
+            <i class="fa fa-caret-right" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
+            <i class="fa fa-caret-left" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
+          </div>
+          <div id="rightPanelShow" style="display:table-cell;width:85%;height:100%;margin:10px;background:white;text-align:center;">
+            <div style="width:95%;height:20%;">
+
+            </div>
+            <iframe src="http://www.lefigaro.fr/assets/pdf/lettre-v-peillon.pdf"></iframe>
+          </div>
+        </div>
+
+      </div>
+    </div>

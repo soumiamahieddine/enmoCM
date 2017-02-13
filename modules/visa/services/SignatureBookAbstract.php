@@ -40,6 +40,7 @@ class Visa_SignatureBookAbstract_Service extends Apps_Table_Service {
         $datas['view'] = file_get_contents('modules/visa/Views/signatureBook.html');
         $datas['datas'] = [];
         $datas['datas']['resId'] = $aArgs['resId'];
+        $datas['datas']['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier='.$aArgs['resId'].'&origin=document&coll_id=letterbox_coll&load&size=medium';
         $datas['datas']['headerTab'] = 1;
 
         return $datas;
