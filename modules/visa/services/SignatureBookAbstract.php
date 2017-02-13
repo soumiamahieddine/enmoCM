@@ -38,7 +38,9 @@ class Visa_SignatureBookAbstract_Service extends Apps_Table_Service {
     public static function getViewDatas(array $aArgs = []) {
         $datas = [];
         $datas['view'] = file_get_contents('modules/visa/Views/signatureBook.html');
-        $datas['resId'] = $aArgs['resId'];
+        $datas['datas'] = [];
+        $datas['datas']['resId'] = $aArgs['resId'];
+        $datas['datas']['headerTab'] = 1;
 
         return $datas;
     }

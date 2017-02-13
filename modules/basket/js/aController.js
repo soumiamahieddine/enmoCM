@@ -1,8 +1,5 @@
 mainApp.controller("basketCtrl", ["$scope", "$http", "$compile", function($scope, $http, $compile) {
 
-  $scope.gto = 'jaki';
-
-
   $scope.getView = function(res_id, service, module) {
 
     $http({
@@ -16,6 +13,7 @@ mainApp.controller("basketCtrl", ["$scope", "$http", "$compile", function($scope
       var elem = angular.element(response.data.result.view);
 
       $j('#divList').html(elem);
+      $scope.signatureBook = response.data.result.datas;
       $compile(elem)($scope);
 
     }, function errorCallback(response) {
