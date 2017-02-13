@@ -198,19 +198,43 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             );
         }
     }
-    $frmStr .= '<h2 class="tit" id="action_title">' . _INDEXING_MLB;
+
+    $frmStr .= '<form name="index_file" method="post" id="index_file" action="#"'
+            . ' class="forms indexingform" style="text-align:left;width:100%;">';
+    //MODAL HEADER
+    $frmStr .= '<div style="margin:-10px;margin-bottom:10px;background-color: #009DC5;">';
+    $frmStr .= '<h2 class="tit" id="action_title" style="display:table-cell;vertical-align:middle;margin:0px;">' . _INDEXING_MLB . ' : ';
     $frmStr .= '</h2>';
+    $frmStr .= '<div style="display:table-cell;vertical-align:middle;">';
+
+    //GET ACTION LIST BY AJAX REQUEST
+    $frmStr .= '<span id="actionSpan"></span>';
+
+    $frmStr .= '<input type="button" name="send" id="send" value="'
+            . _VALIDATE . '" class="button" '
+            . 'onclick="getIframeContent(\''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&page=getIframeTemplateContent\');if(document.getElementById(\'contactcheck\').value!=\'success\'){if (confirm(\''. _CONTACT_CHECK .'\n\nContinuer ?\'))valid_action_form(\'index_file\', \''
+            . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
+            . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
+            . '\', \'' . $mode . '\', true);}else{valid_action_form(\'index_file\', \''
+            . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
+            . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
+            . '\', \'' . $mode . '\', true);}"/> ';    
+    $frmStr .= '</div>';
+    $frmStr .= '</div>';
+
     $frmStr .='<i onmouseover="this.style.cursor=\'pointer\';" '.
              'onclick="javascript:window.top.location.href=\''
             . $_SESSION['config']['businessappurl'] . 'index.php\';reinit();" class="fa fa-times-circle fa-2x closeModale" title="'._CLOSE.'"/>';
     $frmStr .='</i>';
-    $frmStr .= '<div id="validleft">';
+
+    $frmStr .= '<div style="height:90vh;overflow:auto;">';
+    $frmStr .= '<div id="validleft" style="width:447px;">';
     $frmStr .= '<div id="index_div" style="display:none;";>';
     
     $frmStr .= '<div id="frm_error_' . $actionId . '" class="indexing_error">'
             . '</div>';
-    $frmStr .= '<form name="index_file" method="post" id="index_file" action="#"'
-            . ' class="forms indexingform" style="text-align:left;">';
     $frmStr .= '<input type="hidden" name="values" id="values" value="' . $resId
             . '" />';
     $frmStr .= '<input type="hidden" name="action_id" id="action_id" value="'
@@ -875,32 +899,6 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
 
     $frmStr .= '</div>';
     $frmStr .= '</div>';
-
-    $frmStr .= '</div>';
-    /*** Actions ***/
-    $frmStr .= '<hr width="90%"/>';
-    $frmStr .= '<p align="center">';
-    
-    //GET ACTION LIST BY AJAX REQUEST
-    $frmStr .= '<span id="actionSpan"></span>';
-    
-    $frmStr .= '<input type="button" name="send" id="send" value="'
-            . _VALIDATE . '" class="button" '
-            . 'onclick="getIframeContent(\''
-            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&page=getIframeTemplateContent\');if(document.getElementById(\'contactcheck\').value!=\'success\'){if (confirm(\''. _CONTACT_CHECK .'\n\nContinuer ?\'))valid_action_form(\'index_file\', \''
-            . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
-            . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
-            . '\', \'' . $mode . '\', true);}else{valid_action_form(\'index_file\', \''
-            . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
-            . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
-            . '\', \'' . $mode . '\', true);}"/> ';
-    $frmStr .= '<input name="close" id="close" type="button" value="'
-            . _CANCEL . '" class="button" '
-            . 'onclick="javascript:window.top.location.href=\''
-            . $_SESSION['config']['businessappurl'] . 'index.php\';reinit();"/>';
-    $frmStr .= '</p>';
-    $frmStr .= '</form>';
     $frmStr .= '</div>';
     $frmStr .= '</div>';
     $frmStr .= '</div>';
@@ -957,7 +955,8 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . 'var item  = $(\'index_div\'); if(item)'
             . '{item.style.display=\'block\';}</script>';
     $frmStr .= '<style>#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}</style>';
-
+    $frmStr .= '</div>';
+    $frmStr .= '</form>';
     return addslashes($frmStr);
 
 }

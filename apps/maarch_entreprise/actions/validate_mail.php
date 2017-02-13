@@ -291,9 +291,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         array_push($_SESSION['adresses']['contactid'], $res->user_id);
     }
 
+    $frm_str .= '<form name="index_file" method="post" id="index_file" action="#" class="forms indexingform" style="text-align:left;width:100%;">';
     //MODAL HEADER
-    $frm_str .= '<h2 class="tit" id="action_title">'._VALIDATE_MAIL.' '._NUM.functions::xssafe($res_id);
+    $frm_str .= '<div style="margin:-10px;margin-bottom:10px;background-color: #009DC5;">';
+    $frm_str .= '<h2 class="tit" id="action_title" style="display:table-cell;vertical-align:middle;margin:0px;">'._VALIDATE_MAIL.' '._NUM.functions::xssafe($res_id).' : ';
     $frm_str .= '</h2>';
+    $frm_str .= '<div style="display:table-cell;vertical-align:middle;">';
+
+    //GET ACTION LIST BY AJAX REQUEST
+    $frm_str .= '<span id="actionSpan"></span>';
+
+    $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="if(document.getElementById(\'contactcheck\').value!=\'success\'){if (confirm(\''. _CONTACT_CHECK .'\n\nContinuer ?\')){new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');}}else{new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');}"/> ';
+    $frm_str .= '</div>';
+    $frm_str .= '</div>';
+
     $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '
         .'onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] 
         . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' 
@@ -304,10 +315,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='</i>';
     
     //PART LEFT
+    $frm_str .= '<div style="height:90vh;overflow:auto;">';
     $frm_str .= '<div id="validleft">';
     $frm_str .= '<div id="valid_div" style="display:none;";>';
     $frm_str .= '<div id="frm_error_'.$id_action.'" class="indexing_error"></div>';
-    $frm_str .= '<form name="index_file" method="post" id="index_file" action="#" class="forms indexingform" style="text-align:left;">';
 
     $frm_str .= '<input type="hidden" name="values" id="values" value="'.$res_id.'" />';
     $frm_str .= '<input type="hidden" name="action_id" id="action_id" value="'.$id_action.'" />';
@@ -1004,19 +1015,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $frm_str .= '</div>';
     $frm_str .= '</div>';
-
-
-    /*** Actions ***/
-    $frm_str .= '<hr width="90%" align="center"/>';
-    $frm_str .= '<p align="center">';
-
-    //GET ACTION LIST BY AJAX REQUEST
-    $frm_str .= '<span id="actionSpan"></span>';
-
-    $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="if(document.getElementById(\'contactcheck\').value!=\'success\'){if (confirm(\''. _CONTACT_CHECK .'\n\nContinuer ?\')){new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');}}else{new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');}"/> ';
-    $frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '}, onSuccess: function(answer){window.location.href=\'' . $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets=' . $_SESSION['current_basket']['id'] . '\';} });$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
-    $frm_str .= '</p>';
-    $frm_str .= '</form>';
     $frm_str .= '</div>';
     $frm_str .= '</div>';
     $frm_str .= '</div>';
@@ -1221,6 +1219,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '$$(\'select\').each(function(element) { new Chosen(element,{width: "226px", disable_search_threshold: 10,search_contains: true}); });';
     $frm_str .='</script>';
     $frm_str .= '<style>#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}</style>';
+    $frm_str .= '</div>';
+    $frm_str .= '</form>';
 	
     return addslashes($frm_str);
 }

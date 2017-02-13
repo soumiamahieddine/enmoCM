@@ -174,9 +174,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $query .= "from users u, contacts_res cres  ";
     $query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id ";
     $query .= "GROUP BY u.firstname, u.lastname, u.user_id";
-			
+            
     $stmt = $db->query($query, array($res_id));
-	
+    
     while($res = $stmt->fetchObject()){
             $nbContacts = $nbContacts + 1;
             $firstname = str_replace("'","\'", $res->firstname);
@@ -188,17 +188,43 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     $frameContacts = substr($frameContacts, 0, -2);
     $frameContacts .= "}";
-	
+    
+    $frm_str .= '<form name="process" method="post" id="process" action="#" '
+            . 'class="formsProcess addformsProcess" style="text-align:left;width:100%;">';
+
     //_ID_TO_DISPLAY ?
     if(_ID_TO_DISPLAY == 'res_id'){
-        $frm_str .= '<h2 id="action_title">'
-            . _PROCESS . _LETTER_NUM . $res_id;
-        $frm_str .= '</h2>';       
-    }else{
-        $frm_str .= '<h2 id="action_title" title="'. _LETTER_NUM . $res_id . '">'
-            . _PROCESS . _DOCUMENT . ' ' . $chrono_number;
+        //MODAL HEADER
+        $frm_str .= '<div style="margin:-10px;margin-bottom:10px;background-color: #009DC5;">';
+        $frm_str .= '<h2 class="tit" id="action_title" style="display:table-cell;vertical-align:middle;margin:0px;">'. _PROCESS . _LETTER_NUM . $res_id.' : ';
         $frm_str .= '</h2>';
+        $frm_str .= '<div style="display:table-cell;vertical-align:middle;">';      
+    }else{
+        //MODAL HEADER
+        $frm_str .= '<div style="margin:-10px;margin-bottom:10px;background-color: #009DC5;">';
+        $frm_str .= '<h2 class="tit" title="'. _LETTER_NUM . $res_id . '" id="action_title" style="display:table-cell;vertical-align:middle;margin:0px;">'. _PROCESS . _DOCUMENT . ' ' . $chrono_number.' : ';
+        $frm_str .= '</h2>';
+        $frm_str .= '<div style="display:table-cell;vertical-align:middle;">';
     }
+
+    //GET ACTION LIST BY AJAX REQUEST
+    $frm_str .= '<span id="actionSpan"></span>';
+    $frm_str .= '<script>';
+        $frm_str .= 'change_category_actions(\'' 
+            . $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
+            . '&resId=' . $res_id . '&collId=' . $coll_id . '\',\'' . $res_id . '\',\'' . $coll_id . '\',\''.$data['category_id']['value'].'\');';
+    $frm_str .= '</script>';
+
+    $frm_str .= '<input type="button" name="send" id="send" value="'
+        . _VALIDATE
+        . '" class="button" onclick="new Ajax.Request(\'' 
+        . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form(\'process\', \''
+        . $path_manage_action . '\', \'' . $id_action.'\', \''
+        . $res_id . '\', \'' . $table . '\', \'' . $module . '\', \''
+        . $coll_id . '\', \'' . $mode . '\');"/> ';
+    $frm_str .= '</div>';
+    $frm_str .= '</div>';
 
     $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '
         .'onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] 
@@ -211,10 +237,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         .' class="fa fa-times-circle fa-2x closeModale" title="'._CLOSE.'"/>';
     $frm_str .='</i>';
     /********************************* LEFT PART **************************************/
-    $frm_str .= '<div id="validleftprocess" style="display:none;">';
+    $frm_str .= '<div style="height:90vh;overflow:auto;">';
+    $frm_str .= '<div id="validleftprocess" style="display:none;width:auto;">';
     $frm_str .= '<div id="frm_error_' . $id_action . '" class="error"></div>';
-    $frm_str .= '<form name="process" method="post" id="process" action="#" '
-            . 'class="formsProcess addformsProcess" style="text-align:left;">';
     $frm_str .= '<input type="hidden" name="values" id="values" value="' . $res_id . '" />';
     $frm_str .= '<input type="hidden" name="action_id" id="action_id" value="' . $id_action . '" />';
     $frm_str .= '<input type="hidden" name="mode" id="mode" value="' . $mode . '" />';
@@ -349,9 +374,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
 	//THESAURUS
     if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
-		
+        
         require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
-		
+        
         $thesaurus = new thesaurus();
         $thesaurusListRes = array();
 
@@ -459,40 +484,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</script>';
     }
     $frm_str .= '</table>';
-    
-    //ACTIONS
-    $frm_str .= '<hr class="hr_process"/>';
-    $frm_str .= '<p align="center" style="width:90%;">';
-
-    //GET ACTION LIST BY AJAX REQUEST
-    $frm_str .= '<span id="actionSpan"></span>';
-    $frm_str .= '<script>';
-        $frm_str .= 'change_category_actions(\'' 
-            . $_SESSION['config']['businessappurl'] 
-            . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
-            . '&resId=' . $res_id . '&collId=' . $coll_id . '\',\'' . $res_id . '\',\'' . $coll_id . '\',\''.$data['category_id']['value'].'\');';
-    $frm_str .= '</script>';
-    //
-    
-    $frm_str .= '<input type="button" name="send" id="send" value="'
-        . _VALIDATE
-        . '" class="button" onclick="new Ajax.Request(\'' 
-        . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form(\'process\', \''
-        . $path_manage_action . '\', \'' . $id_action.'\', \''
-        . $res_id . '\', \'' . $table . '\', \'' . $module . '\', \''
-        . $coll_id . '\', \'' . $mode . '\');"/> ';
-    
-        $frm_str .= '<input name="close" id="close" type="button" value="'
-            . _CANCEL . '" class="button" onclick="new Ajax.Request(\'' 
-            . $_SESSION['config']['businessappurl'] 
-            . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '}, onSuccess: function(answer){var cur_url=window.location.href; if (cur_url.indexOf(\'&directLinkToAction\') != -1) cur_url=cur_url.replace(\'&directLinkToAction\',\'\');window.location.href=cur_url;} });var tmp_bask=$(\'baskets\');';
-        $frm_str .= 'if (tmp_bask){tmp_bask.style.visibility=\'visible\';}var tmp_ent =$(\'entity\');';
-        $frm_str .= 'if (tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\');';
-        $frm_str .= 'if (tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_'
-            . $id_action . '\');reinit();"/>';
-    $frm_str .= '</p>';
-    $frm_str .= '</form>';
-    $frm_str .= '</div>';
     $frm_str .= '</div>';
 
     // ****************************** RIGHT PART *******************************************/
@@ -639,7 +630,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='<script>loadToolbarBadge(\'links_tab\',\''.$toolbarBagde_script.'\');</script>';
         
     $frm_str .= '</td>';
-	
+    
     //VISA CIRCUIT
     if($core_tools->is_module_loaded('visa')){
   
@@ -665,7 +656,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //AVIS CIRCUIT
     if ($core_tools->is_module_loaded('avis')) { 
     
-    	if ($core->test_service('config_avis_workflow', 'avis', false)){
+        if ($core->test_service('config_avis_workflow', 'avis', false)){
             
             $frm_str .= '<td>';
             
@@ -682,7 +673,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             //LOAD TOOLBAR BADGE
             $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=avis&page=load_toolbar_avis&resId='.$res_id.'&collId='.$coll_id;
             $frm_str .='<script>loadToolbarBadge(\'avis_tab\',\''.$toolbarBagde_script.'\');</script>';
-    	}
+        }
     }
 
     //ATTACHMENTS
@@ -740,7 +731,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
     $frm_str .='<div id =\'show_tab\' module=\'\'>';
     $frm_str .='</div>';
-	
+    
     //RESOURCE FRAME
     $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
@@ -750,10 +741,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //EXTRA SCRIPT
     $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'. $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
-	$frm_str .= '$(\'entity\').style.visibility=\'hidden\';';
-	$frm_str .= '$(\'category\').style.visibility=\'hidden\';';
-	$frm_str .= '$(\'baskets\').style.visibility=\'hidden\';';
+    $frm_str .= '$(\'entity\').style.visibility=\'hidden\';';
+    $frm_str .= '$(\'category\').style.visibility=\'hidden\';';
+    $frm_str .= '$(\'baskets\').style.visibility=\'hidden\';';
     $frm_str .= '</script>';
+    $frm_str .= '</div>';
+    $frm_str .= '</form>';
 
     return addslashes($frm_str);
 }
