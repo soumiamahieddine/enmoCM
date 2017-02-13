@@ -44,6 +44,7 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/prototype.js');
 		readfile('apps/maarch_entreprise/js/scriptaculous.js');
 		readfile('apps/maarch_entreprise/js/jquery.min.js');
+		readfile('apps/maarch_entreprise/js/angular.min.js');
 		readfile('apps/maarch_entreprise/js/indexing.js');
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
 		readfile('apps/maarch_entreprise/js/effects.js');
@@ -58,16 +59,26 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/RSVP.js');
         readfile('apps/maarch_entreprise/js/render.js');
         readfile('apps/maarch_entreprise/js/jio.js');
+
+		readfile('apps/maarch_entreprise/js/app.module.js');
+		readfile('apps/maarch_entreprise/js/aController.js');
+
         echo "\n";
 	}
 
 	public function merge_module() {
-		if ( ! empty($_SESSION['modules_loaded']) ) {
+		if ( !empty($_SESSION['modules_loaded'])) {
 			foreach(array_keys($_SESSION['modules_loaded']) as $value)
 			{
-			    if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js") || file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js"))
+			    if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js")
+					|| file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js"))
 			    {
 			        include('modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/functions.js');
+			    }
+			    if(file_exists($_SESSION['config']['corepath'].'custom/'.$_SESSION['custom_override_id'].'/modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/aController.js')
+					|| file_exists($_SESSION['config']['corepath'].'/modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/aController.js'))
+			    {
+			        include('modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/aController.js');
 			    }
 			}
 		}

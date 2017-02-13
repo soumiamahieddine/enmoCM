@@ -313,7 +313,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
 }
 ?>
 </h1>
-<div id="inner_content" class="clearfix">
+<div id="inner_content" class="clearfix" ng-controller="basketCtrl">
 <?php
 
 

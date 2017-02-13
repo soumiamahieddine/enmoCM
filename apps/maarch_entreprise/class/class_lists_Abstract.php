@@ -123,6 +123,7 @@
 
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
 . 'class_security.php';
+require_once 'modules/basket/services/Baskets.php';
 
 abstract class lists_Abstract extends Database
 {
@@ -1464,8 +1465,12 @@ abstract class lists_Abstract extends Database
                     $keyValue = $resultTheLine[$i]['value'];
                 }
             }
-            $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="validForm( \'page\', \''
-                    .$keyValue.'\', \''.$this->params['defaultAction'].'\');" ';
+            $aService = Basket_Baskets_Service::getServiceFromActionId(['id' => $this->params['defaultAction']]);
+            if ($aService['isService']) {
+                $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="angular.element(\'[ng-controller=basketCtrl]\').scope().getView(\''.$keyValue.'\', \''.$aService['service'].'\', \''.$aService['module'].'\');" ';
+            } else {
+                $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="validForm( \'page\', \''.$keyValue.'\', \''.$this->params['defaultAction'].'\');" ';
+            }
         }
         
         return $return;      

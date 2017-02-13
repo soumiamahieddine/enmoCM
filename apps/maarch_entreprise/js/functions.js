@@ -1575,105 +1575,81 @@ function get_form_values(form_id, return_string, include_buttons)
  */
 function action_send_first_request( path_manage_script, mode_req,  id_action, res_id_values, tablename, modulename, id_coll)
 {
-    //alert('action_send_first_request');
     if(id_action == undefined || id_action == null || id_action  == '')
     {
         window.top.$('main_error').innerHTML = arr_msg_error['choose_action'];
-        //console.log('Choisissez une action !');
     }
     if(res_id_values == undefined || res_id_values == null || res_id_values == '')
     {
         window.top.$('main_error').innerHTML += '<br/>' + arr_msg_error['choose_one_doc'];
-        //console.log('Choisissez au moins un doc !');
     }
-    //alert('res_id_values : '+res_id_values+', id_action '+id_action+', tablename '+tablename+', modulename : '+modulename+', id_coll : '+id_coll+', mode_req : '+mode_req);
-    if(res_id_values != ''  && id_action != '' && tablename != '' && modulename != ''  && id_coll != '' && (mode_req == 'page' || mode_req == 'mass'))
-    {
-        //alert('values : '+res_id_values+', id_action : '+id_action+', table : '+tablename+', module : '+modulename+', coll_id : '+id_coll+', mode : '+mode_req);
-        new Ajax.Request(path_manage_script,
-        {
-            method:'post',
-            parameters: { values : res_id_values,
-                              action_id : id_action,
-                              mode : mode_req,
-                              req : 'first_request',
-                              table : tablename,
-                              coll_id : id_coll,
-                              module : modulename
-                              },
-                onCreate: function(answer) {
-                    //show loading image in toolbar
-                    $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";})
-                    /*$('send_mass').disabled=true;
-                    $('send_mass').style.opacity="0.5";
-                    $('send_mass').value="traitement...";*/
-                },
-                onSuccess: function(answer){
-                eval("response = "+answer.responseText);
-                //console.log(answer.responseText);
-                //alert(answer.responseText);
-                var page_result = response.page_result;
-                //page_result_final = response.page_result;
-                if(response.status == 0 ) // No confirm or form asked
-                {
-                    if(response.action_status != '' && response.action_status != 'NONE')
-                    {
+
+    if(res_id_values != '' && id_action != '' && tablename != '' && modulename != '' && id_coll != '' && (mode_req == 'page' || mode_req == 'mass')) {
+
+        $j.ajax({
+            url : path_manage_script,
+            //dataType: "json",
+            type : 'POST',
+            data: {
+                values      : res_id_values,
+                action_id   : id_action,
+                mode        : mode_req,
+                req         : 'first_request',
+                table       : tablename,
+                coll_id     : id_coll,
+                module      : modulename
+            },
+            beforeSend: function() {
+                //show loading image in toolbar
+                $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";});
+            },
+            success: function(answer){
+                eval("response = " + answer);
+
+                if(response.status == 0 ) {
+                    var page_result = response.page_result;
+
+                    if(response.action_status != '' && response.action_status != 'NONE') {
                         actions_status.action_push(response.action_status);
                     }
-                    //console.log('action_send_first_request OK');
                     end_actions();
-					if (response.newResultId != ''){
-						res_id_values = response.newResultId;
-					}
+                    if (response.newResultId != '') {
+                        res_id_values = response.newResultId;
+                    }
                     close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, tablename, id_coll);
 
-                }
-                else if(response.status == 2) // Confirm asked to the user
-                {
-                    //console.log('confirm');
-                    //alert('confirm');
+                } else if(response.status == 2) {// Confirm asked to the user
                     var modal_txt='<div class=h2_title>'+response.confirm_content+'</div>';
                     modal_txt += '<p class="buttons">';
-		    		modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="if(response.action_status != \'\' && response.action_status != \'NONE\'){actions_status.action_push(response.action_status);}action_send_form_confirm_result( \''+path_manage_script+'\', \''+mode_req+'\',\''+id_action+'\', \''+res_id_values+'\', \''+tablename+'\', \''+modulename+'\', \''+id_coll+'\', \'\', \'Y\');"/>';
+                    modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="if(response.action_status != \'\' && response.action_status != \'NONE\'){actions_status.action_push(response.action_status);}action_send_form_confirm_result( \''+path_manage_script+'\', \''+mode_req+'\',\''+id_action+'\', \''+res_id_values+'\', \''+tablename+'\', \''+modulename+'\', \''+id_coll+'\', \'\', \'Y\');"/>';
                     modal_txt += ' <input type="button" name="cancel" id="cancel" value="'+response.cancel+'" class="button" onclick="pile_actions.action_pop();destroyModal(\'modal_'+id_action+'\');"/></p>';
-                    //console.log(modal_txt);
                     window.top.createModal(modal_txt, 'modal_'+id_action, '150px', '300px');
-                }
-                else if(response.status == 3) // Form to fill by the user
-                {
-                    if(response.action_status != '' && response.action_status != 'NONE')
-                    {
+                } else if(response.status == 3) { // Form to fill by the user
+                    if(response.action_status != '' && response.action_status != 'NONE') {
                         actions_status.action_push(response.action_status);
                     }
                     window.top.createModal(response.form_content,'modal_'+id_action, response.height, response.width, response.mode_frm);
-                }
-				else if(response.status == 4) // Confirm asked to the user (for visa)
-                {
+                }	else if(response.status == 4) {// Confirm asked to the user (for visa)
                     var modal_txt='<div class=h2_title>'+response.error+'</div>';
                     modal_txt += '<p class="buttons">';
-					//load_listmodel_visa(\''.$data['destination']['value'].'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);
                     modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="destroyModal(\'modal_'+id_action+'\')"/>';
                     window.top.createModal(modal_txt, 'modal_'+id_action, '100px', '300px');
-                }
-                else // Param errors
-                {
-                    if(console)
-                    {
+                } else { // Param errors
+                    if(console) {
                         console.log('param error');
-                    }
-                    else
-                    {
+                    } else {
                         alert('param error');
                     }
                     //close_action(id_action,  page_result);
                 }
+
                 /*$('send_mass').disabled = false;
                 $('send_mass').style.opacity = "1";
                 $('send_mass').value = "Valider";*/
             },
-            onFailure: function(){
+            error: function(){
                 //alert('erreur');
-                }
+            }
         });
     }
 }
@@ -2946,8 +2922,11 @@ function loadList(path, inDiv, modeReturn, init) {
 
                 if (modeReturn !== false) {
                     eval("response = "+answer.responseText);
-                    if(response.status == 0){                      
-                        $(div).innerHTML = convertToHTMLVisibleNewline(response.content);
+                    if(response.status == 0){
+                        $j('#' +div).html(convertToHTMLVisibleNewline(response.content));
+                        //angular.element('[ng-controller=basketCtrl]').$scope.$apply();
+                        //$j('#' +div).html("{{gto}}");
+                        //console.log($j('#' +div).html());
                         evalMyScripts(div);
 
                         if(document.getElementById("loading")){
