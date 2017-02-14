@@ -18,4 +18,10 @@
         <SCRIPT>sso_connect.php</SCRIPT>
         <ENABLED>true</ENABLED>
     </METHOD>-->
+<!--     <METHOD>
+        <ID>cas</ID>
+        <NAME>_CAS_LOGIN</NAME>
+        <SCRIPT>cas_connect.php</SCRIPT>
+        <ENABLED>true</ENABLED>
+    </METHOD> -->
 </ROOT>

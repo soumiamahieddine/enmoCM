@@ -60,7 +60,9 @@ $args[2] = time() - 3600;
 call_user_func_array('setcookie', $args);
 
 if(isset($_SESSION['web_sso_url'])){
-        $webSSOurl = $_SESSION['web_sso_url'];
+    $webSSOurl = $_SESSION['web_sso_url'];
+} else if(isset($_SESSION['web_cas_url'])){
+    $webSSOurl = $_SESSION['web_cas_url'];
 }
 
 session_unset();
@@ -79,12 +81,12 @@ if (isset($_GET['logout']) && $_GET['logout']) {
 }
 
 if(isset($webSSOurl) && $webSSOurl <> ''){
-        header("location: " . $webSSOurl );
-        exit();
+    header("location: " . $webSSOurl );
+    exit();
 } else {
-        header(
-         "location: " . $appUrl . "index.php?display=true&page=login"
-         . $logoutExtension
-        );
-        exit();
+    header(
+     "location: " . $appUrl . "index.php?display=true&page=login"
+     . $logoutExtension
+    );
+    exit();
 }
