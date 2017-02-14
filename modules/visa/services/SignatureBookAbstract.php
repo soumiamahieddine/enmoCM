@@ -19,7 +19,9 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once('apps/maarch_entreprise/services/Table.php');
+require_once 'apps/maarch_entreprise/services/Table.php';
+require_once 'modules/basket/class/class_modules_tools.php';
+
 
 class Visa_SignatureBookAbstract_Service extends Apps_Table_Service {
 
@@ -36,11 +38,29 @@ class Visa_SignatureBookAbstract_Service extends Apps_Table_Service {
     }
 
     public static function getViewDatas(array $aArgs = []) {
+        static::checkRequired($aArgs, ['resId']);
+        static::checkNumeric($aArgs, ['resId']);
+
+        $resId = $aArgs['resId'];
+        $collId = 'letterbox_coll';
+
+        $basket = new basket();
+        $actions = $basket->get_actions_from_current_basket($resId, $collId, 'PAGE_USE', false);
+
+        $actionsData = [];
+        $actionsData[] = ['value' => '', 'label' => _CHOOSE_ACTION];
+        foreach($actions as $value) {
+            $actionsData[] = ['value' => $value['VALUE'], 'label' => $value['LABEL']];
+        }
+
+
         $datas = [];
         $datas['view'] = file_get_contents('modules/visa/Views/signatureBook.html');
         $datas['datas'] = [];
-        $datas['datas']['resId'] = $aArgs['resId'];
-        $datas['datas']['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier='.$aArgs['resId'].'&origin=document&coll_id=letterbox_coll&load&size=medium';
+        $datas['datas']['resId'] = $resId;
+        $datas['datas']['actions'] = $actionsData;
+        $datas['datas']['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=' .$collId. '&load&size=medium';
+        $datas['datas']['displayLeftMainDoc'] = 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id=' .$resId. '&collid=' .$collId;
         $datas['datas']['headerTab'] = 1;
 
         return $datas;

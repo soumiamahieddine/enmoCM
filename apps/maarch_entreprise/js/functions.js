@@ -2924,9 +2924,6 @@ function loadList(path, inDiv, modeReturn, init) {
                     eval("response = "+answer.responseText);
                     if(response.status == 0){
                         $j('#' +div).html(convertToHTMLVisibleNewline(response.content));
-                        //angular.element('[ng-controller=basketCtrl]').$scope.$apply();
-                        //$j('#' +div).html("{{gto}}");
-                        //console.log($j('#' +div).html());
                         evalMyScripts(div);
 
                         if(document.getElementById("loading")){
