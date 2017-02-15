@@ -56,6 +56,7 @@ abstract class PrioritiesAbstract extends Database
                 else
                     $mailPriorities->priority[$i]['with_delay'] = $priorities[$i]['number'];
                 $mailPriorities->priority[$i]['working_days'] = $priorities[$i]['wdays'];
+                $mailPriorities->priority[$i]['color'] = $priorities[$i]['color'];
             } else {
                 $newPriority = $mailPriorities->addChild('priority', $priorities[$i]['label']);
                 if ($priorities[$i]['number'] === '*')
@@ -63,6 +64,7 @@ abstract class PrioritiesAbstract extends Database
                 else
                     $newPriority->addAttribute('with_delay', $priorities[$i]['number']);
                 $newPriority->addAttribute('working_days', $priorities[$i]['wdays']);
+                $newPriority->addAttribute('color', $priorities[$i]['color']);
             }
         }
 
@@ -83,17 +85,20 @@ abstract class PrioritiesAbstract extends Database
         $_SESSION['mail_priorities'] = [];
         $_SESSION['mail_priorities_attribute'] = [];
         $_SESSION['mail_priorities_wdays'] = [];
+        $_SESSION['mail_priorities_color'] = [];
 
         for ($i = 0; $mailPriorities->priority[$i]; $i++) {
             $label = (string) $mailPriorities->priority[$i];
             $attribute = (string) $mailPriorities->priority[$i]['with_delay'];
             $workingDays = (string) $mailPriorities->priority[$i]['working_days'];
+            $color = (string) $mailPriorities->priority[$i]['color'];
             if (!empty($label) && defined($label) && constant($label) != NULL) {
                 $label = constant($label);
             }
             $_SESSION['mail_priorities'][$i] = $label;
             $_SESSION['mail_priorities_attribute'][$i] = $attribute;
             $_SESSION['mail_priorities_wdays'][$i] = ($workingDays != 'false' ? 'true' : 'false');
+            $_SESSION['mail_priorities_color'][$i] = $color;
         }
     }
 
@@ -117,11 +122,12 @@ abstract class PrioritiesAbstract extends Database
 
     public function updatePriorities() {
         $priorities = [];
-        for ($i = 0; isset($_REQUEST[('label_' . $i)]) && isset($_REQUEST[('priority_' . $i)]) && isset($_REQUEST[('working_' . $i)]); $i++) {
-            $priorities[] = ['label' => $_REQUEST[('label_' . $i)], 'number' => $_REQUEST[('priority_' . $i)], 'wdays' => $_REQUEST[('working_' . $i)]];
+       
+        for ($i = 0; isset($_REQUEST[('label_' . $i)]) && isset($_REQUEST[('priority_' . $i)]) && isset($_REQUEST[('working_' . $i)]) && isset($_REQUEST[('color_' . $i)]); $i++) {
+            $priorities[] = ['label' => $_REQUEST[('label_' . $i)], 'number' => $_REQUEST[('priority_' . $i)], 'wdays' => $_REQUEST[('working_' . $i)], 'color' => $_REQUEST[('color_' . $i)]];
         }
-        for ($i = 0; !empty($_REQUEST[('label_new' . $i)]) && !empty($_REQUEST[('priority_new' . $i)]) && !empty($_REQUEST[('working_new' . $i)]); $i++) {
-            $priorities[] = ['add' => 'add', 'label' => $_REQUEST[('label_new' . $i)], 'number' => $_REQUEST[('priority_new' . $i)], 'wdays' => $_REQUEST[('working_new' . $i)]];
+        for ($i = 0; !empty($_REQUEST[('label_new' . $i)]) && !empty($_REQUEST[('priority_new' . $i)]) && !empty($_REQUEST[('working_new' . $i)]) && !empty($_REQUEST[('color_new' . $i)]); $i++) {
+            $priorities[] = ['add' => 'add', 'label' => $_REQUEST[('label_new' . $i)], 'number' => $_REQUEST[('priority_new' . $i)], 'wdays' => $_REQUEST[('working_new' . $i)], 'color' => $_REQUEST[('color_new' . $i)]];
         }
         if ($this->checkPriorities($priorities)) {
             $this->setXML($priorities);
