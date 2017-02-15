@@ -22,7 +22,7 @@ function addVisaUser(users) {
         }else{
             $j("#visa_content").append('<div class="droptarget_arrow" id="visa_' + nb_visa + '_arrow" ><span><i class="fa fa-arrow-down" aria-hidden="true"></i></span></div>');
         }
-        $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true"><div class="delete_visa" onclick="delVisaUser(this.parentElement);"><i class="fa fa-trash" aria-hidden="true"></i></div><span style="float:left;"><i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + users.lastname + ' ' + users.firstname + ' <sup class="nbRes">' + users.entity_id + '</sup></span><span style="float:right;width:50%;"><input class="userId" type="hidden" value="' + users.user_id + '"/><input class="visaDate" type="hidden" value=""/><input type="text" class="consigne" value=""/></span><div style="clear:both;"></div></div>');
+        $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true"><div class="delete_visa" onclick="delVisaUser(this.parentElement);"><i class="fa fa-trash" aria-hidden="true"></i></div><span style="float:left;"><i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + users.lastname + ' ' + users.firstname + ' <sup class="nbRes">' + users.entity_id + '</sup></span><span style="float:right;width:50%;"><input class="userId" type="hidden" value="' + users.user_id + '"/><input class="visaDate" type="hidden" value=""/><input type="text" class="consigne" value="' + users.process_comment + '"/></span><div style="clear:both;"></div></div>');
         
     }
 }

@@ -550,7 +550,7 @@ abstract class visa_Abstract extends Database
                             if($lastUserVis == true && $isVisaStep == true){
                                 $vised = ' currentVis';
                                 $modif = 'false';
-                                $disabled = ' disabled="disabled"';
+                                $disabled = '';
                                 $del_vis = '<div class="delete_visa"></div>';
                                 if($info_userVis['user_id'] <> $_SESSION['user']['UserId']){
                                     $info_vised = '<p style="color:red;">Vous être en train de viser à la place de '.$info_userVis['firstname'].' '.$info_userVis['lastname'].'!</p>';
@@ -605,7 +605,7 @@ abstract class visa_Abstract extends Database
                         if($lastUserVis == true && $isVisaStep == true){
                             $vised = ' currentVis';
                             $modif = 'false';
-                            $disabled = ' disabled="disabled"';
+                            $disabled = '';
                             $del_vis = '<div class="delete_visa"></div>';
                             if($info_userSign['user_id'] <> $_SESSION['user']['UserId']){
                                 $info_vised = '<p style="color:red;">Vous être en train de signer à la place de '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'!</p>';

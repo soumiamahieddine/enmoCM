@@ -1,35 +1,92 @@
 <?php
 
 include_once('apps/maarch_entreprise/tools/phpCAS/CAS.php');
+require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_request.php');
 require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_history.php');
+require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_core_tools.php');
+$core = new core_tools();
+
+/**** RECUPERATION DU FICHIER DE CONFIG ****/
+if (file_exists($_SESSION['config']['corepath'] . 'custom' . 
+    DIRECTORY_SEPARATOR . $_SESSION['custom_override_id'] . 
+    DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR . 
+    $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml' . 
+    DIRECTORY_SEPARATOR . 'cas_config.xml')
+){
+    $xmlPath = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+    . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+    . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'cas_config.xml';
+} elseif (file_exists($_SESSION['config']['corepath'] . 'apps'
+    . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 
+    'cas_config.xml')
+){
+    $xmlPath = $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR . 'apps'
+    . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'cas_config.xml';
+} else {
+    echo _XML_FILE_NOT_EXISTS;
+    exit;
+}
+
+$xmlconfig         = simplexml_load_file($xmlPath);
+$loginRequestArray = array();
+$loginRequestArray = $core->object2array($xmlconfig);
 
 // Les paramètres du serveur CAS
-$cas_serveur   = "192.168.21.36";
-$cas_port      = 443;
-$cas_context   = "/cas-server-webapp-4.0.0";
+$cas_serveur   = $loginRequestArray['WEB_CAS_URL'];
+$cas_port      = $loginRequestArray['WEB_CAS_PORT'];
+$cas_context   = $loginRequestArray['WEB_CAS_CONTEXT'];
 // $cas_chemin_ac = "apps/maarch_entreprise/tools/phpCAS/AC-RGS-Certigna-Racine-SHA1.pem" ;
 
 phpCAS::setDebug();
 phpCAS::setVerbose(true);
 
-// Initialisation phpCAS en protocole CAS 2.0
-phpCAS::client(CAS_VERSION_2_0, $cas_serveur, $cas_port, $cas_context, true);
+// Initialisation phpCAS
+phpCAS::client(constant($loginRequestArray['CAS_VERSION']), $cas_serveur, (int)$cas_port, $cas_context, true);
 
 // Le certificat de l'autorité racine
 // phpCAS::setCasServerCACert($cas_chemin_ac);
 phpCAS::setNoCasServerValidation();
 
-// // L'authentification.
+// L'authentification.
 phpCAS::forceAuthentication();
 
-// // Lecture identifiant utilisateur (courriel)
-$userId = phpCAS::getUser();
-echo 'Identifiant : ' . phpCAS::getUser();
-echo '<br/> phpCAS version : ' . phpCAS::getVersion();
+if($loginRequestArray['CAS_VERSION'] == 'CAS_VERSION_2_0'){
+    // Lecture identifiant utilisateur (courriel)
+    $userId = phpCAS::getUser();
+    echo 'Identifiant : ' . phpCAS::getUser();
+    echo '<br/> phpCAS version : ' . phpCAS::getVersion();
+
+} elseif($loginRequestArray['CAS_VERSION'] == 'SAML_VERSION_1_1'){
+    // $attrSAML = phpCAS::getAttributes();
+    // var_export($attrSAML);
+    echo 'Le protocal SAML 1.1 n est pas encore géré.';
+    exit;
+
+}else {
+    echo 'Ce protocol du CAS n est pas prise en compte.';
+    exit;
+}
+
+$db    = new Database();
+$query = "SELECT user_id FROM users WHERE user_id = ?";
+$stmt  = $db->query($query, array($userId));
+
+if ($stmt->rowCount() == 0) {
+    echo '<br>Cet utilisateur n existe pas dans l application.';
+    exit;
+}
 
 $loginArray['password'] = 'maarch';
 
-$_SESSION['web_cas_url'] = 'https://'. $cas_serveur . $cas_context .'/logout';
+$protocol = 'http://';
+if((int)$cas_port == 443){
+    $protocol = 'https://';
+}
+
+$_SESSION['web_cas_url'] = $protocol. $cas_serveur . $cas_context .'/logout';
 
 /**** CONNECTION A MAARCH ****/
 header("location: " . $_SESSION['config']['businessappurl'] 
