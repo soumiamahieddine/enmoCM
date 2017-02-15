@@ -1802,3 +1802,4 @@ if (!defined("_MARK_AS_READ")) define("_MARK_AS_READ", "Marquer comme lu");
 if (!defined("_USE_PREVIOUS_ADDRESS")) define("_USE_PREVIOUS_ADDRESS", "Réutiliser une adresse");
 
 if (!defined("_SEARCH_INDICATION"))    define("_SEARCH_INDICATION", " indique que la recherche se fait sur les courriers et les pièces jointes.");
+if (!defined("_CONNECTION_CAS_OK"))    define("_CONNECTION_CAS_OK", "Authentification CAS OK");
