@@ -79,7 +79,7 @@ function addNewRowPriority(buttonRow) {
         $("minusButton").style.display = "";
     } else {
         var newRow = $("prioritiesTable").insertRow(index);
-        newRow.innerHTML = "<td align='left'><input name='label_new" + indexDiff + "' id='label_new" + indexDiff + "' placeholder='Nom priorité' size='18'></td>" +
+        newRow.innerHTML = "<td align='left'><input name='label_new" + indexDiff + "' id='label_new" + indexDiff + "' placeholder='Nom priorité' size='18'> <input style='background:none;border:none;width:45px;' name='color_new" + indexDiff + "' id='color_new" + indexDiff + "' type='color' value=''></td>" +
                             "<td align='left'><input name='priority_new" + indexDiff + "' id='priority_new" + indexDiff + "' size='6' value='*'></td>" +
                             "<td align='left'><select name='working_new" + indexDiff + "' id='working_new" + indexDiff + "'><option value='true'>Jours ouvrés</option><option value='false' >Jours calendaires</option></select></td>";
     }

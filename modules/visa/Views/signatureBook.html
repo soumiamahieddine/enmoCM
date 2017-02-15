@@ -5,9 +5,6 @@ html{
 	  label{
     font-size: 9px;margin-top: 0px;
   }
-  .thumbnails{
-    
-  }
   #leftPanelThumbnails{
   	height:100px;
   	width:100%;
@@ -15,19 +12,18 @@ html{
   	text-align:center;
   	overflow:auto;
   }
-  .thumbnails #thumnails_img{
+  .rightPanelThumbnails{
     border:solid 1px;
     width:90%;
   }
-  .thumbnails #thumnails_img:hover{
-    opacity: 0.5;
+  .rightPanelThumbnails:hover{
+      width:95%;
   }
-  .thumbnails:hover label{
+  .rightPanelThumbnails:hover label{
     font-weight: bold;
   }
-  .thumbnails #thumnails_img_selected{
+  .rightPanelSelectedThumbnail{
     border:solid 3px;
-    width:90%;
   }
   .thumbnails_mails{
     height: 100%;
@@ -64,7 +60,7 @@ html{
   #signatureBookContent{
   	border: solid 1px black;
   	/*display:table;*/
-  	height: 75vh;
+  	height: 80vh;
   	width:100%;
   	overflow: hidden;
   }
@@ -201,67 +197,31 @@ html{
 
         </div>
     </div>
-  <div style="cursor:w-resize;display:table-cell;width:auto;height:100%;margin:10px;background:#ccc;vertical-align:middle;">
-    <i class="fa fa-caret-right" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
-    <i class="fa fa-caret-left" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
-  </div>
+    <div style="cursor:w-resize;display:table-cell;width:auto;height:100%;margin:10px;background:#ccc;vertical-align:middle;">
+        <i class="fa fa-caret-right" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
+        <i class="fa fa-caret-left" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
+    </div>
     <div id="rightPanel">
-      <div style="display:table;height:98%;margin:5px;">
-        <div id="rightPanelThumbnails" style="display:table-cell;width:15%;height:100%;margin:10px;background:white;vertical-align:top;">
-          <div style="height:68vh;overflow:auto;text-align:center;">
-            <span class="thumbnails">
-              <img id="thumnails_img_selected" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-             <label>projet de réponse</label>
-            </span>
-            <span class="thumbnails">
-              <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-             <label>projet de réponse</label>
-            </span>
-            <span class="thumbnails">
-              <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-             <label>projet de réponse</label>
-            </span>
-            <span class="thumbnails">
-              <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-             <label>projet de réponse</label>
-            </span>
-            <span class="thumbnails">
-              <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-             <label>projet de réponse</label>
-            </span>
-            <span class="thumbnails">
-              <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-             <label>projet de réponse</label>
-            </span>
-            <span class="thumbnails">
-              <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-             <label>projet de réponse</label>
-            </span>
-            <span class="thumbnails">
-              <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-             <label>projet de réponse</label>
-            </span>
-            <span class="thumbnails">
-              <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-             <label>projet de réponse</label>
-            </span>
-          </div>
-          <div style="height:30px;text-align:center;">
-            <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
-          </div>
-
+        <div style="display:table;height:98%;margin:5px;">
+            <div id="rightPanelThumbnails" style="display:table-cell;width:15%;height:100%;margin:10px;background:white;vertical-align:top;">
+                <div style="height:68vh;overflow:auto;text-align:center;">
+                    <span ng-repeat="(index, attachment) in signatureBook.thumbnailsAttachments" ng-click="changeRightViewer(index)">
+                        <img ng-src="{{attachment.thumbnailLink}}" class="rightPanelThumbnails" ng-class="{'rightPanelSelectedThumbnail': index == signatureBook.selectedThumbnail}">
+                        <label>{{attachment.attachment_type}}</label>
+                    </span>
+                </div>
+                <div style="height:30px;text-align:center;">
+                    <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div style="cursor:w-resize;display:table-cell;width:auto;height:100%;margin:10px;background:#ccc;vertical-align:middle;">
+                <i class="fa fa-caret-right" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
+            </div>
+            <div id="rightPanelShow" style="display:table-cell;width:85%;height:100%;margin:10px;background:white;text-align:center;">
+                <div style="width:95%;height:20%;">
+                </div>
+                <iframe ng-src="{{signatureBook.viewerLink}}"></iframe>
+            </div>
         </div>
-        <div style="cursor:w-resize;display:table-cell;width:auto;height:100%;margin:10px;background:#ccc;vertical-align:middle;" onclick="hideRightPanelThumnails('rightPanelThumbnails','rightPanelShow');">
-          <i class="fa fa-caret-right" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
-          <i class="fa fa-caret-left" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
-        </div>
-        <div id="rightPanelShow" style="display:table-cell;width:85%;height:100%;margin:10px;background:white;text-align:center;">
-          <div style="width:95%;height:20%;">
-
-          </div>
-          <iframe src="http://www.lefigaro.fr/assets/pdf/lettre-v-peillon.pdf"></iframe>
-        </div>
-      </div>
-
     </div>
 </div>

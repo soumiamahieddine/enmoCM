@@ -60,6 +60,8 @@
     </dataType>
     <dataType name="collection_list" base="string">
       <enumeration value="letterbox_coll" />
+      <enumeration value="attachments_coll" />
+      <enumeration value="version_attachments_coll" />
       <enumeration value="business_coll" />
       <enumeration value="res_coll" />
       <enumeration value="apa_coll" />

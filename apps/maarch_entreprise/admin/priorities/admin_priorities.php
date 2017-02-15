@@ -62,7 +62,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
                 <?php
                 for ($i = 0; $_SESSION['mail_priorities'][$i]; $i++) {
                     $wdays = ($_SESSION['mail_priorities_wdays'][$i] == 'true' ? '' : 'selected');
-                    echo "<tr><td align='left'><input name='label_{$i}' id='label_{$i}' placeholder='Priority label' size='18' value='{$_SESSION['mail_priorities'][$i]}'></td>";
+                    echo "<tr><td align='left'><input name='label_{$i}' id='label_{$i}' placeholder='Priority label' size='18' value='{$_SESSION['mail_priorities'][$i]}'><input type='color' name='color_{$i}' id='color_{$i}' value='".$_SESSION['mail_priorities_color'][$i]."' style='background:none;border:none;width:45px;'/></td>";
                     if ($_SESSION['mail_priorities_attribute'][$i] == 'false') {
                         echo "<td align='left'><input name='priority_{$i}' id='priority_{$i}' size='6' value='*'>";
                     } else {
@@ -74,7 +74,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
                 ?>
                 <tr style="display: none" id="priorityAddField">
                     <td align="left">
-                        <input name='label_new0' id='label_new0' placeholder='Nom priorité' size='18'>
+                        <input name='label_new0' id='label_new0' placeholder='Nom priorité' size='18'> <input name='color_new0' id='color_new0' type='color' style='background:none;border:none;width:45px;'>
                     </td>
                     <td align="left">
                         <input name='priority_new0' id='priority_new0' size='6' value='*'>
