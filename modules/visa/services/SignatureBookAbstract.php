@@ -21,6 +21,7 @@
 
 require_once 'apps/maarch_entreprise/services/Table.php';
 require_once 'modules/basket/class/class_modules_tools.php';
+require_once 'modules/attachments/services/Attachments.php';
 
 
 class Visa_SignatureBookAbstract_Service extends Apps_Table_Service {
@@ -53,12 +54,19 @@ class Visa_SignatureBookAbstract_Service extends Apps_Table_Service {
             $actionsData[] = ['value' => $value['VALUE'], 'label' => $value['LABEL']];
         }
 
+        $thumbnailsAttachments = Attachments_Attachments_Service::getAttachmentsForThumbnails(['resIdMaster' => $resId]);
+        $viewerAttachments = Attachments_Attachments_Service::getAttachmentsForViewer(['resIdMaster' => $resId]);
+
 
         $datas = [];
         $datas['view'] = file_get_contents('modules/visa/Views/signatureBook.html');
         $datas['datas'] = [];
         $datas['datas']['resId'] = $resId;
         $datas['datas']['actions'] = $actionsData;
+        $datas['datas']['thumbnailsAttachments'] = $thumbnailsAttachments;
+        $datas['datas']['selectedThumbnail'] = 0;
+        $datas['datas']['viewerAttachments'] = $viewerAttachments;
+        $datas['datas']['viewerLink'] = $viewerAttachments[0]['viewerLink'];
         $datas['datas']['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=' .$collId. '&load&size=medium';
         $datas['datas']['displayLeftMainDoc'] = 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id=' .$resId. '&collid=' .$collId;
         $datas['datas']['headerTab'] = 1;

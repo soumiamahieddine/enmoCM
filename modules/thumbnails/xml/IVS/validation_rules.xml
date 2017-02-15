@@ -3,5 +3,6 @@
       <parameter name="coll_id" type="collection_list" />
       <parameter name="res_id" type="integer" />
       <parameter name="module" type="identifier" />
+      <parameter name="advanced" type="string" />
     </validationRule>
 </validationRules>
