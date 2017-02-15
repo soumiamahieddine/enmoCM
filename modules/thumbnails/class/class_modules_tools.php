@@ -1,5 +1,7 @@
 <?php
 
+require_once 'apps/maarch_entreprise/services/Table.php';
+
 class thumbnails
 {
 	/*function __construct()
@@ -91,6 +93,69 @@ class thumbnails
 		$path = str_replace("//","/",$path);
 		
 		return $path;
+	}
+
+	/**
+	 * Retrieve the path of source file to process
+	 * @param array $aArgs
+	 * @return string
+	 */
+	public function getTnlPathWithColl(array $aArgs = []) {
+		if (empty($aArgs['resId'])) {
+			throw new \Exception('resId empty');
+		}
+		if (empty($aArgs['collId'])) {
+			throw new \Exception('collId empty');
+		}
+
+		$resId = $aArgs['resId'];
+		$collId = $aArgs['collId'];
+
+		for ($i=0;$i < count($_SESSION['collections']);$i++) {
+			if ($_SESSION['collections'][$i]['id'] == $collId) {
+				$resTable = $_SESSION['collections'][$i]['table'];
+			}
+		}
+		if (empty($resTable)) {
+			return false;
+		}
+
+		$oRowSet = Apps_Table_Service::select([
+			'select'    => ['path_template'],
+			'table'     => ['docservers'],
+			'where'     => ['docserver_id = ?'],
+			'data'      => ['TNL']
+		]);
+
+		if (empty($oRowSet[0]['path_template'])) {
+			throw new \Exception('TNL docserver path empty');
+		}
+
+		$docserverPath = $oRowSet[0]['path_template'];
+
+		$oRowSet = Apps_Table_Service::select([
+			'select'    => ['tnl_path', 'tnl_filename'],
+			'table'     => [$resTable],
+			'where'     => ['res_id = ?'],
+			'data'      => [$resId]
+		]);
+
+		if (empty($oRowSet)) {
+			return false;
+		}
+
+		$path          = '';
+		$filename      = '';
+		if (!empty($oRowSet[0]['tnl_path'])) {
+			$path = $oRowSet[0]['tnl_path'];
+		}
+		if (!empty($oRowSet[0]['tnl_filename'])) {
+			$filename = $oRowSet[0]['tnl_filename'];
+		}
+		$sourceFilePath = $docserverPath . $path . $filename;
+		$sourceFilePath = str_replace('#', DIRECTORY_SEPARATOR, $sourceFilePath);
+
+		return $sourceFilePath;
 	}
 
 }

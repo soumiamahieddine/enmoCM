@@ -23,6 +23,11 @@ mainApp.controller("basketCtrl", ["$scope", "$http", "$compile", function($scope
 
   $scope.changeSignatureBookLeftContent = function(id) {
     $scope.signatureBook.headerTab = id;
-  }
+  };
+
+  $scope.changeRightViewer = function(index) {
+    $scope.signatureBook.viewerLink = $scope.signatureBook.viewerAttachments[index].viewerLink;
+    $scope.signatureBook.selectedThumbnail = index;
+  };
 
 }]);
