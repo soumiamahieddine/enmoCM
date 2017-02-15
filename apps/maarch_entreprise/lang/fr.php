@@ -1802,4 +1802,8 @@ if (!defined("_MARK_AS_READ")) define("_MARK_AS_READ", "Marquer comme lu");
 if (!defined("_USE_PREVIOUS_ADDRESS")) define("_USE_PREVIOUS_ADDRESS", "Réutiliser une adresse");
 
 if (!defined("_SEARCH_INDICATION"))    define("_SEARCH_INDICATION", " indique que la recherche se fait sur les courriers et les pièces jointes.");
+
 if (!defined("_CONNECTION_CAS_OK"))    define("_CONNECTION_CAS_OK", "Authentification CAS OK");
+if (!defined("_CAS_SAML_NOT_SUPPORTED"))    define("_CAS_SAML_NOT_SUPPORTED", "Le protocal SAML 1.1 n est pas encore géré.");
+if (!defined("_PROTOCOL_NOT_SUPPORTED"))    define("_PROTOCOL_NOT_SUPPORTED", "Ce protocol du CAS n est pas prise en compte.");
+if (!defined("_USER_NOT_EXIST"))    define("_USER_NOT_EXIST", "Cet utilisateur n existe pas dans l application.");
