@@ -256,29 +256,6 @@ class Apps_Table_Service extends Core_Abstract_Service {
     }
 
     /**
-     * Supprime un row dans la base de données
-     * @param array $aWhere données where
-     * @param array $table table de l'ajout
-     * @return [type]        [description]
-     */
-    public static function deleteInto(array $aWhere, $table){
-        if ( ! is_string($table) ) {
-            throw new Core_MaarchException_Service('$table not a string');
-        }
-        $queryExtWhere = [];
-        $queryExtValues = [];
-        // Where :
-        foreach ($aWhere as $key => $value) {
-            $queryExtWhere[$key] = "{$key}=?";
-            $queryExtValues[] = $value;
-        }
-        $sWhere = empty($aWhere)?'': ' WHERE '.implode(' AND ', $queryExtWhere);
-        $queryExt = 'DELETE FROM '.$table.$sWhere;
-        $db = new Database();
-        return $db->query($queryExt, $queryExtValues);
-    }
-
-    /**
      * Fonction de suppression dans la base de données
      * @param array $args
      * @throws Core_MaarchException_Service if Table Argument is empty or is not a string

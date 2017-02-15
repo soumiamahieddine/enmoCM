@@ -1,14 +1,16 @@
 <?php
-	
-	require_once "modules" . DIRECTORY_SEPARATOR . "thumbnails" . DIRECTORY_SEPARATOR
-			. "class" . DIRECTORY_SEPARATOR
-			. "class_modules_tools.php";
+	require_once 'modules/thumbnails/class/class_modules_tools.php';
 			
-	$res_id = $_REQUEST['res_id'];
-	$coll_id = $_REQUEST['coll_id'];
-	
+	$resId    = $_REQUEST['res_id'];
+	$collId   = $_REQUEST['coll_id'];
+	$advanced = $_REQUEST['advanced'];
+
 	$tnl = new thumbnails();
-	$path = $tnl->getPathTnl($res_id, $coll_id);
+	if (empty($advanced)) {
+		$path = $tnl->getPathTnl($resId, $collId); // Old Behaviour
+	} else {
+		$path = $tnl->getTnlPathWithColl(['resId' => $resId, 'collId' => $collId]); // New Behaviour
+	}
 	if (!is_file($path)){
 		//$path = 'modules'. DIRECTORY_SEPARATOR . 'thumbnails' . DIRECTORY_SEPARATOR . 'no_thumb.png';
 		exit();
@@ -22,10 +24,8 @@
 	header("Cache-Control: max-age=".$time.", must-revalidate");
 	header("Content-Description: File Transfer");
 	header("Content-Type: ".$mime_type);
-	header("Content-Disposition: inline; filename=".$tnlFilename.";");
+	header("Content-Disposition: inline; filename=filename;");
 	header("Content-Transfer-Encoding: binary");
 	readfile($path);
 		
 	exit();
-	
-?>
