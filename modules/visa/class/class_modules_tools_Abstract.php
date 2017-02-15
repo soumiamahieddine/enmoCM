@@ -484,380 +484,187 @@ abstract class visa_Abstract extends Database
 	    $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", array($mailStatus, $res_id));
 
 	}
-	
 	public function getList($res_id, $coll_id, $bool_modif=false, $typeList, $isVisaStep = false, $fromDetail = ""){
-		$core_tools =new core_tools();
-		if ( $typeList == 'VISA_CIRCUIT'){
-			$id_tab="tab_visaSetWorkflow";
-			$id_form="form_visaSetWorkflow";
-		}
-		else{
-			$id_tab="tab_avisSetWorkflow";
-			$id_form="form_avisSetWorkflow";
-		}
-		
-		if ($fromDetail == "Y" && !$core_tools->test_service('config_visa_workflow_in_detail', 'visa', false)) {
-			$bool_modif = false;
-		}
-				
-		$circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
-		$str = "";
-		if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users']) && !$core_tools->test_service('config_visa_workflow_in_detail', 'visa', false) && $fromDetail == "Y"){
-			$str .= "<div class='error' id='divErrorVisa' name='divErrorVisa' onclick='this.hide();'>" . _EMPTY_USER_LIST . "</div>";
-			$str .= "<div><strong><em>" . _EMPTY_VISA_WORKFLOW . "</em></strong></div>";
-		}
-		else {
-			require_once("modules/entities/class/class_manage_listdiff.php");
-			$diff_list = new diffusion_list();
-			$listModels = $diff_list->select_listmodels($typeList);
-		
-			$str .= '<div align="center">';
-		
-			$str .= '<div class="error" id="divErrorVisa" onclick="this.hide();"></div>';
-			$str .= '<div class="info" id="divInfoVisa" onclick="this.hide();"></div>';
+                        
+            $circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
+            
+            $str .= '<div class="error" id="divErrorVisa" onclick="this.hide();"></div>';
+            $str .= '<div class="info" id="divInfoVisa" onclick="this.hide();"></div>';
+                        
+            //VISA USER LIST
+            if($bool_modif ==true){
+                $str .= '<select data-placeholder="Ajouter un viseur / signataire" id="visaUserList" onchange="addVisaUser();">';
+                $str .= '<option value="" ></option>';
 
-			if (!empty($listModels) && $bool_modif && !$isVisaStep){
-				$str .= '<select name="modelList" id="modelList" onchange="load_listmodel_visa(this.options[this.selectedIndex], \''.$typeList.'\', \''.$id_tab.'\');">';
-				$str .= '<option value="">Sélectionnez un modèle</option>';
-				foreach($listModels as $lm){
-					$str .= '<option value="'.$lm['object_id'].'">'.$lm['title'].'</option>';
-				}
-				$str .= '</select>';
-			}
+                $tab_userentities = $this->getEntityVis();
+                /** Order by parent entity **/
+                foreach ($tab_userentities as $key => $value) {
+                        $str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+                        $tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
+                        foreach($tab_users as $user){
+                                if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+                                        $selected = " ";
+                                        if ($user['id'] == $step['user_id'])
+                                                $selected = " selected";
+                                        $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].' '.$user['firstname'].'</option>';
+                                }
 
-			$str .= '<table class="listing spec detailtabricator" cellspacing="0" border="0" id="'.$id_tab.'" style="width:100%;">';
-			$str .= '<thead><tr>';
-			$str .= '<th style="width:40%;" align="left" valign="bottom"><span>Visa</span></th>';
-			if ($bool_modif){
-				$str .= '<th style="width:5%;"></th>';
-				$str .= '<th style="width:5%;"></th>';
-				$str .= '<th style="width:5%;"></th>';
-				$str .= '<th style="width:5%;"></th>';
-				$str .= '<th style="width:45%;" align="left" valign="bottom"><span>Consigne</span></th>';
-				$str .= '<th style="width:0;display:none" align="left" valign="bottom"></th>';
-				$str .= '<th style="width:0;display:none" align="center" valign="bottom"></th>';
-			}
-			else {
-				$str .= '<th style="width:55%;" align="left" valign="bottom"><span>Consigne</span></th>';
-				$str .= '<th style="width:10%;" align="left" valign="bottom"><span>Etat</span></th>';
-			}
-			$str .= '</tr></thead>';
-			$str .= '<tbody>';
-			$color = "";
-		
-			if ($typeList == 'VISA_CIRCUIT'){
-				if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users'])){
-					$j=0;
-					$str .= '<tr class="col" id="lineVisaWorkflow_'.$j.'">';
-					$str .= '<td>';
-					$str .= '<span id="rank_' . $j . '"><span class="nbResZero" style="font-weight:bold;opacity:0.5;">1</span> </span>';
-					if ($bool_modif){
-						$str .= '<select id="conseiller_'.$j.'" name="conseiller_'.$j.'" >';
-						$str .= '<option value="" >Sélectionnez un utilisateur</option>';
-						
-						$tab_userentities = $this->getEntityVis();
+                        }
+                        $str .= '</optgroup>';
+                }
+                $str .= '</select>';
+                $str .= '<script>';
+                $str .= 'new Chosen($(\'visaUserList\'),{width: "250px", disable_search_threshold: 10});';
+                $str .= '</script>';
 
-						/** Order by parent entity **/
-						foreach ($tab_userentities as $key => $value) {
-							$str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
-							$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
-							foreach($tab_users as $user){
-								if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
-									$str .= '<option value="'.$user['id'].'" >'.$user['lastname'].', '.$user['firstname'].'</option>';
-								}
-								
-							}
-							$str .= '</optgroup>';
-						}
-						/**************/
-						/*$tab_usergroups = $this->getGroupVis();
-						foreach ($tab_usergroups as $key => $value) {
-							$str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
-							$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
-							foreach($tab_users as $user){
-								$str .= '<option value="'.$user['id'].'" >'.$user['lastname'].', '.$user['firstname'].' ('.$user['entity_id'].')</option>';
-							}
-						}
-						$str .= '</optgroup>';*/
-						$str .= '</select>';
-					}
-					$str .= '<span id="signatory_' . $j . '"> <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
-					$str .= '<td><a href="javascript://" id="down_'.$j.'" name="down_'.$j.'" style="visibility:hidden;" onclick="deplacerLigne(0,1,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x" title="'.DOWN_USER_WORKFLOW.'"></i></a></td>';
-					$str .= '<td><a href="javascript://" id="up_'.$j.'" name="up_'.$j.'" style="visibility:hidden;" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
-					$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:hidden;" ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
-					$str .= '<td><a href="javascript://" style="visibility:visible;"  id="add_'.$j.'" name="add_'.$j.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x" title="'.ADD_USER_WORKFLOW.'"></i></a></td>';
-					$str .= '<td><input type="text" id="consigne_'.$j.'" name="consigne_'.$j.'" onmouseover="setTitle(this);" style="width:95%;"/></td>';
-					$str .= '<td style="display:none"><input type="hidden" id="date_'.$j.'" name="date_'.$j.'"/></td>';
+                require_once("modules/entities/class/class_manage_listdiff.php");
+                $diff_list = new diffusion_list();
+                $listModels = $diff_list->select_listmodels($typeList);
 
-					$str .= '<td style="display:none"><input type="checkbox" id="isSign_'.$j.'" name="isSign_'.$j.'" style="visibility:hidden;" /></td>';
-					$str .= '<td><i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i></td>';
-					$str .= '</tr>';
-				}
-				else{
+                $str .= ' <select data-placeholder="Ajouter des personnes à partir d\'un modèle" name="modelList" id="modelList" onchange="loadVisaModelUsers();">';
+                $str .= '<option value=""></option>';
+                foreach($listModels as $lm){
+                        
+                        $str .= '<option value="'.$lm['object_id'].'">'.$lm['title'].'</option>';
+                }
+                $str .= '</select>';
 
-					if ($isVisaStep)
-						$myPosVisa = $this->myPosVisa($res_id, $coll_id, $typeList);
-					if (isset($circuit['visa']['users'])){
-						foreach($circuit['visa']['users'] as $seq=>$step){
-							if($color == ' class="col"') {
-								$color = '';
-							} else {
-								$color = ' class="col"';
-							}
-
-							$str .= '<tr ' . $color . '>';
-
-							if ($bool_modif){
-								$str .= '<td>';
-								$tab_users = $this->getUsersVis();
-
-								if (($isVisaStep && !is_null($myPosVisa) && $myPosVisa >= $seq) || ($step['process_date'] && $step['process_date'] != ''))
-									$disabled = ' disabled ';
-								else
-									$disabled = '';
-
-								$str .= '<span id="rank_' . $seq . '">'.$actual_vis.' <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) .'</span> </span>';
-								$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
-								$str .= '<option value="" >Sélectionnez un utilisateur</option>';
-								
-								$tab_userentities = $this->getEntityVis();
-								/** Order by parent entity **/
-								foreach ($tab_userentities as $key => $value) {
-									$str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
-									$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
-									foreach($tab_users as $user){
-										if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
-											$selected = " ";
-											if ($user['id'] == $step['user_id'])
-												$selected = " selected";
-											$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
-										}
-										
-									}
-									$str .= '</optgroup>';
-								}
-
-								/*$tab_usergroups = $this->getGroupVis();
-								foreach ($tab_usergroups as $key => $value) {
-									$str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
-									$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
-									foreach($tab_users as $user){
-										$selected = " ";
-										if ($user['id'] == $step['user_id'])
-											$selected = " selected";
-										$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
-
-									}
-									$str .= '</optgroup>';
-								}
-								$str .= '</select>';*/
-
-								$str .= "<span id=\"signatory_" . $seq . "\">";
-								if (empty($circuit['sign']['users']) && $seq == count ($circuit['visa']['users'])-1)
-									$str .= " <i title=\"Signataire\" style=\"color : #fdd16c\" class=\"fa fa-certificate fa-lg fa-fw\"></i>";
-								$str .= "</span></td>";
-								$up = ' style="visibility:visible"';
-								$displayCB = ' style="visibility:hidden"';
-								$checkCB = '';
-								if ($isVisaStep && !is_null($myPosVisa) && $myPosVisa >= $seq || $step['process_date'] != '')
-									$down = ' style="visibility:hidden"';
-								else
-									$down = ' style="visibility:visible"';
-								if ($isVisaStep && !is_null($myPosVisa) && $myPosVisa >= $seq || $step['process_date'] != '')
-									$del = ' style="visibility:hidden"';
-								else
-									$del = ' style="visibility:visible"';
-								if (empty($circuit['sign']['users']) && $seq == count ($circuit['visa']['users'])-1){
-									$add = ' style="visibility:visible"';
-									$down = ' style="visibility:hidden"';
-									$displayCB = ' style="visibility:hidden"';
-									$checkCB = ' checked';
-								}
-								else{
-									$add = ' style="visibility:hidden"';
-								}
-								if ($isVisaStep && $myPosVisa >= $seq || $step['process_date'] != '')
-									$displayCB = ' style="visibility:hidden"';
-
-								if ($seq == 0 || ($isVisaStep && $myPosVisa+1 >= $seq) || $circuit['visa']['users'][$seq-1]['process_date'] != ''){
-									$up = ' style="visibility:hidden"';
-								}
-
-								$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x" title="'.DOWN_USER_WORKFLOW.'"></i></a></td>';
-								$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
-								$str .= '<td id="allez"><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$seq.'" name="suppr_'.$seq.'" '.$del.' ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
-								$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x" title="'.ADD_USER_WORKFLOW.'"></i></a></td>';
-								$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$step['process_comment'].'" onmouseover="setTitle(this);" style="width:95%;" '.$disabled.'/></td>';
-								$str .= '<td style="display:none"><input type="hidden" value="'.$step['process_date'].'" id="date_'.$seq.'" name="date_'.$seq.'"/></td>';
+                $str .= '<script>';
+                $str .= 'new Chosen($(\'modelList\'),{width: "250px;", disable_search_threshold: 10});';
+                $str .= '</script>';
+                $str .= '<br/><br/>';
+            }
+            
+            $str .= '<div id="visa_content">';
+            //VISA USER IN DOCUMENT
+            $i = 1;
+            $lastUserVis = true;
+            
+            if(count($circuit['visa']['users']) == 0 && $circuit['sign']['users'] == 0){
+                $str .= '<div id="emptyVisa"><strong><em>' . _EMPTY_VISA_WORKFLOW . '</em></strong></div>';
+            }else{
+                $str .= '<div id="emptyVisa" style="display:none;"><strong><em>' . _EMPTY_VISA_WORKFLOW . '</em></strong></div>';
+                if(count($circuit['visa']['users']) > 0){
+                    foreach ($circuit['visa']['users'] as $info_userVis) {
+                        if(empty($info_userVis['process_date'])){
+                            if($lastUserVis == true && $isVisaStep == true){
+                                $vised = ' currentVis';
+                                $modif = 'false';
+                                $disabled = ' disabled="disabled"';
+                                $del_vis = '<div class="delete_visa"></div>';
+                                if($info_userVis['user_id'] <> $_SESSION['user']['UserId']){
+                                    $info_vised = '<p style="color:red;">Vous être en train de viser à la place de '.$info_userVis['firstname'].' '.$info_userVis['lastname'].'!</p>';
+                                }else{
+                                    $info_vised = 'Vous êtes l\'actuel viseur';
+                                }
 
 
-								$str .= '<td style="display:none"><input type="checkbox" id="isSign_'.$seq.'" name="isSign_'.$seq.'" '.$displayCB.' '.$checkCB.'/></td>';
-								if ($step['process_date'] != '')
-									$str .= '<td><i class="fa fa-check fa-2x" title="'._VISED.'"></i></td>';
-								else
-									$str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_VISA.'"></i></td>';
 
-							}
-							else{
-								$str .= '<td><span><span class="nbResZero" style="font-weight:bold;opacity:0.5;">' . ($seq + 1) . '</span> </span>'.$step['firstname'].' '.$step['lastname'];
-								$str .= '</td>';
-								$str .= '<td>'.$step['process_comment'].'</td>';
-								if ($step['process_date'] != '')
-									$str .= '<td><i class="fa fa-check fa-2x" title="'._VISED.'"></i></td>';
-								else
-									$str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_VISA.'"></i></td>';
-								// else $str .= '<td></td>';
-							}
-							$str .= '</tr>';
-						}
-					}
-					//ajout signataire
-
-					if (!empty($circuit['sign']['users'])){
-						$seq = count ($circuit['visa']['users']);
-						if($color == ' class="col"') {
-							$color = '';
-						} else {
-							$color = ' class="col"';
-						}
-
-						$str .= '<tr ' . $color . '>';
-						if ($bool_modif){
-							if (($isVisaStep && $myPosVisa >= $seq) || $circuit['sign']['users'][0]['process_date'] != '')
-								$disabled = ' disabled ';
-							else
-								$disabled = '';
-
-							$str .= '<td style="white-space: nowrap;">';
-							$tab_users = $this->getUsersVis();
-							$str .= '<span id="rank_' . $seq . '">'.$actual_sign.' <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) . '</span> </span>';
-							$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
-							$str .= '<option value="" >Sélectionnez un utilisateur</option>';
-							
-
-							$tab_userentities = $this->getEntityVis();
-							/** Order by parent entity **/
-							foreach ($tab_userentities as $key => $value) {
-								$str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
-								$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
-								foreach($tab_users as $user){
-									if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
-										$selected = " ";
-										if ($user['id'] == $circuit['sign']['users'][0]['user_id'])
-											$selected = " selected";
-										$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
-									}
-									
-								}
-								$str .= '</optgroup>';
-							}
-							/*$tab_usergroups = $this->getGroupVis();
-							foreach ($tab_usergroups as $key => $value) {
-								$str .= '<optgroup label="'.$tab_usergroups[$key]['group_desc'].'">';
-								$tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
-								foreach($tab_users as $user){
-									$selected = " ";
-									if ($user['id'] == $circuit['sign']['users'][0]['user_id'])
-										$selected = " selected";
-									$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
-								}
-								$str .= '</optgroup>';
-							}*/
-							$str .= '</select>';
-
-							$str .= '<span id="signatory_' . $seq . '"><i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></span></td>';
-
-							if (($isVisaStep && ($myPosVisa+1 == $seq || $myPosVisa == $seq)) || $circuit['sign']['users'][0]['process_date'] != '' || $circuit['visa']['users'][$seq-1]['process_date'] != '')
-								$up = ' style="visibility:hidden"';
-							else
-								$up = ' style="visibility:visible"';
-							$down = ' style="visibility:hidden"';
-
-							// if ($isVisaStep && $myPosVisa == $seq) $add = ' style="visibility:hidden"';
-							// else $add = ' style="visibility:visible"';
-							$add = ' style="visibility:visible"';
-
-							if (($isVisaStep && $myPosVisa == $seq) || $circuit['sign']['users'][0]['process_date'] != '' || $circuit['visa']['users'][$seq-1]['process_date'] != '')
-								$del = ' style="visibility:hidden"';
-							else
-								$del = ' style="visibility:visible"';
-
-							if ($circuit['sign']['users'][0]['process_date'] != '')
-                                                                $add = ' style="visibility:hidden"';
-                                                        else
-                                                                $add = ' style="visibility:visible"';
+                            }else{
+                               $vised = ''; 
+                               if($bool_modif == true){
+                                   $modif = 'true';
+                                    $del_vis = '<div class="delete_visa" onclick="delVisaUser(this.parentElement);"><i class="fa fa-trash" aria-hidden="true"></i></div>';
+                                    $disabled = '';  
+                               }else{
+                                    $modif = 'false';
+                                    $del_vis = '<div class="delete_visa"></div>';
+                                    $disabled = ' disabled="disabled"';
+                               }
 
 
-							if (count ($circuit['visa']['users']) == 0){
-								$up 	= 'style="visibility:hidden"';
-								$del 	= 'style="visibility:hidden"';
-							}
-							$displayCB = ' style="visibility:hidden"';
-							if ($isVisaStep && $myPosVisa == $seq)
-								$displayCB = ' style="visibility:hidden"';
+                               $info_vised = '';
 
-							$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x" title="'.DOWN_USER_WORKFLOW.'"></i></a></td>';
-							$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x" title="'.UP_USER_WORKFLOW.'"></i></a></td>';
-							$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$seq.'" name="suppr_'.$seq.'" '.$del.' ><i class="fa fa-user-times fa-2x" title="'.DEL_USER_WORKFLOW.'"></i></a></td>';
-							$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x" title="'.ADD_USER_WORKFLOW.'"></i></a></td>';
-							$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_comment'].'" onmouseover="setTitle(this);" style="width:95%;" '.$disabled.'/></td>';
-							$str .= '<td style="display:none"><input type="hidden" id="date_'.$seq.'" name="date_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_date'].'" /></td>';
-
-							$str .= '<td style="display:none"><input type="checkbox" id="isSign_'.$seq.'" name="isSign_'.$seq.'" '.$displayCB.' checked/></td>';
-							if ($circuit['sign']['users'][0]['process_date'] != '')
-								$str .= '<td><i class="fa fa-check fa-2x" title="'._SIGNED.'"></i></td>';
-							else
-								$str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_SIGN.'"></i></td>';
-						} else {
-							$str .= '<td><span><span class="nbResZero" style="font-weight:bold;opacity:0.5;">' . ($seq + 1) .'</span> </span>' . $circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
-							$str .= ' <i title="Signataire" style="color : #fdd16c" class="fa fa-certificate fa-lg fa-fw"></i></td>';
-							$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
-							if ($circuit['sign']['users'][0]['process_date'] != '')
-								$str .= '<td><i class="fa fa-check fa-2x" title="'._SIGNED.'"></i></td>';
-							else
-								$str .= '<td><i class="fa fa-hourglass-half fa-lg" title="'._WAITING_FOR_SIGN.'"></i></td>';
-								
-						}
-						$str .= '</tr>';
-					}
-				}
-			}
-		
-			$str .= '</tbody>';
-			$str .= '</table>';
-			if ($bool_modif){
-				$str .= '<input type="button" name="send" id="send" value="Sauvegarder" class="button" ';
-
-					if ($fromDetail == "Y") {
-						$str .= 'onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'Y\');" /> ';
-					} else {
-						$str .= 'onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'N\');" /> ';
-					}
+                            }
+                            $link_vis = 'arrow-down';
 
 
-				if ($fromDetail == "Y") {
-					$str .= '<input type="button" name="reset" id="reset" value="Reinitialiser" class="button" ';
-			
-					$str .= 'onclick="if(confirm(\'Voulez-vous réinitialiser le circuit ?\')){resetVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\', \'Y\');}" /> ';
-				}
+                            $lastUserVis = false;
+                        }else{
+                            $lastUserVis = true;
+                            $modif = 'false';
+                            $vised = ' vised';
+                            $link_vis = 'check';
+                            $disabled = ' disabled="disabled"';
+                            $info_vised = '<span style="display:block;color:green;">(à visé le : '.functions::format_date_db($info_userVis['process_date'],'','',true).')</span>';
+                            $del_vis = '<div class="delete_visa"></div>';
+                        }
+                        $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';
+                        $str .= '<span style="float:left;"><i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userVis['lastname'].' '.$info_userVis['firstname'].' <sup class="nbRes">'.$info_userVis['entity_id'].'</sup></span>'.$del_vis.'<span style="float:right;width:50%;"><input class="userId" type="hidden" value="'.$info_userVis['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userVis['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userVis['process_comment'].'"/></span><div style="clear:both;"></div>'.$info_vised;
+                        $str .= '</div>';
+                        $str .= '<div class="droptarget_arrow'.$vised.'" id="visa_'.$i.'_arrow"><span><i class="fa fa-'.$link_vis.'" aria-hidden="true"></i></span></div>';
+                    $i++;
+                    }
+                }
+                
 
-					$str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'block\';" />';
-					$str .= '<div id="modalSaveVisaModel" >';
-					$str .= '<h3>Sauvegarder le circuit de visa</h3>';
-					$str .= '<input type="hidden" value="'.$typeList . '_' . strtoupper(base_convert(date('U'), 10, 36)).'" name="objectId_input" id="objectId_input"/><br/>';
-					$str .= '<label for="titleModel">Titre</label> ';
-					$str .= '<input type="text" name="titleModel" id="titleModel"/><br/>';
-					$str .= '<input type="button" name="saveModel" id="saveModel" value="'._VALIDATE.'" class="button" onclick="saveVisaModel(\''.$id_tab.'\');" /> ';
-					$str .= '<input type="button" name="cancelModel" id="cancelModel" value="'._CANCEL.'" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'none\';" />';
-					$str .= '</div>';
-			}
-			$str .= '</div>';
-		}
-		return $str;
-	}
-	
-	
-	
+                //FOR USER SIGN
+                foreach ($circuit['sign']['users'] as $info_userSign) {
+
+                    if(empty($info_userSign['process_date'])){
+                        if($lastUserVis == true && $isVisaStep == true){
+                            $vised = ' currentVis';
+                            $modif = 'false';
+                            $disabled = ' disabled="disabled"';
+                            $del_vis = '<div class="delete_visa"></div>';
+                            if($info_userSign['user_id'] <> $_SESSION['user']['UserId']){
+                                $info_vised = '<p style="color:red;">Vous être en train de signer à la place de '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'!</p>';
+                            }else{
+                                $info_vised = 'Vous êtes l\'actuel signataire';
+                            }
+
+
+
+                        }else{
+                           $vised = ''; 
+                           if($bool_modif == true){
+                               $modif = 'true';
+                                $del_vis = '<div class="delete_visa" onclick="delVisaUser(this.parentElement);"><i class="fa fa-trash" aria-hidden="true"></i></div>';
+                                $disabled = '';  
+                           }else{
+                                $modif = 'false';
+                                $del_vis = '<div class="delete_visa"></div>';
+                                $disabled = ' disabled="disabled"';
+                           }
+
+
+                           $info_vised = '';
+
+                        }
+                    }else{
+                        $modif = 'false';
+                        $vised = ' vised';
+                        $link_vis = 'check';
+                        $info_vised = '<span style="display:block;color:green;">(à signé le : '.functions::format_date_db($info_userVis['process_date'],'','',true).')</span>';
+                    }
+                    $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';
+                    $str .= '<span style="float:left;"><i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userSign['lastname'].' '.$info_userSign['firstname'].' <sup class="nbRes">'.$info_userSign['entity_id'].'</sup></span>'.$del_vis.'<span style="float:right;width:50%;"><input class="userId" type="hidden" value="'.$info_userSign['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userSign['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userSign['process_comment'].'"/></span><div style="clear:both;"></div>'.$info_vised;
+                    $str .= '</div>';
+                $i++;
+                }
+            }
+            
+            $str .= '</div>';
+            
+            if($bool_modif == true){
+                //SAVE VISA CIRCUIT
+                $str .= '<input type="button" name="send" id="send" value="'._SAVE_CHANGES.'" class="button" ';
+                $str .= 'onclick="updateVisaWorkflow('.$res_id.');" /> ';
+                
+                //SAVE AS MODEL
+                $str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'block\';" />';
+                $str .= '<div id="modalSaveVisaModel" >';
+                $str .= '<h3>'._SAVE_POSITION.' '._VISA_WORKFLOW.'</h3><br/>';
+                $str .= '<label for="titleModel">'._TITLE.'</label> ';
+                $str .= '<input type="text" name="titleModel" id="titleModel"/><br/>';
+                $str .= '<input type="button" name="saveModel" id="saveModel" value="'._VALIDATE.'" class="button" onclick="saveVisaWorkflowAsModel();" /> ';
+                $str .= '<input type="button" name="cancelModel" id="cancelModel" value="'._CANCEL.'" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'none\';" />';
+                $str .= '</div>';
+            }
+            $str .= '<script>initDragNDropVisa();</script>';
+            return $str;
+        }
+
 	/* DOSSIER IMPRESSION */
 	public function getJoinedFiles($coll_id, $table, $id, $from_res_attachment=false, $filter_attach_type='all') {
         $joinedFiles = array();

@@ -20,6 +20,12 @@ if(isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == true){
     $from_detail = false;
 }
 
+if(isset($_REQUEST['visaStep']) && $_REQUEST['visaStep'] == true){
+    $visaStep = true;
+}else{
+    $visaStep = false;
+}
+
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
@@ -40,7 +46,7 @@ if($from_detail == true){
 $frm_str .= '<div class="error" id="divError" name="divError"></div>';
 $frm_str .= '<div style="text-align:center;">';
 $visa = new visa();
-$frm_str .= $visa->getList($res_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT');
+$frm_str .= $visa->getList($res_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT',$visaStep,$from_detail);
 
 $frm_str .= '</div><br>';
 /* Historique diffusion visa */
@@ -64,7 +70,7 @@ $frm_str .= '</div>';
 $curr_visa_wf = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
 if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0){
     $frm_str .= '<script>';
-    $frm_str .= 'load_listmodel_visa(\''.$destination.'\',\'VISA_CIRCUIT\',\'tab_visaSetWorkflow\', true);';
+    $frm_str .= '$j("#modelList").val(\''.$destination.'\');$j("#modelList").change();';
     $frm_str .= '</script>';
 }
 

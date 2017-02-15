@@ -39,11 +39,8 @@
         <parameter name="title" type="string" />
     </validationRule>
     <validationRule name="vi_saveVisaModel" extends="standardForm" mode="error">
-    	<parameter name="id_list" type="string" />
     	<parameter name="title" type="string" />
-    	<parameter name="conseillers" type="string" />
-    	<parameter name="consignes" type="string" />
-		<parameter name="list_sign" type="string" />
+    	<parameter name="userList" type="string" />
     </validationRule>
     <validationRule name="vi_saveVisaWF" extends="standardForm" mode="error">
     	<parameter name="res_id" type="integer" />

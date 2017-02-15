@@ -238,7 +238,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='</i>';
     /********************************* LEFT PART **************************************/
     $frm_str .= '<div style="height:90vh;overflow:auto;">';
-    $frm_str .= '<div id="validleftprocess" style="display:none;width:auto;">';
+    $frm_str .= '<div id="validleftprocess" style="display:none;width:300px;">';
     $frm_str .= '<div id="frm_error_' . $id_action . '" class="error"></div>';
     $frm_str .= '<input type="hidden" name="values" id="values" value="' . $res_id . '" />';
     $frm_str .= '<input type="hidden" name="action_id" id="action_id" value="' . $id_action . '" />';

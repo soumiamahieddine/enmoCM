@@ -1,4 +1,248 @@
 var docLockInterval;
+function addVisaUser(users) {
+    if (!users) {
+        nb_visa = $j(".droptarget").length;
+        next_visa = nb_visa + 1;
+        if(nb_visa == 0){
+            $j("#emptyVisa").hide();      
+        }else{
+            $j("#visa_content").append('<div class="droptarget_arrow" id="visa_' + nb_visa + '_arrow" ><span><i class="fa fa-arrow-down" aria-hidden="true"></i></span></div>');
+        }
+
+        $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true"><div class="delete_visa" onclick="delVisaUser(this.parentElement);"><i class="fa fa-trash" aria-hidden="true"></i></div><span style="float:left;"><i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + $j("select#visaUserList option:selected").text() + ' <sup class="nbRes">'+$j("select#visaUserList option:selected").parent().get( 0 ).label+'</sup></span><span style="float:right;width:50%;"><input class="userId" type="hidden" value="' + $j("select#visaUserList option:selected").val() + '"/><input class="visaDate" type="hidden" value=""/><input type="text" class="consigne" value=""/></span><div style="clear:both;"></div></div>');
+
+        //prototype
+        document.getElementById("visaUserList").selectedIndex = 0;
+        Event.fire($("visaUserList"), "chosen:updated");
+    } else {
+        nb_visa = $j(".droptarget").length;
+        next_visa = nb_visa + 1;
+        if(nb_visa == 0){
+            $j("#emptyVisa").hide();      
+        }else{
+            $j("#visa_content").append('<div class="droptarget_arrow" id="visa_' + nb_visa + '_arrow" ><span><i class="fa fa-arrow-down" aria-hidden="true"></i></span></div>');
+        }
+        $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true"><div class="delete_visa" onclick="delVisaUser(this.parentElement);"><i class="fa fa-trash" aria-hidden="true"></i></div><span style="float:left;"><i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + users.lastname + ' ' + users.firstname + ' <sup class="nbRes">' + users.entity_id + '</sup></span><span style="float:right;width:50%;"><input class="userId" type="hidden" value="' + users.user_id + '"/><input class="visaDate" type="hidden" value=""/><input type="text" class="consigne" value=""/></span><div style="clear:both;"></div></div>');
+        
+    }
+}
+function delVisaUser (target) {
+  var id = '#'+target.id;
+  
+  if($j(id+"_arrow").length){
+      $j(id).remove();
+      $j(id+"_arrow").remove();
+  }else{   
+      console.log(target);
+      if($j(".droptarget").length == 1){
+          $j("#emptyVisa").show(); 
+      }else{
+          $j('#'+target.previousElementSibling.id).remove();
+      }
+      $j(id).remove();
+  }
+  resetPosVisa();
+  
+}
+function resetPosVisa () {
+    $i = 1;
+    $j(".droptarget").each(function() {
+        if($j("#"+this.id+"_arrow").length){
+            $j("#"+this.id+"_arrow").id= 'visa_' + $i + '_arrow';
+        }
+        this.id = 'visa_' + $i;      
+        $i++;
+    });
+}
+function updateVisaWorkflow(resId) {
+    var $i = 0;
+    var userList = [];
+    if ($j(".droptarget").length) {
+        $j(".droptarget").each(function () {
+            //console.log('viseur : '+$j("#"+this.id+" .userdId").val());
+            userId = $j("#" + this.id).find(".userId").val();
+            userConsigne = $j("#" + this.id).find(".consigne").val();
+            userVisaDate = $j("#" + this.id).find(".visaDate").val();
+            userPos = $i;
+            userList.push({userId: userId, userPos: userPos, userConsigne: userConsigne, userVisaDate: userVisaDate});
+            $i++;
+        });
+    }
+    $j.ajax({
+       url : 'index.php?display=true&module=visa&page=updateVisaWF',
+       type : 'POST',
+       dataType : 'JSON',
+       data: {
+           resId: resId,
+            userList: JSON.stringify(userList)
+       },
+       success : function(response){
+            if (response.status == 0) {
+                $('divInfoVisa').innerHTML = 'Mise à jour du circuit effectuée';
+                $('divInfoVisa').style.display = 'table-cell';
+                Element.hide.delay(5, 'divInfoVisa');
+                eval(response.exec_js);
+            } else if (response.status != 1) {
+                alert(response.error_txt)
+            }
+       },
+       error : function(error){
+           alert(error);
+       }
+
+    });
+}
+function saveVisaWorkflowAsModel () {
+    var $i = 0;
+    var userList = [];
+    var title = $j("#titleModel").val();
+    
+    if($j(".droptarget").length){
+        $j(".droptarget").each(function() {
+            //console.log('viseur : '+$j("#"+this.id+" .userdId").val());
+            userId = $j("#"+this.id).find(".userId").val();
+            userConsigne = $j("#"+this.id).find(".consigne").val();
+            userVisaDate = $j("#"+this.id).find(".visaDate").val();
+            userPos = $i;
+            userList.push({userId:userId, userPos:userPos, userConsigne:userConsigne, userVisaDate:userVisaDate});        
+            $i++;
+        });
+        $j.ajax({
+            url : 'index.php?display=true&module=visa&page=saveVisaModel',
+            type : 'POST',
+            dataType : 'JSON',
+            data: {
+                title: title,
+                userList: JSON.stringify(userList)
+            },
+            success : function(response){
+                if (response.status == 0) {
+                    $('divInfoVisa').innerHTML = 'Modèle enregistré';
+                    $('divInfoVisa').style.display = 'table-cell';
+                    Element.hide.delay(5, 'divInfoVisa');
+                    $j('#modalSaveVisaModel').hide();
+                    eval(response.exec_js);
+                } else {
+                    alert(response.error_txt)
+                }
+            },
+            error : function(error){
+                alert(error);
+            }
+
+         });
+   
+    }else{
+        alert('Aucun utilisateur dans le circuit !');
+    }
+    
+}
+function loadVisaModelUsers() {
+    
+    var objectId = $j("select#modelList option:selected").val();
+    var objectType = 'VISA_CIRCUIT';
+    $j.ajax({
+            url : 'index.php?display=true&module=visa&page=load_listmodel_visa_users',
+            type : 'POST',
+            dataType : 'JSON',
+            data: {
+                objectType: objectType,
+                objectId: objectId
+            },
+            success : function(response){
+                if (response.status == 0) {
+                    
+                    var userList = response.result;
+                    if(userList){
+                        userList.each(function(user, key) {
+                            addVisaUser(user);
+                         });  
+                    }
+                    
+
+                } else {
+                    alert(response.error_txt);
+                }
+            },
+            error : function(error){
+                alert(error);
+            }
+
+         });
+         
+    //prototype
+    document.getElementById("modelList").selectedIndex = 0;
+    Event.fire($("modelList"), "chosen:updated");
+}
+
+function initDragNDropVisa() {
+    document.getElementById("visa_content").addEventListener("dragstart", function(event) {
+        // The dataTransfer.setData() method sets the data type and the value of the dragged data
+        event.dataTransfer.setData("Text", event.target.id);
+
+        // Output some text when starting to drag the p element
+        //document.getElementById("demo").innerHTML = "Started to drag the p element.";
+
+        // Change the opacity of the draggable element
+        event.target.style.opacity = "0.4";
+    });
+
+    // While dragging the p element, change the color of the output text
+    document.getElementById("visa_content").addEventListener("drag", function(event) {
+        //document.getElementById("demo").style.color = "red";
+    });
+
+    // Output some text when finished dragging the p element and reset the opacity
+    document.getElementById("visa_content").addEventListener("dragend", function(event) {
+        //document.getElementById("demo").innerHTML = "Finished dragging the p element.";
+        event.target.style.opacity = "1";
+    });
+
+
+    /* Events fired on the drop target */
+
+    // When the draggable p element enters the droptarget, change the DIVS's border style
+    document.getElementById("visa_content").addEventListener("dragenter", function(event) {
+        if ( event.target.className == "droptarget") {
+            event.target.style.border = "2px dotted green";
+        }
+    });
+
+    // By default, data/elements cannot be dropped in other elements. To allow a drop, we must prevent the default handling of the element
+    document.getElementById("visa_content").addEventListener("dragover", function(event) {
+        event.preventDefault();
+    });
+
+    // When the draggable p element leaves the droptarget, reset the DIVS's border style
+    document.getElementById("visa_content").addEventListener("dragleave", function(event) {
+        if ( event.target.className == "droptarget" ) {
+            event.target.style.border = "";
+        }
+    });
+
+    /* On drop - Prevent the browser default handling of the data (default is open as link on drop)
+       Reset the color of the output text and DIV's border color
+       Get the dragged data with the dataTransfer.getData() method
+       The dragged data is the id of the dragged element ("drag1")
+       Append the dragged element into the drop element
+    */
+    document.getElementById("visa_content").addEventListener("drop", function(event) {
+        event.preventDefault();
+        if ( event.target.className == "droptarget" ) {
+            //document.getElementById("demo").style.color = "";
+            event.target.style.border = "";
+            var data = event.dataTransfer.getData("Text");
+            var oldContent = event.target.innerHTML;
+            var draggedConsigne = $j('#'+data+' .consigne').val();
+            var replaceConsigne = $j('#'+event.target.id+' .consigne').val();
+            event.target.innerHTML = document.getElementById(data).innerHTML;
+            $j('#'+event.target.id+' .consigne').val(draggedConsigne);
+            document.getElementById(data).innerHTML = oldContent;
+            $j('#'+data+' .consigne').val(replaceConsigne);
+
+        }
+    });
+}
 
 function manageFrame(button) {
 
@@ -83,477 +327,12 @@ function setTitle(input) {
 	input.title = input.value;
 }
 
-function refreshIcones(id_tableau){
-	
-	var tableau = document.getElementById(id_tableau);
-	
-	var arrayLignes = tableau.rows; //l'array est stocké dans une variable
-	var longueur = arrayLignes.length;//on peut donc appliquer la propriété length
-	var i=1; //on définit un incrémenteur qui représentera la clé
-	while(i<longueur)
-	{
-		var disabledLine = false;
-		//Maj de la couleur de ligne
-		if(i % 2 == 0)
-		{
-			arrayLignes[i].className = "";
-		}
-		else
-		{
-			arrayLignes[i].className = "col";
-		}
-		
-		var num = i-1;
-		if (arrayLignes[i].cells[0].childNodes[1].disabled == true)
-			disabledLine = true;
-		//MAJ id et name
-		//arrayLignes[i].cells[0].innerHTML = i;
-		arrayLignes[i].cells[0].childNodes[0].id = "rank_" + num;
-		arrayLignes[i].cells[0].childNodes[1].name = "conseiller_"+num;
-		arrayLignes[i].cells[0].childNodes[1].id="conseiller_"+num;
-		if(arrayLignes[i].cells[0].childNodes[2]){
-			arrayLignes[i].cells[0].childNodes[2].id = "signatory_" + num;
-		}
-		arrayLignes[i].cells[1].childNodes[0].name = "down_"+num;
-		arrayLignes[i].cells[1].childNodes[0].id="down_"+num;
-		document.getElementById("down_"+num).setAttribute('onclick','deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2, \''+id_tableau+'\');');
-				
-		arrayLignes[i].cells[2].childNodes[0].name = "up_"+num;	arrayLignes[i].cells[2].childNodes[0].id="up_"+num;
-		document.getElementById("up_"+num).setAttribute('onclick','deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1, \''+id_tableau+'\');');
-		
-		arrayLignes[i].cells[3].childNodes[0].name = "suppr_"+num;	arrayLignes[i].cells[3].childNodes[0].id="suppr_"+num;
-		arrayLignes[i].cells[4].childNodes[0].name = "add_"+num;	arrayLignes[i].cells[4].childNodes[0].id="add_"+num;
-		arrayLignes[i].cells[5].childNodes[0].name = "consigne_"+num;	arrayLignes[i].cells[5].childNodes[0].id="consigne_"+num;
-		arrayLignes[i].cells[6].childNodes[0].name = "date_"+num;	arrayLignes[i].cells[6].childNodes[0].id="date_"+num;
-		arrayLignes[i].cells[7].childNodes[0].name = "isSign_"+num;	arrayLignes[i].cells[7].childNodes[0].id="isSign_"+num;
-
-		document.getElementById("rank_" + num).innerHTML = "<span class='nbResZero' style='font-weight:bold;opacity:0.5;'>"+i+"</span> ";
-		if (longueur > 2)
-			document.getElementById("suppr_"+num).style.visibility="visible";
-		else
-			document.getElementById("suppr_"+num).style.visibility="hidden";
-		
-		if (i > 1)
-			document.getElementById("up_"+num).style.visibility="visible";
-		else
-			document.getElementById("up_"+num).style.visibility="hidden";
-		
-		if (i != longueur-1){
-			if(arrayLignes[i].cells[0].childNodes[2]){
-				arrayLignes[i].cells[0].childNodes[2].style.visibility = "hidden";
-			}
-			document.getElementById("add_"+num).style.visibility="hidden";
-
-			document.getElementById("isSign_"+num).style.visibility="hidden";
-			document.getElementById("isSign_"+num).checked=false;
-			//document.getElementById("signatory_" + num).innerHTML = "";
-
-			document.getElementById("down_"+num).style.visibility="visible";
-		}
-		else {
-			document.getElementById("add_"+num).style.visibility="visible";
-			
-			document.getElementById("isSign_"+num).style.visibility="hidden";
-			document.getElementById("isSign_"+num).checked=true;
-			if(document.getElementById("signatory_"+num)){
-				document.getElementById("signatory_"+num).innerHTML = " <i title='Signataire' style='color : #fdd16c' class='fa fa-certificate fa-lg fa-fw'></i>";
-			}
-
-			document.getElementById("down_"+num).style.visibility="hidden";
-
-		}
-		
-		/* Ajout des conditions pour les lignes disabled */
-		if (disabledLine){
-			document.getElementById("suppr_"+num).style.visibility="hidden";
-			document.getElementById("down_"+num).style.visibility="hidden";
-			//document.getElementById("up_"+num).style.visibility="hidden";
-			document.getElementById("isSign_"+num).style.visibility="hidden";
-		}
-	
-		/* si la ligne précédente est désactive */
-		if (num > 0) {
-			prev_num = num-1;
-			//console.log(document.getElementById('conseiller_'+prev_num));
-			if (arrayLignes[i-1].cells[0].childNodes[1].disabled == true){
-				document.getElementById("up_"+num).style.visibility="hidden";
-				/*if(i == longueur-1){
-					document.getElementById("suppr_"+num).style.visibility="hidden";
-				}*/
-			}
-		}
-		
-		/*************************************************/
-
-		if (i == longueur-1 && document.getElementById("signatory_"+num)){
-				document.getElementById("signatory_"+num).style.visibility="visible";
-		}
-
-		i++;
-
-	}
-}
-
-
-function addRow(id_tableau)
-{
-	var tableau = document.getElementById(id_tableau);	
-	var ligne = tableau.insertRow(-1);//on a ajouté une ligne
-	var position = ligne.rowIndex;
-	
-	if (position%2 == 1) ligne.className = "col";
-
-	/*var colonne1 = ligne.insertCell(0);//on a une ajouté une cellule
-	colonne1.innerHTML += position;//on y met la position
-	*/
-	var id_Cons = "conseiller_0";
-	var last_select = tableau.rows.length-3;
-	
-	//var listeDeroulante = document.getElementById(id_Cons);
-	var listeDeroulante = document.getElementById('conseiller_'+last_select);
-
-
-	var colonne2 = ligne.insertCell(0);//on ajoute la seconde cellule
-	var listOptions = "";
-	
-	listOptions=listeDeroulante.innerHTML;
-
-	colonne2.innerHTML += "<span id='rank_" + position + "'></span><select>"+listOptions+"</select><span id='signatory_" + position + "'><i title=\"Signataire\" style=\"color : #fdd16c;visibility:visible;\" class=\"fa fa-certificate fa-lg fa-fw\"></i></span>";
-	//colonne2.innerHTML += "</select>";
-
-	var colonne3 = ligne.insertCell(1);
-	//colonne3.innerHTML += "<img src=\"static.php?filename=DownUser.png&module=visa\" id=\"down_"+position+"\" name=\"down_"+position+"\" onclick=\"deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2, '"+id_tableau+"')\" style=\"visibility:hidden;\"/>";
-	colonne3.innerHTML += "<a href=\"javascript://\"  id=\"down_"+position+"\" name=\"down_"+position+"\" onclick=\"deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2, '"+id_tableau+"')\" style=\"visibility:hidden;\" ><i class=\"fa fa-arrow-down fa-2x\" title=\"Déplacer l'utilisateur vers le bas\"></i></a>";
-
-	var colonne4 = ligne.insertCell(2);
-	//colonne4.innerHTML += "<img src=\"static.php?filename=UpUser.png&module=visa\" id=\"up_"+position+"\" name=\"up_"+position+"\" onclick=\"deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1, '"+id_tableau+"')\" style=\"visibility:visible;\"/>";
-	colonne4.innerHTML += "<a href=\"javascript://\" id=\"up_"+position+"\" name=\"up_"+position+"\" onclick=\"deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1, '"+id_tableau+"')\" style=\"visibility:visible;\" ><i class=\"fa fa-arrow-up fa-2x\" title=\"Déplacer l'utilisateur vers le haut\"></i></a>";
-
-	var colonne5 = ligne.insertCell(3);
-	//colonne5.innerHTML += "<img src=\"static.php?filename=SupprUser.png&module=visa\" id=\"suppr_"+position+"\" name=\"suppr_"+position+"\" onclick=\"delRow(this.parentNode.parentNode.rowIndex, '"+id_tableau+"')\" style=\"visibility:visible;\"/>";
-	colonne5.innerHTML += "<a href=\"javascript://\" onclick=\"delRow(this.parentNode.parentNode.rowIndex, '"+id_tableau+"')\" id=\"suppr_"+position+"\" name=\"suppr_"+position+"\" style=\"visibility:visible;\" ><i class=\"fa fa-user-times fa-2x\" title=\"Retirer l'utilisateur du circuit\"></i></a>";
-	
-	var colonne6 = ligne.insertCell(4);
-	//colonne6.innerHTML += "<img src=\"static.php?filename=AjoutUser.png&module=visa\" id=\"add_"+position+"\" name=\"add_"+position+"\" onclick=\"addRow('"+id_tableau+"')\"style=\"visibility:visible;\"/>";
-	colonne6.innerHTML += "<a href=\"javascript://\" id=\"add_"+position+"\" name=\"add_"+position+"\" onclick=\"addRow('"+id_tableau+"')\"style=\"visibility:visible;\" ><i class=\"fa fa-user-plus fa-2x\" title=\"Ajouter un utilisateur dans le circuit\"></i></a>";
-	
-	var colonne7 = ligne.insertCell(5);
-	colonne7.innerHTML += "<input type=\"text\" id=\"consigne_"+position+"\" name=\"consigne_"+position+"\" value=\""+document.getElementById('consigne_'+last_select).value+"\" style=\"width:95%;\"/>";
-	
-	var colonne8 = ligne.insertCell(6);
-	colonne8.style.display = 'none';
-	colonne8.innerHTML += "<input type=\"hidden\" id=\"date_"+position+"\" name=\"date_"+position+"\"/>";
-	
-	var colonne9 = ligne.insertCell(7);
-	colonne9.style.display = 'none';
-	colonne9.innerHTML += "<input type=\"checkbox\" id=\"isSign_"+position+"\" name=\"isSign_"+position+"\"/>";
-
-	var colonne10 = ligne.insertCell(8);
-	//colonne10.style.display = 'none';
-	colonne10.innerHTML += '<i class="fa fa-plus fa-lg" title="Nouvel utilisateur ajouté"></i>';
-	
-	//document.getElementById('consigne_'+last_select).value = "";
-	refreshIcones(id_tableau);
-}
-
-function delRow(num, id_tableau){
-	document.getElementById(id_tableau).deleteRow(num);
-	
-	refreshIcones(id_tableau);
-}
-
-function deplacerLigne(source, cible, id_tableau)
-{
-
-	var tableau = document.getElementById(id_tableau);
-	//on initialise nos variables
-	var ligne = tableau.rows[source];//on copie la ligne
-	var nouvelle = tableau.insertRow(cible);//on insère la nouvelle ligne
-	var cellules = ligne.cells;
-
-	//on boucle pour pouvoir agir sur chaque cellule
-	for(var i=0; i<cellules.length; i++)
-	{
-		//console.log(cellules[i].innerHTML);
-		//console.log(cellules[i].);
-		nouvelle.insertCell(-1).innerHTML += cellules[i].innerHTML;//on copie chaque cellule de l'ancienne à la nouvelle ligne
-		/*if (i == 6 && cellules[i].childNodes[0].value != ""){
-			nouvelle.cells[5].childNodes[0].value = cellules[i].childNodes[0].value;
-		}*/
-		if (i == 0){
-			nouvelle.cells[0].childNodes[1].selectedIndex = cellules[i].childNodes[1].selectedIndex;
-		}
-
-		if(i == 5){
-			nouvelle.cells[5].childNodes[0].value = cellules[i].childNodes[0].value;
-			//console.log(cellules[i].childNodes[0].value);
-		}
-		
-		/*if (i > 6)
-			nouvelle.cells[i].style.display = 'none';*/
-		if (i == 7 || i == 6){
-			nouvelle.cells[i].style.display = 'none';
-		}
-	}
-
-	//on supprimer l'ancienne ligne
-	tableau.deleteRow(ligne.rowIndex);//on met ligne.rowIndex et non pas source car le numéro d'index a pu changer
-	refreshIcones(id_tableau);
-}
-
-function saveVisaWorkflow(res_id, coll_id, id_tableau, fromDetail){
-	var tableau = document.getElementById(id_tableau);
-	
-	var arrayLignes = tableau.rows; //l'array est stocké dans une variable
-	var longueur = arrayLignes.length;//on peut donc appliquer la propriété length
-	var i=1; //on définit un incrémenteur qui représentera la clé
-	
-	var conseillers = "";
-	var consignes = "";
-	var dates = "";
-	var isSign = "";
-	
-	var cons_empty = false;
-
-	var detail = "";
-
-	if (fromDetail == undefined || fromDetail == "N" ) {
-		detail = "N";
-	} else if (fromDetail == "Y") {
-		detail = "Y";
-	}
-
-	while(i<longueur)
-	{
-		
-		var num = i-1;
-		if (document.getElementById("conseiller_"+num).value == "" ) cons_empty = true;
-		conseillers += document.getElementById("conseiller_"+num).value + "#";
-		consignes += document.getElementById("consigne_"+num).value + "#";
-		dates += document.getElementById("date_"+num).value + "#";
-		if (document.getElementById("isSign_"+num).checked == true) isSign += "1#";
-		else isSign += "0#";
-		
-		
-		i++;
-	}
-
-	/*if (cons_empty){
-		$('divErrorVisa').innerHTML = 'Sélectionner au moins un utilisateur';
-		$('divErrorVisa').style.display = 'table-cell';
-		Element.hide.delay(5, 'divErrorVisa');
-	}
-	else*/
-	new Ajax.Request("index.php?display=true&module=visa&page=saveVisaWF",
-	{
-		
-			method:'post',
-			parameters: { 
-				res_id : res_id,
-				coll_id : coll_id,
-				conseillers : conseillers,
-				consignes : consignes,
-				dates : dates,
-				list_sign : isSign,
-				fromDetail : detail,
-				cons_empty : cons_empty
-			},
-			onSuccess: function(answer){
-				eval("response = "+answer.responseText);
-				if (response.status == 1) {
-					$('divInfoVisa').innerHTML = 'Mise à jour du circuit effectuée';
-                                        $('divInfoVisa').style.display = 'table-cell';
-                                        Element.hide.delay(5, 'divInfoVisa');
-                                        eval(response.exec_js);
-				} else if (response.status == 2){
-					$('divErrorVisa').innerHTML = 'Sélectionner au moins un utilisateur';
-					$('divErrorVisa').style.display = 'table-cell';
-					Element.hide.delay(5, 'divErrorVisa');
-				}
-
-			}
-	});
-}
-
-function resetVisaWorkflow(res_id, coll_id, id_tableau, fromDetail){
-	var tableau = document.getElementById(id_tableau);
-	
-	var arrayLignes = tableau.rows; //l'array est stocké dans une variable
-	var longueur = arrayLignes.length;//on peut donc appliquer la propriété length
-	var i=1; //on définit un incrémenteur qui représentera la clé
-	
-	var conseillers = "";
-	var consignes = "";
-	var dates = "";
-	var isSign = "";
-	
-	var cons_empty = false;
-
-	var detail = "";
-
-	if (fromDetail == undefined || fromDetail == "N" ) {
-		detail = "N";
-	} else if (fromDetail == "Y") {
-		detail = "Y";
-	}
-
-	while(i<longueur)
-	{
-		
-		var num = i-1;
-		if (document.getElementById("conseiller_"+num).value == "" ) cons_empty = true;
-		conseillers += document.getElementById("conseiller_"+num).value + "#";
-		consignes += document.getElementById("consigne_"+num).value + "#";
-		dates += document.getElementById("date_"+num).value + "#";
-		if (document.getElementById("isSign_"+num).checked == true) isSign += "1#";
-		else isSign += "0#";
-		
-		
-		i++;
-	}
-
-	new Ajax.Request("index.php?display=true&module=visa&page=resetVisaWF",
-	{
-		
-			method:'post',
-			parameters: { 
-				res_id : res_id,
-				coll_id : coll_id,
-				conseillers : conseillers,
-				consignes : consignes,
-				dates : dates,
-				list_sign : isSign,
-				fromDetail : detail,
-				cons_empty : cons_empty
-			},
-			onSuccess: function(answer){
-				eval("response = "+answer.responseText);
-                    location.reload(); 
-				}
-
-
-	});
-}
-
-function	load_listmodel_visa(selectedOption, objectType, diff_list_id, save_auto) {
-	if (save_auto == undefined || save_auto == '') {
-		save_auto = false;
-	}
-	var div_id = diff_list_id || 'tab_visaSetWorkflow';
-	
-	var objectId = selectedOption.value || selectedOption;
-	
-	var diff_list_div = $(div_id);
-	new Ajax.Request("index.php?display=true&module=visa&page=load_listmodel_visa",
-		{
-			method:'post',
-			parameters: {
-				objectType	: objectType,
-				objectId		: objectId
-			},
-			onSuccess: function(answer){
-				eval("response = "+answer.responseText);
-				if(response.status == 0 ) {
-					diff_list_div.innerHTML = response.div_content;
-					if (save_auto){
-						var res_id = $('values').value;
-						var coll_id = $('coll_id').value;
-						saveVisaWorkflow(res_id, coll_id, diff_list_id);
-					}
-				} else if (response.status != 1 ){
-					diff_list_div.innerHTML = '';
-					try{
-						$('frm_error').innerHTML = response.error_txt;
-					} catch(e){}
-				}
-			}
-		}
-	);
-}
-
 function	triggerFlashMsg($divName, $msg) {
-	var div	= $($divName);
+    var div = $($divName);
 
-	div.innerHTML 		= $msg;
-	div.style.display = 'table-cell';
-	Element.hide.delay(5, $divName);
-}
-
-function	saveVisaModel(id_tableau) {
-	var tableau 		= document.getElementById(id_tableau);
-	var title 			= $('titleModel').value;
-	var id_list			= $('objectId_input').value;
-
-	var arrayLignes = tableau.rows; //l'array est stocké dans une variable
-	var longueur 		= arrayLignes.length;//on peut donc appliquer la propriété length
-
-	var conseillers = "";
-	var consignes 	= "";
-	var isSign 			= "";
-	var cons_empty 	= false;
-
-	var i = 1;
-	while(i < longueur)
-	{
-
-		var num = i - 1;
-		if (document.getElementById("conseiller_"+num).value == "" )
-			cons_empty = true;
-		conseillers	+= document.getElementById("conseiller_"+num).value + "#";
-		consignes		+= document.getElementById("consigne_"+num).value + "#";
-		
-		if (document.getElementById("isSign_"+num).checked == true)
-			isSign += "1#";
-		else
-			isSign += "0#";
-		
-		i++;
-	}
-
-
-	if (cons_empty){
-		triggerFlashMsg('divErrorVisa', 'Sélectionner au moins un utilisateur');
-	} else if (title == "") {
-		triggerFlashMsg('divErrorVisa', 'Titre manquant');
-	} else {
-		new Ajax.Request("index.php?display=true&module=visa&page=getVisaModelByTitle",
-			{
-
-				method: 'GET',
-				dataType:	'JSON',
-				parameters: {
-					title: title
-				},
-				onSuccess: function (responseValue) {
-					var response = JSON.parse(responseValue.responseText);
-					if (response.isWorkflowTitleFree) {
-
-						new Ajax.Request("index.php?display=true&module=visa&page=saveVisaModel",
-							{
-								method:'POST',
-								parameters: {
-									title 			: title,
-									id_list 		: id_list,
-									list_sign 	: isSign,
-									consignes 	: consignes,
-									conseillers	: conseillers
-								},
-								onSuccess: function(responseValue){
-									var response = JSON.parse(responseValue.responseText);
-									if (response.status == 1){
-										triggerFlashMsg('divInfoVisa', 'Modèle sauvegardé');
-										$('modalSaveVisaModel').style.display = 'none';
-									}
-								}
-							});
-
-					} else {
-						triggerFlashMsg('divErrorVisa', 'Titre déjà utilisé pour un modèle');
-					}
-				}
-			});
-	}
-
+    div.innerHTML = $msg;
+    div.style.display = 'table-cell';
+    Element.hide.delay(5, $divName);
 }
 
 /* Fonctions ajoutées par DIS */
@@ -1089,78 +868,78 @@ function endAttachmentSign(newId)
 }
 function generateWaybill(resId)
 {
-	//console.log("Génération du bordereau");
-	new Ajax.Request("index.php?display=true&module=visa&page=visa_waybill",
-	{
-		
-			method:'post',
-			parameters: { res_id : resId
-						},
-			asynchronous: false,
-			onSuccess: function(answer){
-				eval("response = "+answer.responseText);
-				if (response.status == 1){
-					//console.log("path = "+response.path);
-					//console.log("code = "+response.code);
-					new Ajax.Request("index.php?display=true&module=visa&page=put_barcode",
-					{
-						
-							method:'post',
-							parameters: { path : response.path,
-										  res_id : resId,
-										  code : response.code
-										},
-							asynchronous: false,
-							onSuccess: function(answer){
-								eval("response2 = "+answer.responseText);
-								if (response2.status == 1){
-									//console.log("path = "+response2.path);
-								}
-							}
-					});
-				}
-			}
-	});
-	
+    //console.log("Génération du bordereau");
+    new Ajax.Request("index.php?display=true&module=visa&page=visa_waybill",
+            {
+                method: 'post',
+                parameters: {res_id: resId
+                },
+                asynchronous: false,
+                onSuccess: function (answer) {
+                    eval("response = " + answer.responseText);
+                    if (response.status == 1) {
+                        //console.log("path = "+response.path);
+                        //console.log("code = "+response.code);
+                        new Ajax.Request("index.php?display=true&module=visa&page=put_barcode",
+                                {
+                                    method: 'post',
+                                    parameters: {path: response.path,
+                                        res_id: resId,
+                                        code: response.code
+                                    },
+                                    asynchronous: false,
+                                    onSuccess: function (answer) {
+                                        eval("response2 = " + answer.responseText);
+                                        if (response2.status == 1) {
+                                            //console.log("path = "+response2.path);
+                                        }
+                                    }
+                                });
+                    }
+                }
+            });
+
 }
 
-function showNotesPage(id_tabricator){
-	var tab = $(id_tabricator);
-	var tabDT = tab.getElementsByTagName('DT');
-	for (var i = 0; i < tabDT.length; i++){
-		tabDT[i].setAttribute("class", "trig");
-		if (tabDT[i].id == "onglet_notes") tabDT[i].setAttribute("class", "trig open");
-	}
-	
-	var tabDD = tab.getElementsByTagName('DD');
-	for (var i = 0; i < tabDD.length; i++){
-		tabDD[i].style.display = "none";
-		if (tabDD[i].id == "page_notes") tabDD[i].style.display = "block";
-	}
+function showNotesPage(id_tabricator) {
+    var tab = $(id_tabricator);
+    var tabDT = tab.getElementsByTagName('DT');
+    for (var i = 0; i < tabDT.length; i++) {
+        tabDT[i].setAttribute("class", "trig");
+        if (tabDT[i].id == "onglet_notes")
+            tabDT[i].setAttribute("class", "trig open");
+    }
+
+    var tabDD = tab.getElementsByTagName('DD');
+    for (var i = 0; i < tabDD.length; i++) {
+        tabDD[i].style.display = "none";
+        if (tabDD[i].id == "page_notes")
+            tabDD[i].style.display = "block";
+    }
 }
 
-function printFolder(res_id, coll_id, form_id, path){
-	//console.log("printFolder");
-	new Ajax.Request(path,
-    {
-        asynchronous:false,
-        method:'post',
-        parameters: Form.serialize(form_id),   
-        encoding: 'UTF-8',                       
-        onSuccess: function(answer){
-            eval("response = "+answer.responseText);
-            if(response.status == 0){
-							var id_folder = response.id_folder;
-							var winPrint = window.open('index.php?display=true&module=attachments&page=view_attachment&res_id_master='+res_id+'&id='+id_folder,'','height=800, width=700,scrollbars=yes,resizable=yes');
-							/*winPrint.focus();
-							winPrint.print();*/
-            } 
-			else if (response.status == 1 || response.status == -1) {
-				$('divErrorPrint').innerHTML = response.error_txt;
-				$('divErrorPrint').style.display = 'table-cell';
-				Element.hide.delay(5, 'divErrorPrint');
-			}
-        }
-    });
+function printFolder(res_id, coll_id, form_id, path) {
+    //console.log("printFolder");
+    new Ajax.Request(path,
+            {
+                asynchronous: false,
+                method: 'post',
+                parameters: Form.serialize(form_id),
+                encoding: 'UTF-8',
+                onSuccess: function (answer) {
+                    eval("response = " + answer.responseText);
+                    if (response.status == 0) {
+                        var id_folder = response.id_folder;
+                        var winPrint = window.open('index.php?display=true&module=attachments&page=view_attachment&res_id_master=' + res_id + '&id=' + id_folder, '', 'height=800, width=700,scrollbars=yes,resizable=yes');
+                        /*winPrint.focus();
+                         winPrint.print();*/
+                    }
+                    else if (response.status == 1 || response.status == -1) {
+                        $('divErrorPrint').innerHTML = response.error_txt;
+                        $('divErrorPrint').style.display = 'table-cell';
+                        Element.hide.delay(5, 'divErrorPrint');
+                    }
+                }
+            });
 
 }

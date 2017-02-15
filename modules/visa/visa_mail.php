@@ -152,7 +152,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	
     //Onglet Circuit 
-    $pathScriptTab = $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$res_id.'&collId='.$coll_id.'&destination='.$data['destination']['value'];
+    $pathScriptTab = $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$res_id.'&collId='.$coll_id.'&visaStep=true&destination='.$data['destination']['value'];
     $frm_str .= '<dt id="visa_tab" style="padding-top: 6px;" onclick="loadSpecificTab(\'workflow_visa\',\''.$pathScriptTab.'\');return false;">'._VISA_WORKFLOW.'<span id="visa_tab_img"></span><span id="visa_tab_badge"></span></dt><dd id="page_circuit" style="overflow-x: hidden;">';
     $frm_str .= '<h2>'._VISA_WORKFLOW.'</h2>';
     $frm_str .= '<iframe src="" name="workflow_visa" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="workflow_visa"></iframe>';

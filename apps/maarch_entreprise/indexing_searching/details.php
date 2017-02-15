@@ -337,7 +337,7 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
     }
     $stmt = $db->query(
         "SELECT status, format, typist, creation_date, fingerprint, filesize, "
-        . "res_id, work_batch, page_count, is_paper, scan_date, scan_user, "
+        . "res_id, destination, work_batch, page_count, is_paper, scan_date, scan_user, "
         . "scan_location, scan_wkstation, scan_batch, source, doc_language, "
         . "description, closing_date, alt_identifier, initiator, entity_label " . $comp_fields
         . $case_sql_complementary . " FROM " . $table . " WHERE res_id = ?",
@@ -431,6 +431,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             $initiator = $res->initiator;
             $fingerprint = $res->fingerprint;
             $work_batch = $res->work_batch;
+            $destination = $res->destination;
             $page_count = $res->page_count;
             $is_paper = $res->is_paper;
             $scan_date = functions::format_date_db($res->scan_date);
@@ -1200,7 +1201,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 if ($core->is_module_loaded('visa')) {
                     $visa_frame = '';
                     $pathScriptTab = $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true';
+                        . 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&destination='.$destination.'&fromDetail=true';
                     $visa_frame .= '<dt id="visa_tab" class="fa fa-certificate" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'visa_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="visa_tab_badge"></sup></dt><dd id="page_circuit" style="overflow-x: hidden;">';
                     $visa_frame .= '<h2>'._VISA_WORKFLOW.'</h2>';
 		    $visa_frame .= '<iframe src="" name="visa_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="visa_iframe" style="height:95%;"></iframe>';	

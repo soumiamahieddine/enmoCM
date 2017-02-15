@@ -109,3 +109,85 @@
 #tab_visaSetWorkflow td{
 	white-space: pre;
 }
+
+[draggable=true]{
+    cursor: move;
+}
+[draggable=true]:hover{
+    box-shadow:0 0 5px green; /* CSS3 */
+}
+[draggable=false]:hover{
+    cursor: not-allowed;
+}
+#visa_content{
+  display: block;
+  width: 100%;
+}
+.droptarget{
+    background-color: #93D1E4;
+}
+.droptarget, .vised{
+    text-align: center;
+    display: block; 
+    padding: 10px;
+    border: 2px solid #93D1E4;
+    cursor: default;
+    width: 90%;
+    margin:auto;
+}
+.droptarget_arrow {
+    border: none;
+    display:block;
+    width: 90%;
+    margin:auto;
+    padding : 15px;
+}
+
+.droptarget_arrow {
+    border: none;
+    display:block;
+}
+
+.vised{
+  //opacity: 0.5;
+  //color: green;
+  border: solid 2px green;
+}
+
+.droptarget_arrow.vised{
+  padding : 15px;
+  border:none;
+  opacity: 1;
+  color: green;
+}
+
+.delete_visa{
+  visibility: hidden;
+  float: right;
+  color: red;
+}
+
+.droptarget:hover .delete_visa{
+  visibility:visible;
+}
+
+.delete_visa{
+    cursor:pointer;
+    width:5%;
+    margin:5px;
+}
+
+.droptarget input{
+    width : 100%;
+    margin-right:10px;
+}
+
+#visaUserList{
+    width:45%;
+    float:left;
+}
+
+.droptarget.currentVis{
+    color : #009DC5;
+    border: solid 2px #009DC5;
+}
