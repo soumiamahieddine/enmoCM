@@ -47,12 +47,12 @@ if ($_SESSION['history']['userlogout'] == "true"
         $_SESSION['config']['databasetype']
     );
 }
-$custom = $_SESSION['custom_override_id'];
+$custom   = $_SESSION['custom_override_id'];
 $corePath = $_SESSION['config']['corepath'];
 
-$appUrl = $_SESSION['config']['businessappurl'];
+$appUrl   = $_SESSION['config']['businessappurl'];
 
-$appId = $_SESSION['config']['app_id'];
+$appId    = $_SESSION['config']['app_id'];
 
 // Destruction du cookie. La session est entièrement détruite et revenir sur le site attribuera un nouvel identifiant
 $args = array_merge(array(session_name(), ''), array_values(session_get_cookie_params()));
