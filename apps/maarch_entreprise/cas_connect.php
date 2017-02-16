@@ -62,11 +62,11 @@ if($loginRequestArray['CAS_VERSION'] == 'CAS_VERSION_2_0'){
 } elseif($loginRequestArray['CAS_VERSION'] == 'SAML_VERSION_1_1'){
     // $attrSAML = phpCAS::getAttributes();
     // var_export($attrSAML);
-    echo 'Le protocal SAML 1.1 n est pas encore géré.';
+    echo _CAS_SAML_NOT_SUPPORTED;
     exit;
 
 }else {
-    echo 'Ce protocol du CAS n est pas prise en compte.';
+    echo _PROTOCOL_NOT_SUPPORTED;
     exit;
 }
 
@@ -75,7 +75,7 @@ $query = "SELECT user_id FROM users WHERE user_id = ?";
 $stmt  = $db->query($query, array($userId));
 
 if ($stmt->rowCount() == 0) {
-    echo '<br>Cet utilisateur n existe pas dans l application.';
+    echo '<br>' . _USER_NOT_EXIST;
     exit;
 }
 
