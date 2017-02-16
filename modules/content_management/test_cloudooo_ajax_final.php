@@ -14,7 +14,8 @@ if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
 }
 
 // TODO ONLY FOR SIMPLE TEST
-$serverAddress = "https://cloudooo.erp5.net/";
+//$serverAddress = "https://cloudooo.erp5.net/";
+$serverAddress = "http://192.168.21.24:8002/";
 $file = $filePathOnTmp;
 if (!file_exists($file)) {
     echo 'file not exists : ' . $file . PHP_EOL;
