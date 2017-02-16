@@ -8,7 +8,8 @@ require_once 'core/class/class_core_tools.php';
 /************************************************************************************/
 
 // TODO ONLY FOR SIMPLE TEST
-$serverAddress = "https://cloudooo.erp5.net/";
+//$serverAddress = "https://cloudooo.erp5.net/";
+$serverAddress = "http://192.168.21.24:8002/";
 $file = 'modules/content_management/test_cloudooo.docx';
 //$file = '/var/www/html/maarch_trunk_git/modules/content_management/test_cloudooo.docx';
 if (!file_exists($file)) {
