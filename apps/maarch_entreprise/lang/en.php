@@ -388,7 +388,7 @@ if (!defined("_START_DATE_MISSION")) define("_START_DATE_MISSION", "Mission star
 if (!defined("_END_DATE_TRIAL")) define("_END_DATE_TRIAL", "End date of the trial period");
 if (!defined("_END_DATE_MISSION")) define("_END_DATE_MISSION", "Mission end date");
 if (!defined("_EVENT_DATE")) define("_EVENT_DATE", "Event date");
-if (!defined("_VISIT_DATE")) define("_VISIT_DATE", "Visit date ") ;
+if (!defined("_VISIT_DATE")) define("_VISIT_DATE", "Visit date ");
 if (!defined("_CHANGE_DATE")) define("_CHANGE_DATE", "Change date");
 if (!defined("_DOCTYPES_LIST2")) define("_DOCTYPES_LIST2", "Document types list");
 
@@ -692,7 +692,7 @@ if (!defined("_NO_RIGHT_TXT")) define("_NO_RIGHT_TXT", "You tried to access to a
 if (!defined("_NUM_GED")) define("_NUM_GED", "EDM number");
 
 ///// Manage action error
-if (!defined("_AJAX_PARAM_ERROR")) define("_AJAX_PARAM_ERROR", "Ajax parameters Error");______________________
+if (!defined("_AJAX_PARAM_ERROR")) define("_AJAX_PARAM_ERROR", "Ajax parameters Error");
 if (!defined("_ACTION_CONFIRM")) define("_ACTION_CONFIRM", "Do you want to make the following action ? : ");
 if (!defined("_ADD_ATTACHMENT_OR_NOTE")) define("_ADD_ATTACHMENT_OR_NOTE", "Add an attachment or a note pour this mail/ those mails");
 if (!defined("_CLOSE_MAIL_WITH_ATTACHMENT")) define("_CLOSE_MAIL_WITH_ATTACHMENT", "Closing with attachment");

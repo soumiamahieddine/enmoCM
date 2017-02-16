@@ -405,7 +405,7 @@ if (!defined("_PRINT_SEP_TITLE"))
 if (!defined("_COMMENT_FOR_SEP1"))
     define("_COMMENT_FOR_SEP1" , "Put this delimiter on the stack of  ");
 if (!defined("_COMMENT_FOR_SEP2"))
-    define("_COMMENT_FOR_SEP2" , "documents type of")
+    define("_COMMENT_FOR_SEP2" , "documents type of");
 if (!defined("_PRINT_SEP_WILL_BE_START"))
     define("_PRINT_SEP_WILL_BE_START", "Documents printing will automatically start.");
 

@@ -22,6 +22,89 @@
   src: local('Arizonia'), local('Arizonia-Regular'), url('fonts/sonsieOne.woff') format('woff');
 }
 
+/* section.css */
+#fullWrapper #section {
+}
+
+#fullWrapper #section .blockWrapper #progressWrapper{
+    font-family: 'Sonsie One';
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: bold;
+    font-size: 30px;
+}
+
+#fullWrapper #section .blockWrapper {
+    width: 910px;
+    background-color: rgba(224, 224, 224, 0.5);
+    text-align: left;
+}
+
+#fullWrapper #section .blockWrapper .titleBlock {
+}
+
+#fullWrapper #section .blockWrapper .titleBlock h2 {
+    font-size: 35px;
+    font-family: 'Contrail One';
+    background-color: rgba(224, 224, 224, 0.8);
+    padding-top: 15px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#fullWrapper #section .blockWrapper .contentBlock {
+}
+
+#fullWrapper #section .blockWrapper .contentBlock p {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: justify;
+}
+#fullWrapper #section .blockWrapper .contentBlock h6 {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 0;
+    margin-bottom: 10px;
+    text-align: justify;
+}
+
+#fullWrapper #section .blockWrapper .contentBlock .previousButton {
+    position: relative;
+    left: 25px;
+}
+
+#fullWrapper #section .blockWrapper .contentBlock .nextButton {
+    position: relative;
+    right: 25px;
+}
+
+#fullWrapper #section .blockWrapper .contentBlock form {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#fullWrapper #section .blockWrapper .contentBlock table {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#fullWrapper #section .blockWrapper .contentBlock table .voyantPrerequisites {
+    width: 30px;
+}
+
+
+/* footer.css */
+#fullWrapper #footer {
+    height: 125px;
+    width: 910px;
+    text-align: left;
+}
+
+
 /* buttons.css */
 #buttons #next a {
     /* background-color: #64b651; */
@@ -246,89 +329,6 @@
 }
 
 
-/* section.css */
-#fullWrapper #section {
-}
-
-#fullWrapper #section .blockWrapper #progressWrapper{
-    font-family: 'Sonsie One';
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: bold;
-    font-size: 30px;
-}
-
-#fullWrapper #section .blockWrapper {
-    width: 910px;
-    background-color: rgba(224, 224, 224, 0.5);
-    text-align: left;
-}
-
-#fullWrapper #section .blockWrapper .titleBlock {
-}
-
-#fullWrapper #section .blockWrapper .titleBlock h2 {
-    font-size: 35px;
-    font-family: 'Contrail One';
-    background-color: rgba(224, 224, 224, 0.8);
-    padding-top: 15px;
-    padding-bottom: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-#fullWrapper #section .blockWrapper .contentBlock {
-}
-
-#fullWrapper #section .blockWrapper .contentBlock p {
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
-    text-align: justify;
-}
-#fullWrapper #section .blockWrapper .contentBlock h6 {
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin: 0;
-    margin-bottom: 10px;
-    text-align: justify;
-}
-
-#fullWrapper #section .blockWrapper .contentBlock .previousButton {
-    position: relative;
-    left: 25px;
-}
-
-#fullWrapper #section .blockWrapper .contentBlock .nextButton {
-    position: relative;
-    right: 25px;
-}
-
-#fullWrapper #section .blockWrapper .contentBlock form {
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-#fullWrapper #section .blockWrapper .contentBlock table {
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-#fullWrapper #section .blockWrapper .contentBlock table .voyantPrerequisites {
-    width: 30px;
-}
-
-
-/* footer.css */
-#fullWrapper #footer {
-    height: 125px;
-    width: 910px;
-    text-align: left;
-}
-
-
 /* tags.css */
 body {
     margin: 0;
@@ -369,6 +369,34 @@ a:hover {
 }
 
 
+/* header.css */
+#fullWrapper #header {
+	height: 120px;
+	width: 910px;
+	text-align: left;
+}
+
+#fullWrapper #header .headerName {
+	position: relative;
+	top: 18px;
+	left: 0px;
+	float: left;
+}
+
+#fullWrapper #header .headerName h2 {
+	font-size: 70px;
+	font-family: 'Contrail One';
+	color: rgba(81, 112, 144, 1);
+}
+
+#fullWrapper #header .logo {
+	position: relative;
+	top: 17px;
+	right: 0px;
+	float: right;
+}
+
+
 /* general.css */
 #fullWrapper {
 	width: 960px;
@@ -397,33 +425,5 @@ h6 {
     padding-bottom: 0em;
 }
 
-
-
-/* header.css */
-#fullWrapper #header {
-	height: 120px;
-	width: 910px;
-	text-align: left;
-}
-
-#fullWrapper #header .headerName {
-	position: relative;
-	top: 18px;
-	left: 0px;
-	float: left;
-}
-
-#fullWrapper #header .headerName h2 {
-	font-size: 70px;
-	font-family: 'Contrail One';
-	color: rgba(81, 112, 144, 1);
-}
-
-#fullWrapper #header .logo {
-	position: relative;
-	top: 17px;
-	right: 0px;
-	float: right;
-}
 
 
