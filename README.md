@@ -28,3 +28,4 @@ display_errors (On)
 short_open_tags (On)
 magic_quotes_gpc (Off)
 
+
