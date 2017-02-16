@@ -61,12 +61,17 @@
             <label>_A_PJ</label>
             <process_mode></process_mode>
         </type>
+        <type show="false" with_chrono="false">
+            <id>incoming_mail_attachment</id>
+            <label>_INCOMING_PJ</label>
+            <process_mode></process_mode>
+        </type>
         <type show="true" with_chrono="true" get_chrono="response_project">
             <id>waybill</id>
             <label>_WAYBILL</label>
             <process_mode></process_mode>
         </type>
-	<type show="false" with_chrono="true">
+	    <type show="false" with_chrono="true">
             <id>routing</id>
             <label>_ROUTING</label>
             <process_mode></process_mode>
@@ -76,12 +81,12 @@
             <label>_OUTGOING_MAIL</label>
             <process_mode></process_mode>
         </type>
-	<type show="false" with_chrono="false">
+	    <type show="false" with_chrono="false">
             <id>converted_pdf</id>
             <label>_CONVERTED_PDF</label>
             <process_mode></process_mode>
         </type>
-	<type show="false" with_chrono="false">
+	    <type show="false" with_chrono="false">
             <id>print_folder</id>
             <label>_PRINT_FOLDER</label>
             <process_mode></process_mode>
