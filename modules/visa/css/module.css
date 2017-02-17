@@ -124,29 +124,62 @@
   width: 100%;
 }
 .droptarget{
-	position: relative;
     background-color: #93D1E4;
-    display: table;
-    margin: 10px;
+}
+.droptarget, .vised{
+    text-align: center;
+    display: block; 
     padding: 10px;
-    text-align: left;
-    width: 95%;
+    border: 2px solid #93D1E4;
     cursor: default;
+    width: 90%;
+    margin:auto;
+}
+.droptarget_arrow {
+    border: none;
+    display:block;
+    width: 90%;
+    margin:auto;
+    padding : 15px;
 }
 
 .droptarget_arrow {
     border: none;
-    display:table-cell;
+    display:block;
 }
 
 .vised{
-  opacity: 0.5;
-  color: green;
+  //opacity: 0.5;
+  //color: green;
   border: solid 2px green;
+}
+
+.droptarget_arrow.vised{
+  padding : 15px;
+  border:none;
+  opacity: 1;
+  color: green;
+}
+
+.delete_visa{
+  visibility: hidden;
+  float: right;
+  color: red;
+}
+
+.droptarget:hover .delete_visa{
+  visibility:visible;
+}
+
+.delete_visa{
+    cursor:pointer;
+    width:5%;
+    margin:5px;
 }
 
 .droptarget input{
     width : 100%;
+    margin-right:10px;
 }
 
 #visaUserList{
@@ -157,62 +190,4 @@
 .droptarget.currentVis{
     color : #009DC5;
     border: solid 2px #009DC5;
-}
-
-.visaUserInfo,.visaUserStatus,.visaUserConsigne,.visaUserAction{
-	display: table-cell;
-	vertical-align: middle;
-}
-
-.visaUserStatus{
-	width: 5%;
-	opacity: 0.5;
-}
-.vised .visaUserStatus{
-	opacity: 1;
-}
-.visaUserInfo{
-	width: 45%;
-	font-weight: bold;
-}
-
-.visaUserInfo .nbRes{
-	background-color: grey;
-	font-weight: normal;
-}
-
-.visaUserInfo sub{
-	font-weight: normal;
-}
-
-.droptarget:hover.vised #dropZone{
-	visibility: hidden;
-}
-.droptarget:hover #dropZone{
-	visibility: visible;
-}
-
-#dropZone,#dropZone:active{
-	width: 5%;
-	opacity: 0.5;
-	visibility: hidden;
-	text-align: right;
-	margin: 5px;
-}
-#dropZone:hover{
-	cursor: grab;
-}
-#dropZone:active{
-	cursor: grabbing;
-}
-.visaUserConsigne{
-	width: 40%;
-}
-.visaUserAction{
-	color : red;
-	text-align: right;
-	width: 5%;
-}
-.visaUserAction i{
-	cursor: pointer;
 }

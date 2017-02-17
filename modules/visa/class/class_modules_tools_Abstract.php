@@ -551,7 +551,6 @@ abstract class visa_Abstract extends Database
                                 $vised = ' currentVis';
                                 $modif = 'false';
                                 $disabled = '';
-                                $link_vis = 'arrow-right ';
                                 $del_vis = '<div class="delete_visa"></div>';
                                 if($info_userVis['user_id'] <> $_SESSION['user']['UserId']){
                                     $info_vised = '<p style="color:red;">Vous être en train de viser à la place de '.$info_userVis['firstname'].' '.$info_userVis['lastname'].'!</p>';
@@ -565,20 +564,19 @@ abstract class visa_Abstract extends Database
                                $vised = ''; 
                                if($bool_modif == true){
                                    $modif = 'true';
-                                    $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+                                    $del_vis = '<div class="delete_visa" onclick="delVisaUser(this.parentElement);"><i class="fa fa-trash" aria-hidden="true"></i></div>';
                                     $disabled = '';  
                                }else{
                                     $modif = 'false';
-                                    $del_vis = '';
+                                    $del_vis = '<div class="delete_visa"></div>';
                                     $disabled = ' disabled="disabled"';
                                }
 
 
                                $info_vised = '';
-                               $link_vis = 'hourglass';
 
                             }
-                            
+                            $link_vis = 'arrow-down';
 
 
                             $lastUserVis = false;
@@ -588,28 +586,13 @@ abstract class visa_Abstract extends Database
                             $vised = ' vised';
                             $link_vis = 'check';
                             $disabled = ' disabled="disabled"';
-                            $info_vised = '<br/><sub>visé le : '.functions::format_date_db($info_userVis['process_date'],'','',true).'</sub>';
-                            $del_vis = '';
+                            $info_vised = '<span style="display:block;color:green;">(à visé le : '.functions::format_date_db($info_userVis['process_date'],'','',true).')</span>';
+                            $del_vis = '<div class="delete_visa"></div>';
                         }
-                        //VISA USER LINE CIRCUIT
                         $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';
-						$str .= '<span class="visaUserStatus">';
-                        	$str .= '<i class="fa fa-'.$link_vis.'" aria-hidden="true"></i>';
-						$str .= '</span>';
-                        $str .= '<span class="visaUserInfo">';
-                        	$str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userVis['lastname'].' '.$info_userVis['firstname'].' <sup class="nbRes">'.$info_userVis['entity_id'].'</sup>'.$info_vised;
-                    	$str .= '</span>';
-                    	$str .= '<span class="visaUserConsigne">';
-                    		$str .= '<input class="userId" type="hidden" value="'.$info_userVis['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userVis['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userVis['process_comment'].'"/>';
-                    	$str .= '</span>';
-                    	$str .= '<span class="visaUserAction">';
-                    		$str .= $del_vis;
-                    	$str .= '</span>';
-                    	$str .= '<span id="dropZone">';
-                		$str .= '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
-                	$str .= '</span>';
+                        $str .= '<span style="float:left;"><i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userVis['lastname'].' '.$info_userVis['firstname'].' <sup class="nbRes">'.$info_userVis['entity_id'].'</sup></span>'.$del_vis.'<span style="float:right;width:50%;"><input class="userId" type="hidden" value="'.$info_userVis['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userVis['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userVis['process_comment'].'"/></span><div style="clear:both;"></div>'.$info_vised;
                         $str .= '</div>';
-                        
+                        $str .= '<div class="droptarget_arrow'.$vised.'" id="visa_'.$i.'_arrow"><span><i class="fa fa-'.$link_vis.'" aria-hidden="true"></i></span></div>';
                     $i++;
                     }
                 }
@@ -623,8 +606,7 @@ abstract class visa_Abstract extends Database
                             $vised = ' currentVis';
                             $modif = 'false';
                             $disabled = '';
-                            $del_vis = '';
-                            $link_vis = 'arrow-right ';
+                            $del_vis = '<div class="delete_visa"></div>';
                             if($info_userSign['user_id'] <> $_SESSION['user']['UserId']){
                                 $info_vised = '<p style="color:red;">Vous être en train de signer à la place de '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'!</p>';
                             }else{
@@ -637,42 +619,26 @@ abstract class visa_Abstract extends Database
                            $vised = ''; 
                            if($bool_modif == true){
                                $modif = 'true';
-                                $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);"></i>';
+                                $del_vis = '<div class="delete_visa" onclick="delVisaUser(this.parentElement);"><i class="fa fa-trash" aria-hidden="true"></i></div>';
                                 $disabled = '';  
                            }else{
                                 $modif = 'false';
-                                $del_vis = '';
+                                $del_vis = '<div class="delete_visa"></div>';
                                 $disabled = ' disabled="disabled"';
                            }
 
 
                            $info_vised = '';
-                           $link_vis = 'hourglass';
+
                         }
-                        
                     }else{
                         $modif = 'false';
                         $vised = ' vised';
                         $link_vis = 'check';
                         $info_vised = '<span style="display:block;color:green;">(à signé le : '.functions::format_date_db($info_userVis['process_date'],'','',true).')</span>';
                     }
-                    //VISA USER LINE CIRCUIT
                     $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';
-					$str .= '<span class="visaUserStatus">';
-                    	$str .= '<i class="fa fa-'.$link_vis.'" aria-hidden="true"></i>';
-					$str .= '</span>';
-                    $str .= '<span class="visaUserInfo">';
-                    	$str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userSign['lastname'].' '.$info_userSign['firstname'].' <sup class="nbRes">'.$info_userSign['entity_id'].'</sup>';
-                	$str .= '</span>';
-                	$str .= '<span class="visaUserConsigne">';
-                		$str .= '<input class="userId" type="hidden" value="'.$info_userSign['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userSign['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userSign['process_comment'].'"/>'.$info_vised;
-                	$str .= '</span>';
-                	$str .= '<span class="visaUserAction">';
-                		$str .= $del_vis;
-                	$str .= '</span>';
-                	$str .= '<span id="dropZone">';
-                		$str .= '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
-                	$str .= '</span>';
+                    $str .= '<span style="float:left;"><i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userSign['lastname'].' '.$info_userSign['firstname'].' <sup class="nbRes">'.$info_userSign['entity_id'].'</sup></span>'.$del_vis.'<span style="float:right;width:50%;"><input class="userId" type="hidden" value="'.$info_userSign['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userSign['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userSign['process_comment'].'"/></span><div style="clear:both;"></div>'.$info_vised;
                     $str .= '</div>';
                 $i++;
                 }
