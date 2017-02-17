@@ -2,6 +2,7 @@
     .visaContent{
         position: relative;
         height:100%;
+        margin-top: 10px;
     }
     .headerSignatureBook{
         border: solid 1px black;
@@ -35,7 +36,7 @@
         vertical-align: middle;
     }
     
-    .headerSignatureBook .item.activeTabSignatureBook,.panelRight .rightPanelSelectedThumbnail{
+    .headerSignatureBook .item.activeTabSignatureBook,.panelRight .panelSelectedThumbnail{
         background: #009DC5;
         color:white;
     }
@@ -135,7 +136,7 @@
        height: 95%;
        border: solid 2px white;
     }
-    #thumnails_img_selected,img:hover{
+    img.panelSelectedThumbnail,img:hover{
         border: solid 2px #009DC5;
         cursor:pointer;
     }
@@ -178,17 +179,13 @@
     <div class="contentSignatureBook">
         <div class="contentLeft">
             <div class="contentShow" ng-if="signatureBook.headerTab == 1">
-                <div class="pjDoc">
-                    <img id="thumnails_img_selected" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-                    <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-                    <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-                    <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
-                    <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+                <div class="pjDoc" >
+                    <img id="thumnails_img" ng-repeat="(index, document) in signatureBook.documents" ng-click="changeLeftViewer(index)" ng-src="{{document.thumbnailLink}}" class="leftPanelThumbnails" ng-class="{'panelSelectedThumbnail': index == signatureBook.leftSelectedThumbnail}"/>
                 </div>
                 <div class="pjDetailsMore">
                    <i class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
-                <iframe id="leftPanelShow_iframe" ng-src="{{signatureBook.displayLeftMainDoc}}"></iframe>
+                <iframe id="leftPanelShowDocumentIframe" ng-src="{{signatureBook.leftViewerLink}}"></iframe>
             </div>
             <div class="contentShow" ng-if="signatureBook.headerTab == 2">
                 <iframe id="leftPanelShow_iframe" ng-src="{{signatureBook.linkNotes}}"></iframe>
@@ -204,16 +201,16 @@
                 <div class="pjDetails">
                     <div class="infoPj"><label>Type : </label><span>Projet de réponse</span></div>
                     <div class="infoPj"><label>Objet : </label><span>Réponse délicate</span></div>
-                    <div class="infoPj"><label>Contat : </label><span>Laurent GIOVANONNI - 11 boulevard du sud est</span></div>
+                    <div class="infoPj"><label>Contact : </label><span>Laurent GIOVANONNI - 11 boulevard du sud est</span></div>
                 </div>
                 <div class="pjDetailsMore">
                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
                 </div>
-                <iframe ng-src="{{signatureBook.viewerLink}}"></iframe>
+                <iframe ng-src="{{signatureBook.rightViewerLink}}"></iframe>
             </div>
             <div class="panelRight">
-                <div ng-repeat="(index, attachment) in signatureBook.thumbnailsAttachments" ng-click="changeRightViewer(index)" class="item" ng-class="{'rightPanelSelectedThumbnail': index == signatureBook.selectedThumbnail}">
-                    <span class="fa-stack fa-lg" title="{{attachment.attachment_type}}">
+                <div class="item" ng-repeat="(index, attachment) in signatureBook.attachments" ng-click="changeRightViewer(index)" ng-class="{'panelSelectedThumbnail': index == signatureBook.rightSelectedThumbnail}">
+                    <span class="fa-stack fa-lg">
                     <i class="fa fa-file-o fa-stack-2x"></i>
                     <i class="fa fa-reply fa-stack-1x"></i>
                   </span>
