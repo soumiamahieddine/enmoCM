@@ -716,9 +716,9 @@ abstract class diffusion_list_Abstract extends functions
         #**********************************************************************
         $stmt = $db->query(
             "select l.item_id,  e.entity_label, l.visible, l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment  from " . ENT_LISTINSTANCE
-            . " l, " . ENT_ENTITIES . " e where l.coll_id =  ? "
+            . " l, " . ENT_ENTITIES . " e where l.difflist_type = ? and l.coll_id =  ? "
             . "and l.item_type = 'entity_id' and l.item_id = e.entity_id "
-            . "and l.res_id = ? order by l.sequence ",array($collId,$resId)
+            . "and l.res_id = ? order by l.sequence ",array($typeList,$collId,$resId)
         );
 
         while ($res = $stmt->fetchObject()) {

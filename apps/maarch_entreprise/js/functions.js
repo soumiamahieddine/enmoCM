@@ -3044,6 +3044,26 @@ function loadDiffList(id)
             $('divDiffList_'+id).innerHTML = response.toShow;
         }
     });
+    var path_manage_script = 'index.php?module=entities&page=loadDiffList&display=true';
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: { res_id : id,typeList : 'VISA_CIRCUIT' },
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            console.log(response.toShow);
+            if(!response.toShow.match(/<div style="font-style:italic;text-align:center;color:#ea0000;margin:10px;">/)){
+                $('divDiffList_'+id).innerHTML += response.toShow;
+                 $j('#divDiffList_'+id).css({"width":"97%","display":"table"});
+                $j('#divDiffList_'+id).children().css({"width":"50%","display":"table-cell","vertical-align":"top","padding":"5px"});
+            }
+            
+            
+          
+        }
+    });
+    //$('divDiffList_'+id).childNodes[0].style.width = '50%';
+    //$('divDiffList_'+id).childNodes[1].style.width = '50%';
 }
 
 function loadContactsList(id)

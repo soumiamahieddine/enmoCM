@@ -212,6 +212,7 @@
     <validationRule name="loadDiffList" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="res_id" type="integer" />
+                <parameter name="typeList" type="string" />
     </validationRule>
 
     <validationRule name="loadDiffListHistory" extends="standardForm" mode="error">
