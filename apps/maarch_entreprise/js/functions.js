@@ -3041,9 +3041,28 @@ function loadDiffList(id)
         parameters: { res_id : id },
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
-            $('divDiffList_'+id).innerHTML = response.toShow;
+            $('divDiffList_'+id).innerHTML = '<fieldset style="border: 1px dashed rgb(0, 157, 197);width:100%;"><legend>Liste de diffusion:</legend>'+response.toShow+'</fieldset>';
         }
     });
+    var path_manage_script = 'index.php?module=entities&page=loadDiffList&display=true';
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: { res_id : id,typeList : 'VISA_CIRCUIT',showStatus : true },
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            if(!response.toShow.match(/<div style="font-style:italic;text-align:center;color:#ea0000;margin:10px;">/)){
+                $('divDiffList_'+id).innerHTML += '<fieldset style="border: 1px dashed rgb(0, 157, 197);width:100%;"><legend>Circuit de visa:</legend>'+response.toShow+'</fieldset>';
+                 $j('#divDiffList_'+id).css({"width":"97%","display":"table"});
+                $j('#divDiffList_'+id).children().css({"width":"48%","display":"table-cell","vertical-align":"top","padding":"5px","margin":"5px"});
+            }
+            
+            
+          
+        }
+    });
+    //$('divDiffList_'+id).childNodes[0].style.width = '50%';
+    //$('divDiffList_'+id).childNodes[1].style.width = '50%';
 }
 
 function loadContactsList(id)
