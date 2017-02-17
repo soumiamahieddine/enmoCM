@@ -34,40 +34,7 @@ class Attachments_AttachmentsAbstract_Service extends Apps_Table_Service {
         return $aApiMethod;
     }
 
-    public static function getAttachmentsForThumbnails(array $aArgs = []) {
-        static::checkRequired($aArgs, ['resIdMaster']);
-        static::checkNumeric($aArgs, ['resIdMaster']);
-
-
-        $attachments = static::select([
-            'select'    => ['res_id', 'res_id_version', 'attachment_type'],
-            'table'     => ['res_view_attachments'],
-            'where'     => ['res_id_master = ?', 'attachment_type != ?', 'status not in (?)'],
-            'data'      => [$aArgs['resIdMaster'], 'converted_pdf', ['DEL', 'TMP', 'OBS']]
-        ]);
-
-        foreach ($attachments as $key => $value) {
-            $attachments[$key]['collId'] = '';
-            $attachments[$key]['realId'] = 0;
-
-            if ($value['res_id'] == 0) {
-                $attachments[$key]['collId'] = 'version_attachments_coll';
-                $attachments[$key]['realId'] = $value['res_id_version'];
-            } elseif ($value['res_id_version'] == 0) {
-                $attachments[$key]['collId'] = 'attachments_coll';
-                $attachments[$key]['realId'] = $value['res_id'];
-            }
-
-            $attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$attachments[$key]['realId']}&coll_id={$attachments[$key]['collId']}&display=true&advanced=true";
-
-            unset($attachments[$key]['res_id']);
-            unset($attachments[$key]['res_id_version']);
-        }
-
-        return $attachments;
-    }
-
-    public static function getAttachmentsForViewer(array $aArgs = []) {
+    public static function getAttachmentsForSignatureBook(array $aArgs = []) {
         static::checkRequired($aArgs, ['resIdMaster']);
         static::checkNumeric($aArgs, ['resIdMaster']);
 
@@ -75,8 +42,8 @@ class Attachments_AttachmentsAbstract_Service extends Apps_Table_Service {
         $attachments = static::select([
             'select'    => ['res_id', 'res_id_version', 'title', 'identifier', 'attachment_type', 'status', 'typist', 'path', 'filename'],
             'table'     => ['res_view_attachments'],
-            'where'     => ['res_id_master = ?', 'status not in (?)'],
-            'data'      => [$aArgs['resIdMaster'], ['DEL', 'TMP', 'OBS']]
+            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status not in (?)'],
+            'data'      => [$aArgs['resIdMaster'], ['incoming_mail_attachment'], ['DEL', 'TMP', 'OBS']]
         ]);
 
         foreach ($attachments as $key => $value) {
@@ -84,14 +51,17 @@ class Attachments_AttachmentsAbstract_Service extends Apps_Table_Service {
                 continue;
             }
 
-            $attachments[$key]['realId'] = 0;
+            $collId = '';
+            $realId = 0;
             if ($value['res_id'] == 0) {
-                $attachments[$key]['realId'] = $value['res_id_version'];
+                $collId = 'version_attachments_coll';
+                $realId = $value['res_id_version'];
             } elseif ($value['res_id_version'] == 0) {
-                $attachments[$key]['realId'] = $value['res_id'];
+                $collId = 'attachments_coll';
+                $realId = $value['res_id'];
             }
 
-            $viewerId = $attachments[$key]['realId'];
+            $viewerId = $realId;
             $pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
             foreach ($attachments as $tmpKey => $tmpValue) {
                 if ($tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
@@ -100,6 +70,7 @@ class Attachments_AttachmentsAbstract_Service extends Apps_Table_Service {
                 }
             }
 
+            $attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$realId}&coll_id={$collId}&display=true&advanced=true";
             $attachments[$key]['viewerLink'] = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$aArgs['resIdMaster']}&id={$viewerId}";
 
             unset($attachments[$key]['res_id']);
@@ -109,5 +80,43 @@ class Attachments_AttachmentsAbstract_Service extends Apps_Table_Service {
         }
 
         return $attachments;
+    }
+
+    public static function getIncomingMailAttachmentsForSignatureBook(array $aArgs = []) {
+        static::checkRequired($aArgs, ['resIdMaster', 'collIdMaster']);
+        static::checkNumeric($aArgs, ['resIdMaster']);
+
+
+        $incomingMail = static::select([
+            'select'    => ['subject'],
+            'table'     => ['res_letterbox'],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['resIdMaster']]
+        ]);
+        $attachments = static::select([
+            'select'    => ['res_id', 'title'],
+            'table'     => ['res_attachments'],
+            'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
+            'data'      => [$aArgs['resIdMaster'], 'incoming_mail_attachment', ['DEL', 'TMP', 'OBS']]
+        ]);
+
+        $aReturn = [
+            [
+                'title'         => $incomingMail[0]['subject'],
+                'truncateTitle' => ((strlen($incomingMail[0]['subject']) > 10) ? (substr($incomingMail[0]['subject'], 0, 10) . '...') : $incomingMail[0]['subject']),
+                'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$aArgs['resIdMaster']}&collid={$aArgs['collIdMaster']}",
+                'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$aArgs['resIdMaster']}&coll_id={$aArgs['collIdMaster']}&display=true&advanced=true"
+            ]
+        ];
+        foreach ($attachments as $value) {
+            $aReturn[] = [
+                'title'         => $value['title'],
+                'truncateTitle' => ((strlen($value['title']) > 10) ? (substr($value['title'], 0, 10) . '...') : $value['title']),
+                'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$aArgs['resIdMaster']}&id={$value['res_id']}",
+                'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$value['res_id']}&coll_id=attachments_coll&display=true&advanced=true"
+            ];
+        }
+
+        return $aReturn;
     }
 }

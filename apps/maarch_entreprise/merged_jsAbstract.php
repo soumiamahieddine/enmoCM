@@ -45,6 +45,7 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/scriptaculous.js');
 		readfile('apps/maarch_entreprise/js/jquery.min.js');
 		readfile('apps/maarch_entreprise/js/angular.min.js');
+		readfile('apps/maarch_entreprise/js/angular-route.js');
 		readfile('apps/maarch_entreprise/js/indexing.js');
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
 		readfile('apps/maarch_entreprise/js/effects.js');

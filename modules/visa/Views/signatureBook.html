@@ -1,7 +1,4 @@
 <style>
-html{
-	overflow: hidden;
-}
 	  label{
     font-size: 9px;margin-top: 0px;
   }
@@ -12,17 +9,25 @@ html{
   	text-align:center;
   	overflow:auto;
   }
+  #rightPanelThumbnails{
+      display:table-cell;
+      width:15%;
+      height:100%;
+      margin:10px;
+      background:white;
+      vertical-align:top;
+  }
   .rightPanelThumbnails{
     border:solid 1px;
     width:90%;
   }
-  .rightPanelThumbnails:hover{
-      width:95%;
+  .leftPanelThumbnails{
+        border:solid 1px;
+        width:90%;
+        height:70%;
+        position:relative;
   }
-  .rightPanelThumbnails:hover label{
-    font-weight: bold;
-  }
-  .rightPanelSelectedThumbnail{
+  .panelSelectedThumbnail{
     border:solid 3px;
   }
   .thumbnails_mails{
@@ -30,22 +35,10 @@ html{
     display: inline-block;
     margin: 5px;
   }
-  .thumbnails_mails #thumnails_img{
-    border:solid 1px;
-    height:60%;
-    position:relative;
-  }
-  .thumbnails_mails #thumnails_img:hover{
-    opacity: 0.5;
-  }
-  .thumbnails_mails:hover label{
-    font-weight: bold;
-  }
-  .thumbnails_mails #thumnails_img_selected{
-    border:solid 3px;
-    height:60%;
-    position:relative;
-  }
+    .thumbnailsPanel:hover{
+        opacity: 0.5;
+        cursor: pointer;
+    }
   iframe{
     width: 95%;
     height: 80%;
@@ -162,26 +155,17 @@ html{
         <!-- MAIN LEFT CONTENT -->
         <div class="content" ng-if="signatureBook.headerTab == 1">
             <div id="leftPanelThumbnails">
-                 <div class="thumbnails_mails">
-                  <img id="thumnails_img_selected" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
-                  <label>Courrier arrivé</label>
-                </div>
-                <div class="thumbnails_mails">
-                  <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
-                  <label>PJ1</label>
-                </div>
-                <div class="thumbnails_mails">
-                  <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
-                  <label>PJ2</label>
-                </div>
-                <div class="thumbnails_mails">
-                  <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
-                  <label>PJ3</label>
-                </div>
+                 <div class="thumbnails_mails thumbnailsPanel" ng-repeat="(index, document) in signatureBook.documents" ng-click="changeLeftViewer(index)">
+                     <img ng-src="{{document.thumbnailLink}}" class="leftPanelThumbnails" ng-class="{'panelSelectedThumbnail': index == signatureBook.leftSelectedThumbnail}">
+                     <br/>
+                     <label ng-if="index == 0" style="font-weight: bold">Courrier arrivé</label>
+                     <label ng-if="index > 0">{{document.truncateTitle}}</label>
+                 </div>
             </div>
             <hr/>
+            <span>{{signatureBook.documents[signatureBook.leftSelectedThumbnail]['title']}}</span>
             <div id="leftPanelShowDocument">
-              <iframe id="leftPanelShowDocumentIframe" ng-src="{{signatureBook.displayLeftMainDoc}}"></iframe>
+                <iframe id="leftPanelShowDocumentIframe" ng-src="{{signatureBook.leftViewerLink}}"></iframe>
             </div>
         </div>
         <!-- NOTE CONTENT -->
@@ -203,10 +187,10 @@ html{
     </div>
     <div id="rightPanel">
         <div style="display:table;height:98%;margin:5px;">
-            <div id="rightPanelThumbnails" style="display:table-cell;width:15%;height:100%;margin:10px;background:white;vertical-align:top;">
+            <div id="rightPanelThumbnails">
                 <div style="height:68vh;overflow:auto;text-align:center;">
-                    <span ng-repeat="(index, attachment) in signatureBook.thumbnailsAttachments" ng-click="changeRightViewer(index)">
-                        <img ng-src="{{attachment.thumbnailLink}}" class="rightPanelThumbnails" ng-class="{'rightPanelSelectedThumbnail': index == signatureBook.selectedThumbnail}">
+                    <span class="thumbnailsPanel" ng-repeat="(index, attachment) in signatureBook.attachments" ng-click="changeRightViewer(index)">
+                        <img ng-src="{{attachment.thumbnailLink}}" class="rightPanelThumbnails" ng-class="{'panelSelectedThumbnail': index == signatureBook.rightSelectedThumbnail}">
                         <label>{{attachment.attachment_type}}</label>
                     </span>
                 </div>
@@ -220,7 +204,7 @@ html{
             <div id="rightPanelShow" style="display:table-cell;width:85%;height:100%;margin:10px;background:white;text-align:center;">
                 <div style="width:95%;height:20%;">
                 </div>
-                <iframe ng-src="{{signatureBook.viewerLink}}"></iframe>
+                <iframe ng-src="{{signatureBook.rightViewerLink}}"></iframe>
             </div>
         </div>
     </div>

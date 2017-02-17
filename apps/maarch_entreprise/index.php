@@ -366,6 +366,7 @@ if (file_exists($path)) {
               $core->insert_page();
             }
             ?>
+            <div ng-view></div>
         </div>
         <p id="footer">
             <?php
