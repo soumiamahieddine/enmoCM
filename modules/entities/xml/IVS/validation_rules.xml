@@ -213,6 +213,7 @@
 		<parameter name="module" type="identifier" />
 		<parameter name="res_id" type="integer" />
                 <parameter name="typeList" type="string" />
+                <parameter name="showStatus" type="boolean" />
     </validationRule>
 
     <validationRule name="loadDiffListHistory" extends="standardForm" mode="error">

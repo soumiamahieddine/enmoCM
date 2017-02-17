@@ -11,6 +11,12 @@ if(isset($_REQUEST['typeList'])){
 }else{
     $typeList = 'entity_id';
 }
+
+if(isset($_REQUEST['showStatus'])){
+    $showStatus = true;
+}else{
+    $showStatus = false;
+}
 require_once('modules/entities/class/class_manage_listdiff.php');
 $diffListObj = new diffusion_list();
 $difflist = $diffListObj->get_listinstance($_REQUEST['res_id'], false, $_SESSION['collection_id_choice'],$typeList);

@@ -51,6 +51,16 @@
                     </td>
                     <td style="width:37%;"><?php functions::xecho($user['lastname'] . " " . $user['firstname']);?></td>
                     <td style="width:38%;"><?php functions::xecho($user['entity_label']);?></td>
+                    <?php
+                    if($showStatus == true){
+                        if(!empty($difflist[$role_id]['users'][$i]['process_date'])){
+                            echo '<td style="width:5%;"><i class="fa fa-check" aria-hidden="true" style="color:green;"></i></td>';
+                        }else{
+                            echo '<td style="width:5%;"><i class="fa fa-hourglass" aria-hidden="true"></i></td>';
+                        }
+                    }
+                    
+                    ?>
                 </tr><?php
             } ?>
             </table><?php
