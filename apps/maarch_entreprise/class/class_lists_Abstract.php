@@ -1467,7 +1467,7 @@ abstract class lists_Abstract extends Database
             }
             $aService = Basket_Baskets_Service::getServiceFromActionId(['id' => $this->params['defaultAction']]);
             if ($aService['isService']) {
-                $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="angular.element(\'[ng-controller=basketCtrl]\').scope().getView(\''.$keyValue.'\', \''.$aService['service'].'\', \''.$aService['module'].'\');" ';
+                $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="location.href=\'#/baskets/evis/' .$keyValue. '\'" ';
             } else {
                 $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="validForm( \'page\', \''.$keyValue.'\', \''.$this->params['defaultAction'].'\');" ';
             }

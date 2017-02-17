@@ -97,6 +97,8 @@ if (!defined("_OUTGOING_MAIL"))
     define( "_OUTGOING_MAIL", "Spontaneous start mail");
 if (!defined("_A_PJ"))
     define( "_A_PJ", "Attachment");
+if (!defined("_INCOMING_PJ"))
+    define( "_INCOMING_PJ", "Incoming attachment");
 if (!defined("_ENVELOPE"))
     define( "_ENVELOPE", "Envelope");
 if (!defined("_CHOOSE_ATTACHMENT_TYPE"))
