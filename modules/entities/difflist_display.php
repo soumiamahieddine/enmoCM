@@ -43,11 +43,11 @@
                         <i class="fa fa-user fa-2x" title="<?php echo _USER;?>"></i>
                     </td>
                     <td style="width:10%;"><?php
-                    if($user['visible'] == 'Y') { ?>
+                    /* if($user['visible'] == 'Y') { ?>
                         <i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i> <?php
                     } else {?>
                         <i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i><?php
-                    } ?>
+                    } */?>
                     </td>
                     <td style="width:37%;"><?php functions::xecho($user['lastname'] . " " . $user['firstname']);?></td>
                     <td style="width:38%;"><?php functions::xecho($user['entity_label']);?></td>
@@ -70,11 +70,11 @@
                         <i class="fa fa-sitemap fa-2x" title="<?php echo _ENTITY . " " . $role_label ;?>" ></i>
                     </td>
                     <td style="width:10%;"><?php
-                    if($entity['visible'] == 'Y') { ?>
+                    /*if($entity['visible'] == 'Y') { ?>
                         <i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i><?php
                     } else {?>
                         <i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i><?php
-                    } ?>
+                    }*/ ?>
                     </td>
                     <td style="width:37%;"><?php functions::xecho($entity['entity_id']);?></td>
                     <td style="width:38%;"><?php functions::xecho($entity['entity_label']);?></td>
