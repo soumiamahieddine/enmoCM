@@ -1,271 +1,225 @@
 <style>
-html{
-	overflow: hidden;
-}
-	  label{
-    font-size: 9px;margin-top: 0px;
-  }
-  #leftPanelThumbnails{
-  	height:100px;
-  	width:100%;
-  	background:white;
-  	text-align:center;
-  	overflow:auto;
-  }
-  .rightPanelThumbnails{
-    border:solid 1px;
-    width:90%;
-  }
-  .rightPanelThumbnails:hover{
-      width:95%;
-  }
-  .rightPanelThumbnails:hover label{
-    font-weight: bold;
-  }
-  .rightPanelSelectedThumbnail{
-    border:solid 3px;
-  }
-  .thumbnails_mails{
-    height: 100%;
-    display: inline-block;
-    margin: 5px;
-  }
-  .thumbnails_mails #thumnails_img{
-    border:solid 1px;
-    height:60%;
-    position:relative;
-  }
-  .thumbnails_mails #thumnails_img:hover{
-    opacity: 0.5;
-  }
-  .thumbnails_mails:hover label{
-    font-weight: bold;
-  }
-  .thumbnails_mails #thumnails_img_selected{
-    border:solid 3px;
-    height:60%;
-    position:relative;
-  }
-  iframe{
-    width: 95%;
-    height: 80%;
-    border: none;
-  }
-  #headerSignatureBook{
-  	border: solid 1px black;
-  	height:30px;
-  	width:100%;
-  	border-bottom: none;
-  }
-  #signatureBookContent{
-  	border: solid 1px black;
-  	/*display:table;*/
-  	height: 80vh;
-  	width:100%;
-  	overflow: hidden;
-  }
-  #leftPanel, #rightPanel{
-  	position: relative;
-  	display:table-cell;
-  	width:50%;
-  	height:80vh;
-  	margin:10px;
-  	background:white;
-  	vertical-align:top;
-  	overflow:hidden;
-  }
-  #leftPanel hr{
-  	margin-top: 5px;
-	margin-bottom: 5px;
-	background-color: #ccc;
-  }
-  #leftPanel .content{
-  	height:98%;
-  	margin:5px;
-  	text-align:center;
-  	overflow:hidden;
-  }
-  #leftPanelShowDocument{
-  	width:95%;
-  	margin:10px;
-  	background:white;
-  	text-align:center;
-  	height:100%;
-  }
-  #tabLeftSignatureBook{
-  	float: left;
-  	display: table;
-  	height: 100%;
-  }
-  #tabRightSignatureBook{
-  	float: right;
-  	display: table;
-  	height: 100%;
-  	width: 25%;
-  	text-align: right;
-  }
-  #tabRightSignatureBook select{
-  	width: 75%;
-  }
-  #tabRightSignatureBook input{
-  	width: 20%;
-  	text-align: center;
-  }
-  .tabSignatureBook{
-  	display: table-cell;
-  	vertical-align: middle;
-  	border: solid 1px;
-  	padding-left: 10px;
-  	padding-right: 10px;
-  	border-top: none;
-  	border-bottom: none;
-  	border-left: none;
-    border-color: black;
-  }
-
-  .tabSignatureBook:hover{
-    cursor: pointer;
-  }
-
-  .activeTabSignatureBook{
-    color: #fff;
-    background: grey;
-  }
-  
-  .infoPj{
-      width:28%;
-      position: relative;
-      display:inline-block;
-      height:25px;
-      //box-shadow: inset 0px 0px 5px 0px #656565;
-      padding:10px;
-      white-space: nowrap;
+    .visaContent{
+        position: relative;
+        height:100%;
+    }
+    .headerSignatureBook{
+        border: solid 1px black;
+        display: table;
+        margin-bottom: 10px;
+        white-space: nowrap;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .contentSignatureBook{
+        border: solid 1px black;
+        display: table;
+        width: 100%;
+        height:75vh;
+    }
+    
+    .headerSignatureBook .item{
+        border-right: solid 1px black;
+        display: table-cell;
+        padding: 5px;
+        cursor: pointer;
+        width: 5%;
+        vertical-align: middle;
+    }
+    
+     .headerSignatureBook .others{
+        border-right: solid 1px black;
+        display: table-cell;
+        padding: 5px;
+        vertical-align: middle;
+    }
+    
+    .headerSignatureBook .item.activeTabSignatureBook,.panelRight .rightPanelSelectedThumbnail{
+        background: #009DC5;
+        color:white;
+    }
+    .contentLeft{
+        border-right: solid 1px;
+        vertical-align: top;
+    }
+    .contentLeft, .contentRight{
+        display: table-cell;
+        width:50%;
+        text-align: center;
+    }
+    
+    .visaContent iframe{
+        margin: auto;
+        width:95%;
+        height: 100%;
+        border: none;
+    }
+    
+    .contentLeft iframe{
+        height: 80%;
+    }
+    .panelRight{
+        width: 2%;
+        border-left: solid 1px;
+        vertical-align: top;
+    }
+    
+    
+    .panelRight .item{
+        padding:10px;
+        cursor: pointer;
+    }
+    
+    .contentRight .panelRight,.contentRight .contentShow{
+        display: table-cell;
+        vertical-align: top;
+        height:75vh;
+    }
+    .contentLeft .contentShow{
+        height: 75vh;
+    }
+    
+    .contentRight .contentShow,.contentLeft .contentShow{
+        padding : 5px;
+    }
+    
+    .infoPj{
+        width: 33%;
+        display: table-cell;
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-      text-align: left;
-  }
-  #pjDetails{
-      margin-bottom: 10px;
-  }
-  
-    #pjDetails label{
-      display: block;
-      width: 100%;
-      font-weight:bold;
-  }
-  
-  .modifPj{
-    position: absolute;
-    top: 10px;
-    right: 45px;
-    color: #009DC5;
-    cursor:pointer;
-  }
+        padding: 5px;
+    }
+    
+    .pjDetails{
+        display: table;
+        width: 95%;
+        margin: auto;
+        text-align: left;
+        -moz-box-shadow: inset 0px 0px 5px 0px #656565;
+        -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
+        -o-box-shadow: inset 0px 0px 5px 0px #656565;
+        box-shadow: inset 0px 0px 5px 0px #656565;
+        filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        padding: 10px;
+    }
+    
+    .pjDetails label{
+       font-weight: bold;
+    }
+    
+    .pjDetailsMore{
+       text-align: center;
+       cursor: pointer;
+    }
+    
+    .pjDoc{
+       height: 20%;
+       -moz-box-shadow: inset 0px 0px 5px 0px #656565;
+        -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
+        -o-box-shadow: inset 0px 0px 5px 0px #656565;
+        box-shadow: inset 0px 0px 5px 0px #656565;
+        filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        padding: 5px;
+    }
+    
+    .pjDoc img{
+       height: 95%;
+       border: solid 2px white;
+    }
+    #thumnails_img_selected,img:hover{
+        border: solid 2px #009DC5;
+        cursor:pointer;
+    }
+    .actions{
+        width: 20%;
+        display: table-cell;
+        padding: 5px;
+        vertical-align: middle;
+        text-align: right;
+    }
 </style>
-
-<div id="headerSignatureBook">
-	<div id="tabLeftSignatureBook">
-		<div class="tabSignatureBook" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 1}" ng-click="changeSignatureBookLeftContent(1)">
-          <i class="fa fa-dashboard fa-2x"></i>
-        </div>
-        <div class="tabSignatureBook" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 2}" ng-click="changeSignatureBookLeftContent(2)">
-          <i class="fa fa-pencil fa-2x"></i>
-        </div>
-        <div class="tabSignatureBook" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 3}" ng-click="changeSignatureBookLeftContent(3)">
-          <i class="fa fa-certificate fa-2x"></i>
-        </div>
-		<div class="tabSignatureBook" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 4}" ng-click="changeSignatureBookLeftContent(4)">
-          <i class="fa fa-line-chart fa-2x"></i>
-        </div>
-	</div>
-	<div id="tabRightSignatureBook">
-		<div class="tabSignatureBook" style="border-left: solid 1px;border-right: none;">
-			<select id="signatureBookActions">
+<div class="visaResList">
+        
+        
+</div>
+<div class='visaContent'>
+    <div class="headerSignatureBook">
+        <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 1}" ng-click="changeSignatureBookLeftContent(1)">
+            <i class="fa fa-dashboard fa-2x"></i>
+          </div>
+          <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 2}" ng-click="changeSignatureBookLeftContent(2)">
+            <i class="fa fa-pencil fa-2x"></i>
+          </div>
+          <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 3}" ng-click="changeSignatureBookLeftContent(3)">
+            <i class="fa fa-certificate fa-2x"></i>
+          </div>
+            <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 4}" ng-click="changeSignatureBookLeftContent(4)">
+            <i class="fa fa-line-chart fa-2x"></i>
+          </div>
+            <div class="others">
+            
+          </div>
+          <div class="actions">
+            <select id="signatureBookActions">
                 <option ng-repeat="option in signatureBook.actions" value="{{option.value}}">{{option.label}}</option>
             </select>
-			<input name="send" id="send" value="Valider" class="button" type="button">
-		</div>
-	</div>
-</div>
-<div id="signatureBookContent">
-    <div id="leftPanel">
-        <!-- MAIN LEFT CONTENT -->
-        <div class="content" ng-if="signatureBook.headerTab == 1">
-            <div id="leftPanelThumbnails">
-                 <div class="thumbnails_mails">
-                  <img id="thumnails_img_selected" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
-                  <label>Courrier arrivé</label>
-                </div>
-                <div class="thumbnails_mails">
-                  <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
-                  <label>PJ1</label>
-                </div>
-                <div class="thumbnails_mails">
-                  <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
-                  <label>PJ2</label>
-                </div>
-                <div class="thumbnails_mails">
-                  <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png"><br/>
-                  <label>PJ3</label>
-                </div>
-            </div>
-            <hr/>
-            <div id="leftPanelShowDocument">
-              <iframe id="leftPanelShowDocumentIframe" ng-src="{{signatureBook.displayLeftMainDoc}}"></iframe>
-            </div>
-        </div>
-        <!-- NOTE CONTENT -->
-        <div class="content" ng-if="signatureBook.headerTab == 2">
-            <iframe id="leftPanelShow_iframe" style="height:100%;" ng-src="{{signatureBook.linkNotes}}"></iframe>
-        </div>
-        <!-- VISA CIRCUIT CONTENT -->
-        <div class="content" ng-if="signatureBook.headerTab == 3">
-            <iframe id="leftPanelShow_iframe" style="height:100%;" ng-src="{{signatureBook.linkVisaCircuit}}"></iframe>
-        </div>
-        <!-- HISTORY CONTENT -->
-        <div class="content" ng-if="signatureBook.headerTab == 4">
-
-        </div>
+            <input name="send" id="send" value="Valider" class="button" type="button">
+          </div>
     </div>
-    <div style="cursor:w-resize;display:table-cell;width:auto;height:100%;margin:10px;background:#ccc;vertical-align:middle;">
-        <i class="fa fa-caret-right" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
-        <i class="fa fa-caret-left" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
-    </div>
-    <div id="rightPanel">
-        <div style="display:table;height:98%;margin:5px;">
-            <div id="rightPanelThumbnails" style="display:table-cell;width:15%;height:100%;margin:10px;background:white;vertical-align:top;">
-                <div style="height:74vh;overflow:auto;text-align:center;">
-                    <span ng-repeat="(index, attachment) in signatureBook.thumbnailsAttachments" ng-click="changeRightViewer(index)">
-                        <img ng-src="{{attachment.thumbnailLink}}" class="rightPanelThumbnails" ng-class="{'rightPanelSelectedThumbnail': index == signatureBook.selectedThumbnail}">
-                        <label>{{attachment.attachment_type}}</label>
-                    </span>
+    <div class="contentSignatureBook">
+        <div class="contentLeft">
+            <div class="contentShow" ng-if="signatureBook.headerTab == 1">
+                <div class="pjDoc">
+                    <img id="thumnails_img_selected" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+                    <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+                    <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+                    <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
+                    <img id="thumnails_img" src="http://www.linux-france.org/article/pro/entrepreneur-howto/01_letters/demission/lettre-dem.png">
                 </div>
-                <div style="height:30px;text-align:center;color: #009DC5;cursor:pointer;">
-                    <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+                <div class="pjDetailsMore">
+                   <i class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
+                <iframe id="leftPanelShow_iframe" ng-src="{{signatureBook.displayLeftMainDoc}}"></iframe>
             </div>
-            <div style="cursor:w-resize;display:table-cell;width:auto;height:100%;margin:10px;background:#ccc;vertical-align:middle;">
-                <i class="fa fa-caret-right" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
+            <div class="contentShow" ng-if="signatureBook.headerTab == 2">
+                <iframe id="leftPanelShow_iframe" ng-src="{{signatureBook.linkNotes}}"></iframe>
             </div>
-            <div id="rightPanelShow" style="display:table-cell;width:85%;height:100%;margin:10px;background:white;text-align:center;">
-                <div id="pjDetails" style="width:95%;height:20%;margin:auto;overflow:auto;border:solid 1px;margin-bottom:5px;">
-                    <div class="infoPj"><label>Type</label><span>Projet de réponse</span></div>
-                    <div class="infoPj"><label>Crée le</label><span>15-02-2015</span></div>
-                    <div class="infoPj"><label>Par</label><span>Bernard BLIER</span></div>
-                    <div class="infoPj"><label>Date de retour</label><span>15-03-2015</span></div>
-                    <div class="infoPj"><label>Objet</label><span title="Ceci est un test ekjfzeflkj ezflkj hzekjf jkef zejkhf kezjjhf kezjlfh zfhelhf kjfh zefh zefh ezkfh zkjlfh">Ceci est un test ekjfzeflkj ezflkj hzekjf jkef zejkhf kezjjhf kezjlfh zfhelhf kjfh zefh zefh ezkfh zkjlfh</span></div>
-                    <div class="infoPj"><label>Contact</label><span>Prosper DELAURE</span></div>
-                    <div class="infoPj"><label>Version</label><span>1</span></div>
-                    <div class="infoPj"></div><div class="infoPj"></div>
-                    <div class="modifPj fa fa-pencil-square-o fa-2x"></div>
-                </div>
-                <iframe ng-src="{{signatureBook.viewerLink}}" style="height:70%;"></iframe>
-                <div id="pjSign" style="width:95%;height:9%;margin:auto;overflow:auto;border:solid 1px;margin-bottom:5px;">
-                    <img style="height:100%;position: relative;display: inline-block;width: 100px;padding-left: 5px;" src="http://www.etaletaculture.fr/wp-content/uploads/2013/08/Signature-Napoleon.jpg">
-                    <img style="height:100%;position: relative;display: inline-block;width: 100px;padding-left: 5px;" src="http://www.etaletaculture.fr/wp-content/uploads/2013/08/Signature-Napoleon.jpg">
-                    <img style="height:100%;position: relative;display: inline-block;width: 100px;padding-left: 5px;" src="http://www.etaletaculture.fr/wp-content/uploads/2013/08/Signature-Napoleon.jpg">
-              </div>
+            <div class="contentShow" ng-if="signatureBook.headerTab == 3">
+                <iframe id="leftPanelShow_iframe" ng-src="{{signatureBook.linkVisaCircuit}}"></iframe>
+            </div>         
+            <div class="contentShow" ng-if="signatureBook.headerTab == 4">
             </div>
         </div>
+        <div class="contentRight">
+            <div class="contentShow">
+                <div class="pjDetails">
+                    <div class="infoPj"><label>Type : </label><span>Projet de réponse</span></div>
+                    <div class="infoPj"><label>Objet : </label><span>Réponse délicate</span></div>
+                    <div class="infoPj"><label>Contat : </label><span>Laurent GIOVANONNI - 11 boulevard du sud est</span></div>
+                </div>
+                <div class="pjDetailsMore">
+                   <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                </div>
+                <iframe ng-src="{{signatureBook.viewerLink}}"></iframe>
+            </div>
+            <div class="panelRight">
+                <div ng-repeat="(index, attachment) in signatureBook.thumbnailsAttachments" ng-click="changeRightViewer(index)" class="item" ng-class="{'rightPanelSelectedThumbnail': index == signatureBook.selectedThumbnail}">
+                    <span class="fa-stack fa-lg" title="{{attachment.attachment_type}}">
+                    <i class="fa fa-file-o fa-stack-2x"></i>
+                    <i class="fa fa-reply fa-stack-1x"></i>
+                  </span>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>
