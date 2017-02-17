@@ -2,7 +2,6 @@
 VERSION FRANÇAISE
 ======================================
 
-
 Wiki : http://wiki.maarch.org/Maarch_Courrier
 
 
