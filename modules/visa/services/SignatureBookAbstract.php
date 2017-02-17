@@ -68,6 +68,7 @@ class Visa_SignatureBookAbstract_Service extends Apps_Table_Service {
         $datas['datas']['viewerAttachments'] = $viewerAttachments;
         $datas['datas']['viewerLink'] = $viewerAttachments[0]['viewerLink'];
         $datas['datas']['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=' .$collId. '&load&size=medium';
+        $datas['datas']['linkVisaCircuit'] = 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$resId.'&collId='.$collId.'&visaStep=true';
         $datas['datas']['displayLeftMainDoc'] = 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id=' .$resId. '&collid=' .$collId;
         $datas['datas']['headerTab'] = 1;
 

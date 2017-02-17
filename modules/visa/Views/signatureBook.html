@@ -68,7 +68,7 @@ html{
   	position: relative;
   	display:table-cell;
   	width:50%;
-  	height:100%;
+  	height:80vh;
   	margin:10px;
   	background:white;
   	vertical-align:top;
@@ -131,6 +131,36 @@ html{
     color: #fff;
     background: grey;
   }
+  
+  .infoPj{
+      width:28%;
+      position: relative;
+      display:inline-block;
+      height:25px;
+      //box-shadow: inset 0px 0px 5px 0px #656565;
+      padding:10px;
+      white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      text-align: left;
+  }
+  #pjDetails{
+      margin-bottom: 10px;
+  }
+  
+    #pjDetails label{
+      display: block;
+      width: 100%;
+      font-weight:bold;
+  }
+  
+  .modifPj{
+    position: absolute;
+    top: 10px;
+    right: 45px;
+    color: #009DC5;
+    cursor:pointer;
+  }
 </style>
 
 <div id="headerSignatureBook">
@@ -190,7 +220,7 @@ html{
         </div>
         <!-- VISA CIRCUIT CONTENT -->
         <div class="content" ng-if="signatureBook.headerTab == 3">
-            <iframe id="leftPanelShow_iframe" style="height:100%;" ng-src="{{signatureBook.linkNotes}}"></iframe>
+            <iframe id="leftPanelShow_iframe" style="height:100%;" ng-src="{{signatureBook.linkVisaCircuit}}"></iframe>
         </div>
         <!-- HISTORY CONTENT -->
         <div class="content" ng-if="signatureBook.headerTab == 4">
@@ -204,13 +234,13 @@ html{
     <div id="rightPanel">
         <div style="display:table;height:98%;margin:5px;">
             <div id="rightPanelThumbnails" style="display:table-cell;width:15%;height:100%;margin:10px;background:white;vertical-align:top;">
-                <div style="height:68vh;overflow:auto;text-align:center;">
+                <div style="height:74vh;overflow:auto;text-align:center;">
                     <span ng-repeat="(index, attachment) in signatureBook.thumbnailsAttachments" ng-click="changeRightViewer(index)">
                         <img ng-src="{{attachment.thumbnailLink}}" class="rightPanelThumbnails" ng-class="{'rightPanelSelectedThumbnail': index == signatureBook.selectedThumbnail}">
                         <label>{{attachment.attachment_type}}</label>
                     </span>
                 </div>
-                <div style="height:30px;text-align:center;">
+                <div style="height:30px;text-align:center;color: #009DC5;cursor:pointer;">
                     <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
                 </div>
             </div>
@@ -218,9 +248,23 @@ html{
                 <i class="fa fa-caret-right" style="font-size:9px;cursor:pointer;" aria-hidden="true"></i>
             </div>
             <div id="rightPanelShow" style="display:table-cell;width:85%;height:100%;margin:10px;background:white;text-align:center;">
-                <div style="width:95%;height:20%;">
+                <div id="pjDetails" style="width:95%;height:20%;margin:auto;overflow:auto;border:solid 1px;margin-bottom:5px;">
+                    <div class="infoPj"><label>Type</label><span>Projet de réponse</span></div>
+                    <div class="infoPj"><label>Crée le</label><span>15-02-2015</span></div>
+                    <div class="infoPj"><label>Par</label><span>Bernard BLIER</span></div>
+                    <div class="infoPj"><label>Date de retour</label><span>15-03-2015</span></div>
+                    <div class="infoPj"><label>Objet</label><span title="Ceci est un test ekjfzeflkj ezflkj hzekjf jkef zejkhf kezjjhf kezjlfh zfhelhf kjfh zefh zefh ezkfh zkjlfh">Ceci est un test ekjfzeflkj ezflkj hzekjf jkef zejkhf kezjjhf kezjlfh zfhelhf kjfh zefh zefh ezkfh zkjlfh</span></div>
+                    <div class="infoPj"><label>Contact</label><span>Prosper DELAURE</span></div>
+                    <div class="infoPj"><label>Version</label><span>1</span></div>
+                    <div class="infoPj"></div><div class="infoPj"></div>
+                    <div class="modifPj fa fa-pencil-square-o fa-2x"></div>
                 </div>
-                <iframe ng-src="{{signatureBook.viewerLink}}"></iframe>
+                <iframe ng-src="{{signatureBook.viewerLink}}" style="height:70%;"></iframe>
+                <div id="pjSign" style="width:95%;height:9%;margin:auto;overflow:auto;border:solid 1px;margin-bottom:5px;">
+                    <img style="height:100%;position: relative;display: inline-block;width: 100px;padding-left: 5px;" src="http://www.etaletaculture.fr/wp-content/uploads/2013/08/Signature-Napoleon.jpg">
+                    <img style="height:100%;position: relative;display: inline-block;width: 100px;padding-left: 5px;" src="http://www.etaletaculture.fr/wp-content/uploads/2013/08/Signature-Napoleon.jpg">
+                    <img style="height:100%;position: relative;display: inline-block;width: 100px;padding-left: 5px;" src="http://www.etaletaculture.fr/wp-content/uploads/2013/08/Signature-Napoleon.jpg">
+              </div>
             </div>
         </div>
     </div>
