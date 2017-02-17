@@ -5,12 +5,26 @@ function addVisaUser(users) {
         next_visa = nb_visa + 1;
         if(nb_visa == 0){
             $j("#emptyVisa").hide();      
-        }else{
-            $j("#visa_content").append('<div class="droptarget_arrow" id="visa_' + nb_visa + '_arrow" ><span><i class="fa fa-arrow-down" aria-hidden="true"></i></span></div>');
         }
-
-        $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true"><div class="delete_visa" onclick="delVisaUser(this.parentElement);"><i class="fa fa-trash" aria-hidden="true"></i></div><span style="float:left;"><i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + $j("select#visaUserList option:selected").text() + ' <sup class="nbRes">'+$j("select#visaUserList option:selected").parent().get( 0 ).label+'</sup></span><span style="float:right;width:50%;"><input class="userId" type="hidden" value="' + $j("select#visaUserList option:selected").val() + '"/><input class="visaDate" type="hidden" value=""/><input type="text" class="consigne" value=""/></span><div style="clear:both;"></div></div>');
-
+        $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true">'
+            +'<span class="visaUserStatus">'
+                +'<i class="fa fa-hourglass" aria-hidden="true"></i>'
+            +'</span>'
+            +'<span class="visaUserInfo">'
+                +'<i class="fa fa-user fa-2x" aria-hidden="true"></i> '+ $j("select#visaUserList option:selected").text() +' <sup class="nbRes">'+$j("select#visaUserList option:selected").parent().get( 0 ).label+'</sup>'
+                +'<input class="userId" type="hidden" value="' + $j("select#visaUserList option:selected").val() + '"/><input class="visaDate" type="hidden" value=""/>'
+            +'</span>'
+            +'<span class="visaUserConsigne">'
+                +'<input type="text" class="consigne" value=""/>'
+            +'</span>'
+            +'<span class="visaUserAction">'
+                +'<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);"></i>'
+            +'</span>'
+            +'<span id="dropZone">'
+                +'<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>'
+            +'</span>'
+        +'</div>');
+        
         //prototype
         document.getElementById("visaUserList").selectedIndex = 0;
         Event.fire($("visaUserList"), "chosen:updated");
@@ -19,37 +33,43 @@ function addVisaUser(users) {
         next_visa = nb_visa + 1;
         if(nb_visa == 0){
             $j("#emptyVisa").hide();      
-        }else{
-            $j("#visa_content").append('<div class="droptarget_arrow" id="visa_' + nb_visa + '_arrow" ><span><i class="fa fa-arrow-down" aria-hidden="true"></i></span></div>');
         }
-        $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true"><div class="delete_visa" onclick="delVisaUser(this.parentElement);"><i class="fa fa-trash" aria-hidden="true"></i></div><span style="float:left;"><i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + users.lastname + ' ' + users.firstname + ' <sup class="nbRes">' + users.entity_id + '</sup></span><span style="float:right;width:50%;"><input class="userId" type="hidden" value="' + users.user_id + '"/><input class="visaDate" type="hidden" value=""/><input type="text" class="consigne" value="' + users.process_comment + '"/></span><div style="clear:both;"></div></div>');
+        $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true">'
+            +'<span class="visaUserStatus">'
+                +'<i class="fa fa-hourglass" aria-hidden="true"></i>'
+            +'</span>'
+            +'<span class="visaUserInfo">'
+                +'<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + users.lastname + ' ' + users.firstname + ' <sup class="nbRes">'+users.entity_id+'</sup>'
+                +'<input class="userId" type="hidden" value="' + users.user_id + '"/><input class="visaDate" type="hidden" value=""/>'
+            +'</span>'
+            +'<span class="visaUserConsigne">'
+                +'<input type="text" class="consigne" value="' + users.process_comment + '"/>'
+            +'</span>'
+            +'<span class="visaUserAction">'
+                +'<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);"></i>'
+            +'</span>'
+            +'<span id="dropZone">'
+                +'<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>'
+            +'</span>'
+        +'</div>');
         
     }
 }
 function delVisaUser (target) {
+    console.log(target);
   var id = '#'+target.id;
-  
-  if($j(id+"_arrow").length){
-      $j(id).remove();
-      $j(id+"_arrow").remove();
-  }else{   
-      console.log(target);
-      if($j(".droptarget").length == 1){
-          $j("#emptyVisa").show(); 
-      }else{
-          $j('#'+target.previousElementSibling.id).remove();
-      }
-      $j(id).remove();
+    
+  if($j(".droptarget").length == 1){
+      $j("#emptyVisa").show(); 
   }
+  $j(id).remove();
+  
   resetPosVisa();
   
 }
 function resetPosVisa () {
     $i = 1;
     $j(".droptarget").each(function() {
-        if($j("#"+this.id+"_arrow").length){
-            $j("#"+this.id+"_arrow").id= 'visa_' + $i + '_arrow';
-        }
         this.id = 'visa_' + $i;      
         $i++;
     });
