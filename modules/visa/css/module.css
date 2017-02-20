@@ -513,7 +513,7 @@
        height: 95%;
        border: solid 2px white;
     }
-    img.panelSelectedThumbnail,img:hover{
+    img.panelSelectedThumbnail,.pjDoc img:hover{
         border: solid 2px #009DC5;
         cursor:pointer;
     }
