@@ -880,7 +880,7 @@ abstract class visa_Abstract extends Database
 		$str .= '<hr/>';
 		$str .= '<form style="width:99%;" name="print_folder_form" id="print_folder_form" action="#" method="post">';
 		$str .= '<table style="width:99%;" name="print_folder" id="print_folder" >';
-		$str .= '<thead><tr><th style="width:25%;"></th><th style="width:40%;">Titre</th><th style="width:20%;">Rédacteur</th><th style="width:10%;">Date</th><th style="width:5%;"></th></tr></thead>';
+		$str .= '<thead><tr><th style="width:25%;text-align:left;"></th><th style="width:40%;text-align:left;">Titre</th><th style="width:20%;text-align:left;">Rédacteur</th><th style="width:10%;text-align:left;">Date</th><th style="width:5%;text-align:left;"><input title="'._SELECT_ALL.'" id="allPrintFolder" type="checkbox" onclick="selectAllPrintFolder();"></th></tr></thead>';
 		$str .= '<tbody>';
 		
 		if ($res->category_id == "outgoing"){
@@ -904,7 +904,7 @@ abstract class visa_Abstract extends Database
 					 . '</td><td>' . $contact['firstname']
 					 . " " . $contact['lastname'] . '</td><td>' 
 					 . $creation_date . '</td><td><input id="join_file_' 
-					 . $id_doc . '" type="checkbox" name="join_attachment[]"  value="' 
+					 . $id_doc . '" type="checkbox" class="checkPrintFolder" name="join_attachment[]"  value="' 
 					 . $id_doc . '"  '.$check.'/>' . $joined_files[$i]['viewLink']. '</td></tr>';
 			}
 		}
@@ -922,7 +922,7 @@ abstract class visa_Abstract extends Database
 				$creation_date = $request->dateformat($dateFormat[0]);
 				
 				
-				if ($format == 'pdf') $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+				if ($format == 'pdf') $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 				//Show data
 				if($joined_files[$i]['is_version'] === true){
 					//Version
@@ -953,7 +953,7 @@ abstract class visa_Abstract extends Database
             $contact = $users_tools->get_user($joined_files[$i]['typist']);
             $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
             $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
 				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
@@ -973,7 +973,7 @@ abstract class visa_Abstract extends Database
             $contact = $users_tools->get_user($joined_files[$i]['typist']);
             $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
             $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
 				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
@@ -993,7 +993,7 @@ abstract class visa_Abstract extends Database
 			$contact = $users_tools->get_user($joined_files[$i]['typist']);
             $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
             $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
 				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc
@@ -1013,7 +1013,7 @@ abstract class visa_Abstract extends Database
 			$contact = $users_tools->get_user($joined_files[$i]['typist']);
             $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
             $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
 				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc
@@ -1034,7 +1034,7 @@ abstract class visa_Abstract extends Database
             $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
             $creation_date = $request->dateformat($dateFormat[0]);
 			if ($joined_files[$i]['pdf_exist'])
-				$check = 'class="check" checked="checked"';
+				$check = 'class="check checkPrintFolder" checked="checked"';
 			else
 				$check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
@@ -1056,7 +1056,7 @@ abstract class visa_Abstract extends Database
 			$contact = $users_tools->get_user($joined_files[$i]['typist']);
             $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
             $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
 				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc 
@@ -1076,7 +1076,7 @@ abstract class visa_Abstract extends Database
 			$contact = $users_tools->get_user($joined_files[$i]['typist']);
             $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
             $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
 				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc 
@@ -1096,7 +1096,7 @@ abstract class visa_Abstract extends Database
 			$contact = $users_tools->get_user($joined_files[$i]['typist']);
 			$dateFormat = explode(" ",$joined_files[$i]['creation_date']);
 			$creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
 				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc
@@ -1116,7 +1116,7 @@ abstract class visa_Abstract extends Database
 			$contact = $users_tools->get_user($joined_files[$i]['typist']);
             $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
             $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
+			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
 			//Show data
 			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
 				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc 
@@ -1148,7 +1148,7 @@ abstract class visa_Abstract extends Database
 					
 					$str .= '<tr><td></td><td>'.$noteShort.'</td><td>'
                                              .$userArray['firstname']." ".$userArray['lastname']
-                                             .'</td><td>'.$date.'</td><td><input id="note_'.$idNote.'" type="checkbox" name="notes[]"  value="'
+                                             .'</td><td>'.$date.'</td><td><input id="note_'.$idNote.'" class="checkPrintFolder" type="checkbox" name="notes[]"  value="'
                                              .$idNote.'"  '.$check.'/></td></tr>';
 				}
 			}

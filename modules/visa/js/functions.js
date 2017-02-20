@@ -963,3 +963,12 @@ function printFolder(res_id, coll_id, form_id, path) {
             });
 
 }
+
+function selectAllPrintFolder() {
+    console.log($j('#allPrintFolder')[0].checked);
+    if($j('#allPrintFolder')[0].checked == true){
+        $j('.checkPrintFolder').prop('checked', true);
+    }else{
+        $j('.checkPrintFolder').prop('checked', false);
+    }
+}
