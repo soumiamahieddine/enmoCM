@@ -77,12 +77,16 @@ foreach($events as $event) {
     $stmt = $dbDatasource->query($query, $arrayPDO);
     $res = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    // Lien vers la page détail
+    // Lien vers la page dï¿½tail
     $urlToApp = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/index.php?');
     $res['linktodoc'] = $urlToApp . 'display=true&page=view_resource_controler&dir=indexing_searching&id=' . $res['res_id'];
     $res['linktodetail'] = $urlToApp . 'page=details&dir=indexing_searching&id=' . $res['res_id'];
     $res['linktoprocess'] = $urlToApp . 'page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction&resid=' . $res['res_id'];
 
+    $stmt2 = $dbDatasource->query("SELECT entity_label FROM entities WHERE entity_id = ? ", array($res['initiator']));
+    $initiator = $stmt2->fetch(PDO::FETCH_ASSOC);
+    $res['initiator'] = $initiator['entity_label'];
+    
     // Insertion
     $datasources['res_letterbox'][] = $res;
     
