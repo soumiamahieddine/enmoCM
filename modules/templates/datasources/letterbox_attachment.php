@@ -31,10 +31,12 @@ $doc['category_id'] = html_entity_decode($_SESSION['coll_categories']['letterbox
 
 $doc['nature_id'] = $_SESSION['mail_natures'][$doc['nature_id']];
 
-$stmt2 = $dbDatasource->query("SELECT entity_label FROM entities WHERE entity_id = ? ", array($doc['initiator']));
+$stmt2 = $dbDatasource->query("SELECT * FROM entities WHERE entity_id = ? ", array($doc['initiator']));
 $initiator = $stmt2->fetch(PDO::FETCH_ASSOC);
 
-$doc['initiator'] = $initiator['entity_label'];
+foreach (array_keys($initiator) as $value){
+    $doc['initiator_'.$value] = $initiator[$value];
+}
 
 $datasources['res_letterbox'][] = $doc;
 

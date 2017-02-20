@@ -83,9 +83,11 @@ foreach($events as $event) {
     $res['linktodetail'] = $urlToApp . 'page=details&dir=indexing_searching&id=' . $res['res_id'];
     $res['linktoprocess'] = $urlToApp . 'page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction&resid=' . $res['res_id'];
 
-    $stmt2 = $dbDatasource->query("SELECT entity_label FROM entities WHERE entity_id = ? ", array($res['initiator']));
+    $stmt2 = $dbDatasource->query("SELECT * FROM entities WHERE entity_id = ? ", array($res['initiator']));
     $initiator = $stmt2->fetch(PDO::FETCH_ASSOC);
-    $res['initiator'] = $initiator['entity_label'];
+    foreach (array_keys($initiator) as $value){
+        $res['initiator_'.$value] = $initiator[$value];
+    }
     
     // Insertion
     $datasources['res_letterbox'][] = $res;
