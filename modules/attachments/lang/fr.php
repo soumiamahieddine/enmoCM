@@ -97,6 +97,8 @@ if (!defined("_OUTGOING_MAIL"))
     define( "_OUTGOING_MAIL", "Courrier départ spontané");
 if (!defined("_A_PJ"))
     define( "_A_PJ", "Pièce jointe");
+if (!defined("_INCOMING_PJ"))
+    define( "_INCOMING_PJ", "Pièce jointe capturée");
 if (!defined("_ENVELOPE"))
     define( "_ENVELOPE", "Enveloppe");
 if (!defined("_CHOOSE_ATTACHMENT_TYPE"))

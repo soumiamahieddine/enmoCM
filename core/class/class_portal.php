@@ -62,7 +62,7 @@ class portal extends functions
             . DIRECTORY_SEPARATOR . 'maarch_entreprise'
             . DIRECTORY_SEPARATOR . 'tmp'. DIRECTORY_SEPARATOR;
         $_SESSION['config']['defaultpage'] = $corePath . 'index.php';
-        $_SESSION['config']['coreurl'] = Url::coreurl();
+        $_SESSION['config']['coreurl'] = str_replace('rest/', '', Url::coreurl());
         $i=0;
         foreach($xmlconfig->BUSINESSAPPS as $BUSINESSAPPS) {
             $_SESSION['businessapps'][$i] = array("appid" => (string) $BUSINESSAPPS->appid, "comment" => (string) $BUSINESSAPPS->comment);

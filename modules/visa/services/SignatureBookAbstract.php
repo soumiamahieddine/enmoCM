@@ -54,22 +54,19 @@ class Visa_SignatureBookAbstract_Service extends Apps_Table_Service {
             $actionsData[] = ['value' => $value['VALUE'], 'label' => $value['LABEL']];
         }
 
-        $thumbnailsAttachments = Attachments_Attachments_Service::getAttachmentsForThumbnails(['resIdMaster' => $resId]);
-        $viewerAttachments = Attachments_Attachments_Service::getAttachmentsForViewer(['resIdMaster' => $resId]);
-
+        $attachments = Attachments_Attachments_Service::getAttachmentsForSignatureBook(['resIdMaster' => $resId]);
+        $documents = Attachments_Attachments_Service::getIncomingMailAttachmentsForSignatureBook(['resIdMaster' => $resId, 'collIdMaster' => $collId]);
 
         $datas = [];
-        $datas['view'] = file_get_contents('modules/visa/Views/signatureBook.html');
-        $datas['datas'] = [];
-        $datas['datas']['resId'] = $resId;
-        $datas['datas']['actions'] = $actionsData;
-        $datas['datas']['thumbnailsAttachments'] = $thumbnailsAttachments;
-        $datas['datas']['selectedThumbnail'] = 0;
-        $datas['datas']['viewerAttachments'] = $viewerAttachments;
-        $datas['datas']['viewerLink'] = $viewerAttachments[0]['viewerLink'];
-        $datas['datas']['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=' .$collId. '&load&size=medium';
-        $datas['datas']['displayLeftMainDoc'] = 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id=' .$resId. '&collid=' .$collId;
-        $datas['datas']['headerTab'] = 1;
+        $datas['actions'] = $actionsData;
+        $datas['attachments'] = $attachments;
+        $datas['documents'] = $documents;
+        $datas['rightSelectedThumbnail'] = 0;
+        $datas['leftSelectedThumbnail'] = 0;
+        $datas['rightViewerLink'] = $attachments[0]['viewerLink'];
+        $datas['leftViewerLink'] = $documents[0]['viewerLink'];
+        $datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=' .$collId. '&load&size=medium';
+        $datas['headerTab'] = 1;
 
         return $datas;
     }
