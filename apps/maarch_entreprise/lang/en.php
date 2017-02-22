@@ -1802,3 +1802,5 @@ if (!defined("_MARK_AS_READ")) define("_MARK_AS_READ", "Marked as read");
 if (!defined("_USE_PREVIOUS_ADDRESS")) define("_USE_PREVIOUS_ADDRESS", "Re use an address");
 
 if (!defined("_SEARCH_INDICATION"))    define("_SEARCH_INDICATION", " indicate that the search is done on  mails and attachments.");
+
+if (!defined("_VISIBLE_BY"))    define("_VISIBLE_BY", "Is visible by");

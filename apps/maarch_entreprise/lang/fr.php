@@ -1807,3 +1807,4 @@ if (!defined("_CONNECTION_CAS_OK"))    define("_CONNECTION_CAS_OK", "Authentific
 if (!defined("_CAS_SAML_NOT_SUPPORTED"))    define("_CAS_SAML_NOT_SUPPORTED", "Le protocal SAML 1.1 n est pas encore géré.");
 if (!defined("_PROTOCOL_NOT_SUPPORTED"))    define("_PROTOCOL_NOT_SUPPORTED", "Ce protocol du CAS n est pas prise en compte.");
 if (!defined("_USER_NOT_EXIST"))    define("_USER_NOT_EXIST", "Cet utilisateur n existe pas dans l application.");
+if (!defined("_VISIBLE_BY"))    define("_VISIBLE_BY", "Visible par");

@@ -1,15 +1,17 @@
 <validationRules>
 	<validationRule name="tag_manage_add" extends="standardForm" mode="error">
 		<parameter name="id" type="string" />
+		<parameter name="tag_id" type="integer" />
 		<parameter name="tag_label" type="string" />
 		<parameter name="tag_submit" type="string" />
 		<parameter name="tagfusion" type="string" />
 		<parameter name="collection" type="collection_list" />
+                <parameter name="entitieslist" type="string" />
 	</validationRule>
 
 	<validationRule name="tag_fusion_tag" extends="standardForm" mode="error">
-		<parameter name="a_search_tag" type="string" />
-		<parameter name="a_new_tag" type="string" />
+		<parameter name="tagIdBeforeFusion" type="integer" />
+		<parameter name="newTagId" type="integer" />
 	</validationRule>
 
 	<validationRule name="aj_add_this_tags" extends="standardForm" mode="error">

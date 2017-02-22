@@ -56,10 +56,10 @@ if (!is_array($_SESSION['tagsuser'])) {
 
 	if (!empty($tags_list)) {
 		foreach ($tags_list as $key => $value) {
-			if (in_array($value['tag_label'], $_SESSION['tagsuser'])) {
-				$frm_str .= '<option selected="selected" value="'.$value['tag_label'].'">'.$value['tag_label'].'</option>';
+			if (in_array($value['tag_id'], $_SESSION['tagsuser'])) {
+				$frm_str .= '<option selected="selected" value="'.$value['tag_id'].'">'.$value['tag_label'].'</option>';
 			}else{
-				$frm_str .= '<option value="'.$value['tag_label'].'">'.$value['tag_label'].'</option>';
+				$frm_str .= '<option value="'.$value['tag_id'].'">'.$value['tag_label'].'</option>';
 			}
 		}
 	}
