@@ -71,7 +71,7 @@
 	     <nature>include</nature>
 	   </WHEREAMIUSED>
 	</SERVICE>
-	<SERVICE>
+	<!--<SERVICE>
 	   <id>delete_tag_to_res</id>
 	   <name>_DELETE_TAG_TO_RES</name>
 	   <comment>_DELETE_TAG_TO_RES_DESC</comment>
@@ -90,6 +90,15 @@
 	     <page>details.php</page>
 	     <nature>include</nature>
 	   </WHEREAMIUSED>
+	</SERVICE>-->
+        <SERVICE>
+	   <id>private_tag</id>
+	   <name>_PRIVATE_TAGS</name>
+	   <comment>_PRIVATE_TAGS_DESC</comment>
+	   <servicepage></servicepage>
+	   <servicetype>use</servicetype>
+	   <system_service>false</system_service>
+	   <enabled>true</enabled>
 	</SERVICE>
 	<!--<SERVICE>
 	   <id>new_tags_in_library_rights</id>

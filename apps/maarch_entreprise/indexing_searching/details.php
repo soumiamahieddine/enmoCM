@@ -1008,7 +1008,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             <?php
                             if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
                                     include_once('modules/tags/templates/details/index.php');
-                                    echo '<script>new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10, search_contains: true});</script>';
                             }
 
                             if ($core->is_module_loaded('thesaurus') && ($core->test_service('thesaurus_view', 'thesaurus', false) == 1))   

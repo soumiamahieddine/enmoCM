@@ -65,7 +65,7 @@ include_once 'modules/tags/route.php';
 //if (!empty($tags))
 //{
 	$tags = new tag_controler();	
-	$tagmodule_result = $tags->update_restag($ressource_tagmodule,$collection_tagmodule, $tags_list);
+	$tagmodule_result = $tags->associateTagToRes($ressource_tagmodule,$collection_tagmodule, $tags_list);
 	unset($_SESSION['tagsuser']);
 	
 //}

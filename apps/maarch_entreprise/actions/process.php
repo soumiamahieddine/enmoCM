@@ -422,10 +422,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         
         include_once("modules" . DIRECTORY_SEPARATOR . "tags" . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "process" . DIRECTORY_SEPARATOR . "index.php");
 
-        //script
-        $frm_str .= '<script>';
-        $frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
-        $frm_str .= '</script>';
     }
 
     //FOLDERS
