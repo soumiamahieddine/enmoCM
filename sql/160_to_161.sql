@@ -25,6 +25,7 @@ CREATE SEQUENCE tag_id_seq
   CACHE 1;
 
 ALTER TABLE tags ADD tag_id bigint NOT NULL DEFAULT nextval('tag_id_seq'::regclass);
+ALTER TABLE tags ADD entity_id_owner character varying(32);
 
 CREATE SEQUENCE tmp_tag_id_seq
   INCREMENT 1

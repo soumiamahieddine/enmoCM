@@ -211,8 +211,13 @@ function display_list() {
     array_push(
         $select[TAGS], 'tag_id', 'tag_label'
     );
-    $where = '';
-    $where_what = array();
+    if($_SESSION['user']['UserId'] == 'superadmin'){
+        $where = '';
+        $where_what = array();
+    }else{
+        $where = 'entity_id_owner = ? OR entity_id_owner IS NULL';
+        $where_what = array($_SESSION['user']['primaryentity']['id']);   
+    }
     $what = '';
     //var_dump($_REQUEST['what']);exit;
     if (isset($_REQUEST['what'])) {

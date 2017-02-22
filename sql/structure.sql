@@ -1765,6 +1765,7 @@ CREATE TABLE tags
   tag_id bigint NOT NULL DEFAULT nextval('tag_id_seq'::regclass),
   tag_label character varying(50) NOT NULL,
   coll_id character varying(50) NOT NULL,
+  entity_id_owner character varying(32),
   CONSTRAINT tag_id_pkey PRIMARY KEY (tag_id)
 )
 WITH (OIDS=FALSE);
