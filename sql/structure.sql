@@ -1774,7 +1774,7 @@ CREATE TABLE tag_res
 (
   res_id bigint NOT NULL,
   tag_id bigint NOT NULL,
-  CONSTRAINT tags_entities_pkey PRIMARY KEY (res_id,tag_id)
+  CONSTRAINT tag_res_pkey PRIMARY KEY (res_id,tag_id)
 )
 WITH (
   OIDS=FALSE
