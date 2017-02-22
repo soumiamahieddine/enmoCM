@@ -23,7 +23,7 @@
             <select id="signatureBookActions">
                 <option ng-repeat="option in signatureBook.actions" value="{{option.value}}">{{option.label}}</option>
             </select>
-            <input name="send" id="send" value="Valider" class="button" type="button">
+            <input name="send" id="send" value="Valider" class="button" type="button" ng-click="validForm()">
           </div>
     </div>
     <div class="contentSignatureBook">

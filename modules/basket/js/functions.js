@@ -299,3 +299,31 @@ function simpleAjaxReturn(url){
         }
     });
 }
+
+function lockDocument(resId){
+     $j.ajax({
+         url: globalConfig.coreurl + 'apps/maarch_entreprise/index.php?display=true&dir=actions&page=docLocker',
+         type : 'POST',
+         data: {
+             AJAX_CALL  : true,
+             lock       : true,
+             res_id     : resId
+         },
+         success: function(result){
+         }
+     });
+}
+
+function unlockDocument(resId){
+    $j.ajax({
+        url: globalConfig.coreurl + 'apps/maarch_entreprise/index.php?display=true&dir=actions&page=docLocker',
+        type : 'POST',
+        data: {
+            AJAX_CALL  : true,
+            unlock     : true,
+            res_id     : resId
+        },
+        success: function(result){
+        }
+    });
+}
