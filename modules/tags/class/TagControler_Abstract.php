@@ -323,27 +323,16 @@ abstract class tag_controler_Abstract extends ObjectControler
      * Searching a list of ressources by label
      * @Return : an Array with label's ressources or 0
      */
-    public function getresarray_byLabel($tag_label, $coll_id){
-        $array = array();
-        
+    public function getresarray_byId($tag_id){
+        $result = array();
         $db = new Database();
         $stmt = $db->query(
-                "SELECT res_id AS bump FROM " ._TAG_TABLE_NAME
-                . " WHERE tag_label = ? AND coll_id = ?"
-                . " AND res_id <> 0"
-        ,array($tag_label,$coll_id));
-        
-        while ($result = $stmt->fetchObject())
-        {
-            array_push($array, $result->bump);
-        }
-        
-        if ($array)
-        {
-            return $array; 
-        }
-        
-        return false;
+                "SELECT res_id FROM tag_res"
+                . " WHERE tag_id = ?"
+        ,array($tag_id));
+
+        $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+        return $result;
     }
     
     
