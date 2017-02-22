@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 
 require_once 'modules/basket/class/class_modules_tools.php';
 require_once 'apps/maarch_entreprise/Models/ResModel.php';
+require_once 'apps/maarch_entreprise/Models/HistoryModel.php';
 
 
 class VisaController {
@@ -95,6 +96,12 @@ class VisaController {
 			];
 		}
 
+		$history = \HistoryModel::getByIdForActions([
+			'id'      => $resId,
+			'select'  => ['event_date', 'info', 'firstname', 'lastname'],
+			'orderBy' => ['event_date DESC']
+		]);
+
 
 		$datas = [];
 		$datas['actions'] = $actionsData;
@@ -102,6 +109,7 @@ class VisaController {
 		$datas['documents'] = $documents;
 		$datas['currentAction'] = $_SESSION['current_basket']['default_action']; //TODO Aller chercher l'id de la basket sans passer par la session
 		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
+		$datas['history'] = $history;
 
 		return $response->withJson($datas);
 	}
