@@ -1407,12 +1407,12 @@ class docservers_controler
                         );
                     }
                 } else {
-                    $concatError .= _FILE_TYPE . ' ' . _UNKNOWN . '||';
+                    $concatError .= strtoupper(_WRONG_FILE_TYPE) . ' (extension => '.strtoupper($format).', mime_type => '.$mimeType.') ||';
                     $history->add(
                         $tableName, $gedId, 'ERR', 'docserverserr',
                         _FAILOVER . ' ' . _DOCSERVERS . ' '
                         . $adr['docserver_id'] . ':'
-                        . _FILE_TYPE . ' ' . _UNKNOWN,
+                        . _WRONG_FILE_TYPE,
                         $_SESSION['config']['databasetype']
                     );
                 }
@@ -1702,12 +1702,12 @@ class docservers_controler
                                 );
                             }
                         } else {
-                            $concatError .= _FILE_TYPE . ' ' . _UNKNOWN . '||';
+                            $concatError .= strtoupper(_WRONG_FILE_TYPE) . ' (extension => '.strtoupper($format).', mime_type => '.$mimeType.') ||';
                             $history->add(
                                 $tableName, $gedId, 'ERR','docserverserr',
                                 _FAILOVER . ' ' . _DOCSERVERS . ' '
                                 . $adr[0][$cptDocserver]['docserver_id'] . ':'
-                                . _FILE_TYPE . ' ' . _UNKNOWN,
+                                . _WRONG_FILE_TYPE,
                                 $_SESSION['config']['databasetype']
                             );
                         }

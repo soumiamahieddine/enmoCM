@@ -49,29 +49,13 @@ if ($coll_id == '') {
 }
 $tag_resid_return = array();
 $json_txt .= " 'tags_chosen' : [";
-//$tags_chosen_tmp = array();
-for ($getag_i = 0; $getag_i <count($_REQUEST['tags_chosen']); $getag_i++) {
-    $return_tags_res_id = array();
-    $return_tags_res_id  = $tag->getresarray_byLabel($_REQUEST['tags_chosen'][$getag_i], $targetColl);
-    //array_push($tags_chosen_tmp, $func->protect_string_db($_REQUEST['tags_chosen'][$getag_i]));
-    $json_txt .= "'".addslashes($_REQUEST['tags_chosen'][$getag_i])."',";
-    if ($return_tags_res_id) {
-        foreach ($return_tags_res_id as $elem) {
-            array_push($tag_resid_return, $elem);
-        }
-    } else {
-        array_push($tag_resid_return, 0);
-    }
-    
+$json_txt .= "'".implode("','", $_REQUEST['tags_chosen'])."'";
+$return_tags_res_id = array();
+foreach ($_REQUEST['tags_chosen'] as $tagId) {
+    $result  = $tag->getresarray_byId($tagId);
+    $return_tags_res_id = array_merge($return_tags_res_id,$result);
 }
-
-foreach ($tag_resid_return as $finaltagsearch) {
-    
-    $tag_resid_in .= "'".$finaltagsearch."',";
-}
-$tag_resid_in = substr($tag_resid_in, 0, -1);
-$where_request .= " res_id in (:tags) and ";
-$arrayPDO = array_merge($arrayPDO, array(":tags" => $tag_resid_return));
-
-$json_txt = substr($json_txt, 0, -1);
+$return_tags_res_id = "'".implode("','", $return_tags_res_id)."'";
+$where_request .= " res_id in (".$return_tags_res_id.") and ";
+//$arrayPDO = array_merge($arrayPDO, array(":tags" => $return_tags_res_id));
 $json_txt .= '],';

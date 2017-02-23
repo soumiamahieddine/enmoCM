@@ -86,7 +86,7 @@ if (!defined("_TAGS"))
 if (!defined("_TAG_SEPARATOR_HELP"))
     define("_TAG_SEPARATOR_HELP", "Separate tags by pressing on Enter or with commas");
 if (!defined("_NB_DOCS_FOR_THIS_TAG"))
-    define("_NB_DOCS_FOR_THIS_TAG", "Number of tagged documents");
+    define("_NB_DOCS_FOR_THIS_TAG", "tagged documents");
 if (!defined("_TAGOTHER_OPTIONS"))
     define("_TAGOTHER_OPTIONS", "Other options");
 if (!defined("_TAG_FUSION_ACTIONLABEL"))

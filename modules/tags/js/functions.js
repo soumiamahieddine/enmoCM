@@ -1,67 +1,53 @@
 function add_this_tags(action_script, ui_script)
 {
-	//if(res_id == '' || coll_id == '')
-	//{
-	//	if(console)
-	//	{
-	//		console.log('Error add_this_tag :: coll_id or res_id is empty');
-	//	}
-	//}
-	//Allons chercher l'info du formulaire en l etat...
-	var content = $('tag_userform').value;
+    var content = $j("#new_tag_label").val();
 
-	if(content.length < 50) {
-		if(action_script)
-		{
+    if (content.length < 50) {
+        if (action_script)
+        {
 
-			new Ajax.Request(action_script,
-			{
-				method:'post',
-				parameters:
-				{
-					p_input_value : content
-					//p_res_id : res_id,
-					//p_coll_id : coll_id
-					
-				},
-			    onSuccess: function(answer){
-				eval("response = "+answer.responseText);
-					//alert(answer.responseText);
-					if(response.status == 0 )
-					{
-						//load_tags(ui_script,res_id,coll_id)
-						load_tags(ui_script)
-					} else if (response.status == 1 ){
-						//var span = document.getElementById('show_tags');
-						//span.innerHTML ="<font color=\"red\">vous n avez pas les droits pour ajouter ce mot clé !</font>";
-						//alert("<?php echo _ADD_TAG; ?>");
-						if(response.value == 'fr'){
-							alert("Vous devez utiliser les mots clés existants!");
-						}else if(response.value == 'en'){
-							alert("You must use the tags exists !");
-						}
-					} else
-					{
-						if(console)
-						{
-							console.log('Erreur Ajax');
-						}
-					}
-				},
-			    onFailure: function(){ alert('Something went wrong...'); }
-			});
-			
-		}
-		else
-		{
-			if(console)
-			{
-				console.log('Error delete_this_tag::no script defined');
-			}
-		}
-	} else {
-		alert("Le mot-clé doit être inférieur à 50 caractères");
-	}
+            new Ajax.Request(action_script,
+                    {
+                        method: 'post',
+                        parameters:
+                                {
+                                    p_input_value: content
+
+                                },
+                        onSuccess: function (answer) {
+                            eval("response = " + answer.responseText);
+                            
+                            //alert(answer.responseText);
+                            if (response.status == 0)
+                            {
+                                $j('#tag_userform').append($j('<option>', { value : response.value, selected : true }).text(content)); 
+                                //alert('mot clé ajouté');
+                                console.log($j('#tag_userform option'));
+                                Event.fire($("tag_userform"), "chosen:updated");
+                            } else
+                            {
+                                if (console)
+                                {
+                                    console.log('Erreur Ajax');
+                                }
+                            }
+                        },
+                        onFailure: function () {
+                            alert('Something went wrong...');
+                        }
+                    });
+
+        }
+        else
+        {
+            if (console)
+            {
+                console.log('Error delete_this_tag::no script defined');
+            }
+        }
+    } else {
+        alert("Le mot-clé doit être inférieur à 50 caractères");
+    }
 
 }
 
@@ -191,45 +177,40 @@ function launch_autocompleter_tags(path_script)
 	}
 }
 
-function tag_fusion(search_tag, new_tag, path_script, result_text, header_location)
+function tag_fusion(tagIdBeforeFusion, newTagId, path_script, result_text, header_location)
 {
-	if(search_tag == '' || new_tag == '' || path_script == '')
-	{
-		if(console)
-		{
-			console.log('fields empty :: tag_fusion');
-		}
-	}
-	if(path_script)
-	{	
-		new Ajax.Request(path_script,
-		{
-			method:'post',
-			parameters:
-			{
-				a_search_tag : search_tag,
-				a_new_tag : new_tag
-			},
-		    onSuccess: function(answer){
-			eval("response = "+answer.responseText);
-				//alert(answer.responseText);
-				if(response.status == 0 )
-				{
-					alert(result_text);
-					header(header_location);
-				}
-				else
-				{
-					if(console)
-					{
-						console.log('Erreur Ajax');
-					}
-				}
-			},
-		    onFailure: function(){ alert('Something went wrong...'); }
-		});
-		
-	}
+    if (path_script)
+    {
+        new Ajax.Request(path_script,
+                {
+                    method: 'post',
+                    parameters:
+                            {
+                                tagIdBeforeFusion: tagIdBeforeFusion,
+                                newTagId: newTagId
+                            },
+                    onSuccess: function (answer) {
+                        eval("response = " + answer.responseText);
+                        //alert(answer.responseText);
+                        if (response.status == 0)
+                        {
+                            alert(result_text);
+                            window.location.href=header_location;
+                        }
+                        else
+                        {
+                            if (console)
+                            {
+                                console.log('Erreur Ajax');
+                            }
+                        }
+                    },
+                    onFailure: function () {
+                        alert('Something went wrong...');
+                    }
+                });
+
+    }
 
 }
 

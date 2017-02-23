@@ -154,27 +154,22 @@ abstract class users_entities_Abstract extends functions
     * @param    string  $entity_id entity identifier
     * @param    array  $tmparray the array who receive the children
     */
-    public function getEntityChildren($entity_id)
+    public function getEntityChildren($parent_id)
     {
+        $entities = array();
         $db = new Database();
-        static $tmparray = array();
+        $stmt = $db->query('SELECT entity_id, parent_entity_id FROM entities WHERE parent_entity_id = \''.$parent_id.'\' order by entity_id asc', array());
+        while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
+                $stmt3 = $db->query(
+                        "SELECT count(entity_id) as total FROM entities WHERE parent_entity_id IN ('".$row['entity_id']."')"
+                );
+                $row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
 
-        $stmt = $db->query('select entity_id from '.ENT_ENTITIES." where parent_entity_id = ?",array(trim($entity_id)));
-        if($stmt->rowCount() > 0)
-        {
-            while($line = $stmt->fetchObject())
-            {
-                array_push($tmparray, $line->entity_id);
-                $userEnt = new users_entities();
-                $db = new Database();
-                $stmt2 = $db->query('select entity_id from '.ENT_ENTITIES." where parent_entity_id = ?",array(trim($line->entity_id)));
-                if($stmt2->rowCount > 0)
-                {
-                    $stmt2->getEntityChildren($line->entity_id, $tmparray);
-                }
-            }
+                $entities[] = $row['entity_id'];
+                
+                $entities = array_merge($entities,self::getEntityChildren($row['entity_id']));
         }
-        return $tmparray;
+        return $entities ;
     }
 
 

@@ -11,8 +11,9 @@
 	} else {
 		$path = $tnl->getTnlPathWithColl(['resId' => $resId, 'collId' => $collId]); // New Behaviour
 	}
-	if (!is_file($path)){
-		//$path = 'modules'. DIRECTORY_SEPARATOR . 'thumbnails' . DIRECTORY_SEPARATOR . 'no_thumb.png';
+	if (!is_file($path) && !empty($advanced)){
+		$path = 'modules/thumbnails/no_thumb.png';
+	} elseif (!is_file($path)) {
 		exit();
 	}
 	$mime_type = 'image/png';	

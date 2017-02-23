@@ -1753,14 +1753,42 @@ WITH (
   OIDS=FALSE
 );
 
+CREATE SEQUENCE tag_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 7
+  CACHE 1;
+
 CREATE TABLE tags
 (
+  tag_id bigint NOT NULL DEFAULT nextval('tag_id_seq'::regclass),
   tag_label character varying(50) NOT NULL,
   coll_id character varying(50) NOT NULL,
-  res_id bigint NOT NULL,
-  CONSTRAINT tagsjoin_pkey PRIMARY KEY (tag_label, coll_id, res_id )
+  entity_id_owner character varying(32),
+  CONSTRAINT tag_id_pkey PRIMARY KEY (tag_id)
 )
 WITH (OIDS=FALSE);
+
+CREATE TABLE tag_res
+(
+  res_id bigint NOT NULL,
+  tag_id bigint NOT NULL,
+  CONSTRAINT tag_res_pkey PRIMARY KEY (res_id,tag_id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE tags_entities
+(
+  tag_id bigint,
+  entity_id character varying(32),
+  CONSTRAINT tags_entities_pkey PRIMARY KEY (tag_id,entity_id)
+)
+WITH (
+  OIDS=FALSE
+);
 
 CREATE SEQUENCE res_id_seq
   INCREMENT 1
@@ -4062,3 +4090,11 @@ CREATE TABLE thesaurus_res
 WITH (
   OIDS=FALSE
 );
+
+CREATE FUNCTION order_alphanum(text) RETURNS text AS $$
+  SELECT regexp_replace(regexp_replace(regexp_replace(regexp_replace($1,
+    E'(^|\\D)(\\d{1,3}($|\\D))', E'\\1000\\2', 'g'),
+      E'(^|\\D)(\\d{4,6}($|\\D))', E'\\1000\\2', 'g'),
+        E'(^|\\D)(\\d{7}($|\\D))', E'\\100\\2', 'g'),
+          E'(^|\\D)(\\d{8}($|\\D))', E'\\10\\2', 'g');
+$$ LANGUAGE SQL;

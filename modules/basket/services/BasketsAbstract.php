@@ -46,12 +46,7 @@ class Basket_BasketsAbstract_Service extends Apps_Table_Service {
             'data'      => [$aArgs['id'], 'Y']
         ]);
         $aReturn = [];
-        $aReturn['isService'] = strstr($actionstable[0]['action_page'], '_Service') == false ? false : true;
-
-        if ($aReturn['isService']) {
-            $aReturn['service'] = $actionstable[0]['action_page'];
-            $aReturn['module'] = strtolower(explode('_', $actionstable[0]['action_page'])[0]);
-        }
+        $aReturn['actionPage'] = $actionstable[0]['action_page'];
 
         return $aReturn;
     }

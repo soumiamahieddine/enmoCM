@@ -48,41 +48,17 @@ try{
 $core = new core_tools();
 $core->load_lang();
 $tag = new tag_controler;
-
+$coll_id = 'letterbox_coll';
 
 $p_input_value = $_REQUEST['p_input_value'];
-$p_input_value  = str_replace('\r', '', $p_input_value);
-$p_input_value  = str_replace('\n', '', $p_input_value);
-// $p_input_value  = str_replace('\'', ' ', $p_input_value);
-$p_input_value  = str_replace('"', ' ', $p_input_value);
-$p_input_value  = str_replace('\\', ' ', $p_input_value);
-
-
-//On découpe la chaine composée de virgules
-$tabrr = array( CHR(13) => ",", CHR(10) => "," ); 
-$p_input_value = strtr($p_input_value,$tabrr); 
-
-$new_tags = explode(',',$p_input_value);
-	
-
-
-
-
-foreach($new_tags as $new_tag){
-			
-	if (trim($new_tag) <> '')
-	{
-		$result = $tag->add_this_tags_in_session($new_tag);
-		//$result = $tag->add_this_tags($p_res_id, $p_coll_id, $new_tag);
-		//if (!$result){
-		//	echo "{status : 1, error_txt : '".addslashes(UNABLETOADDTAGS)."'}";
-		//	exit();	
-		//}
-	}
-
+if (trim($p_input_value) <> '')
+{
+    $result = $tag->add_this_tags_in_session($p_input_value, $coll_id);
+    $tagInfo = $tag->get_by_label($p_input_value);
 }
 
-echo "{status : 0, value : 'ok'}";
+
+echo "{status : 0, value : '".$tagInfo->tag_id."'}";
 exit();
 
 ?>

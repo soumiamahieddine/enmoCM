@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008,2017 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -16,15 +16,15 @@
 *
 *   You should have received a copy of the GNU General Public License
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-* File : aj_add_this_tag.php
+* File : aj_tag_fusion_tags.php
 *
-* Script called by an ajax object to delete jonction on a ressource and a tag
+* Script called by an ajax object to replace a tag with an other
 *
 * @package  maarch
 * @version 1
-* @since 10/2005
+* @since 10/2016
 * @license GPL v3
-* @author Loic Vinet  <dev@maarch.org>
+* @author Alex ORLUC  <dev@maarch.org>
 */
 
 try{
@@ -32,8 +32,8 @@ try{
     require_once 'core/class/ObjectControlerAbstract.php';
     require_once 'core/class/ObjectControlerIF.php';
     require_once 'core/class/class_request.php' ;
-   	require_once 'modules/tags/class/TagControler.php' ;
-	require_once 'modules/tags/tags_tables_definition.php';
+    require_once 'modules/tags/class/TagControler.php' ;
+    require_once 'modules/tags/tags_tables_definition.php';
 } catch (Exception $e) {
     functions::xecho($e->getMessage());
 }
@@ -45,56 +45,40 @@ $core = new core_tools();
 $core->load_lang();
 $tag = new tag_controler;
 
+if(empty($_REQUEST['newTagId'])){
+    echo "{status : 1, value : 'NO TAG'}";
+    exit();
+}
+$tagIdBeforeFusion = $_REQUEST['tagIdBeforeFusion'];
+$newTagId = $_REQUEST['newTagId'];
 
-$a_search_tag = $_REQUEST['a_search_tag'];
-$a_search_tag  = str_replace('\r', '', $a_search_tag);
-$a_search_tag  = str_replace('\n', '', $a_search_tag);
-// $a_search_tag  = str_replace('\'', ' ', $a_search_tag);
-$a_search_tag  = str_replace('"', ' ', $a_search_tag);
-$a_search_tag  = str_replace('\\', ' ', $a_search_tag);
-
-
-//On découpe la chaine composée de virgules
-$tabrr = array( CHR(13) => ",", CHR(10) => "," ); 
-$a_search_tag = strtr($a_search_tag,$tabrr); 
-
-$a_search_tag_arr = explode(',',$a_search_tag);
-	
-$a_search_tag_label = $a_search_tag_arr[0];
-$a_search_tag_coll = $a_search_tag_arr[1];
-
-//----------------------------------
-
-$a_new_tag = $_REQUEST['a_new_tag'];
-$a_new_tag   = str_replace('\r', '', $a_new_tag );
-$a_new_tag   = str_replace('\n', '', $a_new_tag );
-// $a_new_tag   = str_replace('\'', ' ', $a_new_tag );
-$a_new_tag   = str_replace('"', ' ', $a_new_tag );
-$a_new_tag   = str_replace('\\', ' ', $a_new_tag );
-//On découpe la chaine composée de virgules
-$tabrr = array( CHR(13) => ",", CHR(10) => "," ); 
-$a_new_tag = strtr($a_new_tag,$tabrr); 
-
-$a_new_tag_arr = explode(',',$a_new_tag);
-	
-$a_new_tag_label = $a_new_tag_arr[0];
-$a_new_tag_coll = trim($a_new_tag_arr[1]);
-
-
+//check all res_id associate with newTagId
 $stmt = $db->query(
-	"SELECT DISTINCT res_id from "._TAG_TABLE_NAME
-	. " WHERE tag_label = ? and coll_id = ? "
-	,array($a_search_tag_label,$a_search_tag_coll));
+	"SELECT res_id FROM tag_res"
+	. " WHERE tag_id = ?"
+	,array($newTagId));
 
-while ($result = $stmt->fetchObject()) {
-	$tag -> delete_this_tag($result->res_id,$a_search_tag_coll,functions::protect_string_db($a_search_tag_label));
-	$tag -> add_this_tag($result->res_id,$a_new_tag_coll,$a_new_tag_label);
+while($tagRes = $stmt->fetchObject()){
+    $stmt = $db->query(
+                "DELETE FROM tag_res"
+                . " WHERE res_id = ? and tag_id = ?"
+        ,array($tagRes->res_id,$tagIdBeforeFusion));
 }
 
-//$query_verify = "select count()";
-//$queryupdate = "update "._TAG_TABLE_NAME." set tag_label = '".$a_new_tag_label."', coll_id = '".$a_new_tag_coll."' where tag_label = '".$a_search_tag_label."' and coll_id = '".$a_search_tag_coll."' ";
+//Clean restrictions
+$stmt = $db->query(
+        "DELETE FROM tags_entities"
+        . " WHERE tag_id = ?"
+,array($tagIdBeforeFusion));
 
-//$db->query($query);
+//replace all res associate with tagIdBeforeFusion
+$stmt = $db->query(
+	"UPDATE tag_res SET tag_id = ?"
+	. " WHERE tag_id = ?"
+	,array($newTagId,$tagIdBeforeFusion));
+
+//delete old tag
+$tag->delete($tagIdBeforeFusion);
 
 echo "{status : 0, value : 'ok'}";
 exit();
