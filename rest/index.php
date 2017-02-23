@@ -1,4 +1,21 @@
 <?php
+
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+*
+*/
+/**
+* @brief Maarch rest root file
+*
+* @file
+* @author dev@maarch.org
+* @date $date$
+* @version $Revision$
+* @ingroup core
+*/
+
 require '../vendor/autoload.php';
 
 header('Content-Type: text/html; charset=utf-8');
@@ -56,6 +73,13 @@ $app = new \Slim\App([
         'displayErrorDetails' => true
     ]
 ]);
+
+//status
+$app->get('/status', \Core\Controllers\StatusController::class . ':getList');
+$app->get('/status/{id}', \Core\Controllers\StatusController::class . ':getById');
+$app->post('/status', \Core\Controllers\StatusController::class . ':create');
+$app->put('/status', \Core\Controllers\StatusController::class . ':update');
+$app->delete('/status/{id}', \Core\Controllers\StatusController::class . ':delete');
 
 $app->get('/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
 
