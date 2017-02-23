@@ -38,6 +38,8 @@ $loginRequestArray = $core->object2array($xmlconfig);
 $cas_serveur   = $loginRequestArray['WEB_CAS_URL'];
 $cas_port      = $loginRequestArray['WEB_CAS_PORT'];
 $cas_context   = $loginRequestArray['WEB_CAS_CONTEXT'];
+$id_separator  = $loginRequestArray['ID_SEPARATOR'];
+$certificate   = $loginRequestArray['PATH_CERTIFICATE'];
 // $cas_chemin_ac = "apps/maarch_entreprise/tools/phpCAS/AC-RGS-Certigna-Racine-SHA1.pem" ;
 
 phpCAS::setDebug();
@@ -47,17 +49,22 @@ phpCAS::setVerbose(true);
 phpCAS::client(constant($loginRequestArray['CAS_VERSION']), $cas_serveur, (int)$cas_port, $cas_context, true);
 
 // Le certificat de l'autorité racine
-// phpCAS::setCasServerCACert($cas_chemin_ac);
-phpCAS::setNoCasServerValidation();
+if(!empty($certificate)){
+    phpCAS::setCasServerCACert($certificate);
+} else {
+    phpCAS::setNoCasServerValidation();
+}
 
 // L'authentification.
 phpCAS::forceAuthentication();
 
 if($loginRequestArray['CAS_VERSION'] == 'CAS_VERSION_2_0'){
     // Lecture identifiant utilisateur (courriel)
-    $userId = phpCAS::getUser();
+    $Id = phpCAS::getUser();
     echo 'Identifiant : ' . phpCAS::getUser();
     echo '<br/> phpCAS version : ' . phpCAS::getVersion();
+    $tmpId = explode($id_separator, $Id);
+    $userId = $tmpId[0];
 
 } elseif($loginRequestArray['CAS_VERSION'] == 'SAML_VERSION_1_1'){
     // $attrSAML = phpCAS::getAttributes();
