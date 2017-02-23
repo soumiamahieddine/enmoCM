@@ -10,7 +10,7 @@ $actions = $b->get_actions_from_current_basket(
     $_REQUEST['resId'], $_REQUEST['collId'], 'PAGE_USE', false
 );
 if (count($actions) > 0) {
-    $frmStr .= '<b>' . _ACTIONS . ' : </b>';
+    //$frmStr .= '<b>' . _ACTIONS . ' : </b>';
     $frmStr .= '<select name="chosen_action" id="chosen_action">';
 
 
