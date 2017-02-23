@@ -36,67 +36,67 @@
         <default_nature>simple_mail</default_nature>
     </mail_natures>
     <attachment_types>
-        <type show="true" with_chrono="true" attach_in_mail="true">
+        <type show="true" with_chrono="true" attach_in_mail="true" icon="fa-reply">
             <id>response_project</id>
             <label>_RESPONSE_PROJECT</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="true">
+        <type show="true" with_chrono="true" icon="fa-paper-plane-o">
             <id>transmission</id>
             <label>Transmission</label>
             <process_mode></process_mode>
         </type>
-		<type show="false" with_chrono="true" attach_in_mail="true">
+		<type show="false" with_chrono="true" attach_in_mail="true" icon="fa-certificate">
             <id>signed_response</id>
             <label>_SIGNED_RESPONSE</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="true">
+        <type show="true" with_chrono="true" icon="fa-certificate">
             <id>outgoing_mail_signed</id>
             <label>_OUTGOING_MAIL_SIGNED</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="false">
+        <type show="true" with_chrono="false" icon="">
             <id>simple_attachment</id>
             <label>_A_PJ</label>
             <process_mode></process_mode>
         </type>
-        <type show="false" with_chrono="false">
+        <type show="false" with_chrono="false" icon="fa-envelope-o">
             <id>incoming_mail_attachment</id>
             <label>_INCOMING_PJ</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="true" get_chrono="response_project">
+        <type show="true" with_chrono="true" get_chrono="response_project" icon="">
             <id>waybill</id>
             <label>_WAYBILL</label>
             <process_mode></process_mode>
         </type>
-	    <type show="false" with_chrono="true">
+	    <type show="false" with_chrono="true" icon="fa-road">
             <id>routing</id>
             <label>_ROUTING</label>
             <process_mode></process_mode>
         </type>
-		<type show="true" with_chrono="true">
+		<type show="true" with_chrono="true" icon="fa-envelope-o">
             <id>outgoing_mail</id>
             <label>_OUTGOING_MAIL</label>
             <process_mode></process_mode>
         </type>
-	    <type show="false" with_chrono="false">
+	    <type show="false" with_chrono="false" icon="">
             <id>converted_pdf</id>
             <label>_CONVERTED_PDF</label>
             <process_mode></process_mode>
         </type>
-	    <type show="false" with_chrono="false">
+	    <type show="false" with_chrono="false" icon="">
             <id>print_folder</id>
             <label>_PRINT_FOLDER</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="false">
+        <type show="true" with_chrono="false" icon="">
             <id>sva</id>
             <label>_SVA</label>
             <process_mode>SVA</process_mode>
         </type>
-        <type show="true" with_chrono="false">
+        <type show="true" with_chrono="false" icon="">
             <id>svr</id>
             <label>_SVR</label>
             <process_mode>SVR</process_mode>

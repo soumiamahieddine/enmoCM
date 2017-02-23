@@ -296,21 +296,13 @@
         height:75vh;
     }
     .contentLeft .contentShow{
-        height: 75vh;
+        height: 95vh;
     }
     
     .contentRight .contentShow,.contentLeft .contentShow{
         padding : 5px;
     }
-    
-    .infoPj{
-        width: 33%;
-        display: table-cell;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding: 5px;
-    }
+
     
     .pjDetails{
         display: table;
@@ -326,6 +318,7 @@
         -webkit-border-radius: 5px;
         border-radius: 5px;
         padding: 10px;
+        height:100px;
     }
     
     .pjDetails label{
@@ -338,7 +331,7 @@
     }
     
     .pjDoc{
-       height: 20%;
+       height: 100px;
        -moz-box-shadow: inset 0px 0px 5px 0px #656565;
         -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
         -o-box-shadow: inset 0px 0px 5px 0px #656565;
@@ -347,7 +340,7 @@
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
         border-radius: 5px;
-        padding: 5px;
+        padding: 10px;
     }
     
     .pjDoc img{
@@ -410,6 +403,10 @@
         background: #009DC5;
         color:white;
     }
+    
+    .panelRightAddPj:hover{
+        color: #009DC5;
+    }
     .contentLeft{
         border-right: solid 1px;
         vertical-align: top;
@@ -447,21 +444,22 @@
         vertical-align: top;
         height:75vh;
     }
-    .contentLeft .contentShow{
-        height: 75vh;
-    }
     
     .contentRight .contentShow,.contentLeft .contentShow{
         padding : 5px;
     }
     
     .infoPj{
-        width: 33%;
-        display: table-cell;
+        width: 30%;
+        display: inline-block;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         padding: 5px;
+    }
+    
+    .infoPj label{
+        vertical-align: top;
     }
     
     .pjDetails{
@@ -487,19 +485,6 @@
     .pjDetailsMore{
        text-align: center;
        cursor: pointer;
-    }
-    
-    .pjDoc{
-       height: 20%;
-       -moz-box-shadow: inset 0px 0px 5px 0px #656565;
-        -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
-        -o-box-shadow: inset 0px 0px 5px 0px #656565;
-        box-shadow: inset 0px 0px 5px 0px #656565;
-        filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-        border-radius: 5px;
-        padding: 5px;
     }
     
     .pjDoc img{
