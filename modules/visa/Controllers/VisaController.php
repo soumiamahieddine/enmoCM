@@ -7,14 +7,23 @@ use Psr\Http\Message\ResponseInterface;
 
 require_once 'modules/basket/class/class_modules_tools.php';
 require_once 'apps/maarch_entreprise/Models/ResModel.php';
+require_once 'apps/maarch_entreprise/Models/HistoryModel.php';
 
 
 class VisaController {
 
 	public function getSignatureBook(RequestInterface $request, ResponseInterface $response, $aArgs) {
 
-
 		$resId = $aArgs['resId'];
+
+		$incomingMail = \ResModel::get([
+			'resId' => $resId,
+			'select'    => ['subject']
+		]);
+
+		if (empty($incomingMail[0])) {
+			return $response->withJson(['Error' => 'No Document Found']);
+		}
 
 		$basket = new \basket();
 		$actions = $basket->get_actions_from_current_basket($resId, 'letterbox_coll', 'PAGE_USE', false);
@@ -64,12 +73,6 @@ class VisaController {
 			unset($attachments[$key]['filename']);
 		}
 
-
-		$incomingMail = \ResModel::get([
-			'resId' => $resId,
-			'select'    => ['subject']
-		]);
-
 		$incomingMailAttachments = \ResModel::getAvailableLinkedAttachmentsIn([
 			'resIdMaster' => $resId,
 			'in' 	      => ['incoming_mail_attachment'],
@@ -93,17 +96,20 @@ class VisaController {
 			];
 		}
 
+		$history = \HistoryModel::getByIdForActions([
+			'id'      => $resId,
+			'select'  => ['event_date', 'info', 'firstname', 'lastname'],
+			'orderBy' => ['event_date DESC']
+		]);
+
 
 		$datas = [];
 		$datas['actions'] = $actionsData;
 		$datas['attachments'] = $attachments;
 		$datas['documents'] = $documents;
-		$datas['rightSelectedThumbnail'] = 0;
-		$datas['leftSelectedThumbnail'] = 0;
-		$datas['rightViewerLink'] = $attachments[0]['viewerLink'];
-		$datas['leftViewerLink'] = $documents[0]['viewerLink'];
+		$datas['currentAction'] = $_SESSION['current_basket']['default_action']; //TODO Aller chercher l'id de la basket sans passer par la session
 		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
-		$datas['headerTab'] = 1;
+		$datas['history'] = $history;
 
 		return $response->withJson($datas);
 	}

@@ -19,8 +19,8 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'modules/visa/services/SignatureBookAbstract.php';
+require_once 'apps/maarch_entreprise/Models/HistoryModelAbstract.php';
 
-class Visa_SignatureBook_Service extends Visa_SignatureBookAbstract_Service {
+class HistoryModel extends HistoryModelAbstract {
     // Do your stuff in this class
 }

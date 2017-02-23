@@ -71,7 +71,7 @@ $func = new functions();
 //Get list of all templates
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
     $_REQUEST['id'] = htmlspecialchars_decode($_REQUEST['id']);
-    $tag_label = $func->protect_string_db($_REQUEST['id']);
+    $tag_id = $func->protect_string_db($_REQUEST['id']);
 }
 
 
@@ -86,7 +86,7 @@ if (isset($_REQUEST['tag_submit'])) {
 	    
     switch ($mode) {
         case 'up' :
-           	display_up($tag_label);
+            display_up($tag_id);
          	
             $_SESSION['service_tag'] = 'tag_init';
             core_tools::execute_modules_services(
@@ -103,7 +103,7 @@ if (isset($_REQUEST['tag_submit'])) {
             location_bar_management($mode);
             break;
         case 'del' :
-            display_del($tag_label);
+            display_del($tag_id);
             break;
         case 'list' :
             $tagslist = display_list();
@@ -152,26 +152,24 @@ function location_bar_management($mode)
  * Initialize session parameters for update display
  * @param String $statusId
  */
-function display_up($tag_label)
+function display_up($tag_id)
 {
-	
-	$func = new functions();
+    $func = new functions();
     $tagCtrl = new tag_controler;
     $state = true;
-    $tag = $tagCtrl->get_by_label($tag_label);
+    $tag = $tagCtrl->get_by_id($tag_id);
     if (empty($tag)) {
         $state = false;
     } else {
         //put_in_session('tag', $tag->getArray());
+        $_SESSION['m_admin']['tag']['tag_id'] = $tag->tag_id;
         $_SESSION['m_admin']['tag']['tag_label'] = $tag->tag_label;
-		$_SESSION['m_admin']['tag']['tag_coll'] = $tag->coll_id;
-		$_SESSION['m_admin']['tag']['tag_count'] = (string) $tagCtrl->countdocs(
-																	$func->protect_string_db($tag->tag_label), 
-																	$tag->coll_id
-																  );		
-																 									  
+        $_SESSION['m_admin']['tag']['tag_coll'] = $tag->coll_id;
+        $_SESSION['m_admin']['tag']['entities'] = $tag->entities;
+        $_SESSION['m_admin']['tag']['tag_count'] = (string) $tagCtrl->countdocs(
+            $tag->tag_id
+        );
     }	
- 	
  	//récupération de l'ensemble des tags dans un tableau
    	$all_tags = array();
 	$all_tags = $tagCtrl->get_all_tags();
@@ -211,10 +209,15 @@ function display_list() {
 
     $select[TAGS] = array();
     array_push(
-        $select[TAGS], 'tag_label', 'coll_id'
+        $select[TAGS], 'tag_id', 'tag_label'
     );
-    $where = '';
-    $where_what = array();
+    if($_SESSION['user']['UserId'] == 'superadmin'){
+        $where = '';
+        $where_what = array();
+    }else{
+        $where = 'entity_id_owner = ? OR entity_id_owner IS NULL';
+        $where_what = array($_SESSION['user']['primaryentity']['id']);   
+    }
     $what = '';
     //var_dump($_REQUEST['what']);exit;
     if (isset($_REQUEST['what'])) {
@@ -222,23 +225,18 @@ function display_list() {
 
     }
     if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-        $where .= " (tag_label ilike ? or tag_label ilike ? ) ";
-        $where_what[] = $what.'%';
-        $where_what[] = $what.'%';
-
+        $where .= "";
     } else {
-        $where .= " (tag_label like ?  or tag_label like ? ) ";
-        $where_what[] = $what.'%';
-        $where_what[] = $what.'%';
+        $where .= "";
     }
 
     // Checking order and order_field values
-    $order = 'asc';
+    $order = 'desc';
     if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
         $order = trim($_REQUEST['order']);
     }
 
-    $field = 'tag_label';
+    $field = 'tag_id';
     if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
         $field = trim($_REQUEST['order_field']);
     }
@@ -247,23 +245,23 @@ function display_list() {
     $request = new request();
     $tab = $request->PDOselect(
         $select, $where, $where_what, $orderstr, $_SESSION['config']['databasetype'], 
-        "default", false, "", "", "", true, false, true
+        "default", false, "", "", "", true, false, false
     );
 	//$request->show();
 	
     for ($i=0;$i<count($tab);$i++) {
         foreach ($tab[$i] as &$item) {
             switch ($item['column']) {
-                case 'tag_label':
+                 case 'tag_id':
                     format_item(
-                        $item, _NAME_TAGS, '18', 'left', 'left', 'bottom', true
+                        $item, _ID, '10', 'left', 'left', 'bottom', true
                     );
                     break;
-                case 'coll_id':
+                
+                case 'tag_label':
                     format_item(
-                        $item, _DESC, '55', 'left', 'left', 'bottom', true
+                        $item, _NAME_TAGS, '70', 'left', 'left', 'bottom', true
                     );
-				
                     break;
             }
         }
@@ -296,7 +294,7 @@ function display_list() {
  * Delete given tag if exists and initialize session parameters
  * @param string $statusId
  */
-function display_del($tag_label) {
+function display_del($tag_id) {
 	
 	if (!$_SESSION['m_admin']['tags']['coll_id']){
 		$_SESSION['m_admin']['tags']['coll_id'] = 'letterbox_coll';
@@ -305,14 +303,13 @@ function display_del($tag_label) {
 	$coll_id = $_SESSION['m_admin']['tags']['coll_id'];
 	
     $tagCtrl = new tag_controler();
-    $tag = $tagCtrl->get_by_label($tag_label, $coll_id);
-    if (isset($tag)) {
+    if (isset($tag_id)) {
         // Deletion
-        $control = $tagCtrl->delete($tag_label, $coll_id);
+        $control = $tagCtrl->delete($tag_id, $coll_id);
         if (!$control) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['info'] = _TAG_DELETED.' : '. str_replace("''", "'", $tag_label);
+            $_SESSION['info'] = _TAG_DELETED.' : '. str_replace("''", "'", $_SESSION['m_admin']['tags']['tag_label']).' (ID : '.$tag_id.')';
         }
         ?><script type="text/javascript">window.top.location='<?php
             echo $_SESSION['config']['businessappurl']
@@ -370,8 +367,8 @@ function validate_tag_submit() {
   	$pageName = 'manage_tag_list_controller';
 	$func = new functions();
 	$mode = 'up';
-    $mode = $_REQUEST['mode'];
-    $tagObj = new tag_controler();
+        $mode = $_REQUEST['mode'];
+        $tagObj = new tag_controler();
     
 	if ($_REQUEST['collection'])
 	{
@@ -390,14 +387,14 @@ function validate_tag_submit() {
 	array_push($params, $new_tag_label);
 	array_push($params, $coll_id);
 	
-	// var_dump($new_tag_label);
+	var_dump($new_tag_label);
 	if ($new_tag_label == '' || !$new_tag_label || empty($new_tag_label))
 	{
 		$_SESSION['error'] = _TAG_LABEL_IS_EMPTY;
     	header(
               'location: ' . $_SESSION['config']['businessappurl']
             . 'index.php?page=' . $pageName . '&mode='.$mode.'&id='
-            . $tag->tag_label . '&module=tags'
+            . $tag->tag_idl . '&module=tags'
         );
 		exit();
 	}
@@ -410,66 +407,60 @@ function validate_tag_submit() {
         header(
               'location: ' . $_SESSION['config']['businessappurl']
             . 'index.php?page=' . $pageName . '&mode='.$mode.'&id='
-            . $tag->tag_label . '&module=tags'
+            . $tag->tag_id . '&module=tags'
         );
         exit();
     }
-	
-    $tag = $tagObj->store($_SESSION['m_admin']['tag']['tag_label'], $mode, $params);
-	
-	
-	$_SESSION['m_admin']['tag']['tag_label'] = $new_tag_label;
-	$_SESSION['m_admin']['tag']['coll_id'] = $coll_id;
-  
-  	
-  
+    $_SESSION['m_admin']['tag']['tag_label'] = $new_tag_label;
+    $_SESSION['m_admin']['tag']['coll_id'] = $coll_id;
+    $_SESSION['m_admin']['tag']['entities'] = $_REQUEST['entitieslist'];
+    
+    $tag = $tagObj->store($_SESSION['m_admin']['tag']['tag_id'], $mode, $params);
+    
   	
     switch ($mode) {
         case 'up':
-			if ($_SESSION['error'] == "")
-				$_SESSION['info'] = _TAG_UPDATED.' : '.str_replace("''", "'", $new_tag_label);
-			
+            if ($_SESSION['error'] == "")
+                $_SESSION['info'] = _TAG_UPDATED . ' : ' . str_replace("''", "'", $new_tag_label) . ' (ID : ' . $_SESSION['m_admin']['tag']['tag_id'] . ')';
+
             if (!empty($_SESSION['m_admin']['tag']['dddtag_label'])) {
                 header(
-                    'location: ' . $_SESSION['config']['businessappurl']
-                    . 'index.php?page=' . $pageName . '&mode=up&id='
-                    . $tag->tag_label . '&module=tags'
+                        'location: ' . $_SESSION['config']['businessappurl']
+                        . 'index.php?page=' . $pageName . '&mode=up&id='
+                        . $tag->tag_id . '&module=tags'
                 );
             } else {
                 header(
-                    'location: ' . $_SESSION['config']['businessappurl']
-                    . 'index.php?page=' . $pageName . '&mode=list&module='
-                    .'tags&order=' . $status['order'] . '&order_field='
-                    . $status['order_field'] . '&start=' . $status['start']
-                    . '&what=' . $status['what']
+                        'location: ' . $_SESSION['config']['businessappurl']
+                        . 'index.php?page=' . $pageName . '&mode=list&module='
+                        . 'tags&order=' . $status['order'] . '&order_field='
+                        . $status['order_field'] . '&start=' . $status['start']
+                        . '&what=' . $status['what']
                 );
             }
             exit();
         case 'add':
-            //header(
-            //    'location: ' . $_SESSION['config']['businessappurl']
-            //    . 'index.php?page=' . $pageName . '&mode=add&module=tags'
-            //);
-            $_SESSION['info'] = _TAG_ADDED.' : '. str_replace("''", "'", $new_tag_label);
+            if (empty($_SESSION['error'])) {
+                $_SESSION['info'] = _TAG_ADDED . ' : ' . str_replace("''", "'", $new_tag_label);
+            }
             header(
                     'location: ' . $_SESSION['config']['businessappurl']
                     . 'index.php?page=' . $pageName . '&mode=list&module='
-                    .'tags&order=' . $status['order'] . '&order_field='
+                    . 'tags&order=' . $status['order'] . '&order_field='
                     . $status['order_field'] . '&start=' . $status['start']
                     . '&what=' . $status['what']
-                );
+            );
             exit();
-    
-    }    
+    }
 }
 
 function init_session()
 {
     $_SESSION['m_admin']['tag'] = array(
-        'tag_label'             	 => '',
-		'coll_id'  			 	 => '',
-        'res_id'  			 	 => '',
-   
+        'tag_id' => '',
+        'tag_label' => '',
+        'coll_id' => '',
+        'entities' => array()
     );
 }
 

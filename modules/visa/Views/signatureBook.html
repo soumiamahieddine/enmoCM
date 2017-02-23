@@ -1,30 +1,29 @@
 <div class="visaResList">
         
-        
 </div>
 <div class='visaContent'>
     <div class="headerSignatureBook">
         <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 1}" ng-click="changeSignatureBookLeftContent(1)">
             <i class="fa fa-dashboard fa-2x"></i>
-          </div>
-          <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 2}" ng-click="changeSignatureBookLeftContent(2)">
+        </div>
+        <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 2}" ng-click="changeSignatureBookLeftContent(2)">
             <i class="fa fa-pencil fa-2x"></i>
-          </div>
-          <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 3}" ng-click="changeSignatureBookLeftContent(3)">
+        </div>
+        <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 3}" ng-click="changeSignatureBookLeftContent(3)">
             <i class="fa fa-certificate fa-2x"></i>
-          </div>
-            <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 4}" ng-click="changeSignatureBookLeftContent(4)">
+        </div>
+        <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 4}" ng-click="changeSignatureBookLeftContent(4)">
             <i class="fa fa-line-chart fa-2x"></i>
-          </div>
-            <div class="others">
+        </div>
+        <div class="others">
             
-          </div>
-          <div class="actions">
+        </div>
+        <div class="actions">
             <select id="signatureBookActions">
                 <option ng-repeat="option in signatureBook.actions" value="{{option.value}}">{{option.label}}</option>
             </select>
-            <input name="send" id="send" value="Valider" class="button" type="button">
-          </div>
+            <input name="send" id="send" value="Valider" class="button" type="button" ng-click="validForm()">
+        </div>
     </div>
     <div class="contentSignatureBook">
         <div class="contentLeft">
@@ -49,8 +48,8 @@
         <div class="contentRight">
             <div class="contentShow">
                 <div class="pjDetails">
-                    <div class="infoPj"><label>Type : </label><span>Projet de réponse</span></div>
-                    <div class="infoPj"><label>Objet : </label><span>Réponse délicate</span></div>
+                    <div class="infoPj"><label>Type : </label><span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].attachment_type}}</span></div>
+                    <div class="infoPj"><label>Objet : </label><span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].title}}</span></div>
                     <div class="infoPj"><label>Contact : </label><span>Laurent GIOVANONNI - 11 boulevard du sud est</span></div>
                 </div>
                 <div class="pjDetailsMore">

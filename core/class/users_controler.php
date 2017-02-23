@@ -954,4 +954,41 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 
         return $entities;
     }
+    
+    /**
+    * Returns in an array all the parent entities associated with a specific entitiy type
+    *
+    * @param  $userId string  $entityType string
+    * @return Array or null
+    */
+   public function getParentEntitiesWithType($userId, $entityType) {
+        $userEntities = self::getEntities($userId);
+        $parentEntitiesWithType = array();
+
+        foreach ($userEntities as $entity) {
+            $entity = $entity['ENTITY_ID'];
+            $isRightEntityType = false;
+            while (!$isRightEntityType) {
+                $query = "SELECT parent_entity_id, entity_type"
+                        . " FROM entities"
+                        . " WHERE entity_id = ?";
+                $stmt = self::$db->query($query, array($entity));
+
+                $res = $stmt->fetchObject();
+                if (!$res) {
+                    $isRightEntityType = true;
+                } else if ($res->entity_type == $entityType) {
+                    if (!in_array($entity, $parentEntitiesWithType)) {
+                        $parentEntitiesWithType[] = $entity;
+                    }
+                    $isRightEntityType = true;
+                } else {
+                    $entity = $res->parent_entity_id;
+                }
+            }
+        }
+
+        return $parentEntitiesWithType;
+    }
+
 }

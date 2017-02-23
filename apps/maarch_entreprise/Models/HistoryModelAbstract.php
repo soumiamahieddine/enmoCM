@@ -19,35 +19,25 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once('apps/maarch_entreprise/services/Table.php');
+require_once 'apps/maarch_entreprise/services/Table.php';
 
-class Basket_BasketsAbstract_Service extends Apps_Table_Service {
+class HistoryModelAbstract extends Apps_Table_Service {
 
-    /**
-     * Récupération de la liste des méthodes disponibles via api
-     *
-     * @return string[] La liste des méthodes
-     */
-    public static function getApiMethod() {
-        $aApiMethod = parent::getApiMethod();
-
-        return $aApiMethod;
-    }
-
-    public static function getServiceFromActionId(array $aArgs = []) {
+    public static function getByIdForActions(array $aArgs = []) {
         static::checkRequired($aArgs, ['id']);
         static::checkNumeric($aArgs, ['id']);
 
 
-        $actionstable = static::select([
-            'select'    => ['action_page'],
-            'table'     => ['actions'],
-            'where'     => ['id = ? AND enabled = ?'],
-            'data'      => [$aArgs['id'], 'Y']
+        $aReturn = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['history', 'users'],
+            'left_join' => ['history.user_id = users.user_id'],
+            'where'     => ['history.record_id = ?', 'history.event_type like ?', 'history.event_id ~ ?'],
+            'data'      => [$aArgs['id'], 'ACTION#%', '^[0-9]+$'],
+            'order_by'  => empty($aArgs['orderBy']) ? ['event_date'] : $aArgs['orderBy']
         ]);
-        $aReturn = [];
-        $aReturn['actionPage'] = $actionstable[0]['action_page'];
 
         return $aReturn;
     }
+
 }

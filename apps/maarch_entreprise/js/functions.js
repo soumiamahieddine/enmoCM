@@ -1245,6 +1245,7 @@ function close_action(id_action, page, path_manage_script, mode_req, res_id_valu
             }
             else if(do_nothing == false)
             {
+                window.top.location.hash = "";
                 window.top.location.reload();
             }
             do_nothing = false;
@@ -1264,150 +1265,91 @@ function close_action(id_action, page, path_manage_script, mode_req, res_id_valu
  * @param module String  Action is this module
  * @param coll_id String  Collection identifier
  * @param mode String Action mode : mass or page
+ * @param protect_string bool
  */
-function valid_action_form(current_form_id, path_manage_script, id_action, values, table, module, coll_id, mode, protect_string)
+function valid_action_form(current_form_id, path_manage_script, id_action, values, table, module, coll_id, mode, protect_string, advancedMode)
 {
-    var frm_values = get_form_values(current_form_id);
-    if(protect_string == false)
-    {
-        var protect = false;
+    var frm_values;
+    var chosen_action_id;
+
+    if (typeof advancedMode !== "undefined") {
+        frm_values = "so#use#less"; // Sert juste a remplir frm_values pour manage_actions
+        chosen_action_id = advancedMode[0];
+    } else {
+        frm_values = get_form_values(current_form_id);
+        chosen_action_id = get_chosen_action(current_form_id);
     }
-    else
-    {
-        var protect = true;
-    }
-    if(protect)
-    {
+
+    if(protect_string != false) {
         frm_values = frm_values.replace(/\'/g, "\\'");
         frm_values = frm_values.replace(/\"/g, '\\"');
         frm_values = frm_values.replace(/\r\n/g, ' ');
         frm_values = frm_values.replace(/\r/g, ' ');
         frm_values = frm_values.replace(/\n/g, ' ');
-    }    
+    }
 
-    var chosen_action_id = get_chosen_action(current_form_id);
-    //console.log('values : '+values+', table : '+table+', module : '+module+', coll_id : '+coll_id+', chosen_action_id : '+chosen_action_id+', frm_values : '+frm_values);
-    if(values &&  table && module && coll_id && chosen_action_id != '')
-    {
+    if(values && table && module && coll_id && chosen_action_id != '') {
+
         new Ajax.Request(path_manage_script,
         {
             method:'post',
-            parameters: { action_id : id_action,
-                      form_to_check : current_form_id,
-                      req : 'valid_form',
-                      form_values : frm_values
-                    },
-                    onCreate: function(answer) {
-                    //show loading image in toolbar
-                    $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";})
-                    /*if($('send_action')){
-                        $('send_action').disabled=true;
-                        $('send_action').style.opacity="0.5";
-                        $('send_action').value="traitement...";
-                    }else if($('send')){
-                        $('send').disabled=true;
-                        $('send').style.opacity="0.5";
-                        $('send').value="traitement...";
-                    }else if($('submit')){
-                        $('submit').disabled=true;
-                        $('submit').style.opacity="0.5";
-                        $('submit').value="traitement...";
-                    }else if($('redirect_dep')){
-                        $('redirect_dep').disabled=true;
-                        $('redirect_dep').style.opacity="0.5";
-                        $('redirect_dep').value="traitement...";
-                    }*/
-                    },
-                    onSuccess: function(answer){
-                    //console.log('valid form answer  '+answer.responseText);
-                    //alert('valid form answer  '+answer.responseText);
-                    eval('response='+answer.responseText);
-                    if(response.status == 0 ) //form values checked
-                    {
-						var hist = '';
-                        if(chosen_action_id == 'end_action')
-                        {
-                            hist = 'Y';
-                        }else{
-                            hist = 'N';
+            parameters: {
+                action_id : id_action,
+                form_to_check : current_form_id,
+                req : 'valid_form',
+                form_values : frm_values
+            },
+            onCreate: function(answer) {
+                //show loading image in toolbar
+                $$("input[type='button']").each(function(v) {
+                    v.setAttribute("disabled","disabled");
+                    v.style.opacity = "0.5";
+                });
+            },
+            onSuccess: function(answer){
+                eval('response='+answer.responseText);
+                if(response.status == 0 ) { //form values checked
+						        var hist = '';
+                    if(chosen_action_id == 'end_action') {
+                        hist = 'Y';
+                    }else{
+                        hist = 'N';
+                    }
+
+                    if(response.manage_form_now == false) {
+                        pile_actions.action_push("action_send_form_confirm_result( '"+path_manage_script+"', '"+mode+"', '"+id_action+"', '"+values+"','"+table+"', '"+module+"','"+coll_id+"',  '"+frm_values+"',  '"+hist+"');");
+
+                        if(chosen_action_id == 'end_action') {
+                            end_actions();
+                        } else {
+                            action_send_first_request(path_manage_script, mode, chosen_action_id, values, table, module, coll_id);
                         }
-                        if(response.manage_form_now == false)
-                        {
-                            //console.log('manage_form_now false');
-			    			pile_actions.action_push("action_send_form_confirm_result( '"+path_manage_script+"', '"+mode+"', '"+id_action+"', '"+values+"','"+table+"', '"+module+"','"+coll_id+"',  '"+frm_values+"',  '"+hist+"');");
-                            
-			    			if(chosen_action_id == 'end_action')
-                            {
-	                        	//alert('last_action');
-                                end_actions();
-                            }
-                            else
-                            {
-                                //console.log('not last');
-                                //alert('not last');
-                                action_send_first_request(path_manage_script, mode, chosen_action_id, values, table, module, coll_id);
-                            }
+                    } else {
+                        if(chosen_action_id != 'end_action') {
+                            pile_actions.action_push("action_send_first_request( '"+path_manage_script+"', '"+mode+"', '"+chosen_action_id+"', 'to_define','"+table+"', '"+module+"','"+coll_id+"');");
                         }
-                        else
-                        {
-                            if(chosen_action_id != 'end_action')
-                            {
-                                pile_actions.action_push("action_send_first_request( '"+path_manage_script+"', '"+mode+"', '"+chosen_action_id+"', 'to_define','"+table+"', '"+module+"','"+coll_id+"');");
-                            }
-                            action_send_form_confirm_result(path_manage_script, mode, id_action, values, table, module, coll_id, frm_values, hist);
-                        }
+                        action_send_form_confirm_result(path_manage_script, mode, id_action, values, table, module, coll_id, frm_values, hist);
+                    }
+
+                } else { //  Form Params errors
+                    try {
+                        $('frm_error_'+id_action).innerHTML = response.error_txt;
+                        alert($('frm_error_'+id_action).innerHTML);
+                        $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";});
+                    } catch(e){
 
                     }
-                    else //  Form Params errors
-                    {
-                        //console.log(response.error_txt);
-                        try{
-                                $('frm_error_'+id_action).innerHTML = response.error_txt;
-                                alert($('frm_error_'+id_action).innerHTML);
-                                $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";})
-                                /*if($('send_action')){
-                                    $('send_action').disabled = false;
-                                    $('send_action').style.opacity = "1";
-                                    $('send_action').value = "Valider";
-                                }else if($('send')){
-                                    $('send').disabled = false;
-                                    $('send').style.opacity = "1";
-                                    $('send').value = "Valider";
-                                }else if($('submit')){
-                                    $('submit').disabled=true;
-                                    $('submit').style.opacity="0.5";
-                                    $('submit').value="traitement...";
-                                }else if($('redirect_dep')){
-                                    $('redirect_dep').disabled=true;
-                                    $('redirect_dep').style.opacity="0.5";
-                                    $('redirect_dep').value="traitement...";
-                                }*/
-                            }
-                        catch(e){}
-                    }
-                    /*if($('send_action')){
-                        $('send_action').disabled = false;
-                        $('send_action').style.opacity = "1";
-                        $('send_action').value = "Valider";
-                    }else if($('send')){
-                        $('send').disabled = false;
-                        $('send').style.opacity = "1";
-                        $('send').value = "Valider";
-                    }*/
-                },
-                onFailure: function(){
                 }
-            });
-    } else if (chosen_action_id == ''){
+            },
+            onFailure: function(error){
+                console.log(error);
+            }
+        });
+
+    } else if (chosen_action_id == '') {
         alert('Aucune action choisie');
-    }
-    else
-    {
-        if(console != null)
-        {
-            console.log('Action Error!');
-        }
-        //alert('Action Error!');
+    } else {
+        console.log('Action Error!');
     }
 }
 
@@ -1668,13 +1610,11 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
  */
 function action_send_form_confirm_result(path_manage_script, mode_req, id_action, res_id_values, tablename, modulename, id_coll, values_new_form, hist)
 {
-    //console.log('debut send_form');
     if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
             && id_action != ''  && tablename != ''
             && modulename!= '' &&  id_coll != '')
         {
 
-            //console.log('avant obj : '+path_manage_script);
             new Ajax.Request(path_manage_script,
             {
                 method:'post',
@@ -1710,8 +1650,6 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                     }*/
                 },
                 onSuccess: function(answer){
-                    //  console.log('answer '+answer.responseText);
-                    //alert('answer '+answer.responseText);
                     eval('response='+answer.responseText);
                     if(response.status == 0 ) //Form or confirm processed ok
                     {
@@ -1720,8 +1658,6 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                         {
                             res_id_values = res_ids;
                         }
-                        //console.log(res_ids);
-                    //  alert(res_ids);
                         end_actions();
                         var table_name = tablename;
                         if(response.table && response.table != '')
@@ -1734,28 +1670,12 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                     }
                     else //  Form Params errors
                     {
-                        //console.log(response.error_txt);
                         try{
-                            //$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
                             $('frm_error').innerHTML = response.error_txt;
-                            $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";})
-                            /*if($('send_action')){
-                                $('send_action').disabled = false;
-                                $('send_action').style.opacity = "1";
-                                $('send_action').value = "Valider";
-                            }else if($('send')){
-                                $('send').disabled = false;
-                                $('send').style.opacity = "1";
-                                $('send').value = "Valider";
-                            }else if($('submit')){
-                                $('submit').disabled=true;
-                                $('submit').style.opacity="0.5";
-                                $('submit').value="traitement...";
-                            }else if($('redirect_dep')){
-                                $('redirect_dep').disabled=true;
-                                $('redirect_dep').style.opacity="0.5";
-                                $('redirect_dep').value="traitement...";
-                            }*/
+                            $$("input[type='button']").each(function(v) {
+                                v.setAttribute("disabled","disabled");
+                                v.style.opacity="0.5";
+                            });
                             }
                         catch(e){}
                     }
@@ -1809,10 +1729,13 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                     }
                     else if(do_nothing == false)
                     {
-						var cur_url = window.top.location.href;
-						if (cur_url.indexOf("&directLinkToAction") != -1)
-							window.top.location = cur_url.replace("&directLinkToAction","");
-						else window.top.location.reload();
+						            var cur_url = window.top.location.href;
+						            if (cur_url.indexOf("&directLinkToAction") != -1) {
+							              window.top.location = cur_url.replace("&directLinkToAction","");
+                        }	else {
+                            window.top.location.hash = "";
+                            window.top.location.reload();
+                        }
                     }
                     
                     // fix for Chrome and firefox

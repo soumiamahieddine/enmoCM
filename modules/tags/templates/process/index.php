@@ -56,8 +56,12 @@ include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMU
 
 $frm_str .='</td></tr><style>#tag_userform_chosen{width:95% !important;}</style>';
 $frm_str .= '<input type="hidden" name="res_id" id="res_id"  value="'.$res_id.'" />';
-
+$frm_str .= '<input type="hidden" id="new_tag_label" name="new_tag_label"/>';
 $frm_str .= '<script type="text/javascript">load_tags('.$route_tag_ui_script.', \''.$res_id.'\', \''.$coll_id.'\');';
+$frm_str .= 'new Chosen($(\'tag_userform\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
+if ($core_tools->test_service('create_tag', 'tags', false) == 1) {
+    $frm_str .= '$j( "#tag_userform_chosen input" ).focusout(function() {$j("#new_tag_label").val($j("#tag_userform_chosen input").val());if($j( "#tag_userform_chosen .no-results" ).length){if(confirm("ce mot sera ajouté en tant que mot clé")){add_this_tags('.$route_tag_add_tags_from_res.', '.$route_tag_ui_script.');}}});';
+}
 $frm_str .= '</script>';
    
 ?>

@@ -277,7 +277,7 @@ if($core_tools->is_module_loaded('tags'))
     if ($tag_return_value){
         foreach($tag_return_value as $tagelem)
         {
-            array_push($arr_tmptag, array('VALUE' => functions::protect_string_db($tagelem['tag_label']), 'LABEL' => $tagelem['tag_label']));
+            array_push($arr_tmptag, array('VALUE' => functions::protect_string_db($tagelem['tag_id']), 'LABEL' => $tagelem['tag_label']));
         }
     }
     else

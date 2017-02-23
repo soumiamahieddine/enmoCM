@@ -68,7 +68,9 @@ if (!defined("_ADD_TAG"))
 if (!defined("_ADD_TAG_TO_RES"))
     define("_ADD_TAG_TO_RES", "Associer les "._TAGS_DEFAULT." disponible à un document");
 if (!defined("_CREATE_TAG"))
-    define("_CREATE_TAG", "Créer des "._TAGS_DEFAULT);
+    define("_CREATE_TAG", "Créer des "._TAGS_DEFAULT." depuis les page d'actions");
+if (!defined("_CREATE_TAG_DESC"))
+    define("_CREATE_TAG_DESC", "Permet d'enregistrer à la volée des mots clés inexistants dans la base de données");
 if (!defined("_ADD_TAG_TO_RES_DESC"))
     define("_ADD_TAG_TO_RES_DESC", "Permet d'ajouter des "._TAGS_DEFAULT." à une ressource");
 if (!defined("_DELETE_TAG_TO_RES"))
@@ -86,7 +88,7 @@ if (!defined("_TAGS"))
 if (!defined("_TAG_SEPARATOR_HELP"))
     define("_TAG_SEPARATOR_HELP", "Séparez les mots-clés en appuyant sur Entrée ou avec des virgules");
 if (!defined("_NB_DOCS_FOR_THIS_TAG"))
-    define("_NB_DOCS_FOR_THIS_TAG", "Nbre de documents taggués");
+    define("_NB_DOCS_FOR_THIS_TAG", "document(s) taggué(s)");
 if (!defined("_TAGOTHER_OPTIONS"))
     define("_TAGOTHER_OPTIONS", "Autres options");
 if (!defined("_TAG_FUSION_ACTIONLABEL"))
@@ -109,4 +111,8 @@ if (!defined("_TAGCLICKTODEL"))
     define("_TAGCLICKTODEL", "supprimer");
 if (!defined("_NAME_TAGS"))
     define("_NAME_TAGS", "Nom du mot-clé");
+if (!defined("_PRIVATE_TAGS"))
+    define("_PRIVATE_TAGS", "Restreindre les mots-clés à l'entité de l'utilisateur (Niveau direction)");
+if (!defined("_PRIVATE_TAGS_DESC"))
+    define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les mots clées qui ont été restreint à sa direction (l'ajout / modification associera le mot clé automatiquement à sa direction).");
 
