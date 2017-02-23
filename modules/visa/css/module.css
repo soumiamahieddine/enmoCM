@@ -84,7 +84,6 @@
 	height: 96%;
 	width: 100%;
 	overflow-y: scroll;
-	overflow-x: none;
 }
 
 .listDocsBasket div{
@@ -252,6 +251,7 @@
         display: table-cell;
         padding: 5px;
         vertical-align: middle;
+         text-align: right;
     }
     
     .headerSignatureBook .item.activeTabSignatureBook,.panelRight .panelSelectedThumbnail{
@@ -403,13 +403,6 @@
         padding: 5px;
         cursor: pointer;
         width: 5%;
-        vertical-align: middle;
-    }
-    
-     .headerSignatureBook .others{
-        border-right: solid 1px black;
-        display: table-cell;
-        padding: 5px;
         vertical-align: middle;
     }
     

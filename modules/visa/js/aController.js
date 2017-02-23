@@ -35,6 +35,11 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
     $scope.signatureBook.leftSelectedThumbnail = index;
   };
 
+  $scope.backToBasket = function() {
+    location.hash = "";
+    location.reload();
+  };
+
   $scope.validForm = function() {
     //$interval.cancel(intervalPromise);
     unlockDocument($routeParams.resId);
