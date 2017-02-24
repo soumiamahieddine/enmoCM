@@ -63,9 +63,13 @@ if($loginRequestArray['CAS_VERSION'] == 'CAS_VERSION_2_0'){
     $Id = phpCAS::getUser();
     echo 'Identifiant : ' . phpCAS::getUser();
     echo '<br/> phpCAS version : ' . phpCAS::getVersion();
-    $tmpId = explode($id_separator, $Id);
-    $userId = $tmpId[0];
-
+    if(!empty($id_separator)){
+        $tmpId = explode($id_separator, $Id);
+        $userId = $tmpId[0];
+    } else {
+        $userId = $Id;
+    }
+    
 } elseif($loginRequestArray['CAS_VERSION'] == 'SAML_VERSION_1_1'){
     // $attrSAML = phpCAS::getAttributes();
     // var_export($attrSAML);

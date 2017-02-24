@@ -4,6 +4,6 @@
 	<WEB_CAS_URL>192.168.21.25</WEB_CAS_URL> <!-- ip -->
 	<WEB_CAS_PORT>443</WEB_CAS_PORT>
 	<WEB_CAS_CONTEXT>/cas-server-webapp-4.0.0</WEB_CAS_CONTEXT>
-	<ID_SEPARATOR>@</ID_SEPARATOR><!--return id without string after the separator include-->
+	<ID_SEPARATOR></ID_SEPARATOR><!--return id without string after the separator include-->
 	<PATH_CERTIFICATE></PATH_CERTIFICATE><!--path to the cas server certificate. absolute path. empty if no certificate-->
 </ROOT>
