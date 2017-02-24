@@ -16,7 +16,7 @@
             <i class="fa fa-line-chart fa-2x"></i>
         </div>
         <div class="others">
-            
+            <i style="cursor: pointer" ng-click="backToBasket()" class="fa fa-backward fa-lg"></i>
         </div>
         <div class="actions">
             <select id="signatureBookActions">
@@ -48,9 +48,16 @@
         <div class="contentRight">
             <div class="contentShow">
                 <div class="pjDetails">
-                    <div class="infoPj"><label>Type : </label><span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].attachment_type}}</span></div>
-                    <div class="infoPj"><label>Objet : </label><span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].title}}</span></div>
-                    <div class="infoPj"><label>Contact : </label><span>Laurent GIOVANONNI - 11 boulevard du sud est</span></div>
+                    <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].attachment_type}}"><label>Type : </label><span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].attachment_type}}</span></div>
+                    <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].title}}"><label>Objet : </label><span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].title}}</span></div>
+                    <div class="infoPj" title="Laurent GIOVANONNI - 11 boulevard du sud est"><label>Pour : </label><span>Laurent GIOVANONNI - 11 boulevard du sud est</span></div>
+                    <div class="infoPj" title="Patricia PETIT"><label>Créé par: </label><span>Patricia PETIT</span></div>
+                    <div class="infoPj" title="23-02-2017 15:00"><label>Créé le: </label><span>23-02-2017 15:00</span></div>
+                    <div class="infoPj" title="Laurent GIOVANONNI - 11 boulevard du sud est"><label>Modifié par : </label><span>Bernard BLIER</span></div>
+                    <div class="infoPj" title="Bernard BLIER"><label>Date de retour : </label><span>23-02-2017 15:00</span></div>
+                    <div class="infoPj" title="3"><label>Version : </label><span>3</span></div>
+                    <div class="infoPj" title="PDF"><label>Format : </label><span>PDF</span></div>
+
                 </div>
                 <div class="pjDetailsMore">
                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
@@ -58,9 +65,13 @@
                 <iframe ng-src="{{signatureBook.rightViewerLink}}"></iframe>
             </div>
             <div class="panelRight">
+                <div class="item panelRightAddPj">
+                    <i class="fa fa-plus fa-2x"></i>
+                </div>
                 <div class="item" ng-repeat="(index, attachment) in signatureBook.attachments" ng-click="changeRightViewer(index)" ng-class="{'panelSelectedThumbnail': index == signatureBook.rightSelectedThumbnail}">
                     <span class="fa-stack fa-lg">
                     <i class="fa fa-file-o fa-stack-2x"></i>
+                    <!-- TO DO mettre icone attachment type-->
                     <i class="fa fa-reply fa-stack-1x"></i>
                   </span>
                 </div>

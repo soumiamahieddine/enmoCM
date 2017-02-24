@@ -14,6 +14,9 @@ if ($viewResourceArr['status'] <> 'ko') {
         </html>-->
         <?php
     } else {
+        if(strtolower($viewResourceArr['ext']) == 'txt'){
+            $viewResourceArr['mime_type'] = 'text/plain';
+        }
         header('Pragma: public');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
