@@ -100,18 +100,47 @@ if((int)$cas_port == 443){
 $_SESSION['web_cas_url'] = $protocol. $cas_serveur . $cas_context .'/logout';
 
 /**** CONNECTION A MAARCH ****/
-header("location: " . $_SESSION['config']['businessappurl'] 
-    . "log.php?login=" . $userId 
-    . "&pass=" . $loginArray['password']);
-
-//Traces fonctionnelles
 $trace = new history();
-$trace->add("users",
-            $userId,
-            "LOGIN",
-            "userlogin",
-            _CONNECTION_CAS_OK,
-            $_SESSION['config']['databasetype'],
-            "ADMIN",
-            false);
-exit();
+if ($restMode) {
+    $security = new security();
+    $_SESSION['error'] = '';
+    $pass = $security->getPasswordHash($loginArray['password']);
+    $res = $security->login($userId  , $pass);
+    //$core->show_array($res);
+    $_SESSION['user'] = $res['user'];
+    if (!empty($res['error'])) {
+        $_SESSION['error'] = $res['error'];
+    }
+    //Traces fonctionnelles
+    $trace->add(
+        "users",
+        $loginArray['UserId'],
+        "LOGIN",
+        _CONNECTION_CAS_OK,
+        $_SESSION['config']['databasetype'],
+        "ADMIN",
+        false
+    );
+} else {
+    header("location: " . $_SESSION['config']['businessappurl'] 
+        . "log.php?login=" . $userId 
+        . "&pass=" . $loginArray['password']);
+    //Traces fonctionnelles
+    
+    $trace->add(
+        "users",
+        $userId,
+        "LOGIN",
+        "userlogin",
+        _CONNECTION_CAS_OK,
+        $_SESSION['config']['databasetype'],
+        "ADMIN",
+        false
+    );
+
+    exit();
+}
+
+
+
+
