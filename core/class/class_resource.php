@@ -299,9 +299,10 @@
             elseif($data[$i]['column'] == 'filename' )
             {
                 $find_filename = true;
-                if(!preg_match("/^[0-9]+.([a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]?|maarch)$/", $data[$i]['value']))
+                //if(!preg_match("/^[0-9]+.([a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]?|maarch)$/", $data[$i]['value']))
+                if(!preg_match("/^[\w-.]+.([a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9]?|maarch)$/", $data[$i]['value']))
                 {
-                    $error .= _FILENAME_ERROR.'<br/>';
+                    $error .= _FILENAME_ERROR . ' ' . $data[$i]['value'] . '<br/>';
                 }
             }
             elseif($data[$i]['column'] == "offset_doc")
