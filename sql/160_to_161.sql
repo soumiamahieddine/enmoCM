@@ -16,7 +16,8 @@ $$ LANGUAGE SQL;
 
 
 
-/* MIGRATION NOUVEL STRUCT MOTS CLEES*/
+/* MIGRATION NOUVEL STRUCT MOTS CLES*/
+DROP SEQUENCE IF EXISTS tag_id_seq CASCADE;
 CREATE SEQUENCE tag_id_seq
   INCREMENT 1
   MINVALUE 1
@@ -24,9 +25,13 @@ CREATE SEQUENCE tag_id_seq
   START 7
   CACHE 1;
 
+ALTER TABLE tags DROP COLUMN IF EXISTS tag_id;
 ALTER TABLE tags ADD tag_id bigint NOT NULL DEFAULT nextval('tag_id_seq'::regclass);
+
+ALTER TABLE tags DROP COLUMN IF EXISTS entity_id_owner;
 ALTER TABLE tags ADD entity_id_owner character varying(32);
 
+DROP SEQUENCE IF EXISTS tmp_tag_id_seq;
 CREATE SEQUENCE tmp_tag_id_seq
   INCREMENT 1
   MINVALUE 1
@@ -34,6 +39,7 @@ CREATE SEQUENCE tmp_tag_id_seq
   START 7
   CACHE 1;
 
+DROP TABLE IF EXISTS tmp_tags;
 CREATE TABLE tmp_tags
 (
   tag_id bigint NOT NULL DEFAULT nextval('tmp_tag_id_seq'::regclass),
@@ -46,6 +52,7 @@ WITH (
 INSERT INTO tmp_tags (tag_label)
 SELECT distinct(lower(tag_label)) from tags;
 
+DROP TABLE IF EXISTS tag_res;
 CREATE TABLE tag_res
 (
   res_id bigint NOT NULL,
@@ -56,10 +63,20 @@ WITH (
   OIDS=FALSE
 );
 
+DO $$ 
+    BEGIN
+        BEGIN
+            ALTER TABLE tags ADD res_id bigint;
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE 'column res_id already exists in tags. skipping...';
+        END;
+    END;
+$$;
 INSERT INTO tag_res (res_id,tag_id)
-SELECT tags.res_id, tmp_tags.tag_id FROM tags, tmp_tags WHERE tmp_tags.tag_label = lower(tags.tag_label);
+SELECT tags.res_id, tmp_tags.tag_id FROM tags, tmp_tags WHERE tmp_tags.tag_label = lower(tags.tag_label) AND tags.res_id IS NOT NULL;
 
 TRUNCATE TABLE tags;
+
 ALTER TABLE tags DROP CONSTRAINT IF EXISTS tagsjoin_pkey;
 ALTER TABLE tags DROP COLUMN IF EXISTS res_id;
 
@@ -67,9 +84,10 @@ INSERT INTO tags (tag_label, coll_id, tag_id)
 SELECT tag_label, 'letterbox_coll', tag_id FROM tmp_tags;
 
 
-DROP TABLE tmp_tags;
+DROP TABLE IF EXISTS tmp_tags;
 DROP SEQUENCE IF EXISTS tmp_tag_id_seq;
 
+DROP TABLE IF EXISTS tags_entities;
 CREATE TABLE tags_entities
 (
   tag_id bigint,
