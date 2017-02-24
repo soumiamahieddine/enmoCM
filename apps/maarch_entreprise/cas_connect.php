@@ -54,10 +54,11 @@ if(!empty($certificate)){
 } else {
     phpCAS::setNoCasServerValidation();
 }
-
+//echo 'avant';
 // L'authentification.
 phpCAS::forceAuthentication();
-
+//echo 'apres';exit;
+//exit;
 if($loginRequestArray['CAS_VERSION'] == 'CAS_VERSION_2_0'){
     // Lecture identifiant utilisateur (courriel)
     $Id = phpCAS::getUser();
@@ -70,6 +71,7 @@ if($loginRequestArray['CAS_VERSION'] == 'CAS_VERSION_2_0'){
         $userId = $Id;
     }
     
+
 } elseif($loginRequestArray['CAS_VERSION'] == 'SAML_VERSION_1_1'){
     // $attrSAML = phpCAS::getAttributes();
     // var_export($attrSAML);
