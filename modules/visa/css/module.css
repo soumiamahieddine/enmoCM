@@ -347,6 +347,23 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
    width:19%;
 }
 
+.titleSignatureBook{
+    border-radius: 0px 0px 20px;
+    width:40%;
+    border-right: solid 1px black;
+    border-top: solid 1px black;
+    border-left: solid 1px black;
+    padding: 5px;
+    vertical-align: middle;
+    font-weight: bold;
+    background: #009DC5;
+    color: white;
+    text-transform : uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .headerSignatureBook{
     border: solid 1px black;
     display: table;
