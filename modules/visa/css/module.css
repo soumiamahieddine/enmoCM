@@ -233,11 +233,52 @@
 
 .resListContent{
     display: table-cell;
-    width:10%;
+    width:15%;
     text-align: center;
     border-right: solid 1px;
     vertical-align: top;
+    overflow: auto;
 }
+
+.resListContentInfo{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 95%;
+    text-align: left;
+    padding:5px;
+    cursor:pointer;
+}
+
+.resListContentInfo i{
+    width:5%;
+    text-align: center;
+}
+
+.resListContentFrame:hover{
+    background-color: #009DC5;
+    color: white;
+}
+
+.resListContentFrame{
+    border-bottom : solid 1px black;
+}
+
+.resListContentPos{
+    height:95vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.hideresListContent{
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    overflow: auto;
+    cursor: pointer;
+    width:1%;
+}
+
 .contentLeft{
     border-right: solid 1px;
     vertical-align: top;
@@ -355,6 +396,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 .titleSignatureBook{
+    display: table;
     border-radius: 0px 0px 20px;
     width:40%;
     border-right: solid 1px black;
@@ -369,6 +411,16 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.titleSignatureBook span{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.titleSignatureBook span:nth-child(2){
+    text-align: right;
+    padding-left: 5px;
 }
 
 .headerSignatureBook{
@@ -396,13 +448,30 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     vertical-align: middle;
 }
 
-.headerSignatureBook .item.activeTabSignatureBook,.panelRight .panelSelectedThumbnail{
+.headerSignatureBook .activeTabSignatureBook i{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.headerSignatureBook .itemLabel{
+    display: none;
+    padding-left: 5px;
+    font-weight: bold;
+}
+
+.headerSignatureBook .item.activeTabSignatureBook,.panelRight .panelSelectedThumbnail,.resListContentFrameSelected{
     background: #009DC5;
     color:white;
+    -moz-box-shadow: inset 0px 0px 5px 0px #656565;
+-webkit-box-shadow: inset 0px 0px 5px 0px #656565;
+-o-box-shadow: inset 0px 0px 5px 0px #656565;
+box-shadow: inset 0px 0px 5px 0px #656565;
 }
 
 .panelRightAddPj{
     height: 45px;
+    vertical-align: middle;
+    display: table-cell;
 }
 
 .panelRightAddPj:hover{

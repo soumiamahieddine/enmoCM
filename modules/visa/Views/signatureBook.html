@@ -1,22 +1,26 @@
 <div class='visaContent'>
     <div class="titleSignatureBook" title="Viser le document n°231 : {{signatureBook.documents[0].title}}">
-        Viser le document n°231 : {{signatureBook.documents[0].title}}
+        <span>Viser le document n°231 : {{signatureBook.documents[0].title}}</span><span><i style="cursor: pointer" ng-click="backToBasket()" class="fa fa-times-circle fa-2x"></i></span>
     </div>
     <div class="headerSignatureBook">
         <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 1}" ng-click="changeSignatureBookLeftContent(1)">
             <i class="fa fa-dashboard fa-2x"></i>
+            <i class="itemLabel">Document principal</i>
         </div>
         <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 2}" ng-click="changeSignatureBookLeftContent(2)">
             <i class="fa fa-pencil fa-2x"></i>
+            <i class="itemLabel">Note(s)</i>
         </div>
         <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 3}" ng-click="changeSignatureBookLeftContent(3)">
             <i class="fa fa-certificate fa-2x"></i>
+            <i class="itemLabel">Circuit de visa</i>
         </div>
         <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 4}" ng-click="changeSignatureBookLeftContent(4)">
             <i class="fa fa-line-chart fa-2x"></i>
+            <i class="itemLabel">Avancement</i>
         </div>
         <div class="others">
-            <i style="cursor: pointer" ng-click="backToBasket()" class="fa fa-times-circle fa-2x"></i>
+            
         </div>
         <div class="actions">
             <select id="signatureBookActions">
@@ -27,9 +31,18 @@
     </div>
     <div class="contentSignatureBook">
         <div class="resListContent">
-            <div ng-repeat="res in signatureBook.resList" ng-click="changeLocation(res.res_id)">
-                <span>{{res.alt_identifier}}</span>
+            <div class="resListContentPos">
+                <div class="resListContentFrame" ng-repeat="res in signatureBook.resList" ng-click="changeLocation(res.res_id)" ng-class="{'resListContentFrameSelected': vm.resId == res.res_id}">
+                    <div class="resListContentInfo"><i class="fa fa-compass" title="Numéro chrono"></i> {{res.alt_identifier}} - urgent</div>
+                    <div class="resListContentInfo"><i class="fa fa-info" title="Objet"></i> {{res.subject}}</div>
+                    <div class="resListContentInfo"><i class="fa fa-book" title="Fiche contact"></i> Jean Dubois - Collectivité FC</div>
+                    <div class="resListContentInfo"><i class="fa fa-calendar" title="Date d'arrivée"></i> {{res.admission_date}} - <i class="fa fa-bell" title="Date limite de traitement"></i> {{res.process_limit_date}}</div>
+                </div>
             </div>
+            
+        </div>
+        <div class="hideresListContent">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
         </div>
         <div class="contentLeft">
             <div class="contentShow" ng-if="signatureBook.headerTab == 1">
