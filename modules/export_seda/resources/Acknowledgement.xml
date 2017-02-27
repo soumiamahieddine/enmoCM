@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acknowledgement xmlns="fr:gouv:culture:archivesdefrance:seda:v2.0">
+	<?merge Acknowledgement.comment ?><Comment><?merge .value ?></Comment>
+	<Date><?merge Acknowledgement.date ?></Date>
+	<MessagIdentifier><?merge Acknowledgement.messageIdentifier ?></MessagIdentifier>
+	<Signature><?merge Acknowledgement.signature ?></Signature>
+	<MessageReceivedIdentifier><?merge Acknowledgement.messageReceivedIdentifier ?></MessageReceivedIdentifier>
+	<Sender><?merge Acknowledgement.sender ?></Sender>
+	<Receiver><?merge Acknowledgement.receiver ?></Receiver>
+</Acknowledgement>

@@ -1,0 +1,4 @@
+<?merge $abstractRule.rule ?><Rule><?merge .value ?></Rule>
+<?merge $abstractRule.startDate ?><StartDate><?merge . ?></StartDate>
+<PreventInheritance><?merge $abstractRule.preventInheritance ?></PreventInheritance>
+<RefNonRuleId><?merge $abstractRule.refNonRuleId ?></RefNonRuleId>
