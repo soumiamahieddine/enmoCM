@@ -46,6 +46,7 @@ try {
     require_once("modules/tags/tags_tables_definition.php");
     require_once("core/class/users_controler.php");
     require_once("modules/entities/class/class_users_entities_Abstract.php");
+    require_once("core/class/users_controler.php");
 
 } catch (Exception $e){
     functions::xecho($e->getMessage()).' // ';
@@ -80,12 +81,11 @@ abstract class tag_controler_Abstract extends ObjectControler
         
         if($core->test_service('private_tag', 'tags',false) == 1){
             $entitiesRestriction = array();
-            $entitiesDirection = users_controler::getParentEntitiesWithType($_SESSION['user']['UserId'],'Direction');
+            $userEntities = users_controler::getEntities($_SESSION['user']['UserId']);
             //var_dump($entitiesDirection);
-            foreach ($entitiesDirection as $entity_id) {
+            foreach ($userEntities as $entity) {
+                $entity_id = $entity['ENTITY_ID'];
                 $entitiesRestriction[] = $entity_id;
-                $tmp_arr = users_entities_Abstract::getEntityChildren($entity_id);
-                $entitiesRestriction = array_merge($entitiesRestriction,$tmp_arr);
             }
             //var_dump($entitiesRestriction);
             //CHECK TAG IS ALLOW FOR THESE ENTITIES
@@ -134,7 +134,6 @@ abstract class tag_controler_Abstract extends ObjectControler
             $stmt = $db->query(
             'SELECT tag_id, tag_label FROM ' 
             . _TAG_TABLE_NAME 
-            . $whereClause
             . ' ORDER BY tag_label ASC '
             ,$where_what);
         }
@@ -343,9 +342,58 @@ abstract class tag_controler_Abstract extends ObjectControler
          * @If tag exists, return this value, else, return false
          */
         $db = new Database();
+        $core = new core_tools(); 
+        
+        $where = '';
+        if($core->test_service('private_tag', 'tags',false) == 1){
+            $entitiesRestriction = array();
+            $userEntities = users_controler::getEntities($_SESSION['user']['UserId']);
+            //var_dump($entitiesDirection);
+            foreach ($userEntities as $entity) {
+                $entity_id = $entity['ENTITY_ID'];
+                $entitiesRestriction[] = $entity_id;
+            }
+            //var_dump($entitiesRestriction);
+            //CHECK TAG IS ALLOW FOR THESE ENTITIES
+            if(!empty($entitiesRestriction)){
+                $entitiesRestriction = "'".implode("','", $entitiesRestriction)."'";
+                $where = ' WHERE entity_id IN ('.$entitiesRestriction.')';
+            }else{
+                $where = '';
+            }
+            $stmt = $db->query(
+            'SELECT distinct(tag_id)' 
+            . ' FROM tags_entities'
+            . $where
+            ,array());
+
+            $restrictedTagIdList = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+            //var_dump($restrictedTagIdList);
+            //CHECK TAG WHO IS NOT RESTRICTED
+            $stmt = $db->query(
+            'SELECT tag_id' 
+            . ' FROM tags'
+            . ' WHERE tag_id NOT IN (select distinct(tag_id) from tags_entities)'
+            ,array());
+            $freeTagIdList = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+            //var_dump($freeTagIdList);
+            //MERGE ALLOWED TAGS AND FREE TAGS
+            $tagIdList = array_merge($restrictedTagIdList,$freeTagIdList);
+
+            if(!empty($tagIdList)){
+                $tagIdList = "'".implode("','", $tagIdList)."'";
+                $where = ' AND tag_id IN ('.$tagIdList.')';
+            }else{
+                $where = '';
+            }
+        }
+        
         $stmt = $db->query(
                 "DELETE FROM tag_res"
                 . " WHERE res_id = ?"
+                . $where
         ,array($res_id));
         /*$hist = new history();
         $hist->add(
@@ -480,7 +528,7 @@ abstract class tag_controler_Abstract extends ObjectControler
             . " WHERE  tag_id = ?"
         ,array($new_tag_label,$tag_id));
         
-        //reset entities restrictions
+        //reset entities restrictions    
         $stmt = $db->query(
                 "DELETE FROM tags_entities"
                 . " WHERE tag_id = ?"
