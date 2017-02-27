@@ -299,4 +299,8 @@
         <moduleid>thesaurus</moduleid>
         <comment>_THESAURUS_COMMENT</comment>
     </MODULES>
+    <MODULES>
+        <moduleid>export_seda</moduleid>
+        <comment>_EXPORT_SEDA_COMMENT</comment>
+    </MODULES>
 </ROOT>
