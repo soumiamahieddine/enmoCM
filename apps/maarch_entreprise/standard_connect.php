@@ -1,5 +1,55 @@
 <?php
-if (isset($_REQUEST['askRACode']) && $_REQUEST['askRACode'] == 'true') {
+
+if ($restMode) {
+    $userLogin = [];
+    //HTTP AUTH
+    if (
+        (isset($_SERVER["PHP_AUTH_USER"])
+            && isset($_SERVER["PHP_AUTH_PW"])
+            && isset($_SERVER["HTTP_AUTHORIZATION"])
+        )
+        && $_SERVER["PHP_AUTH_USER"] && $_SERVER["PHP_AUTH_PW"]
+        && preg_match("/^Basic /", $_SERVER["HTTP_AUTHORIZATION"])
+    ) {
+        list($_SERVER["PHP_AUTH_USER"], $_SERVER["PHP_AUTH_PW"])
+            = explode(":", base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)));
+    }
+    if (
+        (isset($_SERVER["PHP_AUTH_USER"])
+            && isset($_SERVER["PHP_AUTH_PW"])
+        )
+        && ($_SERVER["PHP_AUTH_USER"] || $_SERVER["PHP_AUTH_PW"])
+    ) {
+        $_SESSION['user']['UserId'] = $_SERVER["PHP_AUTH_USER"];
+        $password = $_SERVER["PHP_AUTH_PW"];
+    }
+
+    $userLogin['user'] = $_SESSION['user']['UserId'];
+    $userLogin['password'] = $password;
+
+    require_once 'core/class/class_security.php';
+    $sec = new security();
+    $_SESSION['error'] = '';
+    $pass = $sec->getPasswordHash($userLogin['password']);
+    $res = $sec->login($userLogin['user'], $pass);
+    //var_dump($res);
+    $_SESSION['user'] = $res['user'];
+    if (!empty($res['error'])) {
+        $_SESSION['error'] = $res['error'];
+    } else {
+        require_once('core/class/class_history.php');
+        $trace = new history();
+        $trace->add(
+            "users",
+            $userLogin['user'],
+            "LOGIN",
+            _CONNECTION_STANDARD_OK,
+            $_SESSION['config']['databasetype'],
+            "ADMIN",
+            false
+        );
+    }
+} elseif (isset($_REQUEST['askRACode']) && $_REQUEST['askRACode'] == 'true') {
     echo '<div>';
         echo '<p>';
             echo '&nbsp;&nbsp;&nbsp;&nbsp;<br /><br /><br /><br /><br /><br />';
