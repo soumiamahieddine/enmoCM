@@ -10,6 +10,7 @@ require_once 'apps/maarch_entreprise/Models/ResModel.php';
 require_once 'apps/maarch_entreprise/Models/HistoryModel.php';
 require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
 require_once 'apps/maarch_entreprise/Models/UsersModel.php';
+require_once 'modules/basket/Models/BasketsModel.php';
 
 
 class VisaController {
@@ -17,6 +18,7 @@ class VisaController {
 	public function getSignatureBook(RequestInterface $request, ResponseInterface $response, $aArgs) {
 
 		$resId = $aArgs['resId'];
+		$basketId = $aArgs['basketId'];
 
 		$incomingMail = \ResModel::get([
 			'resId' => $resId,
@@ -138,6 +140,10 @@ class VisaController {
 			'orderBy' => ['event_date DESC']
 		]);
 
+		$resList = \BasketsModel::getResListById([
+			'basketId' => $basketId,
+			'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority']
+		]);
 
 		$datas = [];
 		$datas['actions'] = $actionsData;
@@ -146,7 +152,9 @@ class VisaController {
 		$datas['currentAction'] = $_SESSION['current_basket']['default_action']; //TODO Aller chercher l'id de la basket sans passer par la session
 		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
 		$datas['histories'] = $history;
+		$datas['resList'] = $resList;
 
 		return $response->withJson($datas);
 	}
+
 }

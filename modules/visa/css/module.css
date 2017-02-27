@@ -231,13 +231,20 @@
      text-align: right;
 }
 
+.resListContent{
+    display: table-cell;
+    width:10%;
+    text-align: center;
+    border-right: solid 1px;
+    vertical-align: top;
+}
 .contentLeft{
     border-right: solid 1px;
     vertical-align: top;
 }
 .contentLeft, .contentRight{
     display: table-cell;
-    width:50%;
+    width:45%;
     text-align: center;
 }
 

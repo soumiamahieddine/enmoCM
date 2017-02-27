@@ -102,6 +102,6 @@ $app->post('/status', \Core\Controllers\StatusController::class . ':create');
 $app->put('/status', \Core\Controllers\StatusController::class . ':update');
 $app->delete('/status/{id}', \Core\Controllers\StatusController::class . ':delete');
 
-$app->get('/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
+$app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
 
 $app->run();

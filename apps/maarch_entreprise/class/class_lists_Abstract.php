@@ -1467,7 +1467,7 @@ abstract class lists_Abstract extends Database
             }
             $aService = Basket_Baskets_Service::getServiceFromActionId(['id' => $this->params['defaultAction']]);
             if ($aService['actionPage'] == 'visa_mail' && V2_ENABLED == true) {
-                $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="location.href=\'#/signatureBook/' .$keyValue. '\'" ';
+                $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="location.href=\'#/' .$_SESSION['current_basket']['id']. '/signatureBook/' .$keyValue. '\'" ';
             } else {
                 $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="validForm( \'page\', \''.$keyValue.'\', \''.$this->params['defaultAction'].'\');" ';
             }

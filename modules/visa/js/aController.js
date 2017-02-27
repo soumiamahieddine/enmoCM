@@ -1,17 +1,17 @@
 "use strict";
 
-mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", "NgTableParams", function($scope, $http, $routeParams, $interval, NgTableParams) {
+mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", "NgTableParams", "$location", function($scope, $http, $routeParams, $interval, NgTableParams, $location) {
 
-  //var vm = this;
+  var vm = this;
 
-  function getDatas(res_id) {
+  function getDatas(basketId, resId) {
 
     $j('#inner_content').remove();
     $j('#header').remove();
     $j('#viewBasketsTitle').remove();
     $http({
       method : 'GET',
-      url    : globalConfig.coreurl + 'rest/signatureBook/' + res_id,
+      url    : globalConfig.coreurl + 'rest/' + basketId + '/signatureBook/' + resId,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function successCallback(response) {
 
@@ -80,6 +80,10 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
     location.reload();
   };
 
+  $scope.changeLocation = function(resId) {
+    $location.path(vm.basketId + "/signatureBook/" + resId);
+  };
+
   $scope.validForm = function() {
     //$interval.cancel(intervalPromise);
     unlockDocument($routeParams.resId);
@@ -101,7 +105,10 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
 
 
   //Initialize View
-  getDatas($routeParams.resId);
+  vm.basketId = $routeParams.basketId;
+  vm.resId = $routeParams.resId;
+
+  getDatas($routeParams.basketId, $routeParams.resId);
 
   lockDocument($routeParams.resId);
   $interval(function () {
