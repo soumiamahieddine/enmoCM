@@ -1,5 +1,5 @@
 <div class="visaResList">
-        
+
 </div>
 <div class='visaContent'>
     <div class="headerSignatureBook">
@@ -29,10 +29,15 @@
         <div class="contentLeft">
             <div class="contentShow" ng-if="signatureBook.headerTab == 1">
                 <div class="pjDoc" >
-                    <img id="thumnails_img" ng-repeat="(index, document) in signatureBook.documents" ng-click="changeLeftViewer(index)" ng-src="{{document.thumbnailLink}}" class="leftPanelThumbnails" ng-class="{'panelSelectedThumbnail': index == signatureBook.leftSelectedThumbnail}"/>
+                    <div ng-hide="signatureBook.showTopLeftPanel" style="padding: 5px;"><strong>{{signatureBook.documents.length - 1}} pièce(s) jointe(s)</strong></div>
+
+                    <img id="thumnails_img" ng-show="signatureBook.showTopLeftPanel" ng-repeat="(index, document) in signatureBook.documents" ng-click="changeLeftViewer(index)" ng-src="{{document.thumbnailLink}}"
+                             class="leftPanelThumbnails" ng-class="{'panelSelectedThumbnail': index == signatureBook.leftSelectedThumbnail}"/>
+                    <!--<label>PJ1</label>-->
                 </div>
-                <div class="pjDetailsMore">
-                   <i class="fa fa-chevron-up" aria-hidden="true"></i>
+                <div class="pjDetailsMore" ng-click="displayTopPanel('LEFT')">
+                    <i ng-hide="signatureBook.showTopLeftPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
+                    <i ng-show="signatureBook.showTopLeftPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe id="leftPanelShowDocumentIframe" ng-src="{{signatureBook.leftViewerLink}}"></iframe>
             </div>
@@ -43,36 +48,81 @@
                 <iframe id="leftPanelShow_iframe" ng-src="{{signatureBook.linkVisaCircuit}}"></iframe>
             </div>         
             <div class="contentShow" ng-if="signatureBook.headerTab == 4">
+                <table ng-table="historyTable" class="table">
+                    <tr ng-repeat="history in $data">
+                        <td title="'Date'" sortable="'event_date'">
+                            {{history.event_date | datetimeFormat}}
+                        </td>
+                        <td title="'Utilisateur'" sortable="'lastname'">
+                            {{history.firstname + " " + history.lastname}}
+                        </td>
+                        <td title="'Evènement'" sortable="'info'">
+                            {{history.info}}
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
         <div class="contentRight">
-            <div class="contentShow">
+            <div class="contentShow" ng-if="!signatureBook.showAttachmentEditionPanel">
                 <div class="pjDetails">
-                    <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].attachment_type}}"><label>Type : </label><span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].attachment_type}}</span></div>
-                    <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].title}}"><label>Objet : </label><span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].title}}</span></div>
-                    <div class="infoPj" title="Laurent GIOVANONNI - 11 boulevard du sud est"><label>Pour : </label><span>Laurent GIOVANONNI - 11 boulevard du sud est</span></div>
-                    <div class="infoPj" title="Patricia PETIT"><label>Créé par: </label><span>Patricia PETIT</span></div>
-                    <div class="infoPj" title="23-02-2017 15:00"><label>Créé le: </label><span>23-02-2017 15:00</span></div>
-                    <div class="infoPj" title="Laurent GIOVANONNI - 11 boulevard du sud est"><label>Modifié par : </label><span>Bernard BLIER</span></div>
-                    <div class="infoPj" title="Bernard BLIER"><label>Date de retour : </label><span>23-02-2017 15:00</span></div>
-                    <div class="infoPj" title="3"><label>Version : </label><span>3</span></div>
-                    <div class="infoPj" title="PDF"><label>Format : </label><span>PDF</span></div>
+                    <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].attachment_type}}">
+                        <label>Type : </label>
+                        <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].attachment_type}}</span>
+                    </div>
+                    <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].title}}">
+                        <label>Objet : </label>
+                        <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].title}}</span>
+                    </div>
+                    <div class="infoPj" title="Laurent GIOVANONNI - 11 boulevard du sud est">
+                        <label>Pour : </label>
+                        <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].destUser}}</span>
+                    </div>
+                    <div ng-show="signatureBook.showTopRightPanel">
+                        <div class="infoPj">
+                            <label>Créé par: </label>
+                            <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].typist}}</span>
+                        </div>
+                        <div class="infoPj">
+                            <label>Créé le: </label>
+                            <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].creation_date | datetimeFormat}}</span>
+                        </div>
+                        <div class="infoPj">
+                            <label>Modifié par : </label>
+                            <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].updated_by}}</span>
+                        </div>
+                        <div class="infoPj">
+                            <label>Retour : </label>
+                            <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].validation_date | datetimeFormat}}</span>
+                        </div>
+                        <div class="infoPj">
+                            <label>Version : </label>
+                            <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].relation}}</span>
+                        </div>
+                        <div class="infoPj">
+                            <label>Format : </label>
+                            <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].format.toUpperCase()}}</span>
+                        </div>
+                    </div>
 
                 </div>
-                <div class="pjDetailsMore">
-                   <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                <div class="pjDetailsMore" ng-click="displayTopPanel('RIGHT')">
+                   <i ng-hide="signatureBook.showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
+                   <i ng-show="signatureBook.showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe ng-src="{{signatureBook.rightViewerLink}}"></iframe>
             </div>
+            <div class="contentShow" ng-if="signatureBook.showAttachmentEditionPanel">
+                <span>Edition de PJ</span>
+            </div>
             <div class="panelRight">
-                <div class="item panelRightAddPj">
+                <div class="item panelRightAddPj" ng-click="changeRightViewer(-1)" ng-class="{'panelSelectedThumbnail': signatureBook.rightSelectedThumbnail == -1}">
                     <i class="fa fa-plus fa-2x"></i>
                 </div>
                 <div class="item" ng-repeat="(index, attachment) in signatureBook.attachments" ng-click="changeRightViewer(index)" ng-class="{'panelSelectedThumbnail': index == signatureBook.rightSelectedThumbnail}">
                     <span class="fa-stack fa-lg">
                     <i class="fa fa-file-o fa-stack-2x"></i>
-                    <!-- TO DO mettre icone attachment type-->
-                    <i class="fa fa-reply fa-stack-1x"></i>
+                    <i class="fa {{attachment.icon}} fa-stack-1x"></i>
                   </span>
                 </div>
             </div>
