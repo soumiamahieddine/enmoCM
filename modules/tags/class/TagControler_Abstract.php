@@ -676,8 +676,7 @@ abstract class tag_controler_Abstract extends ObjectControler
         if ($core_tools->test_service('add_tag_to_res', 'tags',false) == 1)
         {
             $this->deleteTagsRes($res_id);
-            
-            if ($tag_array) {
+            if (!empty($tag_array[0])) {
                 foreach($tag_array as $this_tagId)
                 {
                     $this->add_this_tag($res_id,$this_tagId);

@@ -31,7 +31,10 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
 
       $scope.historyTable = new NgTableParams({
           page: 1,
-          count: 10
+          count: 20,
+          sorting: {
+                event_date: 'desc'     
+            }
         }, {
           total: $scope.signatureBook.histories.length,
           dataset: $scope.signatureBook.histories
