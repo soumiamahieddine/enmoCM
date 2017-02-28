@@ -1,7 +1,6 @@
 <div class='visaContent'>
     <div class="titleSignatureBook">
-        {{::signatureBook.currentAction.actionLabel}}
-    </div>
+        <span>{{::signatureBook.currentAction.actionLabel}}</span><span><i style="cursor: pointer" ng-click="backToBasket()" class="fa fa-times-circle fa-2x"></i></span>    </div>
     <div class="headerSignatureBook">
         <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 1}" ng-click="changeSignatureBookLeftContent(1)">
             <i class="fa fa-dashboard fa-2x"></i>
