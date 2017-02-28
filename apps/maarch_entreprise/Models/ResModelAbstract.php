@@ -30,7 +30,7 @@ class ResModelAbstract extends Apps_Table_Service {
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['res_letterbox'],
+            'table'     => ['res_view_letterbox'],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
         ]);

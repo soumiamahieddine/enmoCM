@@ -21,8 +21,8 @@ class VisaController {
 		$basketId = $aArgs['basketId'];
 
 		$incomingMail = \ResModel::get([
-			'resId' => $resId,
-			'select'    => ['subject']
+			'resId'  => $resId,
+			'select' => ['res_id', 'subject', 'alt_identifier']
 		]);
 
 		if (empty($incomingMail[0])) {
@@ -145,11 +145,19 @@ class VisaController {
 			'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority']
 		]);
 
+		$actionLabel = \BasketsModel::getActionByActionId(['actionId' => $_SESSION['current_basket']['default_action'], 'select' => ['label_action']])['label_action'] . ' n°';
+		$actionLabel .= (_ID_TO_DISPLAY == 'res_id' ? $incomingMail[0]['res_id'] : $incomingMail[0]['alt_identifier']);
+		$actionLabel .= ' : ' . $incomingMail[0]['subject'];
+		$currentAction = [
+			'id' => $_SESSION['current_basket']['default_action'], //TODO Aller chercher l'id de la basket sans passer par la session
+			'actionLabel' => $actionLabel
+		];
+
 		$datas = [];
 		$datas['actions'] = $actionsData;
 		$datas['attachments'] = $attachments;
 		$datas['documents'] = $documents;
-		$datas['currentAction'] = $_SESSION['current_basket']['default_action']; //TODO Aller chercher l'id de la basket sans passer par la session
+		$datas['currentAction'] = $currentAction;
 		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
 		$datas['histories'] = $history;
 		$datas['resList'] = $resList;

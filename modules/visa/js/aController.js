@@ -4,11 +4,20 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
 
   var vm = this;
 
-  function getDatas(basketId, resId) {
+  function prepareSignatureBook() {
+    if (typeof globalConfig.coreurl == "undefined") {
+      InitializeJsGlobalConfig();
+    }
 
     $j('#inner_content').remove();
     $j('#header').remove();
     $j('#viewBasketsTitle').remove();
+    $j('#container').width("98%");
+  }
+
+  function getDatas(basketId, resId) {
+    prepareSignatureBook();
+
     $http({
       method : 'GET',
       url    : globalConfig.coreurl + 'rest/' + basketId + '/signatureBook/' + resId,
@@ -41,7 +50,6 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
         });
 
     }, function errorCallback(error) {
-      console.log(error);
     });
   }
 
@@ -85,21 +93,23 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
   };
 
   $scope.validForm = function() {
-    //$interval.cancel(intervalPromise);
-    unlockDocument($routeParams.resId);
+    if ($j("#signatureBookActions option:selected")[0].value != "") {
+      //$interval.cancel(intervalPromise);
+      unlockDocument($routeParams.resId);
 
-    valid_action_form(
-      'empty',
-      'http://127.0.0.1/maarch_trunk_git/apps/maarch_entreprise/index.php?display=true&page=manage_action&module=core',
-      $scope.signatureBook.currentAction,
-      $routeParams.resId,
-      'res_letterbox',
-      'null',
-      'letterbox_coll',
-      'page',
-      false,
-      [$j("#signatureBookActions option:selected")[0].value]
-    );
+      valid_action_form(
+        'empty',
+        'http://127.0.0.1/maarch_trunk_git/apps/maarch_entreprise/index.php?display=true&page=manage_action&module=core',
+        $scope.signatureBook.currentAction,
+        $routeParams.resId,
+        'res_letterbox',
+        'null',
+        'letterbox_coll',
+        'page',
+        false,
+        [$j("#signatureBookActions option:selected")[0].value]
+      );
+    }
   };
 
 
