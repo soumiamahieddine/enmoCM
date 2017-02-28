@@ -406,7 +406,7 @@ class ExportFunctions
 
         $collection = $this->collection;
 
-        $query_status = "SELECT tag_label FROM tags WHERE coll_id = '".$collection."' and res_id = ##res_id## ";
+        $query_status = "SELECT t.tag_label FROM tags t left join tag_res tr on t.tag_id = tr.tag_id WHERE t.coll_id = '".$collection."' and tr.res_id = ##res_id## ";
 
         $db = new Database();
 
