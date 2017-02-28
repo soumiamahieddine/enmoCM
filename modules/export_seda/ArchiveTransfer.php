@@ -31,16 +31,18 @@ class ArchiveTransfer {
 		$this->db = new Database();
 	}
 
-	public function receive($listResId, $transferringAgency = "", $archivalAgency = "") {
-		
+	public function receive($listResId) {
 		if (!$listResId) {
 			return false;
 		}
 
 		$messageObject = new stdClass();
-		$messageObject = $this->initMessage($messageObject, $transferringAgency, $archivalAgency);
+		$messageObject = $this->initMessage($messageObject);
 
+		$result = [];
 		foreach ($listResId as $resId) {
+			$result .= $resId.'#';
+
 			$letterbox = $this->getCourrier($resId);
 
 			if ($letterbox->filename) {
@@ -51,11 +53,15 @@ class ArchiveTransfer {
 			}
 		}
 
-		//TODO
-		//$messageObject->dataObjectPackage->managementMetadata
+		$res = $this->insertMessage($messageObject);
+
+		if ($res) {
+			$this->sendXml($messageObject);
+		} else {
+			return $res;
+		}
 		
-		$this->insertMessage($messageObject);
-		return $messageObject;
+		return $result;
 	}
 
 	public function sendXml($messageObject)
@@ -67,12 +73,35 @@ class ArchiveTransfer {
 		$DOMTemplateProcessor->merge();
 		$DOMTemplateProcessor->removeEmptyNodes();
 
-        file_put_contents(__DIR__.DIRECTORY_SEPARATOR.'seda2'.DIRECTORY_SEPARATOR.$messageObject->messageIdentifier->value.'.xml', $DOMTemplate->saveXML());
+		if (!is_dir(__DIR__.DIRECTORY_SEPARATOR.'seda2')) {
+			mkdir(__DIR__.DIRECTORY_SEPARATOR.'seda2', 0777, true);
+		}
+
+		$messageId = $messageObject->messageIdentifier->value;
+		if (!is_dir(__DIR__.DIRECTORY_SEPARATOR.'seda2'.DIRECTORY_SEPARATOR.$messageId)) {
+			mkdir(__DIR__.DIRECTORY_SEPARATOR.'seda2'.DIRECTORY_SEPARATOR.$messageId, 0777, true);
+		}
+
+        file_put_contents(__DIR__.DIRECTORY_SEPARATOR.'seda2'.DIRECTORY_SEPARATOR.$messageId.DIRECTORY_SEPARATOR.$messageId.'.xml', $DOMTemplate->saveXML());
+
+        $this->sendAttachment($messageObject);
 
 		return $xml;
 	}
 
-	private function initMessage($messageObject, $transferringAgency =null, $archivalAgency = null)
+	private function sendAttachment($messageObject)
+	{
+		$messageId = $messageObject->messageIdentifier->value;
+
+		foreach ($messageObject->dataObjectPackage->binaryDataObject as $binaryDataObject) {
+			$basename = basename($binaryDataObject->uri);
+			$dest = __DIR__.DIRECTORY_SEPARATOR.'seda2'.DIRECTORY_SEPARATOR.$messageId.DIRECTORY_SEPARATOR.$basename;
+
+			copy($binaryDataObject->uri, $dest);
+		}
+	}
+
+	private function initMessage($messageObject)
 	{
 		$messageObject->date = date('Y-m-d h:i:s');
 		$messageObject->messageIdentifier = new stdClass();
@@ -81,31 +110,20 @@ class ArchiveTransfer {
 		$messageObject->transferringAgency = new stdClass();
 		$messageObject->transferringAgency->identifier = new stdClass();
 
-		if ($transferringAgency) {
-			$messageObject->transferringAgency->identifier->value = $transferringAgency;
-		}else {
-			foreach ($_SESSION['user']['entities'] as $entitie) {
-				if ($entitie['ENTITY_TYPE'] == "Service") {
-					$entitie = $this->getEntitie($entitie['ENTITY_ID']);
-					if ($entitie) {
-						$messageObject->transferringAgency->identifier->value = $entitie->business_id;
-					} else {
-						// TODO return error;
-					}
-				}
-			}
-		}
-
-		$messageObject->archivalAgreement = new stdClass();
-		$messageObject->archivalAgreement->value = "A COMPLETER";
-
 		$messageObject->archivalAgency = new stdClass();
 		$messageObject->archivalAgency->identifier = new stdClass();
 
-		if ($archivalAgency) {
-			$messageObject->archivalAgency->identifier->value = $archivalAgency;
-		} else {
-			$messageObject->archivalAgency->identifier->value = "A COMPLETER";
+		$messageObject->archivalAgreement = new stdClass();
+
+		foreach ($_SESSION['user']['entities'] as $entitie) {
+			$entitie = $this->getEntitie($entitie['ENTITY_ID']);
+			if ($entitie) {
+				$messageObject->transferringAgency->identifier->value = $entitie->business_id;
+				$messageObject->archivalAgency->identifier->value = $entitie->archival_agency;
+				$messageObject->archivalAgreement->value = $entitie->archival_agreement;
+			} else {
+				// TODO return error;
+			}
 		}
 		
 		$messageObject->dataObjectPackage = new stdClass();
@@ -117,59 +135,15 @@ class ArchiveTransfer {
 		return $messageObject;
 	}
 
+	
+
 	private function getArchiveUnit($letterbox)
 	{
 		$messageArchiveUnit = new stdClass();
 
-		$messageArchiveUnit->content = new stdClass();
-		$messageArchiveUnit->content->receivedDate = $letterbox->admission_date;
-		$messageArchiveUnit->content->sentDate = $letterbox->doc_date;
-		$messageArchiveUnit->content->receivedDate = $letterbox->admission_date;
-		$messageArchiveUnit->content->receivedDate = $letterbox->admission_date;
-
-		$messageArchiveUnit->content->addressee = [];
-		$messageArchiveUnit->content->keyword = [];
-
-		if ($letterbox->exp_contact_id) {
-			
-			$contact = $this->getContact($letterbox->exp_contact_id);
-			$entitie = $this->getEntitie($letterbox->destination);
-
-			$messageArchiveUnit->content->keyword[] = $this->getKeyword($contact);
-			$messageArchiveUnit->content->addressee[] = $this->getAddresse($entitie,"entitie");
-		} else if ($letterbox->dest_contact_id) {
-			$contact = $this->getContact($letterbox->dest_contact_id);
-			$entitie = $this->getEntitie($letterbox->destination);
-
-			$messageArchiveUnit->content->addressee[] = $this->getAddresse($contact);
-			$messageArchiveUnit->content->keyword[] = $this->getKeyword($entitie,"entitie");
-		} else if ($letterbox->exp_user_id) {
-			$user = $this->getUserInformation($letterbox->exp_user_id);
-			$entitie = $this->getEntitie($letterbox->initiator);
-			//$entitie = $this->getEntitie($letterbox->destination);
-
-			$messageArchiveUnit->content->keyword[] = $this->getKeyword($user);
-			$messageArchiveUnit->content->addressee[] = $this->getAddresse($entitie,"entitie");
-		}
+		$messageArchiveUnit->content = $this->getContent($letterbox);
 		
-		$messageArchiveUnit->content->source = $_SESSION['mail_nature'][$letterbox->nature_id];
-
-		$messageArchiveUnit->content->documentType = $letterbox->type_label;
-		$messageArchiveUnit->content->originatingAgencyArchiveIdentifier = $letterbox->alt_identifier;
-		$messageArchiveUnit->content->originatingSystemId = $letterbox->res_id;
-		$messageArchiveUnit->content->title = [];
-		$messageArchiveUnit->content->title[] = $letterbox->subject;
-		$messageArchiveUnit->content->description = [];
-		$messageArchiveUnit->content->description[] = " ";
-		$messageArchiveUnit->content->endDate = $letterbox->process_limit_date;
-
-		$notes = $this->getNotes($letterbox->res_id);
-		$messageArchiveUnit->content->custodialHistory = new stdClass();
-		$messageArchiveUnit->content->custodialHistory->custodialHistoryItem = [];
-
-		foreach ($notes as $note) {
-			$messageArchiveUnit->content->custodialHistory->custodialHistoryItem[] = $this->getCustodialHistoryItem($note);
-		}
+		$messageArchiveUnit->management = $this->getManagement($letterbox);
 
 		if ($dataObjectReferenceId) {
 			$messageArchiveUnit->dataObjectReference = new stdClass();
@@ -179,8 +153,78 @@ class ArchiveTransfer {
 		return $messageArchiveUnit;
 	}
 
+	private function getContent($letterbox)
+	{
+		$content = new stdClass();
+		$content->receivedDate = $letterbox->admission_date;
+		$content->sentDate = $letterbox->doc_date;
+		$content->receivedDate = $letterbox->admission_date;
+		$content->receivedDate = $letterbox->admission_date;
+
+		$content->addressee = [];
+		$content->keyword = [];
+
+		if ($letterbox->exp_contact_id) {
+			
+			$contact = $this->getContact($letterbox->exp_contact_id);
+			$entitie = $this->getEntitie($letterbox->destination);
+
+			$content->keyword[] = $this->getKeyword($contact);
+			$content->addressee[] = $this->getAddresse($entitie,"entitie");
+		} else if ($letterbox->dest_contact_id) {
+			$contact = $this->getContact($letterbox->dest_contact_id);
+			$entitie = $this->getEntitie($letterbox->destination);
+
+			$content->addressee[] = $this->getAddresse($contact);
+			$content->keyword[] = $this->getKeyword($entitie,"entitie");
+		} else if ($letterbox->exp_user_id) {
+			$user = $this->getUserInformation($letterbox->exp_user_id);
+			$entitie = $this->getEntitie($letterbox->initiator);
+			//$entitie = $this->getEntitie($letterbox->destination);
+
+			$content->keyword[] = $this->getKeyword($user);
+			$content->addressee[] = $this->getAddresse($entitie,"entitie");
+		}
+		
+		$content->source = $_SESSION['mail_nature'][$letterbox->nature_id];
+
+		$content->documentType = $letterbox->type_label;
+		$content->originatingAgencyArchiveIdentifier = $letterbox->alt_identifier;
+		$content->originatingSystemId = $letterbox->res_id;
+		$content->title = [];
+		$content->title[] = $letterbox->subject;
+		$content->description = [];
+		$content->description[] = " ";
+		$content->endDate = $letterbox->process_limit_date;
+
+		$notes = $this->getNotes($letterbox->res_id);
+		$content->custodialHistory = new stdClass();
+		$content->custodialHistory->custodialHistoryItem = [];
+
+		foreach ($notes as $note) {
+			$content->custodialHistory->custodialHistoryItem[] = $this->getCustodialHistoryItem($note);
+		}
+
+		return $content;
+	}
+
+	private function getManagement($letterbox) {
+		$management = new stdClass();
+
+		$docTypes = $this->getDocTypes($letterbox->type_id);
+
+		$management->appraisalRule = new stdClass();
+		$management->appraisalRule->rule = new stdClass();
+		$management->appraisalRule->rule->value = $docTypes->retention_rule;
+		$management->appraisalRule->finalAction = $docTypes->retention_final_disposition;
+		
+		return $management;
+	}
+
 	private function getBinaryDataObject($letterbox)
 	{
+		$docServers = $this->getDocServer($letterbox->docserver_id);
+
 		$binaryDataObject = new stdClass();
 		$binaryDataObject->id = $letterbox->res_id;
 		$binaryDataObject->messageDigest = new stdClass();
@@ -192,7 +236,7 @@ class ArchiveTransfer {
 		$uri = str_replace("##", DIRECTORY_SEPARATOR, $letterbox->path);
 		$uri =  str_replace("#", DIRECTORY_SEPARATOR, $uri);
 		$uri .= $letterbox->filename;
-		$binaryDataObject->uri = $uri;
+		$binaryDataObject->uri = $docServers->path_template.$uri;
 
 		return $binaryDataObject;
 	}
@@ -259,6 +303,21 @@ class ArchiveTransfer {
 		return $letterbox;
 	}
 
+	private function getDocTypes($typeId)
+	{
+		$queryParams = [];
+
+		$queryParams[] = $typeId;
+
+		$query = "SELECT * FROM doctypes WHERE type_id = ?";
+
+		$smtp = $this->db->query($query,$queryParams);
+		
+		$docTypes = $smtp->fetchObject();
+
+		return $docTypes;
+	}
+
 	private function getUserInformation($userId) 
 	{
 		$queryParams = [];
@@ -322,6 +381,21 @@ class ArchiveTransfer {
 		return $contact;
 	}
 
+	private function getDocServer($docServerId)
+	{
+		$queryParams = [];
+
+		$queryParams[] = $docServerId;
+
+		$query = "SELECT * FROM docservers WHERE docserver_id = ?";
+
+		$smtp = $this->db->query($query,$queryParams);
+		
+		$docServers = $smtp->fetchObject();
+
+		return $docServers;
+	}
+
 	private function insertMessage($messageObject) 
 	{
 		$queryParams = [];
@@ -336,9 +410,9 @@ class ArchiveTransfer {
 				date,
 				reference,
 	            account_id ,
-				sender_org_identifier_id,
+				sender_org_identifier,
 				sender_org_name,
-				recipient_org_identifier_id,
+				recipient_org_identifier,
 				recipient_org_name,
 				archival_agreement_reference,
 				reply_code,
@@ -373,20 +447,28 @@ class ArchiveTransfer {
 				$this->insertUnitIdentifier($messageId, "res_letterbox", $binaryDataObject->id);
 			}
 		} catch (Exception $e) {
-			// return error
+			var_dump($e);
+			return false;
 		}
+
+		return true;
 	}
 
-	private function insertUnitIdentifier($messageId, $tableName, $resId) {
-		$query = ("INSERT INTO unit_identifier VALUES (?,?,?)");
-		$queryParams = [];
+	private function insertUnitIdentifier($messageId, $tableName, $resId) 
+	{
+		try {
+			$query = ("INSERT INTO unit_identifier VALUES (?,?,?)");
+			$queryParams = [];
 
-		$queryParams[] = $messageId;
-		$queryParams[] = $tableName;
-		$queryParams[] = $resId;
+			$queryParams[] = $messageId;
+			$queryParams[] = $tableName;
+			$queryParams[] = $resId;
 
-		$res = $this->db->query($query,$queryParams);
-
-		return $res;
+			$res = $this->db->query($query,$queryParams);
+		} catch (Exception $e) {
+			return false;
+		}
+		
+		return true;
 	}
 }

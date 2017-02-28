@@ -28,25 +28,25 @@ $etapes = array('export');
 
 function manage_export($arr_id, $history, $id_action, $label_action, $status)
 {
-    // récupérer l'entité racine du courrier
-    // récupérer transferring_agency et archival_agreement
+    require_once('modules/export_seda/ArchiveTransfer.php');
 
-    // récupérer la duration et retention_rule du type de doc du courrier
+    $archiveTransfer = new ArchiveTransfer();
 
-    // appel fonction de transfert et génération bdx
+    
+    // récupérer l'entité racine du courrier *
+    // récupérer archival_agency et archival_agreement *
+
+    // récupérer la retention_final_disposition et retention_rule du type de doc du courrier *
+
+    // appel fonction de transfert et génération bdx *
+
+    $result = $archiveTransfer->receive($arr_id);
 
     // historisation du transfert
 
     // modification statut -> fait automatiquement par mécanique bannette
 
     // ensuite il y a aura une suppression logique des documents et des contacts (si plus de courriers associés)
-
-    for($i=0; $i<count($arr_id);$i++)
-    {
-        $result .= $arr_id[$i].'#';
-        //$db->query("UPDATE ".$ext_table. " SET closing_date = CURRENT_TIMESTAMP WHERE res_id = ?", array($arr_id[$i]));
-
-    }
 
     return array('result' => $result, 'history_msg' => '');
 }

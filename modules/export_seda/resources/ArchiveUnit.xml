@@ -4,28 +4,34 @@
     <ArchiveUnitProfile schemeID="[?merge .archiveUnitProfile.schemeID ?]" schemeName="[?merge .archiveUnitProfile.schemeName ?]" schemeAgencyID="[?merge .archiveUnitProfile.schemeAgencyID ?]" schemeAgencyName="[?merge .archiveUnitProfile.schemeAgencyName ?]" schemeVersionID="[?merge .archiveUnitProfile.schemeVersionID ?]" schemeDataURI="[?merge .archiveUnitProfile.schemeDataURI ?]" schemeURI="[?merge .archiveUnitProfile.schemeURI ?]"><?merge .archiveUnitProfile ?></ArchiveUnitProfile>
     <?merge .management.bool() ?>
     <Management>
+        <?merge .management.storageRule.bool() ?>
         <StorageRule>
             <?merge .management.storageRule $abstractRule ?>
             <?xinclude /resources/AbstractRule.xml ?>
             <FinalAction><?merge .management.storageRule.finalAction ?></FinalAction>
         </StorageRule>
+        <?merge .management.appraisalRule.bool() ?>
         <AppraisalRule>
             <?merge .management.appraisalRule $abstractRule ?>
             <?xinclude /resources/AbstractRule.xml ?>
             <FinalAction><?merge .management.appraisalRule.finalAction ?></FinalAction>
         </AppraisalRule>
+        <?merge .management.accessRule.bool() ?>
         <AccessRule>
             <?merge .management.accessRule $abstractRule ?>
             <?xinclude /resources/AbstractRule.xml ?>
         </AccessRule>
+        <?merge .management.disseminationRule.bool() ?>
         <DisseminationRule>
             <?merge .management.disseminationRule $abstractRule ?>
             <?xinclude /resources/AbstractRule.xml ?>
         </DisseminationRule>
+        <?merge .management.reuseRule.bool() ?>
         <ReuseRule>
             <?merge .management.reuseRule $abstractRule ?>
             <?xinclude /resources/AbstractRule.xml ?>
         </ReuseRule>
+        <?merge .management.classificationRule.bool() ?>
         <ClassificationRule>
             <?merge .management.classificationRule $abstractRule ?>
             <?xinclude /resources/AbstractRule.xml ?>
@@ -34,9 +40,11 @@
             <ClassificationReassessingDate><?merge .management.classificationRule.classificationReassessingDate ?></ClassificationReassessingDate>
             <NeedReassessingAuthorization><?merge .management.classificationRule.needReassessingAuthorization ?></NeedReassessingAuthorization>
         </ClassificationRule>
+        <?merge .management.needAuthorization.bool() ?>
         <NeedAuthorization>
             <?merge .management.needAuthorization ?>
         </NeedAuthorization>
+        <?merge .management.otherManagementAbstract.bool() ?>
         <OtherManagementAbstract>
             <?merge .management.otherManagementAbstract ?>
         </OtherManagementAbstract>
@@ -48,7 +56,8 @@
         <?merge .content.filePlanPosition ?><FilePlanPosition schemeID="[?merge .schemeID @schemeID ?]" schemeName="[?merge .schemeName @schemeName ?]" schemeAgencyID="[?merge .schemeAgencyID @schemeAgencyID ?]" schemeAgencyName="[?merge .schemeAgencyName @schemeAgencyName ?]" schemeVersionID="[?merge .schemeVersionID @schemeVersionID ?]" schemeDataURI="[?merge .schemeDataURI @schemeDataURI ?]" schemeURI="[?merge .schemeURI @schemeURI ?]"><?merge .value ?></FilePlanPosition>
         <OriginatingAgencyArchiveIdentifier><?merge .content.originatingAgencyArchiveIdentifier ?></OriginatingAgencyArchiveIdentifier>
         <?merge .content.description.bool() ?><Description><?merge .content.description ?></Description>
-        <?merge .content.custodialHistory.bool() ?><CustodialHistory>
+        <?merge .content.custodialHistory.bool() ?>
+        <CustodialHistory>
             <?merge .content.custodialHistory.custodialHistoryItem ?>
             <CustodialHistoryItem when="[?merge .when ?]"><?merge .value ?></CustodialHistoryItem>
         </CustodialHistory>
