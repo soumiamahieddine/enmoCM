@@ -779,7 +779,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     
     /*** Status ***/
     if(count($statuses) > 0) {
-        $frmStr .= '<tr id="status" style="display:' . $displayValue . ';">';
+        $frmStr .= '<tr id="status_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="status" class="form_title" >' . _STATUS
                 . '</label></td>';
         $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
