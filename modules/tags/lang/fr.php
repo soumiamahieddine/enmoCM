@@ -114,5 +114,5 @@ if (!defined("_NAME_TAGS"))
 if (!defined("_PRIVATE_TAGS"))
     define("_PRIVATE_TAGS", "Restreindre les mots-clés à l'entité de l'utilisateur (Niveau direction)");
 if (!defined("_PRIVATE_TAGS_DESC"))
-    define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les mots clées qui ont été restreint à sa direction (l'ajout / modification associera le mot clé automatiquement à sa direction).");
+    define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les mots clés qui ont été restreint à sa direction (l'ajout / modification associera le mot clé automatiquement à sa direction).");
 
