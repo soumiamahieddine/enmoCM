@@ -142,14 +142,36 @@ class VisaController {
 
 		$resList = \BasketsModel::getResListById([
 			'basketId' => $basketId,
-			'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority']
+			'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
 		]);
+
+		foreach ($resList as $key => $value) {
+			if (!empty($value['contact_id'])) {
+				$resList[$key]['sender'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['contact_id'], 'addressId' => $value['address_id']]);
+			} else {
+				$resList[$key]['sender'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
+			}
+			$attachmentsInResList = \ResModel::getAvailableLinkedAttachmentsNotIn([
+				'resIdMaster' => $value['res_id'],
+				'notIn' 	  => ['incoming_mail_attachment', 'print_folder'],
+				'select' 	  => ['status']
+			]);
+			$allSigned = true;
+			foreach ($attachmentsInResList as $value2) {
+				if ($value2['status'] == 'TRA' || $value2['status'] == 'A_TRA') {
+					$allSigned = false;
+				}
+			}
+			$resList[$key]['allSigned'] = $allSigned;
+			$resList[$key]['priorityColor'] = $_SESSION['mail_priorities_color'][$value['priority']]; //TODO No Session
+			unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
+		}
 
 		$actionLabel = \BasketsModel::getActionByActionId(['actionId' => $_SESSION['current_basket']['default_action'], 'select' => ['label_action']])['label_action'] . ' n°';
 		$actionLabel .= (_ID_TO_DISPLAY == 'res_id' ? $incomingMail[0]['res_id'] : $incomingMail[0]['alt_identifier']);
 		$actionLabel .= ' : ' . $incomingMail[0]['subject'];
 		$currentAction = [
-			'id' => $_SESSION['current_basket']['default_action'], //TODO Aller chercher l'id de la basket sans passer par la session
+			'id' => $_SESSION['current_basket']['default_action'], //TODO No Session
 			'actionLabel' => $actionLabel
 		];
 

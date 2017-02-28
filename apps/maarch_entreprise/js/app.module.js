@@ -22,3 +22,15 @@ mainApp.filter('datetimeFormat', function($filter)
     return $filter('date')(new Date(input), 'dd/MM/yyyy HH:mm');
   };
 });
+
+mainApp.filter('dateFormat', function($filter)
+{
+  return function(input)
+  {
+    if(input == null) {
+      return "";
+    }
+
+    return $filter('date')(new Date(input), 'dd/MM/yyyy');
+  };
+});

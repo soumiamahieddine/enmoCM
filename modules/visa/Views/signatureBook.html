@@ -32,10 +32,20 @@
         <div class="resListContent">
             <div class="resListContentPos">
                 <div class="resListContentFrame" ng-repeat="res in signatureBook.resList" ng-click="changeLocation(res.res_id)" ng-class="{'resListContentFrameSelected': vm.resId == res.res_id}">
-                    <div class="resListContentInfo"><i class="fa fa-compass" title="Numéro chrono"></i> {{res.alt_identifier}} - urgent</div>
-                    <div class="resListContentInfo"><i class="fa fa-info" title="Objet"></i> {{res.subject}}</div>
-                    <div class="resListContentInfo"><i class="fa fa-book" title="Fiche contact"></i> Jean Dubois - Collectivité FC</div>
-                    <div class="resListContentInfo"><i class="fa fa-calendar" title="Date d'arrivée"></i> {{res.admission_date}} - <i class="fa fa-bell" title="Date limite de traitement"></i> {{res.process_limit_date}}</div>
+                    <div class="resListContentInfo">
+                        <i class="fa fa-compass" title="Numéro chrono"></i> {{::res.alt_identifier}}
+                        <i ng-if="res.allSigned" class="fa fa-certificate"></i>&nbsp;
+                        <i class="fa fa-circle" aria-hidden="true" style="color:{{::res.priorityColor}};"></i>
+                    </div>
+                    <div class="resListContentInfo">
+                        <i class="fa fa-info" title="Objet"></i> {{::res.subject}}
+                    </div>
+                    <div class="resListContentInfo">
+                        <i class="fa fa-book" title="Fiche contact"></i> {{::res.sender}}
+                    </div>
+                    <div class="resListContentInfo">
+                        <i class="fa fa-calendar" title="Date d'arrivée"></i> {{::res.creation_date | dateFormat}} - <i class="fa fa-bell" title="Date limite de traitement"></i> {{::res.process_limit_date | dateFormat}}
+                    </div>
                 </div>
             </div>
             
