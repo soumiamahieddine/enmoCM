@@ -152,15 +152,15 @@ CREATE TABLE unit_identifier
 );
 
 
+ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_final_disposition;
+ALTER TABLE doctypes ADD COLUMN retention_final_disposition character varying(255) NOT NULL DEFAULT 'destruction';
+
 ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_rule;
-ALTER TABLE doctypes ADD COLUMN retention_rule character varying(255) NOT NULL DEFAULT 'destruction';
-
-ALTER TABLE doctypes DROP COLUMN IF EXISTS duration;
-ALTER TABLE doctypes ADD COLUMN duration character varying(15) NOT NULL DEFAULT 'P10Y';
+ALTER TABLE doctypes ADD COLUMN retention_rule character varying(15) NOT NULL DEFAULT 'P10Y';
 
 
-ALTER TABLE entities DROP COLUMN IF EXISTS transferring_agency;
-ALTER TABLE entities ADD COLUMN transferring_agency character varying(255);
+ALTER TABLE entities DROP COLUMN IF EXISTS archival_agency;
+ALTER TABLE entities ADD COLUMN archival_agency character varying(255);
 
 ALTER TABLE entities DROP COLUMN IF EXISTS archival_agreement;
 ALTER TABLE entities ADD COLUMN archival_agreement character varying(255);
