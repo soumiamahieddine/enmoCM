@@ -437,3 +437,9 @@ if (!defined("_ADD_USER_LISTDIFF"))
 
 if (!defined("_ADD_ENTITY_LISTDIFF"))
     define("_ADD_ENTITY_LISTDIFF", "Add the department to the diffusion list");
+
+// SEDA
+if (!defined("_ARCHIVAL_AGREEMENT"))
+    define("_ARCHIVAL_AGREEMENT", "Archival agreement");
+if (!defined("_ARCHIVAL_AGENCY"))
+    define("_ARCHIVAL_AGENCY", "Archival agency");
