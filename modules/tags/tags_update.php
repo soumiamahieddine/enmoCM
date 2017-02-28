@@ -62,12 +62,14 @@ elseif($coll_id){
 
 include_once 'modules/tags/route.php';
 
-//if (!empty($tags))
-//{
-	$tags = new tag_controler();	
-	$tagmodule_result = $tags->associateTagToRes($ressource_tagmodule,$collection_tagmodule, $tags_list);
-	unset($_SESSION['tagsuser']);
-	
-//}
+if (empty($tags_list))
+{
+    $tags_list = array();
+}
+
+$tags = new tag_controler();	
+$tagmodule_result = $tags->associateTagToRes($ressource_tagmodule,$collection_tagmodule, $tags_list);
+unset($_SESSION['tagsuser']);
+
    
 ?>

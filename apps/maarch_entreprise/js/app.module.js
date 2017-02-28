@@ -1,10 +1,11 @@
-var mainApp = angular.module("AppModule", ["ngRoute"]);
+var mainApp = angular.module("AppModule", ["ngRoute", "ngTable"]);
 
 mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
   $routeProvider
-    .when("/baskets/:basketId/:resId", {
-      templateUrl : "../../modules/visa/Views/signatureBook.html",
-      controller  : "visaCtrl"
+    .when("/:basketId/signatureBook/:resId", {
+      templateUrl   : "../../modules/visa/Views/signatureBook.html",
+      controller    : "visaCtrl",
+      controllerAs  : "vm"
     });
 
   $locationProvider.hashPrefix('');

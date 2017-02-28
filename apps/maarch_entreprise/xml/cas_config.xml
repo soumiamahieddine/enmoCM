@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
 	<CAS_VERSION>CAS_VERSION_2_0</CAS_VERSION><!-- CAS_VERSION_2_0  ou  SAML_VERSION_1_1 -->
-	<WEB_CAS_URL>192.168.21.30</WEB_CAS_URL>
+	<WEB_CAS_URL>192.168.21.25</WEB_CAS_URL> <!-- ip -->
 	<WEB_CAS_PORT>443</WEB_CAS_PORT>
 	<WEB_CAS_CONTEXT>/cas-server-webapp-4.0.0</WEB_CAS_CONTEXT>
+	<ID_SEPARATOR></ID_SEPARATOR><!--return id without string after the separator include-->
+	<PATH_CERTIFICATE></PATH_CERTIFICATE><!--path to the cas server certificate. absolute path. empty if no certificate-->
 </ROOT>

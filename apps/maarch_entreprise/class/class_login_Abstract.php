@@ -88,79 +88,19 @@ abstract class login_Abstract extends functions
         return $login_method;
     }
 
-    public function execute_login_script($array_method)
+    public function execute_login_script($array_method, $restMode = false)
     {
-        $displayed_title = false;
-        $tmp_engine = 0;
+        $tmp_engine = array();
         $_SESSION['login_method_bool'] = false;
 
         foreach ($array_method as $only) {
             if ($only['ACTIVATED'] == 'true') {
-                $tmp_engine = $tmp_engine + 1;
+                $tmp_engine = $only;
             }
         }
+        
+        $script_method = $tmp_engine['SCRIPTNAME'];
 
-        if ($tmp_engine > 1) {
-            $displayed_title = true;
-            $_SESSION['login_method_bool'] = true;
-        }
-
-        //Si plusieurs éléments sont disponibles, on ajoute certains attriibuts
-        if ($tmp_engine > 1) {
-            ?>
-            <script language="javascript" type="text/javascript">
-            //Si plusieurs elements sont disponibles, on affiche une liste de choix
-            function display_auth(mydiv)
-            {
-                if (mydiv != '' && mydiv) { //Debug for IE9 and IE6...
-                    var mylittlediv = document.getElementById(mydiv);
-                    mylittlediv.style.display ='block';
-                }
-
-                var elems = document.getElementsByClassName('login_mode');
-                for (var i = 0; i < elems.length; i ++) {
-                    elems[i].style.display ='none';
-                }
-
-                if (mydiv != '' && mydiv) {
-                    var mylittlediv = document.getElementById(mydiv);
-                    mylittlediv.style.display ='block';
-                }
-            }
-            </script>
-            <?php
-            echo '<div style ="margin:25px";>';
-            echo '<select name="login_method" id="login_method" onchange="display_auth(this.options[this.selectedIndex].value);" style="width:275px;">';
-            foreach ($array_method as $VALUE){
-                if ($VALUE['ACTIVATED'] == 'true') {
-                    echo '<option value="' . $VALUE['ID'] . '">'
-                        . constant($VALUE['BRUT_LABEL']) . '</option>';
-                }
-            }
-            echo '</select>';
-            echo '</div>';
-        }
-
-        foreach ($array_method as $KEY) {
-            if ($KEY['ACTIVATED'] == 'true') {
-                if ($displayed_title == true) {
-                    echo "<div style='display:none;' class='login_mode'  id='"
-                        . $KEY['ID'] . "'>";
-                    $this->launch_login_method($KEY['SCRIPTNAME']);
-                    echo "</div>";
-                } else {
-                    $this->launch_login_method($KEY['SCRIPTNAME']);
-                }
-            }
-        }
-        if ($tmp_engine > 1) {
-            echo  "<script type='text/javascript'>display_auth('"
-                . $array_method[0]['ID'] . "');</script>";
-        }
-    }
-
-    protected function launch_login_method($script_method)
-    {
         if (file_exists(
             $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
             . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
@@ -178,4 +118,5 @@ abstract class login_Abstract extends functions
                 . DIRECTORY_SEPARATOR . $script_method;
         }
     }
+
 }

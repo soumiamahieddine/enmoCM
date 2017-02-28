@@ -1,4 +1,21 @@
 <?php
+
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+*
+*/
+/**
+* @brief Maarch rest root file
+*
+* @file
+* @author dev@maarch.org
+* @date $date$
+* @version $Revision$
+* @ingroup core
+*/
+
 require '../vendor/autoload.php';
 
 header('Content-Type: text/html; charset=utf-8');
@@ -51,12 +68,40 @@ if (empty($_SESSION['user'])) {
     Core_CoreConfig_Service::loadModulesServices($_SESSION['modules']);
 }
 
+//login management
+if (empty($_SESSION['user'])) {
+    require_once('apps/maarch_entreprise/class/class_login.php');
+    $loginObj = new login();
+    $loginMethods = $loginObj->build_login_method();
+    require_once('core/services/Session.php');
+    $oSessionService = new \Core_Session_Service();
+
+    $loginObj->execute_login_script($loginMethods, true);
+}
+
+if ($_SESSION['error']) {
+    //TODO : return http bad authent error
+    echo $_SESSION['error'];exit();
+}
+
+//$lifetime = 3600;
+//setcookie(session_name(),session_id(),time()+$lifetime);
+
+//exit;
+
 $app = new \Slim\App([
     'settings' => [
         'displayErrorDetails' => true
     ]
 ]);
 
-$app->get('/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
+//status
+$app->get('/status', \Core\Controllers\StatusController::class . ':getList');
+$app->get('/status/{id}', \Core\Controllers\StatusController::class . ':getById');
+$app->post('/status', \Core\Controllers\StatusController::class . ':create');
+$app->put('/status', \Core\Controllers\StatusController::class . ':update');
+$app->delete('/status/{id}', \Core\Controllers\StatusController::class . ':delete');
+
+$app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
 
 $app->run();

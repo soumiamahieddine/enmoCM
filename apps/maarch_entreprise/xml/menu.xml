@@ -16,7 +16,7 @@
         <id>create_contacts</id>
         <libconst>_CREATE_CONTACTS</libconst>
         <url>index.php?page=contacts_v2</url>
-        <style>fa fa-plus</style>
+        <style>fa fa-users</style>
     </MENU>
 <!-- LETTERBOX -->
     <MENU>

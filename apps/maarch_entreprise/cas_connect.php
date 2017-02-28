@@ -38,6 +38,8 @@ $loginRequestArray = $core->object2array($xmlconfig);
 $cas_serveur   = $loginRequestArray['WEB_CAS_URL'];
 $cas_port      = $loginRequestArray['WEB_CAS_PORT'];
 $cas_context   = $loginRequestArray['WEB_CAS_CONTEXT'];
+$id_separator  = $loginRequestArray['ID_SEPARATOR'];
+$certificate   = $loginRequestArray['PATH_CERTIFICATE'];
 // $cas_chemin_ac = "apps/maarch_entreprise/tools/phpCAS/AC-RGS-Certigna-Racine-SHA1.pem" ;
 
 phpCAS::setDebug();
@@ -47,17 +49,28 @@ phpCAS::setVerbose(true);
 phpCAS::client(constant($loginRequestArray['CAS_VERSION']), $cas_serveur, (int)$cas_port, $cas_context, true);
 
 // Le certificat de l'autorité racine
-// phpCAS::setCasServerCACert($cas_chemin_ac);
-phpCAS::setNoCasServerValidation();
-
+if(!empty($certificate)){
+    phpCAS::setCasServerCACert($certificate);
+} else {
+    phpCAS::setNoCasServerValidation();
+}
+//echo 'avant';
 // L'authentification.
 phpCAS::forceAuthentication();
-
+//echo 'apres';exit;
+//exit;
 if($loginRequestArray['CAS_VERSION'] == 'CAS_VERSION_2_0'){
     // Lecture identifiant utilisateur (courriel)
-    $userId = phpCAS::getUser();
+    $Id = phpCAS::getUser();
     echo 'Identifiant : ' . phpCAS::getUser();
     echo '<br/> phpCAS version : ' . phpCAS::getVersion();
+    if(!empty($id_separator)){
+        $tmpId = explode($id_separator, $Id);
+        $userId = $tmpId[0];
+    } else {
+        $userId = $Id;
+    }
+    
 
 } elseif($loginRequestArray['CAS_VERSION'] == 'SAML_VERSION_1_1'){
     // $attrSAML = phpCAS::getAttributes();
@@ -89,18 +102,47 @@ if((int)$cas_port == 443){
 $_SESSION['web_cas_url'] = $protocol. $cas_serveur . $cas_context .'/logout';
 
 /**** CONNECTION A MAARCH ****/
-header("location: " . $_SESSION['config']['businessappurl'] 
-    . "log.php?login=" . $userId 
-    . "&pass=" . $loginArray['password']);
-
-//Traces fonctionnelles
 $trace = new history();
-$trace->add("users",
-            $userId,
-            "LOGIN",
-            "userlogin",
-            _CONNECTION_CAS_OK,
-            $_SESSION['config']['databasetype'],
-            "ADMIN",
-            false);
-exit();
+if ($restMode) {
+    $security = new security();
+    $_SESSION['error'] = '';
+    $pass = $security->getPasswordHash($loginArray['password']);
+    $res = $security->login($userId  , $pass);
+    //$core->show_array($res);
+    $_SESSION['user'] = $res['user'];
+    if (!empty($res['error'])) {
+        $_SESSION['error'] = $res['error'];
+    }
+    //Traces fonctionnelles
+    $trace->add(
+        "users",
+        $loginArray['UserId'],
+        "LOGIN",
+        _CONNECTION_CAS_OK,
+        $_SESSION['config']['databasetype'],
+        "ADMIN",
+        false
+    );
+} else {
+    header("location: " . $_SESSION['config']['businessappurl'] 
+        . "log.php?login=" . $userId 
+        . "&pass=" . $loginArray['password']);
+    //Traces fonctionnelles
+    
+    $trace->add(
+        "users",
+        $userId,
+        "LOGIN",
+        "userlogin",
+        _CONNECTION_CAS_OK,
+        $_SESSION['config']['databasetype'],
+        "ADMIN",
+        false
+    );
+
+    exit();
+}
+
+
+
+

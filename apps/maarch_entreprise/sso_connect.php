@@ -31,9 +31,6 @@ if (isset($_SESSION['error']) && !empty($_SESSION['error'])) {
     exit;
 }
 
-
-
-
 //////////////////////////////////////////////////////////////////////
 /*************** Récupération entêtes *******************************/
 // Récupération du XML qui correspond à la structure de la requete  //
@@ -69,7 +66,6 @@ if (file_exists($_SESSION['config']['corepath'] . 'custom' .
     echo _XML_FILE_NOT_EXISTS;
     exit;
 }
-
 
 $xmlconfig = simplexml_load_file($xmlPath);
 $loginRequestArray = array();
@@ -135,8 +131,6 @@ foreach($xml as $row)
 }
 $loginArray['change_pass'] = 'N';
 
-
-
 /**********************************************************************/
 /**** GET HEADERS  ****/
 
@@ -197,8 +191,6 @@ foreach ($headers as $k => $v)
             break;
     }    
 }
-
-
 
 /**********************************************************************/
 /**** MANAGEMENT OF ERRORS ****/
@@ -269,8 +261,6 @@ if ($loginArray['entityRequired']=="true")
     }
 }
 
-
-
 /**********************************************************************/
 /**** GESTION DES ERREURS ****/
 
@@ -286,14 +276,16 @@ if (isset($_SESSION['error']) && $_SESSION['error'] <> '') {
                 "ADMIN",
                 true);
                 
-    
-    header("location: " . $loginRequestArray['WEB_SSO_URL']
+    if ($restMode) {
+
+    } else {
+        header("location: " . $loginRequestArray['WEB_SSO_URL']
          . "index.php?errorId=" . $errorId 
          . "&errorMsg=" . $_SESSION['error']);  
-    exit;
+        exit;
+    }
+    
 }
-
-
 
 /**********************************************************************/
 /**** USER ALREADY EXISTS?? ****/
@@ -317,9 +309,7 @@ $userObject = fillUserObject($loginArray);
 $groupArray = fillGroupArray($loginArray,$recordProfils);
 
 //DEBUG
-var_dump($userObject);
-
-
+//var_dump($userObject);
 
 $params = array(
     'modules_services' => $_SESSION['modules_services'],
@@ -330,8 +320,6 @@ $params = array(
 );
 
 $uc = new users_controler();
-
-
 
 /**********************************************************************/
 /**** UPDATE OR INSERT ?? ****/
@@ -351,9 +339,8 @@ if($temoinUpdate > 0){
     $userObject->password = $loginArray['password'];
 }
 
-
 if(!empty($control['error']) && $control['error'] <> 1) {
-    echo $control['error'];exit;
+    //echo $control['error'];exit;
 
     //Traces fonctionnelles
     $trace->add("users",
@@ -365,10 +352,13 @@ if(!empty($control['error']) && $control['error'] <> 1) {
                 $_SESSION['config']['databasetype'],
                 "ADMIN",
                 true);
+    if ($restMode) {
 
-    header("location: " . $loginRequestArray['WEB_SSO_URL']
+    } else {
+        header("location: " . $loginRequestArray['WEB_SSO_URL']
                 . "index.php?errorId=" . $loginArray['databaseError']);
-    exit;
+        exit;
+    }
 } else {
 
     /**/
@@ -393,21 +383,39 @@ if(!empty($control['error']) && $control['error'] <> 1) {
         
 /**********************************************************************/
 /**** CONNECTION A MAARCH ****/
-
     $_SESSION['web_sso_url'] = $loginRequestArray['WEB_SSO_URL'];
-    header("location: " . $_SESSION['config']['businessappurl'] 
-        . "log.php?login=" . $loginArray['UserId'] 
-        . "&pass=" . $loginArray['password']);
-
-    //Traces fonctionnelles
-    $trace->add("users",
-                $loginArray['UserId'],
-                "LOGIN",
-                _CONNECTION_SSO_OK,
-                $_SESSION['config']['databasetype'],
-                "ADMIN",
-                false);
-    exit();
+    if ($restMode) {
+        $security = new security();
+        $_SESSION['error'] = '';
+        $pass = $security->getPasswordHash($loginArray['password']);
+        $res = $security->login($loginArray['UserId'] , $pass);
+        //$core->show_array($res);
+        $_SESSION['user'] = $res['user'];
+        if (!empty($res['error'])) {
+            $_SESSION['error'] = $res['error'];
+        }
+        //Traces fonctionnelles
+        $trace->add("users",
+                    $loginArray['UserId'],
+                    "LOGIN",
+                    _CONNECTION_SSO_OK,
+                    $_SESSION['config']['databasetype'],
+                    "ADMIN",
+                    false);
+    } else {
+        header("location: " . $_SESSION['config']['businessappurl'] 
+            . "log.php?login=" . $loginArray['UserId'] 
+            . "&pass=" . $loginArray['password']);
+        //Traces fonctionnelles
+        $trace->add("users",
+                    $loginArray['UserId'],
+                    "LOGIN",
+                    _CONNECTION_SSO_OK,
+                    $_SESSION['config']['databasetype'],
+                    "ADMIN",
+                    false);
+        exit();
+    }
 }
 
 

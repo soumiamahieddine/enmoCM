@@ -11,7 +11,6 @@
 	float: left;
 }
 
-
 #visa_left{
 	/*border:1px solid blue;*/
 	height:95%;
@@ -84,7 +83,6 @@
 	height: 96%;
 	width: 100%;
 	overflow-y: scroll;
-	overflow-x: none;
 }
 
 .listDocsBasket div{
@@ -217,312 +215,435 @@
 	cursor: pointer;
 }
 
-    .visaContent{
-        position: relative;
-        height:100%;
-        margin-top: 10px;
-    }
-    .headerSignatureBook{
-        border: solid 1px black;
-        display: table;
-        margin-bottom: 10px;
-        white-space: nowrap;
-        text-align: center;
-        width: 100%;
-    }
-    
-    .contentSignatureBook{
-        border: solid 1px black;
-        display: table;
-        width: 100%;
-        height:75vh;
-    }
-    
-    .headerSignatureBook .item{
-        border-right: solid 1px black;
-        display: table-cell;
-        padding: 5px;
-        cursor: pointer;
-        width: 5%;
-        vertical-align: middle;
-    }
-    
-     .headerSignatureBook .others{
-        border-right: solid 1px black;
-        display: table-cell;
-        padding: 5px;
-        vertical-align: middle;
-    }
-    
-    .headerSignatureBook .item.activeTabSignatureBook,.panelRight .panelSelectedThumbnail{
-        background: #009DC5;
-        color:white;
-    }
-    .contentLeft{
-        border-right: solid 1px;
-        vertical-align: top;
-    }
-    .contentLeft, .contentRight{
-        display: table-cell;
-        width:50%;
-        text-align: center;
-    }
-    
-    .visaContent iframe{
-        margin: auto;
-        width:95%;
-        height: 100%;
-        border: none;
-    }
-    
-    .contentLeft iframe{
-        height: 80%;
-    }
-    .panelRight{
-        width: 2%;
-        border-left: solid 1px;
-        vertical-align: top;
-    }
-    
-    
-    .panelRight .item{
-        padding:10px;
-        cursor: pointer;
-    }
-    
-    .contentRight .panelRight,.contentRight .contentShow{
-        display: table-cell;
-        vertical-align: top;
-        height:75vh;
-    }
-    .contentLeft .contentShow{
-        height: 75vh;
-    }
-    
-    .contentRight .contentShow,.contentLeft .contentShow{
-        padding : 5px;
-    }
-    
-    .infoPj{
-        width: 33%;
-        display: table-cell;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding: 5px;
-    }
-    
-    .pjDetails{
-        display: table;
-        width: 95%;
-        margin: auto;
-        text-align: left;
-        -moz-box-shadow: inset 0px 0px 5px 0px #656565;
-        -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
-        -o-box-shadow: inset 0px 0px 5px 0px #656565;
-        box-shadow: inset 0px 0px 5px 0px #656565;
-        filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-        border-radius: 5px;
-        padding: 10px;
-    }
-    
-    .pjDetails label{
-       font-weight: bold;
-    }
-    
-    .pjDetailsMore{
-       text-align: center;
-       cursor: pointer;
-    }
-    
-    .pjDoc{
-       height: 20%;
-       -moz-box-shadow: inset 0px 0px 5px 0px #656565;
-        -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
-        -o-box-shadow: inset 0px 0px 5px 0px #656565;
-        box-shadow: inset 0px 0px 5px 0px #656565;
-        filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-        border-radius: 5px;
-        padding: 5px;
-    }
-    
-    .pjDoc img{
-       height: 95%;
-       border: solid 2px white;
-    }
-    img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
-        border: solid 2px #009DC5;
-        cursor:pointer;
-    }
-    
-    .actions{
-        width: 20%;
-        display: table-cell;
-        padding: 5px;
-        vertical-align: middle;
-        text-align: right;
-    }
-    
-    .actions select{
-       width:80%; 
-    }
-    
-    .actions input{
-       text-align:center;
-       width:19%; 
-    }
-    
-    .visaContent{
-        position: relative;
-        height:100%;
-        margin-top: 10px;
-    }
-    .headerSignatureBook{
-        border: solid 1px black;
-        display: table;
-        margin-bottom: 10px;
-        white-space: nowrap;
-        text-align: center;
-        width: 100%;
-    }
-    
-    .contentSignatureBook{
-        border: solid 1px black;
-        display: table;
-        width: 100%;
-        height:75vh;
-    }
-    
-    .headerSignatureBook .item{
-        border-right: solid 1px black;
-        display: table-cell;
-        padding: 5px;
-        cursor: pointer;
-        width: 5%;
-        vertical-align: middle;
-    }
-    
-     .headerSignatureBook .others{
-        border-right: solid 1px black;
-        display: table-cell;
-        padding: 5px;
-        vertical-align: middle;
-    }
-    
-    .headerSignatureBook .item.activeTabSignatureBook,.panelRight .panelSelectedThumbnail{
-        background: #009DC5;
-        color:white;
-    }
-    .contentLeft{
-        border-right: solid 1px;
-        vertical-align: top;
-    }
-    .contentLeft, .contentRight{
-        display: table-cell;
-        width:50%;
-        text-align: center;
-    }
-    
-    .visaContent iframe{
-        margin: auto;
-        width:95%;
-        height: 100%;
-        border: none;
-    }
-    
-    .contentLeft iframe{
-        height: 80%;
-    }
-    .panelRight{
-        width: 2%;
-        border-left: solid 1px;
-        vertical-align: top;
-    }
-    
-    
-    .panelRight .item{
-        padding:10px;
-        cursor: pointer;
-    }
-    
-    .contentRight .panelRight,.contentRight .contentShow{
-        display: table-cell;
-        vertical-align: top;
-        height:75vh;
-    }
-    .contentLeft .contentShow{
-        height: 75vh;
-    }
-    
-    .contentRight .contentShow,.contentLeft .contentShow{
-        padding : 5px;
-    }
-    
-    .infoPj{
-        width: 33%;
-        display: table-cell;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding: 5px;
-    }
-    
-    .pjDetails{
-        display: table;
-        width: 95%;
-        margin: auto;
-        text-align: left;
-        -moz-box-shadow: inset 0px 0px 5px 0px #656565;
-        -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
-        -o-box-shadow: inset 0px 0px 5px 0px #656565;
-        box-shadow: inset 0px 0px 5px 0px #656565;
-        filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-        border-radius: 5px;
-        padding: 10px;
-    }
-    
-    .pjDetails label{
-       font-weight: bold;
-    }
-    
-    .pjDetailsMore{
-       text-align: center;
-       cursor: pointer;
-    }
-    
-    .pjDoc{
-       height: 20%;
-       -moz-box-shadow: inset 0px 0px 5px 0px #656565;
-        -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
-        -o-box-shadow: inset 0px 0px 5px 0px #656565;
-        box-shadow: inset 0px 0px 5px 0px #656565;
-        filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-        border-radius: 5px;
-        padding: 5px;
-    }
-    
-    .pjDoc img{
-       height: 95%;
-       border: solid 2px white;
-    }
-    img.panelSelectedThumbnail,.pjDoc img:hover{
-        border: solid 2px #009DC5;
-        cursor:pointer;
-    }
-    .actions{
-        width: 20%;
-        display: table-cell;
-        padding: 5px;
-        vertical-align: middle;
-        text-align: right;
-    }
-    
-    
+/* Signature Book CSS */
+
+.visaContent{
+    position: relative;
+    height:100%;
+    margin-top: 10px;
+}
+
+.headerSignatureBook .others{
+    border-right: solid 1px black;
+    display: table-cell;
+    padding: 5px;
+    vertical-align: middle;
+     text-align: right;
+}
+
+.resListContent{
+    display: table-cell;
+    width:15%;
+    text-align: center;
+    border-right: solid 1px;
+    vertical-align: top;
+    overflow: auto;
+}
+
+.resListContentInfo{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 95%;
+    text-align: left;
+    padding:5px;
+    cursor:pointer;
+}
+
+.resListContentInfo i{
+    width:5%;
+    text-align: center;
+}
+
+.resListContentFrame:hover{
+    background-color: #009DC5;
+    color: white;
+}
+
+.resListContentFrame{
+    border-bottom : solid 1px black;
+}
+
+.resListContentPos{
+    height:95vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.hideresListContent{
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    overflow: auto;
+    cursor: pointer;
+    width:1%;
+}
+
+.contentLeft{
+    border-right: solid 1px;
+    vertical-align: top;
+}
+.contentLeft, .contentRight{
+    display: table-cell;
+    width:45%;
+    text-align: center;
+}
+
+.visaContent iframe{
+    margin: auto;
+    width:95%;
+    height: 100%;
+    border: none;
+}
+
+.contentLeft iframe{
+    height: 80%;
+}
+
+.panelRight{
+    width: 2%;
+    border-left: solid 1px;
+    vertical-align: top;
+}
+
+.panelRightConten{
+    height: 75vh;
+    overflow: auto;  
+}
+
+.panelRight .item{
+    padding:10px;
+    cursor: pointer;
+}
+
+.contentRight .panelRight,.contentRight .contentShow{
+    display: table-cell;
+    vertical-align: top;
+    height:75vh;
+}
+.contentLeft .contentShow{
+    height: 95vh;
+    overflow: auto;
+}
+
+.contentRight .contentShow,.contentLeft .contentShow{
+    padding : 5px;
+}
+
+.pjDetails{
+    display: table;
+    width: 97%;
+    text-align: left;
+    -moz-box-shadow: inset 0px 0px 5px 0px #656565;
+    -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
+    -o-box-shadow: inset 0px 0px 5px 0px #656565;
+    box-shadow: inset 0px 0px 5px 0px #656565;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 10px;
+    height:30px;
+}
+
+.pjDetails label{
+   font-weight: bold;
+}
+
+.pjDetailsMore{
+   text-align: center;
+   cursor: pointer;
+}
+
+.pjDoc{
+   height: 30px;
+   -moz-box-shadow: inset 0px 0px 5px 0px #656565;
+    -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
+    -o-box-shadow: inset 0px 0px 5px 0px #656565;
+    box-shadow: inset 0px 0px 5px 0px #656565;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.pjDoc img{
+   height: 95%;
+   border: solid 2px white;
+}
+
+img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
+    border: solid 2px #009DC5;
+    cursor:pointer;
+}
+
+.actions{
+    width: 20%;
+    display: table-cell;
+    padding: 5px;
+    vertical-align: middle;
+    text-align: right;
+}
+
+.actions select{
+   width:80%;
+}
+
+.actions input{
+   text-align:center;
+   width:19%;
+}
+
+.titleSignatureBook{
+    display: table;
+    border-radius: 0px 0px 20px;
+    width:40%;
+    border-right: solid 1px black;
+    border-top: solid 1px black;
+    border-left: solid 1px black;
+    padding: 5px;
+    vertical-align: middle;
+    font-weight: bold;
+    background: #009DC5;
+    color: white;
+    text-transform : uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.titleSignatureBook span{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.titleSignatureBook span:nth-child(2){
+    text-align: right;
+    padding-left: 5px;
+}
+
+.headerSignatureBook{
+    border: solid 1px black;
+    display: table;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    text-align: center;
+    width: 100%;
+}
+
+.contentSignatureBook{
+    border: solid 1px black;
+    display: table;
+    width: 100%;
+    height:75vh;
+}
+
+.headerSignatureBook .item{
+    border-right: solid 1px black;
+    display: table-cell;
+    padding: 5px;
+    cursor: pointer;
+    width: 5%;
+    vertical-align: middle;
+}
+
+.headerSignatureBook .activeTabSignatureBook i{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.headerSignatureBook .itemLabel{
+    display: none;
+    padding-left: 5px;
+    font-weight: bold;
+}
+
+.headerSignatureBook .item.activeTabSignatureBook,.panelRight .panelSelectedThumbnail,.resListContentFrameSelected{
+    background: #009DC5;
+    color:white;
+    -moz-box-shadow: inset 0px 0px 5px 0px #656565;
+-webkit-box-shadow: inset 0px 0px 5px 0px #656565;
+-o-box-shadow: inset 0px 0px 5px 0px #656565;
+box-shadow: inset 0px 0px 5px 0px #656565;
+}
+
+.panelRightAddPj{
+    height: 45px;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.panelRightAddPj:hover{
+    color: #009DC5;
+}
+
+.panelSelectedThumbnail:hover{
+    color: white;
+}
+
+.infoPj{
+    width: 30%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 5px;
+}
+
+.infoPj label{
+    vertical-align: top;
+}
+
+
+
+/* NG TABLE */
+.ng-table th{
+    text-align:left;
+    padding: 5px;
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+
+.ng-table th.sortable{
+    cursor:pointer;
+}
+
+.ng-table th.sortable .sort-indicator{
+    padding-right:18px;
+    position:relative;
+}
+.ng-table th.sortable .sort-indicator:after,.ng-table th.sortable .sort-indicator:before{
+    content:"";
+    border-width:0 4px 4px;
+    border-style:solid;
+    border-color:#000 transparent;
+    visibility:visible;
+    right:5px;
+    top:50%;
+    position:absolute;
+    opacity:.3;
+    margin-top:-4px;
+}
+
+.ng-table th.sortable .sort-indicator:before{
+    margin-top:2px;
+    border-bottom:none;
+    border-left:4px solid transparent;
+    border-right:4px solid transparent;
+    border-top:4px solid #000;
+}
+
+.ng-table th.sortable .sort-indicator:hover:after,.ng-table th.sortable .sort-indicator:hover:before{
+    opacity:1;
+    visibility:visible;
+}
+
+.ng-table th.sortable.sort-asc,.ng-table th.sortable.sort-desc{
+    background-color:rgba(141,192,219,.25);
+    text-shadow:0 1px 1px hsla(0,0%,100%,.75);
+}
+
+.ng-table th.sortable.sort-asc .sort-indicator:after,.ng-table th.sortable.sort-desc .sort-indicator:after{
+    margin-top:-2px;
+}
+
+.ng-table th.sortable.sort-asc .sort-indicator:before,.ng-table th.sortable.sort-desc .sort-indicator:before{
+    visibility:hidden;
+}
+
+.ng-table th.sortable.sort-asc .sort-indicator:after,.ng-table th.sortable.sort-asc .sort-indicator:hover:after,.ng-table th.sortable.sort-desc .sort-indicator:after{
+    visibility:visible;
+    filter:alpha(opacity=60);
+    -khtml-opacity:.6;
+    -moz-opacity:.6;
+    opacity:.6;
+}
+
+.ng-table th.sortable.sort-desc .sort-indicator:after{
+    border-bottom:none;
+    border-left:4px solid transparent;
+    border-right:4px solid transparent;
+    border-top:4px solid #000;
+    box-shadow:none;
+}
+.ng-table th.filter .input{
+    margin:0;display:block;
+    width:auto;
+    /*min-height:30px;*/
+    font-size: 9px;
+    box-sizing:border-box;
+}
+
+.ng-table .ng-table-group-header th{
+    text-align:left;
+}
+.ng-table .ng-table-group-selector{display:block}.ng-table .ng-table-group-close,.ng-table .ng-table-group-toggle{float:right}.ng-table .ng-table-group-toggle{margin-right:5px}@media only screen and (max-width:800px){.ng-table-responsive{border-bottom:1px solid #999}.ng-table-responsive tr{border-top:1px solid #999;border-left:1px solid #999;border-right:1px solid #999}.ng-table-responsive td:before{position:absolute;padding:8px;left:0;top:0;width:50%;white-space:nowrap;text-align:left;font-weight:700}.ng-table-responsive thead tr th{text-align:left}.ng-table-responsive thead tr.ng-table-filters th{padding:0}.ng-table-responsive thead tr.ng-table-filters th form>div{padding:8px}.ng-table-responsive td{border:none;border-bottom:1px solid #eee;position:relative;padding-left:50%;white-space:normal;text-align:left}.ng-table-responsive td:before{content:attr(data-title-text)}.ng-table-responsive,.ng-table-responsive tbody,.ng-table-responsive td,.ng-table-responsive th,.ng-table-responsive thead,.ng-table-responsive tr{display:block}}.ng-table-pagination{margin-top:0}.filter:after,.filter:before,.ng-table-group-selector:after,.ng-table-group-selector:before{display:table;content:" "}.filter:after,.ng-table-group-selector:after{clear:both}.filter>.filter-cell{float:left;box-sizing:border-box}.filter-horizontal>.filter-cell{padding:0 2px}.filter-horizontal>.filter-cell:first-child{padding-left:0}.filter-horizontal>.filter-cell.last,.filter-horizontal>.filter-cell:last-child{padding-right:0}.s12{width:100%}.s11{width:91.66666666666666%}.s10{width:83.33333333333334%}.s9{width:75%}.s8{width:66.66666666666666%}.s7{width:58.333333333333336%}.s6{width:50%}.s5{width:41.66666666666667%}.s4{width:33.33333333333333%}.s3{width:25%}.s2{width:16.666666666666664%}.s1{width:8.333333333333332%}@media all and (max-width:468px){.s1,.s2,.s3,.s4,.s5,.s6,.s7,.s8,.s9,.s10,.s11,.s12{width:100%}.filter>.filter-cell{padding:0}}
+
+.ng-table {
+    margin-bottom: 20px;
+    max-width: 100%;
+    width: 100%;
+    background-color: transparent;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-bottom: solid 1px #009DC5;
+}
+
+.ng-table td{
+    text-align: left;
+    padding: 10px;
+}
+
+.ng-table th{
+    border-bottom: solid 1px #009DC5;
+}
+
+.ng-table-counts{
+    display:none;
+}
+
+.ng-table-pagination li{
+    display: inline-block;
+    border: solid 1px #009DC5;
+    padding: 5px;
+    margin:5px;
+    border-radius: 10px;
+}
+
+.ng-table-pagination li.active{
+    background : #009DC5;
+    color: white;
+}
+
+.ng-table-pagination li.active a{
+    color: white;
+}
+
+.ng-table-pagination li:hover{
+    background : #009DC5;
+    color: white;
+}
+
+.ng-table-pagination li:hover a{
+    color: white;
+}
+
+#historyTable.ng-table tr:nth-child(even) {
+    background-color: rgba(141,192,219,.25);
+}
+
+#historyTable.ng-table th:nth-child(1) {
+    width:20%;
+}
+
+#historyTable.ng-table th:nth-child(2) {
+    width:20%;
+}
+
+#historyTable.ng-table th:nth-child(3) {
+    width:60%;
+}

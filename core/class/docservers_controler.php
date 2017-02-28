@@ -1070,6 +1070,7 @@ class docservers_controler
                 $destinationDir = $pathOnDocserver . '0001'
                                 . DIRECTORY_SEPARATOR;
                 $fileDestinationName = '0001';
+                $fileDestinationName = $fileDestinationName . '_' . mt_rand();
                 return array(
                     'destinationDir' => $destinationDir,
                     'fileDestinationName' => $fileDestinationName,
@@ -1119,6 +1120,7 @@ class docservers_controler
                         . str_pad($newDir, 4, '0', STR_PAD_LEFT)
                         . DIRECTORY_SEPARATOR;
                     $fileDestinationName = '0001';
+                    $fileDestinationName = $fileDestinationName . '_' . mt_rand();
                     return array(
                         'destinationDir' => $destinationDir,
                         'fileDestinationName' => $fileDestinationName,
@@ -1142,6 +1144,7 @@ class docservers_controler
                     }
                 }
                 $fileDestinationName = str_pad($greater, 4, '0', STR_PAD_LEFT);
+                $fileDestinationName = $fileDestinationName . '_' . mt_rand();
                 return array(
                     'destinationDir' => $destinationDir,
                     'fileDestinationName' => $fileDestinationName,

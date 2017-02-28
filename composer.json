@@ -1,0 +1,13 @@
+{
+    "autoload": {
+    	"psr-4": {
+    		"Core\\": "core/",
+    		"Apps\\": "apps/maarch_entreprise/",
+    		"Visa\\": "modules/visa/"
+    	}
+    },
+    "require": {
+        "slim/slim": "^3.7",
+        "respect/validation": "^1.1"
+    }
+}

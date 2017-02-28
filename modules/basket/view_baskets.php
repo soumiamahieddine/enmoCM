@@ -210,7 +210,7 @@ if (
         
     }
 }
-?><h1> <?php
+?><h1 id="viewBasketsTitle"> <?php
 if (count($_SESSION['user']['baskets']) > 0) {
     ?><div style="">
         <form name="select_basket" method="get" id="select_basket" action="<?php
