@@ -101,7 +101,7 @@
                         <label>Objet : </label>
                         <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].title}}</span>
                     </div>
-                    <div class="infoPj" title="Laurent GIOVANONNI - 11 boulevard du sud est">
+                    <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].destUser}}">
                         <label>Pour : </label>
                         <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].destUser}}</span>
                     </div>
@@ -137,6 +137,8 @@
                    <i ng-show="signatureBook.showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe ng-src="{{signatureBook.rightViewerLink}}"></iframe>
+                <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status != 'SIGN'" ng-click="vm.prepareSignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer">SIGNER</span>
+                <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status == 'SIGN'" ng-click="vm.unsignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer">DE-SIGNER</span>
             </div>
             <div class="contentShow" ng-if="signatureBook.showAttachmentEditionPanel">
                 <span>Edition de PJ</span>

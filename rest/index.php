@@ -103,5 +103,6 @@ $app->put('/status', \Core\Controllers\StatusController::class . ':update');
 $app->delete('/status/{id}', \Core\Controllers\StatusController::class . ':delete');
 
 $app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
+$app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
 
 $app->run();

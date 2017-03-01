@@ -60,12 +60,12 @@ class VisaController {
 				'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
 				'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
 				'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
-				'dest_address_id'
+				'dest_address_id', 'origin'
 			]
 		]);
 
 		foreach ($attachments as $key => $value) {
-			if ($value['attachment_type'] == 'converted_pdf') {
+			if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {
 				continue;
 			}
 
@@ -83,8 +83,19 @@ class VisaController {
 			$pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
 			foreach ($attachments as $tmpKey => $tmpValue) {
 				if ($tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
-					$viewerId = $tmpValue['res_id'];
+					if ($value['status'] != 'SIGN') {
+						$viewerId = $tmpValue['res_id'];
+					}
 					unset($attachments[$tmpKey]);
+				}
+				if ($value['status'] == 'SIGN' && $tmpValue['attachment_type'] == 'signed_response' && !empty($tmpValue['origin'])) {
+					$signDaddy = explode(',', $tmpValue['origin']);
+					if (($signDaddy[0] == $value['res_id'] && $signDaddy[1] == "res_attachments")
+						|| ($signDaddy[0] == $value['res_id_version'] && $signDaddy[1] == "res_version_attachments"))
+					{
+						$viewerId = $tmpValue['res_id'];
+						unset($attachments[$tmpKey]);
+					}
 				}
 			}
 
@@ -107,9 +118,11 @@ class VisaController {
 			$attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$realId}&coll_id={$collId}&display=true&advanced=true";
 			$attachments[$key]['viewerLink'] = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$viewerId}";
 
-			unset($attachments[$key]['res_id'], $attachments[$key]['res_id_version'], $attachments[$key]['path'], $attachments[$key]['filename'],
-				$attachments[$key]['dest_user'], $attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id']);
+			unset($attachments[$key]['path'], $attachments[$key]['filename'], $attachments[$key]['dest_user'],
+				$attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id']);
 		}
+
+		$attachments = array_values($attachments);
 
 		$incomingMailAttachments = \ResModel::getAvailableLinkedAttachmentsIn([
 			'resIdMaster' => $resId,
@@ -185,6 +198,24 @@ class VisaController {
 		$datas['resList'] = $resList;
 
 		return $response->withJson($datas);
+	}
+
+	public function unsignFile(RequestInterface $request, ResponseInterface $response, $aArgs) {
+
+		$resId = $aArgs['resId'];
+		$collId = $aArgs['collId'];
+
+		$bReturnSnd = false;
+		$bReturnFirst = \ResModel::put(['collId' => $collId, 'set' => ['status' => 'A_TRA'], 'where' => ['res_id = ?'], 'data' => [$resId]]);
+		if ($bReturnFirst) {
+			$bReturnSnd = \ResModel::put(['collId' => $collId, 'set' => ['status' => 'DEL'], 'where' => ['origin = ?', 'status != ?'], 'data' => [$resId . ',' .$collId, 'DEL']]);
+		}
+
+		if ($bReturnFirst && $bReturnSnd) {
+			return $response->withJson(['status' => 'OK']);
+		} else {
+			return $response->withJson(['status' => 'KO']);
+		}
 	}
 
 }

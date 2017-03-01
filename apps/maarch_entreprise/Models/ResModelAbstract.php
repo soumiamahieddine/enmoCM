@@ -38,6 +38,22 @@ class ResModelAbstract extends Apps_Table_Service {
         return $aReturn;
     }
 
+    public static function put(array $aArgs = []) {
+        // TODO collId stands for table in DB => à Changer pour aller récupérer la table lié à collId
+        static::checkRequired($aArgs, ['collId', 'set', 'where', 'data']);
+        static::checkString($aArgs, ['collId']);
+        static::checkArray($aArgs, ['set', 'where', 'data']);
+
+        $bReturn = static::update([
+            'table'     => $aArgs['collId'],
+            'set'       => $aArgs['set'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return $bReturn;
+    }
+
     public static function getAvailableLinkedAttachmentsIn(array $aArgs = []) {
         static::checkRequired($aArgs, ['resIdMaster', 'in']);
         static::checkNumeric($aArgs, ['resIdMaster']);
@@ -47,8 +63,8 @@ class ResModelAbstract extends Apps_Table_Service {
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_view_attachments'],
-            'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'status not in (?)'],
-            'data'      => [$aArgs['resIdMaster'], $aArgs['in'], ['DEL', 'TMP', 'OBS']]
+            'where'     => ['res_id_master = ?', 'attachment_type in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
+            'data'      => [$aArgs['resIdMaster'], $aArgs['in']]
         ]);
 
         return $aReturn;
@@ -63,8 +79,8 @@ class ResModelAbstract extends Apps_Table_Service {
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_view_attachments'],
-            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status not in (?)'],
-            'data'      => [$aArgs['resIdMaster'], $aArgs['notIn'], ['DEL', 'TMP', 'OBS']]
+            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
+            'data'      => [$aArgs['resIdMaster'], $aArgs['notIn']]
         ]);
 
         return $aReturn;

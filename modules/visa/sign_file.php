@@ -23,7 +23,7 @@ $core_tools->load_lang();
 
 if (!isset($_SESSION['user']['pathToSignature']) ||$_SESSION['user']['pathToSignature'] == '') {
     $_SESSION['error'] = _IMG_SIGN_MISSING;
-	echo "{status:1, error : '". _IMG_SIGN_MISSING ."'}";
+	echo "{\"status\":1, \"error\" : \"". _IMG_SIGN_MISSING ."\"}";
 	exit;
 }
 
@@ -47,7 +47,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
     }
 	
     if ($stmt->rowCount() < 1) {
-    	echo "{status:1, error : '". _FILE . ' ' . _UNKNOWN ."'}";
+    	echo "{\"status\":1, \"error\" : \"". _FILE . ' ' . _UNKNOWN ."\"}";
 		exit;
 		//$_SESSION['error'] = _FILE . ' ' . _UNKNOWN;
     } 
@@ -63,7 +63,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
 		
 		//java -jar C:\Temp\SigniText.jar C:\Temp\blowagie\Modele.pdf C:\Temp\blowagie\extracted\images\Modele-1.jpg 140 114 C:\Temp\blowagie\images
 		if (!file_exists($fileOnDs)){
-			echo "{status:1, error : 'Fichier $fileOnDs non present'}";
+			echo "{\"status\":1, \"error\" : \"Fichier $fileOnDs non present\"}";
 			exit;
 		}
 		$cmd = "java -jar " 
@@ -82,12 +82,10 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
 		
 		include 'modules/visa/save_attach_res_from_cm.php';
 		
-		echo "{status:0, new_id : $id}";
+		echo "{\"status\": 0, \"new_id\": $id}";
 		exit;
 	}
 } else {
 	$_SESSION['error'] = _ATTACHMENT_ID_AND_COLL_ID_REQUIRED;
 }
 exit;
-
-?>
