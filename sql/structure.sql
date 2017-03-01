@@ -2009,7 +2009,7 @@ CREATE TABLE res_letterbox
   custom_n5 bigint,
   custom_f5 numeric,
   custom_d5 timestamp without time zone,
-  custom_t6 character varying(255) DEFAULT NULL::character varying,
+  custom_t6 text DEFAULT NULL::character varying,
   custom_d6 timestamp without time zone,
   custom_t7 character varying(255) DEFAULT NULL::character varying,
   custom_d7 timestamp without time zone,
