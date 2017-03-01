@@ -231,7 +231,7 @@ abstract class lists_Abstract extends Database
                             .$this->divListId.'\', '.$this->modeReturn.');">'
                             .'<option value="none" style="text-align:center;"></option>'
                             .$options.'</select>';
-                $filters .= '<script>new Chosen($(\'entity_id\'),{width:"300px",allow_single_deselect: true});</script>';
+                $filters .= '<script>console.log(\'toto\');new Chosen($(\'entity_id\'),{width:"300px",allow_single_deselect: true});</script>';
             break;
 
             case 'entity_subentities':
@@ -687,11 +687,11 @@ abstract class lists_Abstract extends Database
             case 'identifier':
                 if(isset($_SESSION['filters']['identifier']['VALUE']) && !empty($_SESSION['filters']['identifier']['VALUE'])) {
                     $identifier = $_SESSION['filters']['identifier']['VALUE'];
-                } else {
+                }/* else {
                     $identifier = '['._CHRONO_NUMBER.']';
-                }
-                $filters .='<input type="text" name="identifier" id="identifier" value="'.$identifier.'" size="40" '
-                            .'onfocus="if(this.value==\'['._CHRONO_NUMBER.']\'){this.value=\'\';}" '
+                }*/
+                $filters .='<input type="text" name="identifier" placeholder="'._CHRONO_NUMBER.'" id="identifier" style="width:150px;" value="'.$identifier.'" size="40" '
+                           // .'onfocus="if(this.value==\'['._CHRONO_NUMBER.']\'){this.value=\'\';}" '
                             .'onChange="loadList(\''.$this->link
                             .'&filter=identifier&value=\' + this.value, \''.$this->divListId.'\', '.$this->modeReturn.');" '
                             .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
