@@ -283,7 +283,13 @@ class Apps_Table_Service extends Core_Abstract_Service {
             throw new Core_MaarchException_Service('Data Argument is not an array.');
         }
 
-        $queryExt = 'UPDATE ' .$args['table']. ' SET '.implode(',', $args['set']). ' WHERE ' . implode(' AND ', $args['where']);
+        $querySet  = [];
+        foreach ($args['set'] as $key => $value) {
+            $querySet[] = "{$key} = ?";
+            array_unshift($args['data'], $value);
+        }
+
+        $queryExt = 'UPDATE ' .$args['table']. ' SET '.implode(',', $querySet). ' WHERE ' . implode(' AND ', $args['where']);
 
         $db = new Database();
         $db->query($queryExt, $args['data']);
