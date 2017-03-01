@@ -305,6 +305,7 @@ CREATE TABLE users
   signature_path character varying(255) DEFAULT NULL::character varying,
   signature_file_name character varying(255) DEFAULT NULL::character varying,
   initials character varying(32) DEFAULT NULL::character varying,
+  function character varying(255) DEFAULT NULL::character varying,
   CONSTRAINT users_pkey PRIMARY KEY (user_id)
 )
 WITH (OIDS=FALSE);
