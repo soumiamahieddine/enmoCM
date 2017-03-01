@@ -2809,7 +2809,7 @@ var globalEval =  function(script){
   } else {
     return window.eval(script);
   }
-}
+};
 
 //
 function evalMyScripts(targetId) {
@@ -2879,7 +2879,9 @@ function loadList(path, inDiv, modeReturn, init) {
                     eval("response = "+answer.responseText);
                     if(response.status == 0){
                         $j('#' +div).html(convertToHTMLVisibleNewline(response.content));
-                        evalMyScripts(div);
+                        // Old Way
+                        //$(div).innerHTML = convertToHTMLVisibleNewline(response.content);
+                        //evalMyScripts(div);
 
                         if(document.getElementById("loading")){
                             document.getElementById("loading").style.display='none';
