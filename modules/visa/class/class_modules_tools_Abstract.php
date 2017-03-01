@@ -654,7 +654,7 @@ abstract class visa_Abstract extends Database
                         $modif = 'false';
                         $vised = ' vised';
                         $link_vis = 'check';
-                        $info_vised = '<span style="display:block;color:green;">(à signé le : '.functions::format_date_db($info_userVis['process_date'],'','',true).')</span>';
+                        $info_vised = '<br/><sub>signé le : '.functions::format_date_db($info_userSign['process_date'],'','',true).'</sub>';
                     }
                     //VISA USER LINE CIRCUIT
                     $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';
