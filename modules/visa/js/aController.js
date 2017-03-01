@@ -96,11 +96,11 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
       var path = '';
 
       if (type == 0) {
-        path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&id=' + resId;
+        path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&resIdMaster=' + vm.resId + '&id=' + resId;
       } else if (type == 1) {
-        path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isVersion&id=' + resId;
+        path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isVersion&resIdMaster=' + vm.resId + '&id=' + resId;
       } else if (type == 2) {
-        path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isOutgoing&id=' + resId;
+        path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isOutgoing&resIdMaster=' + vm.resId + '&id=' + resId;
       }
 
       $http({

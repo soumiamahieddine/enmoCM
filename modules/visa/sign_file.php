@@ -28,6 +28,9 @@ if (!isset($_SESSION['user']['pathToSignature']) ||$_SESSION['user']['pathToSign
 }
 
 if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
+	if (!empty($_REQUEST['resIdMaster'])) {
+		$objectResIdMaster = $_REQUEST['resIdMaster'];
+	}
 	$objectId = $_REQUEST['id'];
 	$tableName = 'res_view_attachments';
 	$db = new Database();

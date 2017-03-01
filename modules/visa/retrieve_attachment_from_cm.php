@@ -2,9 +2,13 @@
 //case of res -> update attachment
 require_once 'modules/attachments/attachments_tables.php';
 $db = new Database();
-$stmt = $db->query("SELECT relation, docserver_id, path, filename, format 
-                        FROM res_view_attachments 
-                        WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc", array($objectId, $objectId, $_SESSION['doc_id']));
+if (!empty($objectResIdMaster)) {
+    $data = [$objectId, $objectId, $objectResIdMaster];
+} else {
+    $data = [$objectId, $objectId, $_SESSION['doc_id']];
+}
+$stmt = $db->query("SELECT relation, docserver_id, path, filename, format FROM res_view_attachments
+                        WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc", $data);
 
 if ($stmt->rowCount() == 0) {
     $result = array('ERROR' => _THE_DOC . ' ' . _EXISTS_OR_RIGHT);
