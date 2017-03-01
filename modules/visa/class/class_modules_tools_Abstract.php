@@ -948,7 +948,7 @@ abstract class visa_Abstract extends Database
             }
             //ATTACHMENTS TYPES LOOP
             foreach ($_SESSION['attachment_types'] as $attachmentTypeId => $attachmentTypeLabel) {
-                if($attachmentTypeId <> 'print_folder'){
+                if($attachmentTypeId <> 'print_folder' || $attachmentTypeId <> 'converted_pdf'){
                     $joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, $attachmentTypeId);
                     if (count ($joined_files) > 0){
                         $str .= '<tr><td><h3>+ '.$attachmentTypeLabel.'</h3></td><td></td><td></td><td></td><td></td></tr>';
