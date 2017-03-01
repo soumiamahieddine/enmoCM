@@ -303,7 +303,7 @@
 }
 
 .panelRight{
-    //width: 10%;
+    width: auto;
     border-left: solid 1px;
     //vertical-align: top;
 }
@@ -316,6 +316,7 @@
 
 .panelRight .item{
     padding:10px;
+    padding-left: 5px;
     cursor: pointer;
 }
 
@@ -484,9 +485,7 @@ box-shadow: inset 0px 0px 5px 0px #656565;
 }
 
 .panelRightAddPj{
-    height: 5%;
-    vertical-align: middle;
-    display: table-cell;
+    display: block;
 }
 
 .panelRightAddPj:hover{
@@ -500,7 +499,7 @@ box-shadow: inset 0px 0px 5px 0px #656565;
 .infoPj{
     width: 30%;
     display: inline-block;
-    white-space: nowrap;
+    white-space: nowrap !important;
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 5px;
