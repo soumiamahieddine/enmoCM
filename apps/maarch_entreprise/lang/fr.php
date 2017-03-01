@@ -1172,12 +1172,12 @@ if (!defined("_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS")) define("_PARAM_AVAILAB
 /************** Reports ***************/
 if (!defined("_USERS_LOGS")) define("_USERS_LOGS", "Liste des accès à l'application par agent");
 if (!defined("_USERS_LOGS_DESC")) define("_USERS_LOGS_DESC", "Liste des accès à l'application par agent");
-if (!defined("_PROCESS_DELAY_REPORT")) define("_PROCESS_DELAY_REPORT", "Délai moyen de traitement par type de courrier");
-if (!defined("_PROCESS_DELAY_REPORT_DESC")) define("_PROCESS_DELAY_REPORT_DESC", "Délai moyen de traitement par type de courrier");
-if (!defined("_MAIL_TYPOLOGY_REPORT")) define("_MAIL_TYPOLOGY_REPORT", "Typologie des courriers par période");
-if (!defined("_MAIL_TYPOLOGY_REPORT_DESC")) define("_MAIL_TYPOLOGY_REPORT_DESC", "Typologie des courriers par période");
-if (!defined("_MAIL_VOL_BY_CAT_REPORT")) define("_MAIL_VOL_BY_CAT_REPORT", "Volume de courriers par catégorie par période");
-if (!defined("_MAIL_VOL_BY_CAT_REPORT_DESC")) define("_MAIL_VOL_BY_CAT_REPORT_DESC", "Volume de courriers par catégorie par période");
+if (!defined("_PROCESS_DELAY_REPORT")) define("_PROCESS_DELAY_REPORT", "Délai moyen de traitement par typologie");
+if (!defined("_PROCESS_DELAY_REPORT_DESC")) define("_PROCESS_DELAY_REPORT_DESC", "Permet d'afficher le délai (en jour) de la création jusqu'à la clôture d'un courrier.");
+if (!defined("_MAIL_TYPOLOGY_REPORT")) define("_MAIL_TYPOLOGY_REPORT", "Volume de courrier par typologie");
+if (!defined("_MAIL_TYPOLOGY_REPORT_DESC")) define("_MAIL_TYPOLOGY_REPORT_DESC", "Permet d'afficher le nombre de courriers enregistrés par type de document.");
+if (!defined("_MAIL_VOL_BY_CAT_REPORT")) define("_MAIL_VOL_BY_CAT_REPORT", "Volume de courrier par catégorie");
+if (!defined("_MAIL_VOL_BY_CAT_REPORT_DESC")) define("_MAIL_VOL_BY_CAT_REPORT_DESC", "Permet d'afficher le nombre de courriers enregistrés par catégorie (arrivé, départ, etc.).");
 if (!defined("_SHOW_FORM_RESULT")) define("_SHOW_FORM_RESULT", "Afficher le résultat sous forme de ");
 if (!defined("_GRAPH")) define("_GRAPH", "Graphique");
 if (!defined("_ARRAY")) define("_ARRAY", "Tableau");

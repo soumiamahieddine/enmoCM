@@ -33,9 +33,6 @@ require_once("modules".DIRECTORY_SEPARATOR."reports".DIRECTORY_SEPARATOR."class"
 
 $core_tools = new core_tools();
 $core_tools->test_user();
-$core_tools->load_lang();
-$core_tools->load_html();
-$core_tools->load_header();
 
 $core_tools->test_admin('admin_reports', 'reports');
 

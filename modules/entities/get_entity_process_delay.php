@@ -12,8 +12,27 @@ $graph = new graphics();
 $req = new request();
 $sec = new security();
 $db = new Database();
-$entities_chosen=explode("#",$_POST['entities_chosen']);
-$entities_chosen="'".join("','",$entities_chosen)."'";
+
+//var_dump($_POST['entities_chosen']);
+$entities_chosen = explode("#", $_POST['entities_chosen']);
+$entities_chosen = "'" . join("','", $entities_chosen) . "'";
+
+$status_chosen = '';
+$where_status = '';
+
+if (!empty($_POST['status_chosen'])) {
+    $status_chosen = explode("#", $_POST['status_chosen']);
+    $status_chosen = "'" . join("','", $status_chosen) . "'";
+    $where_status = ' AND status in (' . $status_chosen . ') ';
+}
+
+$priority_chosen = '';
+$where_priority = '';
+if (!empty($_POST['priority_chosen']) || $_POST['priority_chosen'] === "0") {
+    $priority_chosen = explode("#", $_POST['priority_chosen']);
+    $priority_chosen = "'" . join("','", $priority_chosen) . "'";
+    $where_priority = ' AND priority in (' . $priority_chosen . ') ';
+}
 
 $period_type = $_REQUEST['period_type'];
 $status_obj = new manage_status();
@@ -26,106 +45,6 @@ $report_type = $_REQUEST['report_type'];
 $core_tools = new core_tools();
 $core_tools->load_lang();
 
-//Limitation aux documents pouvant être recherchés
-$str_status = '(';
-for($i=0;$i<count($search_status);$i++)
-{
-    $str_status .= "'".$search_status[$i]['ID']."',";
-}
-$str_status = preg_replace('/,$/', ')', $str_status);
-
-if($period_type == 'period_year')
-{
-    if(empty($_REQUEST['the_year']) || !isset($_REQUEST['the_year']))
-    {
-        ?>
-        <div class="error"><?php echo _YEAR.' '._MISSING;?></div>
-        <?php
-        exit();
-    }
-    if( !preg_match('/^[1-2](0|9)[0-9][0-9]$/', $_REQUEST['the_year']))
-    {
-        ?>
-        <div class="error"><?php echo _YEAR.' '._WRONG_FORMAT;?></div>
-        <?php
-        exit();
-    }
-    $where_date = " and ".$req->extract_date('creation_date', 'year')." = '".$_REQUEST['the_year']."'";
-    $date_title = _FOR_YEAR.' '.$_REQUEST['the_year'];
-}
-else if($period_type == 'period_month')
-{
-    $arr_month = array('01','02','03','04','05','06','07','08','09','10','11','12');
-    if(empty($_REQUEST['the_month']) || !isset($_REQUEST['the_month']))
-    {
-        ?>
-        <div class="error"><?php echo _MONTH.' '._MISSING;?></div>
-        <?php
-        exit();
-    }
-    if( !in_array($_REQUEST['the_month'], $arr_month))
-    {
-        ?>
-        <div class="error"><?php echo _MONTH.' '._WRONG_FORMAT;?></div>
-        <?php
-        exit();
-    }
-    $where_date = " and ".$req->extract_date('creation_date', 'year')." = '".$default_year."' and ".$req->extract_date('creation_date', 'month')." = '".$_REQUEST['the_month']."'";
-    $month = '';
-    switch($_REQUEST['the_month'])
-    {
-        case '01':
-            $month = _JANUARY;
-            break;
-        case '02':
-            $month = _FEBRUARY;
-            break;
-        case '03':
-            $month = _MARCH;
-            break;
-        case '04':
-            $month = _APRIL;
-            break;
-        case '05':
-            $month = _MAY;
-            break;
-        case '06':
-            $month = _JUNE;
-            break;
-        case '07':
-            $month = _JULY;
-            break;
-        case '08':
-            $month = _AUGUST;
-            break;
-        case '09':
-            $month = _SEPTEMBER;
-            break;
-        case '10':
-            $month = _OCTOBER;
-            break;
-        case '11':
-            $month = _NOVEMBER;
-        case '12':
-            $month = _DECEMBER;
-            break;
-        default:
-            $month = '';
-    }
-    $date_title = _FOR_MONTH.' '.$month;
-}
-else
-{
-    ?>
-    <div class="error"><?php echo _PERIOD.' '._MISSING;?></div>
-    <?php
-    exit();
-}
-
-
-$title = _ENTITY_PROCESS_DELAY.' '.$date_title ;
-$db = new Database();
-
 //Récupération de l'ensemble des types de documents
 if (!$_REQUEST['entities_chosen']){
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
@@ -133,12 +52,145 @@ if (!$_REQUEST['entities_chosen']){
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label",array());
 }
 
-$doctypes = array();
+$entities = array();
 while($res = $stmt->fetchObject())
 {
 
-    array_push($doctypes, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
+    array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
 }
+
+if($period_type == 'period_year')
+{
+	if(empty($_REQUEST['the_year']) || !isset($_REQUEST['the_year']))
+	{
+		?>
+		<div class="error"><?php echo _YEAR.' '._MISSING;?></div>
+		<?php
+		exit();
+	}
+	if(	!preg_match('/^[1-2](0|9)[0-9][0-9]$/', $_REQUEST['the_year']))
+	{
+		?>
+		<div class="error"><?php echo _YEAR.' '._WRONG_FORMAT;?></div>
+		<?php
+		exit();
+	}
+	$where_date = " and ".$req->extract_date('creation_date', 'year')." = '".$_REQUEST['the_year']."'";
+	$date_title = _FOR_YEAR.' '.$_REQUEST['the_year'];
+}
+
+else if($period_type == 'period_month')
+{
+	$arr_month = array('01','02','03','04','05','06','07','08','09','10','11','12');
+	if(empty($_REQUEST['the_month']) || !isset($_REQUEST['the_month']))
+	{
+		?>
+		<div class="error"><?php echo _MONTH.' '._MISSING;?></div>
+		<?php
+		exit();
+	}
+	if(	!in_array($_REQUEST['the_month'], $arr_month))
+	{
+		?>
+		<div class="error"><?php echo _MONTH.' '._WRONG_FORMAT;?></div>
+		<?php
+		exit();
+	}
+	$where_date = " and ".$req->extract_date('creation_date', 'year')." = '".$default_year."' and ".$req->extract_date('creation_date', 'month')." = '".$_REQUEST['the_month']."'";
+	$month = '';
+	switch($_REQUEST['the_month'])
+	{
+		case '01':
+			$month = _JANUARY;
+			break;
+		case '02':
+			$month = _FEBRUARY;
+			break;
+		case '03':
+			$month = _MARCH;
+			break;
+		case '04':
+			$month = _APRIL;
+			break;
+		case '05':
+			$month = _MAY;
+			break;
+		case '06':
+			$month = _JUNE;
+			break;
+		case '07':
+			$month = _JULY;
+			break;
+		case '08':
+			$month = _AUGUST;
+			break;
+		case '09':
+			$month = _SEPTEMBER;
+			break;
+		case '10':
+			$month = _OCTOBER;
+			break;
+		case '11':
+			$month = _NOVEMBER;
+		case '12':
+			$month = _DECEMBER;
+			break;
+		default:
+			$month = '';
+	}
+	$date_title = _FOR_MONTH.' '.$month;
+}
+else if($period_type == 'custom_period')
+{
+	if (empty($_REQUEST['date_start']) && empty($_REQUEST['date_fin'])){
+		echo '<div class="error">'._DATE.' '._IS_EMPTY.''.$_REQUEST['date_start'].'</div>';
+		exit();
+	}
+	
+	
+	if( preg_match($_ENV['date_pattern'],$_REQUEST['date_start'])==false  && $_REQUEST['date_start'] <> ''  )
+	{
+		
+		echo '<div class="error">'._WRONG_DATE_FORMAT.' : '.$_REQUEST['date_start'].'</div>';
+		exit();
+	
+	}
+	if( preg_match($_ENV['date_pattern'],$_REQUEST['date_fin'])==false && $_REQUEST['date_fin'] <> '' )
+	{
+		
+		echo '<div class="error">'._WRONG_DATE_FORMAT.' : '.$_REQUEST['date_fin'].'</div>';
+		exit();
+
+	}
+
+	if(isset($_REQUEST['date_start']) && $_REQUEST['date_start'] <> '')
+	{
+		$where_date  .= " AND ".$req->extract_date('creation_date')." > '".$db->format_date_db($_REQUEST['date_start'])."'";
+		$date_title .= strtolower(_SINCE).' '.$_REQUEST['date_start'].' ';
+	}
+
+	if(isset($_REQUEST['date_fin']) && $_REQUEST['date_fin'] <> '')
+	{
+		$where_date  .= " AND ".$req->extract_date('creation_date')." < '".$db->format_date_db($_REQUEST['date_fin'])."'";
+		$date_title.= strtolower(_FOR).' '.$_REQUEST['date_fin'].' ';
+	}
+	if(empty($where_date))
+	{
+		$where_date = $req->extract_date('creation_date', 'year')." = '".$default_year."'";
+		$date_title = _FOR_YEAR.' '.$default_year;
+	}
+}
+else
+{
+	?>
+	<div class="error"><?php echo _PERIOD.' '._MISSING;?></div>
+	<?php
+	exit();
+}
+
+
+//$title = _ENTITY_PROCESS_DELAY.' '.$date_title ;
+$db = new Database();
 
 if($report_type == 'graph')
 {
@@ -158,15 +210,15 @@ $where_clause = $sec->get_where_clause_from_coll_id('letterbox_coll');
 if ($where_clause)
     $where_clause = " and ".$where_clause;
 	
-$totalDocTypes = count($doctypes);
+$totalEntities = count($entities);
 	
-for($i=0; $i<count($doctypes);$i++)
+for($i=0; $i<count($entities);$i++)
 {
     //Permet d'afficher ou non les entités dont le nombre de courrier est égal à 0
 	$valid = true;
     if ($_SESSION['user']['entities']){
         foreach($_SESSION['user']['entities'] as $user_ent){
-            if ($doctypes[$i]['ID'] == $user_ent['ENTITY_ID']){
+            if ($entities[$i]['ID'] == $user_ent['ENTITY_ID']){
                 $valid = true;
             }
         }
@@ -174,11 +226,9 @@ for($i=0; $i<count($doctypes);$i++)
     if ($valid == 'true' || $_SESSION['user']['UserId'] == "superadmin")
     {
 
-        $stmt = $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay, res_view_letterbox.creation_date
-                    FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id 
-                    WHERE ".$view.".destination = ? ".$where_date." and ".$view.".status not in ('DEL','BAD')",array($doctypes[$i]['ID']));
+        $stmt = $db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." AS delay, creation_date FROM ".$view
+            . " WHERE destination = ? AND status not in ('DEL','BAD') AND closing_date IS NOT NULL".$where_date." ".$where_status." ".$where_priority,array($entities[$i]['ID']));
         
-
         if( $stmt->rowCount() > 0)
         {
             $tmp = 0;
@@ -198,7 +248,7 @@ for($i=0; $i<count($doctypes);$i++)
             }
             elseif($report_type == 'array')
             {
-                array_push($data, array('LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,0)));
+                array_push($data, array('LABEL' => $db->show_string($entities[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,0)));
             }
             if($tmp / $nbDoc > 0)
             {
@@ -213,20 +263,20 @@ for($i=0; $i<count($doctypes);$i++)
             }
             elseif($report_type == 'array')
             {
-                array_push($data, array('LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => _UNDEFINED));
+                array_push($data, array('LABEL' => $db->show_string($entities[$i]['LABEL']), 'VALUE' => _UNDEFINED));
             }
         }
         if($report_type == 'graph')
         {
-            array_push($_SESSION['labels1'], addslashes($db->show_string($doctypes[$i]['LABEL'])));
+            array_push($_SESSION['labels1'], addslashes($db->show_string($entities[$i]['LABEL'])));
         }
     }
 }
 
 if($report_type == 'graph')
 {
-    $largeur=50*$totalDocTypes;
-    if ($totalDocTypes<20){
+    $largeur=50*$totalEntities;
+    if ($totalEntities<20){
         $largeur=1000;
     }
 

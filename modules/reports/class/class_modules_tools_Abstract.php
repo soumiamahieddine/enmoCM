@@ -146,7 +146,7 @@ abstract class reports_Abstract extends Database
 				if (!empty($desc) && defined($desc) 
 					&& constant($desc) <> NULL
 				) {
-					$label = constant($desc);
+					$desc = constant($desc);
 				}
 				$url = $_SESSION['config']['businessappurl']
 					. 'index.php?display=true&module=' . $module . '&page='
