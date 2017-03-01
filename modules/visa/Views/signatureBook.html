@@ -136,7 +136,7 @@
                    <i ng-hide="signatureBook.showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                    <i ng-show="signatureBook.showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
-                <iframe ng-src="{{signatureBook.rightViewerLink}}"></iframe>
+                <iframe id="rightPanelShowDocumentIframe" ng-src="{{signatureBook.rightViewerLink}}"></iframe>
                 <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status != 'SIGN'" ng-click="vm.prepareSignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer">SIGNER</span>
                 <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status == 'SIGN'" ng-click="vm.unsignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer">DE-SIGNER</span>
             </div>

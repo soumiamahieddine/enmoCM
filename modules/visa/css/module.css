@@ -219,7 +219,7 @@
 
 .visaContent{
     position: relative;
-    height:100%;
+    height:95vh;
     margin-top: 10px;
 }
 
@@ -232,8 +232,9 @@
 }
 
 .resListContent{
-    display: table-cell;
+    display: inline-block;
     width:15%;
+    height:100%;
     text-align: center;
     border-right: solid 1px;
     vertical-align: top;
@@ -265,13 +266,13 @@
 }
 
 .resListContentPos{
-    height:95vh;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
 .hideresListContent{
-    display: table-cell;
+    display: inline-block;
+    height:100%;
     text-align: center;
     vertical-align: middle;
     overflow: auto;
@@ -284,30 +285,32 @@
     vertical-align: top;
 }
 .contentLeft, .contentRight{
-    display: table-cell;
-    width:45%;
+    display: inline-block;
+    width:42%;
+    height:100%;
     text-align: center;
 }
 
 .visaContent iframe{
     margin: auto;
     width:95%;
-    height: 100%;
+    height: 75vh;
     border: none;
 }
 
 .contentLeft iframe{
-    height: 80%;
+    height: 75vh;
 }
 
 .panelRight{
-    width: 2%;
+    //width: 10%;
     border-left: solid 1px;
-    vertical-align: top;
+    //vertical-align: top;
 }
 
 .panelRightConten{
-    height: 75vh;
+    width: 90%;
+    height: 93%;
     overflow: auto;  
 }
 
@@ -317,9 +320,8 @@
 }
 
 .contentRight .panelRight,.contentRight .contentShow{
-    display: table-cell;
-    vertical-align: top;
-    height:75vh;
+    display: inline-block;
+   height: 85vh;
 }
 .contentLeft .contentShow{
     height: 95vh;
@@ -328,6 +330,13 @@
 
 .contentRight .contentShow,.contentLeft .contentShow{
     padding : 5px;
+    width:95%;
+}
+
+.contentRight .contentShow{
+    vertical-align: top;
+    padding : 5px;
+    width:90%;
 }
 
 .pjDetails{
@@ -353,6 +362,10 @@
 .pjDetailsMore{
    text-align: center;
    cursor: pointer;
+}
+
+.pjDetails div{
+    white-space: initial;
 }
 
 .pjDoc{
@@ -434,9 +447,11 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 
 .contentSignatureBook{
     border: solid 1px black;
-    display: table;
+    display: block;
     width: 100%;
-    height:75vh;
+    height:85vh;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .headerSignatureBook .item{
@@ -469,7 +484,7 @@ box-shadow: inset 0px 0px 5px 0px #656565;
 }
 
 .panelRightAddPj{
-    height: 45px;
+    height: 5%;
     vertical-align: middle;
     display: table-cell;
 }
@@ -646,4 +661,8 @@ box-shadow: inset 0px 0px 5px 0px #656565;
 
 #historyTable.ng-table th:nth-child(3) {
     width:60%;
+}
+
+#footer{
+    padding: 0px;
 }
