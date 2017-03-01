@@ -258,6 +258,42 @@ class Apps_Table_Service extends Core_Abstract_Service {
     /**
      * Fonction de suppression dans la base de données
      * @param array $args
+     * @throws Core_MaarchException_Service if table Argument is empty or is not a string
+     * @throws Core_MaarchException_Service if where Argument is empty or is not an array
+     * @throws Core_MaarchException_Service if set Argument is empty or is not an array
+     * @throws Core_MaarchException_Service if data Argument is not an array
+     *
+     * @return bool
+     */
+    public static function update(array $args = []){
+        if (empty($args['table']) || !is_string($args['table'])) {
+            throw new Core_MaarchException_Service('Table Argument is empty or is not a string.');
+        }
+        if (empty($args['set']) || !is_array($args['set'])) {
+            throw new Core_MaarchException_Service('Set Argument is empty or is not an array.');
+        }
+        if (empty($args['where']) || !is_array($args['where'])) {
+            throw new Core_MaarchException_Service('Where Argument is empty or is not an array.');
+        }
+
+        if (empty($args['data'])) {
+            $args['data'] = [];
+        }
+        if (!is_array($args['data'])) {
+            throw new Core_MaarchException_Service('Data Argument is not an array.');
+        }
+
+        $queryExt = 'UPDATE ' .$args['table']. ' SET '.implode(',', $args['set']). ' WHERE ' . implode(' AND ', $args['where']);
+
+        $db = new Database();
+        $db->query($queryExt, $args['data']);
+
+        return true;
+    }
+
+    /**
+     * Fonction de suppression dans la base de données
+     * @param array $args
      * @throws Core_MaarchException_Service if Table Argument is empty or is not a string
      * @throws Core_MaarchException_Service if Where Argument is empty or is not an array
      * @throws Core_MaarchException_Service if Data Argument is not an array
