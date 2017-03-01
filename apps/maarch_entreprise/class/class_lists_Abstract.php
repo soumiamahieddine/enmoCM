@@ -231,7 +231,7 @@ abstract class lists_Abstract extends Database
                             .$this->divListId.'\', '.$this->modeReturn.');">'
                             .'<option value="none" style="text-align:center;"></option>'
                             .$options.'</select>';
-                $filters .= '<script>console.log(\'toto\');new Chosen($(\'entity_id\'),{width:"300px",allow_single_deselect: true});</script>';
+                $filters .= '<script>new Chosen($(\'entity_id\'),{width:"300px",allow_single_deselect: true});</script>';
             break;
 
             case 'entity_subentities':
