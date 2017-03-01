@@ -662,10 +662,10 @@ abstract class visa_Abstract extends Database
                     	$str .= '<i class="fa fa-'.$link_vis.'" aria-hidden="true"></i>';
 					$str .= '</span>';
                     $str .= '<span class="visaUserInfo">';
-                    	$str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userSign['lastname'].' '.$info_userSign['firstname'].' <sup class="nbRes">'.$info_userSign['entity_id'].'</sup>';
+                    	$str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userSign['lastname'].' '.$info_userSign['firstname'].' <sup class="nbRes">'.$info_userSign['entity_id'].'</sup>'.$info_vised;
                 	$str .= '</span>';
                 	$str .= '<span class="visaUserConsigne">';
-                		$str .= '<input class="userId" type="hidden" value="'.$info_userSign['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userSign['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userSign['process_comment'].'"/>'.$info_vised;
+                		$str .= '<input class="userId" type="hidden" value="'.$info_userSign['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userSign['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userSign['process_comment'].'"/>';
                 	$str .= '</span>';
                 	$str .= '<span class="visaUserAction">';
                 		$str .= $del_vis;
