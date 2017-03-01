@@ -335,12 +335,13 @@
 }
 
 .contentRight .contentShow{
+    position: relative;
     vertical-align: top;
     padding : 5px;
     width:90%;
 }
 
-.pjDetails{
+.pjDetails,.pjSign{
     display: table;
     width: 97%;
     text-align: left;
@@ -664,4 +665,21 @@ box-shadow: inset 0px 0px 5px 0px #656565;
 
 #footer{
     padding: 0px;
+}
+
+.pjSign{
+    text-align: center;
+    height: auto;
+    position: absolute;
+    width: auto;
+    bottom: 0px;
+    background: white;
+    -webkit-transition: font-size 0.5s; /* Safari */
+    transition: font-size 0.5s;
+    margin-bottom: 5px;
+}
+.pjSign:hover{
+    font-size: 35px;
+    -webkit-transition: font-size 0.5s; /* Safari */
+    transition: font-size 0.5s;
 }
