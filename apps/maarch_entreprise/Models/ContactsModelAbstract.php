@@ -21,9 +21,11 @@
 
 require_once 'apps/maarch_entreprise/services/Table.php';
 
-class ContactsModelAbstract extends Apps_Table_Service {
+class ContactsModelAbstract extends Apps_Table_Service
+{
 
-    public static function getById(array $aArgs = []) {
+    public static function getById(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['id']);
         static::checkNumeric($aArgs, ['id']);
 
@@ -38,7 +40,8 @@ class ContactsModelAbstract extends Apps_Table_Service {
         return $aReturn;
     }
 
-    public static function getWithAddress(array $aArgs = []) {
+    public static function getWithAddress(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['contactId', 'addressId']);
         static::checkNumeric($aArgs, ['contactId', 'addressId']);
 
@@ -53,7 +56,8 @@ class ContactsModelAbstract extends Apps_Table_Service {
         return $aReturn;
     }
 
-    public static function getLabelledContactWithAddress(array $aArgs = []) {
+    public static function getLabelledContactWithAddress(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['contactId', 'addressId']);
         static::checkNumeric($aArgs, ['contactId', 'addressId']);
 

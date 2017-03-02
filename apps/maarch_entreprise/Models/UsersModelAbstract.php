@@ -21,9 +21,11 @@
 
 require_once 'apps/maarch_entreprise/services/Table.php';
 
-class UsersModelAbstract extends Apps_Table_Service {
+class UsersModelAbstract extends Apps_Table_Service
+{
 
-    public static function getById(array $aArgs = []) {
+    public static function getById(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['id']);
         static::checkString($aArgs, ['id']);
 
@@ -38,7 +40,8 @@ class UsersModelAbstract extends Apps_Table_Service {
         return $aReturn;
     }
 
-    public static function getLabelledUserById(array $aArgs = []) {
+    public static function getLabelledUserById(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['id']);
         static::checkString($aArgs, ['id']);
 
@@ -53,7 +56,8 @@ class UsersModelAbstract extends Apps_Table_Service {
         return $labelledUser;
     }
 
-    public static function getSignatureForCurrentUser() {
+    public static function getSignatureForCurrentUser()
+    {
         //TODO No Session
         if (empty($_SESSION['user']['pathToSignature']) || !file_exists($_SESSION['user']['pathToSignature'])) {
             return [];
@@ -78,7 +82,8 @@ class UsersModelAbstract extends Apps_Table_Service {
         return $aSignature;
     }
 
-    public static function getConsigneForCurrentUserById(array $aArgs = []) {
+    public static function getConsigneForCurrentUserById(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['resId']);
         static::checkNumeric($aArgs, ['resId']);
 

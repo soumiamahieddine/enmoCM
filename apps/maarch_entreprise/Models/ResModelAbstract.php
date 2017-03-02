@@ -21,9 +21,11 @@
 
 require_once 'apps/maarch_entreprise/services/Table.php';
 
-class ResModelAbstract extends Apps_Table_Service {
+class ResModelAbstract extends Apps_Table_Service
+{
 
-    public static function get(array $aArgs = []) {
+    public static function get(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['resId']);
         static::checkNumeric($aArgs, ['resId']);
 
@@ -38,7 +40,8 @@ class ResModelAbstract extends Apps_Table_Service {
         return $aReturn;
     }
 
-    public static function put(array $aArgs = []) {
+    public static function put(array $aArgs = [])
+    {
         // TODO collId stands for table in DB => à Changer pour aller récupérer la table lié à collId
         static::checkRequired($aArgs, ['collId', 'set', 'where', 'data']);
         static::checkString($aArgs, ['collId']);
@@ -54,7 +57,8 @@ class ResModelAbstract extends Apps_Table_Service {
         return $bReturn;
     }
 
-    public static function getAvailableLinkedAttachmentsIn(array $aArgs = []) {
+    public static function getAvailableLinkedAttachmentsIn(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['resIdMaster', 'in']);
         static::checkNumeric($aArgs, ['resIdMaster']);
         static::checkArray($aArgs, ['in']);
@@ -70,7 +74,8 @@ class ResModelAbstract extends Apps_Table_Service {
         return $aReturn;
     }
 
-    public static function getAvailableLinkedAttachmentsNotIn(array $aArgs = []) {
+    public static function getAvailableLinkedAttachmentsNotIn(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['resIdMaster', 'notIn']);
         static::checkNumeric($aArgs, ['resIdMaster']);
         static::checkArray($aArgs, ['notIn']);

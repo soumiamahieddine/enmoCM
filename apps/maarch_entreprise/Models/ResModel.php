@@ -21,6 +21,7 @@
 
 require_once 'apps/maarch_entreprise/Models/ResModelAbstract.php';
 
-class ResModel extends ResModelAbstract {
+class ResModel extends ResModelAbstract
+{
     // Do your stuff in this class
 }

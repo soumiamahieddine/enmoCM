@@ -21,6 +21,7 @@
 
 require_once 'apps/maarch_entreprise/Models/ContactsModelAbstract.php';
 
-class ContactsModel extends ContactsModelAbstract {
+class ContactsModel extends ContactsModelAbstract
+{
     // Do your stuff in this class
 }

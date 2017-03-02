@@ -21,6 +21,7 @@
 
 require_once 'apps/maarch_entreprise/Models/HistoryModelAbstract.php';
 
-class HistoryModel extends HistoryModelAbstract {
+class HistoryModel extends HistoryModelAbstract
+{
     // Do your stuff in this class
 }

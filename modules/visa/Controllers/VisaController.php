@@ -13,9 +13,11 @@ require_once 'apps/maarch_entreprise/Models/UsersModel.php';
 require_once 'modules/basket/Models/BasketsModel.php';
 
 
-class VisaController {
+class VisaController
+{
 
-	public function getSignatureBook(RequestInterface $request, ResponseInterface $response, $aArgs) {
+	public function getSignatureBook(RequestInterface $request, ResponseInterface $response, $aArgs)
+	{
 
 		$resId = $aArgs['resId'];
 		$basketId = $aArgs['basketId'];
@@ -208,7 +210,8 @@ class VisaController {
 		return $response->withJson($datas);
 	}
 
-	public function unsignFile(RequestInterface $request, ResponseInterface $response, $aArgs) {
+	public function unsignFile(RequestInterface $request, ResponseInterface $response, $aArgs)
+	{
 
 		$resId = $aArgs['resId'];
 		$collId = $aArgs['collId'];

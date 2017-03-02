@@ -21,6 +21,7 @@
 
 require_once 'apps/maarch_entreprise/Models/UsersModelAbstract.php';
 
-class UsersModel extends UsersModelAbstract {
+class UsersModel extends UsersModelAbstract
+{
     // Do your stuff in this class
 }

@@ -21,9 +21,11 @@
 
 require_once 'apps/maarch_entreprise/services/Table.php';
 
-class HistoryModelAbstract extends Apps_Table_Service {
+class HistoryModelAbstract extends Apps_Table_Service
+{
 
-    public static function getByIdForActions(array $aArgs = []) {
+    public static function getByIdForActions(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['id']);
         static::checkNumeric($aArgs, ['id']);
 
