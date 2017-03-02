@@ -78,4 +78,22 @@ class UsersModelAbstract extends Apps_Table_Service {
         return $aSignature;
     }
 
+    public static function getConsigneForCurrentUserById(array $aArgs = []) {
+        static::checkRequired($aArgs, ['resId']);
+        static::checkNumeric($aArgs, ['resId']);
+
+
+        $aReturn = static::select([
+            'select'    => ['process_comment'],
+            'table'     => ['listinstance'],
+            'where'     => ['res_id = ?', 'item_id = ?'],
+            'data'      => [$aArgs['resId'], $_SESSION['user']['UserId']],
+        ]);
+
+        if (empty($aReturn[0]['process_comment'])) {
+            return 'No Consigne Found';
+        }
+
+        return $aReturn[0]['process_comment'];
+    }
 }

@@ -56,6 +56,7 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
 
     $scope.changeSignatureBookLeftContent = function(id) {
       $scope.signatureBook.headerTab = id;
+      $scope.signatureBook.showTopLeftPanel = false;
     };
 
     $scope.changeRightViewer = function(index) {
@@ -169,8 +170,8 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
 
         valid_action_form(
           'empty',
-          'http://127.0.0.1/maarch_trunk_git/apps/maarch_entreprise/index.php?display=true&page=manage_action&module=core',
-          $scope.signatureBook.currentAction,
+          'index.php?display=true&page=manage_action&module=core',
+          $scope.signatureBook.currentAction.id,
           $routeParams.resId,
           'res_letterbox',
           'null',

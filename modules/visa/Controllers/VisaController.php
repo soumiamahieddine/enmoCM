@@ -122,6 +122,12 @@ class VisaController {
 				$attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id']);
 		}
 
+		foreach ($attachments as $key => $value) {
+			if ($value['attachment_type'] == 'converted_pdf') {
+				unset($attachments[$key]);
+			}
+		}
+
 		$attachments = array_values($attachments);
 
 		$incomingMailAttachments = \ResModel::getAvailableLinkedAttachmentsIn([
@@ -197,6 +203,7 @@ class VisaController {
 		$datas['histories'] = $history;
 		$datas['resList'] = $resList;
 		$datas['signature'] = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
+		$datas['consigne'] = \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);
 
 		return $response->withJson($datas);
 	}

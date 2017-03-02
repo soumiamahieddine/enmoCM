@@ -1,6 +1,8 @@
 <div class='visaContent'>
     <div class="titleSignatureBook">
-        <span>{{::signatureBook.currentAction.actionLabel}}</span><span><i style="cursor: pointer" ng-click="backToBasket()" class="fa fa-times-circle fa-2x"></i></span>    </div>
+        <span>{{::signatureBook.currentAction.actionLabel}}</span>
+        <span><i style="cursor: pointer" ng-click="backToBasket()" class="fa fa-times-circle fa-2x"></i></span>
+    </div>
     <div class="headerSignatureBook">
         <div class="item" ng-class="{'activeTabSignatureBook': signatureBook.headerTab == 1}" ng-click="changeSignatureBookLeftContent(1)">
             <i class="fa fa-dashboard fa-2x"></i>
@@ -19,7 +21,9 @@
             <i class="itemLabel">Avancement</i>
         </div>
         <div class="others">
-            <span id="consigne"><input type="text" value="VEUILLEZ SIGNER" readonly="readonly"></span>
+            <span id="consigne">
+                <input type="text" value="{{::signatureBook.consigne}}" title="Consigne" readonly="readonly">
+            </span>
         </div>
         <div class="actions">
             <select id="signatureBookActions">
@@ -56,9 +60,9 @@
         <div class="contentLeft">
             <div class="contentShow" ng-if="signatureBook.headerTab == 1">
                 <div class="pjDoc">
-                    <div ng-click="displayTopPanel('LEFT')" ng-hide="signatureBook.showTopLeftPanel" style="padding: 5px;cursor:pointer;"><strong>{{signatureBook.documents.length - 1}} pièce(s) jointe(s)</strong></div>
+                    <div ng-click="displayTopPanel('LEFT')" ng-if="!signatureBook.showTopLeftPanel" style="padding: 5px;cursor:pointer;"><strong>{{signatureBook.documents.length - 1}} pièce(s) jointe(s)</strong></div>
 
-                    <img id="thumnails_img" ng-show="signatureBook.showTopLeftPanel" ng-repeat="(index, document) in signatureBook.documents" ng-click="changeLeftViewer(index)" ng-src="{{document.thumbnailLink}}"
+                    <img id="thumnails_img" ng-if="signatureBook.showTopLeftPanel" ng-repeat="(index, document) in signatureBook.documents" ng-click="changeLeftViewer(index)" ng-src="{{document.thumbnailLink}}"
                              class="leftPanelThumbnails" ng-class="{'panelSelectedThumbnail': index == signatureBook.leftSelectedThumbnail}"/>
                     <!--<label>PJ1</label>-->
                 </div>
