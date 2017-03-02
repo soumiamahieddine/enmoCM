@@ -24,17 +24,17 @@ These terms apply to your contribution of materials to a product or project owne
 	* it does not to the best of your knowledge violate any third party's copyrights, trademarks, patents, or other intellectual property rights; and
 	* you are authorized to sign this contract on behalf of your company (if identified below). 
 
-7. These terms will be governed by the laws of the State of California and applicable U.S. Federal law. Any choice of law rules will not apply. If available, please list your username(s) and the name of the project(s) (or project website(s)) for which you would like to contribute materials. 
+7. These terms will be governed by the laws of the French State and applicable to U.S. Federal law. Any choice of law rules will not apply. If available, please list your username(s) and the name of the project(s) (or project website(s)) for which you would like to contribute materials. 
 
-  Your username: 
-  Project name (or project website): 
-  Your contact information (Please print clearly): 
-  Your name: 
-  Your company's name (if applicable): 
-  Mailing address: 
+ Your username: 
+ Project name (or project website): 
+ Your contact information (Please print clearly): 
+ Your name: 
+ Your company's name (if applicable): 
+ Mailing address: 
  Telephone, Fax and Email: 
-  Your signature: 
-  Date: 
+ Your signature: 
+ Date: 
   
 To deliver these terms to us, scan and email, or fax a signed copy to us using the email address info@Maarch.org 
 
