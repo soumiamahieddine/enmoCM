@@ -8,7 +8,7 @@
 */
 
 /**
-* @brief Status Controller
+* @brief DocerverType Controller
 * @author dev@maarch.org
 * @ingroup core
 */
@@ -18,18 +18,18 @@ namespace Core\Controllers;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-use Core\Models\StatusModel;
+use Core\Models\DocserverTypeModel;
 
-class StatusController
+class DocserverTypeController
 {
 
     public function getList(RequestInterface $request, ResponseInterface $response)
     {
-        $obj = StatusModel::getList();
+        $obj = DocserverTypeModel::getList();
         
         $datas = [
             [
-                'status' => $obj,
+                'DocserverType' => $obj,
             ]
         ];
         
@@ -40,7 +40,7 @@ class StatusController
     {
         if (isset($aArgs['id'])) {
             $id = $aArgs['id'];
-            $obj = StatusModel::getById([
+            $obj = DocserverTypeModel::getById([
                 'id' => $id
             ]);
         } else {
@@ -52,7 +52,7 @@ class StatusController
         
         $datas = [
             [
-                'status' => $obj,
+                'DocserverType' => $obj,
             ]
         ];
 
@@ -74,11 +74,11 @@ class StatusController
 
         $aArgs = $request->getQueryParams();
 
-        $return = StatusModel::create($aArgs);
+        $return = DocserverTypeModel::create($aArgs);
 
         if ($return) {
             $id = $aArgs['id'];
-            $obj = StatusModel::getById([
+            $obj = DocserverTypeModel::getById([
                 'id' => $id
             ]);
         } else {
@@ -90,7 +90,7 @@ class StatusController
 
         $datas = [
             [
-                'status' => $obj,
+                'DocserverType' => $obj,
             ]
         ];
 
@@ -112,11 +112,11 @@ class StatusController
 
         $aArgs = $request->getQueryParams();
 
-        $return = StatusModel::update($aArgs);
+        $return = DocserverTypeModel::update($aArgs);
 
         if ($return) {
             $id = $aArgs['id'];
-            $obj = StatusModel::getById([
+            $obj = DocserverTypeModel::getById([
                 'id' => $id
             ]);
         } else {
@@ -128,7 +128,7 @@ class StatusController
 
         $datas = [
             [
-                'status' => $obj,
+                'DocserverType' => $obj,
             ]
         ];
 
@@ -139,7 +139,7 @@ class StatusController
     {
         if (isset($aArgs['id'])) {
             $id = $aArgs['id'];
-            $obj = StatusModel::delete([
+            $obj = DocserverTypeModel::delete([
                 'id' => $id
             ]);
         } else {
@@ -151,7 +151,7 @@ class StatusController
         
         $datas = [
             [
-                'status' => $obj,
+                'DocserverType' => $obj,
             ]
         ];
 
@@ -163,7 +163,7 @@ class StatusController
         $errors = [];
 
         if($mode == 'update') {
-            $obj = StatusModel::getById([
+            $obj = DocserverTypeModel::getById([
                 'id' => $request->getParam('id')
             ]);
             if (empty($obj)) {
@@ -177,7 +177,7 @@ class StatusController
         if (!Validator::notEmpty()->validate($request->getParam('id'))) {
             array_push($errors, _ID . ' ' . _IS_EMPTY);
         } elseif($mode == 'create') {
-            $obj = StatusModel::getById([
+            $obj = DocserverTypeModel::getById([
                 'id' => $request->getParam('id')
             ]);
             if (!empty($obj)) {

@@ -8,14 +8,15 @@
 */
 
 /**
-* @brief Status Model
+* @brief Docserver Model
 * @author dev@maarch.org
 * @ingroup core
 */
-
 namespace Core\Models;
 
-class StatusModel extends StatusModelAbstract
+require_once 'core/Models/DocserverModelAbstract.php';
+
+class DocserverModel extends DocserverModelAbstract
 {
     // Do your stuff in this class
 }
