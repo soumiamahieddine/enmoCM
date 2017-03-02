@@ -102,7 +102,23 @@ $app->post('/status', \Core\Controllers\StatusController::class . ':create');
 $app->put('/status', \Core\Controllers\StatusController::class . ':update');
 $app->delete('/status/{id}', \Core\Controllers\StatusController::class . ':delete');
 
+//docserver
+$app->get('/docserver', \Core\Controllers\DocserverController::class . ':getList');
+$app->get('/docserver/{id}', \Core\Controllers\DocserverController::class . ':getById');
+
+//docserverType
+$app->get('/docserverType', \Core\Controllers\DocserverTypeController::class . ':getList');
+$app->get('/docserverType/{id}', \Core\Controllers\DocserverTypeController::class . ':getById');
+
+//attachments
+$app->get('/attachments', \Attachments\Controllers\AttachmentsController::class . ':getList');
+$app->get('/attachments/{id}', \Attachments\Controllers\AttachmentsController::class . ':getById');
+$app->post('/attachments', \Attachments\Controllers\AttachmentsController::class . ':create');
+
+//basket
 $app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
 $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
+
+
 
 $app->run();
