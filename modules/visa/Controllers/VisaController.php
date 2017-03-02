@@ -188,7 +188,7 @@ class VisaController
 			unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
 		}
 
-		$actionLabel = \BasketsModel::getActionByActionId(['actionId' => $_SESSION['current_basket']['default_action'], 'select' => ['label_action']])['label_action'] . ' n°';
+		$actionLabel = \BasketsModel::getActionByActionId(['actionId' => \BasketsModel::getActionIdById(['basketId' => $basketId]), 'select' => ['label_action']])['label_action'] . ' n°';
 		$actionLabel .= (_ID_TO_DISPLAY == 'res_id' ? $incomingMail[0]['res_id'] : $incomingMail[0]['alt_identifier']);
 		$actionLabel .= ' : ' . $incomingMail[0]['subject'];
 		$currentAction = [
