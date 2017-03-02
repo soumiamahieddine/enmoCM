@@ -95,7 +95,7 @@ class UsersModelAbstract extends Apps_Table_Service
             'data'      => [$aArgs['resId'], $_SESSION['user']['UserId']],
         ]);
 
-        if (empty($aReturn[0]['process_comment'])) {
+        if (empty($aReturn[0])) {
             return 'No Consigne Found';
         }
 

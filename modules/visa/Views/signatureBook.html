@@ -35,20 +35,20 @@
     <div class="contentSignatureBook">
         <div class="resListContent">
             <div class="resListContentPos">
-                <div class="resListContentFrame" ng-repeat="res in signatureBook.resList" ng-click="changeLocation(res.res_id)" ng-class="{'resListContentFrameSelected': vm.resId == res.res_id}">
+                <div class="resListContentFrame" ng-repeat="res in ::signatureBook.resList" ng-click="changeLocation(res.res_id)" ng-class="{'resListContentFrameSelected': vm.resId == res.res_id}">
                     <div class="resListContentInfo">
-                        <i class="fa fa-compass" title="Numéro chrono"></i> {{::res.alt_identifier}}
+                        <i class="fa fa-compass" title="Numéro chrono"></i> {{res.alt_identifier}}
                         <i ng-if="res.allSigned" class="fa fa-certificate" style="position: absolute;bottom: 5px;right: 100px;font-size: 80px;color: green;opacity: 0.2;"></i>&nbsp;
-                        <i class="fa fa-circle" aria-hidden="true" style="color:{{::res.priorityColor}};position: absolute;right: 0px;top: -10px;font-size: 25px;"></i>
+                        <i class="fa fa-circle" aria-hidden="true" style="color:{{res.priorityColor}};position: absolute;right: 0px;top: -10px;font-size: 25px;"></i>
                     </div>
                     <div class="resListContentInfo">
-                        <i class="fa fa-info" title="Objet"></i> {{::res.subject}}
+                        <i class="fa fa-info" title="Objet"></i> {{res.subject}}
                     </div>
                     <div class="resListContentInfo">
-                        <i class="fa fa-book" title="Fiche contact"></i> {{::res.sender}}
+                        <i class="fa fa-book" title="Fiche contact"></i> {{res.sender}}
                     </div>
                     <div class="resListContentInfo">
-                        <i class="fa fa-calendar" title="Date d'arrivée"></i> {{::res.creation_date | dateFormat}} - <i class="fa fa-bell" title="Date limite de traitement"></i> {{::res.process_limit_date | dateFormat}}
+                        <i class="fa fa-calendar" title="Date d'arrivée"></i> {{res.creation_date | dateFormat}} - <i class="fa fa-bell" title="Date limite de traitement"></i> {{::res.process_limit_date | dateFormat}}
                     </div>
                 </div>
             </div>
@@ -60,9 +60,11 @@
         <div class="contentLeft">
             <div class="contentShow" ng-if="signatureBook.headerTab == 1">
                 <div class="pjDoc">
-                    <div ng-click="displayTopPanel('LEFT')" ng-if="!signatureBook.showTopLeftPanel" style="padding: 5px;cursor:pointer;"><strong>{{signatureBook.documents.length - 1}} pièce(s) jointe(s)</strong></div>
+                    <div ng-click="displayTopPanel('LEFT')" ng-if="!signatureBook.showTopLeftPanel" style="padding: 5px;cursor:pointer;">
+                        <strong>{{::signatureBook.documents.length - 1}} pièce(s) jointe(s)</strong>
+                    </div>
 
-                    <img id="thumnails_img" ng-if="signatureBook.showTopLeftPanel" ng-repeat="(index, document) in signatureBook.documents" ng-click="changeLeftViewer(index)" ng-src="{{document.thumbnailLink}}"
+                    <img id="thumnails_img" ng-if="signatureBook.showTopLeftPanel" ng-repeat="(index, document) in ::signatureBook.documents" ng-click="changeLeftViewer(index)" ng-src="{{document.thumbnailLink}}"
                              class="leftPanelThumbnails" ng-class="{'panelSelectedThumbnail': index == signatureBook.leftSelectedThumbnail}"/>
                     <!--<label>PJ1</label>-->
                 </div>
@@ -110,15 +112,15 @@
                         <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].destUser}}</span>
                     </div>
                     <div ng-show="signatureBook.showTopRightPanel">
-                        <div class="infoPj">
+                        <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].typist}}">
                             <label>Créé par: </label>
                             <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].typist}}</span>
                         </div>
                         <div class="infoPj">
                             <label>Créé le: </label>
-                            <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].creation_date | datetimeFormat}}</span>
+                            <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].creation_date | dateFormat}}</span>
                         </div>
-                        <div class="infoPj">
+                        <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].updated_by}}">
                             <label>Modifié par : </label>
                             <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].updated_by}}</span>
                         </div>
@@ -143,7 +145,7 @@
                 <iframe id="rightPanelShowDocumentIframe" ng-src="{{signatureBook.rightViewerLink}}"></iframe>
                 <div class="pjSign">
                     <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status != 'SIGN'" ng-click="vm.prepareSignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer">
-                        <img title="Signer" ng-src="{{signatureBook.signature}}">
+                        <img title="Signer" ng-src="{{::signatureBook.signature}}">
                     </span>
                     <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status == 'SIGN'" ng-click="vm.unsignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer;color: green;">
                         <i title="Dé-signer" class="fa fa-check fa-2x" aria-hidden="true"></i>
@@ -157,7 +159,7 @@
                 <div class="item panelRightAddPj" ng-click="changeRightViewer(-1)" ng-class="{'panelSelectedThumbnail': signatureBook.rightSelectedThumbnail == -1}">
                     <i class="fa fa-plus fa-2x"></i>
                 </div>
-                <div class="panelRightConten">
+                <div class="panelRightContent">
                     <div class="item" ng-repeat="(index, attachment) in signatureBook.attachments" ng-click="changeRightViewer(index)" ng-class="{'panelSelectedThumbnail': index == signatureBook.rightSelectedThumbnail}">
                         <span class="fa-stack fa-lg">
                             <i class="fa fa-file-o fa-stack-2x"></i><i class="fa {{attachment.icon}} fa-stack-1x"></i>
