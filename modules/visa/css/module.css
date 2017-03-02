@@ -231,6 +231,14 @@
      text-align: right;
 }
 
+.headerSignatureBook .others input{
+    background: #E6E6E6;
+    border-radius: 2px;
+    width: 50%;
+    border: none;
+    padding: 5px;
+}
+
 .resListContent{
     display: inline-block;
     width:15%;
@@ -388,6 +396,7 @@
 .pjDoc img{
    height: 95%;
    border: solid 2px white;
+   cursor:pointer;
 }
 
 img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
