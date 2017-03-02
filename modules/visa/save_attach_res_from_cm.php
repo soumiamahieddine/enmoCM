@@ -27,7 +27,7 @@ if (empty($docserver)) {
 } else {
     // some checking on docserver size limit
     if(!is_file($_SESSION['config']['tmppath'] . $tmpFileName)){
-        echo "{status:1, error : '". _TMP_SIGNED_FILE_FAILED . ': ' ._FILE . ' ' . _ENCRYPTED .' ' . _OR .' ' . _MISSING ."'}";
+        echo "{\"status\":1, \"error\" : \"". _TMP_SIGNED_FILE_FAILED . ': ' ._FILE . ' ' . _ENCRYPTED .' ' . _OR .' ' . _MISSING ."\"}";
         exit;
     }
     
