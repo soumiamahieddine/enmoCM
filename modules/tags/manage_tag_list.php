@@ -143,16 +143,19 @@ if ($mode == 'list') {
                     .$entitiesList[$i]['LABEL'].'" title="'
                     .$entitiesList[$i]['LABEL'].'"';
                      if ($mode == 'add') {
-                        if(in_array($entitiesList[$i]['ID'], $entitiesRestriction)){
-                           $content .= 'selected="selected"';
-                        }else{
-                            $content .= 'disabled="disabled"';
-                        }
+                         if($_SESSION['user']['UserId'] != 'superadmin'){
+                             if(in_array($entitiesList[$i]['ID'], $entitiesRestriction)){
+                                $content .= 'selected="selected"';
+                             }else{
+                                 $content .= 'disabled="disabled"';
+                             }
+                         }
+                        
                      }else{
                         if(in_array($entitiesList[$i]['ID'], $_SESSION['m_admin']['tag']['entities'])){
                            $content .= 'selected="selected"';
                         } 
-                        if(!in_array($entitiesList[$i]['ID'], $entitiesRestriction)){
+                        if(!in_array($entitiesList[$i]['ID'], $entitiesRestriction) && $_SESSION['user']['UserId'] != 'superadmin'){
                            $content .= 'disabled="disabled"';
                         }
                         
@@ -162,7 +165,7 @@ if ($mode == 'list') {
 
                 }
                 $content .= '</select>';
-                $content .= '<script>new Chosen($(\'entitieslist\'),{width: "95%", disable_search_threshold: 10});</script>';
+                $content .= '<script>new Chosen($(\'entitieslist\'),{width: "95%", disable_search_threshold: 10, search_contains: true,display_disabled_options: false});</script>';
                 echo $content;
             ?>
             </p>

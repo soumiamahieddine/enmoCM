@@ -558,13 +558,13 @@ abstract class tag_controler_Abstract extends ObjectControler
         $db = new Database();
         
         //Primo, test de l'existance du mot clé en base.
-        $stmt = $db->query(
+        /*$stmt = $db->query(
             "SELECT tag_label FROM " ._TAG_TABLE_NAME
             . " WHERE  coll_id = ? AND tag_label ILIKE ?"
         ,array($coll_id,$new_tag_label));
         //$db->show();exit();
         if ($stmt->rowCount() == 0)
-        {
+        {*/
              $stmt = $db->query(
                 "INSERT INTO " ._TAG_TABLE_NAME
                 . "(tag_label, coll_id, entity_id_owner) VALUES (?, ?, ?)"
@@ -581,10 +581,10 @@ abstract class tag_controler_Abstract extends ObjectControler
                 }
             }
             
-        }else{
+        /*}else{
             $_SESSION['error'] = _TAG_DEFAULT.' '.': '.$new_tag_label.' '._ALREADY_EXISTS;
             return false;
-        }
+        }*/
         
     }
     
@@ -638,7 +638,7 @@ abstract class tag_controler_Abstract extends ObjectControler
                 $tmp_arr = users_entities_Abstract::getEntityChildren($entity_id);
                 $entitiesRestriction = array_merge($entitiesRestriction, $tmp_arr);
             }
-            $_SESSION['m_admin']['tag']['entities'] = $entitiesRestriction;
+            $_SESSION['m_admin']['tag']['entities'] = array_unique($entitiesRestriction);
         }
 
         $this->insert_tag_label($tag_label, $coll_id);
