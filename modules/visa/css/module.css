@@ -263,6 +263,8 @@
 
 .resListContentFrame{
     border-bottom : solid 1px black;
+    position:relative;
+    overflow: hidden;
 }
 
 .resListContentPos{
