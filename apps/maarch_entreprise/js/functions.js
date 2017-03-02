@@ -2114,24 +2114,41 @@ function valid_report_by_period(url)
     var year = '';
     var month = '';
 
+     
+    if ($j('#entities_chosen').length){
+        var entities_chosen=[];
+        $j("select#entities_chosen option:selected").each(function(key, entity) {
+           entities_chosen.push(entity.value);
+        });
+        var entities_chosen_list = entities_chosen.join('#');
+        
+    }
     
+    if ($j('#status_chosen').length){
+        var status_chosen=[];
+        $j("select#status_chosen option:selected").each(function(key, status) {
+           status_chosen.push(status.value);
+        });
+        var status_chosen_list = status_chosen.join('#');
+        
+    }
     
-    if ($('entities_chosen')){
-        var entities_chosen_list = $('entities_chosen');
-        var entities_chosen;
-        for (var i = 0; i < entities_chosen_list.options.length; i++) {
-            //if(entities_chosen_list.options[i].selected ==true){
-                if(i==0){
-                  entities_chosen = entities_chosen_list.options[i].value;
-                  //entities_chosen = "'"+entities_chosen_list.options[i].value+"'";
-                }else{
-                   entities_chosen += "#"+entities_chosen_list.options[i].value;
-                   //entities_chosen += ","+"'"+entities_chosen_list.options[i].value+"'";
-                   
-                    }
-                //}
-
-            }
+    if ($j('#priority_chosen').length){
+        var priority_chosen=[];
+        $j("select#priority_chosen option:selected").each(function(key, priority) {
+           priority_chosen.push(priority.value);
+        });
+        var priority_chosen_list = priority_chosen.join('#');
+        
+    }
+    
+    if ($j('#doctypes_chosen').length){
+        var doctypes_chosen=[];
+        $j("select#doctypes_chosen option:selected").each(function(key, doctype) {
+           doctypes_chosen.push(doctype.value);
+        });
+        var doctypes_chosen_list = doctypes_chosen.join('#');
+        
     }
     
     
@@ -2200,7 +2217,10 @@ function valid_report_by_period(url)
                 period_type : type_period,
                 the_year : year,
                 the_month : month,
-                entities_chosen : entities_chosen,
+                entities_chosen : entities_chosen_list,
+                status_chosen : status_chosen_list,
+                priority_chosen : priority_chosen_list,
+                doctypes_chosen : doctypes_chosen_list,
                 date_start : datestart,
                 date_fin : dateend
                         },
@@ -2260,6 +2280,18 @@ function valid_report_by_period(url)
                         
                     }
                 }
+            },onCreate: function(answer) {
+                console.log('toto');
+                $j('#validate').val('Traitement en cours ...');
+                $j('#validate').prop('disabled', true);
+                $j('#validate').css("opacity","0.5");
+
+            },onComplete: function(answer) {
+                console.log('toto');
+                $j('#validate').val('Valider');
+                $j('#validate').prop('disabled', false);
+                $j('#validate').css("opacity","1");
+
             }
         });
     }
@@ -2777,7 +2809,7 @@ var globalEval =  function(script){
   } else {
     return window.eval(script);
   }
-}
+};
 
 //
 function evalMyScripts(targetId) {
@@ -2847,7 +2879,9 @@ function loadList(path, inDiv, modeReturn, init) {
                     eval("response = "+answer.responseText);
                     if(response.status == 0){
                         $j('#' +div).html(convertToHTMLVisibleNewline(response.content));
-                        evalMyScripts(div);
+                        // Old Way
+                        //$(div).innerHTML = convertToHTMLVisibleNewline(response.content);
+                        //evalMyScripts(div);
 
                         if(document.getElementById("loading")){
                             document.getElementById("loading").style.display='none';

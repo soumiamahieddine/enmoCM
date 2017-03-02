@@ -13,16 +13,18 @@ require_once 'apps/maarch_entreprise/Models/UsersModel.php';
 require_once 'modules/basket/Models/BasketsModel.php';
 
 
-class VisaController {
+class VisaController
+{
 
-	public function getSignatureBook(RequestInterface $request, ResponseInterface $response, $aArgs) {
+	public function getSignatureBook(RequestInterface $request, ResponseInterface $response, $aArgs)
+	{
 
 		$resId = $aArgs['resId'];
 		$basketId = $aArgs['basketId'];
 
 		$incomingMail = \ResModel::get([
-			'resId' => $resId,
-			'select'    => ['subject']
+			'resId'  => $resId,
+			'select' => ['res_id', 'subject', 'alt_identifier']
 		]);
 
 		if (empty($incomingMail[0])) {
@@ -60,12 +62,12 @@ class VisaController {
 				'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
 				'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
 				'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
-				'dest_address_id'
+				'dest_address_id', 'origin'
 			]
 		]);
 
 		foreach ($attachments as $key => $value) {
-			if ($value['attachment_type'] == 'converted_pdf') {
+			if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {
 				continue;
 			}
 
@@ -83,8 +85,19 @@ class VisaController {
 			$pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
 			foreach ($attachments as $tmpKey => $tmpValue) {
 				if ($tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
-					$viewerId = $tmpValue['res_id'];
+					if ($value['status'] != 'SIGN') {
+						$viewerId = $tmpValue['res_id'];
+					}
 					unset($attachments[$tmpKey]);
+				}
+				if ($value['status'] == 'SIGN' && $tmpValue['attachment_type'] == 'signed_response' && !empty($tmpValue['origin'])) {
+					$signDaddy = explode(',', $tmpValue['origin']);
+					if (($signDaddy[0] == $value['res_id'] && $signDaddy[1] == "res_attachments")
+						|| ($signDaddy[0] == $value['res_id_version'] && $signDaddy[1] == "res_version_attachments"))
+					{
+						$viewerId = $tmpValue['res_id'];
+						unset($attachments[$tmpKey]);
+					}
 				}
 			}
 
@@ -107,9 +120,17 @@ class VisaController {
 			$attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$realId}&coll_id={$collId}&display=true&advanced=true";
 			$attachments[$key]['viewerLink'] = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$viewerId}";
 
-			unset($attachments[$key]['res_id'], $attachments[$key]['res_id_version'], $attachments[$key]['path'], $attachments[$key]['filename'],
-				$attachments[$key]['dest_user'], $attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id']);
+			unset($attachments[$key]['path'], $attachments[$key]['filename'], $attachments[$key]['dest_user'],
+				$attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id']);
 		}
+
+		foreach ($attachments as $key => $value) {
+			if ($value['attachment_type'] == 'converted_pdf') {
+				unset($attachments[$key]);
+			}
+		}
+
+		$attachments = array_values($attachments);
 
 		$incomingMailAttachments = \ResModel::getAvailableLinkedAttachmentsIn([
 			'resIdMaster' => $resId,
@@ -142,19 +163,70 @@ class VisaController {
 
 		$resList = \BasketsModel::getResListById([
 			'basketId' => $basketId,
-			'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority']
+			'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
 		]);
+
+		foreach ($resList as $key => $value) {
+			if (!empty($value['contact_id'])) {
+				$resList[$key]['sender'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['contact_id'], 'addressId' => $value['address_id']]);
+			} else {
+				$resList[$key]['sender'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
+			}
+			$attachmentsInResList = \ResModel::getAvailableLinkedAttachmentsNotIn([
+				'resIdMaster' => $value['res_id'],
+				'notIn' 	  => ['incoming_mail_attachment', 'print_folder'],
+				'select' 	  => ['status']
+			]);
+			$allSigned = !empty($attachmentsInResList);
+			foreach ($attachmentsInResList as $value2) {
+				if ($value2['status'] == 'TRA' || $value2['status'] == 'A_TRA') {
+					$allSigned = false;
+				}
+			}
+			$resList[$key]['allSigned'] = $allSigned;
+			$resList[$key]['priorityColor'] = $_SESSION['mail_priorities_color'][$value['priority']]; //TODO No Session
+			unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
+		}
+
+		$actionLabel = \BasketsModel::getActionByActionId(['actionId' => $_SESSION['current_basket']['default_action'], 'select' => ['label_action']])['label_action'] . ' n°';
+		$actionLabel .= (_ID_TO_DISPLAY == 'res_id' ? $incomingMail[0]['res_id'] : $incomingMail[0]['alt_identifier']);
+		$actionLabel .= ' : ' . $incomingMail[0]['subject'];
+		$currentAction = [
+			'id' => $_SESSION['current_basket']['default_action'], //TODO No Session
+			'actionLabel' => $actionLabel
+		];
 
 		$datas = [];
 		$datas['actions'] = $actionsData;
 		$datas['attachments'] = $attachments;
 		$datas['documents'] = $documents;
-		$datas['currentAction'] = $_SESSION['current_basket']['default_action']; //TODO Aller chercher l'id de la basket sans passer par la session
+		$datas['currentAction'] = $currentAction;
 		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
 		$datas['histories'] = $history;
 		$datas['resList'] = $resList;
+		$datas['signature'] = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
+		$datas['consigne'] = \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);
 
 		return $response->withJson($datas);
+	}
+
+	public function unsignFile(RequestInterface $request, ResponseInterface $response, $aArgs)
+	{
+
+		$resId = $aArgs['resId'];
+		$collId = $aArgs['collId'];
+
+		$bReturnSnd = false;
+		$bReturnFirst = \ResModel::put(['collId' => $collId, 'set' => ['status' => 'A_TRA'], 'where' => ['res_id = ?'], 'data' => [$resId]]);
+		if ($bReturnFirst) {
+			$bReturnSnd = \ResModel::put(['collId' => $collId, 'set' => ['status' => 'DEL'], 'where' => ['origin = ?', 'status != ?'], 'data' => [$resId . ',' .$collId, 'DEL']]);
+		}
+
+		if ($bReturnFirst && $bReturnSnd) {
+			return $response->withJson(['status' => 'OK']);
+		} else {
+			return $response->withJson(['status' => 'KO']);
+		}
 	}
 
 }

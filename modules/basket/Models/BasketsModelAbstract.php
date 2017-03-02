@@ -51,4 +51,19 @@ class BasketsModelAbstract extends Apps_Table_Service {
         return $aResList;
     }
 
+    public static function getActionByActionId(array $aArgs = []) {
+        static::checkRequired($aArgs, ['actionId']);
+        static::checkNumeric($aArgs, ['actionId']);
+
+
+        $aAction = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['actions'],
+            'where'     => ['id = ?'],
+            'data'      => [$aArgs['actionId']]
+        ]);
+
+        return $aAction[0];
+    }
+
 }

@@ -21,9 +21,11 @@
 
 require_once 'apps/maarch_entreprise/services/Table.php';
 
-class UsersModelAbstract extends Apps_Table_Service {
+class UsersModelAbstract extends Apps_Table_Service
+{
 
-    public static function getById(array $aArgs = []) {
+    public static function getById(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['id']);
         static::checkString($aArgs, ['id']);
 
@@ -38,7 +40,8 @@ class UsersModelAbstract extends Apps_Table_Service {
         return $aReturn;
     }
 
-    public static function getLabelledUserById(array $aArgs = []) {
+    public static function getLabelledUserById(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['id']);
         static::checkString($aArgs, ['id']);
 
@@ -53,4 +56,49 @@ class UsersModelAbstract extends Apps_Table_Service {
         return $labelledUser;
     }
 
+    public static function getSignatureForCurrentUser()
+    {
+        //TODO No Session
+        if (empty($_SESSION['user']['pathToSignature']) || !file_exists($_SESSION['user']['pathToSignature'])) {
+            return [];
+        }
+
+        $aSignature = [
+            'signaturePath' => $_SESSION['user']['signature_path'],
+            'signatureFileName' => $_SESSION['user']['signature_file_name'],
+            'pathToSignature' => $_SESSION['user']['pathToSignature']
+        ];
+
+        $extension = explode('.', $_SESSION['user']['pathToSignature']);
+        $extension = $extension[count($extension) - 1];
+        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($extension);
+        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+        if (!copy($_SESSION['user']['pathToSignature'], $filePathOnTmp)) {
+            return $aSignature;
+        }
+
+        $aSignature['pathToSignatureOnTmp'] = $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp;
+
+        return $aSignature;
+    }
+
+    public static function getConsigneForCurrentUserById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['resId']);
+        static::checkNumeric($aArgs, ['resId']);
+
+
+        $aReturn = static::select([
+            'select'    => ['process_comment'],
+            'table'     => ['listinstance'],
+            'where'     => ['res_id = ?', 'item_id = ?'],
+            'data'      => [$aArgs['resId'], $_SESSION['user']['UserId']],
+        ]);
+
+        if (empty($aReturn[0]['process_comment'])) {
+            return 'No Consigne Found';
+        }
+
+        return $aReturn[0]['process_comment'];
+    }
 }

@@ -34,11 +34,11 @@ $core_tools->load_js();
 
 $modifVisaWorkflow = false;
 if($from_detail == true){
-    if ($core_tools->test_service('config_visa_workflow_in_detail', 'avis', false)) {
+    if ($core_tools->test_service('config_visa_workflow_in_detail', 'visa', false)) {
         $modifVisaWorkflow = true;
     }
 }else{
-    if ($core_tools->test_service('config_visa_workflow', 'avis', false)) {
+    if ($core_tools->test_service('config_visa_workflow', 'visa', false)) {
         $modifVisaWorkflow = true;
     }
 }

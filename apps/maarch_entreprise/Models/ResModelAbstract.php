@@ -21,16 +21,18 @@
 
 require_once 'apps/maarch_entreprise/services/Table.php';
 
-class ResModelAbstract extends Apps_Table_Service {
+class ResModelAbstract extends Apps_Table_Service
+{
 
-    public static function get(array $aArgs = []) {
+    public static function get(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['resId']);
         static::checkNumeric($aArgs, ['resId']);
 
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['res_letterbox'],
+            'table'     => ['res_view_letterbox'],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
         ]);
@@ -38,7 +40,25 @@ class ResModelAbstract extends Apps_Table_Service {
         return $aReturn;
     }
 
-    public static function getAvailableLinkedAttachmentsIn(array $aArgs = []) {
+    public static function put(array $aArgs = [])
+    {
+        // TODO collId stands for table in DB => à Changer pour aller récupérer la table lié à collId
+        static::checkRequired($aArgs, ['collId', 'set', 'where', 'data']);
+        static::checkString($aArgs, ['collId']);
+        static::checkArray($aArgs, ['set', 'where', 'data']);
+
+        $bReturn = static::update([
+            'table'     => $aArgs['collId'],
+            'set'       => $aArgs['set'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return $bReturn;
+    }
+
+    public static function getAvailableLinkedAttachmentsIn(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['resIdMaster', 'in']);
         static::checkNumeric($aArgs, ['resIdMaster']);
         static::checkArray($aArgs, ['in']);
@@ -47,14 +67,15 @@ class ResModelAbstract extends Apps_Table_Service {
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_view_attachments'],
-            'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'status not in (?)'],
-            'data'      => [$aArgs['resIdMaster'], $aArgs['in'], ['DEL', 'TMP', 'OBS']]
+            'where'     => ['res_id_master = ?', 'attachment_type in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
+            'data'      => [$aArgs['resIdMaster'], $aArgs['in']]
         ]);
 
         return $aReturn;
     }
 
-    public static function getAvailableLinkedAttachmentsNotIn(array $aArgs = []) {
+    public static function getAvailableLinkedAttachmentsNotIn(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['resIdMaster', 'notIn']);
         static::checkNumeric($aArgs, ['resIdMaster']);
         static::checkArray($aArgs, ['notIn']);
@@ -63,8 +84,8 @@ class ResModelAbstract extends Apps_Table_Service {
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_view_attachments'],
-            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status not in (?)'],
-            'data'      => [$aArgs['resIdMaster'], $aArgs['notIn'], ['DEL', 'TMP', 'OBS']]
+            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
+            'data'      => [$aArgs['resIdMaster'], $aArgs['notIn']]
         ]);
 
         return $aReturn;

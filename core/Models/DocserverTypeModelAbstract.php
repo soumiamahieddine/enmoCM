@@ -8,7 +8,7 @@
 */
 
 /**
-* @brief Status Model
+* @brief DocserverType Model
 * @author dev@maarch.org
 * @ingroup core
 */
@@ -17,14 +17,14 @@ namespace Core\Models;
 
 require_once 'apps/maarch_entreprise/services/Table.php';
 
-class StatusModelAbstract extends \Apps_Table_Service
+class DocserverTypeModelAbstract extends \Apps_Table_Service
 {
 
     public static function getList()
     {
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['status'],
+            'table'     => ['docserver_types'],
         ]);
 
         return $aReturn;
@@ -37,8 +37,8 @@ class StatusModelAbstract extends \Apps_Table_Service
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['status'],
-            'where'     => ['id = ?'],
+            'table'     => ['docserver_types'],
+            'where'     => ['docserver_type_id = ?'],
             'data'      => [$aArgs['id']]
         ]);
 
@@ -50,7 +50,7 @@ class StatusModelAbstract extends \Apps_Table_Service
         static::checkRequired($aArgs, ['id']);
         static::checkString($aArgs, ['id']);
 
-        $aReturn = static::insertInto($aArgs, 'status');
+        $aReturn = static::insertInto($aArgs, 'docserver_types');
 
         return $aReturn;
     }
@@ -64,7 +64,7 @@ class StatusModelAbstract extends \Apps_Table_Service
 
         $aReturn = static::updateTable(
             $aArgs, 
-            'status',
+            'docserver_types',
             $where
         );
 
@@ -77,11 +77,12 @@ class StatusModelAbstract extends \Apps_Table_Service
         static::checkString($aArgs, ['id']);
 
         $aReturn = static::deleteFrom([
-                'table' => 'status',
+                'table' => 'docserver_types',
                 'where' => ['id = ?'],
                 'data'  => [$aArgs['id']]
             ]);
 
         return $aReturn;
     }
+
 }

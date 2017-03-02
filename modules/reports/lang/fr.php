@@ -77,7 +77,9 @@ if (!defined("_MONTH"))
 if (!defined("_PROCESS_DELAI_AVG"))
     define("_PROCESS_DELAI_AVG", "Délai moyen (en jours)");
 if (!defined("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT"))
-    define("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT", "Délai moyen de traitement");
+    define("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT", "Délai moyen de traitement par période");
+if (!defined("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_DESC"))
+    define("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_DESC", "Permet d'afficher le délai (en jour) de la création jusqu'à la clôture d'un courrier.");
 if (!defined("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE"))
     define("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE", "Délai moyen de traitement par type de courrier");
 ?>

@@ -219,7 +219,7 @@
 
 .visaContent{
     position: relative;
-    height:100%;
+    height:95vh;
     margin-top: 10px;
 }
 
@@ -231,9 +231,18 @@
      text-align: right;
 }
 
+.headerSignatureBook .others input{
+    background: #E6E6E6;
+    border-radius: 2px;
+    width: 50%;
+    border: none;
+    padding: 5px;
+}
+
 .resListContent{
-    display: table-cell;
+    display: inline-block;
     width:15%;
+    height:100%;
     text-align: center;
     border-right: solid 1px;
     vertical-align: top;
@@ -262,16 +271,18 @@
 
 .resListContentFrame{
     border-bottom : solid 1px black;
+    position:relative;
+    overflow: hidden;
 }
 
 .resListContentPos{
-    height:95vh;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
 .hideresListContent{
-    display: table-cell;
+    display: inline-block;
+    height:100%;
     text-align: center;
     vertical-align: middle;
     overflow: auto;
@@ -284,42 +295,44 @@
     vertical-align: top;
 }
 .contentLeft, .contentRight{
-    display: table-cell;
-    width:45%;
+    display: inline-block;
+    width:42%;
+    height:100%;
     text-align: center;
 }
 
 .visaContent iframe{
     margin: auto;
     width:95%;
-    height: 100%;
+    height: 75vh;
     border: none;
 }
 
 .contentLeft iframe{
-    height: 80%;
+    height: 75vh;
 }
 
 .panelRight{
-    width: 2%;
+    width: auto;
     border-left: solid 1px;
-    vertical-align: top;
+    //vertical-align: top;
 }
 
 .panelRightConten{
-    height: 75vh;
+    width: 90%;
+    height: 93%;
     overflow: auto;  
 }
 
 .panelRight .item{
     padding:10px;
+    padding-left: 5px;
     cursor: pointer;
 }
 
 .contentRight .panelRight,.contentRight .contentShow{
-    display: table-cell;
-    vertical-align: top;
-    height:75vh;
+    display: inline-block;
+   height: 85vh;
 }
 .contentLeft .contentShow{
     height: 95vh;
@@ -328,9 +341,17 @@
 
 .contentRight .contentShow,.contentLeft .contentShow{
     padding : 5px;
+    width:95%;
 }
 
-.pjDetails{
+.contentRight .contentShow{
+    position: relative;
+    vertical-align: top;
+    padding : 5px;
+    width:90%;
+}
+
+.pjDetails,.pjSign{
     display: table;
     width: 97%;
     text-align: left;
@@ -355,6 +376,10 @@
    cursor: pointer;
 }
 
+.pjDetails div{
+    white-space: initial;
+}
+
 .pjDoc{
    height: 30px;
    -moz-box-shadow: inset 0px 0px 5px 0px #656565;
@@ -371,6 +396,7 @@
 .pjDoc img{
    height: 95%;
    border: solid 2px white;
+   cursor:pointer;
 }
 
 img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
@@ -434,9 +460,11 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 
 .contentSignatureBook{
     border: solid 1px black;
-    display: table;
+    display: block;
     width: 100%;
-    height:75vh;
+    height:85vh;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .headerSignatureBook .item{
@@ -469,9 +497,7 @@ box-shadow: inset 0px 0px 5px 0px #656565;
 }
 
 .panelRightAddPj{
-    height: 45px;
-    vertical-align: middle;
-    display: table-cell;
+    display: block;
 }
 
 .panelRightAddPj:hover{
@@ -485,7 +511,7 @@ box-shadow: inset 0px 0px 5px 0px #656565;
 .infoPj{
     width: 30%;
     display: inline-block;
-    white-space: nowrap;
+    white-space: nowrap !important;
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 5px;
@@ -646,4 +672,29 @@ box-shadow: inset 0px 0px 5px 0px #656565;
 
 #historyTable.ng-table th:nth-child(3) {
     width:60%;
+}
+
+#footer{
+    padding: 0px;
+}
+
+.pjSign{
+    text-align: center;
+    height: auto;
+    position: absolute;
+    width: auto;
+    bottom: 0px;
+    background: white;
+    margin-bottom: 5px;
+}
+
+.pjSign img{
+    height: 30px;
+    -webkit-transition: height 0.5s; /* Safari */
+    transition: height 0.5s;
+}
+.pjSign:hover img{
+    height: 60px;
+    -webkit-transition: height 0.5s; /* Safari */
+    transition: height 0.5s;
 }

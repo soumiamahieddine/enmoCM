@@ -1,5 +1,12 @@
 <?php
 
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+*
+*/
+
 require_once 'vendor/autoload.php';
 require_once 'core/class/class_functions.php';
 include_once('core/init.php');

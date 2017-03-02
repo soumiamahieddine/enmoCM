@@ -33,9 +33,33 @@ $list = new list_show();
 $graph = new graphics();
 $sec = new security();
 
-$entitiesChosen = str_replace("'", "", $_POST['entities_chosen']);
-$entities_chosen=explode("#",$entitiesChosen);
-// $entities_chosen=join(",",$entities_chosen);
+$_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+
+$doctypes_chosen = explode("#", $_POST['doctypes_chosen']);
+$doctypes_chosen = "'" . join("','", $doctypes_chosen) . "'";
+
+$status_chosen = '';
+$where_status = '';
+
+if (!empty($_POST['entities_chosen'])) {
+    $entities_chosen = explode("#", $_POST['entities_chosen']);
+    $entities_chosen = "'" . join("','", $entities_chosen) . "'";
+    $where_entities = ' AND destination in (' . $entities_chosen . ') ';
+}
+
+if (!empty($_POST['status_chosen'])) {
+    $status_chosen = explode("#", $_POST['status_chosen']);
+    $status_chosen = "'" . join("','", $status_chosen) . "'";
+    $where_status = ' AND status in (' . $status_chosen . ') ';
+}
+
+$priority_chosen = '';
+$where_priority = '';
+if (!empty($_POST['priority_chosen']) || $_POST['priority_chosen'] === "0") {
+    $priority_chosen = explode("#", $_POST['priority_chosen']);
+    $priority_chosen = "'" . join("','", $priority_chosen) . "'";
+    $where_priority = ' AND priority in (' . $priority_chosen . ') ';
+}
 
 $status_obj = new manage_status();
 $ind_coll = $sec->get_ind_collection('letterbox_coll');
@@ -75,138 +99,142 @@ $where_date = '';
 $arrayPDO = array();
 $date_title = '';
 
-$arrayPDOStatus = array();
-$str_status = '(';
-	for($i=0;$i<count($search_status);$i++)
-	{
-		$str_status .= "?,";
-		$arrayPDOStatus = array_merge($arrayPDOStatus, array($search_status[$i]['ID']));
-	}
-	$str_status = preg_replace('/,$/', ')', $str_status);
-	$str_status2 = "('COU','END','NEW','RET','SIG','UNS','VAL','VIS','SMART','MAQUAL','BRSAS','XML','XML_SENT','WAIT_REPLY','BAP','DAV','AVD','APP')";
-
-	if($period_type == 'period_year')
-	{
-		if(empty($_REQUEST['the_year']) || !isset($_REQUEST['the_year']))
-		{
-			?>
-			<div class="error"><?php echo _YEAR.' '._MISSING;?></div>
-			<?php
-			exit();
-		}
-		if(	!preg_match('/^[1-2](0|9)[0-9][0-9]$/', $_REQUEST['the_year']))
-		{
-			?>
-			<div class="error"><?php echo _YEAR.' '._WRONG_FORMAT;?></div>
-			<?php
-			exit();
-		}
-		
-		$where_date = $req->extract_date('creation_date', 'year')." = :creation_date_year";
-		$arrayPDO = array_merge($arrayPDO, array(":creation_date_year" =>$_REQUEST['the_year']));
-		
-		$date_title = _FOR_YEAR.' '.$_REQUEST['the_year'];
-	}
-	else if($period_type == 'period_month')
-	{
-		$arr_month = array('01','02','03','04','05','06','07','08','09','10','11','12');
-		if(empty($_REQUEST['the_month']) || !isset($_REQUEST['the_month']))
-		{
-			?>
-			<div class="error"><?php echo _MONTH.' '._MISSING;?></div>
-			<?php
-			exit();
-		}
-		if(	!in_array($_REQUEST['the_month'], $arr_month))
-		{
-			?>
-			<div class="error"><?php echo _MONTH.' '._WRONG_FORMAT;?></div>
-			<?php
-			exit();
-		}
-		$where_date = $req->extract_date('creation_date', 'year')." = '".$default_year."' and ".$req->extract_date('creation_date', 'month')." = :creation_date_month";
-		$arrayPDO = array_merge($arrayPDO, array(":creation_date_month" => $_REQUEST['the_month']));
-		$month = '';
-		switch($_REQUEST['the_month'])
-		{
-			case '01':
-			$month = _JANUARY;
-			break;
-			case '02':
-			$month = _FEBRUARY;
-			break;
-			case '03':
-			$month = _MARCH;
-			break;
-			case '04':
-			$month = _APRIL;
-			break;
-			case '05':
-			$month = _MAY;
-			break;
-			case '06':
-			$month = _JUNE;
-			break;
-			case '07':
-			$month = _JULY;
-			break;
-			case '08':
-			$month = _AUGUST;
-			break;
-			case '09':
-			$month = _SEPTEMBER;
-			break;
-			case '10':
-			$month = _OCTOBER;
-			break;
-			case '11':
-			$month = _NOVEMBER;
-			case '12':
-			$month = _DECEMBER;
-			break;
-			default:
-			$month = '';
-		}
-		$date_title = _FOR_MONTH.' '.$month;
-	}
-	else if($period_type == 'custom_period')
-	{
-		if(isset($_REQUEST['date_start']) && $_REQUEST['date_start'] <> '')
-		{
-			$where_date  .= " AND ".$req->extract_date('creation_date')." > :date_start";
-			$arrayPDO = array_merge($arrayPDO, array(":date_start" => functions::format_date_db($_REQUEST['date_start'])));
-			$date_title .= strtolower(_SINCE).' '.$_REQUEST['date_start'].' ';
-		}
-
-		if(isset($_REQUEST['date_fin']) && $_REQUEST['date_fin'] <> '')
-		{
-			$where_date  .= " AND ".$req->extract_date('creation_date')." < :date_fin";
-			$arrayPDO = array_merge($arrayPDO, array(":date_fin" => functions::format_date_db($_REQUEST['date_fin'])));
-			$date_title.= strtolower(_FOR).' '.$_REQUEST['date_fin'].' ';
-		}
-		if(empty($where_date))
-		{
-			$where_date = $req->extract_date('creation_date', 'year')." = '".$default_year."'";
-			$date_title = _FOR_YEAR.' '.$default_year;
-		}
-	}
-	else
+if($period_type == 'period_year')
+{
+	if(empty($_REQUEST['the_year']) || !isset($_REQUEST['the_year']))
 	{
 		?>
-		<div class="error"><?php echo _PERIOD.' '._MISSING;?></div>
+		<div class="error"><?php echo _YEAR.' '._MISSING;?></div>
 		<?php
 		exit();
 	}
+	if(	!preg_match('/^[1-2](0|9)[0-9][0-9]$/', $_REQUEST['the_year']))
+	{
+		?>
+		<div class="error"><?php echo _YEAR.' '._WRONG_FORMAT;?></div>
+		<?php
+		exit();
+	}
+	$where_date = " and ".$req->extract_date('creation_date', 'year')." = '".$_REQUEST['the_year']."'";
+	$date_title = _FOR_YEAR.' '.$_REQUEST['the_year'];
+}
 
-	$where_date = preg_replace('/^ AND/', '', $where_date);
+else if($period_type == 'period_month')
+{
+	$arr_month = array('01','02','03','04','05','06','07','08','09','10','11','12');
+	if(empty($_REQUEST['the_month']) || !isset($_REQUEST['the_month']))
+	{
+		?>
+		<div class="error"><?php echo _MONTH.' '._MISSING;?></div>
+		<?php
+		exit();
+	}
+	if(	!in_array($_REQUEST['the_month'], $arr_month))
+	{
+		?>
+		<div class="error"><?php echo _MONTH.' '._WRONG_FORMAT;?></div>
+		<?php
+		exit();
+	}
+	$where_date = " and ".$req->extract_date('creation_date', 'year')." = '".$default_year."' and ".$req->extract_date('creation_date', 'month')." = '".$_REQUEST['the_month']."'";
+	$month = '';
+	switch($_REQUEST['the_month'])
+	{
+		case '01':
+			$month = _JANUARY;
+			break;
+		case '02':
+			$month = _FEBRUARY;
+			break;
+		case '03':
+			$month = _MARCH;
+			break;
+		case '04':
+			$month = _APRIL;
+			break;
+		case '05':
+			$month = _MAY;
+			break;
+		case '06':
+			$month = _JUNE;
+			break;
+		case '07':
+			$month = _JULY;
+			break;
+		case '08':
+			$month = _AUGUST;
+			break;
+		case '09':
+			$month = _SEPTEMBER;
+			break;
+		case '10':
+			$month = _OCTOBER;
+			break;
+		case '11':
+			$month = _NOVEMBER;
+		case '12':
+			$month = _DECEMBER;
+			break;
+		default:
+			$month = '';
+	}
+	$date_title = _FOR_MONTH.' '.$month;
+}
+else if($period_type == 'custom_period')
+{
+	if (empty($_REQUEST['date_start']) && empty($_REQUEST['date_fin'])){
+		echo '<div class="error">'._DATE.' '._IS_EMPTY.''.$_REQUEST['date_start'].'</div>';
+		exit();
+	}
+	
+	
+	if( preg_match($_ENV['date_pattern'],$_REQUEST['date_start'])==false  && $_REQUEST['date_start'] <> ''  )
+	{
+		
+		echo '<div class="error">'._WRONG_DATE_FORMAT.' : '.$_REQUEST['date_start'].'</div>';
+		exit();
+	
+	}
+	if( preg_match($_ENV['date_pattern'],$_REQUEST['date_fin'])==false && $_REQUEST['date_fin'] <> '' )
+	{
+		
+		echo '<div class="error">'._WRONG_DATE_FORMAT.' : '.$_REQUEST['date_fin'].'</div>';
+		exit();
+
+	}
+
+	if(isset($_REQUEST['date_start']) && $_REQUEST['date_start'] <> '')
+	{
+		$where_date  .= " AND ".$req->extract_date('creation_date')." > '".$db->format_date_db($_REQUEST['date_start'])."'";
+		$date_title .= strtolower(_SINCE).' '.$_REQUEST['date_start'].' ';
+	}
+
+	if(isset($_REQUEST['date_fin']) && $_REQUEST['date_fin'] <> '')
+	{
+		$where_date  .= " AND ".$req->extract_date('creation_date')." < '".$db->format_date_db($_REQUEST['date_fin'])."'";
+		$date_title.= strtolower(_FOR).' '.$_REQUEST['date_fin'].' ';
+	}
+	if(empty($where_date))
+	{
+		$where_date = $req->extract_date('creation_date', 'year')." = '".$default_year."'";
+		$date_title = _FOR_YEAR.' '.$default_year;
+	}
+}
+else
+{
+	?>
+	<div class="error"><?php echo _PERIOD.' '._MISSING;?></div>
+	<?php
+	exit();
+}
 
 	if($id_report == 'process_delay')
 	{
 	
-		if (!$_REQUEST['entities_chosen']){
+		if (!$_REQUEST['doctypes_chosen']){
 	    	$stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' order by description");
 		}else{
-		    $stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' and type_id IN (?) order by description", array($entities_chosen));
+		    $stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' and type_id IN (".$doctypes_chosen.") order by description", array());
 		}
 
 		$doctypes = array();
@@ -233,9 +261,8 @@ $str_status = '(';
 		for($i=0; $i<count($doctypes);$i++)
 		{
 			$arrayPDO = array_merge($arrayPDO, array(":doctypeId" => $doctypes[$i]['ID']));
-			$stmt = $db->query("SELECT ".$view.".doctypes_second_level_label,".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay 
-				FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id 
-				WHERE  ".$where_date." AND ".$view.".closing_date is NOT NULL AND ".$view.".status not in ('DEL','BAD') and ".$view.".type_id = :doctypeId", $arrayPDO);
+			$stmt = $db->query("SELECT doctypes_second_level_label,".$req->get_date_diff('closing_date', 'creation_date' )." AS delay FROM ".$view
+				. " WHERE closing_date is NOT NULL AND status not in ('DEL','BAD') and type_id = :doctypeId".$where_date." ".$where_status." ".$where_priority, $arrayPDO);
 
 			$stmt2 = $db->query( "SELECT doctypes_second_level_label FROM doctypes INNER JOIN doctypes_second_level 
 						  ON doctypes.doctypes_second_level_id = doctypes_second_level.doctypes_second_level_id
@@ -291,7 +318,7 @@ $str_status = '(';
 				$largeur=1000;
 			}
 			
-			$title = _PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE.' '.$date_title ;
+			//$title = _PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE.' '.$date_title ;
 			$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=300&title=".$title."&labelY="._N_DAYS;
 			for($i=0;$i<count($_SESSION['labels1']);$i++)
 			{
@@ -378,16 +405,8 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 		{
 			for($i=1; $i<= 12; $i++)
 			{
-				if (!isset($where_date) || empty($where_date)) {
-					$period = date("Y");
-					$arrayPDO = array();
-				} else {
-					 $period = substr($where_date, -19);
-				}
-				$stmt = $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date')." as diff_date FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$view.".status not in ('DEL','BAD') 
-					AND ".$view.".closing_date is NOT NULL 
-					AND date_part( 'month', ".$view.".creation_date)  = ?
-					and date_part( 'year', ".$view.".creation_date)  = ?", array($i,$_POST['the_year']));
+				$stmt = $db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date')." as diff_date FROM ".$view
+                                        ." WHERE status not in ('DEL','BAD') AND closing_date is NOT NULL AND date_part( 'month', creation_date)  = ? AND date_part( 'year', creation_date)  = ? ".$where_status." ".$where_priority." ".$where_entities, array($i,$_POST['the_year']));
 				if( $stmt->rowCount() > 0)
 				{
 					$tmp = 0;
@@ -574,12 +593,12 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 		else if($id_report == 'mail_typology')
 		{
 			$has_data = false;
-			$title = _MAIL_TYPOLOGY_REPORT.' '.$date_title ;
+			//$title = _MAIL_TYPOLOGY_REPORT.' '.$date_title ;
 			
-			if (!$_REQUEST['entities_chosen']){
+			if (!$_REQUEST['doctypes_chosen']){
 		    	$stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' order by description");
 			}else{
-			    $stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' and type_id IN (?) order by description", array($entities_chosen));
+			    $stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' and type_id IN (".$doctypes_chosen.") order by description", array());
 			}
 
 			if($report_type == 'graph')
@@ -595,11 +614,10 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 			}
 
 			$totalCourrier=array();
-			$totalEntities = count($entities);
 			$z=0;
 			while($line = $stmt->fetchObject())
 			{
-				$stmt2 = $db->query("SELECT count(*) as total FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$where_date." and type_id = ".$line->type_id." and ".$view.".status not in ('DEL','BAD')", $arrayPDO);
+				$stmt2 = $db->query("SELECT count(res_id) as total FROM ".$view." WHERE type_id = ".$line->type_id." AND status not in ('DEL','BAD') ".$where_date." ".$where_status." ".$where_priority, $arrayPDO);
 				$res = $stmt2->fetchObject();
 
 				$stmt3 = $db->query( "SELECT doctypes_second_level_label FROM doctypes inner join doctypes_second_level 
@@ -687,7 +705,7 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 		else if($id_report == 'mail_vol_by_cat')
 		{
 			$has_data = false;
-			$title = _MAIL_VOL_BY_CAT_REPORT.' '.$date_title ;
+			//$title = _MAIL_VOL_BY_CAT_REPORT.' '.$date_title ;
 			if($report_type == 'graph')
 			{
 				$vol_an = array();
@@ -706,7 +724,8 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 			foreach(array_keys($_SESSION['coll_categories']['letterbox_coll']) as $key)
 			{
 				if($key!='default_category'){
-					$stmt = $db->query("SELECT count(*) as total FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$view.".status not in ('DEL','BAD')  and ".$where_date." and ".$view.".category_id = '".$key."'", $arrayPDO);
+					$stmt = $db->query("SELECT count(res_id) as total FROM ".$view
+                                                . " WHERE status not in ('DEL','BAD') AND category_id = '".$key."' ".$where_date." ".$where_status." ".$where_priority." ".$where_entities, $arrayPDO);
 					$res = $stmt->fetchObject();
 
 					if($report_type == 'graph')

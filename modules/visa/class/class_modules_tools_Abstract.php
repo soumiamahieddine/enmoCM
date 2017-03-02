@@ -654,7 +654,7 @@ abstract class visa_Abstract extends Database
                         $modif = 'false';
                         $vised = ' vised';
                         $link_vis = 'check';
-                        $info_vised = '<span style="display:block;color:green;">(à signé le : '.functions::format_date_db($info_userVis['process_date'],'','',true).')</span>';
+                        $info_vised = '<br/><sub>signé le : '.functions::format_date_db($info_userSign['process_date'],'','',true).'</sub>';
                     }
                     //VISA USER LINE CIRCUIT
                     $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';
@@ -662,10 +662,10 @@ abstract class visa_Abstract extends Database
                     	$str .= '<i class="fa fa-'.$link_vis.'" aria-hidden="true"></i>';
 					$str .= '</span>';
                     $str .= '<span class="visaUserInfo">';
-                    	$str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userSign['lastname'].' '.$info_userSign['firstname'].' <sup class="nbRes">'.$info_userSign['entity_id'].'</sup>';
+                    	$str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userSign['lastname'].' '.$info_userSign['firstname'].' <sup class="nbRes">'.$info_userSign['entity_id'].'</sup>'.$info_vised;
                 	$str .= '</span>';
                 	$str .= '<span class="visaUserConsigne">';
-                		$str .= '<input class="userId" type="hidden" value="'.$info_userSign['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userSign['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userSign['process_comment'].'"/>'.$info_vised;
+                		$str .= '<input class="userId" type="hidden" value="'.$info_userSign['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userSign['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userSign['process_comment'].'"/>';
                 	$str .= '</span>';
                 	$str .= '<span class="visaUserAction">';
                 		$str .= $del_vis;
@@ -851,308 +851,157 @@ abstract class visa_Abstract extends Database
 
 	public function showPrintFolder($coll_id, $table, $id)
 	{
-		require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
 		. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
 		. 'class_indexing_searching_app.php';
-		$is = new indexing_searching_app();
+            $is = new indexing_searching_app();
 		
-		require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-			. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-			. 'class_users.php';
+            require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+                . 'class_users.php';
 			
-			$users_tools    = new class_users();
+            $users_tools    = new class_users();
 		
-		require_once 'core/class/class_request.php';
+            require_once 'core/class/class_request.php';
 			
-		$request = new request();
+            $request = new request();
 			
-		require_once('core/class/class_security.php');
-		$sec = new security();
-		$view = $sec->retrieve_view_from_coll_id($coll_id);
-		$stmt = $this->query("select subject, contact_society, category_id from $view where res_id = ?",array($id));
-		$res = $stmt->fetchObject();
-		$str = '';
-		$str .= '<div align="left" class="block">';
-		$str .= '<div class="error" id="divErrorPrint" name="divErrorPrint" onclick="this.hide();"></div>';
-	
-		$str .= '<p><b>Requérant</b> : '.$res->contact_society.'</p>';
-		$str .= '<p><b>Objet</b> : '.$res->subject.'</p>';
-		$str .= '<hr/>';
-		$str .= '<form style="width:99%;" name="print_folder_form" id="print_folder_form" action="#" method="post">';
-		$str .= '<table style="width:99%;" name="print_folder" id="print_folder" >';
-		$str .= '<thead><tr><th style="width:25%;text-align:left;"></th><th style="width:40%;text-align:left;">Titre</th><th style="width:20%;text-align:left;">Rédacteur</th><th style="width:10%;text-align:left;">Date</th><th style="width:5%;text-align:left;"><input title="'._SELECT_ALL.'" id="allPrintFolder" type="checkbox" onclick="selectAllPrintFolder();"></th></tr></thead>';
-		$str .= '<tbody>';
+            require_once('core/class/class_security.php');
+            $sec = new security();
+            $view = $sec->retrieve_view_from_coll_id($coll_id);
+            $stmt = $this->query("select subject, contact_society, category_id from $view where res_id = ?",array($id));
+            $res = $stmt->fetchObject();
+            $str = '';
+            $str .= '<div align="left" class="block">';
+            $str .= '<div class="error" id="divErrorPrint" name="divErrorPrint" onclick="this.hide();"></div>';
+
+            $str .= '<p><b>Requérant</b> : '.$res->contact_society.'</p>';
+            $str .= '<p><b>Objet</b> : '.$res->subject.'</p>';
+            $str .= '<hr/>';
+            $str .= '<form style="width:99%;" name="print_folder_form" id="print_folder_form" action="#" method="post">';
+            $str .= '<table style="width:99%;" name="print_folder" id="print_folder" >';
+            $str .= '<thead><tr><th style="width:25%;text-align:left;"></th><th style="width:40%;text-align:left;">Titre</th><th style="width:20%;text-align:left;">Rédacteur</th><th style="width:10%;text-align:left;">Date</th><th style="width:5%;text-align:left;"><input title="'._SELECT_ALL.'" id="allPrintFolder" type="checkbox" onclick="selectAllPrintFolder();"></th></tr></thead>';
+            $str .= '<tbody>';
 		
-		if ($res->category_id == "outgoing"){
-			$str .= '<tr><td><h3>+ Courrier sortant</h3></td><td></td><td></td><td></td><td></td></tr>';
-			$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'outgoing_mail');
-			for($i=0; $i < count($joined_files); $i++) {
-				//Get data
-				$id_doc = $joined_files[$i]['id']; 
-				$description = $joined_files[$i]['label'];
-				$format = $joined_files[$i]['format'];
-				$contact = $users_tools->get_user($joined_files[$i]['typist']);
-                $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-				$creation_date = $request->dateformat($dateFormat[0]);
-				if ($joined_files[$i]['pdf_exist'])
-					$check = 'class="check" checked="checked"';
-				else
-					$check = ' disabled title="' . _NO_PDF_FILE . '"';
-				//Show data
-				$str .= '<tr><td>'  
-					 . '</td><td>' . $description 
-					 . '</td><td>' . $contact['firstname']
-					 . " " . $contact['lastname'] . '</td><td>' 
-					 . $creation_date . '</td><td><input id="join_file_' 
-					 . $id_doc . '" type="checkbox" class="checkPrintFolder" name="join_attachment[]"  value="' 
-					 . $id_doc . '"  '.$check.'/>' . $joined_files[$i]['viewLink']. '</td></tr>';
-			}
-		}
-		else {
-			$str .= '<tr><td><h3>+ Courrier entrant</h3></td><td></td><td></td><td></td><td></td></tr>';
-			$joined_files = $this->getJoinedFiles($coll_id, $table, $id, false);
-			for($i=0; $i < count($joined_files); $i++) {
-				//Get data
-				$id_doc = $joined_files[$i]['id']; 
-				$description = $joined_files[$i]['label'];
-				$format = $joined_files[$i]['format'];
+            if ($res->category_id == "outgoing"){
 
-				$contact = $users_tools->get_user($joined_files[$i]['typist']);
-                $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-				$creation_date = $request->dateformat($dateFormat[0]);
-				
-				
-				if ($format == 'pdf') $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
-				//Show data
-				if($joined_files[$i]['is_version'] === true){
-					//Version
-					$version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
-					$str .= '<tr><td>' 
-						. '</td><td>'.$description.$version.'</td><td>'.$contact['firstname']." "
-						. $contact['lastname'].'</td><td>'.$creation_date
-						. '</td><td><input id="join_file_'.$id_doc.'_V'.$joined_files[$i]['version']
-						. '" type="checkbox" name="join_version[]"  value="'.$id_doc
-						. '"/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
-				} else {
-					$str .= '<tr><td></td><td>'.$description.'</td><td>'.$res->contact_society
-						. '</td><td>'.$creation_date.'</td><td><input id="join_file_'
-						. $id_doc.'" type="checkbox" name="join_file[]" value="'.$id_doc.'"  '.$check
-						. '/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
-				}
-			}
-		}
-		// Bordereau
-		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'waybill');
-		if (count ($joined_files) > 0)
-		$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['waybill'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
-		for($i=0; $i < count($joined_files); $i++) {
-            //Get data
-            $id_doc = $joined_files[$i]['id']; 
-            $description = $joined_files[$i]['label'];
-            $format = $joined_files[$i]['format'];
-            $contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-            $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
-			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
-				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
-				. $id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
-				. '/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
-        }
-		
-		// Fiche de circulation
-		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'record_traffic');
-		if (count ($joined_files) > 0)
-		$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['record_traffic'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
-		for($i=0; $i < count($joined_files); $i++) {
-            //Get data
-            $id_doc = $joined_files[$i]['id']; 
-            $description = $joined_files[$i]['label'];
-            $format = $joined_files[$i]['format'];
-            $contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-            $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
-			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
-				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
-				. $id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
-				. '/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
-        }
-		
-		// PROJETS DE REPONSE
-		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'response_project');
-		if (count ($joined_files) > 0)
-			$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['response_project'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
-		for($i=0; $i < count($joined_files); $i++) {
-            //Get data
-            $id_doc = $joined_files[$i]['id']; 
-            $description = $joined_files[$i]['label'];
-            $format = $joined_files[$i]['format'];
-			$contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-            $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
-			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
-				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc
-				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
-				. '/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
-        }
+                $str .= '<tr><td><h3>+ Courrier sortant</h3></td><td></td><td></td><td></td><td></td></tr>';
+                $joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'outgoing_mail');
+                for($i=0; $i < count($joined_files); $i++) {
+                    //Get data
+                    $id_doc = $joined_files[$i]['id']; 
+                    $description = $joined_files[$i]['label'];
+                    $format = $joined_files[$i]['format'];
+                    $contact = $users_tools->get_user($joined_files[$i]['typist']);
+                    $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
+                    $creation_date = $request->dateformat($dateFormat[0]);
+                    if ($joined_files[$i]['pdf_exist']){
+                        $check = 'class="check" checked="checked"';
+                    }else{
+                        $check = ' disabled title="' . _NO_PDF_FILE . '"';
+                    }
+                    //Show data
+                    $str .= '<tr><td>'  
+                        . '</td><td>' . $description 
+                        . '</td><td>' . $contact['firstname']
+                        . " " . $contact['lastname'] . '</td><td>' 
+                        . $creation_date . '</td><td><input id="join_file_' 
+                        . $id_doc . '" type="checkbox" class="checkPrintFolder" name="join_attachment[]"  value="' 
+                        . $id_doc . '"  '.$check.'/>' . $joined_files[$i]['viewLink']. '</td></tr>';
+                }
+            } else {
+                $str .= '<tr><td><h3>+ Courrier entrant</h3></td><td></td><td></td><td></td><td></td></tr>';
+                $joined_files = $this->getJoinedFiles($coll_id, $table, $id, false);
+                for($i=0; $i < count($joined_files); $i++) {
+                    //Get data
+                    $id_doc = $joined_files[$i]['id']; 
+                    $description = $joined_files[$i]['label'];
+                    $format = $joined_files[$i]['format'];
 
-		// TRANSMISSIONS
-		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'transmission');
-		if (count ($joined_files) > 0)
-			$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['transmission'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
-		for($i=0; $i < count($joined_files); $i++) {
-            //Get data
-            $id_doc = $joined_files[$i]['id'];
-            $description = $joined_files[$i]['label'];
-            $format = $joined_files[$i]['format'];
-			$contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-            $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
-			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
-				. $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc
-				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
-				. '/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
-        }
+                    $contact = $users_tools->get_user($joined_files[$i]['typist']);
+                    $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
+                    $creation_date = $request->dateformat($dateFormat[0]);
 
-		// REPONSES SIGNEES
-		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'signed_response');
-		if (count ($joined_files) > 0)
-			$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['signed_response'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
-		for($i=0; $i < count($joined_files); $i++) {
-            //Get data
-            $id_doc = $joined_files[$i]['id']; 
-            $description = $joined_files[$i]['label'];
-            $format = $joined_files[$i]['format'];
-			$contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-            $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist'])
-				$check = 'class="check checkPrintFolder" checked="checked"';
-			else
-				$check = ' disabled title="' . _NO_PDF_FILE . '"';
-			//Show data
-			$str .= "<tr><td></td><td>" . $description . "</td><td>" . $contact["firstname"] . " " . $contact["lastname"] . "</td>";
-			$str .= "<td>" . $creation_date . "</td><td>";
-			$str .= "<input id='join_file_" . $id_doc . "' type='checkbox' name='join_attachment[]' value='" . $id_doc ."' " . $check . "></input>";
-			$str .= $joined_files[$i]['viewLink'] . "</td></tr>";
-        }
-		
-		// AIHP IF NOT CUSTOM USELESS ! 
-		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'aihp');
-		if (count ($joined_files) > 0)
-		$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['aihp'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
-		for($i=0; $i < count($joined_files); $i++) {
-            //Get data
-            $id_doc = $joined_files[$i]['id']; 
-            $description = $joined_files[$i]['label'];
-            $format = $joined_files[$i]['format'];
-			$contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-            $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
-			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
-				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc 
-				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check 
-				. '/>' . $joined_files[$i]['viewLink']. '</td></tr>';
-        }
+                    if ($format == 'pdf'){
+                        $check = 'class="check checkPrintFolder" checked="checked"'; 
+                    
+                    }else{
+                        $check = ' disabled title="' . _NO_PDF_FILE . '"';
+                    }
+                    //Show data
+                    if($joined_files[$i]['is_version'] === true){
+                        //Version
+                        $version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
+                        $str .= '<tr><td>' 
+                            . '</td><td>'.$description.$version.'</td><td>'.$contact['firstname']." "
+                            . $contact['lastname'].'</td><td>'.$creation_date
+                            . '</td><td><input id="join_file_'.$id_doc.'_V'.$joined_files[$i]['version']
+                            . '" type="checkbox" name="join_version[]"  value="'.$id_doc
+                            . '"/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
+                    } else {
+                        $str .= '<tr><td></td><td>'.$description.'</td><td>'.$res->contact_society
+                            . '</td><td>'.$creation_date.'</td><td><input id="join_file_'
+                            . $id_doc.'" type="checkbox" name="join_file[]" value="'.$id_doc.'"  '.$check
+                            . '/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
+                    }
+                }
+            }
+            //ATTACHMENTS TYPES LOOP
+            foreach ($_SESSION['attachment_types'] as $attachmentTypeId => $attachmentTypeLabel) {
+                if($attachmentTypeId <> 'print_folder' && $attachmentTypeId <> 'converted_pdf'){
+                    $joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, $attachmentTypeId);
+                    if (count ($joined_files) > 0){
+                        $str .= '<tr><td><h3>+ '.$attachmentTypeLabel.'</h3></td><td></td><td></td><td></td><td></td></tr>';
+                        for($i=0; $i < count($joined_files); $i++) {
+                            $id_doc = $joined_files[$i]['id']; 
+                            $description = $joined_files[$i]['label'];
+                            $format = $joined_files[$i]['format'];
+                            $contact = $users_tools->get_user($joined_files[$i]['typist']);
+                            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
+                            $creation_date = $request->dateformat($dateFormat[0]);
+                            if ($joined_files[$i]['pdf_exist']){
+                                $check = 'class="check checkPrintFolder" checked="checked"';  
+                            }else{
+                                $check = ' disabled title="' . _NO_PDF_FILE . '"';
+                            }
+                            $str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." "
+                                . $contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
+                                . $id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
+                                . '/>' . $joined_files[$i]['viewLink'] . '</td></tr>';
+                        }
+                    }
+                }
+            }
 
-		// SIMPLE ATTACHMENT
-		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'simple_attachment');
-		if (count ($joined_files) > 0)
-		$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['simple_attachment'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
-		for($i=0; $i < count($joined_files); $i++) {
-            //Get data
-            $id_doc = $joined_files[$i]['id']; 
-            $description = $joined_files[$i]['label'];
-            $format = $joined_files[$i]['format'];
-			$contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-            $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
-			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
-				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc 
-				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check 
-				. '/>' . $joined_files[$i]['viewLink']. '</td></tr>';
-        }
-
-		// ENVELOPE
-		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'envelope');
-		if (count ($joined_files) > 0)
-			$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['envelope'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
-		for($i=0; $i < count($joined_files); $i++) {
-			//Get data
-			$id_doc = $joined_files[$i]['id'];
-			$description = $joined_files[$i]['label'];
-			$format = $joined_files[$i]['format'];
-			$contact = $users_tools->get_user($joined_files[$i]['typist']);
-			$dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-			$creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
-			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
-				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc
-				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
-				. '/>' . $joined_files[$i]['viewLink']. '</td></tr>';
-		}
-
-		// TRANSMISSION
-		$joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'transfer');
-		if (count ($joined_files) > 0)
-		$str .= '<tr><td><h3>+ '.$_SESSION['attachment_types']['transfer'].'</h3></td><td></td><td></td><td></td><td></td></tr>';
-		for($i=0; $i < count($joined_files); $i++) {
-            //Get data
-            $id_doc = $joined_files[$i]['id']; 
-            $description = $joined_files[$i]['label'];
-            $format = $joined_files[$i]['format'];
-			$contact = $users_tools->get_user($joined_files[$i]['typist']);
-            $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-            $creation_date = $request->dateformat($dateFormat[0]);
-			if ($joined_files[$i]['pdf_exist']) $check = 'class="check checkPrintFolder" checked="checked"'; else $check = ' disabled title="' . _NO_PDF_FILE . '"';
-			//Show data
-			$str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname']." ".$contact['lastname']
-				. '</td><td>'.$creation_date.'</td><td><input id="join_file_'.$id_doc 
-				. '" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check 
-				. '/>' . $joined_files[$i]['viewLink']. '</td></tr>';
-        }
-		
-		//Notes         
-		$core_tools     = new core_tools();		
-		if ($core_tools->is_module_loaded('notes')) {
-			require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
+            //NOTES       
+            $core_tools = new core_tools();		
+            if ($core_tools->is_module_loaded('notes')) {
+                require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
 			
-			$notes_tools    = new notes();
-			$user_notes = $notes_tools->getUserNotes($id, $coll_id);
-			if (count($user_notes) >0) {
-				$str .= '<tr><td><h3>+ '._NOTES.'</h3></td><td></td><td></td><td></td><td></td></tr>';
-				for($i=0; $i < count($user_notes); $i++) {
-					//Get data
-					$idNote = $user_notes[$i]['id']; 
-					//$noteShort = $request->cut_string($user_notes[$i]['label'], 50);
-       					$noteShort = $request->cut_string(str_replace(array("'", "\r", "\n","\""),array("'", " ", " ", "&quot;"),
-                                            $user_notes[$i]['label']), 50);
+                $notes_tools    = new notes();
+                $user_notes = $notes_tools->getUserNotes($id, $coll_id);
+                if (count($user_notes) >0) {
+                    $str .= '<tr><td><h3>+ '._NOTES.'</h3></td><td></td><td></td><td></td><td></td></tr>';
+                    for($i=0; $i < count($user_notes); $i++) {
+                            //Get data
+                            $idNote = $user_notes[$i]['id']; 
+                            //$noteShort = $request->cut_string($user_notes[$i]['label'], 50);
+                            $noteShort = $request->cut_string(str_replace(array("'", "\r", "\n","\""),array("'", " ", " ", "&quot;"),
+                            $user_notes[$i]['label']), 50);
 
-					$note = $user_notes[$i]['label'];
-					$userArray = $users_tools->get_user($user_notes[$i]['author']);
-					$date = $request->dateformat($user_notes[$i]['date']);
-					
-					$check = ' ';
-					
-					$str .= '<tr><td></td><td>'.$noteShort.'</td><td>'
-                                             .$userArray['firstname']." ".$userArray['lastname']
-                                             .'</td><td>'.$date.'</td><td><input id="note_'.$idNote.'" class="checkPrintFolder" type="checkbox" name="notes[]"  value="'
-                                             .$idNote.'"  '.$check.'/></td></tr>';
-				}
-			}
-		}
+                            $note = $user_notes[$i]['label'];
+                            $userArray = $users_tools->get_user($user_notes[$i]['author']);
+                            $date = $request->dateformat($user_notes[$i]['date']);
+
+                            $check = ' ';
+
+                            $str .= '<tr><td></td><td>'.$noteShort.'</td><td>'
+                                 .$userArray['firstname']." ".$userArray['lastname']
+                                 .'</td><td>'.$date.'</td><td><input id="note_'.$idNote.'" class="checkPrintFolder" type="checkbox" name="notes[]"  value="'
+                                 .$idNote.'"  '.$check.'/></td></tr>';
+                    }
+                }
+            }
 		
 		$str .= '</body>';
 		$str .= '</table>';

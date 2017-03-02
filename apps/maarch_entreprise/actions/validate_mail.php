@@ -856,7 +856,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $statusObjLabel = $stmt->fetchObject();
             $current_status_label = $statusObjLabel->label_status;
         }
-        $frm_str .= '<tr id="status" style="display:' . $display_value . ';">';
+        $frm_str .= '<tr id="status_tr" style="display:' . $display_value . ';">';
         $frm_str .= '<td><label for="status" class="form_title" >' . _STATUS
                 . '</label></td>';
         $frm_str .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';

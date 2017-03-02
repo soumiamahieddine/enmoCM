@@ -131,24 +131,34 @@ if ($mode == 'list') {
                 }
                 //entitiesList
                 $entitiesList = array();
-                $entitiesList = EntityControler::getAllEntities();
+                //$entitiesList = EntityControler::getAllEntities();
+                require_once('modules'.DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
+                $ent = new entity();
+                $except = array();
+                $entitiesList = $ent->getShortEntityTree($entitiesList, 'all', '', $except );
                 for ($i=0;$i<count($entitiesList);$i++) {
 
                     $content .= '<option value="'
-                    .$entitiesList[$i]->entity_id.'" alt="'
-                    .$entitiesList[$i]->short_label.'" title="'
-                    .$entitiesList[$i]->short_label.'"';
+                    .$entitiesList[$i]['ID'].'" alt="'
+                    .$entitiesList[$i]['LABEL'].'" title="'
+                    .$entitiesList[$i]['LABEL'].'"';
                      if ($mode == 'add') {
-                        if(in_array($entitiesList[$i]->entity_id, $entitiesRestriction)){
+                        if(in_array($entitiesList[$i]['ID'], $entitiesRestriction)){
                            $content .= 'selected="selected"';
+                        }else{
+                            $content .= 'disabled="disabled"';
                         }
                      }else{
-                        if(in_array($entitiesList[$i]->entity_id, $_SESSION['m_admin']['tag']['entities'])){
+                        if(in_array($entitiesList[$i]['ID'], $_SESSION['m_admin']['tag']['entities'])){
                            $content .= 'selected="selected"';
                         } 
+                        if(!in_array($entitiesList[$i]['ID'], $entitiesRestriction)){
+                           $content .= 'disabled="disabled"';
+                        }
+                        
                      }
                     $content .= '>';
-                    $content .= $entitiesList[$i]->short_label.'</option>';
+                    $content .= $entitiesList[$i]['LABEL'].'</option>';
 
                 }
                 $content .= '</select>';
