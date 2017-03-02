@@ -676,12 +676,16 @@ box-shadow: inset 0px 0px 5px 0px #656565;
     width: auto;
     bottom: 0px;
     background: white;
-    -webkit-transition: font-size 0.5s; /* Safari */
-    transition: font-size 0.5s;
     margin-bottom: 5px;
 }
-.pjSign:hover{
-    font-size: 35px;
-    -webkit-transition: font-size 0.5s; /* Safari */
-    transition: font-size 0.5s;
+
+.pjSign img{
+    height: 30px;
+    -webkit-transition: height 0.5s; /* Safari */
+    transition: height 0.5s;
+}
+.pjSign:hover img{
+    height: 60px;
+    -webkit-transition: height 0.5s; /* Safari */
+    transition: height 0.5s;
 }
