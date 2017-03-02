@@ -6,7 +6,7 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
     var vm = this;
 
     function prepareSignatureBook() {
-      if (typeof globalConfig.coreurl == "undefined") {
+      if (typeof globalConfig == "undefined") {
         InitializeJsGlobalConfig();
       }
 
