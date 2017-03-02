@@ -169,7 +169,7 @@ class VisaController {
 				'notIn' 	  => ['incoming_mail_attachment', 'print_folder'],
 				'select' 	  => ['status']
 			]);
-			$allSigned = true;
+			$allSigned = !empty($attachmentsInResList);
 			foreach ($attachmentsInResList as $value2) {
 				if ($value2['status'] == 'TRA' || $value2['status'] == 'A_TRA') {
 					$allSigned = false;
@@ -196,6 +196,7 @@ class VisaController {
 		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
 		$datas['histories'] = $history;
 		$datas['resList'] = $resList;
+		$datas['signature'] = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
 
 		return $response->withJson($datas);
 	}

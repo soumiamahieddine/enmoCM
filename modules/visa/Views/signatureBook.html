@@ -137,12 +137,13 @@
                    <i ng-show="signatureBook.showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe id="rightPanelShowDocumentIframe" ng-src="{{signatureBook.rightViewerLink}}"></iframe>
-                
                 <div class="pjSign">
-                    <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status != 'SIGN'" ng-click="vm.prepareSignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer"><i title="Signer" class="fa fa-gavel fa-2x" aria-hidden="true"></i>
-</span>
-                <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status == 'SIGN'" ng-click="vm.unsignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer;color: green;"><i title="Dé-signer" class="fa fa-check fa-2x" aria-hidden="true"></i>
-</span>
+                    <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status != 'SIGN'" ng-click="vm.prepareSignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer">
+                        <img title="Signer" ng-src="{{signatureBook.signature}}" style="height: 30px;width: 30px">
+                    </span>
+                    <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status == 'SIGN'" ng-click="vm.unsignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer;color: green;">
+                        <i title="Dé-signer" class="fa fa-check fa-2x" aria-hidden="true"></i>
+                    </span>
                 </div>
             </div>
             <div class="contentShow" ng-if="signatureBook.showAttachmentEditionPanel">
