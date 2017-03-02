@@ -1,4 +1,4 @@
-#Maarch Contributor Agreement 
+# Maarch Contributor Agreement 
 
 These terms apply to your contribution of materials to a product or project owned or managed by us ('project'), and set out the intellectual property rights you grant to us (Maarch) in the contributed materials. If this contribution is on behalf of a company, the term 'you' will also mean the company you identify below. If you agree to be bound by these terms, fill in the information requested below and provide your signature. Read this agreement carefully before signing. 
 
@@ -9,6 +9,7 @@ These terms apply to your contribution of materials to a product or project owne
 	* you agree that each of us can do all things in relation to your contribution as if each of us were the sole owners, and if one of us makes a derivative work of your contribution, the one who makes the derivative work (or has it made) will be the sole owner of that derivative work; 
 	* you agree that you will not assert any moral rights in your contribution against us, our licensees or transferees; 
 	* you agree that we may register a copyright in your contribution and exercise all ownership rights associated with it; and
+	* you agree that neither of us has any duty to consult with, obtain the consent of, pay or render an accounting to the other for any use or distribution of your contribution.
 
 3. With respect to any patents you own, or that you can license without payment to any third party, you hereby grant to us a perpetual, irrevocable, non­exclusive, worldwide, no­charge, royalty­free license to:
 	* make, have made, use, sell, offer to sell, import, and otherwise transfer your contribution in whole or in part, alone or  in combination with or included in any product, work or materials arising out of the project to which your contribution was submitted, and
