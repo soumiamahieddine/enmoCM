@@ -39,7 +39,7 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
         $scope.signatureBook.headerTab = 1;
         $scope.signatureBook.showTopRightPanel = false;
         $scope.signatureBook.showTopLeftPanel = false;
-        $scope.signatureBook.showResLeftPanel = true;
+        $scope.signatureBook.showResLeftPanel = false;
         $scope.signatureBook.showLeftPanel = true;
         $scope.signatureBook.showAttachmentEditionPanel = false;
 
@@ -89,16 +89,9 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
       $scope.signatureBook.showTopLeftPanel == true ? $j("#leftPanelShowDocumentIframe").css("height", "69vh") : $j("#leftPanelShowDocumentIframe").css("height", "75vh");
     } else if (panel == "LEFT") {
       $scope.signatureBook.showLeftPanel = !$scope.signatureBook.showLeftPanel;
-      $scope.signatureBook.showLeftPanel == true ? $j(".resListContent").css("display", "inline-block") : $j(".resListContent").css("display", "none");
-      $scope.signatureBook.showLeftPanel == true ? $j(".contentLeft").css("width", "41%") : $j(".contentLeft").css("width", "48.5%");
-      $scope.signatureBook.showLeftPanel == true ? $j(".contentRight").css("width", "42%") : $j(".contentRight").css("width", "50%");
+      $scope.signatureBook.showResLeftPanel = false;
     } else if (panel == "RESLEFT") {
       $scope.signatureBook.showResLeftPanel = !$scope.signatureBook.showResLeftPanel;
-      $scope.signatureBook.showResLeftPanel == true ? $j(".contentLeft").css("display", "inline-block") : $j(".contentLeft").css("display", "none");
-      $scope.signatureBook.showResLeftPanel == true ? $j(".resListContent").css("display", "inline-block") : $j(".resListContent").css("display", "none");
-      $scope.signatureBook.showResLeftPanel == true ? $j(".hideresListContent").css("display", "inline-block") : $j(".hideresListContent").css("display", "none");
-      $scope.signatureBook.showResLeftPanel == true ? $j(".contentRight").css("width", "42%") : $j(".contentRight").css("width", "99%");
-      $scope.signatureBook.showResLeftPanel == true ? $j(".contentRight .contentShow").css("width", "90%") : $j(".contentRight .contentShow").css("width", "96%");
     }
   };
 

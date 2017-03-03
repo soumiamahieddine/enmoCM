@@ -33,12 +33,12 @@
         </div>
     </div>
     <div class="contentSignatureBook">
-        <div class="resListContent">
+        <div class="resListContent" ng-if="signatureBook.showResLeftPanel">
             <div class="resListContentPos">
                 <div class="resListContentFrame" ng-repeat="res in ::signatureBook.resList" ng-click="changeLocation(res.res_id)" ng-class="{'resListContentFrameSelected': vm.resId == res.res_id}">
                     <div class="resListContentInfo">
                         <i class="fa fa-compass" title="Numéro chrono"></i> {{res.alt_identifier}}
-                        <i ng-if="res.allSigned" class="fa fa-certificate" style="position: absolute;bottom: 5px;right: 100px;font-size: 80px;color: green;opacity: 0.2;"></i>&nbsp;
+                        <i ng-if="res.allSigned" class="fa fa-certificate" style="position: absolute;bottom: 35px;right: 50px;font-size: 40px;color: green;opacity: 0.2;"></i>&nbsp;
                         <i class="fa fa-circle" aria-hidden="true" style="color:{{res.priorityColor}};position: absolute;right: 0px;top: -10px;font-size: 25px;"></i>
                     </div>
                     <div class="resListContentInfo">
@@ -54,11 +54,11 @@
             </div>
             
         </div>
-        <div class="hideresListContent" ng-click="displayPanel('LEFT')">
-            <i class="fa fa-chevron-left" aria-hidden="true" ng-if="signatureBook.showLeftPanel"></i>
-            <i class="fa fa-chevron-right" aria-hidden="true" ng-if="!signatureBook.showLeftPanel"></i>
+        <div class="hideresListContent" ng-click="displayPanel('RESLEFT')" ng-if="signatureBook.showLeftPanel">
+            <i class="fa fa-chevron-left" aria-hidden="true" ng-if="signatureBook.showResLeftPanel"></i>
+            <i class="fa fa-chevron-right" aria-hidden="true" ng-if="!signatureBook.showResLeftPanel"></i>
         </div>
-        <div class="contentLeft">
+        <div class="contentLeft" ng-if="signatureBook.showLeftPanel" ng-class="{'showResLeftPanel': signatureBook.showResLeftPanel, 'hideResLeftPanel': !signatureBook.showResLeftPanel}">
             <div class="contentShow" ng-if="signatureBook.headerTab == 1">
                 <div class="pjDoc">
                     <div ng-click="displayPanel('TOPLEFT')" ng-if="!signatureBook.showTopLeftPanel" style="padding: 5px;cursor:pointer;">
@@ -97,11 +97,11 @@
                 </table>
             </div>
         </div>
-        <div class="hideLeftContent" ng-click="displayPanel('RESLEFT')">
-            <i class="fa fa-chevron-left" aria-hidden="true" ng-if="signatureBook.showResLeftPanel"></i>
-            <i class="fa fa-chevron-right" aria-hidden="true" ng-if="!signatureBook.showResLeftPanel"></i>
+        <div class="hideLeftContent" ng-click="displayPanel('LEFT')">
+            <i class="fa fa-chevron-left" aria-hidden="true" ng-if="signatureBook.showLeftPanel"></i>
+            <i class="fa fa-chevron-right" aria-hidden="true" ng-if="!signatureBook.showLeftPanel"></i>
         </div>
-        <div class="contentRight">
+        <div class="contentRight" ng-class="{'showLeftPanel': signatureBook.showLeftPanel, 'hideLeftPanel': !signatureBook.showLeftPanel}">
             <div class="contentShow" ng-if="!signatureBook.showAttachmentEditionPanel">
                 <div class="pjDetails">
                     <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].attachment_type}}">
@@ -215,7 +215,9 @@
                     <i class="fa fa-pencil-square-o" aria-hidden="true" title="Editer un modèle de document"></i>
                 </div>
             </div>
-            <div class="panelRight">
+           
+        </div>
+         <div class="panelRight">
                 <div class="item panelRightAddPj" ng-click="changeRightViewer(-1)" ng-class="{'panelSelectedThumbnail': signatureBook.rightSelectedThumbnail == -1}">
                     <i class="fa fa-plus fa-2x"></i>
                 </div>
@@ -227,7 +229,6 @@
                     </div>
                 </div>
             </div>
-        </div>
         
     </div>
 </div>
