@@ -28,9 +28,7 @@ class DocserverController
         $obj = DocserverModel::getList();
         
         $datas = [
-            [
-                'status' => $obj,
-            ]
+            $obj,
         ];
         
         return $response->withJson($datas);
@@ -51,9 +49,7 @@ class DocserverController
         }
         
         $datas = [
-            [
-                'status' => $obj,
-            ]
+            $obj,
         ];
 
         return $response->withJson($datas);
@@ -89,9 +85,7 @@ class DocserverController
         }
 
         $datas = [
-            [
-                'status' => $obj,
-            ]
+            $obj,
         ];
 
         return $response->withJson($datas);
@@ -127,9 +121,7 @@ class DocserverController
         }
 
         $datas = [
-            [
-                'status' => $obj,
-            ]
+            $obj,
         ];
 
         return $response->withJson($datas);
@@ -150,9 +142,7 @@ class DocserverController
         }
         
         $datas = [
-            [
-                'status' => $obj,
-            ]
+            $obj,
         ];
 
         return $response->withJson($datas);
@@ -281,9 +271,7 @@ class DocserverController
             return ['errors' => 'collId ' . _EMPTY];
         }
 
-        $datas = [
-            'docserver' => $obj,
-        ];
+        $datas = $obj;
 
         return $datas;
     }
@@ -571,7 +559,7 @@ class DocserverController
         $dsTools = new \Core\Controllers\DocserverToolsController();
 
         $docserver = $this->getDocserverToInsert(['collId' => $collId]);
-        $docserver = $docserver['docserver'][0];
+        $docserver = $docserver[0];
 
         $tmpSourceCopy = '';
         
@@ -677,13 +665,10 @@ class DocserverController
         );
 
         $datas = [
-            'storeResourceOnDocserver' => 
-                [
-                    'path_template' => $docserver['path_template'],
-                    'destination_dir' => $destinationDir,
-                    'docserver_id' => $docserver['docserver_id'],
-                    'file_destination_name' => $fileDestinationName,
-                ]
+            'path_template' => $docserver['path_template'],
+            'destination_dir' => $destinationDir,
+            'docserver_id' => $docserver['docserver_id'],
+            'file_destination_name' => $fileDestinationName,
         ];
 
         return $datas;

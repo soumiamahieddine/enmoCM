@@ -147,7 +147,7 @@ class DocserverControllerTest extends PHPUnit_Framework_TestCase
         $response = $action->getDocserverToInsert($aArgs);
 
         $this->assertSame(
-            $response['docserver'][0]['coll_id'], 
+            $response[0]['coll_id'], 
             $aArgs['collId']
         );
     }
@@ -163,7 +163,7 @@ class DocserverControllerTest extends PHPUnit_Framework_TestCase
         $ds = $action->getDocserverToInsert($aArgs);
 
         $aArgs = [
-            'docserver' => $ds['docserver'][0],
+            'docserver' => $ds[0],
             'filesize'  => 1090900,
         ];
 
@@ -183,7 +183,7 @@ class DocserverControllerTest extends PHPUnit_Framework_TestCase
         $ds = $action->getDocserverToInsert($aArgs);
 
         $aArgs = [
-            'docserver_id' => $ds['docserver'][0]['docserver_id'],
+            'docserver_id' => $ds[0]['docserver_id'],
             'actual_size_number'  => 1,
         ];
 
@@ -238,7 +238,7 @@ class DocserverControllerTest extends PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey(
             'path_template', 
-            $response['storeResourceOnDocserver']
+            $response
         );
     }
 
