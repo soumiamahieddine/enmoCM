@@ -68,7 +68,7 @@ if (!defined("_ADD_TAG"))
 if (!defined("_ADD_TAG_TO_RES"))
     define("_ADD_TAG_TO_RES", "Associer des ".strtolower(_TAGS_DEFAULT)." disponibles pour un document");
 if (!defined("_CREATE_TAG"))
-    define("_CREATE_TAG", "Créer des ".strtolower(_TAGS_DreEFAULT)." depuis les pages d'actions");
+    define("_CREATE_TAG", "Créer des ".strtolower(_TAGS_DEFAULT)." depuis les pages d'actions");
 if (!defined("_CREATE_TAG_DESC"))
     define("_CREATE_TAG_DESC", "Permet d'enregistrer à la volée des ".strtolower(_TAGS_DEFAULT)." inexistants dans la base de données");
 if (!defined("_ADD_TAG_TO_RES_DESC"))
