@@ -13,6 +13,7 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
       $j('#inner_content').remove();
       $j('#header').remove();
       $j('#viewBasketsTitle').remove();
+      $j('#homePageWelcomeTitle').remove();
       $j('#container').width("98%");
     }
 

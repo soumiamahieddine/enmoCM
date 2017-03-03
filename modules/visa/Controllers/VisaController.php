@@ -174,7 +174,7 @@ class VisaController
 			}
 			$attachmentsInResList = \ResModel::getAvailableLinkedAttachmentsNotIn([
 				'resIdMaster' => $value['res_id'],
-				'notIn' 	  => ['incoming_mail_attachment', 'print_folder'],
+				'notIn' 	  => ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'],
 				'select' 	  => ['status']
 			]);
 			$allSigned = !empty($attachmentsInResList);
