@@ -37,6 +37,8 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
         $scope.signatureBook.headerTab = 1;
         $scope.signatureBook.showTopRightPanel = false;
         $scope.signatureBook.showTopLeftPanel = false;
+        $scope.signatureBook.showResLeftPanel = true;
+        $scope.signatureBook.showLeftPanel = true;
         $scope.signatureBook.showAttachmentEditionPanel = false;
 
         $scope.historyTable = new NgTableParams({
@@ -74,15 +76,27 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
       $scope.signatureBook.leftSelectedThumbnail = index;
     };
 
-    $scope.displayTopPanel = function(panel) {
-    if (panel == "RIGHT") {
+    $scope.displayPanel = function(panel) {
+    if (panel == "TOPRIGHT") {
       $scope.signatureBook.showTopRightPanel = !$scope.signatureBook.showTopRightPanel;
       $scope.signatureBook.showTopRightPanel == true ? $j(".pjDetails").css("height", "100px") : $j(".pjDetails").css("height", "30px");
       $scope.signatureBook.showTopRightPanel == true ? $j("#rightPanelShowDocumentIframe").css("height", "69vh") : $j("#rightPanelShowDocumentIframe").css("height", "75vh");
-    } else if (panel == "LEFT") {
+    } else if (panel == "TOPLEFT") {
       $scope.signatureBook.showTopLeftPanel = !$scope.signatureBook.showTopLeftPanel;
       $scope.signatureBook.showTopLeftPanel == true ? $j(".pjDoc").css("height", "100px") : $j(".pjDoc").css("height", "30px");
       $scope.signatureBook.showTopLeftPanel == true ? $j("#leftPanelShowDocumentIframe").css("height", "69vh") : $j("#leftPanelShowDocumentIframe").css("height", "75vh");
+    } else if (panel == "LEFT") {
+      $scope.signatureBook.showLeftPanel = !$scope.signatureBook.showLeftPanel;
+      $scope.signatureBook.showLeftPanel == true ? $j(".resListContent").css("display", "inline-block") : $j(".resListContent").css("display", "none");
+      $scope.signatureBook.showLeftPanel == true ? $j(".contentLeft").css("width", "41%") : $j(".contentLeft").css("width", "48.5%");
+      $scope.signatureBook.showLeftPanel == true ? $j(".contentRight").css("width", "42%") : $j(".contentRight").css("width", "50%");
+    } else if (panel == "RESLEFT") {
+      $scope.signatureBook.showResLeftPanel = !$scope.signatureBook.showResLeftPanel;
+      $scope.signatureBook.showResLeftPanel == true ? $j(".contentLeft").css("display", "inline-block") : $j(".contentLeft").css("display", "none");
+      $scope.signatureBook.showResLeftPanel == true ? $j(".resListContent").css("display", "inline-block") : $j(".resListContent").css("display", "none");
+      $scope.signatureBook.showResLeftPanel == true ? $j(".hideresListContent").css("display", "inline-block") : $j(".hideresListContent").css("display", "none");
+      $scope.signatureBook.showResLeftPanel == true ? $j(".contentRight").css("width", "42%") : $j(".contentRight").css("width", "99%");
+      $scope.signatureBook.showResLeftPanel == true ? $j(".contentRight .contentShow").css("width", "90%") : $j(".contentRight .contentShow").css("width", "96%");
     }
   };
 
@@ -189,7 +203,6 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
     vm.resId = $routeParams.resId;
 
     getDatas($routeParams.basketId, $routeParams.resId);
-
     lockDocument($routeParams.resId);
     $interval(function () {
       lockDocument($routeParams.resId);

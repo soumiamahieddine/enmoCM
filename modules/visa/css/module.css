@@ -223,6 +223,13 @@
     margin-top: 10px;
 }
 
+.visaContent h1{
+    display: block !important;
+    position: initial !important;
+    padding: 10px;
+    text-align: center !important;
+}
+
 .headerSignatureBook .others{
     border-right: solid 1px black;
     display: table-cell;
@@ -234,7 +241,7 @@
 .headerSignatureBook .others input{
     background: #E6E6E6;
     border-radius: 2px;
-    width: 50%;
+    width: 350px;
     border: none;
     padding: 5px;
 }
@@ -280,7 +287,7 @@
     overflow-y: auto;
 }
 
-.hideresListContent{
+.hideresListContent,.hideLeftContent{
     display: inline-block;
     height:100%;
     text-align: center;
@@ -293,10 +300,15 @@
 .contentLeft{
     border-right: solid 1px;
     vertical-align: top;
+    width:41%;
 }
+
+.contentRight{
+    width:42%;
+}
+
 .contentLeft, .contentRight{
     display: inline-block;
-    width:42%;
     height:100%;
     text-align: center;
 }
@@ -351,8 +363,8 @@
     width:90%;
 }
 
-.pjDetails,.pjSign{
-    display: table;
+.pjDetails,.pjSign,.pjCreate{
+    display: block;
     width: 97%;
     text-align: left;
     -moz-box-shadow: inset 0px 0px 5px 0px #656565;
@@ -374,6 +386,25 @@
 .pjDetailsMore{
    text-align: center;
    cursor: pointer;
+}
+
+.pjCreate{
+    height: auto;
+    white-space: initial;
+}
+
+.pjCreateFile{
+    border: dashed 12px #ccc;
+    height: 60%;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.pjCreateFile i{
+    font-size: 100px;
+    opacity: 0.5;
+    margin-top: 20%;
+    cursor: pointer;
 }
 
 .pjDetails div{
