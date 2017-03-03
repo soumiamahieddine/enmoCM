@@ -19,27 +19,46 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\UserModel;
-use Entities\Models\EntitiesModel;
-use Core\Controllers\DocserverController;
+//use Entities\Models\EntitiesModel;
 
 class ResController
 {
 
     /**
      * Store resource on database.
-     * @param  $encodedFile  string 
-     * @param  $data array
-     * @param  $collId  string 
-     * @param  $table  string 
-     * @param  $fileFormat  string  
-     * @param  $status  string  
+     * @param  $resTable  string 
+     * @param  $destinationDir string
+     * @param  $pathTemplate  string 
+     * @param  $docserverId  string 
+     * @param  $data  array  
      * @return res_id
      */
-    public function storeResource($aArgs)
+    public function storeResourceOnDB($aArgs)
     {
-        if (empty($aArgs['encodedFile'])) {
 
-            return ['errors' => 'encodedFile ' . _EMPTY];
+        // storeResult['destination_dir'],
+        // $storeResult['file_destination_name'] ,
+        // $storeResult['path_template'],
+        // $storeResult['docserver_id'], $_SESSION['data'],
+        // $_SESSION['config']['databasetype']
+        if (empty($aArgs['resTable'])) {
+
+            return ['errors' => 'resTable ' . _EMPTY];
+        }
+
+        if (empty($aArgs['destinationDir'])) {
+
+            return ['errors' => 'destinationDir ' . _EMPTY];
+        }
+
+        if (empty($aArgs['pathTemplate'])) {
+
+            return ['errors' => 'pathTemplate ' . _EMPTY];
+        }
+
+        if (empty($aArgs['docserverId'])) {
+
+            return ['errors' => 'docserverId ' . _EMPTY];
         }
 
         if (empty($aArgs['data'])) {
@@ -47,109 +66,13 @@ class ResController
             return ['errors' => 'data ' . _EMPTY];
         }
 
-        if (empty($aArgs['collId'])) {
+        
 
-            return ['errors' => 'collId ' . _EMPTY];
-        }
+        $datas = [
+            'docserver' => $obj,
+        ];
 
-        if (empty($aArgs['table'])) {
-
-            return ['errors' => 'table ' . _EMPTY];
-        }
-
-        if (empty($aArgs['fileFormat'])) {
-
-            return ['errors' => 'fileFormat ' . _EMPTY];
-        }
-
-        if (empty($aArgs['status'])) {
-
-            return ['errors' => 'status ' . _EMPTY];
-        }
-        $encodedFile = $aArgs['encodedFile'];
-        $data = $aArgs['data'];
-        $collId = $aArgs['collId'];
-        $table = $aArgs['table'];
-        $fileFormat = $aArgs['fileFormat'];
-        $status = $aArgs['status'];
-
-        try {
-            $count = count($data);
-            for ($i=0;$i<$count;$i++) {
-                $data[$i]['column'] = strtolower($data[$i]['column']);
-            }
-            
-            $returnCode = 0;
-            //copy sended file on tmp 
-            $fileContent = base64_decode($encodedFile);
-            $random = rand();
-            $fileName = 'tmp_file_' . $random . '.' . $fileFormat;
-            $Fnm = $_SESSION['config']['tmppath'] . $fileName;
-            $inF = fopen($Fnm,"w");
-            fwrite($inF, $fileContent);
-            fclose($inF);
-
-            //store resource on docserver
-            $ds = new DocserverController();
-            $aArgs = [
-                'collId' => $collId,
-                'fileInfos' => 
-                    [
-                        'tmpDir'        => $_SESSION['config']['tmppath'],
-                        'size'          => filesize($Fnm),
-                        'format'        => $fileFormat,
-                        'tmpFileName'   => $fileName,
-                    ]
-            ];
-            
-            $storeResult = array();
-            $storeResult = $ds->storeResourceOnDocserver($aArgs);
-            
-            if (!empty($storeResult['errors'])) {
-                
-                return ['errors' => $storeResult['errors']];
-            }
-
-            //store resource metadata in database
-            $aArgs = [
-                'data'        => $data,
-                'docserverId' => $storeResult['docserver_id'],
-                'status'      => $status,
-                'fileFormat'  => $fileFormat,
-            ];
-            
-            $data = $this->prepareStorage($aArgs);
-            
-            unlink($Fnm);
-            
-            require_once 'core/class/class_resource.php';
-            $resource = new \resource();
-            $resId = $resource->load_into_db(
-                $table, 
-                $storeResult['destination_dir'],
-                $storeResult['file_destination_name'],
-                $storeResult['path_template'],
-                $storeResult['docserver_id'], 
-                $data,
-                $_SESSION['config']['databasetype'],
-                true
-            );
-
-            if (!is_numeric($resId)) {
-
-                return ['errors' => 'Pb with SQL insertion : ' .$resId];
-            }
-
-            if ($resId == 0) {
-                $resId = '';
-            }
-
-            return [$resId];
-            
-        } catch (Exception $e) {
-
-            return ['errors' => 'unknown error' . $e->getMessage()];
-        }
+        return $datas;
     }
 
     /**
@@ -196,7 +119,7 @@ class ResController
         $fileFormat = $aArgs['fileFormat'];
 
         $userModel = new UserModel();
-        $entityModel = new \Entities\Models\EntitiesModel();
+        //$entityModel = new EntityModel();
 
         $countD = count($data);
         for ($i=0;$i<$countD;$i++) {
@@ -232,21 +155,33 @@ class ResController
                 $mail = array();
                 $theString = str_replace(">", "", $data[$i]['value']);
                 $mail = explode("<", $theString);
+                
                 $user = $userModel->getByEmail(['mail' => $mail[count($mail) -1]]);
+                //print_r($user);
                 $userIdFound = $user[0]['user_id'];
+                print_r($userIdFound);
+                
                 if (!empty($userIdFound)) {
                     $toAddressFound = true;
                     $destUser = $userIdFound;
-                    $entity = $entityModel->getByUserId(['user_id' => $destUser]);
-                    if (!empty($entity[0]['entity_id'])) {
-                        $userEntity = $entity[0]['entity_id'];
+
+                    $queryUserEntity = "SELECT entity_id FROM users_entities WHERE primary_entity = 'Y' and user_id = ?";
+                    $stmt = $db->query($queryUserEntity, array($destUser));
+                    $userEntityId = $stmt->fetchObject();
+                    
+                    if (!empty($userEntityId->entity_id)) {
+                        $userEntity = $userEntityId->entity_id;
                         $userPrimaryEntity = true;
                     }
                 } else {
-                    $entity = $entityModel->getByEmail(['email' => $mail[count($mail) -1]]);
-                    if (!empty($entity[0]['entity_id'])) {
-                        $userPrimaryEntity = true;
-                    }
+                    $queryEntity = "SELECT entity_id FROM entities WHERE email = ? and enabled = 'Y'";
+                    $stmt = $db->query($queryEntity, array($mail[count($mail) -1]));
+                    $entityIdFound = $stmt->fetchObject();
+                    $userEntity = $entityIdFound->entity_id;
+
+                    // if (!empty($userEntity)) {
+                    //     $userPrimaryEntity = true;
+                    // }
                 }
             }
         }

@@ -8,27 +8,31 @@
 */
 
 /**
-* @brief Status Controller
+* @brief Attachments Controller
 * @author dev@maarch.org
-* @ingroup core
+* @ingroup attachments
 */
 
-namespace Core\Controllers;
+namespace Attachments\Controllers;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-use Core\Models\StatusModel;
+use Attachments\Models\AttachmentsModel;
 
-class StatusController
+require_once 'modules/attachments/Models/AttachmentsModel.php';
+
+class AttachmentsController
 {
 
     public function getList(RequestInterface $request, ResponseInterface $response)
     {
-        $obj = StatusModel::getList();
+        $obj = AttachmentsModel::getList();
         
         $datas = [
-            $obj,
+            [
+                'attachments' => $obj,
+            ]
         ];
         
         return $response->withJson($datas);
@@ -38,7 +42,7 @@ class StatusController
     {
         if (isset($aArgs['id'])) {
             $id = $aArgs['id'];
-            $obj = StatusModel::getById([
+            $obj = AttachmentsModel::getById([
                 'id' => $id
             ]);
         } else {
@@ -49,7 +53,9 @@ class StatusController
         }
         
         $datas = [
-            $obj,
+            [
+                'attachments' => $obj,
+            ]
         ];
 
         return $response->withJson($datas);
@@ -70,11 +76,11 @@ class StatusController
 
         $aArgs = $request->getQueryParams();
 
-        $return = StatusModel::create($aArgs);
+        $return = AttachmentsModel::create($aArgs);
 
         if ($return) {
             $id = $aArgs['id'];
-            $obj = StatusModel::getById([
+            $obj = AttachmentsModel::getById([
                 'id' => $id
             ]);
         } else {
@@ -85,7 +91,9 @@ class StatusController
         }
 
         $datas = [
-            $obj,
+            [
+                'status' => $obj,
+            ]
         ];
 
         return $response->withJson($datas);
@@ -106,11 +114,11 @@ class StatusController
 
         $aArgs = $request->getQueryParams();
 
-        $return = StatusModel::update($aArgs);
+        $return = AttachmentsModel::update($aArgs);
 
         if ($return) {
             $id = $aArgs['id'];
-            $obj = StatusModel::getById([
+            $obj = AttachmentsModel::getById([
                 'id' => $id
             ]);
         } else {
@@ -121,7 +129,9 @@ class StatusController
         }
 
         $datas = [
-            $obj,
+            [
+                'status' => $obj,
+            ]
         ];
 
         return $response->withJson($datas);
@@ -131,7 +141,7 @@ class StatusController
     {
         if (isset($aArgs['id'])) {
             $id = $aArgs['id'];
-            $obj = StatusModel::delete([
+            $obj = AttachmentsModel::delete([
                 'id' => $id
             ]);
         } else {
@@ -142,7 +152,9 @@ class StatusController
         }
         
         $datas = [
-            $obj,
+            [
+                'status' => $obj,
+            ]
         ];
 
         return $response->withJson($datas);
@@ -153,7 +165,7 @@ class StatusController
         $errors = [];
 
         if($mode == 'update') {
-            $obj = StatusModel::getById([
+            $obj = AttachmentsModel::getById([
                 'id' => $request->getParam('id')
             ]);
             if (empty($obj)) {
@@ -167,7 +179,7 @@ class StatusController
         if (!Validator::notEmpty()->validate($request->getParam('id'))) {
             array_push($errors, _ID . ' ' . _IS_EMPTY);
         } elseif($mode == 'create') {
-            $obj = StatusModel::getById([
+            $obj = AttachmentsModel::getById([
                 'id' => $request->getParam('id')
             ]);
             if (!empty($obj)) {
