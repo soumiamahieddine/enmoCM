@@ -53,6 +53,17 @@ mainApp.controller("visaCtrl", ["$scope", "$http", "$routeParams", "$interval", 
             total: $scope.signatureBook.histories.length,
             dataset: $scope.signatureBook.histories
           });
+          
+          $scope.notesTable = new NgTableParams({
+            page: 1,
+            count: 20,
+            sorting: {
+                  date_note: 'desc'
+              }
+          }, {
+            total: $scope.signatureBook.notes.length,
+            dataset: $scope.signatureBook.notes
+          });
 
       }, function errorCallback(error) {
       });

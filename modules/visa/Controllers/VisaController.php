@@ -11,6 +11,7 @@ require_once 'apps/maarch_entreprise/Models/HistoryModel.php';
 require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
 require_once 'apps/maarch_entreprise/Models/UsersModel.php';
 require_once 'modules/basket/Models/BasketsModel.php';
+require_once 'modules/notes/Models/NotesModel.php';
 
 
 class VisaController
@@ -160,6 +161,13 @@ class VisaController
 			'select'  => ['event_date', 'info', 'firstname', 'lastname'],
 			'orderBy' => ['event_date DESC']
 		]);
+                
+                $notes = \NotesModel::getByResId([
+			'resId'      => $resId,
+			'select'  => ['id','firstname','lastname','date_note', 'note_text'],
+			'orderBy' => ['date_note DESC']
+		]);
+                
 
 		$resList = \BasketsModel::getResListById([
 			'basketId' => $basketId,
@@ -203,6 +211,7 @@ class VisaController
 		$datas['currentAction'] = $currentAction;
 		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
 		$datas['histories'] = $history;
+		$datas['notes'] = $notes;
 		$datas['resList'] = $resList;
 		$datas['signature'] = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
 		$datas['consigne'] = \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);

@@ -697,19 +697,19 @@ box-shadow: inset 0px 0px 5px 0px #656565;
     color: white;
 }
 
-#historyTable.ng-table tr:nth-child(even) {
+.ng-table tr:nth-child(even) {
     background-color: rgba(141,192,219,.25);
 }
 
-#historyTable.ng-table th:nth-child(1) {
+.ng-table th:nth-child(1) {
     width:20%;
 }
 
-#historyTable.ng-table th:nth-child(2) {
+.ng-table th:nth-child(2) {
     width:20%;
 }
 
-#historyTable.ng-table th:nth-child(3) {
+.ng-table th:nth-child(3) {
     width:60%;
 }
 
