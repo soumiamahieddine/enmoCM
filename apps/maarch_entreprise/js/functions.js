@@ -2281,13 +2281,11 @@ function valid_report_by_period(url)
                     }
                 }
             },onCreate: function(answer) {
-                console.log('toto');
                 $j('#validate').val('Traitement en cours ...');
                 $j('#validate').prop('disabled', true);
                 $j('#validate').css("opacity","0.5");
 
             },onComplete: function(answer) {
-                console.log('toto');
                 $j('#validate').val('Valider');
                 $j('#validate').prop('disabled', false);
                 $j('#validate').css("opacity","1");
