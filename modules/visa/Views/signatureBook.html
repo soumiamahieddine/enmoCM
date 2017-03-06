@@ -52,13 +52,12 @@
                     </div>
                 </div>
             </div>
-            
         </div>
         <div class="hideresListContent" ng-click="displayPanel('RESLEFT')" ng-if="signatureBook.showLeftPanel">
             <i class="fa fa-chevron-left" aria-hidden="true" ng-if="signatureBook.showResLeftPanel"></i>
             <i class="fa fa-chevron-right" aria-hidden="true" ng-if="!signatureBook.showResLeftPanel"></i>
         </div>
-        <div class="contentLeft" ng-if="signatureBook.showLeftPanel" ng-class="{'showResLeftPanel': signatureBook.showResLeftPanel, 'hideResLeftPanel': !signatureBook.showResLeftPanel}">
+        <div class="contentLeft" ng-if="signatureBook.showLeftPanel" >
             <div class="contentShow" ng-if="signatureBook.headerTab == 1">
                 <div class="pjDoc">
                     <div ng-click="displayPanel('TOPLEFT')" ng-if="!signatureBook.showTopLeftPanel" style="padding: 5px;cursor:pointer;">
@@ -121,7 +120,7 @@
             <i class="fa fa-chevron-left" aria-hidden="true" ng-if="signatureBook.showLeftPanel"></i>
             <i class="fa fa-chevron-right" aria-hidden="true" ng-if="!signatureBook.showLeftPanel"></i>
         </div>
-        <div class="contentRight" ng-class="{'showLeftPanel': signatureBook.showLeftPanel, 'hideLeftPanel': !signatureBook.showLeftPanel}">
+        <div class="contentRight">
             <div class="contentShow" ng-if="!signatureBook.showAttachmentEditionPanel">
                 <div class="pjDetails">
                     <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].attachment_type}}">
@@ -237,18 +236,18 @@
             </div>
            
         </div>
-         <div class="panelRight">
-                <div class="item panelRightAddPj" ng-click="changeRightViewer(-1)" ng-class="{'panelSelectedThumbnail': signatureBook.rightSelectedThumbnail == -1}">
-                    <i class="fa fa-plus fa-2x"></i>
-                </div>
-                <div class="panelRightContent">
-                    <div class="item" ng-repeat="(index, attachment) in signatureBook.attachments" ng-click="changeRightViewer(index)" ng-class="{'panelSelectedThumbnail': index == signatureBook.rightSelectedThumbnail}">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-file-o fa-stack-2x"></i><i class="fa {{attachment.icon}} fa-stack-1x"></i>
-                        </span>
-                    </div>
+        <div class="panelRight">
+            <div class="item panelRightAddPj" ng-click="changeRightViewer(-1)" ng-class="{'panelSelectedThumbnail': signatureBook.rightSelectedThumbnail == -1}">
+                <i class="fa fa-plus fa-2x"></i>
+            </div>
+            <div class="panelRightContent">
+                <div class="item" ng-repeat="(index, attachment) in signatureBook.attachments" ng-click="changeRightViewer(index)" ng-class="{'panelSelectedThumbnail': index == signatureBook.rightSelectedThumbnail}">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-file-o fa-stack-2x"></i><i class="fa {{attachment.icon}} fa-stack-1x"></i>
+                    </span>
                 </div>
             </div>
+        </div>
         
     </div>
 </div>
