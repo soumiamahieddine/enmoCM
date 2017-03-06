@@ -1580,6 +1580,9 @@ class core_tools extends functions
             var app_path = '<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=';
         </script>-->
         <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>merged_js.php"></script>
+        <script>
+          System.import('js/angular/main.js').catch(function(err){ console.error(err); });
+        </script>
         <?php
 
     }

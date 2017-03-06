@@ -226,9 +226,27 @@ if(empty($_SESSION['current_basket'])){
 
 
  ?>
-<body ng-app="AppModule" ng-controller="mainCtrl" style="background: url('static.php?filename=loading_big.gif') no-repeat fixed center;" onload="$('maarch_body').style.background='f2f2f2';$('maarch_body').style.backgroundImage='';$('maarch_body').style.backgroundUrl='';$('maarch_content').style.display='block';session_expirate(<?php echo $time;?>, '<?php
+
+<!-- Polyfill(s) for older browsers -->
+<!-- <script src="/node_modules/core-js/client/shim.js"></script>
+<script src="/node_modules/zone.js/dist/zone.js"></script>
+<script src="/node_modules/systemjs/dist/system.src.js"></script>
+<script src="js/angular/systemjs.config.js"></script> -->
+<!-- <script>
+  System.import('js/angular/main.js').catch(function(err){ console.error(err); });
+</script> -->
+
+<!--body ng-app="AppModule" ng-controller="mainCtrl" style="background: url('static.php?filename=loading_big.gif') no-repeat fixed center;" onload="$('maarch_body').style.background='f2f2f2';$('maarch_body').style.backgroundImage='';$('maarch_body').style.backgroundUrl='';$('maarch_content').style.display='block';session_expirate(<?php echo $time;?>, '<?php
+    echo $_SESSION['config']['businessappurl'];
+    ?>index.php?display=true&page=logout&logout=true');" id="maarch_body"-->
+
+<body style="background: url('static.php?filename=loading_big.gif') no-repeat fixed center;" onload="$('maarch_body').style.background='f2f2f2';$('maarch_body').style.backgroundImage='';$('maarch_body').style.backgroundUrl='';$('maarch_content').style.display='block';session_expirate(<?php echo $time;?>, '<?php
     echo $_SESSION['config']['businessappurl'];
     ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
+    
+
+<my-app>Loading AppComponent content here ...</my-app>
+
     <div id ="maarch_content" style="display:none;">
 
     <?php
