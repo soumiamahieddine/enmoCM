@@ -738,18 +738,18 @@ box-shadow: inset 0px 0px 5px 0px #656565;
     transition: height 0.5s;
 }
 
-.showResLeftPanel.contentLeft,.showResLeftPanel.contentRight{
-    width:39%;
-}
+/*.showResLeftPanel.contentLeft,.showResLeftPanel.contentRight{*/
+    /*width:39%;*/
+/*}*/
 
-.hideResLeftPanel.contentLeft,.hideResLeftPanel.contentRight{
-    width:46.5%;
-}
+/*.hideResLeftPanel.contentLeft,.hideResLeftPanel.contentRight{*/
+    /*width:46.5%;*/
+/*}*/
 
-.hideLeftPanel.contentRight{
-    width:93%;
-}
+/*.hideLeftPanel.contentRight{*/
+    /*width:93%;*/
+/*}*/
 
-.showLeftPanel.contentRight{
-    width:46.5%;
-}
+/*.showLeftPanel.contentRight{*/
+    /*width:46.5%;*/
+/*}*/
