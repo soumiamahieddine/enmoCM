@@ -1,4 +1,4 @@
-<?merge $archiveUnit ?>
+<?merge $archiveUnitChildren ?>
 <ArchiveUnit id="[?merge .id ?]">
     <ArchiveUnitRefId><?merge .archiveUnitRefId ?></ArchiveUnitRefId>
     <ArchiveUnitProfile schemeID="[?merge .archiveUnitProfile.schemeID ?]" schemeName="[?merge .archiveUnitProfile.schemeName ?]" schemeAgencyID="[?merge .archiveUnitProfile.schemeAgencyID ?]" schemeAgencyName="[?merge .archiveUnitProfile.schemeAgencyName ?]" schemeVersionID="[?merge .archiveUnitProfile.schemeVersionID ?]" schemeDataURI="[?merge .archiveUnitProfile.schemeDataURI ?]" schemeURI="[?merge .archiveUnitProfile.schemeURI ?]"><?merge .archiveUnitProfile ?></ArchiveUnitProfile>
@@ -110,13 +110,6 @@
             <?xinclude /resources/Agent.xml ?>
         </Recipient>
         <Source><?merge .content.source ?></Source>
-        <?merge .content.relatedObjectReference.bool() ?>
-        <RelatedObjectReference>
-            <?merge .content.relatedObjectReference.references ?>
-            <Reference>
-                <RepositoryArchiveUnitPID><?merge .repositoryArchiveUnitPID ?></RepositoryArchiveUnitPID>
-            </Reference>
-        </RelatedObjectReference>
         <CreatedDate><?merge .content.createdDate ?></CreatedDate>
         <TransactedDate><?merge .content.transactedDate ?></TransactedDate>
         <AcquiredDate><?merge .content.acquiredDate ?></AcquiredDate>
@@ -133,9 +126,7 @@
             <EventDetail><?merge .eventDetail ?></EventDetail>
         </Event> 
     </Content>
-    <?merge .archiveUnit $archiveUnitChildren?>
-    <?merge .archiveUnit.bool() ?>
-    <?xinclude /resources/ArchiveUnitChildren.xml ?>
+    
     <?merge .dataObjectReference.bool() ?>
     <DataObjectReference>
         <?merge .dataObjectReference.dataObjectReferenceId.bool() ?>
