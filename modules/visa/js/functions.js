@@ -70,7 +70,7 @@ function delVisaUser (target) {
 function resetPosVisa () {
     $i = 1;
     $j(".droptarget").each(function() {
-        this.id = 'visa_' + $i;      
+        this.id = 'visa_' + $i;
         $i++;
     });
 }
@@ -197,6 +197,7 @@ function loadVisaModelUsers() {
 
 function initDragNDropVisa() {
     document.getElementById("visa_content").addEventListener("dragstart", function(event) {
+        $j(".droptarget").css("border","dashed 2px #93D1E4");
         // The dataTransfer.setData() method sets the data type and the value of the dragged data
         event.dataTransfer.setData("Text", event.target.id);
 
@@ -215,6 +216,7 @@ function initDragNDropVisa() {
     // Output some text when finished dragging the p element and reset the opacity
     document.getElementById("visa_content").addEventListener("dragend", function(event) {
         //document.getElementById("demo").innerHTML = "Finished dragging the p element.";
+        $j(".droptarget").css("border","dashed 2px #93D1E4");
         event.target.style.opacity = "1";
     });
 
@@ -224,7 +226,7 @@ function initDragNDropVisa() {
     // When the draggable p element enters the droptarget, change the DIVS's border style
     document.getElementById("visa_content").addEventListener("dragenter", function(event) {
         if ( event.target.className == "droptarget") {
-            event.target.style.border = "2px dotted green";
+            event.target.style.border = "dashed 2px green";
         }
     });
 
@@ -236,7 +238,7 @@ function initDragNDropVisa() {
     // When the draggable p element leaves the droptarget, reset the DIVS's border style
     document.getElementById("visa_content").addEventListener("dragleave", function(event) {
         if ( event.target.className == "droptarget" ) {
-            event.target.style.border = "";
+            event.target.style.border = "dashed 2px #ccc";
         }
     });
 
@@ -249,8 +251,7 @@ function initDragNDropVisa() {
     document.getElementById("visa_content").addEventListener("drop", function(event) {
         event.preventDefault();
         if ( event.target.className == "droptarget" ) {
-            //document.getElementById("demo").style.color = "";
-            event.target.style.border = "";
+            /*event.target.style.border = "";
             var data = event.dataTransfer.getData("Text");
             var oldContent = event.target.innerHTML;
             var draggedConsigne = $j('#'+data+' .consigne').val();
@@ -258,7 +259,18 @@ function initDragNDropVisa() {
             event.target.innerHTML = document.getElementById(data).innerHTML;
             $j('#'+event.target.id+' .consigne').val(draggedConsigne);
             document.getElementById(data).innerHTML = oldContent;
-            $j('#'+data+' .consigne').val(replaceConsigne);
+            $j('#'+data+' .consigne').val(replaceConsigne);*/
+            var data = event.dataTransfer.getData("Text");
+            var target =event.target.id;
+            posData = data.split("_");
+            posTarget = target.split("_");
+            if(posData[1] > posTarget[1]){
+                $j('#'+target).before($j('#'+data));
+            }else{
+                $j('#'+target).after($j('#'+data));
+            }
+            resetPosVisa();
+            
 
         }
     });

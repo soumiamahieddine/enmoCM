@@ -109,4 +109,5 @@ if (!defined("_TAGCLICKTODEL"))
     define("_TAGCLICKTODEL", "Erase");
 if (!defined("_NAME_TAGS"))
     define("_NAME_TAGS", "Tag's name");
-
+if (!defined("_ADD_TAG_CONFIRM"))
+    define("_ADD_TAG_CONFIRM", "This word will be added as ".strtolower(_TAG_DEFAULT).".");

@@ -545,7 +545,7 @@ abstract class visa_Abstract extends Database
             }else{
                 $str .= '<div id="emptyVisa" style="display:none;"><strong><em>' . _EMPTY_VISA_WORKFLOW . '</em></strong></div>';
                 if(count($circuit['visa']['users']) > 0){
-                    foreach ($circuit['visa']['users'] as $info_userVis) {
+                    foreach ($circuit['visa']['users'] as $it=>$info_userVis) {
                         if(empty($info_userVis['process_date'])){
                             if($lastUserVis == true && $isVisaStep == true){
                                 $vised = ' currentVis';
@@ -612,6 +612,7 @@ abstract class visa_Abstract extends Database
                         
                     $i++;
                     }
+                    
                 }
                 
 
@@ -676,6 +677,7 @@ abstract class visa_Abstract extends Database
                     $str .= '</div>';
                 $i++;
                 }
+                
             }
             
             $str .= '</div>';
