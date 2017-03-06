@@ -148,6 +148,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
         $frm_str .= '</dd>';
         $frm_str .= '<script>$$(\'#onglet_entrant\')[0].click();</script>';
+    }else{
+        $frm_str .= '<script>$$(\'#visa_tab\')[0].click();</script>';
     }
 	
 	
