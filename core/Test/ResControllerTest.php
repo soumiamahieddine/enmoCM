@@ -118,8 +118,6 @@ class ResControllerTest extends PHPUnit_Framework_TestCase
         
         $this->assertGreaterThanOrEqual(0, $response[0]);
     }
-<<<<<<< HEAD
-=======
 
     public function testStoreExtResource()
     {
@@ -192,5 +190,4 @@ class ResControllerTest extends PHPUnit_Framework_TestCase
         
         $this->assertGreaterThanOrEqual(0, $response);
     }
->>>>>>> lgi-feat-attachments
 }
