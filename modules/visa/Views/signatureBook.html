@@ -33,47 +33,69 @@
         </div>
     </div>
     <div class="contentSignatureBook">
-        <div class="resListContent">
+        <div class="resListContent" ng-if="signatureBook.showResLeftPanel">
             <div class="resListContentPos">
-                <div class="resListContentFrame" ng-repeat="res in signatureBook.resList" ng-click="changeLocation(res.res_id)" ng-class="{'resListContentFrameSelected': vm.resId == res.res_id}">
+                <div class="resListContentFrame" ng-repeat="res in ::signatureBook.resList" ng-click="changeLocation(res.res_id)" ng-class="{'resListContentFrameSelected': vm.resId == res.res_id}">
                     <div class="resListContentInfo">
-                        <i class="fa fa-compass" title="Numéro chrono"></i> {{::res.alt_identifier}}
-                        <i ng-if="res.allSigned" class="fa fa-certificate" style="position: absolute;bottom: 5px;right: 100px;font-size: 80px;color: green;opacity: 0.2;"></i>&nbsp;
-                        <i class="fa fa-circle" aria-hidden="true" style="color:{{::res.priorityColor}};position: absolute;right: 0px;top: -10px;font-size: 25px;"></i>
+                        <i class="fa fa-compass" title="Numéro chrono"></i> {{res.alt_identifier}}
+                        <i ng-if="res.allSigned" class="fa fa-certificate" style="position: absolute;bottom: 35px;right: 50px;font-size: 40px;color: gold;"></i>&nbsp;
+                        <i class="fa fa-circle" aria-hidden="true" style="color:{{res.priorityColor}};position: absolute;right: 0px;top: -10px;font-size: 25px;"></i>
                     </div>
                     <div class="resListContentInfo">
-                        <i class="fa fa-info" title="Objet"></i> {{::res.subject}}
+                        <i class="fa fa-info" title="Objet"></i> {{res.subject}}
                     </div>
                     <div class="resListContentInfo">
-                        <i class="fa fa-book" title="Fiche contact"></i> {{::res.sender}}
+                        <i class="fa fa-book" title="Fiche contact"></i> {{res.sender}}
                     </div>
                     <div class="resListContentInfo">
-                        <i class="fa fa-calendar" title="Date d'arrivée"></i> {{::res.creation_date | dateFormat}} - <i class="fa fa-bell" title="Date limite de traitement"></i> {{::res.process_limit_date | dateFormat}}
+                        <i class="fa fa-calendar" title="Date d'arrivée"></i> {{res.creation_date | dateFormat}} - <i class="fa fa-bell" title="Date limite de traitement"></i> {{::res.process_limit_date | dateFormat}}
                     </div>
                 </div>
             </div>
-            
         </div>
-        <div class="hideresListContent">
-            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        <div class="hideresListContent" ng-click="displayPanel('RESLEFT')" ng-if="signatureBook.showLeftPanel">
+            <i class="fa fa-chevron-left" aria-hidden="true" ng-if="signatureBook.showResLeftPanel"></i>
+            <i class="fa fa-chevron-right" aria-hidden="true" ng-if="!signatureBook.showResLeftPanel"></i>
         </div>
-        <div class="contentLeft">
+        <div class="contentLeft" ng-if="signatureBook.showLeftPanel" >
             <div class="contentShow" ng-if="signatureBook.headerTab == 1">
                 <div class="pjDoc">
-                    <div ng-click="displayTopPanel('LEFT')" ng-if="!signatureBook.showTopLeftPanel" style="padding: 5px;cursor:pointer;"><strong>{{signatureBook.documents.length - 1}} pièce(s) jointe(s)</strong></div>
+                    <div ng-click="displayPanel('TOPLEFT')" ng-if="!signatureBook.showTopLeftPanel" style="padding: 5px;cursor:pointer;">
+                        <strong>{{::signatureBook.documents.length - 1}} pièce(s) jointe(s)</strong>
+                    </div>
 
-                    <img id="thumnails_img" ng-if="signatureBook.showTopLeftPanel" ng-repeat="(index, document) in signatureBook.documents" ng-click="changeLeftViewer(index)" ng-src="{{document.thumbnailLink}}"
+                    <img id="thumnails_img" ng-if="signatureBook.showTopLeftPanel" ng-repeat="(index, document) in ::signatureBook.documents" ng-click="changeLeftViewer(index)" ng-src="{{document.thumbnailLink}}"
                              class="leftPanelThumbnails" ng-class="{'panelSelectedThumbnail': index == signatureBook.leftSelectedThumbnail}"/>
                     <!--<label>PJ1</label>-->
                 </div>
-                <div class="pjDetailsMore" ng-click="displayTopPanel('LEFT')">
+                <div class="pjDetailsMore" ng-click="displayPanel('TOPLEFT')">
                     <i ng-hide="signatureBook.showTopLeftPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                     <i ng-show="signatureBook.showTopLeftPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe id="leftPanelShowDocumentIframe" ng-src="{{signatureBook.leftViewerLink}}"></iframe>
             </div>
             <div class="contentShow" ng-if="signatureBook.headerTab == 2">
-                <iframe id="leftPanelShow_iframe" ng-src="{{signatureBook.linkNotes}}"></iframe>
+                <!--<iframe id="leftPanelShow_iframe" ng-src="{{signatureBook.linkNotes}}"></iframe>-->
+                <table ng-table="notesTable" class="table" id="notesTable">
+                    <tr ng-repeat="note in $data">
+                        <td title="'Date'" sortable="'date_note'" style="width:5%;">
+                            {{note.date_note | datetimeFormat}}
+                        </td>
+                        <td title="'Note'" sortable="'note_text'" filter="{ note_text: 'text'}" style="width:60%;">
+                            {{note.note_text}}
+                        </td>
+                        <td title="'Créateur'" sortable="'lastname'" filter="{ lastname: 'text'}" style="width:10%;">
+                            {{note.firstname + " " + note.lastname}}
+                        </td>
+                        <td title="'Visibilité'" style="width:20%;">
+                            {{note.entities_restriction}}
+                        </td>
+                        <td title="''" style="width:5%;">
+                            <i class="fa fa-pencil" style="cursor:pointer;color:#009DC5;" aria-hidden="true" title="Modifier" ></i>
+                            <i class="fa fa-times" style="cursor:pointer;color:red;" aria-hidden="true" title="Supprimer"></i>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div class="contentShow" ng-if="signatureBook.headerTab == 3">
                 <iframe id="leftPanelShow_iframe" ng-src="{{signatureBook.linkVisaCircuit}}"></iframe>
@@ -94,6 +116,10 @@
                 </table>
             </div>
         </div>
+        <div class="hideLeftContent" ng-click="displayPanel('LEFT')">
+            <i class="fa fa-chevron-left" aria-hidden="true" ng-if="signatureBook.showLeftPanel"></i>
+            <i class="fa fa-chevron-right" aria-hidden="true" ng-if="!signatureBook.showLeftPanel"></i>
+        </div>
         <div class="contentRight">
             <div class="contentShow" ng-if="!signatureBook.showAttachmentEditionPanel">
                 <div class="pjDetails">
@@ -110,15 +136,15 @@
                         <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].destUser}}</span>
                     </div>
                     <div ng-show="signatureBook.showTopRightPanel">
-                        <div class="infoPj">
+                        <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].typist}}">
                             <label>Créé par: </label>
                             <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].typist}}</span>
                         </div>
                         <div class="infoPj">
                             <label>Créé le: </label>
-                            <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].creation_date | datetimeFormat}}</span>
+                            <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].creation_date | dateFormat}}</span>
                         </div>
-                        <div class="infoPj">
+                        <div class="infoPj" title="{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].updated_by}}">
                             <label>Modifié par : </label>
                             <span>{{signatureBook.attachments[signatureBook.rightSelectedThumbnail].updated_by}}</span>
                         </div>
@@ -136,14 +162,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="pjDetailsMore" ng-click="displayTopPanel('RIGHT')">
+                <div class="pjDetailsMore" ng-click="displayPanel('TOPRIGHT')">
                    <i ng-hide="signatureBook.showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                    <i ng-show="signatureBook.showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe id="rightPanelShowDocumentIframe" ng-src="{{signatureBook.rightViewerLink}}"></iframe>
                 <div class="pjSign">
                     <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status != 'SIGN'" ng-click="vm.prepareSignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer">
-                        <img title="Signer" ng-src="{{signatureBook.signature}}">
+                        <img title="Signer" ng-src="{{::signatureBook.signature}}">
                     </span>
                     <span ng-if="signatureBook.attachments[signatureBook.rightSelectedThumbnail].status == 'SIGN'" ng-click="vm.unsignFile(signatureBook.attachments[signatureBook.rightSelectedThumbnail])" style="cursor: pointer;color: green;">
                         <i title="Dé-signer" class="fa fa-check fa-2x" aria-hidden="true"></i>
@@ -151,18 +177,74 @@
                 </div>
             </div>
             <div class="contentShow" ng-if="signatureBook.showAttachmentEditionPanel">
-                <span>Edition de PJ</span>
-            </div>
-            <div class="panelRight">
-                <div class="item panelRightAddPj" ng-click="changeRightViewer(-1)" ng-class="{'panelSelectedThumbnail': signatureBook.rightSelectedThumbnail == -1}">
-                    <i class="fa fa-plus fa-2x"></i>
-                </div>
-                <div class="panelRightConten">
-                    <div class="item" ng-repeat="(index, attachment) in signatureBook.attachments" ng-click="changeRightViewer(index)" ng-class="{'panelSelectedThumbnail': index == signatureBook.rightSelectedThumbnail}">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-file-o fa-stack-2x"></i><i class="fa {{attachment.icon}} fa-stack-1x"></i>
-                        </span>
+                <h1>Créer une pièce jointe</h1>
+                <div class="pjCreate">
+                    <div class="infoPj" title="Type">
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-file fa-fw"></i></span>
+                            <select><option>Projet d réponse</option></select>
+                          </div>
                     </div>
+                    <div class="infoPj" title="Objet">
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-info fa-fw"></i></span>
+                            <input class="form-control" type="text" placeholder="Objet">
+                          </div>
+                    </div>
+                    <div class="infoPj" title="Personne concerné">
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-book fa-fw"></i></span>
+                            <input class="form-control" type="text" placeholder="Personne concerné">
+                          </div>
+                    </div>
+                    <div class="infoPj" title="Numéro chrono">
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-compass fa-fw"></i></span>
+                            <input class="form-control" type="text" placeholder="Numéro chrono">
+                          </div>
+                    </div>
+                    <div class="infoPj" title="Crée par">
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                            <input class="form-control" type="text" placeholder="Crée par">
+                          </div>
+                    </div>
+                   <div class="infoPj" title="Crée le">
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-calendar-o fa-fw"></i></span>
+                            <input class="form-control" type="text" placeholder="Crée le">
+                          </div>
+                    </div>
+                    <div class="infoPj" title="Retour">
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-calendar-o fa-fw"></i></span>
+                            <input class="form-control" type="text" placeholder="Retour">
+                          </div>
+                    </div>
+                    <div class="infoPj">
+                        <div class="input-group margin-bottom-sm" title="Version">
+                            <span class="input-group-addon"><i class="fa fa-code-fork fa-fw"></i></span>
+                            <input class="form-control" type="text" placeholder="Version">
+                          </div>
+                    </div>
+                </div>
+                <div class="pjCreateFile">
+                    <i class="fa fa-upload" aria-hidden="true" title="Tranférer un fichier depuis votre ordinateur"></i>     
+                    <i>&nbsp;/&nbsp;</i>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" title="Editer un modèle de document"></i>
+                </div>
+            </div>
+           
+        </div>
+        <div class="panelRight">
+            <div class="item panelRightAddPj" ng-click="changeRightViewer(-1)" ng-class="{'panelSelectedThumbnail': signatureBook.rightSelectedThumbnail == -1}">
+                <i class="fa fa-plus fa-2x"></i>
+            </div>
+            <div class="panelRightContent">
+                <div class="item" ng-repeat="(index, attachment) in signatureBook.attachments" ng-click="changeRightViewer(index)" ng-class="{'panelSelectedThumbnail': index == signatureBook.rightSelectedThumbnail}">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-file-o fa-stack-2x"></i><i class="fa {{attachment.icon}} fa-stack-1x"></i>
+                    </span>
                 </div>
             </div>
         </div>

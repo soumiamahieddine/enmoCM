@@ -403,17 +403,17 @@ while ($GLOBALS['state'] <> "END") {
                     )
                 );
 
-                $deleteTagsQuery = "DELETE FROM tags "
-                   . " WHERE coll_id = ? "
-                   . " and res_id = ?";
-                $stmt = Bt_doQuery(
-                    $GLOBALS['db'], 
-                    $deleteTagsQuery, 
-                    array(
-                        $GLOBALS['collection'],
-                        $resourcesArray[$cptRes]["res_id"]
-                    )
-                );
+                // $deleteTagsQuery = "DELETE FROM tags "
+                //    . " WHERE coll_id = ? "
+                //    . " and res_id = ?";
+                // $stmt = Bt_doQuery(
+                //     $GLOBALS['db'], 
+                //     $deleteTagsQuery, 
+                //     array(
+                //         $GLOBALS['collection'],
+                //         $resourcesArray[$cptRes]["res_id"]
+                //     )
+                // );
 
                 $deleteAttachmentsQuery = "DELETE FROM res_attachments "
                    . " WHERE coll_id = ? "

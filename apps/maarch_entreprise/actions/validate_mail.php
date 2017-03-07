@@ -644,7 +644,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     if ($core->test_admin('my_contacts', 'apps', false)) {
         $pathScriptTab = $_SESSION['config']['businessappurl']
-            . 'index.php??display=false&dir=my_contacts&page=create_contact_iframe';
+            . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe';
         $frm_str .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
             . '" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\'\',\''.$pathScriptTab.'\',\'create_contact\');return false;" '
             . 'style="display:inline;" ><i class="fa fa-pencil" title="' . _CREATE_CONTACT . '"></i></a>';

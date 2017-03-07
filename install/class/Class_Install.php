@@ -47,6 +47,7 @@ class Install extends functions
     private $docservers = array(
         array('FASTHD_AI', 'ai'),
         array('FASTHD_MAN', 'manual'),
+        array('FASTHD_ATTACH', 'manual_attachments'),
         array('TEMPLATES', 'templates'),
         array('TNL', 'thumbnails_mlb'),
     );

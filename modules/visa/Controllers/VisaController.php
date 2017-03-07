@@ -11,6 +11,7 @@ require_once 'apps/maarch_entreprise/Models/HistoryModel.php';
 require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
 require_once 'apps/maarch_entreprise/Models/UsersModel.php';
 require_once 'modules/basket/Models/BasketsModel.php';
+require_once 'modules/notes/Models/NotesModel.php';
 
 
 class VisaController
@@ -160,6 +161,13 @@ class VisaController
 			'select'  => ['event_date', 'info', 'firstname', 'lastname'],
 			'orderBy' => ['event_date DESC']
 		]);
+                
+                $notes = \NotesModel::getByResId([
+			'resId'      => $resId,
+			'select'  => ['id','firstname','lastname','date_note', 'note_text'],
+			'orderBy' => ['date_note DESC']
+		]);
+                
 
 		$resList = \BasketsModel::getResListById([
 			'basketId' => $basketId,
@@ -174,7 +182,7 @@ class VisaController
 			}
 			$attachmentsInResList = \ResModel::getAvailableLinkedAttachmentsNotIn([
 				'resIdMaster' => $value['res_id'],
-				'notIn' 	  => ['incoming_mail_attachment', 'print_folder'],
+				'notIn' 	  => ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'],
 				'select' 	  => ['status']
 			]);
 			$allSigned = !empty($attachmentsInResList);
@@ -188,7 +196,7 @@ class VisaController
 			unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
 		}
 
-		$actionLabel = \BasketsModel::getActionByActionId(['actionId' => $_SESSION['current_basket']['default_action'], 'select' => ['label_action']])['label_action'] . ' n°';
+		$actionLabel = \BasketsModel::getActionByActionId(['actionId' => \BasketsModel::getActionIdById(['basketId' => $basketId]), 'select' => ['label_action']])['label_action'] . ' n°';
 		$actionLabel .= (_ID_TO_DISPLAY == 'res_id' ? $incomingMail[0]['res_id'] : $incomingMail[0]['alt_identifier']);
 		$actionLabel .= ' : ' . $incomingMail[0]['subject'];
 		$currentAction = [
@@ -203,6 +211,7 @@ class VisaController
 		$datas['currentAction'] = $currentAction;
 		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
 		$datas['histories'] = $history;
+		$datas['notes'] = $notes;
 		$datas['resList'] = $resList;
 		$datas['signature'] = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
 		$datas['consigne'] = \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);

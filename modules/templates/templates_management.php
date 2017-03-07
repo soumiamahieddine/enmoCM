@@ -288,15 +288,15 @@ if ($mode == 'list') {
                         <label><?php echo _EDIT_TEMPLATE;?> :</label>
                         <div style="text-align:center;">
                                 <?php
-                                $strAction .= 'window.open(\''
+                                $strAction .= 'showAppletLauncher(\''
                                     . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-                                    . '&module=content_management&page=applet_popup_launcher&objectType='
+                                    . '&module=content_management&page=applet_modal_launcher&objectType='
                                     . $objectType
                                     . '&objectId='
                                     . $objectId
                                     . '&objectTable='
                                     . $objectTable
-                                    . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');$(\'add\').value=\'Edition en cours ...\';setInterval(function() {checkEditingDoc(\''.$_SESSION['user']['UserId'].'\')}, 5000);$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';';
+                                    . '\', \'100px\', \'500px\');$(\'add\').value=\'Edition en cours ...\';setInterval(function() {checkEditingDoc(\''.$_SESSION['user']['UserId'].'\')}, 5000);$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';';
                                 ?>
                                 <a href="#" onClick="<?php functions::xecho($strAction);?>">
                                 

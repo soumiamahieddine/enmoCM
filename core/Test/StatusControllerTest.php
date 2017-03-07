@@ -47,10 +47,10 @@ class StatusControllerTest extends PHPUnit_Framework_TestCase
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
         $response = $action->getById($request, $response, $aArgs);
-        $compare = '[{"status":[{"id":"NEW","label_status":"Nouveau",'
+        $compare = '[[{"id":"NEW","label_status":"Nouveau",'
             . '"is_system":"Y","is_folder_status":"N","img_filename":'
             . '"fm-letter-status-new","maarch_module":"apps",'
-            . '"can_be_searched":"Y","can_be_modified":"Y"}]}]';
+            . '"can_be_searched":"Y","can_be_modified":"Y"}]]';
 
         $this->assertSame((string)$response->getBody(), $compare);
     }
@@ -77,10 +77,10 @@ class StatusControllerTest extends PHPUnit_Framework_TestCase
         $response = new \Slim\Http\Response();
         $response = $action->create($request, $response, $aArgs);
 
-        $compare = '[{"status":[{"id":"TEST","label_status":"TEST",'
+        $compare = '[[{"id":"TEST","label_status":"TEST",'
             . '"is_system":"Y","is_folder_status":"N","img_filename":null,'
             . '"maarch_module":"apps","can_be_searched":"Y",'
-            . '"can_be_modified":"Y"}]}]';
+            . '"can_be_modified":"Y"}]]';
         
         $this->assertSame((string)$response->getBody(), $compare);
     }
@@ -107,10 +107,10 @@ class StatusControllerTest extends PHPUnit_Framework_TestCase
         $response = new \Slim\Http\Response();
         $response = $action->update($request, $response, $aArgs);
 
-        $compare = '[{"status":[{"id":"TEST","label_status":"TEST AFTER UP",'
+        $compare = '[[{"id":"TEST","label_status":"TEST AFTER UP",'
             . '"is_system":"Y","is_folder_status":"N","img_filename":null,'
             . '"maarch_module":"apps","can_be_searched":"Y",'
-            . '"can_be_modified":"Y"}]}]';
+            . '"can_be_modified":"Y"}]]';
         
         $this->assertSame((string)$response->getBody(), $compare);
     }
@@ -133,7 +133,7 @@ class StatusControllerTest extends PHPUnit_Framework_TestCase
         $response = new \Slim\Http\Response();
         $response = $action->delete($request, $response, $aArgs);
         
-        $this->assertSame((string)$response->getBody(), '[{"status":true}]');
+        $this->assertSame((string)$response->getBody(), '[true]');
     }
 
 }

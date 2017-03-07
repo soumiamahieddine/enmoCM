@@ -49,9 +49,9 @@ if (!is_array($_SESSION['tagsuser'])) {
 	//print_r($tags_list);
 	
 	if($modify_keyword){
-		$frm_str .='<select  id="tag_userform" name="tag_userform[]" multiple="" data-placeholder="Aucun mot clé">';
+		$frm_str .='<select  id="tag_userform" name="tag_userform[]" multiple="" data-placeholder=" ">';
 	}else{
-		$frm_str .='<select disabled="disabled" id="tag_userform" title="Vous n\'avez pas le droit d\'associer de mots clés" name="tag_userform[]" multiple="" data-placeholder="Aucun mot clé">';
+		$frm_str .='<select disabled="disabled" id="tag_userform" title="Vous n\'avez pas le droit d\'associer de mots-clés" name="tag_userform[]" multiple="" data-placeholder=" ">';
 	}
 
 	if (!empty($tags_list)) {

@@ -1728,6 +1728,11 @@ function set_new_contact_address(path_manage_script, id_div, close,transmission)
             } else if (parent.parent.$('contact')) {
                 parent.parent.$('contact').value = response.contactName;
             }
+            if (parent.$('email')) {
+                parent.$('email').value = response.contactName;
+            } else if (parent.parent.$('email')) {
+                parent.parent.$('email').value = response.contactName;
+            }
             if (parent.$('contactidAttach')) {
                 parent.$('contactidAttach').value = response.contactId;
             } else if (parent.parent.$('contactidAttach')){

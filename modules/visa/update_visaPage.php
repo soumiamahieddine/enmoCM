@@ -38,12 +38,14 @@ $left_html = '';
 
 
 //Onglet document
-if ($selectedCat != 'outgoing'){
+if ($data['category_id']['value'] != 'outgoing'){
     $pathScriptTab = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='. $res_id.'&collid='.$coll_id;
     $left_html .= '<dt id="onglet_entrant" style="padding-top: 6px;" onclick="loadSpecificTab(\'viewframevalidDoc\',\''.$pathScriptTab.'\');return false;">'._INCOMING.' <sup><span id="nb_note" style="'.$style2.'" class="'.$class.'">'.$nbr_notes.'</span></sup></dt><dd style="overflow-y: hidden;">';
     $left_html .= '<iframe src="'.$pathScriptTab.'" name="viewframevalidDoc" id="viewframevalidDoc"  scrolling="auto" frameborder="0"  style="width:100%;height:100%;" ></iframe></dd>';
 
     $left_html .= '</dd>';
+}else{
+    $js .= '$$(\'#visa_tab\')[0].click();';
 }
 	
 //Onglet Circuit 

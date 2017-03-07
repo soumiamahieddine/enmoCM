@@ -98,7 +98,7 @@ $tab = $search_obj->send_criteria_data($param);
 // criteria list options
 $src_tab = $tab[0];
 
-$core_tools->load_js();
+//$core_tools->load_js();
 ?>
 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>
 <script type="text/javascript">

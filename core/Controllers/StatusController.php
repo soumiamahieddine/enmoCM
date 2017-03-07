@@ -28,9 +28,7 @@ class StatusController
         $obj = StatusModel::getList();
         
         $datas = [
-            [
-                'status' => $obj,
-            ]
+            $obj,
         ];
         
         return $response->withJson($datas);
@@ -51,9 +49,7 @@ class StatusController
         }
         
         $datas = [
-            [
-                'status' => $obj,
-            ]
+            $obj,
         ];
 
         return $response->withJson($datas);
@@ -89,9 +85,7 @@ class StatusController
         }
 
         $datas = [
-            [
-                'status' => $obj,
-            ]
+            $obj,
         ];
 
         return $response->withJson($datas);
@@ -127,9 +121,7 @@ class StatusController
         }
 
         $datas = [
-            [
-                'status' => $obj,
-            ]
+            $obj,
         ];
 
         return $response->withJson($datas);
@@ -150,9 +142,7 @@ class StatusController
         }
         
         $datas = [
-            [
-                'status' => $obj,
-            ]
+            $obj,
         ];
 
         return $response->withJson($datas);
