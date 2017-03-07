@@ -275,7 +275,8 @@ while ($queryResult=$stmt1->fetchObject()) {
 			{
 			   $err++;
 			   $errInfo = ' (Last Error : '.$output[0].')';
-			   $GLOBALS['logger']->write('document not converted ! ('.$output[0].')',"ERROR");
+                           $stmt2 = $GLOBALS['db']->query("UPDATE ".$GLOBALS['tablename']." SET tnl_path = 'ERR', tnl_filename = 'ERR' WHERE res_id = ?", array($queryResult->res_id));
+			   $GLOBALS['logger']->write('document not converted ! ('.$output[0].') => '.$command,"ERROR");
 			}else{
 				$stmt2 = $GLOBALS['db']->query("UPDATE ".$GLOBALS['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename), $queryResult->res_id));	
 				$GLOBALS['logger']->write('document converted');
