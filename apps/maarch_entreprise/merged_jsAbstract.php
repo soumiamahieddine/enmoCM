@@ -39,31 +39,31 @@ class MergedJsAbstract {
 	}
 
 	public function merge_lib() {
-		readfile('apps/maarch_entreprise/js/accounting.js');
-		readfile('apps/maarch_entreprise/js/functions.js');
-		readfile('apps/maarch_entreprise/js/prototype.js');
-		readfile('apps/maarch_entreprise/js/scriptaculous.js');
-		readfile('apps/maarch_entreprise/js/jquery.min.js');
-		readfile('apps/maarch_entreprise/js/angular.min.js');
-		readfile('apps/maarch_entreprise/js/angular-route.js');
-		readfile('apps/maarch_entreprise/js/ng-table.min.js');
-		readfile('apps/maarch_entreprise/js/indexing.js');
-		readfile('apps/maarch_entreprise/js/scrollbox.js');
-		readfile('apps/maarch_entreprise/js/effects.js');
-		readfile('apps/maarch_entreprise/js/controls.js');
-		readfile('apps/maarch_entreprise/js/tabricator.js');
-		readfile('apps/maarch_entreprise/js/search_adv.js');
-		readfile('apps/maarch_entreprise/js/maarch.js');
-		readfile('apps/maarch_entreprise/js/keypress.js');
-		readfile('apps/maarch_entreprise/js/Chart.js');
-		readfile('apps/maarch_entreprise/js/chosen.proto.min.js');
-		readfile('apps/maarch_entreprise/js/event.simulate.js');
-		readfile('apps/maarch_entreprise/js/RSVP.js');
-        readfile('apps/maarch_entreprise/js/render.js');
-        readfile('apps/maarch_entreprise/js/jio.js');
+		include('apps/maarch_entreprise/js/accounting.js');
+		include('apps/maarch_entreprise/js/functions.js');
+		include('apps/maarch_entreprise/js/prototype.js');
+		include('apps/maarch_entreprise/js/scriptaculous.js');
+		include('apps/maarch_entreprise/js/jquery.min.js');
+		include('apps/maarch_entreprise/js/angular.min.js');
+		include('apps/maarch_entreprise/js/angular-route.js');
+		include('apps/maarch_entreprise/js/ng-table.min.js');
+		include('apps/maarch_entreprise/js/indexing.js');
+		include('apps/maarch_entreprise/js/scrollbox.js');
+		include('apps/maarch_entreprise/js/effects.js');
+		include('apps/maarch_entreprise/js/controls.js');
+		include('apps/maarch_entreprise/js/tabricator.js');
+		include('apps/maarch_entreprise/js/search_adv.js');
+		include('apps/maarch_entreprise/js/maarch.js');
+		include('apps/maarch_entreprise/js/keypress.js');
+		include('apps/maarch_entreprise/js/Chart.js');
+		include('apps/maarch_entreprise/js/chosen.proto.min.js');
+		include('apps/maarch_entreprise/js/event.simulate.js');
+		include('apps/maarch_entreprise/js/RSVP.js');
+                include('apps/maarch_entreprise/js/render.js');
+                include('apps/maarch_entreprise/js/jio.js');
 
-		readfile('apps/maarch_entreprise/js/app.module.js');
-		readfile('apps/maarch_entreprise/js/aController.js');
+		include('apps/maarch_entreprise/js/app.module.js');
+		include('apps/maarch_entreprise/js/aController.js');
 
         echo "\n";
 	}
