@@ -988,7 +988,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '@media screen and (min-width: 1280px) {#validleft{width:447px !important;}}';
     $frmStr .= '@media screen and (max-width: 1280px) {#validright{width:55% !important;}}';
     $frmStr .= '#file_iframe{width:100% !important;height:100% !important;}';
-    $frmStr .= '.chosen-container{width:100% !important;}';
+    $frmStr .= '#maarch_body{overflow:hidden !important;}';
     $frmStr .= '</style>';
     $frmStr .= '</div>';
     $frmStr .= '</form>';
