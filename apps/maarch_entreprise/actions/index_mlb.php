@@ -631,6 +631,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
 	
     $frmStr .= '<tr id="add_multi_contact_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="contact" class="form_title" >'
+            . '<span id="exp_multi_contact">' . _SHIPPER . '</span>'
             . '<span id="dest_multi_contact">' . _DEST . '</span>';
     if ($core->test_admin('my_contacts', 'apps', false)) {
         $pathScriptTab = $_SESSION['config']['businessappurl']

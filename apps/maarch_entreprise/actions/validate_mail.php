@@ -651,6 +651,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					
     $frm_str .= '<tr id="add_multi_contact_tr" style="display:' . $display_value . ';">';
     $frm_str .= '<td><label for="contact" class="form_title" >'
+        . '<span id="exp_multi_contact">' . _SHIPPER . '</span>'
         . '<span id="dest_multi_contact">' . _DEST . '</span>';
     
     if ($core->test_admin('my_contacts', 'apps', false)) {
