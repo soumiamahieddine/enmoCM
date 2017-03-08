@@ -83,6 +83,7 @@
       <enumeration value="incoming" />
       <enumeration value="outgoing" />
       <enumeration value="internal" />
+      <enumeration value="ged_doc" />
     </dataType>
     <dataType name="contact_user_list" base="string">
       <enumeration value="contacts" />

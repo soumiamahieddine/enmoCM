@@ -183,27 +183,31 @@ elseif($mode == 'up' || $mode == 'add'){
                             ondblclick='moveclick($(categorieslist), $(categories_chosen));' multiple="multiple" >
                             <?php
                             foreach ($_SESSION['coll_categories'] as $collId => $collLabel) {
-                                $state_category = false;
-                                foreach ($collLabel as $catId => $catValue) {
-                                    $j=0;
+                                if(!preg_match('/attachments/', $collId)){
                                     $state_category = false;
-                                    if ($catId <> 'default_category') {
-                                        for ($j=0;$j<count($_SESSION['m_admin']['action']['categories']);$j++) {
-                                            if ($catId == $_SESSION['m_admin']['action']['categories'][$j]) {
-                                                $state_category = true;
+                                    foreach ($collLabel as $catId => $catValue) {
+                                        $j=0;
+                                        $state_category = false;
+                                        if ($catId <> 'default_category') {
+                                            for ($j=0;$j<count($_SESSION['m_admin']['action']['categories']);$j++) {
+                                                if ($catId == $_SESSION['m_admin']['action']['categories'][$j]) {
+                                                    $state_category = true;
+                                                }
                                             }
-                                        }
-                                        if ($state_category == false) {
-                                            ?>
-                                            <option value="<?php
-                                                functions::xecho($catId);
-                                                ?>"><?php
-                                                functions::xecho($collId . ' / ' . $catValue);
-                                                ?></option>
-                                            <?php
+                                            if ($state_category == false) {
+                                                ?>
+                                                <option value="<?php
+                                                    functions::xecho($catId);
+                                                    ?>"><?php
+                                                    functions::xecho($catValue);
+                                                    //functions::xecho($collId . ' / ' . $catValue);
+                                                    ?></option>
+                                                <?php
+                                            }
                                         }
                                     }
                                 }
+                                
                             }
                             ?>
                             </select>
@@ -224,27 +228,31 @@ elseif($mode == 'up' || $mode == 'add'){
                             ondblclick='moveclick($(categories_chosen), $(categorieslist));' multiple="multiple">
                             <?php
                             foreach ($_SESSION['coll_categories'] as $collId => $collLabel) {
-                                $state_category = false;
-                                foreach ($collLabel as $catId => $catValue) {
-                                    $j=0;
+                                if(!preg_match('/attachments/', $collId)){
                                     $state_category = false;
-                                    if ($catId <> 'default_category') {
-                                        for ($j=0;$j<count($_SESSION['m_admin']['action']['categories']);$j++) {
-                                            if ($catId == $_SESSION['m_admin']['action']['categories'][$j]) {
-                                                $state_category = true;
+                                    foreach ($collLabel as $catId => $catValue) {
+                                        $j=0;
+                                        $state_category = false;
+                                        if ($catId <> 'default_category') {
+                                            for ($j=0;$j<count($_SESSION['m_admin']['action']['categories']);$j++) {
+                                                if ($catId == $_SESSION['m_admin']['action']['categories'][$j]) {
+                                                    $state_category = true;
+                                                }
                                             }
-                                        }
-                                        if ($state_category == true) {
-                                            ?>
-                                            <option value="<?php
-                                                functions::xecho($catId);
-                                                ?>" selected="selected"><?php
-                                                functions::xecho($collId . ' / ' . $catValue);
-                                                ?></option>
-                                            <?php
+                                            if ($state_category == true) {
+                                                ?>
+                                                <option value="<?php
+                                                    functions::xecho($catId);
+                                                    ?>" selected="selected"><?php
+                                                    functions::xecho($catValue);
+                                                    //functions::xecho($collId . ' / ' . $catValue);
+                                                    ?></option>
+                                                <?php
+                                            }
                                         }
                                     }
                                 }
+                                
                             }
                             ?>
                             </select>
