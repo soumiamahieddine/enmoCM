@@ -1676,14 +1676,14 @@ function set_new_contact_address(path_manage_script, id_div, close,transmission)
                 parent.$('contact_attach').value = response.contactName;
             } else if (parent.parent.$('contact_attach')) {
                 parent.parent.$('contact_attach').value = response.contactName;
-            } else if (parent.$('contact')) {
+            } else if (parent.$('contact') && parent.$('add_multi_contact_tr').style.display == 'none') {
                 parent.$('contact').value = response.contactName;
-            } else if (parent.parent.$('contact')) {
+            } else if (parent.parent.$('contact')  && parent.parent.$('add_multi_contact_tr').style.display == 'none') {
                 parent.parent.$('contact').value = response.contactName;
             }
-            if (parent.$('email')) {
+            if (parent.$('email') && parent.$('add_multi_contact_tr').style.display != 'none') {
                 parent.$('email').value = response.contactName;
-            } else if (parent.parent.$('email')) {
+            } else if (parent.parent.$('email') && parent.parent.$('add_multi_contact_tr').style.display != 'none') {
                 parent.parent.$('email').value = response.contactName;
             }
             if (parent.$('contactidAttach')) {
