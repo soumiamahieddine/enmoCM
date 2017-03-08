@@ -317,14 +317,32 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 $frmStr .= '</a>';
             $frmStr .= '</td>';
             $frmStr .= '<td style="text-align: right;">';
-                $frmStr .= '<input ';
-                  $frmStr .= 'type="text" ';
-                  $frmStr .= 'name="res_id" ';
-                  $frmStr .= 'id="res_id" ';
-                  $frmStr .= 'class="readonly" ';
-                  $frmStr .= 'readonly="readonly" ';
-                  $frmStr .= 'value="" ';
-                $frmStr .= '/>';
+                if(_ID_TO_DISPLAY == 'res_id'){
+                    $frmStr .= '<input ';
+                        $frmStr .= 'type="text" ';
+                        $frmStr .= 'name="res_id" ';
+                        $frmStr .= 'id="res_id" ';
+                        $frmStr .= 'class="readonly" ';
+                        $frmStr .= 'readonly="readonly" ';
+                        $frmStr .= 'value="" ';
+                    $frmStr .= '/>';
+                }else{
+                    $frmStr .= '<input ';
+                        $frmStr .= 'type="text" ';
+                        $frmStr .= 'name="chrono_id" ';
+                        $frmStr .= 'id="chrono_id" ';
+                        $frmStr .= 'class="readonly" ';
+                        $frmStr .= 'readonly="readonly" ';
+                        $frmStr .= 'value="" ';
+                    $frmStr .= '/>';
+                    $frmStr .= '<input style="display:none"';
+                        $frmStr .= 'type="text" ';
+                        $frmStr .= 'name="res_id" ';
+                        $frmStr .= 'id="res_id" ';
+                        $frmStr .= 'value="" ';
+                    $frmStr .= '/>';
+                }
+                
             $frmStr .= '</td>';
             $frmStr .= '<td>';
                 $frmStr .= '<span class="red_asterisk" id="attachment_link_mandatory" '
@@ -613,11 +631,13 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
 	
     $frmStr .= '<tr id="add_multi_contact_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="contact" class="form_title" >'
+            . '<span id="exp_multi_contact">' . _SHIPPER . '</span>'
             . '<span id="dest_multi_contact">' . _DEST . '</span>';
     if ($core->test_admin('my_contacts', 'apps', false)) {
+        $pathScriptTab = $_SESSION['config']['businessappurl']
+                . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe';
         $frmStr .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
-                . '" onclick="new Effect.toggle(\'create_contact_div\', '
-                . '\'blind\', {delay:0.2});return false;" '
+                . '" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\'\',\''.$pathScriptTab.'\',\'create_contact\');return false;" '
                 . 'style="display:inline;" ><i class="fa fa-pencil" title="' 
                 . _CREATE_CONTACT . '"></i></a>';
     }

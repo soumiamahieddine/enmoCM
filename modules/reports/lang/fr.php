@@ -43,7 +43,7 @@ if (!defined("_CLICK_LINE_BELOW_TO_SEE_REPORT"))
 if (!defined("_CLICK_LINE_BELOW_TO_RETURN_TO_REPORTS"))
     define("_CLICK_LINE_BELOW_TO_RETURN_TO_REPORTS", "Cliquez ici pour retourner à la liste des éditions disponibles");
 if (!defined("_NO_REPORTS_FOR_USER"))
-    define("_NO_REPORTS_FOR_USER", "Aucune éditions n\"est disponibles via le menu pour cet utilisateur");
+    define("_NO_REPORTS_FOR_USER", "Aucune statistique n'est disponible via le menu pour cet utilisateur");
 if (!defined("_PRINT_NO_RESULT"))
     define("_PRINT_NO_RESULT", "Rien à afficher");
 

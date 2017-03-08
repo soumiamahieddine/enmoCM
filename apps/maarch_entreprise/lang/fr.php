@@ -24,7 +24,7 @@
 if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.6");
 
 //if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
-if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "res_id"); // value res_id || chrono_number
+if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "chrono_number"); // value res_id || chrono_number
 /************** Administration **************/
 if (!defined("_SVR")) define("_SVR", "SVR");
 if (!defined("_SVA")) define("_SVA", "SVA");
@@ -1519,7 +1519,7 @@ if (!defined("_POWERED_BY"))    define("_POWERED_BY", "Powered by Maarch&trade;.
 if (!defined("_LINK_TO_DOC"))    define("_LINK_TO_DOC", "Lier à un document");
 if (!defined("_LINK_REFERENCE"))    define("_LINK_REFERENCE", "Pour lier vous devez choisir un document existant");
 if (!defined("_LINKED_TO"))    define("_LINKED_TO", "Lié au document ");
-if (!defined("_NOW_LINK_WITH_THIS_ONE"))    define("_NOW_LINK_WITH_THIS_ONE", " est maintenant lié à ce documents");
+if (!defined("_NOW_LINK_WITH_THIS_ONE"))    define("_NOW_LINK_WITH_THIS_ONE", " est maintenant lié à ce document");
 if (!defined("_LINK_TAB"))    define("_LINK_TAB", "Liaisons");
 if (!defined("_LINK_DESC_FOR"))    define("_LINK_DESC_FOR", "Document(s) liés à ce document");
 if (!defined("_LINK_ASC_FOR"))    define("_LINK_ASC_FOR", "Document(s) au(x)quel(s) est lié ce document");

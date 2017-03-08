@@ -115,4 +115,5 @@ if (!defined("_PRIVATE_TAGS"))
     define("_PRIVATE_TAGS", "Restreindre les ".strtolower(_TAGS_DEFAULT)." à l'entité de l'utilisateur (Niveau direction)");
 if (!defined("_PRIVATE_TAGS_DESC"))
     define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les ".strtolower(_TAGS_DEFAULT)." qui ont été restreints à sa direction (l'ajout / modification associera le mot clé automatiquement à sa direction).");
-
+if (!defined("_ADD_TAG_CONFIRM"))
+    define("_ADD_TAG_CONFIRM", "Ce mot sera ajouté en tant que ".strtolower(_TAG_DEFAULT).".");

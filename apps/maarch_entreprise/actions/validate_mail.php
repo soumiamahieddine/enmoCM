@@ -135,6 +135,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $data = get_general_data($coll_id, $res_id, 'minimal');
     $_SESSION['category_id'] = $data['category_id']['value'];
     $view = $sec->retrieve_view_from_coll_id($coll_id);
+    $stmt = $db->query("SELECT alt_identifier, creation_date FROM " . $view . " WHERE res_id = ?", array($res_id));
+    $resChrono = $stmt->fetchObject();
+    $chrono_number = explode('/', $resChrono->alt_identifier);
+    $chrono_number = $chrono_number[1];
+    $creation_date = functions::format_date_db($resChrono->creation_date, false);
 
     //LAUNCH DOCLOCKER
     $docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
@@ -294,8 +299,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<form name="index_file" method="post" id="index_file" action="#" class="forms indexingform" style="text-align:left;width:100%;">';
     //MODAL HEADER
     $frm_str .= '<div style="margin:-10px;margin-bottom:10px;background-color: #009DC5;">';
-    $frm_str .= '<h2 class="tit" id="action_title" style="display:table-cell;vertical-align:middle;margin:0px;">'._VALIDATE_MAIL.' '._NUM.functions::xssafe($res_id).' : ';
-    $frm_str .= '</h2>';
+    if(_ID_TO_DISPLAY == 'res_id'){
+        $frm_str .= '<h2 class="tit" id="action_title" style="display:table-cell;vertical-align:middle;margin:0px;">'._VALIDATE_MAIL.' '._NUM.functions::xssafe($res_id).' : ';
+        $frm_str .= '</h2>';
+    }else{
+        $frm_str .= '<h2 class="tit" id="action_title" title="'. _LETTER_NUM . $res_id . '" style="display:table-cell;vertical-align:middle;margin:0px;">'. _PROCESS . _DOCUMENT . ' ' . $resChrono->alt_identifier.' : ';
+        $frm_str .= '</h2>'; 
+    }
+    
     $frm_str .= '<div style="display:table-cell;vertical-align:middle;">';
 
     //GET ACTION LIST BY AJAX REQUEST
@@ -316,7 +327,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     //PART LEFT
     $frm_str .= '<div style="height:90vh;overflow:auto;">';
-    $frm_str .= '<div id="validleft">';
+    $frm_str .= '<div id="validleft" style="width:430px;">';
     $frm_str .= '<div id="valid_div" style="display:none;";>';
     $frm_str .= '<div id="frm_error_'.$id_action.'" class="indexing_error"></div>';
 
@@ -640,11 +651,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					
     $frm_str .= '<tr id="add_multi_contact_tr" style="display:' . $display_value . ';">';
     $frm_str .= '<td><label for="contact" class="form_title" >'
+        . '<span id="exp_multi_contact">' . _SHIPPER . '</span>'
         . '<span id="dest_multi_contact">' . _DEST . '</span>';
     
     if ($core->test_admin('my_contacts', 'apps', false)) {
         $pathScriptTab = $_SESSION['config']['businessappurl']
-            . 'index.php??display=false&dir=my_contacts&page=create_contact_iframe';
+            . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe';
         $frm_str .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
             . '" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\'\',\''.$pathScriptTab.'\',\'create_contact\');return false;" '
             . 'style="display:inline;" ><i class="fa fa-pencil" title="' . _CREATE_CONTACT . '"></i></a>';
@@ -907,12 +919,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . 'id="indexing_fields" style="display:table;">';
 
     /*** Chrono number ***/
-    $stmt = $db->query("SELECT alt_identifier FROM " 
-        . $view 
-        . " WHERE res_id = ?", array($res_id));
-    $resChrono = $stmt->fetchObject();
-    $chrono_number = explode('/', $resChrono->alt_identifier);
-    $chrono_number = $chrono_number[1];
     $frm_str .= '<tr id="chrono_number_tr" style="display:'.$display_value.';">';
         $frm_str .='<td><label for="chrono_number" class="form_title" >'._CHRONO_NUMBER.'</label></td>';
         $frm_str .='<td>&nbsp;</td>';

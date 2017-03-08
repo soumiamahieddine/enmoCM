@@ -1,7 +1,7 @@
 -- *************************************************************************--
 --                                                                          --
 --                                                                          --
---        THIS SCRIPT IS USE TO PASS FROM MAARCH 1.5 TO MAARCH 1.5.1        --
+--        THIS SCRIPT IS USE TO PASS FROM MAARCH 1.6 TO MAARCH 1.6.1        --
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
@@ -164,3 +164,7 @@ ALTER TABLE entities ADD COLUMN transferring_agency character varying(255);
 
 ALTER TABLE entities DROP COLUMN IF EXISTS archival_agreement;
 ALTER TABLE entities ADD COLUMN archival_agreement character varying(255);
+
+DELETE FROM docservers where docserver_id = 'FASTHD_ATTACH';
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('FASTHD_ATTACH', 'FASTHD', 'Fast internal disc bay for attachments', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/manual_attachments/', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'attachments_coll', 2, 'NANTERRE', 3);

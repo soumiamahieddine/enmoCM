@@ -19,250 +19,257 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Attachments\Models\AttachmentsModel;
+use Core\Controllers\ResController;
 
 require_once 'modules/attachments/Models/AttachmentsModel.php';
 
 class AttachmentsController
 {
-
-    public function getList(RequestInterface $request, ResponseInterface $response)
+    
+    public function storeAttachmentResource($aArgs)
     {
-        $obj = AttachmentsModel::getList();
-        
-        $datas = [
-            [
-                'attachments' => $obj,
-            ]
+        if (empty($aArgs['resId'])) {
+
+            return ['errors' => 'resId ' . _EMPTY];
+        }
+
+        if (empty($aArgs['encodedFile'])) {
+
+            return ['errors' => 'encodedFile ' . _EMPTY];
+        }
+
+        if (empty($aArgs['data'])) {
+
+            return ['errors' => 'data ' . _EMPTY];
+        }
+
+        if (empty($aArgs['collId'])) {
+
+            return ['errors' => 'collId ' . _EMPTY];
+        }
+
+        if (empty($aArgs['collIdMaster'])) {
+
+            return ['errors' => 'collIdMaster ' . _EMPTY];
+        }
+
+        if (empty($aArgs['table'])) {
+
+            return ['errors' => 'table ' . _EMPTY];
+        }
+
+        if (empty($aArgs['fileFormat'])) {
+
+            return ['errors' => 'fileFormat ' . _EMPTY];
+        }
+
+        $resId = $aArgs['resId'];
+        $encodedFile = $aArgs['encodedFile'];
+        $collId = $aArgs['collId'];
+        $collIdMaster = $aArgs['collIdMaster'];
+        $table = $aArgs['table'];
+        $fileFormat = $aArgs['fileFormat'];
+
+        $aArgs = [
+            'data'   => $aArgs['data'],
+            'collIdMaster' => $collIdMaster,
+            'resId'  => $resId,
         ];
         
-        return $response->withJson($datas);
-    }
-
-    public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
-    {
-        if (isset($aArgs['id'])) {
-            $id = $aArgs['id'];
-            $obj = AttachmentsModel::getById([
-                'id' => $id
-            ]);
-        } else {
-
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
-        }
+        $returnPrepare = $this->prepareStorage($aArgs);
         
-        $datas = [
-            [
-                'attachments' => $obj,
-            ]
+        $aArgs = [
+            'encodedFile'   => $encodedFile,
+            'data'          => $returnPrepare['data'],
+            'collId'        => $collId,
+            'table'         => $table,
+            'fileFormat'    => $fileFormat,
+            'status'        => $returnPrepare['status'],
         ];
 
-        return $response->withJson($datas);
-    }
+        $res = new \Core\Controllers\ResController();
+        $response = $res->storeResource($aArgs);
 
-    public function create(RequestInterface $request, ResponseInterface $response, $aArgs)
-    {
-        $errors = [];
+        //return $response;
+        if (!is_numeric($response[0])) {
 
-        $errors = $this->control($request, 'create');
-
-        if (!empty($errors)) {
-
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => $errors]);
-        }
-
-        $aArgs = $request->getQueryParams();
-
-        $return = AttachmentsModel::create($aArgs);
-
-        if ($return) {
-            $id = $aArgs['id'];
-            $obj = AttachmentsModel::getById([
-                'id' => $id
-            ]);
+            return ['errors' => 'Pb with SQL insertion : ' . $response[0]];
         } else {
-
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_CREATE]);
-        }
-
-        $datas = [
-            [
-                'status' => $obj,
-            ]
-        ];
-
-        return $response->withJson($datas);
-    }
-
-    public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
-    {
-        $errors = [];
-
-        $errors = $this->control($request, 'update');
-
-        if (!empty($errors)) {
-
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => $errors]);
-        }
-
-        $aArgs = $request->getQueryParams();
-
-        $return = AttachmentsModel::update($aArgs);
-
-        if ($return) {
-            $id = $aArgs['id'];
-            $obj = AttachmentsModel::getById([
-                'id' => $id
-            ]);
-        } else {
-
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_UPDATE]);
-        }
-
-        $datas = [
-            [
-                'status' => $obj,
-            ]
-        ];
-
-        return $response->withJson($datas);
-    }
-
-    public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
-    {
-        if (isset($aArgs['id'])) {
-            $id = $aArgs['id'];
-            $obj = AttachmentsModel::delete([
-                'id' => $id
-            ]);
-        } else {
+            require_once 'core/class/class_history.php';
+            require_once 'core/class/class_security.php';
+            $hist = new \history();
+            $sec = new \security();
+            $view = $sec->retrieve_view_from_coll_id($collIdMaster);
             
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_DELETE]);
+            $hist->add(
+                $view, $resId, "ADD", 'attachadd',
+                ucfirst(_DOC_NUM) . $response[0] . ' '
+                . _NEW_ATTACH_ADDED . ' ' . _TO_MASTER_DOCUMENT
+                . $resId,
+                $_SESSION['config']['databasetype'],
+                'apps'
+            );
+            $hist->add(
+                $table, $response[0], "ADD",'attachadd',
+                _NEW_ATTACH_ADDED,
+                $_SESSION['config']['databasetype'],
+                'attachments'
+            );
         }
-        
-        $datas = [
-            [
-                'status' => $obj,
-            ]
-        ];
 
-        return $response->withJson($datas);
+        if ($response[0] == 0) {
+            $response[0] = '';
+        }
+
+        return [$response[0]];
     }
 
-    protected function control($request, $mode)
+    /**
+     * Prepares storage on database.
+     * @param  $data array
+     * @param  $resId bigint
+     * @param  $collIdMaster string
+     * @return $data
+     */
+    public function prepareStorage($aArgs)
     {
-        $errors = [];
+        if (empty($aArgs['data'])) {
 
-        if($mode == 'update') {
-            $obj = AttachmentsModel::getById([
-                'id' => $request->getParam('id')
-            ]);
-            if (empty($obj)) {
-                array_push(
-                    $errors, 
-                    _ID . ' ' . $request->getParam('id') . ' ' . _NOT_EXISTS
-                );
+            return ['errors' => 'data ' . _EMPTY];
+        }
+
+        if (empty($aArgs['resId'])) {
+
+            return ['errors' => 'resId ' . _EMPTY];
+        }
+
+        if (empty($aArgs['collIdMaster'])) {
+
+            return ['errors' => 'collIdMaster ' . _EMPTY];
+        }
+
+        $statusFound = false;
+        $typistFound = false;
+        $typeIdFound = false;
+        $attachmentTypeFound = false;
+        
+        $data = $aArgs['data'];
+        
+        $countD = count($data);
+        for ($i=0;$i<$countD;$i++) {
+
+            if (
+                strtoupper($data[$i]['type']) == 'INTEGER' || 
+                strtoupper($data[$i]['type']) == 'FLOAT'
+            ) {
+                if ($data[$i]['value'] == '') {
+                    $data[$i]['value'] = '0';
+                }
+            }
+
+            if (strtoupper($data[$i]['type']) == 'STRING') {
+               $data[$i]['value'] = $data[$i]['value'];
+               $data[$i]['value'] = str_replace(";", "", $data[$i]['value']);
+               $data[$i]['value'] = str_replace("--", "", $data[$i]['value']);
+            }
+
+            if (strtoupper($data[$i]['column']) == strtoupper('status')) {
+                $statusFound = true;
+                $status = $data[$i]['value'];
+            }
+
+            if (strtoupper($data[$i]['column']) == strtoupper('typist')) {
+                $typistFound = true;
+            }
+
+            if (strtoupper($data[$i]['column']) == strtoupper('type_id')) {
+                $typeIdFound = true;
+            }
+
+            if (strtoupper($data[$i]['column']) == strtoupper('attachment_type')) {
+                $attachmentTypeFound = true;
             }
         }
 
-        if (!Validator::notEmpty()->validate($request->getParam('id'))) {
-            array_push($errors, _ID . ' ' . _IS_EMPTY);
-        } elseif($mode == 'create') {
-            $obj = AttachmentsModel::getById([
-                'id' => $request->getParam('id')
-            ]);
-            if (!empty($obj)) {
-                array_push(
-                    $errors, 
-                    _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS
-                );
-            }
+        if (!$typistFound) {
+            array_push(
+                $data,
+                array(
+                    'column' => 'typist',
+                    'value' => $_SESSION['user']['UserId'],
+                    'type' => 'string',
+                )
+            );
         }
 
-        if (!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('id'))) {
-            array_push($errors, _ID . ' ' . _NOT . ' ' . _VALID);
+        if (!$typeIdFound) {
+            array_push(
+                $data,
+                array(
+                    'column' => 'type_id',
+                    'value' => 0,
+                    'type' => 'int',
+                )
+            );
+        }
+        
+        if (!$statusFound) {
+            array_push(
+                $data,
+                array(
+                    'column' => 'status',
+                    'value' => 'NEW',
+                    'type' => 'string',
+                )
+            );
+            $status = 'NEW';
+        }
+        
+        if (!$attachmentTypeFound) {
+            array_push(
+                $data,
+                array(
+                    'column' => 'attachment_type',
+                    'value' => 'response_project',
+                    'type' => 'string',
+                )
+            );
         }
 
-        if (!Validator::notEmpty()->validate($request->getParam('label_status'))) {
-            array_push($errors, _LABEL_STATUS . ' ' . _IS_EMPTY);
-        }
+        //BASICS
+        array_push(
+            $data,
+            array(
+                'column' => "coll_id",
+                'value' => $aArgs['collIdMaster'],
+                'type' => "string",
+            )
+        );
 
-        if (
-            Validator::notEmpty()
-                ->validate($request->getParam('is_system')) &&
-            !Validator::contains('Y')
-                ->validate($request->getParam('is_system')) &&
-            !Validator::contains('N')
-                ->validate($request->getParam('is_system'))
-        ) {
-            array_push($errors, _IS_SYSTEM . ' ' . _NOT . ' ' . _VALID);
-        }
+        array_push(
+            $data,
+            array(
+                'column' => "res_id_master",
+                'value' => $aArgs['resId'],
+                'type' => "integer",
+            )
+        );
 
-        if (
-            Validator::notEmpty()
-                ->validate($request->getParam('is_folder_status')) &&
-            !Validator::contains('Y')
-                ->validate($request->getParam('is_folder_status')) &&
-            !Validator::contains('N')
-                ->validate($request->getParam('is_folder_status'))
-        ) {
-            array_push($errors, _IS_FOLDER_STATUS . ' ' . _NOT . ' ' . _VALID);
-        }
+        array_push(
+            $data,
+            array(
+                'column' => "relation",
+                'value' => 1,
+                'type' => "integer",
+            )
+        );
 
-        if (
-            Validator::notEmpty()
-                ->validate($request->getParam('img_filename')) &&
-            (!Validator::regex('/^[\w-.]+$/')
-                ->validate($request->getParam('img_filename')) ||
-            !Validator::length(null, 255)
-                ->validate($request->getParam('img_filename')))
-        ) {
-            array_push($errors, _IMG_FILENAME . ' ' . _NOT . ' ' . _VALID);
-        }
+        $return = [
+            'data'   => $data,
+            'status' => $status,
+        ];
 
-        if (
-            Validator::notEmpty()
-                ->validate($request->getParam('maarch_module')) &&
-            !Validator::length(null, 255)
-                ->validate($request->getParam('maarch_module'))
-        ) {
-            array_push($errors, _MAARCH_MODULE . ' ' . _NOT . ' ' . _VALID);
-        }
-
-        if (
-            Validator::notEmpty()
-                ->validate($request->getParam('can_be_searched')) &&
-            !Validator::contains('Y')
-                ->validate($request->getParam('can_be_searched')) &&
-            !Validator::contains('N')
-                ->validate($request->getParam('can_be_searched'))
-        ) {
-            array_push($errors, _CAN_BE_SEARCHED . ' ' . _NOT . ' ' . _VALID);
-        }
-
-        if (
-            Validator::notEmpty()
-                ->validate($request->getParam('can_be_modified')) &&
-            !Validator::contains('Y')
-                ->validate($request->getParam('can_be_modified')) &&
-            !Validator::contains('N')
-                ->validate($request->getParam('can_be_modified'))
-        ) {
-            array_push($errors, _CAN_BE_MODIFIED . ' ' . _NOT . ' ' . _VALID);
-        }
-
-        return $errors;
+        return $return;
     }
 
 }

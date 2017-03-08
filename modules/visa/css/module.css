@@ -130,6 +130,7 @@
     text-align: left;
     width: 95%;
     cursor: default;
+    border: dashed 2px #93D1E4
 }
 
 .droptarget_arrow {
@@ -188,6 +189,19 @@
 }
 .droptarget:hover #dropZone{
 	visibility: visible;
+}
+
+.dropArea{
+    border: dashed 3px white;
+    width: 60%;
+    margin:auto;
+    opacity: 0.5;
+    padding: 5px;
+    
+}
+
+.dropArea::after{
+    font-weight: bolder;
 }
 
 #dropZone,#dropZone:active{
