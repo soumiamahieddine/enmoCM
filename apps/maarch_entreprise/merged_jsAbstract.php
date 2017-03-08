@@ -44,9 +44,6 @@ class MergedJsAbstract {
 		include('apps/maarch_entreprise/js/prototype.js');
 		include('apps/maarch_entreprise/js/scriptaculous.js');
 		include('apps/maarch_entreprise/js/jquery.min.js');
-		include('apps/maarch_entreprise/js/angular.min.js');
-		include('apps/maarch_entreprise/js/angular-route.js');
-		include('apps/maarch_entreprise/js/ng-table.min.js');
 		include('apps/maarch_entreprise/js/indexing.js');
 		include('apps/maarch_entreprise/js/scrollbox.js');
 		include('apps/maarch_entreprise/js/effects.js');
@@ -58,9 +55,9 @@ class MergedJsAbstract {
 		include('apps/maarch_entreprise/js/Chart.js');
 		include('apps/maarch_entreprise/js/chosen.proto.min.js');
 		include('apps/maarch_entreprise/js/event.simulate.js');
-		include('apps/maarch_entreprise/js/RSVP.js');
-                include('apps/maarch_entreprise/js/render.js');
-                include('apps/maarch_entreprise/js/jio.js');
+//		include('apps/maarch_entreprise/js/RSVP.js');
+//		include('apps/maarch_entreprise/js/render.js');
+//		include('apps/maarch_entreprise/js/jio.js');
 
 		readfile('node_modules/core-js/client/shim.js');
 		readfile('node_modules/zone.js/dist/zone.js');
@@ -78,11 +75,6 @@ class MergedJsAbstract {
 					|| file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js"))
 			    {
 			        include('modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/functions.js');
-			    }
-			    if(file_exists($_SESSION['config']['corepath'].'custom/'.$_SESSION['custom_override_id'].'/modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/aController.js')
-					|| file_exists($_SESSION['config']['corepath'].'/modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/aController.js'))
-			    {
-			        include('modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/aController.js');
 			    }
 			}
 		}

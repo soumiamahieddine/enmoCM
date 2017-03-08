@@ -27,3 +27,6 @@ require_once 'apps/maarch_entreprise/define_custom.php';
 if (!defined('V2_ENABLED')) {
 	define('V2_ENABLED', false);
 }
+if (!defined('PROD_MODE')) {
+	define('PROD_MODE', true);
+}

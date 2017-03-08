@@ -1,8 +1,7 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
-import { HashLocationStrategy, Location, LocationStrategy } from '@angular/common';
 
 import { AppComponent }  from './app.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';

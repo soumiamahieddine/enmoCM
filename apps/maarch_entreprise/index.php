@@ -223,13 +223,19 @@ if(empty($_SESSION['current_basket'])){
     $_SESSION['save_list']['template'] = "";
 }
 
+if (PROD_MODE) {
+    ?>
+    <script src="js/angular/main.bundle.min.js"></script>
+    <?php
+} else {
+    ?>
+    <script>
+      System.import('js/angular/main.js').catch(function(err){ console.error(err); });
+    </script>
+    <?php
+}
+?>
 
-
- ?>
-
-<script>
-  System.import('js/angular/main.js').catch(function(err){ console.error(err); });
-</script>
 <body style="background: url('static.php?filename=loading_big.gif') no-repeat fixed center;" onload="$('maarch_body').style.background='f2f2f2';$('maarch_body').style.backgroundImage='';$('maarch_body').style.backgroundUrl='';$('maarch_content').style.display='block';session_expirate(<?php echo $time;?>, '<?php
     echo $_SESSION['config']['businessappurl'];
     ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">

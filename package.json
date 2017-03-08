@@ -1,10 +1,11 @@
 {
   "name": "MaarchCourrier",
-  "version": "2.0 Beta",
   "description": "MaarchCourrier",
   "scripts": {
     "build": "tsc -p apps/maarch_entreprise/js/angular/",
-    "build:watch": "tsc -p apps/maarch_entreprise/js/angular/ -w"
+    "build:watch": "tsc -p apps/maarch_entreprise/js/angular/ -w",
+    "build-prod": "npm run build && browserify -s main apps/maarch_entreprise/js/angular/main.js > apps/maarch_entreprise/js/angular/main.bundle.js && npm run minify",
+    "minify": "uglifyjs apps/maarch_entreprise/js/angular/main.bundle.js --compress --mangle --output apps/maarch_entreprise/js/angular/main.bundle.min.js"
   },
   "keywords": [],
   "author": "Maarch",
@@ -23,7 +24,9 @@
     "systemjs": "0.19.40",
     "core-js": "^2.4.1",
     "rxjs": "5.0.1",
-    "zone.js": "^0.7.4"
+    "zone.js": "^0.7.4",
+    "browserify": "^13.0.1",
+    "uglifyjs": "^2.4.10"
   },
   "devDependencies": {
     "typescript": "~2.0.10",
