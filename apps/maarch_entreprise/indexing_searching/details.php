@@ -343,16 +343,21 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
         . $case_sql_complementary . " FROM " . $table . " WHERE res_id = ?",
         array($s_id)
     );
+    $res = $stmt->fetchObject();
 
 }
 ?>
 <div id="details_div">
 <h1 class="titdetail">
-    <i class="fa fa-info-circle fa-2x"></i>&nbsp;<?php
-        echo _DETAILS . " : " . _DOC . ' ' . strtolower(_NUM);
-        ?><?php
-        functions::xecho($s_id);
-        ?> <span>(<?php
+    <i class="fa fa-info-circle fa-2x"></i>&nbsp;
+    <?php
+    if(_ID_TO_DISPLAY == 'res_id'){
+        echo '<i style="font-style:normal;">'._DETAILS . " : " . _DOC . ' ' . strtolower(_NUM).$s_id.'</i>';
+    }else{
+        echo '<i style="font-style:normal;" title="'. _LETTER_NUM . $s_id . '">'._DETAILS . " : " . _DOC . ' ' . $res->alt_identifier.'</i>';
+    }
+    ?>
+     <span>(<?php
         echo  $security->retrieve_coll_label_from_coll_id($coll_id);
         ?>)</span>
 </h1>
@@ -422,7 +427,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 'img_confidentiality' => true,
                 );
 
-            $res = $stmt->fetchObject();
             $typist = $res->typist;
             $format = $res->format;
             $filesize = $res->filesize;

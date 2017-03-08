@@ -317,14 +317,32 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 $frmStr .= '</a>';
             $frmStr .= '</td>';
             $frmStr .= '<td style="text-align: right;">';
-                $frmStr .= '<input ';
-                  $frmStr .= 'type="text" ';
-                  $frmStr .= 'name="res_id" ';
-                  $frmStr .= 'id="res_id" ';
-                  $frmStr .= 'class="readonly" ';
-                  $frmStr .= 'readonly="readonly" ';
-                  $frmStr .= 'value="" ';
-                $frmStr .= '/>';
+                if(_ID_TO_DISPLAY == 'res_id'){
+                    $frmStr .= '<input ';
+                        $frmStr .= 'type="text" ';
+                        $frmStr .= 'name="res_id" ';
+                        $frmStr .= 'id="res_id" ';
+                        $frmStr .= 'class="readonly" ';
+                        $frmStr .= 'readonly="readonly" ';
+                        $frmStr .= 'value="" ';
+                    $frmStr .= '/>';
+                }else{
+                    $frmStr .= '<input ';
+                        $frmStr .= 'type="text" ';
+                        $frmStr .= 'name="chrono_id" ';
+                        $frmStr .= 'id="chrono_id" ';
+                        $frmStr .= 'class="readonly" ';
+                        $frmStr .= 'readonly="readonly" ';
+                        $frmStr .= 'value="" ';
+                    $frmStr .= '/>';
+                    $frmStr .= '<input style="display:none"';
+                        $frmStr .= 'type="text" ';
+                        $frmStr .= 'name="res_id" ';
+                        $frmStr .= 'id="res_id" ';
+                        $frmStr .= 'value="" ';
+                    $frmStr .= '/>';
+                }
+                
             $frmStr .= '</td>';
             $frmStr .= '<td>';
                 $frmStr .= '<span class="red_asterisk" id="attachment_link_mandatory" '
