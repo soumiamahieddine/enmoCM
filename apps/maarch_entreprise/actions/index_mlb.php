@@ -982,7 +982,8 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     /*** Extra CSS ***/
     $frmStr .= '<style>';
     $frmStr .= '#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}';
-    $frmStr .= '#modal_'. $actionId . ',#modal_'. $actionId . '_layer{height:96% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frmStr .= '#modal_'. $actionId . '{height:96% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frmStr .= '#modal_'. $actionId . '_layer{height:100% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
     $frmStr .= '#validleft{height:100% !important;width:30% !important;}';
     $frmStr .= '#validright{width:67% !important;height:100% !important;}';
     $frmStr .= '@media screen and (min-width: 1280px) {#validleft{width:447px !important;}}';

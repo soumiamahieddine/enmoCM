@@ -1234,7 +1234,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     /*** Extra CSS ***/
     $frm_str .= '<style>';
     $frm_str .= '#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}';
-    $frm_str .= '#modal_'. $id_action . ',#modal_'. $id_action . '_layer{height:96% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frm_str .= '#modal_'. $id_action . '{height:96% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frm_str .= '#modal_'. $id_action . '_layer{height:100% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
     $frm_str .= '#validleft{height:100% !important;width:30% !important;}';
     $frm_str .= '#validright{width:67% !important;height:100% !important;}';
     $frm_str .= '@media screen and (min-width: 1280px) {#validleft{width:447px !important;}}';
