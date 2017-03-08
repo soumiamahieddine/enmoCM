@@ -1,6 +1,6 @@
 {
   "name": "MaarchCourrier",
-  "version": "1.0.0",
+  "version": "2.0 Beta",
   "description": "MaarchCourrier",
   "scripts": {
     "build": "tsc -p apps/maarch_entreprise/js/angular/",
@@ -8,7 +8,7 @@
   },
   "keywords": [],
   "author": "Maarch",
-  "license": "GPLV3",
+  "license": "GPL-3.0",
   "dependencies": {
     "@angular/common": "~2.4.0",
     "@angular/compiler": "~2.4.0",
@@ -26,7 +26,8 @@
     "zone.js": "^0.7.4"
   },
   "devDependencies": {
-    "typescript": "~2.0.10"
+    "typescript": "~2.0.10",
+    "@types/jquery": "~2.0.40"
   },
   "repository": {}
 }

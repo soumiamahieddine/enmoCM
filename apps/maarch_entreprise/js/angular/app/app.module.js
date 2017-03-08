@@ -10,14 +10,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
+var router_1 = require('@angular/router');
+var http_1 = require('@angular/http');
 var app_component_1 = require('./app.component');
+var signature_book_component_1 = require('./signature-book.component');
 var AppModule = (function () {
     function AppModule() {
     }
     AppModule = __decorate([
         core_1.NgModule({
-            imports: [platform_browser_1.BrowserModule],
-            declarations: [app_component_1.AppComponent],
+            imports: [
+                platform_browser_1.BrowserModule,
+                router_1.RouterModule.forRoot([
+                    { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
+                    { path: '**', redirectTo: '', pathMatch: 'full' },
+                ], { useHash: true }),
+                http_1.HttpModule
+            ],
+            declarations: [app_component_1.AppComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
             bootstrap: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])
@@ -25,4 +35,3 @@ var AppModule = (function () {
     return AppModule;
 }());
 exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map

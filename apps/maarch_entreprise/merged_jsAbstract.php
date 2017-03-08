@@ -45,10 +45,6 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/scriptaculous.js');
 		readfile('apps/maarch_entreprise/js/jquery.min.js');
 
-		// readfile('apps/maarch_entreprise/js/angular.min.js');
-		// readfile('apps/maarch_entreprise/js/angular-route.js');
-		// readfile('apps/maarch_entreprise/js/ng-table.min.js');
-
 		readfile('apps/maarch_entreprise/js/indexing.js');
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
 		readfile('apps/maarch_entreprise/js/effects.js');
@@ -65,9 +61,6 @@ class MergedJsAbstract {
 		//readfile('apps/maarch_entreprise/js/RSVP.js');
         //readfile('apps/maarch_entreprise/js/render.js');
         //readfile('apps/maarch_entreprise/js/jio.js');
-
-		// readfile('apps/maarch_entreprise/js/app.module.js');
-		// readfile('apps/maarch_entreprise/js/aController.js');
 
 		readfile('node_modules/core-js/client/shim.js');
 		readfile('node_modules/zone.js/dist/zone.js');
@@ -86,11 +79,6 @@ class MergedJsAbstract {
 			    {
 			        include('modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/functions.js');
 			    }
-			  //   if(file_exists($_SESSION['config']['corepath'].'custom/'.$_SESSION['custom_override_id'].'/modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/aController.js')
-					// || file_exists($_SESSION['config']['corepath'].'/modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/aController.js'))
-			  //   {
-			  //       include('modules/'.$_SESSION['modules_loaded'][$value]['name'].'/js/aController.js');
-			  //   }
 			}
 		}
 	}
