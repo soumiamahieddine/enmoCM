@@ -1,5 +1,7 @@
 <?php
 
+namespace MaarchTest;
+
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -147,7 +149,7 @@ class DocserverControllerTest extends PHPUnit_Framework_TestCase
         $response = $action->getDocserverToInsert($aArgs);
 
         $this->assertSame(
-            $response[0]['coll_id'], 
+            $response[0]['coll_id'],
             $aArgs['collId']
         );
     }
@@ -212,7 +214,7 @@ class DocserverControllerTest extends PHPUnit_Framework_TestCase
         $path = $_SESSION['config']['tmppath'] . '/test/';
 
         if (!is_dir($path)) {
-            mkdir($path);    
+            mkdir($path);
         }
 
         $fileSource = 'test_source.txt';
@@ -223,7 +225,7 @@ class DocserverControllerTest extends PHPUnit_Framework_TestCase
 
         $aArgs = [
             'collId' => 'letterbox_coll',
-            'fileInfos' => 
+            'fileInfos' =>
                 [
                     'tmpDir' => $path,
                     'size' => 122345,
@@ -237,9 +239,8 @@ class DocserverControllerTest extends PHPUnit_Framework_TestCase
         //print_r($response);
 
         $this->assertArrayHasKey(
-            'path_template', 
+            'path_template',
             $response
         );
     }
-
 }

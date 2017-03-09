@@ -1,5 +1,7 @@
 <?php
 
+namespace MaarchTest;
+
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -55,7 +57,7 @@ class ResControllerTest extends PHPUnit_Framework_TestCase
         $path = $_SESSION['config']['tmppath'] . '/test/';
 
         if (!is_dir($path)) {
-            mkdir($path);    
+            mkdir($path);
         }
 
         $fileSource = 'test_source.txt';
@@ -126,7 +128,7 @@ class ResControllerTest extends PHPUnit_Framework_TestCase
         $path = $_SESSION['config']['tmppath'] . '/test/';
 
         if (!is_dir($path)) {
-            mkdir($path);    
+            mkdir($path);
         }
 
         $fileSource = 'test_source.txt';

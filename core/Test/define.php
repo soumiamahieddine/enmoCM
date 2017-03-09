@@ -68,5 +68,6 @@ $loginObj->execute_login_script($loginMethods, true);
 
 if ($_SESSION['error']) {
     //TODO : return http bad authent error
-    echo $_SESSION['error'];exit();
+    echo $_SESSION['error'];
+    exit();
 }

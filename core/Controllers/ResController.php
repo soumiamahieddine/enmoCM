@@ -27,43 +27,37 @@ class ResController
 
     /**
      * Store resource on database.
-     * @param  $encodedFile  string 
+     * @param  $encodedFile  string
      * @param  $data array
-     * @param  $collId  string 
-     * @param  $table  string 
-     * @param  $fileFormat  string  
-     * @param  $status  string  
+     * @param  $collId  string
+     * @param  $table  string
+     * @param  $fileFormat  string
+     * @param  $status  string
      * @return res_id
      */
     public function storeResource($aArgs)
     {
         if (empty($aArgs['encodedFile'])) {
-
             return ['errors' => 'encodedFile ' . _EMPTY];
         }
 
         if (empty($aArgs['data'])) {
-
             return ['errors' => 'data ' . _EMPTY];
         }
 
         if (empty($aArgs['collId'])) {
-
             return ['errors' => 'collId ' . _EMPTY];
         }
 
         if (empty($aArgs['table'])) {
-
             return ['errors' => 'table ' . _EMPTY];
         }
 
         if (empty($aArgs['fileFormat'])) {
-
             return ['errors' => 'fileFormat ' . _EMPTY];
         }
 
         if (empty($aArgs['status'])) {
-
             return ['errors' => 'status ' . _EMPTY];
         }
         $encodedFile = $aArgs['encodedFile'];
@@ -75,17 +69,17 @@ class ResController
 
         try {
             $count = count($data);
-            for ($i=0;$i<$count;$i++) {
+            for ($i = 0; $i < $count; $i++) {
                 $data[$i]['column'] = strtolower($data[$i]['column']);
             }
             
             $returnCode = 0;
-            //copy sended file on tmp 
+            //copy sended file on tmp
             $fileContent = base64_decode($encodedFile);
             $random = rand();
             $fileName = 'tmp_file_' . $random . '.' . $fileFormat;
             $Fnm = $_SESSION['config']['tmppath'] . $fileName;
-            $inF = fopen($Fnm,"w");
+            $inF = fopen($Fnm, "w");
             fwrite($inF, $fileContent);
             fclose($inF);
 
@@ -93,7 +87,7 @@ class ResController
             $ds = new DocserverController();
             $aArgs = [
                 'collId' => $collId,
-                'fileInfos' => 
+                'fileInfos' =>
                     [
                         'tmpDir'        => $_SESSION['config']['tmppath'],
                         'size'          => filesize($Fnm),
@@ -106,7 +100,6 @@ class ResController
             $storeResult = $ds->storeResourceOnDocserver($aArgs);
             
             if (!empty($storeResult['errors'])) {
-                
                 return ['errors' => $storeResult['errors']];
             }
 
@@ -125,18 +118,17 @@ class ResController
             require_once 'core/class/class_resource.php';
             $resource = new \resource();
             $resId = $resource->load_into_db(
-                $table, 
+                $table,
                 $storeResult['destination_dir'],
                 $storeResult['file_destination_name'],
                 $storeResult['path_template'],
-                $storeResult['docserver_id'], 
+                $storeResult['docserver_id'],
                 $data,
                 $_SESSION['config']['databasetype'],
                 true
             );
 
             if (!is_numeric($resId)) {
-
                 return ['errors' => 'Pb with SQL insertion : ' .$resId];
             }
 
@@ -145,9 +137,7 @@ class ResController
             }
 
             return [$resId];
-
         } catch (Exception $e) {
-
             return ['errors' => 'unknown error' . $e->getMessage()];
         }
     }
@@ -163,22 +153,18 @@ class ResController
     public function prepareStorage($aArgs)
     {
         if (empty($aArgs['data'])) {
-
             return ['errors' => 'data ' . _EMPTY];
         }
 
         if (empty($aArgs['docserverId'])) {
-
             return ['errors' => 'docserverId ' . _EMPTY];
         }
 
         if (empty($aArgs['status'])) {
-
             return ['errors' => 'status ' . _EMPTY];
         }
 
         if (empty($aArgs['fileFormat'])) {
-
             return ['errors' => 'fileFormat ' . _EMPTY];
         }
 
@@ -199,10 +185,8 @@ class ResController
         $entityModel = new \Entities\Models\EntitiesModel();
 
         $countD = count($data);
-        for ($i=0;$i<$countD;$i++) {
-
-            if (
-                strtoupper($data[$i]['type']) == 'INTEGER' || 
+        for ($i = 0; $i < $countD; $i++) {
+            if (strtoupper($data[$i]['type']) == 'INTEGER' ||
                 strtoupper($data[$i]['type']) == 'FLOAT'
             ) {
                 if ($data[$i]['value'] == '') {
@@ -211,9 +195,9 @@ class ResController
             }
 
             if (strtoupper($data[$i]['type']) == 'STRING') {
-               $data[$i]['value'] = $data[$i]['value'];
-               $data[$i]['value'] = str_replace(";", "", $data[$i]['value']);
-               $data[$i]['value'] = str_replace("--", "", $data[$i]['value']);
+                $data[$i]['value'] = $data[$i]['value'];
+                $data[$i]['value'] = str_replace(";", "", $data[$i]['value']);
+                $data[$i]['value'] = str_replace("--", "", $data[$i]['value']);
             }
 
             if (strtoupper($data[$i]['column']) == strtoupper('status')) {
@@ -304,7 +288,7 @@ class ResController
         }
         
         if ($userPrimaryEntity) {
-            for ($i=0;$i<count($data);$i++) {
+            for ($i = 0; $i < count($data); $i++) {
                 if (strtoupper($data[$i]['column']) == strtoupper('destination')) {
                     if ($data[$i]['value'] == "") {
                         $data[$i]['value'] = $userEntity;
@@ -326,7 +310,7 @@ class ResController
         }
         
         if ($userPrimaryEntity) {
-            for ($i=0;$i<count($data);$i++) {
+            for ($i = 0; $i<count($data); $i++) {
                 if (strtoupper($data[$i]['column']) == strtoupper('initiator')) {
                     if ($data[$i]['value'] == "") {
                         $data[$i]['value'] = $userEntity;
@@ -345,7 +329,7 @@ class ResController
                     )
                 );
             }
-        }    
+        }
         array_push(
             $data,
             array(
@@ -391,14 +375,14 @@ class ResController
                 $data = $func->object2array($data);
                 $queryExtFields = '(';
                 $queryExtValues = '(';
-                $queryExtValuesFinal = '('; 
+                $queryExtValuesFinal = '(';
                 $parameters = array();
                 $db = new Database();
                 $findProcessLimitDate = false;
                 $findProcessNotes = false;
                 $delayProcessNotes = 0;
 
-                for ($i=0;$i<count($data);$i++) {
+                for ($i = 0; $i < count($data); $i++) {
                     if ($data[$i]['column'] == 'process_limit_date') {
                         $findProcessLimitDate = true;
                     }
@@ -408,7 +392,7 @@ class ResController
                     // }
                     if ($data[$i]['column'] == 'process_notes') {
                         $findProcessNotes = true;
-                        $donnees = explode(',',$data[$i]['value']);
+                        $donnees = explode(',', $data[$i]['value']);
                         $delayProcessNotes = $donnees['0'];
                         $calendarType = $donnees['1'];
                     }
@@ -417,7 +401,7 @@ class ResController
                 if ($table == 'mlb_coll_ext') {
                     if ($delayProcessNotes > 0) {
                         $processLimitDate = $this->retrieveProcessLimitDate(
-                            $resId, 
+                            $resId,
                             $delayProcessNotes,
                             $calendarType
                         );
@@ -439,12 +423,12 @@ class ResController
                 }
 
                 //var_dump($data);
-                for ($i=0;$i<count($data);$i++) {
+                for ($i = 0; $i < count($data); $i++) {
                     if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
                         if ($data[$i]['value'] == '') {
                             $data[$i]['value'] = '0';
                         }
-                        $data[$i]['value'] = str_replace(',' , '.', $data[$i]['value']);
+                        $data[$i]['value'] = str_replace(',', '.', $data[$i]['value']);
                     }
                     if (strtoupper($data[$i]['column']) == strtoupper('category_id')) {
                         $categoryId = $data[$i]['value'];
@@ -459,7 +443,8 @@ class ResController
                                 break;
                             }
                         }
-                        $stmt = $db->query("SELECT destination, type_id FROM ".$resViewTable." WHERE res_id = ?", array($resId));
+                        $stmt = $db->query("SELECT destination, type_id FROM " . $resViewTable
+                            . " WHERE res_id = ?", array($resId));
                         $resView = $stmt->fetchObject();
                         $myVars = array(
                             'entity_id' => $resView->destination,
@@ -468,12 +453,14 @@ class ResController
                             'folder_id' => "",
                         );
                         $myChrono = $chronoX->generate_chrono($categoryId, $myVars, 'false');
-                        $data[$i]['value'] = $myChrono;                     
+                        $data[$i]['value'] = $myChrono;
                     }
-                    if (strtoupper($data[$i]['column']) == strtoupper('exp_contact_id') && $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
+                    if (strtoupper($data[$i]['column']) == strtoupper('exp_contact_id') &&
+                        $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
                         $theString = str_replace(">", "", $data[$i]['value']);
                         $mail = explode("<", $theString);
-                        $stmt = $db->query("SELECT contact_id FROM view_contacts WHERE email = ? and enabled = 'Y' order by creation_date asc", array($mail[count($mail) -1]));
+                        $stmt = $db->query("SELECT contact_id FROM view_contacts WHERE email = ? "
+                            . " and enabled = 'Y' order by creation_date asc", array($mail[count($mail) -1]));
                         $contact = $stmt->fetchObject();
 
                         if ($contact->contact_id <> "") {
@@ -482,10 +469,12 @@ class ResController
                             $data[$i]['value'] = 0;
                         }
                     }
-                    if (strtoupper($data[$i]['column']) == strtoupper('address_id') && $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
+                    if (strtoupper($data[$i]['column']) == strtoupper('address_id') &&
+                        $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
                         $theString = str_replace(">", "", $data[$i]['value']);
                         $mail = explode("<", $theString);
-                        $stmt = $db->query("SELECT ca_id FROM view_contacts WHERE email = ? and enabled = 'Y' order by creation_date asc", array($mail[count($mail) -1]));
+                        $stmt = $db->query("SELECT ca_id FROM view_contacts WHERE email = ? "
+                            . " and enabled = 'Y' order by creation_date asc", array($mail[count($mail) -1]));
                         $contact = $stmt->fetchObject();
                         if ($contact->ca_id <> "") {
                             $data[$i]['value'] = $contact->ca_id;
@@ -507,10 +496,14 @@ class ResController
                 }
                 $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
                 $queryExtValues = preg_replace(
-                    '/,$/', ',' . $resId . ')', $queryExtValues
+                    '/,$/',
+                    ',' . $resId . ')',
+                    $queryExtValues
                 );
                 $queryExtValuesFinal = preg_replace(
-                    '/,$/', ',' . $resId . ')', $queryExtValuesFinal
+                    '/,$/',
+                    ',' . $resId . ')',
+                    $queryExtValuesFinal
                 );
                 /*$queryExt = " insert into " . $table . " " . $queryExtFields
                        . ' values ' . $queryExtValues ;*/
@@ -538,7 +531,7 @@ class ResController
                     'resId' => '',
                     'error' => 'resId is not set',
                 );
-                return $returnResArray;             
+                return $returnResArray;
             }
         } catch (Exception $e) {
             $returnResArray = array(
