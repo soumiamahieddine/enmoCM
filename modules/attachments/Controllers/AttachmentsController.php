@@ -272,4 +272,151 @@ class AttachmentsController
         return $return;
     }
 
+    /**
+     * Prepares storage for transmission.
+     * @param  $nb integer
+     * @return $data
+     */
+    public function setTransmissionData($aArgs)
+    {
+        if (empty($aArgs['nb'])) {
+
+            return ['errors' => 'nb ' . _EMPTY];
+        }
+
+        $transmissionData = [];
+
+        $transmissionData[] = [
+            'column' => 'format',
+            'value' => $_SESSION['upfileTransmission'][$nb]['format'],
+            'type' => 'string'
+        ];
+        
+        if (!empty($_REQUEST["transmissionExpectedDate{$nb}"])) {
+            $rturn = $_REQUEST["transmissionExpectedDate{$nb}"];
+        } else {
+            $rturn = 'NO_RTURN';
+        }
+        //TODO
+        $transmissionData[] = [
+            'column' => 'status',
+            'value' => $rturn,
+            'type' => 'string'
+        ];
+        
+        $transmissionData[] = [
+            'column' => 'title',
+            'value' => str_replace("&#039;", "'", $_REQUEST["transmissionTitle{$nb}"]),
+            'type' => 'string'
+        ];
+        $transmissionData[] = [
+            'column' => 'attachment_type',
+            'value' => $_REQUEST["transmissionType{$nb}"],
+            'type' => 'string'
+        ];
+        $transmissionData[] = [
+            'column' => 'coll_id',
+            'value' => $_SESSION['collection_id_choice'],
+            'type' => 'string'
+        ];
+        //TODO
+        $transmissionData[] = [
+            'column' => 'res_id_master',
+            'value' => $_SESSION['doc_id'],
+            'type' => 'integer'
+        ];
+        $transmissionData[] = [
+            'column' => 'identifier',
+            'value' => $_REQUEST["transmissionChrono{$nb}"],
+            'type' => 'string'
+        ];
+
+        if (!empty($_REQUEST["transmissionBackDate{$nb}"])) {
+            $transmissionData[] = [
+                'column' => 'validation_date',
+                'value' => $_REQUEST["transmissionBackDate{$nb}"],
+                'type' => 'date'
+            ];
+        }
+
+        if (
+            !empty($_REQUEST["transmissionContactidAttach{$nb}"]) && 
+            is_numeric($_REQUEST["transmissionContactidAttach{$nb}"])
+        ) {
+            $transmissionData[] = [
+                'column' => 'dest_contact_id',
+                'value' => $_REQUEST["transmissionContactidAttach{$nb}"],
+                'type' => 'integer'
+            ];
+        } else if (
+            !empty($_REQUEST["transmissionContactidAttach{$nb}"]) && 
+            !is_numeric($_REQUEST["transmissionContactidAttach{$nb}"])
+        ) {
+            $transmissionData[] = [
+                'column' => 'dest_user',
+                'value' => $_REQUEST["transmissionContactidAttach{$nb}"],
+                'type' => 'string'
+            ];
+        }
+
+        if (
+            !empty($_REQUEST["transmissionAddressidAttach{$nb}"]) && 
+            is_numeric($_REQUEST["transmissionAddressidAttach{$nb}"])
+        ) {
+            $transmissionData[] = [
+                'column' => 'dest_address_id',
+                'value' => $_REQUEST["transmissionAddressidAttach{$nb}"],
+                'type' => 'integer'
+            ];
+        }
+
+        return $transmissionData;
+    }
+
+    function setTransmissionDataPdf($aArgs, $nb, $storeResult) 
+    {
+        $transmissionDataPdf = [];
+
+        //TODO
+        $file    = $_SESSION['config']['tmppath'] . $_SESSION['upfileTransmission'][$nb]['fileNamePdfOnTmp'];
+        $newfile = $storeResult['path_template'] . str_replace('#',"/",$storeResult['destination_dir']) . substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )) . '.pdf';
+
+        copy($file, $newfile);
+
+        $transmissionDataPdf[] = [
+            'column' => 'format',
+            'value' => 'pdf',
+            'type' => 'string'
+        ];
+        //TODO
+        $transmissionDataPdf[] = [
+            'column' => 'status',
+            'value' => 'TRA',
+            'type' => 'string'
+        ];
+        $transmissionDataPdf[] = [
+            'column' => 'title',
+            'value' => str_replace("&#039;", "'", $_REQUEST["transmissionTitle{$nb}"]),
+            'type' => 'string'
+        ];
+        $transmissionDataPdf[] = [
+            'column' => 'attachment_type',
+            'value' => 'converted_pdf',
+            'type' => 'string'
+        ];
+        $transmissionDataPdf[] = [
+            'column' => 'coll_id',
+            'value' => $_SESSION['collection_id_choice'],
+            'type' => 'string'
+        ];
+        //TODO
+        $transmissionDataPdf[] = [
+            'column' => 'res_id_master',
+            'value' => $_SESSION['doc_id'],
+            'type' => 'integer'
+        ];
+        
+        return $transmissionDataPdf;
+    }
+
 }
