@@ -9,3 +9,4 @@ apps/maarch_entreprise/xml/log4php.xml
 .phplint.yml
 fonctionnel.log
 technique.log
+xdelete.sh

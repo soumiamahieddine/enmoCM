@@ -24,6 +24,30 @@ use Core\Controllers\DocserverController;
 
 class ResController
 {
+    public function create(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        if (!empty($aArgs)) {
+            $aArgs = $aArgs;
+        } else {
+            $aArgs = $request->getQueryParams();
+            //print_r($aArgs['data']);
+            $aArgs['data'] = json_decode($aArgs['data']);
+            $aArgs['data'] = $this->object2array($aArgs['data']);
+            //print_r($aArgs['data']);exit;
+        }
+
+        $return = $this->storeResource($aArgs);
+
+        if ($return['errors']) {
+            return $response
+                ->withStatus(500)
+                ->withJson(
+                    ['errors' => _NOT_CREATE . ' ' . $return['errors']]
+                );
+        }
+        
+        return $response->withJson($return);
+    }
 
     /**
      * Store resource on database.
@@ -366,180 +390,205 @@ class ResController
         return $data;
     }
 
-    //TODO
-    public function storeExtResource($resId, $data, $table)
+    /**
+     * Store ext resource on database.
+     * @param  $resId  integer
+     * @param  $data array
+     * @param  $table  string
+     * @return res_id
+     */
+    public function storeExtResource($aArgs, $resId, $data, $table)
     {
-        try {
-            if ($resId <> "") {
-                $func = new functions();
-                $data = $func->object2array($data);
-                $queryExtFields = '(';
-                $queryExtValues = '(';
-                $queryExtValuesFinal = '(';
-                $parameters = array();
-                $db = new Database();
-                $findProcessLimitDate = false;
-                $findProcessNotes = false;
-                $delayProcessNotes = 0;
-
-                for ($i = 0; $i < count($data); $i++) {
-                    if ($data[$i]['column'] == 'process_limit_date') {
-                        $findProcessLimitDate = true;
-                    }
-                    // if ($data[$i]['column'] == 'process_notes') {
-                    //     $findProcessNotes = true;
-                    //     $delayProcessNotes = $data[$i]['value'];
-                    // }
-                    if ($data[$i]['column'] == 'process_notes') {
-                        $findProcessNotes = true;
-                        $donnees = explode(',', $data[$i]['value']);
-                        $delayProcessNotes = $donnees['0'];
-                        $calendarType = $donnees['1'];
-                    }
-                }
-
-                if ($table == 'mlb_coll_ext') {
-                    if ($delayProcessNotes > 0) {
-                        $processLimitDate = $this->retrieveProcessLimitDate(
-                            $resId,
-                            $delayProcessNotes,
-                            $calendarType
-                        );
-                    } else {
-                        $processLimitDate = $this->retrieveProcessLimitDate($resId);
-                    }
-                    //echo $processLimitDate;
-                }
-                
-                if (!$findProcessLimitDate && $processLimitDate <> '') {
-                    array_push(
-                        $data,
-                        array(
-                        'column' => 'process_limit_date',
-                        'value' => $processLimitDate,
-                        'type' => 'date',
-                        )
-                    );
-                }
-
-                //var_dump($data);
-                for ($i = 0; $i < count($data); $i++) {
-                    if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
-                        if ($data[$i]['value'] == '') {
-                            $data[$i]['value'] = '0';
-                        }
-                        $data[$i]['value'] = str_replace(',', '.', $data[$i]['value']);
-                    }
-                    if (strtoupper($data[$i]['column']) == strtoupper('category_id')) {
-                        $categoryId = $data[$i]['value'];
-                    }
-                    if (strtoupper($data[$i]['column']) == strtoupper('alt_identifier') && $data[$i]['value'] == "") {
-                        require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                            . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
-                        $chronoX = new chrono();
-                        for ($iColl=0; $iColl<=count($_SESSION['collections']); $iColl++) {
-                            if ($_SESSION['collections'][$iColl]['extensions'][0] == $table) {
-                                $resViewTable = $_SESSION['collections'][$iColl]['view'];
-                                break;
-                            }
-                        }
-                        $stmt = $db->query("SELECT destination, type_id FROM " . $resViewTable
-                            . " WHERE res_id = ?", array($resId));
-                        $resView = $stmt->fetchObject();
-                        $myVars = array(
-                            'entity_id' => $resView->destination,
-                            'type_id' => $resView->type_id,
-                            'category_id' => $categoryId,
-                            'folder_id' => "",
-                        );
-                        $myChrono = $chronoX->generate_chrono($categoryId, $myVars, 'false');
-                        $data[$i]['value'] = $myChrono;
-                    }
-                    if (strtoupper($data[$i]['column']) == strtoupper('exp_contact_id') &&
-                        $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
-                        $theString = str_replace(">", "", $data[$i]['value']);
-                        $mail = explode("<", $theString);
-                        $stmt = $db->query("SELECT contact_id FROM view_contacts WHERE email = ? "
-                            . " and enabled = 'Y' order by creation_date asc", array($mail[count($mail) -1]));
-                        $contact = $stmt->fetchObject();
-
-                        if ($contact->contact_id <> "") {
-                            $data[$i]['value'] = $contact->contact_id;
-                        } else {
-                            $data[$i]['value'] = 0;
-                        }
-                    }
-                    if (strtoupper($data[$i]['column']) == strtoupper('address_id') &&
-                        $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
-                        $theString = str_replace(">", "", $data[$i]['value']);
-                        $mail = explode("<", $theString);
-                        $stmt = $db->query("SELECT ca_id FROM view_contacts WHERE email = ? "
-                            . " and enabled = 'Y' order by creation_date asc", array($mail[count($mail) -1]));
-                        $contact = $stmt->fetchObject();
-                        if ($contact->ca_id <> "") {
-                            $data[$i]['value'] = $contact->ca_id;
-                        } else {
-                            $data[$i]['value'] = 0;
-                        }
-                    }
-                    //COLUMN
-                    $data[$i]['column'] = strtolower($data[$i]['column']);
-                    $queryExtFields .= $data[$i]['column'] . ',';
-                    //VALUE
-                    if ($data[$i]['type'] == 'string' || $data[$i]['type'] == 'date') {
-                        $queryExtValues .= "'" . $data[$i]['value'] . "',";
-                    } else {
-                        $queryExtValues .= $data[$i]['value'] . ",";
-                    }
-                    $parameters[] = $data[$i]['value'];
-                    $queryExtValuesFinal .= "?,";
-                }
-                $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
-                $queryExtValues = preg_replace(
-                    '/,$/',
-                    ',' . $resId . ')',
-                    $queryExtValues
-                );
-                $queryExtValuesFinal = preg_replace(
-                    '/,$/',
-                    ',' . $resId . ')',
-                    $queryExtValuesFinal
-                );
-                /*$queryExt = " insert into " . $table . " " . $queryExtFields
-                       . ' values ' . $queryExtValues ;*/
-                $queryExt = " insert into " . $table . " " . $queryExtFields
-                       . ' values ' . $queryExtValuesFinal ;
-                //echo $queryExt;exit;
-                $returnCode = 0;
-                if ($db->query($queryExt, $parameters)) {
-                    $returnResArray = array(
-                        'returnCode' => (int) 0,
-                        'resId' => $resId,
-                        'error' => '',
-                    );
-                } else {
-                    $returnResArray = array(
-                        'returnCode' => (int) -2,
-                        'resId' => '',
-                        'error' => 'Pb with SQL insertion',
-                    );
-                }
-                return $returnResArray;
-            } else {
-                $returnResArray = array(
-                    'returnCode' => (int) -3,
-                    'resId' => '',
-                    'error' => 'resId is not set',
-                );
-                return $returnResArray;
-            }
-        } catch (Exception $e) {
-            $returnResArray = array(
-                'returnCode' => (int) -1,
-                'resId' => '',
-                'error' => 'unknown error' . $e->getMessage(),
-            );
-            return $returnResArray;
+        if (empty($aArgs['resId'])) {
+            return ['errors' => 'resId ' . _EMPTY];
         }
+
+        if (empty($aArgs['data'])) {
+            return ['errors' => 'data ' . _EMPTY];
+        }
+
+        if (empty($aArgs['table'])) {
+            return ['errors' => 'table ' . _EMPTY];
+        }
+
+
+        $func = new functions();
+        
+        $queryExtFields = '(';
+        $queryExtValues = '(';
+        $queryExtValuesFinal = '(';
+        $parameters = array();
+        $db = new Database();
+        $findProcessLimitDate = false;
+        $findProcessNotes = false;
+        $delayProcessNotes = 0;
+
+        for ($i = 0; $i < count($data); $i++) {
+            if ($data[$i]['column'] == 'process_limit_date') {
+                $findProcessLimitDate = true;
+            }
+            if ($data[$i]['column'] == 'process_notes') {
+                $findProcessNotes = true;
+                $donnees = explode(',', $data[$i]['value']);
+                $delayProcessNotes = $donnees['0'];
+                $calendarType = $donnees['1'];
+            }
+        }
+
+        if ($table == 'mlb_coll_ext') {
+            if ($delayProcessNotes > 0) {
+                $processLimitDate = $this->retrieveProcessLimitDate(
+                    $resId,
+                    $delayProcessNotes,
+                    $calendarType
+                );
+            } else {
+                $processLimitDate = $this->retrieveProcessLimitDate($resId);
+            }
+        }
+        
+        if (!$findProcessLimitDate && $processLimitDate <> '') {
+            array_push(
+                $data,
+                array(
+                'column' => 'process_limit_date',
+                'value' => $processLimitDate,
+                'type' => 'date',
+                )
+            );
+        }
+
+        for ($i = 0; $i < count($data); $i++) {
+            if (strtoupper($data[$i]['type']) == 'INTEGER' || 
+                strtoupper($data[$i]['type']) == 'FLOAT') {
+                if ($data[$i]['value'] == '') {
+                    $data[$i]['value'] = '0';
+                }
+                $data[$i]['value'] = str_replace(',', '.', $data[$i]['value']);
+            }
+            if (strtoupper($data[$i]['column']) == strtoupper('category_id')) {
+                $categoryId = $data[$i]['value'];
+            }
+            if (strtoupper($data[$i]['column']) == strtoupper('alt_identifier') && 
+                $data[$i]['value'] == "") {
+                require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
+                $chronoX = new chrono();
+                for ($iColl=0; $iColl<=count($_SESSION['collections']); $iColl++) {
+                    if ($_SESSION['collections'][$iColl]['extensions'][0] == $table) {
+                        $resViewTable = $_SESSION['collections'][$iColl]['view'];
+                        break;
+                    }
+                }
+                $stmt = $db->query("SELECT destination, type_id FROM " . $resViewTable
+                    . " WHERE res_id = ?", array($resId));
+                $resView = $stmt->fetchObject();
+                $myVars = array(
+                    'entity_id' => $resView->destination,
+                    'type_id' => $resView->type_id,
+                    'category_id' => $categoryId,
+                    'folder_id' => "",
+                );
+                $myChrono = $chronoX->generate_chrono($categoryId, $myVars, 'false');
+                $data[$i]['value'] = $myChrono;
+            }
+            if (strtoupper($data[$i]['column']) == strtoupper('exp_contact_id') &&
+                $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
+                $theString = str_replace(">", "", $data[$i]['value']);
+                $mail = explode("<", $theString);
+                $stmt = $db->query("SELECT contact_id FROM view_contacts WHERE email = ? "
+                    . " and enabled = 'Y' order by creation_date asc", array($mail[count($mail) -1]));
+                $contact = $stmt->fetchObject();
+
+                if ($contact->contact_id <> "") {
+                    $data[$i]['value'] = $contact->contact_id;
+                } else {
+                    $data[$i]['value'] = 0;
+                }
+            }
+            if (strtoupper($data[$i]['column']) == strtoupper('address_id') &&
+                $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
+                $theString = str_replace(">", "", $data[$i]['value']);
+                $mail = explode("<", $theString);
+                $stmt = $db->query("SELECT ca_id FROM view_contacts WHERE email = ? "
+                    . " and enabled = 'Y' order by creation_date asc", array($mail[count($mail) -1]));
+                $contact = $stmt->fetchObject();
+                if ($contact->ca_id <> "") {
+                    $data[$i]['value'] = $contact->ca_id;
+                } else {
+                    $data[$i]['value'] = 0;
+                }
+            }
+            //COLUMN
+            $data[$i]['column'] = strtolower($data[$i]['column']);
+            $queryExtFields .= $data[$i]['column'] . ',';
+            //VALUE
+            if ($data[$i]['type'] == 'string' || $data[$i]['type'] == 'date') {
+                $queryExtValues .= "'" . $data[$i]['value'] . "',";
+            } else {
+                $queryExtValues .= $data[$i]['value'] . ",";
+            }
+            $parameters[] = $data[$i]['value'];
+            $queryExtValuesFinal .= "?,";
+        }
+        $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
+        $queryExtValues = preg_replace(
+            '/,$/',
+            ',' . $resId . ')',
+            $queryExtValues
+        );
+        $queryExtValuesFinal = preg_replace(
+            '/,$/',
+            ',' . $resId . ')',
+            $queryExtValuesFinal
+        );
+
+        $queryExt = " insert into " . $table . " " . $queryExtFields
+                . ' values ' . $queryExtValuesFinal ;
+
+        $returnCode = 0;
+        if ($db->query($queryExt, $parameters)) {
+            $returnResArray = array(
+                'returnCode' => (int) 0,
+                'resId' => $resId,
+                'error' => '',
+            );
+        } else {
+            $returnResArray = array(
+                'returnCode' => (int) -2,
+                'resId' => '',
+                'error' => 'Pb with SQL insertion',
+            );
+        }
+        return $returnResArray;
+        
+    }
+
+    /**
+    * Convert an object to an array
+    * @param  $object object to convert
+    */
+    private function object2array($object)
+    {
+        $return = null;
+        if (is_array($object)) {
+            foreach ($object as $key => $value) {
+                $return[$key] = $this->object2array($value);
+            }
+        } else {
+            if (is_object($object)) {
+                $var = get_object_vars($object);
+                if ($var) {
+                    foreach ($var as $key => $value) {
+                        $return[$key] = ($key && !$value) ? null : $this->object2array($value);
+                    }
+                } else {
+                    return $object;
+                }
+            } else {
+                return $object;
+            }
+        }
+        return $return;
     }
 }

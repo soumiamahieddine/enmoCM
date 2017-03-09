@@ -11,7 +11,7 @@ namespace MaarchTest;
 
 require_once __DIR__.'/define.php';
 
-class StatusControllerTest extends PHPUnit_Framework_TestCase
+class StatusControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetList()
     {

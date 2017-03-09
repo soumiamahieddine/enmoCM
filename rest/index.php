@@ -120,6 +120,9 @@ $app->post('/attachments', \Attachments\Controllers\AttachmentsController::class
 $app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
 $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
 
+//resource
+$app->post('/res', \Core\Controllers\ResController::class . ':create');
+
 
 
 $app->run();
