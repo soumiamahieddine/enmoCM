@@ -25,3 +25,124 @@
 	top: 10%;
 	text-align: center;
 }
+
+[draggable=true]{
+    cursor: move;
+}
+[draggable=true]:hover{
+    box-shadow:0 0 5px green; /* CSS3 */
+}
+[draggable=false]:hover{
+    cursor: not-allowed;
+}
+#avis_content{
+  display: block;
+  width: 100%;
+}
+.droptarget{
+	position: relative;
+    background-color: #93D1E4;
+    display: table;
+    margin: 10px;
+    padding: 10px;
+    text-align: left;
+    width: 95%;
+    cursor: default;
+    border: dashed 2px #93D1E4
+}
+
+.droptarget_arrow {
+    border: none;
+    display:table-cell;
+}
+
+.vised{
+  opacity: 0.5;
+  color: green;
+  border: solid 2px green;
+}
+
+.droptarget input{
+    width : 100%;
+}
+
+#avisUserList{
+    width:45%;
+    float:left;
+}
+
+.droptarget.currentVis{
+    color : #009DC5;
+    border: solid 2px #009DC5;
+}
+
+.avisUserInfo,.avisUserStatus,.avisUserConsigne,.avisUserAction{
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.avisUserStatus{
+	width: 5%;
+	opacity: 0.5;
+}
+.vised .avisUserStatus{
+	opacity: 1;
+}
+.avisUserInfo{
+	width: 45%;
+	font-weight: bold;
+}
+
+.avisUserInfo .nbRes{
+	background-color: grey;
+	font-weight: normal;
+}
+
+.avisUserInfo sub{
+	font-weight: normal;
+}
+
+.droptarget:hover.vised #dropZone{
+	visibility: hidden;
+}
+.droptarget:hover #dropZone{
+	visibility: visible;
+}
+
+.dropArea{
+    border: dashed 3px white;
+    width: 60%;
+    margin:auto;
+    opacity: 0.5;
+    padding: 5px;
+    
+}
+
+.dropArea::after{
+    font-weight: bolder;
+}
+
+#dropZone,#dropZone:active{
+	width: 5%;
+	opacity: 0.5;
+	visibility: hidden;
+	text-align: right;
+	margin: 5px;
+}
+#dropZone:hover{
+	cursor: grab;
+}
+#dropZone:active{
+	cursor: grabbing;
+}
+.avisUserConsigne{
+	width: 40%;
+}
+.avisUserAction{
+	color : red;
+	text-align: right;
+	width: 5%;
+}
+.avisUserAction i{
+	cursor: pointer;
+}
