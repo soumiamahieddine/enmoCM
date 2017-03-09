@@ -234,7 +234,8 @@ class pdf_parser {
 				fseek($this->f, $o_pos+strlen($m[1]));
     		}
     		
-			$c =&  new pdf_context($this->f);
+			//$c =&  new pdf_context($this->f);
+			$c = new pdf_context($this->f);
     	    $trailer = $this->pdf_read_value($c);
     	    
     	    if (isset($trailer[1]['/Prev'])) {

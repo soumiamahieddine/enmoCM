@@ -10,7 +10,7 @@ class TafelTreeBranch {
 	
 	/**
 	 *------------------------------------------------------------------------------
-	 *							Propriétés
+	 *							Propriï¿½tï¿½s
 	 *------------------------------------------------------------------------------
 	 */
 	
@@ -46,7 +46,7 @@ class TafelTreeBranch {
 	 *
 	 * @access	public
 	 * @param 	string			$json					La string JSON
-	 * @return 	array									Les TafelTreeBranch créées
+	 * @return 	array									Les TafelTreeBranch crï¿½ï¿½es
 	 */
 	function &loadJSON ($json) {
 		$service = new Services_JSON();
@@ -63,11 +63,12 @@ class TafelTreeBranch {
 	 *
 	 * @access	public
 	 * @param 	Service_JSON	$service				L'objet Service_JSON
-	 * @return 	array									Les TafelTreeBranch créées
+	 * @return 	array									Les TafelTreeBranch crï¿½ï¿½es
 	 */
 	function &loadServiceJSON ($service) {
-		$branch =& new TafelTreeBranch();
-		// On check toutes les propriétés de branche
+		//$branch =& new TafelTreeBranch();
+		$branch = new TafelTreeBranch();
+		// On check toutes les propriï¿½tï¿½s de branche
 		foreach ($service as $property => $value) {
 			if ($property != 'items') {
 				$branch->setParam($property, $value);
@@ -124,7 +125,7 @@ class TafelTreeBranch {
 	 * Ajoute une branche comme enfant
 	 *
 	 * @access 	public
-	 * @param 	TafelTreeBranch		$branch				La branche à ajouter
+	 * @param 	TafelTreeBranch		$branch				La branche ï¿½ ajouter
 	 * @return 	void
 	 */
 	function &add ($branch) {
@@ -135,16 +136,17 @@ class TafelTreeBranch {
 	}
 	
 	/**
-	 * Ajoute une sous-branche à la branche courante
+	 * Ajoute une sous-branche ï¿½ la branche courante
 	 *
 	 * @access 	public
 	 * @param 	string			$id						L'id de la sous-branche
 	 * @param 	string			$txt					Le texte de la sous-branche
-	 * @param 	array			$options				Les informations complémentaires
+	 * @param 	array			$options				Les informations complï¿½mentaires
 	 * @return 	TafelTreeBranch							La sous-branche
 	 */
 	function &addBranch ($id, $txt, $options = array()) {
-		$branch =& new TafelTreeBranch ();
+		//$branch =& new TafelTreeBranch ();
+		$branch = new TafelTreeBranch ();
 		$branch->setId($id);
 		$branch->setText($txt);
 		foreach ($options as $property => $value) {
@@ -165,7 +167,7 @@ class TafelTreeBranch {
 	}
 	
 	/**
-	 * Retourne la string JSON qui correspond à la structure de la branche et sous-branches
+	 * Retourne la string JSON qui correspond ï¿½ la structure de la branche et sous-branches
 	 *
 	 * @access 	public
 	 * @return 	string									La string JSON de la branche
