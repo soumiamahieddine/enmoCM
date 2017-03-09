@@ -276,9 +276,7 @@ if (isset($_SESSION['error']) && $_SESSION['error'] <> '') {
                 "ADMIN",
                 true);
                 
-    if ($restMode) {
-
-    } else {
+    if (!$restMode) {
         header("location: " . $loginRequestArray['WEB_SSO_URL']
          . "index.php?errorId=" . $errorId 
          . "&errorMsg=" . $_SESSION['error']);  

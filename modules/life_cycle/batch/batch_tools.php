@@ -61,7 +61,7 @@ function Bt_doQuery($dbConn, $queryTxt, $param=array(), $transaction=false)
  *
  * @param int $returnCode code to exit (if > O error)
  * @param string $message message to the log and the DB
- * @return nothing, exit the program
+ * @return nothing exit the program
  */
 function Bt_exitBatch($returnCode, $message='')
 {

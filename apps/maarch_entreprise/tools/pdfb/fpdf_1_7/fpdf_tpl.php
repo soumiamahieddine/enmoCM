@@ -302,8 +302,6 @@ class FPDF_TPL extends fpdi_bridge
      *
      * See FPDF/TCPDF documentation.
      *
-     * @see http://fpdf.org/en/doc/setfont.htm
-     * @see http://www.tcpdf.org/doc/code/classTCPDF.html#afd56e360c43553830d543323e81bc045
      */
     public function SetFont($family, $style = '', $size = null, $fontfile = '', $subset = 'default', $out = true)
     {
@@ -328,8 +326,6 @@ class FPDF_TPL extends fpdi_bridge
      *
      * See FPDF/TCPDF documentation.
      *
-     * @see http://fpdf.org/en/doc/image.htm
-     * @see http://www.tcpdf.org/doc/code/classTCPDF.html#a714c2bee7d6b39d4d6d304540c761352
      */
     public function Image(
         $file, $x = '', $y = '', $w = 0, $h = 0, $type = '', $link = '', $align = '', $resize = false,
@@ -359,8 +355,6 @@ class FPDF_TPL extends fpdi_bridge
      *
      * This method cannot be used if you'd started a template.
      *
-     * @see http://fpdf.org/en/doc/addpage.htm
-     * @see http://www.tcpdf.org/doc/code/classTCPDF.html#a5171e20b366b74523709d84c349c1ced
      */
     public function AddPage($orientation = '', $format = '', $keepmargins = false, $tocpage = false)
     {
@@ -381,8 +375,6 @@ class FPDF_TPL extends fpdi_bridge
      *
      * Overwritten because adding links in a template will not work.
      *
-     * @see http://fpdf.org/en/doc/link.htm
-     * @see http://www.tcpdf.org/doc/code/classTCPDF.html#ab87bf1826384fbfe30eb499d42f1d994
      */
     public function Link($x, $y, $w, $h, $link, $spaces = 0)
     {
@@ -403,8 +395,6 @@ class FPDF_TPL extends fpdi_bridge
      *
      * Overwritten because adding links in a template will not work.
      *
-     * @see http://fpdf.org/en/doc/addlink.htm
-     * @see http://www.tcpdf.org/doc/code/classTCPDF.html#a749522038ed7786c3e1701435dcb891e
      */
     public function AddLink()
     {
@@ -425,8 +415,6 @@ class FPDF_TPL extends fpdi_bridge
      *
      * Overwritten because adding links in a template will not work.
      *
-     * @see http://fpdf.org/en/doc/setlink.htm
-     * @see http://www.tcpdf.org/doc/code/classTCPDF.html#ace5be60e7857953ea5e2b89cb90df0ae
      */
     public function SetLink($link, $y = 0, $page = -1)
     {

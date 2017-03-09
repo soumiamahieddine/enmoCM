@@ -76,7 +76,7 @@ class HTMLPurifier_DefinitionCacheFactory
 
     /**
      * Registers a decorator to add to all new cache objects
-     * @param
+     * @param decorator
      */
     public function addDecorator($decorator) {
         if (is_string($decorator)) {

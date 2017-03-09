@@ -81,11 +81,11 @@ class history
     * @param $event_id
     * @param $info
     * @param $databasetype
-    * @param [$id_module = 'admin']
-    * @param [$isTech = false]
-    * @param [$result = _OK]
-    * @param [$level = _LEVEL_DEBUG]
-    * @param [$user = '']
+    * @param $id_module = 'admin'
+    * @param $isTech = false
+    * @param $result = _OK
+    * @param $level = _LEVEL_DEBUG
+    * @param $user = ''
     */
     public function add(
         $table_name,
@@ -194,7 +194,7 @@ class history
     *
     * @param  $id
     *
-    * @return  (string) => Label of the key word or empty string
+    * @return  string => Label of the key word or empty string
     */
     public function get_label_history_keyword(
         $id
@@ -216,10 +216,10 @@ class history
     /**
     * Delete accents
     *
-    * @param  $str (string)
-    * @param  [$charset = 'utf-8'] (string)
+    * @param  $str string
+    * @param  $charset = 'utf-8' (string)
     *
-    * @return  $str (string)
+    * @return  string $str
     */
     private function wd_remove_accents(
         $str,

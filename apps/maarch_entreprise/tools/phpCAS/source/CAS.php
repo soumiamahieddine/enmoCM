@@ -210,7 +210,7 @@ define("PHPCAS_PROXIED_SERVICE_IMAP", 'CAS_ProxiedService_Imap');
 //  LANGUAGES
 // ------------------------------------------------------------------------
 /**
- * @addtogroup publicLang
+ * addtogroup publicLang
  * @{
  */
 
