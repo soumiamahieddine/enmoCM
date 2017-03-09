@@ -1039,7 +1039,7 @@ class functions
     *
     * @param  $date1 date First date
     * @param  $date2 date Second date
-    * @return "date1" if the first date is the greater, "date2" if the second date or "equal" otherwise
+    * @return date1 if the first date is the greater, date2 if the second date or "equal" otherwise
     */
     public function compare_date($date1, $date2)
     {

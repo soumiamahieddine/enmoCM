@@ -576,7 +576,7 @@ class SecurityControler
     /**
      * Give action bitmask for given $userId over given
      * object
-     * @param varchar(32) $userId
+     * @param string $userId
      * @param bigint $objectId
      * @return bitmask
      */
@@ -597,7 +597,7 @@ class SecurityControler
      * bitmask, according with given user
      * and aggregation.
      * Return computed bitmask
-     * @param varchar(32) $userId
+     * @param string $userId
      * @param bigint $objectId
      * @return bitmask
      */

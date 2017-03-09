@@ -481,7 +481,7 @@ class Core_CoreConfigAbstract_Service extends Core_Abstract_Service {
     /**
      * Loads the modules specific vars into session
      * @param  array $modules  Enabled modules of the application
-     * @param  [type] $userData [description]
+     * @param  array $userData [description]
      */
     public static function loadVarSession($modules, $userData)
     {
@@ -522,7 +522,7 @@ class Core_CoreConfigAbstract_Service extends Core_Abstract_Service {
     /**
     * Loads menu items of each module and the application into session from menu.xml files
     * @param  array $modules Enabled modules of the application
-    * @return [type]          [description]
+    * @return string          [description]
     */
     public static  function loadMenu($modules)
     {

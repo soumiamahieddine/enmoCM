@@ -587,7 +587,7 @@
          * Put an alignment marker.
          * @param frame
          * @param width
-         * @param ox,oy center coordinate of the pattern
+         * @param ox oy center coordinate of the pattern
          */
         public static function putAlignmentMarker(array &$frame, $ox, $oy)
         {
@@ -699,7 +699,7 @@
          * Put a finder pattern.
          * @param frame
          * @param width
-         * @param ox,oy upper-left coordinate of the pattern
+         * @param ox oy upper-left coordinate of the pattern
          */
         public static function putFinderPattern(&$frame, $ox, $oy)
         {

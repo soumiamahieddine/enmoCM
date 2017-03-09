@@ -725,7 +725,6 @@ class SOAP_Client extends SOAP_Client_Overload
     /**
      * Parses a SOAP response.
      *
-     * @see SOAP_Parser::
      *
      * @param string $response    XML content of SOAP response.
      * @param string $encoding    Character set encoding, defaults to 'UTF-8'.

@@ -408,7 +408,7 @@ if (!class_exists('QRcode', false)) {
 		protected $blocks;
 
 		/**
-		 * @var Reed-Solomon blocks
+		 * @var ReedSolomon blocks
 		 * @access protected
 		 */
 		protected $rsblocks = array(); //of RSblock
@@ -462,7 +462,7 @@ if (!class_exists('QRcode', false)) {
 		// Reed-Solomon items
 
 		/**
-		 * @var Reed-Solomon items
+		 * @var ReedSolomon items
 		 * @access protected
 		 */
 		protected $rsitems = array();
@@ -474,7 +474,7 @@ if (!class_exists('QRcode', false)) {
 		protected $frames = array();
 
 		/**
-		 * @var alphabet-numeric convesion table
+		 * @var alphabetnumeric convesion table
 		 * @access protected
 		 */
 		protected $anTable = array(
@@ -867,7 +867,7 @@ if (!class_exists('QRcode', false)) {
 		/**
 		 * Initialize code.
 		 * @param array $spec array of ECC specification
-		 * @return 0 in case of success, -1 in case of error
+		 * @return integer 0 in case of success, -1 in case of error
 		 */
 		protected function init($spec) {
 			$dl = $this->rsDataCodes1($spec);

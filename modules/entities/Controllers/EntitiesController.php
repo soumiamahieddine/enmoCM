@@ -81,7 +81,7 @@ class ResController
      * @param  $docserverId string
      * @param  $status string
      * @param  $fileFormat string
-     * @return $data
+     * @return array $data
      */
     public function prepareStorage($aArgs)
     {

@@ -129,7 +129,7 @@ class AttachmentsController
      * @param  $data array
      * @param  $resId bigint
      * @param  $collIdMaster string
-     * @return $data
+     * @return array $data
      */
     public function prepareStorage($aArgs)
     {
@@ -275,7 +275,7 @@ class AttachmentsController
     /**
      * Prepares storage for transmission.
      * @param  $nb integer
-     * @return $data
+     * @return array $data
      */
     public function setTransmissionData($aArgs)
     {

@@ -27,9 +27,9 @@ class Core_StringAbstract_Service extends Core_Abstract_Service {
     * Delete accents
     *
     * @param  $str (string)
-    * @param  [$charset = 'utf-8'] (string)
+    * @param  $charset = 'utf-8' (string)
     *
-    * @return  $str (string)
+    * @return  string $str
     */
     public static function wd_remove_accents(
         $str,

@@ -26,7 +26,7 @@ class DocserverToolsController
     /**
      * Compute the path in the docserver for a batch
      * @param $docServer docservers path
-     * @return @return array Contains 2 items : subdirectory path and error
+     * @return  array Contains 2 items : subdirectory path and error
      */
     public function createPathOnDocServer($aArgs)
     {
