@@ -49,7 +49,7 @@ class HTMLPurifier_AttrCollections
     /**
      * Takes a reference to an attribute associative array and performs
      * all inclusions specified by the zero index.
-     * @param &$attr Reference to attribute array
+     * @param $attr Reference to attribute array
      */
     public function performInclusions(&$attr) {
         if (!isset($attr[0])) return;
@@ -76,7 +76,7 @@ class HTMLPurifier_AttrCollections
     /**
      * Expands all string identifiers in an attribute array by replacing
      * them with the appropriate values inside HTMLPurifier_AttrTypes
-     * @param &$attr Reference to attribute array
+     * @param $attr Reference to attribute array
      * @param $attr_types HTMLPurifier_AttrTypes instance
      */
     public function expandIdentifiers(&$attr, $attr_types) {

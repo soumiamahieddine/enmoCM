@@ -554,9 +554,9 @@ abstract class visa_Abstract extends Database
                                 $link_vis = 'arrow-right ';
                                 $del_vis = '<div class="delete_visa"></div>';
                                 if($info_userVis['user_id'] <> $_SESSION['user']['UserId']){
-                                    $info_vised = '<p style="color:red;">Vous être en train de viser à la place de '.$info_userVis['firstname'].' '.$info_userVis['lastname'].'!</p>';
+                                    $info_vised = '<p style="color:red;">'._VISA_USER_COU_DESC.' '.$info_userVis['firstname'].' '.$info_userVis['lastname'].'</p>';
                                 }else{
-                                    $info_vised = 'Vous êtes l\'actuel viseur';
+                                    $info_vised = '<p style="font-weight:normal;">'._VISA_USER_COU.'</p>';
                                 }
 
 
@@ -627,9 +627,9 @@ abstract class visa_Abstract extends Database
                             $del_vis = '';
                             $link_vis = 'arrow-right ';
                             if($info_userSign['user_id'] <> $_SESSION['user']['UserId']){
-                                $info_vised = '<p style="color:red;">Vous être en train de signer à la place de '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'!</p>';
+                                $info_vised = '<p style="color:red;">'._SIGN_USER_COU_DESC.' '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'</p>';
                             }else{
-                                $info_vised = 'Vous êtes l\'actuel signataire';
+                                $info_vised = '<p style="font-weight:normal;">'._SIGN_USER_COU.'</p>';
                             }
 
 
@@ -1053,7 +1053,7 @@ abstract class PdfNotes_Abstract extends FPDI
                 
                 $line = $stmt2->fetchObject();
                 $user = $request->show_string($line->lastname . " " . $line->firstname);
-                $notes = $line->note_text;
+                $notes = str_replace('←', '<=', $line->note_text);
                 $userId = $line->user_id;
                 $date = explode("-",date("d-m-Y", strtotime($line->date_note)));
                 $date = $date[0]."/".$date[1]."/".$date[2]." ".date("H:i", strtotime($line->date_note));
@@ -1061,6 +1061,7 @@ abstract class PdfNotes_Abstract extends FPDI
 			}
 			$data[] = array(utf8_decode($user),$date,utf8_decode($notes));
 		}
+                //var_dump(utf8_decode($notes));
 		return $data;
 	}
 

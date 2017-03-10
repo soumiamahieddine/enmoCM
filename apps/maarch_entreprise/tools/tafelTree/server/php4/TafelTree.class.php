@@ -13,7 +13,7 @@ class TafelTree {
 	
 	/**
 	 *------------------------------------------------------------------------------
-	 *							Propriétés
+	 *							Propriï¿½tï¿½s
 	 *------------------------------------------------------------------------------
 	 */
 	
@@ -58,7 +58,7 @@ class TafelTree {
 	 * Constructeur
 	 *
 	 * @access	public
-	 * @param	string				id					L'id de l'élément HTML conteneur
+	 * @param	string				id					L'id de l'ï¿½lï¿½ment HTML conteneur
 	 * @param	string				imgBase				Le path vers les images
 	 * @param	integer				width				La largeur de l'arbre
 	 * @param	integer				height				La hauteur de l'arbre
@@ -80,10 +80,11 @@ class TafelTree {
 	 *
 	 * @access	public
 	 * @param 	string			$json					La string JSON
-	 * @return 	TafelTree								Le TafelTree créé
+	 * @return 	TafelTree								Le TafelTree crï¿½ï¿½
 	 */
 	function &loadJSON ($json, $id, $imgs = 'imgs/', $width = '100%', $height = 'auto', $options = array()) {
-		$tree =& new TafelTree($id, $imgs, $width, $height, $options);
+		//$tree =& new TafelTree($id, $imgs, $width, $height, $options);
+		$tree = new TafelTree($id, $imgs, $width, $height, $options);
 		$service = new Services_JSON();
 		$tree->items =& TafelTree::loadServiceJSON($service->decode($json));
 		return $tree;
@@ -94,7 +95,7 @@ class TafelTree {
 	 *
 	 * @access	public
 	 * @param 	Service_JSON	$service				L'objet Service_JSON
-	 * @return 	array									Les TafelTreeBranch créées
+	 * @return 	array									Les TafelTreeBranch crï¿½ï¿½es
 	 */
 	function &loadServiceJSON ($service) {
 		$branches = array();
@@ -136,7 +137,7 @@ class TafelTree {
 	 * Ajoute une branche comme enfant
 	 *
 	 * @access 	public
-	 * @param 	TafelTreeBranch		$branch				La branche à ajouter
+	 * @param 	TafelTreeBranch		$branch				La branche ï¿½ ajouter
 	 * @return 	void
 	 */
 	function &add ($branch) {
@@ -147,16 +148,17 @@ class TafelTree {
 	}
 	
 	/**
-	 * Ajoute une sous-branche à l'arbre
+	 * Ajoute une sous-branche ï¿½ l'arbre
 	 *
 	 * @access 	public
 	 * @param 	string			$id						L'id de la sous-branche
 	 * @param 	string			$txt					Le texte de la sous-branche
-	 * @param 	array			$options				Les informations complémentaires
+	 * @param 	array			$options				Les informations complï¿½mentaires
 	 * @return 	TafelTreeBranch							La sous-branche
 	 */
 	function &addBranch ($id, $txt, $options = array()) {
-		$branch =& new TafelTreeBranch ();
+		//$branch =& new TafelTreeBranch ();
+		$branch = new TafelTreeBranch ();
 		$branch->setId($id);
 		$branch->setText($txt);
 		foreach ($options as $property => $value) {
@@ -177,11 +179,11 @@ class TafelTree {
 	}
 	
 	/**
-	 * Affiche la méthode d'initialisation de l'arbre
+	 * Affiche la mï¿½thode d'initialisation de l'arbre
 	 *
 	 * @access 	public
 	 * @param 	integer			$debug					Mettre 1 ou 2 pour avoir un affichage plus lisible
-	 * @return 	string									La string de la méthode JS d'initialisation
+	 * @return 	string									La string de la mï¿½thode JS d'initialisation
 	 */
 	function display ($debug = 0) {
 		if ($debug == 1) {

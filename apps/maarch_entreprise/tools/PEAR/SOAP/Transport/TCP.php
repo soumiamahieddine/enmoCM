@@ -13,8 +13,6 @@
  *
  * @category   Web Services
  * @package    SOAP
- * @author     Shane Hanna <iordy_at_iordy_dot_com>
- * @author     Jan Schneider <jan@horde.org>
  * @copyright  2003-2006 The PHP Group
  * @license    http://www.php.net/license/2_02.txt  PHP License 2.02
  * @link       http://pear.php.net/package/SOAP
@@ -29,7 +27,6 @@ require_once 'apps/maarch_entreprise/tools/PEAR/SOAP/Transport.php';
  *          for attachments
  * @access  public
  * @package SOAP
- * @author  Shane Hanna <iordy_at_iordy_dot_com>
  * @author  Jan Schneider <jan@horde.org>
  */
 class SOAP_Transport_TCP extends SOAP_Transport

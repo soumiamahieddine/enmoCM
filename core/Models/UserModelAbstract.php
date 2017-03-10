@@ -19,7 +19,6 @@ require_once 'apps/maarch_entreprise/services/Table.php';
 
 class UserModelAbstract extends \Apps_Table_Service
 {
-
     public static function getByEmail(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['mail']);
@@ -35,6 +34,4 @@ class UserModelAbstract extends \Apps_Table_Service
 
         return $aReturn;
     }
-
-    
 }

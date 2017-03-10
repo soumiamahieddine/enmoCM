@@ -19,7 +19,4 @@ require_once 'apps/maarch_entreprise/services/Table.php';
 
 class ResModelAbstract extends \Apps_Table_Service
 {
-
-
-    
 }

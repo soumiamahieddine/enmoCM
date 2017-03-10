@@ -36,7 +36,8 @@ echo '</ul>';
 
 // Create the tree (same options as javascript). In this sample, the file
 // drop.php doesn't exist. It's just to show how to manage ajax declarations
-$tree =& new TafelTree('divTree', '../imgs/', null, null, array(
+//$tree =& new TafelTree('divTree', '../imgs/', null, null, array(
+$tree = new TafelTree('divTree', '../imgs/', null, null, array(
 	'generate' => true,
 	'onMouseOver'=>'myMouseover',
 	'onMouseOut'=>'myMouseout',

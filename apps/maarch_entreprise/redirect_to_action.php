@@ -5,7 +5,7 @@ $security = new security();
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', false, false);
 require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 
 $bask = new basket();

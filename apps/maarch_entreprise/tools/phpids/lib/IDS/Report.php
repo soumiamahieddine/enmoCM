@@ -255,7 +255,7 @@ class IDS_Report implements Countable, IteratorAggregate
      * This method returns the centrifuge property or null if not
      * filled with data
      *
-     * @return array/null
+     * @return array or null
      */
     public function getCentrifuge()
     {

@@ -939,7 +939,7 @@ function redirect_to_url(url)
     var hours = localTime.getHours();
     var minutes = localTime.getMinutes();
     var text = hours+":"+minutes;
-    alert('Vous avez été déconnecté à '+text+' (temps d\'inactivité trop longue)\n\nVeuillez vous reconnecter');
+    alert('Vous avez été déconnecté à '+text+' (temps d\'inactivité trop long)\n\nVeuillez vous reconnecter');
     location.href=url;
 }
 

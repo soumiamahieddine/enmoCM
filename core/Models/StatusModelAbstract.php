@@ -19,7 +19,6 @@ require_once 'apps/maarch_entreprise/services/Table.php';
 
 class StatusModelAbstract extends \Apps_Table_Service
 {
-
     public static function getList()
     {
         $aReturn = static::select([
@@ -63,7 +62,7 @@ class StatusModelAbstract extends \Apps_Table_Service
         $where['id'] = $aArgs['id'];
 
         $aReturn = static::updateTable(
-            $aArgs, 
+            $aArgs,
             'status',
             $where
         );

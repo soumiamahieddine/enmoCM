@@ -48,7 +48,7 @@ class LoggerFilterDenyAll extends LoggerFilter {
 	 * regardless of the {@link LoggerLoggingEvent} parameter.
 	 * 
 	 * @param LoggerLoggingEvent $event The {@link LoggerLoggingEvent} to filter.
-	 * @return LoggerFilter::DENY Always returns {@link LoggerFilter::DENY}
+	 * @return LoggerFilte DENY Always returns {@link LoggerFilter::DENY}
 	 */
 	public function decide(LoggerLoggingEvent $event) {
 		return LoggerFilter::DENY;

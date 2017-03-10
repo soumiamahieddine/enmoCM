@@ -71,3 +71,5 @@ if (!defined("_EMPTY_AVIS_WORKFLOW"))
 if (!defined("_AVIS_SENT"))
     define("_AVIS_SENT", "Notice given");
 
+if (!defined("_ADD_AVIS_ROLE"))
+    define("_ADD_AVIS_ROLE", "Add a user for recommendation");

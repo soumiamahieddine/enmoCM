@@ -66,7 +66,7 @@ if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE"))
     define("_PROCEED_WORKFLOW_AVIS_SIMPLE", "Émettre un avis (parallèle)");
 
 if (!defined("_EMPTY_AVIS_WORKFLOW"))
-    define("_EMPTY_AVIS_WORKFLOW", "Le circuit d'avis est vide");
+    define("_EMPTY_AVIS_WORKFLOW", "Aucun circuit d'avis paramétré");
 
 if (!defined("_AVIS_SENT"))
     define("_AVIS_SENT", "Avis donné");
@@ -94,3 +94,6 @@ if (!defined("_VALIDATE_BY"))
 
 if (!defined("_AVIS_ROLE_UNAVAILABLE"))
     define("_AVIS_ROLE_UNAVAILABLE", "Le rôle \"pour avis\" n'est pas disponible dans la liste de diffusion");
+
+if (!defined("_ADD_AVIS_ROLE"))
+    define("_ADD_AVIS_ROLE", "Ajouter un conseiller");

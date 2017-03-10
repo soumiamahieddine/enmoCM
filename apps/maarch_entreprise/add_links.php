@@ -67,6 +67,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                    $_SESSION['config']['databasetype'],
                    'apps'
                 );
+                $info = _THE_DOCUMENT_LINK . $res_child . ' ' . _NOW_LINK_WITH_THIS_ONE;
             }elseif($i == 0 && !$self && count($_SESSION['stockCheckbox'])>1){
                 for($j=0;$j<count($_SESSION['stockCheckbox']);$j++){
                 $queryAddLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES(?, ?, ?)";
@@ -94,6 +95,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                    $_SESSION['config']['databasetype'],
                    'apps'
                 );
+                $info = _THE_DOCUMENT_LINK . $res_child . ' ' . _NOW_LINK_WITH_THIS_ONE;
 
               }
             }
@@ -112,6 +114,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                $_SESSION['config']['databasetype'],
                'apps'
             );
+            $info = _LINK_TO_THE_DOCUMENT. $res_parent. ' ' . _LINK_DELETED;
 
             $hist3 = new history();
             $hist3->add(
@@ -124,7 +127,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                'apps'
             );
         }
-		 $js = "window.top.$('main_info').innerHTML = '"._LINKS_DELETED."';window.top.$('main_info').style.display = 'table-cell';setTimeout(function(){ window.top.$('main_info').style.display = 'none'; }, 10000);";
+        $js = "window.top.$('main_info').innerHTML = '".$info."';window.top.$('main_info').style.display = 'table-cell';setTimeout(function(){ window.top.$('main_info').style.display = 'none'; }, 10000);";
 
         $formatText = '';
 
@@ -234,7 +237,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                       $Links .= 'id="tableHist" ';
                       $Links .= 'value="'.$table.'" ';
                     $Links .= '>';
-                    $Links .= '<label for="res_id_link">'.ucfirst(_DOC_NUM).':&nbsp;</label>';
+                    //$Links .= '<label for="res_id_link">'.ucfirst(_DOC_NUM).':&nbsp;</label>';
                     $Links .= '<input ';
                       $Links .= 'type="text" ';
                       $Links .= 'disabled="disabled" ';
@@ -242,6 +245,15 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                       $Links .= 'name="res_id_link" ';
                       $Links .= 'id="res_id_link" ';
                     $Links .= '>';
+                    if(_ID_TO_DISPLAY == 'chrono_number'){
+                        $Links .= '<input ';
+                            $Links .= 'type="text" ';
+                            $Links .= 'disabled="disabled" ';
+                            $Links .= 'readonly="readonly" ';
+                            $Links .= 'name="input_chrono_id" ';
+                            $Links .= 'id="input_chrono_id" ';
+                        $Links .= '>';
+                    }
                 $Links .= '</td>';
             $Links .= '</tr>';
             $Links .= '<tr>';
@@ -250,7 +262,11 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                       $Links .= 'type="button" id="attach_link"';
                       $Links .= 'class="button" ';
                       $Links .= 'onClick="if($(\'res_id_link\').value != \'\') addLinks(\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', \''.$_SESSION['doc_id'].'\', $(\'res_id_link\').value, \'add\', $(\'tableHist\').value);';
-                      $Links .= '$(\'res_id_link\').setValue(\'\');"';
+                      $Links .= '$(\'res_id_link\').setValue(\'\');';
+                      if(_ID_TO_DISPLAY == 'chrono_number'){
+                         $Links .= '$(\'input_chrono_id\').setValue(\'\');'; 
+                      }
+                      $Links .= '"';
                       $Links .= 'value="&nbsp;&nbsp; '._LINK_ACTION.' &nbsp;&nbsp;" ';
                     $Links .= '>';
                 $Links .= '</td>';

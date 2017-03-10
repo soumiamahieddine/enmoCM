@@ -386,7 +386,7 @@ class HTMLPurifier_HTMLDefinition extends HTMLPurifier_Definition
      * @warning Although it's largely drawn from TinyMCE's implementation,
      *      it is different, and you'll probably have to modify your lists
      * @param $list String list to parse
-     * @param array($allowed_elements, $allowed_attributes)
+     * @param array $allowed_elements, $allowed_attributes
      * @todo Give this its own class, probably static interface
      */
     public function parseTinyMCEAllowedList($list) {

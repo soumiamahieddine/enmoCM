@@ -200,7 +200,7 @@ class LoggerLayoutPattern extends LoggerLayout {
 	 * It requires {@link $this->pattern} to be a comma separated string of patterns like
 	 * e.g. <code>%d,%c,%p,%m,%t,%F,%L</code>.
 	 * 
-	 * @return array(string)   An array of the converted elements i.e. timestamp, message, filename etc.
+	 * @return array string   An array of the converted elements i.e. timestamp, message, filename etc.
 	 */
 	public function formatToArray(LoggerLoggingEvent $event) {
 		$results = array();

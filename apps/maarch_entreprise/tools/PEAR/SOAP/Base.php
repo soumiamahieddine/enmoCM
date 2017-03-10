@@ -346,7 +346,6 @@ class SOAP_Base extends SOAP_Base_Object
      * Sets the schema version used in the SOAP message.
      *
      * @access private
-     * @see $_XMLSchema
      *
      * @param string $schemaVersion  The schema version.
      */

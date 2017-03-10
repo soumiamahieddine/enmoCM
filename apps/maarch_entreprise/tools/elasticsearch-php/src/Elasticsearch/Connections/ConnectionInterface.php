@@ -54,7 +54,7 @@ interface ConnectionInterface
     /**
      * Get the URL path suffix, null if not set
      *
-     * @return null|string;
+     * @return null or string;
      */
     public function getPath();
 

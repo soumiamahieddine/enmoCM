@@ -51,6 +51,4 @@ class EntitiesModelAbstract extends \Apps_Table_Service
 
         return $aReturn;
     }
-
-    
 }

@@ -230,7 +230,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .='</i>';
 
     $frmStr .= '<div style="height:90vh;overflow:auto;">';
-    $frmStr .= '<div id="validleft" style="width:447px;">';
+    $frmStr .= '<div id="validleft">';
     $frmStr .= '<div id="index_div" style="display:none;";>';
     
     $frmStr .= '<div id="frm_error_' . $actionId . '" class="indexing_error">'
@@ -317,14 +317,32 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 $frmStr .= '</a>';
             $frmStr .= '</td>';
             $frmStr .= '<td style="text-align: right;">';
-                $frmStr .= '<input ';
-                  $frmStr .= 'type="text" ';
-                  $frmStr .= 'name="res_id" ';
-                  $frmStr .= 'id="res_id" ';
-                  $frmStr .= 'class="readonly" ';
-                  $frmStr .= 'readonly="readonly" ';
-                  $frmStr .= 'value="" ';
-                $frmStr .= '/>';
+                if(_ID_TO_DISPLAY == 'res_id'){
+                    $frmStr .= '<input ';
+                        $frmStr .= 'type="text" ';
+                        $frmStr .= 'name="res_id" ';
+                        $frmStr .= 'id="res_id" ';
+                        $frmStr .= 'class="readonly" ';
+                        $frmStr .= 'readonly="readonly" ';
+                        $frmStr .= 'value="" ';
+                    $frmStr .= '/>';
+                }else{
+                    $frmStr .= '<input ';
+                        $frmStr .= 'type="text" ';
+                        $frmStr .= 'name="chrono_id" ';
+                        $frmStr .= 'id="chrono_id" ';
+                        $frmStr .= 'class="readonly" ';
+                        $frmStr .= 'readonly="readonly" ';
+                        $frmStr .= 'value="" ';
+                    $frmStr .= '/>';
+                    $frmStr .= '<input style="display:none"';
+                        $frmStr .= 'type="text" ';
+                        $frmStr .= 'name="res_id" ';
+                        $frmStr .= 'id="res_id" ';
+                        $frmStr .= 'value="" ';
+                    $frmStr .= '/>';
+                }
+                
             $frmStr .= '</td>';
             $frmStr .= '<td>';
                 $frmStr .= '<span class="red_asterisk" id="attachment_link_mandatory" '
@@ -613,6 +631,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
 	
     $frmStr .= '<tr id="add_multi_contact_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="contact" class="form_title" >'
+            . '<span id="exp_multi_contact">' . _SHIPPER . '</span>'
             . '<span id="dest_multi_contact">' . _DEST . '</span>';
     if ($core->test_admin('my_contacts', 'apps', false)) {
         $pathScriptTab = $_SESSION['config']['businessappurl']
@@ -934,9 +953,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '</div>';
 
     /*** Extra javascript ***/
-    $frmStr .= '<script type="text/javascript">resize_frame_process(\'modal_'
-            . $actionId . '\', \'file_iframe\', true, true); '
-            . 'window.scrollTo(0,0);';
+    $frmStr .= '<script type="text/javascript">window.scrollTo(0,0);';
 
     if (isset($_SESSION['indexing']['category_id']) && $_SESSION['indexing']['category_id'] <> "") {
         $category_default = $_SESSION['indexing']['category_id'];
@@ -961,7 +978,19 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '$(\'baskets\').style.visibility=\'hidden\';'
             . 'var item  = $(\'index_div\'); if(item)'
             . '{item.style.display=\'block\';}</script>';
-    $frmStr .= '<style>#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}</style>';
+    
+    /*** Extra CSS ***/
+    $frmStr .= '<style>';
+    $frmStr .= '#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}';
+    $frmStr .= '#modal_'. $actionId . '{height:96% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frmStr .= '#modal_'. $actionId . '_layer{height:100% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frmStr .= '#validleft{height:100% !important;width:30% !important;}';
+    $frmStr .= '#validright{width:67% !important;height:100% !important;}';
+    $frmStr .= '@media screen and (min-width: 1280px) {#validleft{width:447px !important;}}';
+    $frmStr .= '@media screen and (max-width: 1280px) {#validright{width:55% !important;}}';
+    $frmStr .= '#file_iframe{width:100% !important;height:100% !important;}';
+    $frmStr .= '#maarch_body{overflow:hidden !important;}';
+    $frmStr .= '</style>';
     $frmStr .= '</div>';
     $frmStr .= '</form>';
     return addslashes($frmStr);

@@ -1,0 +1,12 @@
+node_modules/
+vendor/
+composer.lock
+installed.lck
+apps/maarch_entreprise/xml/config.xml
+apps/maarch_entreprise/xml/log4php.xml
+.vscode/
+.phplint-cache
+.phplint.yml
+fonctionnel.log
+technique.log
+xdelete.sh
