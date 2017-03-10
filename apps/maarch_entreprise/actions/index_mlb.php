@@ -230,7 +230,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .='</i>';
 
     $frmStr .= '<div style="height:90vh;overflow:auto;">';
-    $frmStr .= '<div id="validleft" style="width:447px;">';
+    $frmStr .= '<div id="validleft">';
     $frmStr .= '<div id="index_div" style="display:none;";>';
     
     $frmStr .= '<div id="frm_error_' . $actionId . '" class="indexing_error">'
@@ -953,9 +953,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '</div>';
 
     /*** Extra javascript ***/
-    $frmStr .= '<script type="text/javascript">resize_frame_process(\'modal_'
-            . $actionId . '\', \'file_iframe\', true, true); '
-            . 'window.scrollTo(0,0);';
+    $frmStr .= '<script type="text/javascript">window.scrollTo(0,0);';
 
     if (isset($_SESSION['indexing']['category_id']) && $_SESSION['indexing']['category_id'] <> "") {
         $category_default = $_SESSION['indexing']['category_id'];
@@ -980,7 +978,19 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '$(\'baskets\').style.visibility=\'hidden\';'
             . 'var item  = $(\'index_div\'); if(item)'
             . '{item.style.display=\'block\';}</script>';
-    $frmStr .= '<style>#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}</style>';
+    
+    /*** Extra CSS ***/
+    $frmStr .= '<style>';
+    $frmStr .= '#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}';
+    $frmStr .= '#modal_'. $actionId . '{height:96% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frmStr .= '#modal_'. $actionId . '_layer{height:100% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frmStr .= '#validleft{height:100% !important;width:30% !important;}';
+    $frmStr .= '#validright{width:67% !important;height:100% !important;}';
+    $frmStr .= '@media screen and (min-width: 1280px) {#validleft{width:447px !important;}}';
+    $frmStr .= '@media screen and (max-width: 1280px) {#validright{width:55% !important;}}';
+    $frmStr .= '#file_iframe{width:100% !important;height:100% !important;}';
+    $frmStr .= '#maarch_body{overflow:hidden !important;}';
+    $frmStr .= '</style>';
     $frmStr .= '</div>';
     $frmStr .= '</form>';
     return addslashes($frmStr);

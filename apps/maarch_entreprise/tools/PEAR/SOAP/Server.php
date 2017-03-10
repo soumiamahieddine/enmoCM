@@ -120,8 +120,6 @@ class SOAP_Server extends SOAP_Base
      * To always return a valid SOAP response even on errors that don't happen
      * in this code, the errors are catched, transformed to a SOAP fault and
      * immediately sent to the client.
-     *
-     * @see http://www.php.net/set_error_handler
      */
     function _errorHandler($errno, $errmsg, $filename, $linenum)
     {

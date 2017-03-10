@@ -22,7 +22,6 @@ use Core\Models\DocserverTypeModel;
 
 class DocserverTypeController
 {
-
     public function getList(RequestInterface $request, ResponseInterface $response)
     {
         $obj = DocserverTypeModel::getList();
@@ -44,7 +43,6 @@ class DocserverTypeController
                 'id' => $id
             ]);
         } else {
-
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
@@ -66,7 +64,6 @@ class DocserverTypeController
         $errors = $this->control($request, 'create');
 
         if (!empty($errors)) {
-
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => $errors]);
@@ -82,7 +79,6 @@ class DocserverTypeController
                 'id' => $id
             ]);
         } else {
-
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_CREATE]);
@@ -104,7 +100,6 @@ class DocserverTypeController
         $errors = $this->control($request, 'update');
 
         if (!empty($errors)) {
-
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => $errors]);
@@ -120,7 +115,6 @@ class DocserverTypeController
                 'id' => $id
             ]);
         } else {
-
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_UPDATE]);
@@ -143,7 +137,6 @@ class DocserverTypeController
                 'id' => $id
             ]);
         } else {
-            
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_DELETE]);
@@ -162,13 +155,13 @@ class DocserverTypeController
     {
         $errors = [];
 
-        if($mode == 'update') {
+        if ($mode == 'update') {
             $obj = DocserverTypeModel::getById([
                 'id' => $request->getParam('id')
             ]);
             if (empty($obj)) {
                 array_push(
-                    $errors, 
+                    $errors,
                     _ID . ' ' . $request->getParam('id') . ' ' . _NOT_EXISTS
                 );
             }
@@ -176,13 +169,13 @@ class DocserverTypeController
 
         if (!Validator::notEmpty()->validate($request->getParam('id'))) {
             array_push($errors, _ID . ' ' . _IS_EMPTY);
-        } elseif($mode == 'create') {
+        } elseif ($mode == 'create') {
             $obj = DocserverTypeModel::getById([
                 'id' => $request->getParam('id')
             ]);
             if (!empty($obj)) {
                 array_push(
-                    $errors, 
+                    $errors,
                     _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS
                 );
             }
@@ -196,8 +189,7 @@ class DocserverTypeController
             array_push($errors, _LABEL_STATUS . ' ' . _IS_EMPTY);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('is_system')) &&
             !Validator::contains('Y')
                 ->validate($request->getParam('is_system')) &&
@@ -207,8 +199,7 @@ class DocserverTypeController
             array_push($errors, _IS_SYSTEM . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('is_folder_status')) &&
             !Validator::contains('Y')
                 ->validate($request->getParam('is_folder_status')) &&
@@ -218,8 +209,7 @@ class DocserverTypeController
             array_push($errors, _IS_FOLDER_STATUS . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('img_filename')) &&
             (!Validator::regex('/^[\w-.]+$/')
                 ->validate($request->getParam('img_filename')) ||
@@ -229,8 +219,7 @@ class DocserverTypeController
             array_push($errors, _IMG_FILENAME . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('maarch_module')) &&
             !Validator::length(null, 255)
                 ->validate($request->getParam('maarch_module'))
@@ -238,8 +227,7 @@ class DocserverTypeController
             array_push($errors, _MAARCH_MODULE . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('can_be_searched')) &&
             !Validator::contains('Y')
                 ->validate($request->getParam('can_be_searched')) &&
@@ -249,8 +237,7 @@ class DocserverTypeController
             array_push($errors, _CAN_BE_SEARCHED . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('can_be_modified')) &&
             !Validator::contains('Y')
                 ->validate($request->getParam('can_be_modified')) &&
@@ -262,5 +249,4 @@ class DocserverTypeController
 
         return $errors;
     }
-
 }

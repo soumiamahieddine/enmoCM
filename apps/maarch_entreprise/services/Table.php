@@ -49,7 +49,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
      *  - string/array where : WHERE [where]
      *  - data : for remplace ? on query
      *  - array conditions : [condition => valeur]
-     * @return [type]       [description]
+     * @return type       [description]
      */
     public static function select(array $args=[]){
         // Table :
@@ -190,7 +190,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
      * @param array $aData donnée a ajouter
      * @param array $table table de l'ajout
      * @param string $getLastId
-     * @return [type]        [description]
+     * @return type        [description]
      */
     public static function insertInto(array $aData, $table, $getLastId = null){
         if ( ! is_string($table) ) {
@@ -219,7 +219,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
      * @param  array  $aData  [description]
      * @param  string $table  [description]
      * @param  array  $aWhere [description]
-     * @return [type]         [description]
+     * @return type         [description]
      */
     public static function updateTable(array $aData, $table, $aWhere = []){
         // Prés-requis :

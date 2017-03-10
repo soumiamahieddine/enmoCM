@@ -238,7 +238,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='</i>';
     /********************************* LEFT PART **************************************/
     $frm_str .= '<div style="height:90vh;overflow:auto;">';
-    $frm_str .= '<div id="validleftprocess" style="display:none;width:300px;">';
+    $frm_str .= '<div id="validleftprocess" style="display:none;">';
     $frm_str .= '<div id="frm_error_' . $id_action . '" class="error"></div>';
     $frm_str .= '<input type="hidden" name="values" id="values" value="' . $res_id . '" />';
     $frm_str .= '<input type="hidden" name="action_id" id="action_id" value="' . $id_action . '" />';
@@ -484,7 +484,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     // ****************************** RIGHT PART *******************************************/
 
-    $frm_str .= '<div id="validright" style="width:80%;display:none;">';
+    $frm_str .= '<div id="validright" style="display:none;">';
     
     /*** TOOLBAR ***/
     $frm_str .= '<div class="block" align="center" style="height:20px;width=100%;">';
@@ -736,11 +736,27 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
 
     //EXTRA SCRIPT
-    $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'. $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
+    $frm_str .= '<script type="text/javascript">';
+    $frm_str .= 'window.scrollTo(0,0);';
+    $frm_str .= '$j("#validleftprocess").show();';
+    $frm_str .= '$j("#validright").show();';
     $frm_str .= '$(\'entity\').style.visibility=\'hidden\';';
     $frm_str .= '$(\'category\').style.visibility=\'hidden\';';
     $frm_str .= '$(\'baskets\').style.visibility=\'hidden\';';
     $frm_str .= '</script>';
+    
+    /*** Extra CSS ***/
+    $frm_str .= '<style>';
+    $frm_str .= '#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}';
+    $frm_str .= '#modal_'. $id_action . '{height:96% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frm_str .= '#modal_'. $id_action . '_layer{height:100% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frm_str .= '#validleftprocess{height:100% !important;width:300px !important;}';
+    $frm_str .= '#validright{width:76% !important;height:100% !important;}';
+    $frm_str .= '@media screen and (max-width: 1280px) {#validright{width:73% !important;}}';
+    $frm_str .= '#viewframe{width:100% !important;height:93% !important;}';
+    $frm_str .= '#maarch_body{overflow:hidden !important;}';
+    $frm_str .= '</style>';
+    
     $frm_str .= '</div>';
     $frm_str .= '</form>';
 

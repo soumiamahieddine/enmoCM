@@ -151,8 +151,8 @@ abstract class HTMLPurifier_Injector
      * you reach the end of the input tokens.
      * @warning Please prevent previous references from interfering with this
      *          functions by setting $i = null beforehand!
-     * @param &$i Current integer index variable for inputTokens
-     * @param &$current Current token variable. Do NOT use $token, as that variable is also a reference
+     * @param $i Current integer index variable for inputTokens
+     * @param $current Current token variable. Do NOT use $token, as that variable is also a reference
      */
     protected function forward(&$i, &$current) {
         if ($i === null) $i = $this->inputIndex + 1;
@@ -184,8 +184,8 @@ abstract class HTMLPurifier_Injector
      * you reach the beginning of input tokens.
      * @warning Please prevent previous references from interfering with this
      *          functions by setting $i = null beforehand!
-     * @param &$i Current integer index variable for inputTokens
-     * @param &$current Current token variable. Do NOT use $token, as that variable is also a reference
+     * @param $i Current integer index variable for inputTokens
+     * @param $current Current token variable. Do NOT use $token, as that variable is also a reference
      */
     protected function backward(&$i, &$current) {
         if ($i === null) $i = $this->inputIndex - 1;
@@ -201,8 +201,8 @@ abstract class HTMLPurifier_Injector
      * current location.
      * @warning Please prevent previous references from interfering with this
      *          functions by setting $i = null beforehand!
-     * @param &$i Current integer index variable for inputTokens
-     * @param &$current Current token variable. Do NOT use $token, as that variable is also a reference
+     * @param $i Current integer index variable for inputTokens
+     * @param $current Current token variable. Do NOT use $token, as that variable is also a reference
      */
     protected function current(&$i, &$current) {
         if ($i === null) $i = $this->inputIndex;

@@ -297,7 +297,7 @@ class LoggerConfiguratorIni implements LoggerConfigurator {
 	/**
 	 * Read configuration options from <b>properties</b>.
 	 *
-	 * @see doConfigure().
+	 * @see doConfigure
 	 * @param array $properties
 	 * @param LoggerHierarchy $hierarchy
 	 */

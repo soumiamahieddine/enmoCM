@@ -19,7 +19,6 @@ require_once 'apps/maarch_entreprise/services/Table.php';
 
 class DocserverModelAbstract extends \Apps_Table_Service
 {
-
     public static function getList()
     {
         $aReturn = static::select([
@@ -63,7 +62,7 @@ class DocserverModelAbstract extends \Apps_Table_Service
         $where['docserver_id'] = $aArgs['docserver_id'];
 
         $aReturn = static::updateTable(
-            $aArgs, 
+            $aArgs,
             'docservers',
             $where
         );
@@ -110,7 +109,7 @@ class DocserverModelAbstract extends \Apps_Table_Service
         $where['id'] = $aArgs['id'];
 
         $aReturn = static::updateTable(
-            $aArgs, 
+            $aArgs,
             'docservers',
             $where
         );

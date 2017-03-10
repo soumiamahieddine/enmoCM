@@ -128,3 +128,15 @@ if (!defined("_TMP_SIGNED_FILE_FAILED"))
 
 if (!defined("_ENCRYPTED"))
     define("_ENCRYPTED", "crypté");
+
+if (!defined("_VISA_USER_COU"))
+    define("_VISA_USER_COU", "Vous êtes l'actuel viseur");
+
+if (!defined("_VISA_USER_COU_DESC"))
+    define("_VISA_USER_COU_DESC", "Vous visez à la place de");
+
+if (!defined("_SIGN_USER_COU"))
+    define("_SIGN_USER_COU", "Vous êtes l'actuel signataire");
+
+if (!defined("_SIGN_USER_COU_DESC"))
+    define("_SIGN_USER_COU_DESC", "Vous signez à la place de");

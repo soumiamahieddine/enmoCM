@@ -85,7 +85,6 @@ class CAS_Client
      * CAS_Client::setHTMLHeader(), read by CAS_Client::printHTMLHeader().
      *
      * @hideinitializer
-     * @see CAS_Client::setHTMLHeader, CAS_Client::printHTMLHeader()
      */
     private $_output_header = '';
 
@@ -115,7 +114,6 @@ class CAS_Client
      * CAS_Client::setHTMLFooter(), read by printHTMLFooter().
      *
      * @hideinitializer
-     * @see CAS_Client::setHTMLFooter, CAS_Client::printHTMLFooter()
      */
     private $_output_footer = '';
 

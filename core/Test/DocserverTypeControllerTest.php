@@ -1,5 +1,7 @@
 <?php
 
+namespace MaarchTest;
+
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -9,7 +11,7 @@
 
 require_once __DIR__.'/define.php';
 
-class DocserverTypeControllerTest extends PHPUnit_Framework_TestCase
+class DocserverTypeControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetList()
     {
@@ -138,5 +140,4 @@ class DocserverTypeControllerTest extends PHPUnit_Framework_TestCase
         
     //     $this->assertSame((string)$response->getBody(), '[{"docserverType":true}]');
     // }
-
 }

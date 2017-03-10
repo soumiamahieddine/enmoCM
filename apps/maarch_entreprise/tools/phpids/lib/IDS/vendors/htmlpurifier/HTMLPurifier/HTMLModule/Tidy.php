@@ -165,7 +165,7 @@ class HTMLPurifier_HTMLModule_Tidy extends HTMLPurifier_HTMLModule
      * Parses a fix name and determines what kind of fix it is, as well
      * as other information defined by the fix
      * @param $name String name of fix
-     * @return array(string $fix_type, array $fix_parameters)
+     * @return array string $fix_type, array $fix_parameters
      * @note $fix_parameters is type dependant, see populate() for usage
      *       of these parameters
      */

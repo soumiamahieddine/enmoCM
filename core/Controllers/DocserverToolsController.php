@@ -26,7 +26,7 @@ class DocserverToolsController
     /**
      * Compute the path in the docserver for a batch
      * @param $docServer docservers path
-     * @return @return array Contains 2 items : subdirectory path and error
+     * @return  array Contains 2 items : subdirectory path and error
      */
     public function createPathOnDocServer($aArgs)
     {
@@ -72,7 +72,7 @@ class DocserverToolsController
         }
         if (isset($GLOBALS['wb']) && $GLOBALS['wb'] <> '') {
             $path = $pathOnDocserver . date('Y') . DIRECTORY_SEPARATOR.date('m')
-                  . DIRECTORY_SEPARATOR . 'BATCH' . DIRECTORY_SEPARATOR 
+                  . DIRECTORY_SEPARATOR . 'BATCH' . DIRECTORY_SEPARATOR
                   . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
             if (!is_dir($path)) {
                 mkdir($path, 0770, true);
@@ -89,9 +89,9 @@ class DocserverToolsController
                   . DIRECTORY_SEPARATOR;
         }
 
-        $datas = 
+        $datas =
             [
-                'createPathOnDocServer' => 
+                'createPathOnDocServer' =>
                     [
                         'destinationDir' => $path
                     ]
@@ -123,15 +123,13 @@ class DocserverToolsController
             return $datas;
         }
 
-        if (
-            DIRECTORY_SEPARATOR == '/'
+        if (DIRECTORY_SEPARATOR == '/'
             && (isset($GLOBALS['apacheUserAndGroup'])
             && $GLOBALS['apacheUserAndGroup'] <> '')
         ) {
-            exec('chown ' 
-                . escapeshellarg($GLOBALS['apacheUserAndGroup']) . ' ' 
-                . escapeshellarg($aArgs['path'])
-            );
+            exec('chown '
+                . escapeshellarg($GLOBALS['apacheUserAndGroup']) . ' '
+                . escapeshellarg($aArgs['path']));
         }
 
         umask(0022);
@@ -172,7 +170,7 @@ class DocserverToolsController
 
         if (file_exists(($aArgs['destinationDir'] . $aArgs['fileDestinationName']))) {
             $datas = [
-                'errors' => '' . $aArgs['destinationDir'] 
+                'errors' => '' . $aArgs['destinationDir']
                     . $aArgs['fileDestinationName'] . ' ' . _FILE_ALREADY_EXISTS,
             ];
 
@@ -211,7 +209,7 @@ class DocserverToolsController
             $this->setRights($aArgs);
         }
 
-        if(!copy($sourceFilePath, $destinationDir . $fileDestinationName)) {
+        if (!copy($sourceFilePath, $destinationDir . $fileDestinationName)) {
             $datas = [
                 'errors' => _DOCSERVER_COPY_ERROR . ' source : ' . $sourceFilePath
                     . ' dest : ' . $destinationDir . $fileDestinationName
@@ -261,7 +259,7 @@ class DocserverToolsController
         );
 
         $datas = [
-            'copyOnDocserver' =>  
+            'copyOnDocserver' =>
                 [
                     'destinationDir'        => $destinationDir,
                     'fileDestinationName'   => $fileDestinationName,
@@ -304,8 +302,7 @@ class DocserverToolsController
             return $datas;
         }
 
-        if (
-            $aArgs['fingerprintMode'] == 'NONE' || 
+        if ($aArgs['fingerprintMode'] == 'NONE' ||
             $aArgs['fingerprintMode'] == ''
         ) {
             $datas = [
@@ -315,7 +312,7 @@ class DocserverToolsController
             return $datas;
         } else {
             $fingerprint = hash_file(
-                strtolower($aArgs['fingerprintMode']), 
+                strtolower($aArgs['fingerprintMode']),
                 $aArgs['path']
             );
 
@@ -449,5 +446,4 @@ class DocserverToolsController
 
         return $datas;
     }
-
 }

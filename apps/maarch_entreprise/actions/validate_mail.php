@@ -1160,7 +1160,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
 
     /*** Extra javascript ***/
-    $frm_str .= '<script type="text/javascript">$(\'validright\').style.display=\'block\';displayFatherFolder(\'folder\');resize_frame_process("modal_'.$id_action.'", "viewframevalid", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);';
+    $frm_str .= '<script type="text/javascript">$(\'validright\').style.display=\'block\';displayFatherFolder(\'folder\');window.scrollTo(0,0);';
             
     $frm_str .='init_validation(\''.$_SESSION['config']['businessappurl'] 
         . 'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \''
@@ -1231,7 +1231,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= 'affiche_reference();';
 
     $frm_str .='</script>';
-    $frm_str .= '<style>#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}</style>';
+    /*** Extra CSS ***/
+    $frm_str .= '<style>';
+    $frm_str .= '#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}';
+    $frm_str .= '#modal_'. $id_action . '{height:96% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frm_str .= '#modal_'. $id_action . '_layer{height:100% !important;width:98% !important;min-width:1250px;overflow:hidden;}';
+    $frm_str .= '#validleft{height:100% !important;width:30% !important;}';
+    $frm_str .= '#validright{width:67% !important;height:100% !important;}';
+    $frm_str .= '@media screen and (min-width: 1280px) {#validleft{width:447px !important;}}';
+    $frm_str .= '@media screen and (max-width: 1280px) {#validright{width:55% !important;}}';
+    $frm_str .= '#viewframevalid{width:100% !important;height:93% !important;}';
+    $frm_str .= '#maarch_body{overflow:hidden !important;}';
+    $frm_str .= '</style>';
+    
     $frm_str .= '</div>';
     $frm_str .= '</form>';
 	

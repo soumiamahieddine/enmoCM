@@ -22,7 +22,6 @@ use Core\Models\DocserverModel;
 
 class DocserverController
 {
-
     public function getList(RequestInterface $request, ResponseInterface $response)
     {
         $obj = DocserverModel::getList();
@@ -42,7 +41,6 @@ class DocserverController
                 'id' => $id
             ]);
         } else {
-
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
@@ -62,7 +60,6 @@ class DocserverController
         $errors = $this->control($request, 'create');
 
         if (!empty($errors)) {
-
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => $errors]);
@@ -78,7 +75,6 @@ class DocserverController
                 'id' => $id
             ]);
         } else {
-
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_CREATE]);
@@ -98,7 +94,6 @@ class DocserverController
         $errors = $this->control($request, 'update');
 
         if (!empty($errors)) {
-
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => $errors]);
@@ -114,7 +109,6 @@ class DocserverController
                 'id' => $id
             ]);
         } else {
-
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_UPDATE]);
@@ -135,7 +129,6 @@ class DocserverController
                 'id' => $id
             ]);
         } else {
-            
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_DELETE]);
@@ -152,13 +145,13 @@ class DocserverController
     {
         $errors = [];
 
-        if($mode == 'update') {
+        if ($mode == 'update') {
             $obj = DocserverModel::getById([
                 'id' => $request->getParam('id')
             ]);
             if (empty($obj)) {
                 array_push(
-                    $errors, 
+                    $errors,
                     _ID . ' ' . $request->getParam('id') . ' ' . _NOT_EXISTS
                 );
             }
@@ -166,13 +159,13 @@ class DocserverController
 
         if (!Validator::notEmpty()->validate($request->getParam('id'))) {
             array_push($errors, _ID . ' ' . _IS_EMPTY);
-        } elseif($mode == 'create') {
+        } elseif ($mode == 'create') {
             $obj = DocserverModel::getById([
                 'id' => $request->getParam('id')
             ]);
             if (!empty($obj)) {
                 array_push(
-                    $errors, 
+                    $errors,
                     _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS
                 );
             }
@@ -182,12 +175,12 @@ class DocserverController
             array_push($errors, _ID . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (!Validator::notEmpty()->validate($request->getParam('label_status'))) {
+        if (!Validator::notEmpty()
+                ->validate($request->getParam('label_status'))) {
             array_push($errors, _LABEL_STATUS . ' ' . _IS_EMPTY);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('is_system')) &&
             !Validator::contains('Y')
                 ->validate($request->getParam('is_system')) &&
@@ -197,8 +190,7 @@ class DocserverController
             array_push($errors, _IS_SYSTEM . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('is_folder_status')) &&
             !Validator::contains('Y')
                 ->validate($request->getParam('is_folder_status')) &&
@@ -208,8 +200,7 @@ class DocserverController
             array_push($errors, _IS_FOLDER_STATUS . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('img_filename')) &&
             (!Validator::regex('/^[\w-.]+$/')
                 ->validate($request->getParam('img_filename')) ||
@@ -219,8 +210,7 @@ class DocserverController
             array_push($errors, _IMG_FILENAME . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('maarch_module')) &&
             !Validator::length(null, 255)
                 ->validate($request->getParam('maarch_module'))
@@ -228,8 +218,7 @@ class DocserverController
             array_push($errors, _MAARCH_MODULE . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('can_be_searched')) &&
             !Validator::contains('Y')
                 ->validate($request->getParam('can_be_searched')) &&
@@ -239,8 +228,7 @@ class DocserverController
             array_push($errors, _CAN_BE_SEARCHED . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (
-            Validator::notEmpty()
+        if (Validator::notEmpty()
                 ->validate($request->getParam('can_be_modified')) &&
             !Validator::contains('Y')
                 ->validate($request->getParam('can_be_modified')) &&
@@ -267,7 +255,6 @@ class DocserverController
                 'collId' => $collId
             ]);
         } else {
-
             return ['errors' => 'collId ' . _EMPTY];
         }
 
@@ -286,7 +273,6 @@ class DocserverController
     */
     public function checkSize($aArgs)
     {
-
         $newDsSize = $aArgs['docserver']['actual_size_number'] + $aArgs['filesize'];
 
         if (empty($aArgs['docserver']['actual_size_number'])) {
@@ -305,8 +291,7 @@ class DocserverController
             return $datas;
         }
         
-        if (
-            $aArgs['docserver']['size_limit_number'] > 0 &&
+        if ($aArgs['docserver']['size_limit_number'] > 0 &&
             $newDsSize >= $aArgs['docserver']['size_limit_number']
         ) {
             $datas = [
@@ -329,12 +314,10 @@ class DocserverController
     public function setSize($aArgs)
     {
         if (empty($aArgs['docserver_id'])) {
-
             return ['errors' => 'docserver_id ' . _EMPTY];
         }
 
         if (empty($aArgs['actual_size_number'])) {
-
             return ['errors' => 'actual_size_number ' . _EMPTY];
         }
 
@@ -394,7 +377,7 @@ class DocserverController
 
         $nbFiles = count($fileTab);
         //Docserver is empty
-        if ($nbFiles == 0 ) {
+        if ($nbFiles == 0) {
             //Creates the directory
             if (!mkdir($pathOnDocserver . '0001', 0770)) {
                 $datas = [
@@ -437,11 +420,12 @@ class DocserverController
             array_shift($fileTabBis);
             $nbFilesBis = count($fileTabBis);
             //If number of files => 1000 then creates a new subdirectory
-            if ($nbFilesBis >= 1000 ) {
+            if ($nbFilesBis >= 1000) {
                 $newDir = ($nbFiles) + 1;
                 if (!mkdir(
                     $pathOnDocserver
-                    . str_pad($newDir, 4, '0', STR_PAD_LEFT), 0770
+                    . str_pad($newDir, 4, '0', STR_PAD_LEFT),
+                    0770
                 )
                 ) {
                     $datas = [
@@ -475,7 +459,7 @@ class DocserverController
                 //Docserver contains less than 1000 files
                 $newFileName = $nbFilesBis + 1;
                 $greater = $newFileName;
-                for ($n = 0;$n < count($fileTabBis);$n++) {
+                for ($n = 0; $n < count($fileTabBis); $n++) {
                     $currentFileName = array();
                     $currentFileName = explode('.', $fileTabBis[$n]);
                     if ((int) $greater <= (int) $currentFileName[0]) {
@@ -512,42 +496,35 @@ class DocserverController
     public function storeResourceOnDocserver($aArgs)
     {
         if (empty($aArgs['collId'])) {
-            
             return ['errors' => 'collId ' . _EMPTY];
         }
 
         if (empty($aArgs['fileInfos'])) {
-            
             return ['errors' => 'fileInfos ' . _EMPTY];
         }
 
         if (empty($aArgs['fileInfos']['tmpDir'])) {
-            
             return ['errors' => 'fileInfos.tmpDir ' . _EMPTY];
         }
 
         if (empty($aArgs['fileInfos']['size'])) {
-            
             return ['errors' => 'fileInfos.size ' . _EMPTY];
         }
 
         if (empty($aArgs['fileInfos']['format'])) {
-            
             return ['errors' => 'fileInfos.format ' . _EMPTY];
         }
 
         if (empty($aArgs['fileInfos']['tmpFileName'])) {
-            
             return ['errors' => 'fileInfos.tmpFileName ' . _EMPTY];
         }
 
         if (!is_dir($aArgs['fileInfos']['tmpDir'])) {
-            
             return ['errors' => 'fileInfos.tmpDir ' . _NOT_EXISTS];
         }
 
-        if (!file_exists($aArgs['fileInfos']['tmpDir'] . $aArgs['fileInfos']['tmpFileName'])) {
-            
+        if (!file_exists($aArgs['fileInfos']['tmpDir']
+            . $aArgs['fileInfos']['tmpFileName'])) {
             return ['errors' => 'fileInfos.tmpDir fileInfos.tmpFileName' . _NOT_EXISTS];
         }
 
@@ -564,25 +541,23 @@ class DocserverController
         $tmpSourceCopy = '';
         
         if (empty($docserver)) {
-            
             return [
                 'errors' => _DOCSERVER_ERROR . ' : '
-                    . _NO_AVAILABLE_DOCSERVER . ' .  ' . _MORE_INFOS 
+                    . _NO_AVAILABLE_DOCSERVER . ' .  ' . _MORE_INFOS
             ];
         }
 
         $newSize = $this->checkSize(
             [
-                'docserver' => $docserver, 
+                'docserver' => $docserver,
                 'filesize' => $size,
             ]
         );
 
         if ($newSize['newDsSize'] == 0) {
-
             return [
                 'errors' => _DOCSERVER_ERROR . ' : '
-                . _NOT_ENOUGH_DISK_SPACE . ' .  ' . _MORE_INFOS 
+                . _NOT_ENOUGH_DISK_SPACE . ' .  ' . _MORE_INFOS
             ];
         }
 
@@ -613,7 +588,6 @@ class DocserverController
         );
 
         if ($docinfo['errors'] <> '') {
-
             return ['errors' => _FILE_SEND_ERROR];
         }
 
@@ -639,7 +613,6 @@ class DocserverController
         );
 
         if (isset($copyResult['errors']) && $copyResult['errors'] <> '') {
-
             return ['errors' => $copyResult['errors']];
         }
 
@@ -659,7 +632,7 @@ class DocserverController
 
         $this->setSize(
             [
-                'docserver_id' => $docserver['docserver_id'], 
+                'docserver_id' => $docserver['docserver_id'],
                 'actual_size_number' => $newSize['newDsSize']
             ]
         );
@@ -673,5 +646,4 @@ class DocserverController
 
         return $datas;
     }
-
 }

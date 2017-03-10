@@ -48,7 +48,7 @@ if (empty($_SESSION['user'])) {
             $path . PATH_SEPARATOR . $_SESSION['config']['corepath']
             . PATH_SEPARATOR . get_include_path()
         );
-    } else if (isset($_SESSION['config']['corepath'])
+    } elseif (isset($_SESSION['config']['corepath'])
         && ! empty($_SESSION['config']['corepath'])
     ) {
         set_include_path(
@@ -81,7 +81,8 @@ if (empty($_SESSION['user'])) {
 
 if ($_SESSION['error']) {
     //TODO : return http bad authent error
-    echo $_SESSION['error'];exit();
+    echo $_SESSION['error'];
+    exit();
 }
 
 //$lifetime = 3600;
@@ -118,6 +119,9 @@ $app->post('/attachments', \Attachments\Controllers\AttachmentsController::class
 //basket
 $app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
 $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
+
+//resource
+$app->post('/res', \Core\Controllers\ResController::class . ':create');
 
 
 

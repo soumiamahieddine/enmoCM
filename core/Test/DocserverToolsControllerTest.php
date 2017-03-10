@@ -1,5 +1,7 @@
 <?php
 
+namespace MaarchTest;
+
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -9,7 +11,7 @@
 
 require_once __DIR__.'/define.php';
 
-class DocserverToolsControllerTest extends PHPUnit_Framework_TestCase
+class DocserverToolsControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetRights()
     {
@@ -31,7 +33,7 @@ class DocserverToolsControllerTest extends PHPUnit_Framework_TestCase
         $path = $_SESSION['config']['tmppath'] . '/test/';
 
         if (!is_dir($path)) {
-            mkdir($path);    
+            mkdir($path);
         }
 
         $fileSource = 'test_source.txt';
@@ -58,7 +60,7 @@ class DocserverToolsControllerTest extends PHPUnit_Framework_TestCase
         $path = $_SESSION['config']['tmppath'] . '/test/';
 
         if (!is_dir($path)) {
-            mkdir($path);    
+            mkdir($path);
         }
 
         $fileSource = 'test_source.txt';
@@ -85,11 +87,11 @@ class DocserverToolsControllerTest extends PHPUnit_Framework_TestCase
         $path = $_SESSION['config']['tmppath'] . '/test/';
 
         if (!is_dir($path)) {
-            mkdir($path);    
+            mkdir($path);
         }
 
         $fileSource = 'test_source.txt';
-        $fileDest = 'test_dest.txt'; 
+        $fileDest = 'test_dest.txt';
 
         $fp = fopen($path . $fileSource, 'a');
         fwrite($fp, 'a unit test');
@@ -114,7 +116,7 @@ class DocserverToolsControllerTest extends PHPUnit_Framework_TestCase
         $path = $_SESSION['config']['tmppath'] . '/test/';
         
         if (!is_dir($path)) {
-            mkdir($path);    
+            mkdir($path);
         }
 
         $aArgs = [
@@ -139,5 +141,4 @@ class DocserverToolsControllerTest extends PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('destinationDir', $response['createPathOnDocServer']);
     }
-
 }

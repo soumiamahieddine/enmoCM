@@ -56,6 +56,19 @@ class AttachmentsControllerTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('column', $response['data'][0]);
     }
 
+    public function testSetTransmissionData()
+    {
+        $action = new \Attachments\Controllers\AttachmentsController();
+
+        $aArgs = [
+            'nb' => 2,
+        ];
+
+        $response = $action->setTransmissionData($aArgs);
+        
+        $this->assertArrayHasKey('column', $response[0]);
+    }
+
     public function testStoreAttachmentResource()
     {
         $action = new \Attachments\Controllers\AttachmentsController();
