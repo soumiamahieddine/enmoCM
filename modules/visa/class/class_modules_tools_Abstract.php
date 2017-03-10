@@ -554,9 +554,9 @@ abstract class visa_Abstract extends Database
                                 $link_vis = 'arrow-right ';
                                 $del_vis = '<div class="delete_visa"></div>';
                                 if($info_userVis['user_id'] <> $_SESSION['user']['UserId']){
-                                    $info_vised = '<p style="color:red;">Vous être en train de viser à la place de '.$info_userVis['firstname'].' '.$info_userVis['lastname'].'!</p>';
+                                    $info_vised = '<p style="color:red;">'._VISA_USER_COU_DESC.' '.$info_userVis['firstname'].' '.$info_userVis['lastname'].'</p>';
                                 }else{
-                                    $info_vised = 'Vous êtes l\'actuel viseur';
+                                    $info_vised = '<p style="font-weight:normal;">'._VISA_USER_COU.'</p>';
                                 }
 
 
@@ -627,9 +627,9 @@ abstract class visa_Abstract extends Database
                             $del_vis = '';
                             $link_vis = 'arrow-right ';
                             if($info_userSign['user_id'] <> $_SESSION['user']['UserId']){
-                                $info_vised = '<p style="color:red;">Vous être en train de signer à la place de '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'!</p>';
+                                $info_vised = '<p style="color:red;">'._SIGN_USER_COU_DESC.' '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'</p>';
                             }else{
-                                $info_vised = 'Vous êtes l\'actuel signataire';
+                                $info_vised = '<p style="font-weight:normal;">'._SIGN_USER_COU.'</p>';
                             }
 
 
