@@ -64,6 +64,14 @@ class MergedJsAbstract {
 		readfile('node_modules/systemjs/dist/system.src.js');
 		readfile('apps/maarch_entreprise/js/angular/systemjs.config.js');
 
+		if (!empty($_SESSION['user'])) {
+			if (PROD_MODE) {
+				readfile('apps/maarch_entreprise/js/angular/main.bundle.min.js');
+			} else {
+				readfile('apps/maarch_entreprise/js/angular/main.js');
+			}
+		}
+
         echo "\n";
 	}
 

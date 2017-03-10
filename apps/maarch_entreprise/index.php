@@ -387,7 +387,7 @@ if (file_exists($path)) {
 <?php
 if (PROD_MODE) {
 ?>
-<script src="js/angular/main.bundle.min.js"></script>
+<!--script src="js/angular/main.bundle.min.js"></script-->
 <?php
 } else {
     ?>
