@@ -222,18 +222,6 @@ if(empty($_SESSION['current_basket'])){
     $_SESSION['save_list']['order_field'] = "";
     $_SESSION['save_list']['template'] = "";
 }
-
-if (PROD_MODE) {
-    ?>
-    <script src="js/angular/main.bundle.min.js"></script>
-    <?php
-} else {
-    ?>
-    <script>
-      System.import('js/angular/main.js').catch(function(err){ console.error(err); });
-    </script>
-    <?php
-}
 ?>
 
 <body style="background: url('static.php?filename=loading_big.gif') no-repeat fixed center;" onload="$('maarch_body').style.background='f2f2f2';$('maarch_body').style.backgroundImage='';$('maarch_body').style.backgroundUrl='';$('maarch_content').style.display='block';session_expirate(<?php echo $time;?>, '<?php
@@ -396,4 +384,18 @@ if (file_exists($path)) {
     </div>
     </div>
 </body>
+<?php
+if (PROD_MODE) {
+?>
+<script src="js/angular/main.bundle.min.js"></script>
+<?php
+} else {
+    ?>
+    <script>
+        System.import('js/angular/main.js').catch(function(err){ console.error(err); });
+    </script>
+    <?php
+}
+?>
+
 </html>
