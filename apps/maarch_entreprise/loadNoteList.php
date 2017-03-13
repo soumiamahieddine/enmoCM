@@ -150,7 +150,7 @@ if (isset($_REQUEST['identifier'])) {
                                 // $return .= '<br />';
                                 if($entity_label != ''){
 
-                                    $return .= '<div style="padding-top:2px;padding-bottom:2px;color:red;">';
+                                    $return .= '<div style="padding-top:2px;padding-bottom:2px;">';
                                     $note_text = str_replace(array("\r", "\n"), array("<br />", "<br />"), functions::xssafe($return_db->note_text));
                                     $return .= str_replace('<br /><br />', '<br />', $note_text);
                                     $return .= '</div>';
