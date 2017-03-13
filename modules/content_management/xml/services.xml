@@ -17,4 +17,21 @@
             <nature>include</nature>
         </WHEREAMIUSED>
     </SERVICE>
+    <SERVICE>
+        <id>view_version_letterbox</id>
+        <name>_VIEW_VERSIONS</name>
+        <comment>_VIEW_VERSIONS</comment>
+        <servicepage>none.php</servicepage>
+        <servicetype>use</servicetype>
+        <system_service>false</system_service>
+        <enabled>true</enabled>
+        <WHEREAMIUSED>
+            <page>details.php</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+        <WHEREAMIUSED>
+            <page>process.php</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+    </SERVICE>
 </root>
