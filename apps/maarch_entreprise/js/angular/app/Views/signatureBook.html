@@ -162,11 +162,14 @@
                         </div>
                     </div>
                 </div>
+                <div (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">EDIT</div>
+                <div (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">SUPPRIMER</div>
                 <div class="pjDetailsMore" (click)="displayPanel('TOPRIGHT')">
                    <i *ngIf="!showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
-                <iframe id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '75vh' : '69vh'}"></iframe>
+                <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format == 'pdf'" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '75vh' : '69vh'}"></iframe>
+                <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format != 'pdf'">Fichier impossible à charger</span>
                 <div class="pjSign">
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
                         <img title="Signer" src="{{signatureBook.signature}}">
@@ -236,8 +239,8 @@
             <!--</div>-->
         </div>
         <div class="panelRight">
-            <div class="item panelRightAddPj" (click)="changeRightViewer(-1)" [ngClass]="{'panelSelectedThumbnail': rightSelectedThumbnail == -1}">
-                <i class="fa fa-plus fa-2x"></i>
+            <div class="item panelRightAddPj" (click)="addAttachmentIframe()">
+                <i class="fa fa-plus fa-2x" title="Créer une pièce jointe"></i>
             </div>
             <div class="panelRightContent" *ngIf="signatureBook.attachments">
                 <div class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail}">

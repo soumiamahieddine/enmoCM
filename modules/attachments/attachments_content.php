@@ -258,6 +258,10 @@ function setTransmissionDataPdf($nb, $storeResult) {
     return $transmissionDataPdf;
 }
 
+if (!empty($_REQUEST['docId'])) {
+    $_SESSION['doc_id'] = $_REQUEST['docId'];
+}
+
 if (isset($_POST['add']) && $_POST['add']) {
     if (empty($_SESSION['upfile']['tmp_name'])) {
         $_SESSION['error'] .= _FILE_MISSING . ". ";
@@ -1917,7 +1921,15 @@ $content .= '</div>';
             } else {
                 $content .= '" name="add" id="add" class="button" onclick="simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\'' . $_SESSION['config']['businessappurl'] ;
             }
-            $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\',\''._ID_TO_DISPLAY.'\')"/>';
+            $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\'';
+            if (!empty($_REQUEST['docId'])) {
+                if (isset($_REQUEST['id'])) {
+                    $content .= ', \'edit\'';
+                } else {
+                    $content .= ', \'add\'';
+                }
+            }
+            $content .= ')"/>';
 
             $content .= '&nbsp;';
             $content .= '&nbsp;';

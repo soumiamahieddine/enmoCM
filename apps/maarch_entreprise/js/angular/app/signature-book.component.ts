@@ -1,14 +1,15 @@
-import { Pipe, PipeTransform, Component, OnInit } from '@angular/core';
+import { Pipe, PipeTransform, Component, OnInit, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
 declare function lockDocument(resId: number) : void;
 declare function unlockDocument(resId: number) : void;
 declare function valid_action_form(a1: string, a2: string, a3: string, a4: number, a5: string, a6: string, a7: string, a8: string, a9: boolean, a10: any) : void;
 declare function $j(selector: string) : any;
+declare function showAttachmentsForm(path: string) : void;
+declare function modifyAttachmentsForm(path: string, width: string, height: string) : void;
 
 
 @Pipe({ name: 'safeUrl' })
@@ -46,7 +47,10 @@ export class SignatureBookComponent implements OnInit {
     showAttachmentEditionPanel  : boolean   = false;
 
 
-    constructor(public http: Http, private route: ActivatedRoute, private router: Router) {
+    constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone:NgZone) {
+        window['angularSignatureBookComponent'] = {
+            componentAfterAttach: (value: string) => this.processAfterAttach(value)
+        };
     }
 
     ngOnInit(): void {
@@ -56,8 +60,9 @@ export class SignatureBookComponent implements OnInit {
             this.basketId   = params['basketId'];
 
             lockDocument(this.resId);
-            Observable.interval(50000).subscribe(() => lockDocument(this.resId));
-            this.http.get('index.php?display=true&page=initializeJsGlobalConfig').map(res => res.json())
+            setInterval(() => {lockDocument(this.resId)}, 50000);
+            this.http.get('index.php?display=true&page=initializeJsGlobalConfig')
+                .map(res => res.json())
                 .subscribe((data) => {
                     this.coreUrl = data.coreurl;
                     this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
@@ -210,6 +215,55 @@ export class SignatureBookComponent implements OnInit {
                 false,
                 [$j("#signatureBookActions option:selected")[0].value]
             );
+        }
+    }
+
+    refreshAttachments(mode: string) {
+        this.http.get(this.coreUrl + 'rest/' + 'signatureBook/' + this.resId + '/attachments')
+            .map(res => res.json())
+            .subscribe((data) => {
+                this.signatureBook.attachments = data;
+                if (mode == "add") {
+                    this.changeRightViewer(this.signatureBook.attachments.length - 1);
+                } else if (mode == "del") {
+                    this.changeRightViewer(0);
+                }
+            });
+    }
+
+    processAfterAttach(mode: string) {
+        this.zone.run(() => this.refreshAttachments(mode));
+    }
+
+    addAttachmentIframe() {
+        showAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&docId=' + this.resId);
+    }
+
+    editAttachmentIframe(attachment: any) {
+        var resId: number;
+        if (attachment.res_id == 0) {
+            resId = attachment.res_id_version;
+        } else if (attachment.res_id_version == 0) {
+            resId = attachment.res_id;
+        }
+
+        modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
+    }
+
+    delAttachment(attachment: any) {
+        let r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+        if (r) {
+            var resId: number;
+            if (attachment.res_id == 0) {
+                resId = attachment.res_id_version;
+            } else if (attachment.res_id_version == 0) {
+                resId = attachment.res_id;
+            }
+
+            this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&rest=true')
+                .subscribe(() => {
+                    this.refreshAttachments('del');
+                });
         }
     }
 }

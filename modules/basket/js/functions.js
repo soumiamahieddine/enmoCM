@@ -302,7 +302,7 @@ function simpleAjaxReturn(url){
 
 function lockDocument(resId){
      $j.ajax({
-         url: globalConfig.coreurl + 'apps/maarch_entreprise/index.php?display=true&dir=actions&page=docLocker',
+         url: 'index.php?display=true&dir=actions&page=docLocker',
          type : 'POST',
          data: {
              AJAX_CALL  : true,
@@ -316,7 +316,7 @@ function lockDocument(resId){
 
 function unlockDocument(resId){
     $j.ajax({
-        url: globalConfig.coreurl + 'apps/maarch_entreprise/index.php?display=true&dir=actions&page=docLocker',
+        url: 'index.php?display=true&dir=actions&page=docLocker',
         type : 'POST',
         data: {
             AJAX_CALL  : true,

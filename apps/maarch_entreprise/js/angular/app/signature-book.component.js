@@ -12,7 +12,6 @@ var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
 var platform_browser_1 = require('@angular/platform-browser');
 var router_1 = require('@angular/router');
-var Rx_1 = require('rxjs/Rx');
 require('rxjs/add/operator/map');
 var SafeUrlPipe = (function () {
     function SafeUrlPipe(sanitizer) {
@@ -29,10 +28,12 @@ var SafeUrlPipe = (function () {
 }());
 exports.SafeUrlPipe = SafeUrlPipe;
 var SignatureBookComponent = (function () {
-    function SignatureBookComponent(http, route, router) {
+    function SignatureBookComponent(http, route, router, zone) {
+        var _this = this;
         this.http = http;
         this.route = route;
         this.router = router;
+        this.zone = zone;
         this.signatureBook = {
             currentAction: {},
             consigne: "",
@@ -49,6 +50,9 @@ var SignatureBookComponent = (function () {
         this.showResLeftPanel = true;
         this.showLeftPanel = true;
         this.showAttachmentEditionPanel = false;
+        window['angularSignatureBookComponent'] = {
+            componentAfterAttach: function (value) { return _this.processAfterAttach(value); }
+        };
     }
     SignatureBookComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -57,8 +61,9 @@ var SignatureBookComponent = (function () {
             _this.resId = +params['resId'];
             _this.basketId = params['basketId'];
             lockDocument(_this.resId);
-            Rx_1.Observable.interval(50000).subscribe(function () { return lockDocument(_this.resId); });
-            _this.http.get('index.php?display=true&page=initializeJsGlobalConfig').map(function (res) { return res.json(); })
+            setInterval(function () { lockDocument(_this.resId); }, 50000);
+            _this.http.get('index.php?display=true&page=initializeJsGlobalConfig')
+                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.coreUrl = data.coreurl;
                 _this.http.get(_this.coreUrl + 'rest/' + _this.basketId + '/signatureBook/' + _this.resId)
@@ -196,11 +201,59 @@ var SignatureBookComponent = (function () {
             valid_action_form('empty', 'index.php?display=true&page=manage_action&module=core', this.signatureBook.currentAction.id, this.resId, 'res_letterbox', 'null', 'letterbox_coll', 'page', false, [$j("#signatureBookActions option:selected")[0].value]);
         }
     };
+    SignatureBookComponent.prototype.refreshAttachments = function (mode) {
+        var _this = this;
+        this.http.get(this.coreUrl + 'rest/' + 'signatureBook/' + this.resId + '/attachments')
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            _this.signatureBook.attachments = data;
+            if (mode == "add") {
+                _this.changeRightViewer(_this.signatureBook.attachments.length - 1);
+            }
+            else if (mode == "del") {
+                _this.changeRightViewer(0);
+            }
+        });
+    };
+    SignatureBookComponent.prototype.processAfterAttach = function (mode) {
+        var _this = this;
+        this.zone.run(function () { return _this.refreshAttachments(mode); });
+    };
+    SignatureBookComponent.prototype.addAttachmentIframe = function () {
+        showAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&docId=' + this.resId);
+    };
+    SignatureBookComponent.prototype.editAttachmentIframe = function (attachment) {
+        var resId;
+        if (attachment.res_id == 0) {
+            resId = attachment.res_id_version;
+        }
+        else if (attachment.res_id_version == 0) {
+            resId = attachment.res_id;
+        }
+        modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
+    };
+    SignatureBookComponent.prototype.delAttachment = function (attachment) {
+        var _this = this;
+        var r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+        if (r) {
+            var resId;
+            if (attachment.res_id == 0) {
+                resId = attachment.res_id_version;
+            }
+            else if (attachment.res_id_version == 0) {
+                resId = attachment.res_id;
+            }
+            this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&rest=true')
+                .subscribe(function () {
+                _this.refreshAttachments('del');
+            });
+        }
+    };
     SignatureBookComponent = __decorate([
         core_1.Component({
             templateUrl: 'js/angular/app/Views/signatureBook.html',
         }), 
-        __metadata('design:paramtypes', [http_1.Http, router_1.ActivatedRoute, router_1.Router])
+        __metadata('design:paramtypes', [http_1.Http, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
     ], SignatureBookComponent);
     return SignatureBookComponent;
 }());
