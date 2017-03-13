@@ -121,78 +121,6 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThanOrEqual(0, $response[0]);
     }
 
-    public function testStoreExtResource()
-    {
-        $action = new \Core\Controllers\ResController();
-
-        $path = $_SESSION['config']['tmppath'] . '/test/';
-
-        if (!is_dir($path)) {
-            mkdir($path);
-        }
-
-        $fileSource = 'test_source.txt';
-
-        $fp = fopen($path . $fileSource, 'a');
-        fwrite($fp, 'a unit test');
-        fclose($fp);
-
-        $fileContent = file_get_contents($path . $fileSource, FILE_BINARY);
-        $encodedFile = base64_encode($fileContent);
-        
-        $data = [];
-
-        array_push(
-            $data,
-            array(
-                'column' => 'subject',
-                'value' => 'UNIT TEST',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'type_id',
-                'value' => 110,
-                'type' => 'integer',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'custom_t1',
-                'value' => 'TEST',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'custom_t10',
-                'value' => 'lgi@maarch.org',
-                'type' => 'string',
-            )
-        );
-
-        $aArgs = [
-            'encodedFile'   => $encodedFile,
-            'data'          => $data,
-            'collId'        => 'letterbox_coll',
-            'table'         => 'res_letterbox',
-            'fileFormat'    => 'txt',
-            'status'        => 'new',
-        ];
-
-        //TODO
-        //$response = $action->storeExtResource($aArgs);
-        
-        $this->assertGreaterThanOrEqual(0, $response);
-    }
-
     public function testCreate()
     {
         $action = new \Core\Controllers\ResController();
@@ -276,5 +204,185 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         $response = $action->create($request, $response, $aArgs);
         //print_r($response);exit;
         $this->assertGreaterThan(1, json_decode($response->getBody())[0]);
+    }
+
+    public function testPrepareStorageExt()
+    {
+        $action = new \Core\Controllers\ResController();
+
+        $data = [];
+
+        array_push(
+            $data,
+            array(
+                'column' => 'process_limit_date',
+                'value' => '29/03/2017',
+                'type' => 'date',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'process_notes',
+                'value' => '50,workingDay',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'category_id',
+                'value' => 'incoming',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'alt_identifier',
+                'value' => '',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'exp_contact_id',
+                'value' => 'jeanlouis.ercolani@maarch.org',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'address_id',
+                'value' => 'jeanlouis.ercolani@maarch.org',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'nature_id',
+                'value' => 'simple_mail',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'admission_date',
+                'value' => date('d/m/Y'),
+                'type' => 'date',
+            )
+        );
+
+        $aArgs = [
+            'resId' => 100,
+            'data'  => $data,
+            'table' => 'mlb_coll_ext',
+        ];
+
+        $response = $action->prepareStorageExt($aArgs);
+
+        $this->assertArrayHasKey('res_id', $response);
+    }
+
+    public function testStoreExtResource()
+    {
+        $action = new \Core\Controllers\ResController();
+        
+        $data = [];
+
+        array_push(
+            $data,
+            array(
+                'column' => 'process_limit_date',
+                'value' => '29/03/2017',
+                'type' => 'date',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'process_notes',
+                'value' => '50,workingDay',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'category_id',
+                'value' => 'incoming',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'alt_identifier',
+                'value' => '',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'exp_contact_id',
+                'value' => 'jeanlouis.ercolani@maarch.org',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'address_id',
+                'value' => 'jeanlouis.ercolani@maarch.org',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'nature_id',
+                'value' => 'simple_mail',
+                'type' => 'string',
+            )
+        );
+
+        array_push(
+            $data,
+            array(
+                'column' => 'admission_date',
+                'value' => date('d/m/Y'),
+                'type' => 'date',
+            )
+        );
+
+        $aArgs = [
+            'resId'    => 100,
+            'data'     => $data,
+            'table'    => 'mlb_coll_ext',
+            'resTable' => 'res_letterbox',
+        ];
+
+        //TODO
+        $response = $action->storeExtResource($aArgs);
+        
+        $this->assertTrue($response);
     }
 }
