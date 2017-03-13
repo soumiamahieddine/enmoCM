@@ -18,7 +18,8 @@
  *   You should have received a copy of the GNU General Public License
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+if (!defined("_RESTRICTED_SERVICES")) define("_RESTRICTED_SERVICES", "Service(s) restricted : ");
+if (!defined("_VISIBLEBY")) define("_VISIBLEBY", "Visible by");
 if (!defined("_ADD_NOTE"))
     define("_ADD_NOTE","Add a note");
 if (!defined("_READ"))

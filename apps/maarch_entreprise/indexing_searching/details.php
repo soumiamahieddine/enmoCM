@@ -1350,50 +1350,52 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 
                 }
                 
-                //VERSIONS TAB
-                $version = '';
-                $versionTable = $security->retrieve_version_table_from_coll_id(
-                    $coll_id
-                );
-                $selectVersions = "SELECT res_id FROM "
-                    . $versionTable . " WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
-
-                $stmt = $db->query($selectVersions, array($s_id));
-                $nb_versions_for_title = $stmt->rowCount();
-                $lineLastVersion = $stmt->fetchObject();
-                $lastVersion = $lineLastVersion->res_id;
-                if ($lastVersion <> '') {
-                    $objectId = $lastVersion;
-                    $objectTable = $versionTable;
-                } else {
-                    $objectTable = $security->retrieve_table_from_coll(
+                if ($core->test_service('view_version_letterbox', 'apps', false)) {
+                    //VERSIONS TAB
+                    $version = '';
+                    $versionTable = $security->retrieve_version_table_from_coll_id(
                         $coll_id
                     );
-                    $objectId = $s_id;
-                    $_SESSION['cm']['objectId4List'] = $s_id;
-                }
-                if ($nb_versions_for_title == 0) {
-                    $extend_title_for_versions = '0';
-                    $class="nbResZero";
-                    $style = 'display:none;font-size: 10px;';
-                    $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
-                } else {
-                    $extend_title_for_versions = $nb_versions_for_title;
-                    $class="nbRes";
-                    $style = 'font-size: 10px;';
-                    $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
-                }
-                $_SESSION['cm']['resMaster'] = '';
-                
-                $pathScriptTab = $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&page=show_versions_tab&collId=' . $coll_id . '&resId='.$s_id.'&objectTable='.$objectTable;
-                $version .= '<dt  class="fa fa-code-fork" style="'.$style2.'" title="'. _VERSIONS .'" onclick="loadSpecificTab(\'versions_iframe\',\''.$pathScriptTab.'\');return false;">';
-                $version .= ' <sup><span id="nbVersions" class="'.$class.'" style="'.$style.'">' . $extend_title_for_versions . '</span></sup>';
-                $version .= '</dt>';
-                $version .= '<dd>';
-                $version .= '<iframe src="" name="versions_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="versions_iframe" style="height:100%;"></iframe>';
-                $version .= '</dd>';
-                echo $version;    
+                    $selectVersions = "SELECT res_id FROM "
+                        . $versionTable . " WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
+
+                    $stmt = $db->query($selectVersions, array($s_id));
+                    $nb_versions_for_title = $stmt->rowCount();
+                    $lineLastVersion = $stmt->fetchObject();
+                    $lastVersion = $lineLastVersion->res_id;
+                    if ($lastVersion <> '') {
+                        $objectId = $lastVersion;
+                        $objectTable = $versionTable;
+                    } else {
+                        $objectTable = $security->retrieve_table_from_coll(
+                            $coll_id
+                        );
+                        $objectId = $s_id;
+                        $_SESSION['cm']['objectId4List'] = $s_id;
+                    }
+                    if ($nb_versions_for_title == 0) {
+                        $extend_title_for_versions = '0';
+                        $class="nbResZero";
+                        $style = 'display:none;font-size: 10px;';
+                        $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
+                    } else {
+                        $extend_title_for_versions = $nb_versions_for_title;
+                        $class="nbRes";
+                        $style = 'font-size: 10px;';
+                        $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                    }
+                    $_SESSION['cm']['resMaster'] = '';
+                    
+                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&page=show_versions_tab&collId=' . $coll_id . '&resId='.$s_id.'&objectTable='.$objectTable;
+                    $version .= '<dt  class="fa fa-code-fork" style="'.$style2.'" title="'. _VERSIONS .'" onclick="loadSpecificTab(\'versions_iframe\',\''.$pathScriptTab.'\');return false;">';
+                    $version .= ' <sup><span id="nbVersions" class="'.$class.'" style="'.$style.'">' . $extend_title_for_versions . '</span></sup>';
+                    $version .= '</dt>';
+                    $version .= '<dd>';
+                    $version .= '<iframe src="" name="versions_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="versions_iframe" style="height:100%;"></iframe>';
+                    $version .= '</dd>';
+                    echo $version;
+                } 
     
                 //LINKS TAB
                 $Links = '';

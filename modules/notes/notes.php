@@ -117,7 +117,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         
     //Fields
         array_push($select[NOTES_TABLE], "id", "identifier", "date_note", "user_id", "note_text", "note_text as note_short", "coll_id");    //Notes
-        array_push($select[USERS_TABLE], "user_id", "firstname", "lastname");           //Users
+        array_push($select[USERS_TABLE], "user_id", "firstname", "lastname","lastname as visibleBy");           //Users
         
     //Where clause
         $where_tab = array();
@@ -144,127 +144,162 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
     
     //Request
 
-		$tabNotes=$request->PDOselect(
+        $tabNotes=$request->PDOselect(
             $select, $where, $arrayPDO, $orderstr,
             $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
             "user_id"
         );
         
-		//LGI UPDATE
-		$arrayToUnset = array();
+        //LGI UPDATE
+        $arrayToUnset = array();
 
-		for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
-			for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
-				foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
-					if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
-						$tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-						$tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
-						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
-						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
-						$indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
-						if (!$notes_tools->isUserNote(
-							$tabNotes[$indNotes1][$indNotes2]['value'], 
-							$_SESSION['user']['UserId'], 
-							$_SESSION['user']['primaryentity']['id']
-							)
-						) {
-							//unset($tabNotes[$indNotes1]);
-							//echo 'sort ' . $indNotes1 . '<br>';
-							array_push($arrayToUnset, $indNotes1);
-						} else {
-							//echo 'garde ' . $indNotes1 . '<br>';
-						}
-					}
-				}
-			}
-		}
+        for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
+            for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
+                foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
+                    if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
+                        $tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+                        $tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
+                        $tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
+                        $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+                        $tabNotes[$indNotes1][$indNotes2]["show"] = true;
+                        $indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
+                                               
+                        if (!$notes_tools->isUserNote(
+                            $tabNotes[$indNotes1][$indNotes2]['value'], 
+                            $_SESSION['user']['UserId'], 
+                            $_SESSION['user']['primaryentity']['id']
+                            )
+                        ) {
+                            //unset($tabNotes[$indNotes1]);
+                            //echo 'sort ' . $indNotes1 . '<br>';
+                            array_push($arrayToUnset, $indNotes1);
+                        } else {
+                            //echo 'garde ' . $indNotes1 . '<br>';
+                        }
+                    }
+                }
+            }
+        }
 
-		for ($cptUnset=0;$cptUnset<count($arrayToUnset);$cptUnset++ ) {
-			unset($tabNotes[$arrayToUnset[$cptUnset]]);
-		}
+        //var_dump($tabNotes);
+
+        for ($cptUnset=0;$cptUnset<count($arrayToUnset);$cptUnset++ ) {
+            unset($tabNotes[$arrayToUnset[$cptUnset]]);
+        }
         // array_multisort($tabNotes, SORT_DESC);
         $tabNotes = array_merge($tabNotes);
-		
-		// $request->show_array($tabNotes);
-		for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
-			for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
-				foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
-					if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
-						$tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-						$tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
-						$tabNotes[$indNotes1][$indNotes2]["size"] = 1;
-						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+        
+        // $request->show_array($tabNotes);
+        for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
+            for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
+                foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
+                    if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
+                        $tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+                        $tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
+                        $tabNotes[$indNotes1][$indNotes2]["size"] = 1;
+                        $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
                         $tabNotes[$indNotes1][$indNotes2]["show"] = false;
-						$tabNotes[$indNotes1][$indNotes2]["order"] = "id";
-						$indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
-					}
-					if ($tabNotes[$indNotes1][$indNotes2][$value] == "user_id") {
-						$tabNotes[$indNotes1][$indNotes2]["user_id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-						$tabNotes[$indNotes1][$indNotes2]["label"] = _ID;
-						$tabNotes[$indNotes1][$indNotes2]["size"] = 5;
-						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-						$tabNotes[$indNotes1][$indNotes2]["show"] = false;
+                        $tabNotes[$indNotes1][$indNotes2]["order"] = "id";
+                        $indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
+                    }
+                    if ($tabNotes[$indNotes1][$indNotes2][$value] == "user_id") {
+                        $tabNotes[$indNotes1][$indNotes2]["user_id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+                        $tabNotes[$indNotes1][$indNotes2]["label"] = _ID;
+                        $tabNotes[$indNotes1][$indNotes2]["size"] = 5;
+                        $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+                        $tabNotes[$indNotes1][$indNotes2]["show"] = false;
                         $tabNotes[$indNotes1][$indNotes2]["order"] = "user_id";
-					}
-					if ($tabNotes[$indNotes1][$indNotes2][$value] == "lastname") {
-						$tabNotes[$indNotes1][$indNotes2]['value'] = $request->show_string(
-							$tabNotes[$indNotes1][$indNotes2]['value']
-						);
-						$tabNotes[$indNotes1][$indNotes2]["lastname"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-						$tabNotes[$indNotes1][$indNotes2]["label"] = _LASTNAME;
-						$tabNotes[$indNotes1][$indNotes2]["size"] = 5;
-						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+                    }
+                    if ($tabNotes[$indNotes1][$indNotes2][$value] == "lastname") {
+                        $tabNotes[$indNotes1][$indNotes2]['value'] = $request->show_string(
+                            $tabNotes[$indNotes1][$indNotes2]['value']
+                        );
+                        $tabNotes[$indNotes1][$indNotes2]["lastname"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+                        $tabNotes[$indNotes1][$indNotes2]["label"] = _LASTNAME;
+                        $tabNotes[$indNotes1][$indNotes2]["size"] = 5;
+                        $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+                        $tabNotes[$indNotes1][$indNotes2]["show"] = true;
                         $tabNotes[$indNotes1][$indNotes2]["order"] = "lastname";
-					}
-					if ($tabNotes[$indNotes1][$indNotes2][$value] == "date_note") {
-						$tabNotes[$indNotes1][$indNotes2]["date_note"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+                    }
+                    //var_dump($tabNotes[$indNotes1][$indNotes2]);
+                    
+                    if ($tabNotes[$indNotes1][$indNotes2][$value] == "date_note") {
+                        $tabNotes[$indNotes1][$indNotes2]["date_note"] = $tabNotes[$indNotes1][$indNotes2]['value'];
                         $tabNotes[$indNotes1][$indNotes2]["value"] = $core_tools->format_date_db($tabNotes[$indNotes1][$indNotes2]['value'], false, '', true);
-						$tabNotes[$indNotes1][$indNotes2]["label"] = _DATE;
-						$tabNotes[$indNotes1][$indNotes2]["size"] = 5;
-						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+                        $tabNotes[$indNotes1][$indNotes2]["label"] = _DATE;
+                        $tabNotes[$indNotes1][$indNotes2]["size"] = 5;
+                        $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+                        $tabNotes[$indNotes1][$indNotes2]["show"] = true;
                         $tabNotes[$indNotes1][$indNotes2]["order"] = "date_note";
-					}
-					if ($tabNotes[$indNotes1][$indNotes2][$value] == "firstname") {
-						$tabNotes[$indNotes1][$indNotes2]["firstname"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-						$tabNotes[$indNotes1][$indNotes2]["label"] = _FIRSTNAME;
-						$tabNotes[$indNotes1][$indNotes2]["size"] = 5;
-						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+                    }
+                    if ($tabNotes[$indNotes1][$indNotes2][$value] == "firstname") {
+                        $tabNotes[$indNotes1][$indNotes2]["firstname"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+                        $tabNotes[$indNotes1][$indNotes2]["label"] = _FIRSTNAME;
+                        $tabNotes[$indNotes1][$indNotes2]["size"] = 5;
+                        $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+                        $tabNotes[$indNotes1][$indNotes2]["show"] = true;
                         $tabNotes[$indNotes1][$indNotes2]["order"] = "firstname";
-					}
-					if ($tabNotes[$indNotes1][$indNotes2][$value] == "note_text") {
-						//$tabNotes[$indNotes1][$indNotes2]["note_text"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-						$tabNotes[$indNotes1][$indNotes2]["note_text"] = $request->cut_string($request->show_string($tabNotes[$indNotes1][$indNotes2]['value']), $cutString);
-						$tabNotes[$indNotes1][$indNotes2]["label"] = _NOTES;
-						$tabNotes[$indNotes1][$indNotes2]["size"] = 20;
-						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+                    }
+                    if ($tabNotes[$indNotes1][$indNotes2][$value] == "note_text") {
+                        //$tabNotes[$indNotes1][$indNotes2]["note_text"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+                        $tabNotes[$indNotes1][$indNotes2]["note_text"] = $request->cut_string($request->show_string($tabNotes[$indNotes1][$indNotes2]['value']), $cutString);
+                        $tabNotes[$indNotes1][$indNotes2]["label"] = _NOTES;
+                        $tabNotes[$indNotes1][$indNotes2]["size"] = 4;
+                        $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+                        $tabNotes[$indNotes1][$indNotes2]["show"] = true;
                         $tabNotes[$indNotes1][$indNotes2]["order"] = "note_text";
-					}
-				}
-			}
-		}
-		
+                    }
+
+                    if($tabNotes[$indNotes1][$indNotes2][$value] == "visibleby")
+                    {
+
+                        $noteEntities = $notes_tools->getNotesEntities($indNotes1d);
+                        $tabEntityLabel = [];
+                        $tabEntityId = [];
+                        $allEntities = '';
+                        $allEntitiesId = '';
+
+                        foreach($noteEntities as $value){
+                            $tabEntityLabel[] = $value->entity_label;
+                            $tabEntityId[] = $value->entity_id;
+                        }
+
+                        if(!empty($tabEntityLabel)){
+                            $allEntities = implode(', ',$tabEntityLabel);
+                            $allEntitiesId = implode(', ',$tabEntityId);
+                        }
+                        
+
+                        $tabNotes[$indNotes1][$indNotes2]['value'] = '<div style="cursor:pointer;width:250px;text-overflow: ellipsis;color:red;clear:both;white-space: nowrap;overflow: hidden;"><i title="'.$allEntities.'" >'.$allEntitiesId.'</i></div>';
+                        $tabNotes[$indNotes1][$indNotes2]["label"] = _VISIBLEBY;
+                        $tabNotes[$indNotes1][$indNotes2]["size"] = 5;
+                        $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+                        $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+                        $tabNotes[$indNotes1][$indNotes2]["show"] = true;
+
+                    }
+                }
+            }
+        }
+        //var_dump($tabNotes);
         //List
-        $listKey = 'id';                                                                    //Clé de la liste
-        $paramsTab = array();                                                               //Initialiser le tableau de paramètres
+        $listKey = 'id';                                                                    //ClÃ© de la liste
+        $paramsTab = array();                                                               //Initialiser le tableau de paramÃ¨tres
         $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
         $paramsTab['pageTitle'] ='';                                                        //Titre de la page
         $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
@@ -307,8 +342,9 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         //Output
         $status = 0;
         //$content = $list->showList($tab, $paramsTab, $listKey);
+        //var_dump($tabNotes);
         $content = $list->showList($tabNotes, $paramsTab, $listKey);
-        // $debug = $list->debug();
+         //$debug = $list->debug();
 
     echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
 }
