@@ -287,10 +287,16 @@ switch ($mode) {
                         }
                     } else if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "document") {
                         if (!empty($id) && isset($_REQUEST['entities_chosen']) && !empty($_REQUEST['entities_chosen'])){
+                        /*show restricted services*/
+                        $allEntity = '';
+                        foreach ($_REQUEST['entities_chosen'] as $value){
 
+                            $allEntity .= $value." | ";
+
+                        }
                             $hist->add(
                                     $table, $identifier, "UP", 'folderup', _ADDITION_NOTE_PRIVATE . _ON_DOC_NUM
-                                    . $identifier . ' (' . $id . ')',
+                                    . $identifier . ' (' . $id . ')'._VISIBLEBY.' '.$allEntity,
                                     $_SESSION['config']['databasetype'], 'notes'
                                 );
                         }else{
