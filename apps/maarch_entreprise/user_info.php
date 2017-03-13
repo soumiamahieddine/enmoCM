@@ -93,7 +93,7 @@ else
             </p>
             <?php
         }
-        if (!$from_iframe) { ?>
+        if (isset($from_iframe) && !$from_iframe) { ?>
             <p class="buttons">
                 <input name="close" type="button" value="<?php echo _CLOSE;?>"  onclick="self.close();" class="button" />
             </p>
