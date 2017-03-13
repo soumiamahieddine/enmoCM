@@ -82,12 +82,12 @@ abstract class tag_controler_Abstract extends ObjectControler
         if($core->test_service('private_tag', 'tags',false) == 1){
             $entitiesRestriction = array();
             $userEntities = users_controler::getEntities($_SESSION['user']['UserId']);
-            //var_dump($entitiesDirection);
+
             foreach ($userEntities as $entity) {
                 $entity_id = $entity['ENTITY_ID'];
                 $entitiesRestriction[] = $entity_id;
             }
-            //var_dump($entitiesRestriction);
+
             //CHECK TAG IS ALLOW FOR THESE ENTITIES
             if(!empty($entitiesRestriction)){
                 $entitiesRestriction = "'".implode("','", $entitiesRestriction)."'";
@@ -103,7 +103,6 @@ abstract class tag_controler_Abstract extends ObjectControler
             
             $restrictedTagIdList = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
             
-            //var_dump($restrictedTagIdList);
             //CHECK TAG WHO IS NOT RESTRICTED
             $stmt = $db->query(
             'SELECT tag_id' 
@@ -112,7 +111,6 @@ abstract class tag_controler_Abstract extends ObjectControler
             ,array());
             $freeTagIdList = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
             
-            //var_dump($freeTagIdList);
             //MERGE ALLOWED TAGS AND FREE TAGS
             $tagIdList = array_merge($restrictedTagIdList,$freeTagIdList);
             
@@ -120,9 +118,9 @@ abstract class tag_controler_Abstract extends ObjectControler
                 $tagIdList = "'".implode("','", $tagIdList)."'";
                 $where = ' WHERE tag_id IN ('.$tagIdList.')';
             }else{
-                $where = '';
+                // NO TAG ALLOWED
+                $where = ' WHERE tag_id = 0';
             }
-            
             
             $stmt = $db->query(
             'SELECT tag_id, tag_label FROM ' 
@@ -130,7 +128,7 @@ abstract class tag_controler_Abstract extends ObjectControler
             . $where
             . ' ORDER BY tag_label ASC '
             ,$where_what);
-        }else{
+        } else {
             $stmt = $db->query(
             'SELECT tag_id, tag_label FROM ' 
             . _TAG_TABLE_NAME 
