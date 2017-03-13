@@ -41,98 +41,6 @@ class VisaController
 			$actionsData[] = ['value' => $value['VALUE'], 'label' => $value['LABEL']];
 		}
 
-		if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml')) {
-			$path = 'custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml';
-		} else {
-			$path = 'apps/maarch_entreprise/xml/entreprise.xml';
-		}
-		$xmlfile = simplexml_load_file($path);
-		$attachmentTypes = [];
-		$attachmentTypesXML = $xmlfile->attachment_types;
-		if (count($attachmentTypesXML) > 0) {
-			foreach ($attachmentTypesXML->type as $value) {
-				$label = defined((string) $value->label) ? constant((string) $value->label) : (string) $value->label;
-				$attachmentTypes[(string) $value->id] = ['label' => $label, 'icon' => (string) $value['icon']];
-			}
-		}
-
-		$attachments = \ResModel::getAvailableLinkedAttachmentsNotIn([
-			'resIdMaster' => $resId,
-			'notIn' 	  => ['incoming_mail_attachment', 'print_folder'],
-			'select' 	  => [
-				'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
-				'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
-				'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
-				'dest_address_id', 'origin'
-			]
-		]);
-
-		foreach ($attachments as $key => $value) {
-			if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {
-				continue;
-			}
-
-			$collId = '';
-			$realId = 0;
-			if ($value['res_id'] == 0) {
-				$collId = 'version_attachments_coll';
-				$realId = $value['res_id_version'];
-			} elseif ($value['res_id_version'] == 0) {
-				$collId = 'attachments_coll';
-				$realId = $value['res_id'];
-			}
-
-			$viewerId = $realId;
-			$pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
-			foreach ($attachments as $tmpKey => $tmpValue) {
-				if ($tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
-					if ($value['status'] != 'SIGN') {
-						$viewerId = $tmpValue['res_id'];
-					}
-					unset($attachments[$tmpKey]);
-				}
-				if ($value['status'] == 'SIGN' && $tmpValue['attachment_type'] == 'signed_response' && !empty($tmpValue['origin'])) {
-					$signDaddy = explode(',', $tmpValue['origin']);
-					if (($signDaddy[0] == $value['res_id'] && $signDaddy[1] == "res_attachments")
-						|| ($signDaddy[0] == $value['res_id_version'] && $signDaddy[1] == "res_version_attachments"))
-					{
-						$viewerId = $tmpValue['res_id'];
-						unset($attachments[$tmpKey]);
-					}
-				}
-			}
-
-			if (!empty($value['dest_user'])) {
-				$attachments[$key]['destUser'] = \UsersModel::getLabelledUserById(['id' => $value['dest_user']]);
-			} elseif (!empty($value['dest_contact_id']) && !empty($value['dest_address_id'])) {
-				$attachments[$key]['destUser'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['dest_contact_id'], 'addressId' => $value['dest_address_id']]);
-			}
-			if (!empty($value['updated_by'])) {
-				$attachments[$key]['updated_by'] = \UsersModel::getLabelledUserById(['id' => $value['updated_by']]);
-			}
-			if (!empty($value['typist'])) {
-				$attachments[$key]['typist'] = \UsersModel::getLabelledUserById(['id' => $value['typist']]);
-			}
-
-			$attachments[$key]['truncateTitle'] = ((strlen($value['title']) > 20) ? (substr($value['title'], 0, 20) . '...') : $value['title']);
-			$attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
-			$attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
-
-			$attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$realId}&coll_id={$collId}&display=true&advanced=true";
-			$attachments[$key]['viewerLink'] = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$viewerId}";
-
-			unset($attachments[$key]['path'], $attachments[$key]['filename'], $attachments[$key]['dest_user'],
-				$attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id']);
-		}
-
-		foreach ($attachments as $key => $value) {
-			if ($value['attachment_type'] == 'converted_pdf') {
-				unset($attachments[$key]);
-			}
-		}
-
-		$attachments = array_values($attachments);
-
 		$incomingMailAttachments = \ResModel::getAvailableLinkedAttachmentsIn([
 			'resIdMaster' => $resId,
 			'in' 	      => ['incoming_mail_attachment'],
@@ -206,7 +114,7 @@ class VisaController
 
 		$datas = [];
 		$datas['actions'] = $actionsData;
-		$datas['attachments'] = $attachments;
+		$datas['attachments'] = $this->getAttachmentsForSignatureBook(['resId' => $resId]);
 		$datas['documents'] = $documents;
 		$datas['currentAction'] = $currentAction;
 		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
@@ -236,6 +144,110 @@ class VisaController
 		} else {
 			return $response->withJson(['status' => 'KO']);
 		}
+	}
+
+	public function getAttachmentsById(RequestInterface $request, ResponseInterface $response, $aArgs)
+	{
+		$resId = $aArgs['resId'];
+
+		return $response->withJson($this->getAttachmentsForSignatureBook(['resId' => $resId]));
+	}
+
+	private function getAttachmentsForSignatureBook($aArgs)
+	{
+
+		if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml')) {
+			$path = 'custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml';
+		} else {
+			$path = 'apps/maarch_entreprise/xml/entreprise.xml';
+		}
+
+		$xmlfile = simplexml_load_file($path);
+		$attachmentTypes = [];
+		$attachmentTypesXML = $xmlfile->attachment_types;
+		if (count($attachmentTypesXML) > 0) {
+			foreach ($attachmentTypesXML->type as $value) {
+				$label = defined((string) $value->label) ? constant((string) $value->label) : (string) $value->label;
+				$attachmentTypes[(string) $value->id] = ['label' => $label, 'icon' => (string) $value['icon']];
+			}
+		}
+
+		$attachments = \ResModel::getAvailableLinkedAttachmentsNotIn([
+			'resIdMaster' => $aArgs['resId'],
+			'notIn' 	  => ['incoming_mail_attachment', 'print_folder'],
+			'select' 	  => [
+				'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
+				'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
+				'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
+				'dest_address_id', 'origin'
+			]
+		]);
+
+		foreach ($attachments as $key => $value) {
+			if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {
+				continue;
+			}
+
+			$collId = '';
+			$realId = 0;
+			if ($value['res_id'] == 0) {
+				$collId = 'version_attachments_coll';
+				$realId = $value['res_id_version'];
+			} elseif ($value['res_id_version'] == 0) {
+				$collId = 'attachments_coll';
+				$realId = $value['res_id'];
+			}
+
+			$viewerId = $realId;
+			$pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
+			foreach ($attachments as $tmpKey => $tmpValue) {
+				if ($tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
+					if ($value['status'] != 'SIGN') {
+						$viewerId = $tmpValue['res_id'];
+					}
+					unset($attachments[$tmpKey]);
+				}
+				if ($value['status'] == 'SIGN' && $tmpValue['attachment_type'] == 'signed_response' && !empty($tmpValue['origin'])) {
+					$signDaddy = explode(',', $tmpValue['origin']);
+					if (($signDaddy[0] == $value['res_id'] && $signDaddy[1] == "res_attachments")
+						|| ($signDaddy[0] == $value['res_id_version'] && $signDaddy[1] == "res_version_attachments"))
+					{
+						$viewerId = $tmpValue['res_id'];
+						unset($attachments[$tmpKey]);
+					}
+				}
+			}
+
+			if (!empty($value['dest_user'])) {
+				$attachments[$key]['destUser'] = \UsersModel::getLabelledUserById(['id' => $value['dest_user']]);
+			} elseif (!empty($value['dest_contact_id']) && !empty($value['dest_address_id'])) {
+				$attachments[$key]['destUser'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['dest_contact_id'], 'addressId' => $value['dest_address_id']]);
+			}
+			if (!empty($value['updated_by'])) {
+				$attachments[$key]['updated_by'] = \UsersModel::getLabelledUserById(['id' => $value['updated_by']]);
+			}
+			if (!empty($value['typist'])) {
+				$attachments[$key]['typist'] = \UsersModel::getLabelledUserById(['id' => $value['typist']]);
+			}
+
+			$attachments[$key]['truncateTitle'] = ((strlen($value['title']) > 20) ? (substr($value['title'], 0, 20) . '...') : $value['title']);
+			$attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
+			$attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
+
+			$attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$realId}&coll_id={$collId}&display=true&advanced=true";
+			$attachments[$key]['viewerLink'] = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$aArgs['resId']}&id={$viewerId}";
+
+			unset($attachments[$key]['path'], $attachments[$key]['filename'], $attachments[$key]['dest_user'],
+				$attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id']);
+		}
+
+		foreach ($attachments as $key => $value) {
+			if ($value['attachment_type'] == 'converted_pdf') {
+				unset($attachments[$key]);
+			}
+		}
+
+		return array_values($attachments);
 	}
 
 }

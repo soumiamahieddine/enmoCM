@@ -58,6 +58,7 @@
 		<parameter name="fromDetail" type="identifier" />
 		<parameter name="id" type="integer" />
 		<parameter name="relation" type="integer" />
+		<parameter name="rest" type="boolean" />
 	</validationRule>
 
 	<validationRule name="get_other_chrono_attachment" extends="standardForm" mode="error">

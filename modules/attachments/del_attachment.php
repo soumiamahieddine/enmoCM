@@ -110,6 +110,10 @@ if ($_SESSION['history']['attachdel'] == "true") {
     );
 }
 
+if(!empty($_REQUEST['rest'])) {
+	echo '{"status" : "ok"}';
+	exit;
+}
 
 if ($_REQUEST['relation'] == 1) {
     $stmt = $db->query("SELECT res_id_master FROM " . RES_ATTACHMENTS_TABLE . " WHERE res_id = ?",array($_REQUEST['id']));
