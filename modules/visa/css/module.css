@@ -286,14 +286,14 @@
 }
 
 .resListContentFrame:hover{
-    background-color: #009DC5;
-    color: white;
+    background-color: #FDD16C;
 }
 
 .resListContentFrame{
     border-bottom : solid 1px black;
     position:relative;
     overflow: hidden;
+    background-color: white;
 }
 
 .resListContentPos{
@@ -346,6 +346,7 @@
     text-align: center;
     position: absolute;
     right: -1px;
+    background-color: white;
 }
 
 .panelRightContent{
@@ -382,6 +383,7 @@
 }
 
 .pjDetails,.pjSign,.pjCreate{
+    background-color:white;
     display: block;
     width: 97%;
     text-align: left;
@@ -393,7 +395,7 @@
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    padding: 10px;
+    padding:10px;
     height:30px;
 }
 
@@ -435,6 +437,7 @@
 
 .pjDoc{
    height: 30px;
+   background-color: white;
    -moz-box-shadow: inset 0px 0px 5px 0px #656565;
     -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
     -o-box-shadow: inset 0px 0px 5px 0px #656565;
@@ -476,12 +479,11 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 
 .titleSignatureBook{
     display: table;
-    border-radius: 0px 0px 20px;
-    width:40%;
+    width:100%;
     border-right: solid 1px black;
     border-top: solid 1px black;
     border-left: solid 1px black;
-    padding: 5px;
+    /*padding: 5px;*/
     vertical-align: middle;
     font-weight: bold;
     background: #009DC5;
@@ -495,6 +497,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 .titleSignatureBook span{
     display: table-cell;
     vertical-align: middle;
+    padding:5px;
 }
 
 .titleSignatureBook span:nth-child(2){
@@ -518,6 +521,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     height:85vh;
     white-space: nowrap;
     overflow: hidden;
+    background-color: #CEE9F1;
 }
 
 .headerSignatureBook .item{
@@ -527,6 +531,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     cursor: pointer;
     width: 5%;
     vertical-align: middle;
+    background-color: #deedf3;
 }
 
 .headerSignatureBook .activeTabSignatureBook i{
@@ -540,13 +545,17 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     font-weight: bold;
 }
 
-.headerSignatureBook .item.activeTabSignatureBook,.panelRight .panelSelectedThumbnail,.resListContentFrameSelected{
-    background: #009DC5;
-    color:white;
+.headerSignatureBook .item.activeTabSignatureBook,.panelRight .panelSelectedThumbnail{
+    /*background: #009DC5;
+    color:white;*/
     -moz-box-shadow: inset 0px 0px 5px 0px #656565;
--webkit-box-shadow: inset 0px 0px 5px 0px #656565;
--o-box-shadow: inset 0px 0px 5px 0px #656565;
-box-shadow: inset 0px 0px 5px 0px #656565;
+    -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
+    -o-box-shadow: inset 0px 0px 5px 0px #656565;
+    box-shadow: inset 0px 0px 5px 0px #656565;
+}
+
+.resListContentFrameSelected,.panelSelectedThumbnail{
+    background-color: #FDD16C;
 }
 
 .panelRightAddPj{
