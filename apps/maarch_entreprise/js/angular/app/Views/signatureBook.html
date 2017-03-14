@@ -38,7 +38,7 @@
                 <div class="resListContentFrame" *ngFor="let res of signatureBook.resList" (click)="changeLocation(res.res_id)" [ngClass]="{'resListContentFrameSelected': resId == res.res_id}">
                     <div class="resListContentInfo">
                         <i class="fa fa-compass" title="Numéro chrono"></i> {{res.alt_identifier}}
-                        <i ng-if="res.allSigned" class="fa fa-certificate" style="position: absolute;bottom: 35px;right: 50px;font-size: 40px;color: gold;"></i>&nbsp;
+                        <i ng-if="res.allSigned" class="fa fa-certificate" style="position: absolute;bottom: 65px;right: 50px;font-size: 20px;color: #FDD16C;"></i>&nbsp;
                         <i class="fa fa-circle" aria-hidden="true" [ngStyle]="{'color': res.priorityColor}" style="position: absolute;right: 0px;top: -10px;font-size: 25px;"></i>
                     </div>
                     <div class="resListContentInfo">
@@ -63,7 +63,7 @@
                     <div (click)="displayPanel('TOPLEFT')" *ngIf="!showTopLeftPanel" style="padding: 5px;cursor:pointer;">
                         <strong>{{signatureBook.documents.length - 1}} pièce(s) jointe(s)</strong>
                     </div>
-                    <div *ngIf="showTopLeftPanel">
+                    <div *ngIf="showTopLeftPanel" style="height:100%;">
                         <img id="thumnails_img" *ngFor="let document of signatureBook.documents; let i = index" (click)="changeLeftViewer(i)" [src]="document.thumbnailLink"
                                  class="leftPanelThumbnails" [ngClass]="{'panelSelectedThumbnail': i == leftSelectedThumbnail}"/>
                     </div>
@@ -124,7 +124,7 @@
                         </div>
                         <div class="infoPj">
                             <label>Créé le: </label>
-                            <span>{{signatureBook.attachments[rightSelectedThumbnail].creation_date | date:'dd/MM/y'}}</span>
+                            <span>{{signatureBook.attachments[rightSelectedThumbnail].creation_date | date:'dd/MM/y à HH:mm'}}</span>
                         </div>
                         <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].updated_by}}">
                             <label>Modifié par : </label>
@@ -144,8 +144,8 @@
                         </div>
                     </div>
                 </div>
-                <div (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">EDIT</div>
-                <div (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">SUPPRIMER</div>
+                <div title="Modifier la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;bottom: 70px;padding: 10px;background-color: #009DC5;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])"><i class="fa fa-pencil-square-o fa-2x"></i></div>
+                <div title="Supprimer la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;top: 70px;padding: 10px;background-color: red;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])"><i class="fa fa-trash fa-2x"></i></div>
                 <div class="pjDetailsMore" (click)="displayPanel('TOPRIGHT')">
                    <i *ngIf="!showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
