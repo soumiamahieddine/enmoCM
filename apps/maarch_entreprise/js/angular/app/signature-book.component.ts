@@ -144,14 +144,14 @@ export class SignatureBookComponent implements OnInit {
             if (!this.showLeftPanel) {
                 this.rightContentWidth = "95%";
             } else {
-                this.rightContentWidth = "45%";
-                this.leftContentWidth = "45%";
+                this.rightContentWidth = "47%";
+                this.leftContentWidth = "47%";
             }
         } else if (panel == "RESLEFT") {
             this.showResLeftPanel = !this.showResLeftPanel;
             if (!this.showResLeftPanel) {
-                this.rightContentWidth = "45%";
-                this.leftContentWidth = "45%";
+                this.rightContentWidth = "47%";
+                this.leftContentWidth = "47%";
             } else {
                 this.rightContentWidth = "39%";
                 this.leftContentWidth = "39%";
