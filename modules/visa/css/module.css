@@ -315,11 +315,11 @@
 .contentLeft{
     border-right: solid 1px;
     vertical-align: top;
-    width:39%;
+    /*width:39%;*/
 }
 
 .contentRight{
-    width:39%;
+    /*width:39%;*/
 }
 
 .contentLeft, .contentRight{

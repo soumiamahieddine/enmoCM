@@ -51,6 +51,8 @@ var SignatureBookComponent = (function () {
         this.showResLeftPanel = true;
         this.showLeftPanel = true;
         this.showAttachmentEditionPanel = false;
+        this.leftContentWidth = "39%";
+        this.rightContentWidth = "39%";
         this.notesViewerLink = "";
         this.visaViewerLink = "";
         this.histViewerLink = "";
@@ -74,15 +76,11 @@ var SignatureBookComponent = (function () {
                     .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.signatureBook = data;
-                    if (_this.signatureBook.documents[0]) {
-                        _this.leftViewerLink = _this.signatureBook.documents[0].viewerLink;
-                    }
-                    if (_this.signatureBook.attachments[0]) {
-                        _this.rightViewerLink = _this.signatureBook.attachments[0].viewerLink;
-                    }
                     _this.headerTab = 1;
                     _this.leftSelectedThumbnail = 0;
                     _this.rightSelectedThumbnail = 0;
+                    _this.leftViewerLink = "";
+                    _this.rightViewerLink = "";
                     _this.showLeftPanel = true;
                     _this.showResLeftPanel = true;
                     _this.showTopLeftPanel = false;
@@ -91,6 +89,12 @@ var SignatureBookComponent = (function () {
                     _this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + _this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
                     _this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + _this.resId + "&collId=letterbox_coll&visaStep=true";
                     _this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + _this.resId + "&coll_id=letterbox_coll&load&size=full";
+                    if (_this.signatureBook.documents[0]) {
+                        _this.leftViewerLink = _this.signatureBook.documents[0].viewerLink;
+                    }
+                    if (_this.signatureBook.attachments[0]) {
+                        _this.rightViewerLink = _this.signatureBook.attachments[0].viewerLink;
+                    }
                 });
             });
         });
@@ -131,9 +135,24 @@ var SignatureBookComponent = (function () {
         else if (panel == "LEFT") {
             this.showLeftPanel = !this.showLeftPanel;
             this.showResLeftPanel = false;
+            if (!this.showLeftPanel) {
+                this.rightContentWidth = "95%";
+            }
+            else {
+                this.rightContentWidth = "47%";
+                this.leftContentWidth = "47%";
+            }
         }
         else if (panel == "RESLEFT") {
             this.showResLeftPanel = !this.showResLeftPanel;
+            if (!this.showResLeftPanel) {
+                this.rightContentWidth = "47%";
+                this.leftContentWidth = "47%";
+            }
+            else {
+                this.rightContentWidth = "39%";
+                this.leftContentWidth = "39%";
+            }
         }
     };
     SignatureBookComponent.prototype.prepareSignFile = function (attachment) {

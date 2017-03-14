@@ -57,7 +57,7 @@
             <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showResLeftPanel"></i>
             <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showResLeftPanel"></i>
         </div>
-        <div class="contentLeft" *ngIf="showLeftPanel" [ngClass]="{'showResLeftPanel': showResLeftPanel, 'hideResLeftPanel': !showResLeftPanel}">
+        <div class="contentLeft" [ngStyle]="{'width': leftContentWidth}" id="contentLeft" *ngIf="showLeftPanel">
             <div class="contentShow" *ngIf="headerTab == 1">
                 <div class="pjDoc" [ngStyle]="{'height': showTopLeftPanel ? '100px' : '30px'}">
                     <div (click)="displayPanel('TOPLEFT')" *ngIf="!showTopLeftPanel" style="padding: 5px;cursor:pointer;">
@@ -102,8 +102,8 @@
             <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showLeftPanel"></i>
             <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
         </div>
-        <div class="contentRight" [ngClass]="{'showLeftPanel': showLeftPanel, 'hideLeftPanel': !showLeftPanel}">
-            <div class="contentShow" *ngIf="!showAttachmentEditionPanel">
+        <div class="contentRight" id="contentRight" [ngStyle]="{'width': rightContentWidth}">
+            <div class="contentShow" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && !showAttachmentEditionPanel">
                 <div class="pjDetails" *ngIf="signatureBook.attachments[rightSelectedThumbnail]" [ngStyle]="{'height': showTopRightPanel ? '100px' : '30px'}">
                     <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                         <label>Type : </label>
@@ -150,8 +150,9 @@
                    <i *ngIf="!showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
-                <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format == 'pdf'" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '75vh' : '69vh'}"></iframe>
-                <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format != 'pdf'">Fichier impossible à charger</span>
+                <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail] && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)"
+                        id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '75vh' : '69vh'}"></iframe>
+                <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted">Fichier impossible à charger</span>
                 <div class="pjSign">
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
                         <img title="Signer" src="{{signatureBook.signature}}">
