@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true">
+    <testsuites>
+        <testsuite name="Maarch Core Test Suite">
+            <directory>core/Test</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+      <whitelist>
+          <directory suffix=".php">core/Test</directory>
+          <!-- <directory suffix=".php">core/Controllers</directory> -->
+      </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-clover" target="core/Test/build/tests-clover.xml"/>
+        <log type="coverage-html"   target="core/Test/build" lowUpperBound="35" highLowerBound="70"/>
+    </logging>
+</phpunit>
+
