@@ -18,10 +18,15 @@ namespace Core\Controllers;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
+use Core\Models\DocserverModel;
+use Core\Models\DocserverTypeModel;
 use Core\Models\UserModel;
 use Core\Models\ResModel;
 use Entities\Models\EntitiesModel;
 use Core\Controllers\DocserverController;
+use Core\Controllers\DocserverToolsController;
+
+require_once 'core/class/class_db_pdo.php';
 
 class ResController
 {
@@ -138,6 +143,20 @@ class ResController
             $data = $this->prepareStorage($aArgs);
             
             unlink($Fnm);
+
+            $aArgs = [
+                'table'         => $table,
+                'path'          => $storeResult['destination_dir'],
+                'filename'      => $storeResult['file_destination_name'],
+                'docserverPath' => $storeResult['path_template'],
+                'docserverId'   => $storeResult['docserver_id'],
+                'docserverPath' => $storeResult['path_template'],
+                'data'          => $data,
+            ];
+
+            $resId = $this->loadIntoDb($aArgs);
+            var_dump($resId);
+            exit;
             
             require_once 'core/class/class_resource.php';
             $resource = new \resource();
@@ -164,6 +183,268 @@ class ResController
         } catch (Exception $e) {
             return ['errors' => 'unknown error' . $e->getMessage()];
         }
+    }
+
+    /**
+    * Inserts the Resource Object data into the data base
+    *
+    * @param  $table string Resource table where to insert
+    * @param  $path  string Resource path in the docserver
+    * @param  $filename string Resource file name
+    * @param  $docserverPath  string Docserver path
+    * @param  $docserverId  string Docserver identifier
+    * @param  $data  array Data array
+    */
+    public function loadIntoDb($aArgs)
+    {
+        $db = new \Database();
+        if (empty($aArgs['table'])) {
+            return ['errors' => 'table ' . _EMPTY];
+        }
+
+        if (empty($aArgs['path'])) {
+            return ['errors' => 'path ' . _EMPTY];
+        }
+
+        if (empty($aArgs['filename'])) {
+            return ['errors' => 'filename ' . _EMPTY];
+        }
+
+        if (empty($aArgs['docserverPath'])) {
+            return ['errors' => 'docserverPath ' . _EMPTY];
+        }
+
+        if (empty($aArgs['docserverId'])) {
+            return ['errors' => 'docserverId ' . _EMPTY];
+        }
+
+        if (empty($aArgs['data'])) {
+            return ['errors' => 'data ' . _EMPTY];
+        }
+        $table = $aArgs['table'];
+        $path = $aArgs['path'];
+        $filename = $aArgs['filename'];
+        $docserverPath = $aArgs['docserverPath'];
+        $docserverId = $aArgs['docserverId'];
+        $data = $aArgs['data'];
+
+        $filetmp = $docserverPath;
+        $tmp = $path;
+        $tmp = str_replace('#', DIRECTORY_SEPARATOR, $tmp);
+        $filetmp .= $tmp;
+        $filetmp .= $filename;
+        
+        $docserver = DocserverModel::getById([
+            'id' => $docserverId
+        ]);
+        $docserverType = DocserverTypeModel::getById([
+            'id' => $docserver[0]['docserver_type_id']
+        ]);
+
+        $fingerprint = DocserverToolsController::doFingerprint(
+            [
+                'path'            => $filetmp,
+                'fingerprintMode' => $docserverType[0]['fingerprint_mode'],
+            ]
+        );
+
+        $filesize = filesize($filetmp);
+        array_push(
+            $data,
+            array(
+                'column' => "fingerprint",
+                'value' => $fingerprint['fingerprint'],
+                'type' => "string"
+            )
+        );
+        array_push(
+            $data,
+            array(
+                'column' => "filesize",
+                'value' => $filesize,
+                'type' => "int"
+            )
+        );
+        array_push(
+            $data,
+            array(
+                'column' => "path",
+                'value' => $path,
+                'type' => "string"
+            )
+        );
+        array_push(
+            $data,
+            array(
+                'column' => "filename",
+                'value' => $filename,
+                'type' => "string"
+            )
+        );
+        array_push(
+            $data,
+            array(
+                'column' => 'creation_date',
+                'value' => $db->current_datetime(),
+                'type' => "function"
+            )
+        );
+        $testBasicFields = $this->checkBasicFields($data);
+
+        if (!$testBasicFields['status']) {
+            return ['error' => $testBasicFields['error']];
+        } else {
+            $prepareData = [];
+            $countD = count($data);
+            for ($i = 0; $i < $countD; $i++) {
+                //COLUMN
+                $data[$i]['column'] = strtolower($data[$i]['column']);
+                //VALUE
+                $prepareData[$data[$i]['column']] = $data[$i]['value'];
+            }
+            var_dump($prepareData);
+
+            $resInsert = ResModel::create([
+                'table' => 'res_letterbox',
+                'data'  => $prepareData
+            ]);
+            var_dump($resInsert);
+
+            exit;
+
+            if (!$this->insert($table, $data, $_SESSION['config']['databasetype'])) {
+                if (!$calledByWs) {
+                    $this->error = _INDEXING_INSERT_ERROR."<br/>".$this->show();
+                }
+                return false;
+            } else {
+                $db2 = new Database();
+                $stmt = $db2->query(
+                    "select res_id from " . $table
+                        . " where docserver_id = ? and path = ? and filename= ?  order by res_id desc ",
+                    array(
+                        $docserverId,
+                        $path,
+                        $filename
+                    )
+                );
+                $res = $stmt->fetchObject();
+                return $res->res_id;
+            }
+        }
+    }
+
+    /**
+    * Checks the mininum fields required for an insert into the database
+    *
+    * @param  $data array Array of the fields to insert into the database
+    * @return error $error
+    */
+    private function checkBasicFields($data)
+    {
+        $error = '';
+        $db = new \Database();
+        $find_format = false;
+        $find_typist = false;
+        $find_creation_date = false;
+        $find_docserver_id = false;
+        $find_path = false;
+        $find_filename = false;
+        $find_offset = false;
+        $find_logical_adr = false;
+        $find_fingerprint = false;
+        $find_filesize = false;
+        $find_status = false;
+        for ($i=0; $i < count($data); $i++) {
+            if ($data[$i]['column'] == 'format') {
+                $find_format = true;
+                // must be tested in the file_index.php file (module = indexing_searching)
+            } elseif ($data[$i]['column'] == 'typist') {
+                $find_typist = true;
+            } elseif ($data[$i]['column'] == 'creation_date') {
+                $find_creation_date = true;
+                if ($data[$i]['value'] <> $db->current_datetime()) {
+                    $error .= _CREATION_DATE_ERROR;
+                }
+            } elseif ($data[$i]['column'] == 'docserver_id') {
+                $find_docserver_id =  true;
+            } elseif ($data[$i]['column'] == 'path') {
+                $find_path = true;
+                if (empty($data[$i]['value'])) {
+                    $error .= _PATH_ERROR;
+                }
+            } elseif ($data[$i]['column'] == 'filename') {
+                $find_filename = true;
+                if (!preg_match(
+                    "/^[\w-.]+.([a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9]?|maarch)$/",
+                    $data[$i]['value']
+                )
+                ) {
+                    $error .= _FILENAME_ERROR . ' ' . $data[$i]['value'] . '<br/>';
+                }
+            } elseif ($data[$i]['column'] == "offset_doc") {
+                $find_offset = true;
+            } elseif ($data[$i]['column'] == 'logical_adr') {
+                $find_logical_adr = true;
+            } elseif ($data[$i]['column'] == 'fingerprint') {
+                $find_fingerprint  = true;
+                if (!preg_match("/^[0-9A-Fa-f]+$/", $data[$i]['value'])) {
+                    $error .= _FINGERPRINT_ERROR;
+                }
+            } elseif ($data[$i]['column'] == 'filesize') {
+                $find_filesize = true;
+                if ($data[$i]['value'] <= 0) {
+                    $error .= _FILESIZE_ERROR;
+                }
+            } elseif ($data[$i]['column'] == 'status') {
+                $find_status = true;
+            }
+        }
+
+        if ($find_format == false) {
+            $error .= _MISSING_FORMAT;
+        }
+        if ($find_typist == false) {
+            $error .= _MISSING_TYPIST;
+        }
+        if ($find_creation_date == false) {
+            $error .= _MISSING_CREATION_DATE;
+        }
+        if ($find_docserver_id == false) {
+            $error .= _MISSING_DOCSERVER_ID;
+        }
+        if ($find_path == false) {
+            $error .= _MISSING_PATH;
+        }
+        if ($find_filename == false) {
+            $error .= _MISSING_FILENAME;
+        }
+        if ($find_offset == false) {
+            $error .= _MISSING_OFFSET;
+        }
+        if ($find_logical_adr == false) {
+            $error .= _MISSING_LOGICAL_ADR;
+        }
+        if ($find_fingerprint == false) {
+            $error .= _MISSING_FINGERPRINT;
+        }
+        if ($find_filesize == false) {
+            $error .= _MISSING_FILESIZE;
+        }
+        if ($find_status == false) {
+            $error .= _MISSING_STATUS;
+        }
+
+        if (!empty($error)) {
+            $status = false;
+        } else {
+            $status = true;
+        }
+
+        return [
+            'status' => $status,
+            'error'  => $error
+        ];
     }
 
     /**
