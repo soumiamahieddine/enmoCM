@@ -104,7 +104,7 @@
             <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
         </div>
         <div class="contentRight" id="contentRight" [ngStyle]="{'width': rightContentWidth}">
-            <div class="contentShow" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && !showAttachmentEditionPanel">
+            <div class="contentShow" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && !showAttachmentEditionPanel && signatureBook.consigne != 'No Consigne Found'">
                 <div class="pjDetails" *ngIf="signatureBook.attachments[rightSelectedThumbnail]" [ngStyle]="{'height': showTopRightPanel ? '100px' : '30px'}">
                     <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                         <label>Type : </label>
@@ -162,7 +162,8 @@
                     </span>
                 </div>
             </div>
-            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail]" style="height: 80vh;font-size: 40px;border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;margin-top: 10px;"><div style="margin-top:200px;">Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class="fa fa-plus"></i> pour en ajouter une</sub></div></div>
+            <div *ngIf="signatureBook.consigne == 'No Consigne Found'" style="height: 80vh;font-size: 40px;border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;margin-top: 10px;"><div style="margin-top:200px;">Aucun circuit de visa paramétré.<br/><sub>Aucune signature possible.</sub></div></div>
+            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail] && signatureBook.consigne != 'No Consigne Found'" style="height: 80vh;font-size: 40px;border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;margin-top: 10px;"><div style="margin-top:200px;">Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class="fa fa-plus"></i> pour en ajouter une</sub></div></div>
             <!--<div class="contentShow" ng-if="signatureBook.showAttachmentEditionPanel">-->
                 <!--<h1>Créer une pièce jointe</h1>-->
                 <!--<div class="pjCreate">-->
@@ -222,7 +223,7 @@
                 <!--</div>-->
             <!--</div>-->
         </div>
-        <div class="panelRight">
+        <div class="panelRight"  *ngIf="signatureBook.consigne != 'No Consigne Found'">
             <div class="item panelRightAddPj" (click)="addAttachmentIframe()">
                 <i class="fa fa-plus fa-2x" title="Créer une pièce jointe"></i>
             </div>
