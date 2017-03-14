@@ -32,7 +32,8 @@ export class SignatureBookComponent implements OnInit {
         currentAction           : {},
         consigne                : "",
         documents               : [],
-        attachments             : []
+        attachments             : [],
+        histories               : []
     };
 
     rightSelectedThumbnail      : number    = 0;
@@ -45,6 +46,11 @@ export class SignatureBookComponent implements OnInit {
     showResLeftPanel            : boolean   = true;
     showLeftPanel               : boolean   = true;
     showAttachmentEditionPanel  : boolean   = false;
+
+    notesViewerLink             : string    = "";
+    visaViewerLink              : string    = "";
+    histViewerLink              : string    = "";
+
 
 
     constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone:NgZone) {
@@ -83,6 +89,9 @@ export class SignatureBookComponent implements OnInit {
                             this.showTopLeftPanel       = false;
                             this.showTopRightPanel      = false;
                             this.showAttachmentEditionPanel  = false;
+                            this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
+                            this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
+                            this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
                         });
                 });
         });

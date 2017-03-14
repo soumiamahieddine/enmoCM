@@ -38,7 +38,8 @@ var SignatureBookComponent = (function () {
             currentAction: {},
             consigne: "",
             documents: [],
-            attachments: []
+            attachments: [],
+            histories: []
         };
         this.rightSelectedThumbnail = 0;
         this.leftSelectedThumbnail = 0;
@@ -50,6 +51,9 @@ var SignatureBookComponent = (function () {
         this.showResLeftPanel = true;
         this.showLeftPanel = true;
         this.showAttachmentEditionPanel = false;
+        this.notesViewerLink = "";
+        this.visaViewerLink = "";
+        this.histViewerLink = "";
         window['angularSignatureBookComponent'] = {
             componentAfterAttach: function (value) { return _this.processAfterAttach(value); }
         };
@@ -84,6 +88,9 @@ var SignatureBookComponent = (function () {
                     _this.showTopLeftPanel = false;
                     _this.showTopRightPanel = false;
                     _this.showAttachmentEditionPanel = false;
+                    _this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + _this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
+                    _this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + _this.resId + "&collId=letterbox_coll&visaStep=true";
+                    _this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + _this.resId + "&coll_id=letterbox_coll&load&size=full";
                 });
             });
         });
