@@ -154,22 +154,18 @@ class ResController
                 'data'          => $data,
             ];
 
-            $resId = $this->loadIntoDb($aArgs);
-            var_dump($resId);
-            exit;
+            $this->loadIntoDb($aArgs);
+
+            $resDetails = ResModel::getByPath([
+                'docserverId' => $storeResult['docserver_id'],
+                'path'        => $storeResult['destination_dir'],
+                'filename'    => $storeResult['file_destination_name'],
+                'table'       => $aArgs['table'],
+                'select'      => ['res_id']
+            ]);
             
-            require_once 'core/class/class_resource.php';
-            $resource = new \resource();
-            $resId = $resource->load_into_db(
-                $table,
-                $storeResult['destination_dir'],
-                $storeResult['file_destination_name'],
-                $storeResult['path_template'],
-                $storeResult['docserver_id'],
-                $data,
-                $_SESSION['config']['databasetype'],
-                true
-            );
+            $resId = $resDetails[0]['res_id'];
+            
 
             if (!is_numeric($resId)) {
                 return ['errors' => 'Pb with SQL insertion : ' .$resId];
@@ -193,7 +189,7 @@ class ResController
     * @param  $filename string Resource file name
     * @param  $docserverPath  string Docserver path
     * @param  $docserverId  string Docserver identifier
-    * @param  $data  array Data array
+    * @param  boolean
     */
     public function loadIntoDb($aArgs)
     {
@@ -302,35 +298,13 @@ class ResController
                 //VALUE
                 $prepareData[$data[$i]['column']] = $data[$i]['value'];
             }
-            var_dump($prepareData);
 
             $resInsert = ResModel::create([
                 'table' => 'res_letterbox',
                 'data'  => $prepareData
             ]);
-            var_dump($resInsert);
 
-            exit;
-
-            if (!$this->insert($table, $data, $_SESSION['config']['databasetype'])) {
-                if (!$calledByWs) {
-                    $this->error = _INDEXING_INSERT_ERROR."<br/>".$this->show();
-                }
-                return false;
-            } else {
-                $db2 = new Database();
-                $stmt = $db2->query(
-                    "select res_id from " . $table
-                        . " where docserver_id = ? and path = ? and filename= ?  order by res_id desc ",
-                    array(
-                        $docserverId,
-                        $path,
-                        $filename
-                    )
-                );
-                $res = $stmt->fetchObject();
-                return $res->res_id;
-            }
+            return true;
         }
     }
 

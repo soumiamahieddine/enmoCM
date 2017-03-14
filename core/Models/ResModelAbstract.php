@@ -48,6 +48,38 @@ class ResModelAbstract extends \Apps_Table_Service
     }
 
     /**
+     * Retrieve info of resId by path
+     * @param  $docserverId string
+     * @param  $path string
+     * @param  $filename string
+     * @param  $table string
+     * @param  $select string
+     * @return array $res
+     */
+    public static function getByPath(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['docserverId']);
+        static::checkRequired($aArgs, ['path']);
+        static::checkRequired($aArgs, ['filename']);
+
+        if (!empty($aArgs['table'])) {
+            $table = $aArgs['table'];
+        } else {
+            $table = 'res_letterbox';
+        }
+
+        $aReturn = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => [$table],
+            'where'     => ['docserver_id = ? and path = ? and filename = ?'],
+            'data'      => [$aArgs['docserverId'], $aArgs['path'], $aArgs['filename']],
+            'order_by'  => ['res_id desc'],
+        ]);
+
+        return $aReturn;
+    }
+
+    /**
      * Retrieve process_limit_date for resource in extension table if mlb
      * @param  $resId integer
      * @param  $defaultDelay integer
