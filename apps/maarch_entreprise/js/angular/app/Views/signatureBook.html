@@ -26,6 +26,7 @@
             </span>
         </div>
         <div class="actions">
+            <i style="cursor: pointer;vertical-align: middle;" title="Accédez à la fiche détaillée" class="fa fa-info-circle fa-2x"></i>&nbsp;
             <select id="signatureBookActions">
                 <option *ngFor="let option of signatureBook.actions" value="{{option.value}}">{{option.label}}</option>
             </select>
@@ -38,7 +39,7 @@
                 <div class="resListContentFrame" *ngFor="let res of signatureBook.resList" (click)="changeLocation(res.res_id)" [ngClass]="{'resListContentFrameSelected': resId == res.res_id}">
                     <div class="resListContentInfo">
                         <i class="fa fa-compass" title="Numéro chrono"></i> {{res.alt_identifier}}
-                        <i ng-if="res.allSigned" class="fa fa-certificate" style="position: absolute;bottom: 65px;right: 50px;font-size: 20px;color: #FDD16C;"></i>&nbsp;
+                        <i ng-if="res.allSigned" class="fa fa-certificate"></i>&nbsp;
                         <i class="fa fa-circle" aria-hidden="true" [ngStyle]="{'color': res.priorityColor}" style="position: absolute;right: 0px;top: -10px;font-size: 25px;"></i>
                     </div>
                     <div class="resListContentInfo">
@@ -150,10 +151,9 @@
                    <i *ngIf="!showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
-                <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail] && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)"
-                        id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '75vh' : '69vh'}"></iframe>
-                <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted">Fichier impossible à charger</span>
-                <div class="pjSign">
+                <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail] && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '80%' : '88%'}"></iframe>
+                <div style="border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;height: 85%;font-size: 40px;" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted"><div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF de ce format n'a pas été trouvé.</sub></div></div>
+                <div class="pjSign" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format == 'pdf'">
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
                         <img title="Signer" src="{{signatureBook.signature}}">
                     </span>
@@ -162,6 +162,7 @@
                     </span>
                 </div>
             </div>
+            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail]" style="height: 80vh;font-size: 40px;border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;margin-top: 10px;"><div style="margin-top:35%;">Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class="fa fa-plus"></i> pour en ajouter une</sub></div></div>
             <!--<div class="contentShow" ng-if="signatureBook.showAttachmentEditionPanel">-->
                 <!--<h1>Créer une pièce jointe</h1>-->
                 <!--<div class="pjCreate">-->
@@ -226,10 +227,12 @@
                 <i class="fa fa-plus fa-2x" title="Créer une pièce jointe"></i>
             </div>
             <div class="panelRightContent" *ngIf="signatureBook.attachments">
-                <div class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail}">
+                <div style="position: relative;" [ngStyle]="{'color': signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN' ? '#FDD16C' : '#666'}" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail}">
                     <span class="fa-stack fa-lg">
                         <i class="fa fa-file-o fa-stack-2x"></i><i class="fa {{attachment.icon}} fa-stack-1x"></i>
                     </span>
+                    <!-- TO DO : ADD IF FOR PJ SIGN -->
+                    <i style="position: absolute;top: 2px;right: 2px;" class="fa fa-certificate"></i>
                 </div>
             </div>
         </div>

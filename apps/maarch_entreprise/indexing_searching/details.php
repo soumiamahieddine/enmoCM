@@ -630,7 +630,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <th align="left" class="picto" >
                                 <?php
                                 if (isset($data[$key]['addon'])) {
-                                    echo $data[$key]['addon'];
+                                    if(in_array($key, ['dest_user_id', 'exp_user_id', 'dest_contact_id', 'exp_contact_id'])){ 
+                                        echo $data[$key]['addon_detail'];
+                                    } else {
+                                        echo $data[$key]['addon'];
+                                    }
                                     //$detailsExport .= $data[$key]['addon'];
                                 } elseif (isset($data[$key]['img'])) {
                                     //$detailsExport .= "<img alt='".$data[$key]['label']."' title='".$data[$key]['label']."' src='".$data[$key]['img']."'  />";
