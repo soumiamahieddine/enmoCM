@@ -199,11 +199,13 @@ class VisaController
 
 			$viewerId = $realId;
 			$pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
+			$isConverted = false;
 			foreach ($attachments as $tmpKey => $tmpValue) {
 				if ($tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
 					if ($value['status'] != 'SIGN') {
 						$viewerId = $tmpValue['res_id'];
 					}
+					$isConverted = true;
 					unset($attachments[$tmpKey]);
 				}
 				if ($value['status'] == 'SIGN' && $tmpValue['attachment_type'] == 'signed_response' && !empty($tmpValue['origin'])) {
@@ -229,7 +231,7 @@ class VisaController
 				$attachments[$key]['typist'] = \UsersModel::getLabelledUserById(['id' => $value['typist']]);
 			}
 
-			$attachments[$key]['truncateTitle'] = ((strlen($value['title']) > 20) ? (substr($value['title'], 0, 20) . '...') : $value['title']);
+			$attachments[$key]['isConverted'] = $isConverted;
 			$attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
 			$attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
 

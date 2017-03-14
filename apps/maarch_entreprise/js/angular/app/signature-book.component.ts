@@ -47,6 +47,9 @@ export class SignatureBookComponent implements OnInit {
     showLeftPanel               : boolean   = true;
     showAttachmentEditionPanel  : boolean   = false;
 
+    leftContentWidth            : string    = "39%";
+    rightContentWidth           : string    = "39%";
+
     notesViewerLink             : string    = "";
     visaViewerLink              : string    = "";
     histViewerLink              : string    = "";
@@ -75,15 +78,12 @@ export class SignatureBookComponent implements OnInit {
                         .map(res => res.json())
                         .subscribe((data) => {
                             this.signatureBook = data;
-                            if (this.signatureBook.documents[0]) {
-                                this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
-                            }
-                            if (this.signatureBook.attachments[0]) {
-                                this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
-                            }
+
                             this.headerTab              = 1;
                             this.leftSelectedThumbnail  = 0;
                             this.rightSelectedThumbnail = 0;
+                            this.leftViewerLink         = "";
+                            this.rightViewerLink        = "";
                             this.showLeftPanel          = true;
                             this.showResLeftPanel       = true;
                             this.showTopLeftPanel       = false;
@@ -92,6 +92,13 @@ export class SignatureBookComponent implements OnInit {
                             this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
                             this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
                             this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
+
+                            if (this.signatureBook.documents[0]) {
+                                this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
+                            }
+                            if (this.signatureBook.attachments[0]) {
+                                this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
+                            }
                         });
                 });
         });
@@ -134,8 +141,21 @@ export class SignatureBookComponent implements OnInit {
         } else if (panel == "LEFT") {
             this.showLeftPanel = !this.showLeftPanel;
             this.showResLeftPanel = false;
+            if (!this.showLeftPanel) {
+                this.rightContentWidth = "95%";
+            } else {
+                this.rightContentWidth = "45%";
+                this.leftContentWidth = "45%";
+            }
         } else if (panel == "RESLEFT") {
             this.showResLeftPanel = !this.showResLeftPanel;
+            if (!this.showResLeftPanel) {
+                this.rightContentWidth = "45%";
+                this.leftContentWidth = "45%";
+            } else {
+                this.rightContentWidth = "39%";
+                this.leftContentWidth = "39%";
+            }
         }
     }
 
