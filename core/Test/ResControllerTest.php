@@ -50,27 +50,6 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('column', $response[0]);
     }
 
-    public function testDelete()
-    {
-        $action = new \Core\Controllers\ResController();
-
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'DELETE',
-            ]
-        );
-
-        $aArgs = [
-            'id'=> 100
-        ];
-
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->delete($request, $response, $aArgs);
-        
-        $this->assertSame((string)$response->getBody(), '[true]');
-    }
-
     public function testStoreResource()
     {
         $action = new \Core\Controllers\ResController();
@@ -140,6 +119,29 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         $response = $action->storeResource($aArgs);
         
         $this->assertGreaterThanOrEqual(0, $response[0]);
+    }
+
+    public function testDelete()
+    {
+        $action = new \Core\Controllers\ResController();
+
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'DELETE',
+            ]
+        );
+
+        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
+
+        $aArgs = [
+            'id'=> $resId[0]['res_id']
+        ];
+
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = new \Slim\Http\Response();
+        $response = $action->delete($request, $response, $aArgs);
+        
+        $this->assertSame((string)$response->getBody(), '[true]');
     }
 
     public function testCreate()
@@ -227,16 +229,18 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(1, json_decode($response->getBody())[0]);
     }
 
-    public function testDeleteExtRes()
+    public function testDeleteRes()
     {
         $action = new \Core\Controllers\ResController();
 
+        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
+
         $aArgs = [
-            'id' => 100
+            'id'=> $resId[0]['res_id']
         ];
 
         $response = $action->deleteRes($aArgs);
 
         $this->assertTrue($response);
-    } 
+    }
 }

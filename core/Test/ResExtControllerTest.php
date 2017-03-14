@@ -125,8 +125,10 @@ class ResExtControllerTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
+        $resId = \Core\Models\ResExtModel::getLastId(['select' => 'res_id']);
+
         $aArgs = [
-            'id'=> 100
+            'id'=> $resId[0]['res_id']
         ];
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -323,8 +325,10 @@ class ResExtControllerTest extends \PHPUnit_Framework_TestCase
     {
         $action = new \Core\Controllers\ResExtController();
 
+        $resId = \Core\Models\ResExtModel::getLastId(['select' => 'res_id']);
+
         $aArgs = [
-            'id' => 100
+            'id'=> $resId[0]['res_id']
         ];
 
         $response = $action->deleteExtRes($aArgs);

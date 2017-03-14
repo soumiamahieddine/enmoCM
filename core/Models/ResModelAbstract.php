@@ -41,7 +41,33 @@ class ResModelAbstract extends \Apps_Table_Service
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => [$table],
             'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']]
+            'data'      => [$aArgs['resId']],
+            'order_by'  => [$aArgs['orderBy']]
+        ]);
+
+        return $aReturn;
+    }
+
+    /**
+     * Retrieve info of last resId
+     * @param  $table string
+     * @param  $select string
+     * @return array $res
+     */
+    public static function getLastId(array $aArgs = [])
+    {
+        if (!empty($aArgs['table'])) {
+            $table = $aArgs['table'];
+        } else {
+            $table = 'res_letterbox';
+        }
+
+        $aReturn = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => [$table],
+            'data'      => [$aArgs['resId']],
+            'order_by'  => ['res_id desc'],
+            'limit'     => 1,
         ]);
 
         return $aReturn;
