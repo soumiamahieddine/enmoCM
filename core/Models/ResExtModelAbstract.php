@@ -145,4 +145,28 @@ class ResExtModelAbstract extends \Apps_Table_Service
 
         return $aReturn;
     }
+
+    /**
+     * deletes into a resTable
+     * @param  $resId integer
+     * @param  $table string
+     * @return boolean $status
+     */
+    public static function delete(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['id']);
+        static::checkNumeric($aArgs, ['id']);
+
+        if (empty($aArgs['table'])) {
+            $aArgs['table'] = 'mlb_coll_ext';
+        }
+
+        $aReturn = static::deleteFrom([
+                'table' => $aArgs['table'],
+                'where' => ['res_id = ?'],
+                'data'  => [$aArgs['id']]
+            ]);
+
+        return $aReturn;
+    }
 }

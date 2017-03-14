@@ -50,6 +50,27 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('column', $response[0]);
     }
 
+    public function testDelete()
+    {
+        $action = new \Core\Controllers\ResController();
+
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'DELETE',
+            ]
+        );
+
+        $aArgs = [
+            'id'=> 100
+        ];
+
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = new \Slim\Http\Response();
+        $response = $action->delete($request, $response, $aArgs);
+        
+        $this->assertSame((string)$response->getBody(), '[true]');
+    }
+
     public function testStoreResource()
     {
         $action = new \Core\Controllers\ResController();
@@ -205,4 +226,17 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         //print_r($response);exit;
         $this->assertGreaterThan(1, json_decode($response->getBody())[0]);
     }
+
+    public function testDeleteExtRes()
+    {
+        $action = new \Core\Controllers\ResController();
+
+        $aArgs = [
+            'id' => 100
+        ];
+
+        $response = $action->deleteRes($aArgs);
+
+        $this->assertTrue($response);
+    } 
 }

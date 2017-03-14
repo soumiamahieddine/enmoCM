@@ -53,6 +53,51 @@ class ResController
         return $response->withJson($return);
     }
 
+    public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        if (isset($aArgs['id'])) {
+            $obj = $this->deleteRes([
+                'id' => $aArgs['id']
+            ]);
+            if (!$obj) {
+                return $response
+                    ->withStatus(500)
+                    ->withJson(['errors' => _NOT_DELETE]);
+            }
+        } else {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => _NOT_DELETE]);
+        }
+        
+        $datas = [
+            $obj,
+        ];
+
+        return $response->withJson($datas);
+    }
+
+    /**
+     * Deletes ext resource on database.
+     * @param  $resId  integer
+     * @param  $table  string
+     * @return res_id
+     */
+    public function deleteRes($aArgs)
+    {
+        if (isset($aArgs['id'])) {
+            $obj = ResModel::delete([
+                'id' => $aArgs['id']
+            ]);
+        } else {
+            return false;
+        }
+        
+        $datas = $obj;
+
+        return $datas;
+    }
+
     /**
      * Store resource on database.
      * @param  $encodedFile  string
