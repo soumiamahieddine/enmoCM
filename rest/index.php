@@ -124,6 +124,7 @@ $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . 
 //resource
 $app->post('/res', \Core\Controllers\ResController::class . ':create');
 
-
+//extresource
+$app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 
 $app->run();
