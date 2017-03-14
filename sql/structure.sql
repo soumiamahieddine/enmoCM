@@ -714,7 +714,7 @@ WITH (OIDS=FALSE);
 CREATE TABLE basket_persistent_mode
 (
   res_id bigint,
-  user_id character varying(32),
+  user_id character varying(128),
   is_persistent character varying(1)
 )
 WITH (
@@ -725,7 +725,7 @@ CREATE TABLE res_mark_as_read
 (
   coll_id character varying(32),
   res_id bigint,
-  user_id character varying(32),
+  user_id character varying(128),
   basket_id character varying(32)
 )
 WITH (
