@@ -200,9 +200,14 @@ class Apps_Table_Service extends Core_Abstract_Service {
         $queryExtJokers = [];
         $queryExtValues = [];
         foreach ($aData as $key => $value) {
+            if ($value == 'SYSDATE' ||
+                $value == 'CURRENT_TIMESTAMP') {
+                $queryExtJokers[] = $value;
+            } else {
+                $queryExtJokers[] = '?';
+                $queryExtValues[] = $value;
+            }
             $queryExtFields[] = $key;
-            $queryExtJokers[] = '?';
-            $queryExtValues[] = $value;
         }
         $queryExt = 'INSERT INTO '.$table.'('.implode(',', $queryExtFields).')values('.implode(',', $queryExtJokers).')';
         //echo "the query " . $queryExt . PHP_EOL;var_export($queryExtFields). PHP_EOL;var_export($queryExtValues). PHP_EOL;
