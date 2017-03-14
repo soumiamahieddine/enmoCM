@@ -585,7 +585,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     -o-box-shadow: inset 0px 0px 5px 0px #656565;
     box-shadow: inset 0px 0px 5px 0px #656565;
     background-color: #FDD16C;
-    color: #666;
+    color: #666 !important;
 }
 
 .infoPj{
