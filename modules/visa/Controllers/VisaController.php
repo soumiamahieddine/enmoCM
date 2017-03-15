@@ -93,6 +93,8 @@ class VisaController
 					$allSigned = false;
 				}
 			}
+			$resList[$key]['creation_date'] = date(DATE_ATOM, strtotime($resList[$key]['creation_date']));
+			$resList[$key]['process_limit_date'] = date(DATE_ATOM, strtotime($resList[$key]['process_limit_date']));
 			$resList[$key]['allSigned'] = $allSigned;
 			$resList[$key]['priorityColor'] = $_SESSION['mail_priorities_color'][$value['priority']]; //TODO No Session
 			unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
@@ -165,7 +167,7 @@ class VisaController
 				$attachmentTypes[(string) $value->id] = [
 					'label' => $label,
 					'icon' => (string)$value['icon'],
-					'sign' => (empty($value['sign']) || (string)$value['sign'] != 'true') ? false : true
+					'sign' => (empty($value['sign']) || (string)$value['sign'] == 'true') ? true : false
 				];
 			}
 		}
@@ -231,6 +233,10 @@ class VisaController
 				$attachments[$key]['typist'] = \UsersModel::getLabelledUserById(['id' => $value['typist']]);
 			}
 
+			$attachments[$key]['creation_date'] = date(DATE_ATOM, strtotime($attachments[$key]['creation_date']));
+			if ($attachments[$key]['validation_date']) {
+				$attachments[$key]['validation_date'] = date(DATE_ATOM, strtotime($attachments[$key]['validation_date']));
+			}
 			$attachments[$key]['isConverted'] = $isConverted;
 			$attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
 			$attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
