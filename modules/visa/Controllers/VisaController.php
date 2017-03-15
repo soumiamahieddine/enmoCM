@@ -12,6 +12,7 @@ require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
 require_once 'apps/maarch_entreprise/Models/UsersModel.php';
 require_once 'modules/basket/Models/BasketsModel.php';
 require_once 'modules/notes/Models/NotesModel.php';
+require_once 'modules/visa/Models/VisaModel.php';
 
 
 class VisaController
@@ -114,7 +115,8 @@ class VisaController
 		$datas['resList'] 		= $resList;
 		$datas['nbNotes'] 		= \NotesModel::countByResId(['resId' => $resId]);;
 		$datas['signature'] 	= \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
-		$datas['consigne'] 		= \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);
+		$datas['consigne'] 		= \UsersModel::getCurrentConsigneById(['resId' => $resId]);
+		$datas['hasWorkflow'] 	= \VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
 
 		return $response->withJson($datas);
 	}

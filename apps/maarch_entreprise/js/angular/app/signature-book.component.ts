@@ -304,6 +304,11 @@ export class SignatureBookComponent implements OnInit {
         location.reload();
     }
 
+    backToDetails() {
+        location.hash = "";
+        location.search = "?page=details&dir=indexing_searching&id=" + this.resId;
+    }
+
     changeLocation(resId: number) {
         let path = "/" + this.basketId + "/signatureBook/" + resId;
         this.router.navigate([path]);

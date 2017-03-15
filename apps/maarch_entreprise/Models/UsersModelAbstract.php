@@ -91,8 +91,30 @@ class UsersModelAbstract extends Apps_Table_Service
         $aReturn = static::select([
             'select'    => ['process_comment'],
             'table'     => ['listinstance'],
-            'where'     => ['res_id = ?', 'item_id = ?'],
-            'data'      => [$aArgs['resId'], $_SESSION['user']['UserId']],
+            'where'     => ['res_id = ?', 'item_id = ?', 'item_mode in (?)'],
+            'data'      => [$aArgs['resId'], $_SESSION['user']['UserId'], ['visa', 'sign']],
+        ]);
+
+        if (empty($aReturn[0])) {
+            return 'No Consigne Found';
+        }
+
+        return $aReturn[0]['process_comment'];
+    }
+
+    public static function getCurrentConsigneById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['resId']);
+        static::checkNumeric($aArgs, ['resId']);
+
+
+        $aReturn = static::select([
+            'select'    => ['process_comment'],
+            'table'     => ['listinstance'],
+            'where'     => ['res_id = ?', 'process_date is null', 'item_mode in (?)'],
+            'data'      => [$aArgs['resId'], ['visa', 'sign']],
+            'order_by'  => 'listinstance_id ASC',
+            'limit'     => 1
         ]);
 
         if (empty($aReturn[0])) {

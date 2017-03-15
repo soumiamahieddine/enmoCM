@@ -296,6 +296,10 @@ var SignatureBookComponent = (function () {
         location.hash = "";
         location.reload();
     };
+    SignatureBookComponent.prototype.backToDetails = function () {
+        location.hash = "";
+        location.search = "?page=details&dir=indexing_searching&id=" + this.resId;
+    };
     SignatureBookComponent.prototype.changeLocation = function (resId) {
         var path = "/" + this.basketId + "/signatureBook/" + resId;
         this.router.navigate([path]);
