@@ -162,7 +162,11 @@ class VisaController
 		if (count($attachmentTypesXML) > 0) {
 			foreach ($attachmentTypesXML->type as $value) {
 				$label = defined((string) $value->label) ? constant((string) $value->label) : (string) $value->label;
-				$attachmentTypes[(string) $value->id] = ['label' => $label, 'icon' => (string) $value['icon']];
+				$attachmentTypes[(string) $value->id] = [
+					'label' => $label,
+					'icon' => (string)$value['icon'],
+					'sign' => (empty($value['sign']) || (string)$value['sign'] != 'true') ? false : true
+				];
 			}
 		}
 
@@ -230,6 +234,7 @@ class VisaController
 			$attachments[$key]['isConverted'] = $isConverted;
 			$attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
 			$attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
+			$attachments[$key]['sign'] = $attachmentTypes[$value['attachment_type']]['sign'];
 
 			$attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$realId}&coll_id={$collId}&display=true&advanced=true";
 			$attachments[$key]['viewerLink'] = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$aArgs['resId']}&id={$viewerId}";

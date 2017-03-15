@@ -68,7 +68,6 @@
                         <img id="thumnails_img" *ngFor="let document of signatureBook.documents; let i = index" (click)="changeLeftViewer(i)" [src]="document.thumbnailLink"
                                  class="leftPanelThumbnails" [ngClass]="{'panelSelectedThumbnail': i == leftSelectedThumbnail}"/>
                     </div>
-                    <!--<label>PJ1</label>-->
                 </div>
                 <div class="pjDetailsMore" (click)="displayPanel('TOPLEFT')">
                     <i *ngIf="!showTopLeftPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
@@ -159,8 +158,10 @@
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail] && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '80%' : '88%'}"></iframe>
-                <div style="border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;height: 85%;font-size: 40px;" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted"><div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF de ce format n'a pas été trouvée.</sub></div></div>
-                <div class="pjSign" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)">
+                <div style="border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;height: 85%;font-size: 40px;" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted">
+                    <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF de ce format n'a pas été trouvée.</sub></div>
+                </div>
+                <div class="pjSign" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)">
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
                         <img *ngIf="!loading" title="Signer" src="{{signatureBook.signature}}">
                         <i *ngIf="loading" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
@@ -244,8 +245,8 @@
                     <span class="fa-stack fa-lg">
                         <i class="fa fa-file-o fa-stack-2x"></i><i class="fa {{attachment.icon}} fa-stack-1x"></i>
                     </span>
-                    <i title="Le document a été signé" *ngIf="attachment.status == 'SIGN'" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle"></i>
-                    <i title="Le document n'a pas encore été signé" *ngIf="attachment.status != 'SIGN'" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle-o"></i>
+                    <i title="Le document a été signé" *ngIf="attachment.sign && attachment.status == 'SIGN'" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle"></i>
+                    <i title="Le document n'a pas encore été signé" *ngIf="attachment.sign && attachment.status != 'SIGN'" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle-o"></i>
                 </div>
             </div>
         </div>
