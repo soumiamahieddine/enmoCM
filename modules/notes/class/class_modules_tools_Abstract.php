@@ -126,7 +126,7 @@ abstract class notes_Abstract
         $db = new Database();
         $ent = new EntityControler();
         
-        $query = "SELECT entity_id, entity_label FROM ".NOTE_ENTITIES_TABLE." , entities WHERE item_id LIKE entity_id and note_id = ?";
+        $query = "SELECT entity_id, entity_label, short_label FROM ".NOTE_ENTITIES_TABLE." , entities WHERE item_id LIKE entity_id and note_id = ?";
         
         try{
             $stmt = $db->query($query, array($id));
