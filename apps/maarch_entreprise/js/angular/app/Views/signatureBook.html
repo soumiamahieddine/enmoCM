@@ -228,12 +228,13 @@
                 <i class="fa fa-plus fa-2x" title="Créer une pièce jointe"></i>
             </div>
             <div class="panelRightContent" *ngIf="signatureBook.attachments">
-                <div style="position: relative;" [ngStyle]="{'color': attachment.status == 'SIGN' ? '#FDD16C' : '#666'}" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail}">
+                <div style="position: relative;" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail}">
                     <span class="fa-stack fa-lg">
                         <i class="fa fa-file-o fa-stack-2x"></i><i class="fa {{attachment.icon}} fa-stack-1x"></i>
                     </span>
                     <!-- TO DO : ADD IF FOR PJ SIGN -->
-                    <i style="position: absolute;top: 2px;right: 2px;" class="fa fa-certificate"></i>
+                    <i *ngIf="attachment.status == 'SIGN'" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle"></i>
+                    <i *ngIf="attachment.status != 'SIGN'" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle-o"></i>
                 </div>
             </div>
         </div>
