@@ -207,7 +207,7 @@ $users_query =
     . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' and"
     . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
     . " e.enabled = 'Y' and ue.primary_entity='Y' " . $user_expr . $entity_expr 
-    . " order by u.lastname asc, u.firstname asc, u.user_id asc, e.entity_label asc";
+    . " order by u.lastname asc, u.firstname asc, u.user_id asc, e.entity_label asc limit 50";
 
 if ($user_expr == '' && $entity_expr == '') {
     //no query
@@ -233,7 +233,7 @@ $entity_query =
         . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y'"
         . "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and "
         . "e.enabled = 'Y' " . $user_expr . $entity_expr 
-        . " group by e.entity_id, e.entity_label order by e.entity_label asc";
+        . " group by e.entity_id, e.entity_label order by e.entity_label asc limit 50";
 
 if ($user_expr == '' && $entity_expr == '') {
     //no query
