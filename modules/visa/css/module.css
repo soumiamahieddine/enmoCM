@@ -481,7 +481,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 .titleSignatureBook{
-    display: table;
+    display: block;
     width:100%;
     border-right: solid 1px black;
     border-top: solid 1px black;
@@ -498,14 +498,21 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 .titleSignatureBook span{
-    display: table-cell;
+    display: inline-block;
     vertical-align: middle;
-    padding:5px;
+    padding:10px;
+    width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
 }
 
 .titleSignatureBook span:nth-child(2){
+    position: absolute;
+    right: 0px;
     text-align: right;
     padding-left: 5px;
+    top: -4px;
 }
 
 .headerSignatureBook{
