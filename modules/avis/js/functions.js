@@ -10,6 +10,7 @@ function addAvisUser(users) {
                 + '<i class="fa fa-hourglass" aria-hidden="true"></i>'
                 + '</span>'
                 + '<span class="avisUserInfo">'
+                +'<sup class="avisUserPos nbResZero">'+next_avis+'</sup>&nbsp;&nbsp;'
                 + '<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + $j("select#avisUserList option:selected").text() + ' <sup class="nbRes">' + $j("select#avisUserList option:selected").parent().get(0).label + '</sup>'
                 + '<input class="userId" type="hidden" value="' + $j("select#avisUserList option:selected").val() + '"/><input class="avisDate" type="hidden" value=""/>'
                 + '</span>'
@@ -38,6 +39,7 @@ function addAvisUser(users) {
                 + '<i class="fa fa-hourglass" aria-hidden="true"></i>'
                 + '</span>'
                 + '<span class="avisUserInfo">'
+                +'<sup class="avisUserPos nbResZero">'+next_avis+'</sup>&nbsp;&nbsp;'
                 + '<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + users.lastname + ' ' + users.firstname + ' <sup class="nbRes">' + users.entity_id + '</sup>'
                 + '<input class="userId" type="hidden" value="' + users.user_id + '"/><input class="avisDate" type="hidden" value=""/>'
                 + '</span>'
@@ -53,6 +55,7 @@ function addAvisUser(users) {
                 + '</div>');
 
     }
+    resetPosAvis();
 }
 function delAvisUser(target) {
     console.log(target);
@@ -67,10 +70,11 @@ function delAvisUser(target) {
 
 }
 function resetPosAvis() {
-    $i = 1;
+    i = 1;
     $j(".droptarget").each(function () {
-        this.id = 'avis_' + $i;
-        $i++;
+        this.id = 'avis_' + i;
+        $j("#" + this.id).find(".avisUserPos").text(i);
+        i++;
     });
 }
 function updateAvisWorkflow(resId) {

@@ -62,7 +62,7 @@ abstract class avis_controler_Abstract
             $str .= '<option value="" ></option>';
 
             $tab_userentities = $this->getEntityAvis();
-            /** Order by parent entity * */
+            //Order by parent entity
             foreach ($tab_userentities as $key => $value) {
                 $str .= '<optgroup label="' . $tab_userentities[$key]['entity_id'] . '">';
                 $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
@@ -81,7 +81,7 @@ abstract class avis_controler_Abstract
             $str .= 'new Chosen($(\'avisUserList\'),{width: "250px", disable_search_threshold: 10});';
             $str .= '</script>';
 
-            require_once("modules/entities/class/class_manage_listdiff.php");
+            include_once "modules/entities/class/class_manage_listdiff.php";
             $diff_list = new diffusion_list();
             $listModels = $diff_list->select_listmodels($typeList);
 
@@ -157,6 +157,7 @@ abstract class avis_controler_Abstract
                     $str .= '<i class="fa fa-' . $link_vis . '" aria-hidden="true"></i>';
                     $str .= '</span>';
                     $str .= '<span class="avisUserInfo">';
+                    $str .= '<sup class="avisUserPos nbResZero">'.$i.'</sup>&nbsp;&nbsp;';
                     $str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' . $info_userAvis['lastname'] . ' ' . $info_userAvis['firstname'] . ' <sup class="nbRes">' . $info_userAvis['entity_id'] . '</sup>' . $info_vised;
                     $str .= '</span>';
                     $str .= '<span class="avisUserConsigne">';
