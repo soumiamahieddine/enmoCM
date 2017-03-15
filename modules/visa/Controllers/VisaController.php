@@ -147,7 +147,7 @@ class VisaController
 		return $response->withJson($this->getAttachmentsForSignatureBook(['resId' => $resId]));
 	}
 
-	private function getAttachmentsForSignatureBook($aArgs)
+	private function getAttachmentsForSignatureBook(array $aArgs = [])
 	{
 
 		if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml')) {
@@ -174,7 +174,8 @@ class VisaController
 				'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
 				'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
 				'dest_address_id', 'origin'
-			]
+			],
+			'orderBy'	=> "CASE WHEN attachment_type = 'response_project' THEN 1 ELSE 2 END, creation_date"
 		]);
 
 		foreach ($attachments as $key => $value) {
