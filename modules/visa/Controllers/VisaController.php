@@ -114,7 +114,7 @@ class VisaController
 		$datas['resList'] 		= $resList;
 		$datas['nbNotes'] 		= \NotesModel::countByResId(['resId' => $resId]);;
 		$datas['signature'] 	= \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
-		$datas['consigne'] 		= \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);
+		$datas['consigne'] 		= \UsersModel::getCurrentConsigneById(['resId' => $resId]);
 
 		return $response->withJson($datas);
 	}
