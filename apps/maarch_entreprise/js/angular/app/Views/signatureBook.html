@@ -145,10 +145,13 @@
                         </div>
                     </div>
                 </div>
+                <div title="Télécharger la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;bottom: 130px;padding: 10px;background-color: green;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                    <i class="fa fa-download fa-2x"></i>
+                </div>
                 <div title="Modifier la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;bottom: 70px;padding: 10px;background-color: #009DC5;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
                     <i class="fa fa-pencil-square-o fa-2x"></i>
                 </div>
-                <div title="Supprimer la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;top: 70px;padding: 10px;background-color: red;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
+                <div title="Supprimer la pièce jointe" [ngStyle]="{'top': showTopRightPanel ? '150px' : '70px'}" style="cursor: pointer;position: absolute;right: -30px;padding: 10px;background-color: red;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
                     <i class="fa fa-trash fa-2x"></i>
                 </div>
                 <div class="pjDetailsMore" (click)="displayPanel('TOPRIGHT')">
@@ -241,8 +244,8 @@
                     <span class="fa-stack fa-lg">
                         <i class="fa fa-file-o fa-stack-2x"></i><i class="fa {{attachment.icon}} fa-stack-1x"></i>
                     </span>
-                    <i *ngIf="attachment.status == 'SIGN'" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle"></i>
-                    <i *ngIf="attachment.status != 'SIGN'" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle-o"></i>
+                    <i title="Le document a été signé" *ngIf="attachment.status == 'SIGN'" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle"></i>
+                    <i title="Le document n'a pas encore été signé" *ngIf="attachment.status != 'SIGN'" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle-o"></i>
                 </div>
             </div>
         </div>
