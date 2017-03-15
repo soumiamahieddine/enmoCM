@@ -52,6 +52,7 @@ var SignatureBookComponent = (function () {
         this.showResLeftPanel = true;
         this.showLeftPanel = true;
         this.showAttachmentEditionPanel = false;
+        this.loading = false;
         this.leftContentWidth = "39%";
         this.rightContentWidth = "39%";
         this.notesViewerLink = "";
@@ -230,15 +231,18 @@ var SignatureBookComponent = (function () {
         }
     };
     SignatureBookComponent.prototype.prepareSignFile = function (attachment) {
-        if (attachment.res_id == 0) {
-            this.signatureBookSignFile(attachment.res_id_version, 1);
-        }
-        else if (attachment.res_id_version == 0) {
-            this.signatureBookSignFile(attachment.res_id, 0);
+        if (!this.loading) {
+            if (attachment.res_id == 0) {
+                this.signatureBookSignFile(attachment.res_id_version, 1);
+            }
+            else if (attachment.res_id_version == 0) {
+                this.signatureBookSignFile(attachment.res_id, 0);
+            }
         }
     };
     SignatureBookComponent.prototype.signatureBookSignFile = function (resId, type) {
         var _this = this;
+        this.loading = true;
         var path = '';
         if (type == 0) {
             path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&resIdMaster=' + this.resId + '&id=' + resId;
@@ -260,6 +264,7 @@ var SignatureBookComponent = (function () {
             else {
                 alert(data.error);
             }
+            _this.loading = false;
         });
     };
     SignatureBookComponent.prototype.unsignFile = function (attachment) {

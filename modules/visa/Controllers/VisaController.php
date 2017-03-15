@@ -104,6 +104,7 @@ class VisaController
 			'actionLabel' => $actionLabel
 		];
 
+
 		$datas = [];
 		$datas['actions'] 		= $actionsData;
 		$datas['attachments'] 	= $this->getAttachmentsForSignatureBook(['resId' => $resId]);
@@ -111,6 +112,7 @@ class VisaController
 		$datas['currentAction'] = $currentAction;
 //		$datas['histories'] 	= $history;
 		$datas['resList'] 		= $resList;
+		$datas['nbNotes'] 		= \NotesModel::countByResId(['resId' => $resId]);;
 		$datas['signature'] 	= \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
 		$datas['consigne'] 		= \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);
 

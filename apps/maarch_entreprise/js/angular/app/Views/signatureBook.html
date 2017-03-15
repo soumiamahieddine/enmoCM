@@ -9,7 +9,7 @@
             <i class="itemLabel">Document principal</i>
         </div>
         <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
-            <i class="fa fa-pencil fa-2x"></i>
+            <i class="fa fa-pencil fa-2x">{{signatureBook.nbNotes}}</i>
             <i class="itemLabel">Note(s)</i>
         </div>
         <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 3}" (click)="changeSignatureBookLeftContent(3)">
@@ -34,7 +34,7 @@
         </div>
     </div>
     <div class="contentSignatureBook">
-        <div class="resListContent" *ngIf="showResLeftPanel">
+        <div class="resListContent" [ngStyle]="{'display': showResLeftPanel ? 'inline-block' : 'none'}">
             <div class="resListContentPos">
                 <div class="resListContentFrame" *ngFor="let res of signatureBook.resList" (click)="changeLocation(res.res_id)" [ngClass]="{'resListContentFrameSelected': resId == res.res_id}">
                     <div class="resListContentInfo">
@@ -105,7 +105,7 @@
         </div>
         <div class="contentRight" id="contentRight" [ngStyle]="{'width': rightContentWidth}">
             <div class="contentShow" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && !showAttachmentEditionPanel && signatureBook.consigne != 'No Consigne Found'">
-                <div class="pjDetails" *ngIf="signatureBook.attachments[rightSelectedThumbnail]" [ngStyle]="{'height': showTopRightPanel ? '100px' : '30px'}">
+                <div class="pjDetails" [ngStyle]="{'height': showTopRightPanel ? '100px' : '30px'}">
                     <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                         <label>Type : </label>
                         <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}</span>
@@ -145,8 +145,12 @@
                         </div>
                     </div>
                 </div>
-                <div title="Modifier la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;bottom: 70px;padding: 10px;background-color: #009DC5;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])"><i class="fa fa-pencil-square-o fa-2x"></i></div>
-                <div title="Supprimer la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;top: 70px;padding: 10px;background-color: red;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])"><i class="fa fa-trash fa-2x"></i></div>
+                <div title="Modifier la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;bottom: 70px;padding: 10px;background-color: #009DC5;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                    <i class="fa fa-pencil-square-o fa-2x"></i>
+                </div>
+                <div title="Supprimer la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;top: 70px;padding: 10px;background-color: red;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
+                    <i class="fa fa-trash fa-2x"></i>
+                </div>
                 <div class="pjDetailsMore" (click)="displayPanel('TOPRIGHT')">
                    <i *ngIf="!showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
@@ -155,15 +159,20 @@
                 <div style="border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;height: 85%;font-size: 40px;" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted"><div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF de ce format n'a pas été trouvée.</sub></div></div>
                 <div class="pjSign" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)">
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
-                        <img title="Signer" src="{{signatureBook.signature}}">
+                        <img *ngIf="!loading" title="Signer" src="{{signatureBook.signature}}">
+                        <i *ngIf="loading" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
                     </span>
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" (click)="unsignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer;color: green;">
                         <i title="Dé-signer" class="fa fa-check fa-2x" aria-hidden="true"></i>
                     </span>
                 </div>
             </div>
-            <div *ngIf="signatureBook.consigne == 'No Consigne Found'" style="height: 80vh;font-size: 40px;border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;margin-top: 10px;"><div style="margin-top:200px;">Aucun circuit de visa paramétré.<br/><sub>Aucune signature possible.</sub></div></div>
-            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail] && signatureBook.consigne != 'No Consigne Found'" style="height: 80vh;font-size: 40px;border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;margin-top: 10px;"><div style="margin-top:200px;">Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class="fa fa-plus"></i> pour en ajouter une</sub></div></div>
+            <div *ngIf="signatureBook.consigne == 'No Consigne Found'" style="height: 80vh;font-size: 40px;border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;margin-top: 10px;">
+                <div style="margin-top:200px;">Aucun circuit de visa paramétré.<br/><sub>Aucune signature possible.</sub></div>
+            </div>
+            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail] && signatureBook.consigne != 'No Consigne Found'" style="height: 80vh;font-size: 40px;border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;margin-top: 10px;">
+                <div style="margin-top:200px;">Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class="fa fa-plus"></i> pour en ajouter une</sub></div>
+            </div>
             <!--<div class="contentShow" ng-if="signatureBook.showAttachmentEditionPanel">-->
                 <!--<h1>Créer une pièce jointe</h1>-->
                 <!--<div class="pjCreate">-->

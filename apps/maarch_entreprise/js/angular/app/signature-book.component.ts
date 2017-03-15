@@ -47,6 +47,7 @@ export class SignatureBookComponent implements OnInit {
     showResLeftPanel            : boolean   = true;
     showLeftPanel               : boolean   = true;
     showAttachmentEditionPanel  : boolean   = false;
+    loading                     : boolean   = false;
 
     leftContentWidth            : string    = "39%";
     rightContentWidth           : string    = "39%";
@@ -235,14 +236,17 @@ export class SignatureBookComponent implements OnInit {
     }
 
     prepareSignFile(attachment: any) {
-        if (attachment.res_id == 0) {
-            this.signatureBookSignFile(attachment.res_id_version, 1);
-        } else if (attachment.res_id_version == 0) {
-            this.signatureBookSignFile(attachment.res_id, 0);
+        if (!this.loading) {
+            if (attachment.res_id == 0) {
+                this.signatureBookSignFile(attachment.res_id_version, 1);
+            } else if (attachment.res_id_version == 0) {
+                this.signatureBookSignFile(attachment.res_id, 0);
+            }
         }
     }
 
     signatureBookSignFile(resId: number, type: number) {
+        this.loading = true;
         var path = '';
 
         if (type == 0) {
@@ -263,6 +267,8 @@ export class SignatureBookComponent implements OnInit {
                 } else {
                     alert(data.error);
                 }
+
+                this.loading = false;
             });
 
     }
