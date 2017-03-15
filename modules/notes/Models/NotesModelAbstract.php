@@ -27,7 +27,6 @@ class NotesModelAbstract extends Apps_Table_Service
     public static function getByResId(array $aArgs = []) 
     {
         static::checkRequired($aArgs, ['resId']);
-        static::checkRequired($aArgs, ['resId']);
 
         //get notes
         $aReturn = static::select([
@@ -67,6 +66,20 @@ class NotesModelAbstract extends Apps_Table_Service
         }
 
         return $aReturn;
+    }
+
+    public static function countByResId(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['resId']);
+
+        $aReturn = static::select([
+            'select' => 'COUNT(*)',
+            'table' => ['notes'],
+            'where' => ['identifier = ?'],
+            'data' => [$aArgs['resId']]
+        ]);
+
+        return $aReturn[0]['count'];
     }
 
 }

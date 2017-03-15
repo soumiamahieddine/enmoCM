@@ -572,14 +572,20 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     color: #009DC5;
 }
 
-.panelRightContent .item{
-    border:solid 3px white;
-}
 .panelRightContent .item:hover{
-    border:solid 3px #009DC5;
+     -moz-box-shadow: inset 0px 0px 5px 0px #656565;
+    -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
+    -o-box-shadow: inset 0px 0px 5px 0px #656565;
+    box-shadow: inset 0px 0px 5px 0px #656565;
+    background-color: #FDD16C;
 }
 .panelSelectedThumbnail{
-    border:solid 3px #009DC5 !important;
+    -moz-box-shadow: inset 0px 0px 5px 0px #656565;
+    -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
+    -o-box-shadow: inset 0px 0px 5px 0px #656565;
+    box-shadow: inset 0px 0px 5px 0px #656565;
+    background-color: #FDD16C;
+    color: #666 !important;
 }
 
 .infoPj{

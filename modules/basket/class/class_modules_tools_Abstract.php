@@ -435,19 +435,22 @@ abstract class basket_Abstract extends Database
             }
         }
         if ($ind > -1) {
-            //selection du type de diffusion
-            $db = new Database();
-            $stmt = $db->query(
-                "select difflist_type_id from groupbasket_difflist_types "
-                . " where basket_id = ? "
-                . "and group_id = ? "
-                . "and action_id = ?",array($basketId,$_SESSION['user']['baskets'][$ind]['group_id'],$_SESSION['user']['baskets'][$ind]['default_action']));
+            //if no action on the basket we dont do the request on the groupbasket_difflist_types
+            if($_SESSION['user']['baskets'][$ind]['default_action'] != '' || $_SESSION['user']['baskets'][$ind]['default_action'] != null){
+                //selection du type de diffusion
+                $db = new Database();
+                $stmt = $db->query(
+                    "select difflist_type_id from groupbasket_difflist_types "
+                    . " where basket_id = ? "
+                    . "and group_id = ? "
+                    . "and action_id = ?",array($basketId,$_SESSION['user']['baskets'][$ind]['group_id'],$_SESSION['user']['baskets'][$ind]['default_action']));
 
-            if ($stmt->rowCount() <= 0) {
-                $_SESSION['current_basket']['difflist_type'] = 'entity_id';
-            } else {
-                $res = $stmt->fetchObject();
-                $_SESSION['current_basket']['difflist_type'] = $res->difflist_type_id;
+                if ($stmt->rowCount() <= 0) {
+                    $_SESSION['current_basket']['difflist_type'] = 'entity_id';
+                } else {
+                    $res = $stmt->fetchObject();
+                    $_SESSION['current_basket']['difflist_type'] = $res->difflist_type_id;
+                }
             }
 
             $_SESSION['current_basket']['table'] = $_SESSION['user']['baskets'][$ind]['table'];

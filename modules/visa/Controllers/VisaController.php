@@ -64,18 +64,11 @@ class VisaController
 			];
 		}
 
-		$history = \HistoryModel::getByIdForActions([
-			'id'      => $resId,
-			'select'  => ['event_date', 'info', 'firstname', 'lastname'],
-			'orderBy' => ['event_date DESC']
-		]);
-                
-                $notes = \NotesModel::getByResId([
-			'resId'      => $resId,
-			'select'  => ['id','firstname','lastname','date_note', 'note_text'],
-			'orderBy' => ['date_note DESC']
-		]);
-                
+//		$history = \HistoryModel::getByIdForActions([
+//			'id'      => $resId,
+//			'select'  => ['event_date', 'info', 'firstname', 'lastname'],
+//			'orderBy' => ['event_date DESC']
+//		]);
 
 		$resList = \BasketsModel::getResListById([
 			'basketId' => $basketId,
@@ -111,17 +104,17 @@ class VisaController
 			'actionLabel' => $actionLabel
 		];
 
+
 		$datas = [];
-		$datas['actions'] = $actionsData;
-		$datas['attachments'] = $this->getAttachmentsForSignatureBook(['resId' => $resId]);
-		$datas['documents'] = $documents;
+		$datas['actions'] 		= $actionsData;
+		$datas['attachments'] 	= $this->getAttachmentsForSignatureBook(['resId' => $resId]);
+		$datas['documents'] 	= $documents;
 		$datas['currentAction'] = $currentAction;
-		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
-		$datas['histories'] = $history;
-		$datas['notes'] = $notes;
-		$datas['resList'] = $resList;
-		$datas['signature'] = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
-		$datas['consigne'] = \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);
+//		$datas['histories'] 	= $history;
+		$datas['resList'] 		= $resList;
+		$datas['nbNotes'] 		= \NotesModel::countByResId(['resId' => $resId]);;
+		$datas['signature'] 	= \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
+		$datas['consigne'] 		= \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);
 
 		return $response->withJson($datas);
 	}
