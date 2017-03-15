@@ -65,7 +65,7 @@
                         <strong>{{signatureBook.documents.length - 1}} pièce(s) jointe(s)</strong>
                     </div>
                     <div *ngIf="showTopLeftPanel" style="height:100%;">
-                        <img id="thumnails_img" *ngFor="let document of signatureBook.documents; let i = index" (click)="changeLeftViewer(i)" [src]="document.thumbnailLink"
+                        <img title="{{document.title}}" id="thumnails_img" *ngFor="let document of signatureBook.documents; let i = index" (click)="changeLeftViewer(i)" [src]="document.thumbnailLink"
                                  class="leftPanelThumbnails" [ngClass]="{'panelSelectedThumbnail': i == leftSelectedThumbnail}"/>
                     </div>
                 </div>
