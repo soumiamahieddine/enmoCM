@@ -1224,27 +1224,19 @@ function end_actions()
 function close_action(id_action, page, path_manage_script, mode_req, res_id_values, tablename, id_coll)
 {
     var modal = $('modal_'+id_action);
-    if(modal)
-    {
+    if(modal) {
         destroyModal('modal_'+id_action);
     }
-    if(pile_actions.values.length == 0)
-    {
-        if(actions_status.values.length > 0)
-        {
+    if(pile_actions.values.length == 0) {
+        if(actions_status.values.length > 0) {
             var status = actions_status.values[actions_status.values.length -1];
             action_done = action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status,page);
-        }
-        else
-        {
-            if(page != '' && page != NaN && page && page != null )
-            {
+        } else {
+            if(page != '' && page != NaN && page && page != null ) {
                 do_nothing = false;
                 window.top.location.href=page;
 
-            }
-            else if(do_nothing == false)
-            {
+            } else if(do_nothing == false) {
                 window.top.location.hash = "";
                 window.top.location.reload();
             }
@@ -1630,7 +1622,9 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                               },
                 onCreate: function(answer) {
                     //show loading image in toolbar
-                    $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";})
+                    $$("input[type='button']").each(function(v) {
+                        v.setAttribute("disabled","disabled");v.style.opacity="0.5";
+                    });
                     /*if($('send_action')){
                         $('send_action').disabled=true;
                         $('send_action').style.opacity="0.5";
@@ -1688,7 +1682,6 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
 
 function action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status,page)
 {
-  // alert('path '+path_manage_script+', mode '+mode_req+', status '+status+', res_id_value '+res_id_values+', coll '+id_coll+', table '+tablename);
     if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
               && tablename != '' &&  id_coll != '')
         {
@@ -1704,53 +1697,48 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                               new_status : status
                               },
                 onSuccess: function(answer){
-                    //console.log('answer '+answer.responseText);
-                    //alert('answer '+answer.responseText);
                     eval('response='+answer.responseText);
-                    if(response.status == 0 )
-                    {
+                    if(response.status == 0 ) {
                         actions_status.values = [];
                         // Status changed
-                    }
-                    else
-                    {
+                    } else {
                         try{
                             //$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
                             $('frm_error').innerHTML = response.error_txt;
                             }
                         catch(e){}
                     }
-                    //alert(page);
-                    if(page != '' && page != NaN && page && page != null )
-                    {
+                    if(page != '' && page != NaN && page && page != null ) {
                         do_nothing = false;
                         window.top.location.href=page;
 
-                    }
-                    else if(do_nothing == false)
-                    {
-						            var cur_url = window.top.location.href;
-						            if (cur_url.indexOf("&directLinkToAction") != -1) {
-							              window.top.location = cur_url.replace("&directLinkToAction","");
-                        }	else {
-                            window.top.location.hash = "";
-                            window.top.location.reload();
+                    } else if(do_nothing == false) {
+
+                        var cur_url = window.top.location.href;
+                        if (cur_url.indexOf("&directLinkToAction") != -1) {
+                            if (typeof window['angularSignatureBookComponent'] != "undefined") {
+                                window.angularSignatureBookComponent.componentAfterAction();
+                            } else {
+                                window.top.location = cur_url.replace("&directLinkToAction", "");
+                            }
+                        } else {
+                            if (typeof window['angularSignatureBookComponent'] != "undefined") {
+                                window.angularSignatureBookComponent.componentAfterAction();
+                            } else {
+                                window.top.location.hash = "";
+                                window.top.location.reload();
+                            }
                         }
                     }
                     
                     // fix for Chrome and firefox
                     if (page_result_final != '') {
-                        //console.log(page_result_final);
                         window.top.location.href=page_result_final;
                     }
                     
                     do_nothing = false;
                 },
                 onFailure: function(){
-                    if(console)
-                    {
-                        //console.log('the console');
-                    }
                 }
             });
         }
@@ -1898,20 +1886,10 @@ function unlock(path_script, id, coll)
             onSuccess: function(answer){
 
                 eval('response='+answer.responseText);
-                if(response.status == 0 )
-                {
-
-                        //console.log('Unlock OK');
-
-                }
-                else
-                {
-                    if(console)
-                    {
+                if(response.status != 0 ) {
+                    if(console) {
                         console.log('Pb unlock');
-                    }
-                    else
-                    {
+                    } else {
                         alert('Pb unlock');
                     }
                 }

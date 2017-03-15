@@ -64,18 +64,11 @@ class VisaController
 			];
 		}
 
-		$history = \HistoryModel::getByIdForActions([
-			'id'      => $resId,
-			'select'  => ['event_date', 'info', 'firstname', 'lastname'],
-			'orderBy' => ['event_date DESC']
-		]);
-                
-                $notes = \NotesModel::getByResId([
-			'resId'      => $resId,
-			'select'  => ['id','firstname','lastname','date_note', 'note_text'],
-			'orderBy' => ['date_note DESC']
-		]);
-                
+//		$history = \HistoryModel::getByIdForActions([
+//			'id'      => $resId,
+//			'select'  => ['event_date', 'info', 'firstname', 'lastname'],
+//			'orderBy' => ['event_date DESC']
+//		]);
 
 		$resList = \BasketsModel::getResListById([
 			'basketId' => $basketId,
@@ -104,8 +97,7 @@ class VisaController
 			unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
 		}
 
-		$actionLabel = \BasketsModel::getActionByActionId(['actionId' => \BasketsModel::getActionIdById(['basketId' => $basketId]), 'select' => ['label_action']])['label_action'] . ' n°';
-		$actionLabel .= (_ID_TO_DISPLAY == 'res_id' ? $incomingMail[0]['res_id'] : $incomingMail[0]['alt_identifier']);
+		$actionLabel = (_ID_TO_DISPLAY == 'res_id' ? $incomingMail[0]['res_id'] : $incomingMail[0]['alt_identifier']);
 		$actionLabel .= ' : ' . $incomingMail[0]['subject'];
 		$currentAction = [
 			'id' => $_SESSION['current_basket']['default_action'], //TODO No Session
@@ -113,16 +105,14 @@ class VisaController
 		];
 
 		$datas = [];
-		$datas['actions'] = $actionsData;
-		$datas['attachments'] = $this->getAttachmentsForSignatureBook(['resId' => $resId]);
-		$datas['documents'] = $documents;
+		$datas['actions'] 		= $actionsData;
+		$datas['attachments'] 	= $this->getAttachmentsForSignatureBook(['resId' => $resId]);
+		$datas['documents'] 	= $documents;
 		$datas['currentAction'] = $currentAction;
-		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
-		$datas['histories'] = $history;
-		$datas['notes'] = $notes;
-		$datas['resList'] = $resList;
-		$datas['signature'] = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
-		$datas['consigne'] = \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);
+//		$datas['histories'] 	= $history;
+		$datas['resList'] 		= $resList;
+		$datas['signature'] 	= \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
+		$datas['consigne'] 		= \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);
 
 		return $response->withJson($datas);
 	}
@@ -200,11 +190,13 @@ class VisaController
 
 			$viewerId = $realId;
 			$pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
+			$isConverted = false;
 			foreach ($attachments as $tmpKey => $tmpValue) {
 				if ($tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
 					if ($value['status'] != 'SIGN') {
 						$viewerId = $tmpValue['res_id'];
 					}
+					$isConverted = true;
 					unset($attachments[$tmpKey]);
 				}
 				if ($value['status'] == 'SIGN' && $tmpValue['attachment_type'] == 'signed_response' && !empty($tmpValue['origin'])) {
@@ -230,7 +222,7 @@ class VisaController
 				$attachments[$key]['typist'] = \UsersModel::getLabelledUserById(['id' => $value['typist']]);
 			}
 
-			$attachments[$key]['truncateTitle'] = ((strlen($value['title']) > 20) ? (substr($value['title'], 0, 20) . '...') : $value['title']);
+			$attachments[$key]['isConverted'] = $isConverted;
 			$attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
 			$attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
 

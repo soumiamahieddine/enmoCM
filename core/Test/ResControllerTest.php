@@ -121,6 +121,29 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThanOrEqual(0, $response[0]);
     }
 
+    public function testDelete()
+    {
+        $action = new \Core\Controllers\ResController();
+
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'DELETE',
+            ]
+        );
+
+        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
+
+        $aArgs = [
+            'id'=> $resId[0]['res_id']
+        ];
+
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = new \Slim\Http\Response();
+        $response = $action->delete($request, $response, $aArgs);
+        
+        $this->assertSame((string)$response->getBody(), '[true]');
+    }
+
     public function testCreate()
     {
         $action = new \Core\Controllers\ResController();
@@ -206,183 +229,18 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(1, json_decode($response->getBody())[0]);
     }
 
-    public function testPrepareStorageExt()
+    public function testDeleteRes()
     {
         $action = new \Core\Controllers\ResController();
 
-        $data = [];
-
-        array_push(
-            $data,
-            array(
-                'column' => 'process_limit_date',
-                'value' => '29/03/2017',
-                'type' => 'date',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'process_notes',
-                'value' => '50,workingDay',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'category_id',
-                'value' => 'incoming',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'alt_identifier',
-                'value' => '',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'exp_contact_id',
-                'value' => 'jeanlouis.ercolani@maarch.org',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'address_id',
-                'value' => 'jeanlouis.ercolani@maarch.org',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'nature_id',
-                'value' => 'simple_mail',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'admission_date',
-                'value' => date('d/m/Y'),
-                'type' => 'date',
-            )
-        );
+        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
 
         $aArgs = [
-            'resId' => 100,
-            'data'  => $data,
-            'table' => 'mlb_coll_ext',
+            'id'=> $resId[0]['res_id']
         ];
 
-        $response = $action->prepareStorageExt($aArgs);
+        $response = $action->deleteRes($aArgs);
 
-        $this->assertArrayHasKey('res_id', $response);
-    }
-
-    public function testStoreExtResource()
-    {
-        $action = new \Core\Controllers\ResController();
-        
-        $data = [];
-
-        array_push(
-            $data,
-            array(
-                'column' => 'process_limit_date',
-                'value' => '29/03/2017',
-                'type' => 'date',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'process_notes',
-                'value' => '50,workingDay',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'category_id',
-                'value' => 'incoming',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'alt_identifier',
-                'value' => '',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'exp_contact_id',
-                'value' => 'jeanlouis.ercolani@maarch.org',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'address_id',
-                'value' => 'jeanlouis.ercolani@maarch.org',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'nature_id',
-                'value' => 'simple_mail',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'admission_date',
-                'value' => date('d/m/Y'),
-                'type' => 'date',
-            )
-        );
-
-        $aArgs = [
-            'resId'    => 100,
-            'data'     => $data,
-            'table'    => 'mlb_coll_ext',
-            'resTable' => 'res_letterbox',
-        ];
-
-        //TODO
-        $response = $action->storeExtResource($aArgs);
-        
         $this->assertTrue($response);
     }
 }

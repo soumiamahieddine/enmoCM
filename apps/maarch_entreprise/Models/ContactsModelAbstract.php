@@ -76,7 +76,7 @@ class ContactsModelAbstract extends Apps_Table_Service
             'table'     => ['view_contacts'],
             'where'     => ['email = ? and enabled = ?'],
             'data'      => [$aArgs['email'], 'Y'],
-            'order'     => ['creation_date'],
+            'order_by'     => ['creation_date'],
         ]);
 
         return $aReturn;
