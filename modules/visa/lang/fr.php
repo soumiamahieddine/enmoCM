@@ -1,4 +1,5 @@
 <?php
+
 if (!defined("_SIGN_DOCS"))
     define("_SIGN_DOCS", "Signer les documents");
 
@@ -17,7 +18,7 @@ if (!defined("_VISA_WORKFLOW"))
 if (!defined("_INTERRUPT_WORKFLOW"))
     define("_INTERRUPT_WORKFLOW", "Interrompre le circuit de visa");
 if (!defined("_VISA_WORKFLOW_COMMENT"))   
-	define("_VISA_WORKFLOW_COMMENT", "Gestion du circuit de visa");
+    define("_VISA_WORKFLOW_COMMENT", "Gestion du circuit de visa");
 if (!defined("_VIEW_VISA_WORKFLOW"))
     define("_VIEW_VISA_WORKFLOW", "Visualisation du circuit de visa");
 if (!defined("_VIEW_VISA_WORKFLOW_DESC"))
@@ -32,7 +33,7 @@ if (!defined("_EMPTY_VISA_WORKFLOW"))
     define("_EMPTY_VISA_WORKFLOW", "Aucun circuit de visa paramétré");
 if (!defined("_VISA_ANSWERS"))
     define("_VISA_ANSWERS", "Viser les projets de réponse");
-	
+
 if (!defined("_VISA_ANSWERS_DESC"))
     define("_VISA_ANSWERS_DESC", "Permet de viser les projets de réponse");
 
@@ -140,3 +141,6 @@ if (!defined("_SIGN_USER_COU"))
 
 if (!defined("_SIGN_USER_COU_DESC"))
     define("_SIGN_USER_COU_DESC", "Vous signez à la place de");
+
+if (!defined("_SIGN_USER"))
+    define("_SIGN_USER", "Personne signataire");

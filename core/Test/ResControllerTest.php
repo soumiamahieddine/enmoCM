@@ -121,76 +121,27 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThanOrEqual(0, $response[0]);
     }
 
-    public function testStoreExtResource()
+    public function testDelete()
     {
         $action = new \Core\Controllers\ResController();
 
-        $path = $_SESSION['config']['tmppath'] . '/test/';
-
-        if (!is_dir($path)) {
-            mkdir($path);
-        }
-
-        $fileSource = 'test_source.txt';
-
-        $fp = fopen($path . $fileSource, 'a');
-        fwrite($fp, 'a unit test');
-        fclose($fp);
-
-        $fileContent = file_get_contents($path . $fileSource, FILE_BINARY);
-        $encodedFile = base64_encode($fileContent);
-        
-        $data = [];
-
-        array_push(
-            $data,
-            array(
-                'column' => 'subject',
-                'value' => 'UNIT TEST',
-                'type' => 'string',
-            )
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'DELETE',
+            ]
         );
 
-        array_push(
-            $data,
-            array(
-                'column' => 'type_id',
-                'value' => 110,
-                'type' => 'integer',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'custom_t1',
-                'value' => 'TEST',
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $data,
-            array(
-                'column' => 'custom_t10',
-                'value' => 'lgi@maarch.org',
-                'type' => 'string',
-            )
-        );
+        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
 
         $aArgs = [
-            'encodedFile'   => $encodedFile,
-            'data'          => $data,
-            'collId'        => 'letterbox_coll',
-            'table'         => 'res_letterbox',
-            'fileFormat'    => 'txt',
-            'status'        => 'new',
+            'id'=> $resId[0]['res_id']
         ];
 
-        //TODO
-        //$response = $action->storeExtResource($aArgs);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = new \Slim\Http\Response();
+        $response = $action->delete($request, $response, $aArgs);
         
-        $this->assertGreaterThanOrEqual(0, $response);
+        $this->assertSame((string)$response->getBody(), '[true]');
     }
 
     public function testCreate()
@@ -276,5 +227,20 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         $response = $action->create($request, $response, $aArgs);
         //print_r($response);exit;
         $this->assertGreaterThan(1, json_decode($response->getBody())[0]);
+    }
+
+    public function testDeleteRes()
+    {
+        $action = new \Core\Controllers\ResController();
+
+        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
+
+        $aArgs = [
+            'id'=> $resId[0]['res_id']
+        ];
+
+        $response = $action->deleteRes($aArgs);
+
+        $this->assertTrue($response);
     }
 }

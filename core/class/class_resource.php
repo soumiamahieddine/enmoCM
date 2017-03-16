@@ -184,50 +184,6 @@
         }
     }
 
-    /**
-    * Gets the resource identifier
-    *
-    * @return integer Resource identifier (res_id)
-    */
-    public function get_id()
-    {
-        return $this->res_id;
-    }
-    /**
-    * Gets the resource filename
-    *
-    * @return integer Resource name (filemane)
-    */
-    public function get_filename($id,$coll_id)
-    {
-        require_once("core/class/class_security.php");
-        $sec = new security();
-        $resource_table = $sec->retrieve_table_from_coll($coll_id);
-        if ($resource_table == '')
-            echo "error with coll_id";
-        $db = new Database();
-        $stmt = $db->query("select filename from ".$resource_table." where res_id=?", array($id));
-        $result = $stmt->fetchObject();
-        return $result->filename;
-    }
-
-    /**
-    * Gets the resource path
-    *
-    * @return integer Resource path (path)
-    */
-    public function get_path($id,$coll_id)
-    {
-        require_once("core/class/class_security.php");
-        $sec = new security();
-        $resource_table = $sec->retrieve_table_from_coll($coll_id);
-        if ($resource_table == '')
-            echo "error with coll_id";
-        $db = new Database();
-        $stmt = $db->query("select path from ".$resource_table." where res_id=?", array($id));
-        $result = $stmt->fetchObject();
-        return str_replace('#', DIRECTORY_SEPARATOR, $result->path);
-    }
 
     /**
     * Gets the error message of the resource object

@@ -11,6 +11,7 @@ function addVisaUser(users) {
                 +'<i class="fa fa-hourglass" aria-hidden="true"></i>'
             +'</span>'
             +'<span class="visaUserInfo">'
+                +'<sup class="visaUserPos nbResZero">'+next_visa+'</sup>&nbsp;&nbsp;'
                 +'<i class="fa fa-user fa-2x" aria-hidden="true"></i> '+ $j("select#visaUserList option:selected").text() +' <sup class="nbRes">'+$j("select#visaUserList option:selected").parent().get( 0 ).label+'</sup>'
                 +'<input class="userId" type="hidden" value="' + $j("select#visaUserList option:selected").val() + '"/><input class="visaDate" type="hidden" value=""/>'
             +'</span>'
@@ -39,8 +40,10 @@ function addVisaUser(users) {
                 +'<i class="fa fa-hourglass" aria-hidden="true"></i>'
             +'</span>'
             +'<span class="visaUserInfo">'
+                +'<sup class="visaUserPos nbResZero">'+next_visa+'</sup>&nbsp;&nbsp;'
                 +'<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + users.lastname + ' ' + users.firstname + ' <sup class="nbRes">'+users.entity_id+'</sup>'
                 +'<input class="userId" type="hidden" value="' + users.user_id + '"/><input class="visaDate" type="hidden" value=""/>'
+                +'&nbsp;&nbsp; <i title="Personne signataire" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#FDD16C;visibility:hidden;"></i>'
             +'</span>'
             +'<span class="visaUserConsigne">'
                 +'<input type="text" class="consigne" value="' + users.process_comment + '"/>'
@@ -54,25 +57,29 @@ function addVisaUser(users) {
         +'</div>');
         
     }
+    resetPosVisa();
 }
-function delVisaUser (target) {
-    console.log(target);
-  var id = '#'+target.id;
-    
-  if($j(".droptarget").length == 1){
-      $j("#emptyVisa").show(); 
-  }
-  $j(id).remove();
-  
-  resetPosVisa();
-  
+function delVisaUser(target) {
+    var id = '#' + target.id;
+
+    if ($j(".droptarget").length == 1) {
+        $j("#emptyVisa").show();
+    }
+    $j(id).remove();
+
+    resetPosVisa();
+
 }
 function resetPosVisa () {
-    $i = 1;
+    $j(".visaUserSign").css("visibility","hidden");
+    i = 1;
     $j(".droptarget").each(function() {
-        this.id = 'visa_' + $i;
-        $i++;
+        this.id = 'visa_' + i;
+        $j("#" + this.id).find(".visaUserPos").text(i);
+        i++;
     });
+    i--
+    $j("#visa_" + i).find(".visaUserSign").css("visibility","visible");
 }
 function updateVisaWorkflow(resId) {
     var $i = 0;

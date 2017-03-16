@@ -14,7 +14,7 @@
 		<parameter name="cancel" type="string" />
 		<parameter name="chrono" type="string" />
 		<parameter name="contact_attach" type="string" />
-		<parameter name="contactidAttach" type="identifier" />
+		<parameter name="contactidAttach" type="login" />
 		<parameter name="editModel" type="string" />
 		<parameter name="edit" type="string" />
 		<parameter name="fromDetail" type="string" />
@@ -58,6 +58,7 @@
 		<parameter name="fromDetail" type="identifier" />
 		<parameter name="id" type="integer" />
 		<parameter name="relation" type="integer" />
+		<parameter name="rest" type="boolean" />
 	</validationRule>
 
 	<validationRule name="get_other_chrono_attachment" extends="standardForm" mode="error">

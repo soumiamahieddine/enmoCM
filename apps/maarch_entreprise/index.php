@@ -274,13 +274,6 @@ if(empty($_SESSION['current_basket'])){
         </script>
         <?php
     }
-    ?>
-        <script type="text/javascript">
-            //TODO  Ne faire qu'une seule fois cet appel (pas possible pour l'instant à cause des modals qui ne connaissent pas cette variable)
-            // Initialise les variables de config dans le js
-            InitializeJsGlobalConfig();
-        </script>
-    <?php
 
 if (!isset($_REQUEST['display'])) { ?>
     <script>
@@ -385,16 +378,18 @@ if (file_exists($path)) {
     </div>
 </body>
 <?php
-if (PROD_MODE) {
-?>
-<script src="js/angular/main.bundle.min.js"></script>
-<?php
-} else {
+if (V2_ENABLED) {
+    if (PROD_MODE) {
     ?>
-    <script>
-        System.import('js/angular/main.js').catch(function(err){ console.error(err); });
-    </script>
+    <script src="js/angular/main.bundle.min.js"></script>
     <?php
+    } else {
+        ?>
+        <script>
+            System.import('js/angular/main.js').catch(function(err){ console.error(err); });
+        </script>
+        <?php
+    }
 }
 ?>
 

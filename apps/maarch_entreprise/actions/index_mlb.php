@@ -710,7 +710,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . '</label></td>';
     $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><textarea name="subject" '
-            . 'id="subject"  rows="4" onchange="clear_error(\'frm_error_'
+            . 'id="subject" style="resize:vertical" rows="4" onchange="clear_error(\'frm_error_'
             . $actionId . '\');" ></textarea></td>';
     $frmStr .= '<td><span class="red_asterisk" id="subject_mandatory" '
             . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';

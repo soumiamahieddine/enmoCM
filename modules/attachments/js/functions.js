@@ -290,19 +290,19 @@ function showAttachmentsForm(path, width, height) {
     
     if(typeof(height)==='undefined'){
         var height = '480';
-    }  
-    
+    }
+
     new Ajax.Request(path,
     {
         method:'post',
         parameters: { url : path
-                    },  
+                    },
         onSuccess: function(answer) {
             eval("response = "+answer.responseText);
-           
+
             if(response.status == 0){
                 var modal_content = convertToTextVisibleNewLine(response.content);
-                createModalinAttachmentList(modal_content, 'form_attachments', height, width, 'fullscreen'); 
+                createModalinAttachmentList(modal_content, 'form_attachments', height, width, 'fullscreen');
             } else {
                 window.top.$('main_error').innerHTML = response.error;
             }
@@ -319,7 +319,7 @@ function get_num_rep(res_id){
 	}
 	return 0;
 }
-function ValidAttachmentsForm(path, form_id) {
+function ValidAttachmentsForm(path, form_id, fromAngular) {
 
     //console.log(Form.serialize(form_id));
     new Ajax.Request(path,
@@ -333,56 +333,60 @@ function ValidAttachmentsForm(path, form_id) {
             if (response.status == 0) {
                 destroyModal('form_attachments');
 
-                if ($('viewframe') != undefined) {
-                    var srcViewFrame = $('viewframe').src;
-                    $('viewframe').src = srcViewFrame;
-                }
-                
-                if (parent.document.getElementById('nb_attach') != undefined) {
-                    var nb_attach = parseInt(parent.document.getElementById('nb_attach').innerHTML);
-                    nb_attach = nb_attach+1;
-                    parent.document.getElementById('nb_attach').innerHTML = nb_attach;
-                }
-                if(document.getElementById('iframe_tab')){
-                    if (document.getElementById('iframe_tab').contentWindow.document.getElementById('list_attach') != undefined) {
-                        iframe_attach = document.getElementById('iframe_tab').contentWindow.document.getElementById('list_attach');
-                        iframe_attach.src = iframe_attach.src;
+                if (typeof fromAngular != "undefined") {
+                    window.angularSignatureBookComponent.componentAfterAttach(fromAngular);
+                } else {
+                    if ($('viewframe') != undefined) {
+                        var srcViewFrame = $('viewframe').src;
+                        $('viewframe').src = srcViewFrame;
                     }
-                }
-                
-                if ($('cur_idAffich'))
-                    var num_rep = $('cur_idAffich').value;
-                if ($('cur_resId'))
-                    var res_id_master = $('cur_resId').value;
-                if (response.cur_id)
-                    var rep_id = response.cur_id;
-                if (num_rep == 0)
-                    num_rep = get_num_rep(rep_id);
 
-                if ($('viewframevalidRep' + num_rep + '_' + rep_id)) {
-                    if (response.majFrameId > 0) {
-                        $('viewframevalidRep' + num_rep + '_' + rep_id).src = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + res_id_master + "&id=" + response.majFrameId;
-                        if ($('cur_rep'))
-                            $('cur_rep').value = response.majFrameId;
-                        $('viewframevalidRep' + num_rep + '_' + rep_id).id = 'viewframevalidRep' + num_rep + '_' + response.majFrameId;
+                    if (parent.document.getElementById('nb_attach') != undefined) {
+                        var nb_attach = parseInt(parent.document.getElementById('nb_attach').innerHTML);
+                        nb_attach = nb_attach+1;
+                        parent.document.getElementById('nb_attach').innerHTML = nb_attach;
                     }
-                    else
-                        $('viewframevalidRep' + num_rep + '_' + rep_id).src = $('viewframevalidRep' + num_rep + '_' + rep_id).src;
-                }
-
-                if ($('ans_' + num_rep + '_' + rep_id)) {
-                    $('ans_' + num_rep + '_' + rep_id).innerHTML = response.title;
-                    if (response.isVersion) {
-                        $('ans_' + num_rep + '_' + rep_id).setAttribute('onclick', 'updateFunctionModifRep(\'' + response.majFrameId + '\', ' + num_rep + ', ' + response.isVersion + ');');
-                        $('ans_' + num_rep + '_' + rep_id).id = 'ans_' + num_rep + '_' + response.majFrameId;
+                    if(document.getElementById('iframe_tab')){
+                        if (document.getElementById('iframe_tab').contentWindow.document.getElementById('list_attach') != undefined) {
+                            iframe_attach = document.getElementById('iframe_tab').contentWindow.document.getElementById('list_attach');
+                            iframe_attach.src = iframe_attach.src;
+                        }
                     }
-                }
 
-                if ($('cur_idAffich')) {
-                    console.log('test refresh');
-                    loadNewId2('index.php?display=true&module=visa&page=update_visaPage', res_id_master, $('coll_id').value);
+                    if ($('cur_idAffich'))
+                        var num_rep = $('cur_idAffich').value;
+                    if ($('cur_resId'))
+                        var res_id_master = $('cur_resId').value;
+                    if (response.cur_id)
+                        var rep_id = response.cur_id;
+                    if (num_rep == 0)
+                        num_rep = get_num_rep(rep_id);
+
+                    if ($('viewframevalidRep' + num_rep + '_' + rep_id)) {
+                        if (response.majFrameId > 0) {
+                            $('viewframevalidRep' + num_rep + '_' + rep_id).src = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + res_id_master + "&id=" + response.majFrameId;
+                            if ($('cur_rep'))
+                                $('cur_rep').value = response.majFrameId;
+                            $('viewframevalidRep' + num_rep + '_' + rep_id).id = 'viewframevalidRep' + num_rep + '_' + response.majFrameId;
+                        }
+                        else
+                            $('viewframevalidRep' + num_rep + '_' + rep_id).src = $('viewframevalidRep' + num_rep + '_' + rep_id).src;
+                    }
+
+                    if ($('ans_' + num_rep + '_' + rep_id)) {
+                        $('ans_' + num_rep + '_' + rep_id).innerHTML = response.title;
+                        if (response.isVersion) {
+                            $('ans_' + num_rep + '_' + rep_id).setAttribute('onclick', 'updateFunctionModifRep(\'' + response.majFrameId + '\', ' + num_rep + ', ' + response.isVersion + ');');
+                            $('ans_' + num_rep + '_' + rep_id).id = 'ans_' + num_rep + '_' + response.majFrameId;
+                        }
+                    }
+
+                    if ($('cur_idAffich')) {
+                        console.log('test refresh');
+                        loadNewId2('index.php?display=true&module=visa&page=update_visaPage', res_id_master, $('coll_id').value);
+                    }
+                    eval(response.exec_js);
                 }
-                eval(response.exec_js);
             } else {
                 alert(response.error);
             }

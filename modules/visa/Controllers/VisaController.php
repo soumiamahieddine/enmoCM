@@ -12,6 +12,7 @@ require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
 require_once 'apps/maarch_entreprise/Models/UsersModel.php';
 require_once 'modules/basket/Models/BasketsModel.php';
 require_once 'modules/notes/Models/NotesModel.php';
+require_once 'modules/visa/Models/VisaModel.php';
 
 
 class VisaController
@@ -41,30 +42,157 @@ class VisaController
 			$actionsData[] = ['value' => $value['VALUE'], 'label' => $value['LABEL']];
 		}
 
+		$incomingMailAttachments = \ResModel::getAvailableLinkedAttachmentsIn([
+			'resIdMaster' => $resId,
+			'in' 	      => ['incoming_mail_attachment'],
+			'select' 	  => ['res_id', 'title']
+		]);
+
+		$documents = [
+			[
+				'title'         => $incomingMail[0]['subject'],
+				'truncateTitle' => ((strlen($incomingMail[0]['subject']) > 10) ? (substr($incomingMail[0]['subject'], 0, 10) . '...') : $incomingMail[0]['subject']),
+				'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$resId}&collid=letterbox_coll",
+				'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$resId}&coll_id=letterbox_coll&display=true&advanced=true"
+			]
+		];
+		foreach ($incomingMailAttachments as $value) {
+			$documents[] = [
+				'title'         => $value['title'],
+				'truncateTitle' => ((strlen($value['title']) > 10) ? (substr($value['title'], 0, 10) . '...') : $value['title']),
+				'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$value['res_id']}",
+				'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$value['res_id']}&coll_id=attachments_coll&display=true&advanced=true"
+			];
+		}
+
+//		$history = \HistoryModel::getByIdForActions([
+//			'id'      => $resId,
+//			'select'  => ['event_date', 'info', 'firstname', 'lastname'],
+//			'orderBy' => ['event_date DESC']
+//		]);
+
+		$resList = \BasketsModel::getResListById([
+			'basketId' => $basketId,
+			'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
+		]);
+
+		foreach ($resList as $key => $value) {
+			if (!empty($value['contact_id'])) {
+				$resList[$key]['sender'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['contact_id'], 'addressId' => $value['address_id']]);
+			} else {
+				$resList[$key]['sender'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
+			}
+			$attachmentsInResList = \ResModel::getAvailableLinkedAttachmentsNotIn([
+				'resIdMaster' => $value['res_id'],
+				'notIn' 	  => ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'],
+				'select' 	  => ['status']
+			]);
+			$allSigned = !empty($attachmentsInResList);
+			foreach ($attachmentsInResList as $value2) {
+				if ($value2['status'] == 'TRA' || $value2['status'] == 'A_TRA') {
+					$allSigned = false;
+				}
+			}
+			$resList[$key]['creation_date'] = date(DATE_ATOM, strtotime($resList[$key]['creation_date']));
+			$resList[$key]['process_limit_date'] = date(DATE_ATOM, strtotime($resList[$key]['process_limit_date']));
+			$resList[$key]['allSigned'] = $allSigned;
+			$resList[$key]['priorityColor'] = $_SESSION['mail_priorities_color'][$value['priority']]; //TODO No Session
+			$resList[$key]['priorityLabel'] = $_SESSION['mail_priorities'][$value['priority']]; //TODO No Session
+			unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
+		}
+
+		$actionLabel = (_ID_TO_DISPLAY == 'res_id' ? $incomingMail[0]['res_id'] : $incomingMail[0]['alt_identifier']);
+		$actionLabel .= ' : ' . $incomingMail[0]['subject'];
+		$currentAction = [
+			'id' => $_SESSION['current_basket']['default_action'], //TODO No Session
+			'actionLabel' => $actionLabel
+		];
+
+
+		$datas = [];
+		$datas['actions'] 		= $actionsData;
+		$datas['attachments'] 	= $this->getAttachmentsForSignatureBook(['resId' => $resId]);
+		$datas['documents'] 	= $documents;
+		$datas['currentAction'] = $currentAction;
+//		$datas['histories'] 	= $history;
+		$datas['resList'] 		= $resList;
+		$datas['nbNotes'] 		= \NotesModel::countByResId(['resId' => $resId]);;
+		$datas['signature'] 	= \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
+		$datas['consigne'] 		= \UsersModel::getCurrentConsigneById(['resId' => $resId]);
+		$datas['hasWorkflow'] 	= \VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
+
+		return $response->withJson($datas);
+	}
+
+	public function unsignFile(RequestInterface $request, ResponseInterface $response, $aArgs)
+	{
+
+		$resId = $aArgs['resId'];
+		$collId = $aArgs['collId'];
+
+		$bReturnSnd = false;
+		$bReturnFirst = \ResModel::put(['collId' => $collId, 'set' => ['status' => 'A_TRA'], 'where' => ['res_id = ?'], 'data' => [$resId]]);
+		if ($bReturnFirst) {
+			$bReturnSnd = \ResModel::put(['collId' => $collId, 'set' => ['status' => 'DEL'], 'where' => ['origin = ?', 'status != ?'], 'data' => [$resId . ',' .$collId, 'DEL']]);
+		}
+
+		if ($bReturnFirst && $bReturnSnd) {
+			return $response->withJson(['status' => 'OK']);
+		} else {
+			return $response->withJson(['status' => 'KO']);
+		}
+	}
+
+	public function getAttachmentsById(RequestInterface $request, ResponseInterface $response, $aArgs)
+	{
+		$resId = $aArgs['resId'];
+
+		return $response->withJson($this->getAttachmentsForSignatureBook(['resId' => $resId]));
+	}
+
+	private function getAttachmentsForSignatureBook(array $aArgs = [])
+	{
+
 		if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml')) {
 			$path = 'custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml';
 		} else {
 			$path = 'apps/maarch_entreprise/xml/entreprise.xml';
 		}
+
 		$xmlfile = simplexml_load_file($path);
 		$attachmentTypes = [];
 		$attachmentTypesXML = $xmlfile->attachment_types;
 		if (count($attachmentTypesXML) > 0) {
 			foreach ($attachmentTypesXML->type as $value) {
 				$label = defined((string) $value->label) ? constant((string) $value->label) : (string) $value->label;
-				$attachmentTypes[(string) $value->id] = ['label' => $label, 'icon' => (string) $value['icon']];
+				$attachmentTypes[(string) $value->id] = [
+					'label' => $label,
+					'icon' => (string)$value['icon'],
+					'sign' => (empty($value['sign']) || (string)$value['sign'] == 'true') ? true : false
+				];
 			}
 		}
 
+		$orderBy = "CASE attachment_type WHEN 'response_project' THEN 1";
+		$c = 2;
+		foreach($attachmentTypes as $key => $value) {
+			if ($value['sign'] && $key != 'response_project') {
+				$orderBy .= " WHEN '{$key}' THEN {$c}";
+				++$c;
+			}
+		}
+		$orderBy .= " ELSE {$c} END, doc_date DESC NULLS LAST, creation_date DESC";
+
 		$attachments = \ResModel::getAvailableLinkedAttachmentsNotIn([
-			'resIdMaster' => $resId,
-			'notIn' 	  => ['incoming_mail_attachment', 'print_folder'],
-			'select' 	  => [
+			'resIdMaster'	=> $aArgs['resId'],
+			'notIn' 	  	=> ['incoming_mail_attachment', 'print_folder'],
+			'select' 	  	=> [
 				'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
 				'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
 				'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
-				'dest_address_id', 'origin'
-			]
+				'dest_address_id', 'origin', 'doc_date'
+			],
+			'orderBy'		=> $orderBy
 		]);
 
 		foreach ($attachments as $key => $value) {
@@ -84,11 +212,13 @@ class VisaController
 
 			$viewerId = $realId;
 			$pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
+			$isConverted = false;
 			foreach ($attachments as $tmpKey => $tmpValue) {
 				if ($tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
 					if ($value['status'] != 'SIGN') {
 						$viewerId = $tmpValue['res_id'];
 					}
+					$isConverted = true;
 					unset($attachments[$tmpKey]);
 				}
 				if ($value['status'] == 'SIGN' && $tmpValue['attachment_type'] == 'signed_response' && !empty($tmpValue['origin'])) {
@@ -114,12 +244,20 @@ class VisaController
 				$attachments[$key]['typist'] = \UsersModel::getLabelledUserById(['id' => $value['typist']]);
 			}
 
-			$attachments[$key]['truncateTitle'] = ((strlen($value['title']) > 20) ? (substr($value['title'], 0, 20) . '...') : $value['title']);
+			$attachments[$key]['creation_date'] = date(DATE_ATOM, strtotime($attachments[$key]['creation_date']));
+			if ($attachments[$key]['validation_date']) {
+				$attachments[$key]['validation_date'] = date(DATE_ATOM, strtotime($attachments[$key]['validation_date']));
+			}
+			if ($attachments[$key]['doc_date']) {
+				$attachments[$key]['doc_date'] = date(DATE_ATOM, strtotime($attachments[$key]['doc_date']));
+			}
+			$attachments[$key]['isConverted'] = $isConverted;
 			$attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
 			$attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
+			$attachments[$key]['sign'] = $attachmentTypes[$value['attachment_type']]['sign'];
 
 			$attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$realId}&coll_id={$collId}&display=true&advanced=true";
-			$attachments[$key]['viewerLink'] = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$viewerId}";
+			$attachments[$key]['viewerLink'] = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$aArgs['resId']}&id={$viewerId}";
 
 			unset($attachments[$key]['path'], $attachments[$key]['filename'], $attachments[$key]['dest_user'],
 				$attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id']);
@@ -131,111 +269,7 @@ class VisaController
 			}
 		}
 
-		$attachments = array_values($attachments);
-
-		$incomingMailAttachments = \ResModel::getAvailableLinkedAttachmentsIn([
-			'resIdMaster' => $resId,
-			'in' 	      => ['incoming_mail_attachment'],
-			'select' 	  => ['res_id', 'title']
-		]);
-
-		$documents = [
-			[
-				'title'         => $incomingMail[0]['subject'],
-				'truncateTitle' => ((strlen($incomingMail[0]['subject']) > 10) ? (substr($incomingMail[0]['subject'], 0, 10) . '...') : $incomingMail[0]['subject']),
-				'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$resId}&collid=letterbox_coll",
-				'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$resId}&coll_id=letterbox_coll&display=true&advanced=true"
-			]
-		];
-		foreach ($incomingMailAttachments as $value) {
-			$documents[] = [
-				'title'         => $value['title'],
-				'truncateTitle' => ((strlen($value['title']) > 10) ? (substr($value['title'], 0, 10) . '...') : $value['title']),
-				'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$value['res_id']}",
-				'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$value['res_id']}&coll_id=attachments_coll&display=true&advanced=true"
-			];
-		}
-
-		$history = \HistoryModel::getByIdForActions([
-			'id'      => $resId,
-			'select'  => ['event_date', 'info', 'firstname', 'lastname'],
-			'orderBy' => ['event_date DESC']
-		]);
-                
-                $notes = \NotesModel::getByResId([
-			'resId'      => $resId,
-			'select'  => ['id','firstname','lastname','date_note', 'note_text'],
-			'orderBy' => ['date_note DESC']
-		]);
-                
-
-		$resList = \BasketsModel::getResListById([
-			'basketId' => $basketId,
-			'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
-		]);
-
-		foreach ($resList as $key => $value) {
-			if (!empty($value['contact_id'])) {
-				$resList[$key]['sender'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['contact_id'], 'addressId' => $value['address_id']]);
-			} else {
-				$resList[$key]['sender'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
-			}
-			$attachmentsInResList = \ResModel::getAvailableLinkedAttachmentsNotIn([
-				'resIdMaster' => $value['res_id'],
-				'notIn' 	  => ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'],
-				'select' 	  => ['status']
-			]);
-			$allSigned = !empty($attachmentsInResList);
-			foreach ($attachmentsInResList as $value2) {
-				if ($value2['status'] == 'TRA' || $value2['status'] == 'A_TRA') {
-					$allSigned = false;
-				}
-			}
-			$resList[$key]['allSigned'] = $allSigned;
-			$resList[$key]['priorityColor'] = $_SESSION['mail_priorities_color'][$value['priority']]; //TODO No Session
-			unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
-		}
-
-		$actionLabel = \BasketsModel::getActionByActionId(['actionId' => \BasketsModel::getActionIdById(['basketId' => $basketId]), 'select' => ['label_action']])['label_action'] . ' n°';
-		$actionLabel .= (_ID_TO_DISPLAY == 'res_id' ? $incomingMail[0]['res_id'] : $incomingMail[0]['alt_identifier']);
-		$actionLabel .= ' : ' . $incomingMail[0]['subject'];
-		$currentAction = [
-			'id' => $_SESSION['current_basket']['default_action'], //TODO No Session
-			'actionLabel' => $actionLabel
-		];
-
-		$datas = [];
-		$datas['actions'] = $actionsData;
-		$datas['attachments'] = $attachments;
-		$datas['documents'] = $documents;
-		$datas['currentAction'] = $currentAction;
-		$datas['linkNotes'] = 'index.php?display=true&module=notes&page=notes&identifier=' .$resId. '&origin=document&coll_id=letterbox_coll&load&size=medium';
-		$datas['histories'] = $history;
-		$datas['notes'] = $notes;
-		$datas['resList'] = $resList;
-		$datas['signature'] = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
-		$datas['consigne'] = \UsersModel::getConsigneForCurrentUserById(['resId' => $resId]);
-
-		return $response->withJson($datas);
-	}
-
-	public function unsignFile(RequestInterface $request, ResponseInterface $response, $aArgs)
-	{
-
-		$resId = $aArgs['resId'];
-		$collId = $aArgs['collId'];
-
-		$bReturnSnd = false;
-		$bReturnFirst = \ResModel::put(['collId' => $collId, 'set' => ['status' => 'A_TRA'], 'where' => ['res_id = ?'], 'data' => [$resId]]);
-		if ($bReturnFirst) {
-			$bReturnSnd = \ResModel::put(['collId' => $collId, 'set' => ['status' => 'DEL'], 'where' => ['origin = ?', 'status != ?'], 'data' => [$resId . ',' .$collId, 'DEL']]);
-		}
-
-		if ($bReturnFirst && $bReturnSnd) {
-			return $response->withJson(['status' => 'OK']);
-		} else {
-			return $response->withJson(['status' => 'KO']);
-		}
+		return array_values($attachments);
 	}
 
 }

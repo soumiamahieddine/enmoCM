@@ -749,7 +749,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<tr id="subject_tr" style="display:'.$display_value.';">';
         $frm_str .='<td class="indexing_label"><label for="subject" class="form_title" >'._SUBJECT.'</label></td>';
         $frm_str .='<td>&nbsp;</td>';
-        $frm_str .='<td class="indexing_field"><textarea name="subject" id="subject" rows="4" onchange="clear_error(\'frm_error_'.$id_action.'\');" >';
+        $frm_str .='<td class="indexing_field"><textarea style="resize:vertical" name="subject" id="subject" rows="4" onchange="clear_error(\'frm_error_'.$id_action.'\');" >';
         if(isset($data['subject']) && !empty($data['subject']))
         {
             $frm_str .= $data['subject'];

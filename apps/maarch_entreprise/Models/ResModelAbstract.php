@@ -81,12 +81,17 @@ class ResModelAbstract extends Apps_Table_Service
         static::checkArray($aArgs, ['notIn']);
 
 
-        $aReturn = static::select([
+        $select = [
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_view_attachments'],
             'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
-            'data'      => [$aArgs['resIdMaster'], $aArgs['notIn']]
-        ]);
+            'data'      => [$aArgs['resIdMaster'], $aArgs['notIn']],
+        ];
+        if (!empty($aArgs['orderBy'])) {
+            $select['order_by'] = $aArgs['orderBy'];
+        }
+
+        $aReturn = static::select($select);
 
         return $aReturn;
     }

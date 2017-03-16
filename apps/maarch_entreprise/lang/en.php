@@ -1147,6 +1147,7 @@ if (! defined("_STATUS_UPDATED"))    define("_STATUS_UPDATED", "Updated status")
 
 if (!defined("_QUICKLAUNCH")) define("_QUICKLAUNCH", "Short cut");
 if (!defined("_SHOW_DETAILS_DOC")) define("_SHOW_DETAILS_DOC", "See the document details");
+if (!defined("_VISIBLEBY")) define("_VISIBLEBY", "Visible by");
 if (!defined("_VIEW_DOC_FULL")) define("_VIEW_DOC_FULL", "see the document");
 if (!defined("_DETAILS_DOC_FULL")) define("_DETAILS_DOC_FULL", "See the document card");
 if (!defined("_IDENTIFIER")) define("_IDENTIFIER", "Reference");
