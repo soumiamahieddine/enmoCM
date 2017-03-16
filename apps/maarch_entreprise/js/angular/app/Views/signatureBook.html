@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="contentSignatureBook">
-        <div class="resListContent" [ngStyle]="{'display': showResLeftPanel ? 'inline-block' : 'none'}">
+        <div class="resListContent" [ngStyle]="{'display': showResLeftPanel ? 'inline-block' : 'none'}" id="resListContent">
             <div class="resListContentPos">
                 <div class="resListContentFrame" *ngFor="let res of signatureBook.resList" (click)="changeLocation(res.res_id)" [ngClass]="{'resListContentFrameSelected': resId == res.res_id}">
                     <div class="resListContentInfo">
@@ -245,11 +245,11 @@
                 <!--</div>-->
             <!--</div>-->
         </div>
-        <div class="panelRight"  *ngIf="signatureBook.hasWorkflow">
+        <div class="panelRight" *ngIf="signatureBook.hasWorkflow">
             <div class="item panelRightAddPj" (click)="addAttachmentIframe()">
                 <i class="fa fa-plus fa-2x" title="Créer une pièce jointe"></i>
             </div>
-            <div class="panelRightContent" *ngIf="signatureBook.attachments">
+            <div class="panelRightContent" *ngIf="signatureBook.attachments" id="rightPanelContent">
                 <div title="[{{attachment.attachment_type}}] {{attachment.title}}" style="position: relative;" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail}">
                     <span class="fa-stack fa-lg">
                         <i class="fa fa-file-o fa-stack-2x"></i><i class="fa {{attachment.icon}} fa-stack-1x"></i>
