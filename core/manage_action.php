@@ -140,7 +140,7 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
         exit();
     }
 }
-elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values']) && !empty($_POST['new_status']) && !empty($_POST['table']))
+elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values'])&& $_POST['values'] != 'none#' && !empty($_POST['new_status']) && !empty($_POST['table']))
 {
     $stmt = $db->query("select id from status where id = ?", array($_POST['new_status']));
     $lineStatus = $stmt->fetchObject();
