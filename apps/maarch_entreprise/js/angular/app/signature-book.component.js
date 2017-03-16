@@ -107,8 +107,8 @@ var SignatureBookComponent = (function () {
                         _this.rightViewerLink = _this.signatureBook.attachments[0].viewerLink;
                     }
                     setTimeout(function () {
-                        $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#ccc", cursoropacitymax: 0.6, cursorwidth: 4 });
-                        $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#ccc", cursoropacitymax: 0.6, cursorwidth: 4 });
+                        $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
+                        $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                     }, 0);
                 });
             });
