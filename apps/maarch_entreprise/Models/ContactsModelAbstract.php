@@ -60,6 +60,9 @@ class ContactsModelAbstract extends Apps_Table_Service
 
         $labelledContact = '';
         if (!empty($rawContact[0])) {
+            if (empty($rawContact[0]['firstname']) && empty($rawContact[0]['lastname'])) {
+                $rawContact = self::getById(['id' => $aArgs['contactId'], 'select' => ['firstname', 'lastname']]);
+            }
             $labelledContact = $rawContact[0]['firstname']. ' ' .$rawContact[0]['lastname'];
         }
 
