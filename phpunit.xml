@@ -7,8 +7,9 @@
     </testsuites>
     <filter>
       <whitelist>
-          <directory suffix=".php">core/Test</directory>
-          <!-- <directory suffix=".php">core/Controllers</directory> -->
+          <directory suffix="Test.php">core/Test</directory>
+          <directory suffix=".php">core/Controllers</directory>
+          <directory suffix=".php">core/Models</directory>
       </whitelist>
     </filter>
     <logging>
