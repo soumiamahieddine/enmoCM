@@ -9,7 +9,9 @@
             <i class="itemLabel">Document principal</i>
         </div>
         <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
-            <i class="fa fa-pencil fa-2x"><sup class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbNotes}}</sup></i>
+            <i class="fa fa-pencil fa-2x">
+                <sup *ngIf="signatureBook.nbNotes > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbNotes}}</sup>
+            </i>
             <i class="itemLabel">Note(s)</i>
         </div>
         <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 3}" (click)="changeSignatureBookLeftContent(3)">
@@ -134,8 +136,8 @@
                             <label>Retour : </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].validation_date | date:'dd/MM/y'}}</span>
                         </div>
-                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].updated_by}}">
-                            <label>N°Chrono : </label>
+                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].identifier}}">
+                            <label>Chrono : </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].identifier}}</span>
                         </div>
                         <div class="infoPj">
@@ -166,11 +168,14 @@
                     <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF de ce format n'a pas été trouvée.</sub></div>
                 </div>
                 <div class="pjSign" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)">
-                    <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
+                    <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN' && signatureBook.signature" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
                         <img *ngIf="!loading" title="Signer" src="{{signatureBook.signature}}">
                         <i *ngIf="loading" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
                     </span>
-                    <span *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" (click)="unsignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer;color: green;">
+                    <span *ngIf="!signatureBook.signature" style="color: red;">
+                        <i title="Aucune image de signature paramétrée" class="fa fa-ban fa-2x" aria-hidden="true"></i>
+                    </span>
+                    <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" (click)="unsignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer;color: green;">
                         <i title="Dé-signer" class="fa fa-check fa-2x" aria-hidden="true"></i>
                     </span>
                 </div>
