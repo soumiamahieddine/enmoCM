@@ -40,7 +40,7 @@
                     <div class="resListContentInfo">
                         <i class="fa fa-compass" title="Numéro chrono"></i> {{res.alt_identifier}}
                         <i *ngIf="res.allSigned" class="fa fa-certificate"></i>&nbsp;
-                        <i class="fa fa-circle" aria-hidden="true" [ngStyle]="{'color': res.priorityColor}" style="position: absolute;right: 0px;top: -10px;font-size: 25px;"></i>
+                        <i class="fa fa-circle" title="{res.priorityLabel}" aria-hidden="true" [ngStyle]="{'color': res.priorityColor}" style="position: absolute;right: 0px;top: -10px;font-size: 25px;"></i>
                     </div>
                     <div class="resListContentInfo">
                         <i class="fa fa-info" title="Objet"></i> {{res.subject}}
@@ -118,7 +118,7 @@
                         <span>{{signatureBook.attachments[rightSelectedThumbnail].destUser}}</span>
                     </div>
                     <div *ngIf="showTopRightPanel">
-                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].typist}}">
+                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].typist}} / Modifié par : {{signatureBook.attachments[rightSelectedThumbnail].updated_by}}">
                             <label>Créé par: </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
                         </div>
@@ -126,13 +126,13 @@
                             <label>Créé le: </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].creation_date | date:'dd/MM/y à HH:mm'}}</span>
                         </div>
-                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].updated_by}}">
-                            <label>Modifié par : </label>
-                            <span>{{signatureBook.attachments[rightSelectedThumbnail].updated_by}}</span>
-                        </div>
                         <div class="infoPj">
                             <label>Retour : </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].validation_date | date:'dd/MM/y'}}</span>
+                        </div>
+                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].updated_by}}">
+                            <label>N°Chrono : </label>
+                            <span>{{signatureBook.attachments[rightSelectedThumbnail].identifier}}</span>
                         </div>
                         <div class="infoPj">
                             <label>Version : </label>
@@ -241,7 +241,7 @@
                 <i class="fa fa-plus fa-2x" title="Créer une pièce jointe"></i>
             </div>
             <div class="panelRightContent" *ngIf="signatureBook.attachments">
-                <div style="position: relative;" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail}">
+                <div title="[{{attachment.attachment_type}}] {{attachment.title}}" style="position: relative;" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail}">
                     <span class="fa-stack fa-lg">
                         <i class="fa fa-file-o fa-stack-2x"></i><i class="fa {{attachment.icon}} fa-stack-1x"></i>
                     </span>
