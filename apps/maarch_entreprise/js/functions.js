@@ -3326,6 +3326,9 @@ function loadToolbarBadge(targetTab,path_manage_script){
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
             if (response.status == 0) {
+                if(response.nav != ''){
+                    document.getElementById(response.nav).style.paddingRight = "0px";
+                }
                 eval(response.exec_js);
             } else if (response.status == 1){
                 alert('Erreur!');
