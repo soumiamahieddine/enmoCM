@@ -56,6 +56,11 @@ foreach ($_REQUEST['tags_chosen'] as $tagId) {
     $return_tags_res_id = array_merge($return_tags_res_id,$result);
 }
 $return_tags_res_id = "'".implode("','", $return_tags_res_id)."'";
+
+if($return_tags_res_id == "''"){
+    $return_tags_res_id = "0";
+}
+
 $where_request .= " res_id in (".$return_tags_res_id.") and ";
 //$arrayPDO = array_merge($arrayPDO, array(":tags" => $return_tags_res_id));
 $json_txt .= '],';
