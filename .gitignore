@@ -10,3 +10,4 @@ apps/maarch_entreprise/xml/log4php.xml
 fonctionnel.log
 technique.log
 xdelete.sh
+core/Test/build/
