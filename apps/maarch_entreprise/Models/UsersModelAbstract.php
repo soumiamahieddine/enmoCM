@@ -118,7 +118,7 @@ class UsersModelAbstract extends Apps_Table_Service
         ]);
 
         if (empty($aReturn[0])) {
-            return 'No Consigne Found';
+            return '';
         }
 
         return $aReturn[0]['process_comment'];
