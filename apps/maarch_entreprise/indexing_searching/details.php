@@ -564,8 +564,15 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             </div>
             <br/>
             <dl id="tabricator1">
+            <?php 
+                if($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                $style = 'visibility:hidden;"';
+                            }else{
+                                $style = 'display:none;"';
+                            }
+                ?>
                 <?php $detailsExport .= "<h1><center>"._DETAILS_PRINT." : ".$s_id."</center></h1><hr>";?>
-                <dt class="fa fa-tachometer" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _PROPERTIES;?>"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
+                <dt class="fa fa-tachometer" style="font-size:2em;padding-left: 15px;<?php if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){echo 'padding-right: 0px;';}else{echo 'padding-right: 15px;';}?>" title="<?php echo _PROPERTIES;?>"> <sup><span style="font-size: 10px;<?php echo $style; ?>" class="nbResZero">0</span></sup></dt>
                 <dd>
                     
                     <br/>
@@ -630,11 +637,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <th align="left" class="picto" >
                                 <?php
                                 if (isset($data[$key]['addon'])) {
-                                    if(in_array($key, ['dest_user_id', 'exp_user_id', 'dest_contact_id', 'exp_contact_id'])){ 
-                                        echo $data[$key]['addon_detail'];
-                                    } else {
-                                        echo $data[$key]['addon'];
-                                    }
+                                    echo $data[$key]['addon'];
                                     //$detailsExport .= $data[$key]['addon'];
                                 } elseif (isset($data[$key]['img'])) {
                                     //$detailsExport .= "<img alt='".$data[$key]['label']."' title='".$data[$key]['label']."' src='".$data[$key]['img']."'  />";
@@ -1177,7 +1180,21 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $pathScriptTab = $_SESSION['config']['businessappurl']
                         . 'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true&category='.$category.'&roles='.urlencode($roles_str).$onlyCC;    
                     
-                    $diffList_frame .= '<dt class="fa fa-gear" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'diffList_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>';
+                    $diffList_frame .= '<dt class="fa fa-gear" style="font-size:2em;padding-left: 15px;';
+                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                        $diffList_frame .=  'padding-right: 0px;';
+                    }else{
+                        $diffList_frame .=  'padding-right: 15px;';
+                    }
+                    $diffList_frame .= '" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'diffList_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
+
+                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                            $style = 'visibility:hidden;"';
+                        }else{
+                            $style = 'display:none;"';
+                        }
+
+                    $diffList_frame .=$style.' class="nbResZero">0</span></sup></dt>';
                     $diffList_frame .= '<dd>'; 
                     $diffList_frame .= '<iframe src="" name="diffList_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="diffList_iframe" style="height:100%;"></iframe>';
                     $diffList_frame .='</dd>';
@@ -1196,7 +1213,20 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $pathScriptTab = $_SESSION['config']['businessappurl']
                         . 'index.php?display=true&page=show_printFolder_tab&module=visa&resId='
                         . $s_id . '&collId=' . $coll_id . '&table=' . $table;
-                    $printFolder_frame .= '<dt class="fa fa-print" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._PRINTFOLDER.'" onclick="loadSpecificTab(\'printFolder_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>';
+                    $printFolder_frame .= '<dt class="fa fa-print" style="font-size:2em;padding-left: 15px;';
+                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                            $printFolder_frame .=  'padding-right: 0px;';
+                        }else{
+                            $printFolder_frame .=  'padding-right: 15px;';
+                        }
+                    $printFolder_frame .= '" title="'._PRINTFOLDER.'" onclick="loadSpecificTab(\'printFolder_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
+                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                            $style = 'visibility:hidden;"';
+                        }else{
+                            $style = 'display:none;"';
+                        }
+                        
+                        $printFolder_frame .= $style.'class="nbResZero">0</span></sup></dt>';
                     $printFolder_frame .= '<dd>';
                     $printFolder_frame .= '<iframe src="" name="printFolder_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="printFolder_iframe" style="height:100%;"></iframe>';	
                     $printFolder_frame .= '</dd>';
@@ -1209,9 +1239,15 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $visa_frame = '';
                     $pathScriptTab = $_SESSION['config']['businessappurl']
                         . 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&destination='.$destination.'&fromDetail=true';
-                    $visa_frame .= '<dt id="visa_tab" class="fa fa-certificate" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'visa_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="visa_tab_badge"></sup></dt><dd id="page_circuit" style="overflow-x: hidden;">';
+                    $visa_frame .= '<dt id="visa_tab" class="fa fa-certificate" style="font-size:2em;padding-left: 15px;';
+                        // if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                        //     $visa_frame .=  'padding-right: 0px;';
+                        // }else{
+                        //     $visa_frame .=  'padding-right: 15px;';
+                        // }
+                    $visa_frame .='padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'visa_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="visa_tab_badge"></sup></dt><dd id="page_circuit" style="overflow-x: hidden;">';
                     $visa_frame .= '<h2>'._VISA_WORKFLOW.'</h2>';
-		    $visa_frame .= '<iframe src="" name="visa_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="visa_iframe" style="height:95%;"></iframe>';	
+		            $visa_frame .= '<iframe src="" name="visa_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="visa_iframe" style="height:95%;"></iframe>';	
                     $visa_frame .='</dd>';
                     
                     //LOAD TOOLBAR BADGE
@@ -1290,7 +1326,19 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $pathScriptTab = $_SESSION['config']['businessappurl']
                         . 'index.php?display=true&page=show_history_tab&resId='
                         . $s_id . '&collId=' . $coll_id;
-                    $history_frame .= '<dt class="fa fa-line-chart" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'. _DOC_HISTORY . '" onclick="loadSpecificTab(\'history_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>';
+                    $history_frame .= '<dt class="fa fa-line-chart" style="font-size:2em;padding-left: 15px;';
+                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                        $history_frame .=  'padding-right: 0px;';
+                    }else{
+                        $history_frame .=  'padding-right: 15px;';
+                    }
+                    $history_frame .= '" title="'. _DOC_HISTORY . '" onclick="loadSpecificTab(\'history_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
+                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                            $style .= 'visibility:hidden;"';
+                        }else{
+                            $style .= 'display:none;"';
+                        }
+                    $history_frame .= $style.' class="nbResZero">0</span></sup></dt>';
                     $history_frame .= '<dd>';
                     $history_frame .= '<iframe src="" name="history_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="history_iframe" style="height:100%;"></iframe>';   
 
@@ -1380,20 +1428,37 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     if ($nb_versions_for_title == 0) {
                         $extend_title_for_versions = '0';
                         $class="nbResZero";
-                        $style = 'display:none;font-size: 10px;';
+                        if($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                            $style = 'visibility:hidden;font-size: 10px;';
+                        }else{
+                            $style = 'display:none;font-size: 10px;';
+                        }
+                        
                         $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
                     } else {
                         $extend_title_for_versions = $nb_versions_for_title;
                         $class="nbRes";
                         $style = 'font-size: 10px;';
-                        $style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                        //$style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
                     }
                     $_SESSION['cm']['resMaster'] = '';
                     
                     $pathScriptTab = $_SESSION['config']['businessappurl']
                         . 'index.php?display=true&page=show_versions_tab&collId=' . $coll_id . '&resId='.$s_id.'&objectTable='.$objectTable;
-                    $version .= '<dt  class="fa fa-code-fork" style="'.$style2.'" title="'. _VERSIONS .'" onclick="loadSpecificTab(\'versions_iframe\',\''.$pathScriptTab.'\');return false;">';
-                    $version .= ' <sup><span id="nbVersions" class="'.$class.'" style="'.$style.'">' . $extend_title_for_versions . '</span></sup>';
+                    $version .= '<dt  class="fa fa-code-fork" style="font-size:2em;padding-left: 15px;';
+                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                        $version .=  'padding-right: 0px;';
+                    }else{
+                        $version .=  'padding-right: 15px;';
+                    }
+                    $version .= '"title="'. _VERSIONS .'" onclick="loadSpecificTab(\'versions_iframe\',\''.$pathScriptTab.'\');return false;">';
+                    $version .= ' <sup><span id="nbVersions" ';
+                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                            $style .= 'visibility:hidden;"';
+                        }else{
+                            $style .= 'display:none;"';
+                        }
+                    $version .= 'class="'.$class.'" style="'.$style.'">' . $extend_title_for_versions . '</span></sup>';
                     $version .= '</dt>';
                     $version .= '<dd>';
                     $version .= '<iframe src="" name="versions_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="versions_iframe" style="height:100%;"></iframe>';

@@ -22,9 +22,19 @@ if($nbr_emails == 0){
 }
 if($_SESSION['req'] == 'details'){
     if($_REQUEST['origin'] == 'parent'){
+        if($nbr_emails == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+            $nav = 'sendmail_tab';
+            $style2 = 'visibility:hidden;';
+
+        }
         $js .= 'parent.$(\''.$targetTab.'\').style.color=\''.$styleDetail.'\';parent.$(\''.$targetTab.'_badge\').innerHTML = \'<span id="nb_'.$targetTab.'" style="'.$style2.'font-size: 10px;" class="'.$class.'">'.$nbr_emails.'</span>\'';
 
     }else {
+        if($nbr_emails == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+            $nav = 'sendmail_tab';
+            $style2 = 'visibility:hidden;';
+
+        }        
        $js .= '$(\''.$targetTab.'\').style.color=\''.$styleDetail.'\';$(\''.$targetTab.'_badge\').innerHTML = \'<span id="nb_'.$targetTab.'" style="'.$style2.'font-size: 10px;" class="'.$class.'">'.$nbr_emails.'</span>\'';
 
     }
@@ -38,5 +48,5 @@ if($_SESSION['req'] == 'details'){
     }
 }
 
-echo "{status : 0, content : '', error : '', exec_js : '".addslashes($js)."'}";
+echo "{status : 0, nav : '".$nav."',content : '', error : '', exec_js : '".addslashes($js)."'}";
 exit ();

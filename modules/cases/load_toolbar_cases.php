@@ -26,8 +26,17 @@ if($_SESSION['req'] == 'details'){
         $js .= 'window.opener.parent.$(\''.$targetTab.'\').style.color=\''.$styleDetail.'\';';
 
     }else {
-       $js .= '$(\''.$targetTab.'\').style.color=\''.$styleDetail.'\';';
 
+        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+            $nav = 'cases_tab';
+            $style2 = 'visibility:hidden;';
+            $js .= '$(\''.$targetTab.'\').style.color=\''.$styleDetail.'\';$(\''.$targetTab.'_badge\').innerHTML = \'<span id="nb_'.$targetTab.'" style="'.$style2.'font-size: 10px;" class="'.$class.'">0</span>\'';
+
+        }else{
+
+            $js .= '$(\''.$targetTab.'\').style.color=\''.$styleDetail.'\';';
+
+        }
     }
 }else{
     if($_REQUEST['origin'] == 'parent'){
@@ -39,5 +48,5 @@ if($_SESSION['req'] == 'details'){
     }
 }
       
-echo "{status : 0, content : '', error : '', exec_js : '".addslashes($js)."'}";
+echo "{status : 0, nav : '".$nav."',content : '', error : '', exec_js : '".addslashes($js)."'}";
 exit ();
