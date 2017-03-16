@@ -42,7 +42,7 @@
                     <div class="resListContentInfo">
                         <i class="fa fa-compass" title="Numéro chrono"></i> {{res.alt_identifier}}
                         <i *ngIf="res.allSigned" class="fa fa-certificate"></i>&nbsp;
-                        <i class="fa fa-circle" title="{res.priorityLabel}" aria-hidden="true" [ngStyle]="{'color': res.priorityColor}" style="position: absolute;right: 0px;top: -10px;font-size: 25px;"></i>
+                        <i class="fa fa-circle" title="{{res.priorityLabel}}" aria-hidden="true" [ngStyle]="{'color': res.priorityColor}" style="position: absolute;right: 0px;top: -10px;font-size: 25px;"></i>
                     </div>
                     <div class="resListContentInfo">
                         <i class="fa fa-info" title="Objet"></i> {{res.subject}}
@@ -77,13 +77,13 @@
                 </div>
                 <iframe *ngIf="leftViewerLink != ''" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '69vh' : '75vh'}"></iframe>
             </div>
-            <div class="contentShow" *ngIf="headerTab == 2">
+            <div class="contentShow" *ngIf="headerTab == 2" style="width:100%;">
                 <iframe [src]="notesViewerLink | safeUrl"></iframe>
             </div>
-            <div class="contentShow" *ngIf="headerTab == 3">
+            <div class="contentShow" *ngIf="headerTab == 3" style="width:100%;overflow-x: hidden;">
                 <iframe [src]="visaViewerLink | safeUrl"></iframe>
             </div>
-            <div class="contentShow" *ngIf="headerTab == 4">
+            <div class="contentShow" *ngIf="headerTab == 4" style="width:100%;">
                 <iframe [src]="histViewerLink | safeUrl"></iframe>
                 <!--<table ng-table="historyTable" class="table" id="historyTable">-->
                     <!--<tr ng-repeat="history in $data">-->
@@ -132,7 +132,7 @@
                             <label>Créé le: </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].creation_date | date:'dd/MM/y à HH:mm'}}</span>
                         </div>
-                        <div class="infoPj">
+                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].validation_date | date:'dd/MM/y'}}">
                             <label>Retour : </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].validation_date | date:'dd/MM/y'}}</span>
                         </div>
