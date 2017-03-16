@@ -118,8 +118,8 @@
                         <span>{{signatureBook.attachments[rightSelectedThumbnail].destUser}}</span>
                     </div>
                     <div *ngIf="showTopRightPanel">
-                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].typist}} / Modifié par : {{signatureBook.attachments[rightSelectedThumbnail].updated_by}}">
-                            <label>Créé par: </label>
+                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].typist}} / Modifié par : {{signatureBook.attachments[rightSelectedThumbnail].updated_by}} le {{signatureBook.attachments[rightSelectedThumbnail].doc_date}}">
+                            <label><i *ngIf="signatureBook.attachments[rightSelectedThumbnail].doc_date!=''">*</i> Créé par: </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
                         </div>
                         <div class="infoPj">
