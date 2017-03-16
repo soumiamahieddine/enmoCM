@@ -118,8 +118,12 @@
                         <span>{{signatureBook.attachments[rightSelectedThumbnail].destUser}}</span>
                     </div>
                     <div *ngIf="showTopRightPanel">
-                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].typist}} / Modifié par : {{signatureBook.attachments[rightSelectedThumbnail].updated_by}} le {{signatureBook.attachments[rightSelectedThumbnail].doc_date}}">
-                            <label><i *ngIf="signatureBook.attachments[rightSelectedThumbnail].doc_date!=''">*</i> Créé par: </label>
+                        <div class="infoPj" *ngIf="!signatureBook.attachments[rightSelectedThumbnail].updated_by" title="{{signatureBook.attachments[rightSelectedThumbnail].typist}}">
+                            <label>Créé par: </label>
+                            <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
+                        </div>
+                        <div class="infoPj" *ngIf="signatureBook.attachments[rightSelectedThumbnail].updated_by" title="Modifié par : {{signatureBook.attachments[rightSelectedThumbnail].updated_by}} le {{signatureBook.attachments[rightSelectedThumbnail].doc_date | date:'dd/MM/y'}}">
+                            <label><i>*</i> Créé par: </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
                         </div>
                         <div class="infoPj">
@@ -147,7 +151,7 @@
                 <a title="Télécharger la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;bottom: 130px;padding: 10px;background-color: green;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].res_id}}" target="_blank">
                     <i class="fa fa-download fa-2x"></i>
                 </a>
-                <div title="Modifier la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;bottom: 70px;padding: 10px;background-color: #009DC5;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" title="Modifier la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;bottom: 70px;padding: 10px;background-color: #009DC5;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
                     <i class="fa fa-pencil-square-o fa-2x"></i>
                 </div>
                 <div title="Supprimer la pièce jointe" [ngStyle]="{'top': showTopRightPanel ? '150px' : '70px'}" style="cursor: pointer;position: absolute;right: -30px;padding: 10px;background-color: red;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">

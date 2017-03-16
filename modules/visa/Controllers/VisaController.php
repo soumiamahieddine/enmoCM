@@ -173,16 +173,26 @@ class VisaController
 			}
 		}
 
+		$orderBy = "CASE attachment_type WHEN 'response_project' THEN 1";
+		$c = 2;
+		foreach($attachmentTypes as $key => $value) {
+			if ($value['sign'] && $key != 'response_project') {
+				$orderBy .= " WHEN '{$key}' THEN {$c}";
+				++$c;
+			}
+		}
+		$orderBy .= " ELSE {$c} END, doc_date DESC NULLS LAST, creation_date DESC";
+
 		$attachments = \ResModel::getAvailableLinkedAttachmentsNotIn([
-			'resIdMaster' => $aArgs['resId'],
-			'notIn' 	  => ['incoming_mail_attachment', 'print_folder'],
-			'select' 	  => [
+			'resIdMaster'	=> $aArgs['resId'],
+			'notIn' 	  	=> ['incoming_mail_attachment', 'print_folder'],
+			'select' 	  	=> [
 				'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
 				'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
 				'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
-				'dest_address_id', 'origin'
+				'dest_address_id', 'origin', 'doc_date'
 			],
-			'orderBy'	=> "CASE WHEN attachment_type = 'response_project' THEN 1 ELSE 2 END, creation_date"
+			'orderBy'		=> $orderBy
 		]);
 
 		foreach ($attachments as $key => $value) {
@@ -237,6 +247,9 @@ class VisaController
 			$attachments[$key]['creation_date'] = date(DATE_ATOM, strtotime($attachments[$key]['creation_date']));
 			if ($attachments[$key]['validation_date']) {
 				$attachments[$key]['validation_date'] = date(DATE_ATOM, strtotime($attachments[$key]['validation_date']));
+			}
+			if ($attachments[$key]['doc_date']) {
+				$attachments[$key]['doc_date'] = date(DATE_ATOM, strtotime($attachments[$key]['doc_date']));
 			}
 			$attachments[$key]['isConverted'] = $isConverted;
 			$attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];

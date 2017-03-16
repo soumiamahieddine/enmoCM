@@ -194,9 +194,28 @@ export class SignatureBookComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/' + 'signatureBook/' + this.resId + '/attachments')
             .map(res => res.json())
             .subscribe((data) => {
-                this.signatureBook.attachments = data;
+                var i = 0;
                 if (mode == "add") {
-                    this.changeRightViewer(this.signatureBook.attachments.length - 1);
+                    var found = false;
+                    data.forEach((elem: any, index: number) => {
+                        if (!found && (!this.signatureBook.attachments[index] || elem.res_id != this.signatureBook.attachments[index].res_id)) {
+                            i = index;
+                            found = true;
+                        }
+                    });
+                } else if (mode == "edit") {
+                    var id = this.signatureBook.attachments[this.rightSelectedThumbnail].res_id;
+                    data.forEach((elem: any, index: number) => {
+                        if (elem.res_id == id) {
+                            i = index;
+                        }
+                    });
+                }
+
+                this.signatureBook.attachments = data;
+
+                if (mode == "add" || mode == "edit") {
+                    this.changeRightViewer(i);
                 } else if (mode == "del") {
                     this.changeRightViewer(0);
                 }

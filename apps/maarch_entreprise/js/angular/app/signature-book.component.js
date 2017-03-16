@@ -191,9 +191,27 @@ var SignatureBookComponent = (function () {
         this.http.get(this.coreUrl + 'rest/' + 'signatureBook/' + this.resId + '/attachments')
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            _this.signatureBook.attachments = data;
+            var i = 0;
             if (mode == "add") {
-                _this.changeRightViewer(_this.signatureBook.attachments.length - 1);
+                var found = false;
+                data.forEach(function (elem, index) {
+                    if (!found && (!_this.signatureBook.attachments[index] || elem.res_id != _this.signatureBook.attachments[index].res_id)) {
+                        i = index;
+                        found = true;
+                    }
+                });
+            }
+            else if (mode == "edit") {
+                var id = _this.signatureBook.attachments[_this.rightSelectedThumbnail].res_id;
+                data.forEach(function (elem, index) {
+                    if (elem.res_id == id) {
+                        i = index;
+                    }
+                });
+            }
+            _this.signatureBook.attachments = data;
+            if (mode == "add" || mode == "edit") {
+                _this.changeRightViewer(i);
             }
             else if (mode == "del") {
                 _this.changeRightViewer(0);
