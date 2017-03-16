@@ -62,7 +62,7 @@
             <div class="contentShow" *ngIf="headerTab == 1">
                 <div class="pjDoc" [ngStyle]="{'height': showTopLeftPanel ? '100px' : '30px'}">
                     <div (click)="displayPanel('TOPLEFT')" *ngIf="!showTopLeftPanel" style="padding: 5px;cursor:pointer;">
-                        <strong>{{signatureBook.documents.length - 1}} pièce(s) jointe(s)</strong>
+                        <strong>{{signatureBook.documents.length - 1}} pièce(s) complémentaire(s)</strong>
                     </div>
                     <div *ngIf="showTopLeftPanel" style="height:100%;">
                         <img title="{{document.title}}" id="thumnails_img" *ngFor="let document of signatureBook.documents; let i = index" (click)="changeLeftViewer(i)" [src]="document.thumbnailLink"
