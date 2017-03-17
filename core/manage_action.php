@@ -393,6 +393,10 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
         require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
         $hist = new history();
         $arr_res = explode('#', $res_action['result']);
+        if(!is_array($res_action['history_msg'])){
+            $res_action['history_msg'] = [$res_action['history_msg']];
+        }
+        
 		for($i=0; $i<count($arr_res );$i++)
         {
             if(!empty($arr_res[$i]))
@@ -407,9 +411,9 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
                 }
                 //$what .= $label_action.'('._NUM.$arr_res[$i].') ';
                 $what .= $label_action;
-                if(isset($res_action['history_msg']) && !empty($res_action['history_msg']))
+                if(isset($res_action['history_msg'][$i]) && !empty($res_action['history_msg'][$i]))
                 {
-                    $what .= $res_action['history_msg'];
+                    $what .= $res_action['history_msg'][$i];
                 }
                 $_SESSION['info'] = $what . ' ';
                 $_SESSION['cpt_info_basket'] = 0;
