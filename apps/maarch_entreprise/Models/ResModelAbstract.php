@@ -24,7 +24,7 @@ require_once 'apps/maarch_entreprise/services/Table.php';
 class ResModelAbstract extends Apps_Table_Service
 {
 
-    public static function get(array $aArgs = [])
+    public static function getById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['resId']);
         static::checkNumeric($aArgs, ['resId']);
@@ -37,7 +37,7 @@ class ResModelAbstract extends Apps_Table_Service
             'data'      => [$aArgs['resId']]
         ]);
 
-        return $aReturn;
+        return $aReturn[0];
     }
 
     public static function put(array $aArgs = [])
