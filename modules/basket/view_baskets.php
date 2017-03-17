@@ -258,7 +258,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
                     if(form)
                     {
                         var q_name = form.query_name.value;
-                        $('modal').innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
+                        $('save_search').innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
 
                         new Ajax.Request('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=manage_query',
                         {
@@ -269,26 +269,26 @@ if (count($_SESSION['user']['baskets']) > 0) {
                                 eval("response = "+answer.responseText)
                                 if(response.status == 0)
                                 {
-                                    $('modal').innerHTML ='<h2><?php echo _QUERY_SAVED;?></h2><br/><input type="button" name="close" value="<?php echo _CLOSE_WINDOW;?>" onclick="destroyModal(\'save_search\');" class="button" />';
+                                    $('save_search').innerHTML ='<h2><?php echo _QUERY_SAVED;?></h2><br/><input type="button" name="close" value="<?php echo _CLOSE_WINDOW;?>" onclick="destroyModal(\'save_search\');" class="button" />';
                                 }
                                 else if(response.status == 2)
                                 {
-                                    $('modal').innerHTML = '<div class="error"><?php echo _SQL_ERROR;?></div>'+form_txt;
+                                    $('save_search').innerHTML = '<div class="error"><?php echo _SQL_ERROR;?></div>'+form_txt;
                                     form.query_name.value = this.name;
                                 }
                                 else if(response.status == 3)
                                 {
-                                    $('modal').innerHTML = '<div class="error"><?php echo _QUERY_NAME.' '._IS_EMPTY;?></div>'+form_txt;
+                                    $('save_search').innerHTML = '<div class="error"><?php echo _QUERY_NAME.' '._IS_EMPTY;?></div>'+form_txt;
                                     form.query_name.value = this.name;
                                 }
                                 else
                                 {
-                                    $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR;?></div>'+form_txt;
+                                    $('save_search').innerHTML = '<div class="error"><?php echo _SERVER_ERROR;?></div>'+form_txt;
                                     form.query_name.value = this.name;
                                 }
                             },
                             onFailure: function(){
-                                $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR;?></div>'+form_txt;
+                                $('save_search').innerHTML = '<div class="error"><?php echo _SERVER_ERROR;?></div>'+form_txt;
                                 form.query_name.value = this.name;
                                }
                         });
