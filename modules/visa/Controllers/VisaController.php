@@ -35,16 +35,19 @@ class VisaController
         $resId = $aArgs['resId'];
         $basketId = $aArgs['basketId'];
 
-        $incomingMail = \ResModel::get(
-            [
-            'resId'  => $resId,
-            'select' => ['res_id', 'subject', 'alt_identifier']
-            ]
-        );
+		$incomingMail = \ResModel::getById([
+			'resId'  => $resId,
+			'select' => ['res_id', 'subject', 'alt_identifier', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
+		]);
 
-        if (empty($incomingMail[0])) {
-            return $response->withJson(['Error' => 'No Document Found']);
-        }
+		if (empty($incomingMail)) {
+			return $response->withJson(['Error' => 'No Document Found']);
+		}
+		if (!empty($incomingMail['contact_id'])) {
+			$incomingMailSender = \ContactsModel::getLabelledContactWithAddress(['contactId' => $incomingMail['contact_id'], 'addressId' => $incomingMail['address_id']]);
+		} else {
+			$incomingMailSender = $incomingMail['user_firstname'] . ' ' . $incomingMail['user_lastname'];
+		}
 
         $basket = new \basket();
         $actions = $basket->get_actions_from_current_basket($resId, 'letterbox_coll', 'PAGE_USE', false);
@@ -63,22 +66,20 @@ class VisaController
             ]
         );
 
-        $documents = [
-            [
-                'title'         => $incomingMail[0]['subject'],
-                'truncateTitle' => ((strlen($incomingMail[0]['subject']) > 10) ? (substr($incomingMail[0]['subject'], 0, 10) . '...') : $incomingMail[0]['subject']),
-                'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$resId}&collid=letterbox_coll",
-                'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$resId}&coll_id=letterbox_coll&display=true&advanced=true"
-            ]
-        ];
-        foreach ($incomingMailAttachments as $value) {
-            $documents[] = [
-                'title'         => $value['title'],
-                'truncateTitle' => ((strlen($value['title']) > 10) ? (substr($value['title'], 0, 10) . '...') : $value['title']),
-                'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$value['res_id']}",
-                'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$value['res_id']}&coll_id=attachments_coll&display=true&advanced=true"
-            ];
-        }
+		$documents = [
+			[
+				'title'         => $incomingMail['subject'],
+				'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$resId}&collid=letterbox_coll",
+				'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$resId}&coll_id=letterbox_coll&display=true&advanced=true"
+			]
+		];
+		foreach ($incomingMailAttachments as $value) {
+			$documents[] = [
+				'title'         => $value['title'],
+				'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$value['res_id']}",
+				'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$value['res_id']}&coll_id=attachments_coll&display=true&advanced=true"
+			];
+		}
 
         //		$history = \HistoryModel::getByIdForActions([
         //			'id'      => $resId,
@@ -121,12 +122,12 @@ class VisaController
             unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
         }
 
-        $actionLabel = (_ID_TO_DISPLAY == 'res_id' ? $incomingMail[0]['res_id'] : $incomingMail[0]['alt_identifier']);
-        $actionLabel .= ' : ' . $incomingMail[0]['subject'];
-        $currentAction = [
-            'id' => $_SESSION['current_basket']['default_action'], //TODO No Session
-            'actionLabel' => $actionLabel
-        ];
+		$actionLabel = (_ID_TO_DISPLAY == 'res_id' ? $incomingMail['res_id'] : $incomingMail['alt_identifier']);
+		$actionLabel .= " : {$incomingMail['subject']} - {$incomingMailSender}";
+		$currentAction = [
+			'id' => $_SESSION['current_basket']['default_action'], //TODO No Session
+			'actionLabel' => $actionLabel
+		];
 
 
         $datas = [];
