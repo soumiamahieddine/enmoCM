@@ -153,13 +153,13 @@
                         </div>
                     </div>
                 </div>
-                <a title="Télécharger la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;bottom: 130px;padding: 10px;background-color: green;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].res_id}}" target="_blank">
+                <a title="Télécharger la pièce jointe" class="visaPjView" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].res_id}}" target="_blank">
                     <i class="fa fa-download fa-2x"></i>
                 </a>
-                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" title="Modifier la pièce jointe" style="cursor: pointer;position: absolute;right: -30px;bottom: 70px;padding: 10px;background-color: #009DC5;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" title="Modifier la pièce jointe" class="visaPjUp" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
                     <i class="fa fa-pencil-square-o fa-2x"></i>
                 </div>
-                <div title="Supprimer la pièce jointe" [ngStyle]="{'top': showTopRightPanel ? '150px' : '70px'}" style="cursor: pointer;position: absolute;right: -30px;padding: 10px;background-color: red;color: white;border-radius: 25px;-moz-box-shadow: 0px 0px 10px 0px #656565;-webkit-box-shadow: 0px 0px 10px 0px #656565;-o-box-shadow: 0px 0px 10px 0px #656565;box-shadow: 0px 0px 10px 0px #656565;filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
+                <div title="Supprimer la pièce jointe" [ngStyle]="{'top': showTopRightPanel ? '150px' : '70px'}" class="visaPjDel" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
                     <i class="fa fa-trash fa-2x"></i>
                 </div>
                 <div class="pjDetailsMore" (click)="displayPanel('TOPRIGHT')">
@@ -167,7 +167,7 @@
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail] && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '80%' : '89%'}"></iframe>
-                <div style="border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;height: 85%;font-size: 40px;" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted">
+                <div class="visaNoPdfWarning" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted">
                     <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF de ce format n'a pas été trouvée.</sub></div>
                 </div>
                 <div class="pjSign" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)">
@@ -183,10 +183,10 @@
                     </span>
                 </div>
             </div>
-            <div *ngIf="!signatureBook.hasWorkflow" style="height: 80vh;font-size: 40px;border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;margin-top: 10px;">
+            <div *ngIf="!signatureBook.hasWorkflow" class="visaNoWorkflowWarning">
                 <div style="margin-top:200px;">Aucun circuit de visa paramétré.<br/><sub>Aucune signature possible.</sub></div>
             </div>
-            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" style="height: 80vh;font-size: 40px;border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;margin-top: 10px;">
+            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="visaNoPjWarning">
                 <div style="margin-top:200px;">Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class="fa fa-plus"></i> pour en ajouter une</sub></div>
             </div>
             <!--<div class="contentShow" ng-if="signatureBook.showAttachmentEditionPanel">-->
