@@ -637,8 +637,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <th align="left" class="picto" >
                                 <?php
                                 if (isset($data[$key]['addon'])) {
-                                    echo $data[$key]['addon'];
-                                    //$detailsExport .= $data[$key]['addon'];
+                                    if(in_array($key, ['dest_user_id', 'exp_user_id', 'dest_contact_id', 'exp_contact_id'])){ 
+                                        echo $data[$key]['addon_detail'];
+                                    } else {
+                                        echo $data[$key]['addon'];
+                                    }
                                 } elseif (isset($data[$key]['img'])) {
                                     //$detailsExport .= "<img alt='".$data[$key]['label']."' title='".$data[$key]['label']."' src='".$data[$key]['img']."'  />";
                                     if ($folder_id <> "") {
@@ -1240,11 +1243,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $pathScriptTab = $_SESSION['config']['businessappurl']
                         . 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&destination='.$destination.'&fromDetail=true';
                     $visa_frame .= '<dt id="visa_tab" class="fa fa-certificate" style="font-size:2em;padding-left: 15px;';
-                        // if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                        //     $visa_frame .=  'padding-right: 0px;';
-                        // }else{
-                        //     $visa_frame .=  'padding-right: 15px;';
-                        // }
+
                     $visa_frame .='padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'visa_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="visa_tab_badge"></sup></dt><dd id="page_circuit" style="overflow-x: hidden;">';
                     $visa_frame .= '<h2>'._VISA_WORKFLOW.'</h2>';
 		            $visa_frame .= '<iframe src="" name="visa_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="visa_iframe" style="height:95%;"></iframe>';	
