@@ -42,10 +42,10 @@ function doctype_template(args)
 	}
 	else
 	{
-		if(choose_file_div != null)
-		{
-			choose_file_div.style.display = 'block';
-		}
+		// if(choose_file_div != null)
+		// {
+		// 	choose_file_div.style.display = 'block';
+		// }
 		if(file_iframe != null && doc_frame!= '' && doc_frame != null)
 		{
 			file_iframe.src = doc_frame;
