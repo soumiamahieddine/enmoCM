@@ -1,22 +1,16 @@
 <?php
 
-/*
-*    Copyright 2015 Maarch
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 *
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+* @brief   BasketModelAbstract
+* @author  <dev@maarch.org>
+* @ingroup basket
 */
 
 require_once 'apps/maarch_entreprise/services/Table.php';
@@ -28,12 +22,14 @@ class BasketsModelAbstract extends Apps_Table_Service {
         static::checkString($aArgs, ['basketId']);
 
 
-        $aBasket = static::select([
+        $aBasket = static::select(
+            [
             'select'    => ['basket_clause'],
             'table'     => ['baskets'],
             'where'     => ['basket_id = ?'],
             'data'      => [$aArgs['basketId']]
-        ]);
+            ]
+        );
 
         if (empty($aBasket[0]) || empty($aBasket[0]['basket_clause'])) {
             return [];
@@ -41,12 +37,14 @@ class BasketsModelAbstract extends Apps_Table_Service {
 
         $where = str_replace('@user', "'" .$_SESSION['user']['UserId']. "'", $aBasket[0]['basket_clause']);
 
-        $aResList = static::select([
+        $aResList = static::select(
+            [
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_view_letterbox'],
             'where'     => [$where],
-            'order_by'  => "creation_date DESC",
-        ]);
+            'order_by'  => empty($aArgs['order_by']) ? ['creation_date DESC'] : $aArgs['order_by'],
+            ]
+        );
 
         return $aResList;
     }
@@ -56,12 +54,14 @@ class BasketsModelAbstract extends Apps_Table_Service {
         static::checkNumeric($aArgs, ['actionId']);
 
 
-        $aAction = static::select([
+        $aAction = static::select(
+            [
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['actions'],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['actionId']]
-        ]);
+            ]
+        );
 
         return $aAction[0];
     }
@@ -71,12 +71,14 @@ class BasketsModelAbstract extends Apps_Table_Service {
         static::checkString($aArgs, ['basketId']);
 
 
-        $aAction = static::select([
+        $aAction = static::select(
+            [
             'select'    => ['id_action'],
             'table'     => ['actions_groupbaskets'],
             'where'     => ['basket_id = ?'],
             'data'      => [$aArgs['basketId']]
-        ]);
+            ]
+        );
 
         if (empty($aAction[0])) {
             return '';
