@@ -139,7 +139,7 @@ var SignatureBookComponent = (function () {
             }
         }
         if (idToGo >= 0) {
-            this.zone.run(function () { return _this.changeLocation(idToGo); });
+            this.zone.run(function () { return _this.changeLocation(idToGo, "action"); });
         }
         else {
             this.zone.run(function () { return _this.backToBasket(); });
@@ -325,9 +325,24 @@ var SignatureBookComponent = (function () {
         location.hash = "";
         location.search = "?page=details&dir=indexing_searching&id=" + this.resId;
     };
-    SignatureBookComponent.prototype.changeLocation = function (resId) {
-        var path = "/" + this.basketId + "/signatureBook/" + resId;
-        this.router.navigate([path]);
+    SignatureBookComponent.prototype.changeLocation = function (resId, origin) {
+        var _this = this;
+        this.http.get(this.coreUrl + 'rest/res/' + resId + '/lock')
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            if (!data) {
+                var path = "/" + _this.basketId + "/signatureBook/" + resId;
+                _this.router.navigate([path]);
+            }
+            else {
+                if (origin == "view") {
+                    alert("Courrier vérouillé par un autre utilisateur");
+                }
+                else if (origin == "action") {
+                    _this.backToBasket();
+                }
+            }
+        });
     };
     SignatureBookComponent.prototype.validForm = function () {
         if ($j("#signatureBookActions option:selected")[0].value != "") {

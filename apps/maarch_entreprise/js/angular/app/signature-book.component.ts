@@ -146,7 +146,7 @@ export class SignatureBookComponent implements OnInit {
         }
 
         if (idToGo >= 0) {
-            this.zone.run(() => this.changeLocation(idToGo));
+            this.zone.run(() => this.changeLocation(idToGo, "action"));
         } else {
             this.zone.run(() => this.backToBasket());
         }
@@ -336,9 +336,21 @@ export class SignatureBookComponent implements OnInit {
         location.search = "?page=details&dir=indexing_searching&id=" + this.resId;
     }
 
-    changeLocation(resId: number) {
-        let path = "/" + this.basketId + "/signatureBook/" + resId;
-        this.router.navigate([path]);
+    changeLocation(resId: number, origin: string) {
+        this.http.get(this.coreUrl + 'rest/res/' + resId + '/lock')
+            .map(res => res.json())
+            .subscribe((data) => {
+                if (!data) {
+                    let path = "/" + this.basketId + "/signatureBook/" + resId;
+                    this.router.navigate([path]);
+                } else {
+                    if (origin == "view") {
+                        alert("Courrier vérouillé par un autre utilisateur");
+                    } else if (origin == "action") {
+                        this.backToBasket();
+                    }
+                }
+            });
     }
 
     validForm() {
