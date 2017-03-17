@@ -846,7 +846,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     white-space: normal;
     margin-top: 10px;
 }
-.visaNoPJWarning{
+.visaNoPjWarning{
     height: 80vh;
     font-size: 40px;
     border: dashed;
