@@ -37,15 +37,15 @@ class DocserverTypeController
 
     public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (isset($aArgs['id'])) {
-            $id = $aArgs['id'];
+        if (isset($aArgs['docserver_type_id'])) {
+            $id = $aArgs['docserver_type_id'];
             $obj = DocserverTypeModel::getById([
-                'id' => $id
+                'docserver_type_id' => $id
             ]);
         } else {
             return $response
                 ->withStatus(500)
-                ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
+                ->withJson(['errors' => _DOCSERVER_TYPE_ID . ' ' . _IS_EMPTY]);
         }
         
         $datas = [
@@ -74,9 +74,9 @@ class DocserverTypeController
         $return = DocserverTypeModel::create($aArgs);
 
         if ($return) {
-            $id = $aArgs['id'];
+            $id = $aArgs['docserver_type_id'];
             $obj = DocserverTypeModel::getById([
-                'id' => $id
+                'docserver_type_id' => $id
             ]);
         } else {
             return $response
@@ -110,9 +110,9 @@ class DocserverTypeController
         $return = DocserverTypeModel::update($aArgs);
 
         if ($return) {
-            $id = $aArgs['id'];
+            $id = $aArgs['docserver_type_id'];
             $obj = DocserverTypeModel::getById([
-                'id' => $id
+                'docserver_type_id' => $id
             ]);
         } else {
             return $response
@@ -131,10 +131,10 @@ class DocserverTypeController
 
     public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (isset($aArgs['id'])) {
-            $id = $aArgs['id'];
+        if (isset($aArgs['docserver_type_id'])) {
+            $id = $aArgs['docserver_type_id'];
             $obj = DocserverTypeModel::delete([
-                'id' => $id
+                'docserver_type_id' => $id
             ]);
         } else {
             return $response
@@ -157,94 +157,86 @@ class DocserverTypeController
 
         if ($mode == 'update') {
             $obj = DocserverTypeModel::getById([
-                'id' => $request->getParam('id')
+                'docserver_type_id' => $request->getParam('docserver_type_id')
             ]);
             if (empty($obj)) {
                 array_push(
                     $errors,
-                    _ID . ' ' . $request->getParam('id') . ' ' . _NOT_EXISTS
+                    _DOCSERVER_TYPE_ID . ' ' . $request->getParam('docserver_type_id') . ' ' . _NOT_EXISTS
                 );
             }
         }
 
-        if (!Validator::notEmpty()->validate($request->getParam('id'))) {
-            array_push($errors, _ID . ' ' . _IS_EMPTY);
+        if (!Validator::notEmpty()->validate($request->getParam('docserver_type_id'))) {
+            array_push($errors, _DOCSERVER_TYPE_ID . ' ' . _IS_EMPTY);
         } elseif ($mode == 'create') {
             $obj = DocserverTypeModel::getById([
-                'id' => $request->getParam('id')
+                'docserver_type_id' => $request->getParam('docserver_type_id')
             ]);
             if (!empty($obj)) {
                 array_push(
                     $errors,
-                    _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS
+                    _DOCSERVER_TYPE_ID . ' ' . $obj[0]['docserver_type_id'] . ' ' . _ALREADY_EXISTS
                 );
             }
         }
 
-        if (!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('id'))) {
-            array_push($errors, _ID . ' ' . _NOT . ' ' . _VALID);
+        if (!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('docserver_type_id'))) {
+            array_push($errors, _DOCSERVER_TYPE_ID . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (!Validator::notEmpty()->validate($request->getParam('label_status'))) {
-            array_push($errors, _LABEL_STATUS . ' ' . _IS_EMPTY);
+        if (!Validator::notEmpty()->validate($request->getParam('docserver_type_label'))) {
+            array_push($errors, _DOCSERVER_TYPE_LABEL . ' ' . _IS_EMPTY);
         }
 
         if (Validator::notEmpty()
-                ->validate($request->getParam('is_system')) &&
+                ->validate($request->getParam('is_container')) &&
             !Validator::contains('Y')
-                ->validate($request->getParam('is_system')) &&
+                ->validate($request->getParam('is_container')) &&
             !Validator::contains('N')
-                ->validate($request->getParam('is_system'))
+                ->validate($request->getParam('is_container'))
         ) {
-            array_push($errors, _IS_SYSTEM . ' ' . _NOT . ' ' . _VALID);
+            array_push($errors, _IS_CONTAINER . ' ' . _NOT . ' ' . _VALID);
         }
 
         if (Validator::notEmpty()
-                ->validate($request->getParam('is_folder_status')) &&
+                ->validate($request->getParam('is_compressed')) &&
             !Validator::contains('Y')
-                ->validate($request->getParam('is_folder_status')) &&
+                ->validate($request->getParam('is_compressed')) &&
             !Validator::contains('N')
-                ->validate($request->getParam('is_folder_status'))
+                ->validate($request->getParam('is_compressed'))
         ) {
-            array_push($errors, _IS_FOLDER_STATUS . ' ' . _NOT . ' ' . _VALID);
+            array_push($errors, _IS_COMPRESSED . ' ' . _NOT . ' ' . _VALID);
         }
 
         if (Validator::notEmpty()
-                ->validate($request->getParam('img_filename')) &&
-            (!Validator::regex('/^[\w-.]+$/')
-                ->validate($request->getParam('img_filename')) ||
-            !Validator::length(null, 255)
-                ->validate($request->getParam('img_filename')))
-        ) {
-            array_push($errors, _IMG_FILENAME . ' ' . _NOT . ' ' . _VALID);
-        }
-
-        if (Validator::notEmpty()
-                ->validate($request->getParam('maarch_module')) &&
-            !Validator::length(null, 255)
-                ->validate($request->getParam('maarch_module'))
-        ) {
-            array_push($errors, _MAARCH_MODULE . ' ' . _NOT . ' ' . _VALID);
-        }
-
-        if (Validator::notEmpty()
-                ->validate($request->getParam('can_be_searched')) &&
+                ->validate($request->getParam('is_meta')) &&
             !Validator::contains('Y')
-                ->validate($request->getParam('can_be_searched')) &&
+                ->validate($request->getParam('is_meta')) &&
             !Validator::contains('N')
-                ->validate($request->getParam('can_be_searched'))
+                ->validate($request->getParam('is_meta'))
         ) {
-            array_push($errors, _CAN_BE_SEARCHED . ' ' . _NOT . ' ' . _VALID);
+            array_push($errors, _IS_META . ' ' . _NOT . ' ' . _VALID);
         }
 
         if (Validator::notEmpty()
-                ->validate($request->getParam('can_be_modified')) &&
+                ->validate($request->getParam('is_logged')) &&
             !Validator::contains('Y')
-                ->validate($request->getParam('can_be_modified')) &&
+                ->validate($request->getParam('is_logged')) &&
             !Validator::contains('N')
-                ->validate($request->getParam('can_be_modified'))
+                ->validate($request->getParam('is_logged'))
         ) {
-            array_push($errors, _CAN_BE_MODIFIED . ' ' . _NOT . ' ' . _VALID);
+            array_push($errors, _IS_LOGGED . ' ' . _NOT . ' ' . _VALID);
+        }
+
+        if (Validator::notEmpty()
+                ->validate($request->getParam('is_signed')) &&
+            !Validator::contains('Y')
+                ->validate($request->getParam('is_signed')) &&
+            !Validator::contains('N')
+                ->validate($request->getParam('is_signed'))
+        ) {
+            array_push($errors, _IS_SIGNED . ' ' . _NOT . ' ' . _VALID);
         }
 
         return $errors;

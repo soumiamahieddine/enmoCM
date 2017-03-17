@@ -275,10 +275,10 @@ class ResController
         $filetmp .= $filename;
         
         $docserver = DocserverModel::getById([
-            'id' => $docserverId
+            'docserver_id' => $docserverId
         ]);
         $docserverType = DocserverTypeModel::getById([
-            'id' => $docserver[0]['docserver_type_id']
+            'docserver_type_id' => $docserver[0]['docserver_type_id']
         ]);
 
         $fingerprint = DocserverToolsController::doFingerprint(
