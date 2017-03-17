@@ -41,7 +41,7 @@
     <div class="contentSignatureBook">
         <div class="resListContent" [ngStyle]="{'display': showResLeftPanel ? 'inline-block' : 'none'}" id="resListContent">
             <div class="resListContentPos">
-                <div class="resListContentFrame" *ngFor="let res of signatureBook.resList" (click)="changeLocation(res.res_id)" [ngClass]="{'resListContentFrameSelected': resId == res.res_id}">
+                <div class="resListContentFrame" *ngFor="let res of signatureBook.resList" (click)="changeLocation(res.res_id, 'view')" [ngClass]="{'resListContentFrameSelected': resId == res.res_id}">
                     <div class="resListContentInfo">
                         <i class="fa fa-compass" title="Numéro chrono"></i> {{res.alt_identifier}}
                         <i *ngIf="res.allSigned" class="fa fa-certificate"></i>&nbsp;

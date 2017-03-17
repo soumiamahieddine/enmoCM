@@ -118,9 +118,13 @@ if ($mode == 'add') {
     }
 
     $content .='<select name="sender_email" id="sender_email">
-                    <option value="'.$_SESSION['user']['Mail'].'" selected="selected">'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . ' (' . $_SESSION['user']['Mail'] . ')</option>';
+                    <option value="'.$_SESSION['user']['Mail'].'" ';
+    if(empty($userEntitiesMails)){
+        $content .= 'selected="selected"';
+    }
+    $content .='>'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . ' (' . $_SESSION['user']['Mail'] . ')</option>';
     foreach ($userEntitiesMails as $key => $value) {
-        $content .= '<option value="'.$key.'" >' . $value . '</option>';
+        $content .= '<option value="'.$key.'" selected="selected" >' . $value . '</option>';
     }
     $content .='</select>';
     $content .='</td>';
