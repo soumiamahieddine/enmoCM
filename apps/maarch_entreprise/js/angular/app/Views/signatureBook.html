@@ -112,7 +112,7 @@
                 <div class="pjDetails" [ngStyle]="{'height': showTopRightPanel ? '100px' : '30px'}" (click)="displayPanel('TOPRIGHT')">
                     <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                         <label>Type : </label>
-                        <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}</span>
+                        <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}} <sup *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" style="color:#16ADEB;">signé(e)</sup></span>
                     </div>
                     <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].title}}">
                         <label>Objet : </label>
@@ -149,7 +149,7 @@
                         </div>
                         <div class="infoPj">
                             <label>Format : </label>
-                            <span>{{signatureBook.attachments[rightSelectedThumbnail].format.toUpperCase()}}</span>
+                            <span style="color:#16ADEB;font-style: italic;">{{signatureBook.attachments[rightSelectedThumbnail].format.toUpperCase()}}</span>
                         </div>
                     </div>
                 </div>
