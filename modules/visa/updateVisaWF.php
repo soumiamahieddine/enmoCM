@@ -74,6 +74,7 @@ if($userList){
 }
 
 $visa->saveWorkflow($res_id, $coll_id, $_SESSION['visa_wf']['diff_list'], 'VISA_CIRCUIT');
+$visa->setStatusVisa($res_id, $coll_id);
 
 //LOAD TOOLBAR BADGE
 $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=visa&page=load_toolbar_visa&origin=parent&resId=' . $res_id . '&collId=' . $coll_id;
