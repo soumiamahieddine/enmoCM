@@ -1,3 +1,23 @@
+// Date + 60 jours, utile pour les transmissions
+function defineBackDate() {
+	var delay;
+	var date1 = new Date();
+	delay = $('withDelay').value
+	date1.setDate(date1.getDate() + Number(delay));
+	var str_date = date1.toLocaleDateString();
+	str_date = str_date.replace(/\//g, '-');
+	return str_date;
+}
+
+function showOrButtonForAttachment() {
+  if ($("edit").style.display != "none" && $("newTransmissionButton0").style.display != "none") {
+    $("divOr0").style.display = "";
+  } else {
+    $("divOr0").style.display = "none";
+  }
+}
+
+
 function checkBackDate(inputDate) {
 
   var dataCreationDate;
@@ -173,6 +193,7 @@ function addNewTransmission(prePath, docId, canCreateContact, langString, user) 
                     "</p>" +
                     "<p>" +
                       "<label>" + "Date de retour attendue" + "</label>" +
+                      "<input type='hidden' name='withDelay" + size + "' id='withDelay" + size + "' value='' style='width: 75px' />" +
                       "<input type='text' name='transmissionBackDate" + size + "' id='transmissionBackDate" + size + "' onClick='showCalender(this);' onfocus='checkBackDate(this)' value='' style='width: 75px' />" +
                       "<select name='transmissionExpectedDate" + size + "' id='transmissionExpectedDate" + size + "' style='margin-left: 20px;width: 105px' />" +
                         "<option value='EXP_RTURN'>Attente retour</option>" +
@@ -222,6 +243,7 @@ function addNewTransmission(prePath, docId, canCreateContact, langString, user) 
     $('transmissionChrono' + size).value = $('chrono').value + "." + String.fromCharCode(64 + size);
     $('DisTransmissionChrono' + size).value = $('chrono').value + "." + String.fromCharCode(64 + size);
     $('transmissionTitle' + size).value = $('title').value;
+    $('transmissionBackDate' + size).value = defineBackDate();
     getTemplatesForSelect((prePath + "index.php?display=true&module=templates&page=select_templates"), "transmission", "transmissionTemplate" + size);
     launch_autocompleter_contacts_v2(prePath + "index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "transmissionContact_attach" + size, "transmission_show_contacts_attach" + size, "", "transmissionContactidAttach" + size, "transmissionAddressidAttach" + size)
   }

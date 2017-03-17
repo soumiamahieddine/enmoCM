@@ -41,7 +41,7 @@
             <label>_RESPONSE_PROJECT</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="true" icon="fa-paper-plane-o" sign="false">
+        <type show="true" with_chrono="true" with_delay="60" icon="fa-paper-plane-o" sign="false">
             <id>transmission</id>
             <label>Transmission</label>
             <process_mode></process_mode>
