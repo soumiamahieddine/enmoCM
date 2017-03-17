@@ -337,7 +337,7 @@
 }
 
 .contentLeft iframe{
-    height: 75vh;
+    height: 87%;
 }
 
 .panelRight{
@@ -550,7 +550,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 .headerSignatureBook .itemLabel{
-    display: none;
+    /*display: none;*/
     padding-left: 5px;
     font-weight: bold;
 }
