@@ -327,3 +327,24 @@ function unlockDocument(resId){
         }
     });
 }
+
+function islockForSignatureBook(resId, basketId){
+    $j.ajax({
+        url: 'index.php?display=true&dir=actions&page=docLocker',
+        type : 'POST',
+        data: {
+            AJAX_CALL  : true,
+            isLock     : true,
+            res_id     : resId
+        },
+        success: function(result) {
+            var response = JSON.parse(result);
+
+            if (response.lock) {
+                alert("Courrier verouillé par " + response.lockBy);
+            } else {
+                location.href = "#/" + basketId + "/signatureBook/" + resId;
+            }
+        }
+    });
+}

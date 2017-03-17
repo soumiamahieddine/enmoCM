@@ -159,14 +159,17 @@ class ResModelAbstract extends \Apps_Table_Service
             'data'      => [$aArgs['resId']]
         ]);
 
+        $lock = true;
+        $lockBy = empty($aReturn[0]['locker_user_id']) ? '' : $aReturn[0]['locker_user_id'];
+
         if (empty($aReturn[0]['locker_user_id'] || empty($aReturn[0]['locker_time']))) {
-            return false;
+            $lock = false;
         } elseif ($aReturn[0]['locker_user_id'] == $_SESSION['user']['UserId']) {
-            return false;
+            $lock = false;
         } elseif (strtotime($aReturn[0]['locker_time']) < time()) {
-            return false;
+            $lock = false;
         }
 
-        return true;
+        return ['lock' => $lock, 'lockBy' => $lockBy];
     }
 }
