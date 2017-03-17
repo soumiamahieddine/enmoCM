@@ -48,6 +48,7 @@ export class SignatureBookComponent implements OnInit {
     showLeftPanel               : boolean   = true;
     showAttachmentEditionPanel  : boolean   = false;
     loading                     : boolean   = false;
+    loadingSign                 : boolean   = false;
 
     leftContentWidth            : string    = "39%";
     rightContentWidth           : string    = "39%";
@@ -75,6 +76,7 @@ export class SignatureBookComponent implements OnInit {
 
     ngOnInit(): void {
         this.prepareSignatureBook();
+        this.loading = true;
         this.route.params.subscribe(params => {
             this.resId      = +params['resId'];
             this.basketId   = params['basketId'];
@@ -110,6 +112,8 @@ export class SignatureBookComponent implements OnInit {
                             if (this.signatureBook.attachments[0]) {
                                 this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
                             }
+                            this.loading = false;
+
                             setTimeout(() => {
                                 $j("#resListContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
                                 $j("#rightPanelContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
@@ -259,7 +263,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     prepareSignFile(attachment: any) {
-        if (!this.loading) {
+        if (!this.loadingSign) {
             if (attachment.res_id == 0) {
                 this.signatureBookSignFile(attachment.res_id_version, 1);
             } else if (attachment.res_id_version == 0) {
@@ -269,7 +273,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     signatureBookSignFile(resId: number, type: number) {
-        this.loading = true;
+        this.loadingSign = true;
         var path = '';
 
         if (type == 0) {
@@ -291,7 +295,7 @@ export class SignatureBookComponent implements OnInit {
                     alert(data.error);
                 }
 
-                this.loading = false;
+                this.loadingSign = false;
             });
 
     }
