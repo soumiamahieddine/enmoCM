@@ -102,6 +102,8 @@ var SignatureBookComponent = (function () {
                     _this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + _this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
                     _this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + _this.resId + "&collId=letterbox_coll&visaStep=true";
                     _this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + _this.resId + "&coll_id=letterbox_coll&load&size=full";
+                    _this.leftContentWidth = "39%";
+                    _this.rightContentWidth = "39%";
                     if (_this.signatureBook.documents[0]) {
                         _this.leftViewerLink = _this.signatureBook.documents[0].viewerLink;
                     }
@@ -330,13 +332,13 @@ var SignatureBookComponent = (function () {
         this.http.get(this.coreUrl + 'rest/res/' + resId + '/lock')
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            if (!data) {
+            if (!data.lock) {
                 var path = "/" + _this.basketId + "/signatureBook/" + resId;
                 _this.router.navigate([path]);
             }
             else {
                 if (origin == "view") {
-                    alert("Courrier vérouillé par un autre utilisateur");
+                    alert("Courrier verouillé par " + data.lockBy);
                 }
                 else if (origin == "action") {
                     _this.backToBasket();

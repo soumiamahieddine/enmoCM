@@ -106,6 +106,8 @@ export class SignatureBookComponent implements OnInit {
                             this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
                             this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
 
+                            this.leftContentWidth = "39%";
+                            this.rightContentWidth = "39%";
                             if (this.signatureBook.documents[0]) {
                                 this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
                             }
@@ -340,12 +342,12 @@ export class SignatureBookComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/res/' + resId + '/lock')
             .map(res => res.json())
             .subscribe((data) => {
-                if (!data) {
+                if (!data.lock) {
                     let path = "/" + this.basketId + "/signatureBook/" + resId;
                     this.router.navigate([path]);
                 } else {
                     if (origin == "view") {
-                        alert("Courrier vérouillé par un autre utilisateur");
+                        alert("Courrier verouillé par " + data.lockBy);
                     } else if (origin == "action") {
                         this.backToBasket();
                     }
