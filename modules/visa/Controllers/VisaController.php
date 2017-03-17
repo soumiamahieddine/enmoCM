@@ -17,6 +17,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 require_once 'modules/basket/class/class_modules_tools.php';
+require_once 'core/class/class_core_tools.php';
 require_once 'apps/maarch_entreprise/Models/ResModel.php';
 require_once 'apps/maarch_entreprise/Models/HistoryModel.php';
 require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
@@ -217,6 +218,10 @@ class VisaController
             ]
         );
 
+        $coreTools = new \core_tools();
+        $canModify = $coreTools->test_service('modify_attachments', 'attachments', false);
+        $canDelete = $coreTools->test_service('delete_attachments', 'attachments', false);
+
         foreach ($attachments as $key => $value) {
             if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {
                 continue;
@@ -264,6 +269,15 @@ class VisaController
             }
             if (!empty($value['typist'])) {
                 $attachments[$key]['typist'] = \UsersModel::getLabelledUserById(['id' => $value['typist']]);
+            }
+
+            $attachments[$key]['canModify'] = false;
+            $attachments[$key]['canDelete'] = false;
+            if ($canModify || $value['typist'] == $_SESSION['user']['UserId']) {
+                $attachments[$key]['canModify'] = true;
+            }
+            if ($canDelete || $value['typist'] == $_SESSION['user']['UserId']) {
+                $attachments[$key]['canDelete'] = true;
             }
 
             $attachments[$key]['creation_date'] = date(DATE_ATOM, strtotime($attachments[$key]['creation_date']));
