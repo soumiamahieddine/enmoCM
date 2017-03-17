@@ -53,7 +53,6 @@ var SignatureBookComponent = (function () {
         this.showLeftPanel = true;
         this.showAttachmentEditionPanel = false;
         this.loading = false;
-        this.loadingSign = false;
         this.leftContentWidth = "39%";
         this.rightContentWidth = "39%";
         this.notesViewerLink = "";
@@ -75,7 +74,6 @@ var SignatureBookComponent = (function () {
     SignatureBookComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.prepareSignatureBook();
-        this.loading = true;
         this.route.params.subscribe(function (params) {
             _this.resId = +params['resId'];
             _this.basketId = params['basketId'];
@@ -108,7 +106,6 @@ var SignatureBookComponent = (function () {
                     if (_this.signatureBook.attachments[0]) {
                         _this.rightViewerLink = _this.signatureBook.attachments[0].viewerLink;
                     }
-                    _this.loading = false;
                     setTimeout(function () {
                         $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                         $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
@@ -256,7 +253,7 @@ var SignatureBookComponent = (function () {
         }
     };
     SignatureBookComponent.prototype.prepareSignFile = function (attachment) {
-        if (!this.loadingSign) {
+        if (!this.loading) {
             if (attachment.res_id == 0) {
                 this.signatureBookSignFile(attachment.res_id_version, 1);
             }
@@ -267,7 +264,7 @@ var SignatureBookComponent = (function () {
     };
     SignatureBookComponent.prototype.signatureBookSignFile = function (resId, type) {
         var _this = this;
-        this.loadingSign = true;
+        this.loading = true;
         var path = '';
         if (type == 0) {
             path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&resIdMaster=' + this.resId + '&id=' + resId;
@@ -289,7 +286,7 @@ var SignatureBookComponent = (function () {
             else {
                 alert(data.error);
             }
-            _this.loadingSign = false;
+            _this.loading = false;
         });
     };
     SignatureBookComponent.prototype.unsignFile = function (attachment) {

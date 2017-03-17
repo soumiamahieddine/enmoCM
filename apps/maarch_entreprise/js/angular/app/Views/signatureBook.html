@@ -1,7 +1,4 @@
-<div *ngIf="loading" class='visaContent'>
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
-</div>
-<div *ngIf="!loading" class='visaContent'>
+<div class='visaContent'>
     <div class="titleSignatureBook">
         <span>{{signatureBook.currentAction.actionLabel}}</span>
         <span><i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i></span>
@@ -59,12 +56,12 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="showLeftPanel" class="hideresListContent" (click)="displayPanel('RESLEFT')">
+        <div class="hideresListContent" (click)="displayPanel('RESLEFT')" *ngIf="showLeftPanel">
             <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showResLeftPanel"></i>
             <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showResLeftPanel"></i>
         </div>
-        <div *ngIf="showLeftPanel" class="contentLeft" [ngStyle]="{'width': leftContentWidth}" id="contentLeft">
-            <div *ngIf="headerTab == 1" class="contentShow">
+        <div class="contentLeft" [ngStyle]="{'width': leftContentWidth}" id="contentLeft" *ngIf="showLeftPanel">
+            <div class="contentShow" *ngIf="headerTab == 1">
                 <div class="pjDoc" [ngStyle]="{'height': showTopLeftPanel ? '100px' : '30px'}">
                     <div (click)="displayPanel('TOPLEFT')" *ngIf="!showTopLeftPanel" style="padding: 5px;cursor:pointer;">
                         <strong>{{signatureBook.documents.length - 1}} pièce(s) complémentaire(s)</strong>
@@ -78,15 +75,15 @@
                     <i *ngIf="!showTopLeftPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                     <i *ngIf="showTopLeftPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
-                <iframe *ngIf="leftViewerLink != ''" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '72%' : '80%'}"></iframe>
+                <iframe *ngIf="leftViewerLink != ''" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '69vh' : '75vh'}"></iframe>
             </div>
-            <div *ngIf="headerTab == 2" class="contentShow" style="width:100%;">
+            <div class="contentShow" *ngIf="headerTab == 2" style="width:100%;">
                 <iframe [src]="notesViewerLink | safeUrl"></iframe>
             </div>
-            <div *ngIf="headerTab == 3" class="contentShow" style="width:100%;overflow-x: hidden;">
+            <div class="contentShow" *ngIf="headerTab == 3" style="width:100%;overflow-x: hidden;">
                 <iframe [src]="visaViewerLink | safeUrl"></iframe>
             </div>
-            <div *ngIf="headerTab == 4" class="contentShow" style="width:100%;">
+            <div class="contentShow" *ngIf="headerTab == 4" style="width:100%;">
                 <iframe [src]="histViewerLink | safeUrl"></iframe>
                 <!--<table ng-table="historyTable" class="table" id="historyTable">-->
                     <!--<tr ng-repeat="history in $data">-->
@@ -108,8 +105,8 @@
             <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
         </div>
         <div class="contentRight" id="contentRight" [ngStyle]="{'width': rightContentWidth}">
-            <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && !showAttachmentEditionPanel && signatureBook.hasWorkflow" class="contentShow">
-                <div class="pjDetails" [ngStyle]="{'height': showTopRightPanel ? '100px' : '30px'}" (click)="displayPanel('TOPRIGHT')">
+            <div class="contentShow" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && !showAttachmentEditionPanel && signatureBook.hasWorkflow">
+                <div class="pjDetails" [ngStyle]="{'height': showTopRightPanel ? '100px' : '30px'}">
                     <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                         <label>Type : </label>
                         <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}</span>
@@ -166,14 +163,14 @@
                    <i *ngIf="!showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
-                <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail] && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '80%' : '89%'}"></iframe>
+                <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail] && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '80%' : '88%'}"></iframe>
                 <div style="border: dashed;font-weight: bold;opacity: 0.5;white-space: normal;height: 85%;font-size: 40px;" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted">
                     <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF de ce format n'a pas été trouvée.</sub></div>
                 </div>
                 <div class="pjSign" *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)">
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN' && signatureBook.signature" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
-                        <img *ngIf="!loadingSign" title="Signer" src="{{signatureBook.signature}}">
-                        <i *ngIf="loadingSign" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                        <img *ngIf="!loading" title="Signer" src="{{signatureBook.signature}}">
+                        <i *ngIf="loading" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
                     </span>
                     <span *ngIf="!signatureBook.signature" style="color: red;">
                         <i title="Aucune image de signature paramétrée" class="fa fa-ban fa-2x" aria-hidden="true"></i>
