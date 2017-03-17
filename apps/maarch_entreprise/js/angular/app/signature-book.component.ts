@@ -237,19 +237,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     editAttachmentIframe(attachment: any) {
-        var resId: number;
-        if (attachment.res_id == 0) {
-            resId = attachment.res_id_version;
-        } else if (attachment.res_id_version == 0) {
-            resId = attachment.res_id;
-        }
-
-        modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
-    }
-
-    delAttachment(attachment: any) {
-        let r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
-        if (r) {
+        if (attachment.canModify) {
             var resId: number;
             if (attachment.res_id == 0) {
                 resId = attachment.res_id_version;
@@ -257,10 +245,26 @@ export class SignatureBookComponent implements OnInit {
                 resId = attachment.res_id;
             }
 
-            this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&rest=true')
-                .subscribe(() => {
-                    this.refreshAttachments('del');
-                });
+            modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
+        }
+    }
+
+    delAttachment(attachment: any) {
+        if (attachment.canDelete) {
+            let r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+            if (r) {
+                var resId: number;
+                if (attachment.res_id == 0) {
+                    resId = attachment.res_id_version;
+                } else if (attachment.res_id_version == 0) {
+                    resId = attachment.res_id;
+                }
+
+                this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&rest=true')
+                    .subscribe(() => {
+                        this.refreshAttachments('del');
+                    });
+            }
         }
     }
 
