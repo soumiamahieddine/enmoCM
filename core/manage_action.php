@@ -386,20 +386,23 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
             echo "{status : 0, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'".$comp.", result_id : '".$res_action['result']."'}";
         }
     }
-    // Save action in history if needed
-    if($bool_history=='Y')
+
+    require_once 'apps/maarch_entreprise/actions/docLocker.php';
+    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+    $hist = new history();
+    $arr_res = explode('#', $res_action['result']);
+    if(!is_array($res_action['history_msg'])){
+        $res_action['history_msg'] = [$res_action['history_msg']];
+    }
+    
+	for($i=0; $i<count($arr_res);$i++)
     {
-		$db = new Database();
-        require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-        $hist = new history();
-        $arr_res = explode('#', $res_action['result']);
-        if(!is_array($res_action['history_msg'])){
-            $res_action['history_msg'] = [$res_action['history_msg']];
-        }
-        
-		for($i=0; $i<count($arr_res );$i++)
+        if(!empty($arr_res[$i]))
         {
-            if(!empty($arr_res[$i]))
+            $docLocker = new docLocker($arr_res[$i]);
+            $docLocker->unlock();
+            // Save action in history if needed
+            if($bool_history=='Y')
             {
                 $what = '';
                 if (isset($_SESSION['current_basket']['id']) && !empty($_SESSION['current_basket']['id'])) {
