@@ -406,10 +406,24 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
             {
                 $what = '';
                 if (isset($_SESSION['current_basket']['id']) && !empty($_SESSION['current_basket']['id'])) {
-                    $stmt = $db->query("SELECT basket_name FROM baskets WHERE basket_id = ?", array($_SESSION['current_basket']['id']));
-                    while($data = $stmt->fetchObject()) {
+                    if(isset($_SESSION['current_basket']['basket_owner']) && !empty($_SESSION['current_basket']['basket_owner'])){
+                        
+                        $pos =stripos($_SESSION['current_basket']['id'], $_SESSION['current_basket']['basket_owner']);
+                        $string = substr($_SESSION['current_basket']['id'], 0, $pos -1);
+                        $stmt = $db->query("SELECT basket_name FROM baskets WHERE basket_id = ?", array($string));
+                        while($data = $stmt->fetchObject()) {
                         $what = $data->basket_name;
+                        $what .= " (".$_SESSION['current_basket']['basket_owner'].")";
+                        }
+
+                    }else{
+                        $stmt = $db->query("SELECT basket_name FROM baskets WHERE basket_id = ?", array($_SESSION['current_basket']['id']));
+                        while($data = $stmt->fetchObject()) {
+                        $what = $data->basket_name;
+                        }
+
                     }
+                    
                     $what .= ' : ';
                 }
                 //$what .= $label_action.'('._NUM.$arr_res[$i].') ';
