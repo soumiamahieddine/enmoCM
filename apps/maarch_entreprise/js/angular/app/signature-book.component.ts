@@ -297,6 +297,14 @@ export class SignatureBookComponent implements OnInit {
                     this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + this.resId + "&id=" + data.new_id;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
+                    this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = data.new_id;
+                    var allSigned = true;
+                    this.signatureBook.attachments.forEach((value: any) => {
+                        if (value.sign && value.status != 'SIGN') {
+                            allSigned = false;
+                        }
+                    });
+                    this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = allSigned;
                 } else {
                     alert(data.error);
                 }
@@ -325,6 +333,8 @@ export class SignatureBookComponent implements OnInit {
                     this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + this.resId + "&id=" + resId;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
+                    this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;
+                    this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
                 } else {
                     alert(data.error);
                 }

@@ -291,6 +291,14 @@ var SignatureBookComponent = (function () {
                 _this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + _this.resId + "&id=" + data.new_id;
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].viewerLink = _this.rightViewerLink;
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].status = 'SIGN';
+                _this.signatureBook.attachments[_this.rightSelectedThumbnail].idToDl = data.new_id;
+                var allSigned = true;
+                _this.signatureBook.attachments.forEach(function (value) {
+                    if (value.sign && value.status != 'SIGN') {
+                        allSigned = false;
+                    }
+                });
+                _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = allSigned;
             }
             else {
                 alert(data.error);
@@ -317,6 +325,8 @@ var SignatureBookComponent = (function () {
                 _this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + _this.resId + "&id=" + resId;
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].viewerLink = _this.rightViewerLink;
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].status = 'A_TRA';
+                _this.signatureBook.attachments[_this.rightSelectedThumbnail].idToDl = resId;
+                _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = false;
             }
             else {
                 alert(data.error);

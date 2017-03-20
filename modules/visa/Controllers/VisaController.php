@@ -95,7 +95,13 @@ class VisaController
             ]
         );
 
+        $attachmentTypes = $this->getAttachmentsTypesByXML();
+
+        $resListIndex = 0;
         foreach ($resList as $key => $value) {
+            if ($value['res_id'] == $resId){
+                $resListIndex = $key;
+            }
             if (!empty($value['contact_id'])) {
                 $resList[$key]['sender'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['contact_id'], 'addressId' => $value['address_id']]);
             } else {
@@ -105,12 +111,12 @@ class VisaController
                 [
                 'resIdMaster' => $value['res_id'],
                 'notIn'       => ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'],
-                'select'      => ['status']
+                'select'      => ['status', 'attachment_type']
                 ]
             );
             $allSigned = !empty($attachmentsInResList);
             foreach ($attachmentsInResList as $value2) {
-                if ($value2['status'] == 'TRA' || $value2['status'] == 'A_TRA') {
+                if ($attachmentTypes[$value2['attachment_type']]['sign'] && ($value2['status'] == 'TRA' || $value2['status'] == 'A_TRA')) {
                     $allSigned = false;
                 }
             }
@@ -137,6 +143,7 @@ class VisaController
         $datas['currentAction'] = $currentAction;
         //		$datas['histories'] 	= $history;
         $datas['resList']       = $resList;
+        $datas['resListIndex']  = $resListIndex;
         $datas['nbNotes']       = \NotesModel::countByResId(['resId' => $resId]);;
         $datas['signature']     = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
         $datas['consigne']      = \UsersModel::getCurrentConsigneById(['resId' => $resId]);
@@ -171,9 +178,8 @@ class VisaController
         return $response->withJson($this->getAttachmentsForSignatureBook(['resId' => $resId]));
     }
 
-    private function getAttachmentsForSignatureBook(array $aArgs = [])
+    private function getAttachmentsTypesByXML()
     {
-
         if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml')) {
             $path = 'custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml';
         } else {
@@ -193,6 +199,13 @@ class VisaController
                 ];
             }
         }
+
+        return $attachmentTypes;
+    }
+
+    private function getAttachmentsForSignatureBook(array $aArgs = [])
+    {
+        $attachmentTypes = $this->getAttachmentsTypesByXML();
 
         $orderBy = "CASE attachment_type WHEN 'response_project' THEN 1";
         $c = 2;
@@ -287,6 +300,7 @@ class VisaController
             if ($attachments[$key]['doc_date']) {
                 $attachments[$key]['doc_date'] = date(DATE_ATOM, strtotime($attachments[$key]['doc_date']));
             }
+            $attachments[$key]['idToDl'] = $viewerId;
             $attachments[$key]['isConverted'] = $isConverted;
             $attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
             $attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
