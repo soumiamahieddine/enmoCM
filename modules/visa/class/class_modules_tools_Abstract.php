@@ -555,13 +555,16 @@ abstract class visa_Abstract extends Database
                                 $del_vis = '<div class="delete_visa"></div>';
                                 if($info_userVis['user_id'] <> $_SESSION['user']['UserId']){
                                     $info_vised = '<p style="color:red;">'._VISA_USER_COU_DESC.' '.$info_userVis['firstname'].' '.$info_userVis['lastname'].'</p>';
-                                }else{
+									$dropZone = '';
+								}else{
                                     $info_vised = '<p style="font-weight:normal;">'._VISA_USER_COU.'</p>';
+									$dropZone = '';
                                 }
 
 
 
                             }else{
+								$dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
                                $vised = ''; 
                                if($bool_modif == true){
                                    $modif = 'true';
@@ -608,7 +611,7 @@ abstract class visa_Abstract extends Database
                     		$str .= $del_vis;
                     	$str .= '</span>';
                     	$str .= '<span id="dropZone">';
-                		$str .= '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
+                		$str .= $dropZone;
                 	$str .= '</span>';
                         $str .= '</div>';
                         
@@ -629,14 +632,17 @@ abstract class visa_Abstract extends Database
                             $del_vis = '';
                             $link_vis = 'arrow-right ';
                             if($info_userSign['user_id'] <> $_SESSION['user']['UserId']){
+								$dropZone = '';
                                 $info_vised = '<p style="color:red;">'._SIGN_USER_COU_DESC.' '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'</p>';
                             }else{
+								$dropZone = '';
                                 $info_vised = '<p style="font-weight:normal;">'._SIGN_USER_COU.'</p>';
                             }
 
 
 
                         }else{
+							$dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
                            $vised = ''; 
                            if($bool_modif == true){
                                $modif = 'true';
@@ -676,7 +682,7 @@ abstract class visa_Abstract extends Database
                 		$str .= $del_vis;
                 	$str .= '</span>';
                 	$str .= '<span id="dropZone">';
-                		$str .= '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
+                		$str .= $dropZone;
                 	$str .= '</span>';
                     $str .= '</div>';
                 $i++;
