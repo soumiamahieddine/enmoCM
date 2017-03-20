@@ -90,6 +90,11 @@ export class SignatureBookComponent implements OnInit {
                     this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
                         .map(res => res.json())
                         .subscribe((data) => {
+                            if (data.error) {
+                                location.hash = "";
+                                location.search = "";
+                                return;
+                            }
                             this.signatureBook = data;
 
                             this.headerTab              = 1;
