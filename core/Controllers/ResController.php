@@ -77,6 +77,11 @@ class ResController
         return $response->withJson($datas);
     }
 
+    public function isLock(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        return $response->withJson(ResModel::isLockForCurrentUser(['resId' => $aArgs['resId']]));
+    }
+
     /**
      * Deletes ext resource on database.
      * @param  $resId  integer

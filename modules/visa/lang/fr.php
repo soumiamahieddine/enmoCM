@@ -86,7 +86,7 @@ if (!defined("_VISA_BY"))
     define("_VISA_BY", "Visa par");
 
 if (!defined("_INSTEAD_OF"))
-    define("_INSTEAD_OF", "A la place de");
+    define("_INSTEAD_OF", "à la place de");
 
 if (!defined("_CONFIG_VISA_WORKFLOW_IN_DETAIL"))
     define("_CONFIG_VISA_WORKFLOW_IN_DETAIL", "Configuration du circuit de visa depuis la fiche détaillée");

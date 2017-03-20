@@ -90,11 +90,11 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 			$content .= '<option value="" >Sélectionnez un utilisateur</option>';
 			
 			$tab_userentities = $visa->getEntityVis();
+			$tab_users = $visa->getUsersVis();
 
 			/** Order by parent entity **/
 			foreach ($tab_userentities as $key => $value) {
 				$content .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
-				$tab_users = $visa->getUsersVis($tab_usergroups[$key]['group_id']);
 				foreach($tab_users as $user){
 					if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
 						$selected = " ";
@@ -150,17 +150,16 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 		$content .= '<tr ' . $color . '>';
 
 		$content .= '<td>';
-		$tab_users = $visa->getUsersVis();
 		$content .= '<span id="rank_' . $seq . '"> <span class="nbResZero" style="font-weight:bold;opacity:0.5;">'. ($seq + 1) .'</span> </span>';
 		$content .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
 		$content .= '<option value="" >Sélectionnez un utilisateur</option>';
 		
+		$tab_users = $visa->getUsersVis();
 		$tab_userentities = $visa->getEntityVis();
 
 		/** Order by parent entity **/
 		foreach ($tab_userentities as $key => $value) {
 			$content .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
-			$tab_users = $visa->getUsersVis($tab_usergroups[$key]['group_id']);
 			foreach($tab_users as $user){
 				if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
 					$selected = " ";

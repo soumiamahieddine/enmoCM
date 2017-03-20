@@ -54,7 +54,7 @@ require_once "modules/visa/class/class_modules_tools.php";
 
 function manage_empty_error($arr_id, $history, $id_action, $label_action, $status)
 {
-	$db = new Database();
+    $db = new Database();
     $result = '';
 
     if (!empty($_SESSION['stockCheckbox'])) {
@@ -74,19 +74,29 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
         $sequence = $circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT');
         $stepDetails = array();
         $stepDetails = $circuit_visa->getStepDetails($res_id, $coll_id, 'VISA_CIRCUIT', $sequence);
-        $message = '';
+        $message = [];
 
         //enables to process the visa if i am not the item_id
         if ($stepDetails['item_id'] <> $_SESSION['user']['UserId']) {
-        	$stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
+            $stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
                 . " WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?"
                 , array($stepDetails['listinstance_id'], $stepDetails['item_mode'], $res_id, $stepDetails['item_id'], 'VISA_CIRCUIT'));
-        	$message = _VISA_BY . " " . $_SESSION['user']['UserId'] 
-        		. " " . _INSTEAD_OF . " " . $stepDetails['item_id'];
+
+            $stmt = $db->query("SELECT firstname, lastname, user_id FROM users WHERE user_id IN (?)", array([$_SESSION['user']['UserId'], $stepDetails['item_id']]));
+            foreach ($stmt as $value) {
+                if($value['user_id'] == $_SESSION['user']['UserId']){
+                    $user1 = $value['firstname'] . ' ' . $value['lastname'];
+                } else {
+                    $user2 = $value['firstname'] . ' ' . $value['lastname'];
+                }
+            }
+
+            $message[] = " " ._VISA_BY . " " . $user1 . " " . _INSTEAD_OF . " " . $user2;
         } else {
-        	$stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
+            $stmt = $db->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
                 . " WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?"
                 , array($stepDetails['listinstance_id'], $stepDetails['item_mode'], $res_id, $_SESSION['user']['UserId'], 'VISA_CIRCUIT'));
+            $message[] = "";
         }
 
         if ($circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $circuit_visa->nbVisa($res_id, $coll_id)) {
@@ -96,5 +106,5 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
         $result .= $arr_id[$i] . '#';
     }
 
-    return array('result' => $result, 'history_msg' => '');
+    return array('result' => $result, 'history_msg' => $message);
 }

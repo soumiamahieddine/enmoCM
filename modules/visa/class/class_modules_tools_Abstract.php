@@ -233,7 +233,7 @@ abstract class visa_Abstract extends Database
 		$resFirstFiles = [];
 
 		while($res = $stmt->fetchObject()){
-			if ($res->format == 'doc' || $res->format == 'docx' || $res->format == 'odt')
+			if (($res->format == 'doc' || $res->format == 'docx' || $res->format == 'odt') && !in_array($res->attachment_type, ['simple_attachment', 'simple_attachment_rp']))
 				array_push($resFirstFiles, $res);
 		}
 
@@ -350,21 +350,21 @@ abstract class visa_Abstract extends Database
 			array($res_id, $coll_id, $listDiffType, $sequence));
 		
 		$res = $stmt->fetchObject();
-		$stepDetails['listinstance_id'] = $res->listinstance_id;
-		$stepDetails['coll_id'] = $res->coll_id;
-		$stepDetails['res_id'] = $res->res_id;
+		$stepDetails['listinstance_id']   = $res->listinstance_id;
+		$stepDetails['coll_id']           = $res->coll_id;
+		$stepDetails['res_id']            = $res->res_id;
 		$stepDetails['listinstance_type'] = $res->listinstance_type;
-		$stepDetails['sequence'] = $res->sequence;
-		$stepDetails['item_id'] = $res->item_id;
-		$stepDetails['item_type'] = $res->item_type;
-		$stepDetails['item_mode'] = $res->item_mode;
-		$stepDetails['added_by_user'] = $res->added_by_user;
-		$stepDetails['added_by_entity'] = $res->added_by_entity;
-		$stepDetails['visible'] = $res->visible;
-		$stepDetails['viewed'] = $res->viewed;
-		$stepDetails['difflist_type'] = $res->difflist_type;
-		$stepDetails['process_date'] = $res->process_date;
-		$stepDetails['process_comment'] = $res->process_comment;
+		$stepDetails['sequence']          = $res->sequence;
+		$stepDetails['item_id']           = $res->item_id;
+		$stepDetails['item_type']         = $res->item_type;
+		$stepDetails['item_mode']         = $res->item_mode;
+		$stepDetails['added_by_user']     = $res->added_by_user;
+		$stepDetails['added_by_entity']   = $res->added_by_entity;
+		$stepDetails['visible']           = $res->visible;
+		$stepDetails['viewed']            = $res->viewed;
+		$stepDetails['difflist_type']     = $res->difflist_type;
+		$stepDetails['process_date']      = $res->process_date;
+		$stepDetails['process_comment']   = $res->process_comment;
 		
 		return $stepDetails;
 	}
@@ -396,7 +396,6 @@ abstract class visa_Abstract extends Database
 		
 		$tab_users = array();
 		
-		
 		while($res = $stmt->fetchObject()){
 			array_push($tab_users,array('id'=>$res->user_id, 'firstname'=>$res->firstname,'lastname'=>$res->lastname,'group_id'=>$res->group_id,'entity_id'=>$res->entity_id));
 		}
@@ -406,33 +405,31 @@ abstract class visa_Abstract extends Database
 	public function getGroupVis(){
 		$db = new Database();
 		
-		$stmt = $db->query("SELECT DISTINCT(usergroup_content.group_id),group_desc from usergroups, usergroup_content WHERE usergroups.group_id = usergroup_content.group_id AND usergroup_content.group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)", array('visa_documents'));
+		$stmt = $db->query("SELECT DISTINCT(usergroup_content.group_id),group_desc FROM usergroups, usergroup_content WHERE usergroups.group_id = usergroup_content.group_id AND usergroup_content.group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)", array('visa_documents'));
 		
 		$tab_usergroup = array();
-		
 		
 		while($res = $stmt->fetchObject()){
 			array_push($tab_usergroup,array('group_id'=>$res->group_id,'group_desc'=>$res->group_desc));
 		}
-		//print_r($tab_usergroup);
+
 		return $tab_usergroup;
 	}
 
 	public function getEntityVis(){
 		$db = new Database();
 		
-		$stmt = $db->query("SELECT distinct(entities.entity_id) from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and 
+		$stmt = $db->query("SELECT distinct(entities.entity_id) FROM users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and 
 			users_entities.primary_entity = 'Y' and users.user_id = usergroup_content.user_id AND entities.entity_id = users_entities.entity_id AND group_id IN 
 			(SELECT group_id FROM usergroups_services WHERE service_id = ?)  
 			order by entities.entity_id", array('visa_documents'));
 		
 		$tab_userentities = array();
 		
-		
 		while($res = $stmt->fetchObject()){
 			array_push($tab_userentities,array('entity_id'=>$res->entity_id));
 		}
-		//print_r($tab_userentities);
+
 		return $tab_userentities;
 	}
 	
@@ -497,20 +494,20 @@ abstract class visa_Abstract extends Database
                 $str .= '<option value="" ></option>';
 
                 $tab_userentities = $this->getEntityVis();
+                $tab_users = $this->getUsersVis();
                 /** Order by parent entity **/
                 foreach ($tab_userentities as $key => $value) {
-                        $str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
-                        $tab_users = $this->getUsersVis($tab_usergroups[$key]['group_id']);
-                        foreach($tab_users as $user){
-                                if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
-                                        $selected = " ";
-                                        if ($user['id'] == $step['user_id'])
-                                                $selected = " selected";
-                                        $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].' '.$user['firstname'].'</option>';
-                                }
-
+                    $str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
+                    foreach($tab_users as $user){
+                        if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
+                            $selected = " ";
+                            if ($user['id'] == $step['user_id']) {
+                                $selected = " selected";
+                            }
+                            $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].' '.$user['firstname'].'</option>';
                         }
-                        $str .= '</optgroup>';
+                    }
+                    $str .= '</optgroup>';
                 }
                 $str .= '</select>';
                 $str .= '<script>';

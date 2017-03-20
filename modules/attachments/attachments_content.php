@@ -1720,6 +1720,9 @@ if (!isset($_REQUEST['id'])) {
         if(empty($_SESSION['attachment_types_get_chrono'][$attachmentType][0])){
             $_SESSION['attachment_types_get_chrono'][$attachmentType] = '';
         }
+        if(empty($_SESSION['attachment_types_with_delay'][$attachmentType][0])){
+            $_SESSION['attachment_types_with_delay'][$attachmentType] = '';
+        }
         if($_SESSION['attachment_types_show'][$attachmentType] == "true"){
             $content .= '<option value="' . $attachmentType . '" with_chrono = "'. $_SESSION['attachment_types_with_chrono'][$attachmentType].'" get_chrono = "'. $_SESSION['attachment_types_get_chrono'][$attachmentType].'"';
 
@@ -1803,6 +1806,7 @@ if (isset($_REQUEST['id'])) {
 } else {
     $content .= '<input type="text" name="back_date" id="back_date" onClick="showCalender(this);" onfocus="checkBackDate(this)" value="" />';
 }
+$content .= "<input type='hidden' name='withDelay' id='withDelay' value='".$_SESSION['attachment_types_with_delay']['transmission']."' />";
 $content .= "<input type='hidden' name='dataCreationDate' id='dataCreationDate' value='{$dataForDate->creation_date}' />";
 $content .= '</p>';
 $content .= '<div>';

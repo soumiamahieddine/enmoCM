@@ -145,4 +145,31 @@ class ResModelAbstract extends \Apps_Table_Service
 
         return $aReturn;
     }
+
+    public static function isLockForCurrentUser(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['resId']);
+        static::checkNumeric($aArgs, ['resId']);
+
+
+        $aReturn = static::select([
+            'select'    => ['locker_user_id', 'locker_time'],
+            'table'     => ['res_letterbox'],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['resId']]
+        ]);
+
+        $lock = true;
+        $lockBy = empty($aReturn[0]['locker_user_id']) ? '' : $aReturn[0]['locker_user_id'];
+
+        if (empty($aReturn[0]['locker_user_id'] || empty($aReturn[0]['locker_time']))) {
+            $lock = false;
+        } elseif ($aReturn[0]['locker_user_id'] == $_SESSION['user']['UserId']) {
+            $lock = false;
+        } elseif (strtotime($aReturn[0]['locker_time']) < time()) {
+            $lock = false;
+        }
+
+        return ['lock' => $lock, 'lockBy' => $lockBy];
+    }
 }
