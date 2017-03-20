@@ -88,6 +88,11 @@ var SignatureBookComponent = (function () {
                 _this.http.get(_this.coreUrl + 'rest/' + _this.basketId + '/signatureBook/' + _this.resId)
                     .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
+                    if (data.error) {
+                        location.hash = "";
+                        location.search = "";
+                        return;
+                    }
                     _this.signatureBook = data;
                     _this.headerTab = 1;
                     _this.leftSelectedThumbnail = 0;
@@ -231,19 +236,7 @@ var SignatureBookComponent = (function () {
         showAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&docId=' + this.resId);
     };
     SignatureBookComponent.prototype.editAttachmentIframe = function (attachment) {
-        var resId;
-        if (attachment.res_id == 0) {
-            resId = attachment.res_id_version;
-        }
-        else if (attachment.res_id_version == 0) {
-            resId = attachment.res_id;
-        }
-        modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
-    };
-    SignatureBookComponent.prototype.delAttachment = function (attachment) {
-        var _this = this;
-        var r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
-        if (r) {
+        if (attachment.canModify) {
             var resId;
             if (attachment.res_id == 0) {
                 resId = attachment.res_id_version;
@@ -251,10 +244,26 @@ var SignatureBookComponent = (function () {
             else if (attachment.res_id_version == 0) {
                 resId = attachment.res_id;
             }
-            this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&rest=true')
-                .subscribe(function () {
-                _this.refreshAttachments('del');
-            });
+            modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
+        }
+    };
+    SignatureBookComponent.prototype.delAttachment = function (attachment) {
+        var _this = this;
+        if (attachment.canDelete) {
+            var r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+            if (r) {
+                var resId;
+                if (attachment.res_id == 0) {
+                    resId = attachment.res_id_version;
+                }
+                else if (attachment.res_id_version == 0) {
+                    resId = attachment.res_id;
+                }
+                this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&rest=true')
+                    .subscribe(function () {
+                    _this.refreshAttachments('del');
+                });
+            }
         }
     };
     SignatureBookComponent.prototype.prepareSignFile = function (attachment) {
@@ -287,6 +296,14 @@ var SignatureBookComponent = (function () {
                 _this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + _this.resId + "&id=" + data.new_id;
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].viewerLink = _this.rightViewerLink;
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].status = 'SIGN';
+                _this.signatureBook.attachments[_this.rightSelectedThumbnail].idToDl = data.new_id;
+                var allSigned = true;
+                _this.signatureBook.attachments.forEach(function (value) {
+                    if (value.sign && value.status != 'SIGN') {
+                        allSigned = false;
+                    }
+                });
+                _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = allSigned;
             }
             else {
                 alert(data.error);
@@ -313,6 +330,8 @@ var SignatureBookComponent = (function () {
                 _this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + _this.resId + "&id=" + resId;
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].viewerLink = _this.rightViewerLink;
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].status = 'A_TRA';
+                _this.signatureBook.attachments[_this.rightSelectedThumbnail].idToDl = resId;
+                _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = false;
             }
             else {
                 alert(data.error);

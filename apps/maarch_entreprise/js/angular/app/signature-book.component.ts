@@ -90,6 +90,11 @@ export class SignatureBookComponent implements OnInit {
                     this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
                         .map(res => res.json())
                         .subscribe((data) => {
+                            if (data.error) {
+                                location.hash = "";
+                                location.search = "";
+                                return;
+                            }
                             this.signatureBook = data;
 
                             this.headerTab              = 1;
@@ -237,19 +242,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     editAttachmentIframe(attachment: any) {
-        var resId: number;
-        if (attachment.res_id == 0) {
-            resId = attachment.res_id_version;
-        } else if (attachment.res_id_version == 0) {
-            resId = attachment.res_id;
-        }
-
-        modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
-    }
-
-    delAttachment(attachment: any) {
-        let r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
-        if (r) {
+        if (attachment.canModify) {
             var resId: number;
             if (attachment.res_id == 0) {
                 resId = attachment.res_id_version;
@@ -257,10 +250,26 @@ export class SignatureBookComponent implements OnInit {
                 resId = attachment.res_id;
             }
 
-            this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&rest=true')
-                .subscribe(() => {
-                    this.refreshAttachments('del');
-                });
+            modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
+        }
+    }
+
+    delAttachment(attachment: any) {
+        if (attachment.canDelete) {
+            let r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+            if (r) {
+                var resId: number;
+                if (attachment.res_id == 0) {
+                    resId = attachment.res_id_version;
+                } else if (attachment.res_id_version == 0) {
+                    resId = attachment.res_id;
+                }
+
+                this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&rest=true')
+                    .subscribe(() => {
+                        this.refreshAttachments('del');
+                    });
+            }
         }
     }
 
@@ -293,6 +302,14 @@ export class SignatureBookComponent implements OnInit {
                     this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + this.resId + "&id=" + data.new_id;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
+                    this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = data.new_id;
+                    var allSigned = true;
+                    this.signatureBook.attachments.forEach((value: any) => {
+                        if (value.sign && value.status != 'SIGN') {
+                            allSigned = false;
+                        }
+                    });
+                    this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = allSigned;
                 } else {
                     alert(data.error);
                 }
@@ -321,6 +338,8 @@ export class SignatureBookComponent implements OnInit {
                     this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + this.resId + "&id=" + resId;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
+                    this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;
+                    this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
                 } else {
                     alert(data.error);
                 }
