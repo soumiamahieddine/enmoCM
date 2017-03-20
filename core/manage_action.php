@@ -399,8 +399,10 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
     {
         if(!empty($arr_res[$i]))
         {
-            $docLocker = new docLocker($arr_res[$i]);
-            $docLocker->unlock();
+            if(is_numeric($arr_res[$i])){
+                $docLocker = new docLocker($arr_res[$i]);
+                $docLocker->unlock(); 
+            }
             // Save action in history if needed
             if($bool_history=='Y')
             {

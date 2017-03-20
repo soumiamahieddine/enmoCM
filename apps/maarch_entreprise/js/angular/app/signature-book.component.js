@@ -88,6 +88,11 @@ var SignatureBookComponent = (function () {
                 _this.http.get(_this.coreUrl + 'rest/' + _this.basketId + '/signatureBook/' + _this.resId)
                     .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
+                    if (data.error) {
+                        location.hash = "";
+                        location.search = "";
+                        return;
+                    }
                     _this.signatureBook = data;
                     _this.headerTab = 1;
                     _this.leftSelectedThumbnail = 0;
