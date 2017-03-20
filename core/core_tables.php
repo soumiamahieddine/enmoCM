@@ -29,7 +29,6 @@
 * @version $Revision$
 * @ingroup core
 */
-
 if (! defined('ACTIONS_TABLE')) {
     define('ACTIONS_TABLE', 'actions');
 }
@@ -116,4 +115,7 @@ if (! defined('EMAIL_SIGNATURES_TABLE')) {
 }
 if (! defined('USER_BASKETS_SECONDARY_TABLE')) {
     define('USER_BASKETS_SECONDARY_TABLE', 'user_baskets_secondary');
+}
+if (! defined('USER_SIGNATURES_TABLE')) {
+    define('USER_SIGNATURES_TABLE', 'user_signatures');
 }

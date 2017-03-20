@@ -101,10 +101,12 @@ $businessAppTools->compare_base_version(
 
 //LGI TEST FOR SMARTPHONE
 if ($core->detectSmartphone()) {
+    $_SESSION['isSmartphone'] = true;
     header('location: smartphone/hello.php');
     exit;
 }
 
+else $_SESSION['isSmartphone'] = false;
 $core->load_html();
 $core->load_header('', true, false);
 $time = $core->get_session_time_expire();

@@ -25,7 +25,7 @@ $stmt = $db->query(
       WHERE notes.user_id = u.user_id 
       AND notes.identifier = ? 
       AND notes.coll_id = ? 
-      ODER BY notes.date_note DESC",array($_REQUEST['id'],$_REQUEST['collId']));
+      ORDER BY notes.date_note DESC",array($_REQUEST['id'],$_REQUEST['collId']));
 //$db->show();
 $notesList = '<div id="newNote" class="row" style="display: none;"></div>';
 if ($stmt->rowCount()< 1) {

@@ -57,14 +57,14 @@ if (empty($docserver)) {
 			$db = new Database();
 			writeLogIndex("Relation = ".$_SESSION['visa']['repSignRel']);
 			if ($_SESSION['visa']['repSignRel'] > 1) {
-                $target_table = 'res_version_attachments';
-                $stmt = $db->query("UPDATE res_version_attachments set status = 'SIGN' WHERE res_id = ?",array($_SESSION['visa']['repSignId']));
+                //$target_table = 'res_version_attachments';
+                $db->query("UPDATE res_version_attachments set status = 'SIGN' WHERE res_id = ?",array($_SESSION['visa']['repSignId']));
             } else {
-                $target_table = 'res_attachments';
-				$stmt = $db->query("UPDATE res_attachments set status = 'SIGN' WHERE res_id = ?",array($_SESSION['visa']['repSignId']));
+                //$target_table = 'res_attachments';
+				$db->query("UPDATE res_attachments set status = 'SIGN' WHERE res_id = ?",array($_SESSION['visa']['repSignId']));
             }
 			unset($_SESSION['visa']['repSignRel']);
-			unset($_SESSION['visa']['repSignId']);
+			if (isset($_SESSION['visa']['repSignId'])) unset($_SESSION['visa']['repSignId']);
 			
             $resAttach = new resource();
             $_SESSION['data'] = array();
@@ -93,11 +93,12 @@ if (empty($docserver)) {
                 )
             );
 			
+            if (!isset($statusSign) || empty($statusSign)) $statusSign = 'TRA';
             array_push(
                 $_SESSION['data'],
                 array(
                     'column' => 'status',
-                    'value' => 'TRA',
+                    'value' => $statusSign,
                     'type' => 'string',
                 )
             );
@@ -181,8 +182,28 @@ if (empty($docserver)) {
             array_push(
                 $_SESSION['data'],
                 array(
+                    'column' => 'dest_contact_id',
+                    'value' => $_SESSION['visa']['last_resId_signed']['dest_contact'],
+                    'type' => 'int',
+                )
+            );
+            array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'dest_address_id',
+                    'value' => $_SESSION['visa']['last_resId_signed']['dest_address'],
+                    'type' => 'int',
+                )
+            );
+
+            if (empty($_REQUEST['id'])) $id_origin = $objectId;
+            else $id_origin = $_REQUEST['id'];
+            if (empty($target_table)) $target_table = "res_attachments";
+            array_push(
+                $_SESSION['data'],
+                array(
                     'column' => 'origin',
-                    'value' => $_REQUEST['id'].','.$target_table,
+                    'value' => $id_origin.','.$target_table,
                     'type' => 'string',
                 )
             );

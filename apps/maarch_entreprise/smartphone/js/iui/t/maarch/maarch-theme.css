@@ -222,7 +222,7 @@ body[orient="landscape"] > .footer > h1 {
 }
 
 span.bubble {
-    background-color: none;
+    background-color: #FFC200;
     border-radius: 10px 10px 10px 10px;
     color: #009DC5;
     display: block;
@@ -465,4 +465,36 @@ a, a:link, a:visited, a:hover{
     margin-top: 20px;
     margin-bottom: 20px;
     float:none!important;
+}
+
+
+/************************************************************************************************/
+/* Optimisation affichage de la page signature_recap.php  */
+#signature_recap .btn_recap{
+    margin-right: 5%;
+    font-size: 16px;
+}
+#signature_recap .btn_recap a{
+    font-size: 16px;
+}
+#signature_recap .btn_recap img{
+    width: 20%;
+}
+
+/************************************************************************************************/
+.forceLandscape{
+    transform: rotate(90deg);
+    -webkit-transform:  rotate(90deg);
+    -webkit-transform-origin: bottom left;
+}
+
+.landscape #sign_main_panel #info_landscape{
+    display: none;
+}
+
+.portrait #sign_main_panel #info_landscape{
+    display: block;
+    color: red;
+    text-align: center;
+    font-size: 20px;
 }

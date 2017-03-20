@@ -21,7 +21,7 @@ $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 
-if (!isset($_SESSION['user']['pathToSignature']) ||$_SESSION['user']['pathToSignature'] == '') {
+if (!isset($_SESSION['user']['pathToSignature'][0]) ||$_SESSION['user']['pathToSignature'][0] == '') {
     $_SESSION['error'] = _IMG_SIGN_MISSING;
 	echo "{\"status\":1, \"error\" : \"". _IMG_SIGN_MISSING ."\"}";
 	exit;
@@ -72,7 +72,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
 		$cmd = "java -jar " 
 			. escapeshellarg($_SESSION['config']['corepath'] . "modules/visa/dist/SignPdf.jar") . " " 
 			. escapeshellarg($fileOnDs) . " " 
-			. escapeshellarg($_SESSION['user']['pathToSignature']) . " " 
+			. escapeshellarg($_SESSION['user']['pathToSignature'][0]) . " " 
 			. escapeshellarg($_SESSION['modules_loaded']['visa']['width_blocsign']) . " " 
 			. escapeshellarg($_SESSION['modules_loaded']['visa']['height_blocsign']) . " " 
 			. escapeshellarg($_SESSION['config']['tmppath']);

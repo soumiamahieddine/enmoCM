@@ -536,32 +536,38 @@ abstract class class_users_Abstract extends Database
     *
     */
     public function get_user($user_id) {
+        require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR. "class" . DIRECTORY_SEPARATOR. "class_user_signatures.php";
+        $us = new UserSignatures();
         if (!empty($user_id)) {
             $db = new Database();
             $stmt = $db->query(
-                "SELECT user_id, firstname, lastname, mail, phone, status, thumbprint, signature_path, signature_file_name FROM " 
+                "SELECT user_id, firstname, lastname, mail, phone, status, thumbprint/*, signature_path, signature_file_name*/ FROM " 
                 . USERS_TABLE . " WHERE user_id = ?",
                 array($user_id)
             );
             if ($stmt->rowCount() >0) {
                 $line = $stmt->fetchObject();
-                if ($line->signature_path <> '' 
-                    && $line->signature_file_name <> '' 
-                ) {
+                /* MODIFICATION POUR LES SIGNATURES */
 
-                    $query = "SELECT path_template FROM " 
-                        . _DOCSERVERS_TABLE_NAME 
-                        . " WHERE docserver_id = 'TEMPLATES'";
-                    $stmt = $db->query($query);
-                    $resDs = $stmt->fetchObject();
-                    $pathToDs = $resDs->path_template;
-                    $pathToSignature = $pathToDs . str_replace(
-                            "#", 
-                            DIRECTORY_SEPARATOR, 
-                            $line->signature_path
-                        )
-                        . $line->signature_file_name;
+                $query = "SELECT path_template FROM " 
+                    . _DOCSERVERS_TABLE_NAME 
+                    . " WHERE docserver_id = 'TEMPLATES'";
+                $stmt = $db->query($query);
+                $resDs = $stmt->fetchObject();
+                $pathToDs = $resDs->path_template;
+
+                $tab_sign = $us->getForUser($line->user_id);
+                $pathToSignature = array();
+                foreach ($tab_sign as $sign) {
+                    $path = $pathToDs . str_replace(
+                        "#", 
+                        DIRECTORY_SEPARATOR, 
+                        $sign['signature_path']
+                    )
+                    . $sign['signature_file_name'];
+                    array_push($pathToSignature, $path);
                 }
+
                 $user = array(
                     'id' => $line->user_id,
                     'firstname' => $this->show_string($line->firstname),

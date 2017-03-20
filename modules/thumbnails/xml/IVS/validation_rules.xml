@@ -2,6 +2,8 @@
     <validationRule name="get_thumbnails" extends="standardForm" mode="error">
       <parameter name="coll_id" type="collection_list" />
       <parameter name="res_id" type="integer" />
+      <parameter name="num_page" type="integer" />
+      <parameter name="tablename" type="string" />
       <parameter name="module" type="identifier" />
       <parameter name="advanced" type="string" />
     </validationRule>

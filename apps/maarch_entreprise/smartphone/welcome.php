@@ -23,4 +23,5 @@ if($_SESSION['user']['UserId'] == NULL) {
     <li><a href="about.php"><span class="fa fa-question-circle"></span><?php echo _MAARCH_CREDITS;?></a></li>
 	<li><a href="info.php"><span class="fa fa-exclamation-circle"></span><?php echo _MAARCH_INFO;?></a></li>
     <li><a href="logout.php"><span class="fa fa-power-off"></span><?php echo _LOGOUT;?></a></li>
+    <!-- <li><a href="test.php"><span class="fa fa-power-off"></span>INFOS DEVICE</a></li> -->
 </ul>

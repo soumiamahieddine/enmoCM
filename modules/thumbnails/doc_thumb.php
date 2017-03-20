@@ -16,6 +16,12 @@
 	} elseif (!is_file($path)) {
 		exit();
 	}
+
+	$tab_tnl = $tnl->testMultiPage($path);
+	if (!isset($_REQUEST['num_page'])) $num_page = 0;
+	else $num_page = $_GET['num_page'];
+
+	//echo "<pre>".print_r($tab_tnl,true)."</pre>";
 	$mime_type = 'image/png';	
 	$date = mktime(0,0,0,date("m" ) + 2  ,date("d" ) ,date("Y" )  );
 	$date = date("D, d M Y H:i:s", $date);
@@ -27,6 +33,5 @@
 	header("Content-Type: ".$mime_type);
 	header("Content-Disposition: inline; filename=filename;");
 	header("Content-Transfer-Encoding: binary");
-	readfile($path);
-		
+	readfile($tab_tnl[$num_page]);
 	exit();

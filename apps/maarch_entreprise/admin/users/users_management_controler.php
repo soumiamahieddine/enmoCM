@@ -137,22 +137,27 @@ function display_up($user_id){
     if (empty($user)){
         $state = false;
     } else {
-        if ($user->signature_path <> '' 
-            && $user->signature_file_name <> '' 
-        ) {
-            $db = new Database();
-            $query = "select path_template from " 
-                . _DOCSERVERS_TABLE_NAME 
-                . " where docserver_id = 'TEMPLATES'";
-            $stmt = $db->query($query);
-            $resDs = $stmt->fetchObject();
-            $pathToDs = $resDs->path_template;
-            $user->pathToSignature = $pathToDs . str_replace(
-                    "#", 
-                    DIRECTORY_SEPARATOR, 
-                    $user->signature_path
-                )
-                . $user->signature_file_name;
+        require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR. "class" . DIRECTORY_SEPARATOR. "class_user_signatures.php";
+        $us = new UserSignatures();
+        
+        $db = new Database();
+        $query = "select path_template from " 
+            . _DOCSERVERS_TABLE_NAME 
+            . " where docserver_id = 'TEMPLATES'";
+        $stmt = $db->query($query);
+        $resDs = $stmt->fetchObject();
+        $pathToDs = $resDs->path_template;
+
+        $tab_sign = $us->getForUser($user->user_id);
+        $user->pathToSignature = array();
+        foreach ($tab_sign as $sign) {
+            $path = $pathToDs . str_replace(
+                "#", 
+                DIRECTORY_SEPARATOR, 
+                $sign['signature_path']
+            )
+            . $sign['signature_file_name'];
+            array_push($user->pathToSignature, $path);
         }
         put_in_session("users",$user->getArray());
     }

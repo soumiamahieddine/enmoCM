@@ -2443,6 +2443,12 @@ class core_tools extends functions
                 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>smartphone/js/iscroll.js?v3.7.1"></script>
                 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>js/prototype.js"></script>
                 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>js/scriptaculous.js"></script>
+                <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/signature_pad/js/signature_pad.js" type="text/javascript"></script>
+
+                <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/swiper/dist/js/swiper.min.js" type="text/javascript"></script>
+
+                <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+                <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/fingerprintjs2/fingerprint2.js" type="text/javascript"></script>
                 <?php
             }
             ?>
@@ -2458,9 +2464,18 @@ class core_tools extends functions
         ?>
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
         <!--<link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/style.css';?>" media="screen" />-->
+        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
+            . 'css/font-awesome/css/font-awesome.css'; ?>" media="screen" />
+        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
+            . 'css/font-awesome/css/font-maarch.css'; ?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css';?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/iui.css';?>" media="screen" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'tools/swiper/dist/css/swiper.min.css';?>" media="screen" />
+
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/t/maarch/maarch-theme.css';?>" media="screen" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'tools/signature_pad/css/signature-pad.css';?>" media="screen" />
+        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] . 'tools/PhotoSwipe/photoswipe.css'; ?>" media="screen" />
+        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] . 'tools/PhotoSwipe/default-skin/default-skin.css'; ?>" media="screen" />
         <?php
     }
 }

@@ -29,6 +29,9 @@ var hasOrientationEvent = false;
 var portraitVal = "portrait";
 var landscapeVal = "landscape";
 
+
+var forceLandscape = false;
+
 // *************************************************************************************************
 
 /*
@@ -518,6 +521,8 @@ addEventListener("load", function(event)
 	}
 	setTimeout(checkOrientAndLocation, 0);
 	checkTimer = setInterval(checkOrientAndLocation, 300);
+
+
 }, false);
 
 addEventListener("unload", function(event)
@@ -599,6 +604,12 @@ addEventListener("click", function(event)
 		
 		event.preventDefault();		   
 	}
+	else{
+		if (event.target.id == "backBut")
+		{
+			iui.goBack();
+		}
+	}
 }, true);
 
 /*
@@ -671,6 +682,7 @@ function getPageFromLoc()
 	return page;
 }
 
+
 function orientChangeHandler()
 {
 	var orientation=window.orientation;
@@ -697,6 +709,13 @@ function checkOrientAndLocation()
 		  currentWidth = window.innerWidth;
 		  currentHeight = window.innerHeight;
 		  var orient = (currentWidth < currentHeight) ? portraitVal : landscapeVal;
+
+		  if (forceLandscape){
+		  	if (orient == portraitVal){
+		  		var tmp;
+		  		tmp = currentWidth; currentWidth = currentHeight; currentHeight = tmp;
+		  	}
+		  }
 		  setOrientation(orient);
 	  }
 	}
@@ -708,10 +727,32 @@ function checkOrientAndLocation()
 	}
 }
 
+function forceOrientLandscape(){
+	if (document.body.getAttribute("orient") == portraitVal){
+		iui.addClass(document.body, "forceLandscape");
+		var width = Math.max(document.documentElement.clientWidth,document.documentElement.clientHeight)*(99/100);
+		var height = Math.max(Math.min(document.documentElement.clientWidth,document.documentElement.clientHeight)*(90/100),415);
+		document.body.style.height = height + "px";
+		document.body.style.width = width + "px";
+
+		var pct = -height*100/width;
+		document.body.style.transform = "rotate(90deg) translate("+pct+"%)";
+		document.body.style.webkitTransform = "rotate(90deg) translate("+pct+"%)";
+	}
+	else{
+	 	iui.removeClass(document.body, "forceLandscape");
+	 	document.body.style.height = '';
+	 	document.body.style.width = '';
+
+	 	document.body.style.transform = '';
+		document.body.style.webkitTransform = '';
+	}
+}
+
 function setOrientation(orient)
 {
 	document.body.setAttribute("orient", orient);
-//  Set class in addition to orient attribute:
+	//  Set class in addition to orient attribute:
 	if (orient == portraitVal)
 	{
 		iui.removeClass(document.body, landscapeVal);
@@ -728,7 +769,12 @@ function setOrientation(orient)
 		iui.removeClass(document.body, landscapeVal);
 	}
 	setTimeout(scrollTo, 100, 0, 1);
+
+	/*if (forceLandscape){
+		forceOrientLandscape();
+	}*/
 }
+
 
 function showDialog(page)
 {
@@ -766,6 +812,7 @@ function cancelDialog(form)
 
 function updatePage(page, fromPage)
 {
+	window.onresize = '';
 	if (!page.id)
 		page.id = "__" + (++newPageCount) + "__";
 
@@ -795,8 +842,35 @@ function updatePage(page, fromPage)
 		else
 			backButton.style.display = "none";
 	}
+
+	if (page.id == 'sign_main_panel'){
+		/*forceLandscape = true;
+		forceOrientLandscape();*/
+		//if (document.body.getAttribute("orient") == portraitVal) alert("Passez en orientation paysage pour signer");
+		loadSignPad();
+	}
+	if (page.id == 'details'){
+		if ($("ifrm")){
+			//replaceFrame($("ifrm"),$("ifrm").src);
+			replaceFrameResize();
+			window.onresize = replaceFrameResize;
+		}
+	} 
+	if (page.id == 'test'){
+		  loadDeviceInfos();
+	} 
+	if (page.id == 'list_ans'){
+		if (fromPage.id == 'signature_recap'){
+			document.getElementById('signature_recap').parentNode.removeChild(document.getElementById('signature_recap'));
+			if (document.getElementById('check_id_user')) document.getElementById('check_id_user').parentNode.removeChild(document.getElementById('check_id_user'));
+			if (document.getElementById('load_user_signatures')) document.getElementById('load_user_signatures').parentNode.removeChild(document.getElementById('load_user_signatures'));
+			document.getElementById('sign_main_panel').parentNode.removeChild(document.getElementById('sign_main_panel'));
+			document.getElementById('details').parentNode.removeChild(document.getElementById('details'));
+		}			
+	}
 	iui.busy = false;
 }
+
 /*
 events:
 Both panels involved in a slide animation receive `beforetransition` and
