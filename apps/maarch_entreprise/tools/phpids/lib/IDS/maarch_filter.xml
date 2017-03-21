@@ -313,7 +313,7 @@
         </tags>
         <impact>4</impact>
     </filter>
-    <filter>
+<!--     <filter>
         <id>30</id>
         <rule><![CDATA[(?:=\s*\w+\s*\+\s*")|(?:\+=\s*\(\s")|(?:!+\s*[\d.,]+\w?\d*\s*\?)|(?:=\s*\[s*\])|(?:"\s*\+\s*")|(?:[^\s]\[\s*\d+\s*\]\s*[;+])|(?:"\s*[&|]+\s*")|(?:\/\s*\?\s*")|(?:\/\s*\)\s*\[)|(?:\d\?.+:\d)|(?:]\s*\[\W*\w)|(?:[^\s]\s*=\s*\/)]]></rule>
         <description>Detects common XSS concatenation patterns 1/2</description>
@@ -324,7 +324,7 @@
             <tag>rfe</tag>
         </tags>
         <impact>4</impact>
-    </filter>
+    </filter> -->
     <filter>
         <id>31</id>
         <rule><![CDATA[(?:=\s*\d*\.\d*\?\d*\.\d*)|(?:[|&]{2,}\s*")|(?:!\d+\.\d*\?")|(?:\/:[\w.]+,)|(?:=[\d\W\s]*\[[^]]+\])|(?:\?\w+:\w+)]]></rule>
@@ -457,17 +457,6 @@
         </tags>
         <impact>7</impact>
     </filter> -->
-     <filter>
-        <id>46</id>
-        <rule><![CDATA[(?:in\s*\(+\s*select)|(?:(?:n?and|x?or|not |\|\||\&\&)\s+[\s\w+]+(?:regexp\s*\(|sounds\s+like\s*"|[=\d]+x))|("\s*\d\s*(?:--|#))|(?:"[%&<>^=]+\d\s*(=|or))|(?:"\W+[\w+-]+\s*=\s*\d\W+")|(?:"\s*is\s*\d.+"?\w)|(?:"\|?[\w-]{3,}[^\w\s.,]+")|(?:"\s*is\s*[\d.]+\s*\W.*")]]></rule>
-        <description>Detects basic SQL authentication bypass attempts 3/3</description>
-        <tags>
-            <tag>sqli</tag>
-            <tag>id</tag>
-            <tag>lfi</tag>
-        </tags>
-        <impact>7</impact>
-    </filter> 
     <filter>
         <id>47</id>
         <rule><![CDATA[(?:[\d\W]\s+as\s*["\w]+\s*from)|(?:^[\W\d]+\s*(?:union|select|create|rename|truncate|load|alter|delete|update|insert|desc))|(?:(?:select|create|rename|truncate|load|alter|delete|update|insert|desc)\s+(?:(?:group_)concat|char|load_file)\s?\(?)|(?:end\s*\);)|("\s+regexp\W)|(?:[\s(]load_file\s*\()]]></rule>

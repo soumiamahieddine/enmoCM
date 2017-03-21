@@ -67,6 +67,11 @@
     </FORMAT>
     <FORMAT>
         <name>DOCX</name>
+        <mime>application/octet-stream</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>DOCX</name>
         <mime>application/vnd.openxmlformats-officedocument.wordprocessingml.document</mime>
         <index_frame_show>false</index_frame_show>
     </FORMAT>

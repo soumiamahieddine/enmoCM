@@ -140,7 +140,7 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
         exit();
     }
 }
-elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values']) && !empty($_POST['new_status']) && !empty($_POST['table']))
+elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values'])&& $_POST['values'] != 'none#' && !empty($_POST['new_status']) && !empty($_POST['table']))
 {
     $stmt = $db->query("select id from status where id = ?", array($_POST['new_status']));
     $lineStatus = $stmt->fetchObject();
@@ -386,30 +386,53 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
             echo "{status : 0, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'".$comp.", result_id : '".$res_action['result']."'}";
         }
     }
-    // Save action in history if needed
-    if($bool_history=='Y')
+
+    require_once 'apps/maarch_entreprise/actions/docLocker.php';
+    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+    $hist = new history();
+    $arr_res = explode('#', $res_action['result']);
+    if(!is_array($res_action['history_msg'])){
+        $res_action['history_msg'] = [$res_action['history_msg']];
+    }
+    
+	for($i=0; $i<count($arr_res);$i++)
     {
-		$db = new Database();
-        require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-        $hist = new history();
-        $arr_res = explode('#', $res_action['result']);
-		for($i=0; $i<count($arr_res );$i++)
+        if(!empty($arr_res[$i]))
         {
-            if(!empty($arr_res[$i]))
+            if(is_numeric($arr_res[$i])){
+                $docLocker = new docLocker($arr_res[$i]);
+                $docLocker->unlock(); 
+            }
+            // Save action in history if needed
+            if($bool_history=='Y')
             {
                 $what = '';
                 if (isset($_SESSION['current_basket']['id']) && !empty($_SESSION['current_basket']['id'])) {
-                    $stmt = $db->query("SELECT basket_name FROM baskets WHERE basket_id = ?", array($_SESSION['current_basket']['id']));
-                    while($data = $stmt->fetchObject()) {
+                    if(isset($_SESSION['current_basket']['basket_owner']) && !empty($_SESSION['current_basket']['basket_owner'])){
+                        
+                        $pos =stripos($_SESSION['current_basket']['id'], $_SESSION['current_basket']['basket_owner']);
+                        $string = substr($_SESSION['current_basket']['id'], 0, $pos -1);
+                        $stmt = $db->query("SELECT basket_name FROM baskets WHERE basket_id = ?", array($string));
+                        while($data = $stmt->fetchObject()) {
                         $what = $data->basket_name;
+                        $what .= " (".$_SESSION['current_basket']['basket_owner'].")";
+                        }
+
+                    }else{
+                        $stmt = $db->query("SELECT basket_name FROM baskets WHERE basket_id = ?", array($_SESSION['current_basket']['id']));
+                        while($data = $stmt->fetchObject()) {
+                        $what = $data->basket_name;
+                        }
+
                     }
+                    
                     $what .= ' : ';
                 }
                 //$what .= $label_action.'('._NUM.$arr_res[$i].') ';
                 $what .= $label_action;
-                if(isset($res_action['history_msg']) && !empty($res_action['history_msg']))
+                if(isset($res_action['history_msg'][$i]) && !empty($res_action['history_msg'][$i]))
                 {
-                    $what .= $res_action['history_msg'];
+                    $what .= $res_action['history_msg'][$i];
                 }
                 $_SESSION['info'] = $what . ' ';
                 $_SESSION['cpt_info_basket'] = 0;

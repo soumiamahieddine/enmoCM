@@ -123,7 +123,7 @@ class thumbnails
 		$oRowSet = Apps_Table_Service::select([
 			'select'    => ['path_template'],
 			'table'     => ['docservers'],
-			'where'     => ['docserver_id = ?'],
+			'where'     => ['docserver_type_id = ?'],
 			'data'      => ['TNL']
 		]);
 

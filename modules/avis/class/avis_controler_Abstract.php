@@ -118,11 +118,14 @@ abstract class avis_controler_Abstract
                             $link_vis = 'arrow-right ';
                             $del_vis = '<div class="delete_avis"></div>';
                             if ($info_userAvis['user_id'] <> $_SESSION['user']['UserId']) {
-                                $info_vised = '<p style="color:red;">Vous être en train de viser à la place de ' . $info_userAvis['firstname'] . ' ' . $info_userAvis['lastname'] . '!</p>';
+                                //$info_vised = '<p style="color:red;">Vous donnez votre avis à la place de ' . $info_userAvis['firstname'] . ' ' . $info_userAvis['lastname'] . '!</p>';
+                                $dropZone = '';
                             } else {
-                                $info_vised = 'Vous êtes l\'actuel viseur';
+                                //$info_vised = 'Vous êtes l\'actuel conseiller';
+                                $dropZone = '';
                             }
                         } else {
+                            $dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
                             $vised = '';
                             if ($bool_modif == true) {
                                 $modif = 'true';
@@ -167,7 +170,7 @@ abstract class avis_controler_Abstract
                     $str .= $del_vis;
                     $str .= '</span>';
                     $str .= '<span id="dropZone">';
-                    $str .= '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
+                    $str .= $dropZone;
                     $str .= '</span>';
                     $str .= '</div>';
 

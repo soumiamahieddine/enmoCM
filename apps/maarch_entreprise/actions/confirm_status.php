@@ -75,24 +75,26 @@ $frm_height = 'auto';
             $templates = $templatesControler->getAllTemplatesForSelect();
         }
         $frm_str .='<center style="font-size:15px;">'._ACTION_CONFIRM.'<br/><br/><b>'.$labelAction.' ?</b></center><br/>';
-        $frm_str .='<b>'._PROCESS_NOTES.':</b><br/>';
-        $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
+        if($_SESSION['current_basket']['id'] != 'IndexingBasket'){
+            $frm_str .='<b>'._PROCESS_NOTES.':</b><br/>';
+            $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
                     . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''
                     . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
                     . '&module=templates&page=templates_ajax_content_for_notes\');document.getElementById(\'notes\').focus();">';
-        $frm_str .= '<option value="">' . _SELECT_NOTE_TEMPLATE . '</option>';
-            for ($i=0;$i<count($templates);$i++) {
-                if ($templates[$i]['TYPE'] == 'TXT' && ($templates[$i]['TARGET'] == 'notes' || $templates[$i]['TARGET'] == '')) {
-                    $frm_str .= '<option value="';
-                    $frm_str .= $templates[$i]['ID'];
-                    $frm_str .= '">';
-                    $frm_str .= $templates[$i]['LABEL'];
+            $frm_str .= '<option value="">' . _SELECT_NOTE_TEMPLATE . '</option>';
+                for ($i=0;$i<count($templates);$i++) {
+                    if ($templates[$i]['TYPE'] == 'TXT' && ($templates[$i]['TARGET'] == 'notes' || $templates[$i]['TARGET'] == '')) {
+                        $frm_str .= '<option value="';
+                        $frm_str .= $templates[$i]['ID'];
+                        $frm_str .= '">';
+                        $frm_str .= $templates[$i]['LABEL'];
+                    }
+                    $frm_str .= '</option>';
                 }
-                $frm_str .= '</option>';
-            }
-        $frm_str .= '</select><br />';
+            $frm_str .= '</select><br />';
 
-        $frm_str .= '<textarea placeholder="motif de l\'action (optionnel) ..." style="width:98%;height:60px;resize:none;" name="notes"  id="notes" onblur="document.getElementById(\'note_content_to_users\').value=document.getElementById(\'notes\').value;"></textarea>';
+            $frm_str .= '<textarea placeholder="motif de l\'action (optionnel) ..." style="width:98%;height:60px;resize:none;" name="notes"  id="notes" onblur="document.getElementById(\'note_content_to_users\').value=document.getElementById(\'notes\').value;"></textarea>';
+        }
         $frm_str .='<div id="form2" style="border:none;">';
         $frm_str .= '<form name="frm_redirect_dep" id="frm_redirect_dep" method="post" class="forms" action="#">';
         $frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';

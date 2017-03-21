@@ -48,6 +48,7 @@ export class SignatureBookComponent implements OnInit {
     showLeftPanel               : boolean   = true;
     showAttachmentEditionPanel  : boolean   = false;
     loading                     : boolean   = false;
+    loadingSign                 : boolean   = false;
 
     leftContentWidth            : string    = "39%";
     rightContentWidth           : string    = "39%";
@@ -75,6 +76,7 @@ export class SignatureBookComponent implements OnInit {
 
     ngOnInit(): void {
         this.prepareSignatureBook();
+        this.loading = true;
         this.route.params.subscribe(params => {
             this.resId      = +params['resId'];
             this.basketId   = params['basketId'];
@@ -88,6 +90,11 @@ export class SignatureBookComponent implements OnInit {
                     this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
                         .map(res => res.json())
                         .subscribe((data) => {
+                            if (data.error) {
+                                location.hash = "";
+                                location.search = "";
+                                return;
+                            }
                             this.signatureBook = data;
 
                             this.headerTab              = 1;
@@ -104,12 +111,20 @@ export class SignatureBookComponent implements OnInit {
                             this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
                             this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
 
+                            this.leftContentWidth = "39%";
+                            this.rightContentWidth = "39%";
                             if (this.signatureBook.documents[0]) {
                                 this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
                             }
                             if (this.signatureBook.attachments[0]) {
                                 this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
                             }
+                            this.loading = false;
+
+                            setTimeout(() => {
+                                $j("#resListContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
+                                $j("#rightPanelContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
+                            }, 0);
                         });
                 });
         });
@@ -138,7 +153,7 @@ export class SignatureBookComponent implements OnInit {
         }
 
         if (idToGo >= 0) {
-            this.zone.run(() => this.changeLocation(idToGo));
+            this.zone.run(() => this.changeLocation(idToGo, "action"));
         } else {
             this.zone.run(() => this.backToBasket());
         }
@@ -227,19 +242,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     editAttachmentIframe(attachment: any) {
-        var resId: number;
-        if (attachment.res_id == 0) {
-            resId = attachment.res_id_version;
-        } else if (attachment.res_id_version == 0) {
-            resId = attachment.res_id;
-        }
-
-        modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
-    }
-
-    delAttachment(attachment: any) {
-        let r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
-        if (r) {
+        if (attachment.canModify) {
             var resId: number;
             if (attachment.res_id == 0) {
                 resId = attachment.res_id_version;
@@ -247,15 +250,31 @@ export class SignatureBookComponent implements OnInit {
                 resId = attachment.res_id;
             }
 
-            this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&rest=true')
-                .subscribe(() => {
-                    this.refreshAttachments('del');
-                });
+            modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
+        }
+    }
+
+    delAttachment(attachment: any) {
+        if (attachment.canDelete) {
+            let r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+            if (r) {
+                var resId: number;
+                if (attachment.res_id == 0) {
+                    resId = attachment.res_id_version;
+                } else if (attachment.res_id_version == 0) {
+                    resId = attachment.res_id;
+                }
+
+                this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&rest=true')
+                    .subscribe(() => {
+                        this.refreshAttachments('del');
+                    });
+            }
         }
     }
 
     prepareSignFile(attachment: any) {
-        if (!this.loading) {
+        if (!this.loadingSign) {
             if (attachment.res_id == 0) {
                 this.signatureBookSignFile(attachment.res_id_version, 1);
             } else if (attachment.res_id_version == 0) {
@@ -265,7 +284,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     signatureBookSignFile(resId: number, type: number) {
-        this.loading = true;
+        this.loadingSign = true;
         var path = '';
 
         if (type == 0) {
@@ -283,11 +302,19 @@ export class SignatureBookComponent implements OnInit {
                     this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + this.resId + "&id=" + data.new_id;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
+                    this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = data.new_id;
+                    var allSigned = true;
+                    this.signatureBook.attachments.forEach((value: any) => {
+                        if (value.sign && value.status != 'SIGN') {
+                            allSigned = false;
+                        }
+                    });
+                    this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = allSigned;
                 } else {
                     alert(data.error);
                 }
 
-                this.loading = false;
+                this.loadingSign = false;
             });
 
     }
@@ -311,6 +338,8 @@ export class SignatureBookComponent implements OnInit {
                     this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + this.resId + "&id=" + resId;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
+                    this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;
+                    this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
                 } else {
                     alert(data.error);
                 }
@@ -328,9 +357,21 @@ export class SignatureBookComponent implements OnInit {
         location.search = "?page=details&dir=indexing_searching&id=" + this.resId;
     }
 
-    changeLocation(resId: number) {
-        let path = "/" + this.basketId + "/signatureBook/" + resId;
-        this.router.navigate([path]);
+    changeLocation(resId: number, origin: string) {
+        this.http.get(this.coreUrl + 'rest/res/' + resId + '/lock')
+            .map(res => res.json())
+            .subscribe((data) => {
+                if (!data.lock) {
+                    let path = "/" + this.basketId + "/signatureBook/" + resId;
+                    this.router.navigate([path]);
+                } else {
+                    if (origin == "view") {
+                        alert("Courrier verouillé par " + data.lockBy);
+                    } else if (origin == "action") {
+                        this.backToBasket();
+                    }
+                }
+            });
     }
 
     validForm() {

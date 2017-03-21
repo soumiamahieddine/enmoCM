@@ -43,7 +43,7 @@ $tab_export = $request->PDOselect($_SESSION['export_admin_list']['select'], $_SE
 									$_SESSION['config']['databasetype'], 20000);
 unset($_SESSION['export_admin_list']);
 
-$fp = fopen($_SESSION['config']['tmppath'].'admin_list_'.$_SESSION['user']['UserId'].'.csv', 'w');
+$fp = fopen($_SESSION['config']['tmppath'].'contact_list'.$_SESSION['user']['UserId'].'.csv', 'w');
 
 $list_row = array();
 $list_address = array();
@@ -133,6 +133,6 @@ header('Pragma: public');
 header('Expires: 0');
 header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 header('Content-Type: application/vnd.ms-excel');
-header('Content-Disposition: inline; filename=admin_list_'.$_SESSION['user']['UserId'].'.csv;');
-readfile($_SESSION['config']['tmppath'].'admin_list_'.$_SESSION['user']['UserId'].'.csv');
+header('Content-Disposition: inline; filename=contact_list'.$_SESSION['user']['UserId'].'.csv;');
+readfile($_SESSION['config']['tmppath'].'contact_list'.$_SESSION['user']['UserId'].'.csv');
 exit;

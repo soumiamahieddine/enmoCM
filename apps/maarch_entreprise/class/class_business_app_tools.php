@@ -101,6 +101,7 @@ class business_app_tools extends business_app_tools_Abstract
         $_SESSION['attachment_types_with_chrono'] = array();
         $_SESSION['attachment_types_show'] = array();
         $_SESSION['attachment_types_with_process'] = array();
+        $_SESSION['attachment_types_with_delay'] = array();
         $attachmentTypes = $xmlfile->attachment_types;
         if (count($attachmentTypes) > 0) {
             foreach ($attachmentTypes->type as $type ) {
@@ -109,6 +110,7 @@ class business_app_tools extends business_app_tools_Abstract
                 $get_chrono = (string) $type['get_chrono'];
                 $attach_in_mail = (string) $type['attach_in_mail'];
                 $show_attachment_type = (string) $type['show'];
+                $delay = (string) $type['with_delay'];
                 $process = (string) $type->process_mode;
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
@@ -123,6 +125,7 @@ class business_app_tools extends business_app_tools_Abstract
                 $_SESSION['attachment_types_get_chrono'][(string) $type->id] = $array_get_chrono;
                 $_SESSION['attachment_types_attach_in_mail'][(string) $type->id] = $attach_in_mail;
                 $_SESSION['attachment_types_with_process'][(string) $type->id] = $process;
+                $_SESSION['attachment_types_with_delay'][(string) $type->id] = $delay;
             }
         }
 
