@@ -244,15 +244,14 @@
     text-align: center !important;
 }
 
-.headerSignatureBook .others{
+.titleSignatureBook .others{
     border-right: solid 1px black;
-    display: table-cell;
     padding: 5px;
     vertical-align: middle;
      text-align: right;
 }
 
-.headerSignatureBook .others input{
+.titleSignatureBook .others input{
     background: #E6E6E6;
     border-radius: 2px;
     width: 350px;
@@ -363,7 +362,7 @@
 
 .panelRight,.contentRight .contentShow{
     display: inline-block;
-   height: 85vh;
+   height: 91vh;
 }
 .contentLeft .contentShow{
     height: 95vh;
@@ -462,8 +461,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 .actions{
-    width: 25%;
-    display: table-cell;
+    width: 35%;
     padding: 5px;
     vertical-align: middle;
     text-align: right;
@@ -497,8 +495,44 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     overflow: hidden;
     text-overflow: ellipsis;
 }
+#closeSignatureBook{
+    padding:5px;
+    width:2%;
+    text-align: center;
+}
+#labelSignatureBook{
+    width: 33%;
+    padding-left: 10px;
+}
 
-.titleSignatureBook span{
+#labelSignatureBook div{
+    width: 450px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+#tabSignatureBook{
+    width:auto;
+}
+.titleSignatureBook div{
+    display:table-cell;
+    vertical-align: middle;
+}
+
+#tabSignatureBook .item{
+    border-right: solid 1px black;
+    display: table-cell;
+    padding: 5px;
+    cursor: pointer;
+    width: 5%;
+    vertical-align: middle;
+    width: 40px;
+    text-align: center;
+    padding-left: 10px;
+padding-right: 10px;
+}
+/*.titleSignatureBook span{
     display: inline-block;
     vertical-align: middle;
     padding:10px;
@@ -514,7 +548,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     text-align: right;
     padding-left: 5px;
     top: -4px;
-}
+}*/
 
 .headerSignatureBook{
     border: solid 1px black;
@@ -529,7 +563,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     border: solid 1px black;
     display: block;
     width: 100%;
-    height:85vh;
+    height:91vh;
     white-space: nowrap;
     overflow: hidden;
     background-color: #CEE9F1;
@@ -550,13 +584,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     vertical-align: middle;
 }
 
-.headerSignatureBook .itemLabel{
-    /*display: none;*/
-    padding-left: 5px;
-    font-weight: bold;
-}
-
-.headerSignatureBook .item.activeTabSignatureBook{
+#tabSignatureBook .item.activeTabSignatureBook{
     /*background: #009DC5;
     color:white;*/
     -moz-box-shadow: inset 0px 0px 5px 0px #656565;

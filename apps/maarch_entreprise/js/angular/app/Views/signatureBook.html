@@ -3,28 +3,24 @@
 </div>
 <div *ngIf="!loading" class='visaContent'>
     <div class="titleSignatureBook">
-        <span>{{signatureBook.currentAction.actionLabel}}</span>
-        <span><i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i></span>
-    </div>
-    <div class="headerSignatureBook">
-        <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
-            <i class="fa fa-dashboard fa-2x"></i>
-            <i class="itemLabel">Document principal</i>
+        <div id="closeSignatureBook"><i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i></div>
+        <div id="tabSignatureBook">
+            <div title="Courrier" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
+                <i class="fa fa-dashboard fa-2x"></i>
+            </div>
+            <div title="Note(s)" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
+                <i class="fa fa-pencil fa-2x">
+                    <sup *ngIf="signatureBook.nbNotes > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbNotes}}</sup>
+                </i>
+            </div>
+            <div title="Circuit de visa" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 3}" (click)="changeSignatureBookLeftContent(3)">
+                <i class="fa fa-certificate fa-2x"></i>
+            </div>
+            <div title="Avancement" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 4}" (click)="changeSignatureBookLeftContent(4)">
+                <i class="fa fa-line-chart fa-2x"></i>
+            </div>
         </div>
-        <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
-            <i class="fa fa-pencil fa-2x">
-                <sup *ngIf="signatureBook.nbNotes > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbNotes}}</sup>
-            </i>
-            <i class="itemLabel">Note(s)</i>
-        </div>
-        <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 3}" (click)="changeSignatureBookLeftContent(3)">
-            <i class="fa fa-certificate fa-2x"></i>
-            <i class="itemLabel">Circuit de visa</i>
-        </div>
-        <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 4}" (click)="changeSignatureBookLeftContent(4)">
-            <i class="fa fa-line-chart fa-2x"></i>
-            <i class="itemLabel">Avancement</i>
-        </div>
+        <div id="labelSignatureBook" title="{{signatureBook.currentAction.actionLabel}}" ><div>{{signatureBook.currentAction.actionLabel}}</div></div>
         <div class="others">
             <span id="consigne">
                 <input type="text" value="{{signatureBook.consigne}}" title="Consigne" readonly="readonly">
@@ -37,6 +33,7 @@
             </select>
             <input name="send" id="send" value="Valider" class="button" type="button" (click)="validForm()">
         </div>
+
     </div>
     <div class="contentSignatureBook">
         <div class="resListContent" [ngStyle]="{'display': showResLeftPanel ? 'inline-block' : 'none'}" id="resListContent">
@@ -78,7 +75,7 @@
                     <i *ngIf="!showTopLeftPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                     <i *ngIf="showTopLeftPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
-                <iframe *ngIf="leftViewerLink != ''" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '72%' : '80%'}"></iframe>
+                <iframe *ngIf="leftViewerLink != ''" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '77%' : '85%'}"></iframe>
             </div>
             <div *ngIf="headerTab == 2" class="contentShow" style="width:100%;">
                 <iframe [src]="notesViewerLink | safeUrl"></iframe>
