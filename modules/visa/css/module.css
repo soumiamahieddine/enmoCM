@@ -407,6 +407,7 @@
 }
 
 .pjDetailsMore{
+    z-index: 1;
     position: absolute;
     left: -14px;
     text-align: center;
@@ -830,27 +831,11 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     transition: height 0.5s;
 }
 .visaPjView{
-    margin: auto;
-    margin-top: 10px;
-    
-    font-size: 10px;
-    height:20px;
-    width:20px;
-    cursor: pointer;
-    padding: 10px;
-    background-color: green;
-    color: white !important;
-    border-radius: 25px;
-    -moz-box-shadow: 0px 0px 10px 0px #656565;
-    -webkit-box-shadow: 0px 0px 10px 0px #656565;
-    -o-box-shadow: 0px 0px 10px 0px #656565;
-    box-shadow: 0px 0px 10px 0px #656565;
-    filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);
+    color: initial;
 }
 .visaPjUp{
     margin: auto;
-    margin-top: 10px;
-    
+    margin-top: 10px;  
     font-size: 10px;
     height:20px;
     width:20px;
@@ -864,9 +849,6 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     -o-box-shadow: 0px 0px 10px 0px #656565;
     box-shadow: 0px 0px 10px 0px #656565;
     filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);
-}
-.visaPjView a{
-    color: white !important;
 }
 .visaPjDel{
     margin: auto;
