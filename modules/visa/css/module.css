@@ -139,7 +139,7 @@
 }
 
 .vised{
-  opacity: 0.5;
+  opacity: 1;
   color: green;
   border: solid 2px green;
 }
@@ -205,11 +205,12 @@
 }
 
 #dropZone,#dropZone:active{
-	width: 5%;
+    width: 10px;
 	opacity: 0.5;
 	visibility: hidden;
 	text-align: right;
 	margin: 5px;
+    float: right;
 }
 #dropZone:hover{
 	cursor: grab;
@@ -222,7 +223,7 @@
 }
 .visaUserAction{
 	color : red;
-	text-align: right;
+	text-align: center;
 	width: 5%;
 }
 .visaUserAction i{
