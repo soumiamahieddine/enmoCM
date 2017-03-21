@@ -54,14 +54,15 @@ var SignatureBookComponent = (function () {
         this.showAttachmentEditionPanel = false;
         this.loading = false;
         this.loadingSign = false;
-        this.leftContentWidth = "39%";
-        this.rightContentWidth = "39%";
+        this.leftContentWidth = "42%";
+        this.rightContentWidth = "42%";
         this.notesViewerLink = "";
         this.visaViewerLink = "";
         this.histViewerLink = "";
         window['angularSignatureBookComponent'] = {
             componentAfterAttach: function (value) { return _this.processAfterAttach(value); },
-            componentAfterAction: function () { return _this.processAfterAction(); }
+            componentAfterAction: function () { return _this.processAfterAction(); },
+            componentAfterNotes: function () { return _this.processAfterNotes(); }
         };
     }
     SignatureBookComponent.prototype.prepareSignatureBook = function () {
@@ -70,7 +71,7 @@ var SignatureBookComponent = (function () {
         $j('#viewBasketsTitle').remove();
         $j('#homePageWelcomeTitle').remove();
         $j('#footer').remove();
-        $j('#container').width("98%");
+        $j('#container').width("99%");
     };
     SignatureBookComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -107,8 +108,8 @@ var SignatureBookComponent = (function () {
                     _this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + _this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
                     _this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + _this.resId + "&collId=letterbox_coll&visaStep=true";
                     _this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + _this.resId + "&coll_id=letterbox_coll&load&size=full";
-                    _this.leftContentWidth = "39%";
-                    _this.rightContentWidth = "39%";
+                    _this.leftContentWidth = "42%";
+                    _this.rightContentWidth = "42%";
                     if (_this.signatureBook.documents[0]) {
                         _this.leftViewerLink = _this.signatureBook.documents[0].viewerLink;
                     }
@@ -119,6 +120,7 @@ var SignatureBookComponent = (function () {
                     setTimeout(function () {
                         $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                         $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
+                        $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
                     }, 0);
                 });
             });
@@ -130,6 +132,10 @@ var SignatureBookComponent = (function () {
     SignatureBookComponent.prototype.processAfterAttach = function (mode) {
         var _this = this;
         this.zone.run(function () { return _this.refreshAttachments(mode); });
+    };
+    SignatureBookComponent.prototype.processAfterNotes = function () {
+        var _this = this;
+        this.zone.run(function () { return _this.refreshNotes(); });
     };
     SignatureBookComponent.prototype.processAfterAction = function () {
         var _this = this;
@@ -181,7 +187,7 @@ var SignatureBookComponent = (function () {
             this.showLeftPanel = !this.showLeftPanel;
             this.showResLeftPanel = false;
             if (!this.showLeftPanel) {
-                this.rightContentWidth = "95%";
+                this.rightContentWidth = "96%";
             }
             else {
                 this.rightContentWidth = "47%";
@@ -195,8 +201,8 @@ var SignatureBookComponent = (function () {
                 this.leftContentWidth = "47%";
             }
             else {
-                this.rightContentWidth = "39%";
-                this.leftContentWidth = "39%";
+                this.rightContentWidth = "42%";
+                this.leftContentWidth = "42%";
             }
         }
     };
@@ -236,7 +242,7 @@ var SignatureBookComponent = (function () {
         showAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&docId=' + this.resId);
     };
     SignatureBookComponent.prototype.editAttachmentIframe = function (attachment) {
-        if (attachment.canModify) {
+        if (attachment.canModify && attachment.status != "SIGN") {
             var resId;
             if (attachment.res_id == 0) {
                 resId = attachment.res_id_version;
@@ -265,6 +271,14 @@ var SignatureBookComponent = (function () {
                 });
             }
         }
+    };
+    SignatureBookComponent.prototype.refreshNotes = function () {
+        var _this = this;
+        this.http.get(this.coreUrl + 'rest/res/' + this.resId + '/notes/count')
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            _this.signatureBook.nbNotes = data;
+        });
     };
     SignatureBookComponent.prototype.prepareSignFile = function (attachment) {
         if (!this.loadingSign) {

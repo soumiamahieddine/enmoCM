@@ -163,11 +163,11 @@ abstract class avis_controler_Abstract
                     $str .= '<sup class="avisUserPos nbResZero">'.$i.'</sup>&nbsp;&nbsp;';
                     $str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' . $info_userAvis['lastname'] . ' ' . $info_userAvis['firstname'] . ' <sup class="nbRes">' . $info_userAvis['entity_id'] . '</sup>' . $info_vised;
                     $str .= '</span>';
-                    $str .= '<span class="avisUserConsigne">';
-                    $str .= '<input class="userId" type="hidden" value="' . $info_userAvis['user_id'] . '"/><input class="avisDate" type="hidden" value="' . $info_userAvis['process_date'] . '"/><input' . $disabled . ' class="consigne" type="text" value="' . $info_userAvis['process_comment'] . '"/>';
-                    $str .= '</span>';
                     $str .= '<span class="avisUserAction">';
                     $str .= $del_vis;
+                    $str .= '</span>';
+                    $str .= '<span class="avisUserConsigne">';
+                    $str .= '<input class="userId" type="hidden" value="' . $info_userAvis['user_id'] . '"/><input class="avisDate" type="hidden" value="' . $info_userAvis['process_date'] . '"/><input' . $disabled . ' class="consigne" type="text" value="' . $info_userAvis['process_comment'] . '"/>';
                     $str .= '</span>';
                     $str .= '<span id="dropZone">';
                     $str .= $dropZone;

@@ -50,8 +50,8 @@ export class SignatureBookComponent implements OnInit {
     loading                     : boolean   = false;
     loadingSign                 : boolean   = false;
 
-    leftContentWidth            : string    = "39%";
-    rightContentWidth           : string    = "39%";
+    leftContentWidth            : string    = "42%";
+    rightContentWidth           : string    = "42%";
 
     notesViewerLink             : string    = "";
     visaViewerLink              : string    = "";
@@ -61,7 +61,8 @@ export class SignatureBookComponent implements OnInit {
     constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone:NgZone) {
         window['angularSignatureBookComponent'] = {
             componentAfterAttach: (value: string) => this.processAfterAttach(value),
-            componentAfterAction: () => this.processAfterAction()
+            componentAfterAction: () => this.processAfterAction(),
+            componentAfterNotes: () => this.processAfterNotes()
         };
     }
 
@@ -71,7 +72,7 @@ export class SignatureBookComponent implements OnInit {
         $j('#viewBasketsTitle').remove();
         $j('#homePageWelcomeTitle').remove();
         $j('#footer').remove();
-        $j('#container').width("98%");
+        $j('#container').width("99%");
     }
 
     ngOnInit(): void {
@@ -111,8 +112,8 @@ export class SignatureBookComponent implements OnInit {
                             this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
                             this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
 
-                            this.leftContentWidth = "39%";
-                            this.rightContentWidth = "39%";
+                            this.leftContentWidth = "42%";
+                            this.rightContentWidth = "42%";
                             if (this.signatureBook.documents[0]) {
                                 this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
                             }
@@ -124,6 +125,7 @@ export class SignatureBookComponent implements OnInit {
                             setTimeout(() => {
                                 $j("#resListContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
                                 $j("#rightPanelContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
+                                $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
                             }, 0);
                         });
                 });
@@ -136,6 +138,10 @@ export class SignatureBookComponent implements OnInit {
 
     processAfterAttach(mode: string) {
         this.zone.run(() => this.refreshAttachments(mode));
+    }
+
+    processAfterNotes() {
+        this.zone.run(() => this.refreshNotes());
     }
 
     processAfterAction() {
@@ -188,7 +194,7 @@ export class SignatureBookComponent implements OnInit {
             this.showLeftPanel = !this.showLeftPanel;
             this.showResLeftPanel = false;
             if (!this.showLeftPanel) {
-                this.rightContentWidth = "95%";
+                this.rightContentWidth = "96%";
             } else {
                 this.rightContentWidth = "47%";
                 this.leftContentWidth = "47%";
@@ -199,8 +205,8 @@ export class SignatureBookComponent implements OnInit {
                 this.rightContentWidth = "47%";
                 this.leftContentWidth = "47%";
             } else {
-                this.rightContentWidth = "39%";
-                this.leftContentWidth = "39%";
+                this.rightContentWidth = "42%";
+                this.leftContentWidth = "42%";
             }
         }
     }
@@ -242,7 +248,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     editAttachmentIframe(attachment: any) {
-        if (attachment.canModify) {
+        if (attachment.canModify && attachment.status != "SIGN") {
             var resId: number;
             if (attachment.res_id == 0) {
                 resId = attachment.res_id_version;
@@ -271,6 +277,14 @@ export class SignatureBookComponent implements OnInit {
                     });
             }
         }
+    }
+
+    refreshNotes() {
+        this.http.get(this.coreUrl + 'rest/res/' + this.resId + '/notes/count')
+            .map(res => res.json())
+            .subscribe((data) => {
+                this.signatureBook.nbNotes = data;
+            });
     }
 
     prepareSignFile(attachment: any) {

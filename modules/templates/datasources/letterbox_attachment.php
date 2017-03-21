@@ -12,9 +12,9 @@ $contacts = new contacts_v2();
 
 // Main document resource from view
 $datasources['res_letterbox'] = array();
+
 $stmt = $dbDatasource->query("SELECT * FROM " . $res_view . " WHERE res_id = ? ", array($res_id));
 $doc = $stmt->fetch(PDO::FETCH_ASSOC);
-
 $date = new DateTime($doc['doc_date']);
 $doc['doc_date']=$date->format('d/m/Y');
 
@@ -34,8 +34,8 @@ $doc['nature_id'] = $_SESSION['mail_natures'][$doc['nature_id']];
 $stmt2 = $dbDatasource->query("SELECT * FROM entities WHERE entity_id = ? ", array($doc['initiator']));
 $initiator = $stmt2->fetch(PDO::FETCH_ASSOC);
 
-foreach (array_keys($initiator) as $value){
-    $doc['initiator_'.$value] = $initiator[$value];
+for ($i=0;$i<count($initiator);$i++) {
+    $doc['initiator_'.$i] = $initiator[$i];
 }
 
 $datasources['res_letterbox'][] = $doc;

@@ -151,7 +151,7 @@ class VisaController
         //		$datas['histories'] 	= $history;
         $datas['resList']       = $resList;
         $datas['resListIndex']  = $resListIndex;
-        $datas['nbNotes']       = \NotesModel::countByResId(['resId' => $resId]);;
+        $datas['nbNotes']       = \NotesModel::countByResId(['resId' => $resId]);
         $datas['signature']     = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
         $datas['consigne']      = \UsersModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = \VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
@@ -232,7 +232,7 @@ class VisaController
                     'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
                     'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
                     'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
-                    'dest_address_id', 'origin', 'doc_date'
+                    'dest_address_id', 'origin', 'doc_date', 'attachment_id_master'
                 ],
                 'orderBy'       => $orderBy
             ]
@@ -307,7 +307,6 @@ class VisaController
             if ($attachments[$key]['doc_date']) {
                 $attachments[$key]['doc_date'] = date(DATE_ATOM, strtotime($attachments[$key]['doc_date']));
             }
-            $attachments[$key]['idToDl'] = $viewerId;
             $attachments[$key]['isConverted'] = $isConverted;
             $attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
             $attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
@@ -315,17 +314,38 @@ class VisaController
 
             $attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$realId}&coll_id={$collId}&display=true&advanced=true";
             $attachments[$key]['viewerLink'] = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$aArgs['resId']}&id={$viewerId}";
+        }
 
-            unset(
-                $attachments[$key]['path'], $attachments[$key]['filename'], $attachments[$key]['dest_user'],
-                $attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id']
-            );
+        $obsAttachments = \ResModel::getObsLinkedAttachmentsNotIn([
+                'resIdMaster'   => $aArgs['resId'],
+                'notIn'         => ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'],
+                'select'        => [
+                    'res_id', 'res_id_version', 'attachment_id_master', 'relation', 'creation_date'
+                ]
+        ]);
+
+        $obsData = [];
+        foreach ($obsAttachments as $value) {
+            if ($value['relation'] == 1) {
+                $obsData[$value['res_id']][] = ['resId' => $value['res_id'], 'relation' => $value['relation'], 'creation_date' => $value['creation_date']];
+            } else {
+                $obsData[$value['attachment_id_master']][] = ['resId' => $value['res_id_version'], 'relation' => $value['relation'], 'creation_date' => $value['creation_date']];
+            }
         }
 
         foreach ($attachments as $key => $value) {
             if ($value['attachment_type'] == 'converted_pdf') {
                 unset($attachments[$key]);
             }
+
+            $attachments[$key]['obsAttachments'] = [];
+            if ($value['relation'] > 1 && !empty($obsData[$value['attachment_id_master']])) {
+                $attachments[$key]['obsAttachments'] = $obsData[$value['attachment_id_master']];
+            }
+
+            unset($attachments[$key]['path'], $attachments[$key]['filename'], $attachments[$key]['dest_user'],
+                $attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id'], $attachments[$key]['attachment_id_master']
+            );
         }
 
         return array_values($attachments);

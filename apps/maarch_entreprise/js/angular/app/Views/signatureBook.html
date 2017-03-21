@@ -3,28 +3,24 @@
 </div>
 <div *ngIf="!loading" class='visaContent'>
     <div class="titleSignatureBook">
-        <span>{{signatureBook.currentAction.actionLabel}}</span>
-        <span><i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i></span>
-    </div>
-    <div class="headerSignatureBook">
-        <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
-            <i class="fa fa-dashboard fa-2x"></i>
-            <i class="itemLabel">Document principal</i>
+        <div id="closeSignatureBook"><i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i></div>
+        <div id="tabSignatureBook">
+            <div title="Courrier" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
+                <i class="fa fa-dashboard fa-2x"></i>
+            </div>
+            <div title="Note(s)" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
+                <i class="fa fa-pencil fa-2x">
+                    <sup *ngIf="signatureBook.nbNotes > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbNotes}}</sup>
+                </i>
+            </div>
+            <div title="Circuit de visa" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 3}" (click)="changeSignatureBookLeftContent(3)">
+                <i class="fa fa-certificate fa-2x"></i>
+            </div>
+            <div title="Avancement" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 4}" (click)="changeSignatureBookLeftContent(4)">
+                <i class="fa fa-line-chart fa-2x"></i>
+            </div>
         </div>
-        <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
-            <i class="fa fa-pencil fa-2x">
-                <sup *ngIf="signatureBook.nbNotes > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbNotes}}</sup>
-            </i>
-            <i class="itemLabel">Note(s)</i>
-        </div>
-        <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 3}" (click)="changeSignatureBookLeftContent(3)">
-            <i class="fa fa-certificate fa-2x"></i>
-            <i class="itemLabel">Circuit de visa</i>
-        </div>
-        <div class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 4}" (click)="changeSignatureBookLeftContent(4)">
-            <i class="fa fa-line-chart fa-2x"></i>
-            <i class="itemLabel">Avancement</i>
-        </div>
+        <div id="labelSignatureBook" title="{{signatureBook.currentAction.actionLabel}}" ><div>{{signatureBook.currentAction.actionLabel}}</div></div>
         <div class="others">
             <span id="consigne">
                 <input type="text" value="{{signatureBook.consigne}}" title="Consigne" readonly="readonly">
@@ -54,7 +50,10 @@
                         <i class="fa fa-book" title="Fiche contact"></i> {{res.sender}}
                     </div>
                     <div class="resListContentInfo">
-                        <i class="fa fa-calendar" title="Date d'arrivée"></i> {{res.creation_date | date:'dd/MM/y'}} - <i class="fa fa-bell" title="Date limite de traitement"></i> {{res.process_limit_date | date:'dd/MM/y'}}
+                        <i class="fa fa-calendar" title="Date d'arrivée"></i> {{res.creation_date | date:'dd/MM/y'}}
+                    </div>
+                    <div class="resListContentInfo" style="margin-top:-10px;">
+                        <i class="fa fa-bell" title="Date limite de traitement"></i> {{res.process_limit_date | date:'dd/MM/y'}}
                     </div>
                 </div>
             </div>
@@ -65,42 +64,27 @@
         </div>
         <div *ngIf="showLeftPanel" class="contentLeft" [ngStyle]="{'width': leftContentWidth}" id="contentLeft">
             <div *ngIf="headerTab == 1" class="contentShow">
-                <div class="pjDoc" [ngStyle]="{'height': showTopLeftPanel ? '100px' : '30px'}">
-                    <div (click)="displayPanel('TOPLEFT')" *ngIf="!showTopLeftPanel" style="padding: 5px;cursor:pointer;">
-                        <strong>{{signatureBook.documents.length - 1}} pièce(s) complémentaire(s)</strong>
-                    </div>
-                    <div *ngIf="showTopLeftPanel" style="height:100%;">
+                <div *ngIf="showTopLeftPanel" class="pjDoc">
+                    <div style="height:100%;">
                         <img title="{{document.title}}" id="thumnails_img" *ngFor="let document of signatureBook.documents; let i = index" (click)="changeLeftViewer(i)" [src]="document.thumbnailLink"
                                  class="leftPanelThumbnails" [ngClass]="{'panelSelectedThumbnail': i == leftSelectedThumbnail}"/>
                     </div>
                 </div>
-                <div class="pjDetailsMore" (click)="displayPanel('TOPLEFT')">
-                    <i *ngIf="!showTopLeftPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
+                <div *ngIf="signatureBook.documents.length - 1 > 0" class="pjDetailsMore" (click)="displayPanel('TOPLEFT')" title="{{signatureBook.documents.length - 1}} pièce(s) complémentaire(s)">
+                    <i *ngIf="!showTopLeftPanel" class="fa fa-envelope-square fa-2x" aria-hidden="true"></i>
+                    <sup *ngIf="!showTopLeftPanel" class="nbRes" style="position: absolute;right: 6px;top: 5px;}">{{signatureBook.documents.length - 1}}</sup>
                     <i *ngIf="showTopLeftPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
-                <iframe *ngIf="leftViewerLink != ''" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '72%' : '80%'}"></iframe>
+                <iframe *ngIf="leftViewerLink != ''" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '84%' : '99%'}"></iframe>
             </div>
-            <div *ngIf="headerTab == 2" class="contentShow" style="width:100%;">
+            <div *ngIf="headerTab == 2" class="contentShow" style="width:98%;">
                 <iframe [src]="notesViewerLink | safeUrl"></iframe>
             </div>
-            <div *ngIf="headerTab == 3" class="contentShow" style="width:100%;overflow-x: hidden;">
+            <div *ngIf="headerTab == 3" class="contentShow" style="width:98%;overflow-x: hidden;">
                 <iframe [src]="visaViewerLink | safeUrl"></iframe>
             </div>
-            <div *ngIf="headerTab == 4" class="contentShow" style="width:100%;">
+            <div *ngIf="headerTab == 4" class="contentShow" style="width:98%;">
                 <iframe [src]="histViewerLink | safeUrl"></iframe>
-                <!--<table ng-table="historyTable" class="table" id="historyTable">-->
-                    <!--<tr ng-repeat="history in $data">-->
-                        <!--<td title="'Date'" sortable="'event_date'" style="width:20%;">-->
-                            <!--{{history.event_date}}-->
-                        <!--</td>-->
-                        <!--<td title="'Utilisateur'" sortable="'lastname'" filter="{ lastname: 'text'}" style="width:20%;">-->
-                            <!--{{history.firstname + " " + history.lastname}}-->
-                        <!--</td>-->
-                        <!--<td title="'Evènement'" sortable="'info'" style="width:60%;">-->
-                            <!--{{history.info}}-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                <!--</table>-->
             </div>
         </div>
         <div class="hideLeftContent" (click)="displayPanel('LEFT')">
@@ -108,8 +92,8 @@
             <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
         </div>
         <div class="contentRight" id="contentRight" [ngStyle]="{'width': rightContentWidth}">
-            <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && !showAttachmentEditionPanel && signatureBook.hasWorkflow" class="contentShow">
-                <div class="pjDetails" [ngStyle]="{'height': showTopRightPanel ? '100px' : '30px'}" (click)="displayPanel('TOPRIGHT')">
+            <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="contentShow">
+                <div *ngIf="showTopRightPanel" class="pjDetails" (click)="displayPanel('TOPRIGHT')">
                     <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                         <label>Type : </label>
                         <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}} <sup *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" style="color:#16ADEB;">signé(e)</sup></span>
@@ -122,7 +106,7 @@
                         <label>Pour : </label>
                         <span>{{signatureBook.attachments[rightSelectedThumbnail].destUser}}</span>
                     </div>
-                    <div *ngIf="showTopRightPanel">
+                    <div>
                         <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail].updated_by" title="{{signatureBook.attachments[rightSelectedThumbnail].typist}}" class="infoPj">
                             <label>Créé par: </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
@@ -153,25 +137,18 @@
                         </div>
                     </div>
                 </div>
-                <a *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" title="Télécharger la pièce jointe" class="visaPjView" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].res_id}}" target="_blank">
-                    <i class="fa fa-download fa-2x"></i>
-                </a>
-                <a *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" title="Télécharger la pièce jointe" class="visaPjView" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].idToDl}}" target="_blank">
-                    <i class="fa fa-download fa-2x"></i>
-                </a>
-                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].canModify && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" title="Modifier la pièce jointe" class="visaPjUp" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
-                    <i class="fa fa-pencil-square-o fa-2x"></i>
-                </div>
-                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].canDelete" title="Supprimer la pièce jointe" [ngStyle]="{'top': showTopRightPanel ? '150px' : '70px'}" class="visaPjDel" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
-                    <i class="fa fa-trash fa-2x"></i>
-                </div>
-                <div class="pjDetailsMore" (click)="displayPanel('TOPRIGHT')">
-                   <i *ngIf="!showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
+                <div class="pjDetailsMore" (click)="displayPanel('TOPRIGHT')" title="Détails">
+                   <i *ngIf="!showTopRightPanel" class="fa fa-list-alt fa-2x" aria-hidden="true"></i>
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
-                <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '80%' : '89%'}"></iframe>
-                <div class="visaNoPdfWarning" *ngIf="signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted">
+                <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '84%' : '99%'}"></iframe>
+                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
                     <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF de ce format n'a pas été trouvée.</sub></div>
+                    <div class="visaPjView">
+                        <a title="Télécharger la pièce jointe" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].res_id}}" target="_blank">
+                            <i class="fa fa-download fa-2x"></i>
+                        </a>
+                    </div>
                 </div>
                 <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" class="pjSign">
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN' && signatureBook.signature" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
@@ -192,69 +169,8 @@
             <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="visaNoPjWarning">
                 <div style="margin-top:200px;">Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class="fa fa-plus"></i> pour en ajouter une</sub></div>
             </div>
-            <!--<div class="contentShow" ng-if="signatureBook.showAttachmentEditionPanel">-->
-                <!--<h1>Créer une pièce jointe</h1>-->
-                <!--<div class="pjCreate">-->
-                    <!--<div class="infoPj" title="Type">-->
-                        <!--<div class="input-group margin-bottom-sm">-->
-                            <!--<span class="input-group-addon"><i class="fa fa-file fa-fw"></i></span>-->
-                            <!--<select><option>Projet d réponse</option></select>-->
-                          <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="infoPj" title="Objet">-->
-                        <!--<div class="input-group margin-bottom-sm">-->
-                            <!--<span class="input-group-addon"><i class="fa fa-info fa-fw"></i></span>-->
-                            <!--<input class="form-control" type="text" placeholder="Objet">-->
-                          <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="infoPj" title="Personne concerné">-->
-                        <!--<div class="input-group margin-bottom-sm">-->
-                            <!--<span class="input-group-addon"><i class="fa fa-book fa-fw"></i></span>-->
-                            <!--<input class="form-control" type="text" placeholder="Personne concerné">-->
-                          <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="infoPj" title="Numéro chrono">-->
-                        <!--<div class="input-group margin-bottom-sm">-->
-                            <!--<span class="input-group-addon"><i class="fa fa-compass fa-fw"></i></span>-->
-                            <!--<input class="form-control" type="text" placeholder="Numéro chrono">-->
-                          <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="infoPj" title="Crée par">-->
-                        <!--<div class="input-group margin-bottom-sm">-->
-                            <!--<span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>-->
-                            <!--<input class="form-control" type="text" placeholder="Crée par">-->
-                          <!--</div>-->
-                    <!--</div>-->
-                   <!--<div class="infoPj" title="Crée le">-->
-                        <!--<div class="input-group margin-bottom-sm">-->
-                            <!--<span class="input-group-addon"><i class="fa fa-calendar-o fa-fw"></i></span>-->
-                            <!--<input class="form-control" type="text" placeholder="Crée le">-->
-                          <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="infoPj" title="Retour">-->
-                        <!--<div class="input-group margin-bottom-sm">-->
-                            <!--<span class="input-group-addon"><i class="fa fa-calendar-o fa-fw"></i></span>-->
-                            <!--<input class="form-control" type="text" placeholder="Retour">-->
-                          <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="infoPj">-->
-                        <!--<div class="input-group margin-bottom-sm" title="Version">-->
-                            <!--<span class="input-group-addon"><i class="fa fa-code-fork fa-fw"></i></span>-->
-                            <!--<input class="form-control" type="text" placeholder="Version">-->
-                          <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="pjCreateFile">-->
-                    <!--<i class="fa fa-upload" aria-hidden="true" title="Tranférer un fichier depuis votre ordinateur"></i>     -->
-                    <!--<i>&nbsp;/&nbsp;</i>-->
-                    <!--<i class="fa fa-pencil-square-o" aria-hidden="true" title="Editer un modèle de document"></i>-->
-                <!--</div>-->
-            <!--</div>-->
         </div>
         <div *ngIf="signatureBook.hasWorkflow" class="panelRight">
-            <div class="item panelRightAddPj" (click)="addAttachmentIframe()">
-                <i class="fa fa-plus fa-2x" title="Créer une pièce jointe"></i>
-            </div>
             <div *ngIf="signatureBook.attachments" id="rightPanelContent" class="panelRightContent">
                 <div title="[{{attachment.attachment_type}}] {{attachment.title}}" style="position: relative;" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail}">
                     <span class="fa-stack fa-lg">
@@ -262,6 +178,19 @@
                     </span>
                     <i *ngIf="attachment.sign && attachment.status == 'SIGN'" title="Le document a été signé" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle"></i>
                     <i *ngIf="attachment.sign && attachment.status != 'SIGN'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle-o"></i>
+                </div>
+            </div>
+            <div style="bottom: 0px;position: absolute;left: 5px;">
+                <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canDelete}" title="Supprimer la pièce jointe" class="visaPjDel" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
+                    <i class="fa fa-trash fa-2x"></i>
+                </div>
+                <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canModify || signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'}" title="Modifier la pièce jointe" class="visaPjUp" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                    <i class="fa fa-pencil-square-o fa-2x"></i>
+                </div>
+                <hr style="background-color:#666;margin-bottom:0px;"/>
+                <div class="item panelRightAddPj" (click)="addAttachmentIframe()" style="padding-left:5px;" title="Créer une pièce jointe">
+                    <i class="fa fa-paperclip fa-2x" ></i>
+                    <i class="fa fa-plus" style="position:absolute;"></i>
                 </div>
             </div>
         </div>
