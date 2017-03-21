@@ -244,15 +244,14 @@
     text-align: center !important;
 }
 
-.headerSignatureBook .others{
+.titleSignatureBook .others{
     border-right: solid 1px black;
-    display: table-cell;
     padding: 5px;
     vertical-align: middle;
      text-align: right;
 }
 
-.headerSignatureBook .others input{
+.titleSignatureBook .others input{
     background: #E6E6E6;
     border-radius: 2px;
     width: 350px;
@@ -351,7 +350,7 @@
 
 .panelRightContent{
     width: 100%;
-    height: 93%;
+    height: 72%;
     overflow: auto;  
 }
 
@@ -363,9 +362,10 @@
 
 .panelRight,.contentRight .contentShow{
     display: inline-block;
-   height: 85vh;
+   height: 91vh;
 }
 .contentLeft .contentShow{
+    height: 95vh;
     overflow: auto;
     width:98%;
 }
@@ -461,11 +461,11 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 .actions{
-    width: 25%;
-    display: table-cell;
+    width: 35%;
     padding: 5px;
     vertical-align: middle;
     text-align: right;
+    text-transform: initial;
 }
 .actions i{
    width:5%;
@@ -496,8 +496,46 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     overflow: hidden;
     text-overflow: ellipsis;
 }
+#closeSignatureBook{
+    padding:5px;
+    width:2%;
+    text-align: center;
+}
+#labelSignatureBook{
+    width: 33%;
+    padding-left: 10px;
+}
 
-.titleSignatureBook span{
+#labelSignatureBook div{
+    width: 450px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+#tabSignatureBook{
+    width:auto;
+}
+.titleSignatureBook div{
+    display:table-cell;
+    vertical-align: middle;
+}
+
+#tabSignatureBook .item{
+    border-right: solid 1px black;
+    display: table-cell;
+    padding: 5px;
+    cursor: pointer;
+    width: 5%;
+    vertical-align: middle;
+    width: 40px;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    color:#666;
+    background-color: #deedf3;
+}
+/*.titleSignatureBook span{
     display: inline-block;
     vertical-align: middle;
     padding:10px;
@@ -513,7 +551,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     text-align: right;
     padding-left: 5px;
     top: -4px;
-}
+}*/
 
 .headerSignatureBook{
     border: solid 1px black;
@@ -528,7 +566,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     border: solid 1px black;
     display: block;
     width: 100%;
-    height:85vh;
+    height:91vh;
     white-space: nowrap;
     overflow: hidden;
     background-color: #CEE9F1;
@@ -549,13 +587,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     vertical-align: middle;
 }
 
-.headerSignatureBook .itemLabel{
-    /*display: none;*/
-    padding-left: 5px;
-    font-weight: bold;
-}
-
-.headerSignatureBook .item.activeTabSignatureBook{
+#tabSignatureBook .item.activeTabSignatureBook{
     /*background: #009DC5;
     color:white;*/
     -moz-box-shadow: inset 0px 0px 5px 0px #656565;
@@ -786,9 +818,13 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     transition: height 0.5s;
 }
 .visaPjView{
+    margin: auto;
+    margin-top: 10px;
+    
+    font-size: 10px;
+    height:20px;
+    width:20px;
     cursor: pointer;
-    position: absolute;
-    right: -30px;bottom: 130px;
     padding: 10px;
     background-color: green;
     color: white !important;
@@ -800,10 +836,13 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);
 }
 .visaPjUp{
+    margin: auto;
+    margin-top: 10px;
+    
+    font-size: 10px;
+    height:20px;
+    width:20px;
     cursor: pointer;
-    position: absolute;
-    right: -30px;
-    bottom: 70px;
     padding: 10px;
     background-color: #009DC5;
     color: white;
@@ -814,10 +853,16 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     box-shadow: 0px 0px 10px 0px #656565;
     filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);
 }
+.visaPjView a{
+    color: white !important;
+}
 .visaPjDel{
+    margin: auto;
+    font-size: 10px;
+    
+    height:20px;
+    width:20px;
     cursor: pointer;
-    position: absolute;
-    right: -30px;
     padding: 10px;
     background-color: red;
     color: white;
