@@ -234,7 +234,7 @@
 .visaContent{
     position: relative;
     height:95vh;
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 .visaContent h1{
@@ -260,13 +260,13 @@
 }
 
 .resListContent{
-    display: inline-block;
-    width:15%;
+    width:10%;
     height:100%;
     text-align: center;
     border-right: solid 1px;
     vertical-align: top;
     overflow: auto;
+    font-size: 10px;
 }
 
 .resListContentInfo{
@@ -483,10 +483,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 .titleSignatureBook{
     display: block;
     width:100%;
-    border-right: solid 1px black;
-    border-top: solid 1px black;
-    border-left: solid 1px black;
-    /*padding: 5px;*/
+    border: solid 1px black;
     vertical-align: middle;
     font-weight: bold;
     background: #009DC5;
@@ -570,6 +567,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     white-space: nowrap;
     overflow: hidden;
     background-color: #CEE9F1;
+    margin-top: 5px;
 }
 
 .headerSignatureBook .item{
@@ -878,7 +876,6 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     font-weight: bold;
     opacity: 0.5;
     white-space: normal;
-    height: 85%;
     font-size: 40px;
 }
 .visaNoWorkflowWarning{

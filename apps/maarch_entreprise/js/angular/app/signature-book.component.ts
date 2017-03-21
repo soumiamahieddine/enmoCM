@@ -50,8 +50,8 @@ export class SignatureBookComponent implements OnInit {
     loading                     : boolean   = false;
     loadingSign                 : boolean   = false;
 
-    leftContentWidth            : string    = "39%";
-    rightContentWidth           : string    = "39%";
+    leftContentWidth            : string    = "42%";
+    rightContentWidth           : string    = "42%";
 
     notesViewerLink             : string    = "";
     visaViewerLink              : string    = "";
@@ -71,7 +71,7 @@ export class SignatureBookComponent implements OnInit {
         $j('#viewBasketsTitle').remove();
         $j('#homePageWelcomeTitle').remove();
         $j('#footer').remove();
-        $j('#container').width("98%");
+        $j('#container').width("99%");
     }
 
     ngOnInit(): void {
@@ -111,8 +111,8 @@ export class SignatureBookComponent implements OnInit {
                             this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
                             this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
 
-                            this.leftContentWidth = "39%";
-                            this.rightContentWidth = "39%";
+                            this.leftContentWidth = "42%";
+                            this.rightContentWidth = "42%";
                             if (this.signatureBook.documents[0]) {
                                 this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
                             }
@@ -188,7 +188,7 @@ export class SignatureBookComponent implements OnInit {
             this.showLeftPanel = !this.showLeftPanel;
             this.showResLeftPanel = false;
             if (!this.showLeftPanel) {
-                this.rightContentWidth = "95%";
+                this.rightContentWidth = "96%";
             } else {
                 this.rightContentWidth = "47%";
                 this.leftContentWidth = "47%";
@@ -199,8 +199,8 @@ export class SignatureBookComponent implements OnInit {
                 this.rightContentWidth = "47%";
                 this.leftContentWidth = "47%";
             } else {
-                this.rightContentWidth = "39%";
-                this.leftContentWidth = "39%";
+                this.rightContentWidth = "42%";
+                this.leftContentWidth = "42%";
             }
         }
     }
