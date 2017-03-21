@@ -61,7 +61,8 @@ export class SignatureBookComponent implements OnInit {
     constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone:NgZone) {
         window['angularSignatureBookComponent'] = {
             componentAfterAttach: (value: string) => this.processAfterAttach(value),
-            componentAfterAction: () => this.processAfterAction()
+            componentAfterAction: () => this.processAfterAction(),
+            componentAfterNotes: () => this.processAfterNotes()
         };
     }
 
@@ -136,6 +137,10 @@ export class SignatureBookComponent implements OnInit {
 
     processAfterAttach(mode: string) {
         this.zone.run(() => this.refreshAttachments(mode));
+    }
+
+    processAfterNotes() {
+
     }
 
     processAfterAction() {
@@ -242,7 +247,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     editAttachmentIframe(attachment: any) {
-        if (attachment.canModify) {
+        if (attachment.canModify && attachment.status != "SIGN") {
             var resId: number;
             if (attachment.res_id == 0) {
                 resId = attachment.res_id_version;

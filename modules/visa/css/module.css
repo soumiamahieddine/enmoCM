@@ -910,6 +910,10 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     margin-top: 10px;
 }
 
+.visaDisabledButton{
+    cursor: inherit;
+    opacity: 0.3;
+}
 
 /*.showResLeftPanel.contentLeft,.showResLeftPanel.contentRight{*/
     /*width:39%;*/

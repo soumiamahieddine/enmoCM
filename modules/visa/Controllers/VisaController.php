@@ -151,7 +151,7 @@ class VisaController
         //		$datas['histories'] 	= $history;
         $datas['resList']       = $resList;
         $datas['resListIndex']  = $resListIndex;
-        $datas['nbNotes']       = \NotesModel::countByResId(['resId' => $resId]);;
+        $datas['nbNotes']       = \NotesModel::countByResId(['resId' => $resId]);
         $datas['signature']     = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
         $datas['consigne']      = \UsersModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = \VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
@@ -307,7 +307,6 @@ class VisaController
             if ($attachments[$key]['doc_date']) {
                 $attachments[$key]['doc_date'] = date(DATE_ATOM, strtotime($attachments[$key]['doc_date']));
             }
-            $attachments[$key]['idToDl'] = $viewerId;
             $attachments[$key]['isConverted'] = $isConverted;
             $attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
             $attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];

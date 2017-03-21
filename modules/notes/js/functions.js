@@ -38,6 +38,9 @@ function validNotesForm (path, form_id) {
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
             if(response.status == 0){
+                if (typeof window['angularSignatureBookComponent'] != "undefined") {
+                    window.angularSignatureBookComponent.componentAfterNotes();
+                }
                 destroyModal('form_notes'); 
                 eval(response.exec_js);
             } else {
