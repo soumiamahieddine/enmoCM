@@ -878,7 +878,8 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     font-size: 40px;
 }
 .visaNoWorkflowWarning{
-    height: 80vh;
+    height: 96%;
+    width:100%;
     font-size: 40px;
     border: dashed;
     font-weight: bold;
