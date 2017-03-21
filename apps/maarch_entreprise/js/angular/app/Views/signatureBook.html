@@ -150,18 +150,6 @@
                         </div>
                     </div>
                 </div>
-                <a *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" title="Télécharger la pièce jointe" class="visaPjView" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].res_id}}" target="_blank">
-                    <i class="fa fa-download fa-2x"></i>
-                </a>
-                <a *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" title="Télécharger la pièce jointe" class="visaPjView" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].idToDl}}" target="_blank">
-                    <i class="fa fa-download fa-2x"></i>
-                </a>
-                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].canModify && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" title="Modifier la pièce jointe" class="visaPjUp" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
-                    <i class="fa fa-pencil-square-o fa-2x"></i>
-                </div>
-                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].canDelete" title="Supprimer la pièce jointe" [ngStyle]="{'top': showTopRightPanel ? '150px' : '70px'}" class="visaPjDel" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
-                    <i class="fa fa-trash fa-2x"></i>
-                </div>
                 <div class="pjDetailsMore" (click)="displayPanel('TOPRIGHT')">
                    <i *ngIf="!showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
@@ -249,9 +237,6 @@
             <!--</div>-->
         </div>
         <div *ngIf="signatureBook.hasWorkflow" class="panelRight">
-            <div class="item panelRightAddPj" (click)="addAttachmentIframe()">
-                <i class="fa fa-plus fa-2x" title="Créer une pièce jointe"></i>
-            </div>
             <div *ngIf="signatureBook.attachments" id="rightPanelContent" class="panelRightContent">
                 <div title="[{{attachment.attachment_type}}] {{attachment.title}}" style="position: relative;" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail}">
                     <span class="fa-stack fa-lg">
@@ -259,6 +244,28 @@
                     </span>
                     <i *ngIf="attachment.sign && attachment.status == 'SIGN'" title="Le document a été signé" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle"></i>
                     <i *ngIf="attachment.sign && attachment.status != 'SIGN'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle-o"></i>
+                </div>
+            </div>
+            <div style="bottom: 0px;position: absolute;left: 5px;">
+                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].canDelete" title="Supprimer la pièce jointe" [ngStyle]="{'top': showTopRightPanel ? '150px' : '70px'}" class="visaPjDel" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
+                    <i class="fa fa-trash fa-2x"></i>
+                </div>
+                <!--<div class="visaPjView" *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'">
+                    <a title="Télécharger la pièce jointe" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].res_id}}" target="_blank">
+                        <i class="fa fa-download fa-2x"></i>
+                    </a>
+                </div>
+                <div class="visaPjView" *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'">
+                    <a title="Télécharger la pièce jointe" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].idToDl}}" target="_blank">
+                        <i class="fa fa-download fa-2x"></i>
+                    </a>
+                </div>-->
+                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].canModify && signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN'" title="Modifier la pièce jointe" class="visaPjUp" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                    <i class="fa fa-pencil-square-o fa-2x"></i>
+                </div>
+                <hr style="background-color:#666;margin-bottom:0px;"/>
+                <div class="item panelRightAddPj" (click)="addAttachmentIframe()" style="padding-left:10px;">
+                    <i class="fa fa-plus fa-2x" title="Créer une pièce jointe"></i>
                 </div>
             </div>
         </div>

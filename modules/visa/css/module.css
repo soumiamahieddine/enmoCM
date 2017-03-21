@@ -350,7 +350,7 @@
 
 .panelRightContent{
     width: 100%;
-    height: 93%;
+    height: 72%;
     overflow: auto;  
 }
 
@@ -378,7 +378,7 @@
     position: relative;
     vertical-align: top;
     padding : 5px;
-    width:90%;
+    width:100%;
 }
 
 .pjDetails,.pjSign,.pjCreate{
@@ -465,6 +465,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     padding: 5px;
     vertical-align: middle;
     text-align: right;
+    text-transform: initial;
 }
 .actions i{
    width:5%;
@@ -817,9 +818,13 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     transition: height 0.5s;
 }
 .visaPjView{
+    margin: auto;
+    margin-top: 10px;
+    
+    font-size: 10px;
+    height:20px;
+    width:20px;
     cursor: pointer;
-    position: absolute;
-    right: -30px;bottom: 130px;
     padding: 10px;
     background-color: green;
     color: white !important;
@@ -831,10 +836,13 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);
 }
 .visaPjUp{
+    margin: auto;
+    margin-top: 10px;
+    
+    font-size: 10px;
+    height:20px;
+    width:20px;
     cursor: pointer;
-    position: absolute;
-    right: -30px;
-    bottom: 70px;
     padding: 10px;
     background-color: #009DC5;
     color: white;
@@ -845,10 +853,16 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     box-shadow: 0px 0px 10px 0px #656565;
     filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);
 }
+.visaPjView a{
+    color: white !important;
+}
 .visaPjDel{
+    margin: auto;
+    font-size: 10px;
+    
+    height:20px;
+    width:20px;
     cursor: pointer;
-    position: absolute;
-    right: -30px;
     padding: 10px;
     background-color: red;
     color: white;
