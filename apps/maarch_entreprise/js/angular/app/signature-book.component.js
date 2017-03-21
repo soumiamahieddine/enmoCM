@@ -133,6 +133,8 @@ var SignatureBookComponent = (function () {
         this.zone.run(function () { return _this.refreshAttachments(mode); });
     };
     SignatureBookComponent.prototype.processAfterNotes = function () {
+        var _this = this;
+        this.zone.run(function () { return _this.refreshNotes(); });
     };
     SignatureBookComponent.prototype.processAfterAction = function () {
         var _this = this;
@@ -268,6 +270,14 @@ var SignatureBookComponent = (function () {
                 });
             }
         }
+    };
+    SignatureBookComponent.prototype.refreshNotes = function () {
+        var _this = this;
+        this.http.get(this.coreUrl + 'rest/res/' + this.resId + '/notes/count')
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            _this.signatureBook.nbNotes = data;
+        });
     };
     SignatureBookComponent.prototype.prepareSignFile = function (attachment) {
         if (!this.loadingSign) {

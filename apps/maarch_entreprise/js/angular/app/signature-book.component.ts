@@ -140,7 +140,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     processAfterNotes() {
-
+        this.zone.run(() => this.refreshNotes());
     }
 
     processAfterAction() {
@@ -276,6 +276,14 @@ export class SignatureBookComponent implements OnInit {
                     });
             }
         }
+    }
+
+    refreshNotes() {
+        this.http.get(this.coreUrl + 'rest/res/' + this.resId + '/notes/count')
+            .map(res => res.json())
+            .subscribe((data) => {
+                this.signatureBook.nbNotes = data;
+            });
     }
 
     prepareSignFile(attachment: any) {
