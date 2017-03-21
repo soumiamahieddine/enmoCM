@@ -331,7 +331,7 @@
 
 .visaContent iframe{
     margin: auto;
-    width:95%;
+    width: 100%;
     height: 75vh;
     border: none;
 }
@@ -366,20 +366,19 @@
    height: 85vh;
 }
 .contentLeft .contentShow{
-    height: 95vh;
     overflow: auto;
+    width:98%;
 }
 
 .contentRight .contentShow,.contentLeft .contentShow{
     padding : 5px;
-    width:95%;
+    height: 100%;
 }
 
 .contentRight .contentShow{
     position: relative;
     vertical-align: top;
-    padding : 5px;
-    width:90%;
+    width:98%;
 }
 
 .pjDetails,.pjSign,.pjCreate{
@@ -396,7 +395,7 @@
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding:10px;
-    height:30px;
+    height:100px;
     cursor: pointer;
 }
 
@@ -437,7 +436,7 @@
 }
 
 .pjDoc{
-   height: 30px;
+   height: 100px;
    background-color: white;
    -moz-box-shadow: inset 0px 0px 5px 0px #656565;
     -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
