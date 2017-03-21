@@ -383,6 +383,9 @@
     vertical-align: top;
     width:98%;
 }
+.pjDetails,.pjDoc{
+    margin-bottom: 5px;
+}
 
 .pjDetails,.pjSign,.pjCreate{
     background-color:white;
