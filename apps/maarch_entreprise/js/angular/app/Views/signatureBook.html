@@ -50,7 +50,10 @@
                         <i class="fa fa-book" title="Fiche contact"></i> {{res.sender}}
                     </div>
                     <div class="resListContentInfo">
-                        <i class="fa fa-calendar" title="Date d'arrivée"></i> {{res.creation_date | date:'dd/MM/y'}} - <i class="fa fa-bell" title="Date limite de traitement"></i> {{res.process_limit_date | date:'dd/MM/y'}}
+                        <i class="fa fa-calendar" title="Date d'arrivée"></i> {{res.creation_date | date:'dd/MM/y'}}
+                    </div>
+                    <div class="resListContentInfo" style="margin-top:-10px;">
+                        <i class="fa fa-bell" title="Date limite de traitement"></i> {{res.process_limit_date | date:'dd/MM/y'}}
                     </div>
                 </div>
             </div>
@@ -67,8 +70,9 @@
                                  class="leftPanelThumbnails" [ngClass]="{'panelSelectedThumbnail': i == leftSelectedThumbnail}"/>
                     </div>
                 </div>
-                <div class="pjDetailsMore" (click)="displayPanel('TOPLEFT')" title="{{signatureBook.documents.length - 1}} pièce(s) complémentaire(s)">
-                    <i *ngIf="!showTopLeftPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
+                <div *ngIf="signatureBook.documents.length - 1 > 0" class="pjDetailsMore" (click)="displayPanel('TOPLEFT')" title="{{signatureBook.documents.length - 1}} pièce(s) complémentaire(s)">
+                    <i *ngIf="!showTopLeftPanel" class="fa fa-envelope-square fa-2x" aria-hidden="true"></i>
+                    <sup *ngIf="!showTopLeftPanel" class="nbRes" style="position: absolute;right: 6px;top: 5px;}">{{signatureBook.documents.length - 1}}</sup>
                     <i *ngIf="showTopLeftPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe *ngIf="leftViewerLink != ''" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '80%' : '95%'}"></iframe>
@@ -147,7 +151,7 @@
                     </div>
                 </div>
                 <div class="pjDetailsMore" (click)="displayPanel('TOPRIGHT')" title="Détails">
-                   <i *ngIf="!showTopRightPanel" class="fa fa-chevron-down" aria-hidden="true"></i>
+                   <i *ngIf="!showTopRightPanel" class="fa fa-list-alt fa-2x" aria-hidden="true"></i>
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '80%' : '95%'}"></iframe>
@@ -260,8 +264,9 @@
                     <i class="fa fa-pencil-square-o fa-2x"></i>
                 </div>
                 <hr style="background-color:#666;margin-bottom:0px;"/>
-                <div class="item panelRightAddPj" (click)="addAttachmentIframe()" style="padding-left:10px;">
-                    <i class="fa fa-plus fa-2x" title="Créer une pièce jointe"></i>
+                <div class="item panelRightAddPj" (click)="addAttachmentIframe()" style="padding-left:5px;" title="Créer une pièce jointe">
+                    <i class="fa fa-paperclip fa-2x" ></i>
+                    <i class="fa fa-plus" style="position:absolute;"></i>
                 </div>
             </div>
         </div>

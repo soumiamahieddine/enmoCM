@@ -277,6 +277,7 @@
     text-align: left;
     padding:5px;
     cursor:pointer;
+    margin-top: 0px;
 }
 
 .resListContentInfo i{
@@ -312,6 +313,7 @@
 }
 
 .contentLeft{
+    position: relative;
     border-right: solid 1px;
     vertical-align: top;
     /*width:39%;*/
@@ -404,8 +406,19 @@
 }
 
 .pjDetailsMore{
-   text-align: center;
-   cursor: pointer;
+    position: absolute;
+    left: -14px;
+    text-align: center;
+    cursor: pointer;
+    background: #009DC5;
+    color: white;
+    padding:10px;
+    border-radius: 25px;
+    -moz-box-shadow: 0px 0px 10px 0px #656565;
+    -webkit-box-shadow: 0px 0px 10px 0px #656565;
+    -o-box-shadow: 0px 0px 10px 0px #656565;
+    box-shadow: 0px 0px 10px 0px #656565;
+    filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565,Direction=NaN,Strength=10);
 }
 
 .pjCreate{
