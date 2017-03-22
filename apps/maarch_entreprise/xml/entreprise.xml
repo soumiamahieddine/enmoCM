@@ -36,12 +36,12 @@
         <default_nature>simple_mail</default_nature>
     </mail_natures>
     <attachment_types>
-        <type show="true" with_chrono="true" attach_in_mail="true" icon="fa-reply" sign="true">
+        <type show="true" with_chrono="true" attach_in_mail="true" icon="R" sign="true">
             <id>response_project</id>
             <label>_RESPONSE_PROJECT</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="true" with_delay="60" icon="fa-paper-plane-o" sign="false">
+        <type show="true" with_chrono="true" with_delay="60" icon="TR" sign="false">
             <id>transmission</id>
             <label>Transmission</label>
             <process_mode></process_mode>

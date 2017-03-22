@@ -126,7 +126,7 @@
     background-color: #93D1E4;
     display: table;
     margin: 10px;
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     width: 95%;
     cursor: default;
@@ -362,6 +362,8 @@
     padding:10px;
     padding-left: 5px;
     cursor: pointer;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .panelRight,.contentRight .contentShow{
@@ -844,7 +846,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 .visaPjUp{
     margin: auto;
-    margin-top: 10px;  
+    margin-bottom: 10px; 
     font-size: 10px;
     height:20px;
     width:20px;
@@ -862,7 +864,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 .visaPjDel{
     margin: auto;
     font-size: 10px;
-    
+    margin-bottom: 5px; 
     height:20px;
     width:20px;
     cursor: pointer;
@@ -908,18 +910,6 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     opacity: 0.3;
 }
 
-/*.showResLeftPanel.contentLeft,.showResLeftPanel.contentRight{*/
-    /*width:39%;*/
-/*}*/
-
-/*.hideResLeftPanel.contentLeft,.hideResLeftPanel.contentRight{*/
-    /*width:46.5%;*/
-/*}*/
-
-/*.hideLeftPanel.contentRight{*/
-    /*width:93%;*/
-/*}*/
-
-/*.showLeftPanel.contentRight{*/
-    /*width:46.5%;*/
-/*}*/
+.chosen-container-single .chosen-default {
+    color: black !important;
+}
