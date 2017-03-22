@@ -3,6 +3,9 @@ require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_reque
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_security.php';
 require_once('core/class/LinkController.php');
 
+if (!empty($_REQUEST['id'])) {
+    $_SESSION['doc_id'] = $_REQUEST['id'];
+}
 $security = new security();
 $right = $security->test_right_doc($_SESSION['collection_id_choice'], $_SESSION['doc_id']);
 

@@ -126,7 +126,7 @@
     background-color: #93D1E4;
     display: table;
     margin: 10px;
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     width: 95%;
     cursor: default;
@@ -246,22 +246,23 @@
 }
 
 .titleSignatureBook .others{
-    border-right: solid 1px black;
+    float:right;
+    width:10%;
     padding: 5px;
     vertical-align: middle;
-     text-align: right;
+    text-align: right;
 }
 
 .titleSignatureBook .others input{
+    width: 95%;
     background: #E6E6E6;
     border-radius: 2px;
-    width: 350px;
     border: none;
     padding: 5px;
 }
 
 .resListContent{
-    width:10%;
+    width:8%;
     height:100%;
     text-align: center;
     border-right: solid 1px;
@@ -353,7 +354,7 @@
 
 .panelRightContent{
     width: 100%;
-    height: 72%;
+    height: 69%;
     overflow: auto;  
 }
 
@@ -361,6 +362,8 @@
     padding:10px;
     padding-left: 5px;
     cursor: pointer;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .panelRight,.contentRight .contentShow{
@@ -479,11 +482,13 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 .actions{
-    width: 35%;
+    float:right;
+    width: 25%;
     padding: 5px;
     vertical-align: middle;
     text-align: right;
     text-transform: initial;
+    border-left: solid 1px black;
 }
 .actions i{
    width:5%;
@@ -509,30 +514,33 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     text-transform : uppercase;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 #closeSignatureBook{
+    float:left;
     padding:5px;
     width:2%;
     text-align: center;
 }
 #labelSignatureBook{
+    float:left;
     width: 33%;
     padding-left: 10px;
+    margin-top: 10px;
 }
 
 #labelSignatureBook div{
-    width: 450px;
+    /*width: 100%;*/
     overflow: hidden;
     text-overflow: ellipsis;
     display: block;
 }
 
 #tabSignatureBook{
+    float:left;
     width:auto;
 }
 .titleSignatureBook div{
-    display:table-cell;
+    display:inline-block;
     vertical-align: middle;
 }
 
@@ -541,12 +549,12 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     display: table-cell;
     padding: 5px;
     cursor: pointer;
-    width: 5%;
     vertical-align: middle;
     width: 40px;
     text-align: center;
     padding-left: 10px;
     padding-right: 10px;
+    padding-bottom: 7px;
     color:#666;
     background-color: #deedf3;
 }
@@ -838,7 +846,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 .visaPjUp{
     margin: auto;
-    margin-top: 10px;  
+    margin-bottom: 10px; 
     font-size: 10px;
     height:20px;
     width:20px;
@@ -856,7 +864,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 .visaPjDel{
     margin: auto;
     font-size: 10px;
-    
+    margin-bottom: 5px; 
     height:20px;
     width:20px;
     cursor: pointer;
@@ -902,18 +910,6 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     opacity: 0.3;
 }
 
-/*.showResLeftPanel.contentLeft,.showResLeftPanel.contentRight{*/
-    /*width:39%;*/
-/*}*/
-
-/*.hideResLeftPanel.contentLeft,.hideResLeftPanel.contentRight{*/
-    /*width:46.5%;*/
-/*}*/
-
-/*.hideLeftPanel.contentRight{*/
-    /*width:93%;*/
-/*}*/
-
-/*.showLeftPanel.contentRight{*/
-    /*width:46.5%;*/
-/*}*/
+.chosen-container-single .chosen-default {
+    color: black !important;
+}

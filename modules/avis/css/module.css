@@ -44,7 +44,7 @@
     background-color: #93D1E4;
     display: table;
     margin: 10px;
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     width: 95%;
     cursor: default;
@@ -146,4 +146,8 @@
 }
 .avisUserAction i{
 	cursor: pointer;
+}
+
+.chosen-container-single .chosen-default {
+    color: black !important;
 }

@@ -50,15 +50,16 @@ export class SignatureBookComponent implements OnInit {
     loading                     : boolean   = false;
     loadingSign                 : boolean   = false;
 
-    leftContentWidth            : string    = "42%";
-    rightContentWidth           : string    = "42%";
+    leftContentWidth            : string    = "43%";
+    rightContentWidth           : string    = "43%";
 
     notesViewerLink             : string    = "";
     visaViewerLink              : string    = "";
     histViewerLink              : string    = "";
+    linksViewerLink             : string    = "";
 
 
-    constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone:NgZone) {
+    constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
         window['angularSignatureBookComponent'] = {
             componentAfterAttach: (value: string) => this.processAfterAttach(value),
             componentAfterAction: () => this.processAfterAction(),
@@ -109,11 +110,12 @@ export class SignatureBookComponent implements OnInit {
                             this.showTopRightPanel      = false;
                             this.showAttachmentEditionPanel  = false;
                             this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
-                            this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
-                            this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
+                            this.visaViewerLink  = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
+                            this.histViewerLink  = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
+                            this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
 
-                            this.leftContentWidth = "42%";
-                            this.rightContentWidth = "42%";
+                            this.leftContentWidth  = "43%";
+                            this.rightContentWidth = "43%";
                             if (this.signatureBook.documents[0]) {
                                 this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
                             }
@@ -125,6 +127,7 @@ export class SignatureBookComponent implements OnInit {
                             setTimeout(() => {
                                 $j("#resListContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
                                 $j("#rightPanelContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
+                                $j("#resListContent").scrollTop(0);
                                 $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
                             }, 0);
                         });
@@ -205,8 +208,8 @@ export class SignatureBookComponent implements OnInit {
                 this.rightContentWidth = "47%";
                 this.leftContentWidth = "47%";
             } else {
-                this.rightContentWidth = "42%";
-                this.leftContentWidth = "42%";
+                this.rightContentWidth = "43%";
+                this.leftContentWidth = "43%";
             }
         }
     }
