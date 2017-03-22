@@ -21,17 +21,17 @@
             </div>
         </div>
         <div id="labelSignatureBook" title="{{signatureBook.currentAction.actionLabel}}" ><div>{{signatureBook.currentAction.actionLabel}}</div></div>
-        <div class="others">
-            <span id="consigne">
-                <input type="text" value="{{signatureBook.consigne}}" title="Consigne" readonly="readonly">
-            </span>
-        </div>
         <div class="actions">
             <i style="cursor: pointer;vertical-align: middle;" title="Accédez à la fiche détaillée" class="fa fa-info-circle fa-2x" (click)="backToDetails()"></i>&nbsp;
             <select id="signatureBookActions">
                 <option *ngFor="let option of signatureBook.actions" value="{{option.value}}">{{option.label}}</option>
             </select>
             <input name="send" id="send" value="Valider" class="button" type="button" (click)="validForm()">
+        </div>
+        <div class="others">
+            <span id="consigne">
+                <input type="text" value="{{signatureBook.consigne}}" title="Consigne" readonly="readonly">
+            </span>
         </div>
     </div>
     <div class="contentSignatureBook">
