@@ -1567,6 +1567,11 @@ class core_tools extends functions
         <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7';?>" media="screen" />  <![endif]-->
         <!--[if IE 8.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie8';?>" media="screen" />  <![endif]-->
         <!--[if gte IE 9.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie9';?>" media="screen" />  <![endif]-->
+
+        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
+            . 'tools/PhotoSwipe/photoswipe.css'; ?>" media="screen" />
+        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
+            . 'tools/PhotoSwipe/default-skin/default-skin.css'; ?>" media="screen" />
         <?php
     }
 
@@ -2474,8 +2479,6 @@ class core_tools extends functions
 
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/t/maarch/maarch-theme.css';?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'tools/signature_pad/css/signature-pad.css';?>" media="screen" />
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] . 'tools/PhotoSwipe/photoswipe.css'; ?>" media="screen" />
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] . 'tools/PhotoSwipe/default-skin/default-skin.css'; ?>" media="screen" />
         <?php
     }
 }

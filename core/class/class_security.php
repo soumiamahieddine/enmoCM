@@ -396,14 +396,17 @@ class security extends Database
         $mailer->Subject = (string)$mailerParams->subject;
         $mailer->CharSet = (string)$mailerParams->charset;
         $mailer->msgHTML($mailToSend);
-        
         if (!$mailer->send()) {
             $_SESSION['error'] .= ' mail not send to '.$userInfo['mail'].': '.$mailer->ErrorInfo;
-            $_SESSION['error'] .= '<pre>'.print_r($mailer,true).'</pre>';
+            //$_SESSION['error'] .= '<pre>'.print_r($mailer,true).'</pre>';
             if ($redirect){
                 if ($_SESSION['isSmartphone']) header('location: smartphone/index.php?page=login');
                 else header('location: index.php?page=login&display=true');
             }
+            /*else{
+                echo $_SESSION['error'];
+                exit();
+            }*/
         } else {
             $_SESSION['error'] .= ' '._CONFIRM_ASK_RA_CODE_7;
             $_SESSION['recup_user']['login'] = $login;

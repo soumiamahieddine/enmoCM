@@ -1,48 +1,33 @@
 <?php
-	
-	require_once "modules" . DIRECTORY_SEPARATOR . "thumbnails" . DIRECTORY_SEPARATOR
-			. "class" . DIRECTORY_SEPARATOR
-			. "class_modules_tools.php";
+	require_once 'modules/thumbnails/class/class_modules_tools.php';
 			
 	$res_id = $_REQUEST['res_id'];
 	$coll_id = $_REQUEST['coll_id'];
+	$advanced = $_REQUEST['advanced'];
 	$tnl = new thumbnails();
 
 	if (isset($_REQUEST['res_id_attach'])){
 		$path = $tnl->getPathTnl($_REQUEST['res_id_attach'], $coll_id, 'res_attachments');
 
-		if (!is_file($path)){
+		if (!is_file($path) && !empty($advanced)){
+			$path = 'modules/thumbnails/no_thumb.png';
+		} elseif (!is_file($path)) {
 			exit();
-		}	
-		$tab_tnl = $tnl->testMultiPage($path);
-		/*$tab_tnl = $tnl->testMultiPage($path);
-		$db = new Database();
-		$stmt = $db->query("SELECT res_id FROM res_attachments WHERE res_id_master = ? AND tnl_filename IS NOT NULL AND tnl_filename <> 'ERR' ", array($res_id));
-		$tmp_array = array();
-		$tab_tnl = array();
-		while($res = $stmt->fetchObject()){
-			$res_id_attach = $res->res_id;
-			//echo " res_id_attach : ".$res_id_attach;
-			$path = $tnl->getPathTnl($_REQUEST['res_id_attach'], $coll_id, 'res_attachments');
-			//echo " path : ".$path;
-			if (is_file($path)) array_push($tmp_array,array('id'=>$res_id_attach,'path'=>$path));
 		}
-		
-		foreach ($tmp_array as $p) {
-			$tab_tnl_tmp = array();
-			$tab_tnl_tmp['id'] = $p['id'];
-			$tab_tnl_tmp['path'] = $tnl->testMultiPage($p['path']);
-			//$tab_tnl = array_merge($tab_tnl,$tab_tnl_tmp);
-			array_push($tab_tnl,$tab_tnl_tmp);
-		}*/
+		$tab_tnl = $tnl->testMultiPage($path);
 	}
 	
 	else{
-		$path = $tnl->getPathTnl($res_id, $coll_id);
-
-		if (!is_file($path)){
+		if (empty($advanced)) {
+			$path = $tnl->getPathTnl($res_id, $coll_id);
+		} else {
+			$path = $tnl->getTnlPathWithColl(['resId' => $res_id, 'collId' => $coll_id]); // New Behaviour
+		}
+		if (!is_file($path) && !empty($advanced)){
+			$path = 'modules/thumbnails/no_thumb.png';
+		} elseif (!is_file($path)) {
 			exit();
-		}	
+		}
 		$tab_tnl = $tnl->testMultiPage($path);
 	}
 ?>

@@ -399,14 +399,14 @@ abstract class class_users_Abstract extends Database
                             <input type="file" name="signature" id="signature"/>
                             <br />
                             <?php
-                            if (file_exists($_SESSION['user']['pathToSignature'])) {
-                                $extension = explode(".", $_SESSION['user']['pathToSignature']);
+                            if (file_exists($_SESSION['user']['pathToSignature'][0])) {
+                                $extension = explode(".", $_SESSION['user']['pathToSignature'][0]);
                                 $count_level = count($extension)-1;
                                 $the_ext = $extension[$count_level];
                                 $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($the_ext);
                                 $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
 
-                                if (copy($_SESSION['user']['pathToSignature'], $filePathOnTmp)) { ?>
+                                if (copy($_SESSION['user']['pathToSignature'][0], $filePathOnTmp)) { ?>
                                     <div style="text-align:center;">
                                     <img src="<?php echo $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp; ?>"
                                          alt="signature" id="signFromDs" style="width:150px;height:100px;"/>

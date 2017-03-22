@@ -172,8 +172,10 @@ if (isset($_REQUEST['res_id_master'])){
     $ac = new attachments_controler();
     $infos_attach = $ac->getAttachmentInfos($att_id);
     $pdf_id = $ac->getCorrespondingPdf($att_id);
+    //echo "pdf : ".$pdf_id;
     $path = $tnl->getPathTnl($pdf_id, $coll_id, 'res_attachments');
     $getAttach = "&res_id_attach=".$pdf_id;
+
     if (!is_file($path)) $path=$tnl->generateTnl($pdf_id, $coll_id, 'res_attachments');
 }
 else{
@@ -184,6 +186,7 @@ else{
 <div id="details" title="Détails" class="panel">
 	<?php
         if (!is_file($path)){
+            echo "pdf : ".$pdf_id;
 		?>
 	<div align="center">
 		<input type="button" class="whiteButton" value="<?php 

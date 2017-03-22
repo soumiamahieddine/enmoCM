@@ -277,6 +277,7 @@ abstract class attachments_controler_Abstract
 			$file_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION),'pdf',$file);
 			$infos['pathfile'] = $file;
 			$infos['path'] = $path;
+            $infos['format'] = $format;
 			$infos['pathfile_pdf'] = $file_pdf;
             $infos['res_id_origin'] = $res_id_origin;
             $infos['target_table_origin'] = $target_table_origin;
@@ -295,6 +296,7 @@ abstract class attachments_controler_Abstract
 	public function getCorrespondingPdf($resId)
     {
 		$infos = $this->getAttachmentInfos($resId);
+        if ($infos['format'] == 'pdf') return $resId;
 		$db2 = new Database();
 		$result = 0;
 		$stmt2 = $db2->query(

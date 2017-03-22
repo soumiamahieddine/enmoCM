@@ -73,12 +73,17 @@ $res_db = $db->query("SELECT * FROM " . $view . " WHERE res_id = ? ", array($s_i
 
 $res = $res_db->fetchObject();
 $subject = $res->subject;
+
+$ra_code = $_SESSION['recup_user']['ra_code'];
 //echo "<pre>".print_r($_SESSION,true)."</pre>";
 ?>
 <div id="check_id_user" title="<?php functions::xecho($subject);?>" class="panel" style="height:90%;"> 
+    <?php
+    if (empty($_SESSION['error'])){
+    ?>
     <fieldset>
         <div class="row">
-          <p>Pour signer, veuillez saisir votre code d'accès (envoi par courriel à <?php echo $_SESSION['user']['Mail'];?>)</p>
+          <p>Pour signer, veuillez saisir votre code d'accès (envoi par courriel à <?php functions::xecho($_SESSION['user']['Mail']);?>)</p>
           <label for="code_session">CODE</label>
           <input type="text" id="code_session" name="code_session" />
         </div>
@@ -87,6 +92,9 @@ $subject = $res->subject;
         </div>
     </fieldset>
     <a href="signature_recap.php?id=<?php echo $s_id;?>&res_id_attach=<?php functions::xecho($att_id);?>" id="link_recap" style="display:none;" />
+    <?php
+    }
+    ?>
     <div class="error">
         <?php
         if (isset($_SESSION['error'])) {

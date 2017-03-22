@@ -249,8 +249,10 @@ while ($queryResult=$stmt1->fetchObject()) {
 			
 			$command = '';
 			if (strtoupper($fileFormat) == 'PDF') {
-				$command = "convert -thumbnail 400x600 -background white -alpha remove " . escapeshellarg($pathToFile) . "[0] "
-					. escapeshellarg($outputPathFile);
+				/*$command = "convert -thumbnail 400x600 -background white -alpha remove " . escapeshellarg($pathToFile) . "[0] "
+					. escapeshellarg($outputPathFile);*/
+				/* convert all pdf pages to img, without resize, low quality */
+				$command = "convert -density 100x100 -quality 65 -background white -alpha remove " . escapeshellarg($pathToFile) . " ". escapeshellarg($outputPathFile);
 			} else {
 				$posPoint = strpos($pathToFile, '.');
 				$extension = substr($pathToFile, $posPoint);
@@ -275,10 +277,16 @@ while ($queryResult=$stmt1->fetchObject()) {
 			{
 			   $err++;
 			   $errInfo = ' (Last Error : '.$output[0].')';
-                           $stmt2 = $GLOBALS['db']->query("UPDATE ".$GLOBALS['tablename']." SET tnl_path = 'ERR', tnl_filename = 'ERR' WHERE res_id = ?", array($queryResult->res_id));
+               $stmt2 = $GLOBALS['db']->query("UPDATE ".$GLOBALS['tablename']." SET tnl_path = 'ERR', tnl_filename = 'ERR' WHERE res_id = ?", array($queryResult->res_id));
 			   $GLOBALS['logger']->write('document not converted ! ('.$output[0].') => '.$command,"ERROR");
 			}else{
-				$stmt2 = $GLOBALS['db']->query("UPDATE ".$GLOBALS['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename), $queryResult->res_id));	
+				if (is_file($outputPathFile)){
+					$stmt2 = $GLOBALS['db']->query("UPDATE ".$GLOBALS['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$queryResult->filename), $queryResult->res_id));	
+				}
+				else if (is_file(pathinfo($outputPathFile,PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . pathinfo($outputPathFile,PATHINFO_FILENAME).'-0.png')){
+					$newFilename =  pathinfo($outputPathFile,PATHINFO_FILENAME).'-0.jpg';
+					$stmt2 = $GLOBALS['db']->query("UPDATE ".$GLOBALS['tablename']." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($queryResult->path, $newFilename, $queryResult->res_id));
+				}
 				$GLOBALS['logger']->write('document converted');
 			}
 		}	

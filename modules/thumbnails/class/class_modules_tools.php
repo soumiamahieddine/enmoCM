@@ -41,7 +41,7 @@ class thumbnails
 	if($recursive) {
 		$toDo = substr($path, 0, strrpos($path, DIRECTORY_SEPARATOR));
 		if($toDo !== '.' && $toDo !== '..')
-			r_mkdir($toDo, $mode);
+			$this->r_mkdir_tnl($toDo, $mode);
 	}
 	 
 	if(!is_dir($path))
@@ -81,7 +81,7 @@ class thumbnails
 			. str_replace("#", DIRECTORY_SEPARATOR, $path)
         	. $queryResult->filename;
 			$outputPathFile  = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $path) 
-			. str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "jpg",$filename);
+			. str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$filename);
 		}
 
 		if (
@@ -92,7 +92,7 @@ class thumbnails
 			$stmt2 = $db->query("UPDATE ".$table_name." SET tnl_path = 'ERR', tnl_filename = 'ERR' WHERE res_id = ?", array($res_id));
 
        	} else {
-			$racineOut = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $queryResult->path);
+			$racineOut = $pathOutput . str_replace("#", DIRECTORY_SEPARATOR, $path);
 			if (!is_dir($racineOut)){
 				$this->r_mkdir_tnl($racineOut,0777);
 			}
@@ -100,9 +100,7 @@ class thumbnails
 			$command = '';
 
 			if (strtoupper($fileFormat) == 'PDF') {
-				/*$command = "convert -thumbnail 400x600 -background white -alpha remove " . escapeshellarg($pathToFile) . " "
-					. escapeshellarg($outputPathFile);*/
-				$command = "convert -density 100x100 -quality 65 " . escapeshellarg($pathToFile) . " ". escapeshellarg($outputPathFile);
+				$command = "convert -density 100x100 -quality 65 -alpha remove " . escapeshellarg($pathToFile) . " ". escapeshellarg($outputPathFile);
 			} else {
 				$posPoint = strpos($pathToFile, '.');
 				$extension = substr($pathToFile, $posPoint);
@@ -121,18 +119,16 @@ class thumbnails
 					. escapeshellarg($outputPathFile);
 				}
 			}
-			//echo $command;exit();
 			exec($command.' 2>&1', $output, $result);
 			if($result > 0)
 			{
 			   echo 'document not converted ! ('.$output[0].')';
 			}else{
 				if (is_file($outputPathFile)){
-					$stmt2 = $db->query("UPDATE ".$table_name." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "jpg",$filename), $res_id));	
+					$stmt2 = $db->query("UPDATE ".$table_name." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($path, str_replace(pathinfo($pathToFile, PATHINFO_EXTENSION), "png",$filename), $res_id));	
 				}
-				else if (is_file(pathinfo($outputPathFile,PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . pathinfo($outputPathFile,PATHINFO_FILENAME).'-0.jpg')){
-					$newFilename =  pathinfo($outputPathFile,PATHINFO_FILENAME).'-0.jpg';
-					//$_ENV['db2']->query("UPDATE ".$_ENV['tablename']." SET tnl_path = '".$queryResult['path']."', tnl_filename = '".$newFilename."' WHERE res_id = ".$queryResult['res_id']);
+				else if (is_file(pathinfo($outputPathFile,PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . pathinfo($outputPathFile,PATHINFO_FILENAME).'-0.png')){
+					$newFilename =  pathinfo($outputPathFile,PATHINFO_FILENAME).'-0.png';
 					$stmt2 = $db->query("UPDATE ".$table_name." SET tnl_path = ?, tnl_filename = ? WHERE res_id = ?", array($path, $newFilename, $res_id));
 				}
 				return $this->getPathTnl($res_id, $coll_id, $table_name);
