@@ -19,6 +19,9 @@
             <div title="Avancement" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 4}" (click)="changeSignatureBookLeftContent(4)">
                 <i class="fa fa-line-chart fa-2x"></i>
             </div>
+            <div title="Liaisons" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 5}" (click)="changeSignatureBookLeftContent(5)">
+                <i class="fa fa-link fa-2x"></i>
+            </div>
         </div>
         <div id="labelSignatureBook" title="{{signatureBook.currentAction.actionLabel}}" ><div>{{signatureBook.currentAction.actionLabel}}</div></div>
         <div class="others">
@@ -85,6 +88,9 @@
             </div>
             <div *ngIf="headerTab == 4" class="contentShow" style="width:98%;">
                 <iframe [src]="histViewerLink | safeUrl"></iframe>
+            </div>
+            <div *ngIf="headerTab == 5" class="contentShow" style="width:98%;">
+                <iframe [src]="linksViewerLink | safeUrl"></iframe>
             </div>
         </div>
         <div class="hideLeftContent" (click)="displayPanel('LEFT')">

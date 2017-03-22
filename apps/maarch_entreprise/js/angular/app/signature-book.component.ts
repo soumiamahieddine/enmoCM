@@ -56,9 +56,10 @@ export class SignatureBookComponent implements OnInit {
     notesViewerLink             : string    = "";
     visaViewerLink              : string    = "";
     histViewerLink              : string    = "";
+    linksViewerLink             : string    = "";
 
 
-    constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone:NgZone) {
+    constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
         window['angularSignatureBookComponent'] = {
             componentAfterAttach: (value: string) => this.processAfterAttach(value),
             componentAfterAction: () => this.processAfterAction(),
@@ -109,10 +110,11 @@ export class SignatureBookComponent implements OnInit {
                             this.showTopRightPanel      = false;
                             this.showAttachmentEditionPanel  = false;
                             this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
-                            this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
-                            this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
+                            this.visaViewerLink  = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
+                            this.histViewerLink  = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
+                            this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
 
-                            this.leftContentWidth = "42%";
+                            this.leftContentWidth  = "42%";
                             this.rightContentWidth = "42%";
                             if (this.signatureBook.documents[0]) {
                                 this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
