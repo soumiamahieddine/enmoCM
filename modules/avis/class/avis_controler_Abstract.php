@@ -62,10 +62,10 @@ abstract class avis_controler_Abstract
             $str .= '<option value="" ></option>';
 
             $tab_userentities = $this->getEntityAvis();
+            $tab_users = $this->getUsersAvis();
             //Order by parent entity
             foreach ($tab_userentities as $key => $value) {
                 $str .= '<optgroup label="' . $tab_userentities[$key]['entity_id'] . '">';
-                $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
                 foreach ($tab_users as $user) {
                     if ($tab_userentities[$key]['entity_id'] == $user['entity_id']) {
                         $selected = " ";
