@@ -54,8 +54,8 @@ var SignatureBookComponent = (function () {
         this.showAttachmentEditionPanel = false;
         this.loading = false;
         this.loadingSign = false;
-        this.leftContentWidth = "42%";
-        this.rightContentWidth = "42%";
+        this.leftContentWidth = "43%";
+        this.rightContentWidth = "43%";
         this.notesViewerLink = "";
         this.visaViewerLink = "";
         this.histViewerLink = "";
@@ -110,8 +110,8 @@ var SignatureBookComponent = (function () {
                     _this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + _this.resId + "&collId=letterbox_coll&visaStep=true";
                     _this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + _this.resId + "&coll_id=letterbox_coll&load&size=full";
                     _this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + _this.resId;
-                    _this.leftContentWidth = "42%";
-                    _this.rightContentWidth = "42%";
+                    _this.leftContentWidth = "43%";
+                    _this.rightContentWidth = "43%";
                     if (_this.signatureBook.documents[0]) {
                         _this.leftViewerLink = _this.signatureBook.documents[0].viewerLink;
                     }
@@ -204,8 +204,8 @@ var SignatureBookComponent = (function () {
                 this.leftContentWidth = "47%";
             }
             else {
-                this.rightContentWidth = "42%";
-                this.leftContentWidth = "42%";
+                this.rightContentWidth = "43%";
+                this.leftContentWidth = "43%";
             }
         }
     };

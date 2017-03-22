@@ -262,7 +262,7 @@
 }
 
 .resListContent{
-    width:10%;
+    width:8%;
     height:100%;
     text-align: center;
     border-right: solid 1px;
@@ -547,12 +547,12 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     display: table-cell;
     padding: 5px;
     cursor: pointer;
-    width: 5%;
     vertical-align: middle;
     width: 40px;
     text-align: center;
     padding-left: 10px;
     padding-right: 10px;
+    padding-bottom: 7px;
     color:#666;
     background-color: #deedf3;
 }

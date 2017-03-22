@@ -50,8 +50,8 @@ export class SignatureBookComponent implements OnInit {
     loading                     : boolean   = false;
     loadingSign                 : boolean   = false;
 
-    leftContentWidth            : string    = "42%";
-    rightContentWidth           : string    = "42%";
+    leftContentWidth            : string    = "43%";
+    rightContentWidth           : string    = "43%";
 
     notesViewerLink             : string    = "";
     visaViewerLink              : string    = "";
@@ -114,8 +114,8 @@ export class SignatureBookComponent implements OnInit {
                             this.histViewerLink  = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
                             this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
 
-                            this.leftContentWidth  = "42%";
-                            this.rightContentWidth = "42%";
+                            this.leftContentWidth  = "43%";
+                            this.rightContentWidth = "43%";
                             if (this.signatureBook.documents[0]) {
                                 this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
                             }
@@ -208,8 +208,8 @@ export class SignatureBookComponent implements OnInit {
                 this.rightContentWidth = "47%";
                 this.leftContentWidth = "47%";
             } else {
-                this.rightContentWidth = "42%";
-                this.leftContentWidth = "42%";
+                this.rightContentWidth = "43%";
+                this.leftContentWidth = "43%";
             }
         }
     }
