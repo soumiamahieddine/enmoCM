@@ -2998,7 +2998,7 @@ function loadDiffList(id)
                                     eval("response = " + answer.responseText);
                                     if (!response.toShow.match(/<div style="font-style:italic;text-align:center;color:#ea0000;margin:10px;">/)) {
                                         $('divDiffList_' + id).innerHTML += '<fieldset style="border: 1px dashed rgb(0, 157, 197);width:100%;"><legend>Circuit d\'avis:</legend>' + response.toShow + '</fieldset>';
-                                        $j('#divDiffList_' + id).css({"width": "97%", "display": "table", "white-space": "nowrap"});
+                                        $j('#divDiffList_' + id).css({"width": "97%", "display": "table"});
                                         $j('#divDiffList_' + id).children().css({"width": "32%", "display": "table-cell", "vertical-align": "top", "padding": "5px", "margin": "5px"});
                                     }
 
