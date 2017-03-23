@@ -128,3 +128,9 @@ if (!defined("_TMP_SIGNED_FILE_FAILED"))
 
 if (!defined("_ENCRYPTED"))
     define("_ENCRYPTED", "Encoded");
+
+if (!defined("_ADD_VISA_ROLE"))
+    define("_ADD_VISA_ROLE", "Add visa user / signatory user");
+
+if (!defined("_ADD_VISA_MODEL"))
+    define("_ADD_VISA_MODEL", "Use visa circuit model");

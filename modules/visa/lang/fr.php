@@ -144,3 +144,9 @@ if (!defined("_SIGN_USER_COU_DESC"))
 
 if (!defined("_SIGN_USER"))
     define("_SIGN_USER", "Personne signataire");
+
+if (!defined("_ADD_VISA_ROLE"))
+    define("_ADD_VISA_ROLE", "Ajouter un viseur / signataire");
+
+if (!defined("_ADD_VISA_MODEL"))
+    define("_ADD_VISA_MODEL", "Utiliser un modèle de circuit de visa");
