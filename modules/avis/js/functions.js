@@ -14,11 +14,11 @@ function addAvisUser(users) {
                 + '<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + $j("select#avisUserList option:selected").text() + ' <sup class="nbRes">' + $j("select#avisUserList option:selected").parent().get(0).label + '</sup>'
                 + '<input class="userId" type="hidden" value="' + $j("select#avisUserList option:selected").val() + '"/><input class="avisDate" type="hidden" value=""/>'
                 + '</span>'
-                + '<span class="avisUserConsigne">'
-                + '<input type="text" class="consigne" value=""/>'
-                + '</span>'
                 + '<span class="avisUserAction">'
                 + '<i class="fa fa-trash" aria-hidden="true" onclick="delAvisUser(this.parentElement.parentElement);"></i>'
+                + '</span>'
+                + '<span class="avisUserConsigne">'
+                + '<input type="text" class="consigne" value=""/>'
                 + '</span>'
                 + '<span id="dropZone">'
                 + '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>'
@@ -43,11 +43,11 @@ function addAvisUser(users) {
                 + '<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + users.lastname + ' ' + users.firstname + ' <sup class="nbRes">' + users.entity_id + '</sup>'
                 + '<input class="userId" type="hidden" value="' + users.user_id + '"/><input class="avisDate" type="hidden" value=""/>'
                 + '</span>'
-                + '<span class="avisUserConsigne">'
-                + '<input type="text" class="consigne" value="' + users.process_comment + '"/>'
-                + '</span>'
                 + '<span class="avisUserAction">'
                 + '<i class="fa fa-trash" aria-hidden="true" onclick="delAvisUser(this.parentElement.parentElement);"></i>'
+                + '</span>'
+                + '<span class="avisUserConsigne">'
+                + '<input type="text" class="consigne" value="' + users.process_comment + '"/>'
                 + '</span>'
                 + '<span id="dropZone">'
                 + '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>'
@@ -200,7 +200,7 @@ function loadAvisModelUsers() {
 
 function initDragNDropAvis() {
     document.getElementById("avis_content").addEventListener("dragstart", function (event) {
-        $j(".droptarget").css("border", "dashed 2px #93D1E4");
+        $j(".droptarget").not(".vised,.currentVis").css("border", "dashed 2px #93D1E4");
         // The dataTransfer.setData() method sets the data type and the value of the dragged data
         event.dataTransfer.setData("Text", event.target.id);
 
@@ -219,7 +219,7 @@ function initDragNDropAvis() {
     // Output some text when finished dragging the p element and reset the opacity
     document.getElementById("avis_content").addEventListener("dragend", function (event) {
         //document.getElementById("demo").innerHTML = "Finished dragging the p element.";
-        $j(".droptarget").css("border", "dashed 2px #93D1E4");
+        $j(".droptarget").not(".vised,.currentVis").css("border", "dashed 2px #93D1E4");
         event.target.style.opacity = "1";
     });
 

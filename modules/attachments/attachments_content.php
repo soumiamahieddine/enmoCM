@@ -774,7 +774,7 @@ if (isset($_POST['add']) && $_POST['add']) {
     }
     if (!isset($_SESSION['new_id'])) $_SESSION['new_id'] = 0;
 
-    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', majFrameId : ".functions::xssafe($_SESSION['new_id']).", exec_js : '".addslashes($js)."'}";
+    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', majFrameId : ".functions::xssafe($_SESSION['new_id']).", exec_js : '".addslashes($js)."', \"type\" : \"".$attachment_types."\"}";
     unset($_SESSION['new_id']);
     exit();
 } else if (isset($_POST['edit']) && $_POST['edit']) {

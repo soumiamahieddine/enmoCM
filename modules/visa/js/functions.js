@@ -15,11 +15,11 @@ function addVisaUser(users) {
                 +'<i class="fa fa-user fa-2x" aria-hidden="true"></i> '+ $j("select#visaUserList option:selected").text() +' <sup class="nbRes">'+$j("select#visaUserList option:selected").parent().get( 0 ).label+'</sup>'
                 +'<input class="userId" type="hidden" value="' + $j("select#visaUserList option:selected").val() + '"/><input class="visaDate" type="hidden" value=""/>'
             +'</span>'
-            +'<span class="visaUserConsigne">'
-                +'<input type="text" class="consigne" value=""/>'
-            +'</span>'
             +'<span class="visaUserAction">'
                 +'<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);"></i>'
+            +'</span>'
+            +'<span class="visaUserConsigne">'
+                +'<input type="text" class="consigne" value=""/>'
             +'</span>'
             +'<span id="dropZone">'
                 +'<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>'
@@ -45,11 +45,11 @@ function addVisaUser(users) {
                 +'<input class="userId" type="hidden" value="' + users.user_id + '"/><input class="visaDate" type="hidden" value=""/>'
                 +'&nbsp;&nbsp; <i title="Personne signataire" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#FDD16C;visibility:hidden;"></i>'
             +'</span>'
-            +'<span class="visaUserConsigne">'
-                +'<input type="text" class="consigne" value="' + users.process_comment + '"/>'
-            +'</span>'
             +'<span class="visaUserAction">'
                 +'<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);"></i>'
+            +'</span>'
+            +'<span class="visaUserConsigne">'
+                +'<input type="text" class="consigne" value="' + users.process_comment + '"/>'
             +'</span>'
             +'<span id="dropZone">'
                 +'<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>'
@@ -204,7 +204,7 @@ function loadVisaModelUsers() {
 
 function initDragNDropVisa() {
     document.getElementById("visa_content").addEventListener("dragstart", function(event) {
-        $j(".droptarget").css("border","dashed 2px #93D1E4");
+        $j(".droptarget").not(".vised,.currentVis").css("border","dashed 2px #93D1E4");
         // The dataTransfer.setData() method sets the data type and the value of the dragged data
         event.dataTransfer.setData("Text", event.target.id);
 
@@ -223,7 +223,7 @@ function initDragNDropVisa() {
     // Output some text when finished dragging the p element and reset the opacity
     document.getElementById("visa_content").addEventListener("dragend", function(event) {
         //document.getElementById("demo").innerHTML = "Finished dragging the p element.";
-        $j(".droptarget").css("border","dashed 2px #93D1E4");
+        $j(".droptarget").not(".vised,.currentVis").css("border","dashed 2px #93D1E4");
         event.target.style.opacity = "1";
     });
 

@@ -46,22 +46,25 @@ export class SignatureBookComponent implements OnInit {
     showTopLeftPanel            : boolean   = false;
     showResLeftPanel            : boolean   = true;
     showLeftPanel               : boolean   = true;
+    showRightPanel              : boolean   = true;
     showAttachmentEditionPanel  : boolean   = false;
     loading                     : boolean   = false;
     loadingSign                 : boolean   = false;
 
-    leftContentWidth            : string    = "39%";
-    rightContentWidth           : string    = "39%";
+    leftContentWidth            : string    = "44%";
+    rightContentWidth           : string    = "44%";
 
     notesViewerLink             : string    = "";
     visaViewerLink              : string    = "";
     histViewerLink              : string    = "";
+    linksViewerLink             : string    = "";
 
 
-    constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone:NgZone) {
+    constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
         window['angularSignatureBookComponent'] = {
             componentAfterAttach: (value: string) => this.processAfterAttach(value),
-            componentAfterAction: () => this.processAfterAction()
+            componentAfterAction: () => this.processAfterAction(),
+            componentAfterNotes: () => this.processAfterNotes()
         };
     }
 
@@ -71,7 +74,7 @@ export class SignatureBookComponent implements OnInit {
         $j('#viewBasketsTitle').remove();
         $j('#homePageWelcomeTitle').remove();
         $j('#footer').remove();
-        $j('#container').width("98%");
+        $j('#container').width("99%");
     }
 
     ngOnInit(): void {
@@ -90,6 +93,11 @@ export class SignatureBookComponent implements OnInit {
                     this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
                         .map(res => res.json())
                         .subscribe((data) => {
+                            if (data.error) {
+                                location.hash = "";
+                                location.search = "";
+                                return;
+                            }
                             this.signatureBook = data;
 
                             this.headerTab              = 1;
@@ -98,16 +106,18 @@ export class SignatureBookComponent implements OnInit {
                             this.leftViewerLink         = "";
                             this.rightViewerLink        = "";
                             this.showLeftPanel          = true;
+                            this.showRightPanel         = true;
                             this.showResLeftPanel       = true;
                             this.showTopLeftPanel       = false;
                             this.showTopRightPanel      = false;
                             this.showAttachmentEditionPanel  = false;
                             this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
-                            this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
-                            this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
+                            this.visaViewerLink  = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
+                            this.histViewerLink  = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
+                            this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
 
-                            this.leftContentWidth = "39%";
-                            this.rightContentWidth = "39%";
+                            this.leftContentWidth  = "44%";
+                            this.rightContentWidth = "44%";
                             if (this.signatureBook.documents[0]) {
                                 this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
                             }
@@ -119,6 +129,8 @@ export class SignatureBookComponent implements OnInit {
                             setTimeout(() => {
                                 $j("#resListContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
                                 $j("#rightPanelContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
+                                $j("#resListContent").scrollTop(0);
+                                $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
                             }, 0);
                         });
                 });
@@ -131,6 +143,10 @@ export class SignatureBookComponent implements OnInit {
 
     processAfterAttach(mode: string) {
         this.zone.run(() => this.refreshAttachments(mode));
+    }
+
+    processAfterNotes() {
+        this.zone.run(() => this.refreshNotes());
     }
 
     processAfterAction() {
@@ -183,53 +199,75 @@ export class SignatureBookComponent implements OnInit {
             this.showLeftPanel = !this.showLeftPanel;
             this.showResLeftPanel = false;
             if (!this.showLeftPanel) {
-                this.rightContentWidth = "95%";
+                this.rightContentWidth = "96%";
+                $j("#hideLeftContent").css('background', 'none');
             } else {
-                this.rightContentWidth = "47%";
-                this.leftContentWidth = "47%";
+                this.rightContentWidth = "48%";
+                this.leftContentWidth = "48%";
+                $j("#hideLeftContent").css('background', '#CEE9F1');
             }
         } else if (panel == "RESLEFT") {
             this.showResLeftPanel = !this.showResLeftPanel;
             if (!this.showResLeftPanel) {
-                this.rightContentWidth = "47%";
-                this.leftContentWidth = "47%";
+                this.rightContentWidth = "48%";
+                this.leftContentWidth = "48%";
             } else {
-                this.rightContentWidth = "39%";
-                this.leftContentWidth = "39%";
+                this.rightContentWidth = "44%";
+                this.leftContentWidth = "44%";
+            }
+        } else if (panel == "MIDDLE") {
+            this.showRightPanel = !this.showRightPanel;
+            this.showResLeftPanel = false;
+            if (!this.showRightPanel) {
+                this.leftContentWidth = "96%";
+                $j("#contentLeft").css('border-right', 'none');
+            } else {
+                this.rightContentWidth = "48%";
+                this.leftContentWidth = "48%";
+                $j("#contentLeft").css('border-right', 'solid 1px');
             }
         }
     }
 
     refreshAttachments(mode: string) {
-        this.http.get(this.coreUrl + 'rest/' + 'signatureBook/' + this.resId + '/attachments')
-            .map(res => res.json())
-            .subscribe((data) => {
-                var i = 0;
-                if (mode == "add") {
-                    var found = false;
-                    data.forEach((elem: any, index: number) => {
-                        if (!found && (!this.signatureBook.attachments[index] || elem.res_id != this.signatureBook.attachments[index].res_id)) {
-                            i = index;
-                            found = true;
-                        }
-                    });
-                } else if (mode == "edit") {
-                    var id = this.signatureBook.attachments[this.rightSelectedThumbnail].res_id;
-                    data.forEach((elem: any, index: number) => {
-                        if (elem.res_id == id) {
-                            i = index;
-                        }
-                    });
-                }
+        if (mode == "rightContent") {
+            this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/incomingMailAttachments')
+                .map(res => res.json())
+                .subscribe((data) => {
+                    this.signatureBook.documents = data;
+                });
 
-                this.signatureBook.attachments = data;
+        } else {
+            this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/attachments')
+                .map(res => res.json())
+                .subscribe((data) => {
+                    var i = 0;
+                    if (mode == "add") {
+                        var found = false;
+                        data.forEach((elem: any, index: number) => {
+                            if (!found && (!this.signatureBook.attachments[index] || elem.res_id != this.signatureBook.attachments[index].res_id)) {
+                                i = index;
+                                found = true;
+                            }
+                        });
+                    } else if (mode == "edit") {
+                        var id = this.signatureBook.attachments[this.rightSelectedThumbnail].res_id;
+                        data.forEach((elem: any, index: number) => {
+                            if (elem.res_id == id) {
+                                i = index;
+                            }
+                        });
+                    }
 
-                if (mode == "add" || mode == "edit") {
-                    this.changeRightViewer(i);
-                } else if (mode == "del") {
-                    this.changeRightViewer(0);
-                }
-            });
+                    this.signatureBook.attachments = data;
+
+                    if (mode == "add" || mode == "edit") {
+                        this.changeRightViewer(i);
+                    } else if (mode == "del") {
+                        this.changeRightViewer(0);
+                    }
+                });
+        }
     }
 
     addAttachmentIframe() {
@@ -237,7 +275,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     editAttachmentIframe(attachment: any) {
-        if (attachment.canModify) {
+        if (attachment.canModify && attachment.status != "SIGN") {
             var resId: number;
             if (attachment.res_id == 0) {
                 resId = attachment.res_id_version;
@@ -266,6 +304,14 @@ export class SignatureBookComponent implements OnInit {
                     });
             }
         }
+    }
+
+    refreshNotes() {
+        this.http.get(this.coreUrl + 'rest/res/' + this.resId + '/notes/count')
+            .map(res => res.json())
+            .subscribe((data) => {
+                this.signatureBook.nbNotes = data;
+            });
     }
 
     prepareSignFile(attachment: any) {

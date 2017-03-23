@@ -86,11 +86,11 @@ require_once "modules" . DIRECTORY_SEPARATOR . "avis" . DIRECTORY_SEPARATOR
 			$content .= '<option value="" >Sélectionnez un utilisateur</option>';
 			
 			$tab_userentities = $avis->getEntityAvis();
+			$tab_users = $avis->getUsersAvis();
 
 			/** Order by parent entity **/
 			foreach ($tab_userentities as $key => $value) {
 				$content .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
-				$tab_users = $avis->getUsersAvis($tab_usergroups[$key]['group_id']);
 				foreach($tab_users as $user){
 					if($tab_userentities[$key]['entity_id'] == $user['entity_id']){
 						$selected = " ";

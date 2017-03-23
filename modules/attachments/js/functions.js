@@ -356,7 +356,11 @@ function ValidAttachmentsForm(path, form_id, fromAngular) {
                 destroyModal('form_attachments');
 
                 if (typeof fromAngular != "undefined") {
-                    window.angularSignatureBookComponent.componentAfterAttach(fromAngular);
+                    if (typeof response.type != "undefined" && response.type == "incoming_mail_attachment") {
+                        window.angularSignatureBookComponent.componentAfterAttach("rightContent");
+                    } else {
+                        window.angularSignatureBookComponent.componentAfterAttach(fromAngular);
+                    }
                 } else {
                     if ($('viewframe') != undefined) {
                         var srcViewFrame = $('viewframe').src;

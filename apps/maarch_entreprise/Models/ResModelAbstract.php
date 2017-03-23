@@ -24,7 +24,7 @@ require_once 'apps/maarch_entreprise/services/Table.php';
 class ResModelAbstract extends Apps_Table_Service
 {
 
-    public static function get(array $aArgs = [])
+    public static function getById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['resId']);
         static::checkNumeric($aArgs, ['resId']);
@@ -37,7 +37,7 @@ class ResModelAbstract extends Apps_Table_Service
             'data'      => [$aArgs['resId']]
         ]);
 
-        return $aReturn;
+        return $aReturn[0];
     }
 
     public static function put(array $aArgs = [])
@@ -90,6 +90,26 @@ class ResModelAbstract extends Apps_Table_Service
         if (!empty($aArgs['orderBy'])) {
             $select['order_by'] = $aArgs['orderBy'];
         }
+
+        $aReturn = static::select($select);
+
+        return $aReturn;
+    }
+
+    public static function getObsLinkedAttachmentsNotIn(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['resIdMaster', 'notIn']);
+        static::checkNumeric($aArgs, ['resIdMaster']);
+        static::checkArray($aArgs, ['notIn']);
+
+
+        $select = [
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['res_view_attachments'],
+            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status = ?'],
+            'data'      => [$aArgs['resIdMaster'], $aArgs['notIn'], 'OBS'],
+            'order_by'  => 'relation ASC'
+        ];
 
         $aReturn = static::select($select);
 

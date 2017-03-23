@@ -62,10 +62,10 @@ abstract class avis_controler_Abstract
             $str .= '<option value="" ></option>';
 
             $tab_userentities = $this->getEntityAvis();
+            $tab_users = $this->getUsersAvis();
             //Order by parent entity
             foreach ($tab_userentities as $key => $value) {
                 $str .= '<optgroup label="' . $tab_userentities[$key]['entity_id'] . '">';
-                $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
                 foreach ($tab_users as $user) {
                     if ($tab_userentities[$key]['entity_id'] == $user['entity_id']) {
                         $selected = " ";
@@ -118,11 +118,14 @@ abstract class avis_controler_Abstract
                             $link_vis = 'arrow-right ';
                             $del_vis = '<div class="delete_avis"></div>';
                             if ($info_userAvis['user_id'] <> $_SESSION['user']['UserId']) {
-                                $info_vised = '<p style="color:red;">Vous être en train de viser à la place de ' . $info_userAvis['firstname'] . ' ' . $info_userAvis['lastname'] . '!</p>';
+                                //$info_vised = '<p style="color:red;">Vous donnez votre avis à la place de ' . $info_userAvis['firstname'] . ' ' . $info_userAvis['lastname'] . '!</p>';
+                                $dropZone = '';
                             } else {
-                                $info_vised = 'Vous êtes l\'actuel viseur';
+                                //$info_vised = 'Vous êtes l\'actuel conseiller';
+                                $dropZone = '';
                             }
                         } else {
+                            $dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
                             $vised = '';
                             if ($bool_modif == true) {
                                 $modif = 'true';
@@ -160,14 +163,14 @@ abstract class avis_controler_Abstract
                     $str .= '<sup class="avisUserPos nbResZero">'.$i.'</sup>&nbsp;&nbsp;';
                     $str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' . $info_userAvis['lastname'] . ' ' . $info_userAvis['firstname'] . ' <sup class="nbRes">' . $info_userAvis['entity_id'] . '</sup>' . $info_vised;
                     $str .= '</span>';
-                    $str .= '<span class="avisUserConsigne">';
-                    $str .= '<input class="userId" type="hidden" value="' . $info_userAvis['user_id'] . '"/><input class="avisDate" type="hidden" value="' . $info_userAvis['process_date'] . '"/><input' . $disabled . ' class="consigne" type="text" value="' . $info_userAvis['process_comment'] . '"/>';
-                    $str .= '</span>';
                     $str .= '<span class="avisUserAction">';
                     $str .= $del_vis;
                     $str .= '</span>';
+                    $str .= '<span class="avisUserConsigne">';
+                    $str .= '<input class="userId" type="hidden" value="' . $info_userAvis['user_id'] . '"/><input class="avisDate" type="hidden" value="' . $info_userAvis['process_date'] . '"/><input' . $disabled . ' class="consigne" type="text" value="' . $info_userAvis['process_comment'] . '"/>';
+                    $str .= '</span>';
                     $str .= '<span id="dropZone">';
-                    $str .= '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
+                    $str .= $dropZone;
                     $str .= '</span>';
                     $str .= '</div>';
 
