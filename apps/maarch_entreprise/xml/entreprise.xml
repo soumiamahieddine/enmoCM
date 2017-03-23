@@ -38,7 +38,7 @@
     <attachment_types>
         <!-- with_chrono : generate chrono if chosen -->
         <!-- attach_in_mail : appear in sendmail -->
-        <!-- icon : chose acronym for attachment (signature book) -->
+        <!-- icon : choose acronym for attachment (signature book) -->
         <!-- sign : if attachment can be signed (signature book) -->
         <type show="true" with_chrono="true" attach_in_mail="true" icon="R" sign="true">
             <id>response_project</id>
