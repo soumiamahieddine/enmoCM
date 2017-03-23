@@ -61,11 +61,11 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="showLeftPanel" class="hideresListContent" (click)="displayPanel('RESLEFT')">
-            <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showResLeftPanel"></i>
-            <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showResLeftPanel"></i>
-        </div>
         <div *ngIf="showLeftPanel" class="contentLeft" [ngStyle]="{'width': leftContentWidth}" id="contentLeft">
+            <div *ngIf="showLeftPanel" class="hideresListContent" (click)="displayPanel('RESLEFT')">
+                <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showResLeftPanel"></i>
+                <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showResLeftPanel"></i>
+            </div>
             <div *ngIf="headerTab == 1" class="contentShow">
                 <div *ngIf="showTopLeftPanel" class="pjDoc">
                     <div style="height:100%;">
@@ -92,12 +92,16 @@
             <div *ngIf="headerTab == 5" class="contentShow" style="width:98%;">
                 <iframe [src]="linksViewerLink | safeUrl"></iframe>
             </div>
-        </div>
-        <div class="hideLeftContent" (click)="displayPanel('LEFT')">
-            <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showLeftPanel"></i>
-            <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
+            <div class="hideRightContent">
+                <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="showLeftPanel"></i>
+                <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="!showLeftPanel"></i>
+            </div>
         </div>
         <div class="contentRight" id="contentRight" [ngStyle]="{'width': rightContentWidth}">
+            <div class="hideLeftContent" (click)="displayPanel('LEFT')">
+                <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showLeftPanel"></i>
+                <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
+            </div>
             <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="contentShow">
                 <div *ngIf="showTopRightPanel" class="pjDetails" (click)="displayPanel('TOPRIGHT')">
                     <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
@@ -182,8 +186,8 @@
                     <span class="fa-stack fa-lg">
                         <i class="fa fa-file-o fa-stack-2x"></i><i style="font-weight:bold;letter-spacing: -1px;">{{attachment.icon}}</i>
                     </span>
-                    <i *ngIf="attachment.sign && attachment.status == 'SIGN'" title="Le document a été signé" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle"></i>
-                    <i *ngIf="attachment.sign && attachment.status != 'SIGN'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle-o"></i>
+                    <i *ngIf="attachment.sign && attachment.status == 'SIGN'" title="Le document a été signé" style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle"></i>
+                    <i *ngIf="attachment.sign && attachment.status != 'SIGN'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle-o"></i>
                 </div>
             </div>
             <div *ngIf="signatureBook.attachments[rightSelectedThumbnail]" style="bottom: 0px;position: absolute;left: 5px;">

@@ -204,7 +204,7 @@ function loadVisaModelUsers() {
 
 function initDragNDropVisa() {
     document.getElementById("visa_content").addEventListener("dragstart", function(event) {
-        $j(".droptarget").css("border","dashed 2px #93D1E4");
+        $j(".droptarget").not(".vised,.currentVis").css("border","dashed 2px #93D1E4");
         // The dataTransfer.setData() method sets the data type and the value of the dragged data
         event.dataTransfer.setData("Text", event.target.id);
 
@@ -223,7 +223,7 @@ function initDragNDropVisa() {
     // Output some text when finished dragging the p element and reset the opacity
     document.getElementById("visa_content").addEventListener("dragend", function(event) {
         //document.getElementById("demo").innerHTML = "Finished dragging the p element.";
-        $j(".droptarget").css("border","dashed 2px #93D1E4");
+        $j(".droptarget").not(".vised,.currentVis").css("border","dashed 2px #93D1E4");
         event.target.style.opacity = "1";
     });
 

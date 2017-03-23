@@ -211,35 +211,44 @@ var SignatureBookComponent = (function () {
     };
     SignatureBookComponent.prototype.refreshAttachments = function (mode) {
         var _this = this;
-        this.http.get(this.coreUrl + 'rest/' + 'signatureBook/' + this.resId + '/attachments')
-            .map(function (res) { return res.json(); })
-            .subscribe(function (data) {
-            var i = 0;
-            if (mode == "add") {
-                var found = false;
-                data.forEach(function (elem, index) {
-                    if (!found && (!_this.signatureBook.attachments[index] || elem.res_id != _this.signatureBook.attachments[index].res_id)) {
-                        i = index;
-                        found = true;
-                    }
-                });
-            }
-            else if (mode == "edit") {
-                var id = _this.signatureBook.attachments[_this.rightSelectedThumbnail].res_id;
-                data.forEach(function (elem, index) {
-                    if (elem.res_id == id) {
-                        i = index;
-                    }
-                });
-            }
-            _this.signatureBook.attachments = data;
-            if (mode == "add" || mode == "edit") {
-                _this.changeRightViewer(i);
-            }
-            else if (mode == "del") {
-                _this.changeRightViewer(0);
-            }
-        });
+        if (mode == "rightContent") {
+            this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/incomingMailAttachments')
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.signatureBook.documents = data;
+            });
+        }
+        else {
+            this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/attachments')
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                var i = 0;
+                if (mode == "add") {
+                    var found = false;
+                    data.forEach(function (elem, index) {
+                        if (!found && (!_this.signatureBook.attachments[index] || elem.res_id != _this.signatureBook.attachments[index].res_id)) {
+                            i = index;
+                            found = true;
+                        }
+                    });
+                }
+                else if (mode == "edit") {
+                    var id = _this.signatureBook.attachments[_this.rightSelectedThumbnail].res_id;
+                    data.forEach(function (elem, index) {
+                        if (elem.res_id == id) {
+                            i = index;
+                        }
+                    });
+                }
+                _this.signatureBook.attachments = data;
+                if (mode == "add" || mode == "edit") {
+                    _this.changeRightViewer(i);
+                }
+                else if (mode == "del") {
+                    _this.changeRightViewer(0);
+                }
+            });
+        }
     };
     SignatureBookComponent.prototype.addAttachmentIframe = function () {
         showAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&docId=' + this.resId);
