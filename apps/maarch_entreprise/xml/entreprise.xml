@@ -61,7 +61,7 @@
             <label>_A_PJ</label>
             <process_mode></process_mode>
         </type>
-        <type show="false" with_chrono="false" icon="fa-envelope-o" sign="false">
+        <type show="true" with_chrono="false" icon="fa-envelope-o" sign="false">
             <id>incoming_mail_attachment</id>
             <label>_INCOMING_PJ</label>
             <process_mode></process_mode>
