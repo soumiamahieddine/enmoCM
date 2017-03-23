@@ -43,19 +43,15 @@ class VisaController
             return $response->withJson(['error' => 'Not Allowed']);
         }
 
-        $incomingMail = \ResModel::getById([
-            'resId'  => $resId,
-            'select' => ['res_id', 'subject', 'alt_identifier', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
-        ]);
-
-        if (empty($incomingMail)) {
-            return $response->withJson(['error' => 'No Document Found']);
+        $documents = $this->getIncomingMailAndAttachmentsForSignatureBook(['resId' => $resId]);
+        if (!empty($documents['error'])) {
+            return $response->withJson($documents);
         }
 
-        if (!empty($incomingMail['contact_id'])) {
-            $incomingMailSender = \ContactsModel::getLabelledContactWithAddress(['contactId' => $incomingMail['contact_id'], 'addressId' => $incomingMail['address_id']]);
+        if (!empty($documents[0]['cId'])) {
+            $incomingMailSender = \ContactsModel::getLabelledContactWithAddress(['contactId' => $documents[0]['cId'], 'addressId' => $documents[0]['aId']]);
         } else {
-            $incomingMailSender = $incomingMail['user_firstname'] . ' ' . $incomingMail['user_lastname'];
+            $incomingMailSender = $documents[0]['firstname'] . ' ' . $documents[0]['lastname'];
         }
 
         $basket = new \basket();
@@ -67,26 +63,6 @@ class VisaController
             $actionsData[] = ['value' => $value['VALUE'], 'label' => $value['LABEL']];
         }
 
-        $incomingMailAttachments = \ResModel::getAvailableLinkedAttachmentsIn([
-            'resIdMaster' => $resId,
-            'in'          => ['incoming_mail_attachment'],
-            'select'      => ['res_id', 'title']
-        ]);
-
-        $documents = [
-            [
-                'title'         => $incomingMail['subject'],
-                'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$resId}&collid=letterbox_coll",
-                'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$resId}&coll_id=letterbox_coll&display=true&advanced=true"
-            ]
-        ];
-        foreach ($incomingMailAttachments as $value) {
-            $documents[] = [
-                'title'         => $value['title'],
-                'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$value['res_id']}",
-                'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$value['res_id']}&coll_id=attachments_coll&display=true&advanced=true"
-            ];
-        }
 
         //		$history = \HistoryModel::getByIdForActions([
         //			'id'      => $resId,
@@ -135,8 +111,8 @@ class VisaController
             unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
         }
 
-        $actionLabel = (_ID_TO_DISPLAY == 'res_id' ? $incomingMail['res_id'] : $incomingMail['alt_identifier']);
-        $actionLabel .= " : {$incomingMail['subject']} - {$incomingMailSender}";
+        $actionLabel = (_ID_TO_DISPLAY == 'res_id' ? $documents[0]['res_id'] : $documents[0]['alt_id']);
+        $actionLabel .= " : {$documents[0]['title']} - {$incomingMailSender}";
         $currentAction = [
             'id' => $_SESSION['current_basket']['default_action'], //TODO No Session
             'actionLabel' => $actionLabel
@@ -178,6 +154,13 @@ class VisaController
         }
     }
 
+    public function getIncomingMailAndAttachmentsById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $resId = $aArgs['resId'];
+
+        return $response->withJson($this->getIncomingMailAndAttachmentsForSignatureBook(['resId' => $resId]));
+    }
+
     public function getAttachmentsById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         $resId = $aArgs['resId'];
@@ -208,6 +191,49 @@ class VisaController
         }
 
         return $attachmentTypes;
+    }
+
+    private function getIncomingMailAndAttachmentsForSignatureBook(array $aArgs = [])
+    {
+        $resId = $aArgs['resId'];
+
+        $incomingMail = \ResModel::getById([
+            'resId'  => $resId,
+            'select' => ['res_id', 'subject', 'alt_identifier', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
+        ]);
+
+        if (empty($incomingMail)) {
+            return ['error' => 'No Document Found'];
+        }
+
+        $incomingMailAttachments = \ResModel::getAvailableLinkedAttachmentsIn([
+            'resIdMaster' => $resId,
+            'in'          => ['incoming_mail_attachment'],
+            'select'      => ['res_id', 'title']
+        ]);
+
+        $documents = [
+            [
+                'res_id'        => $incomingMail['res_id'],
+                'alt_id'        => $incomingMail['alt_identifier'],
+                'title'         => $incomingMail['subject'],
+                'cId'           => $incomingMail['contact_id'],
+                'aId'           => $incomingMail['address_id'],
+                'firstname'     => $incomingMail['user_firstname'],
+                'lastname'      => $incomingMail['user_lastname'],
+                'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$resId}&collid=letterbox_coll",
+                'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$resId}&coll_id=letterbox_coll&display=true&advanced=true"
+            ]
+        ];
+        foreach ($incomingMailAttachments as $value) {
+            $documents[] = [
+                'title'         => $value['title'],
+                'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$value['res_id']}",
+                'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$value['res_id']}&coll_id=attachments_coll&display=true&advanced=true"
+            ];
+        }
+
+        return $documents;
     }
 
     private function getAttachmentsForSignatureBook(array $aArgs = [])

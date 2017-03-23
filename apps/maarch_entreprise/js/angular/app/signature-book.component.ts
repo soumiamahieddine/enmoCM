@@ -215,35 +215,44 @@ export class SignatureBookComponent implements OnInit {
     }
 
     refreshAttachments(mode: string) {
-        this.http.get(this.coreUrl + 'rest/' + 'signatureBook/' + this.resId + '/attachments')
-            .map(res => res.json())
-            .subscribe((data) => {
-                var i = 0;
-                if (mode == "add") {
-                    var found = false;
-                    data.forEach((elem: any, index: number) => {
-                        if (!found && (!this.signatureBook.attachments[index] || elem.res_id != this.signatureBook.attachments[index].res_id)) {
-                            i = index;
-                            found = true;
-                        }
-                    });
-                } else if (mode == "edit") {
-                    var id = this.signatureBook.attachments[this.rightSelectedThumbnail].res_id;
-                    data.forEach((elem: any, index: number) => {
-                        if (elem.res_id == id) {
-                            i = index;
-                        }
-                    });
-                }
+        if (mode == "rightContent") {
+            this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/incomingMailAttachments')
+                .map(res => res.json())
+                .subscribe((data) => {
+                    this.signatureBook.documents = data;
+                });
 
-                this.signatureBook.attachments = data;
+        } else {
+            this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/attachments')
+                .map(res => res.json())
+                .subscribe((data) => {
+                    var i = 0;
+                    if (mode == "add") {
+                        var found = false;
+                        data.forEach((elem: any, index: number) => {
+                            if (!found && (!this.signatureBook.attachments[index] || elem.res_id != this.signatureBook.attachments[index].res_id)) {
+                                i = index;
+                                found = true;
+                            }
+                        });
+                    } else if (mode == "edit") {
+                        var id = this.signatureBook.attachments[this.rightSelectedThumbnail].res_id;
+                        data.forEach((elem: any, index: number) => {
+                            if (elem.res_id == id) {
+                                i = index;
+                            }
+                        });
+                    }
 
-                if (mode == "add" || mode == "edit") {
-                    this.changeRightViewer(i);
-                } else if (mode == "del") {
-                    this.changeRightViewer(0);
-                }
-            });
+                    this.signatureBook.attachments = data;
+
+                    if (mode == "add" || mode == "edit") {
+                        this.changeRightViewer(i);
+                    } else if (mode == "del") {
+                        this.changeRightViewer(0);
+                    }
+                });
+        }
     }
 
     addAttachmentIframe() {
