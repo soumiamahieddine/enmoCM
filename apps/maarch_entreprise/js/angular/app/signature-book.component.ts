@@ -46,12 +46,13 @@ export class SignatureBookComponent implements OnInit {
     showTopLeftPanel            : boolean   = false;
     showResLeftPanel            : boolean   = true;
     showLeftPanel               : boolean   = true;
+    showRightPanel              : boolean   = true;
     showAttachmentEditionPanel  : boolean   = false;
     loading                     : boolean   = false;
     loadingSign                 : boolean   = false;
 
-    leftContentWidth            : string    = "43%";
-    rightContentWidth           : string    = "43%";
+    leftContentWidth            : string    = "44%";
+    rightContentWidth           : string    = "44%";
 
     notesViewerLink             : string    = "";
     visaViewerLink              : string    = "";
@@ -105,6 +106,7 @@ export class SignatureBookComponent implements OnInit {
                             this.leftViewerLink         = "";
                             this.rightViewerLink        = "";
                             this.showLeftPanel          = true;
+                            this.showRightPanel         = true;
                             this.showResLeftPanel       = true;
                             this.showTopLeftPanel       = false;
                             this.showTopRightPanel      = false;
@@ -114,8 +116,8 @@ export class SignatureBookComponent implements OnInit {
                             this.histViewerLink  = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
                             this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
 
-                            this.leftContentWidth  = "43%";
-                            this.rightContentWidth = "43%";
+                            this.leftContentWidth  = "44%";
+                            this.rightContentWidth = "44%";
                             if (this.signatureBook.documents[0]) {
                                 this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
                             }
@@ -198,18 +200,31 @@ export class SignatureBookComponent implements OnInit {
             this.showResLeftPanel = false;
             if (!this.showLeftPanel) {
                 this.rightContentWidth = "96%";
+                $j("#hideLeftContent").css('background', 'none');
             } else {
-                this.rightContentWidth = "47%";
-                this.leftContentWidth = "47%";
+                this.rightContentWidth = "48%";
+                this.leftContentWidth = "48%";
+                $j("#hideLeftContent").css('background', '#CEE9F1');
             }
         } else if (panel == "RESLEFT") {
             this.showResLeftPanel = !this.showResLeftPanel;
             if (!this.showResLeftPanel) {
-                this.rightContentWidth = "47%";
-                this.leftContentWidth = "47%";
+                this.rightContentWidth = "48%";
+                this.leftContentWidth = "48%";
             } else {
-                this.rightContentWidth = "43%";
-                this.leftContentWidth = "43%";
+                this.rightContentWidth = "44%";
+                this.leftContentWidth = "44%";
+            }
+        } else if (panel == "MIDDLE") {
+            this.showRightPanel = !this.showRightPanel;
+            this.showResLeftPanel = false;
+            if (!this.showRightPanel) {
+                this.leftContentWidth = "96%";
+                $j("#contentLeft").css('border-right', 'none');
+            } else {
+                this.rightContentWidth = "48%";
+                this.leftContentWidth = "48%";
+                $j("#contentLeft").css('border-right', 'solid 1px');
             }
         }
     }
