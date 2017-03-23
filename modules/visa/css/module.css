@@ -303,21 +303,43 @@
     overflow-y: auto;
 }
 
-.hideresListContent,.hideLeftContent{
-    display: inline-block;
-    height:100%;
-    text-align: center;
-    vertical-align: middle;
-    overflow: auto;
+.hideLeftContent{
+    position: absolute;
+    margin-left: -13px;
+    color: white;
+    top: 45%;
+    padding: 5px;
     cursor: pointer;
-    width:1%;
-    padding-top: 15%;
+    background: #009DC5;
+    border-radius:40px;
+}
+.hideRightContent{
+    position: absolute;
+    right: -10px;
+    color: white;
+    top: 45%;
+    padding: 5px;
+    cursor: pointer;
+    background: #009DC5;
+    border-radius:40px;
+}
+
+.hideresListContent{
+    position: absolute;
+    left: -4px;
+    color: white;
+    top: 45%;
+    padding: 5px;
+    cursor: pointer;
+    background: #009DC5;
+    border-radius:40px;
 }
 
 .contentLeft{
     position: relative;
     border-right: solid 1px;
     vertical-align: top;
+    padding-left: 10px;
     /*width:39%;*/
 }
 
@@ -415,7 +437,7 @@
 .pjDetailsMore{
     z-index: 1;
     position: absolute;
-    left: -14px;
+    left: 15px;
     text-align: center;
     cursor: pointer;
     background: #009DC5;
