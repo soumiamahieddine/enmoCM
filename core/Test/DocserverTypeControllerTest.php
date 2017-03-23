@@ -43,7 +43,7 @@ class DocserverTypeControllerTest extends \PHPUnit_Framework_TestCase
         );
 
         $aArgs = [
-            'id'=> 'FASTHD'
+            'docserver_type_id'=> 'FASTHD'
         ];
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -60,84 +60,104 @@ class DocserverTypeControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame((string)$response->getBody(), $compare);
     }
 
-    // public function testCreate()
-    // {
-    //     $action = new \Core\Controllers\DocserverTypeController();
+    public function testCreate()
+    {
+        $action = new \Core\Controllers\DocserverTypeController();
 
-    //     $query  = 'id=TEST&';
-    //     $query .= 'label_status=TEST';
+        $query  = 'docserver_type_id=TEST&';
+        $query .= 'docserver_type_label=TEST&';
+        $query .= 'enabled=Y&';
+        $query .= 'is_container=N&';
+        $query .= 'is_compressed=N&';
+        $query .= 'is_meta=N&';
+        $query .= 'is_logged=N&';
+        $query .= 'is_signed=N&';
+        $query .= 'fingerprint_mode=SHA256';
 
-    //     $environment = \Slim\Http\Environment::mock(
-    //         [
-    //             'REQUEST_METHOD' => 'POST',
-    //             'QUERY_STRING'=> $query,
-    //         ]
-    //     );
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'POST',
+                'QUERY_STRING'=> $query,
+            ]
+        );
         
-    //     $aArgs = [
-    //         'id'=> 'NEW'
-    //     ];
+        $aArgs = [
+            'docserver_type_id'=> 'TEST'
+        ];
 
-    //     $request = \Slim\Http\Request::createFromEnvironment($environment);
-    //     $response = new \Slim\Http\Response();
-    //     $response = $action->create($request, $response, $aArgs);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = new \Slim\Http\Response();
+        $response = $action->create($request, $response, $aArgs);
 
-    //     $compare = '[{"docserverType":[{"id":"TEST","label_status":"TEST",'
-    //         . '"is_system":"Y","is_folder_status":"N","img_filename":null,'
-    //         . '"maarch_module":"apps","can_be_searched":"Y",'
-    //         . '"can_be_modified":"Y"}]}]';
+        $compare = '[{"DocserverType":[{"docserver_type_id":"TEST",'
+            . '"docserver_type_label":"TEST","enabled":"Y",'
+            . '"is_container":"N","container_max_number":0,'
+            . '"is_compressed":"N","compression_mode":null,'
+            . '"is_meta":"N","meta_template":null,'
+            . '"is_logged":"N","log_template":null,'
+            . '"is_signed":"N","fingerprint_mode":"SHA256"}]}]';
         
-    //     $this->assertSame((string)$response->getBody(), $compare);
-    // }
+        $this->assertSame((string)$response->getBody(), $compare);
+    }
 
-    // public function testUpdate()
-    // {
-    //     $action = new \Core\Controllers\DocserverTypeController();
+    public function testUpdate()
+    {
+        $action = new \Core\Controllers\DocserverTypeController();
 
-    //     $query  = 'id=TEST&';
-    //     $query .= 'label_status=TEST AFTER UP';
+        $query  = 'docserver_type_id=TEST&';
+        $query .= 'docserver_type_label=TEST&';
+        $query .= 'enabled=Y&';
+        $query .= 'is_container=N&';
+        $query .= 'is_compressed=N&';
+        $query .= 'is_meta=N&';
+        $query .= 'is_logged=N&';
+        $query .= 'is_signed=N&';
+        $query .= 'fingerprint_mode=SHA512';
 
-    //     $environment = \Slim\Http\Environment::mock(
-    //         [
-    //             'REQUEST_METHOD' => 'PUT',
-    //             'QUERY_STRING'=> $query,
-    //         ]
-    //     );
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'PUT',
+                'QUERY_STRING'=> $query,
+            ]
+        );
         
-    //     $aArgs = [
-    //         'id'=> 'NEW'
-    //     ];
+        $aArgs = [
+            'docserver_type_id'=> 'TEST'
+        ];
 
-    //     $request = \Slim\Http\Request::createFromEnvironment($environment);
-    //     $response = new \Slim\Http\Response();
-    //     $response = $action->update($request, $response, $aArgs);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = new \Slim\Http\Response();
+        $response = $action->update($request, $response, $aArgs);
 
-    //     $compare = '[{"docserverType":[{"id":"TEST","label_status":"TEST AFTER UP",'
-    //         . '"is_system":"Y","is_folder_status":"N","img_filename":null,'
-    //         . '"maarch_module":"apps","can_be_searched":"Y",'
-    //         . '"can_be_modified":"Y"}]}]';
+        $compare = '[{"DocserverType":[{"docserver_type_id":"TEST",'
+            . '"docserver_type_label":"TEST","enabled":"Y",'
+            . '"is_container":"N","container_max_number":0,'
+            . '"is_compressed":"N","compression_mode":null,'
+            . '"is_meta":"N","meta_template":null,'
+            . '"is_logged":"N","log_template":null,'
+            . '"is_signed":"N","fingerprint_mode":"SHA512"}]}]';
         
-    //     $this->assertSame((string)$response->getBody(), $compare);
-    // }
+        $this->assertSame((string)$response->getBody(), $compare);
+    }
 
-    // public function testDelete()
-    // {
-    //     $action = new \Core\Controllers\DocserverTypeController();
+    public function testDelete()
+    {
+        $action = new \Core\Controllers\DocserverTypeController();
 
-    //     $environment = \Slim\Http\Environment::mock(
-    //         [
-    //             'REQUEST_METHOD' => 'DELETE',
-    //         ]
-    //     );
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'DELETE',
+            ]
+        );
 
-    //     $aArgs = [
-    //         'id'=> 'TEST'
-    //     ];
+        $aArgs = [
+            'docserver_type_id'=> 'TEST'
+        ];
 
-    //     $request = \Slim\Http\Request::createFromEnvironment($environment);
-    //     $response = new \Slim\Http\Response();
-    //     $response = $action->delete($request, $response, $aArgs);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = new \Slim\Http\Response();
+        $response = $action->delete($request, $response, $aArgs);
         
-    //     $this->assertSame((string)$response->getBody(), '[{"docserverType":true}]');
-    // }
+        $this->assertSame((string)$response->getBody(), '[{"DocserverType":true}]');
+    }
 }

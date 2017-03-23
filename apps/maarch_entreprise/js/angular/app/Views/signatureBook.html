@@ -33,7 +33,7 @@
         </div>
         <div class="others">
             <span id="consigne">
-                <input type="text" value="{{signatureBook.consigne}}" title="Consigne" readonly="readonly">
+                <input type="text" value="{{signatureBook.consigne}}" title="{{signatureBook.consigne}}" readonly="readonly">
             </span>
         </div>
     </div>
@@ -62,7 +62,7 @@
             </div>
         </div>
         <div *ngIf="showLeftPanel" class="contentLeft" [ngStyle]="{'width': leftContentWidth}" id="contentLeft">
-            <div *ngIf="showLeftPanel" class="hideresListContent" (click)="displayPanel('RESLEFT')">
+            <div *ngIf="showLeftPanel && showRightPanel" class="hideresListContent" (click)="displayPanel('RESLEFT')">
                 <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showResLeftPanel"></i>
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showResLeftPanel"></i>
             </div>
@@ -92,18 +92,18 @@
             <div *ngIf="headerTab == 5" class="contentShow" style="width:98%;">
                 <iframe [src]="linksViewerLink | safeUrl"></iframe>
             </div>
-            <div class="hideRightContent">
-                <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="showLeftPanel"></i>
-                <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="!showLeftPanel"></i>
+            <div class="hideRightContent" (click)="displayPanel('MIDDLE')">
+                <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="showRightPanel"></i>
+                <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="!showRightPanel"></i>
             </div>
         </div>
-        <div class="contentRight" id="contentRight" [ngStyle]="{'width': rightContentWidth}">
-            <div class="hideLeftContent" (click)="displayPanel('LEFT')">
+        <div *ngIf="showRightPanel" class="contentRight" id="contentRight" [ngStyle]="{'width': rightContentWidth}">
+            <div class="hideLeftContent" (click)="displayPanel('LEFT')" id="hideLeftContent">
                 <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showLeftPanel"></i>
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
             </div>
             <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="contentShow">
-                <div *ngIf="showTopRightPanel" class="pjDetails" (click)="displayPanel('TOPRIGHT')">
+                <div *ngIf="showTopRightPanel" class="pjDetails">
                     <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                         <label>Type : </label>
                         <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}} <sup *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" style="color:#16ADEB;">signé(e)</sup></span>

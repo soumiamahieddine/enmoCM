@@ -51,11 +51,12 @@ var SignatureBookComponent = (function () {
         this.showTopLeftPanel = false;
         this.showResLeftPanel = true;
         this.showLeftPanel = true;
+        this.showRightPanel = true;
         this.showAttachmentEditionPanel = false;
         this.loading = false;
         this.loadingSign = false;
-        this.leftContentWidth = "43%";
-        this.rightContentWidth = "43%";
+        this.leftContentWidth = "44%";
+        this.rightContentWidth = "44%";
         this.notesViewerLink = "";
         this.visaViewerLink = "";
         this.histViewerLink = "";
@@ -102,6 +103,7 @@ var SignatureBookComponent = (function () {
                     _this.leftViewerLink = "";
                     _this.rightViewerLink = "";
                     _this.showLeftPanel = true;
+                    _this.showRightPanel = true;
                     _this.showResLeftPanel = true;
                     _this.showTopLeftPanel = false;
                     _this.showTopRightPanel = false;
@@ -110,8 +112,8 @@ var SignatureBookComponent = (function () {
                     _this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + _this.resId + "&collId=letterbox_coll&visaStep=true";
                     _this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + _this.resId + "&coll_id=letterbox_coll&load&size=full";
                     _this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + _this.resId;
-                    _this.leftContentWidth = "43%";
-                    _this.rightContentWidth = "43%";
+                    _this.leftContentWidth = "44%";
+                    _this.rightContentWidth = "44%";
                     if (_this.signatureBook.documents[0]) {
                         _this.leftViewerLink = _this.signatureBook.documents[0].viewerLink;
                     }
@@ -191,21 +193,36 @@ var SignatureBookComponent = (function () {
             this.showResLeftPanel = false;
             if (!this.showLeftPanel) {
                 this.rightContentWidth = "96%";
+                $j("#hideLeftContent").css('background', 'none');
             }
             else {
-                this.rightContentWidth = "47%";
-                this.leftContentWidth = "47%";
+                this.rightContentWidth = "48%";
+                this.leftContentWidth = "48%";
+                $j("#hideLeftContent").css('background', '#CEE9F1');
             }
         }
         else if (panel == "RESLEFT") {
             this.showResLeftPanel = !this.showResLeftPanel;
             if (!this.showResLeftPanel) {
-                this.rightContentWidth = "47%";
-                this.leftContentWidth = "47%";
+                this.rightContentWidth = "48%";
+                this.leftContentWidth = "48%";
             }
             else {
-                this.rightContentWidth = "43%";
-                this.leftContentWidth = "43%";
+                this.rightContentWidth = "44%";
+                this.leftContentWidth = "44%";
+            }
+        }
+        else if (panel == "MIDDLE") {
+            this.showRightPanel = !this.showRightPanel;
+            this.showResLeftPanel = false;
+            if (!this.showRightPanel) {
+                this.leftContentWidth = "96%";
+                $j("#contentLeft").css('border-right', 'none');
+            }
+            else {
+                this.rightContentWidth = "48%";
+                this.leftContentWidth = "48%";
+                $j("#contentLeft").css('border-right', 'solid 1px');
             }
         }
     };
