@@ -124,7 +124,12 @@ if ($mode == 'add') {
     }
     $content .='>'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . ' (' . $_SESSION['user']['Mail'] . ')</option>';
     foreach ($userEntitiesMails as $key => $value) {
-        $content .= '<option value="'.$key.'" selected="selected" >' . $value . '</option>';
+        $primaryentity = explode(',', $key);
+        if($primaryentity[0] == $_SESSION['user']['primaryentity']['id']){
+            $content .= '<option value="'.$key.'" selected="selected" >' . $value . '</option>';
+        }else{
+            $content .= '<option value="'.$key.'" >' . $value . '</option>';
+        }
     }
     $content .='</select>';
     $content .='</td>';

@@ -44,7 +44,7 @@
     background-color: #93D1E4;
     display: table;
     margin: 10px;
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     width: 95%;
     cursor: default;
@@ -57,7 +57,7 @@
 }
 
 .vised{
-  opacity: 0.5;
+  opacity: 1;
   color: green;
   border: solid 2px green;
 }
@@ -123,11 +123,12 @@
 }
 
 #dropZone,#dropZone:active{
-	width: 5%;
+	width: 10px;
 	opacity: 0.5;
 	visibility: hidden;
 	text-align: right;
 	margin: 5px;
+	float: right;
 }
 #dropZone:hover{
 	cursor: grab;
@@ -140,9 +141,13 @@
 }
 .avisUserAction{
 	color : red;
-	text-align: right;
+	text-align: center;
 	width: 5%;
 }
 .avisUserAction i{
 	cursor: pointer;
+}
+
+.chosen-container-single .chosen-default {
+    color: black !important;
 }

@@ -35,15 +35,15 @@ class DocserverController
 
     public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (isset($aArgs['id'])) {
-            $id = $aArgs['id'];
+        if (isset($aArgs['docserver_id'])) {
+            $id = $aArgs['docserver_id'];
             $obj = DocserverModel::getById([
-                'id' => $id
+                'docserver_id' => $id
             ]);
         } else {
             return $response
                 ->withStatus(500)
-                ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
+                ->withJson(['errors' => _DOCSERVER_ID . ' ' . _IS_EMPTY]);
         }
         
         $datas = [
@@ -593,7 +593,7 @@ class DocserverController
 
         $docserverTypeControler = new \Core\Models\DocserverTypeModel();
         $docserverTypeObject = $docserverTypeControler->getById(
-            ['id' => $docserver['docserver_type_id']]
+            ['docserver_type_id' => $docserver['docserver_type_id']]
         );
 
         $docserverTypeObject = $docserverTypeObject[0];

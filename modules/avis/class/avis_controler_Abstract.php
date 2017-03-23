@@ -62,10 +62,10 @@ abstract class avis_controler_Abstract
             $str .= '<option value="" ></option>';
 
             $tab_userentities = $this->getEntityAvis();
+            $tab_users = $this->getUsersAvis();
             //Order by parent entity
             foreach ($tab_userentities as $key => $value) {
                 $str .= '<optgroup label="' . $tab_userentities[$key]['entity_id'] . '">';
-                $tab_users = $this->getUsersAvis($tab_usergroups[$key]['group_id']);
                 foreach ($tab_users as $user) {
                     if ($tab_userentities[$key]['entity_id'] == $user['entity_id']) {
                         $selected = " ";
@@ -163,11 +163,11 @@ abstract class avis_controler_Abstract
                     $str .= '<sup class="avisUserPos nbResZero">'.$i.'</sup>&nbsp;&nbsp;';
                     $str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' . $info_userAvis['lastname'] . ' ' . $info_userAvis['firstname'] . ' <sup class="nbRes">' . $info_userAvis['entity_id'] . '</sup>' . $info_vised;
                     $str .= '</span>';
-                    $str .= '<span class="avisUserConsigne">';
-                    $str .= '<input class="userId" type="hidden" value="' . $info_userAvis['user_id'] . '"/><input class="avisDate" type="hidden" value="' . $info_userAvis['process_date'] . '"/><input' . $disabled . ' class="consigne" type="text" value="' . $info_userAvis['process_comment'] . '"/>';
-                    $str .= '</span>';
                     $str .= '<span class="avisUserAction">';
                     $str .= $del_vis;
+                    $str .= '</span>';
+                    $str .= '<span class="avisUserConsigne">';
+                    $str .= '<input class="userId" type="hidden" value="' . $info_userAvis['user_id'] . '"/><input class="avisDate" type="hidden" value="' . $info_userAvis['process_date'] . '"/><input' . $disabled . ' class="consigne" type="text" value="' . $info_userAvis['process_comment'] . '"/>';
                     $str .= '</span>';
                     $str .= '<span id="dropZone">';
                     $str .= $dropZone;

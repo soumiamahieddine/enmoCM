@@ -27,6 +27,7 @@ use Core\Controllers\DocserverController;
 use Core\Controllers\DocserverToolsController;
 
 require_once 'core/class/class_db_pdo.php';
+require_once 'modules/notes/Models/NotesModel.php';
 
 class ResController
 {
@@ -80,6 +81,11 @@ class ResController
     public function isLock(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         return $response->withJson(ResModel::isLockForCurrentUser(['resId' => $aArgs['resId']]));
+    }
+
+    public function getNotesCountById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        return $response->withJson(\NotesModel::countByResId(['resId' => $aArgs['resId']]));
     }
 
     /**
@@ -280,10 +286,10 @@ class ResController
         $filetmp .= $filename;
         
         $docserver = DocserverModel::getById([
-            'id' => $docserverId
+            'docserver_id' => $docserverId
         ]);
         $docserverType = DocserverTypeModel::getById([
-            'id' => $docserver[0]['docserver_type_id']
+            'docserver_type_id' => $docserver[0]['docserver_type_id']
         ]);
 
         $fingerprint = DocserverToolsController::doFingerprint(

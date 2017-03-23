@@ -119,11 +119,13 @@ $app->post('/attachments', \Attachments\Controllers\AttachmentsController::class
 //basket
 $app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
 $app->get('/signatureBook/{resId}/attachments', \Visa\Controllers\VisaController::class . ':getAttachmentsById');
+$app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\VisaController::class . ':getIncomingMailAndAttachmentsById');
 $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
 
 //resource
 $app->post('/res', \Core\Controllers\ResController::class . ':create');
 $app->get('/res/{resId}/lock', \Core\Controllers\ResController::class . ':isLock');
+$app->get('/res/{resId}/notes/count', \Core\Controllers\ResController::class . ':getNotesCountById');
 
 //extresource
 $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');

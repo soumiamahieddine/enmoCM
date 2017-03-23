@@ -31,14 +31,14 @@ class DocserverModelAbstract extends \Apps_Table_Service
 
     public static function getById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        static::checkRequired($aArgs, ['docserver_id']);
+        static::checkString($aArgs, ['docserver_id']);
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docservers'],
             'where'     => ['docserver_id = ?'],
-            'data'      => [$aArgs['id']]
+            'data'      => [$aArgs['docserver_id']]
         ]);
 
         return $aReturn;
@@ -72,12 +72,12 @@ class DocserverModelAbstract extends \Apps_Table_Service
 
     public static function delete(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        static::checkRequired($aArgs, ['docserver_id']);
+        static::checkString($aArgs, ['docserver_id']);
 
         $aReturn = static::deleteFrom([
                 'table' => 'docservers',
-                'where' => ['id = ?'],
+                'where' => ['docserver_id = ?'],
                 'data'  => [$aArgs['id']]
             ]);
 
@@ -97,22 +97,6 @@ class DocserverModelAbstract extends \Apps_Table_Service
             'order_by'  => ['priority_number'],
             'limit'     => 1,
         ]);
-
-        return $aReturn;
-    }
-
-    public static function setSize(array $aArgs = [])
-    {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
-
-        $where['id'] = $aArgs['id'];
-
-        $aReturn = static::updateTable(
-            $aArgs,
-            'docservers',
-            $where
-        );
 
         return $aReturn;
     }
