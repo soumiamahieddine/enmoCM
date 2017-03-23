@@ -2360,6 +2360,10 @@ class core_tools extends functions
         }
         $linkToApps = false;
             $arr = explode('/', $_SERVER['SCRIPT_NAME']);
+        if($key = array_search('rest',$arr)){
+            unset($arr[$key]);
+        }
+        $arr = array_values($arr);
         for($cptArr=0;$cptArr<count($arr);$cptArr++) {
             if($arr[$cptArr] == "apps") {
                 $linkToApps = true;
