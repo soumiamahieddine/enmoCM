@@ -186,8 +186,8 @@
                     <span class="fa-stack fa-lg">
                         <i class="fa fa-file-o fa-stack-2x"></i><i style="font-weight:bold;letter-spacing: -1px;">{{attachment.icon}}</i>
                     </span>
-                    <i *ngIf="attachment.sign && attachment.status == 'SIGN'" title="Le document a été signé" style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle"></i>
-                    <i *ngIf="attachment.sign && attachment.status != 'SIGN'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 2px;right: 2px;" class="fa fa-circle-o"></i>
+                    <i *ngIf="attachment.sign && attachment.status == 'SIGN'" title="Le document a été signé" style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle"></i>
+                    <i *ngIf="attachment.sign && attachment.status != 'SIGN'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle-o"></i>
                 </div>
             </div>
             <div *ngIf="signatureBook.attachments[rightSelectedThumbnail]" style="bottom: 0px;position: absolute;left: 5px;">

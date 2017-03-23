@@ -31,14 +31,14 @@ class DocserverTypeModelAbstract extends \Apps_Table_Service
 
     public static function getById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        static::checkRequired($aArgs, ['docserver_type_id']);
+        static::checkString($aArgs, ['docserver_type_id']);
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docserver_types'],
             'where'     => ['docserver_type_id = ?'],
-            'data'      => [$aArgs['id']]
+            'data'      => [$aArgs['docserver_type_id']]
         ]);
 
         return $aReturn;
@@ -46,8 +46,8 @@ class DocserverTypeModelAbstract extends \Apps_Table_Service
 
     public static function create(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        static::checkRequired($aArgs, ['docserver_type_id']);
+        static::checkString($aArgs, ['docserver_type_id']);
 
         $aReturn = static::insertInto($aArgs, 'docserver_types');
 
@@ -56,10 +56,10 @@ class DocserverTypeModelAbstract extends \Apps_Table_Service
 
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        static::checkRequired($aArgs, ['docserver_type_id']);
+        static::checkString($aArgs, ['docserver_type_id']);
 
-        $where['id'] = $aArgs['id'];
+        $where['docserver_type_id'] = $aArgs['docserver_type_id'];
 
         $aReturn = static::updateTable(
             $aArgs,
@@ -72,13 +72,13 @@ class DocserverTypeModelAbstract extends \Apps_Table_Service
 
     public static function delete(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        static::checkRequired($aArgs, ['docserver_type_id']);
+        static::checkString($aArgs, ['docserver_type_id']);
 
         $aReturn = static::deleteFrom([
                 'table' => 'docserver_types',
-                'where' => ['id = ?'],
-                'data'  => [$aArgs['id']]
+                'where' => ['docserver_type_id = ?'],
+                'data'  => [$aArgs['docserver_type_id']]
             ]);
 
         return $aReturn;

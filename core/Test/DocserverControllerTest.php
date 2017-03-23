@@ -13,49 +13,49 @@ require_once __DIR__.'/define.php';
 
 class DocserverControllerTest extends \PHPUnit_Framework_TestCase
 {
-    // public function testGetList()
-    // {
-    //     $action = new \Core\Controllers\DocserverController();
+    public function testGetList()
+    {
+        $action = new \Core\Controllers\DocserverController();
 
-    //     $environment = \Slim\Http\Environment::mock(
-    //         [
-    //             'REQUEST_METHOD' => 'GET',
-    //             //'REQUEST_URI' => '/status',
-    //             //'QUERY_STRING'=>'foo=bar',
-    //         ]
-    //     );
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'GET',
+                //'REQUEST_URI' => '/status',
+                //'QUERY_STRING'=>'foo=bar',
+            ]
+        );
 
-    //     $request = \Slim\Http\Request::createFromEnvironment($environment);
-    //     $response = new \Slim\Http\Response();
-    //     $response = $action->getList($request, $response, []);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = new \Slim\Http\Response();
+        $response = $action->getList($request, $response, []);
 
-    //     $this->assertNotNull((string)$response->getBody());
-    // }
+        $this->assertNotNull((string)$response->getBody());
+    }
 
-    // public function testGetById()
-    // {
-    //     $action = new \Core\Controllers\DocserverController();
+    public function testGetById()
+    {
+        $action = new \Core\Controllers\DocserverController();
 
-    //     $environment = \Slim\Http\Environment::mock(
-    //         [
-    //             'REQUEST_METHOD' => 'GET',
-    //         ]
-    //     );
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'GET',
+            ]
+        );
 
-    //     $aArgs = [
-    //         'id'=> 'NEW'
-    //     ];
+        $aArgs = [
+            'docserver_id'=> 'NEW'
+        ];
 
-    //     $request = \Slim\Http\Request::createFromEnvironment($environment);
-    //     $response = new \Slim\Http\Response();
-    //     $response = $action->getById($request, $response, $aArgs);
-    //     $compare = '[{"status":[{"id":"NEW","label_status":"Nouveau",'
-    //         . '"is_system":"Y","is_folder_status":"N","img_filename":'
-    //         . '"fm-letter-status-new","maarch_module":"apps",'
-    //         . '"can_be_searched":"Y","can_be_modified":"Y"}]}]';
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = new \Slim\Http\Response();
+        $response = $action->getById($request, $response, $aArgs);
+        $compare = '[{"status":[{"id":"NEW","label_status":"Nouveau",'
+            . '"is_system":"Y","is_folder_status":"N","img_filename":'
+            . '"fm-letter-status-new","maarch_module":"apps",'
+            . '"can_be_searched":"Y","can_be_modified":"Y"}]}]';
 
-    //     $this->assertSame((string)$response->getBody(), $compare);
-    // }
+        $this->assertSame((string)$response->getBody(), $compare);
+    }
 
     // public function testCreate()
     // {
