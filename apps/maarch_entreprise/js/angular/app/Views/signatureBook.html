@@ -33,7 +33,7 @@
         </div>
         <div class="others">
             <span id="consigne">
-                <input type="text" value="{{signatureBook.consigne}}" title="Consigne" readonly="readonly">
+                <input type="text" value="{{signatureBook.consigne}}" title="{{signatureBook.consigne}}" readonly="readonly">
             </span>
         </div>
     </div>
@@ -99,7 +99,7 @@
         </div>
         <div class="contentRight" id="contentRight" [ngStyle]="{'width': rightContentWidth}">
             <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="contentShow">
-                <div *ngIf="showTopRightPanel" class="pjDetails" (click)="displayPanel('TOPRIGHT')">
+                <div *ngIf="showTopRightPanel" class="pjDetails">
                     <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                         <label>Type : </label>
                         <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}} <sup *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" style="color:#16ADEB;">signé(e)</sup></span>
