@@ -125,7 +125,7 @@ $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . 
 //resource
 $app->post('/res', \Core\Controllers\ResController::class . ':create');
 $app->get('/res/{resId}/lock', \Core\Controllers\ResController::class . ':isLock');
-$app->get('/res/{resId}/notes/count', \Core\Controllers\ResController::class . ':getNotesCountById');
+$app->get('/res/{resId}/notes/count', \Core\Controllers\ResController::class . ':getNotesCountForCurrentUserById');
 
 //extresource
 $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');

@@ -121,7 +121,7 @@ class VisaController
         //		$datas['histories'] 	= $history;
         $datas['resList']       = $resList;
         $datas['resListIndex']  = $resListIndex;
-        $datas['nbNotes']       = \NotesModel::countByResId(['resId' => $resId]);
+        $datas['nbNotes']       = \NotesModel::countForCurrentUserByResId(['resId' => $resId]);
         $datas['signature']     = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
         $datas['consigne']      = \UsersModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = \VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);

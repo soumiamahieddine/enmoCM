@@ -83,9 +83,9 @@ class ResController
         return $response->withJson(ResModel::isLockForCurrentUser(['resId' => $aArgs['resId']]));
     }
 
-    public function getNotesCountById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getNotesCountForCurrentUserById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        return $response->withJson(\NotesModel::countByResId(['resId' => $aArgs['resId']]));
+        return $response->withJson(\NotesModel::countForCurrentUserByResId(['resId' => $aArgs['resId']]));
     }
 
     /**
