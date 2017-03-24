@@ -126,6 +126,9 @@ if (!defined("_VISA_USERS"))
 if (!defined("_TMP_SIGNED_FILE_FAILED"))
     define("_TMP_SIGNED_FILE_FAILED", "Failure on document generation with signature");
 
+if (!defined("NO_PLACE_SIGNATURE"))
+    define("NO_PLACE_SIGNATURE", "No place for signature");
+
 if (!defined("_ENCRYPTED"))
     define("_ENCRYPTED", "Encoded");
 
