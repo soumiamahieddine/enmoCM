@@ -103,6 +103,22 @@ class ArchiveTransfer {
 		return $xml;
 	}
 
+	public function deleteMessage($listResId)
+	{
+		if (!$listResId) {
+			return false;
+		}
+
+		foreach ($listResId as $resId) {
+			$unitIdentifiers = $this->getUnitIdentifier($resId);
+			foreach ($unitIdentifiers as $unitIdentifier) {
+				$this->deleteSeda($unitIdentifier->message_id);
+				$this->deleteUnitIdentifier($unitIdentifier->message_id);
+			}
+		}
+
+		return true;
+	}
 	private function sendAttachment($messageObject)
 	{
 		$messageId = $messageObject->messageIdentifier->value;
@@ -356,6 +372,27 @@ class ArchiveTransfer {
 
 		return $custodialHistoryItem;
 	}
+	///////////////////
+	/// Requete SQL ///
+	///////////////////
+
+	private function getUnitIdentifier($resId)
+	{
+		$queryParams = [];
+
+		$queryParams[] = $resId;
+
+		$query = "SELECT * FROM unit_identifier WHERE res_id = ?";
+
+		$smtp = $this->db->query($query,$queryParams);
+		
+		$unitIdentifier = [];
+		while ($res = $smtp->fetchObject()) {
+			$unitIdentifier[] = $res;
+		}
+
+		return $unitIdentifier;
+	}
 
 	private function getCourrier($resId) 
 	{
@@ -555,6 +592,38 @@ class ArchiveTransfer {
 			return false;
 		}
 		
+		return true;
+	}
+
+	private function deleteSeda($messageId)
+	{
+		$queryParams = [];
+
+		$queryParams[] = $messageId;
+		try {
+			$query = "DELETE FROM seda WHERE message_id = ?";
+
+			$smtp = $this->db->query($query,$queryParams);
+		} catch (Exception $e) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private function deleteUnitIdentifier($messageId)
+	{
+		$queryParams = [];
+
+		$queryParams[] = $messageId;
+		try {
+			$query = "DELETE FROM unit_identifier WHERE message_id = ?";
+
+			$smtp = $this->db->query($query,$queryParams);
+		} catch (Exception $e) {
+			return false;
+		}
+
 		return true;
 	}
 }

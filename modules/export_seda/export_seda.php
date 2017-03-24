@@ -31,6 +31,9 @@ require_once __DIR__.'/ArchiveTransfer.php';
 function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode) {
     $archiveTransfer = new ArchiveTransfer();
 
+    $result = $archiveTransfer->deleteMessage($values);
+
+    
     $result = $archiveTransfer->receive($values);
     
     $db = new Database();
