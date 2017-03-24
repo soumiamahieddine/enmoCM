@@ -61,7 +61,9 @@ class Extract
 
 	public function download($full_path) {
 		$file_name = basename($full_path);
-		 
+		
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
 		header('Content-Tranfer-Encoding: fichier');
 		header('Content-Length: '.filesize($full_path));
 		header('Content-Type: application/force-download');

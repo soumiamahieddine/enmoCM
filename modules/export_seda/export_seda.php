@@ -33,7 +33,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $result = $archiveTransfer->deleteMessage($values);
 
-    
     $result = $archiveTransfer->receive($values);
     
     $db = new Database();
