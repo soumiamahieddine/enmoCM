@@ -419,6 +419,9 @@ var SignatureBookComponent = (function () {
             unlockDocument(this.resId);
             valid_action_form('empty', 'index.php?display=true&page=manage_action&module=core', this.signatureBook.currentAction.id, this.resId, 'res_letterbox', 'null', 'letterbox_coll', 'page', false, [$j("#signatureBookActions option:selected")[0].value]);
         }
+        else {
+            alert("Aucune action choisie");
+        }
     };
     SignatureBookComponent = __decorate([
         core_1.Component({

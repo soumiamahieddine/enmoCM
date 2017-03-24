@@ -438,6 +438,8 @@ export class SignatureBookComponent implements OnInit {
                 false,
                 [$j("#signatureBookActions option:selected")[0].value]
             );
+        } else {
+            alert("Aucune action choisie");
         }
     }
 }
