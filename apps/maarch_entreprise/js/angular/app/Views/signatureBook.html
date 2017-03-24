@@ -120,15 +120,15 @@
                     </div>
                     <div>
                         <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail].updated_by" title="{{signatureBook.attachments[rightSelectedThumbnail].typist}}" class="infoPj">
-                            <label>Créé par: </label>
+                            <label>Créé par : </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
                         </div>
                         <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].updated_by" title="Modifié par : {{signatureBook.attachments[rightSelectedThumbnail].updated_by}} le {{signatureBook.attachments[rightSelectedThumbnail].doc_date | date:'dd/MM/y'}}" class="infoPj">
-                            <label><i>*</i> Créé par: </label>
+                            <label><i>*</i> Créé par : </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
                         </div>
                         <div class="infoPj">
-                            <label>Créé le: </label>
+                            <label>Créé le : </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].creation_date | date:'dd/MM/y à HH:mm'}}</span>
                         </div>
                         <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].validation_date | date:'dd/MM/y'}}">
@@ -214,10 +214,10 @@
     <span id="obsVersionTooltip">
         <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].relation > 1">
             <div *ngFor="let version of signatureBook.attachments[rightSelectedThumbnail].obsAttachments">
-                <span>Version: </span>
-                <span>{{version.relation}}</span>
-                <span>Objet: </span>
-                <span>{{version.title}}</span>
+                <span>Version : </span>
+                <span>{{version.relation}}</span>&nbsp;
+                <span>Objet : </span>
+                <span>{{version.title}}</span>&nbsp;
                 <a style="color:#16ADEB" title="Télécharger la pièce jointe" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{version.resId}}" target="_blank">
                     <i class="fa fa-download fa-2x"></i>
                 </a>
