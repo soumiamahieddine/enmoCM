@@ -105,9 +105,9 @@ function updateVisaWorkflow(resId) {
        },
        success : function(response){
             if (response.status == 0) {
-                $('divInfoVisa').innerHTML = 'Mise à jour du circuit effectuée';
-                $('divInfoVisa').style.display = 'table-cell';
-                Element.hide.delay(5, 'divInfoVisa');
+                parent.$('main_info').innerHTML = 'Mise à jour du circuit effectuée';
+                parent.$('main_info').style.display = 'table-cell';
+                parent.Element.hide.delay(5, 'main_info');
                 eval(response.exec_js);
             } else if (response.status != 1) {
                 alert(response.error_txt)
