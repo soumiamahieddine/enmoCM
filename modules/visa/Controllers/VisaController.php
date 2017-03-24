@@ -203,7 +203,7 @@ class VisaController
         $incomingMailAttachments = \ResModel::getAvailableLinkedAttachmentsIn([
             'resIdMaster' => $resId,
             'in'          => ['incoming_mail_attachment'],
-            'select'      => ['res_id', 'title']
+            'select'      => ['res_id', 'title', 'format']
         ]);
 
         $documents = [
@@ -217,7 +217,9 @@ class VisaController
         ];
         foreach ($incomingMailAttachments as $value) {
             $documents[] = [
+                'res_id'        => $value['res_id'],
                 'title'         => $value['title'],
+                'format'        => $value['format'],
                 'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$value['res_id']}",
                 'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$value['res_id']}&coll_id=attachments_coll&display=true&advanced=true"
             ];

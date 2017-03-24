@@ -396,11 +396,13 @@ export class SignatureBookComponent implements OnInit {
     }
 
     backToBasket() {
+        unlockDocument(this.resId);
         location.hash = "";
         location.reload();
     }
 
     backToDetails() {
+        unlockDocument(this.resId);
         location.hash = "";
         location.search = "?page=details&dir=indexing_searching&id=" + this.resId;
     }
