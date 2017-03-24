@@ -124,6 +124,10 @@ export class SignatureBookComponent implements OnInit {
                             if (this.signatureBook.attachments[0]) {
                                 this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
                             }
+
+                            if (this.loading) {
+                                this.displayPanel("RESLEFT");
+                            }
                             this.loading = false;
 
                             setTimeout(() => {
@@ -131,6 +135,9 @@ export class SignatureBookComponent implements OnInit {
                                 $j("#rightPanelContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
                                 $j("#resListContent").scrollTop(0);
                                 $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
+                                $j("#obsVersion").tooltipster({
+                                    interactive: true
+                                });
                             }, 0);
                         });
                 });

@@ -427,11 +427,15 @@
     border-radius: 5px;
     padding:10px;
     height:100px;
+}
+
+.pjSign,.pjCreate{
     cursor: pointer;
 }
 
 .pjDetails label{
-   font-weight: bold;
+    font-weight: bold;
+    cursor: inherit;
 }
 
 .pjDetailsMore{

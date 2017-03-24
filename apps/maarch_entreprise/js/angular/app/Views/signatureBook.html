@@ -3,7 +3,9 @@
 </div>
 <div *ngIf="!loading" class='visaContent'>
     <div class="titleSignatureBook">
-        <div id="closeSignatureBook"><i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i></div>
+        <div id="closeSignatureBook">
+            <i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i>
+        </div>
         <div id="tabSignatureBook">
             <div title="Courrier" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" style="border-left: solid 1px black" (click)="changeSignatureBookLeftContent(1)">
                 <i class="fa fa-file-text-o fa-2x"></i>
@@ -31,7 +33,7 @@
             </select>
             <input name="send" id="send" value="Valider" class="button" type="button" (click)="validForm()">
         </div>
-        <div class="others">
+        <div class="others" *ngIf="signatureBook.consigne != ''">
             <span id="consigne">
                 <input type="text" value="{{signatureBook.consigne}}" title="{{signatureBook.consigne}}" readonly="readonly">
             </span>
@@ -103,7 +105,7 @@
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
             </div>
             <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="contentShow">
-                <div *ngIf="showTopRightPanel" class="pjDetails">
+                <div [ngStyle]="{'display': showTopRightPanel ? 'block' : 'none'}" class="pjDetails">
                     <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                         <label>Type : </label>
                         <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}} <sup *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" style="color:#16ADEB;">signé(e)</sup></span>
@@ -140,10 +142,11 @@
                         <div class="infoPj">
                             <label>Version : </label>
                             <span>{{signatureBook.attachments[rightSelectedThumbnail].relation}}</span>
+                            <i [ngStyle]="{'display': signatureBook.attachments[rightSelectedThumbnail].relation > 1 ? '' : 'none'}" style="color:#16ADEB" class="fa fa-chevron-circle-up" id="obsVersion" data-tooltip-content="#obsVersionTooltip" aria-hidden="true"></i>
                         </div>
                         <div class="infoPj">
                             <label>Format : </label>
-                            <span style="color:#16ADEB;font-style: italic;">{{signatureBook.attachments[rightSelectedThumbnail].format.toUpperCase()}}</span>
+                            <span>{{signatureBook.attachments[rightSelectedThumbnail].format.toUpperCase()}}</span>
                         </div>
                     </div>
                 </div>
@@ -206,4 +209,19 @@
             </div>
         </div>
     </div>
+</div>
+<div class="tooltip_templates" style="display: none">
+    <span id="obsVersionTooltip">
+        <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].relation > 1">
+            <div *ngFor="let version of signatureBook.attachments[rightSelectedThumbnail].obsAttachments">
+                <span>Version: </span>
+                <span>{{version.relation}}</span>
+                <span>Objet: </span>
+                <span>{{version.title}}</span>
+                <a style="color:#16ADEB" title="Télécharger la pièce jointe" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{version.resId}}" target="_blank">
+                    <i class="fa fa-download fa-2x"></i>
+                </a>
+            </div>
+        </div>
+    </span>
 </div>
