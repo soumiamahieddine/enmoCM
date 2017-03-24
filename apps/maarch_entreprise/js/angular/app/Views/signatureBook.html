@@ -75,7 +75,7 @@
                                  class="leftPanelThumbnails" [ngClass]="{'panelSelectedThumbnail': i == leftSelectedThumbnail}"/>
                     </div>
                 </div>
-                <div *ngIf="signatureBook.documents.length - 1 > 0" class="pjDetailsMore" (click)="displayPanel('TOPLEFT')" title="{{signatureBook.documents.length - 1}} pièce(s) complémentaire(s)">
+                <div *ngIf="signatureBook.documents.length - 1 > 0" class="pjDetailsMore" (click)="displayPanel('TOPLEFT')" title="{{signatureBook.documents.length - 1}} pièce(s) complémentaire(s)" style="left:25px;">
                     <i *ngIf="!showTopLeftPanel" class="fa fa-envelope-square fa-2x" aria-hidden="true"></i>
                     <sup *ngIf="!showTopLeftPanel" class="nbRes" style="position: absolute;right: 6px;top: 5px;">{{signatureBook.documents.length - 1}}</sup>
                     <i *ngIf="showTopLeftPanel" class="fa fa-chevron-up" aria-hidden="true"></i>

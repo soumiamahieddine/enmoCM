@@ -442,12 +442,13 @@
     z-index: 1;
     position: absolute;
     left: 15px;
+    top:15px;
     text-align: center;
     cursor: pointer;
     background: #009DC5;
     color: white;
     padding:10px;
-    border-radius: 25px;
+    /*border-radius: 25px;*/
     -moz-box-shadow: 0px 0px 10px 0px #656565;
     -webkit-box-shadow: 0px 0px 10px 0px #656565;
     -o-box-shadow: 0px 0px 10px 0px #656565;
@@ -651,10 +652,6 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 .resListContentFrameSelected{
     background-color: #FDD16C;
     
-}
-
-.panelRightAddPj{
-    display: block;
 }
 
 .panelRightContent .item:hover{
@@ -867,7 +864,8 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     color: initial;
 }
 .panelRightAddPj{
-    padding:5px;
+    display: block;
+    padding:10px;
     margin: auto;
     margin-bottom: 10px; 
     font-size: 10px;
@@ -883,8 +881,12 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     -o-box-shadow: 0px 0px 10px 0px #656565;
     box-shadow: 0px 0px 10px 0px #656565;
     filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);
-    padding-left:5px;
 }
+
+.panelRightAddPj i{
+    margin-left: -5px;
+}
+
 .visaPjUp{
     margin: auto;
     margin-bottom: 10px; 
