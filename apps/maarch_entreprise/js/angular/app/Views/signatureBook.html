@@ -100,7 +100,7 @@
             </div>
         </div>
         <div *ngIf="showRightPanel" class="contentRight" id="contentRight" [ngStyle]="{'width': rightContentWidth}">
-            <div class="hideLeftContent" (click)="displayPanel('LEFT')" id="hideLeftContent">
+            <div class="hideLeftContent" (click)="displayPanel('LEFT')" id="hideLeftContent" [ngStyle]="{'margin-left': showLeftPanel ? '-13px' : '-2px'}">
                 <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showLeftPanel"></i>
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
             </div>
