@@ -36,6 +36,10 @@
         <default_nature>simple_mail</default_nature>
     </mail_natures>
     <attachment_types>
+        <!-- with_chrono : generate chrono if chosen -->
+        <!-- attach_in_mail : appear in sendmail -->
+        <!-- icon : choose acronym for attachment (signature book) -->
+        <!-- sign : if attachment can be signed (signature book) -->
         <type show="true" with_chrono="true" attach_in_mail="true" icon="R" sign="true">
             <id>response_project</id>
             <label>_RESPONSE_PROJECT</label>
@@ -46,37 +50,37 @@
             <label>Transmission</label>
             <process_mode></process_mode>
         </type>
-		<type show="false" with_chrono="true" attach_in_mail="true" icon="fa-certificate" sign="false">
+		<type show="false" with_chrono="true" attach_in_mail="true" icon="" sign="false">
             <id>signed_response</id>
             <label>_SIGNED_RESPONSE</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="true" icon="fa-certificate" sign="false">
+        <type show="true" with_chrono="true" icon="DS" sign="true">
             <id>outgoing_mail_signed</id>
             <label>_OUTGOING_MAIL_SIGNED</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="false" icon="" sign="false">
+        <type show="true" with_chrono="false" icon="PJ" sign="false">
             <id>simple_attachment</id>
             <label>_A_PJ</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="false" icon="fa-envelope-o" sign="false">
+        <type show="true" with_chrono="false" icon="" sign="false">
             <id>incoming_mail_attachment</id>
             <label>_INCOMING_PJ</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="true" get_chrono="response_project" icon="" sign="false">
+        <type show="true" with_chrono="true" get_chrono="response_project" icon="BE" sign="true">
             <id>waybill</id>
             <label>_WAYBILL</label>
             <process_mode></process_mode>
         </type>
-	    <type show="false" with_chrono="true" icon="fa-road" sign="false">
+	    <type show="false" with_chrono="true" icon="FC" sign="false">
             <id>routing</id>
             <label>_ROUTING</label>
             <process_mode></process_mode>
         </type>
-		<type show="true" with_chrono="true" icon="fa-envelope-o" sign="false">
+		<type show="true" with_chrono="true" icon="DS" sign="true">
             <id>outgoing_mail</id>
             <label>_OUTGOING_MAIL</label>
             <process_mode></process_mode>
@@ -91,12 +95,12 @@
             <label>_PRINT_FOLDER</label>
             <process_mode></process_mode>
         </type>
-        <type show="true" with_chrono="false" icon="" sign="false">
+        <type show="true" with_chrono="false" icon="VA" sign="false">
             <id>sva</id>
             <label>_SVA</label>
             <process_mode>SVA</process_mode>
         </type>
-        <type show="true" with_chrono="false" icon="" sign="false">
+        <type show="true" with_chrono="false" icon="VR" sign="false">
             <id>svr</id>
             <label>_SVR</label>
             <process_mode>SVR</process_mode>
@@ -118,10 +122,10 @@
     </process_modes>
     <priorities>
         <!-- Tag working_days "true" = Jours ouvrés // "false" = Jours calendaires -->
-        <priority color="red" with_delay="4" working_days="true">Très urgent</priority> <!-- 0 -->
-        <priority color="orange" with_delay="8" working_days="true">Urgent</priority> <!-- 1 -->
-        <priority color="" with_delay="false" working_days="true">Normal</priority> <!-- 2 -->
-        <priority color="orange" with_delay="false" working_days="true">SVA/SVR</priority> <!-- 3 -->
+        <priority color="#FF0000" with_delay="4" working_days="true">Très urgent</priority> <!-- 0 -->
+        <priority color="#FFA500" with_delay="8" working_days="true">Urgent</priority> <!-- 1 -->
+        <priority color="#009DC5" with_delay="false" working_days="true">Normal</priority> <!-- 2 -->
+        <priority color="#FFA500" with_delay="false" working_days="true">SVA/SVR</priority> <!-- 3 -->
         <default_priority>2</default_priority>
     </priorities>
     <contact_check>

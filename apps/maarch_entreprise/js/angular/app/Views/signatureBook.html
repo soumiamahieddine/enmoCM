@@ -6,7 +6,7 @@
         <div id="closeSignatureBook"><i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i></div>
         <div id="tabSignatureBook">
             <div title="Courrier" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" style="border-left: solid 1px black" (click)="changeSignatureBookLeftContent(1)">
-                <i class="fa fa-dashboard fa-2x"></i>
+                <i class="fa fa-file-text-o fa-2x"></i>
             </div>
             <div title="Note(s)" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
                 <i class="fa fa-pencil fa-2x">
@@ -192,7 +192,7 @@
             </div>
             <div *ngIf="signatureBook.attachments[rightSelectedThumbnail]" style="bottom: 0px;position: absolute;left: 5px;">
                 
-                <div class="item panelRightAddPj" (click)="addAttachmentIframe()" style="padding-left:5px;" title="Créer une pièce jointe">
+                <div class="panelRightAddPj" (click)="addAttachmentIframe()" title="Créer une pièce jointe">
                     <i class="fa fa-paperclip fa-2x" ></i>
                     <i class="fa fa-plus" style="position:absolute;"></i>
                 </div>
