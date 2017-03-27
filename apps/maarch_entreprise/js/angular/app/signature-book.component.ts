@@ -171,6 +171,8 @@ export class SignatureBookComponent implements OnInit {
         }
 
         if (idToGo >= 0) {
+            $j("#send").removeAttr("disabled");
+            $j("#send").css("opacity", "1");
             this.zone.run(() => this.changeLocation(idToGo, "action"));
         } else {
             this.zone.run(() => this.backToBasket());

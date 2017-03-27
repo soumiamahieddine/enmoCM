@@ -163,6 +163,8 @@ var SignatureBookComponent = (function () {
             }
         }
         if (idToGo >= 0) {
+            $j("#send").removeAttr("disabled");
+            $j("#send").css("opacity", "1");
             this.zone.run(function () { return _this.changeLocation(idToGo, "action"); });
         }
         else {
