@@ -1333,7 +1333,7 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
 			Element.setStyle(show_multi_contact, {display : 'none'});
 			Element.setStyle(add_multi_contact, {display : 'none'});
             Element.setStyle(contact_id_tr, {display : 'table-row'});
-            if($j('#info_contact_div').length > 0)
+            if($j('#create_contact_div').length > 0)
             {
                 Element.setStyle('create_contact_div', {display : 'none'});
             }
