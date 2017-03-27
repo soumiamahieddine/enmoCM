@@ -1717,12 +1717,16 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                         var cur_url = window.top.location.href;
                         if (cur_url.indexOf("&directLinkToAction") != -1) {
                             if (typeof window['angularSignatureBookComponent'] != "undefined") {
+                                $j("#send").removeAttr("disabled");
+                                $j("#send").css("opacity", "1");
                                 window.angularSignatureBookComponent.componentAfterAction();
                             } else {
                                 window.top.location = cur_url.replace("&directLinkToAction", "");
                             }
                         } else {
                             if (typeof window['angularSignatureBookComponent'] != "undefined") {
+                                $j("#send").removeAttr("disabled");
+                                $j("#send").css("opacity", "1");
                                 window.angularSignatureBookComponent.componentAfterAction();
                             } else {
                                 window.top.location.hash = "";
