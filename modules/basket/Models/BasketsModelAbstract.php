@@ -14,6 +14,7 @@
 */
 
 require_once 'apps/maarch_entreprise/services/Table.php';
+require_once 'core/class/SecurityControler.php';
 
 class BasketsModelAbstract extends Apps_Table_Service {
 
@@ -35,7 +36,8 @@ class BasketsModelAbstract extends Apps_Table_Service {
             return [];
         }
 
-        $where = str_replace('@user', "'" .$_SESSION['user']['UserId']. "'", $aBasket[0]['basket_clause']);
+        $sec = new SecurityControler();
+        $where = $sec->process_security_where_clause($aBasket[0]['basket_clause'], $_SESSION['user']['UserId'], false);
 
         $aResList = static::select(
             [
