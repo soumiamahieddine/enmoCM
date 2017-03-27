@@ -80,8 +80,8 @@
                     <sup *ngIf="!showTopLeftPanel" class="nbRes" style="position: absolute;right: 6px;top: 5px;">{{signatureBook.documents.length - 1}}</sup>
                     <i *ngIf="showTopLeftPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
-                <iframe *ngIf="leftViewerLink != '' && (signatureBook.documents[leftSelectedThumbnail].format == 'pdf' || leftSelectedThumbnail == 0)" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '84%' : '99%'}"></iframe>
-                <div *ngIf="signatureBook.documents[leftSelectedThumbnail].format != 'pdf' && leftSelectedThumbnail > 0" [ngStyle]="{'height': showTopLeftPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
+                <iframe *ngIf="leftViewerLink != '' && (leftSelectedThumbnail == 0 || signatureBook.documents[leftSelectedThumbnail].format == 'pdf' || signatureBook.documents[leftSelectedThumbnail].isConverted)" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '84%' : '99%'}"></iframe>
+                <div *ngIf="leftSelectedThumbnail > 0 && signatureBook.documents[leftSelectedThumbnail].format != 'pdf' && !signatureBook.documents[leftSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopLeftPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
                     <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF de ce format n'a pas été trouvée.</sub></div>
                     <div class="visaPjView">
                         <a title="Télécharger la pièce jointe" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.documents[leftSelectedThumbnail].res_id}}" target="_blank">

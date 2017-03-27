@@ -202,8 +202,8 @@ class VisaController
 
         $incomingMailAttachments = \ResModel::getAvailableLinkedAttachmentsIn([
             'resIdMaster' => $resId,
-            'in'          => ['incoming_mail_attachment'],
-            'select'      => ['res_id', 'title', 'format']
+            'in'          => ['incoming_mail_attachment', 'converted_pdf'],
+            'select'      => ['res_id', 'res_id_version', 'title', 'format', 'attachment_type', 'path', 'filename']
         ]);
 
         $documents = [
@@ -216,11 +216,33 @@ class VisaController
             ]
         ];
         foreach ($incomingMailAttachments as $value) {
+            if ($value['attachment_type'] == 'converted_pdf') {
+                continue;
+            }
+
+            $realId = 0;
+            if ($value['res_id'] == 0) {
+                $realId = $value['res_id_version'];
+            } elseif ($value['res_id_version'] == 0) {
+                $realId = $value['res_id'];
+            }
+
+            $viewerId = $realId;
+            $pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
+            $isConverted = false;
+            foreach ($incomingMailAttachments as $tmpKey => $tmpValue) {
+                if ($tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
+                    $viewerId = $tmpValue['res_id'];
+                    $isConverted = true;
+                }
+            }
+
             $documents[] = [
                 'res_id'        => $value['res_id'],
                 'title'         => $value['title'],
                 'format'        => $value['format'],
-                'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$value['res_id']}",
+                'isConverted'   => $isConverted,
+                'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$viewerId}",
                 'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$value['res_id']}&coll_id=attachments_coll&display=true&advanced=true"
             ];
         }
