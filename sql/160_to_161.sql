@@ -171,3 +171,5 @@ VALUES ('FASTHD_ATTACH', 'FASTHD', 'Fast internal disc bay for attachments', 'N'
 
 ALTER TABLE basket_persistent_mode ALTER COLUMN user_id TYPE character varying(128);
 ALTER TABLE res_mark_as_read ALTER COLUMN user_id TYPE character varying(128);
+
+UPDATE parameters SET param_value_int = '170' WHERE id = 'database_version';
