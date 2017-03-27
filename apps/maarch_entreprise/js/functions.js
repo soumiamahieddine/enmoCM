@@ -616,6 +616,10 @@ function moveclick_ext( id_list1, id_list2)
 {
     var list1 = $(id_list1);
     var list2 = $(id_list2);
+
+    if(list1.options.length == 1 && list1.options[0].value == ''){
+        return;
+    }
     moveclick(list1,list2);
 }
 
@@ -640,6 +644,10 @@ function Move_ext( id_list1, id_list2)
 {
     var list1 = $(id_list1);
     var list2 = $(id_list2);
+
+    if(list1.options.length == 1 && list1.options[0].value == ''){
+        return;
+    }
     Move(list1,list2);
 }
 /*********************************************************/
