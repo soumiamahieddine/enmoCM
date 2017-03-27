@@ -2247,15 +2247,27 @@ function valid_report_by_period(url)
                                 ]
 
                             }
+
+                            if(url.indexOf("entity_response_rate_stat") > 0){
+                                var optionBarChart = {
+                                    responsive : true,
+                                    scaleShowVerticalLines: false,
+                                    scaleOverride : true,
+                                    scaleSteps : 10,
+                                    scaleStepWidth : 10,
+                                    scaleStartValue : 0 
+                                }
+                            } else {
+                                var optionBarChart = {
+                                    responsive : true,
+                                    scaleShowVerticalLines: false,
+                                }
+                            }
                             
                             var ctx = document.getElementById("src1").getContext("2d");
-                            window.myBar = new Chart(ctx).Bar(barChartData, {
-                                responsive : true,
-                                scaleShowVerticalLines: false
-                            });
+                            window.myBar = new Chart(ctx).Bar(barChartData, optionBarChart);
                         }
 
-                        
                     }
                 }
             },onCreate: function(answer) {
