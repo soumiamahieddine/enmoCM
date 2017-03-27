@@ -188,7 +188,7 @@
                 <div style="margin-top:200px;">Aucun circuit de visa paramétré.<br/><sub>Aucune signature possible.</sub></div>
             </div>
             <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="visaNoPjWarning">
-                <div style="margin-top:200px;">Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class="fa fa-plus"></i> pour en ajouter une</sub></div>
+                <div style="margin-top:200px;">Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class="fa fa-paperclip fa-lg" ></i><i class="fa fa-plus"></i> pour en ajouter une</sub></div>
             </div>
         </div>
         <div *ngIf="signatureBook.hasWorkflow" class="panelRight">
@@ -201,18 +201,19 @@
                     <i *ngIf="attachment.sign && attachment.status != 'SIGN'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle-o"></i>
                 </div>
             </div>
-            <div *ngIf="signatureBook.attachments[rightSelectedThumbnail]" style="bottom: 0px;position: absolute;left: 5px;">
-                
+            <div style="bottom: 0px;position: absolute;left: 5px;">
                 <div class="panelRightAddPj" (click)="addAttachmentIframe()" title="Créer une pièce jointe">
                     <i class="fa fa-paperclip fa-2x" ></i>
                     <i class="fa fa-plus" style="position:absolute;"></i>
                 </div>
-                <hr style="background-color:#666;margin-top:0px;"/>
-                <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canModify || signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'}" title="Modifier la pièce jointe" class="visaPjUp" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
-                    <i class="fa fa-pencil-square-o fa-2x"></i>
-                </div>
-                <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canDelete}" title="Supprimer la pièce jointe" class="visaPjDel" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
-                    <i class="fa fa-trash fa-2x"></i>
+                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail]">
+                    <hr style="background-color:#666;margin-top:0px;"/>
+                    <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canModify || signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'}" title="Modifier la pièce jointe" class="visaPjUp" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                        <i class="fa fa-pencil-square-o fa-2x"></i>
+                    </div>
+                    <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canDelete}" title="Supprimer la pièce jointe" class="visaPjDel" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
+                        <i class="fa fa-trash fa-2x"></i>
+                    </div>
                 </div>
             </div>
         </div>
