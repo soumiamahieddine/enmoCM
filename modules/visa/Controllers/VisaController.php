@@ -34,6 +34,7 @@ class VisaController
     public function getSignatureBook(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         $resId = $aArgs['resId'];
+        $_SESSION['doc_id'] = $resId; //TODO Set session for some actions
         $basketId = $aArgs['basketId'];
         $collId = 'letterbox_coll';
 
