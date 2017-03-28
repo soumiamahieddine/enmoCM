@@ -37,6 +37,7 @@ class VisaController
         $basketId = $aArgs['basketId'];
         $collId = 'letterbox_coll';
 
+        $coreTools = new \core_tools();
         $security = new \security();
         $allowed = $security->test_right_doc($collId, $resId);
         if (!$allowed) {
@@ -125,6 +126,8 @@ class VisaController
         $datas['signature']     = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
         $datas['consigne']      = \UsersModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = \VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
+        $datas['canSign']       = $coreTools->test_service('sign_document', 'visa', false);
+
 
         return $response->withJson($datas);
     }
@@ -193,7 +196,7 @@ class VisaController
 
         $incomingMail = \ResModel::getById([
             'resId'  => $resId,
-            'select' => ['res_id', 'subject', 'alt_identifier', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
+            'select' => ['res_id', 'subject', 'alt_identifier', 'category_id']
         ]);
 
         if (empty($incomingMail)) {
@@ -211,10 +214,12 @@ class VisaController
                 'res_id'        => $incomingMail['res_id'],
                 'alt_id'        => $incomingMail['alt_identifier'],
                 'title'         => $incomingMail['subject'],
+                'category_id'   => $incomingMail['category_id'],
                 'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$resId}&collid=letterbox_coll",
                 'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$resId}&coll_id=letterbox_coll&display=true&advanced=true"
             ]
         ];
+
         foreach ($incomingMailAttachments as $value) {
             if ($value['attachment_type'] == 'converted_pdf') {
                 continue;

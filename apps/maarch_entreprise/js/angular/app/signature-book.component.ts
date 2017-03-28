@@ -324,11 +324,19 @@ export class SignatureBookComponent implements OnInit {
     }
 
     prepareSignFile(attachment: any) {
-        if (!this.loadingSign) {
+        if (!this.loadingSign && this.signatureBook.canSign) {
             if (attachment.res_id == 0) {
-                this.signatureBookSignFile(attachment.res_id_version, 1);
+                if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
+                    this.signatureBookSignFile(attachment.res_id_version, 4);
+                } else {
+                    this.signatureBookSignFile(attachment.res_id_version, 1);
+                }
             } else if (attachment.res_id_version == 0) {
-                this.signatureBookSignFile(attachment.res_id, 0);
+                if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
+                    this.signatureBookSignFile(attachment.res_id, 3);
+                } else {
+                    this.signatureBookSignFile(attachment.res_id, 0);
+                }
             }
         }
     }
@@ -343,6 +351,8 @@ export class SignatureBookComponent implements OnInit {
             path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isVersion&resIdMaster=' + this.resId + '&id=' + resId;
         } else if (type == 2) {
             path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isOutgoing&resIdMaster=' + this.resId + '&id=' + resId;
+        } else if (type == 3) {
+            path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isOutgoing&isVersion&resIdMaster=' + this.resId + '&id=' + resId;
         }
 
         this.http.get(path)
