@@ -24,30 +24,29 @@ require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
 require_once __DIR__.'/RequestSeda.php';
 require_once __DIR__.'/ArchiveTransfer.php';
 
-	$status = 0;
-	$error = $content = '';
-	if ($_REQUEST['reference']) {
-		$validateMessage = new ValidateMessage();
-		$res = $validateMessage->validate($_REQUEST['reference']);
-		$status = $res['status'];
-		if ($status != 0) {
-			$error = $res['error'];
-		} else {
-			$content = $res['content'];
-		}
-		
-	} else {
-		$status = 1;
-	}
+$status = 0;
+$error = $content = '';
+if ($_REQUEST['reference']) {
+    $validateMessage = new ValidateMessage();
+    $res = $validateMessage->validate($_REQUEST['reference']);
+    $status = $res['status'];
+    if ($status != 0) {
+        $error = $res['error'];
+    } else {
+        $content = $res['content'];
+    }
+} else {
+    $status = 1;
+}
 
-	
-	echo "{status : " . $status . ", content : '" . addslashes($content) . "', error : '" . addslashes($error) . "'}";
-	exit ();
+echo "{status : " . $status . ", content : '" . addslashes($content) . "', error : '" . addslashes($error) . "'}";
+exit ();
 
-class ValidateMessage{
+class ValidateMessage
+{
     private $db;
     private $res;
-    private $config;
+    private $deleteData;
 
     public function __construct()
     {
@@ -57,17 +56,18 @@ class ValidateMessage{
         $this->res['content'] = "";
 
         $config = parse_ini_file(__DIR__.'/config.ini');
+        $this->deleteData = $config['deleteData'];
     }
 
     public function validate($reference)
     {
         try {
-            if ($config['deleteData']) {
-            	$message = $this->db->getMessageByReference($reference);
+            if ($this->deleteData) {
+                $message = $this->db->getMessageByReference($reference);
 
                 $listResId = $this->db->getUnitIdentifierByMessageId($message->message_id);
 
-                for ($i=0;$i < count($listResId); $i++) {
+                for ($i=0; $i < count($listResId); $i++) {
                     $this->purgeResource($listResId[$i]->res_id);
 
                     $courrier = $this->db->getCourrier($listResId[$i]->res_id);
@@ -95,7 +95,7 @@ class ValidateMessage{
         $action = new \Core\Controllers\ResController();
         $data = [];
 
-        array_push($data,array(
+        array_push($data, array(
                 'column' => 'status',
                 'value' => 'DEL',
                 'type' => 'string'

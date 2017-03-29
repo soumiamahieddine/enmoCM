@@ -53,7 +53,8 @@ if (!defined("_ERROR_MESSAGE"))
     define("_ERROR_MESSAGE", "Bordereau non-reçu");
 
 if (!defined("_TRANSFERRING_AGENCY_SIREN_COMPULSORY"))
-    define("_TRANSFERRING_AGENCY_SIREN_COMPULSORY", "Numéro SIREN service versant obligatoire !");
+    define("_TRANSFERRING_AGENCY_SIREN_COMPULSORY", "Numéro SIREN service versant obligatoire");
 
-if (!defined("_ARCHIVE_AGENCY_SIREN_COMPULSORY"))
-    define("_ARCHIVE_AGENCY_SIREN_COMPULSORY", "Numéro SIREN service d'archive obligatoire !");
+if (!defined("_ARCHIVAL_AGENCY_SIREN_COMPULSORY"))
+    define("_ARCHIVAL_AGENCY_SIREN_COMPULSORY", "Numéro SIREN service d'archive obligatoire");
+    

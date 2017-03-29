@@ -13,7 +13,6 @@
 * @ingroup export_seda
 */
 
-
 /**
 * $confirm  bool true
 */
@@ -28,22 +27,18 @@ $etapes = array('form');
 require_once __DIR__.'/ArchiveTransfer.php';
 //require_once __DIR__.'/StreamClient.php';
 
-function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode) {
+function get_form_txt($values, $path_manage_action, $id_action, $table, $module, $coll_id, $mode)
+{
     $archiveTransfer = new ArchiveTransfer();
 
     $result = $archiveTransfer->deleteMessage($values);
 
     $result = $archiveTransfer->receive($values);
-    
-    if ($_SESSION['error']) {
-        header("location: " . $_SESSION['config']['businessappurl'] . "index.php?page=view_baskets&module=basket&baskets=AExporterSeda#top");
-        exit();
-    }
 
     $db = new Database();
-    $stmt = $db->query("select message_id from unit_identifier where res_id = ?",array($values[0]));
+    $stmt = $db->query("select message_id from unit_identifier where res_id = ?", array($values[0]));
     $unitIdentifier = $stmt->fetchObject();
-    $stmt = $db->query("select data from seda where message_id = ?",array($unitIdentifier->message_id));
+    $stmt = $db->query("select data from seda where message_id = ?", array($unitIdentifier->message_id));
 
     $messageData = $stmt->fetchObject();
 
@@ -73,24 +68,28 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</tr></tbody></table><hr />';
 
     //Information n Archive
-    
-    foreach ($messageObject->dataObjectPackage->descriptiveMetadata->archiveUnit as $archiveUnit) {
-        $frm_str .= viewArchiveUnit($archiveUnit);
+    if (!$_SESSION['error']) {
+        foreach ($messageObject->dataObjectPackage->descriptiveMetadata->archiveUnit as $archiveUnit) {
+            $frm_str .= viewArchiveUnit($archiveUnit);
+        }
+
+        $path_to_script = $_SESSION['config']['businessappurl']."index.php?display=true&module=export_seda";
+
+        $frm_str .= '</div>';
+        $frm_str .='<div align="center">';
+        $frm_str .='<input type="button" name="zip" id="zip" class="button"  value="'._ZIP.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_seda_zip&reference='.$messageObject->messageIdentifier->value.'\',\'zip\');"/>&nbsp&nbsp&nbsp';
+        $frm_str .='<input type="button" name="sendMessage" id="sendMessage" class="button"  value="'._SEND_MESSAGE.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_transfer_SAE&reference='.$messageObject->messageIdentifier->value.'\',\'sendMessage\');"/>';
+        $frm_str .='</div>';
+    } else {
+        $frm_str .='<div align="center" style="color:red">';
+        $frm_str .= $_SESSION['error'];
+        $frm_str .='</div>';
     }
 
+    $config = parse_ini_file(__DIR__.'/config.ini');
+    $urlSAE = $config['urlSAE'];
 
-    /*
-*/
-
-    $path_to_script = $_SESSION['config']['businessappurl']."index.php?display=true&module=export_seda";
-
-    $frm_str .= '</div>';
-    $frm_str .='<div align="center">';
-    $frm_str .='<input type="button" name="zip" id="zip" class="button"  value="'._ZIP.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_seda_zip&reference='.$messageObject->messageIdentifier->value.'\',\'zip\');"/>&nbsp&nbsp&nbsp';
-    $frm_str .='<input type="button" name="sendMessage" id="sendMessage" class="button"  value="'._SEND_MESSAGE.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_transfer_SAE&reference='.$messageObject->messageIdentifier->value.'\',\'sendMessage\');"/>';
-    $frm_str .='</div>';
-//
-    $frm_str .='<div align="center"  name="validSeda" id="validSeda" style="display: none ">"'._URL_SAE.'"<span name="nameSAE"></span><br><input type="button" class="button" name="validateMessage" id="validateMessage" value="'._VALIDATE.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_validate_message&reference='.$messageObject->messageIdentifier->value.'\',\'validateMessage\');"/></div>';
+    $frm_str .='<div align="center"  name="validSeda" id="validSeda" style="display: none ">"'.$urlSAE.'"<span name="nameSAE"></span><br><input type="button" class="button" name="validateMessage" id="validateMessage" value="'._VALIDATE.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_validate_message&reference='.$messageObject->messageIdentifier->value.'\',\'validateMessage\');"/></div>';
     $frm_str .='<hr />';
     $frm_str .='<div align="center">';
     $frm_str .='<input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
@@ -105,11 +104,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
 function manage_form($arr_id, $history, $id_action, $label_action, $status)
 {
-    
-
-    
-
-    
     // récupérer l'entité racine du courrier *
     // récupérer archival_agency et archival_agreement *
 
@@ -165,8 +159,6 @@ function viewArchiveUnit($archiveUnit, $archiveUnitChildren = false)
             $frm_str .= viewArchiveUnit($archiveUnitChildren,true);
         }
     }
-
-    
 
     return $frm_str;
 }

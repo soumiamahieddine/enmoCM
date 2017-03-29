@@ -55,7 +55,8 @@ if (!defined("_ACKNOWLEDGEMENT_REFERENCE"))
     define("_ACKNOWLEDGEMENT_REFERENCE", "Acknowledgement reference");
 
 if (!defined("_TRANSFERRING_AGENCY_SIREN_COMPULSORY"))
-    define("_TRANSFERRING_AGENCY_SIREN_COMPULSORY", "Transferring agency SIREN compulsory !");
+    define("_TRANSFERRING_AGENCY_SIREN_COMPULSORY", "Transferring agency SIREN compulsory");
 
-if (!defined("_ARCHIVE_AGENCY_SIREN_COMPULSORY"))
-    define("_ARCHIVE_AGENCY_SIREN_COMPULSORY", "Archive agency SIREN compulsory !");
+if (!defined("_ARCHIVAL_AGENCY_SIREN_COMPULSORY"))
+    define("_ARCHIVAL_AGENCY_SIREN_COMPULSORY", "Archive agency SIREN compulsory");
+    
