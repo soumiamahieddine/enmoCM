@@ -19,23 +19,23 @@
 *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'core/class/class_request.php';
+require_once __DIR__.'/RequestSeda.php';
 require_once __DIR__.'/DOMTemplateProcessor.php';
 
 class ArchiveTransfer {
-
 	private $db;
 
 	public function __construct() 
 	{
-		$this->db = new Database();
+		$this->db = new RequestSeda();
+		$_SESSION['error'] = "";
 	}
 
 	public function receive($listResId) {
 		if (!$listResId) {
 			return false;
 		}
-
+		
 		$messageObject = new stdClass();
 		$messageObject = $this->initMessage($messageObject);
 
@@ -43,8 +43,8 @@ class ArchiveTransfer {
 		foreach ($listResId as $resId) {
 			$result .= $resId.'#';
 
-			$letterbox = $this->getCourrier($resId);
-			$attachments = $this->getAttachments($letterbox->res_id);
+			$letterbox = $this->db->getCourrier($resId);
+			$attachments = $this->db->getAttachments($letterbox->res_id);
 
 			$archiveUnitId = uniqid();
 			if ($letterbox->filename) {
@@ -67,7 +67,7 @@ class ArchiveTransfer {
 			}
 		}
 
-		$res = $this->insertMessage($messageObject);
+		$res = $this->db->insertMessage($messageObject,$listResId);
 
 		if ($res) {
 			$this->sendXml($messageObject);
@@ -109,11 +109,19 @@ class ArchiveTransfer {
 			return false;
 		}
 
-		foreach ($listResId as $resId) {
-			$unitIdentifiers = $this->getUnitIdentifier($resId);
+		$resIds = [];
+		if(!is_array($listResId)) {
+			$resIds[] = $listResId;
+		} else {
+			$resIds = $listResId;
+		}
+
+
+		foreach ($resIds as $resId) {
+			$unitIdentifiers = $this->db->getUnitIdentifierByResId($resId);
 			foreach ($unitIdentifiers as $unitIdentifier) {
-				$this->deleteSeda($unitIdentifier->message_id);
-				$this->deleteUnitIdentifier($unitIdentifier->message_id);
+				$this->db->deleteSeda($unitIdentifier->message_id);
+				$this->db->deleteUnitIdentifier($unitIdentifier->message_id);
 			}
 		}
 
@@ -133,7 +141,8 @@ class ArchiveTransfer {
 
 	private function initMessage($messageObject)
 	{
-		$messageObject->date = date('Y-m-d h:i:s');
+		$date = new DateTime;
+		$messageObject->date = $date->format(DateTime::ATOM);
 		$messageObject->messageIdentifier = new stdClass();
 		$messageObject->messageIdentifier->value = $_SESSION['user']['UserId'] . "-" . date('Ymd-His');
 
@@ -146,10 +155,19 @@ class ArchiveTransfer {
 		$messageObject->archivalAgreement = new stdClass();
 
 		foreach ($_SESSION['user']['entities'] as $entitie) {
-			$entitie = $this->getEntitie($entitie['ENTITY_ID']);
+			$entitie = $this->db->getEntitie($entitie['ENTITY_ID']);
 			if ($entitie) {
 				$messageObject->transferringAgency->identifier->value = $entitie->business_id;
 				$messageObject->archivalAgency->identifier->value = $entitie->archival_agency;
+
+				if (!$entitie->business_id) {
+					$_SESSION['error'] .= _TRANSFERRING_AGENCY_SIREN_COMPULSORY;
+				}
+
+				if (!$entitie->archival_agency) {
+					$_SESSION['error'] .= _ARCHIVAL_AGENCY_SIREN_COMPULSORY;
+				}
+
 				$messageObject->archivalAgreement->value = $entitie->archival_agreement;
 			} else {
 				// TODO return error;
@@ -164,8 +182,6 @@ class ArchiveTransfer {
 
 		return $messageObject;
 	}
-
-	
 
 	private function getArchiveUnit($object, $type, $attachments =null, $archiveUnitId = null, $dataObjectReferenceId = null, $relatedObjectReference =null)
 	{
@@ -189,7 +205,7 @@ class ArchiveTransfer {
 
 		if ($dataObjectReferenceId) {
 			$messageArchiveUnit->dataObjectReference = new stdClass();
-			$messageArchiveUnit->dataObjectReference->dataObjectReferenceId = $dataObjectReferenceId;
+			$messageArchiveUnit->dataObjectReference->dataObjectReferenceId = "doc_".$dataObjectReferenceId;
 		}
 
 		
@@ -218,29 +234,30 @@ class ArchiveTransfer {
 		if ($type == "File") {
 			$content->descriptionLevel = $type;
 			$content->receivedDate = $object->admission_date;
-			$content->sentDate = $object->doc_date;
-			$content->receivedDate = $object->admission_date;
-			$content->receivedDate = $object->admission_date;
+			$sentDate = new DateTime($object->doc_date);
+			$receivedDate = new DateTime($object->admission_date);
+			$content->sentDate = $sentDate->format(DateTime::ATOM);
+			$content->receivedDate = $receivedDate->format(DateTime::ATOM);
 
 			$content->addressee = [];
 			$content->keyword = [];
 
 			if ($object->exp_contact_id) {
 				
-				$contact = $this->getContact($object->exp_contact_id);
-				$entitie = $this->getEntitie($object->destination);
+				$contact = $this->db->getContact($object->exp_contact_id);
+				$entitie = $this->db->getEntitie($object->destination);
 
 				$content->keyword[] = $this->getKeyword($contact);
 				$content->addressee[] = $this->getAddresse($entitie,"entitie");
 			} else if ($object->dest_contact_id) {
-				$contact = $this->getContact($object->dest_contact_id);
-				$entitie = $this->getEntitie($object->destination);
+				$contact = $this->db->getContact($object->dest_contact_id);
+				$entitie = $this->db->getEntitie($object->destination);
 
 				$content->addressee[] = $this->getAddresse($contact);
 				$content->keyword[] = $this->getKeyword($entitie,"entitie");
 			} else if ($object->exp_user_id) {
-				$user = $this->getUserInformation($object->exp_user_id);
-				$entitie = $this->getEntitie($object->initiator);
+				$user = $this->db->getUserInformation($object->exp_user_id);
+				$entitie = $this->db->getEntitie($object->initiator);
 				//$entitie = $this->getEntitie($letterbox->destination);
 
 				$content->keyword[] = $this->getKeyword($user);
@@ -250,11 +267,12 @@ class ArchiveTransfer {
 			$content->source = $_SESSION['mail_nature'][$object->nature_id];
 
 			$content->documentType = $object->type_label;
-			$content->originatingAgencyArchiveIdentifier = $object->alt_identifier;
+			$content->originatingAgencyArchiveUnitIdentifier = $object->alt_identifier;
 			$content->originatingSystemId = $object->res_id;
 			$content->title = [];
 			$content->title[] = $object->subject;
-			$content->endDate = $object->process_limit_date;
+			$endDate = new DateTime($object->process_limit_date);
+			$content->endDate = $endDate->format(DateTime::ATOM);
 
 		} else {
 			$content->descriptionLevel = "Item";
@@ -290,19 +308,24 @@ class ArchiveTransfer {
 	private function getManagement($letterbox) {
 		$management = new stdClass();
 
-		$docTypes = $this->getDocTypes($letterbox->type_id);
+		$docTypes = $this->db->getDocTypes($letterbox->type_id);
 
 		$management->appraisalRule = new stdClass();
 		$management->appraisalRule->rule = new stdClass();
 		$management->appraisalRule->rule->value = $docTypes->retention_rule;
-		$management->appraisalRule->finalAction = $docTypes->retention_final_disposition;
+		if ($docTypes->retention_final_disposition == "preservation") {
+			$management->appraisalRule->finalAction = "Keep";
+		} else {
+			$management->appraisalRule->finalAction = "Destroy";
+		}
+		
 		
 		return $management;
 	}
 
 	private function getBinaryDataObject($object, $isAttachment = false)
 	{
-		$docServers = $this->getDocServer($object->docserver_id);
+		$docServers = $this->db->getDocServer($object->docserver_id);
 
 		$binaryDataObject = new stdClass();
 
@@ -314,6 +337,7 @@ class ArchiveTransfer {
 		
 		$binaryDataObject->messageDigest = new stdClass();
 		$binaryDataObject->messageDigest->value = $object->fingerprint;
+		$binaryDataObject->messageDigest->algorithm = "xxx";
 
 		$binaryDataObject->size = new stdClass();
 		$binaryDataObject->size->value = $object->filesize;
@@ -371,259 +395,5 @@ class ArchiveTransfer {
 		$custodialHistoryItem->when = $note->date_note;
 
 		return $custodialHistoryItem;
-	}
-	///////////////////
-	/// Requete SQL ///
-	///////////////////
-
-	private function getUnitIdentifier($resId)
-	{
-		$queryParams = [];
-
-		$queryParams[] = $resId;
-
-		$query = "SELECT * FROM unit_identifier WHERE res_id = ?";
-
-		$smtp = $this->db->query($query,$queryParams);
-		
-		$unitIdentifier = [];
-		while ($res = $smtp->fetchObject()) {
-			$unitIdentifier[] = $res;
-		}
-
-		return $unitIdentifier;
-	}
-
-	private function getCourrier($resId) 
-	{
-		$queryParams = [];
-
-		$queryParams[] = $resId;
-
-		$query = "SELECT * FROM res_view_letterbox WHERE res_id = ?";
-
-		$smtp = $this->db->query($query,$queryParams);
-		
-		$letterbox = $smtp->fetchObject();
-
-		return $letterbox;
-	}
-
-	private function getDocTypes($typeId)
-	{
-		$queryParams = [];
-
-		$queryParams[] = $typeId;
-
-		$query = "SELECT * FROM doctypes WHERE type_id = ?";
-
-		$smtp = $this->db->query($query,$queryParams);
-		
-		$docTypes = $smtp->fetchObject();
-
-		return $docTypes;
-	}
-
-	private function getUserInformation($userId) 
-	{
-		$queryParams = [];
-
-		$queryParams[] = $userId;
-
-		$query = "SELECT * FROM users WHERE user_id = ?";
-
-		$smtp = $this->db->query($query,$queryParams);
-		
-		$user = $smtp->fetchObject();
-
-		return $user;
-	}
-
-	private function getNotes($letterboxId) 
-	{
-		$queryParams = [];
-
-		$queryParams[] = $letterboxId;
-
-		$query = "SELECT * FROM notes WHERE identifier = ?";
-
-		$smtp = $this->db->query($query,$queryParams);
-
-		$notes = [];
-		while ($res = $smtp->fetchObject()) {
-			$notes[] = $res;
-		}
-
-		return $notes;
-	}
-
-	private function getEntitie($entityId)
-	{
-		$queryParams = [];
-
-		$queryParams[] = $entityId;
-
-		$query = "SELECT * FROM entities WHERE entity_id = ?";
-
-		$smtp = $this->db->query($query,$queryParams);
-		
-		$entitie = $smtp->fetchObject();
-
-		return $entitie;
-	}
-
-	private function getContact($contactId)
-	{
-		$queryParams = [];
-
-		$queryParams[] = $contactId;
-
-		$query = "SELECT * FROM contacts_v2 WHERE contact_id = ?";
-
-		$smtp = $this->db->query($query,$queryParams);
-		
-		$contact = $smtp->fetchObject();
-
-		return $contact;
-	}
-
-	private function getDocServer($docServerId)
-	{
-		$queryParams = [];
-
-		$queryParams[] = $docServerId;
-
-		$query = "SELECT * FROM docservers WHERE docserver_id = ?";
-
-		$smtp = $this->db->query($query,$queryParams);
-		
-		$docServers = $smtp->fetchObject();
-
-		return $docServers;
-	}
-
-	private function getAttachments($resIdMaster)
-	{
-		$queryParams = [];
-
-		$queryParams[] = $resIdMaster;
-
-		$query = "SELECT * FROM res_attachments WHERE res_id_master = ?";
-
-		$smtp = $this->db->query($query,$queryParams);
-		
-		while ($res = $smtp->fetchObject()) {
-			$attachments[] = $res;
-		}
-
-		return $attachments;
-	}
-
-	private function insertMessage($messageObject) 
-	{
-		$queryParams = [];
-		$messageId = uniqid();
-
-		try {
-			$query = ("INSERT INTO seda (
-				message_id,
-				schema,
-				type,
-				status,
-				date,
-				reference,
-	            account_id ,
-				sender_org_identifier,
-				sender_org_name,
-				recipient_org_identifier,
-				recipient_org_name,
-				archival_agreement_reference,
-				reply_code,
-				size,
-				data,
-				active,
-				archived)
-				VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-
-			$queryParams[] = $messageId; // Message Id
-			$queryParams[] = "2.1"; //Schema
-			$queryParams[] = "ArchiveTransfer"; // Type
-			$queryParams[] = "sent"; // Status
-			$queryParams[] = $messageObject->date; // Date
-			$queryParams[] = $messageObject->messageIdentifier->value; // Reference
-			$queryParams[] = $_SESSION['user']['UserId']; // Account Id
-			$queryParams[] = $messageObject->transferringAgency->identifier->value; // Sender org identifier id
-			$queryParams[] = ""; //SenderOrgNAme
-			$queryParams[] = $messageObject->archivalAgency->identifier->value; // Recipient org identifier id
-			$queryParams[] = ""; //RecipientOrgNAme
-			$queryParams[] = $messageObject->archivalAgreement->value; // Archival agreement reference
-			$queryParams[] = ""; //ReplyCode
-			$queryParams[] = 0; // size
-			$queryParams[] = json_encode($messageObject);//$messageObject; // Data
-			$queryParams[] = 1; // active
-			$queryParams[] = 0; // archived
-
-			$res = $this->db->query($query,$queryParams);
-
-			//var_dump($messageObject);
-			foreach ($messageObject->dataObjectPackage->binaryDataObject as $binaryDataObject) {
-				$this->insertUnitIdentifier($messageId, "res_letterbox", $binaryDataObject->id);
-			}
-		} catch (Exception $e) {
-			var_dump($e);
-			return false;
-		}
-
-		return true;
-	}
-
-	private function insertUnitIdentifier($messageId, $tableName, $resId) 
-	{
-		try {
-			$query = ("INSERT INTO unit_identifier VALUES (?,?,?)");
-			$queryParams = [];
-
-			$queryParams[] = $messageId;
-			$queryParams[] = $tableName;
-			$queryParams[] = $resId;
-
-			$res = $this->db->query($query,$queryParams);
-		} catch (Exception $e) {
-			return false;
-		}
-		
-		return true;
-	}
-
-	private function deleteSeda($messageId)
-	{
-		$queryParams = [];
-
-		$queryParams[] = $messageId;
-		try {
-			$query = "DELETE FROM seda WHERE message_id = ?";
-
-			$smtp = $this->db->query($query,$queryParams);
-		} catch (Exception $e) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private function deleteUnitIdentifier($messageId)
-	{
-		$queryParams = [];
-
-		$queryParams[] = $messageId;
-		try {
-			$query = "DELETE FROM unit_identifier WHERE message_id = ?";
-
-			$smtp = $this->db->query($query,$queryParams);
-		} catch (Exception $e) {
-			return false;
-		}
-
-		return true;
 	}
 }

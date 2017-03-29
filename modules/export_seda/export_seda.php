@@ -35,6 +35,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $result = $archiveTransfer->receive($values);
     
+    if ($_SESSION['error']) {
+        header("location: " . $_SESSION['config']['businessappurl'] . "index.php?page=view_baskets&module=basket&baskets=AExporterSeda#top");
+        exit();
+    }
+
     $db = new Database();
     $stmt = $db->query("select message_id from unit_identifier where res_id = ?",array($values[0]));
     $unitIdentifier = $stmt->fetchObject();
@@ -63,7 +68,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<td><input type="text" id="archivalAgreement" name="archivalAgreement" value="'.$messageObject->archivalAgreement->value. '" disabled></td>';
     $frm_str .='<td><b>'._ARCHIVAL_AGENCY_SIREN.':</b></td>';
     $frm_str .= '<td><input type="text" id="archivalAgency" name="archivalAgency" value="'.$messageObject->archivalAgency->identifier->value. '" disabled></td></tr><tr class="col">';
-    $frm_str .='<td><b>'.TRANSFERRING_AGENCY_SIREN.':</b></td>';
+    $frm_str .='<td><b>'._TRANSFERRING_AGENCY_SIREN.':</b></td>';
     $frm_str .= '<td><input type="text" id="transferringAgency" name="transferringAgency" value="'.$messageObject->transferringAgency->identifier->value. '" disabled></td>';
     $frm_str .= '</tr></tbody></table><hr />';
 
@@ -81,14 +86,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $frm_str .= '</div>';
     $frm_str .='<div align="center">';
-    $frm_str .='<input type="button" name="zip" id="zip" class="button"  value="'._ZIP.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_seda_zip&reference='.$messageObject->messageIdentifier->value.'\');"/>&nbsp&nbsp&nbsp';
-    $frm_str .='<input type="button" name="sendMessage" id="sendMessage" class="button"  value="'._SEND_MESSAGE.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_seda_send&reference='.$messageObject->messageIdentifier->value.'\');"/>';
+    $frm_str .='<input type="button" name="zip" id="zip" class="button"  value="'._ZIP.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_seda_zip&reference='.$messageObject->messageIdentifier->value.'\',\'zip\');"/>&nbsp&nbsp&nbsp';
+    $frm_str .='<input type="button" name="sendMessage" id="sendMessage" class="button"  value="'._SEND_MESSAGE.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_transfer_SAE&reference='.$messageObject->messageIdentifier->value.'\',\'sendMessage\');"/>';
     $frm_str .='</div>';
-    $frm_str .='<div align="center" id="validSeda"></div>';
+//
+    $frm_str .='<div align="center"  name="validSeda" id="validSeda" style="display: none ">"'._URL_SAE.'"<span name="nameSAE"></span><br><input type="button" class="button" name="validateMessage" id="validateMessage" value="'._VALIDATE.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_validate_message&reference='.$messageObject->messageIdentifier->value.'\',\'validateMessage\');"/></div>';
     $frm_str .='<hr />';
-
     $frm_str .='<div align="center">';
-            $frm_str .='<input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
+    $frm_str .='<input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
     $frm_str .='</div>';
     //$frm_str .='<script type="text/javascript">'. require_once __DIR__.'/js/function.js'.'</script>';
 

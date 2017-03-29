@@ -11,5 +11,5 @@
 <?merge $agent.activity.bool() ?><Activity><?merge $agent.activity ?></Activity>
 <?merge $agent.position.bool() ?><Position><?merge $agent.position ?></Position>
 <?merge $agent.role.bool() ?><Role><?merge $agent.role ?></Role>
-<?merge $agent.corpname.bool() ?><CorpName><?merge $agent.corpname ?></CorpName>
+<?merge $agent.corpname.bool() ?><Corpname><?merge $agent.corpname ?></Corpname>
 <?merge $agent.identifier.bool() ?><Identifier><?merge $agent.identifier ?></Identifier>

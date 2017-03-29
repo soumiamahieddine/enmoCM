@@ -42,4 +42,18 @@ if (!defined("_INFORMATION_ARCHIVE_CHILDREN"))
 if (!defined("_ZIP"))
     define("_ZIP", "Télécharger Zip");
 if (!defined("_SEND_MESSAGE"))
-    define("_SEND_MESSAGE", "Archiver bordereau");
+    define("_SEND_MESSAGE", "Transferer bordereau");
+if (!defined("_VALIDATE"))
+    define("_VALIDATE", "Valider");
+
+if (!defined("_RECEIVED_MESSAGE"))
+    define("_RECEIVED_MESSAGE", "Conformité du bordereau confirmée par accusé de réception : ");
+
+if (!defined("_ERROR_MESSAGE"))
+    define("_ERROR_MESSAGE", "Bordereau non-reçu");
+
+if (!defined("_TRANSFERRING_AGENCY_SIREN_COMPULSORY"))
+    define("_TRANSFERRING_AGENCY_SIREN_COMPULSORY", "Numéro SIREN service versant obligatoire !");
+
+if (!defined("_ARCHIVE_AGENCY_SIREN_COMPULSORY"))
+    define("_ARCHIVE_AGENCY_SIREN_COMPULSORY", "Numéro SIREN service d'archive obligatoire !");

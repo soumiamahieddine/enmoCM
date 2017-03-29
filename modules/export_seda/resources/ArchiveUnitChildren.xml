@@ -1,5 +1,5 @@
 <?merge $archiveUnitChildren ?>
-<ArchiveUnit id="[?merge .id ?]">
+<ArchiveUnit id="arch_child_[?merge .id ?]">
     <ArchiveUnitRefId><?merge .archiveUnitRefId ?></ArchiveUnitRefId>
     <ArchiveUnitProfile schemeID="[?merge .archiveUnitProfile.schemeID ?]" schemeName="[?merge .archiveUnitProfile.schemeName ?]" schemeAgencyID="[?merge .archiveUnitProfile.schemeAgencyID ?]" schemeAgencyName="[?merge .archiveUnitProfile.schemeAgencyName ?]" schemeVersionID="[?merge .archiveUnitProfile.schemeVersionID ?]" schemeDataURI="[?merge .archiveUnitProfile.schemeDataURI ?]" schemeURI="[?merge .archiveUnitProfile.schemeURI ?]"><?merge .archiveUnitProfile ?></ArchiveUnitProfile>
     <?merge .management.bool() ?>
@@ -69,7 +69,7 @@
         <Status><?merge .content.status ?></Status>
         <Version><?merge .content.version ?></Version>
         <?merge .content.tag ?><Tag><?merge .value ?></Tag>
-        <?merge .content.keyword ?><Keyword>
+        <?merge .content.keyword.array() ?><Keyword>
             <KeywordContent role="[?merge .keywordContent.role @role ?]"><?merge .keywordContent.value ?></KeywordContent>
             <KeywordReference schemeID="[?merge .keywordReference.schemeID @schemeID ?]" schemeName="[?merge .keywordReference.schemeName @schemeName ?]" schemeAgencyID="[?merge .keywordReference.schemeAgencyID @schemeAgencyID ?]" schemeAgencyName="[?merge .keywordReference.schemeAgencyName @schemeAgencyName ?]" schemeVersionID="[?merge .keywordReference.schemeVersionID @schemeVersionID ?]" schemeDataURI="[?merge .keywordReference.schemeDataURI @schemeDataURI ?]" schemeURI="[?merge .keywordReference.schemeURI @schemeURI ?]"><?merge .keywordReference.value ?></KeywordReference>
             <KeywordType listVersionID="[?merge .keywordType.listVersionID @listVersionID ?]"><?merge .keywordType ?></KeywordType>
@@ -118,7 +118,7 @@
         <RegisteredDate><?merge .content.registeredDate ?></RegisteredDate>
         <StartDate><?merge .content.startDate ?></StartDate>
         <EndDate><?merge .content.endDate ?></EndDate>
-        <?merge .content.event ?>
+        <?merge .content.event.array() ?>
         <Event>
             <EventIdentifier><?merge .eventIdentifier ?></EventIdentifier>
             <EventType><?merge .eventType ?></EventType>
