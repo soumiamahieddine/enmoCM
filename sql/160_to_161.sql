@@ -1,7 +1,7 @@
 -- *************************************************************************--
 --                                                                          --
 --                                                                          --
---        THIS SCRIPT IS USE TO PASS FROM MAARCH 1.6 TO MAARCH 1.6.1        --
+--        THIS SCRIPT IS USE TO PASS FROM MAARCH 1.6 TO MAARCH 1.7          --
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
@@ -152,15 +152,15 @@ CREATE TABLE unit_identifier
 );
 
 
+ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_final_disposition;
+ALTER TABLE doctypes ADD COLUMN retention_final_disposition character varying(255) NOT NULL DEFAULT 'destruction';
+
 ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_rule;
-ALTER TABLE doctypes ADD COLUMN retention_rule character varying(255) NOT NULL DEFAULT 'destruction';
-
-ALTER TABLE doctypes DROP COLUMN IF EXISTS duration;
-ALTER TABLE doctypes ADD COLUMN duration character varying(15) NOT NULL DEFAULT 'P10Y';
+ALTER TABLE doctypes ADD COLUMN retention_rule character varying(15) NOT NULL DEFAULT 'P10Y';
 
 
-ALTER TABLE entities DROP COLUMN IF EXISTS transferring_agency;
-ALTER TABLE entities ADD COLUMN transferring_agency character varying(255);
+ALTER TABLE entities DROP COLUMN IF EXISTS archival_agency;
+ALTER TABLE entities ADD COLUMN archival_agency character varying(255);
 
 ALTER TABLE entities DROP COLUMN IF EXISTS archival_agreement;
 ALTER TABLE entities ADD COLUMN archival_agreement character varying(255);
@@ -172,6 +172,123 @@ VALUES ('FASTHD_ATTACH', 'FASTHD', 'Fast internal disc bay for attachments', 'N'
 ALTER TABLE basket_persistent_mode ALTER COLUMN user_id TYPE character varying(128);
 ALTER TABLE res_mark_as_read ALTER COLUMN user_id TYPE character varying(128);
 
+-- EXPORT SEDA
+DROP TABLE IF EXISTS seda;
+CREATE TABLE seda
+(
+  "message_id" text NOT NULL,
+  "schema" text,
+  "type" text NOT NULL,
+  "status" text NOT NULL,
+  
+  "date" timestamp NOT NULL,
+  "reference" text NOT NULL,
+  
+  "account_id" text,
+  "sender_org_identifier" text NOT NULL,
+  "sender_org_name" text,
+  "recipient_org_identifier" text NOT NULL,
+  "recipient_org_name" text,
+
+  "archival_agreement_reference" text,
+  "reply_code" text,
+  "operation_date" timestamp,
+  "reception_date" timestamp,
+  
+  "related_reference" text,
+  "request_reference" text,
+  "reply_reference" text,
+  "derogation" boolean,
+  
+  "data_object_count" integer,
+  "size" numeric,
+  
+  "data" text,
+  
+  "active" boolean,
+  "archived" boolean,
+
+  PRIMARY KEY ("message_id")
+)
+WITH (
+  OIDS=FALSE
+);
+
+DROP TABLE IF EXISTS unit_identifier;
+CREATE TABLE unit_identifier
+(
+  "message_id" text NOT NULL,
+  "tablename" text NOT NULL,
+  "res_id" text NOT NULL
+);
+
+--EXPORT SEDA DATAS
+DELETE FROM USERGROUPS WHERE GROUP_ID = 'ARCHIVISTE';
+INSERT INTO USERGROUPS VALUES ('ARCHIVISTE', 'Archiviste', 'N', 'N', 'N', 'N', 'N', 'Y');
+
+DELETE FROM USERGROUPS_SERVICES WHERE GROUP_ID = 'ARCHIVISTE';
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'add_thesaurus_to_res');
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'adv_search_mlb');
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'export_seda_view');
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'fileplan');
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'my_contacts_menu');
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'put_doc_in_fileplan');
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'sendmail');
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'tag_view');
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'view_baskets');
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'view_doc_history');
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'view_technical_infos');
+INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'avis_documents');
+
+DELETE FROM SECURITY WHERE GROUP_ID = 'ARCHIVISTE';
+INSERT INTO SECURITY (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) 
+VALUES ('ARCHIVISTE', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 24, NULL, NULL, 'DOC');
+
+DELETE FROM USERS WHERE USER_ID = 'aarc';
+INSERT INTO USERS (user_id, password, firstname, lastname, mail, enabled, change_password, status, loginmode) 
+VALUES ('aarc', '65d1d802c2c5e7e9035c5cef3cfc0902b6d0b591bfa85977055290736bbfcdd7e19cb7cfc9f980d0c815bbf7fe329a4efd8da880515ba520b22c0aa3a96514cc', 'Alfred', 'ARC', 'info@maarch.org', 'Y', 'N', 'OK', 'standard');
+
+DELETE FROM USERS_ENTITIES WHERE USER_ID = 'aarc';
+INSERT INTO USERS_ENTITIES (user_id, entity_id, user_role, primary_entity) 
+VALUES ('aarc', 'VILLE', '', 'Y');
+
+DELETE FROM USERGROUP_CONTENT WHERE USER_ID = 'aarc';
+INSERT INTO USERGROUP_CONTENT (user_id, group_id, primary_group, role) 
+VALUES ('aarc', 'ARCHIVISTE', 'Y','');
+
+DELETE FROM STATUS WHERE ID = 'EXP_SEDA';
+INSERT INTO STATUS (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) 
+VALUES ('EXP_SEDA', 'A exporter au format SEDA', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
+
+DELETE FROM ACTIONS WHERE id = 418;
+INSERT INTO ACTIONS (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) 
+VALUES (418, '', 'Exporter SEDA', '_NOSTATUS_', 'N', 'N', 'Y', 'export_seda', 'Y', 'export_seda', 'N', NULL);
+
+DELETE FROM ACTIONS WHERE id = 419;
+INSERT INTO ACTIONS (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) 
+VALUES (419, '', 'Proposer export SEDA', 'EXP_SEDA', 'N', 'N', 'Y', '', 'Y', 'apps', 'N', NULL);
+
+DELETE FROM BASKETS WHERE BASKET_ID = 'AExporterSeda';
+INSERT INTO BASKETS (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) 
+VALUES ('AExporterSeda', 'Courriers à exporter SEDA', 'Courriers à exporter SEDA', 'status=''EXP_SEDA''', 'letterbox_coll', 'Y', 'N', 'Y',300);
+
+DELETE FROM GROUPBASKET WHERE BASKET_ID = 'AExporterSeda';
+INSERT INTO GROUPBASKET (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert, list_lock_clause, sublist_lock_clause) 
+VALUES ('ARCHIVISTE', 'AExporterSeda', 1, NULL, NULL, 'list_with_attachments','N', 'N', 'N', NULL, NULL);
+
+DELETE FROM ACTIONS_GROUPBASKETS WHERE id_action = 418;
+INSERT INTO ACTIONS_GROUPBASKETS (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
+VALUES (418, '', 'ARCHIVISTE', 'AExporterSeda', 'Y', 'N', 'N');
+
+DELETE FROM ACTIONS_GROUPBASKETS WHERE id_action = 419;
+INSERT INTO ACTIONS_GROUPBASKETS (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
+VALUES (419, '', 'RESP_COURRIER', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO ACTIONS_GROUPBASKETS (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
+VALUES (419, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
+
+UPDATE ENTITIES SET BUSINESS_ID = 'org_987654321_Versant';
+UPDATE ENTITIES SET ARCHIVAL_AGENCY = 'org_123456789_Archives';
+UPDATE ENTITIES SET ARCHIVAL_AGREEMENT = 'MAARCH_LES_BAINS_ACTES';
 
 /*************DIS UPDATE***************/
 DROP SEQUENCE IF EXISTS allowed_ip_id_seq CASCADE;
@@ -216,3 +333,5 @@ ALTER TABLE users DROP COLUMN IF EXISTS ra_code;
 ALTER TABLE users ADD ra_code character varying(255);
 ALTER TABLE users DROP COLUMN IF EXISTS ra_expiration_date;
 ALTER TABLE users ADD ra_expiration_date timestamp without time zone;
+
+UPDATE parameters SET param_value_int = '170' WHERE id = 'database_version';
