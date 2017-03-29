@@ -39,7 +39,7 @@ class MergedJsAbstract {
 	}
 
 	public function merge_lib() {
-		readfile('apps/maarch_entreprise/js/accounting.js');
+		readfile('apps/maarch_entreprise/js/accounting.min.js');
 		include('apps/maarch_entreprise/js/functions.js');
 		readfile('apps/maarch_entreprise/js/prototype.js');
 		readfile('apps/maarch_entreprise/js/scriptaculous.js');

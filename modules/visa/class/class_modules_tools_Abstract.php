@@ -31,6 +31,7 @@
 define('FPDF_FONTPATH',$core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/font/');
 require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdf.php');
 require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
+use Core\Models\AttachmentModel;
 
 abstract class visa_Abstract extends Database
 {
@@ -223,8 +224,17 @@ abstract class visa_Abstract extends Database
 	public function checkResponseProject($res_id, $coll_id) {
 		$this->errorMessageVisa = null;
 
+		$attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+
+		$noSignableAttachments = [];
+		foreach ($attachmentTypes as $key => $value) {
+			if (!$value['sign']) {
+				$noSignableAttachments[] = $key;
+			}
+		}
+
 		$db = new Database();
-		$stmt = $db->query("SELECT * FROM res_view_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder', 'incoming_mail_attachment') ", array($res_id, $coll_id));
+		$stmt = $db->query("SELECT * FROM res_view_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN (?) ", [$res_id, $coll_id, $noSignableAttachments]);
 		if ($stmt->rowCount() <= 0) {
 			$this->errorMessageVisa = _NO_RESPONSE_PROJECT_VISA;
 			return false;
