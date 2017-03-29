@@ -3362,6 +3362,10 @@ function loadToolbarBadge(targetTab,path_manage_script){
     });
 }
 
+function resetSelect(id) {
+    $j('#'+id).val("");
+    Event.fire($(id), "chosen:updated");
+}
 
 // Exemple appel service
 // function testService(){

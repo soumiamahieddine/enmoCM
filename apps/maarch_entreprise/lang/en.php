@@ -1812,3 +1812,5 @@ if (!defined("_CHOOSE_FINAL_DISPOSITION")) define("_CHOOSE_FINAL_DISPOSITION","c
 if (!defined("_DESTROY")) define("_DESTROY","Destroy");
 if (!defined("_KEEP")) define("_KEEP","Keep");
 if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Retention rule");
+
+if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Unselect all");
