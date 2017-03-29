@@ -427,23 +427,28 @@
     border-radius: 5px;
     padding:10px;
     height:100px;
+}
+
+.pjSign,.pjCreate{
     cursor: pointer;
 }
 
 .pjDetails label{
-   font-weight: bold;
+    font-weight: bold;
+    cursor: inherit;
 }
 
 .pjDetailsMore{
     z-index: 1;
     position: absolute;
     left: 15px;
+    margin-top: 2px;
     text-align: center;
     cursor: pointer;
     background: #009DC5;
     color: white;
     padding:10px;
-    border-radius: 25px;
+    /*border-radius: 25px;*/
     -moz-box-shadow: 0px 0px 10px 0px #656565;
     -webkit-box-shadow: 0px 0px 10px 0px #656565;
     -o-box-shadow: 0px 0px 10px 0px #656565;
@@ -647,14 +652,6 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 .resListContentFrameSelected{
     background-color: #FDD16C;
     
-}
-
-.panelRightAddPj{
-    display: block;
-}
-
-.panelRightAddPj:hover{
-    color: #009DC5;
 }
 
 .panelRightContent .item:hover{
@@ -866,6 +863,30 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 .visaPjView{
     color: initial;
 }
+.panelRightAddPj{
+    display: block;
+    padding:10px;
+    margin: auto;
+    margin-bottom: 10px; 
+    font-size: 10px;
+    height:20px;
+    width:20px;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #16a765;
+    color: white;
+    border-radius: 25px;
+    -moz-box-shadow: 0px 0px 10px 0px #656565;
+    -webkit-box-shadow: 0px 0px 10px 0px #656565;
+    -o-box-shadow: 0px 0px 10px 0px #656565;
+    box-shadow: 0px 0px 10px 0px #656565;
+    filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);
+}
+
+.panelRightAddPj i{
+    margin-left: -5px;
+}
+
 .visaPjUp{
     margin: auto;
     margin-bottom: 10px; 
@@ -874,7 +895,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     width:20px;
     cursor: pointer;
     padding: 10px;
-    background-color: #009DC5;
+    background-color: #4285f4;
     color: white;
     border-radius: 25px;
     -moz-box-shadow: 0px 0px 10px 0px #656565;
@@ -891,7 +912,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     width:20px;
     cursor: pointer;
     padding: 10px;
-    background-color: red;
+    background-color: #d14836;
     color: white;
     border-radius: 25px;
     -moz-box-shadow: 0px 0px 10px 0px #656565;

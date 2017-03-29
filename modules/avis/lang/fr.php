@@ -97,3 +97,6 @@ if (!defined("_AVIS_ROLE_UNAVAILABLE"))
 
 if (!defined("_ADD_AVIS_ROLE"))
     define("_ADD_AVIS_ROLE", "Ajouter un conseiller");
+
+if (!defined("_ADD_AVIS_MODEL"))
+    define("_ADD_AVIS_MODEL", "Utiliser un modèle de circuit d'avis");

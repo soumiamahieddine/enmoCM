@@ -450,3 +450,9 @@ if (!defined("_RESPONSE_RATE_BY_ENTITIES"))
 
 if (!defined("_RESPONSE_RATE_BY_ENTITIES_DESC"))
     define("_RESPONSE_RATE_BY_ENTITIES_DESC", "Permet d'afficher le pourcentage de courrier dont une réponse a été effectuée. Cette statistique se base sur le nombre de courriers dont une date de départ a été inscrite (il faut utiliser le champ custom_d1)");
+
+// SEDA
+if (!defined("_ARCHIVAL_AGREEMENT"))
+    define("_ARCHIVAL_AGREEMENT", "Convention d'archivage");
+if (!defined("_ARCHIVAL_AGENCY"))
+    define("_ARCHIVAL_AGENCY", "Service d'archive");

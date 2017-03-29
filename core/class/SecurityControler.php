@@ -335,11 +335,15 @@ class SecurityControler
     * @param  $userId string User identifier
     * @return string Proper where clause
     */
-    public function process_security_where_clause($whereClause, $userId)
+    public function process_security_where_clause($whereClause, $userId, $addWhere = true)
     {
         if (!empty($whereClause)) {
             $whereClause = str_replace("&#039;", "'", $whereClause);
-            $where = ' where ' . $whereClause;
+            if ($addWhere) {
+                $where = ' where ' . $whereClause;
+            } else {
+                $where = $whereClause;
+            }
             // Process with the core vars
             $where = $this->process_where_clause($where, $userId);
             // Process with the modules vars

@@ -63,7 +63,6 @@ while ($state <> 'END') {
 			if ($userInfo['mail'] == $email->sender_email) {
 				if (!empty($mailfrom_generic)) {
 
-
 					$GLOBALS['logger']->write('process e-mail '.($currentEmail+1)."/".$totalEmailsToProcess.' (FROM => '.$userInfo['firstname'].' '.$userInfo['lastname'].' <'.$mailfrom_generic.'>'.', TO => '.$email->to_list.', SUBJECT => '.$email->email_object.', CC =>'.$email->cc_list.', CCI => '.$email->cci_list.') ...', 'INFO');
 
 		            $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
@@ -102,11 +101,14 @@ while ($state <> 'END') {
 			if (!empty($email->cci_list))$GLOBALS['logger']->write("Copy invisible e-mail to : " . $email->cci_list, 'INFO');
 			
 			//--> Set the return path
-			$GLOBALS['mailer']->setReturnPath($userInfo['mail']);
-			/*$GLOBALS['mailer']->setReturnPath(
-				$userInfo['firstname'] . ' ' .  $userInfo['lastname'] . ' <' . $mailfrom_generic . '> '
-			);*/
-			
+			if (!empty($mailfrom_generic)) {
+				$GLOBALS['mailer']->setReturnPath(
+					$userInfo['firstname'] . ' ' .  $userInfo['lastname'] . ' <' . $mailfrom_generic . '> '
+				);
+			} else {
+				$GLOBALS['mailer']->setReturnPath($userInfo['mail']);
+			}
+
 			//--> To
 			$to = array();
 			$to = explode(',', $email->to_list);

@@ -31,6 +31,7 @@
 define('FPDF_FONTPATH',$core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/font/');
 require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdf.php');
 require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
+use Core\Models\AttachmentModel;
 
 abstract class visa_Abstract extends Database
 {
@@ -223,8 +224,17 @@ abstract class visa_Abstract extends Database
 	public function checkResponseProject($res_id, $coll_id) {
 		$this->errorMessageVisa = null;
 
+		$attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+
+		$noSignableAttachments = [];
+		foreach ($attachmentTypes as $key => $value) {
+			if (!$value['sign']) {
+				$noSignableAttachments[] = $key;
+			}
+		}
+
 		$db = new Database();
-		$stmt = $db->query("SELECT * FROM res_view_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder') ", array($res_id, $coll_id));
+		$stmt = $db->query("SELECT * FROM res_view_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN (?) ", [$res_id, $coll_id, $noSignableAttachments]);
 		if ($stmt->rowCount() <= 0) {
 			$this->errorMessageVisa = _NO_RESPONSE_PROJECT_VISA;
 			return false;
@@ -490,7 +500,7 @@ abstract class visa_Abstract extends Database
                         
             //VISA USER LIST
             if($bool_modif ==true){
-                $str .= '<select data-placeholder="Ajouter un viseur / signataire" id="visaUserList" onchange="addVisaUser();">';
+                $str .= '<select data-placeholder="' . _ADD_VISA_ROLE . '" id="visaUserList" onchange="addVisaUser();">';
                 $str .= '<option value="" ></option>';
 
                 $tab_userentities = $this->getEntityVis();
@@ -518,7 +528,7 @@ abstract class visa_Abstract extends Database
                 $diff_list = new diffusion_list();
                 $listModels = $diff_list->select_listmodels($typeList);
 
-                $str .= ' <select data-placeholder="Ajouter des personnes à partir d\'un modèle" name="modelList" id="modelList" onchange="loadVisaModelUsers();">';
+                $str .= ' <select data-placeholder="'._ADD_VISA_MODEL.'" name="modelList" id="modelList" onchange="loadVisaModelUsers();">';
                 $str .= '<option value=""></option>';
                 foreach($listModels as $lm){
                         

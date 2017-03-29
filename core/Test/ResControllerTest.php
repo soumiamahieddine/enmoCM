@@ -243,4 +243,68 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($response);
     }
+
+    public function testUpdate()
+    {
+        $action = new \Core\Controllers\ResController();
+
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'POST',
+            ]
+        );
+        
+        $data = [];
+
+        array_push(
+            $data,
+            array(
+                'column' => 'status',
+                'value' => 'NEW',
+                'type' => 'string',
+            )
+        );
+
+        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
+
+        $aArgs = [
+            'table'         => 'res_letterbox',
+            'res_id'        => $resId[0]['res_id'],
+            'data'          => $data,
+        ];
+
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = new \Slim\Http\Response();
+        $response = $action->update($request, $response, $aArgs);
+        //print_r($response);exit;
+        $this->assertGreaterThan(1, json_decode($response->getBody())[0]);
+    }
+
+    public function testUpdateResource()
+    {
+        $action = new \Core\Controllers\ResController();
+        
+        $data = [];
+
+        array_push(
+            $data,
+            array(
+                'column' => 'status',
+                'value' => 'NEW',
+                'type' => 'string',
+            )
+        );
+
+        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
+
+        $aArgs = [
+            'table'         => 'res_letterbox',
+            'res_id'        => $resId[0]['res_id'],
+            'data'          => $data,
+        ];
+
+        $response = $action->updateResource($aArgs);
+        //print_r($response);exit;
+        $this->assertGreaterThan(1, $response);
+    }
 }

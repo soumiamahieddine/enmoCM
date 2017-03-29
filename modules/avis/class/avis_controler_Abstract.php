@@ -85,7 +85,7 @@ abstract class avis_controler_Abstract
             $diff_list = new diffusion_list();
             $listModels = $diff_list->select_listmodels($typeList);
 
-            $str .= ' <select data-placeholder="Ajouter des personnes à partir d\'un modèle" name="modelList" id="modelList" onchange="loadAvisModelUsers();">';
+            $str .= ' <select data-placeholder="'._ADD_AVIS_MODEL.'" name="modelList" id="modelList" onchange="loadAvisModelUsers();">';
             $str .= '<option value=""></option>';
             foreach ($listModels as $lm) {
 

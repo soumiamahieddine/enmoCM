@@ -39,12 +39,13 @@ class MergedJsAbstract {
 	}
 
 	public function merge_lib() {
-		readfile('apps/maarch_entreprise/js/accounting.js');
+		readfile('apps/maarch_entreprise/js/accounting.min.js');
 		include('apps/maarch_entreprise/js/functions.js');
 		readfile('apps/maarch_entreprise/js/prototype.js');
 		readfile('apps/maarch_entreprise/js/scriptaculous.js');
 		readfile('apps/maarch_entreprise/js/jquery.min.js');
 		readfile('apps/maarch_entreprise/js/jquery.nicescroll.min.js');
+		readfile('apps/maarch_entreprise/js/tooltipster/dist/js/tooltipster.bundle.min.js');
 		include('apps/maarch_entreprise/js/indexing.js');
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
 		readfile('apps/maarch_entreprise/js/effects.js');

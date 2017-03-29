@@ -1805,3 +1805,10 @@ if (!defined("_USE_PREVIOUS_ADDRESS")) define("_USE_PREVIOUS_ADDRESS", "Re use a
 if (!defined("_SEARCH_INDICATION"))    define("_SEARCH_INDICATION", " indicate that the search is done on  mails and attachments.");
 
 if (!defined("_VISIBLE_BY"))    define("_VISIBLE_BY", "Is visible by");
+
+// SEDA
+if (!defined("_FINAL_DISPOSITION")) define("_FINAL_DISPOSITION","Final disposition");
+if (!defined("_CHOOSE_FINAL_DISPOSITION")) define("_CHOOSE_FINAL_DISPOSITION","choose final disposition");
+if (!defined("_DESTROY")) define("_DESTROY","Destroy");
+if (!defined("_KEEP")) define("_KEEP","Keep");
+if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Retention rule");

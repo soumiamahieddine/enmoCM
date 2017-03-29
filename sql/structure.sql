@@ -111,8 +111,8 @@ CREATE TABLE doctypes
   doctypes_second_level_id integer,
   primary_retention  character varying(50) DEFAULT NULL,
   secondary_retention  character varying(50) DEFAULT NULL,
-  retention_rule character varying(255) NOT NULL DEFAULT 'destruction'::character varying,
-  duration character varying(15) NOT NULL DEFAULT 'P10Y'::character varying,
+  retention_final_disposition character varying(255) NOT NULL DEFAULT 'destruction'::character varying,
+  retention_rule character varying(15) NOT NULL DEFAULT 'P10Y'::character varying,
   CONSTRAINT doctypes_pkey PRIMARY KEY (type_id)
 )
 WITH (OIDS=FALSE);
@@ -826,7 +826,7 @@ CREATE TABLE entities
   entity_type character varying(64),
   entity_path character varying(2048),
   ldap_id character varying(255),
-  transferring_agency character varying(255),
+  archival_agency character varying(255),
   archival_agreement character varying(255),
   CONSTRAINT entities_pkey PRIMARY KEY (entity_id)
 )

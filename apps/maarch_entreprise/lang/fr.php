@@ -1809,3 +1809,10 @@ if (!defined("_CAS_SAML_NOT_SUPPORTED"))    define("_CAS_SAML_NOT_SUPPORTED", "L
 if (!defined("_PROTOCOL_NOT_SUPPORTED"))    define("_PROTOCOL_NOT_SUPPORTED", "Ce protocol du CAS n est pas prise en compte.");
 if (!defined("_USER_NOT_EXIST"))    define("_USER_NOT_EXIST", "Cet utilisateur n existe pas dans l application.");
 if (!defined("_VISIBLE_BY"))    define("_VISIBLE_BY", "Visible par");
+
+// SEDA
+if (!defined("_FINAL_DISPOSITION")) define("_FINAL_DISPOSITION","Sort final");
+if (!defined("_CHOOSE_FINAL_DISPOSITION")) define("_CHOOSE_FINAL_DISPOSITION","Choix du sort final");
+if (!defined("_DESTROY")) define("_DESTROY","Destruction");
+if (!defined("_KEEP")) define("_KEEP","Conservation");
+if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Règle de retention");

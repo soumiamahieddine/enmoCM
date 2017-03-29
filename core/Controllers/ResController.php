@@ -83,9 +83,9 @@ class ResController
         return $response->withJson(ResModel::isLockForCurrentUser(['resId' => $aArgs['resId']]));
     }
 
-    public function getNotesCountById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getNotesCountForCurrentUserById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        return $response->withJson(\NotesModel::countByResId(['resId' => $aArgs['resId']]));
+        return $response->withJson(\NotesModel::countForCurrentUserByResId(['resId' => $aArgs['resId']]));
     }
 
     /**
@@ -234,6 +234,75 @@ class ResController
         } catch (Exception $e) {
             return ['errors' => 'unknown error' . $e->getMessage()];
         }
+    }
+
+    public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        if (!empty($aArgs)) {
+            $aArgs = $aArgs;
+        } else {
+            $aArgs = $request->getQueryParams();
+            $aArgs['data'] = json_decode($aArgs['data']);
+            $aArgs['data'] = $this->object2array($aArgs['data']);
+        }
+
+        $return = $this->updateResource($aArgs);
+
+        if ($return) {
+            $id = $aArgs['res_id'];
+            $obj = ResModel::getById([
+                'resId' => $id,
+                'orderBy' => 'res_id'
+            ]);
+        } else {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => _NOT_UPDATE]);
+        }
+
+        $datas = [
+            $obj,
+        ];
+
+        return $response->withJson($datas);
+    }
+
+    public function updateResource($aArgs)
+    {
+        $data = $aArgs['data'];
+        $prepareData = [];
+        $countD = count($data);
+        for ($i = 0; $i < $countD; $i++) {
+            //COLUMN
+            $data[$i]['column'] = strtolower($data[$i]['column']);
+            //VALUE
+            $prepareData[$data[$i]['column']] = $data[$i]['value'];
+        }
+
+        //print_r($prepareData);exit;
+        $aArgs['data'] = $prepareData;
+
+        $errors = [];
+
+        $return = ResModel::update($aArgs);
+
+        if ($return) {
+            $id = $aArgs['res_id'];
+            $obj = ResModel::getById([
+                'resId' => $id,
+                'orderBy' => 'res_id'
+            ]);
+        } else {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => _NOT_UPDATE]);
+        }
+
+        $datas = [
+            $obj,
+        ];
+
+        return $datas;
     }
 
     /**

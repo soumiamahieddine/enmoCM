@@ -14,6 +14,7 @@ function addVisaUser(users) {
                 +'<sup class="visaUserPos nbResZero">'+next_visa+'</sup>&nbsp;&nbsp;'
                 +'<i class="fa fa-user fa-2x" aria-hidden="true"></i> '+ $j("select#visaUserList option:selected").text() +' <sup class="nbRes">'+$j("select#visaUserList option:selected").parent().get( 0 ).label+'</sup>'
                 +'<input class="userId" type="hidden" value="' + $j("select#visaUserList option:selected").val() + '"/><input class="visaDate" type="hidden" value=""/>'
+                +'&nbsp;&nbsp; <i title="Personne signataire" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#FDD16C;visibility:hidden;"></i>'
             +'</span>'
             +'<span class="visaUserAction">'
                 +'<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);"></i>'
@@ -105,9 +106,9 @@ function updateVisaWorkflow(resId) {
        },
        success : function(response){
             if (response.status == 0) {
-                $('divInfoVisa').innerHTML = 'Mise à jour du circuit effectuée';
-                $('divInfoVisa').style.display = 'table-cell';
-                Element.hide.delay(5, 'divInfoVisa');
+                parent.$('main_info').innerHTML = 'Mise à jour du circuit effectuée';
+                parent.$('main_info').style.display = 'table-cell';
+                parent.Element.hide.delay(5, 'main_info');
                 eval(response.exec_js);
             } else if (response.status != 1) {
                 alert(response.error_txt)
