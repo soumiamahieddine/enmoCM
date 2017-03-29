@@ -1042,7 +1042,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<tr align="center">';
         
     // HISTORY
-    if ($core_tools->test_service('view_doc_history', 'apps', false)) {
+    if ($core_tools->test_service('view_doc_history', 'apps', false) || $core->test_service('view_full_history', 'apps', false)) {
         $frm_str .= '<td>';
         $pathScriptTab = $_SESSION['config']['businessappurl']
         . 'index.php?display=true&page=show_history_tab&resId='
