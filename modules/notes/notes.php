@@ -261,7 +261,12 @@ if (isset($_REQUEST['load'])) {
 
                     if (!empty($tabEntityLabel)) {
                         $allEntities = implode(' - ', $tabEntityLabel);
-                        $allEntitiesId = implode('<br/>', $tabEntityId);
+                        if(count($tabEntityId) > 3){
+                            $allEntitiesId = $tabEntityId[0] .'<br/>'.$tabEntityId[1].'<br/>'.$tabEntityId[2].'<br/>...';
+                        }else{
+                            $allEntitiesId = implode('<br/>', $tabEntityId);
+                        }
+                        
                     }
                     
 
