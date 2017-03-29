@@ -282,6 +282,14 @@ function initDragNDropVisa() {
 
         }
     });
+    $j('#visa_content')
+        .on('focus', '.consigne', function(e) {
+            $j(this).closest('.droptarget').attr("draggable", false);
+            console.log($j(this).closest('.droptarget'));
+        })
+        .on('blur', '.consigne', function(e) {
+            $j(this).closest('.droptarget').attr("draggable", true);
+        });
 }
 
 function manageFrame(button) {
