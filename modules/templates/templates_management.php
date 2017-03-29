@@ -137,8 +137,7 @@ if ($mode == 'list') {
                         ?>
                             <option value="<?php functions::xecho($_SESSION['m_admin']['templatesTargets'][$cptTarget]['id']);?>" <?php
                             if (isset($_SESSION['m_admin']['templates']['template_target'])
-                                && $_SESSION['m_admin']['templates']['template_target']
-                                    == $_SESSION['m_admin']['templatesTargets'][$cptTarget]['id']
+                                && $_SESSION['m_admin']['templates']['template_target'] == $_SESSION['m_admin']['templatesTargets'][$cptTarget]['id']
                             ) {
                                 echo 'selected="selected"';
                             }
@@ -184,6 +183,7 @@ if ($mode == 'list') {
                         onClick="javascript:show_special_form_3_elements('txt_div', 'html_div', 'office_div');" <?php
                         echo $checkedTXT;?>/> <span id="span_txt"><?php echo _TXT;?></span>
                 </p>
+                <script>setradiobutton($j("#template_target").val());</script>
                 <p>
                     <label for="template_datasource"><?php echo _TEMPLATE_DATASOURCE;?> : </label>
                     <select name="template_datasource" id="template_datasource">
@@ -197,8 +197,7 @@ if ($mode == 'list') {
                         ?>
                             <option value="<?php functions::xecho($_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['id']);?>" <?php
                             if (isset($_SESSION['m_admin']['templates']['template_datasource'])
-                                && $_SESSION['m_admin']['templates']['template_datasource']
-                                    == $_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['id']
+                                && $_SESSION['m_admin']['templates']['template_datasource'] == $_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['id']
                             ) {
                                 echo 'selected="selected"';
                             }
@@ -257,9 +256,8 @@ if ($mode == 'list') {
                                         functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileExt']); echo ': ';
                                         functions::xecho($_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileName']);
                                     ?>" <?php
-                                    if (isset($_SESSION['m_admin']['templates']['template_style'])
-                                        && $_SESSION['m_admin']['templates']['template_style']
-                                            == $_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileName']
+                                    if(isset($_SESSION['m_admin']['templates']['template_style'])
+                                        && $_SESSION['m_admin']['templates']['template_style'] == $_SESSION['m_admin']['templatesStyles'][$cptStyle]['fileName']
                                     ) {
                                         echo 'selected="selected"';
                                     }
@@ -444,35 +442,6 @@ if ($mode == 'list') {
                     show_special_form_3_elements('office_div', 'html_div', 'txt_div');
                 </script>
                 <?php
-            }
-
-            if (isset($_SESSION['m_admin']['templates']['template_target'])
-                && $_SESSION['m_admin']['templates']['template_target']
-                    == "notes"
-            ) {
-                ?>
-                <script>
-                    setradiobutton("notes");
-                </script>
-                <?php                
-            } else if (isset($_SESSION['m_admin']['templates']['template_target'])
-                && $_SESSION['m_admin']['templates']['template_target']
-                    == "notifications"
-            ) {
-                ?>
-                <script>
-                    setradiobutton("notifications");
-                </script>
-                <?php                
-            } else if (isset($_SESSION['m_admin']['templates']['template_target'])
-                && $_SESSION['m_admin']['templates']['template_target']
-                    == "attachments"
-            ) {
-                ?>
-                <script>
-                    setradiobutton("attachments");
-                </script>
-                <?php                
             }
         }
         ?>

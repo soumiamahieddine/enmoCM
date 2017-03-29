@@ -60,36 +60,31 @@ function changeStyle(style_id, path_to_script)
 
 function setradiobutton(target)
 {
-    $("html").style.display="inline";
-    $("office").style.display="inline";
-    $("txt").style.display="inline";
-    $("span_html").style.display="inline";
-    $("span_office").style.display="inline";
-    $("span_txt").style.display="inline";
-   	$("template_attachment_type_tr").style.display="none";
+    $j("#html,#office,#txt,#span_html,#span_office,#span_txt").css({"display":"inline"});
+    $j("#template_attachment_type_tr").hide();
 
-    if(target=="notes"|| target=="sendmail") {
-        $("html").style.display="none";
-        $("span_html").style.display="none";
-        $("txt").click();
-        $("txt").checked = true;
-        $("office").style.display="none";
-        $("span_office").style.display="none";
+    if(target=="notes") {
+        $j("#html,#span_html,#office,#span_office").hide();
+        $j("#txt").click();
+    }else if(target=="sendmail") {
+        $j("#office,#span_office").hide();
+        $j("#html").click();
+        console.log("office caché !");
     } else if(target=="notifications") {
-        $("txt").style.display="none";
-        $("span_txt").style.display="none";
-        $("html").click();
-        $("html").checked = true;
-        $("office").style.display="none";
-        $("span_office").style.display="none";
+        $j("#txt,#span_txt,#office,#span_office").hide();
+        $j("#html").click();
     } else if (target=="attachments"){
-    	$("template_attachment_type_tr").style.display="inline";
+        $j("#txt,#span_txt,#html,#span_html").hide();
+        $j("#office").click();
+        $j("#template_attachment_type_tr").css({"display":"inline"});
+    } else if(target=="doctypes") {
+        $j("#txt,#span_txt,#office,#span_office").hide();
+        $j("#html").click();
     }
 
     if (target != "attachments") {
-    	$("template_attachment_type").selectedIndex="0";
+    	$j("#template_attachment_type").selectedIndex="0";
     }
-
 }
 
 function select_template(path_to_script, attachment_type)
