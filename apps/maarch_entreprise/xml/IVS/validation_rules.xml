@@ -96,6 +96,8 @@
       <parameter name="fields" type="identifier" />
       <parameter name="fields_attachments" type="identifier" />
       <parameter name="mandatory_fields" type="identifier" />
+      <parameter name="retention_final_disposition" type="string" />
+      <parameter name="retention_rule" type="identifier" />
     </validationRule>
 
     <validationRule name="admin_docserver_location" extends="standardForm" mode="error">

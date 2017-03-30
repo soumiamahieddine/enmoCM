@@ -117,15 +117,15 @@ elseif($mode == "up" || $mode == "add")
                     <br />
                     <br />
                     <?php
-                    if (file_exists($_SESSION['m_admin']['users']['pathToSignature'])) {
-                        $extension = explode(".", $_SESSION['m_admin']['users']['pathToSignature']);
+                    if (file_exists($_SESSION['m_admin']['users']['pathToSignature'][0])) {
+                        $extension = explode(".", $_SESSION['m_admin']['users']['pathToSignature'][0]);
                         $count_level = count($extension)-1;
                         $the_ext = $extension[$count_level];
                     $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
                         . '_' . rand() . '.' . strtolower($the_ext);
                     $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
 
-                    if (copy($_SESSION['m_admin']['users']['pathToSignature'], $filePathOnTmp)) {
+                    if (copy($_SESSION['m_admin']['users']['pathToSignature'][0], $filePathOnTmp)) {
                         ?>
                          <img src="<?php 
                             echo $_SESSION['config']['businessappurl'] 

@@ -1,36 +1,14 @@
 <?php
-/*
-*    Copyright 2008,2014 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 /**
-* Module : Tags
-* 
-* This module is used to store ressources with any keywords
-* V: 1.0
-*
-* @file
-* @author Loic Vinet
-* @date $date$
-* @version $Revision$
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   managage_tag_list
+* @author  dev <dev@maarch.org>
+* @ingroup tags
 */
 
-/* Affichage */
 if ($mode == 'list') {
     $list = new list_show();
     $list->admin_list(
@@ -39,7 +17,8 @@ if ($mode == 'list') {
         $tagslist['title'],
         'tag_label',
         'manage_tag_list_controller&mode=list',
-        'tags','tag_id',
+        'tags',
+        'tag_id',
         true,
         $tagslist['page_name_up'],
         $tagslist['page_name_val'],
@@ -165,6 +144,7 @@ if ($mode == 'list') {
 
                 }
                 $content .= '</select>';
+                $content .= '<p style="text-align: right;margin-right: 20px;"><a style="cursor: pointer;" onclick="resetSelect(\'entitieslist\')">'._UNSELECT_ALL.'</a></p>';
                 $content .= '<script>new Chosen($(\'entitieslist\'),{width: "95%", disable_search_threshold: 10, search_contains: true,display_disabled_options: false});</script>';
                 echo $content;
             ?>

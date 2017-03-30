@@ -65,6 +65,8 @@ if (isset($_SESSION['custom_override_id'])
     );
 }
 
+require_once 'vendor/autoload.php';
+
 
 /**
  * Get an array that represents directory tree

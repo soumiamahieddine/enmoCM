@@ -109,6 +109,7 @@ class ResModelAbstract extends \Apps_Table_Service
      * insert into a resTable
      * @param  $resId integer
      * @param  $table string
+     * @param  $data array
      * @return boolean $status
      */
     public static function create(array $aArgs = [])
@@ -142,6 +143,33 @@ class ResModelAbstract extends \Apps_Table_Service
                 'where' => ['res_id = ?'],
                 'data'  => [$aArgs['id']]
             ]);
+
+        return $aReturn;
+    }
+
+    /**
+     * update a resTable
+     * @param  $resId integer
+     * @param  $table string
+     * @param  $data array
+     * @return boolean $status
+     */
+    public static function update(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['res_id']);
+        static::checkNumeric($aArgs, ['res_id']);
+
+        $where['res_id'] = $aArgs['res_id'];
+
+        if (empty($aArgs['table'])) {
+            $aArgs['table'] = 'res_letterbox';
+        }
+
+        $aReturn = static::updateTable(
+            $aArgs['data'],
+            $aArgs['table'],
+            $where
+        );
 
         return $aReturn;
     }

@@ -16,39 +16,48 @@ function writeLogIndex($EventInfo)
     );
     fclose($logFileOpened);
 }
-//print_r($_REQUEST);exit;
+
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 
-if (!isset($_SESSION['user']['pathToSignature']) ||$_SESSION['user']['pathToSignature'] == '') {
+if (!isset($_SESSION['user']['pathToSignature'][0]) ||$_SESSION['user']['pathToSignature'][0] == '') {
     $_SESSION['error'] = _IMG_SIGN_MISSING;
 	echo "{\"status\":1, \"error\" : \"". _IMG_SIGN_MISSING ."\"}";
 	exit;
 }
 
-if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
+if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
 	if (!empty($_REQUEST['resIdMaster'])) {
 		$objectResIdMaster = $_REQUEST['resIdMaster'];
 	}
 	$objectId = $_REQUEST['id'];
 	$tableName = 'res_view_attachments';
 	$db = new Database();
-    if (isset($_REQUEST['isVersion'])) {
+	if (isset($_REQUEST['isOutgoing'])) {
+            if (isset($_REQUEST['isVersion'])) {
+                $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type from "
+                    . $tableName
+                    . " where attachment_type = ? and res_id_version = ?", ['outgoing_mail', $objectId]);
 
-        $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type from "
-            . $tableName 
-            . " where attachment_type NOT IN ('converted_pdf','print_folder') and res_id_version = ?", array($objectId));
+            } else {
+                $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from "
+                    . $tableName
+                    . " where attachment_type = ? and res_id = ?", ['outgoing_mail', $objectId]);
+            }
+	} else {
+        if (isset($_REQUEST['isVersion'])) {
+            $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type from "
+                . $tableName
+                . " where attachment_type NOT IN ('converted_pdf','print_folder') and res_id_version = ?", array($objectId));
 
-    } elseif (isset($_REQUEST['isOutgoing'])) {
-
-        $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from " 
-            . $tableName 
-            . " where attachment_type = ? and res_id = ?", array('outgoing_mail', $objectId));
-    } else {
-        $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from ".$tableName." where (attachment_type NOT IN ('converted_pdf','print_folder')) and res_id = ?", array($objectId));
+        } else {
+            $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from "
+                . $tableName
+                . " where (attachment_type NOT IN ('converted_pdf','print_folder')) and res_id = ?", array($objectId));
+        }
     }
-	
+
     if ($stmt->rowCount() < 1) {
     	echo "{\"status\":1, \"error\" : \"". _FILE . ' ' . _UNKNOWN ."\"}";
 		exit;
@@ -72,7 +81,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])){
 		$cmd = "java -jar " 
 			. escapeshellarg($_SESSION['config']['corepath'] . "modules/visa/dist/SignPdf.jar") . " " 
 			. escapeshellarg($fileOnDs) . " " 
-			. escapeshellarg($_SESSION['user']['pathToSignature']) . " " 
+			. escapeshellarg($_SESSION['user']['pathToSignature'][0]) . " " 
 			. escapeshellarg($_SESSION['modules_loaded']['visa']['width_blocsign']) . " " 
 			. escapeshellarg($_SESSION['modules_loaded']['visa']['height_blocsign']) . " " 
 			. escapeshellarg($_SESSION['config']['tmppath']);

@@ -21,6 +21,7 @@ if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
 }
 $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 $whereRequest = $_SESSION['current_basket']['clause'];
+$basket_label = $_SESSION['current_basket']['label'];
 $view = $_SESSION['current_basket']['view'];
 if (
     isset($_SESSION['current_basket']['page_include'])

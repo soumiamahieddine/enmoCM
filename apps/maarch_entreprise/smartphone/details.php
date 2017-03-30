@@ -40,7 +40,11 @@ $sec = new security();
 $type = new types();
 $coll_id = $_SESSION['collection_id_choice'];
 $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
-$s_id = $_REQUEST['id'];
+if (isset($_REQUEST['res_id_master'])){
+    $s_id = $_REQUEST['res_id_master'];
+    $att_id = $_REQUEST['id'];
+}
+else $s_id = $_REQUEST['id'];
 $_SESSION['doc_id'] = $s_id;
 //to change
 $right = true;
@@ -152,14 +156,60 @@ foreach (array_keys($data) as $key) {
     }
 }
 require_once('apps/maarch_entreprise/smartphone/view_resource_controler.php');
+
+require_once "modules" . DIRECTORY_SEPARATOR . "thumbnails" . DIRECTORY_SEPARATOR
+			. "class" . DIRECTORY_SEPARATOR
+			. "class_modules_tools.php";
+
+$getAttach = "";
+
+$tnl = new thumbnails();
+
+$db = new Database();
+if (isset($_REQUEST['res_id_master'])){
+    //$ac->getCorrespondingPdf($att_id);
+    require_once 'modules/attachments/class/attachments_controler.php';
+    $ac = new attachments_controler();
+    $infos_attach = $ac->getAttachmentInfos($att_id);
+    $pdf_id = $ac->getCorrespondingPdf($att_id);
+    //echo "pdf : ".$pdf_id;
+    $path = $tnl->getPathTnl($pdf_id, $coll_id, 'res_attachments');
+    $getAttach = "&res_id_attach=".$pdf_id;
+
+    if (!is_file($path)) $path=$tnl->generateTnl($pdf_id, $coll_id, 'res_attachments');
+}
+else{
+    $path = $tnl->getPathTnl($s_id, $coll_id);
+    if (!is_file($path)) $path=$tnl->generateTnl($pdf_id, $coll_id);
+}
 ?>
 <div id="details" title="Détails" class="panel">
+	<?php
+        if (!is_file($path)){
+            echo "pdf : ".$pdf_id;
+		?>
 	<div align="center">
 		<input type="button" class="whiteButton" value="<?php 
 		echo _VIEW_DOC; 
 		?>" onclick="window.open('<?php echo $fileUrl;?>', '_blank');">
 	</div>
+    <?php
+		}
+		else {
+            
+		?>
+		<!--<img style="width:90%;" src="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=doc_thumb&module=thumbnails&res_id='.$s_id.'&coll_id=letterbox_coll&display=true';?>" onclick="window.open('<?php echo $fileUrl;?>', '_blank');"/>-->		
+		
+		<div id="frameThumb">
+		<iframe id="ifrm" frameborder="0" scrolling="no" width="0" height="0" src="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=doc_thumb_frame&body_loaded&module=thumbnails&res_id='.$s_id.'&coll_id=letterbox_coll'.$getAttach;?>"></iframe>
+		</div>
+		
+		<?php
+		}
+		?>
+	
 	<br />
+    <hr/>
     <?php
     if($core->is_module_loaded('notes')) {
         require_once('modules/notes/notes_tables.php');
@@ -168,21 +218,39 @@ require_once('apps/maarch_entreprise/smartphone/view_resource_controler.php');
         $stmtNote = $dbNotes->query($selectNotes,array($s_id,$_SESSION['collection_id_choice']));
         $nbNotes = $stmtNote->rowCount();
         ?>
-        <ul>
-            <li>
+        <!--<ul>
+            <li>-->
                 <a href="view_notes.php?id=<?php functions::xecho($s_id);?>&collId=<?php
                     functions::xecho($_SESSION['collection_id_choice']);
                 ?>&tableName=<?php
                     functions::xecho($_SESSION['res_table']);
-                ?>"><span class="fa fa-pencil-square-o"></span>
-                    &nbsp;<?php echo _NOTES;?>
-                    <span class="bubble"><?php echo $nbNotes;?></span>
+                ?>"><!--<span class="fa fa-pencil-square-o"></span>
+                    &nbsp;<?php echo _NOTES;?>-->
+                    <span class="bubble"><i class="fa fa-pencil fa-2x mCdarkGrey"></i>&nbsp;<?php echo $nbNotes;?></span>
                 </a>
-            </li>
-        </ul>
+            <!--</li>
+        </ul>-->
+        <?php
+    }
+    if ($_SESSION['current_basket']['id'] == "EsigBasket" && $infos_attach['attachment_type'] != 'signed_response'){
+        ?>
+        <a href="signature_main_panel.php?id=<?php functions::xecho($s_id);?>&collId=<?php
+                    functions::xecho($_SESSION['collection_id_choice']);
+        ?>&tableName=<?php
+            functions::xecho($_SESSION['res_table']);
+        ?>&res_id_attach=<?php
+            functions::xecho($att_id);
+        ?>">
+            <span class="bubble"><img src="<?php
+            functions::xecho($_SESSION['config']['businessappurl'])
+            ?>smartphone/img/sign.png" alt="Signer" style="height:22px;"/></span>
+        </a>
         <?php
     }
     ?>
+    <br/>
+    <br/>
+    <hr/>
     <h2><span class="fa fa-exclamation-circle" style="margin-right:10px;"></span><?php echo _GENERAL_INFO;?></h2>
     <fieldset>
         <?php

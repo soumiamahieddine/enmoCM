@@ -44,6 +44,7 @@ if (!defined("_ADMIN_ARCHITECTURE_DESC"))    define("_ADMIN_ARCHITECTURE_DESC", 
 if (!defined("_VIEW_HISTORY"))    define("_VIEW_HISTORY", "History");
 if (!defined("_VIEW_HISTORY_BATCH"))    define("_VIEW_HISTORY_BATCH", "Batch history");
 if (!defined("_VIEW_HISTORY_DESC"))    define("_VIEW_HISTORY_DESC", "Read the events history linked to the utilisation of Maarch GED.");
+if (!defined("_VIEW_FULL_HISTORY_DESC"))    define("_VIEW_FULL_HISTORY_DESC", "Read the full events history linked to the utilisation of Maarch GED.");
 if (!defined("_VIEW_HISTORY_BATCH_DESC"))    define("_VIEW_HISTORY_BATCH_DESC", "Read batch history");
 if (!defined("_ADMIN_MODULES"))    define("_ADMIN_MODULES", "Manage the modules");
 if (!defined("_ADMIN_SERVICE"))    define("_ADMIN_SERVICE", "Administration department");
@@ -1719,7 +1720,8 @@ if (!defined("_CHOOSE_CATEGORY_ASSOCIATION")) define("_CHOOSE_CATEGORY_ASSOCIATI
 if (!defined("_CHOOSE_CATEGORY_ASSOCIATION_HELP")) define("_CHOOSE_CATEGORY_ASSOCIATION_HELP", "If there is no selected category, then the action is available for all categories");
 
 //SERVICE VIEW DOC HISTORY
-if (!defined("_VIEW_DOC_HISTORY")) define("_VIEW_DOC_HISTORY", "See document history");
+if (!defined("_VIEW_DOC_HISTORY")) define("_VIEW_DOC_HISTORY", "See global document history");
+if (!defined("_VIEW_FULL_HISTORY"))    define("_VIEW_FULL_HISTORY", "See Full document history");
 
 //ONLY ALPHANUM
 if (!defined("_ONLY_ALPHANUM")) define("_ONLY_ALPHANUM", "Only alphanumeric characters are accepted");
@@ -1805,3 +1807,12 @@ if (!defined("_USE_PREVIOUS_ADDRESS")) define("_USE_PREVIOUS_ADDRESS", "Re use a
 if (!defined("_SEARCH_INDICATION"))    define("_SEARCH_INDICATION", " indicate that the search is done on  mails and attachments.");
 
 if (!defined("_VISIBLE_BY"))    define("_VISIBLE_BY", "Is visible by");
+
+// SEDA
+if (!defined("_FINAL_DISPOSITION")) define("_FINAL_DISPOSITION","Final disposition");
+if (!defined("_CHOOSE_FINAL_DISPOSITION")) define("_CHOOSE_FINAL_DISPOSITION","choose final disposition");
+if (!defined("_DESTROY")) define("_DESTROY","Destroy");
+if (!defined("_KEEP")) define("_KEEP","Keep");
+if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Retention rule");
+
+if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Unselect all");

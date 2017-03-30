@@ -120,12 +120,18 @@ var SignatureBookComponent = (function () {
                     if (_this.signatureBook.attachments[0]) {
                         _this.rightViewerLink = _this.signatureBook.attachments[0].viewerLink;
                     }
+                    if (_this.loading) {
+                        _this.displayPanel("RESLEFT");
+                    }
                     _this.loading = false;
                     setTimeout(function () {
                         $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                         $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                         $j("#resListContent").scrollTop(0);
                         $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
+                        $j("#obsVersion").tooltipster({
+                            interactive: true
+                        });
                     }, 0);
                 });
             });
@@ -157,6 +163,8 @@ var SignatureBookComponent = (function () {
             }
         }
         if (idToGo >= 0) {
+            $j("#send").removeAttr("disabled");
+            $j("#send").css("opacity", "1");
             this.zone.run(function () { return _this.changeLocation(idToGo, "action"); });
         }
         else {
@@ -310,12 +318,22 @@ var SignatureBookComponent = (function () {
         });
     };
     SignatureBookComponent.prototype.prepareSignFile = function (attachment) {
-        if (!this.loadingSign) {
+        if (!this.loadingSign && this.signatureBook.canSign) {
             if (attachment.res_id == 0) {
-                this.signatureBookSignFile(attachment.res_id_version, 1);
+                if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
+                    this.signatureBookSignFile(attachment.res_id_version, 4);
+                }
+                else {
+                    this.signatureBookSignFile(attachment.res_id_version, 1);
+                }
             }
             else if (attachment.res_id_version == 0) {
-                this.signatureBookSignFile(attachment.res_id, 0);
+                if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
+                    this.signatureBookSignFile(attachment.res_id, 3);
+                }
+                else {
+                    this.signatureBookSignFile(attachment.res_id, 0);
+                }
             }
         }
     };
@@ -331,6 +349,9 @@ var SignatureBookComponent = (function () {
         }
         else if (type == 2) {
             path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isOutgoing&resIdMaster=' + this.resId + '&id=' + resId;
+        }
+        else if (type == 3) {
+            path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isOutgoing&isVersion&resIdMaster=' + this.resId + '&id=' + resId;
         }
         this.http.get(path)
             .map(function (res) { return res.json(); })
@@ -382,10 +403,12 @@ var SignatureBookComponent = (function () {
         });
     };
     SignatureBookComponent.prototype.backToBasket = function () {
+        unlockDocument(this.resId);
         location.hash = "";
         location.reload();
     };
     SignatureBookComponent.prototype.backToDetails = function () {
+        unlockDocument(this.resId);
         location.hash = "";
         location.search = "?page=details&dir=indexing_searching&id=" + this.resId;
     };
@@ -412,6 +435,9 @@ var SignatureBookComponent = (function () {
         if ($j("#signatureBookActions option:selected")[0].value != "") {
             unlockDocument(this.resId);
             valid_action_form('empty', 'index.php?display=true&page=manage_action&module=core', this.signatureBook.currentAction.id, this.resId, 'res_letterbox', 'null', 'letterbox_coll', 'page', false, [$j("#signatureBookActions option:selected")[0].value]);
+        }
+        else {
+            alert("Aucune action choisie");
         }
     };
     SignatureBookComponent = __decorate([

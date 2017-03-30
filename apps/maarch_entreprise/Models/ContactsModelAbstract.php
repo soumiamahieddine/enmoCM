@@ -84,4 +84,37 @@ class ContactsModelAbstract extends Apps_Table_Service
 
         return $aReturn;
     }
+
+    public static function purgeContact($aArgs)
+    {
+        static::checkRequired($aArgs, ['id']);
+        static::checkNumeric($aArgs, ['id']);
+
+        $aReturn = static::select([
+            'select'    => ['count(*)'],
+            'table'     => ['res_view_letterbox'],
+            'where'     => ['contact_id = ?'],
+            'data'      => [$aArgs['id']],
+        ]);
+        
+        $aReturnBis = static::select([
+            'select'    => ['count(*)'],
+            'table'     => ['contacts_res'],
+            'where'     => ['contact_id = ?'],
+            'data'      => [$aArgs['id']],
+        ]);
+
+        if ($aReturn[0]['count'] < 1 && $aReturnBis[0]['count'] < 1) {
+            $aDelete = static::deleteFrom([
+                'table' => 'contact_addresses',
+                'where' => ['contact_id = ?'],
+                'data'  => [$aArgs['id']]
+            ]);
+            $aDelete = static::deleteFrom([
+                'table' => 'contacts_v2',
+                'where' => ['contact_id = ?'],
+                'data'  => [$aArgs['id']]
+            ]);
+        }
+    }
 }

@@ -111,8 +111,8 @@ CREATE TABLE doctypes
   doctypes_second_level_id integer,
   primary_retention  character varying(50) DEFAULT NULL,
   secondary_retention  character varying(50) DEFAULT NULL,
-  retention_rule character varying(255) NOT NULL DEFAULT 'destruction'::character varying,
-  duration character varying(15) NOT NULL DEFAULT 'P10Y'::character varying,
+  retention_final_disposition character varying(255) NOT NULL DEFAULT 'destruction'::character varying,
+  retention_rule character varying(15) NOT NULL DEFAULT 'P10Y'::character varying,
   CONSTRAINT doctypes_pkey PRIMARY KEY (type_id)
 )
 WITH (OIDS=FALSE);
@@ -305,6 +305,8 @@ CREATE TABLE users
   signature_path character varying(255) DEFAULT NULL::character varying,
   signature_file_name character varying(255) DEFAULT NULL::character varying,
   initials character varying(32) DEFAULT NULL::character varying,
+  ra_code character varying(255) DEFAULT NULL::character varying,
+  ra_expiration_date timestamp without time zone,
   CONSTRAINT users_pkey PRIMARY KEY (user_id)
 )
 WITH (OIDS=FALSE);
@@ -826,7 +828,7 @@ CREATE TABLE entities
   entity_type character varying(64),
   entity_path character varying(2048),
   ldap_id character varying(255),
-  transferring_agency character varying(255),
+  archival_agency character varying(255),
   archival_agreement character varying(255),
   CONSTRAINT entities_pkey PRIMARY KEY (entity_id)
 )
@@ -2795,6 +2797,42 @@ CREATE TABLE rm_schedule
 WITH (
     OIDS=FALSE
 );
+
+
+CREATE SEQUENCE allowed_ip_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE allowed_ip
+(
+  id integer NOT NULL DEFAULT nextval('allowed_ip_id_seq'::regclass),
+  ip character varying(50) NOT NULL,
+  CONSTRAINT allowed_ip_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+CREATE SEQUENCE user_signatures_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE user_signatures
+(
+  id bigint NOT NULL DEFAULT nextval('user_signatures_seq'::regclass),
+  user_id character varying(128) NOT NULL,
+  signature_label character varying(255) DEFAULT NULL::character varying,
+  signature_path character varying(255) DEFAULT NULL::character varying,
+  signature_file_name character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  CONSTRAINT user_signatures_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
 
 -- ************************************************************************* --
 --                                  VUES                                     --

@@ -7,7 +7,8 @@
 
 	$tnl = new thumbnails();
 	if (empty($advanced)) {
-		$path = $tnl->getPathTnl($resId, $collId); // Old Behaviour
+		if (isset($_REQUEST['tablename'])) $path = $tnl->getPathTnl($resId, $collId,$_REQUEST['tablename']);
+		else $path = $tnl->getPathTnl($resId, $collId); // Old Behaviour
 	} else {
 		$path = $tnl->getTnlPathWithColl(['resId' => $resId, 'collId' => $collId]); // New Behaviour
 	}
@@ -16,6 +17,10 @@
 	} elseif (!is_file($path)) {
 		exit();
 	}
+
+	$tab_tnl = $tnl->testMultiPage($path);
+	if (!isset($_REQUEST['num_page'])) $num_page = 0;
+	else $num_page = $_GET['num_page'];
 	$mime_type = 'image/png';	
 	$date = mktime(0,0,0,date("m" ) + 2  ,date("d" ) ,date("Y" )  );
 	$date = date("D, d M Y H:i:s", $date);
@@ -27,6 +32,5 @@
 	header("Content-Type: ".$mime_type);
 	header("Content-Disposition: inline; filename=filename;");
 	header("Content-Transfer-Encoding: binary");
-	readfile($path);
-		
+	readfile($tab_tnl[$num_page]);
 	exit();

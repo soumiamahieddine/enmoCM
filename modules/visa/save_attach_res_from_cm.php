@@ -20,14 +20,13 @@ $docserver = $docserverControler->getDocserverToInsert(
    $collId
 );
 
-
 if (empty($docserver)) {
     $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
         . _IMG_SIGN_MISSING . '. ' . _MORE_INFOS;
 } else {
     // some checking on docserver size limit
     if(!is_file($_SESSION['config']['tmppath'] . $tmpFileName)){
-        echo "{\"status\":1, \"error\" : \"". _TMP_SIGNED_FILE_FAILED . ': ' ._FILE . ' ' . _ENCRYPTED .' ' . _OR .' ' . _MISSING ."\"}";
+        echo "{\"status\":1, \"error\" : \"". _TMP_SIGNED_FILE_FAILED . ': ' ._FILE . ' ' . _ENCRYPTED .' ' . _OR .' ' . _MISSING . ' ' . _OR .' ' . strtolower(NO_PLACE_SIGNATURE) ."\"}";
         exit;
     }
     
@@ -44,7 +43,6 @@ if (empty($docserver)) {
             'format'      => strtoupper($fileExtension),
             'tmpFileName' => $tmpFileName,
         );
-
         $storeResult = array();
         $storeResult = $docserverControler->storeResourceOnDocserver(
             $collId, $fileInfos
@@ -52,19 +50,17 @@ if (empty($docserver)) {
         if (isset($storeResult['error']) && $storeResult['error'] <> '') {
             $_SESSION['error'] = $storeResult['error'];
         } else {
-			
 			require_once "core/class/class_request.php";
 			$db = new Database();
-			writeLogIndex("Relation = ".$_SESSION['visa']['repSignRel']);
 			if ($_SESSION['visa']['repSignRel'] > 1) {
-                $target_table = 'res_version_attachments';
-                $stmt = $db->query("UPDATE res_version_attachments set status = 'SIGN' WHERE res_id = ?",array($_SESSION['visa']['repSignId']));
+                //$target_table = 'res_version_attachments';
+                $db->query("UPDATE res_version_attachments set status = 'SIGN' WHERE res_id = ?",[$_SESSION['visa']['repSignId']]);
             } else {
-                $target_table = 'res_attachments';
-				$stmt = $db->query("UPDATE res_attachments set status = 'SIGN' WHERE res_id = ?",array($_SESSION['visa']['repSignId']));
+                //$target_table = 'res_attachments';
+				$db->query("UPDATE res_attachments set status = 'SIGN' WHERE res_id = ?",[$_SESSION['visa']['repSignId']]);
             }
 			unset($_SESSION['visa']['repSignRel']);
-			unset($_SESSION['visa']['repSignId']);
+			if (isset($_SESSION['visa']['repSignId'])) unset($_SESSION['visa']['repSignId']);
 			
             $resAttach = new resource();
             $_SESSION['data'] = array();
@@ -93,11 +89,12 @@ if (empty($docserver)) {
                 )
             );
 			
+            if (!isset($statusSign) || empty($statusSign)) $statusSign = 'TRA';
             array_push(
                 $_SESSION['data'],
                 array(
                     'column' => 'status',
-                    'value' => 'TRA',
+                    'value' => $statusSign,
                     'type' => 'string',
                 )
             );
@@ -117,7 +114,6 @@ if (empty($docserver)) {
                     'type' => 'string',
                 )
             );
-			writeLogIndex("Test 4");
             array_push(
                 $_SESSION['data'],
                 array(
@@ -126,7 +122,6 @@ if (empty($docserver)) {
                     'type' => 'string',
                 )
             );
-			writeLogIndex("Test 5");
 			array_push(
                 $_SESSION['data'],
                 array(
@@ -181,17 +176,34 @@ if (empty($docserver)) {
             array_push(
                 $_SESSION['data'],
                 array(
+                    'column' => 'dest_contact_id',
+                    'value' => $_SESSION['visa']['last_resId_signed']['dest_contact'],
+                    'type' => 'int',
+                )
+            );
+            array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'dest_address_id',
+                    'value' => $_SESSION['visa']['last_resId_signed']['dest_address'],
+                    'type' => 'int',
+                )
+            );
+
+            if (empty($_REQUEST['id'])) $id_origin = $objectId;
+            else $id_origin = $_REQUEST['id'];
+            if (empty($target_table)) $target_table = "res_attachments";
+            array_push(
+                $_SESSION['data'],
+                array(
                     'column' => 'origin',
-                    'value' => $_REQUEST['id'].','.$target_table,
+                    'value' => $id_origin.','.$target_table,
                     'type' => 'string',
                 )
             );
 			
-			writeLogIndex("Test 6");
 			unset($_SESSION['visa']['last_resId_signed']);
 			
-			writeLogIndex("Début insertion BDD");
-            //$_SESSION['error'] = 'test';
             $id = $resAttach->load_into_db(
                 RES_ATTACHMENTS_TABLE,
                 $storeResult['destination_dir'],
@@ -201,8 +213,6 @@ if (empty($docserver)) {
                 $_SESSION['data'],
                 $_SESSION['config']['databasetype']
             );
-			writeLogIndex("ID = $id");
-			writeLogIndex("Fin insertion BDD");
 			
 			$_SESSION['visa']['last_ans_signed'] = $id;
             if ($id == false) {

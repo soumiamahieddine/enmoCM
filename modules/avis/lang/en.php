@@ -73,3 +73,6 @@ if (!defined("_AVIS_SENT"))
 
 if (!defined("_ADD_AVIS_ROLE"))
     define("_ADD_AVIS_ROLE", "Add a user for recommendation");
+
+if (!defined("_ADD_AVIS_MODEL"))
+    define("_ADD_AVIS_MODEL", "Use avis circuit model");

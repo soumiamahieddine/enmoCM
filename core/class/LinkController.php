@@ -65,7 +65,7 @@ class LinkController
                     $return .= '</tr>';
                     $return .= '<tr>';
                         $return .= '<td style="width:14%;text-align:center;" onclick="window.top.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
-                            $return .=  $infos['res_id'];
+                            $return .= (_ID_TO_DISPLAY == 'res_id' ? $infos['res_id'] : $infos['alt_identifier']);
                         $return .= '</td>';
                         $return .= '<td style="font-size:12px;width:16%;" onclick="window.top.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
                         if ($_SESSION['current_basket']['coll_id'] == 'letterbox_coll') {

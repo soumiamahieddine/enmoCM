@@ -1,0 +1,248 @@
+.m-signature-pad {
+  position: absolute;
+  font-size: 10px;
+  width: 100%;
+  height: 95%;
+  /*top: 50%;*/
+  /*left: 3%;*/
+  /*margin-left: -350px;
+  margin-top: -200px;*/
+  border: 1px solid #e8e8e8;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.08) inset;
+  border-radius: 4px;
+}
+
+.m-signature-pad:before, .m-signature-pad:after {
+	position: absolute;
+  z-index: -1;
+  content: "";
+	width: 40%;
+	height: 10px;
+	left: 20px;
+	bottom: 10px;
+	background: transparent;
+	-webkit-transform: skew(-3deg) rotate(-3deg);
+	-moz-transform: skew(-3deg) rotate(-3deg);
+	-ms-transform: skew(-3deg) rotate(-3deg);
+	-o-transform: skew(-3deg) rotate(-3deg);
+	transform: skew(-3deg) rotate(-3deg);
+	box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+}
+
+.m-signature-pad:after {
+	left: auto;
+	right: 20px;
+	-webkit-transform: skew(3deg) rotate(3deg);
+	-moz-transform: skew(3deg) rotate(3deg);
+	-ms-transform: skew(3deg) rotate(3deg);
+	-o-transform: skew(3deg) rotate(3deg);
+	transform: skew(3deg) rotate(3deg);
+}
+
+.m-signature-pad--body {
+  position: absolute;
+  left: 120px;
+  right: 20px;
+  top: 20px;
+  bottom: 60px;
+  border: 1px solid #f4f4f4;
+}
+
+.m-signature-pad--body
+  canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.02) inset;
+  }
+
+.m-signature-pad--left {
+  position: absolute;
+  left: 0px;
+  top: 20px;
+  bottom: 60px;
+  width: 120px;
+}
+
+/*swiper*/
+.swiper-container {
+    width: 100px;
+    height: 100%;
+    margin: 5px auto;
+    background: #f4f4f4;
+}
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    width: 100px;
+    height: 15%;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+/**************************/
+
+.m-signature-pad--footer {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  height: 40px;
+}
+
+.m-signature-pad--footer
+  .description {
+    color: #C3C3C3;
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 1.8em;
+  }
+
+.m-signature-pad--footer
+  .action_but_sign {
+    position: relative;
+    font-size: 14px;
+    margin-right: 7%;
+    bottom: 0;
+    cursor: pointer;
+    opacity: 0.4;
+  }
+
+.m-signature-pad--footer
+  .action_but_sign.selected_but{
+    opacity: 1;
+  }
+
+  
+.m-signature-pad--footer
+  .action_but_sign.disabled_but{
+    opacity: 0.4;
+  }
+/* COULEURS */
+.m-signature-pad--footer
+  .action_but_sign.colBlue {
+    background: rgb(0, 0, 255) none repeat scroll 0% 0%;
+    border-radius: 50%;
+  }
+.m-signature-pad--footer
+  .action_but_sign.colGreen {
+    background: rgb(0, 255, 0) none repeat scroll 0% 0%;
+    border-radius: 50%;
+  }
+.m-signature-pad--footer
+  .action_but_sign.colRed {
+    background: rgb(255, 0, 0) none repeat scroll 0% 0%;
+    border-radius: 50%;
+  }
+.m-signature-pad--footer
+  .action_but_sign.colBlack {
+    background: rgb(0,0,0) none repeat scroll 0% 0%;
+    border-radius: 50%;
+  }
+
+.m-signature-pad--footer
+  .action_but_sign.colorBut {
+    display: inline-block;
+    height: 15px;
+    margin-left: 2px;
+    margin-right: 15px;
+    width: 15px;
+  }
+
+/* TAILLES */
+.m-signature-pad--footer
+  .action_but_sign.sizeBut {
+    display: inline-block;
+    margin-left: 2px;
+    margin-right: 15px;
+  }
+
+.m-signature-pad--footer
+  .action_but_sign.smallPen {
+    height: 5px;
+    width: 5px;
+  }
+
+.m-signature-pad--footer
+  .action_but_sign.midPen {
+    height: 10px;
+    width: 10px;
+  }
+
+.m-signature-pad--footer
+  .action_but_sign.bigPen {
+    height: 15px;
+    width: 15px;
+    margin-right: 8%;
+  }
+
+.m-signature-pad--footer
+  .action_but_sign.saveBut {
+    right: 0;
+  }
+
+.m-signature-pad--footer
+  .action_but_sign.stampBut {
+    height: 15px;
+    margin-right: 8%;
+    width: 15px;
+  }
+
+/*
+@media screen and (max-width: 1024px) {
+  .m-signature-pad {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
+    min-width: 85%;
+    min-height: 40%;
+    margin: 5%;
+  }
+  #github {
+    display: none;
+  }
+}
+
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .m-signature-pad {
+    margin: 10%;
+  }
+}
+
+@media screen and (max-height: 320px) {
+  .m-signature-pad--body {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 32px;
+  }
+  .m-signature-pad--footer {
+    left: 20px;
+    right: 20px;
+    bottom: 4px;
+    height: 100px;
+  }
+  .m-signature-pad--footer
+    .description {
+      font-size: 1em;
+      margin-top: 1em;
+    }
+}
+*/

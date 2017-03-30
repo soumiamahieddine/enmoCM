@@ -736,6 +736,9 @@ class functions
     */
     public function infouser($id)
     {
+        require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR. "class" . DIRECTORY_SEPARATOR. "class_user_signatures.php";
+        $us = new UserSignatures();
+
         $conn = new Database();
 
         $stmt = $conn->query("SELECT * FROM ".$_SESSION['tablename']['users']." WHERE user_id = ?", array($id));
@@ -749,7 +752,7 @@ class functions
                 "Mail" => "",
                 "department" => "",
                 "thumbprint" => "",
-                "pathToSignature" => ""
+                "pathToSignature" => array()
             );
         }
         else
@@ -760,15 +763,17 @@ class functions
             $stmt2 = $conn->query($query);
             $resDs = $stmt2->fetchObject();
             $pathToDs = $resDs->path_template;
-            if ($line->signature_file_name <> "") {
-                $_SESSION['user']['pathToSignature'] = $pathToDs . str_replace(
-                        "#", 
-                        DIRECTORY_SEPARATOR, 
-                        $line->signature_path
-                    )
-                    . $line->signature_file_name;
-            } else {
-                $_SESSION['user']['pathToSignature'] = "";
+            
+            $tab_sign = $us->getForUser($line->user_id);
+            $_SESSION['user']['pathToSignature'] = array();
+            foreach ($tab_sign as $sign) {
+                $path = $pathToDs . str_replace(
+                    "#", 
+                    DIRECTORY_SEPARATOR, 
+                    $sign['signature_path']
+                )
+                . $sign['signature_file_name'];
+                array_push($_SESSION['user']['pathToSignature'], $path);
             }
 
             return array("UserId" => $line->user_id,

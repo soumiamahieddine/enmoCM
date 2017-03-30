@@ -168,7 +168,15 @@ if (count($_SESSION['config']) <= 0) {
         } else {
             $_SESSION['error'] = '';
             $pass = $sec->getPasswordHash($password);
-            $res = $sec->login($login, $pass);
+            if ($ra_code != '') $res = $sec->login($login, $pass, false, $ra_code);
+            else $res = $sec->login($login, $pass);
+
+            if (!$sec->test_allowed_ip() && $ra_code == ''){
+                $_SESSION['error'] = _TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP;
+                $sec->generateRaCode($login, $password);
+                exit();
+            }
+
             //$core->show_array($res);exit();
             $_SESSION['user'] = $res['user'];
             if ($res['error'] == '') {
@@ -186,7 +194,7 @@ if (count($_SESSION['config']) <= 0) {
                 exit();
             }
             
-            $pathToIPFilter = '';
+            /*$pathToIPFilter = '';
             if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml')){
                 $pathToIPFilter = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml';
             } elseif (file_exists('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml')) {
@@ -218,7 +226,7 @@ if (count($_SESSION['config']) <= 0) {
                     }
                     $res['url'] = 'index.php?display=true&page=login';
                 }
-            }
+            }*/
                 header('location: smartphone/index.php?page=welcome');
             exit();
         }

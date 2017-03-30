@@ -45,6 +45,7 @@ if (!defined("_ADMIN_ARCHITECTURE_DESC"))    define("_ADMIN_ARCHITECTURE_DESC", 
 if (!defined("_VIEW_HISTORY"))    define("_VIEW_HISTORY", "Historique");
 if (!defined("_VIEW_HISTORY_BATCH"))    define("_VIEW_HISTORY_BATCH", "Historique des batchs");
 if (!defined("_VIEW_HISTORY_DESC"))    define("_VIEW_HISTORY_DESC", "Consulter l'historique des événements relatifs à l'utilisation de la GED Maarch.");
+if (!defined("_VIEW_FULL_HISTORY_DESC"))    define("_VIEW_FULL_HISTORY_DESC", "Consulter l'historique complet des événements relatifs à l'utilisation de la GED Maarch.");
 if (!defined("_VIEW_HISTORY_BATCH_DESC"))    define("_VIEW_HISTORY_BATCH_DESC", "Consulter l'historique des batchs");
 if (!defined("_ADMIN_MODULES"))    define("_ADMIN_MODULES", "Gérer les modules");
 if (!defined("_ADMIN_SERVICE"))    define("_ADMIN_SERVICE", "Service d'administration");
@@ -1719,7 +1720,8 @@ if (!defined("_CHOOSE_CATEGORY_ASSOCIATION")) define("_CHOOSE_CATEGORY_ASSOCIATI
 if (!defined("_CHOOSE_CATEGORY_ASSOCIATION_HELP")) define("_CHOOSE_CATEGORY_ASSOCIATION_HELP", "Si aucune catégorie sélectionnée alors l'action est valable pour toute les catégories");
 
 //SERVICE VIEW DOC HISTORY
-if (!defined("_VIEW_DOC_HISTORY")) define("_VIEW_DOC_HISTORY", "Voir l'historique du document");
+if (!defined("_VIEW_DOC_HISTORY")) define("_VIEW_DOC_HISTORY", "Voir l'historique global du document");
+if (!defined("_VIEW_FULL_HISTORY"))    define("_VIEW_FULL_HISTORY", "Voir l'historique complet du document");
 
 //ONLY ALPHANUM
 if (!defined("_ONLY_ALPHANUM")) define("_ONLY_ALPHANUM", "Seuls les caractères alphanumériques sont acceptés");
@@ -1809,3 +1811,12 @@ if (!defined("_CAS_SAML_NOT_SUPPORTED"))    define("_CAS_SAML_NOT_SUPPORTED", "L
 if (!defined("_PROTOCOL_NOT_SUPPORTED"))    define("_PROTOCOL_NOT_SUPPORTED", "Ce protocol du CAS n est pas prise en compte.");
 if (!defined("_USER_NOT_EXIST"))    define("_USER_NOT_EXIST", "Cet utilisateur n existe pas dans l application.");
 if (!defined("_VISIBLE_BY"))    define("_VISIBLE_BY", "Visible par");
+
+// SEDA
+if (!defined("_FINAL_DISPOSITION")) define("_FINAL_DISPOSITION","Sort final");
+if (!defined("_CHOOSE_FINAL_DISPOSITION")) define("_CHOOSE_FINAL_DISPOSITION","Choix du sort final");
+if (!defined("_DESTROY")) define("_DESTROY","Destruction");
+if (!defined("_KEEP")) define("_KEEP","Conservation");
+if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Règle de retention");
+
+if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Tout désélectionner");

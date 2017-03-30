@@ -117,7 +117,7 @@ if ($core->test_service('view_technical_infos', 'apps', false)) {
 
 //test service view doc history
 $viewDocHistory = false;
-if ($core->test_service('view_doc_history', 'apps', false)) {
+if ($core->test_service('view_doc_history', 'apps', false) || $core->test_service('view_full_history', 'apps', false)) {
     $viewDocHistory = true;
 }
 

@@ -71,6 +71,8 @@
 		<parameter name="parententity" type="identifier" />
 		<parameter name="short_label" type="string" />
 		<parameter name="type" type="string" />
+		<parameter name="archival_agreement" type="string" />
+		<parameter name="archival_agency" type="string" />
     </validationRule>
     <validationRule name="entity_del" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />

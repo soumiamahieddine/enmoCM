@@ -68,18 +68,50 @@ class NotesModelAbstract extends Apps_Table_Service
         return $aReturn;
     }
 
-    public static function countByResId(array $aArgs = [])
+    public static function countForCurrentUserByResId(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['resId']);
 
-        $aReturn = static::select([
-            'select' => 'COUNT(*)',
-            'table' => ['notes'],
+        $nb = 0;
+        $countedNotes = [];
+        $entities = [];
+
+        $aEntities = static::select([
+            'select' => 'entity_id',
+            'table' => ['users_entities'],
+            'where' => ['user_id = ?'],
+            'data' => [$_SESSION['user']['UserId']]
+        ]);
+
+        foreach ($aEntities as $value) {
+            $entities[] = $value['entity_id'];
+        }
+
+        $aNotes = static::select([
+            'select' => ['notes.id','user_id', 'item_id'],
+            'table' => ['notes', 'note_entities'],
+            'left_join' => ['notes.id = note_entities.note_id'],
             'where' => ['identifier = ?'],
             'data' => [$aArgs['resId']]
         ]);
 
-        return $aReturn[0]['count'];
+        foreach ($aNotes as $value) {
+            if (empty($value['item_id']) && !in_array($value['id'], $countedNotes)) {
+                ++$nb;
+                $countedNotes[] = $value['id'];
+            } elseif (!empty($value['item_id'])) {
+                if ($value['user_id'] == $_SESSION['user']['UserId'] && !in_array($value['id'], $countedNotes)) {
+                    ++$nb;
+                    $countedNotes[] = $value['id'];
+                } elseif (in_array($value['item_id'], $entities) && !in_array($value['id'], $countedNotes)) {
+                    ++$nb;
+                    $countedNotes[] = $value['id'];
+                }
+            }
+        }
+
+
+        return $nb;
     }
 
 }

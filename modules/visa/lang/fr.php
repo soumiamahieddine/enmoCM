@@ -127,6 +127,9 @@ if (!defined("_VISA_USERS"))
 if (!defined("_TMP_SIGNED_FILE_FAILED"))
     define("_TMP_SIGNED_FILE_FAILED", "Echec de la génération document avec signature");
 
+if (!defined("NO_PLACE_SIGNATURE"))
+    define("NO_PLACE_SIGNATURE", "Aucun emplacement de signature");
+
 if (!defined("_ENCRYPTED"))
     define("_ENCRYPTED", "crypté");
 
@@ -144,3 +147,9 @@ if (!defined("_SIGN_USER_COU_DESC"))
 
 if (!defined("_SIGN_USER"))
     define("_SIGN_USER", "Personne signataire");
+
+if (!defined("_ADD_VISA_ROLE"))
+    define("_ADD_VISA_ROLE", "Ajouter un viseur / signataire");
+
+if (!defined("_ADD_VISA_MODEL"))
+    define("_ADD_VISA_MODEL", "Utiliser un modèle de circuit de visa");

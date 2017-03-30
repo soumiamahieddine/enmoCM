@@ -63,6 +63,8 @@ abstract class entity_Abstract extends functions
                     $_SESSION['m_admin']['entity']['business'] = functions::show_string($line->business_id);
                     $_SESSION['m_admin']['entity']['parent'] = functions::show_string($line->parent_entity_id);
                     $_SESSION['m_admin']['entity']['type'] = functions::show_string($line->entity_type);
+                    $_SESSION['m_admin']['entity']['archival_agreement'] = functions::show_string($line->archival_agreement);
+                    $_SESSION['m_admin']['entity']['archival_agency'] = functions::show_string($line->archival_agency);
                 }
             }
             //$core_tools->execute_modules_services($_SESSION['modules_services'], 'entity_up', "include");
@@ -107,7 +109,7 @@ abstract class entity_Abstract extends functions
             else
             {
                 ?>
-                <div class="block" style="float:left;width:65%;height:600px;">
+                <div class="block" style="float:left;width:65%;height:700px;">
                 <form name="formentity" id="formentity" method="post" style="width:500px;margin:auto;" action="<?php  if($mode == 'up') { echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=entity_up_db'; } elseif($mode == 'add') { echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=entity_add_db'; } ?>" class="forms">
                     <input type="hidden" name="display" value="true" />
                     <input type="hidden" name="module" value="entities" />
@@ -213,6 +215,14 @@ abstract class entity_Abstract extends functions
                                 }
                             ?>
                         </select><span class="red_asterisk"><i class="fa fa-star"></i></span>
+                    </p>
+                    <p style="text-align:right;">
+                        <label><?php echo _ARCHIVAL_AGREEMENT ?> : </label>
+                        <input name="archival_agreement" style="margin-right: 7px" type="text" id="archival_agreement" value="<?php if(isset($_SESSION['m_admin']['entity']['archival_agreement'])){ functions::xecho($_SESSION['m_admin']['entity']['archival_agreement']); }?>">
+                    </p>
+                    <p style="text-align:right;">
+                        <label><?php echo _ARCHIVAL_AGENCY ?> : </label>
+                        <input name="archival_agency" style="margin-right: 7px" type="text" id="archival_agency" value="<?php if(isset($_SESSION['m_admin']['entity']['archival_agency'])){ functions::xecho($_SESSION['m_admin']['entity']['archival_agency']); }?>">
                     </p>
                     <?php
                     $foundParent = false;

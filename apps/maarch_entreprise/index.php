@@ -222,14 +222,23 @@ if(empty($_SESSION['current_basket'])){
     $_SESSION['save_list']['order_field'] = "";
     $_SESSION['save_list']['template'] = "";
 }
-?>
 
+if (isset($_GET['body_loaded'])){
+?>
+<body style="background:#f2f2f2;" onload="session_expirate(<?php echo $time;?>, '<?php 
+    echo $_SESSION['config']['businessappurl'];
+    ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
+    <div id ="maarch_content" style="display:block;">
+<?php
+}
+else{
+?>
 <body style="background: url('static.php?filename=loading_big.gif') no-repeat fixed center;" onload="$('maarch_body').style.background='f2f2f2';$('maarch_body').style.backgroundImage='';$('maarch_body').style.backgroundUrl='';$('maarch_content').style.display='block';session_expirate(<?php echo $time;?>, '<?php
     echo $_SESSION['config']['businessappurl'];
     ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
     <div id ="maarch_content" style="display:none;">
-
-    <?php
+<?php
+}
     //do it only once
     if (empty($_SESSION['clientSideCookies'])) {
         ?>

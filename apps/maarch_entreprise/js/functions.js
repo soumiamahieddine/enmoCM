@@ -616,6 +616,10 @@ function moveclick_ext( id_list1, id_list2)
 {
     var list1 = $(id_list1);
     var list2 = $(id_list2);
+
+    if(list1.options.length == 1 && list1.options[0].value == ''){
+        return;
+    }
     moveclick(list1,list2);
 }
 
@@ -640,6 +644,10 @@ function Move_ext( id_list1, id_list2)
 {
     var list1 = $(id_list1);
     var list2 = $(id_list2);
+
+    if(list1.options.length == 1 && list1.options[0].value == ''){
+        return;
+    }
     Move(list1,list2);
 }
 /*********************************************************/
@@ -2247,15 +2255,27 @@ function valid_report_by_period(url)
                                 ]
 
                             }
+
+                            if(url.indexOf("entity_response_rate_stat") > 0){
+                                var optionBarChart = {
+                                    responsive : true,
+                                    scaleShowVerticalLines: false,
+                                    scaleOverride : true,
+                                    scaleSteps : 10,
+                                    scaleStepWidth : 10,
+                                    scaleStartValue : 0 
+                                }
+                            } else {
+                                var optionBarChart = {
+                                    responsive : true,
+                                    scaleShowVerticalLines: false,
+                                }
+                            }
                             
                             var ctx = document.getElementById("src1").getContext("2d");
-                            window.myBar = new Chart(ctx).Bar(barChartData, {
-                                responsive : true,
-                                scaleShowVerticalLines: false
-                            });
+                            window.myBar = new Chart(ctx).Bar(barChartData, optionBarChart);
                         }
 
-                        
                     }
                 }
             },onCreate: function(answer) {
@@ -3342,6 +3362,10 @@ function loadToolbarBadge(targetTab,path_manage_script){
     });
 }
 
+function resetSelect(id) {
+    $j('#'+id).val("");
+    Event.fire($(id), "chosen:updated");
+}
 
 // Exemple appel service
 // function testService(){

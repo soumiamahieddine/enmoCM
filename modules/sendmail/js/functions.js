@@ -133,21 +133,38 @@ function updateAdress(path, action, adress, target, array_index, email_format_te
 }
 
 function validEmailForm (path, form_id) {
-	// var content = tinyMCE.get('body_from_html').getContent(); // 
-        //alert(path);
-        tinyMCE.triggerSave();
+
+    var attachments = $j("#joined_files input.check");
+
+    if (attachments.length > 0) {
+        var hasOneChecked = false;
+        for (var i = 0; i < attachments.length; i++) {
+            if (attachments[i].checked == true) {
+                hasOneChecked = true;
+                break;
+            }
+        }
+
+        if (!hasOneChecked) {
+            var cfm = confirm('Aucune pièce jointe sélectionnée. Voulez-vous quand même envoyer le mail ?');
+            if (!cfm) {
+                return;
+            }
+        }
+    }
+
+    tinyMCE.triggerSave();
     new Ajax.Request(path,
     {
         asynchronous:false,
         method:'post',
-        // parameters: Form.serialize(form_id)+ '&body_from_html=' + content,   
-        parameters: Form.serialize(form_id),   
-        encoding: 'UTF-8',                       
+        parameters: Form.serialize(form_id),
+        encoding: 'UTF-8',
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
             if(response.status == 0){
                 eval(response.exec_js);
-               window.parent.destroyModal('form_email'); 
+               window.parent.destroyModal('form_email');
             } else {
                 alert(response.error);
                 eval(response.exec_js);

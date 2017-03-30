@@ -634,20 +634,18 @@ abstract class basket_Abstract extends Database
      * @param   $collId  string Collection identifier
      *   (used in PAGE_USE mode to test the action where_clause)
      * @param   $mode  string  "PAGE_USE" or "MASS_USE"
+     * @param   $testWhere  boolean
      * @return array  Actions to be displayed
      */
-    public function get_actions_from_current_basket($resId, $collId, $mode,$testWhere = true)
+    public function get_actions_from_current_basket($resId, $collId, $mode, $testWhere = true)
     {
+        $arr = [];
+
         if ($_SESSION['category_id'] == '') {
             $_SESSION['category_id'] = $_SESSION['coll_categories'][$collId]['default_category'];
         }
-        //var_dump($_SESSION['category_id']);
-        $arr = array();
-        // If parameters error return an empty array
-        if (empty($resId) || empty($collId)
-        || (strtoupper($mode) <> 'MASS_USE'
-        && strtoupper($mode) <> 'PAGE_USE')
-        ) {
+
+        if (empty($resId) || empty($collId) || (strtoupper($mode) != 'MASS_USE' && strtoupper($mode) != 'PAGE_USE')) {
             return $arr;
         } else {
             $sec = new security();
@@ -656,99 +654,51 @@ abstract class basket_Abstract extends Database
             if (empty($table)) {
                 $table = $sec->retrieve_table_from_coll_id($collId);
             }
-            // If the view and the table of the collection is empty,
-            // return an empty array
             if (empty($table)) {
+                // If the view and the table of the collection is empty,
                 return $arr;
             }
-            // If mode "PAGE_USE", add the action 'end_action' to validate
-            // the current action
+            // If mode "PAGE_USE", add the action 'end_action' to validate the current action
             if ($mode == 'PAGE_USE') {
                 $db = new Database();
-                $stmt = $db->query(
-                    "SELECT label_action FROM actions WHERE id= ?",array($_SESSION['current_basket']['default_action']));
+                $stmt = $db->query("SELECT label_action FROM actions WHERE id= ?", [$_SESSION['current_basket']['default_action']]);
                 $label_action = $stmt->fetchObject();
-                array_push(
-                    $arr,
-                    array(
-                        'VALUE' => 'end_action',
-                        'LABEL' => $label_action->label_action.' (par défaut)',
-                    )
-                );
+                $arr[] = ['VALUE' => 'end_action', 'LABEL' => $label_action->label_action.' (par défaut)'];
             }
+
             // Browsing the current basket actions to build the actions array
-            for ($i = 0; $i < count($_SESSION['current_basket']['actions']);
-            $i ++
-            ) {
+            for ($i = 0; $i < count($_SESSION['current_basket']['actions']); $i++) {
                 $noFilterOnCat = true;
                 if (count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']) > 0) {
                     $noFilterOnCat = false;
                 }
                 $categoryIdForActions = '';
-                for ($cptCat=0;$cptCat<count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']);$cptCat++) {
+                for ($cptCat=0; $cptCat < count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']); $cptCat++) {
                     if ($_SESSION['current_basket']['actions'][$i]['CATEGORIES'][$cptCat] == $_SESSION['category_id']) {
                         $categoryIdForActions = $_SESSION['category_id'];
                     }
                 }
-                if (
-                    $noFilterOnCat || $categoryIdForActions <> ''
-                ) {
-                    // If in mode "PAGE_USE", testing the action where clause
-                    // on the res_id before adding the action
-                    if (strtoupper($mode) == 'PAGE_USE'
-                    && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y'
-                    && $testWhere
-                    ) {
+                if ($noFilterOnCat || $categoryIdForActions != '') {
+                    // If in mode "PAGE_USE", testing the action where clause on the res_id before adding the action
+                    if (strtoupper($mode) == 'PAGE_USE' && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y' && $testWhere) {
                         $where = ' where res_id = ' . $resId;
-                        if (! empty(
-                        $_SESSION['current_basket']['actions'][$i]['WHERE']
-                        )
-                        ) {
-                            $where = $where . ' and '
-                            . $_SESSION['current_basket']['actions'][$i]
-                            ['WHERE'];
+                        if (!empty($_SESSION['current_basket']['actions'][$i]['WHERE'])) {
+                            $where = $where . ' and ' . $_SESSION['current_basket']['actions'][$i]['WHERE'];
                         }
                         $stmt = $db->query('select res_id from ' . $table . ' ' . $where);
                         if ($stmt->rowCount() > 0) {
-                            array_push(
-                                $arr,
-                                array(
-                                    'VALUE' => $_SESSION['current_basket']['actions']
-                                    [$i]['ID'],
-                                    'LABEL' => $_SESSION['current_basket']
-                                    ['actions'][$i]['LABEL'],
-                                )
-                            );
+                            $arr[] = ['VALUE' => $_SESSION['current_basket']['actions'][$i]['ID'], 'LABEL' => $_SESSION['current_basket']['actions'][$i]['LABEL']];
                         }
-                    } else if (strtoupper($mode) == 'PAGE_USE'
-                    && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y'
-                    && ! $testWhere
-                    ) {
-                        array_push(
-                            $arr,
-                            array(
-                                'VALUE' => $_SESSION['current_basket']['actions']
-                                [$i]['ID'],
-                                'LABEL' => $_SESSION['current_basket']['actions']
-                                [$i]['LABEL'],
-                            )
-                        );
-                    } else if (strtoupper($mode) == 'MASS_USE'
-                    && $_SESSION['current_basket']['actions'][$i]['MASS_USE'] == 'Y'
-                    ) { // If "MASS_USE" adding the actions in the array
-                        array_push(
-                            $arr,
-                            array(
-                                'VALUE' => $_SESSION['current_basket']['actions']
-                                [$i]['ID'],
-                                'LABEL' => $_SESSION['current_basket']['actions']
-                                [$i]['LABEL'],
-                            )
-                        );
+                    } else if (strtoupper($mode) == 'PAGE_USE' && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y' && !$testWhere) {
+                        $arr[] = ['VALUE' => $_SESSION['current_basket']['actions'][$i]['ID'], 'LABEL' => $_SESSION['current_basket']['actions'][$i]['LABEL']];
+                    } else if (strtoupper($mode) == 'MASS_USE' && $_SESSION['current_basket']['actions'][$i]['MASS_USE'] == 'Y') {
+                        // If "MASS_USE" adding the actions in the array
+                        $arr[] = ['VALUE' => $_SESSION['current_basket']['actions'][$i]['ID'], 'LABEL' => $_SESSION['current_basket']['actions'][$i]['LABEL']];
                     }
                 }
             }
         }
+
         return $arr;
     }
 
@@ -757,6 +707,7 @@ abstract class basket_Abstract extends Database
      *  (Including the redirected baskets)
      *
      * @param  $userId string Owner of the baskets (identifier)
+     * @return array
      */
     public function get_baskets($userId)
     {   
@@ -765,21 +716,17 @@ abstract class basket_Abstract extends Database
             "select b.basket_id, b.basket_name from " . BASKET_TABLE . " b, "
             . USERGROUP_CONTENT_TABLE . " uc, " . GROUPBASKET_TABLE . " gb, "
             . USERGROUPS_TABLE . " u where uc.user_id = ? and uc.primary_group = 'Y' and gb.group_id = uc.group_id "
-            . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id "
-            . "and u.enabled = 'Y' ",array($userId));
+            . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id and u.enabled = 'Y' ", [$userId]);
 
-        $arr = array();
+        $arr = [];
         while ($res = $stmt->fetchObject()) {
-            array_push(
-                $arr,
-                array(
-                    'id'           => $res->basket_id,
-                    'name'         => $res->basket_name,
-                    'is_virtual'   => 'N',
-                    'basket_owner' => '',
-                    'abs_basket'   => false,
-                )
-            );
+            $arr[] = [
+                'id'           => $res->basket_id,
+                'name'         => $res->basket_name,
+                'is_virtual'   => 'N',
+                'basket_owner' => '',
+                'abs_basket'   => false
+            ];
         }
         $absBaskets = $this->get_abs_baskets($userId);
         if (isset($absBaskets)) {
