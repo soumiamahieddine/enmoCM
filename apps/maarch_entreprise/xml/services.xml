@@ -239,20 +239,32 @@
         <nature>include</nature>
     </WHEREAMIUSED>
  </SERVICE>
-   <SERVICE>
-   <id>view_doc_history</id>
-   <name>_VIEW_DOC_HISTORY</name>
-   <comment>_VIEW_HISTORY_DESC</comment>
-   <!-- <servicepage>index.php?page=history&amp;admin=history</servicepage> -->
-   <servicetype>use</servicetype>
-   <system_service>false</system_service>
-   <!-- <style>view_history</style> -->
-   <enabled>true</enabled>
-   <WHEREAMIUSED>
-        <page>details.php</page>
-        <!-- <nature>include</nature> -->
-    </WHEREAMIUSED>
- </SERVICE>
+    <SERVICE>
+       <id>view_doc_history</id>
+       <name>_VIEW_DOC_HISTORY</name>
+       <comment>_VIEW_HISTORY_DESC</comment>
+       <!-- <servicepage>index.php?page=history&amp;admin=history</servicepage> -->
+       <servicetype>use</servicetype>
+       <system_service>false</system_service>
+       <!-- <style>view_history</style> -->
+       <enabled>true</enabled>
+       <WHEREAMIUSED>
+            <page>details.php</page>
+            <!-- <nature>include</nature> -->
+        </WHEREAMIUSED>
+    </SERVICE>
+    <SERVICE>
+        <id>view_full_history</id>
+        <name>_VIEW_FULL_HISTORY</name>
+        <comment>_VIEW_FULL_HISTORY_DESC</comment>
+        <servicetype>use</servicetype>
+        <system_service>false</system_service>
+        <enabled>true</enabled>
+        <WHEREAMIUSED>
+            <page>details.php</page>
+            <!-- <nature>include</nature> -->
+        </WHEREAMIUSED>
+    </SERVICE>
  <SERVICE>
    <id>put_in_validation</id>
    <name>_PUT_DOC_ON_VALIDATION_FROM_DETAILS</name>
