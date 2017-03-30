@@ -334,4 +334,7 @@ ALTER TABLE users ADD ra_code character varying(255);
 ALTER TABLE users DROP COLUMN IF EXISTS ra_expiration_date;
 ALTER TABLE users ADD ra_expiration_date timestamp without time zone;
 
+/** Add new service for group which have view_doc_history service **/
+INSERT INTO usergroups_services SELECT group_id, 'view_full_history' FROM usergroups_services WHERE service_id = 'view_doc_history';
+
 UPDATE parameters SET param_value_int = '170' WHERE id = 'database_version';
