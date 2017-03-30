@@ -51,7 +51,7 @@ class VisaController
         }
 
         $basket = new \basket();
-        $actions = $basket->get_actions_from_current_basket($resId, $collId, 'PAGE_USE', false);
+        $actions = $basket->get_actions_from_current_basket($resId, $collId, 'PAGE_USE', true);
 
         $actionsData = [];
         $actionsData[] = ['value' => '', 'label' => _CHOOSE_ACTION];
