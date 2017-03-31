@@ -24,6 +24,7 @@ export class SafeUrlPipe implements PipeTransform {
   templateUrl: 'js/angular/app/Views/signatureBook.html',
 })
 export class SignatureBookComponent implements OnInit {
+
     coreUrl                     : string;
     resId                       : number;
     basketId                    : string;

@@ -13,6 +13,7 @@ var platform_browser_1 = require('@angular/platform-browser');
 var router_1 = require('@angular/router');
 var http_1 = require('@angular/http');
 var app_component_1 = require('./app.component');
+var profile_component_1 = require('./profile.component');
 var signature_book_component_1 = require('./signature-book.component');
 var AppModule = (function () {
     function AppModule() {
@@ -22,12 +23,13 @@ var AppModule = (function () {
             imports: [
                 platform_browser_1.BrowserModule,
                 router_1.RouterModule.forRoot([
+                    { path: 'profile', component: profile_component_1.ProfileComponent },
                     { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
                     { path: '**', redirectTo: '', pathMatch: 'full' },
                 ], { useHash: true }),
                 http_1.HttpModule
             ],
-            declarations: [app_component_1.AppComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
+            declarations: [app_component_1.AppComponent, profile_component_1.ProfileComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
             bootstrap: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])

@@ -489,8 +489,7 @@ class core_tools extends functions
         array_multisort($label, SORT_ASC, $label, SORT_ASC, $menu);
 
         // Browses the menu items
-        for($i=0;$i<count($menu);$i++)
-        {
+        for($i=0;$i<count($menu);$i++) {
             if($menu[$i]['show'] == true)
             {
                 $tmp = $menu[$i]['url'];
@@ -521,9 +520,11 @@ class core_tools extends functions
 
         // Menu items always displayed
         if ($myProfil) {
-        echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
-        <a href="'.$_SESSION['config']['businessappurl']
-            . 'index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
+            if (V2_ENABLED == true) {
+                echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="location.href = \'#/profile\'" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
+            } else {
+                echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a href="'.$_SESSION['config']['businessappurl']. 'index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
+            }
         }
         if ($logout) {
         echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
