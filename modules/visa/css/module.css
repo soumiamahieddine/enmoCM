@@ -516,6 +516,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     text-align: right;
     text-transform: initial;
     border-left: solid 1px black;
+    border-right: solid 1px black;
 }
 .actions i{
    width:5%;
@@ -543,7 +544,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     overflow: hidden;
 }
 #closeSignatureBook{
-    float:left;
+    float:right;
     padding:5px;
     width:2%;
     text-align: center;

@@ -3,11 +3,8 @@
 </div>
 <div *ngIf="!loading" class='visaContent'>
     <div class="titleSignatureBook">
-        <div id="closeSignatureBook">
-            <i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i>
-        </div>
         <div id="tabSignatureBook">
-            <div title="Courrier" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" style="border-left: solid 1px black" (click)="changeSignatureBookLeftContent(1)">
+            <div title="Courrier" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
                 <i class="fa fa-file-text-o fa-2x"></i>
             </div>
             <div title="Note(s)" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
@@ -26,6 +23,9 @@
             </div>
         </div>
         <div id="labelSignatureBook" title="{{signatureBook.currentAction.actionLabel}}" ><div>{{signatureBook.currentAction.actionLabel}}</div></div>
+        <div id="closeSignatureBook">
+            <i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i>
+        </div>
         <div class="actions">
             <i style="cursor: pointer;vertical-align: middle;" title="Accédez à la fiche détaillée" class="fa fa-info-circle fa-2x" (click)="backToDetails()"></i>&nbsp;
             <select id="signatureBookActions">
