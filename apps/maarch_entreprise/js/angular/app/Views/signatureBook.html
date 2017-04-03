@@ -7,7 +7,7 @@
             <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="Courrier" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
                 <i class="fa fa-file-text-o fa-2x"></i>
             </div>
-            <div title="Note(s)" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
+            <div title="Annotations" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
                 <i class="fa fa-pencil fa-2x">
                     <sup *ngIf="signatureBook.nbNotes > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbNotes}}</sup>
                 </i>
