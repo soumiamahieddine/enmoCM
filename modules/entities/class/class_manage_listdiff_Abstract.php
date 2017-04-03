@@ -145,7 +145,11 @@ abstract class diffusion_list_Abstract extends functions
                     $listmodel[$role_id] = array();
                 if(!isset($listmodel[$role_id]['users']))
                     $listmodel[$role_id]['users'] = array();
-                                
+
+                if ($user->process_comment === null) {
+                    $user->process_comment = '';
+                }
+                
                 array_push(
                     $listmodel[$role_id]['users'],
                     array(
