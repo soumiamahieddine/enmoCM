@@ -116,6 +116,9 @@ var SignatureBookComponent = (function () {
                     _this.rightContentWidth = "44%";
                     if (_this.signatureBook.documents[0]) {
                         _this.leftViewerLink = _this.signatureBook.documents[0].viewerLink;
+                        if (_this.signatureBook.documents[0].category_id == "outgoing") {
+                            _this.headerTab = 3;
+                        }
                     }
                     if (_this.signatureBook.attachments[0]) {
                         _this.rightViewerLink = _this.signatureBook.attachments[0].viewerLink;

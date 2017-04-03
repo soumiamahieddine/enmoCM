@@ -121,6 +121,9 @@ export class SignatureBookComponent implements OnInit {
                             this.rightContentWidth = "44%";
                             if (this.signatureBook.documents[0]) {
                                 this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
+                                if (this.signatureBook.documents[0].category_id == "outgoing") {
+                                    this.headerTab = 3;
+                                }
                             }
                             if (this.signatureBook.attachments[0]) {
                                 this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;

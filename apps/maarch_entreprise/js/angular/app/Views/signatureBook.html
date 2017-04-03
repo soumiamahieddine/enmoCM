@@ -4,7 +4,7 @@
 <div *ngIf="!loading" class='visaContent'>
     <div class="titleSignatureBook">
         <div id="tabSignatureBook">
-            <div title="Courrier" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
+            <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="Courrier" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
                 <i class="fa fa-file-text-o fa-2x"></i>
             </div>
             <div title="Note(s)" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
