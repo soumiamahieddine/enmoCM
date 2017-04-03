@@ -56,7 +56,7 @@
                         if(!empty($difflist[$role_id]['users'][$i]['process_date'])){
                             echo '<td style="width:5%;"><i class="fa fa-check" aria-hidden="true" style="color:green;"></i></td>';
                         }else{
-                            echo '<td style="width:5%;"><i class="fa fa-hourglass" aria-hidden="true"></i></td>';
+                            echo '<td style="width:5%;"><i class="fa fa-hourglass-half" aria-hidden="true"></i></td>';
                         }
                     }
                     

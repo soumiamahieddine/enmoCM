@@ -585,7 +585,7 @@ abstract class visa_Abstract extends Database
 
 
                                $info_vised = '';
-                               $link_vis = 'hourglass';
+                               $link_vis = 'hourglass-half';
 
                             }
                             
@@ -664,7 +664,7 @@ abstract class visa_Abstract extends Database
 
 
                            $info_vised = '';
-                           $link_vis = 'hourglass';
+                           $link_vis = 'hourglass-half';
                         }
                         
                     }else{

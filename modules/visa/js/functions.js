@@ -8,7 +8,7 @@ function addVisaUser(users) {
         }
         $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true">'
             +'<span class="visaUserStatus">'
-                +'<i class="fa fa-hourglass" aria-hidden="true"></i>'
+                +'<i class="fa fa-hourglass-half" aria-hidden="true"></i>'
             +'</span>'
             +'<span class="visaUserInfo">'
                 +'<sup class="visaUserPos nbResZero">'+next_visa+'</sup>&nbsp;&nbsp;'
@@ -38,7 +38,7 @@ function addVisaUser(users) {
         }
         $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true">'
             +'<span class="visaUserStatus">'
-                +'<i class="fa fa-hourglass" aria-hidden="true"></i>'
+                +'<i class="fa fa-hourglass-half" aria-hidden="true"></i>'
             +'</span>'
             +'<span class="visaUserInfo">'
                 +'<sup class="visaUserPos nbResZero">'+next_visa+'</sup>&nbsp;&nbsp;'

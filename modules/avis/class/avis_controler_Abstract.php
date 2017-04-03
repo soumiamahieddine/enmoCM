@@ -139,7 +139,7 @@ abstract class avis_controler_Abstract
 
 
                             $info_vised = '';
-                            $link_vis = 'hourglass';
+                            $link_vis = 'hourglass-half';
                         }
 
 
