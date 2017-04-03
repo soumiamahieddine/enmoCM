@@ -752,7 +752,7 @@ class functions
                 "Mail" => "",
                 "department" => "",
                 "thumbprint" => "",
-                "pathToSignature" => array()
+                "pathToSignature" => []
             );
         }
         else
@@ -768,8 +768,8 @@ class functions
             $_SESSION['user']['pathToSignature'] = array();
             foreach ($tab_sign as $sign) {
                 $path = $pathToDs . str_replace(
-                    "#", 
-                    DIRECTORY_SEPARATOR, 
+                    "#",
+                    DIRECTORY_SEPARATOR,
                     $sign['signature_path']
                 )
                 . $sign['signature_file_name'];

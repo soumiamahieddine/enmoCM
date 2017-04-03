@@ -59,21 +59,21 @@ class UsersModelAbstract extends Apps_Table_Service
     public static function getSignatureForCurrentUser()
     {
         //TODO No Session
-        if (empty($_SESSION['user']['pathToSignature']) || !file_exists($_SESSION['user']['pathToSignature'])) {
+        if (empty($_SESSION['user']['pathToSignature'][0]) || !file_exists($_SESSION['user']['pathToSignature'][0])) {
             return [];
         }
 
         $aSignature = [
             'signaturePath' => $_SESSION['user']['signature_path'],
             'signatureFileName' => $_SESSION['user']['signature_file_name'],
-            'pathToSignature' => $_SESSION['user']['pathToSignature']
+            'pathToSignature' => $_SESSION['user']['pathToSignature'][0]
         ];
 
-        $extension = explode('.', $_SESSION['user']['pathToSignature']);
+        $extension = explode('.', $aSignature['pathToSignature']);
         $extension = $extension[count($extension) - 1];
         $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($extension);
         $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
-        if (!copy($_SESSION['user']['pathToSignature'], $filePathOnTmp)) {
+        if (!copy($aSignature['pathToSignature'], $filePathOnTmp)) {
             return $aSignature;
         }
 

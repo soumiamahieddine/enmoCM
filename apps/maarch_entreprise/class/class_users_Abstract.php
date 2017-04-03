@@ -226,6 +226,15 @@ abstract class class_users_Abstract extends Database
                 $_SESSION['user']['signature_path'], $_SESSION['user']['signature_file_name'], $_SESSION['user']['UserId']));
             $db->query($query, $arrayPDO);
 
+            $stmt = $db->query("SELECT user_id FROM user_signatures WHERE user_id = ?", [$_SESSION['user']['UserId']]);
+            $obj = $stmt->fetchObject();
+
+            if ($obj) {
+                $db->query('UPDATE user_signatures SET signature_label = ?, signature_path = ?, signature_file_name = ? WHERE user_id = ?', ['', $_SESSION['user']['signature_path'], $_SESSION['user']['signature_file_name'], $_SESSION['user']['UserId']]);
+            } else {
+                $db->query('INSERT INTO user_signatures (user_id, signature_label, signature_path, signature_file_name) VALUES (?, ?, ?, ?)', [$_SESSION['user']['UserId'], '', $_SESSION['user']['signature_path'], $_SESSION['user']['signature_file_name']]);
+            }
+
             // email_signatures
             if ($core->is_module_loaded('sendmail')) {
                 if (isset($_POST['emailSignature']) && !empty($_POST['emailSignature'])) {
