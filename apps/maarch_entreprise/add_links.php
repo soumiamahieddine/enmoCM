@@ -40,7 +40,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                    }
                 }
             }
-            
+
             if ($i == 0 && !$self && count($_SESSION['stockCheckbox'])==1) {
                 $queryAddLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES(?, ?, ?)";
                 $arrayPDO = array($res_parent, $res_child, $_SESSION['collection_id_choice']);
@@ -56,18 +56,26 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                    $_SESSION['config']['databasetype'],
                    'apps'
                 );
-
+                $altIdentifier = $Class_LinkController->getAltIdentifier($res_child);
                 $hist3 = new history();
                 $hist3->add(
                     $_REQUEST['tableHist'],
                     $res_parent,
                    "ADD",
                    'linkup',
-                   _THE_DOCUMENT_LINK . $res_child . ' ' . _NOW_LINK_WITH_THIS_ONE,
+                   _THE_DOCUMENT_LINK . $altIdentifier.' (n°'.$res_child . ') ' . _NOW_LINK_WITH_THIS_ONE,
                    $_SESSION['config']['databasetype'],
                    'apps'
                 );
-                $info = _THE_DOCUMENT_LINK . $res_child . ' ' . _NOW_LINK_WITH_THIS_ONE;
+                //$info = _THE_DOCUMENT_LINK . $altIdentifier.' (n°'.$res_child . ') ' . _NOW_LINK_WITH_THIS_ONE;
+                $allChronoNumber = $Class_LinkController->getAltIdentifierConcatened($_SESSION['stockCheckbox']);
+                if(count($_SESSION['stockCheckbox']) == 1){
+                  $info = _THE_DOCUMENT_LINK .$allChronoNumber.' ' . _NOW_LINK_WITH_THIS_ONE;
+                }elseif(count($_SESSION['stockCheckbox']) > 1 && count($_SESSION['stockCheckbox']) < 3){
+                  $info = _THE_DOCUMENTS_LINK .$allChronoNumber.' ' . _ARE_NOW_LINK_WITH_THIS_ONE;
+                }elseif(count($_SESSION['stockCheckbox']) >= 3){
+                  $info = _THE_DOCUMENT_LINK .$altIdentifier.' (n°'.$res_child . ') ' . _ARE_NOW_LINK_WITH_MANY_DOCUMENTS;
+                }
             }elseif($i == 0 && !$self && count($_SESSION['stockCheckbox'])>1){
                 for($j=0;$j<count($_SESSION['stockCheckbox']);$j++){
                 $queryAddLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES(?, ?, ?)";
@@ -84,37 +92,46 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                    $_SESSION['config']['databasetype'],
                    'apps'
                 );
-
+                $altIdentifier = $Class_LinkController->getAltIdentifier($res_child);
                 $hist3 = new history();
                 $hist3->add(
                     $_REQUEST['tableHist'],
                     $res_parent,
                    "ADD",
                    'linkup',
-                   _THE_DOCUMENT_LINK . $res_child . ' ' . _NOW_LINK_WITH_THIS_ONE,
+                   _THE_DOCUMENT_LINK .$altIdentifier.' (n°'.$res_child . ') ' . _NOW_LINK_WITH_THIS_ONE,
                    $_SESSION['config']['databasetype'],
                    'apps'
                 );
-                $info = _THE_DOCUMENT_LINK . $res_child . ' ' . _NOW_LINK_WITH_THIS_ONE;
-
+                //$info = _THE_DOCUMENT_LINKBBBB .$altIdentifier.' (n°'.$res_child . ') ' . _NOW_LINK_WITH_THIS_ONE;
+              }
+              //seek all chrono number
+              $allChronoNumber = $Class_LinkController->getAltIdentifierConcatened($_SESSION['stockCheckbox']);
+              if(count($_SESSION['stockCheckbox']) == 1){
+                $info = _THE_DOCUMENT_LINK .$allChronoNumber.' ' . _NOW_LINK_WITH_THIS_ONE;
+              }elseif(count($_SESSION['stockCheckbox']) > 1 && count($_SESSION['stockCheckbox']) < 3){
+                $info = _THE_DOCUMENTS_LINK .$allChronoNumber.' ' . _ARE_NOW_LINK_WITH_THIS_ONE;
+              }elseif(count($_SESSION['stockCheckbox']) >= 3){
+                $info = _THE_DOCUMENT_LINK .$altIdentifier.' (n°'.$res_child . ') ' . _ARE_NOW_LINK_WITH_MANY_DOCUMENTS;
               }
             }
         } elseif($_REQUEST['mode'] == 'del') {
+            //seek the alt_identifier of the $res_parent
+            $altIdentifier = $Class_LinkController->getAltIdentifier($res_parent);
             $queryDelLink = "DELETE FROM res_linked WHERE res_parent=? AND res_child=? and coll_id=?";
             $arrayPDO = array($res_parent, $res_child, $_SESSION['collection_id_choice']);
             $db->query($queryDelLink, $arrayPDO);
-
             $hist2 = new history();
             $hist2->add(
                 $_REQUEST['tableHist'],
                $res_child,
                "DEL",
                'linkdel',
-               _LINK_TO_THE_DOCUMENT. $res_parent. ' ' . _LINK_DELETED,
+               _LINK_TO_THE_DOCUMENT. $altIdentifier.' (n°'.$res_parent . ') ' . _LINK_DELETED,
                $_SESSION['config']['databasetype'],
                'apps'
             );
-            $info = _LINK_TO_THE_DOCUMENT. $res_parent. ' ' . _LINK_DELETED;
+            $info = _LINK_TO_THE_DOCUMENT. $altIdentifier.' (n°'.$res_parent . ') ' . _LINK_DELETED;
 
             $hist3 = new history();
             $hist3->add(
@@ -122,7 +139,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                 $res_parent,
                "DEL",
                'linkdel',
-               _THE_DOCUMENT_LINK . $res_child . ' ' . _NO_LINK_WITH_THIS_ONE,
+               _THE_DOCUMENT_LINK . $altIdentifier.' (n°'.$res_child . ') ' . _NO_LINK_WITH_THIS_ONE,
                $_SESSION['config']['databasetype'],
                'apps'
             );

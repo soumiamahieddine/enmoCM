@@ -34,4 +34,49 @@ class UserModelAbstract extends \Apps_Table_Service
 
         return $aReturn;
     }
+
+    public static function getById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+        $aReturn = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['users'],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']],
+        ]);
+
+        return $aReturn[0];
+    }
+
+    public static function getSignaturesById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+        $aReturn = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['user_signatures'],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']],
+        ]);
+
+        return $aReturn;
+    }
+
+    public static function getEmailSignaturesById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+        $aReturn = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['users_email_signatures'],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']],
+        ]);
+
+        return $aReturn;
+    }
 }

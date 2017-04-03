@@ -387,18 +387,16 @@ if (file_exists($path)) {
     </div>
 </body>
 <?php
-if (V2_ENABLED) {
-    if (PROD_MODE) {
-    ?>
+if (PROD_MODE) {
+?>
     <script src="js/angular/main.bundle.min.js"></script>
+<?php
+} else {
+    ?>
+    <script>
+        System.import('js/angular/main.js').catch(function(err){ console.error(err); });
+    </script>
     <?php
-    } else {
-        ?>
-        <script>
-            System.import('js/angular/main.js').catch(function(err){ console.error(err); });
-        </script>
-        <?php
-    }
 }
 ?>
 
