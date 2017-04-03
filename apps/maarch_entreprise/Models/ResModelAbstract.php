@@ -96,6 +96,28 @@ class ResModelAbstract extends Apps_Table_Service
         return $aReturn;
     }
 
+    public static function getAvailableAndTemporaryLinkedAttachmentsNotIn(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['resIdMaster', 'notIn']);
+        static::checkNumeric($aArgs, ['resIdMaster']);
+        static::checkArray($aArgs, ['notIn']);
+
+
+        $select = [
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['res_view_attachments'],
+            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')"],
+            'data'      => [$aArgs['resIdMaster'], $aArgs['notIn']],
+        ];
+        if (!empty($aArgs['orderBy'])) {
+            $select['order_by'] = $aArgs['orderBy'];
+        }
+
+        $aReturn = static::select($select);
+
+        return $aReturn;
+    }
+
     public static function getObsLinkedAttachmentsNotIn(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['resIdMaster', 'notIn']);

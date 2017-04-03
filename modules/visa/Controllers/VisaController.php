@@ -270,7 +270,7 @@ class VisaController
         }
         $orderBy .= " ELSE {$c} END, doc_date DESC NULLS LAST, creation_date DESC";
 
-        $attachments = \ResModel::getAvailableLinkedAttachmentsNotIn(
+        $attachments = \ResModel::getAvailableAndTemporaryLinkedAttachmentsNotIn(
             [
                 'resIdMaster'   => $aArgs['resId'],
                 'notIn'         => ['incoming_mail_attachment', 'print_folder'],
