@@ -163,11 +163,19 @@
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '84%' : '99%'}"></iframe>
-                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
+                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
                     <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF du format "{{signatureBook.attachments[rightSelectedThumbnail].title}}.{{signatureBook.attachments[rightSelectedThumbnail].format}}" n'est pas disponible.</sub></div>
                     <div class="visaPjView">
                         <a title="Télécharger la pièce jointe" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].res_id}}" target="_blank">
                             <i class="fa fa-download fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
+                    <div style="padding-top: 25%;">L'édition de la pièce jointe a été interrompue.<br/><sub>Veuillez la ré-éditer.</sub></div>
+                    <div>
+                        <a title="Editer la pièce jointe" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                            <i class="fa fa-pencil-square-o fa-2x" style="cursor:pointer;"></i>
                         </a>
                     </div>
                 </div>
@@ -198,7 +206,8 @@
                         <i class="fa fa-file-o fa-stack-2x"></i><i style="font-weight:bold;letter-spacing: -1px;">{{attachment.icon}}</i>
                     </span>
                     <i *ngIf="attachment.sign && attachment.status == 'SIGN'" title="Le document a été signé" style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle"></i>
-                    <i *ngIf="attachment.sign && attachment.status != 'SIGN'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle-o"></i>
+                    <i *ngIf="attachment.sign && attachment.status != 'SIGN' && attachment.status != 'TMP'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle-o"></i>
+                    <i *ngIf="attachment.sign && attachment.status == 'TMP'"  style="color:green;-ms-transform: rotate(-35deg);-webkit-transform: rotate(-35deg);transform: rotate(-35deg);position: absolute;top: 39px;right: 1px;" >Brouillon</i>
                 </div>
             </div>
             <div style="bottom: 0px;position: absolute;left: 5px;">
