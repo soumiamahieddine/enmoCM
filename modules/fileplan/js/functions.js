@@ -78,8 +78,8 @@ function execFileplanScript(path) {
     });
 }
 
-function oneIsChecked(idForm, fieldName) {
-    
+function planIsChecked(idForm, fieldName) {
+
     if(typeof(fieldName)==='undefined'){
         var fieldName = 'field[]';
     }
@@ -118,7 +118,7 @@ function getFieldsCheckedValues(idForm, fieldName) {
 
 function showFileplanList(path, idForm, width, height, error) {
 
-    var isChecked = oneIsChecked(idForm);
+    var isChecked = planIsChecked(idForm);
     // alert(isChecked);
     if(isChecked == true) {
         

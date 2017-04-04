@@ -8,9 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var http_1 = require('@angular/http');
-require('rxjs/add/operator/map');
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = require("@angular/core");
+var http_1 = require("@angular/http");
+require("rxjs/add/operator/map");
 var ProfileComponent = (function () {
     function ProfileComponent(http) {
         this.http = http;
@@ -31,12 +32,12 @@ var ProfileComponent = (function () {
             _this.coreUrl = data.coreurl;
         });
     };
-    ProfileComponent = __decorate([
-        core_1.Component({
-            templateUrl: 'js/angular/app/Views/profile.html',
-        }), 
-        __metadata('design:paramtypes', [http_1.Http])
-    ], ProfileComponent);
     return ProfileComponent;
 }());
+ProfileComponent = __decorate([
+    core_1.Component({
+        templateUrl: 'js/angular/app/Views/profile.html',
+    }),
+    __metadata("design:paramtypes", [http_1.Http])
+], ProfileComponent);
 exports.ProfileComponent = ProfileComponent;
