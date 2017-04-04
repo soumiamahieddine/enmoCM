@@ -15,6 +15,7 @@ require("rxjs/add/operator/map");
 var ProfileComponent = (function () {
     function ProfileComponent(http) {
         this.http = http;
+        this.user = {};
         this.loading = false;
     }
     ProfileComponent.prototype.prepareProfile = function () {
@@ -30,6 +31,12 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.coreUrl = data.coreurl;
+            _this.http.get(_this.coreUrl + 'rest/user/profile')
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.user = data;
+                _this.loading = false;
+            });
         });
     };
     return ProfileComponent;

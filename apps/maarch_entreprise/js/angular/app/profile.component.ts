@@ -12,6 +12,7 @@ export class ProfileComponent implements OnInit {
 
     coreUrl                     : string;
 
+    user                        : any = {};
     loading                     : boolean   = false;
 
 
@@ -32,6 +33,13 @@ export class ProfileComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 this.coreUrl = data.coreurl;
+                this.http.get(this.coreUrl + 'rest/user/profile')
+                    .map(res => res.json())
+                    .subscribe((data) => {
+                        this.user = data;
+
+                        this.loading = false;
+                    });
             });
     }
 
