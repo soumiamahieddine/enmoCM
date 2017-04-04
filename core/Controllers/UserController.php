@@ -31,6 +31,8 @@ class UserController
         $user = UserModel::getById(['userId' => $_SESSION['user']['UserId'], 'select' => ['user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials']]);
         $user['signatures'] = UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $_SESSION['user']['UserId']]);
+        $user['groups'] = UserModel::getGroupsById(['userId' => $_SESSION['user']['UserId']]);
+        $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
 
         return $response->withJson($user);
     }

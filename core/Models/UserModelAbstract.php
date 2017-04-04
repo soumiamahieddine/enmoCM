@@ -143,4 +143,36 @@ class UserModelAbstract extends \Apps_Table_Service
 
         return $aReturn[0]['process_comment'];
     }
+
+    public static function getGroupsById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+
+        $aGroups = static::select([
+            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group'],
+            'table'     => ['usergroup_content, usergroups'],
+            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return $aGroups;
+    }
+
+    public static function getEntitiesById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+
+        $aEntities = static::select([
+            'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.primary_entity'],
+            'table'     => ['users_entities, entities'],
+            'where'     => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return $aEntities;
+    }
 }
