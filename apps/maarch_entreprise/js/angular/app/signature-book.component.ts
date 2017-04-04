@@ -129,9 +129,7 @@ export class SignatureBookComponent implements OnInit {
                                 this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
                             }
 
-                            if (this.loading) {
-                                this.displayPanel("RESLEFT");
-                            }
+                            this.displayPanel("RESLEFT");
                             this.loading = false;
 
                             setTimeout(() => {

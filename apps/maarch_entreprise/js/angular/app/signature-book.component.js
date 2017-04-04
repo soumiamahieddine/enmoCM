@@ -124,9 +124,7 @@ var SignatureBookComponent = (function () {
                     if (_this.signatureBook.attachments[0]) {
                         _this.rightViewerLink = _this.signatureBook.attachments[0].viewerLink;
                     }
-                    if (_this.loading) {
-                        _this.displayPanel("RESLEFT");
-                    }
+                    _this.displayPanel("RESLEFT");
                     _this.loading = false;
                     setTimeout(function () {
                         $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
