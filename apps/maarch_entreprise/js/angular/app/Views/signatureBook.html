@@ -208,6 +208,7 @@
                     <i *ngIf="attachment.sign && attachment.status == 'SIGN'" title="Le document a été signé" style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle"></i>
                     <i *ngIf="attachment.sign && attachment.status != 'SIGN' && attachment.status != 'TMP'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle-o"></i>
                     <i *ngIf="attachment.sign && attachment.status == 'TMP'"  style="color:green;-ms-transform: rotate(-35deg);-webkit-transform: rotate(-35deg);transform: rotate(-35deg);position: absolute;top: 39px;right: 1px;" >Brouillon</i>
+                    <br/><i style="position: absolute;margin-left: -9px;" >.{{attachment.format}}</i>
                 </div>
             </div>
             <div style="bottom: 0px;position: absolute;left: 5px;">
