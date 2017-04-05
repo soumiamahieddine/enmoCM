@@ -492,7 +492,7 @@ abstract class visa_Abstract extends Database
 
 	}
 	public function getList($res_id, $coll_id, $bool_modif=false, $typeList, $isVisaStep = false, $fromDetail = ""){
-                        
+			$core = new core_tools();      
             $circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
             
             $str .= '<div class="error" id="divErrorVisa" onclick="this.hide();"></div>';
@@ -554,9 +554,9 @@ abstract class visa_Abstract extends Database
                 if(count($circuit['visa']['users']) > 0){
                     foreach ($circuit['visa']['users'] as $it=>$info_userVis) {
                         if(empty($info_userVis['process_date'])){
-                            if($lastUserVis == true && $isVisaStep == true){
+                            if(($lastUserVis == true && $isVisaStep == true)){
                                 $vised = ' currentVis';
-                                $modif = 'false';
+                                
                                 $disabled = '';
                                 $link_vis = 'arrow-right ';
                                 $del_vis = '<div class="delete_visa"></div>';
@@ -567,6 +567,13 @@ abstract class visa_Abstract extends Database
                                     $info_vised = '<p style="font-weight:normal;">'._VISA_USER_COU.'</p>';
 									$dropZone = '';
                                 }
+								if($core->test_service('modify_visa_in_signatureBook', 'visa', false)){
+									$modif = 'true';
+									$dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
+                                    $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+								}else{
+									$modif = 'false';
+								}
 
 
 
@@ -646,15 +653,20 @@ abstract class visa_Abstract extends Database
 								$dropZone = '';
                                 $info_vised = '<p style="font-weight:normal;">'._SIGN_USER_COU.'</p>';
                             }
-
-
+							if($core->test_service('modify_visa_in_signatureBook', 'visa', false)){
+								$modif = 'true';
+								$dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
+								$del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+							}else{
+								$modif = 'false';
+							}
 
                         }else{
 							$dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
                            $vised = ''; 
                            if($bool_modif == true){
                                $modif = 'true';
-                                $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);"></i>';
+                                $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
                                 $disabled = '';  
                            }else{
                                 $modif = 'false';

@@ -153,3 +153,9 @@ if (!defined("_ADD_VISA_ROLE"))
 
 if (!defined("_ADD_VISA_MODEL"))
     define("_ADD_VISA_MODEL", "Utiliser un modèle de circuit de visa");
+
+if (!defined("_MODIFY_VISA_IN_SIGNATUREBOOK"))
+    define("_MODIFY_VISA_IN_SIGNATUREBOOK", "Modifier le viseur en cours depuis le parapheur");
+
+if (!defined("_MODIFY_VISA_IN_SIGNATUREBOOK_DESC"))
+    define("_MODIFY_VISA_IN_SIGNATUREBOOK_DESC", "Utile si le parahpeur sert en tant que parapheur de supervision");
