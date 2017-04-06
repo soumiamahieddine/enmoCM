@@ -1,46 +1,16 @@
 <?php
-/*
-*    Copyright 2008-2016 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
 /**
-* @brief   Contains all the functions to manage diffusion list
-*
-* @file
-* @author Claire Figueras <dev@maarch.org>
-* @date $date$
-* @version $Revision$
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   class_manage_listdiff_Abstract : Contains all the functions to manage diffusion list
+* @author  dev <dev@maarch.org>
 * @ingroup entities
 */
 require_once 'modules/entities/entities_tables.php';
 require_once 'core/core_tables.php';
-/**
-* @brief   Contains all the functions to manage diffusion list
-*
-* <ul>
-* <li>Loads diffusion list from an model linked to an entity</li>
-* <li>Updates the listinstance or listmodel table in the database</li>
-* <li>Gets a diffusion list for a given resource identifier</li>
-*</ul>
-*
-* @ingroup entities
-*/
+
 abstract class diffusion_list_Abstract extends functions
 {
     #**************************************************************************
@@ -359,8 +329,8 @@ abstract class diffusion_list_Abstract extends functions
             $creatorEntity = "";
         }
 
-        $oldListInst = $this->get_listinstance($resId, false, $collId);
-/*        echo 'old<br/>';
+        $oldListInst = $this->get_listinstance($resId, false, $collId, $difflistType);
+        /*echo 'old<br/>';
         var_dump($oldListInst);
         echo 'new<br/>';
         var_dump($diffList);*/
@@ -370,36 +340,27 @@ abstract class diffusion_list_Abstract extends functions
 
         $roles = $this->list_difflist_roles();
         $db = new Database();
-        $stmt = $db->query("SELECT listinstance_id FROM listinstance WHERE res_id = ? and coll_id = ? and difflist_type = ?",array($resId,$collId,$difflistType));
+        $stmt = $db->query("SELECT listinstance_id FROM listinstance WHERE res_id = ? and coll_id = ? and difflist_type = ?", array($resId,$collId,$difflistType));
 
         $diffUser = false;
         $diffCopyUsers = false;
         $diffCopyEntities = false;
 
-        foreach($roles as $role_id => $role_label) {
+        foreach ($roles as $role_id => $role_label) {
             if ($stmt->rowCount() > 0 && (isset($oldListInst[$role_id]) || isset($diffList[$role_id]) )) {
 
                 //compare old and new difflist
-                for($iOld=0; $iOld<count($oldListInst['users']); $iOld++){
-                    foreach($oldListInst['users'][$iOld] as $key => $value){
-                        if ($value != $diffList['users'][$iOld][$key]) {
-                            $diffUser = true;
-                            break;
-                        }
+                for ($iOld=0; $iOld<count($oldListInst[$role_id]['users']); $iOld++) {
+                    if ($oldListInst[$role_id]['users'][$iOld]['user_id'] != $diffList[$role_id]['users'][$iOld]['user_id']) {
+                        $diffUser = true;
+                        break;
                     }
                 }
 
+                //USELESS ?
                 if (!$diffUser && isset($oldListInst[$role_id]['users'])) {
                     if (count($oldListInst[$role_id]['users']) != count($diffList[$role_id]['users']) ) {
                         $diffCopyUsers = true;
-                    }
-                    for($iOld=0; $iOld<count($oldListInst[$role_id]['users']); $iOld++){
-                        foreach($oldListInst[$role_id]['users'][$iOld] as $key => $value){
-                            if ($value != $diffList[$role_id]['users'][$iOld][$key]) {
-                                $diffCopyUsers = true;
-                                break;
-                            }
-                        }
                     }
                 }
 
@@ -407,8 +368,8 @@ abstract class diffusion_list_Abstract extends functions
                     if (count($oldListInst[$role_id]['entities']) != count($diffList[$role_id]['entities']) ) {
                         $diffCopyEntities = true;
                     }
-                    for($iOld=0; $iOld<count($oldListInst[$role_id]['entities']); $iOld++){
-                        foreach($oldListInst[$role_id]['entities'][$iOld] as $key => $value){
+                    for ($iOld=0; $iOld<count($oldListInst[$role_id]['entities']); $iOld++) {
+                        foreach ($oldListInst[$role_id]['entities'][$iOld] as $key => $value) {
                             if ($value != $diffList[$role_id]['entities'][$iOld][$key]) {
                                 $diffCopyEntities = true;
                                 break;
@@ -417,13 +378,8 @@ abstract class diffusion_list_Abstract extends functions
                     }
                 }
 
-                // check add/remove all copy users
-                if ( (isset($diffList[$role_id]['users']) && !isset($oldListInst[$role_id]['users'])) || (!isset($diffList[$role_id]['users']) && isset($oldListInst[$role_id]['users']))) {
-                    $diffCopyUsers = true;
-                }
-
                 // check add/remove all copy entities
-                if ( (isset($diffList[$role_id]['entities']) && !isset($oldListInst[$role_id]['entities'])) || (!isset($diffList[$role_id]['entities']) && isset($oldListInst[$role_id]['entities']))) {
+                if ((isset($diffList[$role_id]['entities']) && !isset($oldListInst[$role_id]['entities'])) || (!isset($diffList[$role_id]['entities']) && isset($oldListInst[$role_id]['entities']))) {
                     $diffCopyUsers = true;
                 }
 
@@ -434,15 +390,15 @@ abstract class diffusion_list_Abstract extends functions
             $this->save_listinstance_history($collId, $resId, $difflistType);
         }
 
-        # Delete previous listinstance
+        //Delete previous listinstance
         $stmt = $db->query(
             "DELETE FROM " . ENT_LISTINSTANCE
             . " WHERE coll_id = ?"
-                . " AND res_id = ? AND difflist_type = ?",array($collId,$resId,$difflistType)
+                . " AND res_id = ? AND difflist_type = ?", array($collId,$resId,$difflistType)
         );
         
         $roles = $this->list_difflist_roles();
-        foreach($roles as $role_id => $role_label) {
+        foreach ($roles as $role_id => $role_label) {
             // Special value 'copy', item_mode = cc
             if($role_id == 'copy')
                 $item_mode = 'cc';
@@ -468,50 +424,48 @@ abstract class diffusion_list_Abstract extends functions
                 }
                 //Modification du dest_user dans la table res_letterbox
                 if($role_id == 'dest' && $collId == 'letterbox_coll')
-					$stmt = $db->query("update ".RES_LETTERBOX." set dest_user = ? where res_id = ?",array($userId,$resId));
-				
-				if ($processDate != ''){
-					$stmt = $db->query(
-						"insert into " . ENT_LISTINSTANCE
-							. " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment, process_date) "
-						. "values ("
-							. "?, ?, "
-							. "'DOC', ?, "
-							. "?, " 
-							. "'user_id' , "
-							. "?, "
-							. "?, "
-							. "?, "
-							. "?, ?, "
-							. "?, "
-							. "?, "
-							. "?"
-						. " )",array($collId,$resId,$i,$userId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType,$processComment,$processDate)
-					);
-				}
-				else {
-					$stmt = $db->query(
-						"insert into " . ENT_LISTINSTANCE
-							. " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment) "
-						. "values ("
-							. "?, ?, "
-							. "'DOC', ?, "
-							. "?, " 
-							. "'user_id' , "
-							. "?, "
-							. "?, "
-							. "?, "
-							. "?, ?, "
-							. "?, "
-							. "?"
-						. " )",array($collId,$resId,$i,$userId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType,$processComment)
-					);
-				}
-					
+                    $stmt = $db->query("update ".RES_LETTERBOX." set dest_user = ? where res_id = ?", array($userId,$resId));
+
+                if ($processDate != '') {
+                    $stmt = $db->query(
+                        "insert into " . ENT_LISTINSTANCE
+                            . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment, process_date) "
+                        . "values ("
+                            . "?, ?, "
+                            . "'DOC', ?, "
+                            . "?, " 
+                            . "'user_id' , "
+                            . "?, "
+                            . "?, "
+                            . "?, "
+                            . "?, ?, "
+                            . "?, "
+                            . "?, "
+                            . "?"
+                        . " )", array($collId,$resId,$i,$userId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType,$processComment,$processDate)
+                    );
+                } else {
+                    $stmt = $db->query(
+                        "insert into " . ENT_LISTINSTANCE
+                            . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment) "
+                        . "values ("
+                            . "?, ?, "
+                            . "'DOC', ?, "
+                            . "?, " 
+                            . "'user_id' , "
+                            . "?, "
+                            . "?, "
+                            . "?, "
+                            . "?, ?, "
+                            . "?, "
+                            . "?"
+                        . " )", array($collId,$resId,$i,$userId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType,$processComment)
+                    );
+                }
                 
                 if (!$userFound || $fromQualif) {
-                    # History
-                    $listinstance_id = $db->lastInsertId('listinstance_id_seq');      
+                    //History
+                    $listinstance_id = $db->lastInsertId('listinstance_id_seq');
                     $hist->add(
                         ENT_LISTINSTANCE,
                         $listinstance_id,
@@ -524,7 +478,7 @@ abstract class diffusion_list_Abstract extends functions
                 }
             }
             
-            # CUSTOM ENTITY ROLES
+            //CUSTOM ENTITY ROLES
             $cptEntities=count($diffList[$role_id]['entities']);
             for ($j=0;$j<$cptEntities;$j++) {
                 $entityFound = false;
@@ -554,11 +508,11 @@ abstract class diffusion_list_Abstract extends functions
                         . "?, "
                         . "?,?, "
                         . "?"
-                    . " )",array($collId,$resId,$j,$entityId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType)
+                    . " )", array($collId,$resId,$j,$entityId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType)
                 );
                 
                 if (!$entityFound || $fromQualif) {
-                    # History
+                    //History
                     $listinstance_id = $db->lastInsertId('listinstance_id_seq');      
                     $hist->add(
                         ENT_LISTINSTANCE,
