@@ -20,6 +20,19 @@ h2{
 .ng-invalid:not(form)  {
     border-left: 5px solid #a94442;
 }
+
+.modal-content{
+    background-color: #009DC5 !important;
+}
+.modal-header h4{
+    color: white !important;
+
+}
+
+.modal-body{
+    background-color: white;
+    padding:10px;
+}
 </style>
 <div *ngIf="loading">
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
@@ -34,7 +47,7 @@ h2{
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="javascript://" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a></li>
+                    <li><a data-toggle="modal" data-target=".bs-example-modal-lg" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a></li>
                     <li><a href="javascript://" ><i class="fa fa-user-times" title=""></i> Gérer mes signatures </a></li>
                 </ul>
             </div>
@@ -67,7 +80,12 @@ h2{
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <input type="text" class="form-control" id="userId" title="Identifiant" placeholder="Identifiant" value="{{user.user_id}}" disabled>
+                         <div class="input-group">
+                            <input type="text" class="form-control" id="userId" title="Identifiant" placeholder="Identifiant" value="{{user.user_id}}" disabled>
+                             <span class="input-group-btn">
+                                <button class="btn btn-success" type="button" title="Modifier votre mot de passe"><i class="fa fa-key" aria-hidden="true"></i></button>
+                            </span>
+                         </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -95,7 +113,7 @@ h2{
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display:none;">
                     <div class="col-sm-6">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
@@ -128,4 +146,18 @@ h2{
             </ul>
         </div>
     </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document"> 
+    <div class="modal-content">
+        <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Gérer mes absences</h4>
+      </div>
+    <div class="modal-body">
+        ceci est une modal
+    </div>
+    </div>
+  </div>
 </div>

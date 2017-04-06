@@ -64,6 +64,7 @@ class MergedJsAbstract {
 		readfile('node_modules/zone.js/dist/zone.min.js');
 		readfile('node_modules/systemjs/dist/system.src.js');
 		readfile('apps/maarch_entreprise/js/angular/systemjs.config.js');
+		readfile('apps/maarch_entreprise/js/bootstrap.min.js');
 
 		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe.min.js');
 		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe-ui-default.min.js');
