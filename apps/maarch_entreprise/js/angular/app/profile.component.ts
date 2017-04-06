@@ -43,4 +43,11 @@ export class ProfileComponent implements OnInit {
             });
     }
 
+    onSubmit() {
+        this.http.put(this.coreUrl + 'rest/user/' + this.user.user_id, this.user)
+            .map(res => res.json())
+            .subscribe((data) => {
+            });
+    }
+
 }

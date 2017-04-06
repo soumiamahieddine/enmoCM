@@ -39,6 +39,12 @@ var ProfileComponent = (function () {
             });
         });
     };
+    ProfileComponent.prototype.onSubmit = function () {
+        this.http.put(this.coreUrl + 'rest/user/' + this.user.user_id, this.user)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+        });
+    };
     return ProfileComponent;
 }());
 ProfileComponent = __decorate([

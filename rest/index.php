@@ -133,5 +133,6 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 
 //Users
 $app->get('/user/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
+$app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
 
 $app->run();

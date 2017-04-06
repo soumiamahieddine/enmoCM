@@ -50,6 +50,29 @@ class UserModelAbstract extends \Apps_Table_Service
         return $aReturn;
     }
 
+    public static function update(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['user']);
+        static::checkRequired($aArgs['user'], ['user_id', 'firstname', 'lastname']);
+        static::checkString($aArgs['user'], ['user_id', 'firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone']);
+
+        $aReturn = parent::update([
+            'table'     => 'users',
+            'set'       => [
+                'firstname'     => $aArgs['user']['firstname'],
+                'lastname'      => $aArgs['user']['lastname'],
+                'mail'          => $aArgs['user']['mail'],
+                'phone'         => $aArgs['user']['phone'],
+                'initials'      => $aArgs['user']['initials'],
+                'thumbprint'    => $aArgs['user']['thumbprint']
+            ],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['user']['user_id']]
+        ]);
+
+        return $aReturn;
+    }
+
     public static function getSignaturesById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId']);
