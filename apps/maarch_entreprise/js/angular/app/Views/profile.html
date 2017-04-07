@@ -33,6 +33,14 @@ h2{
     background-color: white;
     padding:10px;
 }
+.modal-body .list-group li{
+    /*border-color: #009DC5 !important;*/
+    font-weight: bold;
+}
+
+.modal-footer{
+    background:white;
+}
 </style>
 <div *ngIf="loading">
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
@@ -155,9 +163,31 @@ h2{
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Gérer mes absences</h4>
       </div>
-    <div class="modal-body">
-        ceci est une modal
-    </div>
+        <div class="modal-body">
+            <div class="alert alert-danger" role="alert">Vous allez être <strong>automatiquement déconnecté</strong> après avoir défini vos redirections de bannettes</div>
+            <nav class="navbar navbar-default">
+               <div class="container-fluid">
+                     <form class="navbar-form navbar-left">
+                        <div class="form-group">
+                            <select class="form-control" placeholder="Bannette(s) à rediriger"><option>Courrier à signer</option></select>
+              
+                            <span>&nbsp;vers&nbsp;</span>
+                            <input type="text" class="form-control" placeholder="Utilisateur">
+                        </div>
+                    </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#" title="Sauvegarder la modification"><i class="fa fa-plus"></i></a></li>
+                    </ul>
+                </div>
+            </nav>
+            <ul class="list-group">
+                <li class="list-group-item"><i class="fa fa-tasks"></i> Mes courriers à traiter <span class="pull-right"><span class="label label-primary">Barbarain BAIN</span> <a href="#" title="Supprimer"><i class="fa fa-trash" style="color:red;"></i></a></span></li>
+                <li class="list-group-item"><i class="fa fa-tasks"></i> Mes courriers à viser <span class="pull-right"><span class="label label-primary">Patricia PETIT</span> <a href="#" title="Supprimer"><i class="fa fa-trash" style="color:red;"></i></a></span></li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default">Activer mon absence</button>
+      </div>
     </div>
   </div>
 </div>
