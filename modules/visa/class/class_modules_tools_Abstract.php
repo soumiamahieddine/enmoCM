@@ -578,7 +578,7 @@ abstract class visa_Abstract extends Database
 
 
                             }else{
-								$dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
+							   $dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>';
                                $vised = ''; 
                                if($bool_modif == true){
                                    $modif = 'true';
@@ -586,6 +586,7 @@ abstract class visa_Abstract extends Database
                                     $disabled = '';  
                                }else{
                                     $modif = 'false';
+									$dropZone = '';
                                     $del_vis = '';
                                     $disabled = ' disabled="disabled"';
                                }
@@ -669,6 +670,7 @@ abstract class visa_Abstract extends Database
                                 $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
                                 $disabled = '';  
                            }else{
+							   	$dropZone = '';
                                 $modif = 'false';
                                 $del_vis = '';
                                 $disabled = ' disabled="disabled"';
