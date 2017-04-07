@@ -736,9 +736,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     /*** Recommande ***/
     $frm_str .= '<tr id="reference_number_tr" style="display:none;">';
-        $frm_str .= '<td ><label for="reference_number" class="form_title" >' ._MONITORING_NUMBER.'</label></td>';
+        $frm_str .= '<td><label for="reference_number" class="form_title" >' ._MONITORING_NUMBER.'</label></td>';
         $frm_str .= '<td>&nbsp;</td>';
-        $frm_str .= '<td><input type="text" name="reference_number" id="reference_number"';
+        $frm_str .= '<td class="indexing_field"><input type="text" name="reference_number" id="reference_number"';
             if (isset($data['reference_number']) && $data['reference_number'] <> '') {
                 $frm_str .= 'value = "'.$data['reference_number'].'"';
             }
@@ -1239,7 +1239,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '#validleft{height:100% !important;width:30% !important;}';
     $frm_str .= '#validright{width:67% !important;height:100% !important;}';
     $frm_str .= '@media screen and (min-width: 1280px) {#validleft{width:447px !important;}}';
-    $frm_str .= '@media screen and (max-width: 1280px) {#validright{width:55% !important;}}';
+    $frm_str .= '@media screen and (max-width: 1400px) {#validright{width:57% !important;}}';
     $frm_str .= '#viewframevalid{width:100% !important;height:93% !important;}';
     $frm_str .= '#maarch_body{overflow:hidden !important;}';
     $frm_str .= '</style>';
