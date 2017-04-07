@@ -432,6 +432,7 @@ export class SignatureBookComponent implements OnInit {
                     if (origin == "view") {
                         alert("Courrier verouillé par " + data.lockBy);
                     } else if (origin == "action") {
+                        alert("Courrier suivant verouillé par " + data.lockBy);
                         this.backToBasket();
                     }
                 }
