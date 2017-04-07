@@ -382,6 +382,7 @@ class VisaController
         foreach ($attachments as $key => $value) {
             if ($value['attachment_type'] == 'converted_pdf') {
                 unset($attachments[$key]);
+                continue;
             }
 
             $attachments[$key]['obsAttachments'] = [];
