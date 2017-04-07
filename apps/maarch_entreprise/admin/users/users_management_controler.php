@@ -149,7 +149,7 @@ function display_up($user_id){
         $pathToDs = $resDs->path_template;
 
         $tab_sign = $us->getForUser($user->user_id);
-        $user->pathToSignature = array();
+        $user->pathToSignature = [];
         foreach ($tab_sign as $sign) {
             $path = $pathToDs . str_replace(
                 "#", 
@@ -157,7 +157,7 @@ function display_up($user_id){
                 $sign['signature_path']
             )
             . $sign['signature_file_name'];
-            array_push($user->pathToSignature, $path);
+            $user->pathToSignature = [$path];
         }
         put_in_session("users",$user->getArray());
     }

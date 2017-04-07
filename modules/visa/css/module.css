@@ -165,13 +165,12 @@
 
 .visaUserStatus{
 	width: 5%;
-	opacity: 0.5;
 }
 .vised .visaUserStatus{
 	opacity: 1;
 }
 .visaUserInfo{
-	width: 45%;
+	width: 55%;
 	font-weight: bold;
 }
 
@@ -205,12 +204,12 @@
 }
 
 #dropZone,#dropZone:active{
-    width: 10px;
+	width: 40px;
+	text-align: right;
 	opacity: 0.5;
 	visibility: hidden;
-	text-align: right;
+	float: right;
 	margin: 5px;
-    float: right;
 }
 #dropZone:hover{
 	cursor: grab;
@@ -219,7 +218,7 @@
 	cursor: grabbing;
 }
 .visaUserConsigne{
-	width: 40%;
+	width: 30%;
 }
 .visaUserAction{
 	color : red;
@@ -516,6 +515,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     text-align: right;
     text-transform: initial;
     border-left: solid 1px black;
+    border-right: solid 1px black;
 }
 .actions i{
    width:5%;
@@ -543,7 +543,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     overflow: hidden;
 }
 #closeSignatureBook{
-    float:left;
+    float:right;
     padding:5px;
     width:2%;
     text-align: center;

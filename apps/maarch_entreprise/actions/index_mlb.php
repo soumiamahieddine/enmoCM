@@ -987,7 +987,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '#validleft{height:100% !important;width:30% !important;}';
     $frmStr .= '#validright{width:67% !important;height:100% !important;}';
     $frmStr .= '@media screen and (min-width: 1280px) {#validleft{width:447px !important;}}';
-    $frmStr .= '@media screen and (max-width: 1280px) {#validright{width:55% !important;}}';
+    $frmStr .= '@media screen and (max-width: 1400px) {#validright{width:57% !important;}}';
     $frmStr .= '#file_iframe{width:100% !important;height:100% !important;}';
     $frmStr .= '#maarch_body{overflow:hidden !important;}';
     $frmStr .= '</style>';

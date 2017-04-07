@@ -289,10 +289,12 @@ class Apps_Table_Service extends Core_Abstract_Service {
         }
 
         $querySet  = [];
+        $setData = [];
         foreach ($args['set'] as $key => $value) {
             $querySet[] = "{$key} = ?";
-            array_unshift($args['data'], $value);
+            $setData[] = $value;
         }
+        $args['data'] = array_merge($setData, $args['data']);
 
         $queryExt = 'UPDATE ' .$args['table']. ' SET '.implode(',', $querySet). ' WHERE ' . implode(' AND ', $args['where']);
 

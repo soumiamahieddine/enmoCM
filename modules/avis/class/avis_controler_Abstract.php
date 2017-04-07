@@ -132,6 +132,7 @@ abstract class avis_controler_Abstract
                                 $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delAvisUser(this.parentElement.parentElement);" title="' . _DELETE . '"></i>';
                                 $disabled = '';
                             } else {
+                                $dropZone = '';
                                 $modif = 'false';
                                 $del_vis = '';
                                 $disabled = ' disabled="disabled"';
@@ -139,7 +140,7 @@ abstract class avis_controler_Abstract
 
 
                             $info_vised = '';
-                            $link_vis = 'hourglass';
+                            $link_vis = 'hourglass-half';
                         }
 
 

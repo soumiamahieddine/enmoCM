@@ -3,14 +3,11 @@
 </div>
 <div *ngIf="!loading" class='visaContent'>
     <div class="titleSignatureBook">
-        <div id="closeSignatureBook">
-            <i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i>
-        </div>
         <div id="tabSignatureBook">
-            <div title="Courrier" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" style="border-left: solid 1px black" (click)="changeSignatureBookLeftContent(1)">
+            <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="Courrier" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
                 <i class="fa fa-file-text-o fa-2x"></i>
             </div>
-            <div title="Note(s)" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
+            <div title="Annotations" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
                 <i class="fa fa-pencil fa-2x">
                     <sup *ngIf="signatureBook.nbNotes > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbNotes}}</sup>
                 </i>
@@ -26,6 +23,9 @@
             </div>
         </div>
         <div id="labelSignatureBook" title="{{signatureBook.currentAction.actionLabel}}" ><div>{{signatureBook.currentAction.actionLabel}}</div></div>
+        <div id="closeSignatureBook">
+            <i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i>
+        </div>
         <div class="actions">
             <i style="cursor: pointer;vertical-align: middle;" title="Accédez à la fiche détaillée" class="fa fa-info-circle fa-2x" (click)="backToDetails()"></i>&nbsp;
             <select id="signatureBookActions">
@@ -82,7 +82,7 @@
                 </div>
                 <iframe *ngIf="leftViewerLink != '' && (leftSelectedThumbnail == 0 || signatureBook.documents[leftSelectedThumbnail].format == 'pdf' || signatureBook.documents[leftSelectedThumbnail].isConverted)" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '84%' : '99%'}"></iframe>
                 <div *ngIf="leftSelectedThumbnail > 0 && signatureBook.documents[leftSelectedThumbnail].format != 'pdf' && !signatureBook.documents[leftSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopLeftPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
-                    <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF de ce format n'a pas été trouvée.</sub></div>
+                    <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF du fichier "{{signatureBook.documents[leftSelectedThumbnail].title}}.{{signatureBook.documents[leftSelectedThumbnail].format}}" n'est pas disponible.</sub></div>
                     <div class="visaPjView">
                         <a title="Télécharger la pièce jointe" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.documents[leftSelectedThumbnail].res_id}}" target="_blank">
                             <i class="fa fa-download fa-2x"></i>
@@ -163,15 +163,23 @@
                    <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                 </div>
                 <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '84%' : '99%'}"></iframe>
-                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
-                    <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF de ce format n'a pas été trouvée.</sub></div>
+                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
+                    <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF du fichier "{{signatureBook.attachments[rightSelectedThumbnail].title}}.{{signatureBook.attachments[rightSelectedThumbnail].format}}" n'est pas disponible.</sub></div>
                     <div class="visaPjView">
                         <a title="Télécharger la pièce jointe" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].res_id}}" target="_blank">
                             <i class="fa fa-download fa-2x"></i>
                         </a>
                     </div>
                 </div>
-                <div *ngIf="signatureBook.canSign && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" class="pjSign">
+                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
+                    <div style="padding-top: 25%;">L'édition de la pièce jointe a été interrompue.<br/><sub>Veuillez la ré-éditer.</sub></div>
+                    <div>
+                        <a title="Editer la pièce jointe" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                            <i class="fa fa-pencil-square-o fa-2x" style="cursor:pointer;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div *ngIf="signatureBook.canSign && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" class="pjSign">
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN' && signatureBook.signature" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
                         <img *ngIf="!loadingSign" title="Signer" src="{{signatureBook.signature}}">
                         <i *ngIf="loadingSign" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
@@ -198,7 +206,9 @@
                         <i class="fa fa-file-o fa-stack-2x"></i><i style="font-weight:bold;letter-spacing: -1px;">{{attachment.icon}}</i>
                     </span>
                     <i *ngIf="attachment.sign && attachment.status == 'SIGN'" title="Le document a été signé" style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle"></i>
-                    <i *ngIf="attachment.sign && attachment.status != 'SIGN'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle-o"></i>
+                    <i *ngIf="attachment.sign && attachment.status != 'SIGN' && attachment.status != 'TMP'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle-o"></i>
+                    <i *ngIf="attachment.sign && attachment.status == 'TMP'"  style="color:green;-ms-transform: rotate(-35deg);-webkit-transform: rotate(-35deg);transform: rotate(-35deg);position: absolute;top: 39px;right: 1px;" >Brouillon</i>
+                    <br/><i style="position: absolute;margin-left: -9px;" >.{{attachment.format}}</i>
                 </div>
             </div>
             <div style="bottom: 0px;position: absolute;left: 5px;">

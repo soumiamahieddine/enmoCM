@@ -130,7 +130,7 @@ if (isset($_REQUEST['identifier'])) {
             $return .= str_replace('<br /><br />', '<br />', $note_text);
             $return .= '</div>';
             $return .= '<div style="padding-top:2px;padding-bottom:2px;">';
-            $return .= '<div style="font-weight:bold;clear:both;"><i title="'.$allEntities.'" >'._RESTRICTED_SERVICES.$allEntitiesId.'</i></div>';
+            $return .= '<div style="font-style:italic;clear:both;"><i title="'.$allEntities.'" >'._RESTRICTED_SERVICES.$allEntitiesId.'</i></div>';
             $return .= '</div>';
         } else {
             $return .= '<div style="padding-top:2px;padding-bottom:2px;">';

@@ -3,7 +3,7 @@
     	"psr-4": {
     		"Core\\": "core/",
     		"Apps\\": "apps/maarch_entreprise/",
-                "Attachments\\": "modules/attachments/",
+            "Attachments\\": "modules/attachments/",
             "Entities\\": "modules/entities/",
     		"Visa\\": "modules/visa/"
     	}

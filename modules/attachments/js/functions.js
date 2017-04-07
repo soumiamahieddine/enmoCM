@@ -39,9 +39,11 @@ function checkBackDate(inputDate) {
     tmpDate.setMinutes(0);
     var d2_dateToCheck = tmpDate.getTime();
   }
-
-  if (dateToCheck != "" && d1_dataCreationDate > d2_dateToCheck) {
+  if ((d1_dataCreationDate > d2_dateToCheck) && !isNaN(d2_dateToCheck)) {
     alert("La date de retour doit être supérieure à la date du courrier");
+    inputDate.value = "";
+  }else if(isNaN(d2_dateToCheck) && dateToCheck != ""){
+    alert("Le format de la date de retour est incorrect");
     inputDate.value = "";
   }
 
@@ -148,6 +150,14 @@ function delLastTransmission() {
   }
 }
 
+function hideInput(currentValue, editDate) {
+	if (currentValue == "NO_RTURN") {
+		editDate.value = null
+	} else {
+		editDate.value = defineBackDate();
+	}
+}
+
 function addNewTransmission(prePath, docId, canCreateContact, langString, user) {
   var size = $j('#transmission')[0].childElementCount;
   
@@ -194,8 +204,8 @@ function addNewTransmission(prePath, docId, canCreateContact, langString, user) 
                     "<p>" +
                       "<label>" + "Date de retour attendue" + "</label>" +
                       "<input type='hidden' name='withDelay" + size + "' id='withDelay" + size + "' value='' style='width: 75px' />" +
-                      "<input type='text' name='transmissionBackDate" + size + "' id='transmissionBackDate" + size + "' onClick='showCalender(this);' onfocus='checkBackDate(this)' value='' style='width: 75px' />" +
-                      "<select name='transmissionExpectedDate" + size + "' id='transmissionExpectedDate" + size + "' style='margin-left: 20px;width: 105px' />" +
+                      "<input type='text' name='transmissionBackDate" + size + "' id='transmissionBackDate" + size + "' onClick='showCalender(this);' onchange='checkBackDate(this)' onfocus='checkBackDate(this)' value='' style='width: 75px' />" +
+                      "<select name='transmissionExpectedDate" + size + "' id='transmissionExpectedDate" + size + "' style='margin-left: 20px;width: 105px' onchange = 'hideInput(this.options[this.selectedIndex].value,transmissionBackDate" + size +")'/>" +
                         "<option value='EXP_RTURN'>Attente retour</option>" +
                         "<option value='NO_RTURN'>Pas de retour</option>" +
                       "</select>" +

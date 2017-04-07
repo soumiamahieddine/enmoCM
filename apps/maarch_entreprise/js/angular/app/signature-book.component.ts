@@ -24,6 +24,7 @@ export class SafeUrlPipe implements PipeTransform {
   templateUrl: 'js/angular/app/Views/signatureBook.html',
 })
 export class SignatureBookComponent implements OnInit {
+
     coreUrl                     : string;
     resId                       : number;
     basketId                    : string;
@@ -113,21 +114,22 @@ export class SignatureBookComponent implements OnInit {
                             this.showAttachmentEditionPanel  = false;
                             this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
                             this.visaViewerLink  = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
-                            this.histViewerLink  = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + this.resId + "&coll_id=letterbox_coll&load&size=full";
+                            this.histViewerLink  = "index.php?display=true&page=show_history_tab&resId=" + this.resId + "&collId=letterbox_coll";
                             this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
 
                             this.leftContentWidth  = "44%";
                             this.rightContentWidth = "44%";
                             if (this.signatureBook.documents[0]) {
                                 this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
+                                if (this.signatureBook.documents[0].category_id == "outgoing") {
+                                    this.headerTab = 3;
+                                }
                             }
                             if (this.signatureBook.attachments[0]) {
                                 this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
                             }
 
-                            if (this.loading) {
-                                this.displayPanel("RESLEFT");
-                            }
+                            this.displayPanel("RESLEFT");
                             this.loading = false;
 
                             setTimeout(() => {
@@ -430,6 +432,7 @@ export class SignatureBookComponent implements OnInit {
                     if (origin == "view") {
                         alert("Courrier verouillé par " + data.lockBy);
                     } else if (origin == "action") {
+                        alert("Courrier suivant verouillé par " + data.lockBy);
                         this.backToBasket();
                     }
                 }

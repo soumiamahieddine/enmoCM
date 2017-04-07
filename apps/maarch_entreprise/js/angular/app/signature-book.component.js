@@ -8,11 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var http_1 = require('@angular/http');
-var platform_browser_1 = require('@angular/platform-browser');
-var router_1 = require('@angular/router');
-require('rxjs/add/operator/map');
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = require("@angular/core");
+var http_1 = require("@angular/http");
+var platform_browser_1 = require("@angular/platform-browser");
+var router_1 = require("@angular/router");
+require("rxjs/add/operator/map");
 var SafeUrlPipe = (function () {
     function SafeUrlPipe(sanitizer) {
         this.sanitizer = sanitizer;
@@ -20,12 +21,12 @@ var SafeUrlPipe = (function () {
     SafeUrlPipe.prototype.transform = function (url) {
         return this.sanitizer.bypassSecurityTrustResourceUrl(url);
     };
-    SafeUrlPipe = __decorate([
-        core_1.Pipe({ name: 'safeUrl' }), 
-        __metadata('design:paramtypes', [platform_browser_1.DomSanitizer])
-    ], SafeUrlPipe);
     return SafeUrlPipe;
 }());
+SafeUrlPipe = __decorate([
+    core_1.Pipe({ name: 'safeUrl' }),
+    __metadata("design:paramtypes", [platform_browser_1.DomSanitizer])
+], SafeUrlPipe);
 exports.SafeUrlPipe = SafeUrlPipe;
 var SignatureBookComponent = (function () {
     function SignatureBookComponent(http, route, router, zone) {
@@ -110,19 +111,20 @@ var SignatureBookComponent = (function () {
                     _this.showAttachmentEditionPanel = false;
                     _this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + _this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
                     _this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + _this.resId + "&collId=letterbox_coll&visaStep=true";
-                    _this.histViewerLink = "index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=" + _this.resId + "&coll_id=letterbox_coll&load&size=full";
+                    _this.histViewerLink = "index.php?display=true&page=show_history_tab&resId=" + _this.resId + "&collId=letterbox_coll";
                     _this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + _this.resId;
                     _this.leftContentWidth = "44%";
                     _this.rightContentWidth = "44%";
                     if (_this.signatureBook.documents[0]) {
                         _this.leftViewerLink = _this.signatureBook.documents[0].viewerLink;
+                        if (_this.signatureBook.documents[0].category_id == "outgoing") {
+                            _this.headerTab = 3;
+                        }
                     }
                     if (_this.signatureBook.attachments[0]) {
                         _this.rightViewerLink = _this.signatureBook.attachments[0].viewerLink;
                     }
-                    if (_this.loading) {
-                        _this.displayPanel("RESLEFT");
-                    }
+                    _this.displayPanel("RESLEFT");
                     _this.loading = false;
                     setTimeout(function () {
                         $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
@@ -426,6 +428,7 @@ var SignatureBookComponent = (function () {
                     alert("Courrier verouillé par " + data.lockBy);
                 }
                 else if (origin == "action") {
+                    alert("Courrier suivant verouillé par " + data.lockBy);
                     _this.backToBasket();
                 }
             }
@@ -440,12 +443,12 @@ var SignatureBookComponent = (function () {
             alert("Aucune action choisie");
         }
     };
-    SignatureBookComponent = __decorate([
-        core_1.Component({
-            templateUrl: 'js/angular/app/Views/signatureBook.html',
-        }), 
-        __metadata('design:paramtypes', [http_1.Http, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
-    ], SignatureBookComponent);
     return SignatureBookComponent;
 }());
+SignatureBookComponent = __decorate([
+    core_1.Component({
+        templateUrl: 'js/angular/app/Views/signatureBook.html',
+    }),
+    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
+], SignatureBookComponent);
 exports.SignatureBookComponent = SignatureBookComponent;

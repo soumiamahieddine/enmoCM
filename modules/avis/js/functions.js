@@ -7,7 +7,7 @@ function addAvisUser(users) {
         }
         $j("#avis_content").append('<div class="droptarget" id="avis_' + next_avis + '" draggable="true">'
                 + '<span class="avisUserStatus">'
-                + '<i class="fa fa-hourglass" aria-hidden="true"></i>'
+                + '<i class="fa fa-hourglass-half" aria-hidden="true"></i>'
                 + '</span>'
                 + '<span class="avisUserInfo">'
                 +'<sup class="avisUserPos nbResZero">'+next_avis+'</sup>&nbsp;&nbsp;'
@@ -36,7 +36,7 @@ function addAvisUser(users) {
         }
         $j("#avis_content").append('<div class="droptarget" id="avis_' + next_avis + '" draggable="true">'
                 + '<span class="avisUserStatus">'
-                + '<i class="fa fa-hourglass" aria-hidden="true"></i>'
+                + '<i class="fa fa-hourglass-half" aria-hidden="true"></i>'
                 + '</span>'
                 + '<span class="avisUserInfo">'
                 +'<sup class="avisUserPos nbResZero">'+next_avis+'</sup>&nbsp;&nbsp;'

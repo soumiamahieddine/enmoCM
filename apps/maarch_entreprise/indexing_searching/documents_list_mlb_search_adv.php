@@ -226,10 +226,10 @@ if($mode == 'normal') {
 
 //Fields
     //Documents
-    array_push($select[$view],  "res_id", "res_id as is_labeled", "status", "subject", "category_id as category_img", 
+    array_push($select[$view],  "res_id", "res_id as is_labeled", "alt_identifier", "status", "subject", "category_id as category_img", 
                                 "contact_firstname", "contact_lastname", "contact_society", 
                                 "user_lastname", "user_firstname", "dest_user", "type_label", 
-                                "creation_date", "entity_label", "category_id, exp_user_id", "alt_identifier", "count_attachment", "is_multicontacts", "priority", "address_id");
+                                "creation_date", "entity_label", "category_id, exp_user_id", "count_attachment", "is_multicontacts", "priority", "address_id");
     //Cases
     if($core_tools->is_module_loaded("cases") == true) {
         array_push($select[$view], "case_id", "case_label", "case_description");
@@ -374,7 +374,11 @@ if($mode == 'normal') {
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
                     $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=true;
+                    if($_REQUEST['mode'] == 'popup'){
+                        $tab[$i][$j]["show"]=false;
+                    }else{
+                        $tab[$i][$j]["show"]=true;
+                    }
                     $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                     $tab[$i][$j]["order"]='res_id';
                     $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
@@ -426,6 +430,21 @@ if($mode == 'normal') {
                         $stmt = $db->query($query, $arrayPDO);
                         $tab[$i][$j]['hasNotes'] = $stmt->fetchObject();
 						$tab[$i][$j]['res_multi_contacts'] = $_SESSION['mlb_search_current_res_id'];
+                }
+                if($tab[$i][$j][$value]=="alt_identifier")
+                {
+                    $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]["label"]=_CHRONO_NUMBER;
+                    $tab[$i][$j]["size"]="10";
+                    $tab[$i][$j]["label_align"]="left";
+                    $tab[$i][$j]["align"]="left";
+                    $tab[$i][$j]["valign"]="bottom";
+                    if($_REQUEST['mode'] == 'popup'){
+                        $tab[$i][$j]["show"]=true;
+                    }else{
+                        $tab[$i][$j]["show"]=false;
+                    }
+                    $tab[$i][$j]["order"]='alt_identifier';
                 }
                 if($tab[$i][$j][$value]=="type_label")
                 {

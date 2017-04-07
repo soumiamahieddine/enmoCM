@@ -289,4 +289,29 @@ class LinkController
 
         return $i;
     }
+
+    public function getAltIdentifier($resId)
+    {
+
+            $db = new Database;
+            $altIdentifierRequest = "SELECT alt_identifier FROM mlb_coll_ext where res_id = ?";
+            $stmt = $db->query($altIdentifierRequest, array($resId));
+            while($altIdentifierResult = $stmt->fetchObject()) {
+                    $altIdentifier = $altIdentifierResult->alt_identifier;
+                   }
+            return $altIdentifier;
+
+    }
+
+    public function getAltIdentifierConcatened($array)
+    {
+            $_SESSION['chronoNumber'] = '';
+            for($j=0;$j<count($array);$j++){
+
+                $_SESSION['chronoNumber'] .= $this->getAltIdentifier($array[$j]).', ';
+            
+            }
+            return substr($_SESSION['chronoNumber'], 0, -2);
+
+    }
 }

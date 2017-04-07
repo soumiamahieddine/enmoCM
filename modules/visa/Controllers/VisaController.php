@@ -13,6 +13,7 @@
 */
 namespace Visa\Controllers;
 
+use Core\Models\UserModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -22,7 +23,6 @@ require_once 'core/class/class_security.php';
 require_once 'apps/maarch_entreprise/Models/ResModel.php';
 require_once 'apps/maarch_entreprise/Models/HistoryModel.php';
 require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
-require_once 'apps/maarch_entreprise/Models/UsersModel.php';
 require_once 'modules/basket/Models/BasketsModel.php';
 require_once 'modules/notes/Models/NotesModel.php';
 require_once 'modules/visa/Models/VisaModel.php';
@@ -124,8 +124,8 @@ class VisaController
         $datas['resList']       = $resList;
         $datas['resListIndex']  = $resListIndex;
         $datas['nbNotes']       = \NotesModel::countForCurrentUserByResId(['resId' => $resId]);
-        $datas['signature']     = \UsersModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
-        $datas['consigne']      = \UsersModel::getCurrentConsigneById(['resId' => $resId]);
+        $datas['signature']     = UserModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
+        $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = \VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
         $datas['canSign']       = $coreTools->test_service('sign_document', 'visa', false);
 
@@ -270,7 +270,7 @@ class VisaController
         }
         $orderBy .= " ELSE {$c} END, doc_date DESC NULLS LAST, creation_date DESC";
 
-        $attachments = \ResModel::getAvailableLinkedAttachmentsNotIn(
+        $attachments = \ResModel::getAvailableAndTemporaryLinkedAttachmentsNotIn(
             [
                 'resIdMaster'   => $aArgs['resId'],
                 'notIn'         => ['incoming_mail_attachment', 'print_folder'],
@@ -326,15 +326,15 @@ class VisaController
             }
 
             if (!empty($value['dest_user'])) {
-                $attachments[$key]['destUser'] = \UsersModel::getLabelledUserById(['id' => $value['dest_user']]);
+                $attachments[$key]['destUser'] = UserModel::getLabelledUserById(['id' => $value['dest_user']]);
             } elseif (!empty($value['dest_contact_id']) && !empty($value['dest_address_id'])) {
                 $attachments[$key]['destUser'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['dest_contact_id'], 'addressId' => $value['dest_address_id']]);
             }
             if (!empty($value['updated_by'])) {
-                $attachments[$key]['updated_by'] = \UsersModel::getLabelledUserById(['id' => $value['updated_by']]);
+                $attachments[$key]['updated_by'] = UserModel::getLabelledUserById(['id' => $value['updated_by']]);
             }
             if (!empty($value['typist'])) {
-                $attachments[$key]['typist'] = \UsersModel::getLabelledUserById(['id' => $value['typist']]);
+                $attachments[$key]['typist'] = UserModel::getLabelledUserById(['id' => $value['typist']]);
             }
 
             $attachments[$key]['canModify'] = false;
@@ -382,6 +382,7 @@ class VisaController
         foreach ($attachments as $key => $value) {
             if ($value['attachment_type'] == 'converted_pdf') {
                 unset($attachments[$key]);
+                continue;
             }
 
             $attachments[$key]['obsAttachments'] = [];
