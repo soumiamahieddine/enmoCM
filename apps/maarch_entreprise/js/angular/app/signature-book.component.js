@@ -428,6 +428,7 @@ var SignatureBookComponent = (function () {
                     alert("Courrier verouillé par " + data.lockBy);
                 }
                 else if (origin == "action") {
+                    alert("Courrier suivant verouillé par " + data.lockBy);
                     _this.backToBasket();
                 }
             }
