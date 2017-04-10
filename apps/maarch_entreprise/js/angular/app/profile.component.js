@@ -38,7 +38,7 @@ var ProfileComponent = (function () {
                 pluginsToDisable.each(function (plugin) {
                     jQuery(window).on(method + '.bs.' + plugin, handler);
                 });
-            }, pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover'];
+            }, pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover', 'tab'];
             disablePrototypeJS('show', pluginsToDisable);
             disablePrototypeJS('hide', pluginsToDisable);
         }
