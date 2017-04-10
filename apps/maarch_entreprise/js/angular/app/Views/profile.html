@@ -1,4 +1,7 @@
 <link rel="stylesheet" href="../../../../css/bootstrap.min.css">
+<script>
+
+</script>
 <style>
 nav{
     margin-top:10px !important;
@@ -41,6 +44,26 @@ h2{
 .modal-footer{
     background:white;
 }
+/* layout.css Style */
+.upload-drop-zone {
+    font-size: 16px;
+    height: 100px;
+    border-width: 2px;
+    margin-bottom: 20px;
+}
+
+/* skin.css Style*/
+.upload-drop-zone {
+    color: #ccc;
+    border-style: dashed;
+    border-color: #ccc;
+    line-height: 100px;
+    text-align: center
+}
+.upload-drop-zone.drop {
+    color: #222;
+    border-color: #222;
+}
 </style>
 <div *ngIf="loading">
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
@@ -55,8 +78,8 @@ h2{
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a data-toggle="modal" data-target=".bs-example-modal-lg" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a></li>
-                    <li><a href="javascript://" ><i class="fa fa-user-times" title=""></i> Gérer mes signatures </a></li>
+                    <li><a data-toggle="modal" data-target="#manageAbs" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a></li>
+                    <li><a data-toggle="modal" data-target="#manageSign" ><i class="fa fa-user-times" title=""></i> Gérer mes signatures </a></li>
                 </ul>
             </div>
         </div>
@@ -156,7 +179,7 @@ h2{
     </div>
 </div>
 
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div id="manageAbs" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document"> 
     <div class="modal-content">
         <div class="modal-header">
@@ -191,3 +214,135 @@ h2{
     </div>
   </div>
 </div>
+
+<div id="manageSign" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document"> 
+    <div class="modal-content">
+        <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Gérer mes signatures</h4>
+      </div>
+        <div class="modal-body">
+             <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Signatures de mail</a></li>
+                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Signatures de parapheur</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane" id="mail">
+                    
+                </div>
+                <div role="tabpanel" class="tab-pane active" id="signatureBook">
+                     <div class="row" style="margin-top:5px;">
+
+                        <div class="col-md-11">
+                             <input type="text" placeholder="nom de la signature" class="form-control">
+                             <form action="" method="post" enctype="multipart/form-data" id="js-upload-form" style="display:none;">
+                                <div class="form-inline">
+                                <div class="form-group">
+                                    <input type="file" name="files[]" id="js-upload-files" multiple>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit">Upload files</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-1" style="margin-bottom:5px;">
+                             <button class="form-control btn btn-sm btn-success"><i class="fa fa-plus"></i></button>
+                        </div>
+                         <div class="col-md-12">
+                          
+                            <div class="upload-drop-zone" id="drop-zone">
+                                Glissez-déposez une image de signature ici <strong>OU</strong> cliquez sur <i class="fa fa-upload fa-2x" style="cursor:pointer;"></i>
+                            </div>
+                        </div>
+                     </div>
+                    <div class="row">
+                    <div class="col-md-3">
+                        <div class="thumbnail">
+                        <img src="http://www.agencecampion.fr/diz/signature-13.jpg" alt="...">
+                        <div class="caption" style="margin-bottom:0px;">
+                            <p>signature 1</p>
+                            <a href="#" class="btn btn-danger" role="button" title="supprimer la signature"><i class="fa fa-trash"></i></a>
+                            <a href="#" class="btn btn-primary" role="button" title="modifier la signature"><i class="fa fa-pencil"></i></a>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="thumbnail">
+                        <img src="http://www.agencecampion.fr/diz/signature-13.jpg" alt="...">
+                        <div class="caption" style="margin-bottom:0px;">
+                            <p>signature 2</p>
+                            <a href="#" class="btn btn-danger" role="button" title="supprimer la signature"><i class="fa fa-trash"></i></a>
+                            <a href="#" class="btn btn-primary" role="button" title="modifier la signature"><i class="fa fa-pencil"></i></a>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="thumbnail">
+                        <img src="http://www.agencecampion.fr/diz/signature-13.jpg" alt="...">
+                        <div class="caption" style="margin-bottom:0px;">
+                            <p>signature 3</p>
+                            <a href="#" class="btn btn-danger" role="button" title="supprimer la signature"><i class="fa fa-trash"></i></a>
+                            <a href="#" class="btn btn-primary" role="button" title="modifier la signature"><i class="fa fa-pencil"></i></a>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="thumbnail">
+                        <img src="http://www.agencecampion.fr/diz/signature-13.jpg" alt="...">
+                        <div class="caption" style="margin-bottom:0px;">
+                            <p>signature 4</p>
+                            <a href="#" class="btn btn-danger" role="button" title="supprimer la signature"><i class="fa fa-trash"></i></a>
+                            <a href="#" class="btn btn-primary" role="button" title="modifier la signature"><i class="fa fa-pencil"></i></a>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+<script>
+ function($) {
+    'use strict';
+
+    // UPLOAD CLASS DEFINITION
+    // ======================
+
+    var dropZone = document.getElementById('drop-zone');
+    var uploadForm = document.getElementById('js-upload-form');
+
+    var startUpload = function(files) {
+        console.log(files)
+    }
+
+    uploadForm.addEventListener('submit', function(e) {
+        var uploadFiles = document.getElementById('js-upload-files').files;
+        e.preventDefault()
+
+        startUpload(uploadFiles)
+    })
+
+    dropZone.ondrop = function(e) {
+        e.preventDefault();
+        this.className = 'upload-drop-zone';
+
+        startUpload(e.dataTransfer.files)
+    }
+
+    dropZone.ondragover = function() {
+        this.className = 'upload-drop-zone drop';
+        return false;
+    }
+
+    dropZone.ondragleave = function() {
+        this.className = 'upload-drop-zone';
+        return false;
+    }
+
+}(jQuery);
+</script>
