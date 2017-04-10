@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="../../../../css/bootstrap.min.css">
+
 <style>
 nav{
     margin-top:10px !important;
@@ -109,12 +110,45 @@ h2{
                 <div class="form-group">
                     <div class="col-sm-12">
                          <div class="input-group">
-                            <input type="text" class="form-control" id="userId" title="Identifiant" placeholder="Identifiant" value="{{user.user_id}}" disabled>
+                             <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
+                             <input type="text" class="form-control" id="userId" title="Identifiant" placeholder="Identifiant" value="{{user.user_id}}" disabled>
                              <span class="input-group-btn">
-                                <button class="btn btn-success" type="button" title="Modifier votre mot de passe"><i class="fa fa-key" aria-hidden="true"></i></button>
+                                <button (click)="displayPassword()" class="btn btn-success" type="button" title="Modifier votre mot de passe"><i class="fa fa-key" aria-hidden="true"></i></button>
                             </span>
                          </div>
                     </div>
+                </div>
+                <div *ngIf="showPassword" style="margin-bottom: 5%">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                <input type="password" class="form-control" style="display: none">
+                                <input type="password" [(ngModel)]="passwordModel.currentPassword" class="form-control" name="currentPassword" placeholder="Mot de passe actuel">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                <input type="password" [(ngModel)]="passwordModel.newPassword" class="form-control" name="newPassword" placeholder="Nouveau mot de passe">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                <input type="password" [(ngModel)]="passwordModel.reNewPassword" class="form-control" name="reNewPassword" placeholder="Retaper le mot de passe">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div style="text-align:center;">
+                            <button (click)="changePassword()" type="button" class="btn btn-default">Modifier votre mot de passe</button>
+                        </div>
+                    </div>
+                    <hr style="background-color: grey; height: 1px">
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
@@ -139,21 +173,6 @@ h2{
                             <span class="input-group-addon"><i class="fa fa-paw" aria-hidden="true"></i></span>
                             <input type="text" class="form-control" id="fingerprint" name="fingerprint" title="Empreinte Numérique" placeholder="Empreinte Numérique" [(ngModel)]="user.thumbprint">
                         </div>
-                    </div>
-                </div>
-                <div class="form-group" style="display:none;">
-                    <div class="col-sm-6">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
-                            <input type="password" class="form-control" id="password" placeholder="Nouveau mot de passe">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
-                            <input type="password" class="form-control" id="repassword" placeholder="Retaper le mot de passe">
-                        </div>
-
                     </div>
                 </div>
                 <div class="form-group">

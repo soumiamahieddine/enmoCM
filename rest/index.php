@@ -133,6 +133,8 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 
 //Users
 $app->get('/user/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
-$app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
+$app->put('/user/profile', \Core\Controllers\UserController::class . ':updateProfile');
+$app->put('/user/password', \Core\Controllers\UserController::class . ':updatePassword');
+//$app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
 
 $app->run();

@@ -41,17 +41,57 @@ class UserController
     {
         $data = $request->getParams();
 
-        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['user_id', 'firstname', 'lastname']])) {
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['firstname', 'lastname']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $r = UserModel::update(['user' => $data]);
+        $r = UserModel::update(['userId' => $aArgs['id'] ,'user' => $data]);
 
         if ($r) {
             return $response->withJson([]);
         } else {
             return $response->withStatus(500)->withJson(['errors' => 'User Update Error']);
         }
+    }
+
+    public function updateProfile(RequestInterface $request, ResponseInterface $response)
+    {
+        $data = $request->getParams();
+
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['firstname', 'lastname']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $r = UserModel::update(['userId' => $_SESSION['user']['UserId'], 'user' => $data]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Update Error']);
+        }
+
+        return $response->withJson([]);
+    }
+
+    public function updatePassword(RequestInterface $request, ResponseInterface $response)
+    {
+        $data = $request->getParams();
+
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['currentPassword', 'newPassword', 'reNewPassword']])) {
+            return $response->withJson(['errors' => _EMPTY_PSW_FORM]);
+        }
+
+        if ($data['newPassword'] != $data['reNewPassword']) {
+            return $response->withJson(['errors' => _WRONG_SECOND_PSW]);
+        } elseif (!UserModel::checkPassword(['userId' => $_SESSION['user']['UserId'],'password' => $data['currentPassword']])) {
+            return $response->withJson(['errors' => _WRONG_PSW]);
+        }
+
+        $r = UserModel::updatePassword(['userId' => $_SESSION['user']['UserId'], 'password' => $data['newPassword']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'Password Update Error']);
+        }
+
+        return $response->withJson([]);
     }
 
     private function checkNeededParameters($aArgs = []) {

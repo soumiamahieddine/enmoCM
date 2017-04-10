@@ -3362,6 +3362,18 @@ function loadToolbarBadge(targetTab,path_manage_script){
     });
 }
 
+var disablePrototypeJS = function (method, pluginsToDisable) {
+    var handler = function (event) {
+        event.target[method] = undefined;
+        setTimeout(function () {
+            delete event.target[method];
+        }, 0);
+    };
+    pluginsToDisable.each(function (plugin) {
+        $j(window).on(method + '.bs.' + plugin, handler);
+    });
+};
+
 function resetSelect(id) {
     $j('#'+id).val("");
     Event.fire($(id), "chosen:updated");
