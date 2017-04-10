@@ -36,7 +36,6 @@ if(!$core->test_admin('admin_contacts', 'apps', false)){
 		$core->test_admin('my_contacts_menu', 'apps');
 	}
 }
-$core->load_lang();
 
 $mode = "";
 if (isset($_GET['id']) && ! empty($_GET['id'])) {
@@ -356,7 +355,7 @@ if ($mode == "up") {
 </div>
 
 <div class="block_end">&nbsp;</div>
-<?php $core->load_js();?>
+
 </body>
 </html>
 
