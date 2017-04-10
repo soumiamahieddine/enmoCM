@@ -865,6 +865,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 .panelRightListPj{
+    padding: 5px;
     margin-bottom: 5px;
     cursor: pointer;
 }

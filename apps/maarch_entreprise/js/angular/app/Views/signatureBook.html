@@ -113,7 +113,7 @@
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
             </div>
             <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="contentShow">
-                <div *ngIf="!showAttachmentPanel">
+                <div *ngIf="!showAttachmentPanel" style="height:100%;">
                     <div [ngStyle]="{'display': showTopRightPanel ? 'block' : 'none'}" class="pjDetails">
                         <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                             <label>Type : </label>
@@ -215,7 +215,7 @@
                 </div>
             </div>
             <div style="bottom: 0px;position: absolute;left: 5px;">
-                <div class="panelRightListPj" (click)="displayAttachmentPanel()" title="Afficher la liste des pièces jointes">
+                <div class="panelRightListPj" (click)="displayAttachmentPanel()" title="Afficher la liste des pièces jointes" [ngClass]="{'panelSelectedThumbnail': showAttachmentPanel}">
                     <i class="fa fa-bars fa-2x" ></i>
                 </div>
                 <hr style="background-color:#666;margin-top:0px;"/>
