@@ -212,12 +212,15 @@
                 </div>
             </div>
             <div style="bottom: 0px;position: absolute;left: 5px;">
+                <div class="panelRightListPj" (click)="addAttachmentIframe()" title="Afficher la liste des pièces jointes">
+                    <i class="fa fa-bars fa-2x" ></i>
+                </div>
+                <hr style="background-color:#666;margin-top:0px;"/>
                 <div class="panelRightAddPj" (click)="addAttachmentIframe()" title="Créer une pièce jointe">
                     <i class="fa fa-paperclip fa-2x" ></i>
                     <i class="fa fa-plus" style="position:absolute;"></i>
                 </div>
                 <div *ngIf="signatureBook.attachments[rightSelectedThumbnail]">
-                    <hr style="background-color:#666;margin-top:0px;"/>
                     <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canModify || signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'}" title="Modifier la pièce jointe" class="visaPjUp" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
                         <i class="fa fa-pencil-square-o fa-2x"></i>
                     </div>

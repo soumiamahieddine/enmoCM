@@ -863,6 +863,15 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 .visaPjView{
     color: initial;
 }
+
+.panelRightListPj{
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+.panelRightListPj:hover{
+    color: #009DC5;
+}
+
 .panelRightAddPj{
     display: block;
     padding:10px;
