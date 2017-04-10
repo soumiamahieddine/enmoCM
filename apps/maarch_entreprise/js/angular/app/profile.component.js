@@ -26,6 +26,22 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.prepareProfile();
+        //FIX PROTOTYPE CONFLICT
+        if (Prototype.BrowserFeatures.ElementExtensions) {
+            var disablePrototypeJS = function (method, pluginsToDisable) {
+                var handler = function (event) {
+                    event.target[method] = undefined;
+                    setTimeout(function () {
+                        delete event.target[method];
+                    }, 0);
+                };
+                pluginsToDisable.each(function (plugin) {
+                    jQuery(window).on(method + '.bs.' + plugin, handler);
+                });
+            }, pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover'];
+            disablePrototypeJS('show', pluginsToDisable);
+            disablePrototypeJS('hide', pluginsToDisable);
+        }
         this.loading = true;
         this.http.get('index.php?display=true&page=initializeJsGlobalConfig')
             .map(function (res) { return res.json(); })
