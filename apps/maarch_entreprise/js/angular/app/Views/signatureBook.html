@@ -113,73 +113,74 @@
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
             </div>
             <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="contentShow">
-                <div [ngStyle]="{'display': showTopRightPanel ? 'block' : 'none'}" class="pjDetails">
-                    <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
-                        <label>Type : </label>
-                        <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}} <sup *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" style="color:#16ADEB;">signé(e)</sup></span>
+                <div *ngIf="!showAttachmentPanel">
+                    <div [ngStyle]="{'display': showTopRightPanel ? 'block' : 'none'}" class="pjDetails">
+                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
+                            <label>Type : </label>
+                            <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}} <sup *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" style="color:#16ADEB;">signé(e)</sup></span>
+                        </div>
+                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].title}}">
+                            <label>Objet : </label>
+                            <span>{{signatureBook.attachments[rightSelectedThumbnail].title}}</span>
+                        </div>
+                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].destUser}}">
+                            <label>Pour : </label>
+                            <span>{{signatureBook.attachments[rightSelectedThumbnail].destUser}}</span>
+                        </div>
+                        <div>
+                            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail].updated_by" title="{{signatureBook.attachments[rightSelectedThumbnail].typist}}" class="infoPj">
+                                <label>Créé par : </label>
+                                <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
+                            </div>
+                            <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].updated_by" title="Modifié par : {{signatureBook.attachments[rightSelectedThumbnail].updated_by}} le {{signatureBook.attachments[rightSelectedThumbnail].doc_date | date:'dd/MM/y'}}" class="infoPj">
+                                <label><i>*</i> Créé par : </label>
+                                <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
+                            </div>
+                            <div class="infoPj">
+                                <label>Créé le : </label>
+                                <span>{{signatureBook.attachments[rightSelectedThumbnail].creation_date | date:'dd/MM/y à HH:mm'}}</span>
+                            </div>
+                            <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].validation_date | date:'dd/MM/y'}}">
+                                <label>Retour : </label>
+                                <span>{{signatureBook.attachments[rightSelectedThumbnail].validation_date | date:'dd/MM/y'}}</span>
+                            </div>
+                            <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].identifier}}">
+                                <label>Chrono : </label>
+                                <span>{{signatureBook.attachments[rightSelectedThumbnail].identifier}}</span>
+                            </div>
+                            <div class="infoPj">
+                                <label>Version : </label>
+                                <span>{{signatureBook.attachments[rightSelectedThumbnail].relation}}</span>
+                                <i [ngStyle]="{'display': signatureBook.attachments[rightSelectedThumbnail].relation > 1 ? '' : 'none'}" style="color:#16ADEB" class="fa fa-chevron-circle-up" id="obsVersion" data-tooltip-content="#obsVersionTooltip" aria-hidden="true"></i>
+                            </div>
+                            <div class="infoPj">
+                                <label>Format : </label>
+                                <span>{{signatureBook.attachments[rightSelectedThumbnail].format.toUpperCase()}}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].title}}">
-                        <label>Objet : </label>
-                        <span>{{signatureBook.attachments[rightSelectedThumbnail].title}}</span>
+                    <div class="pjDetailsMore" (click)="displayPanel('TOPRIGHT')" title="Détails">
+                        <i *ngIf="!showTopRightPanel" class="fa fa-list-alt fa-2x" aria-hidden="true"></i>
+                        <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
                     </div>
-                    <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].destUser}}">
-                        <label>Pour : </label>
-                        <span>{{signatureBook.attachments[rightSelectedThumbnail].destUser}}</span>
-                    </div>
-                    <div>
-                        <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail].updated_by" title="{{signatureBook.attachments[rightSelectedThumbnail].typist}}" class="infoPj">
-                            <label>Créé par : </label>
-                            <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
-                        </div>
-                        <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].updated_by" title="Modifié par : {{signatureBook.attachments[rightSelectedThumbnail].updated_by}} le {{signatureBook.attachments[rightSelectedThumbnail].doc_date | date:'dd/MM/y'}}" class="infoPj">
-                            <label><i>*</i> Créé par : </label>
-                            <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
-                        </div>
-                        <div class="infoPj">
-                            <label>Créé le : </label>
-                            <span>{{signatureBook.attachments[rightSelectedThumbnail].creation_date | date:'dd/MM/y à HH:mm'}}</span>
-                        </div>
-                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].validation_date | date:'dd/MM/y'}}">
-                            <label>Retour : </label>
-                            <span>{{signatureBook.attachments[rightSelectedThumbnail].validation_date | date:'dd/MM/y'}}</span>
-                        </div>
-                        <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].identifier}}">
-                            <label>Chrono : </label>
-                            <span>{{signatureBook.attachments[rightSelectedThumbnail].identifier}}</span>
-                        </div>
-                        <div class="infoPj">
-                            <label>Version : </label>
-                            <span>{{signatureBook.attachments[rightSelectedThumbnail].relation}}</span>
-                            <i [ngStyle]="{'display': signatureBook.attachments[rightSelectedThumbnail].relation > 1 ? '' : 'none'}" style="color:#16ADEB" class="fa fa-chevron-circle-up" id="obsVersion" data-tooltip-content="#obsVersionTooltip" aria-hidden="true"></i>
-                        </div>
-                        <div class="infoPj">
-                            <label>Format : </label>
-                            <span>{{signatureBook.attachments[rightSelectedThumbnail].format.toUpperCase()}}</span>
+                    <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '84%' : '99%'}"></iframe>
+                    <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
+                        <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF du fichier "{{signatureBook.attachments[rightSelectedThumbnail].title}}.{{signatureBook.attachments[rightSelectedThumbnail].format}}" n'est pas disponible.</sub></div>
+                        <div class="visaPjView">
+                            <a title="Télécharger la pièce jointe" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].res_id}}" target="_blank">
+                                <i class="fa fa-download fa-2x"></i>
+                            </a>
                         </div>
                     </div>
-                </div>
-                <div class="pjDetailsMore" (click)="displayPanel('TOPRIGHT')" title="Détails">
-                   <i *ngIf="!showTopRightPanel" class="fa fa-list-alt fa-2x" aria-hidden="true"></i>
-                   <i *ngIf="showTopRightPanel" class="fa fa-chevron-up" aria-hidden="true"></i>
-                </div>
-                <iframe *ngIf="signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted" id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '84%' : '99%'}"></iframe>
-                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
-                    <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF du fichier "{{signatureBook.attachments[rightSelectedThumbnail].title}}.{{signatureBook.attachments[rightSelectedThumbnail].format}}" n'est pas disponible.</sub></div>
-                    <div class="visaPjView">
-                        <a title="Télécharger la pièce jointe" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{signatureBook.attachments[rightSelectedThumbnail].res_id}}" target="_blank">
-                            <i class="fa fa-download fa-2x"></i>
-                        </a>
+                    <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
+                        <div style="padding-top: 25%;">L'édition de la pièce jointe a été interrompue.<br/><sub>Veuillez la ré-éditer.</sub></div>
+                        <div>
+                            <a title="Editer la pièce jointe" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                                <i class="fa fa-pencil-square-o fa-2x" style="cursor:pointer;"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
-                    <div style="padding-top: 25%;">L'édition de la pièce jointe a été interrompue.<br/><sub>Veuillez la ré-éditer.</sub></div>
-                    <div>
-                        <a title="Editer la pièce jointe" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
-                            <i class="fa fa-pencil-square-o fa-2x" style="cursor:pointer;"></i>
-                        </a>
-                    </div>
-                </div>
-                <div *ngIf="signatureBook.canSign && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" class="pjSign">
+                    <div *ngIf="signatureBook.canSign && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" class="pjSign">
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN' && signatureBook.signature" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
                         <img *ngIf="!loadingSign" title="Signer" src="{{signatureBook.signature}}">
                         <i *ngIf="loadingSign" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
@@ -190,7 +191,9 @@
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" (click)="unsignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer;color: green;">
                         <i title="Dé-signer" class="fa fa-check fa-2x" aria-hidden="true"></i>
                     </span>
+                    </div>
                 </div>
+                <iframe *ngIf="showAttachmentPanel" [src]="attachmentsViewerLink | safeUrl"></iframe>
             </div>
             <div *ngIf="!signatureBook.hasWorkflow" class="visaNoWorkflowWarning">
                 <div style="margin-top:200px;">Aucun circuit de visa paramétré.<br/><sub>Aucune signature possible.</sub></div>
@@ -201,7 +204,7 @@
         </div>
         <div *ngIf="signatureBook.hasWorkflow" class="panelRight">
             <div *ngIf="signatureBook.attachments" id="rightPanelContent" class="panelRightContent">
-                <div title="[{{attachment.attachment_type}}] {{attachment.title}}" style="position: relative;" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail}">
+                <div title="[{{attachment.attachment_type}}] {{attachment.title}}" style="position: relative;" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail && !showAttachmentPanel}">
                     <span class="fa-stack fa-lg">
                         <i class="fa fa-file-o fa-stack-2x"></i><i style="font-weight:bold;letter-spacing: -1px;">{{attachment.icon}}</i>
                     </span>
@@ -212,7 +215,7 @@
                 </div>
             </div>
             <div style="bottom: 0px;position: absolute;left: 5px;">
-                <div class="panelRightListPj" (click)="addAttachmentIframe()" title="Afficher la liste des pièces jointes">
+                <div class="panelRightListPj" (click)="displayAttachmentPanel()" title="Afficher la liste des pièces jointes">
                     <i class="fa fa-bars fa-2x" ></i>
                 </div>
                 <hr style="background-color:#666;margin-top:0px;"/>

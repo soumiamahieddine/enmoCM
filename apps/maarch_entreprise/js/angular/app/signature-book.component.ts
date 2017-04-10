@@ -48,7 +48,7 @@ export class SignatureBookComponent implements OnInit {
     showResLeftPanel            : boolean   = true;
     showLeftPanel               : boolean   = true;
     showRightPanel              : boolean   = true;
-    showAttachmentEditionPanel  : boolean   = false;
+    showAttachmentPanel         : boolean   = false;
     loading                     : boolean   = false;
     loadingSign                 : boolean   = false;
 
@@ -59,6 +59,7 @@ export class SignatureBookComponent implements OnInit {
     visaViewerLink              : string    = "";
     histViewerLink              : string    = "";
     linksViewerLink             : string    = "";
+    attachmentsViewerLink       : string    = "";
 
 
     constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
@@ -111,11 +112,12 @@ export class SignatureBookComponent implements OnInit {
                             this.showResLeftPanel       = true;
                             this.showTopLeftPanel       = false;
                             this.showTopRightPanel      = false;
-                            this.showAttachmentEditionPanel  = false;
+                            this.showAttachmentPanel    = false;
                             this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
                             this.visaViewerLink  = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
                             this.histViewerLink  = "index.php?display=true&page=show_history_tab&resId=" + this.resId + "&collId=letterbox_coll";
                             this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
+                            this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + this.resId + "&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
 
                             this.leftContentWidth  = "44%";
                             this.rightContentWidth = "44%";
@@ -187,12 +189,8 @@ export class SignatureBookComponent implements OnInit {
     }
 
     changeRightViewer(index: number) {
-        if (index < 0) {
-            this.showAttachmentEditionPanel = true;
-        } else {
-            this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
-            this.showAttachmentEditionPanel = false;
-        }
+        this.showAttachmentPanel = false;
+        this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
         this.rightSelectedThumbnail = index;
     }
 
@@ -237,6 +235,14 @@ export class SignatureBookComponent implements OnInit {
                 this.leftContentWidth = "48%";
                 $j("#contentLeft").css('border-right', 'solid 1px');
             }
+        }
+    }
+
+    displayAttachmentPanel() {
+        this.showAttachmentPanel = !this.showAttachmentPanel;
+        this.rightSelectedThumbnail = 0;
+        if (this.signatureBook.attachments[0]) {
+            this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
         }
     }
 
