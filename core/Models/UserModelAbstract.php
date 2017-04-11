@@ -52,11 +52,11 @@ class UserModelAbstract extends \Apps_Table_Service
 
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['user']);
-        static::checkRequired($aArgs['user'], ['user_id', 'firstname', 'lastname']);
-        static::checkString($aArgs['user'], ['user_id', 'firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone']);
+        static::checkRequired($aArgs, ['user', 'userId']);
+        static::checkRequired($aArgs['user'], ['firstname', 'lastname']);
+        static::checkString($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone']);
 
-        $aReturn = parent::update([
+        $isUpdated = parent::update([
             'table'     => 'users',
             'set'       => [
                 'firstname'     => $aArgs['user']['firstname'],
@@ -67,10 +67,46 @@ class UserModelAbstract extends \Apps_Table_Service
                 'thumbprint'    => $aArgs['user']['thumbprint']
             ],
             'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['user']['user_id']]
+            'data'      => [$aArgs['userId']]
         ]);
 
-        return $aReturn;
+        return $isUpdated;
+    }
+
+    public static function updatePassword(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'password']);
+        static::checkString($aArgs, ['userId', 'password']);
+
+        $isUpdated = parent::update([
+            'table'     => 'users',
+            'set'       => [
+                'password'  => SecurityModel::getPasswordHash($aArgs['password'])
+            ],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return $isUpdated;
+    }
+
+    public static function checkPassword(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'password']);
+        static::checkString($aArgs, ['userId', 'password']);
+
+        $aReturn = parent::select([
+            'select'    => ['password'],
+            'table'     => 'users',
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        if ($aReturn[0]['password'] === SecurityModel::getPasswordHash($aArgs['password'])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function getSignaturesById(array $aArgs = [])

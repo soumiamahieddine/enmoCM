@@ -1,7 +1,5 @@
 <link rel="stylesheet" href="../../../../css/bootstrap.min.css">
-<script>
 
-</script>
 <style>
 nav{
     margin-top:10px !important;
@@ -65,42 +63,6 @@ h2{
     border-color: #222;
 }
 </style>
-<!-- TEST HEADER WITH BOOTSTRAP-->
-<!--<nav class="navbar navbar-default" style="height:74px;border-radius:0px;margin-left: -10px;margin-top: -10px;margin-right: -10px;border: solid 2px #009DC5;background: #009DC5;color:white;">
-        <div class="container-fluid" style="height: 100%;">
-            <ol class="breadcrumb" style="margin-bottom:0px;background:none;position:absolute;">
-                <li><a href="#" style="color:white;">Maarch Courrier 1.7</a></li>
-                <li class="active"><a href="#" style="color:white;">Mon Profile</a></li>
-                </ol>
-            <div class="navbar-header" style="margin-top: 17px;">
-                
-                 <ul class="nav navbar-nav">
-                     
-        <li class="dropdown" style="font-size:20px;margin-top:10px;">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:white;font-weight:bold;"><i class="fa fa-dropbox" aria-hidden="true"></i>
- Menu <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li>
-        <p class="navbar-text" style="position: absolute;margin: 0px;padding: 15px;background: #f2f2f2;width: 80%;height: 40px;top: 30px;border-top-left-radius: 3px;left: 262px;color: #009dc5;font-weight: bold;font-size: 1.3em;">Mon profile</p>
-      </ul>
-      
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <div class="navbar-header navbar-right" style="background-color:#f2f2f2;margin-right:-30px;">
-                    <a class="navbar-brand" href="#" style="float: right;right: 0px;position: absolute;margin: 0px;padding-right: 0px;padding-top: 0px;height: 70px;width: 236px;background: url(static.php?filename=default_nav_logo_maarch.gif) #f2f2f2;background-size: 90%;background-position: center;background-repeat: no-repeat;">
-                    </a>
-                    </div>
-            </div>
-        </div>
-    </nav>-->
 <div *ngIf="loading">
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
@@ -148,12 +110,45 @@ h2{
                 <div class="form-group">
                     <div class="col-sm-12">
                          <div class="input-group">
-                            <input type="text" class="form-control" id="userId" title="Identifiant" placeholder="Identifiant" value="{{user.user_id}}" disabled>
+                             <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
+                             <input type="text" class="form-control" id="userId" title="Identifiant" placeholder="Identifiant" value="{{user.user_id}}" disabled>
                              <span class="input-group-btn">
-                                <button class="btn btn-success" type="button" title="Modifier votre mot de passe"><i class="fa fa-key" aria-hidden="true"></i></button>
+                                <button (click)="displayPassword()" class="btn btn-success" type="button" title="Modifier votre mot de passe"><i class="fa fa-key" aria-hidden="true"></i></button>
                             </span>
                          </div>
                     </div>
+                </div>
+                <div *ngIf="showPassword" style="margin-bottom: 5%">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                <input type="password" class="form-control" style="display: none">
+                                <input type="password" [(ngModel)]="passwordModel.currentPassword" class="form-control" name="currentPassword" placeholder="Mot de passe actuel">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                <input type="password" [(ngModel)]="passwordModel.newPassword" class="form-control" name="newPassword" placeholder="Nouveau mot de passe">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                <input type="password" [(ngModel)]="passwordModel.reNewPassword" class="form-control" name="reNewPassword" placeholder="Retaper le mot de passe">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div style="text-align:center;">
+                            <button (click)="changePassword()" type="button" class="btn btn-default">Modifier votre mot de passe</button>
+                        </div>
+                    </div>
+                    <hr style="background-color: grey; height: 1px">
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
@@ -178,21 +173,6 @@ h2{
                             <span class="input-group-addon"><i class="fa fa-paw" aria-hidden="true"></i></span>
                             <input type="text" class="form-control" id="fingerprint" name="fingerprint" title="Empreinte Numérique" placeholder="Empreinte Numérique" [(ngModel)]="user.thumbprint">
                         </div>
-                    </div>
-                </div>
-                <div class="form-group" style="display:none;">
-                    <div class="col-sm-6">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
-                            <input type="password" class="form-control" id="password" placeholder="Nouveau mot de passe">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
-                            <input type="password" class="form-control" id="repassword" placeholder="Retaper le mot de passe">
-                        </div>
-
                     </div>
                 </div>
                 <div class="form-group">
@@ -259,20 +239,18 @@ h2{
         <h4 class="modal-title" id="myModalLabel">Gérer mes signatures</h4>
       </div>
         <div class="modal-body">
-             <!-- Nav tabs -->
+              <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Signatures de mail</a></li>
-                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Signatures de parapheur</a></li>
+                <li role="presentation" class="active"><a href="#mailSign" aria-controls="mailSign" role="tab" data-toggle="tab">Signatures de mail</a></li>
+                <li role="presentation"><a href="#signatureBookSign" aria-controls="signatureBookSign" role="tab" data-toggle="tab">Signatures de parapheur</a></li>
+
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane" id="mail">
-                    
-                </div>
-                <div role="tabpanel" class="tab-pane active" id="signatureBook">
-                     <div class="row" style="margin-top:5px;">
-
+                <div role="tabpanel" class="tab-pane active" id="mailSign">Signatures de mail</div>
+                <div role="tabpanel" class="tab-pane" id="signatureBookSign">
+                    <div class="row" style="margin-top:5px;">
                         <div class="col-md-11">
                              <input type="text" placeholder="nom de la signature" class="form-control">
                              <form action="" method="post" enctype="multipart/form-data" id="js-upload-form" style="display:none;">
@@ -294,7 +272,7 @@ h2{
                             </div>
                         </div>
                      </div>
-                    <div class="row">
+                     <div class="row">
                     <div class="col-md-3">
                         <div class="thumbnail">
                         <img src="http://www.agencecampion.fr/diz/signature-13.jpg" alt="...">
@@ -342,43 +320,3 @@ h2{
     </div>
   </div>
 </div>
-<script>
- function($) {
-    'use strict';
-
-    // UPLOAD CLASS DEFINITION
-    // ======================
-
-    var dropZone = document.getElementById('drop-zone');
-    var uploadForm = document.getElementById('js-upload-form');
-
-    var startUpload = function(files) {
-        console.log(files)
-    }
-
-    uploadForm.addEventListener('submit', function(e) {
-        var uploadFiles = document.getElementById('js-upload-files').files;
-        e.preventDefault()
-
-        startUpload(uploadFiles)
-    })
-
-    dropZone.ondrop = function(e) {
-        e.preventDefault();
-        this.className = 'upload-drop-zone';
-
-        startUpload(e.dataTransfer.files)
-    }
-
-    dropZone.ondragover = function() {
-        this.className = 'upload-drop-zone drop';
-        return false;
-    }
-
-    dropZone.ondragleave = function() {
-        this.className = 'upload-drop-zone';
-        return false;
-    }
-
-}(jQuery);
-</script>

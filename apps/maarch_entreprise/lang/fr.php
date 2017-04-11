@@ -562,6 +562,7 @@ if (!defined("_BAD_LOGIN_OR_PSW")) define("_BAD_LOGIN_OR_PSW", "Mauvais nom d'ut
 if (!defined("_WRONG_PSW")) define("_WRONG_PSW", "Mauvais mot de passe actuel");
 if (!defined("_WRONG_SECOND_PSW")) define("_WRONG_SECOND_PSW", "Le deuxième mot de passe ne correspond pas au premier mot de passe !");
 if (!defined("_EMPTY_PSW")) define("_EMPTY_PSW", "Mot de passe actuel vide");
+if (!defined("_EMPTY_PSW_FORM")) define("_EMPTY_PSW_FORM", "Le formulaire de mot de passe n'est pas complet");
 if (!defined("_AUTORIZED_USER")) define("_AUTORIZED_USER", "Utilisateur autorisé");
 if (!defined("_SUSPENDED_USER")) define("_SUSPENDED_USER", "Utilisateur suspendu");
 if (!defined("_DELETED_USER")) define("_DELETED_USER", "Utilisateur supprimé");

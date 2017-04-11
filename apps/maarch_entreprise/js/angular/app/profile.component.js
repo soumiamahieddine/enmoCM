@@ -16,12 +16,24 @@ var ProfileComponent = (function () {
     function ProfileComponent(http) {
         this.http = http;
         this.user = {};
+        this.passwordModel = {
+            currentPassword: "",
+            newPassword: "",
+            reNewPassword: "",
+        };
+        this.showPassword = false;
         this.loading = false;
     }
     ProfileComponent.prototype.prepareProfile = function () {
         $j('#inner_content').remove();
         $j('#menunav').hide();
         $j('#container').width("99%");
+        if (Prototype.BrowserFeatures.ElementExtensions) {
+            //FIX PROTOTYPE CONFLICT
+            var pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover', 'tab'];
+            disablePrototypeJS('show', pluginsToDisable);
+            disablePrototypeJS('hide', pluginsToDisable);
+        }
     };
     ProfileComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -39,10 +51,34 @@ var ProfileComponent = (function () {
             });
         });
     };
-    ProfileComponent.prototype.onSubmit = function () {
-        this.http.put(this.coreUrl + 'rest/user/' + this.user.user_id, this.user)
+    ProfileComponent.prototype.displayPassword = function () {
+        this.showPassword = !this.showPassword;
+    };
+    ProfileComponent.prototype.changePassword = function () {
+        var _this = this;
+        this.http.put(this.coreUrl + 'rest/user/password', this.passwordModel)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
+            if (data.errors) {
+                alert(data.errors);
+            }
+            else {
+                _this.showPassword = false;
+                _this.passwordModel = {
+                    currentPassword: "",
+                    newPassword: "",
+                    reNewPassword: "",
+                };
+            }
+        });
+    };
+    ProfileComponent.prototype.onSubmit = function () {
+        this.http.put(this.coreUrl + 'rest/user/profile', this.user)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            if (data.errors) {
+                alert(data.errors);
+            }
         });
     };
     return ProfileComponent;

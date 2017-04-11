@@ -563,6 +563,7 @@ if (!defined("_BAD_LOGIN_OR_PSW")) define("_BAD_LOGIN_OR_PSW", "Wrong user name 
 if (!defined("_WRONG_PSW")) define("_WRONG_PSW", "Wrong current password");
 if (!defined("_WRONG_SECOND_PSW")) define("_WRONG_SECOND_PSW", "The second password isn't equivalent to the first password !");
 if (!defined("_EMPTY_PSW")) define("_EMPTY_PSW", "The current password is empty");
+if (!defined("_EMPTY_PSW_FORM")) define("_EMPTY_PSW_FORM", "Password form is not complete");
 if (!defined("_AUTORIZED_USER")) define("_AUTORIZED_USER", "Authorized user");
 if (!defined("_SUSPENDED_USER")) define("_SUSPENDED_USER", "Suspended user");
 if (!defined("_DELETED_USER")) define("_DELETED_USER", "Deleted user");
