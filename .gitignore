@@ -7,8 +7,7 @@ apps/maarch_entreprise/xml/log4php.xml
 .vscode/
 .phplint-cache
 .phplint.yml
-fonctionnel.log
-technique.log
+*.log
 xdelete.sh
 core/Test/build/
 apps/maarch_entreprise/tmp/
