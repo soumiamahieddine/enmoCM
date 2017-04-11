@@ -248,7 +248,30 @@ h2{
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="mailSign">Signatures de mail</div>
+                <div role="tabpanel" class="tab-pane active" id="mailSign">Signatures de mail
+                    <div class="row" style="margin-top:5px;">
+                        <div class="col-md-6">
+                            <select class="form-control">
+                                <option>Nouvelle signature</option>
+                                <option>Signature Principale</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" placeholder="nom de la signature" class="form-control">
+                        </div>
+                        <div class="col-md-1">
+                            <button class="form-control btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:5px;">
+                        <div class="col-md-12">
+                            <div id="html_mode" style="display: block; width:100%;">
+                                <textarea name="emailSignature" id="emailSignature" style="width:100%" rows="15" cols="60"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
                 <div role="tabpanel" class="tab-pane" id="signatureBookSign">
                     <div class="row" style="margin-top:5px;">
                         <div class="col-md-11">

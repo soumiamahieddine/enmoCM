@@ -39,6 +39,29 @@ export class ProfileComponent implements OnInit {
             disablePrototypeJS('show', pluginsToDisable);
             disablePrototypeJS('hide', pluginsToDisable);
         }
+
+        //LOAD EDITOR TINYMCE for MAIL SIGN
+        /*tinymce.init({
+            selector: "textarea#emailSignature",
+            statusbar : false,
+            language : "fr_FR",
+            height : "120",
+            plugins: [
+                "textcolor bdesk_photo"
+            ],
+            menubar: false,
+            toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor",
+            theme_buttons1_add : "fontselect,fontsizeselect",
+            theme_buttons2_add_before : "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
+            theme_buttons2_add : "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
+            theme_buttons3_add_before : "tablecontrols,separator",
+            theme_buttons3_add : "separator,print,separator,ltr,rtl,separator,fullscreen,separator,insertlayer,moveforward,movebackward,absolut",
+            theme_toolbar_align : "left",
+            theme_advanced_toolbar_location : "top",
+            theme_styles : "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1"
+    
+        });*/
+
     }
 
     ngOnInit(): void {
