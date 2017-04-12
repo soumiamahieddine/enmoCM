@@ -180,13 +180,10 @@
                             </a>
                         </div>
                     </div>
-                    <div *ngIf="signatureBook.canSign && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" class="pjSign">
+                    <div *ngIf="signatureBook.signature && signatureBook.canSign && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)" class="pjSign">
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN' && signatureBook.signature" (click)="prepareSignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer">
                         <img *ngIf="!loadingSign" title="Signer" src="{{signatureBook.signature}}">
                         <i *ngIf="loadingSign" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
-                    </span>
-                    <span *ngIf="!signatureBook.signature" style="color: red;">
-                        <i title="Aucune image de signature paramétrée" class="fa fa-ban fa-2x" aria-hidden="true"></i>
                     </span>
                     <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" (click)="unsignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer;color: green;">
                         <i title="Dé-signer" class="fa fa-check fa-2x" aria-hidden="true"></i>
