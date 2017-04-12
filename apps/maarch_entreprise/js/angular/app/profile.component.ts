@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
@@ -20,12 +20,23 @@ export class ProfileComponent implements OnInit {
         newPassword             : "",
         reNewPassword           : "",
     };
-    
+    signatureModel              : any       = {
+        base64                  : "",
+        name                    : "",
+        type                    : "",
+        size                    : 0,
+        label                   : "",
+    };
+
     showPassword                : boolean   = false;
+    resultInfo                  : string    = "";
     loading                     : boolean   = false;
 
 
-    constructor(public http: Http) {
+    constructor(public http: Http, private zone: NgZone) {
+        window['angularProfileComponent'] = {
+            componentAfterUpload: (value: any) => this.processAfterUpload(value),
+        };
     }
 
     prepareProfile() {
@@ -83,16 +94,29 @@ export class ProfileComponent implements OnInit {
             });
     }
 
+    processAfterUpload(value: any) {
+        this.zone.run(() => this.resfreshUpload(value));
+    }
+
+    resfreshUpload(value: any) {
+        this.signatureModel.base64 = value;
+    }
+
     displayPassword() {
         this.showPassword = !this.showPassword;
     }
 
+    exitProfile() {
+        location.hash = "";
+        location.reload();
+    }
+
     changePassword() {
-        this.http.put(this.coreUrl + 'rest/user/password', this.passwordModel)
+        this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.errors) {
-                    $j('#resultInfo').html(data.errors);
+                    this.resultInfo = data.errors;
                     $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
                     $j('#resultInfo').modal('show').show();
                 } else {
@@ -102,7 +126,7 @@ export class ProfileComponent implements OnInit {
                         newPassword             : "",
                         reNewPassword           : "",
                     };
-                    $j('#resultInfo').html('Le mot de passe a été modifié');
+                    this.resultInfo = 'Le mot de passe a bien été modifié';
                     $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                     //auto close
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
@@ -112,17 +136,64 @@ export class ProfileComponent implements OnInit {
             });
     }
 
+    deleteSignature(id: number) {
+        this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
+            .map(res => res.json())
+            .subscribe((data) => {
+                if (data.errors) {
+                    alert(data.errors);
+                } else {
+                    this.user.signatures = data.signatures;
+                }
+            });
+    }
+
+    uploadSignatureTrigger(fileInput: any) {
+        if (fileInput.target.files && fileInput.target.files[0]) {
+            var reader = new FileReader();
+            reader.readAsDataURL(fileInput.target.files[0]);
+
+            reader.onload = function () {
+                let zipContent = reader.result.replace(/^data:.*?;base64,/, "");
+                window['angularProfileComponent'].componentAfterUpload(zipContent);
+            };
+
+            this.signatureModel.name = fileInput.target.files[0].name;
+            this.signatureModel.size = fileInput.target.files[0].size;
+            this.signatureModel.type = fileInput.target.files[0].type;
+        }
+    }
+
+    submitSignature() {
+        this.http.post(this.coreUrl + 'rest/currentUser/signature', this.signatureModel)
+            .map(res => res.json())
+            .subscribe((data) => {
+                if (data.errors) {
+                    alert(data.errors);
+                } else {
+                    this.user.signatures = data.signatures;
+                    this.signatureModel  = {
+                        base64                  : "",
+                        name                    : "",
+                        type                    : "",
+                        size                    : 0,
+                        label                   : "",
+                    };
+                }
+            });
+    }
+
     onSubmit() {
         this.http.put(this.coreUrl + 'rest/user/profile', this.user)
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.errors) {
-                    $j('#resultInfo').html(data.errors);
-                    $j('#resultInfo').removeClass('hide').addClass('alert alert-danger alert-dismissible');
+                    this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
                     $j('#resultInfo').modal('show').show();
                             
                 }else{
-                    $j('#resultInfo').html('Les informations utilisateur ont été modifiées');
+                    this.resultInfo = 'Les informations utilisateur ont été modifiées';
                     $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                     //auto close
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){

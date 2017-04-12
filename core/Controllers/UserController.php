@@ -20,6 +20,8 @@ use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\UserModel;
 
+include_once 'core/class/docservers_controler.php';
+
 class UserController
 {
     public function getCurrentUserInfos(RequestInterface $request, ResponseInterface $response)
@@ -71,7 +73,7 @@ class UserController
         return $response->withJson([]);
     }
 
-    public function updatePassword(RequestInterface $request, ResponseInterface $response)
+    public function updateCurrentUserPassword(RequestInterface $request, ResponseInterface $response)
     {
         $data = $request->getParams();
 
@@ -94,7 +96,62 @@ class UserController
         return $response->withJson([]);
     }
 
-    private function checkNeededParameters($aArgs = []) {
+    public function createCurrentUserSignature(RequestInterface $request, ResponseInterface $response)
+    {
+        $data = $request->getParams();
+
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['base64', 'name', 'type', 'size', 'label']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $file = base64_decode($data['base64']);
+        $tmpName = 'tmp_file_' .$_SESSION['user']['UserId']. '_' .rand(). '_' .$data['name'];
+        $ext = strrchr($data['type'], '/');
+
+        file_put_contents($_SESSION['config']['tmppath'] . $tmpName, $file);
+
+        $docservers_controler = new \docservers_controler();
+        $storeInfos = $docservers_controler->storeResourceOnDocserver(
+            'templates',
+            [
+                'tmpDir'      => $_SESSION['config']['tmppath'],
+                'size'        => $data['size'],
+                'format'      => $ext,
+                'tmpFileName' => $tmpName
+            ]
+        );
+
+        if (!file_exists($storeInfos['path_template']. str_replace('#', '/', $storeInfos['destination_dir']) .$storeInfos['file_destination_name'])) {
+            return $response->withJson(['errors' => $storeInfos['error'] .' templates']);
+        }
+
+        $r = UserModel::createSignature([
+            'userId'            => $_SESSION['user']['UserId'],
+            'signatureLabel'    => $data['label'],
+            'signaturePath'     => $storeInfos['destination_dir'],
+            'signatureFileName' => $storeInfos['file_destination_name'],
+        ]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'Signature Create Error']);
+        }
+
+        return $response->withJson(['signatures' => UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']])]);
+    }
+
+    public function deleteCurrentUserSignature(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $r = UserModel::deleteSignature(['signatureId' => $aArgs['id'], 'userId' => $_SESSION['user']['UserId']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'Signature Create Error']);
+        }
+
+        return $response->withJson(['signatures' => UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']])]);
+    }
+
+    private function checkNeededParameters($aArgs = [])
+    {
         foreach ($aArgs['needed'] as $value) {
             if (empty($aArgs['data'][$value])) {
                 return false;

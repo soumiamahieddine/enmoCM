@@ -13,16 +13,29 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/map");
 var ProfileComponent = (function () {
-    function ProfileComponent(http) {
+    function ProfileComponent(http, zone) {
+        var _this = this;
         this.http = http;
+        this.zone = zone;
         this.user = {};
         this.passwordModel = {
             currentPassword: "",
             newPassword: "",
             reNewPassword: "",
         };
+        this.signatureModel = {
+            base64: "",
+            name: "",
+            type: "",
+            size: 0,
+            label: "",
+        };
         this.showPassword = false;
+        this.resultInfo = "";
         this.loading = false;
+        window['angularProfileComponent'] = {
+            componentAfterUpload: function (value) { return _this.processAfterUpload(value); },
+        };
     }
     ProfileComponent.prototype.prepareProfile = function () {
         $j('#inner_content').remove();
@@ -64,6 +77,7 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.coreUrl = data.coreurl;
+            _this.businessappurl = data.businessappurl;
             _this.http.get(_this.coreUrl + 'rest/user/profile')
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
@@ -72,16 +86,27 @@ var ProfileComponent = (function () {
             });
         });
     };
+    ProfileComponent.prototype.processAfterUpload = function (value) {
+        var _this = this;
+        this.zone.run(function () { return _this.resfreshUpload(value); });
+    };
+    ProfileComponent.prototype.resfreshUpload = function (value) {
+        this.signatureModel.base64 = value;
+    };
     ProfileComponent.prototype.displayPassword = function () {
         this.showPassword = !this.showPassword;
     };
+    ProfileComponent.prototype.exitProfile = function () {
+        location.hash = "";
+        location.reload();
+    };
     ProfileComponent.prototype.changePassword = function () {
         var _this = this;
-        this.http.put(this.coreUrl + 'rest/user/password', this.passwordModel)
+        this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                $j('#resultInfo').html(data.errors);
+                _this.resultInfo = data.errors;
                 $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
                 $j('#resultInfo').modal('show').show();
             }
@@ -92,7 +117,7 @@ var ProfileComponent = (function () {
                     newPassword: "",
                     reNewPassword: "",
                 };
-                $j('#resultInfo').html('Le mot de passe a été modifié');
+                _this.resultInfo = 'Le mot de passe a bien été modifié';
                 $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                 //auto close
                 $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
@@ -101,17 +126,64 @@ var ProfileComponent = (function () {
             }
         });
     };
+    ProfileComponent.prototype.deleteSignature = function (id) {
+        var _this = this;
+        this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            if (data.errors) {
+                alert(data.errors);
+            }
+            else {
+                _this.user.signatures = data.signatures;
+            }
+        });
+    };
+    ProfileComponent.prototype.uploadSignatureTrigger = function (fileInput) {
+        if (fileInput.target.files && fileInput.target.files[0]) {
+            var reader = new FileReader();
+            reader.readAsDataURL(fileInput.target.files[0]);
+            reader.onload = function () {
+                var zipContent = reader.result.replace(/^data:.*?;base64,/, "");
+                window['angularProfileComponent'].componentAfterUpload(zipContent);
+            };
+            this.signatureModel.name = fileInput.target.files[0].name;
+            this.signatureModel.size = fileInput.target.files[0].size;
+            this.signatureModel.type = fileInput.target.files[0].type;
+        }
+    };
+    ProfileComponent.prototype.submitSignature = function () {
+        var _this = this;
+        this.http.post(this.coreUrl + 'rest/currentUser/signature', this.signatureModel)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            if (data.errors) {
+                alert(data.errors);
+            }
+            else {
+                _this.user.signatures = data.signatures;
+                _this.signatureModel = {
+                    base64: "",
+                    name: "",
+                    type: "",
+                    size: 0,
+                    label: "",
+                };
+            }
+        });
+    };
     ProfileComponent.prototype.onSubmit = function () {
+        var _this = this;
         this.http.put(this.coreUrl + 'rest/user/profile', this.user)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                $j('#resultInfo').html(data.errors);
-                $j('#resultInfo').removeClass('hide').addClass('alert alert-danger alert-dismissible');
+                _this.resultInfo = data.errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
                 $j('#resultInfo').modal('show').show();
             }
             else {
-                $j('#resultInfo').html('Les informations utilisateur ont été modifiées');
+                _this.resultInfo = 'Les informations utilisateur ont été modifiées';
                 $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                 //auto close
                 $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
@@ -126,6 +198,6 @@ ProfileComponent = __decorate([
     core_1.Component({
         templateUrl: 'js/angular/app/Views/profile.html',
     }),
-    __metadata("design:paramtypes", [http_1.Http])
+    __metadata("design:paramtypes", [http_1.Http, core_1.NgZone])
 ], ProfileComponent);
 exports.ProfileComponent = ProfileComponent;

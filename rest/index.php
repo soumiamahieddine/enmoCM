@@ -134,7 +134,9 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 //Users
 $app->get('/user/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/user/profile', \Core\Controllers\UserController::class . ':updateProfile');
-$app->put('/user/password', \Core\Controllers\UserController::class . ':updatePassword');
+$app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
+$app->post('/currentUser/signature', \Core\Controllers\UserController::class . ':createCurrentUserSignature');
+$app->delete('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserSignature');
 //$app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
 
 $app->run();

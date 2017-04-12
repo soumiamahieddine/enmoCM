@@ -894,8 +894,8 @@ class docservers_controler
 
     /**
      * Store a new doc in a docserver.
-     * @param   $collId collection resource
-     * @param   $fileInfos infos of the doc to store, contains :
+     * @param   $collId string collection resource
+     * @param   $fileInfos array , contains :
      *          tmpDir : path to tmp directory
      *          size : size of the doc
      *          format : format of the doc

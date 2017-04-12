@@ -121,7 +121,66 @@ class UserModelAbstract extends \Apps_Table_Service
             'data'      => [$aArgs['userId']],
         ]);
 
+        if (!empty($aReturn)) {
+            $docserver = DocserverModel::getByTypeId(['docserver_type_id' => 'TEMPLATES', 'select' => ['path_template']]);
+        }
+
+        foreach($aReturn as $key => $value) {
+            $pathToSignature = $docserver[0]['path_template'] . str_replace('#', '/', $value['signature_path']) . $value['signature_file_name'];
+
+            $extension = explode('.', $pathToSignature);
+            $extension = $extension[count($extension) - 1];
+            $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($extension);
+            $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp; // TODO No Session
+            if (copy($pathToSignature, $filePathOnTmp)) {
+                $aReturn[$key]['pathToSignatureOnTmp'] = $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp;
+            } else {
+                $aReturn[$key]['pathToSignatureOnTmp'] = '';
+            }
+
+        }
+
         return $aReturn;
+    }
+
+    public static function createSignature(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'signatureLabel', 'signaturePath', 'signatureFileName']);
+        static::checkString($aArgs, ['userId', 'signatureLabel', 'signaturePath', 'signatureFileName']);
+
+        parent::insertInto(
+            [
+                'user_id'           => $aArgs['userId'],
+                'signature_label'   => $aArgs['signatureLabel'],
+                'signature_path'    => $aArgs['signaturePath'],
+                'signature_file_name' => $aArgs['signatureFileName']
+            ],
+            'user_signatures'
+        );
+
+        return true;
+    }
+
+    public static function deleteSignature(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['signatureId']);
+        static::checkNumeric($aArgs, ['signatureId']);
+
+        $where = ['id = ?'];
+        $data = [$aArgs['signatureId']];
+
+        if (!empty($aArgs['userId'])) {
+            $where[] = 'user_id = ?';
+            $data[] = $aArgs['userId'];
+        }
+
+        parent::deleteFrom([
+            'table'     => 'user_signatures',
+            'where'     => $where,
+            'data'      => $data,
+        ]);
+
+        return true;
     }
 
     public static function getEmailSignaturesById(array $aArgs = [])
