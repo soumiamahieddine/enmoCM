@@ -54,7 +54,6 @@ class VisaController
         $actions = $basket->get_actions_from_current_basket($resId, $collId, 'PAGE_USE', true);
 
         $actionsData = [];
-        $actionsData[] = ['value' => '', 'label' => _CHOOSE_ACTION];
         foreach ($actions as $value) {
             $actionsData[] = ['value' => $value['VALUE'], 'label' => $value['LABEL']];
         }
