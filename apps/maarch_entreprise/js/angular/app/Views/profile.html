@@ -75,6 +75,17 @@ h2{
     z-index: 1;
     height: 40px;
 }
+ #signList {
+    overflow-x:scroll;
+    overflow-y:hidden;
+    white-space:nowrap;
+  }
+  #signList [class*="col-lg"], #signList [class*="col-md"], #signList [class*="col-sm"] {
+    float:none;
+    display:inline-block;
+    white-space:normal;
+    vertical-align:top;
+  }
 </style>
 <div id="resultInfo" class="fade" style="display:none;">
     {{resultInfo}}
@@ -287,28 +298,28 @@ h2{
                         <div class="row" style="margin-top:5px;">
                             <div class="col-md-11">
                                 <form (ngSubmit)="submitSignature()" #signatureForm="ngForm">
-                                    <input type="text" [(ngModel)]="signatureModel.label" name="label" placeholder="nom de la signature" class="form-control" required>
-                                    <div class="form-inline">
+                                    <input type="text" [(ngModel)]="signatureModel.label" id="signLabel" name="label" placeholder="nom de la signature" class="form-control" required>
+                                    <div class="form-inline hide">
                                         <div class="form-group">
-                                            <input type="file" name="files[]" id="js-upload-files" (change)="uploadSignatureTrigger($event)">
+                                            <input type="file" [(ngModel)]="signatureModel.name" (ngModelChange)="signatureModel.label = signatureModel.name" name="files[]" id="uploadSignFile" (change)="uploadSignatureTrigger($event)">
                                         </div>
-                                        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!signatureForm.form.valid">Upload files</button>
+                                        <button id="uploadSignFileButton" type="submit" class="btn btn-sm btn-primary">Upload files</button>
                                     </div>
                                 </form>
                             </div>
                             <div class="col-md-1" style="margin-bottom:5px;">
-                                <button class="form-control btn btn-sm btn-success"><i class="fa fa-plus"></i></button>
+                                <button class="form-control btn btn-sm btn-success" onclick="$j('#uploadSignFileButton').click();" [disabled]="!signatureForm.form.valid"><i class="fa fa-plus"></i></button>
                             </div>
                             <div class="col-md-12">
                                 <div class="upload-drop-zone" id="drop-zone">
-                                    Glissez-déposez une image de signature ici <strong>OU</strong> cliquez sur <i class="fa fa-upload fa-2x" style="cursor:pointer;"></i>
+                                    Glissez-déposez une image de signature ici <strong>OU</strong> cliquez sur <i class="fa fa-upload fa-2x" style="cursor:pointer;" onclick="$j('#uploadSignFile').click();"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" id="signList">
                             <div *ngFor="let signature of user.signatures" class="col-md-3">
                                 <div class="thumbnail">
-                                    <img src="{{signature.pathToSignatureOnTmp}}" alt="...">
+                                    <img src="{{signature.pathToSignatureOnTmp}}" alt="..." style="width:auto;height:60px;">
                                     <div class="caption" style="margin-bottom:0px;">
                                         <p>{{signature.signature_label}}</p>
                                         <a (click)="deleteSignature(signature.id)" class="btn btn-danger" role="button" title="supprimer la signature">
