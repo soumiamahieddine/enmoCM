@@ -127,8 +127,22 @@ if (isset($_POST['what_services']) && ! empty($_POST['what_services'])) {
 }
 
 // by default, if difflist for entities, load users and entity of the selectionned entity
+$primaryEntityLabel = '';
 if ($_GET['what_services'] == '' && $_GET['what_users'] == '') {
-    $_GET['what_services'] = $_SESSION[$origin]['difflist_object']['object_label'];
+    if($_SESSION[$origin]['difflist_object']['object_label'] != null){
+        $_GET['what_services'] = $_SESSION[$origin]['difflist_object']['object_label'];
+    }else{
+        $_SESSION['user']['primaryentity']['id'];
+        $_GET['what_services'] = $_SESSION['user']['primaryentity']['id'];
+        foreach($_SESSION['user']['entities'] as $key => $value){
+            if($_SESSION['user']['entities'][$key]['ENTITY_ID'] == $_SESSION['user']['primaryentity']['id']){
+                $primaryEntityLabel = $_SESSION['user']['entities'][$key]['ENTITY_LABEL'];
+               $_GET['what_services'] = $primaryEntityLabel;
+            }
+ 
+        
+        }
+    }
 }
 
 if (isset($_REQUEST['no_filter'])) {
@@ -186,6 +200,7 @@ if (isset($_GET['what_users'])
         . ")";
     $PDOarray = array_merge($PDOarray, array(":whatUser" => "%" . $what_users . "%"));
 }
+
 if (isset($_GET['what_services']) 
     && ! empty($_GET['what_services'])
 ) {
@@ -234,7 +249,6 @@ $entity_query =
         . "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and "
         . "e.enabled = 'Y' " . $user_expr . $entity_expr 
         . " group by e.entity_id, e.entity_label order by e.entity_label asc limit 50";
-
 if ($user_expr == '' && $entity_expr == '') {
     //no query
 } else {
@@ -899,6 +913,12 @@ $linkwithwhat =
                                 <input class="button" name="auto_filter" id="auto_filter" type="button" onclick="$('what_services').value='<?php 
                                     functions::xecho($_SESSION[$origin]['difflist_object']['object_label']);?>';$('what_users').value='';" value="<?php echo _AUTO_FILTER;?>"/>
                                 <?php
+                            }elseif($primaryEntityLabel <> ''){
+                                ?>
+                                <input class="button" name="auto_filter" id="auto_filter" type="button" onclick="$('what_services').value='<?php 
+                                    functions::xecho($primaryEntityLabel);?>';$('what_users').value='';" value="<?php echo _AUTO_FILTER;?>"/>
+                                <?php
+
                             }
                             ?>
 							<input class="button" name="no_filter" id="no_filter" type="button" onclick="$('what_services').value='';$('what_users').value='';" value="<?php echo _NO_FILTER;?>"/>
