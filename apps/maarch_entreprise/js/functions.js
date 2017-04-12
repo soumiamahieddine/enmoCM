@@ -1241,12 +1241,22 @@ function close_action(id_action, page, path_manage_script, mode_req, res_id_valu
             action_done = action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status,page);
         } else {
             if(page != '' && page != NaN && page && page != null ) {
-                do_nothing = false;
-                window.top.location.href=page;
+                if (typeof window['angularSignatureBookComponent'] != "undefined") {
+                    window.angularSignatureBookComponent.componentAfterAction();
+                }else{
+                    do_nothing = false;
+                    window.top.location.href=page;
+                }
 
             } else if(do_nothing == false) {
-                window.top.location.hash = "";
-                window.top.location.reload();
+                if (typeof window['angularSignatureBookComponent'] != "undefined") {
+                    window.angularSignatureBookComponent.componentAfterAction();
+                }else{
+                    window.top.location.hash = "";
+                    window.top.location.reload();
+                } 
+                
+                
             }
             do_nothing = false;
         }
