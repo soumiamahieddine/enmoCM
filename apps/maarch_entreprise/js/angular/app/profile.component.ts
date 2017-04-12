@@ -92,7 +92,9 @@ export class ProfileComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.errors) {
-                    alert(data.errors);
+                    $j('#resultInfo').html(data.errors);
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j('#resultInfo').modal('show').show();
                 } else {
                     this.showPassword = false;
                     this.passwordModel = {
@@ -100,6 +102,12 @@ export class ProfileComponent implements OnInit {
                         newPassword             : "",
                         reNewPassword           : "",
                     };
+                    $j('#resultInfo').html('Le mot de passe a été modifié');
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    //auto close
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    });
                 }
             });
     }
@@ -111,11 +119,11 @@ export class ProfileComponent implements OnInit {
                 if (data.errors) {
                     $j('#resultInfo').html(data.errors);
                     $j('#resultInfo').removeClass('hide').addClass('alert alert-danger alert-dismissible');
-                    $j('#resultInfo').modal('show');
+                    $j('#resultInfo').modal('show').show();
                             
                 }else{
-                    $j('#resultInfo').html('Les informations utilisateur ont été modifiés');
-                    $j('#resultInfo').removeClass('hide').addClass('alert alert-success alert-dismissible');
+                    $j('#resultInfo').html('Les informations utilisateur ont été modifiées');
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                     //auto close
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
                         $j("#resultInfo").slideUp(500);
