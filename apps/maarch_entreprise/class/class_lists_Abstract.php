@@ -1943,6 +1943,8 @@ abstract class lists_Abstract extends Database
 
                     if (empty($parameters) || empty($parameters['noModification']) || ($output[1][$i] != 'func_modify' && $output[1][$i] != 'func_delete')) {
                         $remplacement = $this->_tmplt_loadVarSys($output[1][$i], $resultArray[$theLine], $listKey, $lineIsDisabled);
+                    } else {
+                        $remplacement = '';
                     }
                     $trueContent = str_replace($output[0][$i],$remplacement,$trueContent);
                     
