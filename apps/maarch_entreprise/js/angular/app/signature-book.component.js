@@ -114,7 +114,7 @@ var SignatureBookComponent = (function () {
                     _this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + _this.resId + "&collId=letterbox_coll&visaStep=true";
                     _this.histViewerLink = "index.php?display=true&page=show_history_tab&resId=" + _this.resId + "&collId=letterbox_coll";
                     _this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + _this.resId;
-                    _this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + _this.resId + "&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
+                    _this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + _this.resId + "&noModification=true&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
                     _this.leftContentWidth = "44%";
                     _this.rightContentWidth = "44%";
                     if (_this.signatureBook.documents[0]) {
