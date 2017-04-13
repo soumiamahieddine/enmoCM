@@ -107,7 +107,9 @@ var ProfileComponent = (function () {
             if (data.errors) {
                 _this.resultInfo = data.errors;
                 $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j('#resultInfo').modal('show').show();
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
             else {
                 _this.showPassword = false;
@@ -179,7 +181,9 @@ var ProfileComponent = (function () {
             if (data.errors) {
                 _this.resultInfo = data.errors;
                 $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j('#resultInfo').modal('show').show();
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
             else {
                 _this.resultInfo = 'Les informations utilisateur ont été modifiées';
