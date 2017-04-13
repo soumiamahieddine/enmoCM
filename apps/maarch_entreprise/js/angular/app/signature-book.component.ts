@@ -117,7 +117,7 @@ export class SignatureBookComponent implements OnInit {
                             this.visaViewerLink  = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
                             this.histViewerLink  = "index.php?display=true&page=show_history_tab&resId=" + this.resId + "&collId=letterbox_coll";
                             this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
-                            this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + this.resId + "&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
+                            this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + this.resId + "&noModification=true&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
 
                             this.leftContentWidth  = "44%";
                             this.rightContentWidth = "44%";

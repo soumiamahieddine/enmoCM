@@ -77,7 +77,6 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.coreUrl = data.coreurl;
-            _this.businessappurl = data.businessappurl;
             _this.http.get(_this.coreUrl + 'rest/user/profile')
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {

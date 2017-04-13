@@ -39,6 +39,7 @@
 		<parameter name="attach_type_exclude" type="string" />
 		<parameter name="load" type="string" />
 		<parameter name="resId" type="identifier" />
+		<parameter name="noModification" type="boolean" />
 		<parameter name="view_only" type="string" />
 	</validationRule>
 
