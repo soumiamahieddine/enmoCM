@@ -135,4 +135,11 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 $app->get('/user/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
 
+//actions
+$app->get('/actions', \Core\Controllers\ActionsController::class . ':getList');
+$app->get('/actions/{id}', \Core\Controllers\ActionsController::class . ':getById');
+$app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
+$app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
+$app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');
+
 $app->run();

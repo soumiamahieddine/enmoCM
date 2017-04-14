@@ -118,6 +118,7 @@ if (!defined("_INFOS_ACTIONS"))    define("_INFOS_ACTIONS", "You have to choose 
 if (!defined("_SAVE_CONFIRM"))    define("_SAVE_CONFIRM", "Record confirmation");
 if (!defined("_SAVED_ALREADY_EXIST"))    define("_SAVED_ALREADY_EXIST", "Recording already exists");
 if (!defined("_OK_FOR_CONFIRM"))    define("_OK_FOR_CONFIRM", "Do you confirm the recording?");
++if (!defined("_TRACE_ACT"))    define("_TRACE_ACT", "Follow the history is incorrect ");
 
 /************** Forms And lists **************/
 if (!defined("_ID"))    define("_ID", "ID");
