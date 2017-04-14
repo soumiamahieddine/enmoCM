@@ -134,4 +134,11 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 //Users
 $app->get('/user/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 
+//parameters
+$app->get('/parameters', \Core\Controllers\ParametersController::class . ':getList');
+$app->get('/parameters/{id}', \Core\Controllers\ParametersController::class . ':getById');
+$app->post('/parameters', \Core\Controllers\ParametersController::class . ':create');
+$app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':update');
+$app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
+
 $app->run();
