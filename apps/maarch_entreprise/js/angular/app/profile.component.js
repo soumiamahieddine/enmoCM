@@ -110,7 +110,34 @@ var ProfileComponent = (function () {
         location.hash = "";
         location.reload();
     };
-    ProfileComponent.prototype.changePassword = function () {
+    ProfileComponent.prototype.uploadSignatureTrigger = function (fileInput) {
+        if (fileInput.target.files && fileInput.target.files[0]) {
+            var reader = new FileReader();
+            reader.readAsDataURL(fileInput.target.files[0]);
+            reader.onload = function (value) {
+                window['angularProfileComponent'].componentAfterUpload(value.target.result);
+            };
+            this.signatureModel.name = fileInput.target.files[0].name;
+            this.signatureModel.size = fileInput.target.files[0].size;
+            this.signatureModel.type = fileInput.target.files[0].type;
+            if (this.signatureModel.label == "") {
+                this.signatureModel.label = this.signatureModel.name;
+            }
+        }
+    };
+    ProfileComponent.prototype.changeEmailSignature = function () {
+        var index = $j("#emailSignaturesSelect").prop("selectedIndex");
+        this.mailSignatureModel.selected = index;
+        if (index > 0) {
+            tinymce.get('emailSignature').setContent(this.user.emailSignatures[index - 1].html_body);
+            this.mailSignatureModel.title = this.user.emailSignatures[index - 1].title;
+        }
+        else {
+            tinymce.get('emailSignature').setContent("");
+            this.mailSignatureModel.title = "";
+        }
+    };
+    ProfileComponent.prototype.updatePassword = function () {
         var _this = this;
         this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)
             .map(function (res) { return res.json(); })
@@ -129,40 +156,12 @@ var ProfileComponent = (function () {
                     newPassword: "",
                     reNewPassword: "",
                 };
-                _this.resultInfo = 'Le mot de passe a bien été modifié';
+                _this.resultInfo = data.success;
                 $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                 //auto close
                 $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                     $j("#resultInfo").slideUp(500);
                 });
-            }
-        });
-    };
-    ProfileComponent.prototype.changeEmailSignature = function () {
-        var index = $j("#emailSignaturesSelect").prop("selectedIndex");
-        this.mailSignatureModel.selected = index;
-        if (index > 0) {
-            tinymce.get('emailSignature').setContent(this.user.emailSignatures[index - 1].html_body);
-            this.mailSignatureModel.title = this.user.emailSignatures[index - 1].title;
-        }
-        else {
-            tinymce.get('emailSignature').setContent("");
-            this.mailSignatureModel.title = "";
-        }
-    };
-    ProfileComponent.prototype.updateEmailSignature = function () {
-        var _this = this;
-        this.mailSignatureModel.htmlBody = tinymce.get('emailSignature').getContent();
-        var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
-        this.http.put(this.coreUrl + 'rest/currentUser/emailSignature/' + id, this.mailSignatureModel)
-            .map(function (res) { return res.json(); })
-            .subscribe(function (data) {
-            if (data.errors) {
-                alert(data.errors);
-            }
-            else {
-                _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].title = data.emailSignature.title;
-                _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].html_body = data.emailSignature.html_body;
             }
         });
     };
@@ -183,6 +182,22 @@ var ProfileComponent = (function () {
                     title: "",
                 };
                 tinymce.get('emailSignature').setContent("");
+            }
+        });
+    };
+    ProfileComponent.prototype.updateEmailSignature = function () {
+        var _this = this;
+        this.mailSignatureModel.htmlBody = tinymce.get('emailSignature').getContent();
+        var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
+        this.http.put(this.coreUrl + 'rest/currentUser/emailSignature/' + id, this.mailSignatureModel)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            if (data.errors) {
+                alert(data.errors);
+            }
+            else {
+                _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].title = data.emailSignature.title;
+                _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].html_body = data.emailSignature.html_body;
             }
         });
     };
@@ -209,37 +224,6 @@ var ProfileComponent = (function () {
             });
         }
     };
-    ProfileComponent.prototype.deleteSignature = function (id) {
-        var _this = this;
-        var r = confirm('Voulez-vous vraiment supprimer la signature ?');
-        if (r) {
-            this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
-                .map(function (res) { return res.json(); })
-                .subscribe(function (data) {
-                if (data.errors) {
-                    alert(data.errors);
-                }
-                else {
-                    _this.user.signatures = data.signatures;
-                }
-            });
-        }
-    };
-    ProfileComponent.prototype.uploadSignatureTrigger = function (fileInput) {
-        if (fileInput.target.files && fileInput.target.files[0]) {
-            var reader = new FileReader();
-            reader.readAsDataURL(fileInput.target.files[0]);
-            reader.onload = function (value) {
-                window['angularProfileComponent'].componentAfterUpload(value.target.result);
-            };
-            this.signatureModel.name = fileInput.target.files[0].name;
-            this.signatureModel.size = fileInput.target.files[0].size;
-            this.signatureModel.type = fileInput.target.files[0].type;
-            if (this.signatureModel.label == "") {
-                this.signatureModel.label = this.signatureModel.name;
-            }
-        }
-    };
     ProfileComponent.prototype.submitSignature = function () {
         var _this = this;
         this.http.post(this.coreUrl + 'rest/currentUser/signature', this.signatureModel)
@@ -261,6 +245,22 @@ var ProfileComponent = (function () {
             }
         });
     };
+    ProfileComponent.prototype.deleteSignature = function (id) {
+        var _this = this;
+        var r = confirm('Voulez-vous vraiment supprimer la signature ?');
+        if (r) {
+            this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    alert(data.errors);
+                }
+                else {
+                    _this.user.signatures = data.signatures;
+                }
+            });
+        }
+    };
     ProfileComponent.prototype.onSubmit = function () {
         var _this = this;
         this.http.put(this.coreUrl + 'rest/user/profile', this.user)
@@ -274,7 +274,7 @@ var ProfileComponent = (function () {
                 });
             }
             else {
-                _this.resultInfo = 'Les informations utilisateur ont été modifiées';
+                _this.resultInfo = data.success;
                 $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                 //auto close
                 $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {

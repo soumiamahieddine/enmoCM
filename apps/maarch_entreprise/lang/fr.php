@@ -559,10 +559,7 @@ if (!defined("_EXPORT_RIGHT")) define("_EXPORT_RIGHT", "Droits d'export");
 if (!defined("_USER_NO_GROUP")) define("_USER_NO_GROUP", "Vous n'appartenez à aucun groupe");
 if (!defined("_SUSPENDED_ACCOUNT")) define("_SUSPENDED_ACCOUNT", "Votre compte utilisateur a été suspendu");
 if (!defined("_BAD_LOGIN_OR_PSW")) define("_BAD_LOGIN_OR_PSW", "Mauvais nom d'utilisateur ou mauvais mot de passe");
-if (!defined("_WRONG_PSW")) define("_WRONG_PSW", "Mauvais mot de passe actuel");
-if (!defined("_WRONG_SECOND_PSW")) define("_WRONG_SECOND_PSW", "Le deuxième mot de passe ne correspond pas au premier mot de passe !");
 if (!defined("_EMPTY_PSW")) define("_EMPTY_PSW", "Mot de passe actuel vide");
-if (!defined("_EMPTY_PSW_FORM")) define("_EMPTY_PSW_FORM", "Le formulaire de mot de passe n'est pas complet");
 if (!defined("_AUTORIZED_USER")) define("_AUTORIZED_USER", "Utilisateur autorisé");
 if (!defined("_SUSPENDED_USER")) define("_SUSPENDED_USER", "Utilisateur suspendu");
 if (!defined("_DELETED_USER")) define("_DELETED_USER", "Utilisateur supprimé");
@@ -1769,8 +1766,6 @@ if (!defined("_SIGNATORY_GROUP")) define("_SIGNATORY_GROUP", "Groupe du signatai
 if (!defined("_FORMAT_PHONE")) define("_FORMAT_PHONE", "Format : 06 01 02 03 04");
 
 if (!defined("_SIGNATURE")) define("_SIGNATURE","Signature");
-if (!defined("_NEW_EMAIL_SIGNATURE"))
-    define("_NEW_EMAIL_SIGNATURE","Nouvelle signature mail");
 
 // Actions parapheur
 if (!defined("_SEND_MAIL"))    define("_SEND_MAIL", "Envoi du dossier par courriel");
@@ -1824,3 +1819,31 @@ if (!defined("_KEEP")) define("_KEEP","Conservation");
 if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Règle de retention");
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Tout désélectionner");
+
+/***** Profile *****/
+if (!defined('_UPDATED_PROFILE'))
+    define('_UPDATED_PROFILE', 'Votre profil a bien été modifié');
+
+if (!defined('_WRONG_PSW'))
+    define('_WRONG_PSW', 'Mauvais mot de passe');
+if (!defined('_WRONG_SECOND_PSW'))
+    define('_WRONG_SECOND_PSW', 'Le deuxième mot de passe ne correspond pas au premier mot de passe !');
+if (!defined('_EMPTY_PSW_FORM'))
+    define('_EMPTY_PSW_FORM', 'Le formulaire de mot de passe n\'est pas complet');
+if (!defined('_UPDATED_PASSWORD'))
+    define('_UPDATED_PASSWORD', 'Votre mot de passe a bien été modifié');
+
+if (!defined('_NEW_SIGNATURE'))
+    define('_NEW_SIGNATURE', 'Nouvelle signature ajoutée');
+if (!defined('_UPDATED_SIGNATURE'))
+    define('_UPDATED_SIGNATURE', 'Signature modifiée');
+if (!defined('_DELETED_SIGNATURE'))
+    define('_DELETED_SIGNATURE', 'Signature supprimée');
+
+if (!defined('_NEW_EMAIL_SIGNATURE'))
+    define('_NEW_EMAIL_SIGNATURE', 'Nouvelle signature de mail ajoutée');
+if (!defined('_UPDATED_EMAIL_SIGNATURE'))
+    define('_UPDATED_EMAIL_SIGNATURE', 'Signature de mail modifiée');
+if (!defined('_DELETED_EMAIL_SIGNATURE'))
+    define('_DELETED_EMAIL_SIGNATURE', 'Signature de mail supprimée');
+/***** Profile *****/
