@@ -165,7 +165,7 @@ class UserController
         $data = $request->getParams();
 
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['title', 'htmlBody']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            return $response->withJson(['errors' => _EMPTY_EMAIL_SIGNATURE_FORM]);
         }
 
         $r = UserModel::createEmailSignature([
@@ -189,7 +189,7 @@ class UserController
         $data = $request->getParams();
 
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['title', 'htmlBody']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            return $response->withJson(['errors' => _EMPTY_EMAIL_SIGNATURE_FORM]);
         }
 
         $r = UserModel::updateEmailSignature([

@@ -1835,6 +1835,8 @@ if (!defined('_UPDATED_SIGNATURE'))
 if (!defined('_DELETED_SIGNATURE'))
     define('_DELETED_SIGNATURE', 'Signature deleted');
 
+if (!defined('_EMPTY_EMAIL_SIGNATURE_FORM'))
+    define('_EMPTY_EMAIL_SIGNATURE_FORM', 'Mail signature form is imcomplete');
 if (!defined('_NEW_EMAIL_SIGNATURE'))
     define('_NEW_EMAIL_SIGNATURE', 'New email signature added');
 if (!defined('_UPDATED_EMAIL_SIGNATURE'))

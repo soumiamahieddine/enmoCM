@@ -289,8 +289,8 @@ h2{
                                 <input type="text" [(ngModel)]="mailSignatureModel.title" name="title" placeholder="Nom de la signature" class="form-control">
                             </div>
                             <div class="col-md-1">
-                                <button class="form-control btn btn-sm btn-success" *ngIf="mailSignatureModel.selected == 0" (click)="submitEmailSignature()"><i class="fa fa-plus"></i></button>
-                                <button class="form-control btn btn-sm btn-primary" *ngIf="mailSignatureModel.selected > 0" (click)="updateEmailSignature()"><i class="fa fa-pencil"></i></button>
+                                <button class="form-control btn btn-sm btn-success" *ngIf="mailSignatureModel.selected == 0" (click)="submitEmailSignature()" [disabled]="!mailSignatureModel.title"><i class="fa fa-plus"></i></button>
+                                <button class="form-control btn btn-sm btn-primary" *ngIf="mailSignatureModel.selected > 0" (click)="updateEmailSignature()" [disabled]="!mailSignatureModel.title"><i class="fa fa-pencil"></i></button>
                                 <button class="form-control btn btn-sm btn-danger" *ngIf="mailSignatureModel.selected > 0" (click)="deleteEmailSignature()"><i class="fa fa-trash"></i></button>
                             </div>
                         </div>

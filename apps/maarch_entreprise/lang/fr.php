@@ -1840,6 +1840,8 @@ if (!defined('_UPDATED_SIGNATURE'))
 if (!defined('_DELETED_SIGNATURE'))
     define('_DELETED_SIGNATURE', 'Signature supprimée');
 
+if (!defined('_EMPTY_EMAIL_SIGNATURE_FORM'))
+    define('_EMPTY_EMAIL_SIGNATURE_FORM', 'Le formulaire de signature de mail n\'est pas complet');
 if (!defined('_NEW_EMAIL_SIGNATURE'))
     define('_NEW_EMAIL_SIGNATURE', 'Nouvelle signature de mail ajoutée');
 if (!defined('_UPDATED_EMAIL_SIGNATURE'))
