@@ -97,14 +97,21 @@ h2{
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" (click)="exitProfile()">
+                <a class="navbar-brand" style="cursor: pointer" (click)="exitProfile()">
                     <i class="fa fa-arrow-circle-left" title="Retour"></i>
                 </a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a data-toggle="modal" data-target="#manageAbs" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a></li>
-                    <li><a data-toggle="modal" data-target="#manageSign" ><i class="fa fa-user-times" title=""></i> Gérer mes signatures </a></li>
+                    <!--<li>-->
+                        <!--<a data-toggle="modal" data-target="#manageAbs" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a>-->
+                    <!--</li>-->
+                    <li style="cursor: pointer">
+                        <a onclick="createModal(modal_content, 'modal_redirect', 'auto', '950px');autocomplete(15, 'index.php?display=true&module=basket&page=autocomplete_users_list')" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a>
+                    </li>
+                    <li style="cursor: pointer">
+                        <a data-toggle="modal" data-target="#manageSign"><i class="fa fa-user-times" title=""></i> Gérer mes signatures </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -274,16 +281,18 @@ h2{
                     <div role="tabpanel" class="tab-pane active" id="mailSign">
                         <div class="row" style="margin-top:5px;">
                             <div class="col-md-6">
-                                <select class="form-control">
+                                <select id="emailSignaturesSelect" class="form-control" (change)="changeEmailSignature()">
                                     <option>Nouvelle signature</option>
-                                    <option>Signature Principale</option>
+                                    <option *ngFor="let emailSignature of user.emailSignatures">{{emailSignature.title}}</option>
                                 </select>
                             </div>
                             <div class="col-md-5">
-                                <input type="text" placeholder="nom de la signature" class="form-control">
+                                <input type="text" [(ngModel)]="mailSignatureModel.title" name="title" placeholder="Nom de la signature" class="form-control">
                             </div>
                             <div class="col-md-1">
-                                <button class="form-control btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                <button class="form-control btn btn-sm btn-success" *ngIf="mailSignatureModel.selected == 0" (click)="submitEmailSignature()"><i class="fa fa-plus"></i></button>
+                                <button class="form-control btn btn-sm btn-primary" *ngIf="mailSignatureModel.selected > 0" (click)="updateEmailSignature()"><i class="fa fa-pencil"></i></button>
+                                <button class="form-control btn btn-sm btn-danger" *ngIf="mailSignatureModel.selected > 0" (click)="deleteEmailSignature()"><i class="fa fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="row" style="margin-top:5px;">
@@ -296,30 +305,34 @@ h2{
                     </div>
                     <div role="tabpanel" class="tab-pane" id="signatureBookSign">
                         <div class="row" style="margin-top:5px;">
-                            <div class="col-md-11">
-                                <form (ngSubmit)="submitSignature()" #signatureForm="ngForm">
-                                    <input type="text" [(ngModel)]="signatureModel.label" id="signLabel" name="label" placeholder="nom de la signature" class="form-control" required>
+                            <form (ngSubmit)="submitSignature()" #signatureForm="ngForm">
+                                <div class="col-md-11">
+                                    <input type="text" [(ngModel)]="signatureModel.label" id="signLabel" name="label" placeholder="Label de la signature" class="form-control" required>
                                     <div class="form-inline hide">
                                         <div class="form-group">
-                                            <input type="file" [(ngModel)]="signatureModel.name" (ngModelChange)="signatureModel.label = signatureModel.name" name="files[]" id="uploadSignFile" (change)="uploadSignatureTrigger($event)">
+                                            <input type="file" name="files[]" id="uploadSignFile" (change)="uploadSignatureTrigger($event)">
                                         </div>
-                                        <button id="uploadSignFileButton" type="submit" class="btn btn-sm btn-primary">Upload files</button>
                                     </div>
-                                </form>
-                            </div>
-                            <div class="col-md-1" style="margin-bottom:5px;">
-                                <button class="form-control btn btn-sm btn-success" onclick="$j('#uploadSignFileButton').click();" [disabled]="!signatureForm.form.valid"><i class="fa fa-plus"></i></button>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="upload-drop-zone" id="drop-zone">
-                                    Glissez-déposez une image de signature ici <strong>OU</strong> cliquez sur <i class="fa fa-upload fa-2x" style="cursor:pointer;" onclick="$j('#uploadSignFile').click();"></i>
                                 </div>
-                            </div>
+                                <div class="col-md-1" style="margin-bottom:5px;">
+                                    <button class="form-control btn btn-sm btn-success" type="submit" [disabled]="!signatureForm.form.valid || !signatureModel.size">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="upload-drop-zone">
+                                        Cliquez sur <i class="fa fa-upload fa-2x" style="cursor:pointer;" (click)="clickOnUploader('uploadSignFile')"></i> pour
+                                        <span *ngIf="!signatureModel.size">ajouter une signature</span>
+                                        <span *ngIf="signatureModel.size">modifier la signature téléchargée</span>
+                                        <img *ngIf="signatureModel.size" id="signaturePreview" src="{{signatureModel.base64ForJs}}" alt="Preview" style="height: 60px; width: auto">
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <div class="row" id="signList">
                             <div *ngFor="let signature of user.signatures" class="col-md-3">
                                 <div class="thumbnail">
-                                    <img src="{{signature.pathToSignatureOnTmp}}" alt="..." style="width:auto;height:60px;">
+                                    <img src="{{signature.pathToSignatureOnTmp}}" alt="Signature" style="width:auto;height:60px;">
                                     <div class="caption" style="margin-bottom:0px;">
                                         <p>{{signature.signature_label}}</p>
                                         <a (click)="deleteSignature(signature.id)" class="btn btn-danger" role="button" title="supprimer la signature">

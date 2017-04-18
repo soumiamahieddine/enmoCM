@@ -25,16 +25,22 @@ var ProfileComponent = (function () {
         };
         this.signatureModel = {
             base64: "",
+            base64ForJs: "",
             name: "",
             type: "",
             size: 0,
             label: "",
         };
+        this.mailSignatureModel = {
+            selected: 0,
+            htmlBody: "",
+            title: "",
+        };
         this.showPassword = false;
         this.resultInfo = "";
         this.loading = false;
         window['angularProfileComponent'] = {
-            componentAfterUpload: function (value) { return _this.processAfterUpload(value); },
+            componentAfterUpload: function (base64Content) { return _this.processAfterUpload(base64Content); },
         };
     }
     ProfileComponent.prototype.prepareProfile = function () {
@@ -48,26 +54,27 @@ var ProfileComponent = (function () {
             disablePrototypeJS('hide', pluginsToDisable);
         }
         //LOAD EDITOR TINYMCE for MAIL SIGN
-        /*tinymce.init({
+        tinymce.baseURL = "tools/tiny_mce";
+        tinymce.suffix = '.min';
+        tinymce.init({
             selector: "textarea#emailSignature",
-            statusbar : false,
-            language : "fr_FR",
-            height : "120",
+            statusbar: false,
+            language: "fr_FR",
+            height: "120",
             plugins: [
                 "textcolor bdesk_photo"
             ],
             menubar: false,
             toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor",
-            theme_buttons1_add : "fontselect,fontsizeselect",
-            theme_buttons2_add_before : "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
-            theme_buttons2_add : "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
-            theme_buttons3_add_before : "tablecontrols,separator",
-            theme_buttons3_add : "separator,print,separator,ltr,rtl,separator,fullscreen,separator,insertlayer,moveforward,movebackward,absolut",
-            theme_toolbar_align : "left",
-            theme_advanced_toolbar_location : "top",
-            theme_styles : "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1"
-    
-        });*/
+            theme_buttons1_add: "fontselect,fontsizeselect",
+            theme_buttons2_add_before: "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
+            theme_buttons2_add: "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
+            theme_buttons3_add_before: "tablecontrols,separator",
+            theme_buttons3_add: "separator,print,separator,ltr,rtl,separator,fullscreen,separator,insertlayer,moveforward,movebackward,absolut",
+            theme_toolbar_align: "left",
+            theme_advanced_toolbar_location: "top",
+            theme_styles: "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1"
+        });
     };
     ProfileComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -85,15 +92,19 @@ var ProfileComponent = (function () {
             });
         });
     };
-    ProfileComponent.prototype.processAfterUpload = function (value) {
+    ProfileComponent.prototype.processAfterUpload = function (b64Content) {
         var _this = this;
-        this.zone.run(function () { return _this.resfreshUpload(value); });
+        this.zone.run(function () { return _this.resfreshUpload(b64Content); });
     };
-    ProfileComponent.prototype.resfreshUpload = function (value) {
-        this.signatureModel.base64 = value;
+    ProfileComponent.prototype.resfreshUpload = function (b64Content) {
+        this.signatureModel.base64 = b64Content.replace(/^data:.*?;base64,/, "");
+        this.signatureModel.base64ForJs = b64Content;
     };
     ProfileComponent.prototype.displayPassword = function () {
         this.showPassword = !this.showPassword;
+    };
+    ProfileComponent.prototype.clickOnUploader = function (id) {
+        $j('#' + id).click();
     };
     ProfileComponent.prototype.exitProfile = function () {
         location.hash = "";
@@ -127,6 +138,74 @@ var ProfileComponent = (function () {
             }
         });
     };
+    ProfileComponent.prototype.changeEmailSignature = function () {
+        var index = $j("#emailSignaturesSelect").prop("selectedIndex");
+        this.mailSignatureModel.selected = index;
+        if (index > 0) {
+            tinymce.get('emailSignature').setContent(this.user.emailSignatures[index - 1].html_body);
+            this.mailSignatureModel.title = this.user.emailSignatures[index - 1].title;
+        }
+        else {
+            tinymce.get('emailSignature').setContent("");
+            this.mailSignatureModel.title = "";
+        }
+    };
+    ProfileComponent.prototype.updateEmailSignature = function () {
+        var _this = this;
+        this.mailSignatureModel.htmlBody = tinymce.get('emailSignature').getContent();
+        var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
+        this.http.put(this.coreUrl + 'rest/currentUser/emailSignature/' + id, this.mailSignatureModel)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            if (data.errors) {
+                alert(data.errors);
+            }
+            else {
+                _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].title = data.emailSignature.title;
+                _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].html_body = data.emailSignature.html_body;
+            }
+        });
+    };
+    ProfileComponent.prototype.submitEmailSignature = function () {
+        var _this = this;
+        this.mailSignatureModel.htmlBody = tinymce.get('emailSignature').getContent();
+        this.http.post(this.coreUrl + 'rest/currentUser/emailSignature', this.mailSignatureModel)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            if (data.errors) {
+                alert(data.errors);
+            }
+            else {
+                _this.user.emailSignatures = data.emailSignatures;
+                _this.mailSignatureModel = {
+                    selected: 0,
+                    htmlBody: "",
+                    title: "",
+                };
+                tinymce.get('emailSignature').setContent("");
+            }
+        });
+    };
+    ProfileComponent.prototype.deleteEmailSignature = function () {
+        var _this = this;
+        var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
+        this.http.delete(this.coreUrl + 'rest/currentUser/emailSignature/' + id)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            if (data.errors) {
+                alert(data.errors);
+            }
+            else {
+                _this.user.emailSignatures = data.emailSignatures;
+                _this.mailSignatureModel = {
+                    selected: 0,
+                    htmlBody: "",
+                    title: "",
+                };
+                tinymce.get('emailSignature').setContent("");
+            }
+        });
+    };
     ProfileComponent.prototype.deleteSignature = function (id) {
         var _this = this;
         this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
@@ -144,13 +223,15 @@ var ProfileComponent = (function () {
         if (fileInput.target.files && fileInput.target.files[0]) {
             var reader = new FileReader();
             reader.readAsDataURL(fileInput.target.files[0]);
-            reader.onload = function () {
-                var zipContent = reader.result.replace(/^data:.*?;base64,/, "");
-                window['angularProfileComponent'].componentAfterUpload(zipContent);
+            reader.onload = function (value) {
+                window['angularProfileComponent'].componentAfterUpload(value.target.result);
             };
             this.signatureModel.name = fileInput.target.files[0].name;
             this.signatureModel.size = fileInput.target.files[0].size;
             this.signatureModel.type = fileInput.target.files[0].type;
+            if (this.signatureModel.label == "") {
+                this.signatureModel.label = this.signatureModel.name;
+            }
         }
     };
     ProfileComponent.prototype.submitSignature = function () {
@@ -165,6 +246,7 @@ var ProfileComponent = (function () {
                 _this.user.signatures = data.signatures;
                 _this.signatureModel = {
                     base64: "",
+                    base64ForJs: "",
                     name: "",
                     type: "",
                     size: 0,

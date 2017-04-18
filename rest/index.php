@@ -137,6 +137,9 @@ $app->put('/user/profile', \Core\Controllers\UserController::class . ':updatePro
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
 $app->post('/currentUser/signature', \Core\Controllers\UserController::class . ':createCurrentUserSignature');
 $app->delete('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserSignature');
+$app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
+$app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
+$app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 //$app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
 
 $app->run();

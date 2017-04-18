@@ -144,10 +144,67 @@ class UserController
         $r = UserModel::deleteSignature(['signatureId' => $aArgs['id'], 'userId' => $_SESSION['user']['UserId']]);
 
         if (!$r) {
-            return $response->withStatus(500)->withJson(['errors' => 'Signature Create Error']);
+            return $response->withStatus(500)->withJson(['errors' => 'Signature Creation Error']);
         }
 
         return $response->withJson(['signatures' => UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']])]);
+    }
+
+    public function createCurrentUserEmailSignature(RequestInterface $request, ResponseInterface $response)
+    {
+        $data = $request->getParams();
+
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['title', 'htmlBody']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $r = UserModel::createEmailSignature([
+            'userId'    => $_SESSION['user']['UserId'],
+            'title'     => $data['title'],
+            'htmlBody'  => $data['htmlBody']
+        ]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'Email Signature Creation Error']);
+        }
+
+        return $response->withJson(['emailSignatures' => UserModel::getEmailSignaturesById(['userId' => $_SESSION['user']['UserId']])]);
+    }
+
+    public function updateCurrentUserEmailSignature(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $data = $request->getParams();
+
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['title', 'htmlBody']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $r = UserModel::updateEmailSignature([
+            'id'        => $aArgs['id'],
+            'userId'    => $_SESSION['user']['UserId'],
+            'title'     => $data['title'],
+            'htmlBody'  => $data['htmlBody']
+        ]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'Email Signature Update Error']);
+        }
+
+        return $response->withJson(['emailSignature' => UserModel::getEmailSignatureWithSignatureIdById(['userId' => $_SESSION['user']['UserId'], 'signatureId' => $aArgs['id']])]);
+    }
+
+    public function deleteCurrentUserEmailSignature(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $r = UserModel::deleteEmailSignature([
+            'id'        => $aArgs['id'],
+            'userId'    => $_SESSION['user']['UserId']
+        ]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'Email Signature Delete Error']);
+        }
+
+        return $response->withJson(['emailSignatures' => UserModel::getEmailSignaturesById(['userId' => $_SESSION['user']['UserId']])]);
     }
 
     private function checkNeededParameters($aArgs = [])
