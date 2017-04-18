@@ -188,36 +188,42 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.deleteEmailSignature = function () {
         var _this = this;
-        var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
-        this.http.delete(this.coreUrl + 'rest/currentUser/emailSignature/' + id)
-            .map(function (res) { return res.json(); })
-            .subscribe(function (data) {
-            if (data.errors) {
-                alert(data.errors);
-            }
-            else {
-                _this.user.emailSignatures = data.emailSignatures;
-                _this.mailSignatureModel = {
-                    selected: 0,
-                    htmlBody: "",
-                    title: "",
-                };
-                tinymce.get('emailSignature').setContent("");
-            }
-        });
+        var r = confirm('Voulez-vous vraiment supprimer la signature de mail ?');
+        if (r) {
+            var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
+            this.http.delete(this.coreUrl + 'rest/currentUser/emailSignature/' + id)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    alert(data.errors);
+                }
+                else {
+                    _this.user.emailSignatures = data.emailSignatures;
+                    _this.mailSignatureModel = {
+                        selected: 0,
+                        htmlBody: "",
+                        title: "",
+                    };
+                    tinymce.get('emailSignature').setContent("");
+                }
+            });
+        }
     };
     ProfileComponent.prototype.deleteSignature = function (id) {
         var _this = this;
-        this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
-            .map(function (res) { return res.json(); })
-            .subscribe(function (data) {
-            if (data.errors) {
-                alert(data.errors);
-            }
-            else {
-                _this.user.signatures = data.signatures;
-            }
-        });
+        var r = confirm('Voulez-vous vraiment supprimer la signature ?');
+        if (r) {
+            this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    alert(data.errors);
+                }
+                else {
+                    _this.user.signatures = data.signatures;
+                }
+            });
+        }
     };
     ProfileComponent.prototype.uploadSignatureTrigger = function (fileInput) {
         if (fileInput.target.files && fileInput.target.files[0]) {

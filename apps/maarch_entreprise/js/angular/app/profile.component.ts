@@ -202,35 +202,43 @@ export class ProfileComponent implements OnInit {
     }
 
     deleteEmailSignature() {
-        var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
+        let r = confirm('Voulez-vous vraiment supprimer la signature de mail ?');
 
-        this.http.delete(this.coreUrl + 'rest/currentUser/emailSignature/' + id)
-            .map(res => res.json())
-            .subscribe((data) => {
-                if (data.errors) {
-                    alert(data.errors);
-                } else {
-                    this.user.emailSignatures = data.emailSignatures;
-                    this.mailSignatureModel     = {
-                        selected                : 0,
-                        htmlBody                : "",
-                        title                   : "",
-                    };
-                    tinymce.get('emailSignature').setContent("");
-                }
-            });
+        if (r) {
+            var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
+
+            this.http.delete(this.coreUrl + 'rest/currentUser/emailSignature/' + id)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    if (data.errors) {
+                        alert(data.errors);
+                    } else {
+                        this.user.emailSignatures = data.emailSignatures;
+                        this.mailSignatureModel     = {
+                            selected                : 0,
+                            htmlBody                : "",
+                            title                   : "",
+                        };
+                        tinymce.get('emailSignature').setContent("");
+                    }
+                });
+        }
     }
 
     deleteSignature(id: number) {
-        this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
-            .map(res => res.json())
-            .subscribe((data) => {
-                if (data.errors) {
-                    alert(data.errors);
-                } else {
-                    this.user.signatures = data.signatures;
-                }
-            });
+        let r = confirm('Voulez-vous vraiment supprimer la signature ?');
+
+        if (r) {
+            this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    if (data.errors) {
+                        alert(data.errors);
+                    } else {
+                        this.user.signatures = data.signatures;
+                    }
+                });
+        }
     }
 
     uploadSignatureTrigger(fileInput: any) {
