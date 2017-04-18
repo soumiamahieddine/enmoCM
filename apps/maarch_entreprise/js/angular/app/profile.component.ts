@@ -6,6 +6,8 @@ declare function $j(selector: any) : any;
 declare var tinymce : any;
 declare var Prototype : any;
 declare function disablePrototypeJS(method: string, plugins: any) : any;
+declare function createModal(a: string, b: string, c: string, d: string) : any;
+declare function autocomplete(a: number, b: string) : any;
 
 
 @Component({
@@ -50,6 +52,9 @@ export class ProfileComponent implements OnInit {
         $j('#inner_content').remove();
         $j('#menunav').hide();
         $j('#container').width("99%");
+        $j('#viewBasketsTitle').remove();
+        $j('#homePageWelcomeTitle').remove();
+        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>MAARCH Trunk</a> > Profil";
 
         if (Prototype.BrowserFeatures.ElementExtensions) {
             //FIX PROTOTYPE CONFLICT
@@ -301,4 +306,8 @@ export class ProfileComponent implements OnInit {
             });
     }
 
+    absenceModal() {
+        createModal(this.user.absence, 'modal_redirect', 'auto', '950px');
+        autocomplete(15, 'index.php?display=true&module=basket&page=autocomplete_users_list');
+    }
 }

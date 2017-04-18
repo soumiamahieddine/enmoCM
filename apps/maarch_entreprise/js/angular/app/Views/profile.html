@@ -87,6 +87,7 @@ h2{
     vertical-align:top;
   }
 </style>
+<h1 style="margin-top: 10px">Mon profil</h1>
 <div id="resultInfo" class="fade" style="display:none;">
     {{resultInfo}}
 </div>
@@ -107,7 +108,7 @@ h2{
                         <!--<a data-toggle="modal" data-target="#manageAbs" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a>-->
                     <!--</li>-->
                     <li style="cursor: pointer">
-                        <a onclick="createModal(modal_content, 'modal_redirect', 'auto', '950px');autocomplete(15, 'index.php?display=true&module=basket&page=autocomplete_users_list')" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a>
+                        <a (click)="absenceModal()" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a>
                     </li>
                     <li style="cursor: pointer">
                         <a data-toggle="modal" data-target="#manageSign"><i class="fa fa-user-times" title=""></i> Gérer mes signatures </a>

@@ -21,6 +21,7 @@ use Respect\Validation\Validator;
 use Core\Models\UserModel;
 
 include_once 'core/class/docservers_controler.php';
+include_once 'modules/basket/class/class_modules_tools.php';
 
 class UserController
 {
@@ -30,11 +31,15 @@ class UserController
             return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
         }
 
+
         $user = UserModel::getById(['userId' => $_SESSION['user']['UserId'], 'select' => ['user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'thumbprint']]);
         $user['signatures'] = UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $user['groups'] = UserModel::getGroupsById(['userId' => $_SESSION['user']['UserId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
+        
+        $basket = new \basket();
+        $user['absence'] = $basket->redirect_my_baskets_list($_SESSION['user']['baskets'], count($_SESSION['user']['baskets']), $_SESSION['user']['UserId'], 'listingbasket specsmall');
 
         return $response->withJson($user);
     }

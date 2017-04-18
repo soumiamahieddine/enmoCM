@@ -47,6 +47,9 @@ var ProfileComponent = (function () {
         $j('#inner_content').remove();
         $j('#menunav').hide();
         $j('#container').width("99%");
+        $j('#viewBasketsTitle').remove();
+        $j('#homePageWelcomeTitle').remove();
+        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>MAARCH Trunk</a> > Profil";
         if (Prototype.BrowserFeatures.ElementExtensions) {
             //FIX PROTOTYPE CONFLICT
             var pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover', 'tab'];
@@ -282,6 +285,10 @@ var ProfileComponent = (function () {
                 });
             }
         });
+    };
+    ProfileComponent.prototype.absenceModal = function () {
+        createModal(this.user.absence, 'modal_redirect', 'auto', '950px');
+        autocomplete(15, 'index.php?display=true&module=basket&page=autocomplete_users_list');
     };
     return ProfileComponent;
 }());
