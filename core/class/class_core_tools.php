@@ -730,8 +730,11 @@ class core_tools extends functions
         echo '<div style="clear:both;"></div>';
         // quicklaunch items always displayed
         echo '<div style="width: 85%;margin: auto;">';
-        echo '<a style="display: inline-block;width: 45%;float: left;" href="' . $_SESSION['config']['businessappurl']
-                . 'index.php?page=modify_user&amp;admin=users&amp;reinit=true">';
+        if (V2_ENABLED == true) {
+            echo '<a style="display: inline-block;width: 45%;float: left;cursor: pointer" onClick="location.href = \'#/profile\'">';
+        } else {
+            echo '<a style="display: inline-block;width: 45%;float: left;" href="' .$_SESSION['config']['businessappurl']. 'index.php?page=modify_user&amp;admin=users&amp;reinit=true">';
+        }
         echo '<span>';
         echo '<span style="width:30px;height:30px;display:inline-block;text-align:center;">'
             .'<i class="fa fa-user fa-2x mCdarkGrey"></i></span>';
