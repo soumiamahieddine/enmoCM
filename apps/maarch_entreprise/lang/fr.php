@@ -149,6 +149,8 @@ if (!defined("_WARNING_MESSAGE_DEL_GROUP"))
     define("_WARNING_MESSAGE_DEL_GROUP", "Avertissement :<br> Il existe des utilisateurs associés à ce groupe. Choisissez un groupe de remplacement :");
 if (!defined("_WARNING_MESSAGE_DEL_USER"))
     define("_WARNING_MESSAGE_DEL_USER", "Avertissement :<br> Il existe des listes de diffusion associées à cet utilisateur. Choisissez un utilisateur de remplacement :");
+if (!defined("_WARNING_MESSAGE_UPDATE_USER"))
+    define("_WARNING_MESSAGE_UPDATE_USER", "Avertissement :<br>Afin de garder la confidentialité des courriers en cours de traitement du service, il est recommandé de réaffecter ceux-ci à un autre utilisateur :");
 if (!defined("_USERS_IN_GROUPS"))
     define("_USERS_IN_GROUPS", "utilisateur(s) dans le groupe");
 if (!defined("_LISTE_DIFFUSION_IN_USER")) define("_LISTE_DIFFUSION_IN_USER", "liste(s) de diffusion pour l utilisateur");
@@ -1759,13 +1761,15 @@ if (!defined("_SAVE_MODIFICATION")) define("_SAVE_MODIFICATION", "Enregistrer le
 
 if (!defined("_CONFIDENTIALITY")) define("_CONFIDENTIALITY", "Confidentiel");
 if (!defined("_CONFIDENTIAL")) define("_CONFIDENTIAL", "Confidentiel");
+if (!defined("_CONFIDENTIAL_DOCUMENTS")) define("_CONFIDENTIAL_DOCUMENTS", "courrier(s) confidentiel");
+
 
 if (!defined("_SIGNATORY_NAME")) define("_SIGNATORY_NAME", "Nom du signataire");
 if (!defined("_SIGNATORY_GROUP")) define("_SIGNATORY_GROUP", "Groupe du signataire");
 
 if (!defined("_FORMAT_PHONE")) define("_FORMAT_PHONE", "Format : 06 01 02 03 04");
 
-if (!defined("_SIGNATURE")) define("_SIGNATURE","Signature");
+if (!defined("_SIGNATURE")) define("_SIGNATURE", "Signature");
 
 // Actions parapheur
 if (!defined("_SEND_MAIL"))    define("_SEND_MAIL", "Envoi du dossier par courriel");
