@@ -123,7 +123,7 @@ class VisaController
         $datas['resList']       = $resList;
         $datas['resListIndex']  = $resListIndex;
         $datas['nbNotes']       = \NotesModel::countForCurrentUserByResId(['resId' => $resId]);
-        $datas['signature']     = UserModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
+        $datas['signatures']    = UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = \VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
         $datas['canSign']       = $coreTools->test_service('sign_document', 'visa', false);

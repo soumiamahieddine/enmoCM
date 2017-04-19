@@ -49,7 +49,9 @@ var ProfileComponent = (function () {
         $j('#container').width("99%");
         $j('#viewBasketsTitle').remove();
         $j('#homePageWelcomeTitle').remove();
-        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>MAARCH Trunk</a> > Profil";
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>MAARCH Trunk</a> > Profil";
+        }
         if (Prototype.BrowserFeatures.ElementExtensions) {
             //FIX PROTOTYPE CONFLICT
             var pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover', 'tab'];

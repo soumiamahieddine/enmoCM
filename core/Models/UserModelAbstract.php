@@ -204,7 +204,7 @@ class UserModelAbstract extends \Apps_Table_Service
         static::checkString($aArgs, ['userId']);
 
         $aReturn = static::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'select'    => ['id', 'user_id', 'signature_label', 'signature_path', 'signature_file_name'],
             'table'     => ['user_signatures'],
             'where'     => ['user_id = ?'],
             'data'      => [$aArgs['userId']],
@@ -222,11 +222,13 @@ class UserModelAbstract extends \Apps_Table_Service
             $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($extension);
             $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp; // TODO No Session
             if (copy($pathToSignature, $filePathOnTmp)) {
-                $aReturn[$key]['pathToSignatureOnTmp'] = $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp;
+                $aReturn[$key]['pathToSignatureOnTmp'] = $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp; // TODO No Session
             } else {
                 $aReturn[$key]['pathToSignatureOnTmp'] = '';
             }
+            $aReturn[$key]['pathToSignature'] = $pathToSignature;
 
+            unset($aReturn[$key]['signature_path'], $aReturn[$key]['signature_file_name']);
         }
 
         return $aReturn;
@@ -276,32 +278,6 @@ class UserModelAbstract extends \Apps_Table_Service
         }
 
         return $labelledUser;
-    }
-
-    public static function getSignatureForCurrentUser()
-    {
-        //TODO No Session
-        if (empty($_SESSION['user']['pathToSignature'][0]) || !file_exists($_SESSION['user']['pathToSignature'][0])) {
-            return [];
-        }
-
-        $aSignature = [
-            'signaturePath' => $_SESSION['user']['signature_path'],
-            'signatureFileName' => $_SESSION['user']['signature_file_name'],
-            'pathToSignature' => $_SESSION['user']['pathToSignature'][0]
-        ];
-
-        $extension = explode('.', $aSignature['pathToSignature']);
-        $extension = $extension[count($extension) - 1];
-        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($extension);
-        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
-        if (!copy($aSignature['pathToSignature'], $filePathOnTmp)) {
-            return $aSignature;
-        }
-
-        $aSignature['pathToSignatureOnTmp'] = $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp;
-
-        return $aSignature;
     }
 
     public static function getCurrentConsigneById(array $aArgs = [])
