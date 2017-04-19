@@ -1,4 +1,14 @@
 <?php
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   users_management_controler
+* @author  dev <dev@maarch.org>
+* @ingroup apps
+*/
+
 $core_tools = new core_tools();
 $core_tools->test_admin('admin_users', 'apps');
 
@@ -6,36 +16,36 @@ core_tools::load_lang();
 // var_dump($_REQUEST['mode']);
 // var_dump($_REQUEST['page']);
 $entities_loaded = false;
-if(core_tools::is_module_loaded('entities')){
+if (core_tools::is_module_loaded('entities')) {
     $entities_loaded = true;
 }
 // Default mode is add
 $mode = 'add';
-if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])){
+if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
     $mode = $_REQUEST['mode'];
 }
 
 // Include files
 try{
-    require_once("core/class/usergroups_controler.php");
-    require_once("core/class/users_controler.php");
-    if($mode == 'list'){
-        require_once("core/class/class_request.php");
-        require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+    include_once "core/class/usergroups_controler.php";
+    include_once "core/class/users_controler.php";
+    if ($mode == 'list') {
+        include_once "core/class/class_request.php";
+        include_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php";
     }
-    if($mode == 'del' && $entities_loaded){
-        require_once("modules/entities/class/EntityControler.php");
+    if ($mode == 'del' || $mode == 'up' && $entities_loaded) {
+        include_once "modules/entities/class/EntityControler.php";
     }
 
 } catch (Exception $e){
     functions::xecho($e->getMessage());
 }
 
-if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
+if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
     $user_id = $_REQUEST['id'];
 }
 
-if(isset($_REQUEST['user_submit'])){
+if (isset($_REQUEST['user_submit'])) {
     // Action to do with db
     validate_user_submit();
 
@@ -44,77 +54,83 @@ if(isset($_REQUEST['user_submit'])){
     $ugc = new usergroups_controler();
     $state = true;
     switch ($mode) {
-        case "up" :
-            $state=display_up($user_id);
-            $_SESSION['service_tag'] = 'user_init';
-            core_tools::execute_modules_services($_SESSION['modules_services'], 'user_init', "include");
-            $_SESSION['m_admin']['nbgroups']  = $ugc->getUsergroupsCount();
-            location_bar_management($mode);
-            break;
-        case "add" :
-            display_add();  
-            $_SESSION['service_tag'] = 'user_init';
-            core_tools::execute_modules_services($_SESSION['modules_services'], 'user_init', "include");
-            $_SESSION['m_admin']['nbgroups']  = $ugc->getUsergroupsCount();
-            location_bar_management($mode);
-            break;
-        case "del" :
-            display_del($user_id);
-            break;
-        case "allow" :
-            display_enable($user_id);
-            break;
-        case "ban" :
-            $result_Check_Dest = check_dest_listmodels($user_id);
-            if($result_Check_Dest == true){
-               display_disable($user_id); 
-           }elseif($result_Check_Dest == false){
+    case "up" :
+        $state=display_up($user_id);
+        $_SESSION['service_tag'] = 'user_init';
+        core_tools::execute_modules_services($_SESSION['modules_services'], 'user_init', "include");
+        $_SESSION['m_admin']['nbgroups']  = $ugc->getUsergroupsCount();
+        location_bar_management($mode);
+        break;
+    case "add" :
+        display_add();  
+        $_SESSION['service_tag'] = 'user_init';
+        core_tools::execute_modules_services($_SESSION['modules_services'], 'user_init', "include");
+        $_SESSION['m_admin']['nbgroups']  = $ugc->getUsergroupsCount();
+        location_bar_management($mode);
+        break;
+    case "del" :
+        display_del($user_id);
+        break;
+    case "allow" :
+        display_enable($user_id);
+        break;
+    case "ban" :
+        $result_Check_Dest = check_dest_listmodels($user_id);
+        if ($result_Check_Dest == true) {
+            display_disable($user_id); 
+        } elseif ($result_Check_Dest == false) { ?>
 
-            ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
+            <script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
         <?php
-        exit();
-
-           }
-            
-            break;
-        case "list" :
-            $users_list=display_list();
-            $_SESSION['m_admin']['nbgroups']  = $ugc->getUsergroupsCount();
-            location_bar_management($mode);
-            break;
-        case "check_del" :
-            display_del_check($user_id);
-            break;
+            exit();
+        }        
+        break;
+    case "list" :
+        $users_list=display_list();
+        $_SESSION['m_admin']['nbgroups']  = $ugc->getUsergroupsCount();
+        location_bar_management($mode);
+        break;
+    case "check_del" :
+        display_del_check($user_id);
+        break;
+    case "check_up" :
+        display_up_check($user_id);
+        break;
     }
-    include('apps/maarch_entreprise/admin/users/users_management.php');
+    include 'apps/maarch_entreprise/admin/users/users_management.php';
 }
 
-
-function check_dest_listmodels($user_id){
-    //permet de vérifier si l'utilisateur fait partie d'une liste de diffusion. Si il fait parti d'une liste de diffusion, dans l'administration, il ne pourra etre mis en pause sauf si il n'est plus destinataire.
+/**
+ *  [Permet de vérifier si l'utilisateur fait partie d'une liste de diffusion. Si il fait parti d'une liste de diffusion, dans l'administration, il ne pourra etre mis en pause sauf si il n'est plus destinataire.]
+ *  
+ */
+function check_dest_listmodels($user_id)
+{
+    //
     $db = new Database();
     $stmt = $db->query("select item_id, item_mode from  listmodels where item_id = ? and item_mode = 'dest'",array($user_id));
     $res = $stmt->fetchObject();
-        if($res->item_mode == 'dest'){
-            return false;
-        }else{
-            return true;
-        }
-
+    if ($res->item_mode == 'dest') {
+        return false;
+    } else {
+        return true;
     }
+
+}
 /**
  * Management of the location bar
  */
-function location_bar_management($mode){
+function location_bar_management($mode)
+{
     $page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _USERS_LIST);
     $page_ids = array('add' => 'user_add', 'up' => 'user_up', 'list' => 'users_list');
     $init = false;
-    if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true"){
+    if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
         $init = true;
     }
 
     $level = "";
-    if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)){
+    if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)) {
         $level = $_REQUEST['level'];
     }
 
@@ -129,18 +145,21 @@ function location_bar_management($mode){
  * Initialize session parameters for update display
  * @param String $user_id
  */
-function display_up($user_id){
+function display_up($user_id)
+{
     $uc = new users_controler();
     $ugc = new usergroups_controler();
+    $db = new Database();
+
     $state=true;
-    $user = $uc->get($user_id );
-    if (empty($user)){
+    $user = $uc->get($user_id);
+
+    if (empty($user)) {
         $state = false;
     } else {
-        require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR. "class" . DIRECTORY_SEPARATOR. "class_user_signatures.php";
+        include_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR. "class" . DIRECTORY_SEPARATOR. "class_user_signatures.php";
         $us = new UserSignatures();
         
-        $db = new Database();
         $query = "select path_template from " 
             . _DOCSERVERS_TABLE_NAME 
             . " where docserver_id = 'TEMPLATES'";
@@ -159,14 +178,14 @@ function display_up($user_id){
             . $sign['signature_file_name'];
             $user->pathToSignature = [$path];
         }
-        put_in_session("users",$user->getArray());
+        put_in_session("users", $user->getArray());        
     }
 
-    if (
-        ($_SESSION['m_admin']['load_group'] == true || ! isset($_SESSION['m_admin']['load_group'] )) 
-        && $_SESSION['m_admin']['users']['user_id'] <> "superadmin"){
+    if (($_SESSION['m_admin']['load_group'] == true || !isset($_SESSION['m_admin']['load_group'])) 
+        && $_SESSION['m_admin']['users']['user_id'] <> "superadmin"
+    ) {
         $tmp_array = $uc->getGroups($_SESSION['m_admin']['users']['user_id']);
-        for($i=0; $i<count($tmp_array);$i++){
+        for ($i=0; $i<count($tmp_array);$i++) {
             $group = $ugc->get($tmp_array[$i]['GROUP_ID']);
             $tmp_array[$i]['LABEL'] = $group->__get('group_desc');
         }
@@ -179,8 +198,9 @@ function display_up($user_id){
 /**
  * Initialize session parameters for add display
  */
-function display_add(){
-    if(!isset($_SESSION['m_admin']['init'])){
+function display_add()
+{
+    if (!isset($_SESSION['m_admin']['init'])) {
         init_session();
     }
 }
@@ -188,7 +208,8 @@ function display_add(){
 /**
  * Initialize session parameters for list display
  */
-function display_list(){
+function display_list()
+{
 
     $_SESSION['m_admin'] = array();
     $list = new list_show();
@@ -196,19 +217,19 @@ function display_list(){
     init_session();
 
     $select[USERS_TABLE] = array();
-    array_push($select[USERS_TABLE],'user_id','lastname','firstname','enabled','status','mail');
+    array_push($select[USERS_TABLE], 'user_id', 'lastname', 'firstname', 'enabled', 'status', 'mail');
     $where = " ((status = 'OK' or status = 'ABS') and user_id != 'superadmin')";
     $what = '';
     $arrayPDO = array();
-    if(isset($_REQUEST['what'])){
+    if (isset($_REQUEST['what'])) {
         $what = $_REQUEST['what'];
-		$where .= " and (lower(lastname) like lower(?) or lower(users.user_id) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
+        $where .= " and (lower(lastname) like lower(?) or lower(users.user_id) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
         $arrayPDO = array($what.'%', $what.'%', $what);
     }
 
     // Checking order and order_field values
     $order = 'asc';
-    if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])){
+    if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
         $order = trim($_REQUEST['order']);
     }
 
@@ -218,60 +239,68 @@ function display_list(){
 
     $orderstr = $list->define_order($order, $field);
     $request = new request();
-	
-	if($entities_loaded == true ){
-		$tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype']);
+
+    if ($entities_loaded == true ) {
+        $tab=$request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
     } else {
-		require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
-		$ent = new entity();
-		$my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
-		
-		if($_SESSION['user']['UserId'] != 'superadmin'){
-			$where = " ((status = 'OK' or status = 'ABS') and users.user_id != 'superadmin') and ((users_entities.entity_id is NULL) or users_entities.entity_id in (".join(',', $my_tab_entities_id)."))";
-		}else{
-			$where = " ((status = 'OK' or status = 'ABS') and users.user_id != 'superadmin')";
-		}
-		
-		$what = '';
-		if(isset($_REQUEST['what'])){
-			$what = $_REQUEST['what'];
-			$where .= " and (lower(lastname) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
+        include_once 'modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php';
+        $ent = new entity();
+        $my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
+
+        if ($_SESSION['user']['UserId'] != 'superadmin') {
+            $where = " ((status = 'OK' or status = 'ABS') and users.user_id != 'superadmin') and ((users_entities.entity_id is NULL) or users_entities.entity_id in (".join(',', $my_tab_entities_id)."))";
+        } else {
+            $where = " ((status = 'OK' or status = 'ABS') and users.user_id != 'superadmin')";
+        }
+
+        $what = '';
+        if (isset($_REQUEST['what'])) {
+            $what = $_REQUEST['what'];
+            $where .= " and (lower(lastname) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
             $arrayPDO = array($what.'%',$what);
-		}
+        }
 
-		// Checking order and order_field values
-		$order = 'asc';
-		if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])){
-			$order = trim($_REQUEST['order']);
-		}
+        // Checking order and order_field values
+        $order = 'asc';
+        if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
+            $order = trim($_REQUEST['order']);
+        }
 
-		$field = 'lastname';
-		if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
-			$field = trim($_REQUEST['order_field']);
+        $field = 'lastname';
+        if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
+            $field = trim($_REQUEST['order_field']);
+        }
 
-		$orderstr = $list->define_order($order, $field);
-		$tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype'], 'default', 'users_entities', 'users','users_entities', 'user_id', true, false, true);
-	
-	}
+        $orderstr = $list->define_order($order, $field);
+        $tab=$request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', 'users_entities', 'users','users_entities', 'user_id', true, false, true);
+
+    }
     for ($i=0;$i<count($tab);$i++) {
-        foreach($tab[$i] as &$item) {
-            switch ($item['column']){
-                case "user_id":
-                    format_item($item,_ID,"20","left","left","bottom",true); break;
-                case "lastname":
-                    format_item($item,_LASTNAME,"20","left","left","bottom",true); break;
-                case "firstname":
-                    format_item($item,_FIRSTNAME,"20","left","left","bottom",true); break;
-                case "enabled":
-                    format_item($item,_STATUS,"3","left","center","bottom",true); break;
-                case "mail":
-                    format_item($item,_MAIL,"27","left","left","bottom",true); break;
-                case "status":
-                    if($item['value'] == "ABS")
-                        $item['value'] = "<em>("._MISSING.")</em>";
-                    else
-                        $item['value'] = '';
-                    format_item($item,'',"5","left","left","bottom",true, false); break;
+        foreach ($tab[$i] as &$item) {
+            switch ($item['column']) {
+            case "user_id":
+                format_item($item, _ID, "20", "left", "left", "bottom", true);
+                break;
+            case "lastname":
+                format_item($item, _LASTNAME, "20", "left", "left", "bottom", true);
+                break;
+            case "firstname":
+                format_item($item, _FIRSTNAME, "20", "left", "left", "bottom", true);
+                break;
+            case "enabled":
+                format_item($item, _STATUS, "3", "left", "center", "bottom", true);
+                break;
+            case "mail":
+                format_item($item, _MAIL, "27", "left", "left", "bottom", true);
+                break;
+            case "status":
+                if ($item['value'] == "ABS") {
+                    $item['value'] = "<em>("._MISSING.")</em>";
+                } else {
+                    $item['value'] = '';
+                }
+                format_item($item, '', "5", "left", "left", "bottom", true, false);
+                break;
             }
         }
     }
@@ -304,7 +333,8 @@ function display_list(){
  * Delete given user if exists and initialize session parameters
  * @param unknown_type $user_id
  */
-function display_del($user_id){
+function display_del($user_id)
+{
     $uc = new users_controler();
     
 
@@ -319,25 +349,26 @@ function display_del($user_id){
         array_push($listDiffusion, $res->description);
     }
 
-    if(!empty($listDiffusion)){ ?>
+    if (!empty($listDiffusion)) { ?>
         <script type="text/javascript">window.top.location='<?php
         echo $_SESSION['config']['businessappurl'] . 'index.php?page='
             . 'users_management_controler&mode=check_del&admin=users&id=' . $user_id;
         ?>';</script>   
-    <?php exit(); }
+    <?php exit();
+    }
 
 
 
 
     $user = $uc->get($user_id);
-    if(isset($user)) {
+    if (isset($user)) {
         // Deletion
         $control = array();
         $params = array( 'log_user_del' => $_SESSION['history']['usersdel'],
                          'databasetype' => $_SESSION['config']['databasetype']
                         );
         $control = $uc->delete($user, $params);
-        if(!empty($control['error']) && $control['error'] <> 1) {
+        if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
             $_SESSION['info'] = _DELETED_USER.' : '.$user_id;
@@ -346,82 +377,198 @@ function display_del($user_id){
         ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".functions::xssafe($_REQUEST['order'])."&order_field=".functions::xssafe($_REQUEST['order_field'])."&start=".functions::xssafe($_REQUEST['start'])."&what=".functions::xssafe($_REQUEST['what']);?>';</script>
         <?php 
         exit;
-    }
-    else{
+    } else {
         // Error management
         $_SESSION['error'] = _USER.' '._UNKNOWN;
     }
 }
 
 
-function display_del_check($user_id){
+function display_del_check($user_id)
+{
+    /****************Management of the location bar  ************/
+    $admin = new core_tools();
+    $db = new Database();
+    $init = false;
+    if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
+        $init = true;
+    }
+    $level = "";
+    if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 
+        || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 
+        || $_REQUEST['level'] == 1)
+    ) {
+        $level = $_REQUEST['level'];
+    }
+    $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page=users';
+    $pageLabel = _DELETION;
+    $pageId = "users";
+    $admin->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
+    /***********************************************************/
 
-
-/****************Management of the location bar  ************/
-        $admin = new core_tools();
-        $db = new Database();
-        $init = false;
-        if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
-            $init = true;
-        }
-        $level = "";
-        if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 
-            || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 
-            || $_REQUEST['level'] == 1)
-        ) {
-            $level = $_REQUEST['level'];
-        }
-        $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page=users';
-        $pageLabel = _DELETION;
-        $pageId = "users";
-        $admin->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
-
-        /***********************************************************/
-        if(isset($_POST['user_id'])){
-            $old_user=$_POST['id'];
-            $new_user=$_POST['user_id'];
-
-            $listDiffusion=array();
-            
-            $stmt = $db->query(
-                "select * from listmodels WHERE item_id=? AND item_mode='dest'",
-                array($user_id)
-            );
-            while ($res = $stmt->fetchObject()) {
-                array_push($listDiffusion, $res->object_id);
-            }
-
-            // Mise à jour des enregistrements (egal suppression puis insertion)
-            $listDiffusion_sql = "'".implode("','", $listDiffusion)."'";
-            $db->query(
-                "update listmodels set item_id=:newItemId where item_id=:oldItemId and object_id in (" .$listDiffusion_sql. ")",
-                array(
-                    ':newItemId' => $new_user,
-                    ':oldItemId' => $old_user,
-                    )
-                );
-
-            $_SESSION['info'] = _DELETED_USER.' : '.$old_user;
-
-           ?>
-
-
-            <script type="text/javascript">window.top.location='<?php
-        echo $_SESSION['config']['businessappurl'] . 'index.php?page='
-            . 'users_management_controler&mode=del&admin=users&id=' . $user_id;
-        ?>';</script> <?php
-        }
+    if (isset($_POST['user_id'])) {
+        $old_user=$_POST['id'];
+        $new_user=$_POST['user_id'];
 
         $listDiffusion=array();
+        
         $stmt = $db->query(
-            "select * from listmodels list, entities it WHERE list.object_id = it.entity_id and item_id=? AND item_mode='dest'",
+            "select * from listmodels WHERE item_id=? AND item_mode='dest'",
             array($user_id)
         );
         while ($res = $stmt->fetchObject()) {
-            array_push($listDiffusion, $res->entity_label);
+            array_push($listDiffusion, $res->object_id);
         }
 
-        echo '<h1><i class="fa fa-users fa-2x"></i>'._USER_DELETION.': <i>'.$user_id.'</i></h1>';
+        // Mise à jour des enregistrements (egal suppression puis insertion)
+        $listDiffusion_sql = "'".implode("','", $listDiffusion)."'";
+        $db->query(
+            "update listmodels set item_id=:newItemId where item_id=:oldItemId and object_id in (" .$listDiffusion_sql. ")",
+            array(
+                ':newItemId' => $new_user,
+                ':oldItemId' => $old_user,
+                )
+        );
+
+        $_SESSION['info'] = _DELETED_USER.' : '.$old_user;
+
+        ?>
+        <script type="text/javascript">window.top.location='<?php
+        echo $_SESSION['config']['businessappurl'] . 'index.php?page=users_management_controler&mode=del&admin=users&id=' . $user_id;?>';</script> <?php
+    }
+
+    $listDiffusion=array();
+    $stmt = $db->query(
+        "select * from listmodels list, entities it WHERE list.object_id = it.entity_id and item_id=? AND item_mode='dest'",
+        array($user_id)
+    );
+    while ($res = $stmt->fetchObject()) {
+        array_push($listDiffusion, $res->entity_label);
+    }
+
+    echo '<h1><i class="fa fa-users fa-2x"></i>'._USER_DELETION.': <i>'.$user_id.'</i></h1>';
+    echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
+    $_SESSION['error'] = "";
+    ?>
+    <br>
+    <div class="block">
+    <div id="main_error" style="text-align:center;">
+        <b><?php
+        echo _WARNING_MESSAGE_DEL_USER;
+        ?></b>
+    </div>
+    <br/>
+    <form name="user_del" id="user_del" style="width: 350px;margin:auto;" method="post" class="forms">
+        <input type="hidden" value="<?php functions::xecho($user_id);?>" name="id">
+        <?php
+        echo "<h3>".count($listDiffusion)." "._LISTE_DIFFUSION_IN_USER .":</h3>";
+        echo "<ul>";
+        foreach ($listDiffusion as $key => $value) {
+            echo "<li>".$value."</li>";
+        }
+        echo "</ul>";
+        ?>
+        <br>
+        <br>
+        <select name="user_id" id="user_id" onchange=''>
+            <option value="no_user"><?php echo _NO_REPLACEMENT;?></option>
+            <?php
+            $stmt = $db->query("select * from users order by user_id ASC");
+            while ($users = $stmt->fetchObject()) {
+                if ($users->user_id != $user_id) {
+                    ?>
+                <option value="<?php functions::xecho($users->user_id);?>"><?php functions::xecho($users->lastname . " " . $users->firstname);?></option>
+                <?php
+                }
+                
+            }
+            ?>
+            </select>
+                <p class="buttons">
+                <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id;?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
+                <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=usergroups_management_controler&mode=list&admin=groups&order=<?php functions::xecho($_REQUEST['order']);?>&order_field=<?php functions::xecho($_REQUEST['order_field']);?>&start=<?php functions::xecho($_REQUEST['start']);?>&what=<?php functions::xecho($_REQUEST['what']);?>';"/>
+            </p>
+        </form>
+            </div>
+            <script type="text/javascript"></script>
+        <?php
+        exit();  
+}
+
+function display_up_check($user_id)
+{
+
+    /****************Management of the location bar  ************/
+    $admin = new core_tools();
+    $db = new Database();
+    $init = false;
+    if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
+        $init = true;
+    }
+    $level = "";
+    if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 
+        || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 
+        || $_REQUEST['level'] == 1)
+    ) {
+        $level = $_REQUEST['level'];
+    }
+    $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page=users';
+    $pageLabel = _UPDATE;
+    $pageId = "users";
+    $admin->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
+    /***********************************************************/
+
+    if (isset($_POST['user_id'])) {
+        $old_user=$_POST['id'];
+        $new_user=$_POST['user_id'];
+
+        if ($new_user <> 'NO_USER') {
+            //LIST OF ENTITIES
+            $entitiesList = [];
+            foreach ($_SESSION['m_admin']['entitiesUserToRedirect']['entity_id'] as $entity) {
+                $query = "SELECT res_id FROM res_letterbox WHERE confidentiality = 'Y' AND destination = ? AND dest_user = ? AND status <> 'END'";
+                $arrayPDO = array($entity,$old_user);
+                $stmt =  $db->query($query, $arrayPDO);
+                $res = $stmt->fetchObject();
+                $resListToCheck[] = $res->res_id;
+            }
+
+            foreach ($resListToCheck as $res_id) {
+                //UPDATE res_letterbox
+                $query = "UPDATE res_letterbox SET dest_user = ? WHERE res_id = ?";
+                $arrayPDO = array($new_user,$res_id);
+                $stmt =  $db->query($query, $arrayPDO);
+
+                //UDPATE listinstance
+                $query = "UPDATE listinstance SET item_id = ? WHERE res_id = ? and item_mode = 'dest'";
+                $arrayPDO = array($new_user,$res_id);
+                $stmt =  $db->query($query, $arrayPDO);
+
+                //ADD history entry
+                $query = "SELECT listinstance_id FROM listinstance WHERE res_id = ? and item_mode = 'dest'";
+                $arrayPDO = array($res_id);
+                $stmt =  $db->query($query, $arrayPDO);
+                $res = $stmt->fetchObject();
+                $listinstance_id = $res->listinstance_id;
+                include_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_history.php';
+                $hist = new history();
+                $hist->add(
+                    ENT_LISTINSTANCE,
+                    $listinstance_id,
+                    'UP',
+                    'diffdestuser',
+                    'Réaffectation du document confidentiel '.$res_id.' de '. $old_user .' à '. $new_user . ' en tant que "dest"',
+                    $_SESSION['config']['databasetype'],
+                    'entities'
+                );
+
+            }        
+        }
+        $_SESSION['info'] = _USER_UPDATED;
+        echo '<script type="text/javascript">window.top.location=\''.$_SESSION['config']['businessappurl'] .'index.php?page=users_management_controler&admin=users&mode=list\'</script>';
+    }
+
+        echo '<h1><i class="fa fa-users fa-2x"></i>'._UPDATE.' '.strtolower(_USER).': <i>'.$user_id.'</i></h1>';
         echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
         $_SESSION['error'] = "";
         ?>
@@ -429,36 +576,31 @@ function display_del_check($user_id){
         <div class="block">
         <div id="main_error" style="text-align:center;">
             <b><?php
-            echo _WARNING_MESSAGE_DEL_USER;
+            echo _WARNING_MESSAGE_UPDATE_USER;
             ?></b>
         </div>
         <br/>
         <form name="user_del" id="user_del" style="width: 350px;margin:auto;" method="post" class="forms">
             <input type="hidden" value="<?php functions::xecho($user_id);?>" name="id">
             <?php
-
-                echo "<h3>".count($listDiffusion)." "._LISTE_DIFFUSION_IN_USER .":</h3>";
-                echo "<ul>";
-                foreach ($listDiffusion as $key => $value) {
-                   echo "<li>".$value."</li>";
-                }
-                echo "</ul>";
-                ?>
-                <br>
-                <br>
-                <select name="user_id" id="user_id" onchange=''>
-                    <option value="no_user"><?php echo _NO_REPLACEMENT;?></option>
+            for ($i=0;$i<count($_SESSION['m_admin']['entitiesUserToRedirect']['entity_id']);$i++) {
+                echo "<h3>".$_SESSION['m_admin']['entitiesUserToRedirect']['nbDocs'][$i]." "._CONFIDENTIAL_DOCUMENTS ." ("._TO." ".$user_id." - ".$_SESSION['m_admin']['entitiesUserToRedirect']['entity_id'][$i]."):</h3>";
+            }
+            ?>
+            <br>
+            <br>
+            <select name="user_id" id="user_id" onchange=''>
+                <option value="no_user"><?php echo _NO_REPLACEMENT;?></option>
+                <?php
+                $stmt = $db->query("select * from users order by user_id ASC");
+                while ($users = $stmt->fetchObject()) {
+                    if ($users->user_id != $user_id) {
+                        ?>
+                    <option value="<?php functions::xecho($users->user_id);?>"><?php functions::xecho($users->lastname . " " . $users->firstname);?></option>
                     <?php
-                    $stmt = $db->query("select * from users order by user_id ASC");
-                    while($users = $stmt->fetchObject())
-                    {
-                        if($users->user_id != $user_id){
-                         ?>
-                        <option value="<?php functions::xecho($users->user_id);?>"><?php functions::xecho($users->lastname . " " . $users->firstname);?></option>
-                        <?php
-                        }
-                       
                     }
+                    
+                }
                     ?>
                 </select>
                  <p class="buttons">
@@ -467,7 +609,6 @@ function display_del_check($user_id){
                 </p>
             </form>
             </div>
-            <script type="text/javascript"></script>
         <?php
         exit();  
 }
@@ -476,25 +617,25 @@ function display_del_check($user_id){
  * Enable given user if exists and initialize session parameters
  * @param unknown_type $user_id
  */
-function display_enable($user_id){
+function display_enable($user_id)
+{
     $uc = new users_controler();
     $user = $uc->get($user_id);
-    if(isset($user)){
+    if (isset($user)) {
         $control = array();
         $params = array();
-        if(isset($_SESSION['history']['usersval'])){
+        if (isset($_SESSION['history']['usersval'])) {
             $params['log_user_enabled'] = $_SESSION['history']['usersval'];
         }
-        if(isset($_SESSION['config']['databasetype'])){
+        if (isset($_SESSION['config']['databasetype'])) {
             $params['databasetype'] = $_SESSION['config']['databasetype'];
-        }
-        else{
+        } else {
             $params['databasetype'] = 'POSTGRESQL';
         }
 
         $control = $uc->enable($user, $params);
         $_SESSION['error'] = '';
-        if(!empty($control['error']) && $control['error'] <> 1) {
+        if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
             $_SESSION['info'] = _AUTORIZED_USER.' : '.$user_id;
@@ -504,8 +645,7 @@ function display_enable($user_id){
         window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
         <?php
         exit();
-    }
-    else{
+    } else {
         // Error management
         $_SESSION['error'] = _USER.' '._UNKNOWN;
     }
@@ -515,24 +655,24 @@ function display_enable($user_id){
  * Disable given user if exists and initialize session parameters
  * @param unknown_type $user_id
  */
-function display_disable($user_id){
+function display_disable($user_id)
+{
     $uc = new users_controler();
     $user = $uc->get($user_id);
-    if(isset($user)){
+    if (isset($user)) {
         $control = array();
         $params = array();
-        if(isset($_SESSION['history']['usersban'])){
+        if (isset($_SESSION['history']['usersban'])) {
             $params['log_user_disabled'] = $_SESSION['history']['usersban'];
         }
-        if(isset($_SESSION['config']['databasetype'])){
+        if (isset($_SESSION['config']['databasetype'])) {
             $params['databasetype'] = $_SESSION['config']['databasetype'];
-        }
-        else{
+        } else {
             $params['databasetype'] = 'POSTGRESQL';
         }
 
         $control = $uc->disable($user, $params);
-        if(!empty($control['error']) && $control['error'] <> 1) {
+        if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
             $_SESSION['info'] = _SUSPENDED_USER.' : '.$user_id;
@@ -541,8 +681,7 @@ function display_disable($user_id){
         ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
         <?php
         exit();
-    }
-    else{
+    } else {
         // Error management
         $_SESSION['error'] = _USER.' '._UNKNOWN;
     }
@@ -561,7 +700,8 @@ function display_disable($user_id){
  * @param $valign
  * @param $show
  */
-function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$order= true){
+function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$order= true)
+{
     $func = new functions();
     $item['value']=$func->show_string($item['value']);
     $item[$item['column']]=$item['value'];
@@ -571,10 +711,9 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$orde
     $item["align"]=$align;
     $item["valign"]=$valign;
     $item["show"]=$show;
-    if($order){
+    if ($order) {
         $item["order"]=$item['value'];
-    }
-    else{
+    } else {
         $item["order"]='';
     }
 }
@@ -586,41 +725,64 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$orde
 function validate_user_submit()
 {
     $uc = new users_controler();
+    $ec = new EntityControler();
+    $db = new Database();
+
     $pageName = "users_management_controler";
+
+    //check del services
+    $entitiesUserCheck = $ec->getUsersEntities($_REQUEST['user_id']);
+    $entitiesUserToRedirect = [];
+    //var_dump($_SESSION['m_admin']['entity']['entities']);
+    for ($i=0;$i<count($_SESSION['m_admin']['entity']['entities']);$i++) {
+        $newUserEntitiesList[] = $_SESSION['m_admin']['entity']['entities'][$i]['ENTITY_ID'];
+    }
+    for ($i=0;$i<count($entitiesUserCheck);$i++) {
+        if (!in_array($entitiesUserCheck[$i]['ENTITY_ID'], $newUserEntitiesList)) {
+            $query = "SELECT count(res_id) FROM res_letterbox WHERE confidentiality = 'Y' AND destination = ? AND dest_user = ? AND status <> 'END'";
+            $arrayPDO = array($entitiesUserCheck[$i]['ENTITY_ID'],$_REQUEST['user_id']);
+            $stmt =  $db->query($query, $arrayPDO);
+            $res = $stmt->fetchObject();   
+            if ($res->count > 0) {
+                $entitiesUserToRedirect['entity_id'][] = $entitiesUserCheck[$i]['ENTITY_ID'];
+                $entitiesUserToRedirect['nbDocs'][] = $res->count;
+            }
+        }
+    }
+    
 
     $mode = $_REQUEST['mode'];
     $user = new users();
     $user->user_id=$_REQUEST['user_id'];
     $_SESSION['m_admin']['users']['user_id']=$_REQUEST['user_id'];
 
-    if(isset($_REQUEST['reactivate'])){
+    if (isset($_REQUEST['reactivate'])) {
         $mode='up';
         $uc->reactivate($user);
     }
 
-    if($mode == "add"){
-        if(isset($_SESSION['config']['userdefaultpassword']) && !empty($_SESSION['config']['userdefaultpassword'])){
+    if ($mode == "add") {
+        if (isset($_SESSION['config']['userdefaultpassword']) && !empty($_SESSION['config']['userdefaultpassword'])) {
             $user->password = $_SESSION['config']['userdefaultpassword'];
-        }
-        else{
+        } else {
             $user->password = 'maarch';
         }
     }
     $user->firstname = $_REQUEST['FirstName'];
     $user->lastname = $_REQUEST['LastName'];
-    if(isset($_REQUEST['Department']) && !empty($_REQUEST['Department'])){
+    if (isset($_REQUEST['Department']) && !empty($_REQUEST['Department'])) {
         $user->department  = $_REQUEST['Department'];
     }
-    if(isset($_REQUEST['Phone']) && !empty($_REQUEST['Phone'])){
+    if (isset($_REQUEST['Phone']) && !empty($_REQUEST['Phone'])) {
         $user->phone  = $_REQUEST['Phone'];
     }
-    if(isset($_REQUEST['LoginMode']) && !empty($_REQUEST['LoginMode'])){
+    if (isset($_REQUEST['LoginMode']) && !empty($_REQUEST['LoginMode'])) {
         $user->loginmode  = $_REQUEST['LoginMode'];
     }
-    if(isset($_REQUEST['Mail']) && !empty($_REQUEST['Mail'])){
+    if (isset($_REQUEST['Mail']) && !empty($_REQUEST['Mail'])) {
         $user->mail  = $_REQUEST['Mail'];
     }
-	if(isset($_REQUEST['thumbprint']) && !empty($_REQUEST['thumbprint'])){
+    if (isset($_REQUEST['thumbprint']) && !empty($_REQUEST['thumbprint'])) {
         $user->thumbprint  = trim($_REQUEST['thumbprint']);
     }
 
@@ -643,7 +805,7 @@ function validate_user_submit()
                 . $_SESSION['config']['adminmail'] . "\">"
                 . $_SESSION['config']['adminname'] . "</a>)";
         } else {
-            require_once 'core/docservers_tools.php';
+            include_once 'core/docservers_tools.php';
             $arrayIsAllowed = array();
             $arrayIsAllowed = Ds_isFileTypeAllowed($filePathOnTmp);
             if (strtolower($the_ext) <> 'jpg' && strtolower($the_ext) <> 'jpeg') {
@@ -666,10 +828,10 @@ function validate_user_submit()
                     $fileTemplateInfos
                 );
                 if (!file_exists(
-                        $storeInfos['path_template']
-                        .  str_replace("#", DIRECTORY_SEPARATOR, $storeInfos['destination_dir'])
-                        . $storeInfos['file_destination_name']
-                    )
+                    $storeInfos['path_template']
+                    .  str_replace("#", DIRECTORY_SEPARATOR, $storeInfos['destination_dir'])
+                    . $storeInfos['file_destination_name']
+                )
                 ) {
                     $_SESSION['error'] = _FILE_NOT_EXISTS . ' : ' . $storeInfos['path_template']
                         .  str_replace("#", DIRECTORY_SEPARATOR, $storeInfos['destination_dir'])
@@ -689,10 +851,9 @@ function validate_user_submit()
     $status['what']=$_REQUEST['what'];
     $status['start']=$_REQUEST['start'];
 
-    if(isset($_SESSION['config']['userdefaultpassword']) && !empty($_SESSION['config']['userdefaultpassword'])){
+    if (isset($_SESSION['config']['userdefaultpassword']) && !empty($_SESSION['config']['userdefaultpassword'])) {
         $tmp_pass = $_SESSION['config']['userdefaultpassword'];
-    }
-    else{
+    } else {
         $tmp_pass = 'maarch';
     }
 
@@ -707,28 +868,32 @@ function validate_user_submit()
     if (isset($_SESSION['m_admin']['users']['groups'])) {
         $control = $uc->save($user, $_SESSION['m_admin']['users']['groups'], $mode, $params);
     }
+    if (!empty($entitiesUserToRedirect)) {
+        $_SESSION['m_admin']['entitiesUserToRedirect'] = $entitiesUserToRedirect;
+        header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=check_up&id=".$_REQUEST['user_id']."&admin=users");
+        exit();
+    }
     if (!empty($control['error']) && $control['error'] <> 1) {
         // Error management depending of mode
         $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         put_in_session("status", $status);
         put_in_session("users",$user->getArray());
         switch ($mode) {
-            case "up":
-                if(!empty($user->user_id)) {
-                    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=up&id=".$user->user_id."&admin=users");
-                } else {
-                    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=users&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
-                }
-                exit;
-            case "add":
-                header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=add&admin=users");
-                exit;
+        case "up":
+            if (!empty($user->user_id)) {
+                header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=up&id=".$user->user_id."&admin=users");
+            } else {
+                header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=users&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
+            }
+            exit;
+        case "add":
+            header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=add&admin=users");
+            exit;
         }
     } else {
-        if($mode == "add"){
+        if ($mode == "add") {
             $_SESSION['info'] = _USER_ADDED;
-        }
-         else{
+        } else {
             $_SESSION['info'] = _USER_UPDATED;
         }
         unset($_SESSION['m_admin']);
@@ -736,7 +901,8 @@ function validate_user_submit()
     }
 }
 
-function init_session(){
+function init_session()
+{
     $_SESSION['m_admin']['users'] = array();
     $_SESSION['m_admin']['users']['groups'] = array();
     $_SESSION['m_admin']['users']['nbbelonginggroups'] = 0;
@@ -750,13 +916,13 @@ function init_session(){
  * @param string $type
  * @param hashable $hashable
  */
-function put_in_session($type,$hashable, $show_string = true){
+function put_in_session($type,$hashable, $show_string = true)
+{
     $func = new functions();
-    foreach($hashable as $key=>$value){
-        if ($show_string){
+    foreach ($hashable as $key=>$value) {
+        if ($show_string) {
             $_SESSION['m_admin'][$type][$key]=$func->show_string($value);
-        }
-        else{
+        } else {
             $_SESSION['m_admin'][$type][$key]=$value;
         }
     }
