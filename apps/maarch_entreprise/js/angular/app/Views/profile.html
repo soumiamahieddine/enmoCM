@@ -330,14 +330,28 @@ h2{
                             </form>
                         </div>
                         <div class="row" id="signList">
-                            <div *ngFor="let signature of user.signatures" class="col-md-3">
+                            <div *ngFor="let signature of user.signatures; let i = index" class="col-md-3">
                                 <div class="thumbnail">
                                     <img src="{{signature.pathToSignatureOnTmp}}" alt="Signature" style="width:auto;height:60px;">
                                     <div class="caption" style="margin-bottom:0px;">
-                                        <p>{{signature.signature_label}}</p>
-                                        <a (click)="deleteSignature(signature.id)" class="btn btn-danger" role="button" title="supprimer la signature">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
+                                        <div *ngIf="selectedSignature != i">
+                                            <p>{{signature.signature_label}}</p>
+                                            <a (click)="displaySignatureEditionForm(i)" class="btn btn-primary" role="button" title="Modifier la signature">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a (click)="deleteSignature(signature.id)" class="btn btn-danger" role="button" title="Supprimer la signature">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
+                                        <div *ngIf="selectedSignature == i">
+                                            <input type="text" [(ngModel)]="selectedSignatureLabel" name="selectedSignatureLabel" placeholder="Label de la signature" class="form-control" style="margin-bottom: 10px; font-size: 12px;height:28px">
+                                            <button (click)="updateSignature()" type="button" class="btn btn-success" [disabled]="!selectedSignatureLabel" title="Modifier la signature">
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                            <button (click)="selectedSignature = -1" type="button" class="btn btn-warning" title="Annuler">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

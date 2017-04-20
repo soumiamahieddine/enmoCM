@@ -38,6 +38,8 @@ export class ProfileComponent implements OnInit {
     };
 
     showPassword                : boolean   = false;
+    selectedSignature           : number    = -1;
+    selectedSignatureLabel      : string    = "";
     resultInfo                  : string    = "";
     loading                     : boolean   = false;
 
@@ -72,7 +74,7 @@ export class ProfileComponent implements OnInit {
             selector: "textarea#emailSignature",
             statusbar : false,
             language : "fr_FR",
-            height : "120",
+            height : "200",
             plugins: [
                 "textcolor bdesk_photo"
             ],
@@ -148,6 +150,11 @@ export class ProfileComponent implements OnInit {
                 this.signatureModel.label = this.signatureModel.name;
             }
         }
+    }
+
+    displaySignatureEditionForm(index: number) {
+        this.selectedSignature = index;
+        this.selectedSignatureLabel = this.user.signatures[index].signature_label;
     }
 
     changeEmailSignature() {
@@ -266,6 +273,22 @@ export class ProfileComponent implements OnInit {
                         size                    : 0,
                         label                   : "",
                     };
+                }
+            });
+    }
+
+    updateSignature() {
+        var id = this.user.signatures[this.selectedSignature].id;
+
+        this.http.put(this.coreUrl + 'rest/currentUser/signature/' + id, {"label" : this.selectedSignatureLabel})
+            .map(res => res.json())
+            .subscribe((data) => {
+                if (data.errors) {
+                    alert(data.errors);
+                } else {
+                    this.user.signatures[this.selectedSignature].signature_label = data.signature.signature_label;
+                    this.selectedSignature = -1;
+                    this.selectedSignatureLabel = "";
                 }
             });
     }

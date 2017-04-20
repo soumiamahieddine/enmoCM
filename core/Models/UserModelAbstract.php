@@ -127,6 +127,24 @@ class UserModelAbstract extends \Apps_Table_Service
         return true;
     }
 
+    public static function updateSignature(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['id', 'userId', 'label']);
+        static::checkString($aArgs, ['userId', 'label']);
+        static::checkNumeric($aArgs, ['id']);
+
+        parent::update([
+            'table'     => 'user_signatures',
+            'set'       => [
+                'signature_label'   => $aArgs['label']
+            ],
+            'where'     => ['user_id = ?', 'id = ?'],
+            'data'      => [$aArgs['userId'], $aArgs['id']]
+        ]);
+
+        return true;
+    }
+
     public static function deleteSignature(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['signatureId']);
@@ -170,6 +188,7 @@ class UserModelAbstract extends \Apps_Table_Service
     {
         static::checkRequired($aArgs, ['id','userId', 'title', 'htmlBody']);
         static::checkString($aArgs, ['userId', 'title', 'htmlBody']);
+        static::checkNumeric($aArgs, ['id']);
 
         parent::update([
             'table'     => 'users_email_signatures',
@@ -234,6 +253,22 @@ class UserModelAbstract extends \Apps_Table_Service
         return $aReturn;
     }
 
+    public static function getSignatureWithSignatureIdById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'signatureId']);
+        static::checkString($aArgs, ['userId']);
+        static::checkNumeric($aArgs, ['signatureId']);
+
+        $aReturn = static::select([
+            'select'    => ['id', 'user_id', 'signature_label'],
+            'table'     => ['user_signatures'],
+            'where'     => ['user_id = ?', 'id = ?'],
+            'data'      => [$aArgs['userId'], $aArgs['signatureId']],
+        ]);
+
+        return $aReturn[0];
+    }
+
     public static function getEmailSignaturesById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId']);
@@ -253,6 +288,7 @@ class UserModelAbstract extends \Apps_Table_Service
     {
         static::checkRequired($aArgs, ['userId', 'signatureId']);
         static::checkString($aArgs, ['userId']);
+        static::checkNumeric($aArgs, ['signatureId']);
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],

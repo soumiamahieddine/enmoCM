@@ -37,6 +37,8 @@ var ProfileComponent = (function () {
             title: "",
         };
         this.showPassword = false;
+        this.selectedSignature = -1;
+        this.selectedSignatureLabel = "";
         this.resultInfo = "";
         this.loading = false;
         window['angularProfileComponent'] = {
@@ -65,7 +67,7 @@ var ProfileComponent = (function () {
             selector: "textarea#emailSignature",
             statusbar: false,
             language: "fr_FR",
-            height: "120",
+            height: "200",
             plugins: [
                 "textcolor bdesk_photo"
             ],
@@ -129,6 +131,10 @@ var ProfileComponent = (function () {
                 this.signatureModel.label = this.signatureModel.name;
             }
         }
+    };
+    ProfileComponent.prototype.displaySignatureEditionForm = function (index) {
+        this.selectedSignature = index;
+        this.selectedSignatureLabel = this.user.signatures[index].signature_label;
     };
     ProfileComponent.prototype.changeEmailSignature = function () {
         var index = $j("#emailSignaturesSelect").prop("selectedIndex");
@@ -247,6 +253,22 @@ var ProfileComponent = (function () {
                     size: 0,
                     label: "",
                 };
+            }
+        });
+    };
+    ProfileComponent.prototype.updateSignature = function () {
+        var _this = this;
+        var id = this.user.signatures[this.selectedSignature].id;
+        this.http.put(this.coreUrl + 'rest/currentUser/signature/' + id, { "label": this.selectedSignatureLabel })
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            if (data.errors) {
+                alert(data.errors);
+            }
+            else {
+                _this.user.signatures[_this.selectedSignature].signature_label = data.signature.signature_label;
+                _this.selectedSignature = -1;
+                _this.selectedSignatureLabel = "";
             }
         });
     };
