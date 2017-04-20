@@ -227,6 +227,7 @@ class UserModelAbstract extends \Apps_Table_Service
             'table'     => ['user_signatures'],
             'where'     => ['user_id = ?'],
             'data'      => [$aArgs['userId']],
+            'order_by'  => 'id'
         ]);
 
         if (!empty($aReturn)) {
@@ -279,6 +280,7 @@ class UserModelAbstract extends \Apps_Table_Service
             'table'     => ['users_email_signatures'],
             'where'     => ['user_id = ?'],
             'data'      => [$aArgs['userId']],
+            'order_by'  => 'id'
         ]);
 
         return $aReturn;
