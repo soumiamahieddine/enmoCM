@@ -851,7 +851,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     width : 50px;
     -webkit-transition: width 0.5s; /* Safari */
     transition: width 0.5s;
-    overflow:auto;
+    overflow:auto !important;
 }
 
 .pjSign img{
