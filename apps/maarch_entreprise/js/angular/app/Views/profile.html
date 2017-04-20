@@ -95,6 +95,9 @@ h2{
 .form-control.btn-success[disabled]{
     background-color: #5cb85c;
 }
+.form-control.btn-primary[disabled]{
+    background-color: #286090;
+}
 </style>
 <h1 style="margin-top: 10px">Mon profil</h1>
 <div id="resultInfo" class="fade" style="display:none;">
@@ -288,33 +291,35 @@ h2{
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="mailSign">
-                        <div class="row" style="margin-top:5px;">
-                            <div class="col-md-5">
-                                <select id="emailSignaturesSelect" class="form-control" (change)="changeEmailSignature()">
-                                    <option>Nouvelle signature</option>
-                                    <option *ngFor="let emailSignature of user.emailSignatures">{{emailSignature.title}}</option>
-                                </select>
-                            </div>
-                            <div class="col-md-5">
-                                <input type="text" [(ngModel)]="mailSignatureModel.title" name="title" placeholder="Nom de la signature" class="form-control">
-                            </div>
-                            <div class="col-md-1 col-md-offset-1" *ngIf="mailSignatureModel.selected == 0">
-                                <button class="form-control btn btn-sm btn-success"  (click)="submitEmailSignature()" [disabled]="!mailSignatureModel.title"><i class="fa fa-plus"></i></button>
-                            </div>
-                            <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
-                                <button class="form-control btn btn-sm btn-primary" (click)="updateEmailSignature()" [disabled]="!mailSignatureModel.title"><i class="fa fa-pencil"></i></button>
-                            </div>
-                            <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
-                                <button class="form-control btn btn-sm btn-danger"  (click)="deleteEmailSignature()"><i class="fa fa-trash"></i></button>
-                            </div>
-                        </div>
-                        <div class="row" style="margin-top:5px;">
-                            <div class="col-md-12">
-                                <div id="html_mode" style="display: block; width:100%;">
-                                    <textarea name="emailSignature" id="emailSignature" style="width:100%" rows="15" cols="60"></textarea>
+                        <form (ngSubmit)="submitEmailSignature()" #emailSignatureForm="ngForm">
+                            <div class="row" style="margin-top:5px;">
+                                <div class="col-md-5">
+                                    <select id="emailSignaturesSelect" class="form-control" (change)="changeEmailSignature()">
+                                        <option>Nouvelle signature</option>
+                                        <option *ngFor="let emailSignature of user.emailSignatures">{{emailSignature.title}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" [(ngModel)]="mailSignatureModel.title" name="title" placeholder="Nom de la signature" class="form-control" required>
+                                </div>
+                                <div class="col-md-1 col-md-offset-1" *ngIf="mailSignatureModel.selected == 0">
+                                    <button type="submit" class="form-control btn btn-sm btn-success" [disabled]="!emailSignatureForm.form.valid"><i class="fa fa-plus"></i></button>
+                                </div>
+                                <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
+                                    <button class="form-control btn btn-sm btn-primary" (click)="updateEmailSignature()" [disabled]="!emailSignatureForm.form.valid"><i class="fa fa-pencil"></i></button>
+                                </div>
+                                <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
+                                    <button class="form-control btn btn-sm btn-danger"  (click)="deleteEmailSignature()"><i class="fa fa-trash"></i></button>
                                 </div>
                             </div>
-                        </div>
+                            <div class="row" style="margin-top:5px;">
+                                <div class="col-md-12">
+                                    <div id="html_mode" style="display: block; width:100%;">
+                                        <textarea name="emailSignature" id="emailSignature" style="width:100%" rows="15" cols="60"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="signatureBookSign">
                         <div class="row" style="margin-top:5px;">
