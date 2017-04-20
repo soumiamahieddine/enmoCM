@@ -132,7 +132,7 @@ var SignatureBookComponent = (function () {
                     setTimeout(function () {
                         $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                         $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
-                        $j(".pjSign").niceScroll({ touchbehavior: true, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
+                        $j(".pjSign").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                         $j("#resListContent").scrollTop(0);
                         $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
                         $j("#obsVersion").tooltipster({
