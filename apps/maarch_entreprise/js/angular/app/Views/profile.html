@@ -355,7 +355,7 @@ h2{
                                     <img src="{{signature.pathToSignatureOnTmp}}" alt="Signature" style="width:auto;height:60px;">
                                     <div class="caption" style="margin-bottom:0px;">
                                         <div *ngIf="selectedSignature != i">
-                                            <p>{{signature.signature_label}}</p>
+                                            <p title="{{signature.signature_label}}" style="text-overflow: ellipsis;">{{signature.signature_label}}</p>
                                             <a (click)="displaySignatureEditionForm(i)" class="btn btn-primary" role="button" title="Modifier la signature">
                                                 <i class="fa fa-edit"></i>
                                             </a>
