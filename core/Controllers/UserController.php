@@ -115,6 +115,8 @@ class UserController
 
         if ($ext[0] != 'image') {
             return $response->withJson(['errors' => _WRONG_FILE_TYPE]);
+        } elseif ($data['size'] > 2000000){
+            return $response->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED . ' (2 MB)']);
         }
 
         file_put_contents($_SESSION['config']['tmppath'] . $tmpName, $file);
