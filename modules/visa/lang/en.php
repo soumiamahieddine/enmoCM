@@ -137,3 +137,19 @@ if (!defined("_ADD_VISA_ROLE"))
 
 if (!defined("_ADD_VISA_MODEL"))
     define("_ADD_VISA_MODEL", "Use visa circuit model");
+
+if (!defined("_NO_SIGNATORY"))
+    define("_NO_SIGNATORY", "No signatory");
+
+if (!defined("_SIGNATORY"))
+    define("_SIGNATORY", "Signatory");
+
+if (!defined("_SIGNED_TO"))
+    define("_SIGNED_TO", "Signed to");
+
+if (!defined("_SIGN_IN_PROGRESS"))
+    define("_SIGN_IN_PROGRESS", "Signature in progress");
+
+if (!defined("_DOCUMENTS_LIST_WITH_SIGNATORY"))
+    define("_DOCUMENTS_LIST_WITH_SIGNATORY", "Documents list with signatory");
+

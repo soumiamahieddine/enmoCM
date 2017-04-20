@@ -38,6 +38,8 @@ export class ProfileComponent implements OnInit {
     };
 
     showPassword                : boolean   = false;
+    selectedSignature           : number    = -1;
+    selectedSignatureLabel      : string    = "";
     resultInfo                  : string    = "";
     loading                     : boolean   = false;
 
@@ -72,7 +74,7 @@ export class ProfileComponent implements OnInit {
             selector: "textarea#emailSignature",
             statusbar : false,
             language : "fr_FR",
-            height : "120",
+            height : "200",
             plugins: [
                 "textcolor bdesk_photo"
             ],
@@ -150,6 +152,11 @@ export class ProfileComponent implements OnInit {
         }
     }
 
+    displaySignatureEditionForm(index: number) {
+        this.selectedSignature = index;
+        this.selectedSignatureLabel = this.user.signatures[index].signature_label;
+    }
+
     changeEmailSignature() {
         var index = $j("#emailSignaturesSelect").prop("selectedIndex");
         this.mailSignatureModel.selected = index;
@@ -197,7 +204,11 @@ export class ProfileComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.errors) {
-                    alert(data.errors);
+                    this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    });
                 } else {
                     this.user.emailSignatures = data.emailSignatures;
                     this.mailSignatureModel     = {
@@ -206,6 +217,11 @@ export class ProfileComponent implements OnInit {
                         title                   : "",
                     };
                     tinymce.get('emailSignature').setContent("");
+                    this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    }); 
                 }
             });
     }
@@ -218,10 +234,19 @@ export class ProfileComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.errors) {
-                    alert(data.errors);
+                    this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    });
                 } else {
                     this.user.emailSignatures[this.mailSignatureModel.selected - 1].title = data.emailSignature.title;
                     this.user.emailSignatures[this.mailSignatureModel.selected - 1].html_body = data.emailSignature.html_body;
+                    this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    }); 
                 }
             });
     }
@@ -236,7 +261,11 @@ export class ProfileComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe((data) => {
                     if (data.errors) {
-                        alert(data.errors);
+                        this.resultInfo = data.errors;
+                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        });
                     } else {
                         this.user.emailSignatures = data.emailSignatures;
                         this.mailSignatureModel     = {
@@ -245,6 +274,11 @@ export class ProfileComponent implements OnInit {
                             title                   : "",
                         };
                         tinymce.get('emailSignature').setContent("");
+                        this.resultInfo = data.success;
+                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        }); 
                     }
                 });
         }
@@ -255,7 +289,11 @@ export class ProfileComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.errors) {
-                    alert(data.errors);
+                    this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    }); 
                 } else {
                     this.user.signatures = data.signatures;
                     this.signatureModel  = {
@@ -266,6 +304,36 @@ export class ProfileComponent implements OnInit {
                         size                    : 0,
                         label                   : "",
                     };
+                    this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    }); 
+                }
+            });
+    }
+
+    updateSignature() {
+        var id = this.user.signatures[this.selectedSignature].id;
+
+        this.http.put(this.coreUrl + 'rest/currentUser/signature/' + id, {"label" : this.selectedSignatureLabel})
+            .map(res => res.json())
+            .subscribe((data) => {
+                if (data.errors) {
+                    this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    });  
+                } else {
+                    this.user.signatures[this.selectedSignature].signature_label = data.signature.signature_label;
+                    this.selectedSignature = -1;
+                    this.selectedSignatureLabel = "";
+                    this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    });  
                 }
             });
     }
@@ -278,9 +346,18 @@ export class ProfileComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe((data) => {
                     if (data.errors) {
-                        alert(data.errors);
+                        this.resultInfo = data.errors;
+                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        });  
                     } else {
                         this.user.signatures = data.signatures;
+                        this.resultInfo = data.success;
+                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        });  
                     }
                 });
         }

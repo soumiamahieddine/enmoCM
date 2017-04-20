@@ -159,3 +159,18 @@ if (!defined("_MODIFY_VISA_IN_SIGNATUREBOOK"))
 
 if (!defined("_MODIFY_VISA_IN_SIGNATUREBOOK_DESC"))
     define("_MODIFY_VISA_IN_SIGNATUREBOOK_DESC", "Utile si le parahpeur sert en tant que parapheur de supervision");
+
+if (!defined("_NO_SIGNATORY"))
+    define("_NO_SIGNATORY", "Aucun signataire");
+
+if (!defined("_SIGNATORY"))
+    define("_SIGNATORY", "Signataire");
+
+if (!defined("_SIGNED_TO"))
+    define("_SIGNED_TO", "Signé le");
+
+if (!defined("_SIGN_IN_PROGRESS"))
+    define("_SIGN_IN_PROGRESS", "En cours de signature");
+
+if (!defined("_DOCUMENTS_LIST_WITH_SIGNATORY"))
+    define("_DOCUMENTS_LIST_WITH_SIGNATORY", "Liste des documents avec signataire");

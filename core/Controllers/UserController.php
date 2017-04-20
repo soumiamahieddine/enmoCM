@@ -151,6 +151,30 @@ class UserController
         ]);
     }
 
+    public function updateCurrentUserSignature(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $data = $request->getParams();
+
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['label']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $r = UserModel::updateSignature([
+            'id'        => $aArgs['id'],
+            'userId'    => $_SESSION['user']['UserId'],
+            'label'     => $data['label']
+        ]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'Signature Update Error']);
+        }
+
+        return $response->withJson([
+            'success' => _UPDATED_SIGNATURE,
+            'signature' => UserModel::getSignatureWithSignatureIdById(['userId' => $_SESSION['user']['UserId'], 'signatureId' => $aArgs['id']])
+        ]);
+    }
+
     public function deleteCurrentUserSignature(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         $r = UserModel::deleteSignature(['signatureId' => $aArgs['id'], 'userId' => $_SESSION['user']['UserId']]);
