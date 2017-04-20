@@ -857,11 +857,13 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 .pjSign img{
     border: solid 2px white;
     height: 30px;
+    width: 50px;
     -webkit-transition: height 0.5s; /* Safari */
     transition: height 0.5s;
 }
 .pjSign:hover img{
     height: 60px;
+    width:auto;
     -webkit-transition: height 0.5s; /* Safari */
     transition: height 0.5s;
 }
