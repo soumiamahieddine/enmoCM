@@ -183,7 +183,11 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                alert(data.errors);
+                _this.resultInfo = data.errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
             else {
                 _this.user.emailSignatures = data.emailSignatures;
@@ -193,6 +197,11 @@ var ProfileComponent = (function () {
                     title: "",
                 };
                 tinymce.get('emailSignature').setContent("");
+                _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
         });
     };
@@ -204,11 +213,20 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                alert(data.errors);
+                _this.resultInfo = data.errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
             else {
                 _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].title = data.emailSignature.title;
                 _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].html_body = data.emailSignature.html_body;
+                _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
         });
     };
@@ -221,7 +239,11 @@ var ProfileComponent = (function () {
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
-                    alert(data.errors);
+                    _this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
                 }
                 else {
                     _this.user.emailSignatures = data.emailSignatures;
@@ -231,6 +253,11 @@ var ProfileComponent = (function () {
                         title: "",
                     };
                     tinymce.get('emailSignature').setContent("");
+                    _this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
                 }
             });
         }
@@ -241,7 +268,11 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                alert(data.errors);
+                _this.resultInfo = data.errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
             else {
                 _this.user.signatures = data.signatures;
@@ -253,6 +284,11 @@ var ProfileComponent = (function () {
                     size: 0,
                     label: "",
                 };
+                _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
         });
     };
@@ -263,12 +299,21 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                alert(data.errors);
+                _this.resultInfo = data.errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
             else {
                 _this.user.signatures[_this.selectedSignature].signature_label = data.signature.signature_label;
                 _this.selectedSignature = -1;
                 _this.selectedSignatureLabel = "";
+                _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
         });
     };
@@ -280,10 +325,19 @@ var ProfileComponent = (function () {
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
-                    alert(data.errors);
+                    _this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
                 }
                 else {
                     _this.user.signatures = data.signatures;
+                    _this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
                 }
             });
         }
