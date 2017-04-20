@@ -86,6 +86,10 @@ h2{
     white-space:normal;
     vertical-align:top;
   }
+  .caption p{
+      white-space: nowrap;
+      overflow: auto;
+  }
 </style>
 <h1 style="margin-top: 10px">Mon profil</h1>
 <div id="resultInfo" class="fade" style="display:none;">
@@ -280,7 +284,7 @@ h2{
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="mailSign">
                         <div class="row" style="margin-top:5px;">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <select id="emailSignaturesSelect" class="form-control" (change)="changeEmailSignature()">
                                     <option>Nouvelle signature</option>
                                     <option *ngFor="let emailSignature of user.emailSignatures">{{emailSignature.title}}</option>
@@ -289,10 +293,14 @@ h2{
                             <div class="col-md-5">
                                 <input type="text" [(ngModel)]="mailSignatureModel.title" name="title" placeholder="Nom de la signature" class="form-control">
                             </div>
-                            <div class="col-md-1">
-                                <button class="form-control btn btn-sm btn-success" *ngIf="mailSignatureModel.selected == 0" (click)="submitEmailSignature()" [disabled]="!mailSignatureModel.title"><i class="fa fa-plus"></i></button>
-                                <button class="form-control btn btn-sm btn-primary" *ngIf="mailSignatureModel.selected > 0" (click)="updateEmailSignature()" [disabled]="!mailSignatureModel.title"><i class="fa fa-pencil"></i></button>
-                                <button class="form-control btn btn-sm btn-danger" *ngIf="mailSignatureModel.selected > 0" (click)="deleteEmailSignature()"><i class="fa fa-trash"></i></button>
+                            <div class="col-md-1" *ngIf="mailSignatureModel.selected == 0">
+                                <button class="form-control btn btn-sm btn-success"  (click)="submitEmailSignature()" [disabled]="!mailSignatureModel.title"><i class="fa fa-plus"></i></button>
+                            </div>
+                            <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
+                                <button class="form-control btn btn-sm btn-primary" (click)="updateEmailSignature()" [disabled]="!mailSignatureModel.title"><i class="fa fa-pencil"></i></button>
+                            </div>
+                            <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
+                                <button class="form-control btn btn-sm btn-danger"  (click)="deleteEmailSignature()"><i class="fa fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="row" style="margin-top:5px;">
@@ -319,13 +327,15 @@ h2{
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </div>
-                                <div class="col-md-12">
+                                <div [ngClass]="[signatureModel.size != '' ? 'col-md-10' : 'col-md-12']">
                                     <div class="upload-drop-zone">
                                         Cliquez sur <i class="fa fa-upload fa-2x" style="cursor:pointer;" (click)="clickOnUploader('uploadSignFile')"></i> pour
                                         <span *ngIf="!signatureModel.size">ajouter une signature</span>
                                         <span *ngIf="signatureModel.size">modifier la signature téléchargée</span>
-                                        <img *ngIf="signatureModel.size" id="signaturePreview" src="{{signatureModel.base64ForJs}}" alt="Preview" style="height: 60px; width: auto">
                                     </div>
+                                </div>
+                                <div class="col-md-2" *ngIf="signatureModel.size">
+                                    <img  id="signaturePreview" src="{{signatureModel.base64ForJs}}" alt="Preview" style="width: 100%;">
                                 </div>
                             </form>
                         </div>
