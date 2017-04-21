@@ -48,10 +48,11 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.prepareProfile = function () {
         $j('#inner_content').remove();
         $j('#menunav').hide();
+        $j('#divList').remove();
         $j('#container').width("99%");
-        $j('#viewBasketsTitle').remove();
-        $j('#homePageWelcomeTitle').remove();
-        $j('#searchContactsTitle').remove();
+        if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
+            $j('#content h1')[0].remove();
+        }
         if ($j('#ariane')[0]) {
             $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>MAARCH Trunk</a> > Profil";
         }
