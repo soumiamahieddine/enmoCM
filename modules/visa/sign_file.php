@@ -21,12 +21,6 @@ $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 
-if (!isset($_SESSION['user']['pathToSignature'][0]) || $_SESSION['user']['pathToSignature'][0] == '') {
-    $_SESSION['error'] = _IMG_SIGN_MISSING;
-	echo "{\"status\":1, \"error\" : \"". _IMG_SIGN_MISSING ."\"}";
-	exit;
-}
-
 if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
 	$db = new Database();
 
