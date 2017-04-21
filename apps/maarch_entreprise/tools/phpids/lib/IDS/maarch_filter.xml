@@ -228,7 +228,7 @@
         </tags>
         <impact>3</impact>
     </filter>
-    <filter>
+<!--     <filter>
         <id>22</id>
         <rule><![CDATA[(?:=\s*(?:top|this|window|content|self|frames|_content))|(?:\/\s*[gimx]*\s*[)}])|(?:[^\s]\s*=\s*script)|(?:\.\s*constructor)|(?:default\s+xml\s+namespace\s*=)|(?:\/\s*\+[^+]+\s*\+\s*\/)]]></rule>
         <description>Detects advanced XSS probings via Script(), RexExp, constructors and XML namespaces</description>
@@ -239,7 +239,7 @@
             <tag>rfe</tag>
         </tags>
         <impact>5</impact>
-    </filter>	
+    </filter>	 -->
     <filter>
         <id>23</id>
         <rule><![CDATA[(?:\.\s*\w+\W*=)|(?:\W\s*(?:location)\s*\W[^({[;]+[({[;])|(?:\(\w+\?[:\w]+\))]]></rule>
