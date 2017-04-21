@@ -51,6 +51,7 @@ var ProfileComponent = (function () {
         $j('#container').width("99%");
         $j('#viewBasketsTitle').remove();
         $j('#homePageWelcomeTitle').remove();
+        $j('#searchContactsTitle').remove();
         if ($j('#ariane')[0]) {
             $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>MAARCH Trunk</a> > Profil";
         }
