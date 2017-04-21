@@ -294,15 +294,19 @@ class VisaController
 
             $collId = '';
             $realId = 0;
+            $isVersion = 'false';
             if ($value['res_id'] == 0) {
                 $collId = 'version_attachments_coll';
                 $realId = $value['res_id_version'];
+                $isVersion = 'true';
             } elseif ($value['res_id_version'] == 0) {
                 $collId = 'attachments_coll';
                 $realId = $value['res_id'];
+                $isVersion = 'false';
             }
 
             $viewerId = $realId;
+            $viewerNoSignId = $realId;
             $pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
             $isConverted = false;
             foreach ($attachments as $tmpKey => $tmpValue) {
@@ -310,6 +314,7 @@ class VisaController
                     if ($value['status'] != 'SIGN') {
                         $viewerId = $tmpValue['res_id'];
                     }
+                    $viewerNoSignId = $tmpValue['res_id'];
                     $isConverted = true;
                     unset($attachments[$tmpKey]);
                 }
@@ -353,12 +358,13 @@ class VisaController
                 $attachments[$key]['doc_date'] = date(DATE_ATOM, strtotime($attachments[$key]['doc_date']));
             }
             $attachments[$key]['isConverted'] = $isConverted;
+            $attachments[$key]['viewerNoSignId'] = $viewerNoSignId;
             $attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
             $attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
             $attachments[$key]['sign'] = $attachmentTypes[$value['attachment_type']]['sign'];
 
             $attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$realId}&coll_id={$collId}&display=true&advanced=true";
-            $attachments[$key]['viewerLink'] = "index.php?display=true&module=attachments&page=view_attachment&res_id_master={$aArgs['resId']}&id={$viewerId}";
+            $attachments[$key]['viewerLink'] = "index.php?display=true&module=attachments&page=view_attachment&res_id_master={$aArgs['resId']}&id={$viewerId}&isVersion={$isVersion}";
         }
 
         $obsAttachments = \ResModel::getObsLinkedAttachmentsNotIn([

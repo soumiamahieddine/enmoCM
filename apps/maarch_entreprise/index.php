@@ -247,12 +247,10 @@ else{
                 
                 //document.cookie = "maarch_cookie_1=thefirstcookie";
                 //document.cookie = "maarch_cookie_2=thesecondcookie";
-                //console.log(document.cookie);
                 return document.cookie;
             }
 
             var theCookies;
-            //theCookies = getCookies().split(";");
             theCookies = getCookies();
             
             
@@ -269,17 +267,9 @@ else{
                     },
                     success: function(answer)
                     {
-                        //console.log(answer);
-                        if (answer.status == '0') {
-                            //console.log('OK !!! COOKIES FROM PROXY SET');
-                        } else {
-                            //console.log('KO... COOKIES FROM PROXY NOT SET');
-                        }
-                        
+
                     }
                 });
-            } else {
-                //console.log('no completements cookies');
             }
         </script>
         <?php
