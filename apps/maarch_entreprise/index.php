@@ -259,17 +259,18 @@ else{
             if (theCookies != undefined) {
                 var path_manage_script = '<?php echo $_SESSION["config"]["businessappurl"];?>' + 'index.php?display=true&page=setProxyCookies';
 
-                new Ajax.Request(path_manage_script,
+                $j.ajax(
                 {
-                    method:'post',
-                    parameters: {
+                    url: path_manage_script,
+                    type:'POST',
+                    dataType:'json',
+                    data: {
                         cookies : theCookies
                     },
-                    onSuccess: function(answer)
+                    success: function(answer)
                     {
-                        eval('response = ' + answer.responseText);
-                        //console.log(response);
-                        if (response.status == '0') {
+                        //console.log(answer);
+                        if (answer.status == '0') {
                             //console.log('OK !!! COOKIES FROM PROXY SET');
                         } else {
                             //console.log('KO... COOKIES FROM PROXY NOT SET');

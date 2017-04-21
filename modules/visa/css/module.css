@@ -844,7 +844,6 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     text-align: left;
     height: auto;
     position: absolute;
-    width: auto;
     bottom: 0px;
     background: white;
     margin-bottom: 5px;
@@ -852,6 +851,10 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     -webkit-transition: width 0.5s; /* Safari */
     transition: width 0.5s;
     overflow:auto !important;
+}
+
+.pjSign.signed{
+    width: auto !important;  
 }
 
 .pjSign img{
