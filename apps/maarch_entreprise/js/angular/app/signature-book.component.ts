@@ -356,7 +356,7 @@ export class SignatureBookComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe((data) => {
                     if (data.status == 0) {
-                        this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + this.resId + "&id=" + data.new_id;
+                        this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + data.new_id + "&isVersion=false";
                         this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                         this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
                         this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = data.new_id;
@@ -380,20 +380,23 @@ export class SignatureBookComponent implements OnInit {
     unsignFile(attachment: any) {
         var collId: string;
         var resId: number;
+        var isVersion: string;
 
         if (attachment.res_id == 0) {
             resId = attachment.res_id_version;
             collId = "res_version_attachments";
+            isVersion = "true";
         } else if (attachment.res_id_version == 0) {
             resId = attachment.res_id;
             collId = "res_attachments";
+            isVersion = "false";
         }
 
         this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {}, {})
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.status == "OK") {
-                    this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + this.resId + "&id=" + resId;
+                    this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
                     this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;
