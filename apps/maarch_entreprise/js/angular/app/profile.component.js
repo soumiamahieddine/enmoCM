@@ -106,8 +106,22 @@ var ProfileComponent = (function () {
         this.zone.run(function () { return _this.resfreshUpload(b64Content); });
     };
     ProfileComponent.prototype.resfreshUpload = function (b64Content) {
-        this.signatureModel.base64 = b64Content.replace(/^data:.*?;base64,/, "");
-        this.signatureModel.base64ForJs = b64Content;
+        if (this.signatureModel.size <= 2000000) {
+            this.signatureModel.base64 = b64Content.replace(/^data:.*?;base64,/, "");
+            this.signatureModel.base64ForJs = b64Content;
+        }
+        else {
+            this.signatureModel.name = "";
+            this.signatureModel.size = 0;
+            this.signatureModel.type = "";
+            this.signatureModel.base64 = "";
+            this.signatureModel.base64ForJs = "";
+            this.resultInfo = "Taille maximum de fichier dépassée (2 MB)";
+            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        }
     };
     ProfileComponent.prototype.displayPassword = function () {
         this.showPassword = !this.showPassword;
@@ -122,16 +136,16 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.uploadSignatureTrigger = function (fileInput) {
         if (fileInput.target.files && fileInput.target.files[0]) {
             var reader = new FileReader();
-            reader.readAsDataURL(fileInput.target.files[0]);
-            reader.onload = function (value) {
-                window['angularProfileComponent'].componentAfterUpload(value.target.result);
-            };
             this.signatureModel.name = fileInput.target.files[0].name;
             this.signatureModel.size = fileInput.target.files[0].size;
             this.signatureModel.type = fileInput.target.files[0].type;
             if (this.signatureModel.label == "") {
                 this.signatureModel.label = this.signatureModel.name;
             }
+            reader.readAsDataURL(fileInput.target.files[0]);
+            reader.onload = function (value) {
+                window['angularProfileComponent'].componentAfterUpload(value.target.result);
+            };
         }
     };
     ProfileComponent.prototype.displaySignatureEditionForm = function (index) {
