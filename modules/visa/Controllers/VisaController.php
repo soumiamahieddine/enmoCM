@@ -385,7 +385,7 @@ class VisaController
         }
 
         foreach ($attachments as $key => $value) {
-            if ($value['attachment_type'] == 'converted_pdf') {
+            if ($value['attachment_type'] == 'converted_pdf' || $value['attachment_type'] == 'signed_response') {
                 unset($attachments[$key]);
                 continue;
             }
