@@ -136,7 +136,7 @@ function validEmailForm (path, form_id) {
 
     var attachments = $j("#joined_files input.check");
 
-    if (attachments.length > 0 && !path.includes("for=save")) {
+    if (attachments.length > 0 && path.includes("for=send")) {
         var hasOneChecked = false;
         for (var i = 0; i < attachments.length; i++) {
             if (attachments[i].checked == true) {

@@ -364,6 +364,8 @@ var ProfileComponent = (function () {
                     $j("#resultInfo").slideUp(500);
                 });
             }
+        }, function (error) {
+            alert(error.statusText);
         });
     };
     ProfileComponent.prototype.absenceModal = function () {

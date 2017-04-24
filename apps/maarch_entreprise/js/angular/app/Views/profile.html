@@ -99,7 +99,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" id="phone" name="phone" title="Téléphone" placeholder="Téléphone" [(ngModel)]="user.phone">
+                            <input type="text" class="form-control" id="phone" name="phone" title="Téléphone" placeholder="Téléphone" [(ngModel)]="user.phone" pattern="[+]{0,1}[0-9]{10,11}">
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
-                            <input type="mail" class="form-control" id="mail" name="mail" title="Courriel"  placeholder="Courriel" [(ngModel)]="user.mail">
+                            <input type="email" class="form-control" id="mail" name="mail" title="Courriel"  placeholder="Courriel" [(ngModel)]="user.mail" [email]="true">
                         </div>
 
                     </div>

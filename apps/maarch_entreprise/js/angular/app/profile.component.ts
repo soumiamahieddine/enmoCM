@@ -385,6 +385,8 @@ export class ProfileComponent implements OnInit {
                         $j("#resultInfo").slideUp(500);
                     });   
                 }
+            }, (error) => {
+                alert(error.statusText);
             });
     }
 
