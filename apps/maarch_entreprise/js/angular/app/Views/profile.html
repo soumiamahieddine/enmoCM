@@ -99,7 +99,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
-                            <input type="tel" class="form-control" id="phone" name="phone" title="Téléphone" placeholder="Téléphone" [(ngModel)]="user.phone" pattern="^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$">
+                            <input type="tel" class="form-control" id="phone" name="phone" title="Téléphone" placeholder="Téléphone" [(ngModel)]="user.phone" pattern="^(?:0|\+\d\d?\d?\s?)[1-9]([\.\-\s]?\d\d){4}([\.\-\s]?\d?\d?)$">
                         </div>
                     </div>
                 </div>
