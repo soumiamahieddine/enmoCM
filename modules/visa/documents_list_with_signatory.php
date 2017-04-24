@@ -502,7 +502,7 @@ for ($i=0;$i<$tabI;$i++) {
 
                 $query = "SELECT u.firstname || ' ' || u.lastname || ' (' || ue.user_role || ')' as signatory_user, process_date
                     FROM users u INNER JOIN listinstance l ON u.user_id = l.item_id
-                    INNER JOIN users_entities ue ON ue.user_id=u.user_id WHERE l.difflist_type = 'VISA_CIRCUIT' AND item_mode = 'sign' AND l.res_id = ?";
+                    INNER JOIN users_entities ue ON ue.user_id=u.user_id WHERE ue.primary_entity = 'Y' AND l.difflist_type = 'VISA_CIRCUIT' AND item_mode = 'sign' AND l.res_id = ?";
                 $arrayPDO = array($tab[$i][0]['res_id']);
                 $stmt2 = $db->query($query, $arrayPDO);
                 $res = $stmt2->fetchObject();
