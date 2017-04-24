@@ -500,9 +500,9 @@ for ($i=0;$i<$tabI;$i++) {
             }
             if ($tab[$i][$j][$value]=="signatory_user") {
 
-                $query = "SELECT u.firstname || ' ' || u.lastname || ' (' || uc.role || ')' as signatory_user, process_date
-                            FROM users u INNER JOIN listinstance l ON u.user_id = l.item_id
-                            INNER JOIN usergroup_content uc ON uc.user_id=u.user_id WHERE l.difflist_type = 'VISA_CIRCUIT' AND item_mode = 'sign' AND l.res_id = ?";
+                $query = "SELECT u.firstname || ' ' || u.lastname || ' (' || ue.user_role || ')' as signatory_user, process_date
+                    FROM users u INNER JOIN listinstance l ON u.user_id = l.item_id
+                    INNER JOIN users_entities ue ON ue.user_id=u.user_id WHERE l.difflist_type = 'VISA_CIRCUIT' AND item_mode = 'sign' AND l.res_id = ?";
                 $arrayPDO = array($tab[$i][0]['res_id']);
                 $stmt2 = $db->query($query, $arrayPDO);
                 $res = $stmt2->fetchObject();
