@@ -266,7 +266,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
                             parameters: {name: q_name,
                                         action : "creation"},
                             onSuccess: function(answer){
-                                eval("response = "+answer.responseText)
+                                eval("response = "+answer.responseText);
                                 if(response.status == 0)
                                 {
                                     $('save_search').innerHTML ='<h2><?php echo _QUERY_SAVED;?></h2><br/><input type="button" name="close" value="<?php echo _CLOSE_WINDOW;?>" onclick="destroyModal(\'save_search\');" class="button" />';
