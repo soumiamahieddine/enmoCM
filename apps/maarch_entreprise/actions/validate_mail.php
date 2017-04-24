@@ -219,11 +219,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
             $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
         );
-
+        //echo "HELLO";
         //diffusion list in this basket ?
         if($_SESSION['current_basket']['difflist_type'] == 'entity_id'){
             $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
-            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $(\'category_id\').value);';
+            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $(\'category_id\').val());';
+            
         }else if($_SESSION['current_basket']['difflist_type'] == 'type_id'){
             $target_model = 'document.getElementById(\'type_id\').options[document.getElementById(\'type_id\').selectedIndex]';
             $func_load_listdiff_by_type = 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value);';

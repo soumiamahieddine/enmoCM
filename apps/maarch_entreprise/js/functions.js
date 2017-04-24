@@ -10,20 +10,34 @@ function capitalizeFirstLetter(theString)
 
 function whatIsTheDivStatus(theDiv, divStatus)
 {
-    if ($(theDiv).style.display == 'none') {
+    /*if ($(theDiv).style.display == 'none') {
         $(divStatus).innerHTML = '<i class="fa fa-minus-square-o"></i>';
     } else {
         $(divStatus).innerHTML = '<i class="fa fa-plus-square-o"></i>';
+    }
+    $j.ajax
+    */    
+    if ($j('#'+theDiv).css('display') == 'none') {
+        $j('#'+divStatus).html('<i class="fa fa-minus-square-o"></i>');
+    } else {
+        $j('#'+divStatus).html('<i class="fa fa-plus-square-o"></i>');
     }
 }
 
 
 function resetInlineDisplay(theDiv)
 {
+    /*setTimeout(function() {
+        if ($(theDiv).style.display == '')
+            $(theDiv).style.display = 'inline';
+    }, 250);*/
+    
     setTimeout(function() {
         if ($(theDiv).style.display == '')
             $(theDiv).style.display = 'inline';
     }, 250);
+
+
 }
 
 function changeSignatureForProfil(selected, mailSignaturesJS)
@@ -70,7 +84,14 @@ function deleteSignature(mailSignaturesJS)
     }
 }
 
+/*if ($j('#'+theDiv).css('display') == 'none') {
+        $j('#'+divStatus).html('<i class="fa fa-minus-square-o"></i>');
+    } else {
+        $j('#'+divStatus).html('<i class="fa fa-plus-square-o"></i>');
+    }*/
+
 function addNewRowPriority(buttonRow) {
+    console.log("PRIORITE")
     var index = buttonRow.rowIndex;
     var indexDiff = index - $("priorityAddField").rowIndex;
 
@@ -83,6 +104,20 @@ function addNewRowPriority(buttonRow) {
                             "<td align='left'><input name='priority_new" + indexDiff + "' id='priority_new" + indexDiff + "' size='6' value='*'></td>" +
                             "<td align='left'><select name='working_new" + indexDiff + "' id='working_new" + indexDiff + "'><option value='true'>Jours ouvrés</option><option value='false' >Jours calendaires</option></select></td>";
     }
+    /*
+    console.log("PRIORITE")
+    var index = buttonRow.rowIndex;
+    var indexDiff = index - $("priorityAddField").rowIndex;
+
+    if ($j('#priorityAddField').css('display') == "none") {
+        $j('#priorityAddField').css('display') = "";
+        $j("#minusButton").css('display') = "";
+    } else {
+        var newRow = $("prioritiesTable").insertRow(index);
+        newRow.innerHTML = "<td align='left'><input name='label_new" + indexDiff + "' id='label_new" + indexDiff + "' placeholder='Nom priorité' size='18'> <input style='background:none;border:none;width:45px;' name='color_new" + indexDiff + "' id='color_new" + indexDiff + "' type='color' value=''></td>" +
+                            "<td align='left'><input name='priority_new" + indexDiff + "' id='priority_new" + indexDiff + "' size='6' value='*'></td>" +
+                            "<td align='left'><select name='working_new" + indexDiff + "' id='working_new" + indexDiff + "'><option value='true'>Jours ouvrés</option><option value='false' >Jours calendaires</option></select></td>";
+    }*/
 
 }
 
@@ -1095,6 +1130,7 @@ function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
+    /*
     if ($('divList')) {
         $('divList').style.display = 'block';
     }
@@ -1111,9 +1147,43 @@ function destroyModal(id_mod){
     {
         isAlreadyClick = false;
     }
+
+    console.log(document.getElementsByTagName('body')[0]);
+    console.log(id_mod);
     document.getElementsByTagName('body')[0].removeChild($(id_mod));
+    
     document.getElementsByTagName('body')[0].removeChild($(id_layer));
     $$("input[type='button']").each(function(v) {v.disabled = false;v.style.opacity="1";})
+    */
+    if ($j('#divList')) {
+        $j('#divList').css('display','block');
+    }
+    if(id_mod == undefined || id_mod=='')
+    {
+        id_mod = 'modal';
+        id_layer = 'lb1-layer';
+    }
+    else
+    {
+        id_layer = id_mod+'_layer';
+    }
+    if(isAlreadyClick)
+    {
+        isAlreadyClick = false;
+    }
+    //var body=$j('body')[0];
+    //$j('body')[0].remove($j('#'+id_mod));
+    //console.log(id_layer);
+    //$j('body')[0].remove($j('#'+id_layer));
+    //console.log($j('#'+id_mod));
+    //console.log($(id_mod));
+    document.getElementsByTagName('body')[0].removeChild($j('#'+id_mod)[0]);
+    
+    document.getElementsByTagName('body')[0].removeChild($j('#'+id_layer)[0]);
+    
+    $j("input[type='button']").each(function(v) {v.disabled = false;v.style.opacity="1";})
+
+
     /*if($('send_action')){
         $('send_action').disabled = false;
         $('send_action').style.opacity = "1";
@@ -1281,7 +1351,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 {
     var frm_values;
     var chosen_action_id;
-
+    console.log("VALID ACTION FORM");
     if (typeof advancedMode !== "undefined") {
         frm_values = "so#use#less"; // Sert juste a remplir frm_values pour manage_actions
         chosen_action_id = advancedMode[0];
@@ -1311,6 +1381,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
             },
             onCreate: function(answer) {
                 //show loading image in toolbar
+                console.log("onCreate");
                 $$("input[type='button']").each(function(v) {
                     v.setAttribute("disabled","disabled");
                     v.style.opacity = "0.5";
@@ -2085,7 +2156,7 @@ function valid_userlogs(url)
                 user : user_id_val
                         },
                 onSuccess: function(answer){
-            //  alert(answer.responseText);
+                //alert(answer.responseText);
                 var div_to_fill = $('result_userlogsstat');
                 if(div_to_fill)
                 {
@@ -3111,20 +3182,19 @@ function showPreviousAttachments(path_manage_script, id){
 }
 
 function affiche_reference(){
-    
     var nature = document.getElementById('nature_id').options[document.getElementById('nature_id').selectedIndex];
 
-    if (nature.getAttribute('with_reference') == 'true') {      
-        $('reference_number_tr').setStyle({display: 'table-row'});
+    if (nature.getAttribute('with_reference') == 'true') {
+        $j('#reference_number_tr').css('display','table-row');
     } else {
-        $('reference_number_tr').setStyle({display: 'none'});
-        $('reference_number').value='';
+        $j('#reference_number_tr').css('display','none');
+        $j('#reference_number').val('');
     }
 }
 
 function erase_contact_external_id(id, erase_id){
-    if($(id).value == ''){
-        $(erase_id).value = '';
+    if($j('#'+id).val() == ''){
+        $j('#'+erase_id).val('');
     }
 }
 
@@ -3314,34 +3384,36 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
         return false;
         
     }
-    
-    var path_manage_script = 'index.php?display=true&page=display_tab';
-    new Ajax.Request(path_manage_script,
-    {
-        method:'post',
-        parameters: {
+    $j.ajax({
+        url:'index.php?display=true&page=display_tab',
+        type: 'POST',
+        //dataType : 'JSON',
+        data: {
             resId : resId,
             collId : collId,
             titleTab : titleTab,
             pathScriptTab : pathScriptTab
-            },
-        onSuccess: function(answer){
-            //console.log(answer.responseText);
-            document.getElementById('show_tab').style.display='block';
-            document.getElementById('show_tab').setAttribute('module',module);
-            
-            $$("span[class='tab_module']").each(function(v) {v.innerHTML = '<i class="fa fa-plus-square-o"></i>';})
-            if(document.getElementById(module+'_tab') != undefined ){
+        },
+        success: function (response) {
+                document.getElementById('show_tab').style.display='block';
+                document.getElementById('show_tab').setAttribute('module',module);
+                //console.log($j("span[class='tab_module']"));
+                var objects = $j("span[class='tab_module']");
+                for(var key in objects){
+                    objects[key].innerHTML = '<i class="fa fa-plus-square-o"></i>';
+                }
+                if(document.getElementById(module+'_tab') != undefined ){
                 document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
             }
-            document.getElementById('show_tab').innerHTML = answer.responseText;
-            /*if (response.status == 0) {
-                console.log(response);
-            } else if (response.status == 1){
-                alert('Erreur!');
-            }*/
+            document.getElementById('show_tab').innerHTML = response;
+        },
+        error: function(error)
+        {
+            console.log("ERREUR");
+            console.log(error);
+            alert(error);
         }
-    });
+        });
 }
 
 function loadSpecificTab(id_iframe,pathScriptTab){
@@ -3351,7 +3423,8 @@ function loadSpecificTab(id_iframe,pathScriptTab){
 
 //LOAD BADGES TOOLBAR
 function loadToolbarBadge(targetTab,path_manage_script){
-    new Ajax.Request(path_manage_script,
+    console.log("LOAD TOOLBAR BADGE")
+    /*new Ajax.Request(path_manage_script,
     {
         asynchronous : false,
         method:'post',
@@ -3359,6 +3432,8 @@ function loadToolbarBadge(targetTab,path_manage_script){
             targetTab : targetTab
         },
         onSuccess: function(answer){
+            console.log('TOOLBAR LOADED');
+            console.log(response);
             eval("response = "+answer.responseText);
             if (response.status == 0) {
                 if(response.nav != ''){
@@ -3369,7 +3444,30 @@ function loadToolbarBadge(targetTab,path_manage_script){
                 alert('Erreur!');
             }
         }
-    });
+    });*/
+   $j.ajax({
+        url: path_manage_script,
+        type : 'POST',
+        //dataType: 'JSON',
+        data: {
+            targetTab : targetTab
+        },
+        success: function(answer){
+            console.log(answer.status);
+            eval("response = "+answer);
+            console.log(response);
+            if(response.status==0){            
+                if(response.nav != ''){
+                    $j('#'+response.nav).css('paddingRight','0px');
+                }
+            eval(response.exec_js);
+            }
+        },
+        error: function(error)
+        {
+            alert(error);
+        }
+    })
 }
 
 var disablePrototypeJS = function (method, pluginsToDisable) {
