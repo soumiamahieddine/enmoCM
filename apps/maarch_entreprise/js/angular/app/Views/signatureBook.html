@@ -180,9 +180,9 @@
                             </a>
                         </div>
                     </div>
-                    <div *ngIf="signatureBook.signatures && signatureBook.canSign && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)"
+                    <div *ngIf="signatureBook.signatures[0] && signatureBook.canSign && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)"
                          (mouseenter)="showSignaturesPanel = true" (mouseleave)="showSignaturesPanel = false" class="pjSign" [ngClass]="[signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN' ? 'signed' : '']">
-                        <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN' && signatureBook.signatures" style="cursor: pointer">
+                        <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN' && signatureBook.signatures[0]" style="cursor: pointer">
                             <span *ngIf="!loadingSign">
                                 <img *ngFor="let signature of signatureBook.signatures; let i = index" src="{{signature.pathToSignatureOnTmp}}" (click)="signFile(signatureBook.attachments[rightSelectedThumbnail], signature)" [ngStyle]="{'display': !showSignaturesPanel && i > 0 ? 'none' : ''}" title="{{signature.signature_label}}">
                             </span>

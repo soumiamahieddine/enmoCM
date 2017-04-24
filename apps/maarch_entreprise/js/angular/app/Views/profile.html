@@ -1,4 +1,4 @@
-<h1 style="margin-top: 10px">Mon profil</h1>
+<h1 style="margin-top: 0"><i class="fa fa-user fa-2x"></i> Mon profil</h1>
 <div id="resultInfo" class="fade" style="display:none;">
     {{resultInfo}}
 </div>
@@ -237,8 +237,8 @@
                                     </button>
                                 </div>
                                 <div [ngClass]="[signatureModel.size != '' ? 'col-md-10' : 'col-md-12']">
-                                    <div class="upload-drop-zone">
-                                        Cliquez sur <i class="fa fa-upload fa-2x" style="cursor:pointer;" (click)="clickOnUploader('uploadSignFile')"></i> pour
+                                    <div class="upload-drop-zone" (click)="clickOnUploader('uploadSignFile')" style="cursor:pointer">
+                                        Cliquez sur <i class="fa fa-upload fa-2x"></i> pour
                                         <span *ngIf="!signatureModel.size">ajouter une signature</span>
                                         <span *ngIf="signatureModel.size">modifier la signature téléchargée</span>
                                     </div>

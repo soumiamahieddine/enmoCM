@@ -1723,7 +1723,7 @@ if (!defined("_CHOOSE_CATEGORY_ASSOCIATION")) define("_CHOOSE_CATEGORY_ASSOCIATI
 if (!defined("_CHOOSE_CATEGORY_ASSOCIATION_HELP")) define("_CHOOSE_CATEGORY_ASSOCIATION_HELP", "Si aucune catégorie sélectionnée alors l'action est valable pour toute les catégories");
 
 //SERVICE VIEW DOC HISTORY
-if (!defined("_VIEW_DOC_HISTORY")) define("_VIEW_DOC_HISTORY", "Voir l'historique global du document");
+if (!defined("_VIEW_DOC_HISTORY")) define("_VIEW_DOC_HISTORY", "Voir l'historique des actions sur le document");
 if (!defined("_VIEW_FULL_HISTORY"))    define("_VIEW_FULL_HISTORY", "Voir l'historique complet du document");
 
 //ONLY ALPHANUM
