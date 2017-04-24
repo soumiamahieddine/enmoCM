@@ -113,9 +113,23 @@ class UserController
 
         $file = base64_decode($data['base64']);
         $tmpName = 'tmp_file_' .$_SESSION['user']['UserId']. '_' .rand(). '_' .$data['name'];
-        $ext = explode('/', $data['type']);
 
-        if ($ext[0] != 'image') {
+        if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/extensions.xml')) {
+            $path = 'custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/extensions.xml';
+        } else {
+            $path = 'apps/maarch_entreprise/xml/extensions.xml';
+        }
+
+        $xmlfile = simplexml_load_file($path);
+        $extensionTypes = [];
+        if (count($xmlfile->FORMAT) > 0) {
+            foreach ($xmlfile->FORMAT as $value) {
+                $extensionTypes[(string) $value->name] = (string) $value->mime;
+            }
+        }
+        $ext = strtoupper(substr($data['name'], strrpos($data['name'], '.') + 1));
+
+        if (empty($extensionTypes[$ext]) || $extensionTypes[$ext] != $data['type']) {
             return $response->withJson(['errors' => _WRONG_FILE_TYPE]);
         } elseif ($data['size'] > 2000000){
             return $response->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED . ' (2 MB)']);
@@ -129,7 +143,7 @@ class UserController
             [
                 'tmpDir'      => $_SESSION['config']['tmppath'],
                 'size'        => $data['size'],
-                'format'      => $ext[1],
+                'format'      => $ext,
                 'tmpFileName' => $tmpName
             ]
         );
