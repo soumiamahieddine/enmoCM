@@ -205,10 +205,10 @@
                                     <button type="submit" class="form-control btn btn-sm btn-success" [disabled]="!emailSignatureForm.form.valid"><i class="fa fa-plus"></i></button>
                                 </div>
                                 <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
-                                    <button class="form-control btn btn-sm btn-primary" (click)="updateEmailSignature()" [disabled]="!emailSignatureForm.form.valid"><i class="fa fa-pencil"></i></button>
+                                    <button type="button" class="form-control btn btn-sm btn-primary" (click)="updateEmailSignature()" [disabled]="!emailSignatureForm.form.valid" title="Modifier la signature de mail"><i class="fa fa-pencil"></i></button>
                                 </div>
                                 <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
-                                    <button class="form-control btn btn-sm btn-danger"  (click)="deleteEmailSignature()"><i class="fa fa-trash"></i></button>
+                                    <button type="button" class="form-control btn btn-sm btn-danger"  (click)="deleteEmailSignature()" title="Supprimer la signature de mail"><i class="fa fa-trash"></i></button>
                                 </div>
                             </div>
                             <div class="row" style="margin-top:5px;">
