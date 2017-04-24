@@ -67,7 +67,7 @@ class UserController
 
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['firstname', 'lastname']])
             || (!empty($data['mail']) && !filter_var($data['mail'], FILTER_VALIDATE_EMAIL))
-            || (!empty($data['phone']) && !preg_match("/[+]{0,1}[0-9]{10,11}/", $data['phone']))) {
+            || (!empty($data['phone']) && !preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']))) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
