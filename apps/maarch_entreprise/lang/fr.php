@@ -1829,7 +1829,7 @@ if (!defined('_UPDATED_PROFILE'))
     define('_UPDATED_PROFILE', 'Votre profil a bien été modifié');
 
 if (!defined('_WRONG_PSW'))
-    define('_WRONG_PSW', 'Mauvais mot de passe');
+    define('_WRONG_PSW', 'Le mot de passe actuel n\'est pas correct');
 if (!defined('_WRONG_SECOND_PSW'))
     define('_WRONG_SECOND_PSW', 'Le deuxième mot de passe ne correspond pas au premier mot de passe !');
 if (!defined('_EMPTY_PSW_FORM'))
