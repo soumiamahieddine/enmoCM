@@ -220,12 +220,12 @@ $totalEntities = count($entities);
 for($i=0; $i<count($entities); $i++)
 {
 	//NB RES INCOMING
-	$stmt = $db->query("select count(res_id) as nb_res_incoming from ".$view." where destination = ? and status not in ('DEL','BAD') AND admission_date is not null AND category_id = 'incoming'".$where_date." ".$where_status." ".$where_priority,array($entities[$i]['ID']));
+	$stmt = $db->query("select count(res_id) as nb_res_incoming from ".$view." where destination = ? and status not in ('DEL','BAD') AND admission_date is not null AND category_id = 'incoming'".$where_date." ".$where_status." ".$where_priority . $where_clause,array($entities[$i]['ID']));
 	$res = $stmt->fetchObject();
 	$nbResIncoming = $res->nb_res_incoming;
         
 	//NB RES CUSTOM_D1 (if response)
-	$stmt = $db->query("select count(res_id) as nb_response_incoming from ".$view." where destination = ? and ".$view.".status not in ('DEL','BAD') AND (admission_date is not null and doc_custom_d1 is not null) AND category_id = 'incoming'".$where_date." ".$where_status." ".$where_priority,array($entities[$i]['ID']));
+	$stmt = $db->query("select count(res_id) as nb_response_incoming from ".$view." where destination = ? and ".$view.".status not in ('DEL','BAD') AND (admission_date is not null and doc_custom_d1 is not null) AND category_id = 'incoming'".$where_date." ".$where_status." ".$where_priority . $where_clause,array($entities[$i]['ID']));
 	$res = $stmt->fetchObject();
 	$nbResponseIncoming = $res->nb_response_incoming;
         
