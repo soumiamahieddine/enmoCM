@@ -153,7 +153,7 @@ if (!defined("_WARNING_MESSAGE_UPDATE_USER"))
     define("_WARNING_MESSAGE_UPDATE_USER", "Avertissement :<br>Afin de garder la confidentialité des courriers en cours de traitement du service, il est recommandé de réaffecter ceux-ci à un autre utilisateur :");
 if (!defined("_USERS_IN_GROUPS"))
     define("_USERS_IN_GROUPS", "utilisateur(s) dans le groupe");
-if (!defined("_LISTE_DIFFUSION_IN_USER")) define("_LISTE_DIFFUSION_IN_USER", "liste(s) de diffusion pour l utilisateur");
+if (!defined("_LISTE_DIFFUSION_IN_USER")) define("_LISTE_DIFFUSION_IN_USER", "liste(s) de diffusion pour l'utilisateur ");
 if (!defined("_NO_REPLACEMENT"))    define("_NO_REPLACEMENT", "AUCUN REMPLACEMENT");
 if (!defined("_DOCS_IN_DOCTYPES"))    define("_DOCS_IN_DOCTYPES", "document(s) de ce type");
 if (!defined("_CHOOSE_REPLACEMENT_DOCTYPES"))    define("_CHOOSE_REPLACEMENT_DOCTYPES", "Choisissez un type de document de remplacement");
