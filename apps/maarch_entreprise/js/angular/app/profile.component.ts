@@ -60,9 +60,6 @@ export class ProfileComponent implements OnInit {
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();
         }
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>MAARCH Trunk</a> > Profil";
-        }
 
         if (Prototype.BrowserFeatures.ElementExtensions) {
             //FIX PROTOTYPE CONFLICT
@@ -97,6 +94,12 @@ export class ProfileComponent implements OnInit {
 
     }
 
+    updateBreadcrumb(applicationName: string) {
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > Profil";
+        }
+    }
+
     ngOnInit(): void {
         this.prepareProfile();
 
@@ -106,6 +109,7 @@ export class ProfileComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 this.coreUrl = data.coreurl;
+                this.updateBreadcrumb(data.applicationName);
                 this.http.get(this.coreUrl + 'rest/user/profile')
                     .map(res => res.json())
                     .subscribe((data) => {

@@ -54,9 +54,6 @@ var ProfileComponent = (function () {
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();
         }
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>MAARCH Trunk</a> > Profil";
-        }
         if (Prototype.BrowserFeatures.ElementExtensions) {
             //FIX PROTOTYPE CONFLICT
             var pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover', 'tab'];
@@ -86,6 +83,11 @@ var ProfileComponent = (function () {
             theme_styles: "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1"
         });
     };
+    ProfileComponent.prototype.updateBreadcrumb = function (applicationName) {
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > Profil";
+        }
+    };
     ProfileComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.prepareProfile();
@@ -94,6 +96,7 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.coreUrl = data.coreurl;
+            _this.updateBreadcrumb(data.applicationName);
             _this.http.get(_this.coreUrl + 'rest/user/profile')
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
