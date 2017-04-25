@@ -211,49 +211,47 @@ elseif($report_type == 'array')
 //Utilisation de la clause de sécurité de Maarch
 
 $where_clause = $sec->get_where_clause_from_coll_id('letterbox_coll');
-//var_dump($where_clause);
 if ($where_clause)
 	$where_clause = " and ".$where_clause;
 
-$totalCourrier=array();
+$totalCourrier = [];
 $totalEntities = count($entities);	
 	
-for($i=0; $i<count($entities);$i++)
+for($i=0; $i<count($entities); $i++)
 {
-        //NB RES INCOMING
-        $stmt = $db->query("select count(res_id) as nb_res_incoming from ".$view." where destination = ? and status not in ('DEL','BAD') AND admission_date is not null AND category_id = 'incoming'".$where_date." ".$where_status." ".$where_priority,array($entities[$i]['ID']));
-        $res = $stmt->fetchObject();
-        $nbResIncoming = $res->nb_res_incoming;
+	//NB RES INCOMING
+	$stmt = $db->query("select count(res_id) as nb_res_incoming from ".$view." where destination = ? and status not in ('DEL','BAD') AND admission_date is not null AND category_id = 'incoming'".$where_date." ".$where_status." ".$where_priority,array($entities[$i]['ID']));
+	$res = $stmt->fetchObject();
+	$nbResIncoming = $res->nb_res_incoming;
         
-        //NB RES CUSTOM_D1 (if response)
+	//NB RES CUSTOM_D1 (if response)
 	$stmt = $db->query("select count(res_id) as nb_response_incoming from ".$view." where destination = ? and ".$view.".status not in ('DEL','BAD') AND (admission_date is not null and doc_custom_d1 is not null) AND category_id = 'incoming'".$where_date." ".$where_status." ".$where_priority,array($entities[$i]['ID']));
 	$res = $stmt->fetchObject();
-        $nbResponseIncoming = $res->nb_response_incoming;
+	$nbResponseIncoming = $res->nb_response_incoming;
         
-        //RESPONSE RATE
-        if($nbResIncoming > 0){
-            $responseRate = number_format(($nbResponseIncoming * 100) / $nbResIncoming,1);
-        }else{
-            $responseRate = 0;
-        }
+	//RESPONSE RATE
+	if($nbResIncoming > 0){
+		$responseRate = number_format(($nbResponseIncoming * 100) / $nbResIncoming,1);
+	}else{
+		$responseRate = 0;
+	}
                 
-        //$db->show();
-		
-		if($report_type == 'graph')
-		{
-				array_push($_SESSION['labels1'], addslashes(utf8_decode($db->wash_html($entities[$i]['LABEL'], 'NO_ACCENT'))));
-				array_push($vol_an, $responseRate);
-		}
-		elseif($report_type == 'array')
-		{
-			array_push($data, array('LABEL' => $entities[$i]['LABEL'], 'VALUE' => $responseRate ));
-			array_push($totalCourrier, $responseRate);		
-		}
+	if ($responseRate == 0.0) {
+		$responseRate = 0;
+	}
 
-		if ($responseRate<>0){
-			$has_data = true;
-		}
-		
+	if($report_type == 'graph')
+	{
+			array_push($_SESSION['labels1'], addslashes(utf8_decode($db->wash_html($entities[$i]['LABEL'], 'NO_ACCENT'))));
+			array_push($vol_an, $responseRate);
+	}
+	elseif($report_type == 'array')
+	{
+		array_push($data, array('LABEL' => $entities[$i]['LABEL'], 'VALUE' => $responseRate ));
+		array_push($totalCourrier, $responseRate);
+	}
+
+	$has_data = true;
 }
 
 if($report_type == 'graph')
@@ -273,7 +271,7 @@ if($report_type == 'graph')
 }
 elseif($report_type == 'array')
 {
-	array_unshift($data, array('LABEL' => _ENTITY, 'VALUE' => _RESPONSE_RATE));
+	array_unshift($data, array('LABEL' => _ENTITY, 'VALUE' => _RESPONSE_RATE . ' (en %)'));
 }
 
 
