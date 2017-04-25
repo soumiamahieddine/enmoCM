@@ -33,7 +33,7 @@ try{
         include_once "core/class/class_request.php";
         include_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php";
     }
-    if ($mode == 'del' || $mode == 'up' && $entities_loaded) {
+    if (in_array($mode, ['del', 'up', 'add']) && $entities_loaded) {
         include_once "modules/entities/class/EntityControler.php";
     }
 
@@ -336,7 +336,6 @@ function display_list()
 function display_del($user_id)
 {
     $uc = new users_controler();
-    
 
     // information liste(s) de diffusion exists in users
     $listDiffusion=array();
@@ -356,9 +355,6 @@ function display_del($user_id)
         ?>';</script>   
     <?php exit();
     }
-
-
-
 
     $user = $uc->get($user_id);
     if (isset($user)) {
@@ -470,7 +466,7 @@ function display_del_check($user_id)
         ?>
         <br>
         <br>
-        <select name="user_id" id="user_id" onchange=''>
+        <select name="user_id" id="user_id" data-placeholder="<?php echo _CHOOSE_USER2 ;?>">
             <option value="no_user"><?php echo _NO_REPLACEMENT;?></option>
             <?php
             $stmt = $db->query("select * from users order by user_id ASC");
@@ -490,7 +486,7 @@ function display_del_check($user_id)
             </p>
         </form>
             </div>
-            <script type="text/javascript"></script>
+            <script type="text/javascript">new Chosen($('user_id'),{width: "auto", disable_search_threshold: 10, search_contains: true, allow_single_deselect: true});</script>
         <?php
         exit();  
 }
