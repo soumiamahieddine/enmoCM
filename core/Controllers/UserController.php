@@ -129,9 +129,11 @@ class UserController
         }
         $ext = strtoupper(substr($data['name'], strrpos($data['name'], '.') + 1));
 
-        $mimeType = explode('/', $data['type']);
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($file);
+        $type = explode('/', $mimeType);
 
-        if (empty($extensionTypes[$ext]) || $extensionTypes[$ext] != $data['type'] || $mimeType[0] != 'image') {
+        if (empty($extensionTypes[$ext]) || $extensionTypes[$ext] != $mimeType || $type[0] != 'image') {
             return $response->withJson(['errors' => _WRONG_FILE_TYPE]);
         } elseif ($data['size'] > 2000000){
             return $response->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED . ' (2 MB)']);
