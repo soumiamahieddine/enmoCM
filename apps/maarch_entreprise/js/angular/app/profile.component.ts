@@ -55,6 +55,7 @@ export class ProfileComponent implements OnInit {
         $j('#inner_content').remove();
         $j('#menunav').hide();
         $j('#divList').remove();
+        $j('#magicContactsTable').remove();
         $j('#container').width("99%");
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();
