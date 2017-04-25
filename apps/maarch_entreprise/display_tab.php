@@ -1,5 +1,4 @@
 <?php
-
 if(isset($_REQUEST["titleTab"])){
     $titleTab = $_REQUEST["titleTab"];
     $res_id = $_REQUEST["resId"];

@@ -219,17 +219,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
             $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
         );
-
+        //echo "HELLO";
         //diffusion list in this basket ?
         if($_SESSION['current_basket']['difflist_type'] == 'entity_id'){
             $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
-            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $(\'category_id\').value);';
+            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $j(\'#category_id\').val());';
+            
         }else if($_SESSION['current_basket']['difflist_type'] == 'type_id'){
             $target_model = 'document.getElementById(\'type_id\').options[document.getElementById(\'type_id\').selectedIndex]';
-            $func_load_listdiff_by_type = 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value);';
+            $func_load_listdiff_by_type = 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $j(\'#category_id\').val());';
         }else{
             $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
-            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $(\'category_id\').value);';
+            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $j(\'#category_id\').val());';
         }
 
         //LOADING LISTMODEL
@@ -321,7 +322,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' 
         . functions::xssafe($res_id) . '}, onSuccess: function(answer){window.location.href=\'' 
         . $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets=' 
-        . $_SESSION['current_basket']['id'] . '\';} });$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"'
+        . $_SESSION['current_basket']['id'] . '\';} });$j(\'#baskets\').css(\'visibility\',\'visible\');destroyModal(\'modal_'.$id_action.'\');reinit();"'
         .' class="fa fa-times-circle fa-2x closeModale" title="'._CLOSE.'"/>';
     $frm_str .='</i>';
     
@@ -609,12 +610,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if($data['type_contact'] == 'internal'){
         //$frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;color:#009DC5;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
-        $frm_str .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+        //$frm_str .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\').click();$j(\'#type_contact_internal_icon\').css(\'color\', \'#666\');$j(\'#type_contact_external_icon\').css(\'color\', \'#009DC5\');$j(\'#type_multi_contact_external_icon\').css(\'color\', \'#666\');"></i>';
 
     }elseif ($data['type_contact'] == 'external') {
         //$frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
-        $frm_str .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+        //$frm_str .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\').click();$j(\'#type_contact_internal_icon\').css(\'color\', \'#666\');$j(\'#type_contact_external_icon\').css(\'color\', \'#009DC5\');$j(\'#type_multi_contact_external_icon\').css(\'color\', \'#666\');"></i>';
 
     }
                    

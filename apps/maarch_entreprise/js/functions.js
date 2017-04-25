@@ -1095,8 +1095,8 @@ function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
-    if ($('divList')) {
-        $('divList').style.display = 'block';
+    if ($j('#divList')[0]) {
+        $j('#divList')[0].style.display = 'block';
     }
     if(id_mod == undefined || id_mod=='')
     {
@@ -1890,8 +1890,10 @@ function print_r(x, max, sep, l) {
  * @param id String Basket id to unlock
  * @param coll String Collection identifier of the basket
  **/
-function unlock(path_script, id, coll)
+function unlock(path_script, id, coll) // A FAIRE
 {
+
+    Console.log("TEST UNLOCK");
     if(path_script && res_id && coll_id)
     {
         new Ajax.Request(path_script,
@@ -1939,6 +1941,7 @@ function setContactType(mode, creation){
  **/
 function show_admin_contacts( is_corporate, display)
 {
+    Console.log("TEST MAIL VALIDE");
     var display_value = display || 'inline';
     var title = $("title_p");
     var lastname = $("lastname_p");
@@ -2067,10 +2070,11 @@ function clear_form(form_id)
  *
  * @param url String Form Url of the php script which gets the results
  **/
-function valid_userlogs(url)
+function valid_userlogs(url) 
 {
     var user_div = $('user_id');
     var user_id_val = '';
+    console.log("TEST USERLOGS")
     if(user_div)
     {
         user_id_val = user_div.value;
@@ -2101,7 +2105,7 @@ function valid_userlogs(url)
  *
  * @param url String Form Url of the php script which gets the results
  **/
-function valid_report_by_period(url)
+function valid_report_by_period(url) 
 {
     var type_period = '';
     var type_report = 'graph';
@@ -3304,7 +3308,7 @@ function linkDuplicate(id_form) {
     alert('Opération terminé!');
 }
 
-function loadTab(resId,collId,titleTab,pathScriptTab,module){
+function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
     if(document.getElementById('show_tab').getAttribute('module') == module){
         document.getElementById('show_tab').style.display='none';
         if(document.getElementById(module+'_tab') != undefined ){
@@ -3316,7 +3320,32 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
     }
     
     var path_manage_script = 'index.php?display=true&page=display_tab';
-    new Ajax.Request(path_manage_script,
+    $j.ajax({
+        url: path_manage_script,
+        type: 'POST',
+        data: {
+             resId : resId,
+            collId : collId,
+            titleTab : titleTab,
+            pathScriptTab : pathScriptTab
+        },
+        success: function(answer){
+                console.log(answer) ;
+
+            //console.log(answer.responseText);
+            document.getElementById('show_tab').style.display='block';
+            document.getElementById('show_tab').setAttribute('module',module);
+            
+            $$("span[class='tab_module']").each(function(v) {v.innerHTML = '<i class="fa fa-plus-square-o"></i>';})
+            if(document.getElementById(module+'_tab') != undefined ){
+                document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
+            }
+            document.getElementById('show_tab').innerHTML = answer;
+        }
+    });
+  
+  
+    /*new Ajax.Request(path_manage_script,
     {
         method:'post',
         parameters: {
@@ -3340,8 +3369,9 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
             } else if (response.status == 1){
                 alert('Erreur!');
             }*/
-        }
-    });
+      //  }
+   // });
+
 }
 
 function loadSpecificTab(id_iframe,pathScriptTab){
