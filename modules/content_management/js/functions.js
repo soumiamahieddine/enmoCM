@@ -1,3 +1,9 @@
+var editing;
+function editingDoc(user){
+
+    editing = setInterval(function() {checkEditingDoc('user')}, 500);
+
+}
 //load applet in a modal
 function loadApplet(url, value)
 {
@@ -52,6 +58,7 @@ function sendAppletMsg(theMsg)
 //destroy the modal of the applet and launch an ajax script
 function endOfApplet(objectType, theMsg)
 {
+    console.log('endOfAppletendOfAppletendOfApplet');
     if (window.opener.$('add')) {
         window.opener.$('add').setStyle({display: 'inline'});
     } else if (window.opener.$('edit')) {
@@ -213,6 +220,8 @@ function checkEditingDoc(userId) {
                 target.removeAttribute('disabled');
                 target.style.opacity='1';
                 target.value='Valider';
+                console.log('clearInterval');
+                clearInterval(editing);
             } else {
                 console.log('lck found! Editing in progress !');
                 target.disabled='disabled';

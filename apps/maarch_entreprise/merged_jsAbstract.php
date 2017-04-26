@@ -45,7 +45,8 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/scriptaculous.js');
 		readfile('apps/maarch_entreprise/js/jquery.min.js');
 		readfile('apps/maarch_entreprise/js/jquery.nicescroll.min.js');
-		readfile('apps/maarch_entreprise/js/tooltipster/dist/js/tooltipster.bundle.min.js');
+		readfile('apps/maarch_entreprise/tools/tooltipster/dist/js/tooltipster.bundle.min.js');
+		readfile('apps/maarch_entreprise/tools/tiny_mce/tinymce.min.js');
 		include('apps/maarch_entreprise/js/indexing.js');
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
 		readfile('apps/maarch_entreprise/js/effects.js');

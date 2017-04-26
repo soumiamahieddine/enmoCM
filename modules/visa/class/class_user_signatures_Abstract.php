@@ -18,6 +18,8 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once 'core/core_tables.php';
+
 abstract class UserSignaturesAbstract extends Database
 {
 

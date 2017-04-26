@@ -110,7 +110,7 @@ $src_tab = $tab[0];
 -->
 </script>
 
-<h1><i class="fa fa-search fa-2x"></i> <?php echo _SEARCH_CONTACTS;?></h1>
+<h1 id="searchContactsTitle"><i class="fa fa-search fa-2x"></i> <?php echo _SEARCH_CONTACTS;?></h1>
 <div id="inner_content">
 
 <form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_contacts_result';?>"  id="frmsearch2" class="<?php functions::xecho($class_for_form);?>">

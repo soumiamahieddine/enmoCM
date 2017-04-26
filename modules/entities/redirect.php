@@ -1,7 +1,7 @@
 <?php
 $confirm = false;
 $etapes = array('form');
-$frm_width='355px';
+$frm_width='400px';
 $frm_height = '90%';
 require("modules/entities/entities_tables.php");
 require_once("modules/entities/class/EntityControler.php");
@@ -169,7 +169,7 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
                             }
                         }
                     $frm_str .='</select>';
-                    $frm_str .='<script>new Chosen($(\'department\'),{width: "226px", disable_search_threshold: 10, search_contains: true,allow_single_deselect: true});</script>';
+                    $frm_str .='<script>new Chosen($(\'department\'),{width: "80%", disable_search_threshold: 10, search_contains: true,allow_single_deselect: true});</script>';
                     $frm_str .=' <input type="button" style="float:right;margin:0px;" name="redirect_dep" value="'._REDIRECT.'" id="redirect_dep" class="button" onclick="valid_action_form( \'frm_redirect_dep\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$values_str.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');" />';
                     $frm_str .='<div style="clear:both;"></div>';
                 $frm_str .= '<div id="diff_list_div_redirect" class="scroll_div" style="height:auto;"></div>';
@@ -193,7 +193,7 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
                         $frm_str .='<option value="'.$users[$i]['ID'].'">'.$users[$i]['NOM'].' '.$users[$i]['PRENOM'].'</option>';
                        }
                     $frm_str .='</select>';
-                    $frm_str .='<script>new Chosen($(\'user\'),{width: "226px", disable_search_threshold: 10, search_contains: true,allow_single_deselect: true});</script>';
+                    $frm_str .='<script>new Chosen($(\'user\'),{width: "80%", disable_search_threshold: 10, search_contains: true,allow_single_deselect: true});</script>';
                     $frm_str .=' <input type="button" style="float:right;margin:0px;" name="redirect_user" id="redirect_user" value="'
                         ._REDIRECT
                         . '" class="button" onclick="valid_action_form( \'frm_redirect_user\', \''

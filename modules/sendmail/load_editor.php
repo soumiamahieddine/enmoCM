@@ -8,8 +8,9 @@
 }*/
 ?>
 <!-- tinyMCE -->
-<script  type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/';?>tiny_mce/tinymce.min.js"></script>
 <script type="text/javascript">
+    tinymce.baseURL = "tools/tiny_mce";
+    tinymce.suffix = '.min';
     tinymce.init({
         // theme : "<?php functions::xecho($theme);?>",
         selector: "textarea#body_from_html",

@@ -10,4 +10,4 @@ apps/maarch_entreprise/xml/log4php.xml
 *.log
 xdelete.sh
 core/Test/build/
-apps/maarch_entreprise/tmp/
+apps/maarch_entreprise/tmp/*

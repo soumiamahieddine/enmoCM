@@ -703,7 +703,7 @@ if ($mode == 'add') {
                             /*
                             avec la condition ci-dessous, toutes les réponses signées sont cochées lorsqu'on veut envoyer le courrier par mail
                             */
-                            if ($attachment_type == _SIGNED_RESPONSE) {
+                            if ($attachment_type == _SIGNED_RESPONSE && $mode == 'transfer') {
                                 $content .= " checked=\"checked\" ";
                             }
                         $content .= "/></th>";
@@ -1070,15 +1070,6 @@ if ($mode == 'add') {
                             . " class=\"check\" value=\""
                             . $id."\"";
                         
-                            /*if ($_SESSION['attachment_types_attach_in_mail'][$attachment_type]) {
-                                $content .= " checked=\"checked\" ";
-                            }*/
-                            /*
-                            avec la condition ci-dessous, toutes les réponses signées sont cochées lorsqu'on veut envoyer le courrier par mail
-                            */
-                            if ($attachment_type == _SIGNED_RESPONSE) {
-                                $content .= " checked=\"checked\" ";
-                            }
                         $content .= "/></th>";
 
                         if(!$id_converted){
