@@ -1351,7 +1351,6 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 {
     var frm_values;
     var chosen_action_id;
-    console.log("VALID ACTION FORM");
     if (typeof advancedMode !== "undefined") {
         frm_values = "so#use#less"; // Sert juste a remplir frm_values pour manage_actions
         chosen_action_id = advancedMode[0];
@@ -3409,8 +3408,6 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
         },
         error: function(error)
         {
-            console.log("ERREUR");
-            console.log(error);
             alert(error);
         }
         });
@@ -3423,28 +3420,7 @@ function loadSpecificTab(id_iframe,pathScriptTab){
 
 //LOAD BADGES TOOLBAR
 function loadToolbarBadge(targetTab,path_manage_script){
-    console.log("LOAD TOOLBAR BADGE")
-    /*new Ajax.Request(path_manage_script,
-    {
-        asynchronous : false,
-        method:'post',
-        parameters: {
-            targetTab : targetTab
-        },
-        onSuccess: function(answer){
-            console.log('TOOLBAR LOADED');
-            console.log(response);
-            eval("response = "+answer.responseText);
-            if (response.status == 0) {
-                if(response.nav != ''){
-                    document.getElementById(response.nav).style.paddingRight = "0px";
-                }
-                eval(response.exec_js);
-            } else if (response.status == 1){
-                alert('Erreur!');
-            }
-        }
-    });*/
+    
    $j.ajax({
         url: path_manage_script,
         type : 'POST',
@@ -3453,9 +3429,7 @@ function loadToolbarBadge(targetTab,path_manage_script){
             targetTab : targetTab
         },
         success: function(answer){
-            console.log(answer.status);
             eval("response = "+answer);
-            console.log(response);
             if(response.status==0){            
                 if(response.nav != ''){
                     $j('#'+response.nav).css('paddingRight','0px');
