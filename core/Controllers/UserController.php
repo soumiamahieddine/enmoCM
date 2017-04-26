@@ -107,12 +107,17 @@ class UserController
     {
         $data = $request->getParams();
 
-        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['base64', 'name', 'type', 'size', 'label']])) {
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['base64', 'name', 'size', 'label']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $file = base64_decode($data['base64']);
+        $file    = base64_decode($data['base64']);
         $tmpName = 'tmp_file_' .$_SESSION['user']['UserId']. '_' .rand(). '_' .$data['name'];
+
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($file);
+        $type     = explode('/', $mimeType);
+        $ext      = strtoupper(substr($data['name'], strrpos($data['name'], '.') + 1));
 
         if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/extensions.xml')) {
             $path = 'custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/extensions.xml';
@@ -120,20 +125,19 @@ class UserController
             $path = 'apps/maarch_entreprise/xml/extensions.xml';
         }
 
-        $xmlfile = simplexml_load_file($path);
-        $extensionTypes = [];
+        $xmlfile  = simplexml_load_file($path);
+
+        $fileAccepted = false;
         if (count($xmlfile->FORMAT) > 0) {
             foreach ($xmlfile->FORMAT as $value) {
-                $extensionTypes[(string) $value->name] = (string) $value->mime;
+                if(strtoupper($value->name) == $ext && strtoupper($value->mime) == strtoupper($mimeType)){
+                    $fileAccepted = true;
+                    break;
+                }
             }
         }
-        $ext = strtoupper(substr($data['name'], strrpos($data['name'], '.') + 1));
 
-        $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->buffer($file);
-        $type = explode('/', $mimeType);
-
-        if (empty($extensionTypes[$ext]) || $extensionTypes[$ext] != $mimeType || $type[0] != 'image') {
+        if (!$fileAccepted || $type[0] != 'image') {
             return $response->withJson(['errors' => _WRONG_FILE_TYPE]);
         } elseif ($data['size'] > 2000000){
             return $response->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED . ' (2 MB)']);
