@@ -151,11 +151,6 @@ export class ProfileComponent implements OnInit {
         $j('#' + id).click();
     }
 
-    exitProfile() {
-        location.hash = "";
-        location.reload();
-    }
-
     uploadSignatureTrigger(fileInput: any) {
         if (fileInput.target.files && fileInput.target.files[0]) {
             var reader = new FileReader();

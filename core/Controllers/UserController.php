@@ -107,15 +107,16 @@ class UserController
     {
         $data = $request->getParams();
 
-        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['base64', 'name', 'size', 'label']])) {
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['base64', 'name', 'label']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $file    = base64_decode($data['base64']);
-        $tmpName = 'tmp_file_' .$_SESSION['user']['UserId']. '_' .rand(). '_' .$data['name'];
+        $file     = base64_decode($data['base64']);
+        $tmpName  = 'tmp_file_' .$_SESSION['user']['UserId']. '_' .rand(). '_' .$data['name'];
 
         $finfo    = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($file);
+        $size     = strlen($file);
         $type     = explode('/', $mimeType);
         $ext      = strtoupper(substr($data['name'], strrpos($data['name'], '.') + 1));
 
@@ -139,7 +140,7 @@ class UserController
 
         if (!$fileAccepted || $type[0] != 'image') {
             return $response->withJson(['errors' => _WRONG_FILE_TYPE]);
-        } elseif ($data['size'] > 2000000){
+        } elseif ($size > 2000000){
             return $response->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED . ' (2 MB)']);
         }
 

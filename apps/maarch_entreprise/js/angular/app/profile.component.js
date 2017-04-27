@@ -133,10 +133,6 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.clickOnUploader = function (id) {
         $j('#' + id).click();
     };
-    ProfileComponent.prototype.exitProfile = function () {
-        location.hash = "";
-        location.reload();
-    };
     ProfileComponent.prototype.uploadSignatureTrigger = function (fileInput) {
         if (fileInput.target.files && fileInput.target.files[0]) {
             var reader = new FileReader();
