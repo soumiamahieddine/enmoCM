@@ -21,7 +21,7 @@
 
 
 
-if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.6");
+if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.7");
 
 //if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
 if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "chrono_number"); // value res_id || chrono_number
@@ -148,10 +148,12 @@ if (!defined("_WARNING_MESSAGE_DEL_TYPE"))
 if (!defined("_WARNING_MESSAGE_DEL_GROUP"))
     define("_WARNING_MESSAGE_DEL_GROUP", "Avertissement :<br> Il existe des utilisateurs associés à ce groupe. Choisissez un groupe de remplacement :");
 if (!defined("_WARNING_MESSAGE_DEL_USER"))
-    define("_WARNING_MESSAGE_DEL_USER", "Avertissement :<br> Il existe des listes de diffusion associées à cet utilisateur. Choisissez un utilisateur de remplacement :");
+    define("_WARNING_MESSAGE_DEL_USER", "Avertissement :<br> Il existe des modèles de liste de diffusion avec cet utilisateur. Choisissez un utilisateur de remplacement :");
+if (!defined("_WARNING_MESSAGE_UPDATE_USER"))
+    define("_WARNING_MESSAGE_UPDATE_USER", "Avertissement :<br>Afin de garder la confidentialité des courriers en cours de traitement du service, il est recommandé de réaffecter ceux-ci à un autre utilisateur :");
 if (!defined("_USERS_IN_GROUPS"))
     define("_USERS_IN_GROUPS", "utilisateur(s) dans le groupe");
-if (!defined("_LISTE_DIFFUSION_IN_USER")) define("_LISTE_DIFFUSION_IN_USER", "liste(s) de diffusion pour l utilisateur");
+if (!defined("_LISTE_DIFFUSION_IN_USER")) define("_LISTE_DIFFUSION_IN_USER", "liste(s) de diffusion pour l'utilisateur ");
 if (!defined("_NO_REPLACEMENT"))    define("_NO_REPLACEMENT", "AUCUN REMPLACEMENT");
 if (!defined("_DOCS_IN_DOCTYPES"))    define("_DOCS_IN_DOCTYPES", "document(s) de ce type");
 if (!defined("_CHOOSE_REPLACEMENT_DOCTYPES"))    define("_CHOOSE_REPLACEMENT_DOCTYPES", "Choisissez un type de document de remplacement");
@@ -559,8 +561,6 @@ if (!defined("_EXPORT_RIGHT")) define("_EXPORT_RIGHT", "Droits d'export");
 if (!defined("_USER_NO_GROUP")) define("_USER_NO_GROUP", "Vous n'appartenez à aucun groupe");
 if (!defined("_SUSPENDED_ACCOUNT")) define("_SUSPENDED_ACCOUNT", "Votre compte utilisateur a été suspendu");
 if (!defined("_BAD_LOGIN_OR_PSW")) define("_BAD_LOGIN_OR_PSW", "Mauvais nom d'utilisateur ou mauvais mot de passe");
-if (!defined("_WRONG_PSW")) define("_WRONG_PSW", "Mauvais mot de passe actuel");
-if (!defined("_WRONG_SECOND_PSW")) define("_WRONG_SECOND_PSW", "Le deuxième mot de passe ne correspond pas au premier mot de passe !");
 if (!defined("_EMPTY_PSW")) define("_EMPTY_PSW", "Mot de passe actuel vide");
 if (!defined("_AUTORIZED_USER")) define("_AUTORIZED_USER", "Utilisateur autorisé");
 if (!defined("_SUSPENDED_USER")) define("_SUSPENDED_USER", "Utilisateur suspendu");
@@ -1176,9 +1176,9 @@ if (!defined("_USERS_LOGS")) define("_USERS_LOGS", "Liste des accès à l'applic
 if (!defined("_USERS_LOGS_DESC")) define("_USERS_LOGS_DESC", "Liste des accès à l'application par agent");
 if (!defined("_PROCESS_DELAY_REPORT")) define("_PROCESS_DELAY_REPORT", "Délai moyen de traitement par typologie");
 if (!defined("_PROCESS_DELAY_REPORT_DESC")) define("_PROCESS_DELAY_REPORT_DESC", "Permet d'afficher le délai (en jour) de la création jusqu'à la clôture d'un courrier.");
-if (!defined("_MAIL_TYPOLOGY_REPORT")) define("_MAIL_TYPOLOGY_REPORT", "Volume de courrier par typologie");
+if (!defined("_MAIL_TYPOLOGY_REPORT")) define("_MAIL_TYPOLOGY_REPORT", "Volume de courriers par typologie");
 if (!defined("_MAIL_TYPOLOGY_REPORT_DESC")) define("_MAIL_TYPOLOGY_REPORT_DESC", "Permet d'afficher le nombre de courriers enregistrés par type de document.");
-if (!defined("_MAIL_VOL_BY_CAT_REPORT")) define("_MAIL_VOL_BY_CAT_REPORT", "Volume de courrier par catégorie");
+if (!defined("_MAIL_VOL_BY_CAT_REPORT")) define("_MAIL_VOL_BY_CAT_REPORT", "Volume de courriers par catégorie");
 if (!defined("_MAIL_VOL_BY_CAT_REPORT_DESC")) define("_MAIL_VOL_BY_CAT_REPORT_DESC", "Permet d'afficher le nombre de courriers enregistrés par catégorie (arrivé, départ, etc.).");
 if (!defined("_SHOW_FORM_RESULT")) define("_SHOW_FORM_RESULT", "Afficher le résultat sous forme de ");
 if (!defined("_GRAPH")) define("_GRAPH", "Graphique");
@@ -1723,7 +1723,7 @@ if (!defined("_CHOOSE_CATEGORY_ASSOCIATION")) define("_CHOOSE_CATEGORY_ASSOCIATI
 if (!defined("_CHOOSE_CATEGORY_ASSOCIATION_HELP")) define("_CHOOSE_CATEGORY_ASSOCIATION_HELP", "Si aucune catégorie sélectionnée alors l'action est valable pour toute les catégories");
 
 //SERVICE VIEW DOC HISTORY
-if (!defined("_VIEW_DOC_HISTORY")) define("_VIEW_DOC_HISTORY", "Voir l'historique global du document");
+if (!defined("_VIEW_DOC_HISTORY")) define("_VIEW_DOC_HISTORY", "Voir l'historique des actions sur le document");
 if (!defined("_VIEW_FULL_HISTORY"))    define("_VIEW_FULL_HISTORY", "Voir l'historique complet du document");
 
 //ONLY ALPHANUM
@@ -1761,15 +1761,15 @@ if (!defined("_SAVE_MODIFICATION")) define("_SAVE_MODIFICATION", "Enregistrer le
 
 if (!defined("_CONFIDENTIALITY")) define("_CONFIDENTIALITY", "Confidentiel");
 if (!defined("_CONFIDENTIAL")) define("_CONFIDENTIAL", "Confidentiel");
+if (!defined("_CONFIDENTIAL_DOCUMENTS")) define("_CONFIDENTIAL_DOCUMENTS", "courrier(s) confidentiel");
+
 
 if (!defined("_SIGNATORY_NAME")) define("_SIGNATORY_NAME", "Nom du signataire");
 if (!defined("_SIGNATORY_GROUP")) define("_SIGNATORY_GROUP", "Groupe du signataire");
 
 if (!defined("_FORMAT_PHONE")) define("_FORMAT_PHONE", "Format : 06 01 02 03 04");
 
-if (!defined("_SIGNATURE")) define("_SIGNATURE","Signature");
-if (!defined("_NEW_EMAIL_SIGNATURE"))
-    define("_NEW_EMAIL_SIGNATURE","Nouvelle signature mail");
+if (!defined("_SIGNATURE")) define("_SIGNATURE", "Signature");
 
 // Actions parapheur
 if (!defined("_SEND_MAIL"))    define("_SEND_MAIL", "Envoi du dossier par courriel");
@@ -1823,3 +1823,33 @@ if (!defined("_KEEP")) define("_KEEP","Conservation");
 if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Règle de retention");
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Tout désélectionner");
+
+/***** Profile *****/
+if (!defined('_UPDATED_PROFILE'))
+    define('_UPDATED_PROFILE', 'Votre profil a bien été modifié');
+
+if (!defined('_WRONG_PSW'))
+    define('_WRONG_PSW', 'Le mot de passe actuel n\'est pas correct');
+if (!defined('_WRONG_SECOND_PSW'))
+    define('_WRONG_SECOND_PSW', 'Le deuxième mot de passe ne correspond pas au premier mot de passe !');
+if (!defined('_EMPTY_PSW_FORM'))
+    define('_EMPTY_PSW_FORM', 'Le formulaire de mot de passe n\'est pas complet');
+if (!defined('_UPDATED_PASSWORD'))
+    define('_UPDATED_PASSWORD', 'Votre mot de passe a bien été modifié');
+
+if (!defined('_NEW_SIGNATURE'))
+    define('_NEW_SIGNATURE', 'Nouvelle signature ajoutée');
+if (!defined('_UPDATED_SIGNATURE'))
+    define('_UPDATED_SIGNATURE', 'Signature modifiée');
+if (!defined('_DELETED_SIGNATURE'))
+    define('_DELETED_SIGNATURE', 'Signature supprimée');
+
+if (!defined('_EMPTY_EMAIL_SIGNATURE_FORM'))
+    define('_EMPTY_EMAIL_SIGNATURE_FORM', 'Le formulaire de signature de mail n\'est pas complet');
+if (!defined('_NEW_EMAIL_SIGNATURE'))
+    define('_NEW_EMAIL_SIGNATURE', 'Nouvelle signature de mail ajoutée');
+if (!defined('_UPDATED_EMAIL_SIGNATURE'))
+    define('_UPDATED_EMAIL_SIGNATURE', 'Signature de mail modifiée');
+if (!defined('_DELETED_EMAIL_SIGNATURE'))
+    define('_DELETED_EMAIL_SIGNATURE', 'Signature de mail supprimée');
+/***** Profile *****/

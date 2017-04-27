@@ -39,7 +39,7 @@ if (!defined("_AVAILABLE_REPORTS"))
 if (!defined("_GROUP_REPORTS_ADDED"))
     define("_GROUP_REPORTS_ADDED", "Etats affectés au groupe");
 if (!defined("_CLICK_LINE_BELOW_TO_SEE_REPORT"))
-    define("_CLICK_LINE_BELOW_TO_SEE_REPORT", "Veuillez cliquez sur une des lignes ci dessous pour voir les éditions correspondantes");
+    define("_CLICK_LINE_BELOW_TO_SEE_REPORT", "Veuillez cliquer sur une des lignes ci-dessous pour voir les éditions correspondantes");
 if (!defined("_CLICK_LINE_BELOW_TO_RETURN_TO_REPORTS"))
     define("_CLICK_LINE_BELOW_TO_RETURN_TO_REPORTS", "Cliquez ici pour retourner à la liste des éditions disponibles");
 if (!defined("_NO_REPORTS_FOR_USER"))

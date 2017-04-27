@@ -72,9 +72,12 @@ $content .='<div id="params">';
           $content.='<select name="entities_chosen" data-placeholder="'._DEPARTMENT_DEST.'" id="entities_chosen" size="10" multiple="multiple">';
           for($i=0; $i<count($entities);$i++)
           {
-            $content.="<option";
-            $content.=" value='".$entities[$i]['ID']."'>";
-            $content.=$entities[$i]['LABEL']."</option>";                 
+              $content.="<option";
+              if ($entities[$i]['ID'] == $_SESSION['user']['primaryentity']['id']) {
+                  $content .= ' selected';
+              }
+              $content.=" value='".$entities[$i]['ID']."'>";
+              $content.=$entities[$i]['LABEL']."</option>";
           }             
           $content.='</select>';
             $js .= 'new Chosen($(\'entities_chosen\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';

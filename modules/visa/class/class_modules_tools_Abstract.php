@@ -917,33 +917,7 @@ abstract class visa_Abstract extends Database
             $str .= '<thead><tr><th style="width:25%;text-align:left;"></th><th style="width:40%;text-align:left;">Titre</th><th style="width:20%;text-align:left;">Rédacteur</th><th style="width:10%;text-align:left;">Date</th><th style="width:5%;text-align:left;"><input title="'._SELECT_ALL.'" id="allPrintFolder" type="checkbox" onclick="selectAllPrintFolder();"></th></tr></thead>';
             $str .= '<tbody>';
 		
-            if ($res->category_id == "outgoing"){
-
-                $str .= '<tr><td><h3>+ Courrier sortant</h3></td><td></td><td></td><td></td><td></td></tr>';
-                $joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'outgoing_mail');
-                for($i=0; $i < count($joined_files); $i++) {
-                    //Get data
-                    $id_doc = $joined_files[$i]['id']; 
-                    $description = $joined_files[$i]['label'];
-                    $format = $joined_files[$i]['format'];
-                    $contact = $users_tools->get_user($joined_files[$i]['typist']);
-                    $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-                    $creation_date = $request->dateformat($dateFormat[0]);
-                    if ($joined_files[$i]['pdf_exist']){
-                        $check = 'class="check" checked="checked"';
-                    }else{
-                        $check = ' disabled title="' . _NO_PDF_FILE . '"';
-                    }
-                    //Show data
-                    $str .= '<tr><td>'  
-                        . '</td><td>' . $description 
-                        . '</td><td>' . $contact['firstname']
-                        . " " . $contact['lastname'] . '</td><td>' 
-                        . $creation_date . '</td><td><input id="join_file_' 
-                        . $id_doc . '" type="checkbox" class="checkPrintFolder" name="join_attachment[]"  value="' 
-                        . $id_doc . '"  '.$check.'/>' . $joined_files[$i]['viewLink']. '</td></tr>';
-                }
-            } else {
+            if ($res->category_id != "outgoing") {
                 $str .= '<tr><td><h3>+ Courrier entrant</h3></td><td></td><td></td><td></td><td></td></tr>';
                 $joined_files = $this->getJoinedFiles($coll_id, $table, $id, false);
                 for($i=0; $i < count($joined_files); $i++) {

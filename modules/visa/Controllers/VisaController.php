@@ -13,6 +13,7 @@
 */
 namespace Visa\Controllers;
 
+use Core\Models\AttachmentModel;
 use Core\Models\UserModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -54,7 +55,6 @@ class VisaController
         $actions = $basket->get_actions_from_current_basket($resId, $collId, 'PAGE_USE', true);
 
         $actionsData = [];
-        $actionsData[] = ['value' => '', 'label' => _CHOOSE_ACTION];
         foreach ($actions as $value) {
             $actionsData[] = ['value' => $value['VALUE'], 'label' => $value['LABEL']];
         }
@@ -74,7 +74,7 @@ class VisaController
             ]
         );
 
-        $attachmentTypes = $this->getAttachmentsTypesByXML();
+        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
 
         $resListIndex = 0;
         foreach ($resList as $key => $value) {
@@ -124,7 +124,7 @@ class VisaController
         $datas['resList']       = $resList;
         $datas['resListIndex']  = $resListIndex;
         $datas['nbNotes']       = \NotesModel::countForCurrentUserByResId(['resId' => $resId]);
-        $datas['signature']     = UserModel::getSignatureForCurrentUser()['pathToSignatureOnTmp'];
+        $datas['signatures']    = UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = \VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
         $datas['canSign']       = $coreTools->test_service('sign_document', 'visa', false);
@@ -164,31 +164,6 @@ class VisaController
         $resId = $aArgs['resId'];
 
         return $response->withJson($this->getAttachmentsForSignatureBook(['resId' => $resId]));
-    }
-
-    private function getAttachmentsTypesByXML()
-    {
-        if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml')) {
-            $path = 'custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml';
-        } else {
-            $path = 'apps/maarch_entreprise/xml/entreprise.xml';
-        }
-
-        $xmlfile = simplexml_load_file($path);
-        $attachmentTypes = [];
-        $attachmentTypesXML = $xmlfile->attachment_types;
-        if (count($attachmentTypesXML) > 0) {
-            foreach ($attachmentTypesXML->type as $value) {
-                $label = defined((string) $value->label) ? constant((string) $value->label) : (string) $value->label;
-                $attachmentTypes[(string) $value->id] = [
-                    'label' => $label,
-                    'icon' => (string)$value['icon'],
-                    'sign' => (empty($value['sign']) || (string)$value['sign'] == 'true') ? true : false
-                ];
-            }
-        }
-
-        return $attachmentTypes;
     }
 
     private function getIncomingMailAndAttachmentsForSignatureBook(array $aArgs = [])
@@ -258,7 +233,7 @@ class VisaController
 
     private function getAttachmentsForSignatureBook(array $aArgs = [])
     {
-        $attachmentTypes = $this->getAttachmentsTypesByXML();
+        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
 
         $orderBy = "CASE attachment_type WHEN 'response_project' THEN 1";
         $c = 2;
@@ -295,15 +270,19 @@ class VisaController
 
             $collId = '';
             $realId = 0;
+            $isVersion = 'false';
             if ($value['res_id'] == 0) {
                 $collId = 'version_attachments_coll';
                 $realId = $value['res_id_version'];
+                $isVersion = 'true';
             } elseif ($value['res_id_version'] == 0) {
                 $collId = 'attachments_coll';
                 $realId = $value['res_id'];
+                $isVersion = 'false';
             }
 
             $viewerId = $realId;
+            $viewerNoSignId = $realId;
             $pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
             $isConverted = false;
             foreach ($attachments as $tmpKey => $tmpValue) {
@@ -311,6 +290,7 @@ class VisaController
                     if ($value['status'] != 'SIGN') {
                         $viewerId = $tmpValue['res_id'];
                     }
+                    $viewerNoSignId = $tmpValue['res_id'];
                     $isConverted = true;
                     unset($attachments[$tmpKey]);
                 }
@@ -354,12 +334,13 @@ class VisaController
                 $attachments[$key]['doc_date'] = date(DATE_ATOM, strtotime($attachments[$key]['doc_date']));
             }
             $attachments[$key]['isConverted'] = $isConverted;
+            $attachments[$key]['viewerNoSignId'] = $viewerNoSignId;
             $attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
             $attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
             $attachments[$key]['sign'] = $attachmentTypes[$value['attachment_type']]['sign'];
 
             $attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$realId}&coll_id={$collId}&display=true&advanced=true";
-            $attachments[$key]['viewerLink'] = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$aArgs['resId']}&id={$viewerId}";
+            $attachments[$key]['viewerLink'] = "index.php?display=true&module=attachments&page=view_attachment&res_id_master={$aArgs['resId']}&id={$viewerId}&isVersion={$isVersion}";
         }
 
         $obsAttachments = \ResModel::getObsLinkedAttachmentsNotIn([
@@ -380,7 +361,7 @@ class VisaController
         }
 
         foreach ($attachments as $key => $value) {
-            if ($value['attachment_type'] == 'converted_pdf') {
+            if ($value['attachment_type'] == 'converted_pdf' || $value['attachment_type'] == 'signed_response') {
                 unset($attachments[$key]);
                 continue;
             }

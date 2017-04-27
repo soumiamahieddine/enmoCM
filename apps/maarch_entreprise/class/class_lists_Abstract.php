@@ -1847,7 +1847,7 @@ abstract class lists_Abstract extends Database
     }
 
     
-    protected function _buildTemplate($templateFile, $resultArray, $listKey) {
+    protected function _buildTemplate($templateFile, $resultArray, $listKey, $parameters = []) {
         
         if (file_exists('custom/' . $_SESSION['custom_override_id']  . '/' . $templateFile)) {
             $templateFile = 'custom/' . $_SESSION['custom_override_id']  . '/' . $templateFile;
@@ -1941,7 +1941,11 @@ abstract class lists_Abstract extends Database
                     
                     // echo '<- '.$output[1][$i].'<br><br>';
 
-                    $remplacement = $this->_tmplt_loadVarSys($output[1][$i], $resultArray[$theLine], $listKey, $lineIsDisabled);
+                    if (empty($parameters) || empty($parameters['noModification']) || ($output[1][$i] != 'func_modify' && $output[1][$i] != 'func_delete' && $output[1][$i] != 'func_final_version')) {
+                        $remplacement = $this->_tmplt_loadVarSys($output[1][$i], $resultArray[$theLine], $listKey, $lineIsDisabled);
+                    } else {
+                        $remplacement = '';
+                    }
                     $trueContent = str_replace($output[0][$i],$remplacement,$trueContent);
                     
                 }
@@ -3574,7 +3578,7 @@ abstract class lists_Abstract extends Database
             //Template mode
             if (!empty($this->template) && $this->template <> 'none') {
                 //Build the grid from template
-                $gridContent .= $this->_buildTemplate($_SESSION['html_templates'][$this->template]['PATH'], $resultArray, $listKey);
+                $gridContent .= $this->_buildTemplate($_SESSION['html_templates'][$this->template]['PATH'], $resultArray, $listKey, $parameters);
                 
                 //Build the list
                 $grid .= $B_form . $B_height . $gridContent . $E_height . $E_form;

@@ -44,6 +44,21 @@ class DocserverModelAbstract extends \Apps_Table_Service
         return $aReturn;
     }
 
+    public static function getByTypeId(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['docserver_type_id']);
+        static::checkString($aArgs, ['docserver_type_id']);
+
+        $aReturn = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['docservers'],
+            'where'     => ['docserver_type_id = ?'],
+            'data'      => [$aArgs['docserver_type_id']]
+        ]);
+
+        return $aReturn;
+    }
+
     public static function create(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['docserver_id']);

@@ -20,7 +20,7 @@
  */
 
 
-if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.6");
+if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.7");
 
 //if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
 if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "res_id"); // value res_id || chrono_number
@@ -560,9 +560,6 @@ if (!defined("_EXPORT_RIGHT")) define("_EXPORT_RIGHT", "Export rights");
 if (!defined("_USER_NO_GROUP")) define("_USER_NO_GROUP", "You don't belong to any group");
 if (!defined("_SUSPENDED_ACCOUNT")) define("_SUSPENDED_ACCOUNT", "Your user account has been suspended");
 if (!defined("_BAD_LOGIN_OR_PSW")) define("_BAD_LOGIN_OR_PSW", "Wrong user name or wrong password");
-if (!defined("_WRONG_PSW")) define("_WRONG_PSW", "Wrong current password");
-if (!defined("_WRONG_SECOND_PSW")) define("_WRONG_SECOND_PSW", "The second password isn't equivalent to the first password !");
-if (!defined("_EMPTY_PSW")) define("_EMPTY_PSW", "The current password is empty");
 if (!defined("_AUTORIZED_USER")) define("_AUTORIZED_USER", "Authorized user");
 if (!defined("_SUSPENDED_USER")) define("_SUSPENDED_USER", "Suspended user");
 if (!defined("_DELETED_USER")) define("_DELETED_USER", "Deleted user");
@@ -1768,8 +1765,6 @@ if (!defined("_SIGNATORY_GROUP")) define("_SIGNATORY_GROUP", "Signatory group");
 if (!defined("_FORMAT_PHONE")) define("_FORMAT_PHONE", "Phone format : 06 01 02 03 04");
 
 if (!defined("_SIGNATURE")) define("_SIGNATURE","Signature");
-if (!defined("_NEW_EMAIL_SIGNATURE"))
-    define("_NEW_EMAIL_SIGNATURE","New email signature");
 
 // Actions parapheur
 if (!defined("_SEND_MAIL"))    define("_SEND_MAIL", "Folder sent by email");
@@ -1819,3 +1814,33 @@ if (!defined("_KEEP")) define("_KEEP","Keep");
 if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Retention rule");
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Unselect all");
+
+/***** Profile *****/
+if (!defined('_UPDATED_PROFILE'))
+    define('_UPDATED_PROFILE', 'Your profile has been updated');
+
+if (!defined('_WRONG_PSW'))
+    define('_WRONG_PSW', 'Wrong password');
+if (!defined('_WRONG_SECOND_PSW'))
+    define('_WRONG_SECOND_PSW', 'The second password isn\'t equivalent to the first password !');
+if (!defined('_EMPTY_PSW_FORM'))
+    define('_EMPTY_PSW_FORM', 'Password form is not complete');
+if (!defined('_UPDATED_PASSWORD'))
+    define('_UPDATED_PASSWORD', 'Your password has been updated');
+
+if (!defined('_NEW_SIGNATURE'))
+    define('_NEW_SIGNATURE', 'New signature added');
+if (!defined('_UPDATED_SIGNATURE'))
+    define('_UPDATED_SIGNATURE', 'Signature updated');
+if (!defined('_DELETED_SIGNATURE'))
+    define('_DELETED_SIGNATURE', 'Signature deleted');
+
+if (!defined('_EMPTY_EMAIL_SIGNATURE_FORM'))
+    define('_EMPTY_EMAIL_SIGNATURE_FORM', 'Mail signature form is imcomplete');
+if (!defined('_NEW_EMAIL_SIGNATURE'))
+    define('_NEW_EMAIL_SIGNATURE', 'New email signature added');
+if (!defined('_UPDATED_EMAIL_SIGNATURE'))
+    define('_UPDATED_EMAIL_SIGNATURE', 'Mail signature updated');
+if (!defined('_DELETED_EMAIL_SIGNATURE'))
+    define('_DELETED_EMAIL_SIGNATURE', 'Mail signature deleted');
+/***** Profile *****/

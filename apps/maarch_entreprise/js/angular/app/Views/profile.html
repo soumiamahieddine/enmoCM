@@ -1,39 +1,7 @@
-<link rel="stylesheet" href="../../../../css/bootstrap.min.css">
-<style>
-nav{
-    margin-top:10px !important;
-}
-h2{
-    background-color: #009DC5 !important;
-    color: white !important;
-    margin-top: -10px !important;
-    margin-left: -10px !important;
-    margin-right: -10px !important;
-    padding: 10px !important;
-    font-size: 16px !important;
-}
-
-.col-md-4,.col-md-3{
-    margin-bottom: 10px;  
-}
-
-.ng-invalid:not(form)  {
-    border-left: 5px solid #a94442;
-}
-
-.modal-content{
-    background-color: #009DC5 !important;
-}
-.modal-header h4{
-    color: white !important;
-
-}
-
-.modal-body{
-    background-color: white;
-    padding:10px;
-}
-</style>
+<h1 style="margin-top: 0"><i class="fa fa-user fa-2x"></i> Mon profil</h1>
+<div id="resultInfo" class="fade" style="display:none;">
+    {{resultInfo}}
+</div>
 <div *ngIf="loading">
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
@@ -41,14 +9,21 @@ h2{
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" style="cursor: pointer" (click)="exitProfile()">
                     <i class="fa fa-arrow-circle-left" title="Retour"></i>
                 </a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a data-toggle="modal" data-target=".bs-example-modal-lg" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a></li>
-                    <li><a href="javascript://" ><i class="fa fa-user-times" title=""></i> Gérer mes signatures </a></li>
+                    <!--<li>-->
+                        <!--<a data-toggle="modal" data-target="#manageAbs" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a>-->
+                    <!--</li>-->
+                    <li style="cursor: pointer">
+                        <a (click)="absenceModal()" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a>
+                    </li>
+                    <li style="cursor: pointer">
+                        <a data-toggle="modal" data-target="#manageSign"><i class="fa fa-vcard-o" title=""></i> Gérer mes signatures </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -81,18 +56,50 @@ h2{
                 <div class="form-group">
                     <div class="col-sm-12">
                          <div class="input-group">
-                            <input type="text" class="form-control" id="userId" title="Identifiant" placeholder="Identifiant" value="{{user.user_id}}" disabled>
+                             <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
+                             <input type="text" class="form-control" id="userId" title="Identifiant" placeholder="Identifiant" value="{{user.user_id}}" disabled>
                              <span class="input-group-btn">
-                                <button class="btn btn-success" type="button" title="Modifier votre mot de passe"><i class="fa fa-key" aria-hidden="true"></i></button>
+                                <button (click)="displayPassword()" class="btn btn-success" type="button" title="Modifier votre mot de passe"><i class="fa fa-key" aria-hidden="true"></i></button>
                             </span>
                          </div>
                     </div>
+                </div>
+                <div *ngIf="showPassword" style="margin-bottom: 5%">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                <input type="password" class="form-control" style="display: none">
+                                <input type="password" [(ngModel)]="passwordModel.currentPassword" class="form-control" name="currentPassword" placeholder="Mot de passe actuel">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                <input type="password" [(ngModel)]="passwordModel.newPassword" class="form-control" name="newPassword" placeholder="Nouveau mot de passe">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                <input type="password" [(ngModel)]="passwordModel.reNewPassword" class="form-control" name="reNewPassword" placeholder="Retaper le mot de passe">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div style="text-align:center;">
+                            <button type="button" (click)="updatePassword()" [disabled]="!passwordModel.currentPassword || !passwordModel.newPassword || !passwordModel.reNewPassword" class="btn btn-default">Modifier votre mot de passe</button>
+                        </div>
+                    </div>
+                    <hr style="background-color: grey; height: 1px">
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" id="phone" name="phone" title="Téléphone" placeholder="Téléphone" [(ngModel)]="user.phone">
+                            <input type="tel" class="form-control" id="phone" name="phone" title="Téléphone" placeholder="Téléphone" [(ngModel)]="user.phone" pattern="^(?:0|\+\d\d?\d?\s?)[1-9]([\.\-\s]?\d\d){4}([\.\-\s]?\d?\d?)$">
                         </div>
                     </div>
                 </div>
@@ -100,7 +107,7 @@ h2{
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
-                            <input type="mail" class="form-control" id="mail" name="mail" title="Courriel"  placeholder="Courriel" [(ngModel)]="user.mail">
+                            <input type="email" class="form-control" id="mail" name="mail" title="Courriel"  placeholder="Courriel" [(ngModel)]="user.mail" pattern="[^@\s]+@[^@\s]+">
                         </div>
 
                     </div>
@@ -109,23 +116,8 @@ h2{
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-paw" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" id="fingerprint" name="fingerprint" title="Empreinte Numérique" placeholder="Empreinte Numérique" [(ngModel)]="user.thumbprint">
+                            <input type="text" class="form-control" id="fingerprint" name="fingerprint" title="Empreinte numérique" placeholder="Empreinte numérique" [(ngModel)]="user.thumbprint">
                         </div>
-                    </div>
-                </div>
-                <div class="form-group" style="display:none;">
-                    <div class="col-sm-6">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
-                            <input type="password" class="form-control" id="password" placeholder="Nouveau mot de passe">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
-                            <input type="password" class="form-control" id="repassword" placeholder="Retaper le mot de passe">
-                        </div>
-
                     </div>
                 </div>
                 <div class="form-group">
@@ -148,16 +140,145 @@ h2{
     </div>
 </div>
 
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div id="manageAbs" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document"> 
     <div class="modal-content">
         <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Gérer mes absences</h4>
       </div>
-    <div class="modal-body">
-        ceci est une modal
-    </div>
+        <div class="modal-body">
+            <div class="alert alert-danger" role="alert">Vous allez être <strong>automatiquement déconnecté</strong> après avoir défini vos redirections de bannettes</div>
+            <nav class="navbar navbar-default">
+               <div class="container-fluid">
+                     <form class="navbar-form navbar-left">
+                        <div class="form-group">
+                            <select class="form-control" placeholder="Bannette(s) à rediriger"><option>Courrier à signer</option></select>
+              
+                            <span>&nbsp;vers&nbsp;</span>
+                            <input type="text" class="form-control" placeholder="Utilisateur">
+                        </div>
+                    </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#" title="Sauvegarder la modification"><i class="fa fa-plus"></i></a></li>
+                    </ul>
+                </div>
+            </nav>
+            <ul class="list-group">
+                <li class="list-group-item"><i class="fa fa-tasks"></i> Mes courriers à traiter <span class="pull-right"><span class="label label-primary">Barbarain BAIN</span> <a href="#" title="Supprimer"><i class="fa fa-trash" style="color:red;"></i></a></span></li>
+                <li class="list-group-item"><i class="fa fa-tasks"></i> Mes courriers à viser <span class="pull-right"><span class="label label-primary">Patricia PETIT</span> <a href="#" title="Supprimer"><i class="fa fa-trash" style="color:red;"></i></a></span></li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default">Activer mon absence</button>
+      </div>
     </div>
   </div>
+</div>
+
+<div id="manageSign" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Gérer mes signatures</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#mailSign" aria-controls="mailSign" role="tab" data-toggle="tab">Signatures de mail</a></li>
+                    <li role="presentation"><a href="#signatureBookSign" aria-controls="signatureBookSign" role="tab" data-toggle="tab">Signatures de parapheur</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="mailSign">
+                        <form (ngSubmit)="submitEmailSignature()" #emailSignatureForm="ngForm">
+                            <div class="row" style="margin-top:5px;">
+                                <div class="col-md-5">
+                                    <select id="emailSignaturesSelect" class="form-control" (change)="changeEmailSignature()">
+                                        <option>Nouvelle signature</option>
+                                        <option *ngFor="let emailSignature of user.emailSignatures">{{emailSignature.title}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" [(ngModel)]="mailSignatureModel.title" name="title" placeholder="Nom de la signature" class="form-control" required>
+                                </div>
+                                <div class="col-md-1 col-md-offset-1" *ngIf="mailSignatureModel.selected == 0">
+                                    <button type="submit" class="form-control btn btn-sm btn-success" [disabled]="!emailSignatureForm.form.valid"><i class="fa fa-plus"></i></button>
+                                </div>
+                                <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
+                                    <button type="button" class="form-control btn btn-sm btn-primary" (click)="updateEmailSignature()" [disabled]="!emailSignatureForm.form.valid" title="Modifier la signature de mail"><i class="fa fa-pencil"></i></button>
+                                </div>
+                                <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
+                                    <button type="button" class="form-control btn btn-sm btn-danger"  (click)="deleteEmailSignature()" title="Supprimer la signature de mail"><i class="fa fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:5px;">
+                                <div class="col-md-12">
+                                    <div id="html_mode" style="display: block; width:100%;">
+                                        <textarea name="emailSignature" id="emailSignature" style="width:100%" rows="15" cols="60"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="signatureBookSign">
+                        <div class="row" style="margin-top:5px;">
+                            <form (ngSubmit)="submitSignature()" #signatureForm="ngForm">
+                                <div class="col-md-11">
+                                    <input type="text" [(ngModel)]="signatureModel.label" id="signLabel" name="label" placeholder="Label de la signature" class="form-control" required>
+                                    <div class="form-inline hide">
+                                        <div class="form-group">
+                                            <input type="file" name="files[]" id="uploadSignFile" (change)="uploadSignatureTrigger($event)" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1" style="margin-bottom:5px;">
+                                    <button class="form-control btn btn-sm btn-success" type="submit" [disabled]="!signatureForm.form.valid || !signatureModel.size">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div [ngClass]="[signatureModel.size != '' ? 'col-md-10' : 'col-md-12']">
+                                    <div class="upload-drop-zone" (click)="clickOnUploader('uploadSignFile')" style="cursor:pointer">
+                                        Cliquez sur <i class="fa fa-upload fa-2x"></i> pour
+                                        <span *ngIf="!signatureModel.size">ajouter une signature</span>
+                                        <span *ngIf="signatureModel.size">modifier la signature téléchargée</span>
+                                        (< 2MB)
+                                    </div>
+                                </div>
+                                <div class="col-md-2" *ngIf="signatureModel.size">
+                                    <img  id="signaturePreview" src="{{signatureModel.base64ForJs}}" alt="Image non valide" style="width: 100%;">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row" id="signList">
+                            <div *ngFor="let signature of user.signatures; let i = index" class="col-md-3">
+                                <div class="thumbnail">
+                                    <img src="{{signature.pathToSignatureOnTmp}}" alt="Signature" style="width:auto;height:60px;">
+                                    <div class="caption" style="margin-bottom:0px;">
+                                        <div *ngIf="selectedSignature != i">
+                                            <p title="{{signature.signature_label}}" style="text-overflow: ellipsis;">{{signature.signature_label}}</p>
+                                            <a (click)="displaySignatureEditionForm(i)" class="btn btn-primary" role="button" title="Modifier la signature">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a (click)="deleteSignature(signature.id)" class="btn btn-danger" role="button" title="Supprimer la signature">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
+                                        <div *ngIf="selectedSignature == i">
+                                            <input type="text" [(ngModel)]="selectedSignatureLabel" name="selectedSignatureLabel" placeholder="Label de la signature" class="form-control" style="margin-bottom: 10px; font-size: 12px;height:28px">
+                                            <button (click)="updateSignature()" type="button" class="btn btn-success" [disabled]="!selectedSignatureLabel" title="Modifier la signature">
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                            <button (click)="selectedSignature = -1" type="button" class="btn btn-warning" title="Annuler">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

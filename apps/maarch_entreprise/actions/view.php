@@ -64,7 +64,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str = '';
 	$_SESSION['doc_id'] = $res_id;
 	$frm_str .= '<div>';
-	$frm_str .= '	<center><input name="close" style="padding:5px;font-weight:600;" id="close" type="button" value="'._CLOSE.'" class="button" onClick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();window.location.reload();"/></center>';
+	if($_POST['module'] == 'cases'){
+		$frm_str .= '	<center><input name="close" style="padding:5px;font-weight:600;" id="close" type="button" value="'._CLOSE.'" class="button" onClick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/></center>';
+	}else{
+		$frm_str .= '	<center><input name="close" style="padding:5px;font-weight:600;" id="close" type="button" value="'._CLOSE.'" class="button" onClick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();window.location.reload();"/></center>';
+	}
 	$frm_str .= '    </br>';
 	$frm_str .= '	<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$res_id.'" name="viewframe" id="viewframe"  scrolling="auto" frameborder="0" ></iframe>';
 	$frm_str .= '</div>';
