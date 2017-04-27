@@ -11,8 +11,8 @@ declare function autocomplete(a: number, b: string) : any;
 
 
 @Component({
-    templateUrl : 'js/angular/app/Views/profile.html',
-    styleUrls   : ['css/bootstrap.min.css', 'js/angular/app/Css/profile.css']
+    templateUrl : 'js/angular/app/Views/profile.component.html',
+    styleUrls   : ['css/bootstrap.min.css','js/angular/app/Css/profile.component.css']
 })
 export class ProfileComponent implements OnInit {
 
