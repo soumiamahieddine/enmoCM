@@ -483,8 +483,8 @@ abstract class contacts_v2_Abstract extends Database
                     <tr>
                         <td>&nbsp;</td>
                         <td class="indexing_field">
-                            <input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onclick="javascript:show_admin_contacts( true, '<?php functions::xecho($display_value);?>');setContactType('corporate', '<?php echo ($can_add_contact);?>')" id="corpo_yes"><span onclick="$('corpo_yes').click();" onmouseover="this.style.cursor='pointer';"><?php echo _IS_CORPORATE_PERSON;?></span>
-                            <input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false, '<?php functions::xecho($display_value);?>');setContactType('no_corporate', '<?php echo ($can_add_contact);?>')" id="corpo_no"><span onclick="$('corpo_no').click();" onmouseover="this.style.cursor='pointer';"><?php echo _INDIVIDUAL;?></span>
+                            <input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onclick="javascript:show_admin_contacts( true, '<?php functions::xecho($display_value);?>');setContactType('corporate', '<?php echo ($can_add_contact);?>')" id="corpo_yes"><span onclick="$j('#corpo_yes').click();" onmouseover="this.style.cursor='pointer';"><?php echo _IS_CORPORATE_PERSON;?></span>
+                            <input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false, '<?php functions::xecho($display_value);?>');setContactType('no_corporate', '<?php echo ($can_add_contact);?>')" id="corpo_no"><span onclick="$j('#corpo_no').click();" onmouseover="this.style.cursor='pointer';"><?php echo _INDIVIDUAL;?></span>
                         </td>
                         <td>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </td>
                         <td>&nbsp;</td>
@@ -596,7 +596,7 @@ abstract class contacts_v2_Abstract extends Database
                         <em style="display:none">(<?php echo _YOU_SHOULD_ADD_AN_ADDRESS;?>)</em>
                     <p>
 
-                        <input class="button" type="submit" name="Submit" onclick='$("frmcontact").submit();this.disabled="disabled";this.style.opacity="0.5";' value="<?php echo _VALIDATE;?>" />
+                        <input class="button" type="submit" name="Submit" onclick='$j("#frmcontact").submit();this.disabled="disabled";this.style.opacity="0.5";' value="<?php echo _VALIDATE;?>" />
 
                     <?php
                     $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2';
@@ -1132,7 +1132,7 @@ abstract class contacts_v2_Abstract extends Database
                             </td>
                             <td>
 
-                                <input class="<?php echo $fieldAddressClass;?>" name="new_id" id="new_id" onfocus="$('rule_purpose').style.display='table-row'" onblur="purposeCheck();$('rule_purpose').style.display='none'";
+                                <input class="<?php echo $fieldAddressClass;?>" name="new_id" id="new_id" onfocus="$j('#rule_purpose').css('display','table-row')" onblur="purposeCheck();$j('#rule_purpose')$j('#rule_purpose').css('display','none')";
                                     <?php if(isset($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']) && $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] <> '')
                                         {
                                             echo 'value="'.functions::xssafe($this->get_label_contact($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'],$_SESSION['tablename']['contact_purposes'])).'"';
@@ -1169,7 +1169,7 @@ abstract class contacts_v2_Abstract extends Database
                         <tr id="departement_p">
                             <td><label for="departement"><?php echo _SERVICE;?>&nbsp;: </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="departement" type="text" onfocus="$('rule_departement').style.display='table-row'" onblur="$('rule_departement').style.display='none';" id="departement" value="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']));} ?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="departement" type="text" onfocus="$j('#rule_departement').style.display='table-row'" onblur="$j('#rule_departement').style.display='none';" id="departement" value="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']));} ?>"/>
                                 <span class="blue_asterisk" style="visibility:visible;">*</span>
                             </td>
                         </tr>
@@ -1200,7 +1200,7 @@ abstract class contacts_v2_Abstract extends Database
                         <tr id="lastname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ functions::xecho($display_value);}?>">
                             <td><label for="lastname"><?php echo _LASTNAME;?> : </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="lastname" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$('rule_lastname').style.display='table-row'" onblur="$('rule_lastname').style.display='none';" id="lastname" value="<?php if(isset($_SESSION['m_admin']['address']['LASTNAME'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['LASTNAME']));} ?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="lastname" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$j('#rule_lastname').css('display','table-row')" onblur="$j('#rule_lastname').css('display','none');" id="lastname" value="<?php if(isset($_SESSION['m_admin']['address']['LASTNAME'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['LASTNAME']));} ?>"/>
                             </td>
                         </tr>
                         <tr style="display:none;" id="rule_lastname">
@@ -1275,7 +1275,7 @@ abstract class contacts_v2_Abstract extends Database
                         <tr>
                             <td><label for="country"><?php echo _COUNTRY;?> : </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="country" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$('rule_country').style.display='table-row'" onblur="$('rule_country').style.display='none';" id="country" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COUNTRY'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_COUNTRY'])); }?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="country" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$j('#rule_country').css('display','table-row')" onblur="$j('#rule_country').css('display','none');" id="country" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COUNTRY'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_COUNTRY'])); }?>"/>
                                 <span class="blue_asterisk" style="visibility:visible;">*</span>
                             </td>
                         </tr>
@@ -1286,7 +1286,7 @@ abstract class contacts_v2_Abstract extends Database
                         <tr >
                             <td><label for="phone"><?php echo _PHONE;?>&nbsp;: </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="phone" type="text" onfocus="$('rule_phone').style.display='table-row'" onblur="$('rule_phone').style.display='none';" id="phone" value="<?php if(isset($_SESSION['m_admin']['address']['PHONE'])){functions::xecho($func->show_str($_SESSION['m_admin']['address']['PHONE']));} ?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="phone" type="text" onfocus="$j('#rule_phone').css('display','table-row')" onblur="$j('#rule_phone').css('display','none');" id="phone" value="<?php if(isset($_SESSION['m_admin']['address']['PHONE'])){functions::xecho($func->show_str($_SESSION['m_admin']['address']['PHONE']));} ?>"/>
                                 <span class="blue_asterisk" style="visibility:visible;">*</span>
                             </td>
                         </tr>

@@ -191,22 +191,6 @@ function repost(php_file,update_divs,fields,action,timeout)
     * List used for autocompletion
     *
     */
-    var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv
-            });
-    };
-
-    /**
-    * List used for autocompletion and set id in hidden input
-    *
-    */
     var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
     {
         new Ajax.Autocompleter(
@@ -217,7 +201,7 @@ function repost(php_file,update_divs,fields,action,timeout)
                 paramName: paramNameSrv,
                 minChars: minCharsSrv,
                 afterUpdateElement: function (text, li){
-                    $(new_value).value = li.id;
+                    $j('#'+new_value).value = li.id; 
                 }
             });
     };
@@ -253,9 +237,9 @@ function repost(php_file,update_divs,fields,action,timeout)
                 afterUpdateElement: function (text, li){
                     var str = li.id;
                     var res = str.split(",");
-                    $(new_value).value = res[0];
-                    $(actual_value).value = res[1];
-                    $('country').value = 'FRANCE';
+                    $j("#"+new_value).value = res[0];
+                    $j("#"+actual_value).value = res[1];
+                    $j('#country').value = 'FRANCE';
                 }
             });
     };
@@ -270,10 +254,10 @@ function repost(php_file,update_divs,fields,action,timeout)
                 paramName: paramNameSrv,
                 minChars: minCharsSrv,
                 callback: function (element, entry){
-					return entry + "&"+previous_name+"=" + $(previous_field).value; 
-			    },
+                    return entry + "&"+previous_name+"=" + $j("#"+previous_field).value; 
+                },
                 afterUpdateElement: function (text, li){
-                    $(new_value).value = li.id;
+                    $j("#"+new_value).value = li.id;
                 }
             });
     };
@@ -399,7 +383,7 @@ function repost(php_file,update_divs,fields,action,timeout)
 
     }
     function showCalender(ele) {
-        if($('basis')) { removeCalender() }
+        if($j('#basis')[0]) { removeCalender() }
         else {
             target=$(ele.id.replace(/for_/,''));
             var basis=ele.parentNode.insertBefore(document.createElement('div'),ele);
@@ -506,10 +490,10 @@ function repost(php_file,update_divs,fields,action,timeout)
 
     function ShowHideMenu(menu,onouoff) {
         if (typeof($) == 'function') {
-            monmenu = $(menu);
-            mondivmenu = $("menu");
-            monadmin = $("admin");
-            monhelp = $("aide");
+            monmenu = $j("#"+menu)[0];
+            mondivmenu = $j("#menu")[0];
+            monadmin = $j("#admin")[0];
+            monhelp = $j("#aide")[0];
         }
         else if(document.all) {
             monmenu = document.all[menu];
@@ -547,6 +531,7 @@ function repost(php_file,update_divs,fields,action,timeout)
             }
         }
     }
+
 
 
 /****************************************/
