@@ -28,6 +28,9 @@ if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "chrono_number"); // va
 /************** Administration **************/
 if (!defined("_SVR")) define("_SVR", "SVR");
 if (!defined("_SVA")) define("_SVA", "SVA");
+if (!defined("_ADDED")) define("_ADDED", "ajouté");
+if (!defined("_UPDATED")) define("_UPDATED", "modifié");
+if (!defined("_DELETED")) define("_DELETED", "supprimé");
 if (!defined("_PLEASE_CHOOSE_AN_ATTACHMENT")) define("_PLEASE_CHOOSE_AN_ATTACHMENT", "Ajoutez une pièce jointe svp.");
 if (!defined("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT")) define("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT", "Veuillez ajouter une pièce jointe avant d'envoyer ce courrier au contact");
 if (!defined("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT")) define("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT", "Envoyer au contact avec une pièce jointe obligatoire");

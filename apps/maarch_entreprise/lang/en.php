@@ -27,6 +27,9 @@ if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "res_id"); // value res
 /************** Administration **************/
 if (!defined("_SVR")) define("_SVR", "SVR");
 if (!defined("_SVA")) define("_SVA", "SVA");
+if (!defined("_ADDED")) define("_ADDED", "added");
+if (!defined("_UPDATED")) define("_UPDATED", "updated");
+if (!defined("_DELETED")) define("_DELETED", "deleted");
 if (!defined("_PLEASE_CHOOSE_AN_ATTACHMENT")) define("_PLEASE_CHOOSE_AN_ATTACHMENT", "Please add an attachment.");
 if (!defined("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT")) define("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT", "Please add an attachment before sending this mail to the contact.");
 if (!defined("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT")) define("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT", "Send to the contact with a mandatory attachment");
