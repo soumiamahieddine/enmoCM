@@ -164,6 +164,8 @@ var ProfileComponent = (function () {
             this.mailSignatureModel.title = "";
         }
     };
+    ProfileComponent.prototype.getAbsenceInfos = function () {
+    };
     ProfileComponent.prototype.updatePassword = function () {
         var _this = this;
         this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)

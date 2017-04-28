@@ -63,10 +63,6 @@ class MergedJsAbstract {
 //		include('apps/maarch_entreprise/js/jio.js');
 		readfile('node_modules/core-js/client/shim.js');
 		readfile('node_modules/zone.js/dist/zone.min.js');
-		if (!PROD_MODE) {
-			readfile('node_modules/systemjs/dist/system.src.js');
-			readfile('apps/maarch_entreprise/js/angular/systemjs.config.js');
-		}
 		readfile('apps/maarch_entreprise/js/bootstrap.min.js');
 
 		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe.min.js');

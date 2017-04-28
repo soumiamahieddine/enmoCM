@@ -380,13 +380,15 @@ if (file_exists($path)) {
 <?php
 if (PROD_MODE) {
 ?>
-    <script src="js/angular/main.bundle.min.js"></script>
+<!--    <script src="js/angular/main.bundle.min.js"></script>-->
 <?php
 } else {
     ?>
-    <script>
-        System.import('js/angular/main.js').catch(function(err){ console.error(err); });
-    </script>
+    <script src="../../node_modules/systemjs/dist/system.src.js"></script>
+    <script src="js/angular/systemjs.config.js"></script>
+<!--    <script>-->
+<!--        System.import('js/angular/main.js').catch(function(err){ console.error(err); });-->
+<!--    </script>-->
     <?php
 }
 ?>
