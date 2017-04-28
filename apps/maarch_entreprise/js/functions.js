@@ -2321,12 +2321,14 @@ function valid_report_by_period(url)
                                     scaleOverride : true,
                                     scaleSteps : 10,
                                     scaleStepWidth : 10,
-                                    scaleStartValue : 0 
+                                    scaleStartValue : 0,
+                                    animation : false,
                                 }
                             } else {
                                 var optionBarChart = {
                                     responsive : true,
                                     scaleShowVerticalLines: false,
+                                    animation : false,
                                 }
                             }
                             
