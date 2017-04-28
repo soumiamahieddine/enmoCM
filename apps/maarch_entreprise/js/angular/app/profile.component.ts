@@ -189,6 +189,9 @@ export class ProfileComponent implements OnInit {
         }
     }
 
+    getAbsenceInfos() {
+    }
+
     updatePassword() {
         this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)
             .map(res => res.json())
