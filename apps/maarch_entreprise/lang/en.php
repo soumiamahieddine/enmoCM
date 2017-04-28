@@ -149,6 +149,12 @@ if (!defined("_WARNING_MESSAGE_DEL_GROUP"))
     define("_WARNING_MESSAGE_DEL_GROUP", "Warning :<br>There are users associated to this group. Choose a replacement group:");
 if (!defined("_WARNING_MESSAGE_DEL_USER"))
     define("_WARNING_MESSAGE_DEL_USER", "Warning :<br> There are diffusion lists associated to this user. Choose a replacement user:");
+if (!defined("_INFO_MESSAGE_UPDATE_USER"))
+    define("_INFO_MESSAGE_UPDATE_USER", "In order to keep confidentiality of documents in progress of current user's entity, you can replace him with another user");
+if (!defined("_WARNING_MESSAGE_UPDATE_USER"))
+    define("_WARNING_MESSAGE_UPDATE_USER", "If you choose \"NO REPLACEMENT\" and current user is in dest, he can't be removed !");
+if (!defined("_MESSAGE_REAFFECT_USER_LISTMODEL"))
+    define("_MESSAGE_REAFFECT_USER_LISTMODEL", "Include user reassignment in list models");
 if (!defined("_USERS_IN_GROUPS"))
     define("_USERS_IN_GROUPS", "Users in the group");
 if (!defined("_LISTE_DIFFUSION_IN_USER")) define("_LISTE_DIFFUSION_IN_USER", "Diffusion list(s) for the user");

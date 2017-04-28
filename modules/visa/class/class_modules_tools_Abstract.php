@@ -552,11 +552,11 @@ abstract class visa_Abstract extends Database
             }else{
                 $str .= '<div id="emptyVisa" style="display:none;"><strong><em>' . _EMPTY_VISA_WORKFLOW . '</em></strong></div>';
                 if(count($circuit['visa']['users']) > 0){
+					$isCurrentVisa = false;
                     foreach ($circuit['visa']['users'] as $it=>$info_userVis) {
                         if(empty($info_userVis['process_date'])){
-                            if(($lastUserVis == true && $isVisaStep == true)){
+                            if($lastUserVis == true && $isVisaStep == true && $isCurrentVisa === false){
                                 $vised = ' currentVis';
-                                
                                 $disabled = '';
                                 $link_vis = 'arrow-right ';
                                 $del_vis = '<div class="delete_visa"></div>';
@@ -594,20 +594,31 @@ abstract class visa_Abstract extends Database
 
                                $info_vised = '';
                                $link_vis = 'hourglass-half';
-
                             }
                             
 
 
                             $lastUserVis = false;
+							$isCurrentVisa = true;
                         }else{
                             $lastUserVis = true;
                             $modif = 'false';
-                            $vised = ' vised';
-                            $link_vis = 'check';
+                            
+                            
                             $disabled = ' disabled="disabled"';
-                            $info_vised = '<br/><sub>visé le : '.functions::format_date_db($info_userVis['process_date'],'','',true).'</sub>';
-                            $del_vis = '';
+							if(preg_match("/[DEL]/", $info_userVis['process_comment'])){
+								$info_vised = '';
+								$link_vis = 'times';
+								$vised = ' moved vised';
+								$del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+							}else{
+								$info_vised = '<br/><sub>visé le : '.functions::format_date_db($info_userVis['process_date'],'','',true).'</sub>';
+								$link_vis = 'check';
+								$vised = ' vised';
+								$del_vis = '';
+							}
+                            
+                            
                         }
                         //VISA USER LINE CIRCUIT
                         $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';
@@ -639,9 +650,8 @@ abstract class visa_Abstract extends Database
 
                 //FOR USER SIGN
                 foreach ($circuit['sign']['users'] as $info_userSign) {
-
-                    if(empty($info_userSign['process_date'])){
-                        if($lastUserVis == true && $isVisaStep == true){
+                    if(empty($info_userSign['process_date'])) {
+                        if(($lastUserVis == true && $isVisaStep == true)) {
                             $vised = ' currentVis';
                             $modif = 'false';
                             $disabled = '';
@@ -682,10 +692,18 @@ abstract class visa_Abstract extends Database
                         }
                         
                     }else{
-                        $modif = 'false';
-                        $vised = ' vised';
-                        $link_vis = 'check';
-                        $info_vised = '<br/><sub>signé le : '.functions::format_date_db($info_userSign['process_date'],'','',true).'</sub>';
+						$modif = 'false';
+                        if (preg_match("/[DEL]/", $info_userSign['process_comment'])) {
+							$info_vised = '';
+							$link_vis = 'times';
+							$vised = ' moved vised';
+							$del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+						}else{
+                        	$vised = ' vised';
+                        	$link_vis = 'check';
+                        	$info_vised = '<br/><sub>signé le : '.functions::format_date_db($info_userSign['process_date'],'','',true).'</sub>';
+						}
+                        
                     }
                     //VISA USER LINE CIRCUIT
                     $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';

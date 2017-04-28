@@ -327,7 +327,7 @@ if (file_exists($path)) {
                 <script>
                     var main_error = $j('#main_error_popup');
                     if (main_error != null) {
-                        main_error.style.display = 'table-cell';
+                        main_error.css({"display":"table-cell"})
                         Element.hide.delay(10, 'main_error_popup');
                     }
                 </script>
@@ -339,7 +339,7 @@ if (file_exists($path)) {
                 <script>
                     var main_info = $j('#main_info');
                     if (main_info != null) {
-                        main_info.style.display = 'table-cell';
+                        main_info.css({"display":"table-cell"})
                         Element.hide.delay(10, 'main_info');
                     }
                 </script>
