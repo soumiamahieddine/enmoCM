@@ -267,9 +267,11 @@ ALTER TABLE users DROP COLUMN IF EXISTS ra_expiration_date;
 ALTER TABLE users ADD ra_expiration_date timestamp without time zone;
 
 /** Add new service for group which have view_doc_history service **/
+DELETE FROM usergroups_services where service_id = 'view_full_history';
 INSERT INTO usergroups_services SELECT group_id, 'view_full_history' FROM usergroups_services WHERE service_id = 'view_doc_history';
 
 /** Migrate signatures to the new table **/
+TRUNCATE TABLE user_signatures;
 INSERT INTO user_signatures (user_id, signature_label, signature_path, signature_file_name) SELECT user_id, '', signature_path, signature_file_name FROM users WHERE signature_path is not null and signature_file_name is not null;
 
 UPDATE parameters SET param_value_int = '170' WHERE id = 'database_version';

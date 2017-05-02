@@ -3,6 +3,30 @@ var chronoExpiration;
 
 page_result_final = '';
 
+function triggerAngular(prodmode, locationToGo) {
+    if (prodmode) {
+        $j('#inner_content').html('<div><i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i></div>');
+
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = "js/angular/main.bundle.min.js";
+
+        script.onreadystatechange = changeLocationToAngular(locationToGo);
+        script.onload = changeLocationToAngular(locationToGo);
+
+        // Fire the loading
+        head.appendChild(script);
+    } else {
+        System.import('js/angular/main.js').catch(function(err){ console.error(err); });
+        location.href = locationToGo;
+    }
+}
+
+function changeLocationToAngular(locationToGo) {
+    location.href = locationToGo;
+}
+
 function capitalizeFirstLetter(theString)
 {
     return theString && theString[0].toUpperCase() + theString.slice(1);
@@ -1088,6 +1112,30 @@ function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
     $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";})
 }
 
+function test_form()
+{
+    var error_num = check_form_baskets("redirect_my_baskets_to");
+    if( error_num == 1)
+    {
+        document.getElementById('redirect_my_baskets_to').submit();
+    }
+    else if(error_num == 2)
+    {
+        alert("Un champ n'est pas dans le bon format : Nom, Prénom (Identifiant)");
+    }
+    else if(error_num == 3)
+    {
+        alert("Le propriétaire des corbeilles n'est pas défini.");
+    }
+    else if(error_num == 4)
+    {
+        alert("Vous devez rediriger au moins une des corbeilles vers un utilisateur.");
+    }
+    else
+    {
+        alert("Erreur dans la transmission du formulaire...");
+    }
+}
 
 /**
  * Destroy a modal window
@@ -1241,12 +1289,22 @@ function close_action(id_action, page, path_manage_script, mode_req, res_id_valu
             action_done = action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status,page);
         } else {
             if(page != '' && page != NaN && page && page != null ) {
-                do_nothing = false;
-                window.top.location.href=page;
+                if (typeof window['angularSignatureBookComponent'] != "undefined") {
+                    window.angularSignatureBookComponent.componentAfterAction();
+                }else{
+                    do_nothing = false;
+                    window.top.location.href=page;
+                }
 
             } else if(do_nothing == false) {
-                window.top.location.hash = "";
-                window.top.location.reload();
+                if (typeof window['angularSignatureBookComponent'] != "undefined") {
+                    window.angularSignatureBookComponent.componentAfterAction();
+                }else{
+                    window.top.location.hash = "";
+                    window.top.location.reload();
+                } 
+                
+                
             }
             do_nothing = false;
         }
@@ -2263,12 +2321,14 @@ function valid_report_by_period(url)
                                     scaleOverride : true,
                                     scaleSteps : 10,
                                     scaleStepWidth : 10,
-                                    scaleStartValue : 0 
+                                    scaleStartValue : 0,
+                                    animation : false,
                                 }
                             } else {
                                 var optionBarChart = {
                                     responsive : true,
                                     scaleShowVerticalLines: false,
+                                    animation : false,
                                 }
                             }
                             
@@ -3361,6 +3421,18 @@ function loadToolbarBadge(targetTab,path_manage_script){
         }
     });
 }
+
+var disablePrototypeJS = function (method, pluginsToDisable) {
+    var handler = function (event) {
+        event.target[method] = undefined;
+        setTimeout(function () {
+            delete event.target[method];
+        }, 0);
+    };
+    pluginsToDisable.each(function (plugin) {
+        $j(window).on(method + '.bs.' + plugin, handler);
+    });
+};
 
 function resetSelect(id) {
     $j('#'+id).val("");

@@ -8,7 +8,7 @@
 		<parameter name="size" type="size" />
 		<parameter name="url" type="url" />
 		<parameter name="for" type="identifier" />
-		<parameter name="email" type="email" />
+		<parameter name="email" type="string" />
 		<parameter name="field" type="identifier" />
 		<parameter name="index" type="identifier" />
 		<parameter name="is_html" type="YN" />

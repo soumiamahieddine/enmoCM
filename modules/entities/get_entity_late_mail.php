@@ -241,7 +241,7 @@ for($i=0; $i<count($entities);$i++)
     {
 
         $stmt = $db->query("SELECT count(res_id) AS total FROM ".$view
-                    ." WHERE destination = ? and status not in ('DEL','BAD') and date(process_limit_date) <= date(now()) and closing_date is null".$where_date." ".$where_status." ".$where_priority,array($entities[$i]['ID']));
+                    ." WHERE destination = ? and status not in ('DEL','BAD') and date(process_limit_date) <= date(now()) and closing_date is null".$where_date." ".$where_status." ".$where_priority . $where_clause,array($entities[$i]['ID']));
         //$db->show();
 
         if( $stmt->rowCount() > 0)

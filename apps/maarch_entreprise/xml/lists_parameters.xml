@@ -164,6 +164,16 @@
             <GOTOLIST></GOTOLIST>
         </TEMPLATE>
         <TEMPLATE>
+            <ID>documents_list_with_signatory</ID>
+            <LABEL>_DOCUMENTS_LIST_WITH_SIGNATORY</LABEL>
+            <IMG>fa fa-list-ul fa-2x</IMG>
+            <NAME>documents_list_with_signatory</NAME>
+            <ORIGIN>module</ORIGIN>
+            <MODULE>visa</MODULE>
+            <ENABLED>true</ENABLED>
+            <GOTOLIST></GOTOLIST>
+        </TEMPLATE>
+        <TEMPLATE>
             <ID>documents_list_copies</ID>
             <LABEL>_DOCUMENTS_LIST_COPIES</LABEL>
             <IMG>fa fa-list-ul fa-2x</IMG>

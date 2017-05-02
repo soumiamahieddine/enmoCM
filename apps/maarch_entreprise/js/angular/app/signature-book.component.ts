@@ -21,7 +21,7 @@ export class SafeUrlPipe implements PipeTransform {
 }
 
 @Component({
-  templateUrl: 'js/angular/app/Views/signatureBook.html',
+  templateUrl: 'js/angular/app/Views/signature-book.component.html',
 })
 export class SignatureBookComponent implements OnInit {
 
@@ -48,7 +48,8 @@ export class SignatureBookComponent implements OnInit {
     showResLeftPanel            : boolean   = true;
     showLeftPanel               : boolean   = true;
     showRightPanel              : boolean   = true;
-    showAttachmentEditionPanel  : boolean   = false;
+    showAttachmentPanel         : boolean   = false;
+    showSignaturesPanel         : boolean   = false;
     loading                     : boolean   = false;
     loadingSign                 : boolean   = false;
 
@@ -59,6 +60,7 @@ export class SignatureBookComponent implements OnInit {
     visaViewerLink              : string    = "";
     histViewerLink              : string    = "";
     linksViewerLink             : string    = "";
+    attachmentsViewerLink       : string    = "";
 
 
     constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
@@ -111,11 +113,12 @@ export class SignatureBookComponent implements OnInit {
                             this.showResLeftPanel       = true;
                             this.showTopLeftPanel       = false;
                             this.showTopRightPanel      = false;
-                            this.showAttachmentEditionPanel  = false;
+                            this.showAttachmentPanel    = false;
                             this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
                             this.visaViewerLink  = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
                             this.histViewerLink  = "index.php?display=true&page=show_history_tab&resId=" + this.resId + "&collId=letterbox_coll";
                             this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
+                            this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + this.resId + "&noModification=true&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
 
                             this.leftContentWidth  = "44%";
                             this.rightContentWidth = "44%";
@@ -133,8 +136,9 @@ export class SignatureBookComponent implements OnInit {
                             this.loading = false;
 
                             setTimeout(() => {
-                                $j("#resListContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
-                                $j("#rightPanelContent").niceScroll({touchbehavior:false,cursorcolor:"#666",cursoropacitymax:0.6,cursorwidth:4});
+                                $j("#resListContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
+                                $j("#rightPanelContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
+                                $j(".pjSign").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
                                 $j("#resListContent").scrollTop(0);
                                 $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
                                 $j("#obsVersion").tooltipster({
@@ -187,12 +191,8 @@ export class SignatureBookComponent implements OnInit {
     }
 
     changeRightViewer(index: number) {
-        if (index < 0) {
-            this.showAttachmentEditionPanel = true;
-        } else {
-            this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
-            this.showAttachmentEditionPanel = false;
-        }
+        this.showAttachmentPanel = false;
+        this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
         this.rightSelectedThumbnail = index;
     }
 
@@ -237,6 +237,14 @@ export class SignatureBookComponent implements OnInit {
                 this.leftContentWidth = "48%";
                 $j("#contentLeft").css('border-right', 'solid 1px');
             }
+        }
+    }
+
+    displayAttachmentPanel() {
+        this.showAttachmentPanel = !this.showAttachmentPanel;
+        this.rightSelectedThumbnail = 0;
+        if (this.signatureBook.attachments[0]) {
+            this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
         }
     }
 
@@ -325,79 +333,70 @@ export class SignatureBookComponent implements OnInit {
             });
     }
 
-    prepareSignFile(attachment: any) {
+    signFile(attachment: any, signature: any) {
         if (!this.loadingSign && this.signatureBook.canSign) {
+            this.loadingSign = true;
+            var path = "index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&resIdMaster=" + this.resId + "&signatureId=" + signature.id;
+
             if (attachment.res_id == 0) {
                 if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
-                    this.signatureBookSignFile(attachment.res_id_version, 4);
+                    path += "&isVersion&isOutgoing&id=" + attachment.res_id_version;
                 } else {
-                    this.signatureBookSignFile(attachment.res_id_version, 1);
+                    path += "&isVersion&id=" + attachment.res_id_version;
                 }
             } else if (attachment.res_id_version == 0) {
                 if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
-                    this.signatureBookSignFile(attachment.res_id, 3);
+                    path += "&isOutgoing&id=" + attachment.res_id;
                 } else {
-                    this.signatureBookSignFile(attachment.res_id, 0);
+                    path += "&id=" + attachment.res_id;
                 }
             }
+
+            this.http.get(path, signature)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    if (data.status == 0) {
+                        this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + data.new_id + "&isVersion=false";
+                        this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
+                        this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
+                        this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = data.new_id;
+                        var allSigned = true;
+                        this.signatureBook.attachments.forEach((value: any) => {
+                            if (value.sign && value.status != 'SIGN') {
+                                allSigned = false;
+                            }
+                        });
+                        this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = allSigned;
+                    } else {
+                        alert(data.error);
+                    }
+
+                    this.showSignaturesPanel = false;
+                    this.loadingSign = false;
+                });
         }
-    }
-
-    signatureBookSignFile(resId: number, type: number) {
-        this.loadingSign = true;
-        var path = '';
-
-        if (type == 0) {
-            path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&resIdMaster=' + this.resId + '&id=' + resId;
-        } else if (type == 1) {
-            path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isVersion&resIdMaster=' + this.resId + '&id=' + resId;
-        } else if (type == 2) {
-            path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isOutgoing&resIdMaster=' + this.resId + '&id=' + resId;
-        } else if (type == 3) {
-            path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isOutgoing&isVersion&resIdMaster=' + this.resId + '&id=' + resId;
-        }
-
-        this.http.get(path)
-            .map(res => res.json())
-            .subscribe((data) => {
-                if (data.status == 0) {
-                    this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + this.resId + "&id=" + data.new_id;
-                    this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
-                    this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
-                    this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = data.new_id;
-                    var allSigned = true;
-                    this.signatureBook.attachments.forEach((value: any) => {
-                        if (value.sign && value.status != 'SIGN') {
-                            allSigned = false;
-                        }
-                    });
-                    this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = allSigned;
-                } else {
-                    alert(data.error);
-                }
-
-                this.loadingSign = false;
-            });
-
     }
 
     unsignFile(attachment: any) {
         var collId: string;
         var resId: number;
+        var isVersion: string;
 
         if (attachment.res_id == 0) {
             resId = attachment.res_id_version;
             collId = "res_version_attachments";
+            isVersion = "true";
         } else if (attachment.res_id_version == 0) {
             resId = attachment.res_id;
             collId = "res_attachments";
+            isVersion = "false";
         }
 
         this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {}, {})
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.status == "OK") {
-                    this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + this.resId + "&id=" + resId;
+                    this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
                     this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;
@@ -432,6 +431,7 @@ export class SignatureBookComponent implements OnInit {
                     if (origin == "view") {
                         alert("Courrier verouillé par " + data.lockBy);
                     } else if (origin == "action") {
+                        alert("Courrier suivant verouillé par " + data.lockBy);
                         this.backToBasket();
                     }
                 }

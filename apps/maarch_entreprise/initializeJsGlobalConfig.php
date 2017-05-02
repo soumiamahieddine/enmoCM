@@ -22,8 +22,10 @@
 $core_tools = new core_tools();
 $core_tools->test_user();
 
-$aJsGlobal = array();
+$aJsGlobal = [];
 $aJsGlobal['coreurl'] = $_SESSION['config']['coreurl'];
+$aJsGlobal['businessappurl'] = $_SESSION['config']['businessappurl'];
+$aJsGlobal['applicationName'] = $_SESSION['config']['applicationname'];
 
 echo json_encode($aJsGlobal);
 

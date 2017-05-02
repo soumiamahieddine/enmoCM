@@ -45,7 +45,8 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/scriptaculous.js');
 		readfile('apps/maarch_entreprise/js/jquery.min.js');
 		readfile('apps/maarch_entreprise/js/jquery.nicescroll.min.js');
-		readfile('apps/maarch_entreprise/js/tooltipster/dist/js/tooltipster.bundle.min.js');
+		readfile('apps/maarch_entreprise/tools/tooltipster/dist/js/tooltipster.bundle.min.js');
+		readfile('apps/maarch_entreprise/tools/tiny_mce/tinymce.min.js');
 		include('apps/maarch_entreprise/js/indexing.js');
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
 		readfile('apps/maarch_entreprise/js/effects.js');
@@ -62,8 +63,7 @@ class MergedJsAbstract {
 //		include('apps/maarch_entreprise/js/jio.js');
 		readfile('node_modules/core-js/client/shim.js');
 		readfile('node_modules/zone.js/dist/zone.min.js');
-		readfile('node_modules/systemjs/dist/system.src.js');
-		readfile('apps/maarch_entreprise/js/angular/systemjs.config.js');
+		readfile('apps/maarch_entreprise/js/bootstrap.min.js');
 
 		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe.min.js');
 		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe-ui-default.min.js');

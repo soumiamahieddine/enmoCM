@@ -37,8 +37,17 @@
                 $user = $difflist[$role_id]['users'][$i];
                 
                 if ($color == ' class="col"') $color = ' ';
-                else $color = ' class="col"';?>
-                <tr <?php echo $color;?> >
+                else $color = ' class="col"';
+                
+                if (preg_match("/[DEL]/", $difflist[$role_id]['users'][$i]['process_comment'])) {
+                    $styleMoved=" style='text-decoration: line-through;opacity:0.5;' ";
+                    $descMoved=$difflist[$role_id]['users'][$i]['process_comment'];
+                } else {
+                    $styleMoved="";
+                    $descMoved="";
+                }
+                ?>
+                <tr <?php echo $color.$styleMoved;?> title="<?php echo $descMoved;?>">
                     <td style="width:15%;text-align:center;">
                         <i class="fa fa-user fa-2x" title="<?php echo _USER;?>"></i>
                     </td>
