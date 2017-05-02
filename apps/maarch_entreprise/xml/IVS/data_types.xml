@@ -74,6 +74,7 @@
       <enumeration value="res_attachments" />
       <enumeration value="mlb_coll_ext" />
       <enumeration value="business_coll_ext" />
+      <enumeration value="folders" />
     </dataType>
     <dataType name="res_view_table_list" base="string">
       <enumeration value="res_view_letterbox" />

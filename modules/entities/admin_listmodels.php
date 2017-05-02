@@ -1,24 +1,12 @@
 <?php
-/*
-*
-*    Copyright 2008,2012 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*
-*   @author  Cyril Vazquez <dev@maarch.org>
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   admin_listmodels
+* @author  dev <dev@maarch.org>
+* @ingroup entities
 */
 
 $admin = new core_tools();
@@ -26,13 +14,11 @@ $admin->test_admin('admin_listmodels', 'entities');
 $_SESSION['m_admin']= array();
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
-{
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)) {
     $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=admin_listmodels&module=entities';
@@ -41,11 +27,12 @@ $page_id = "admin_listmodels";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php";
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php";
+require_once 'modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php';
 require_once 'modules/entities/class/class_manage_listdiff.php';
-require_once("modules/entities/entities_tables.php");
+require_once "modules/entities/entities_tables.php";
+
 $ent = new entity();
 $func = new functions();
 $request = new request;
@@ -60,14 +47,13 @@ $where = '';
 $list = new list_show();
 $arrayPDO = array();
 
-if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
-{
+if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
     $what = $func->protect_string_db($_REQUEST['what']);
-	$where = " (lower(object_id) like lower(?) or lower(description) like lower(?)) and ";
+    $where = " (lower(object_id) like lower(?) or lower(description) like lower(?)) and ";
     $arrayPDO = array_merge($arrayPDO, array("%".$what."%", "%".$what."%"));
 }
 
-if($_SESSION['user']['UserId'] != 'superadmin') {
+if ($_SESSION['user']['UserId'] != 'superadmin') {
     $my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
     if (count($my_tab_entities_id)>0) {
         //we need all entities that are managed by connected user
@@ -76,13 +62,12 @@ if($_SESSION['user']['UserId'] != 'superadmin') {
 }
 
 $order = 'asc';
-if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
-{
+if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
+
     $order = trim($_REQUEST['order']);
 }
 $field = 'object_id';
-if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
-{
+if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
     $field = trim($_REQUEST['order_field']);
 }
 
@@ -96,14 +81,14 @@ $where .= ' 1=1 group by object_type, object_id, title, description';
 // var_dump($where);
 $tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
 
-for ($i=0;$i<count($tab);$i++)
-{
-    for ($j=0;$j<count($tab[$i]);$j++)
-    {
-        foreach(array_keys($tab[$i][$j]) as $value)
-        {
-            if($tab[$i][$j][$value]=="list_id")
-            {
+for ($i=0;$i<count($tab);$i++) {
+
+    for ($j=0;$j<count($tab[$i]);$j++) {
+
+        foreach (array_keys($tab[$i][$j]) as $value) {
+
+            if ($tab[$i][$j][$value]=="list_id") {
+
                 $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["list_id"]=$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]=_ID;
@@ -115,8 +100,8 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=false;
             }
             
-            if($tab[$i][$j][$value]=="object_type")
-            {
+            if ($tab[$i][$j][$value]=="object_type") {
+
                 $objectType = $tab[$i][$j]['value'];
                 $tab[$i][$j]['value'] = $difflist_types[$objectType];
                 $tab[$i][$j]["label"]= _OBJECT_TYPE;
@@ -128,8 +113,8 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=true;
             }
             
-            if($tab[$i][$j][$value]=="object_id")
-            {
+            if ($tab[$i][$j][$value]=="object_id") {
+
                 $tab[$i][$j]["object_id"]=$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]= _ID;
                 $tab[$i][$j]["size"]="18";
@@ -140,8 +125,7 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=true;
             }
             
-            if($tab[$i][$j][$value]=="title")
-            {
+            if ($tab[$i][$j][$value]=="title") {
                 $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["title"]=$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]=_TITLE;
@@ -153,8 +137,8 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=true;
             }
 
-            if($tab[$i][$j][$value]=="description")
-            {
+            if ($tab[$i][$j][$value]=="description") {
+
                 $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["description"]=$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]=_DESCRIPTION;

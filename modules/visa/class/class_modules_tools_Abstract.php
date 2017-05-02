@@ -552,11 +552,11 @@ abstract class visa_Abstract extends Database
             }else{
                 $str .= '<div id="emptyVisa" style="display:none;"><strong><em>' . _EMPTY_VISA_WORKFLOW . '</em></strong></div>';
                 if(count($circuit['visa']['users']) > 0){
+					$isCurrentVisa = false;
                     foreach ($circuit['visa']['users'] as $it=>$info_userVis) {
                         if(empty($info_userVis['process_date'])){
-                            if(($lastUserVis == true && $isVisaStep == true)){
+                            if($lastUserVis == true && $isVisaStep == true && $isCurrentVisa === false){
                                 $vised = ' currentVis';
-                                
                                 $disabled = '';
                                 $link_vis = 'arrow-right ';
                                 $del_vis = '<div class="delete_visa"></div>';
@@ -594,20 +594,31 @@ abstract class visa_Abstract extends Database
 
                                $info_vised = '';
                                $link_vis = 'hourglass-half';
-
                             }
                             
 
 
                             $lastUserVis = false;
+							$isCurrentVisa = true;
                         }else{
                             $lastUserVis = true;
                             $modif = 'false';
-                            $vised = ' vised';
-                            $link_vis = 'check';
+                            
+                            
                             $disabled = ' disabled="disabled"';
-                            $info_vised = '<br/><sub>visé le : '.functions::format_date_db($info_userVis['process_date'],'','',true).'</sub>';
-                            $del_vis = '';
+							if(preg_match("/[DEL]/", $info_userVis['process_comment'])){
+								$info_vised = '';
+								$link_vis = 'times';
+								$vised = ' moved vised';
+								$del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+							}else{
+								$info_vised = '<br/><sub>visé le : '.functions::format_date_db($info_userVis['process_date'],'','',true).'</sub>';
+								$link_vis = 'check';
+								$vised = ' vised';
+								$del_vis = '';
+							}
+                            
+                            
                         }
                         //VISA USER LINE CIRCUIT
                         $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';
@@ -639,9 +650,8 @@ abstract class visa_Abstract extends Database
 
                 //FOR USER SIGN
                 foreach ($circuit['sign']['users'] as $info_userSign) {
-
-                    if(empty($info_userSign['process_date'])){
-                        if($lastUserVis == true && $isVisaStep == true){
+                    if(empty($info_userSign['process_date'])) {
+                        if(($lastUserVis == true && $isVisaStep == true)) {
                             $vised = ' currentVis';
                             $modif = 'false';
                             $disabled = '';
@@ -682,10 +692,18 @@ abstract class visa_Abstract extends Database
                         }
                         
                     }else{
-                        $modif = 'false';
-                        $vised = ' vised';
-                        $link_vis = 'check';
-                        $info_vised = '<br/><sub>signé le : '.functions::format_date_db($info_userSign['process_date'],'','',true).'</sub>';
+						$modif = 'false';
+                        if (preg_match("/[DEL]/", $info_userSign['process_comment'])) {
+							$info_vised = '';
+							$link_vis = 'times';
+							$vised = ' moved vised';
+							$del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+						}else{
+                        	$vised = ' vised';
+                        	$link_vis = 'check';
+                        	$info_vised = '<br/><sub>signé le : '.functions::format_date_db($info_userSign['process_date'],'','',true).'</sub>';
+						}
+                        
                     }
                     //VISA USER LINE CIRCUIT
                     $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';
@@ -917,33 +935,7 @@ abstract class visa_Abstract extends Database
             $str .= '<thead><tr><th style="width:25%;text-align:left;"></th><th style="width:40%;text-align:left;">Titre</th><th style="width:20%;text-align:left;">Rédacteur</th><th style="width:10%;text-align:left;">Date</th><th style="width:5%;text-align:left;"><input title="'._SELECT_ALL.'" id="allPrintFolder" type="checkbox" onclick="selectAllPrintFolder();"></th></tr></thead>';
             $str .= '<tbody>';
 		
-            if ($res->category_id == "outgoing"){
-
-                $str .= '<tr><td><h3>+ Courrier sortant</h3></td><td></td><td></td><td></td><td></td></tr>';
-                $joined_files = $this->getJoinedFiles($coll_id, $table, $id, true, 'outgoing_mail');
-                for($i=0; $i < count($joined_files); $i++) {
-                    //Get data
-                    $id_doc = $joined_files[$i]['id']; 
-                    $description = $joined_files[$i]['label'];
-                    $format = $joined_files[$i]['format'];
-                    $contact = $users_tools->get_user($joined_files[$i]['typist']);
-                    $dateFormat = explode(" ",$joined_files[$i]['creation_date']);
-                    $creation_date = $request->dateformat($dateFormat[0]);
-                    if ($joined_files[$i]['pdf_exist']){
-                        $check = 'class="check" checked="checked"';
-                    }else{
-                        $check = ' disabled title="' . _NO_PDF_FILE . '"';
-                    }
-                    //Show data
-                    $str .= '<tr><td>'  
-                        . '</td><td>' . $description 
-                        . '</td><td>' . $contact['firstname']
-                        . " " . $contact['lastname'] . '</td><td>' 
-                        . $creation_date . '</td><td><input id="join_file_' 
-                        . $id_doc . '" type="checkbox" class="checkPrintFolder" name="join_attachment[]"  value="' 
-                        . $id_doc . '"  '.$check.'/>' . $joined_files[$i]['viewLink']. '</td></tr>';
-                }
-            } else {
+            if ($res->category_id != "outgoing") {
                 $str .= '<tr><td><h3>+ Courrier entrant</h3></td><td></td><td></td><td></td><td></td></tr>';
                 $joined_files = $this->getJoinedFiles($coll_id, $table, $id, false);
                 for($i=0; $i < count($joined_files); $i++) {

@@ -25,22 +25,35 @@ var ProfileComponent = (function () {
         };
         this.signatureModel = {
             base64: "",
+            base64ForJs: "",
             name: "",
             type: "",
             size: 0,
             label: "",
         };
+        this.mailSignatureModel = {
+            selected: 0,
+            htmlBody: "",
+            title: "",
+        };
         this.showPassword = false;
+        this.selectedSignature = -1;
+        this.selectedSignatureLabel = "";
         this.resultInfo = "";
         this.loading = false;
         window['angularProfileComponent'] = {
-            componentAfterUpload: function (value) { return _this.processAfterUpload(value); },
+            componentAfterUpload: function (base64Content) { return _this.processAfterUpload(base64Content); },
         };
     }
     ProfileComponent.prototype.prepareProfile = function () {
         $j('#inner_content').remove();
         $j('#menunav').hide();
+        $j('#divList').remove();
+        $j('#magicContactsTable').remove();
         $j('#container').width("99%");
+        if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
+            $j('#content h1')[0].remove();
+        }
         if (Prototype.BrowserFeatures.ElementExtensions) {
             //FIX PROTOTYPE CONFLICT
             var pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover', 'tab'];
@@ -48,26 +61,32 @@ var ProfileComponent = (function () {
             disablePrototypeJS('hide', pluginsToDisable);
         }
         //LOAD EDITOR TINYMCE for MAIL SIGN
-        /*tinymce.init({
+        tinymce.baseURL = "tools/tiny_mce";
+        tinymce.suffix = '.min';
+        tinymce.init({
             selector: "textarea#emailSignature",
-            statusbar : false,
-            language : "fr_FR",
-            height : "120",
+            statusbar: false,
+            language: "fr_FR",
+            height: "200",
             plugins: [
                 "textcolor bdesk_photo"
             ],
             menubar: false,
             toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor",
-            theme_buttons1_add : "fontselect,fontsizeselect",
-            theme_buttons2_add_before : "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
-            theme_buttons2_add : "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
-            theme_buttons3_add_before : "tablecontrols,separator",
-            theme_buttons3_add : "separator,print,separator,ltr,rtl,separator,fullscreen,separator,insertlayer,moveforward,movebackward,absolut",
-            theme_toolbar_align : "left",
-            theme_advanced_toolbar_location : "top",
-            theme_styles : "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1"
-    
-        });*/
+            theme_buttons1_add: "fontselect,fontsizeselect",
+            theme_buttons2_add_before: "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
+            theme_buttons2_add: "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
+            theme_buttons3_add_before: "tablecontrols,separator",
+            theme_buttons3_add: "separator,print,separator,ltr,rtl,separator,fullscreen,separator,insertlayer,moveforward,movebackward,absolut",
+            theme_toolbar_align: "left",
+            theme_advanced_toolbar_location: "top",
+            theme_styles: "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1"
+        });
+    };
+    ProfileComponent.prototype.updateBreadcrumb = function (applicationName) {
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > Profil";
+        }
     };
     ProfileComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -77,6 +96,7 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.coreUrl = data.coreurl;
+            _this.updateBreadcrumb(data.applicationName);
             _this.http.get(_this.coreUrl + 'rest/user/profile')
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
@@ -85,21 +105,68 @@ var ProfileComponent = (function () {
             });
         });
     };
-    ProfileComponent.prototype.processAfterUpload = function (value) {
+    ProfileComponent.prototype.processAfterUpload = function (b64Content) {
         var _this = this;
-        this.zone.run(function () { return _this.resfreshUpload(value); });
+        this.zone.run(function () { return _this.resfreshUpload(b64Content); });
     };
-    ProfileComponent.prototype.resfreshUpload = function (value) {
-        this.signatureModel.base64 = value;
+    ProfileComponent.prototype.resfreshUpload = function (b64Content) {
+        if (this.signatureModel.size <= 2000000) {
+            this.signatureModel.base64 = b64Content.replace(/^data:.*?;base64,/, "");
+            this.signatureModel.base64ForJs = b64Content;
+        }
+        else {
+            this.signatureModel.name = "";
+            this.signatureModel.size = 0;
+            this.signatureModel.type = "";
+            this.signatureModel.base64 = "";
+            this.signatureModel.base64ForJs = "";
+            this.resultInfo = "Taille maximum de fichier dépassée (2 MB)";
+            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        }
     };
     ProfileComponent.prototype.displayPassword = function () {
         this.showPassword = !this.showPassword;
     };
-    ProfileComponent.prototype.exitProfile = function () {
-        location.hash = "";
-        location.reload();
+    ProfileComponent.prototype.clickOnUploader = function (id) {
+        $j('#' + id).click();
     };
-    ProfileComponent.prototype.changePassword = function () {
+    ProfileComponent.prototype.uploadSignatureTrigger = function (fileInput) {
+        if (fileInput.target.files && fileInput.target.files[0]) {
+            var reader = new FileReader();
+            this.signatureModel.name = fileInput.target.files[0].name;
+            this.signatureModel.size = fileInput.target.files[0].size;
+            this.signatureModel.type = fileInput.target.files[0].type;
+            if (this.signatureModel.label == "") {
+                this.signatureModel.label = this.signatureModel.name;
+            }
+            reader.readAsDataURL(fileInput.target.files[0]);
+            reader.onload = function (value) {
+                window['angularProfileComponent'].componentAfterUpload(value.target.result);
+            };
+        }
+    };
+    ProfileComponent.prototype.displaySignatureEditionForm = function (index) {
+        this.selectedSignature = index;
+        this.selectedSignatureLabel = this.user.signatures[index].signature_label;
+    };
+    ProfileComponent.prototype.changeEmailSignature = function () {
+        var index = $j("#emailSignaturesSelect").prop("selectedIndex");
+        this.mailSignatureModel.selected = index;
+        if (index > 0) {
+            tinymce.get('emailSignature').setContent(this.user.emailSignatures[index - 1].html_body);
+            this.mailSignatureModel.title = this.user.emailSignatures[index - 1].title;
+        }
+        else {
+            tinymce.get('emailSignature').setContent("");
+            this.mailSignatureModel.title = "";
+        }
+    };
+    ProfileComponent.prototype.getAbsenceInfos = function () {
+    };
+    ProfileComponent.prototype.updatePassword = function () {
         var _this = this;
         this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)
             .map(function (res) { return res.json(); })
@@ -118,7 +185,7 @@ var ProfileComponent = (function () {
                     newPassword: "",
                     reNewPassword: "",
                 };
-                _this.resultInfo = 'Le mot de passe a bien été modifié';
+                _this.resultInfo = data.success;
                 $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                 //auto close
                 $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
@@ -127,30 +194,90 @@ var ProfileComponent = (function () {
             }
         });
     };
-    ProfileComponent.prototype.deleteSignature = function (id) {
+    ProfileComponent.prototype.submitEmailSignature = function () {
         var _this = this;
-        this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
+        this.mailSignatureModel.htmlBody = tinymce.get('emailSignature').getContent();
+        this.http.post(this.coreUrl + 'rest/currentUser/emailSignature', this.mailSignatureModel)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                alert(data.errors);
+                _this.resultInfo = data.errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
             else {
-                _this.user.signatures = data.signatures;
+                _this.user.emailSignatures = data.emailSignatures;
+                _this.mailSignatureModel = {
+                    selected: 0,
+                    htmlBody: "",
+                    title: "",
+                };
+                tinymce.get('emailSignature').setContent("");
+                _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
         });
     };
-    ProfileComponent.prototype.uploadSignatureTrigger = function (fileInput) {
-        if (fileInput.target.files && fileInput.target.files[0]) {
-            var reader = new FileReader();
-            reader.readAsDataURL(fileInput.target.files[0]);
-            reader.onload = function () {
-                var zipContent = reader.result.replace(/^data:.*?;base64,/, "");
-                window['angularProfileComponent'].componentAfterUpload(zipContent);
-            };
-            this.signatureModel.name = fileInput.target.files[0].name;
-            this.signatureModel.size = fileInput.target.files[0].size;
-            this.signatureModel.type = fileInput.target.files[0].type;
+    ProfileComponent.prototype.updateEmailSignature = function () {
+        var _this = this;
+        this.mailSignatureModel.htmlBody = tinymce.get('emailSignature').getContent();
+        var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
+        this.http.put(this.coreUrl + 'rest/currentUser/emailSignature/' + id, this.mailSignatureModel)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            if (data.errors) {
+                _this.resultInfo = data.errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            }
+            else {
+                _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].title = data.emailSignature.title;
+                _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].html_body = data.emailSignature.html_body;
+                _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            }
+        });
+    };
+    ProfileComponent.prototype.deleteEmailSignature = function () {
+        var _this = this;
+        var r = confirm('Voulez-vous vraiment supprimer la signature de mail ?');
+        if (r) {
+            var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
+            this.http.delete(this.coreUrl + 'rest/currentUser/emailSignature/' + id)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    _this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }
+                else {
+                    _this.user.emailSignatures = data.emailSignatures;
+                    _this.mailSignatureModel = {
+                        selected: 0,
+                        htmlBody: "",
+                        title: "",
+                    };
+                    tinymce.get('emailSignature').setContent("");
+                    _this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }
+            });
         }
     };
     ProfileComponent.prototype.submitSignature = function () {
@@ -159,19 +286,79 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                alert(data.errors);
+                _this.resultInfo = data.errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
             else {
                 _this.user.signatures = data.signatures;
                 _this.signatureModel = {
                     base64: "",
+                    base64ForJs: "",
                     name: "",
                     type: "",
                     size: 0,
                     label: "",
                 };
+                _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             }
         });
+    };
+    ProfileComponent.prototype.updateSignature = function () {
+        var _this = this;
+        var id = this.user.signatures[this.selectedSignature].id;
+        this.http.put(this.coreUrl + 'rest/currentUser/signature/' + id, { "label": this.selectedSignatureLabel })
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            if (data.errors) {
+                _this.resultInfo = data.errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            }
+            else {
+                _this.user.signatures[_this.selectedSignature].signature_label = data.signature.signature_label;
+                _this.selectedSignature = -1;
+                _this.selectedSignatureLabel = "";
+                _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            }
+        });
+    };
+    ProfileComponent.prototype.deleteSignature = function (id) {
+        var _this = this;
+        var r = confirm('Voulez-vous vraiment supprimer la signature ?');
+        if (r) {
+            this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    _this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }
+                else {
+                    _this.user.signatures = data.signatures;
+                    _this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }
+            });
+        }
     };
     ProfileComponent.prototype.onSubmit = function () {
         var _this = this;
@@ -186,20 +373,27 @@ var ProfileComponent = (function () {
                 });
             }
             else {
-                _this.resultInfo = 'Les informations utilisateur ont été modifiées';
+                _this.resultInfo = data.success;
                 $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                 //auto close
                 $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                     $j("#resultInfo").slideUp(500);
                 });
             }
+        }, function (error) {
+            alert(error.statusText);
         });
+    };
+    ProfileComponent.prototype.absenceModal = function () {
+        createModal(this.user.absence, 'modal_redirect', 'auto', '950px');
+        autocomplete(15, 'index.php?display=true&module=basket&page=autocomplete_users_list');
     };
     return ProfileComponent;
 }());
 ProfileComponent = __decorate([
     core_1.Component({
-        templateUrl: 'js/angular/app/Views/profile.html',
+        templateUrl: 'js/angular/app/Views/profile.component.html',
+        styleUrls: ['css/bootstrap.min.css', 'js/angular/app/Css/profile.component.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, core_1.NgZone])
 ], ProfileComponent);

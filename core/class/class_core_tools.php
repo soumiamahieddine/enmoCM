@@ -520,10 +520,10 @@ class core_tools extends functions
 
         // Menu items always displayed
         if ($myProfil) {
-            if (V2_ENABLED == true) {
-                echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="location.href = \'#/profile\'" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
+            if (PROD_MODE) {
+                echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(true, \'#/profile\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
             } else {
-                echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a href="'.$_SESSION['config']['businessappurl']. 'index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
+                echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(false, \'#/profile\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
             }
         }
         if ($logout) {
@@ -730,8 +730,11 @@ class core_tools extends functions
         echo '<div style="clear:both;"></div>';
         // quicklaunch items always displayed
         echo '<div style="width: 85%;margin: auto;">';
-        echo '<a style="display: inline-block;width: 45%;float: left;" href="' . $_SESSION['config']['businessappurl']
-                . 'index.php?page=modify_user&amp;admin=users&amp;reinit=true">';
+        if (PROD_MODE) {
+            echo '<a style="display: inline-block;width: 45%;float: left;cursor: pointer" onClick="triggerAngular(true, \'#/profile\')">';
+        } else {
+            echo '<a style="display: inline-block;width: 45%;float: left;cursor: pointer" onClick="triggerAngular(false, \'#/profile\')">';
+        }
         echo '<span>';
         echo '<span style="width:30px;height:30px;display:inline-block;text-align:center;">'
             .'<i class="fa fa-user fa-2x mCdarkGrey"></i></span>';
