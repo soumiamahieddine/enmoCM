@@ -15,7 +15,7 @@ function change_properties_box(difftype_id, path_manage_script, diff_list_id, or
     if(difftype_id != null)
     {	
 		document.getElementById(div_id).style = "height:200px; width:600px; border:1px solid;";
-		new Ajax.Request(path_manage_script,
+		/*new Ajax.Request(path_manage_script,
         {
             method:'post',
             parameters: { id_type : difftype_id,
@@ -47,7 +47,45 @@ function change_properties_box(difftype_id, path_manage_script, diff_list_id, or
                         catch(e){}
                     }
                }
-        });
+        });*/
+
+        $j.ajax({
+            url: path_manage_script,
+            type: 'POST',
+            data: {
+                id_type : difftype_id,
+                origin : origin_arg
+            },
+            success: function(answer)
+            {
+                eval("response = "+answer);
+                if (response.status==0)
+                {
+                    var diff_list_div=$j('#'+div_id);
+                    if(diff_list_div != null)
+                    {
+                        diff_list_div.html(response.div_content);
+                    }
+                }
+                else
+                {
+                    var diff_list_div = $j('#'+div_id);
+                    if(diff_list_div != null)
+                    {
+                        diff_list_div.html('');
+                    }
+
+                    try{
+                        $('frm_error').html(response.error_txt);
+                    }
+                    catch(e){}
+                }
+            },
+            error: function(error)
+            {
+                alert(error);
+            }            
+        })
     }
 }
 
@@ -74,10 +112,50 @@ function set_attach_type(type)
 
 function loadDiffusionProperties(difftype_id, path_manage_script, updatediv_id)
 {
-    var div_id = updatediv_id; 
+    console.log("LOADDIFF");
+    //var div_id = updatediv_id;
     if(difftype_id != null)
     {
-        new Ajax.Request(path_manage_script,
+        $j.ajax({
+            url : path_manage_script,
+            type : 'POST',
+            data : {id_type : difftype_id},
+            success: function(answer)
+            {
+                eval("response = "+answer);
+				if(response.status == 0 )
+                {
+                    var selected_list = response.div_content.split(',');
+					var complete_list = $j("#diffusion_values")[0];
+					var diffusion_properties = $j("#diffusion_properties")[0];
+					for (i=0;i<complete_list.length;i++)
+					{
+						complete_list[i].selected = false;
+					}
+					for (i=0;i<complete_list.length;i++)
+					{
+						for(j=0;j<selected_list.length;j++)
+						{
+							if(complete_list[i].value == selected_list[j]) 
+							{
+								complete_list[i].selected = true;
+							}
+						}
+					}
+					Move(complete_list,diffusion_properties);
+                    /*if(diff_list_div != null)
+                    {
+                        diff_list_div.html(response.div_content);
+                    }*/
+                }
+					
+            },
+            error : function(error)
+            {
+                alert(error);
+            } 
+        });
+        /*new Ajax.Request(path_manage_script,
         {
             method:'post',
             parameters: { id_type : difftype_id
@@ -105,10 +183,10 @@ function loadDiffusionProperties(difftype_id, path_manage_script, updatediv_id)
 						}
 					}
 					Move(complete_list,diffusion_properties);
-                    /*if(diff_list_div != null)
+                    if(diff_list_div != null)
                     {
                         diff_list_div.innerHTML = response.div_content;
-                    }*/
+                    }
 					
                 }
                 else
@@ -125,7 +203,7 @@ function loadDiffusionProperties(difftype_id, path_manage_script, updatediv_id)
                     catch(e){}
                 }
             }
-        });
+        });*/
     }
 }
 
@@ -134,7 +212,7 @@ function loadAttachforProperties(difftype_id, path_manage_script, updatediv_id)
     var div_id = updatediv_id
 	if(difftype_id != null)
     {
-        new Ajax.Request(path_manage_script,
+        /*new Ajax.Request(path_manage_script,
         {
             method:'post',
             parameters: { id_type : difftype_id
@@ -177,17 +255,51 @@ function loadAttachforProperties(difftype_id, path_manage_script, updatediv_id)
                     catch(e){}
                 }
             }
+        });*/
+
+        $j.ajax({
+            url : path_manage_script,
+            data:{
+                id_type : difftype_id
+            },
+            success : function(answer){
+                eval("response = "+answer);
+				if(response.status == 0 )
+                {
+					var selected_list = response.div_content.split(',');
+					var complete_list = $j("#attachfor_values")[0];
+					var attachfor_properties = $j("#attachfor_properties")[0];
+					for (i=0;i<complete_list.length;i++)
+					{
+						complete_list[i].selected = false;
+					}
+					for (i=0;i<complete_list.length;i++)
+					{
+						for(j=0;j<selected_list.length;j++)
+						{
+							if(complete_list[i].value == selected_list[j]) 
+							{
+								complete_list[i].selected = true;
+							}
+						}
+					}
+					Move(complete_list,attachfor_properties);
+                }
+            },
+          error : function(error){
+              alert(error);
+          }
         });
     }
 }
 
 function del(id) {
-	$("state-"+id).value = 'deleted';
-	$("row-"+id).style.display='none';
+	$j("#state-"+id).val('deleted');
+	$j("#row-"+id).css('display','none');
 }
 
 function createNotifScript(path_manage_script, notification_sid, notification_id){
-    new Ajax.Request(path_manage_script,
+    /*new Ajax.Request(path_manage_script,
     {
         method:'post',
         parameters: { notification_sid : notification_sid,
@@ -198,6 +310,23 @@ function createNotifScript(path_manage_script, notification_sid, notification_id
             if(response.status == 0 ) {
                 $('create_notif_script').style.display="none";
             }
+        }
+    });*/
+    $j.ajax({
+        url : path_manage_script,
+        type : 'POST',
+        data : {
+            notification_sid : notification_sid,
+            notification_id : notification_id,
+        },
+        success : function(answer){
+            eval("response = "+answer);
+            if(response.status == 0 ) {
+                $j('#create_notif_script').css('display','none');
+            }
+        },
+        error : function(error){
+            alert(error);
         }
     });
 }
