@@ -3,24 +3,37 @@ var chronoExpiration;
 
 page_result_final = '';
 
+var profileView = "Views/profile.component.html";
+var signatureBookView = "Views/signature-book.component.html";
 function triggerAngular(prodmode, locationToGo) {
-    if (prodmode) {
-        $j('#inner_content').html('<div><i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i></div>');
+    $j.ajax({
+        url      : 'index.php?display=true&page=initializeJsGlobalConfig',
+        type     : 'GET',
+        dataType : 'json',
+        success: function(answer) {
 
-        var head = document.getElementsByTagName('head')[0];
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = "js/angular/main.bundle.min.js";
+            profileView = answer.profileView;
+            signatureBookView = answer.signatureBookView;
+            if (prodmode) {
+                $j('#inner_content').html('<div><i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i></div>');
 
-        script.onreadystatechange = changeLocationToAngular(locationToGo);
-        script.onload = changeLocationToAngular(locationToGo);
+                var head = document.getElementsByTagName('head')[0];
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = "js/angular/main.bundle.min.js";
 
-        // Fire the loading
-        head.appendChild(script);
-    } else {
-        System.import('js/angular/main.js').catch(function(err){ console.error(err); });
-        location.href = locationToGo;
-    }
+                script.onreadystatechange = changeLocationToAngular(locationToGo);
+                script.onload = changeLocationToAngular(locationToGo);
+
+                // Fire the loading
+                head.appendChild(script);
+            } else {
+                System.import('js/angular/main.js').catch(function(err){ console.error(err); });
+                location.href = locationToGo;
+            }
+        }
+    });
+
 }
 
 function changeLocationToAngular(locationToGo) {

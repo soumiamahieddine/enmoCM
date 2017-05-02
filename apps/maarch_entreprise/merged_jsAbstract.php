@@ -55,7 +55,7 @@ class MergedJsAbstract {
 		include('apps/maarch_entreprise/js/search_adv.js');
 		readfile('apps/maarch_entreprise/js/maarch.js');
 		readfile('apps/maarch_entreprise/js/keypress.js');
-		readfile('apps/maarch_entreprise/js/Chart.js');
+		readfile('apps/maarch_entreprise/js/Chart.min.js');
 		readfile('apps/maarch_entreprise/js/chosen.proto.min.js');
 		readfile('apps/maarch_entreprise/js/event.simulate.js');
 //		include('apps/maarch_entreprise/js/RSVP.js');

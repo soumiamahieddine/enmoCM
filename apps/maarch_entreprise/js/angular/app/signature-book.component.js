@@ -443,7 +443,7 @@ var SignatureBookComponent = (function () {
 }());
 SignatureBookComponent = __decorate([
     core_1.Component({
-        templateUrl: 'js/angular/app/Views/signature-book.component.html',
+        templateUrl: signatureBookView,
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
 ], SignatureBookComponent);
