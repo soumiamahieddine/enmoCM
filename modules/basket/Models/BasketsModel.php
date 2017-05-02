@@ -19,7 +19,7 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'modules/basket/Models/BasketsModelAbstract.php';
+namespace Baskets\Models;
 
 class BasketsModel extends BasketsModelAbstract {
     // Do your stuff in this class

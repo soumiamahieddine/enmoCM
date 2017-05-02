@@ -135,6 +135,7 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 $app->get('/user/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/user/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
+$app->get('/currentUser/baskets/absence', \Core\Controllers\UserController::class . ':getCurrentUserBasketsForAbsence');
 $app->post('/currentUser/signature', \Core\Controllers\UserController::class . ':createCurrentUserSignature');
 $app->put('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserSignature');
 $app->delete('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserSignature');

@@ -5,13 +5,14 @@ import 'rxjs/add/operator/map';
 declare function $j(selector: any) : any;
 declare var tinymce : any;
 declare var Prototype : any;
+declare var profileView : string;
 declare function disablePrototypeJS(method: string, plugins: any) : any;
 declare function createModal(a: string, b: string, c: string, d: string) : any;
 declare function autocomplete(a: number, b: string) : any;
 
 
 @Component({
-    templateUrl : 'js/angular/app/Views/profile.component.html',
+    templateUrl : profileView,
     styleUrls   : ['css/bootstrap.min.css','js/angular/app/Css/profile.component.css']
 })
 export class ProfileComponent implements OnInit {
@@ -190,6 +191,11 @@ export class ProfileComponent implements OnInit {
     }
 
     getAbsenceInfos() {
+        this.http.get(this.coreUrl + 'rest/currentUser/baskets/absence')
+            .map(res => res.json())
+            .subscribe((data) => {
+                this.loading = false;
+            });
     }
 
     updatePassword() {

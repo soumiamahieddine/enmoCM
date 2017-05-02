@@ -4,6 +4,7 @@
     		"Core\\": "core/",
     		"Apps\\": "apps/maarch_entreprise/",
             "Attachments\\": "modules/attachments/",
+            "Baskets\\": "modules/basket/",
             "Entities\\": "modules/entities/",
     		"Visa\\": "modules/visa/"
     	}

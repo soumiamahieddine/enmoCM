@@ -103,6 +103,14 @@ class UserController
         return $response->withJson(['success' => _UPDATED_PASSWORD]);
     }
 
+    public function getCurrentUserBasketsForAbsence(RequestInterface $request, ResponseInterface $response) {
+        if (empty($_SESSION['user']['UserId'])) {
+            return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
+        }
+
+
+    }
+
     public function createCurrentUserSignature(RequestInterface $request, ResponseInterface $response)
     {
         $data = $request->getParams();

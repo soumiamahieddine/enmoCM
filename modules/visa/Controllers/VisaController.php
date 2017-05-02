@@ -15,6 +15,7 @@ namespace Visa\Controllers;
 
 use Core\Models\AttachmentModel;
 use Core\Models\UserModel;
+use Baskets\Models\BasketsModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -24,7 +25,6 @@ require_once 'core/class/class_security.php';
 require_once 'apps/maarch_entreprise/Models/ResModel.php';
 require_once 'apps/maarch_entreprise/Models/HistoryModel.php';
 require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
-require_once 'modules/basket/Models/BasketsModel.php';
 require_once 'modules/notes/Models/NotesModel.php';
 require_once 'modules/visa/Models/VisaModel.php';
 
@@ -66,7 +66,7 @@ class VisaController
         //			'orderBy' => ['event_date DESC']
         //		]);
 
-        $resList = \BasketsModel::getResListById(
+        $resList = BasketsModel::getResListById(
             [
             'basketId' => $basketId,
             'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname'],

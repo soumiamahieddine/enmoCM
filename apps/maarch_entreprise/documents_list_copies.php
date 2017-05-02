@@ -197,7 +197,7 @@ for ($i=0;$i<count($tab);$i++)
             if($tab[$i][$j][$value]=="res_id")
             {
                 $tab[$i][$j]["res_id"]=$tab[$i][$j]['value'];
-                $tab[$i][$j]["label"]=_GED_NUMAAAA;
+                $tab[$i][$j]["label"]=_GED_NUM;
                 $tab[$i][$j]["size"]="4";
                 $tab[$i][$j]["label_align"]="left";
                 $tab[$i][$j]["align"]="left";
