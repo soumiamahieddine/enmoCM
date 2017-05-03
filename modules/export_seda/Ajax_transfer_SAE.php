@@ -41,7 +41,7 @@ class TransferToSAE
     {
         $config = parse_ini_file(__DIR__.'/config.ini');
         $this->token = $config['token'];
-        $this->SAE = $config['urlSAE'];
+        $this->SAE = $config['urlSAEService'];
     }
 
     public function send($reference)
@@ -55,7 +55,6 @@ class TransferToSAE
         $messageFile = $reference.".xml";
 
         $files = scandir($messageDirectory);
-        $attachments = [];
         foreach ($files as $file) {
             if ($file != $messageFile && $file != ".." && $file != ".") {
                 $attachment = new stdClass;
@@ -93,9 +92,8 @@ class TransferToSAE
             curl_setopt($curl, CURLOPT_COOKIE, $this->token);
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
             //curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($post));
-            
+
             $return = json_decode(curl_exec($curl));
-            
             
             if (!$return) {
                 $res['status'] = 1;

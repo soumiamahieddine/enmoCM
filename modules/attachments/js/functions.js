@@ -5,7 +5,14 @@ function defineBackDate() {
 	delay = $('withDelay').value
 	date1.setDate(date1.getDate() + Number(delay));
 	var str_date = date1.toLocaleDateString();
-	str_date = str_date.replace(/\//g, '-');
+    var t = str_date.split('/');
+    if(t[1].length == 1){
+        t[1] = '0'+t[1];
+    }
+    if(t[0].length == 1){
+        t[0] = '0'+t[0];
+    }
+    str_date = t.join('-');
 	return str_date;
 }
 
