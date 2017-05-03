@@ -3,17 +3,18 @@ var chronoExpiration;
 
 page_result_final = '';
 
-var profileView = "Views/profile.component.html";
-var signatureBookView = "Views/signature-book.component.html";
+var angularGlobals = {};
 function triggerAngular(prodmode, locationToGo) {
     $j.ajax({
-        url      : 'index.php?display=true&page=initializeJsGlobalConfig',
+        url      : '../../rest/initialize',
         type     : 'GET',
         dataType : 'json',
         success: function(answer) {
 
-            profileView = answer.profileView;
-            signatureBookView = answer.signatureBookView;
+            angularGlobals.profileView = answer.profileView;
+            angularGlobals.signatureBookView = answer.signatureBookView;
+            angularGlobals.coreUrl = answer.coreUrl;
+            angularGlobals.applicationName = answer.applicationName;
             if (prodmode) {
                 $j('#inner_content').html('<div><i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i></div>');
 
@@ -33,7 +34,6 @@ function triggerAngular(prodmode, locationToGo) {
             }
         }
     });
-
 }
 
 function changeLocationToAngular(locationToGo) {
