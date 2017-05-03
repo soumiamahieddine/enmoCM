@@ -46,16 +46,6 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/effects.js');
 		readfile('apps/maarch_entreprise/js/controls.js');
 
-		//Dependencies
-		readfile('node_modules/jquery/dist/jquery.min.js');
-		readfile('node_modules/core-js/client/shim.js');
-		readfile('node_modules/zone.js/dist/zone.min.js');
-		readfile('node_modules/bootstrap/dist/js/bootstrap.min.js');
-		readfile('node_modules/chart.js/Chart.min.js');
-		readfile('node_modules/tinymce/tinymce.min.js');
-		readfile('node_modules/jquery.nicescroll/jquery.nicescroll.min.js');
-		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
-
 		//TODO clean
 		include('apps/maarch_entreprise/js/search_adv.js');
 		readfile('apps/maarch_entreprise/js/chosen.proto.min.js');
@@ -65,6 +55,16 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/tabricator.js');
 		readfile('apps/maarch_entreprise/js/maarch.js');
 		readfile('apps/maarch_entreprise/js/accounting.min.js');
+
+		//Dependencies
+		readfile('node_modules/jquery/dist/jquery.min.js');
+		readfile('node_modules/core-js/client/shim.js');
+		readfile('node_modules/zone.js/dist/zone.min.js');
+		readfile('node_modules/bootstrap/dist/js/bootstrap.min.js');
+		readfile('node_modules/chart.js/Chart.min.js');
+		readfile('node_modules/tinymce/tinymce.min.js');
+		readfile('node_modules/jquery.nicescroll/jquery.nicescroll.min.js');
+		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
 
 		//Mobile
 		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe.min.js');
