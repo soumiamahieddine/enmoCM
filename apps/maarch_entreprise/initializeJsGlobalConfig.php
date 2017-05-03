@@ -22,9 +22,20 @@
 $core_tools = new core_tools();
 $core_tools->test_user();
 
-$aJsGlobal = array();
+$aJsGlobal = [];
 $aJsGlobal['coreurl'] = $_SESSION['config']['coreurl'];
 $aJsGlobal['businessappurl'] = $_SESSION['config']['businessappurl'];
+$aJsGlobal['applicationName'] = $_SESSION['config']['applicationname'];
+
+$aJsGlobal['profileView'] = 'Views/profile.component.html';
+if(file_exists($_SESSION['config']['corepath'].'custom/'.$_SESSION['custom_override_id'].'/apps/maarch_entreprise/Views/profile.component.html')) {
+    $aJsGlobal['profileView'] = '../../custom/'.$_SESSION['custom_override_id'].'/apps/maarch_entreprise/Views/profile.component.html';
+}
+$aJsGlobal['signatureBookView'] = 'Views/signature-book.component.html';
+if(file_exists($_SESSION['config']['corepath'].'custom/'.$_SESSION['custom_override_id'].'/apps/maarch_entreprise/Views/signature-book.component.html')) {
+    $aJsGlobal['signatureBookView'] = '../../custom/'.$_SESSION['custom_override_id'].'/apps/maarch_entreprise/Views/signature-book.component.html';
+}
+
 
 echo json_encode($aJsGlobal);
 

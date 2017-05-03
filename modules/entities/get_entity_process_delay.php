@@ -227,7 +227,7 @@ for($i=0; $i<count($entities);$i++)
     {
 
         $stmt = $db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." AS delay, creation_date FROM ".$view
-            . " WHERE destination = ? AND status not in ('DEL','BAD') AND closing_date IS NOT NULL".$where_date." ".$where_status." ".$where_priority,array($entities[$i]['ID']));
+            . " WHERE destination = ? AND status not in ('DEL','BAD') AND closing_date IS NOT NULL".$where_date." ".$where_status." ".$where_priority . $where_clause,array($entities[$i]['ID']));
         
         if( $stmt->rowCount() > 0)
         {

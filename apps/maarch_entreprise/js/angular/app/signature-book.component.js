@@ -54,6 +54,7 @@ var SignatureBookComponent = (function () {
         this.showLeftPanel = true;
         this.showRightPanel = true;
         this.showAttachmentPanel = false;
+        this.showSignaturesPanel = false;
         this.loading = false;
         this.loadingSign = false;
         this.leftContentWidth = "44%";
@@ -131,6 +132,7 @@ var SignatureBookComponent = (function () {
                     setTimeout(function () {
                         $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                         $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
+                        $j(".pjSign").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                         $j("#resListContent").scrollTop(0);
                         $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
                         $j("#obsVersion").tooltipster({
@@ -323,81 +325,71 @@ var SignatureBookComponent = (function () {
             _this.signatureBook.nbNotes = data;
         });
     };
-    SignatureBookComponent.prototype.prepareSignFile = function (attachment) {
+    SignatureBookComponent.prototype.signFile = function (attachment, signature) {
+        var _this = this;
         if (!this.loadingSign && this.signatureBook.canSign) {
+            this.loadingSign = true;
+            var path = "index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&resIdMaster=" + this.resId + "&signatureId=" + signature.id;
             if (attachment.res_id == 0) {
                 if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
-                    this.signatureBookSignFile(attachment.res_id_version, 4);
+                    path += "&isVersion&isOutgoing&id=" + attachment.res_id_version;
                 }
                 else {
-                    this.signatureBookSignFile(attachment.res_id_version, 1);
+                    path += "&isVersion&id=" + attachment.res_id_version;
                 }
             }
             else if (attachment.res_id_version == 0) {
                 if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
-                    this.signatureBookSignFile(attachment.res_id, 3);
+                    path += "&isOutgoing&id=" + attachment.res_id;
                 }
                 else {
-                    this.signatureBookSignFile(attachment.res_id, 0);
+                    path += "&id=" + attachment.res_id;
                 }
             }
+            this.http.get(path, signature)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.status == 0) {
+                    _this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + _this.resId + "&id=" + data.new_id + "&isVersion=false";
+                    _this.signatureBook.attachments[_this.rightSelectedThumbnail].viewerLink = _this.rightViewerLink;
+                    _this.signatureBook.attachments[_this.rightSelectedThumbnail].status = 'SIGN';
+                    _this.signatureBook.attachments[_this.rightSelectedThumbnail].idToDl = data.new_id;
+                    var allSigned = true;
+                    _this.signatureBook.attachments.forEach(function (value) {
+                        if (value.sign && value.status != 'SIGN') {
+                            allSigned = false;
+                        }
+                    });
+                    _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = allSigned;
+                }
+                else {
+                    alert(data.error);
+                }
+                _this.showSignaturesPanel = false;
+                _this.loadingSign = false;
+            });
         }
-    };
-    SignatureBookComponent.prototype.signatureBookSignFile = function (resId, type) {
-        var _this = this;
-        this.loadingSign = true;
-        var path = '';
-        if (type == 0) {
-            path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&resIdMaster=' + this.resId + '&id=' + resId;
-        }
-        else if (type == 1) {
-            path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isVersion&resIdMaster=' + this.resId + '&id=' + resId;
-        }
-        else if (type == 2) {
-            path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isOutgoing&resIdMaster=' + this.resId + '&id=' + resId;
-        }
-        else if (type == 3) {
-            path = 'index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&isOutgoing&isVersion&resIdMaster=' + this.resId + '&id=' + resId;
-        }
-        this.http.get(path)
-            .map(function (res) { return res.json(); })
-            .subscribe(function (data) {
-            if (data.status == 0) {
-                _this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + _this.resId + "&id=" + data.new_id;
-                _this.signatureBook.attachments[_this.rightSelectedThumbnail].viewerLink = _this.rightViewerLink;
-                _this.signatureBook.attachments[_this.rightSelectedThumbnail].status = 'SIGN';
-                _this.signatureBook.attachments[_this.rightSelectedThumbnail].idToDl = data.new_id;
-                var allSigned = true;
-                _this.signatureBook.attachments.forEach(function (value) {
-                    if (value.sign && value.status != 'SIGN') {
-                        allSigned = false;
-                    }
-                });
-                _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = allSigned;
-            }
-            else {
-                alert(data.error);
-            }
-            _this.loadingSign = false;
-        });
     };
     SignatureBookComponent.prototype.unsignFile = function (attachment) {
         var _this = this;
         var collId;
         var resId;
+        var isVersion;
         if (attachment.res_id == 0) {
             resId = attachment.res_id_version;
             collId = "res_version_attachments";
+            isVersion = "true";
         }
         else if (attachment.res_id_version == 0) {
             resId = attachment.res_id;
             collId = "res_attachments";
+            isVersion = "false";
         }
         this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {}, {})
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.status == "OK") {
-                _this.rightViewerLink = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=" + _this.resId + "&id=" + resId;
+                _this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + _this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].viewerLink = _this.rightViewerLink;
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].status = 'A_TRA';
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].idToDl = resId;
@@ -451,7 +443,7 @@ var SignatureBookComponent = (function () {
 }());
 SignatureBookComponent = __decorate([
     core_1.Component({
-        templateUrl: 'js/angular/app/Views/signatureBook.html',
+        templateUrl: signatureBookView,
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
 ], SignatureBookComponent);

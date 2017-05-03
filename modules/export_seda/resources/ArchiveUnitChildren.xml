@@ -1,4 +1,3 @@
-<?merge $archiveUnitChildren ?>
 <ArchiveUnit id="arch_child_[?merge .id ?]">
     <ArchiveUnitRefId><?merge .archiveUnitRefId ?></ArchiveUnitRefId>
     <ArchiveUnitProfile schemeID="[?merge .archiveUnitProfile.schemeID ?]" schemeName="[?merge .archiveUnitProfile.schemeName ?]" schemeAgencyID="[?merge .archiveUnitProfile.schemeAgencyID ?]" schemeAgencyName="[?merge .archiveUnitProfile.schemeAgencyName ?]" schemeVersionID="[?merge .archiveUnitProfile.schemeVersionID ?]" schemeDataURI="[?merge .archiveUnitProfile.schemeDataURI ?]" schemeURI="[?merge .archiveUnitProfile.schemeURI ?]"><?merge .archiveUnitProfile ?></ArchiveUnitProfile>

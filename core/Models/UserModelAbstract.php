@@ -109,40 +109,6 @@ class UserModelAbstract extends \Apps_Table_Service
         }
     }
 
-    public static function getSignaturesById(array $aArgs = [])
-    {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
-
-        $aReturn = static::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['user_signatures'],
-            'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']],
-        ]);
-
-        if (!empty($aReturn)) {
-            $docserver = DocserverModel::getByTypeId(['docserver_type_id' => 'TEMPLATES', 'select' => ['path_template']]);
-        }
-
-        foreach($aReturn as $key => $value) {
-            $pathToSignature = $docserver[0]['path_template'] . str_replace('#', '/', $value['signature_path']) . $value['signature_file_name'];
-
-            $extension = explode('.', $pathToSignature);
-            $extension = $extension[count($extension) - 1];
-            $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($extension);
-            $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp; // TODO No Session
-            if (copy($pathToSignature, $filePathOnTmp)) {
-                $aReturn[$key]['pathToSignatureOnTmp'] = $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp;
-            } else {
-                $aReturn[$key]['pathToSignatureOnTmp'] = '';
-            }
-
-        }
-
-        return $aReturn;
-    }
-
     public static function createSignature(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId', 'signatureLabel', 'signaturePath', 'signatureFileName']);
@@ -157,6 +123,24 @@ class UserModelAbstract extends \Apps_Table_Service
             ],
             'user_signatures'
         );
+
+        return true;
+    }
+
+    public static function updateSignature(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['id', 'userId', 'label']);
+        static::checkString($aArgs, ['userId', 'label']);
+        static::checkNumeric($aArgs, ['id']);
+
+        parent::update([
+            'table'     => 'user_signatures',
+            'set'       => [
+                'signature_label'   => $aArgs['label']
+            ],
+            'where'     => ['user_id = ?', 'id = ?'],
+            'data'      => [$aArgs['userId'], $aArgs['id']]
+        ]);
 
         return true;
     }
@@ -183,6 +167,109 @@ class UserModelAbstract extends \Apps_Table_Service
         return true;
     }
 
+    public static function createEmailSignature(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'title', 'htmlBody']);
+        static::checkString($aArgs, ['userId', 'title', 'htmlBody']);
+
+        parent::insertInto(
+            [
+                'user_id'   => $aArgs['userId'],
+                'title'     => $aArgs['title'],
+                'html_body' => $aArgs['htmlBody']
+            ],
+            'users_email_signatures'
+        );
+
+        return true;
+    }
+
+    public static function updateEmailSignature(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['id','userId', 'title', 'htmlBody']);
+        static::checkString($aArgs, ['userId', 'title', 'htmlBody']);
+        static::checkNumeric($aArgs, ['id']);
+
+        parent::update([
+            'table'     => 'users_email_signatures',
+            'set'       => [
+                'title'     => $aArgs['title'],
+                'html_body' => $aArgs['htmlBody'],
+            ],
+            'where'     => ['user_id = ?', 'id = ?'],
+            'data'      => [$aArgs['userId'], $aArgs['id']]
+        ]);
+
+        return true;
+    }
+
+    public static function deleteEmailSignature(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['id', 'userId']);
+        static::checkString($aArgs, ['userId']);
+
+        parent::deleteFrom([
+            'table'     => 'users_email_signatures',
+            'where'     => ['user_id = ?', 'id = ?'],
+            'data'      => [$aArgs['userId'], $aArgs['id']]
+        ]);
+
+        return true;
+    }
+
+    public static function getSignaturesById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+        $aReturn = static::select([
+            'select'    => ['id', 'user_id', 'signature_label', 'signature_path', 'signature_file_name'],
+            'table'     => ['user_signatures'],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']],
+            'order_by'  => 'id'
+        ]);
+
+        if (!empty($aReturn)) {
+            $docserver = DocserverModel::getByTypeId(['docserver_type_id' => 'TEMPLATES', 'select' => ['path_template']]);
+        }
+
+        foreach($aReturn as $key => $value) {
+            $pathToSignature = $docserver[0]['path_template'] . str_replace('#', '/', $value['signature_path']) . $value['signature_file_name'];
+
+            $extension = explode('.', $pathToSignature);
+            $extension = $extension[count($extension) - 1];
+            $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($extension);
+            $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp; // TODO No Session
+            if (copy($pathToSignature, $filePathOnTmp)) {
+                $aReturn[$key]['pathToSignatureOnTmp'] = $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp; // TODO No Session
+            } else {
+                $aReturn[$key]['pathToSignatureOnTmp'] = '';
+            }
+            $aReturn[$key]['pathToSignature'] = $pathToSignature;
+
+            unset($aReturn[$key]['signature_path'], $aReturn[$key]['signature_file_name']);
+        }
+
+        return $aReturn;
+    }
+
+    public static function getSignatureWithSignatureIdById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'signatureId']);
+        static::checkString($aArgs, ['userId']);
+        static::checkNumeric($aArgs, ['signatureId']);
+
+        $aReturn = static::select([
+            'select'    => ['id', 'user_id', 'signature_label'],
+            'table'     => ['user_signatures'],
+            'where'     => ['user_id = ?', 'id = ?'],
+            'data'      => [$aArgs['userId'], $aArgs['signatureId']],
+        ]);
+
+        return $aReturn[0];
+    }
+
     public static function getEmailSignaturesById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId']);
@@ -193,9 +280,26 @@ class UserModelAbstract extends \Apps_Table_Service
             'table'     => ['users_email_signatures'],
             'where'     => ['user_id = ?'],
             'data'      => [$aArgs['userId']],
+            'order_by'  => 'id'
         ]);
 
         return $aReturn;
+    }
+
+    public static function getEmailSignatureWithSignatureIdById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'signatureId']);
+        static::checkString($aArgs, ['userId']);
+        static::checkNumeric($aArgs, ['signatureId']);
+
+        $aReturn = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['users_email_signatures'],
+            'where'     => ['user_id = ?', 'id = ?'],
+            'data'      => [$aArgs['userId'], $aArgs['signatureId']],
+        ]);
+
+        return $aReturn[0];
     }
 
     public static function getLabelledUserById(array $aArgs = [])
@@ -212,32 +316,6 @@ class UserModelAbstract extends \Apps_Table_Service
         }
 
         return $labelledUser;
-    }
-
-    public static function getSignatureForCurrentUser()
-    {
-        //TODO No Session
-        if (empty($_SESSION['user']['pathToSignature'][0]) || !file_exists($_SESSION['user']['pathToSignature'][0])) {
-            return [];
-        }
-
-        $aSignature = [
-            'signaturePath' => $_SESSION['user']['signature_path'],
-            'signatureFileName' => $_SESSION['user']['signature_file_name'],
-            'pathToSignature' => $_SESSION['user']['pathToSignature'][0]
-        ];
-
-        $extension = explode('.', $aSignature['pathToSignature']);
-        $extension = $extension[count($extension) - 1];
-        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($extension);
-        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
-        if (!copy($aSignature['pathToSignature'], $filePathOnTmp)) {
-            return $aSignature;
-        }
-
-        $aSignature['pathToSignatureOnTmp'] = $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp;
-
-        return $aSignature;
     }
 
     public static function getCurrentConsigneById(array $aArgs = [])
