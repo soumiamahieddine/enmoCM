@@ -1965,66 +1965,77 @@ function setContactType(mode, creation){
  **/
 function show_admin_contacts( is_corporate, display)
 {
-    Console.log("TEST MAIL VALIDE");
+    
     var display_value = display || 'inline';
-    var title = $("title_p");
-    var lastname = $("lastname_p");
-    var firstname = $("firstname_p");
-    var function_p = $("function_p");
-    var lastname_mandatory = $("lastname_mandatory");
-    var society_mandatory = $("society_mandatory");
+    var title = $j("#title_p");
+    var lastname = $j("#lastname_p");
+    var firstname = $j("#firstname_p");
+    var function_p = $j("#function_p");
+    var lastname_mandatory = $j("#lastname_mandatory");
+    var society_mandatory = $j("#society_mandatory");
     if(is_corporate == true)
     {
         if(title)
         {
-            title.style.display = "none";
+           // title.style.display = "none";
+            title.css('display', 'none');
         }
         if(lastname)
         {
-            lastname.style.display = "none";
+            lastname.css('display', 'none');
         }
         if(firstname)
         {
-            firstname.style.display = "none";
+            firstname.css('display', 'none');
         }
         if(function_p)
         {
-            function_p.style.display = "none";
+            function_p.css('display', 'none');
         }
         if(lastname_mandatory)
         {
-            lastname_mandatory.style.display = 'none';
+            lastname_mandatory.css('display', 'none');
         }
         if(society_mandatory)
         {
-            society_mandatory.style.display = 'inline';
+            society_mandatory.css('display', 'none');
         }
     }
     else
     {
         if(title)
         {
-            title.style.display = display_value;
+          //  title.style.display = display_value;
+            title.css('display', display_value);
         }
         if(lastname)
         {
-            lastname.style.display = display_value;
+           // lastname.style.display = display_value;
+            lastname.css('display', display_value);
         }
         if(firstname)
         {
-            firstname.style.display = display_value;
+            //firstname.style.display = display_value;
+            firstname.css('display', display_value);
+
         }
         if(function_p)
         {
-            function_p.style.display = display_value;
+            //function_p.style.display = display_value;
+            function_p.css('display', display_value);
+
         }
         if(lastname_mandatory)
         {
-            lastname_mandatory.style.display = 'inline';
+           // lastname_mandatory.style.display = 'inline';
+            lastname_mandatory.css('display', 'inline');
+
         }
         if(society_mandatory)
         {
-            society_mandatory.style.display = 'none';
+            //society_mandatory.style.display = 'none';
+            society_mandatory.css('display', 'none');
+
         }
     }
 }
