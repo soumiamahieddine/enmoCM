@@ -133,10 +133,6 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.clickOnUploader = function (id) {
         $j('#' + id).click();
     };
-    ProfileComponent.prototype.exitProfile = function () {
-        location.hash = "";
-        location.reload();
-    };
     ProfileComponent.prototype.uploadSignatureTrigger = function (fileInput) {
         if (fileInput.target.files && fileInput.target.files[0]) {
             var reader = new FileReader();
@@ -167,6 +163,14 @@ var ProfileComponent = (function () {
             tinymce.get('emailSignature').setContent("");
             this.mailSignatureModel.title = "";
         }
+    };
+    ProfileComponent.prototype.getAbsenceInfos = function () {
+        var _this = this;
+        this.http.get(this.coreUrl + 'rest/currentUser/baskets/absence')
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            _this.loading = false;
+        });
     };
     ProfileComponent.prototype.updatePassword = function () {
         var _this = this;
@@ -394,8 +398,8 @@ var ProfileComponent = (function () {
 }());
 ProfileComponent = __decorate([
     core_1.Component({
-        templateUrl: 'js/angular/app/Views/profile.html',
-        styleUrls: ['css/bootstrap.min.css', 'js/angular/app/Css/profile.css']
+        templateUrl: profileView,
+        styleUrls: ['css/bootstrap.min.css', 'js/angular/app/Css/profile.component.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, core_1.NgZone])
 ], ProfileComponent);

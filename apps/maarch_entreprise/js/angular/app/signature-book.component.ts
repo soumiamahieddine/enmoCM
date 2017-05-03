@@ -10,6 +10,7 @@ declare function valid_action_form(a1: string, a2: string, a3: string, a4: numbe
 declare function $j(selector: string) : any;
 declare function showAttachmentsForm(path: string) : void;
 declare function modifyAttachmentsForm(path: string, width: string, height: string) : void;
+declare var signatureBookView : string;
 
 
 @Pipe({ name: 'safeUrl' })
@@ -21,7 +22,7 @@ export class SafeUrlPipe implements PipeTransform {
 }
 
 @Component({
-  templateUrl: 'js/angular/app/Views/signatureBook.html',
+  templateUrl: signatureBookView,
 })
 export class SignatureBookComponent implements OnInit {
 

@@ -3,6 +3,43 @@ var chronoExpiration;
 
 page_result_final = '';
 
+var profileView = "Views/profile.component.html";
+var signatureBookView = "Views/signature-book.component.html";
+function triggerAngular(prodmode, locationToGo) {
+    $j.ajax({
+        url      : 'index.php?display=true&page=initializeJsGlobalConfig',
+        type     : 'GET',
+        dataType : 'json',
+        success: function(answer) {
+
+            profileView = answer.profileView;
+            signatureBookView = answer.signatureBookView;
+            if (prodmode) {
+                $j('#inner_content').html('<div><i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i></div>');
+
+                var head = document.getElementsByTagName('head')[0];
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = "js/angular/main.bundle.min.js";
+
+                script.onreadystatechange = changeLocationToAngular(locationToGo);
+                script.onload = changeLocationToAngular(locationToGo);
+
+                // Fire the loading
+                head.appendChild(script);
+            } else {
+                System.import('js/angular/main.js').catch(function(err){ console.error(err); });
+                location.href = locationToGo;
+            }
+        }
+    });
+
+}
+
+function changeLocationToAngular(locationToGo) {
+    location.href = locationToGo;
+}
+
 function capitalizeFirstLetter(theString)
 {
     return theString && theString[0].toUpperCase() + theString.slice(1);
@@ -2312,12 +2349,14 @@ function valid_report_by_period(url)
                                     scaleOverride : true,
                                     scaleSteps : 10,
                                     scaleStepWidth : 10,
-                                    scaleStartValue : 0 
+                                    scaleStartValue : 0,
+                                    animation : false,
                                 }
                             } else {
                                 var optionBarChart = {
                                     responsive : true,
                                     scaleShowVerticalLines: false,
+                                    animation : false,
                                 }
                             }
                             

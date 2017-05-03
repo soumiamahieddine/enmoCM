@@ -55,7 +55,7 @@ class MergedJsAbstract {
 		include('apps/maarch_entreprise/js/search_adv.js');
 		readfile('apps/maarch_entreprise/js/maarch.js');
 		readfile('apps/maarch_entreprise/js/keypress.js');
-		readfile('apps/maarch_entreprise/js/Chart.js');
+		readfile('apps/maarch_entreprise/js/Chart.min.js');
 		readfile('apps/maarch_entreprise/js/chosen.proto.min.js');
 		readfile('apps/maarch_entreprise/js/event.simulate.js');
 //		include('apps/maarch_entreprise/js/RSVP.js');
@@ -63,8 +63,6 @@ class MergedJsAbstract {
 //		include('apps/maarch_entreprise/js/jio.js');
 		readfile('node_modules/core-js/client/shim.js');
 		readfile('node_modules/zone.js/dist/zone.min.js');
-		readfile('node_modules/systemjs/dist/system.src.js');
-		readfile('apps/maarch_entreprise/js/angular/systemjs.config.js');
 		readfile('apps/maarch_entreprise/js/bootstrap.min.js');
 
 		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe.min.js');

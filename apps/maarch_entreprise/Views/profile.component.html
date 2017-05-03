@@ -9,14 +9,14 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" style="cursor: pointer" (click)="exitProfile()">
+                <a class="navbar-brand" href="index.php" style="cursor: pointer">
                     <i class="fa fa-arrow-circle-left" title="Retour"></i>
                 </a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <!--<li>-->
-                        <!--<a data-toggle="modal" data-target="#manageAbs" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a>-->
+                        <!--<a data-toggle="modal" data-target="#manageAbs" (click)="getAbsenceInfos()"><i class="fa fa-user-times" title=""></i> Gérer mes absences </a>-->
                     <!--</li>-->
                     <li style="cursor: pointer">
                         <a (click)="absenceModal()" ><i class="fa fa-user-times" title=""></i> Gérer mes absences </a>

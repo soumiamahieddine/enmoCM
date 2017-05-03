@@ -28,6 +28,9 @@ if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "chrono_number"); // va
 /************** Administration **************/
 if (!defined("_SVR")) define("_SVR", "SVR");
 if (!defined("_SVA")) define("_SVA", "SVA");
+if (!defined("_ADDED")) define("_ADDED", "ajouté");
+if (!defined("_UPDATED")) define("_UPDATED", "modifié");
+if (!defined("_DELETED")) define("_DELETED", "supprimé");
 if (!defined("_PLEASE_CHOOSE_AN_ATTACHMENT")) define("_PLEASE_CHOOSE_AN_ATTACHMENT", "Ajoutez une pièce jointe svp.");
 if (!defined("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT")) define("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT", "Veuillez ajouter une pièce jointe avant d'envoyer ce courrier au contact");
 if (!defined("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT")) define("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT", "Envoyer au contact avec une pièce jointe obligatoire");
@@ -148,9 +151,13 @@ if (!defined("_WARNING_MESSAGE_DEL_TYPE"))
 if (!defined("_WARNING_MESSAGE_DEL_GROUP"))
     define("_WARNING_MESSAGE_DEL_GROUP", "Avertissement :<br> Il existe des utilisateurs associés à ce groupe. Choisissez un groupe de remplacement :");
 if (!defined("_WARNING_MESSAGE_DEL_USER"))
-    define("_WARNING_MESSAGE_DEL_USER", "Avertissement :<br> Il existe des modèles de liste de diffusion avec cet utilisateur. Choisissez un utilisateur de remplacement :");
+    define("_WARNING_MESSAGE_DEL_USER", "Avertissement :<br> Il existe des listes de diffusion associées à cet utilisateur. Choisissez un utilisateur de remplacement :");
+if (!defined("_INFO_MESSAGE_UPDATE_USER"))
+    define("_INFO_MESSAGE_UPDATE_USER", "Afin de garder la confidentialité des courriers en cours de traitement du service, il est recommandé de réaffecter ceux-ci à un autre utilisateur");
 if (!defined("_WARNING_MESSAGE_UPDATE_USER"))
-    define("_WARNING_MESSAGE_UPDATE_USER", "Avertissement :<br>Afin de garder la confidentialité des courriers en cours de traitement du service, il est recommandé de réaffecter ceux-ci à un autre utilisateur :");
+    define("_WARNING_MESSAGE_UPDATE_USER", "Si vous choisissez \"AUCUN REMPLACEMENT\" et que l'utilisateur actuel est en destinataire, celui ne sera pas supprimé !");
+if (!defined("_MESSAGE_REAFFECT_USER_LISTMODEL"))
+    define("_MESSAGE_REAFFECT_USER_LISTMODEL", "Inclure la réaffectation dans les modèles de liste de diffusion");
 if (!defined("_USERS_IN_GROUPS"))
     define("_USERS_IN_GROUPS", "utilisateur(s) dans le groupe");
 if (!defined("_LISTE_DIFFUSION_IN_USER")) define("_LISTE_DIFFUSION_IN_USER", "liste(s) de diffusion pour l'utilisateur ");

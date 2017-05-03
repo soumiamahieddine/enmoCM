@@ -27,12 +27,30 @@ if (!defined("_ARCHIVE_IDENTIFIER"))
 
 if (!defined("_DESCRIPTION_LEVEL"))
     define("_DESCRIPTION_LEVEL", "Service de description");
+if (!defined("_ITEM"))
+    define("_ITEM", "Objet");
 if (!defined("_RECEIVED_DATE"))
     define("_RECEIVED_DATE", "Date de reception");
-if (!defined("_RETENTION_FINAL_DISPOSITION"))
-    define("_RETENTION_FINAL_DISPOSITION", "Sort final");
+if (!defined("_YEARS"))
+    define("_YEARS", "an(s)");
+if (!defined("_MONTHS"))
+    define("_MONTHS", "mois");
+if (!defined("_DAYS"))
+    define("_DAYS", "jour(s)");
+if (!defined("_APPRAISAL_RULE"))
+    define("_APPRAISAL_RULE", "Règle de conservation");
+if (!defined("_APPRAISAL_FINAL_DISPOSITION"))
+    define("_APPRAISAL_FINAL_DISPOSITION", "Sort final");
+if (!defined("_DESTROY"))
+    define("_DESTROY", "Destruction");
+if (!defined("_KEEP"))
+    define("_KEEP", "Conservation");
 if (!defined("_DOCUMENT_TYPE"))
     define("_DOCUMENT_TYPE", "Type de document");
+if (!defined("_REPLY"))
+    define("_REPLY", "Réponse");
+if (!defined("_ATTACHMENT"))
+    define("_ATTACHMENT", "Pièce jointe");
 if (!defined("_SENT_DATE"))
     define("_SENT_DATE", "Date d'envoie");
 
@@ -45,6 +63,8 @@ if (!defined("_SEND_MESSAGE"))
     define("_SEND_MESSAGE", "Transferer bordereau");
 if (!defined("_VALIDATE"))
     define("_VALIDATE", "Valider");
+if (!defined("_URLSAE"))
+    define("_URLSAE", "> Système d'archivage <");
 
 if (!defined("_RECEIVED_MESSAGE"))
     define("_RECEIVED_MESSAGE", "Conformité du bordereau confirmée par accusé de réception : ");
