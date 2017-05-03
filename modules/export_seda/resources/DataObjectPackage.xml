@@ -20,7 +20,7 @@
         <PhysicalId schemeID="[?merge .physicalId.schemeID ?]" schemeName="[?merge .physicalId.schemeName ?]" schemeAgencyID="[?merge .physicalId.schemeAgencyID ?]" schemeAgencyName="[?merge .physicalId.schemeAgencyName ?]" schemeVersionID="[?merge .physicalId.schemeVersionID ?]" schemeDataURI="[?merge .physicalId.schemeDataURI ?]" schemeURI="[?merge .physicalId.schemeURI ?]"><?merge .physicalId.value ?></PhysicalId>
     </PhysicalDataObject>
     <DescriptiveMetadata>
-        <?merge $dataObjectPackage.descriptiveMetadata.archiveUnit $archiveUnit?>
+        <?merge $dataObjectPackage.descriptiveMetadata ?>
         <?xinclude /resources/ArchiveUnit.xml ?>
     </DescriptiveMetadata>
     <?merge $dataObjectPackage.managementMetadata $managementMetadata ?>
