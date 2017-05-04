@@ -2159,7 +2159,7 @@ function valid_report_by_period(url)
     var year = '';
     var month = '';
 
-     
+     console.log(url);
     if ($j('#entities_chosen').length){
         var entities_chosen=[];
         $j("select#entities_chosen option:selected").each(function(key, entity) {
@@ -2214,6 +2214,7 @@ function valid_report_by_period(url)
     var period_custom = $('custom_period');
     var period_year = $('period_by_year');
     var period_month = $('period_by_month');
+    var sub_entities = $j('#sub_entities')[0].checked;
     if(period_custom && period_custom.checked)
     {
         type_period = 'custom_period';
@@ -2263,6 +2264,7 @@ function valid_report_by_period(url)
                 the_year : year,
                 the_month : month,
                 entities_chosen : entities_chosen_list,
+                sub_entities : sub_entities,
                 status_chosen : status_chosen_list,
                 priority_chosen : priority_chosen_list,
                 doctypes_chosen : doctypes_chosen_list,

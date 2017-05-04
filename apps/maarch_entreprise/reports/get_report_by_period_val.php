@@ -45,6 +45,9 @@ if (!empty($_POST['entities_chosen'])) {
     $entities_chosen = explode("#", $_POST['entities_chosen']);
     $entities_chosen = "'" . join("','", $entities_chosen) . "'";
     $where_entities = ' AND destination in (' . $entities_chosen . ') ';
+	if($_REQUEST['sub_entities'] == 'true'){
+		$where_entities = 'AND (destination in (' . $entities_chosen . ') or destination in (select entity_id from entities where parent_entity_id IN ('.$entities_chosen.')))';
+	}
 }
 
 if (!empty($_POST['status_chosen'])) {
@@ -405,7 +408,7 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 		{
 			for($i=1; $i<= 12; $i++)
 			{
-				$stmt = $db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date')." as diff_date FROM ".$view
+					$stmt = $db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date')." as diff_date FROM ".$view
                                         ." WHERE status not in ('DEL','BAD') AND closing_date is NOT NULL AND date_part( 'month', creation_date)  = ? AND date_part( 'year', creation_date)  = ? ".$where_status." ".$where_priority." ".$where_entities, array($i,$_POST['the_year']));
 				if( $stmt->rowCount() > 0)
 				{
