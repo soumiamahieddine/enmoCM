@@ -392,7 +392,7 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.absenceModal = function () {
         createModal(this.user.absence, 'modal_redirect', 'auto', '950px');
-        autocomplete(15, 'index.php?display=true&module=basket&page=autocomplete_users_list');
+        autocomplete(this.user.countBasketsForAbsence, 'index.php?display=true&module=basket&page=autocomplete_users_list');
     };
     return ProfileComponent;
 }());
