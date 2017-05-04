@@ -31,7 +31,7 @@ $content .='<div id="params">';
         $content .='<tr>';
           $content .='<td align="left">';
           $content .='<p class="double"  style="padding:10px;text-align:justify;border:solid 1px #ccc;">';
-          $content .= _ENTITY_LATE_MAIL_DESC;
+          $content .= _ENTITY_VOL_STAT_DESC;
           $content .='</p>';
           $content .='<br/>';
           $content .='<p class="double">';

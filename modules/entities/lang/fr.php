@@ -253,7 +253,7 @@ if (!defined("_CHOOSE_REPLACEMENT_DEPARTMENT"))
 if (!defined("_ENTITY_VOL_STAT"))
     define("_ENTITY_VOL_STAT", "Volume des courriers par entité");
 if (!defined("_ENTITY_VOL_STAT_DESC"))
-    define("_ENTITY_VOL_STAT_DESC", "Volume des courriers par entité");
+    define("_ENTITY_VOL_STAT_DESC", "Permet d'afficher le nombre de courriers enregistrés par service.");
 if (!defined("_NO_DATA_MESSAGE"))
     define("_NO_DATA_MESSAGE", "Pas assez de données");
 if (!defined("_MAIL_VOL_BY_ENT_REPORT"))
