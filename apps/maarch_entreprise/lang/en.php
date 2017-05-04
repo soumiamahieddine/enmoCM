@@ -190,9 +190,10 @@ if (!defined("_QUALIFY"))    define("_QUALIFY", "Qualify - title");
 
 
 /************** Messages pop up **************/
-if (!defined("_REALLY_SUSPEND")) define("_REALLY_SUSPEND", "Do you really want to suspend ? ");
-if (!defined("_REALLY_AUTHORIZE")) define("_REALLY_AUTHORIZE", "Do you really want to authorize? ");
-if (!defined("_REALLY_DELETE")) define("_REALLY_DELETE", "Do you really want to deleted ? ");
+if (!defined("_REALLY_SUSPEND")) define("_REALLY_SUSPEND", "Do you really want to suspend ");
+if (!defined("_REALLY_AUTHORIZE")) define("_REALLY_AUTHORIZE", "Do you really want to authorize ");
+if (!defined("_REALLY_DELETE")) define("_REALLY_DELETE", "Do you really want to deleted ");
+if (!defined("_REALLY_CONTINUE")) define("_REALLY_CONTINUE", "Really continue ");
 if (!defined("_DEFINITIVE_ACTION")) define("_DEFINITIVE_ACTION", "This action is definitive");
 if (!defined("_AND")) define("_AND", " and ");
 if (!defined("_PLEASE_CHECK_LISTDIFF")) define("_PLEASE_CHECK_LISTDIFF", " is on the diffusion list(s). Please change the recipient in the diffusion list(s) of");
