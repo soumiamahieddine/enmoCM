@@ -531,8 +531,8 @@ function display_up_check($user_id)
                 }
 
                 //CHECK DIFFLIST
-                $query = "SELECT distinct(r.res_id),r.dest_user FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND item_id = ? AND closing_date is null AND difflist_type = 'entity_id' and process_date is null";
-                $arrayPDO = array($entity,$old_user);
+                $query = "SELECT distinct(r.res_id),r.dest_user FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND typist <> ? AND item_id = ? AND closing_date is null AND difflist_type = 'entity_id' and process_date is null";
+                $arrayPDO = array($entity,$old_user,$old_user);
                 $stmt =  $db->query($query, $arrayPDO);
                 while ($res = $stmt->fetchObject()) {
                     $resListToCheck[] = $res->res_id;
@@ -579,8 +579,8 @@ function display_up_check($user_id)
             $resListToCheck = [];
             foreach ($_SESSION['m_admin']['entitiesUserToRedirect']['entity_id'] as $entity) {
                 //CHECK VISA_CIRCUIT
-                $query = "SELECT distinct(r.res_id) FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND item_id = ? AND closing_date is null AND difflist_type = 'VISA_CIRCUIT' and process_date is null";
-                $arrayPDO = array($entity,$old_user);
+                $query = "SELECT distinct(r.res_id) FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND typist <> ? AND item_id = ? AND closing_date is null AND difflist_type = 'VISA_CIRCUIT' and process_date is null";
+                $arrayPDO = array($entity,$old_user,$old_user);
                 $stmt =  $db->query($query, $arrayPDO);
                 while ($res = $stmt->fetchObject()) {
                     $resListToCheck[] = $res->res_id;
@@ -644,8 +644,8 @@ function display_up_check($user_id)
                 }
 
                 //CHECK VISA_CIRCUIT
-                $query = "SELECT distinct(r.res_id) FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND item_id = ? AND closing_date is null AND difflist_type = 'VISA_CIRCUIT' and process_date is null";
-                $arrayPDO = array($entity,$old_user);
+                $query = "SELECT distinct(r.res_id) FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND typist <> ? AND item_id = ? AND closing_date is null AND difflist_type = 'VISA_CIRCUIT' and process_date is null";
+                $arrayPDO = array($entity,$old_user,$old_user);
                 $stmt =  $db->query($query, $arrayPDO);
                 while ($res = $stmt->fetchObject()) {
                     $resListToCheck[] = $res->res_id;
@@ -681,8 +681,8 @@ function display_up_check($user_id)
             $resListToCheck = [];
             foreach ($_SESSION['m_admin']['entitiesUserToRedirect']['entity_id'] as $entity) {
                 //CHECK Listinstance
-                $query = "SELECT distinct(r.res_id)  FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND closing_date is null AND item_id = ? AND difflist_type = 'entity_id' AND item_mode <> 'dest' AND process_date is null";
-                $arrayPDO = array($entity,$old_user);
+                $query = "SELECT distinct(r.res_id)  FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND closing_date is null AND typist <> ? AND item_id = ? AND difflist_type = 'entity_id' AND item_mode <> 'dest' AND process_date is null";
+                $arrayPDO = array($entity,$old_user,$old_user);
                 $stmt =  $db->query($query, $arrayPDO);
                 while ($res = $stmt->fetchObject()) {
                     $resListToCheck[] = $res->res_id;
@@ -745,8 +745,8 @@ function display_up_check($user_id)
     //USER LIST REPLACEMENT
     $frm .= '<form name="user_del" id="user_del" style="width: 100%;text-align:center;margin:auto;" method="post" class="forms">';
     $frm .= '<input type="hidden" value="'.$user_id.'" name="id">';
-    $frm .= '<select name="user_id" id="user_id">';
-    $frm .= '<option value="no_user">'._NO_REPLACEMENT.'</option>';
+    $frm .= '<select name="user_id" id="user_id" data-placeholder="'._NO_REPLACEMENT.'">';
+    $frm .= '<option value="no_user"></option>';
     $stmt = $db->query("select * from users order by user_id ASC");
     while ($users = $stmt->fetchObject()) {
         if ($users->user_id != $user_id) {
@@ -763,15 +763,21 @@ function display_up_check($user_id)
 
     //WARNING BLOCK
     $frm .= '<p style="text-align:center;color:red;"><i class="fa fa-warning"></i> '._WARNING_MESSAGE_UPDATE_USER.' <i class="fa fa-warning"></i></p>';
+    $frm .= '<p style="text-align:center;"><i class="fa fa-info-circle"></i> '._INFO_MESSAGE_UPDATE_USER2.' <i class="fa fa-info-circle"></i></p>';
 
     //ACTIONS BUTTONS
     $frm .= '<p class="buttons">';
-    $frm .= '<input type="submit" value="'._DEL_AND_REAFFECT.'" name="valid" class="button" />';
-    $frm .= ' <input type="button" value="'._CANCEL.'" class="button" onclick="window.location.href=\''.$_SESSION['config']['businessappurl'].'index.php?page=users_management_controler&mode=up&admin=users&id='.$user_id.'&order='.$_REQUEST['order'].'&order_field='.$_REQUEST['order_field'].'&start='.$_REQUEST['start'].'&what='.$_REQUEST['what'].'\'" />';
+    $frm .= '<input type="submit" value="'._DEL_AND_REAFFECT.'" name="valid" class="button" onclick="if (!confirm(\''. _REALLY_CONTINUE .' ?\')){return false;}" />';
+    $frm .= ' <input type="button" value="'._NO_REAFFECT.'" class="button" onclick="if (confirm(\''. _REALLY_CONTINUE .' ?\')){window.location.href=\''.$_SESSION['config']['businessappurl'].'index.php?page=users_management_controler&mode=up&admin=users&id='.$user_id.'&order='.$_REQUEST['order'].'&order_field='.$_REQUEST['order_field'].'&start='.$_REQUEST['start'].'&what='.$_REQUEST['what'].'\';}" />';
     $frm .= '</p>';
 
     $frm .= '</form>';
     $frm .= '</div>';
+    //script
+    $frm .= '<script>';
+        $frm .= 'new Chosen($(\'user_id\'),{width: "220px", disable_search_threshold: 10, search_contains: true,allow_single_deselect: true});';
+    $frm .= '</script>';
+    /*****************/
     echo $frm;
     exit();  
 }

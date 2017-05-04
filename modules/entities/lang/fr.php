@@ -21,7 +21,7 @@
 
 /*************************** Entites management *****************/
 if (!defined("_ADD_ENTITY"))
-    define("_ADD_ENTITY","Entité ajoutée");
+    define("_ADD_ENTITY", "Entité ajoutée");
 if (!defined("_ENTITY_ADDITION"))
     define("_ENTITY_ADDITION", "Ajout d'une entité");
 if (!defined("_ENTITY_MODIFICATION"))
@@ -199,7 +199,9 @@ if (!defined("_THERE_ARE_NOW"))
 if (!defined("_DOC_IN_THE_DEPARTMENT"))
     define("_DOC_IN_THE_DEPARTMENT", "document(s) associé(s) à l'entité");
 if (!defined("_DEL_AND_REAFFECT"))
-    define("_DEL_AND_REAFFECT", "Supprimer et réaffecter");
+    define("_DEL_AND_REAFFECT", "Supprimer ET réaffecter");
+if (!defined("_NO_REAFFECT"))
+    define("_NO_REAFFECT", "Ne pas réaffecter");
 if (!defined("_THE_ENTITY"))
     define("_THE_ENTITY", "L'entité");
 if (!defined("_USERS_LINKED_TO"))

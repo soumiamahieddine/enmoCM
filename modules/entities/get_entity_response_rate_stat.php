@@ -34,7 +34,6 @@ if (!empty($_POST['priority_chosen'])  || $_POST['priority_chosen'] === "0") {
     $where_priority = ' AND priority in (' . $priority_chosen . ') ';
 }
 
-
 $period_type = $_REQUEST['period_type'];
 $status_obj = new manage_status();
 $ind_coll = $sec->get_ind_collection('letterbox_coll');
@@ -50,8 +49,10 @@ $core_tools->load_lang();
 //Récupération de l'ensemble des types de documents
 if (!$_REQUEST['entities_chosen']){
 	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+}elseif($_REQUEST['sub_entities'] == 'true'){
+	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") or parent_entity_id IN (".$entities_chosen.") order by short_label",array());
 }else{
-	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label",array());
+	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label",array());	
 }
 
 $entities = array();
