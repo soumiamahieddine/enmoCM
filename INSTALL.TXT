@@ -1,2 +1,3 @@
 Documentation d'installation :
  http://wiki.maarch.org/Maarch_Courrier
+
