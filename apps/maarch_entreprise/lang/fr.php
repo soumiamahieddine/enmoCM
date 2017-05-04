@@ -155,7 +155,7 @@ if (!defined("_WARNING_MESSAGE_DEL_USER"))
 if (!defined("_INFO_MESSAGE_UPDATE_USER"))
     define("_INFO_MESSAGE_UPDATE_USER", "Afin de garder la confidentialité des courriers en cours de traitement du service, il est recommandé de réaffecter ceux-ci à un autre utilisateur");
 if (!defined("_WARNING_MESSAGE_UPDATE_USER"))
-    define("_WARNING_MESSAGE_UPDATE_USER", "Si vous choisissez \"AUCUN REMPLACEMENT\" et que l'utilisateur actuel est en destinataire, celui ne sera pas supprimé !");
+    define("_WARNING_MESSAGE_UPDATE_USER", "Si vous choisissez \"AUCUN REMPLACEMENT\" et que l'utilisateur actuel est en destinataire, celui-ci ne sera pas supprimé !");
 if (!defined("_MESSAGE_REAFFECT_USER_LISTMODEL"))
     define("_MESSAGE_REAFFECT_USER_LISTMODEL", "Inclure la réaffectation dans les modèles de liste de diffusion");
 if (!defined("_USERS_IN_GROUPS"))
