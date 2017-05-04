@@ -91,4 +91,25 @@ class BasketsModelAbstract extends \Apps_Table_Service {
         return $aAction[0]['id_action'];
     }
 
+    public static function getBasketsByUserId(array $aArgs = []) {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+
+        $aAction = static::select(
+            [
+                'select'    => ['id_action'],
+                'table'     => ['actions_groupbaskets'],
+                'where'     => ['basket_id = ?'],
+                'data'      => [$aArgs['basketId']]
+            ]
+        );
+
+        if (empty($aAction[0])) {
+            return '';
+        }
+
+        return $aAction[0]['id_action'];
+    }
+
 }
