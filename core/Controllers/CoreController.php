@@ -29,17 +29,19 @@ class CoreController
             return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
         }
 
+        $data = $request->getParams();
+
         $aInit = [];
         $aInit['coreUrl'] = str_replace('rest/', '', \Url::coreurl());
         $aInit['applicationName'] = $_SESSION['config']['applicationname']; //Todo No Session
 
-        $aInit['profileView'] = 'Views/profile.component.html';
-        if(file_exists($_SESSION['config']['corepath'].'custom/'.$_SESSION['custom_override_id'].'/apps/maarch_entreprise/Views/profile.component.html')) {
-            $aInit['profileView'] = '../../custom/'.$_SESSION['custom_override_id'].'/apps/maarch_entreprise/Views/profile.component.html';
-        }
-        $aInit['signatureBookView'] = 'Views/signature-book.component.html';
-        if(file_exists($_SESSION['config']['corepath'].'custom/'.$_SESSION['custom_override_id'].'/apps/maarch_entreprise/Views/signature-book.component.html')) {
-            $aInit['signatureBookView'] = '../../custom/'.$_SESSION['custom_override_id'].'/apps/maarch_entreprise/Views/signature-book.component.html';
+        if (!empty($data['views'])) {
+            foreach ($data['views'] as $view) {
+                $aInit[$view . 'View'] = 'Views/' . $view . '.component.html';
+                if(file_exists("{$_SESSION['config']['corepath']}custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/Views/{$view}.component.html")) {
+                    $aInit[$view . 'View'] = "../../custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/Views/{$view}.component.html";
+                }
+            }
         }
 
         return $response->withJson($aInit);

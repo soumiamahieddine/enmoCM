@@ -5,16 +5,21 @@ page_result_final = '';
 
 var angularGlobals = {};
 function triggerAngular(prodmode, locationToGo) {
+    var views = [
+        'profile',
+        'signature-book'
+    ];
+
     $j.ajax({
         url      : '../../rest/initialize',
-        type     : 'GET',
+        type     : 'POST',
         dataType : 'json',
+        data: {
+            views  : views
+        },
         success: function(answer) {
 
-            angularGlobals.profileView = answer.profileView;
-            angularGlobals.signatureBookView = answer.signatureBookView;
-            angularGlobals.coreUrl = answer.coreUrl;
-            angularGlobals.applicationName = answer.applicationName;
+            angularGlobals = answer;
             if (prodmode) {
                 $j('#inner_content').html('<div><i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i></div>');
 
