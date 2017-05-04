@@ -40,6 +40,7 @@ class UserController
         
         $basket = new \basket();
         $user['absence'] = $basket->redirect_my_baskets_list($_SESSION['user']['baskets'], count($_SESSION['user']['baskets']), $_SESSION['user']['UserId'], 'listingbasket specsmall');
+        $user['countBasketsForAbsence'] = count($_SESSION['user']['baskets']);
 
         return $response->withJson($user);
     }

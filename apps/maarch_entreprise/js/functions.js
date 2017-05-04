@@ -1161,8 +1161,8 @@ function test_form()
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
-    if ($('divList')) {
-        $('divList').style.display = 'block';
+    if ($j('#divList')) {
+        $j('#divList').css("display", "block");
     }
     if(id_mod == undefined || id_mod=='')
     {
@@ -1177,26 +1177,9 @@ function destroyModal(id_mod){
     {
         isAlreadyClick = false;
     }
-    document.getElementsByTagName('body')[0].removeChild($(id_mod));
-    document.getElementsByTagName('body')[0].removeChild($(id_layer));
-    $$("input[type='button']").each(function(v) {v.disabled = false;v.style.opacity="1";})
-    /*if($('send_action')){
-        $('send_action').disabled = false;
-        $('send_action').style.opacity = "1";
-        $('send_action').value = "Valider";
-    }else if($('send')){
-        $('send').disabled = false;
-        $('send').style.opacity = "1";
-        $('send').value = "Valider";
-    }else if($('send_mass')){
-        $('send_mass').disabled = false;
-        $('send_mass').style.opacity = "1";
-        $('send_mass').value = "Valider";
-    }else if($('submit')){
-        $('submit').disabled = false;
-        $('submit').style.opacity = "1";
-        $('send_mass').value = "Valider";
-    }*/
+    document.getElementsByTagName('body')[0].removeChild($j("#" + id_mod)[0]);
+    document.getElementsByTagName('body')[0].removeChild($j("#" + id_layer)[0]);
+    $j("input[type='button']").prop("disabled", false).css("opacity", "1")
 }
 
 /**
