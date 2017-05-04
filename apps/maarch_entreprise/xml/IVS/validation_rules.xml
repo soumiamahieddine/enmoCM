@@ -298,6 +298,7 @@
       <parameter name="delete" type="string" />
       <parameter name="new_contact_id_reaffect" type="integer" />
       <parameter name="new_contact_reaffect" type="string" />
+      <parameter name="mycontact" type="YN" />
     </validationRule>
 
     <validationRule name="contactAddressUp" extends="standardForm" mode="error">

@@ -1049,19 +1049,19 @@ INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, fol
 --KEYWORDS / TAGS
 ------------
 TRUNCATE TABLE tags;
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('SEMINAIRE', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('INNOVATION', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('MAARCH', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('ENVIRONNEMENT', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('PARTENARIAT', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('JUMELAGE', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('ECONOMIE', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('ASSOCIATIONS', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('RH', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('BUDGET', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('QUARTIERS', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('LITTORAL', 'letterbox_coll', 0);
-INSERT INTO tags (tag_label, coll_id, res_id) VALUES ('SPORT', 'letterbox_coll', 0);
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (1, 'SEMINAIRE', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (2, 'INNOVATION', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (3, 'MAARCH', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (4, 'ENVIRONNEMENT', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (5, 'PARTENARIAT', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (6, 'JUMELAGE', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (7, 'ECONOMIE', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (8, 'ASSOCIATIONS', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (9, 'RH', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (10, 'BUDGET', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (11, 'QUARTIERS', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (12, 'LITTORAL', 'letterbox_coll');
+INSERT INTO tags (tag_id, tag_label, coll_id) VALUES (13, 'SPORT', 'letterbox_coll');
 ------------
 --TEMPLATES
 ------------

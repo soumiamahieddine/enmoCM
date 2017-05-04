@@ -154,8 +154,10 @@ if (!defined("_WARNING_MESSAGE_DEL_USER"))
     define("_WARNING_MESSAGE_DEL_USER", "Avertissement :<br> Il existe des listes de diffusion associées à cet utilisateur. Choisissez un utilisateur de remplacement :");
 if (!defined("_INFO_MESSAGE_UPDATE_USER"))
     define("_INFO_MESSAGE_UPDATE_USER", "Afin de garder la confidentialité des courriers en cours de traitement du service, il est recommandé de réaffecter ceux-ci à un autre utilisateur");
+if (!defined("_INFO_MESSAGE_UPDATE_USER2"))
+    define("_INFO_MESSAGE_UPDATE_USER2", "Les courriers confidentiels que vous avez créé ne seront pas affectés");
 if (!defined("_WARNING_MESSAGE_UPDATE_USER"))
-    define("_WARNING_MESSAGE_UPDATE_USER", "Si vous choisissez \"AUCUN REMPLACEMENT\" et que l'utilisateur actuel est en destinataire, celui ne sera pas supprimé !");
+    define("_WARNING_MESSAGE_UPDATE_USER", "Si vous choisissez \"AUCUN REMPLACEMENT\" et que l'utilisateur actuel est en destinataire, celui-ci ne sera pas supprimé !");
 if (!defined("_MESSAGE_REAFFECT_USER_LISTMODEL"))
     define("_MESSAGE_REAFFECT_USER_LISTMODEL", "Inclure la réaffectation dans les modèles de liste de diffusion");
 if (!defined("_USERS_IN_GROUPS"))
@@ -193,6 +195,7 @@ if (!defined("_QUALIFY"))    define("_QUALIFY", "Qualification");
 if (!defined("_REALLY_SUSPEND")) define("_REALLY_SUSPEND", "Voulez-vous vraiment suspendre ");
 if (!defined("_REALLY_AUTHORIZE")) define("_REALLY_AUTHORIZE", "Voulez-vous vraiment autoriser ");
 if (!defined("_REALLY_DELETE")) define("_REALLY_DELETE", "Voulez-vous vraiment supprimer ");
+if (!defined("_REALLY_CONTINUE")) define("_REALLY_CONTINUE", "Voulez-vous vraiment continuer ");
 if (!defined("_DEFINITIVE_ACTION")) define("_DEFINITIVE_ACTION", "Cette action est définitive");
 if (!defined("_AND")) define("_AND", " et ");
 if (!defined("_PLEASE_CHECK_LISTDIFF")) define("_PLEASE_CHECK_LISTDIFF", " est dans une ou des listes de diffusion. Veuillez le remplacer dans la ou les listes de ");
@@ -1197,6 +1200,8 @@ if (!defined("_NB_MAILS1")) define("_NB_MAILS1", "Nombre de courriers enregistr�
 if (!defined("_FOR_YEAR")) define("_FOR_YEAR", "pour l'année");
 if (!defined("_FOR_MONTH")) define("_FOR_MONTH", "pour le mois de");
 if (!defined("_N_DAYS")) define("_N_DAYS","NB JOURS");
+if (!defined("_INCLUDE_SUB_ENTITIES")) define("_INCLUDE_SUB_ENTITIES","Inclure les sous-entités");
+if (!defined("_GRAPHICS_REPORTS")) define("_GRAPHICS_REPORTS","Activer l'affichage graphique");
 
 /******************** Specific ************/
 if (!defined("_PROJECT")) define("_PROJECT", "Dossier");

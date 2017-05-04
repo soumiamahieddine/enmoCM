@@ -3,17 +3,23 @@ var chronoExpiration;
 
 page_result_final = '';
 
-var profileView = "Views/profile.component.html";
-var signatureBookView = "Views/signature-book.component.html";
+var angularGlobals = {};
 function triggerAngular(prodmode, locationToGo) {
+    var views = [
+        'profile',
+        'signature-book'
+    ];
+
     $j.ajax({
-        url      : 'index.php?display=true&page=initializeJsGlobalConfig',
-        type     : 'GET',
+        url      : '../../rest/initialize',
+        type     : 'POST',
         dataType : 'json',
+        data: {
+            views  : views
+        },
         success: function(answer) {
 
-            profileView = answer.profileView;
-            signatureBookView = answer.signatureBookView;
+            angularGlobals = answer;
             if (prodmode) {
                 $j('#inner_content').html('<div><i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i></div>');
 
@@ -33,7 +39,6 @@ function triggerAngular(prodmode, locationToGo) {
             }
         }
     });
-
 }
 
 function changeLocationToAngular(locationToGo) {
@@ -1156,8 +1161,8 @@ function test_form()
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
-    if ($('divList')) {
-        $('divList').style.display = 'block';
+    if ($j('#divList')) {
+        $j('#divList').css("display", "block");
     }
     if(id_mod == undefined || id_mod=='')
     {
@@ -1172,26 +1177,9 @@ function destroyModal(id_mod){
     {
         isAlreadyClick = false;
     }
-    document.getElementsByTagName('body')[0].removeChild($(id_mod));
-    document.getElementsByTagName('body')[0].removeChild($(id_layer));
-    $$("input[type='button']").each(function(v) {v.disabled = false;v.style.opacity="1";})
-    /*if($('send_action')){
-        $('send_action').disabled = false;
-        $('send_action').style.opacity = "1";
-        $('send_action').value = "Valider";
-    }else if($('send')){
-        $('send').disabled = false;
-        $('send').style.opacity = "1";
-        $('send').value = "Valider";
-    }else if($('send_mass')){
-        $('send_mass').disabled = false;
-        $('send_mass').style.opacity = "1";
-        $('send_mass').value = "Valider";
-    }else if($('submit')){
-        $('submit').disabled = false;
-        $('submit').style.opacity = "1";
-        $('send_mass').value = "Valider";
-    }*/
+    document.getElementsByTagName('body')[0].removeChild($j("#" + id_mod)[0]);
+    document.getElementsByTagName('body')[0].removeChild($j("#" + id_layer)[0]);
+    $j("input[type='button']").prop("disabled", false).css("opacity", "1")
 }
 
 /**
@@ -2171,7 +2159,6 @@ function valid_report_by_period(url)
     var year = '';
     var month = '';
 
-     
     if ($j('#entities_chosen').length){
         var entities_chosen=[];
         $j("select#entities_chosen option:selected").each(function(key, entity) {
@@ -2226,6 +2213,7 @@ function valid_report_by_period(url)
     var period_custom = $('custom_period');
     var period_year = $('period_by_year');
     var period_month = $('period_by_month');
+    var sub_entities = $j('#sub_entities')[0].checked;
     if(period_custom && period_custom.checked)
     {
         type_period = 'custom_period';
@@ -2275,6 +2263,7 @@ function valid_report_by_period(url)
                 the_year : year,
                 the_month : month,
                 entities_chosen : entities_chosen_list,
+                sub_entities : sub_entities,
                 status_chosen : status_chosen_list,
                 priority_chosen : priority_chosen_list,
                 doctypes_chosen : doctypes_chosen_list,

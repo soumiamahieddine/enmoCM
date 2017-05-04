@@ -1562,20 +1562,9 @@ class core_tools extends functions
     private function load_css()
     {
         ?>
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
-            . 'css/font-awesome/css/font-awesome.css';?>" media="screen" />
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
-            . 'css/font-awesome/css/font-maarch.css';?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php';?>" media="screen" />
-        <!--[if lt  IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie';?>" media="screen" />  <![endif]-->
-        <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7';?>" media="screen" />  <![endif]-->
-        <!--[if IE 8.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie8';?>" media="screen" />  <![endif]-->
-        <!--[if gte IE 9.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie9';?>" media="screen" />  <![endif]-->
-
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
-            . 'tools/PhotoSwipe/photoswipe.css'; ?>" media="screen" />
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
-            . 'tools/PhotoSwipe/default-skin/default-skin.css'; ?>" media="screen" />
+        <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" media="screen" />
+        <link rel="stylesheet" href="css/font-awesome/css/font-maarch.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="merged_css.php" media="screen" />
         <?php
     }
 
@@ -1585,9 +1574,6 @@ class core_tools extends functions
     public function load_js()
     {
         ?>
-        <!--<script type="text/javascript" >
-            var app_path = '<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=';
-        </script>-->
         <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>merged_js.php"></script>
         <?php
 

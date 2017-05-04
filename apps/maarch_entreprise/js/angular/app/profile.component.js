@@ -61,16 +61,20 @@ var ProfileComponent = (function () {
             disablePrototypeJS('hide', pluginsToDisable);
         }
         //LOAD EDITOR TINYMCE for MAIL SIGN
-        tinymce.baseURL = "tools/tiny_mce";
+        tinymce.baseURL = "../../node_modules/tinymce";
         tinymce.suffix = '.min';
         tinymce.init({
             selector: "textarea#emailSignature",
             statusbar: false,
             language: "fr_FR",
+            language_url: "tools/tinymce/langs/fr_FR.js",
             height: "200",
             plugins: [
-                "textcolor bdesk_photo"
+                "textcolor"
             ],
+            external_plugins: {
+                'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
+            },
             menubar: false,
             toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor",
             theme_buttons1_add: "fontselect,fontsizeselect",
@@ -91,18 +95,14 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.prepareProfile();
+        this.updateBreadcrumb(angularGlobals.applicationName);
+        this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
-        this.http.get('index.php?display=true&page=initializeJsGlobalConfig')
+        this.http.get(this.coreUrl + 'rest/user/profile')
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            _this.coreUrl = data.coreurl;
-            _this.updateBreadcrumb(data.applicationName);
-            _this.http.get(_this.coreUrl + 'rest/user/profile')
-                .map(function (res) { return res.json(); })
-                .subscribe(function (data) {
-                _this.user = data;
-                _this.loading = false;
-            });
+            _this.user = data;
+            _this.loading = false;
         });
     };
     ProfileComponent.prototype.processAfterUpload = function (b64Content) {
@@ -392,14 +392,14 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.absenceModal = function () {
         createModal(this.user.absence, 'modal_redirect', 'auto', '950px');
-        autocomplete(15, 'index.php?display=true&module=basket&page=autocomplete_users_list');
+        autocomplete(this.user.countBasketsForAbsence, 'index.php?display=true&module=basket&page=autocomplete_users_list');
     };
     return ProfileComponent;
 }());
 ProfileComponent = __decorate([
     core_1.Component({
-        templateUrl: profileView,
-        styleUrls: ['css/bootstrap.min.css', 'js/angular/app/Css/profile.component.css']
+        templateUrl: angularGlobals.profileView,
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'js/angular/app/Css/profile.component.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, core_1.NgZone])
 ], ProfileComponent);
