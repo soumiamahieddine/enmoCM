@@ -56,7 +56,7 @@ $stmt = $db->query("SELECT ir.record_id as res_id, ir.subject, ir.doc_date, ir.e
 FROM
 (SELECT DISTINCT ON (h.record_id) h.record_id, h.event_date, r.subject, r.doc_date, r.creation_date, r.alt_identifier FROM history h, res_view_letterbox r
   WHERE h.user_id = ? 
-  AND event_id !='linkup'
+  AND event_id !='linkup' AND event_id NOT LIKE 'attach%'
   AND (h.table_name='res_letterbox' OR h.table_name='res_view_letterbox')
   AND h.record_id <> 'none'
   AND CAST(h.record_id AS INT) = r.res_id
@@ -185,10 +185,7 @@ $status = 0;
 $content = $list->showList($tab, $paramsTab, $listKey, $_SESSION['current_basket']);
 // $debug = $list->debug(false);
 
-$content .= "<script>$$('#container')[0].setAttribute('style', 'width: auto; min-width: 1000px;');".
-                    "$$('#content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');".
-                    "$$('#inner_content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');".
-                    // "$$('table#extended_list')[0].setAttribute('style', 'width: 100%; min-width: 900px; margin: 0;');".
-            "</script>";
+$content .= '<script>$j(\'#container\').attr(\'style\', \'width: 90%; min-width: 1000px\');$j(\'#content\').attr(\'style\', \'width: auto; min-width: 1000px;\');';
+$content .= '$j(\'#inner_content\').attr(\'style\', \'width: auto; min-width: 1000px;\');</script>';
 
 echo "{'status' : " . $status . ", 'content' : '" . addslashes($debug.$content) . "', 'error' : '" . addslashes($error) . "'}";
