@@ -145,7 +145,7 @@
       <parameter name="page" value="contact_addresses_up_db"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id" >
+    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="contactAddressDel" >
       <parameter name="page" value="contact_addresses_del"/>
       <parameter name="id"/>
     </requestDefinition>
