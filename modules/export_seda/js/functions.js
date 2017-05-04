@@ -8,11 +8,8 @@ function actionSeda($path,$type) {
                 parameters: { url : $path,
                             },
                 onSuccess: function(answer) {
-                    console.log(answer);
-
                     eval("response = "+answer.responseText);
                     if(response.status == 0){
-                        console.log(response);
                         if ($type != "validateMessage") {
                             $("validSeda").style.display = 'block';
                             $("sendMessage").style.display = 'none';

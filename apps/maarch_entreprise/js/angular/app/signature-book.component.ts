@@ -11,6 +11,8 @@ declare function $j(selector: string) : any;
 declare function showAttachmentsForm(path: string) : void;
 declare function modifyAttachmentsForm(path: string, width: string, height: string) : void;
 
+declare var angularGlobals : any;
+
 
 @Pipe({ name: 'safeUrl' })
 export class SafeUrlPipe implements PipeTransform {
@@ -21,7 +23,7 @@ export class SafeUrlPipe implements PipeTransform {
 }
 
 @Component({
-  templateUrl: 'js/angular/app/Views/signatureBook.html',
+  templateUrl: angularGlobals.signatureBookView,
 })
 export class SignatureBookComponent implements OnInit {
 
@@ -82,70 +84,68 @@ export class SignatureBookComponent implements OnInit {
 
     ngOnInit(): void {
         this.prepareSignatureBook();
+        this.coreUrl = angularGlobals.coreUrl;
+
         this.loading = true;
+
         this.route.params.subscribe(params => {
             this.resId      = +params['resId'];
             this.basketId   = params['basketId'];
 
             lockDocument(this.resId);
             setInterval(() => {lockDocument(this.resId)}, 50000);
-            this.http.get('index.php?display=true&page=initializeJsGlobalConfig')
+            this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
                 .map(res => res.json())
                 .subscribe((data) => {
-                    this.coreUrl = data.coreurl;
-                    this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
-                        .map(res => res.json())
-                        .subscribe((data) => {
-                            if (data.error) {
-                                location.hash = "";
-                                location.search = "";
-                                return;
-                            }
-                            this.signatureBook = data;
+                    if (data.error) {
+                        location.hash = "";
+                        location.search = "";
+                        return;
+                    }
+                    this.signatureBook = data;
 
-                            this.headerTab              = 1;
-                            this.leftSelectedThumbnail  = 0;
-                            this.rightSelectedThumbnail = 0;
-                            this.leftViewerLink         = "";
-                            this.rightViewerLink        = "";
-                            this.showLeftPanel          = true;
-                            this.showRightPanel         = true;
-                            this.showResLeftPanel       = true;
-                            this.showTopLeftPanel       = false;
-                            this.showTopRightPanel      = false;
-                            this.showAttachmentPanel    = false;
-                            this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
-                            this.visaViewerLink  = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
-                            this.histViewerLink  = "index.php?display=true&page=show_history_tab&resId=" + this.resId + "&collId=letterbox_coll";
-                            this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
-                            this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + this.resId + "&noModification=true&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
+                    this.headerTab              = 1;
+                    this.leftSelectedThumbnail  = 0;
+                    this.rightSelectedThumbnail = 0;
+                    this.leftViewerLink         = "";
+                    this.rightViewerLink        = "";
+                    this.showLeftPanel          = true;
+                    this.showRightPanel         = true;
+                    this.showResLeftPanel       = true;
+                    this.showTopLeftPanel       = false;
+                    this.showTopRightPanel      = false;
+                    this.showAttachmentPanel    = false;
+                    this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
+                    this.visaViewerLink  = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
+                    this.histViewerLink  = "index.php?display=true&page=show_history_tab&resId=" + this.resId + "&collId=letterbox_coll";
+                    this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
+                    this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + this.resId + "&noModification=true&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
 
-                            this.leftContentWidth  = "44%";
-                            this.rightContentWidth = "44%";
-                            if (this.signatureBook.documents[0]) {
-                                this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
-                                if (this.signatureBook.documents[0].category_id == "outgoing") {
-                                    this.headerTab = 3;
-                                }
-                            }
-                            if (this.signatureBook.attachments[0]) {
-                                this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
-                            }
+                    this.leftContentWidth  = "44%";
+                    this.rightContentWidth = "44%";
+                    if (this.signatureBook.documents[0]) {
+                        this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
+                        if (this.signatureBook.documents[0].category_id == "outgoing") {
+                            this.headerTab = 3;
+                        }
+                    }
+                    if (this.signatureBook.attachments[0]) {
+                        this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
+                    }
 
-                            this.displayPanel("RESLEFT");
-                            this.loading = false;
+                    this.displayPanel("RESLEFT");
+                    this.loading = false;
 
-                            setTimeout(() => {
-                                $j("#resListContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
-                                $j("#rightPanelContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
-                                $j(".pjSign").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
-                                $j("#resListContent").scrollTop(0);
-                                $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
-                                $j("#obsVersion").tooltipster({
-                                    interactive: true
-                                });
-                            }, 0);
+                    setTimeout(() => {
+                        $j("#resListContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
+                        $j("#rightPanelContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
+                        $j(".pjSign").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
+                        $j("#resListContent").scrollTop(0);
+                        $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
+                        $j("#obsVersion").tooltipster({
+                            interactive: true
                         });
+                    }, 0);
                 });
         });
     }

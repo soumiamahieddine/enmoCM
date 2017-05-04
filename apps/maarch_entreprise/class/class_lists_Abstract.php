@@ -1467,7 +1467,11 @@ abstract class lists_Abstract extends Database
             }
             $aService = Basket_Baskets_Service::getServiceFromActionId(['id' => $this->params['defaultAction']]);
             if ($aService['actionPage'] == 'visa_mail') {
-                $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="islockForSignatureBook(\'' .$keyValue. '\', \'' .$_SESSION['current_basket']['id']. '\')"';
+                if (PROD_MODE) {
+                    $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="islockForSignatureBook(\'' .$keyValue. '\', \'' .$_SESSION['current_basket']['id']. '\', true)"';
+                } else {
+                    $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="islockForSignatureBook(\'' .$keyValue. '\', \'' .$_SESSION['current_basket']['id']. '\', false)"';
+                }
             } else {
                 $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="validForm( \'page\', \''.$keyValue.'\', \''.$this->params['defaultAction'].'\');" ';
             }

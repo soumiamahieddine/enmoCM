@@ -518,31 +518,84 @@ function display_up_check($user_id)
         $old_user=$_POST['id'];
         $new_user=$_POST['user_id'];
 
-        if ($new_user <> 'NO_USER') {
+        if ($new_user <> 'no_user') {
             //LIST OF ENTITIES
-            $entitiesList = [];
+            $resListToCheck = [];
+
             foreach ($_SESSION['m_admin']['entitiesUserToRedirect']['entity_id'] as $entity) {
-                $query = "SELECT res_id FROM res_letterbox WHERE confidentiality = 'Y' AND destination = ? AND dest_user = ? AND status <> 'END'";
+                //CHECK LISTMODEL
+                if (isset($_POST['entityModels'])) {
+                    $query = "UPDATE listmodels SET item_id = ? WHERE object_id = ? AND item_id = ?";
+                    $arrayPDO = array($new_user,$entity,$old_user);
+                    $db->query($query, $arrayPDO);
+                }
+
+                //CHECK DIFFLIST
+                $query = "SELECT distinct(r.res_id),r.dest_user FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND item_id = ? AND closing_date is null AND difflist_type = 'entity_id' and process_date is null";
                 $arrayPDO = array($entity,$old_user);
                 $stmt =  $db->query($query, $arrayPDO);
-                $res = $stmt->fetchObject();
-                $resListToCheck[] = $res->res_id;
+                while ($res = $stmt->fetchObject()) {
+                    $resListToCheck[] = $res->res_id;
+                    $destList[] = $res->dest_user;
+                }
+                
             }
-
+            $i=0;
             foreach ($resListToCheck as $res_id) {
-                //UPDATE res_letterbox
-                $query = "UPDATE res_letterbox SET dest_user = ? WHERE res_id = ?";
-                $arrayPDO = array($new_user,$res_id);
-                $stmt =  $db->query($query, $arrayPDO);
+                if ($destList[$i] == $old_user) {
+                    //UPDATE res_letterbox for dest
+                    $query = "UPDATE res_letterbox SET dest_user = ? WHERE res_id = ?";
+                    $arrayPDO = array($new_user,$res_id);
+                    $db->query($query, $arrayPDO);
+                }
 
-                //UDPATE listinstance
-                $query = "UPDATE listinstance SET item_id = ? WHERE res_id = ? and item_mode = 'dest'";
-                $arrayPDO = array($new_user,$res_id);
-                $stmt =  $db->query($query, $arrayPDO);
+                //UDPATE listinstance for all item_mode
+                $query = "UPDATE listinstance SET item_id = ? WHERE res_id = ? AND item_id = ? AND difflist_type = 'entity_id'";
+                $arrayPDO = array($new_user, $res_id, $old_user);
+                $db->query($query, $arrayPDO);
 
                 //ADD history entry
-                $query = "SELECT listinstance_id FROM listinstance WHERE res_id = ? and item_mode = 'dest'";
-                $arrayPDO = array($res_id);
+                $query = "SELECT listinstance_id, item_mode FROM listinstance WHERE res_id = ? and item_id = ? AND difflist_type = 'entity_id'";
+                $arrayPDO = array($res_id,$new_user);
+                $stmt =  $db->query($query, $arrayPDO);
+                while ($res = $stmt->fetchObject()) {
+                    $listinstance_id = $res->listinstance_id;
+                    $item_mode = $res->item_mode;
+                    include_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_history.php';
+                    $hist = new history();
+                    $hist->add(
+                        ENT_LISTINSTANCE,
+                        $listinstance_id,
+                        'UP',
+                        'diff'.$item_mode.'user',
+                        'Réaffectation du document confidentiel '.$res_id.' de '. $old_user .' à '. $new_user . ' en tant que "'.$item_mode.'"',
+                        $_SESSION['config']['databasetype'],
+                        'entities'
+                    );
+                }
+                $i++;
+            }
+
+            $resListToCheck = [];
+            foreach ($_SESSION['m_admin']['entitiesUserToRedirect']['entity_id'] as $entity) {
+                //CHECK VISA_CIRCUIT
+                $query = "SELECT distinct(r.res_id) FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND item_id = ? AND closing_date is null AND difflist_type = 'VISA_CIRCUIT' and process_date is null";
+                $arrayPDO = array($entity,$old_user);
+                $stmt =  $db->query($query, $arrayPDO);
+                while ($res = $stmt->fetchObject()) {
+                    $resListToCheck[] = $res->res_id;
+                }                
+            }
+            foreach ($resListToCheck as $res_id) {
+
+                //UDPATE listinstance
+                $query = "UPDATE listinstance SET item_id = ? WHERE res_id = ? AND item_id = ? AND difflist_type = 'VISA_CIRCUIT' and process_date is null";
+                $arrayPDO = array($new_user,$res_id,$old_user);
+                $db->query($query, $arrayPDO);
+
+                //ADD history entry
+                $query = "SELECT listinstance_id FROM listinstance WHERE res_id = ? AND item_id = ? AND difflist_type = 'VISA_CIRCUIT'";
+                $arrayPDO = array($res_id,$new_user);
                 $stmt =  $db->query($query, $arrayPDO);
                 $res = $stmt->fetchObject();
                 $listinstance_id = $res->listinstance_id;
@@ -552,61 +605,175 @@ function display_up_check($user_id)
                     ENT_LISTINSTANCE,
                     $listinstance_id,
                     'UP',
-                    'diffdestuser',
-                    'Réaffectation du document confidentiel '.$res_id.' de '. $old_user .' à '. $new_user . ' en tant que "dest"',
+                    'diffvisauser',
+                    'Réaffectation du document confidentiel '.$res_id.' de '. $old_user .' à '. $new_user . ' dans le circuit de visa',
                     $_SESSION['config']['databasetype'],
                     'entities'
                 );
 
-            }        
+            }      
+        } else {
+            
+            $resListToCheck = [];
+            foreach ($_SESSION['m_admin']['entitiesUserToRedirect']['entity_id'] as $entity) {
+                if (isset($_POST['entityModels'])) {
+                    //CHECK LISTMODELS
+                    $query = "DELETE FROM listmodels WHERE item_id = ? AND object_id = ? AND item_mode <> 'dest'";
+                    $arrayPDO = array($old_user,$entity);
+                    $db->query($query, $arrayPDO);
+
+                    //FIX AND RESET POS AND MODE VISA CIRCUIT
+                    /*$query = "SELECT item_id FROM listmodels WHERE object_id = ? AND object_type = 'VISA_CIRCUIT' ORDER BY item_mode DESC, sequence ASC";
+                    $arrayPDO = array($entity);
+                    $stmt = $db->query($query, $arrayPDO);
+                    $nbRes = $stmt->rowCount();
+                    $i = 1;
+                    
+                    while ($res = $stmt->fetchObject()) {
+                        if ($i == $nbRes) {
+                            $query = "UPDATE listmodels SET SEQUENCE = '0', item_mode = 'sign' WHERE item_id = ? AND object_id = ? AND object_type = 'VISA_CIRCUIT'";
+                            $arrayPDO = array($res->item_id,$entity);
+                            $db->query($query, $arrayPDO);
+                        } else {
+                            $query = "UPDATE listmodels SET SEQUENCE = ?, item_mode = 'visa' WHERE item_id = ? AND object_id = ? AND object_type = 'VISA_CIRCUIT'";
+                            $arrayPDO = array($i-1,$entity,$res->item_id);
+                            $db->query($query, $arrayPDO);
+                        }
+                        $i++;
+                    }*/
+                }
+
+                //CHECK VISA_CIRCUIT
+                $query = "SELECT distinct(r.res_id) FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND item_id = ? AND closing_date is null AND difflist_type = 'VISA_CIRCUIT' and process_date is null";
+                $arrayPDO = array($entity,$old_user);
+                $stmt =  $db->query($query, $arrayPDO);
+                while ($res = $stmt->fetchObject()) {
+                    $resListToCheck[] = $res->res_id;
+                }  
+            }
+
+            foreach ($resListToCheck as $res_id) {
+
+                //UDPATE listinstance
+                $query = "UPDATE listinstance SET item_id = ?, process_comment = '[DEL] supprimé - changement d’entité', process_date = CURRENT_TIMESTAMP WHERE res_id = ? AND item_id = ? AND difflist_type = 'VISA_CIRCUIT' and process_date is null";
+                $arrayPDO = array($old_user,$res_id,$old_user);
+                $db->query($query, $arrayPDO);
+
+                //ADD history entry
+                $query = "SELECT listinstance_id FROM listinstance WHERE res_id = ? AND item_id = ? AND difflist_type = 'VISA_CIRCUIT'";
+                $arrayPDO = array($res_id,$old_user);
+                $stmt =  $db->query($query, $arrayPDO);
+                $res = $stmt->fetchObject();
+                $listinstance_id = $res->listinstance_id;
+                include_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_history.php';
+                $hist = new history();
+                $hist->add(
+                    ENT_LISTINSTANCE,
+                    $listinstance_id,
+                    'UP',
+                    'diffvisauser',
+                    'Désactivation de l\'utilisateur '. $old_user .' dans le circuit de visa du document confidentiel '.$res_id,
+                    $_SESSION['config']['databasetype'],
+                    'entities'
+                );
+
+            }
+            $resListToCheck = [];
+            foreach ($_SESSION['m_admin']['entitiesUserToRedirect']['entity_id'] as $entity) {
+                //CHECK Listinstance
+                $query = "SELECT distinct(r.res_id)  FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE confidentiality = 'Y' AND destination = ? AND closing_date is null AND item_id = ? AND difflist_type = 'entity_id' AND item_mode <> 'dest' AND process_date is null";
+                $arrayPDO = array($entity,$old_user);
+                $stmt =  $db->query($query, $arrayPDO);
+                while ($res = $stmt->fetchObject()) {
+                    $resListToCheck[] = $res->res_id;
+                }  
+            }
+
+            foreach ($resListToCheck as $res_id) {
+
+                //UDPATE listinstance
+                $query = "UPDATE listinstance SET item_id = ?, process_comment = '[DEL] supprimé - changement d’entité', process_date = CURRENT_TIMESTAMP WHERE res_id = ? AND item_id = ? AND difflist_type = 'entity_id' AND process_date is null and item_mode <> 'dest'";
+                $arrayPDO = array($old_user,$res_id,$old_user);
+                $db->query($query, $arrayPDO);
+
+                //ADD history entry
+                $query = "SELECT listinstance_id,item_mode FROM listinstance WHERE res_id = ? AND item_id = ? AND difflist_type = 'entity_id'";
+                $arrayPDO = array($res_id,$old_user);
+                $stmt =  $db->query($query, $arrayPDO);
+                while ($res = $stmt->fetchObject()) {
+                    $listinstance_id = $res->listinstance_id;
+                    $item_mode = $res->item_mode;
+                    include_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_history.php';
+                    $hist = new history();
+                    $hist->add(
+                        ENT_LISTINSTANCE,
+                        $listinstance_id,
+                        'UP',
+                        'diff'.$item_mode.'user',
+                        'Désactivation de l\'utilisateur '. $old_user .' en tant que "'.$item_mode.'" du document confidentiel '.$res_id,
+                        $_SESSION['config']['databasetype'],
+                        'entities'
+                    );
+                }
+
+            }
+
         }
         $_SESSION['info'] = _USER_UPDATED;
+        //echo '<script type="text/javascript">window.top.location=\''.$_SESSION['config']['businessappurl'] .'index.php?page=users_management_controler&admin=users&id='.$old_user.'&mode=up\'</script>';
         echo '<script type="text/javascript">window.top.location=\''.$_SESSION['config']['businessappurl'] .'index.php?page=users_management_controler&admin=users&mode=list\'</script>';
     }
+    $frm = '';
+    $frm .= '<h1><i class="fa fa-user fa-2x"></i> '._UPDATE.' '.strtolower(_USER).': <i>'.$user_id.'</i></h1>';
+    $frm .= '<div class="error" id="main_error">'.$_SESSION['error'].'</div>';
+    $_SESSION['error'] = "";
+    $frm .= '<br>';
+    $frm .= '<div class="block">';
 
-        echo '<h1><i class="fa fa-users fa-2x"></i>'._UPDATE.' '.strtolower(_USER).': <i>'.$user_id.'</i></h1>';
-        echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
-        $_SESSION['error'] = "";
-        ?>
-        <br>
-        <div class="block">
-        <div id="main_error" style="text-align:center;">
-            <b><?php
-            echo _WARNING_MESSAGE_UPDATE_USER;
-            ?></b>
-        </div>
-        <br/>
-        <form name="user_del" id="user_del" style="width: 350px;margin:auto;" method="post" class="forms">
-            <input type="hidden" value="<?php functions::xecho($user_id);?>" name="id">
-            <?php
-            for ($i=0;$i<count($_SESSION['m_admin']['entitiesUserToRedirect']['entity_id']);$i++) {
-                echo "<h3>".$_SESSION['m_admin']['entitiesUserToRedirect']['nbDocs'][$i]." "._CONFIDENTIAL_DOCUMENTS ." ("._TO." ".$user_id." - ".$_SESSION['m_admin']['entitiesUserToRedirect']['entity_id'][$i]."):</h3>";
-            }
-            ?>
-            <br>
-            <br>
-            <select name="user_id" id="user_id" onchange=''>
-                <option value="no_user"><?php echo _NO_REPLACEMENT;?></option>
-                <?php
-                $stmt = $db->query("select * from users order by user_id ASC");
-                while ($users = $stmt->fetchObject()) {
-                    if ($users->user_id != $user_id) {
-                        ?>
-                    <option value="<?php functions::xecho($users->user_id);?>"><?php functions::xecho($users->lastname . " " . $users->firstname);?></option>
-                    <?php
-                    }
-                    
-                }
-                    ?>
-                </select>
-                 <p class="buttons">
-                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id;?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
-                    <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=usergroups_management_controler&mode=list&admin=groups&order=<?php functions::xecho($_REQUEST['order']);?>&order_field=<?php functions::xecho($_REQUEST['order_field']);?>&start=<?php functions::xecho($_REQUEST['start']);?>&what=<?php functions::xecho($_REQUEST['what']);?>';"/>
-                </p>
-            </form>
-            </div>
-        <?php
-        exit();  
+    //INFO BLOCK
+    $frm .= '<h3 style="text-align:center;"><i class="fa fa-info-circle"></i> '._INFO_MESSAGE_UPDATE_USER.' <i class="fa fa-info-circle"></i></h3>';
+
+    //RESLIST
+    $frm .= '<br/>';
+    $frm .= '<ul style="width: 400px;margin: auto;">';
+    for ($i=0;$i<count($_SESSION['m_admin']['entitiesUserToRedirect']['entity_id']);$i++) {
+        $frm .= '<li style="list-style: inside;"><b>'.$_SESSION['m_admin']['entitiesUserToRedirect']['nbDocs'][$i].'</b> '._CONFIDENTIAL_DOCUMENTS .' ('._ENTITY.' <b>'.$_SESSION['m_admin']['entitiesUserToRedirect']['entity_id'][$i].')</b></li>';
+    }
+    $frm .= '</ul>';
+    $frm .= '<br/>';
+
+    //USER LIST REPLACEMENT
+    $frm .= '<form name="user_del" id="user_del" style="width: 100%;text-align:center;margin:auto;" method="post" class="forms">';
+    $frm .= '<input type="hidden" value="'.$user_id.'" name="id">';
+    $frm .= '<select name="user_id" id="user_id">';
+    $frm .= '<option value="no_user">'._NO_REPLACEMENT.'</option>';
+    $stmt = $db->query("select * from users order by user_id ASC");
+    while ($users = $stmt->fetchObject()) {
+        if ($users->user_id != $user_id) {
+            $frm .= '<option value="'.$users->user_id.'">'.$users->lastname.' '.$users->firstname.'</option>';
+        }
+    }
+    $frm .= '</select>';
+
+    //CLEAN LISTMODEL BUTTON
+    $frm .= '<input type="checkbox" name="entityModels" id="entityModels" /> '._MESSAGE_REAFFECT_USER_LISTMODEL;
+
+    $frm .= '<br/>';
+    $frm .= '<br/>';
+
+    //WARNING BLOCK
+    $frm .= '<p style="text-align:center;color:red;"><i class="fa fa-warning"></i> '._WARNING_MESSAGE_UPDATE_USER.' <i class="fa fa-warning"></i></p>';
+
+    //ACTIONS BUTTONS
+    $frm .= '<p class="buttons">';
+    $frm .= '<input type="submit" value="'._DEL_AND_REAFFECT.'" name="valid" class="button" />';
+    $frm .= ' <input type="button" value="'._CANCEL.'" class="button" onclick="window.location.href=\''.$_SESSION['config']['businessappurl'].'index.php?page=users_management_controler&mode=up&admin=users&id='.$user_id.'&order='.$_REQUEST['order'].'&order_field='.$_REQUEST['order_field'].'&start='.$_REQUEST['start'].'&what='.$_REQUEST['what'].'\'" />';
+    $frm .= '</p>';
+
+    $frm .= '</form>';
+    $frm .= '</div>';
+    echo $frm;
+    exit();  
 }
 
 /**
@@ -735,8 +902,8 @@ function validate_user_submit()
     }
     for ($i=0;$i<count($entitiesUserCheck);$i++) {
         if (!in_array($entitiesUserCheck[$i]['ENTITY_ID'], $newUserEntitiesList)) {
-            $query = "SELECT count(res_id) FROM res_letterbox WHERE confidentiality = 'Y' AND destination = ? AND dest_user = ? AND status <> 'END'";
-            $arrayPDO = array($entitiesUserCheck[$i]['ENTITY_ID'],$_REQUEST['user_id']);
+            $query = "SELECT count(distinct(r.res_id)) FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE ((dest_user = ? and item_id = ?) OR (item_id = ? AND difflist_type = 'entity_id' AND process_comment is null) OR (item_id = ? AND difflist_type = 'VISA_CIRCUIT' AND process_date is null)) AND closing_date is null AND confidentiality = 'Y' AND destination = ?";
+            $arrayPDO = array($_REQUEST['user_id'],$_REQUEST['user_id'],$_REQUEST['user_id'],$_REQUEST['user_id'],$entitiesUserCheck[$i]['ENTITY_ID']);
             $stmt =  $db->query($query, $arrayPDO);
             $res = $stmt->fetchObject();   
             if ($res->count > 0) {
@@ -894,6 +1061,7 @@ function validate_user_submit()
         }
         unset($_SESSION['m_admin']);
         header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=users&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
+        //header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=up&admin=users&id=".$_REQUEST['user_id']."&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
     }
 }
 

@@ -13,10 +13,12 @@
 * @ingroup basket
 */
 
+namespace Baskets\Models;
+
 require_once 'apps/maarch_entreprise/services/Table.php';
 require_once 'core/class/SecurityControler.php';
 
-class BasketsModelAbstract extends Apps_Table_Service {
+class BasketsModelAbstract extends \Apps_Table_Service {
 
     public static function getResListById(array $aArgs = []) {
         static::checkRequired($aArgs, ['basketId']);
@@ -36,7 +38,7 @@ class BasketsModelAbstract extends Apps_Table_Service {
             return [];
         }
 
-        $sec = new SecurityControler();
+        $sec = new \SecurityControler();
         $where = $sec->process_security_where_clause($aBasket[0]['basket_clause'], $_SESSION['user']['UserId'], false);
 
         $aResList = static::select(
@@ -79,6 +81,27 @@ class BasketsModelAbstract extends Apps_Table_Service {
             'table'     => ['actions_groupbaskets'],
             'where'     => ['basket_id = ?'],
             'data'      => [$aArgs['basketId']]
+            ]
+        );
+
+        if (empty($aAction[0])) {
+            return '';
+        }
+
+        return $aAction[0]['id_action'];
+    }
+
+    public static function getBasketsByUserId(array $aArgs = []) {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+
+        $aAction = static::select(
+            [
+                'select'    => ['id_action'],
+                'table'     => ['actions_groupbaskets'],
+                'where'     => ['basket_id = ?'],
+                'data'      => [$aArgs['basketId']]
             ]
         );
 

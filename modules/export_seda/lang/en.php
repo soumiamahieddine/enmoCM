@@ -26,12 +26,28 @@ if (!defined("_ARCHIVE_IDENTIFIER"))
 
 if (!defined("_DESCRIPTION_LEVEL"))
     define("_DESCRIPTION_LEVEL", "Description level");
+if (!defined("_ITEM"))
+    define("_ITEM", "Item");
 if (!defined("_RECEIVED_DATE"))
     define("_RECEIVED_DATE", "Received date");
+if (!defined("_YEARS"))
+    define("_YEARS", "year(s)");
+if (!defined("_MONTHS"))
+    define("_MONTHS", "month(s)");
+if (!defined("_DAYS"))
+    define("_DAYS", "day(s)");
 if (!defined("_RETENTION_FINAL_DISPOSITION"))
     define("_RETENTION_FINAL_DISPOSITION", "Final disposition");
+if (!defined("_DESTROY"))
+    define("_DESTROY", "Destroy");
+if (!defined("_KEEP"))
+    define("_KEEP", "Keep");
 if (!defined("_DOCUMENT_TYPE"))
     define("_DOCUMENT_TYPE", "Document type");
+if (!defined("_REPLY"))
+    define("_REPLY", "Reply");
+if (!defined("_ATTACHMENT"))
+    define("_ATTACHMENT", "Attachment");
 if (!defined("_SENT_DATE"))
     define("_SENT_DATE", "Sent date");
 

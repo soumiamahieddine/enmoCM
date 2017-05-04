@@ -393,7 +393,7 @@ class DOMTemplateProcessor
 
         if (isset($params['include'])) {
             $filename = $params['include'];
-            $source = file_get_contents($filename);
+            $source = file_get_contents(__DIR__."/".$filename);
 
             $targetNode = $this->document->createDocumentFragment();
             $targetNode->appendXML($source);
@@ -456,7 +456,7 @@ class DOMTemplateProcessor
             if ($oname) {
                 $pname = $oname . "." . $pname;
             }
-            //var_dump("merge $pname");
+
             if (is_scalar($pvalue) || (is_object($pvalue) && method_exists($pvalue, '__toString'))) {
                 $this->mergeObjectProperty($targetNode, $pvalue, $params, $pname);
             }
