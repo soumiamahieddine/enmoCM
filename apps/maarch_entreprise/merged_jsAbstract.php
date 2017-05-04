@@ -67,8 +67,8 @@ class MergedJsAbstract {
 		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
 
 		//Mobile
-		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe.min.js');
-		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe-ui-default.min.js');
+		readfile('node_modules/photoswipe/dist/photoswipe.min.js');
+		readfile('node_modules/photoswipe/dist/photoswipe-ui-default.min.js');
 
 		//Maarch
 		include('apps/maarch_entreprise/js/functions.js');
