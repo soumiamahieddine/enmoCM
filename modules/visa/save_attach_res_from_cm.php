@@ -189,6 +189,11 @@ if (empty($docserver)) {
                     'type' => 'int',
                 )
             );
+            $_SESSION['data'][] = [
+                'column' => 'dest_user',
+                'value' => $_SESSION['visa']['last_resId_signed']['dest_user'],
+                'type' => 'string'
+            ];
 
             if (empty($_REQUEST['id'])) $id_origin = $objectId;
             else $id_origin = $_REQUEST['id'];
