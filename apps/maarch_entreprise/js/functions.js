@@ -2159,7 +2159,6 @@ function valid_report_by_period(url)
     var year = '';
     var month = '';
 
-     console.log(url);
     if ($j('#entities_chosen').length){
         var entities_chosen=[];
         $j("select#entities_chosen option:selected").each(function(key, entity) {

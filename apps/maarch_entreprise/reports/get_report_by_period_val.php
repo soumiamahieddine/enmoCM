@@ -46,7 +46,7 @@ if (!empty($_POST['entities_chosen'])) {
     $entities_chosen = "'" . join("','", $entities_chosen) . "'";
     $where_entities = ' AND destination in (' . $entities_chosen . ') ';
 	if($_REQUEST['sub_entities'] == 'true'){
-		$where_entities = 'AND (destination in (' . $entities_chosen . ') or destination in (select entity_id from entities where parent_entity_id IN (\'DSG\')))';
+		$where_entities = 'AND (destination in (' . $entities_chosen . ') or destination in (select entity_id from entities where parent_entity_id IN ('.$entities_chosen.')))';
 	}
 }
 
