@@ -15,6 +15,18 @@ $db = new Database();
 
 //var_dump($_POST['entities_chosen']);
 $entities_chosen = explode("#", $_POST['entities_chosen']);
+if($_REQUEST['sub_entities'] == 'true'){
+	$sub_entities = [];
+	foreach($entities_chosen as $value){
+		$sub_entities[] = users_entities_Abstract::getEntityChildren($value);
+	}
+	$sub_entities1 = "'";
+	for( $i=0; $i< count($sub_entities ); $i++){
+		$sub_entities1 .= implode("','",$sub_entities[$i]);
+		$sub_entities1 .= "','";
+	}
+	$sub_entities1 = substr($sub_entities1, 0, -2);
+}
 $entities_chosen = "'" . join("','", $entities_chosen) . "'";
 
 $status_chosen = '';
@@ -48,6 +60,8 @@ $core_tools->load_lang();
 //Récupération de l'ensemble des types de documents
 if (!$_REQUEST['entities_chosen']){
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+}elseif($_REQUEST['sub_entities'] == 'true'){
+	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") or entity_id IN (".$sub_entities1.") order by short_label",array());
 }else{
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label",array());
 }

@@ -122,7 +122,7 @@ if (!defined("_SAVE_CONFIRM"))    define("_SAVE_CONFIRM", "Record confirmation")
 if (!defined("_SAVED_ALREADY_EXIST"))    define("_SAVED_ALREADY_EXIST", "Recording already exists");
 if (!defined("_OK_FOR_CONFIRM"))    define("_OK_FOR_CONFIRM", "Do you confirm the recording?");
 if (!defined("_INCLUDE_SUB_ENTITIES")) define("_INCLUDE_SUB_ENTITIES","Include sub-entities");
-if (!defined("_GRAPHICS_REPORTS")) define("_GRAPHICS_REPORTS","Graphics mode activated");
+if (!defined("_GRAPHICS_REPORTS")) define("_GRAPHICS_REPORTS","Graphics mode disabled");
 
 /************** Forms And lists **************/
 if (!defined("_ID"))    define("_ID", "ID");
