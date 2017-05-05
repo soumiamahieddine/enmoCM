@@ -134,4 +134,3 @@ if ($_SESSION['modules_loaded']['visa']['confirm_sign_by_email'] == 'true') {
 }
 
 exit;
-

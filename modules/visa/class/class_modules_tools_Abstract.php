@@ -72,7 +72,7 @@ abstract class visa_Abstract extends Database
 		
 		$_SESSION['modules_loaded']['visa']['width_blocsign'] = (string) $conf->width_blocsign;
 		$_SESSION['modules_loaded']['visa']['height_blocsign'] = (string) $conf->height_blocsign;
-		
+
 		$_SESSION['modules_loaded']['visa']['confirm_sign_by_email'] = (string) $conf->confirm_sign_by_email;
 		
 		$routing_template = (string) $conf->routing_template;
@@ -1325,4 +1325,3 @@ Array
 )
 
 */
-?>
