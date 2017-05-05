@@ -18,9 +18,11 @@ namespace Baskets\Models;
 require_once 'apps/maarch_entreprise/services/Table.php';
 require_once 'core/class/SecurityControler.php';
 
-class BasketsModelAbstract extends \Apps_Table_Service {
+class BasketsModelAbstract extends \Apps_Table_Service 
+{
 
-    public static function getResListById(array $aArgs = []) {
+    public static function getResListById(array $aArgs = []) 
+    {
         static::checkRequired($aArgs, ['basketId']);
         static::checkString($aArgs, ['basketId']);
 
@@ -53,7 +55,8 @@ class BasketsModelAbstract extends \Apps_Table_Service {
         return $aResList;
     }
 
-    public static function getActionByActionId(array $aArgs = []) {
+    public static function getActionByActionId(array $aArgs = []) 
+    {
         static::checkRequired($aArgs, ['actionId']);
         static::checkNumeric($aArgs, ['actionId']);
 
@@ -70,7 +73,8 @@ class BasketsModelAbstract extends \Apps_Table_Service {
         return $aAction[0];
     }
 
-    public static function getActionIdById(array $aArgs = []) {
+    public static function getActionIdById(array $aArgs = []) 
+    {
         static::checkRequired($aArgs, ['basketId']);
         static::checkString($aArgs, ['basketId']);
 
@@ -91,25 +95,36 @@ class BasketsModelAbstract extends \Apps_Table_Service {
         return $aAction[0]['id_action'];
     }
 
-    public static function getBasketsByUserId(array $aArgs = []) {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
-
-
+    public static function getTemplateById(array $aArgs = []) 
+    {
         $aAction = static::select(
             [
-                'select'    => ['id_action'],
-                'table'     => ['actions_groupbaskets'],
-                'where'     => ['basket_id = ?'],
-                'data'      => [$aArgs['basketId']]
+            'select'    => ['result_page'],
+            'table'     => ['groupbasket'],
+            'where'     => ['basket_id = ?'],
+            'data'      => [$aArgs['basketId']]
             ]
         );
 
-        if (empty($aAction[0])) {
+        if (empty($aAction)) {
             return '';
         }
 
-        return $aAction[0]['id_action'];
+        if (file_exists('custom/' .$_SESSION['custom_override_id']. '/mdoules/basket/xml/basketpage.xml')) {
+            $path = 'custom/' .$_SESSION['custom_override_id']. '/modules/basket/xml/basketpage.xml';
+        } else {
+            $path = 'modules/basket/xml/basketpage.xml';
+        }
+
+        $xmlfile = simplexml_load_file($path);
+        $name = '';
+        foreach ($xmlfile as $basket) {
+            if ($basket->ID == $aAction[0]["result_page"]) {
+                $name = (string)$basket->NAME;
+            } 
+        }
+        return $name;
     }
+    
 
 }
