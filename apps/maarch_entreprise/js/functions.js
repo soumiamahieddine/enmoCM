@@ -2213,7 +2213,10 @@ function valid_report_by_period(url)
     var period_custom = $('custom_period');
     var period_year = $('period_by_year');
     var period_month = $('period_by_month');
-    var sub_entities = $j('#sub_entities')[0].checked;
+    var sub_entities = '';
+    if($j('#sub_entities')[0]){   
+        sub_entities = $j('#sub_entities')[0].checked;   
+    }
     if(period_custom && period_custom.checked)
     {
         type_period = 'custom_period';

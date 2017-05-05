@@ -15,9 +15,9 @@ $content = '';
 $content .='<div id="params">';
 	$content .='<form id="report_by_period_form" name="report_by_period_form" method="get" action="">';
         if($core_tools->test_service('graphics_reports', 'reports', false) == 1){
-        $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'._ENTITY_PROCESS_DELAY.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /><label for="report_graph"> ' . _GRAPH . ' </label><input type="radio" name="form_report" id="report_array" value="array" /><label for="report_array"> '. _ARRAY . '</label>)</span></div>';
+        $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'._ENTITY_PROCESS_DELAY.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_array" value="array" checked="checked" /><label for="report_array"> '. _ARRAY . '</label>)</span></div>';        
         }else{
-        $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'._ENTITY_PROCESS_DELAY.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_array" value="array" checked="checked" /><label for="report_array"> '. _ARRAY . '</label>)</span></div>';
+        $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'._ENTITY_PROCESS_DELAY.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /><label for="report_graph"> ' . _GRAPH . ' </label><input type="radio" name="form_report" id="report_array" value="array" /><label for="report_array"> '. _ARRAY . '</label>)</span></div>';          
         }
   $content .='<br/>';
         $content .='<input type="hidden" name="id_report" id="id_report" value="'.$id.'" />';

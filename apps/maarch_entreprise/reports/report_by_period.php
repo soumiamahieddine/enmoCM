@@ -29,14 +29,14 @@ $content = '';
 $content .='<div id="params">';
 	$content .='<form id="report_by_period_form" name="report_by_period_form" method="get" action="">';
   if($core_tools->test_service('graphics_reports', 'reports', false) == 1){
-        $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'.$title.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /><label for="report_graph"> ' . _GRAPH . ' </label><input type="radio" name="form_report" id="report_array" value="array" /><label for="report_array"> '. _ARRAY . '</label>)</span></div>';
+        $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'.$title.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_array" value="array" checked="checked"/><label for="report_array"> '. _ARRAY . '</label>)</span></div>';        
   }else{
-        $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'.$title.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_array" value="array" checked="checked"/><label for="report_array"> '. _ARRAY . '</label>)</span></div>';    
-  }
-  $content .='<br/>';
-        $content .='<input type="hidden" name="id_report" id="id_report" value="'.$id.'" />';
-	$content .='<table style="width:600px;border: solid 1px #009DC5;margin:auto;" >';
-        $content .='<tr>';
+        $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'.$title.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /><label for="report_graph"> ' . _GRAPH . ' </label><input type="radio" name="form_report" id="report_array" value="array" /><label for="report_array"> '. _ARRAY . '</label>)</span></div>';
+          }
+          $content .='<br/>';
+          $content .='<input type="hidden" name="id_report" id="id_report" value="'.$id.'" />';
+	        $content .='<table style="width:600px;border: solid 1px #009DC5;margin:auto;" >';
+          $content .='<tr>';
           $content .='<td align="left">';
           $content .='<p class="double"  style="padding:10px;text-align:justify;border:solid 1px #ccc;">';
           $content .= $titleDesc;
