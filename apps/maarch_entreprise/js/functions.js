@@ -3444,6 +3444,10 @@ function resetSelect(id) {
     Event.fire($(id), "chosen:updated");
 }
 
+function titleWithTooltipster(id){
+    $j(document).ready(function() {$j('#'+id).tooltipster({delay :0});});
+}
+
 // Exemple appel service
 // function testService(){
 //     $j.ajax({
