@@ -17,16 +17,17 @@ function fill_report_result(url_report)
 			}
 		}
 		//console.log(fct_args);
-		new Ajax.Request(url_report,
+		$j.ajax(
 		{
-		    method:'post',
-		    parameters: { arguments : fct_args
+			url : url_report,
+		    type : 'POST',
+		    data: { arguments : fct_args
 						},
-		        onSuccess: function(answer){
+		        success: function(answer){
 				//alert(answer.responseText);
-				eval("response = "+answer.responseText);
-				var div_to_fill = $('result_report');
-				div_to_fill.innerHTML = response.content;
+				eval("response = "+answer);
+				var div_to_fill = $j('#result_report');
+				div_to_fill.html(response.content);
 				eval(response.exec_js);
 			}
 		});

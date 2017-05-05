@@ -84,7 +84,8 @@ $content .='<div id="params">';
             $content .= $entities[$i]['LABEL']."</option>";
           }             
           $content.='</select>';
-            $content .='<input type="checkbox" title="'._INCLUDE_SUB_ENTITIES.'" name="sub_entities" id="sub_entities" />';          
+            $content .='<input type="checkbox" title="'._INCLUDE_SUB_ENTITIES.'" name="sub_entities" id="sub_entities" />'; 
+            $content .= '<script>$j(document).ready(function() {$j("#sub_entities").tooltipster();});</script>';         
             $js .= 'new Chosen($(\'entities_chosen\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
             $content.= '<br/><br/>';
             $status_obj = new manage_status();
