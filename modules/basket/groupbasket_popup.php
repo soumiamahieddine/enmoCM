@@ -319,7 +319,6 @@ $time = $core_tools->get_session_time_expire();
                 <?php
                 /*}*/ ?></div><?php
         }
-        $core_tools->load_js();
 
         ?>  </div>
             <script type="text/javascript">

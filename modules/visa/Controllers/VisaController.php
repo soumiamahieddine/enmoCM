@@ -13,7 +13,7 @@
 */
 namespace Visa\Controllers;
 
-use Core\Models\AttachmentModel;
+use Attachments\Models\AttachmentsModel;
 use Core\Models\UserModel;
 use Baskets\Models\BasketsModel;
 use Psr\Http\Message\RequestInterface;
@@ -74,7 +74,7 @@ class VisaController
             ]
         );
 
-        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+        $attachmentTypes = AttachmentsModel::getAttachmentsTypesByXML();
 
         $resListIndex = 0;
         foreach ($resList as $key => $value) {
@@ -233,7 +233,7 @@ class VisaController
 
     private function getAttachmentsForSignatureBook(array $aArgs = [])
     {
-        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+        $attachmentTypes = AttachmentsModel::getAttachmentsTypesByXML();
 
         $orderBy = "CASE attachment_type WHEN 'response_project' THEN 1";
         $c = 2;
