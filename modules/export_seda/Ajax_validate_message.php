@@ -61,21 +61,26 @@ class ValidateMessage
 
     public function validate($reference)
     {
+
         try {
+            $message = $this->db->getMessageByReference($reference);
+            $listResId = $this->db->getUnitIdentifierByMessageId($message->message_id);
+
             if ($this->deleteData) {
-                $message = $this->db->getMessageByReference($reference);
-
-                $listResId = $this->db->getUnitIdentifierByMessageId($message->message_id);
-
                 for ($i=0; $i < count($listResId); $i++) {
                     $this->purgeResource($listResId[$i]->res_id);
 
                     $courrier = $this->db->getCourrier($listResId[$i]->res_id);
                     $this->purgeContact($courrier->contact_id);
                 }
-
                 $this->purgeMessage($message->message_id);
             }
+
+            for ($i=0; $i < count($listResId); $i++) {
+                $this->db->updateStatusLetterbox($listResId[$i]->res_id,'SENT_ARC');
+            }
+
+
         } catch (Exception $e) {
             $this->res['status'] = 1;
             $this->res['error'] = "Données non supprimées";

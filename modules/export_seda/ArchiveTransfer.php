@@ -371,7 +371,7 @@ class ArchiveTransfer
 
         if ($type == "entitie") {
             $keyword->keywordType = "corpname";
-            $keyword->keywordContent = $informations->business_id;
+            $keyword->keywordContent->value = $informations->business_id;
         } else if ($informations->is_corporate_person == "Y") {
             $keyword->keywordType = "corpname";
             $keyword->keywordContent->value = $informations->society;
