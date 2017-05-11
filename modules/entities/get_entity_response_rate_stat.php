@@ -1,4 +1,5 @@
 <?php
+
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
@@ -8,13 +9,11 @@ require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'entit
 
 $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
-
 $graph = new graphics();
-$req = new request();
-$db = new Database();
-$sec = new security();
+$req   = new request();
+$db    = new Database();
+$sec   = new security();
 
-//var_dump($_POST['entities_chosen']);
 $entities_chosen = explode("#", $_POST['entities_chosen']);
 if($_REQUEST['sub_entities'] == 'true'){
 	$sub_entities = [];
@@ -251,8 +250,8 @@ for($i=0; $i<$totalEntities; $i++)
 
 	if($report_type == 'graph')
 	{
-			array_push($_SESSION['labels1'], addslashes(utf8_decode($db->wash_html($entities[$i]['LABEL'], 'NO_ACCENT'))));
-			array_push($vol_an, $responseRate);
+		array_push($_SESSION['labels1'], addslashes(utf8_decode($db->wash_html($entities[$i]['LABEL'], 'NO_ACCENT'))));
+		array_push($vol_an, $responseRate);
 	}
 	elseif($report_type == 'array')
 	{
@@ -274,7 +273,6 @@ if($report_type == 'graph')
 	$_SESSION['GRAPH']['VALUES']='';
 	for($i=0;$i<count($vol_an);$i++)
 	{
-		//$src1 .= "&values[]=".$vol_an[$i];
 		$_SESSION['GRAPH']['VALUES'][$i]=$vol_an[$i];
 	}
 }
@@ -283,13 +281,11 @@ elseif($report_type == 'array')
 	array_unshift($data, array('LABEL' => _ENTITY, 'VALUE' => _RESPONSE_RATE . ' (en %)'));
 }
 
-
 if($has_data)
 {
 	if($report_type == 'graph')
 	{
 		$labels1 = "'".implode("','", $_SESSION['labels1'])."'";
-		//var_dump($labels1);
 
 		echo "{label: [".utf8_encode($labels1)."] ".
 			", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
@@ -302,7 +298,6 @@ if($has_data)
 		$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
 		echo $form;
 		
-		
 		$graph->show_stats_array($title, $data);
 	}
 }
@@ -312,5 +307,3 @@ else
     echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 }
 exit();
-
-?>
