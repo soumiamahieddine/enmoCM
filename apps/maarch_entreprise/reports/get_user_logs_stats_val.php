@@ -50,9 +50,10 @@ if(isset($_REQUEST['user']) && $_REQUEST['user'] != '')
 	$req = new request();
 	$tab = $req->PDOselect($select, $where, $arrayPDO, " ORDER BY ".$_SESSION['tablename']['history'].".event_date DESC ", $_SESSION['config']['databasetype'], $limit="500",false);
 
-	if (count($tab) > 0)
+	$tabCount = count($tab);
+	if ($tabCount > 0)
 	{
-		for ($i=0;$i<count($tab);$i++)
+		for ($i=0;$i<$tabCount;$i++)
 		{
 			for ($j=0;$j<count($tab[$i]);$j++)
 			{
