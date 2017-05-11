@@ -57,8 +57,7 @@ $report_type   = $_REQUEST['report_type'];
 $core_tools    = new core_tools();
 $core_tools->load_lang();
 
-
-//Récupération de l'ensemble des types de documents
+//Récupération de l'ensemble des entités
 if (!$_REQUEST['entities_chosen']){
 	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
 }elseif($_REQUEST['sub_entities'] == 'true'){
@@ -73,9 +72,7 @@ while($res = $stmt->fetchObject())
     array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
 }
 
-
 $status = array();
-
 
 if($period_type == 'period_year')
 {
@@ -207,9 +204,8 @@ else
 }
 
 $has_data = false;
-//$title = _RESPONSE_RATE_BY_ENTITIES.' '.$date_title ;
-$db = new Database();
 
+$db = new Database();
 
 if($report_type == 'graph')
 {
