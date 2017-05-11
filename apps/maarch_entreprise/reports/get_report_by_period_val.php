@@ -260,8 +260,7 @@ else
 
 		$totalDocTypes = count($doctypes);
 
-
-		for($i=0; $i<count($doctypes);$i++)
+		for($i=0; $i<$totalDocTypes;$i++)
 		{
 			$arrayPDO = array_merge($arrayPDO, array(":doctypeId" => $doctypes[$i]['ID']));
 			$stmt = $db->query("SELECT doctypes_second_level_label,".$req->get_date_diff('closing_date', 'creation_date' )." AS delay FROM ".$view
@@ -369,7 +368,7 @@ else
 		else
 		{
 			$error = _NO_DATA_MESSAGE;
-echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
+			echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 		}
 
 	}
