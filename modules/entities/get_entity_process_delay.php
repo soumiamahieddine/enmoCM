@@ -9,9 +9,9 @@ $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 
 $graph = new graphics();
-$req = new request();
-$sec = new security();
-$db = new Database();
+$req   = new request();
+$sec   = new security();
+$db    = new Database();
 
 //var_dump($_POST['entities_chosen']);
 $entities_chosen = explode("#", $_POST['entities_chosen']);
@@ -46,15 +46,15 @@ if (!empty($_POST['priority_chosen']) || $_POST['priority_chosen'] === "0") {
     $where_priority = ' AND priority in (' . $priority_chosen . ') ';
 }
 
-$period_type = $_REQUEST['period_type'];
-$status_obj = new manage_status();
-$ind_coll = $sec->get_ind_collection('letterbox_coll');
-$table = $_SESSION['collections'][$ind_coll]['table'];
-$view = $_SESSION['collections'][$ind_coll]['view'];
+$period_type   = $_REQUEST['period_type'];
+$status_obj    = new manage_status();
+$ind_coll      = $sec->get_ind_collection('letterbox_coll');
+$table         = $_SESSION['collections'][$ind_coll]['table'];
+$view          = $_SESSION['collections'][$ind_coll]['view'];
 $search_status = $status_obj->get_searchable_status();
-$default_year = date('Y');
-$report_type = $_REQUEST['report_type'];
-$core_tools = new core_tools();
+$default_year  = date('Y');
+$report_type   = $_REQUEST['report_type'];
+$core_tools    = new core_tools();
 $core_tools->load_lang();
 
 //Récupération de l'ensemble des types de documents
@@ -161,7 +161,6 @@ else if($period_type == 'custom_period')
 		exit();
 	}
 	
-	
 	if( preg_match($_ENV['date_pattern'],$_REQUEST['date_start'])==false  && $_REQUEST['date_start'] <> ''  )
 	{
 		
@@ -202,7 +201,6 @@ else
 	exit();
 }
 
-
 //$title = _ENTITY_PROCESS_DELAY.' '.$date_title ;
 $db = new Database();
 
@@ -220,13 +218,13 @@ $has_data = false;
 //Utilisation de la clause de sécurité de Maarch
 
 $where_clause = $sec->get_where_clause_from_coll_id('letterbox_coll');
-//var_dump($where_clause);
+
 if ($where_clause)
     $where_clause = " and ".$where_clause;
 	
 $totalEntities = count($entities);
 	
-for($i=0; $i<count($entities);$i++)
+for($i=0; $i<$totalEntities;$i++)
 {
     //Permet d'afficher ou non les entités dont le nombre de courrier est égal à 0
 	$valid = true;
@@ -295,14 +293,10 @@ if($report_type == 'graph')
     }
 
     $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=300&title=".$title."&labelY="._N_DAYS;
-    for($i=0;$i<count($_SESSION['labels1']);$i++)
-    {
-        //$src1 .= "&labels[]=".$_SESSION['labels1'][$i];
-    }
+
     $_SESSION['GRAPH']['VALUES']='';
     for($i=0;$i<count($val_an);$i++)
     {
-        //$src1 .= "&values[]=".$val_an[$i];
         $_SESSION['GRAPH']['VALUES'][$i]=$val_an[$i];
     }
 }
@@ -311,30 +305,20 @@ elseif($report_type == 'array')
     array_unshift($data, array('LABEL' => _DOCTYPE, 'VALUE' => _PROCESS_DELAY));
 }
 
-if ( $has_data)
-{
-    if($report_type == 'graph')
-    {
-        $labels1 = "'".implode("','", $_SESSION['labels1'])."'";
-        echo "{label: [".$labels1."] ".
-            ", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
-            ", title: '".addslashes($title)."'}";
-        exit;
-     }
-    elseif($report_type == 'array')
-    {
-		$data2 = urlencode(json_encode($data));
-		$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
-		echo $form;
-		
-        $graph->show_stats_array($title, $data);
-    }
+if($report_type == 'graph') {
+    $labels1 = "'".implode("','", $_SESSION['labels1'])."'";
+    echo "{label: [".$labels1."] ".
+        ", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
+        ", title: '".addslashes($title)."'}";
+    exit;
+
+} elseif($report_type == 'array') {
+	$data2 = urlencode(json_encode($data));
+	$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
+	echo $form;
+	
+    $graph->show_stats_array($title, $data);
 }
-else
-{
-    $error = _NO_DATA_MESSAGE;
-    echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
-}
+
 exit();
 
-?>

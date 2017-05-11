@@ -43,15 +43,15 @@ if (!empty($_POST['priority_chosen'])  || $_POST['priority_chosen'] === "0") {
     $where_priority = ' AND priority in (' . $priority_chosen . ') ';
 }
 
-$period_type = $_REQUEST['period_type'];
-$status_obj = new manage_status();
-$ind_coll = $sec->get_ind_collection('letterbox_coll');
-$table = $_SESSION['collections'][$ind_coll]['table'];
-$view = $_SESSION['collections'][$ind_coll]['view'];
+$period_type   = $_REQUEST['period_type'];
+$status_obj    = new manage_status();
+$ind_coll      = $sec->get_ind_collection('letterbox_coll');
+$table         = $_SESSION['collections'][$ind_coll]['table'];
+$view          = $_SESSION['collections'][$ind_coll]['view'];
 $search_status = $status_obj->get_searchable_status();
-$default_year = date('Y');
-$report_type = $_REQUEST['report_type'];
-$core_tools = new core_tools();
+$default_year  = date('Y');
+$report_type   = $_REQUEST['report_type'];
+$core_tools    = new core_tools();
 $core_tools->load_lang();
 
 
@@ -214,7 +214,7 @@ if ($where_clause) {
 $totalCourrier=array();
 $totalEntities = count($entities);
 
-for ($i=0; $i<count($entities);$i++) {
+for ($i=0; $i<$totalEntities;$i++) {
     $stmt = $db->query("select count(*) as total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where destination = ? and ".$view.".status not in ('DEL','BAD') ".$where_date." ".$where_status." ".$where_priority . $where_clause." ", array($entities[$i]['ID']));
     //$db->show();
     $res = $stmt->fetchObject();

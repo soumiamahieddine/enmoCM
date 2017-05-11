@@ -46,19 +46,18 @@ if (!empty($_POST['priority_chosen'])  || $_POST['priority_chosen'] === "0") {
     $where_priority = ' AND priority in (' . $priority_chosen . ') ';
 }
 
-$period_type = $_REQUEST['period_type'];
-$status_obj = new manage_status();
-$ind_coll = $sec->get_ind_collection('letterbox_coll');
-$table = $_SESSION['collections'][$ind_coll]['table'];
-$view = $_SESSION['collections'][$ind_coll]['view'];
+$period_type   = $_REQUEST['period_type'];
+$status_obj    = new manage_status();
+$ind_coll      = $sec->get_ind_collection('letterbox_coll');
+$table         = $_SESSION['collections'][$ind_coll]['table'];
+$view          = $_SESSION['collections'][$ind_coll]['view'];
 $search_status = $status_obj->get_searchable_status();
-$default_year = date('Y');
-$report_type = $_REQUEST['report_type'];
-$core_tools = new core_tools();
+$default_year  = date('Y');
+$report_type   = $_REQUEST['report_type'];
+$core_tools    = new core_tools();
 $core_tools->load_lang();
 
-
-//Récupération de l'ensemble des types de documents
+//Récupération de l'ensemble des entités
 if (!$_REQUEST['entities_chosen']){
 	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
 }elseif($_REQUEST['sub_entities'] == 'true'){
@@ -73,9 +72,7 @@ while($res = $stmt->fetchObject())
     array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
 }
 
-
 $status = array();
-
 
 if($period_type == 'period_year')
 {
@@ -207,9 +204,8 @@ else
 }
 
 $has_data = false;
-//$title = _RESPONSE_RATE_BY_ENTITIES.' '.$date_title ;
-$db = new Database();
 
+$db = new Database();
 
 if($report_type == 'graph')
 {
@@ -230,7 +226,7 @@ if ($where_clause)
 $totalCourrier = [];
 $totalEntities = count($entities);	
 	
-for($i=0; $i<count($entities); $i++)
+for($i=0; $i<$totalEntities; $i++)
 {
 	//NB RES INCOMING
 	$stmt = $db->query("select count(res_id) as nb_res_incoming from ".$view." where destination = ? and status not in ('DEL','BAD') AND admission_date is not null AND category_id = 'incoming'".$where_date." ".$where_status." ".$where_priority . $where_clause,array($entities[$i]['ID']));
