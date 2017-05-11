@@ -157,7 +157,7 @@ $status = 0;
 $content = $list->showList($tab, $paramsTab, $listKey, $_SESSION['current_basket']);
 //$debug = $list->debug(false);
 
-$content .= '<script>$j(\'#content\').attr(\'style\', \'width: auto; min-width: 1000px;\');';
+$content .= '<script>$j(\'#container\').attr(\'style\', \'width: auto; min-width: 1000px;\');$j(\'#content\').attr(\'style\', \'width: auto; min-width: 1000px;\');';
 $content .= '$j(\'#inner_content\').attr(\'style\', \'width: auto; min-width: 1000px;\');</script>';
 
 echo "{'status' : " . $status . ", 'content' : '" . addslashes($debug.$content) . "', 'error' : '" . addslashes($error) . "'}";
