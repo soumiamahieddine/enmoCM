@@ -1930,11 +1930,12 @@ $content .= '</div>';
             if (!empty($_REQUEST['docId'])) {
                 if (isset($_REQUEST['id'])) {
                     $content .= ', \'edit\'';
+                    $content .= ');simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetTemporarySaved&mode=edit\')"/>';
                 } else {
                     $content .= ', \'add\'';
+                    $content .= ');simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetTemporarySaved&mode=add\')"/>';
                 }
             }
-            $content .= ');simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetTemporarySaved&mode=add\')"/>';
 
             $content .= '&nbsp;';
             $content .= '&nbsp;';
