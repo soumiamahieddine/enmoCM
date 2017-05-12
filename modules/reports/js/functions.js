@@ -34,19 +34,15 @@ function fill_report_result(url_report)
 	}
 }
 
-function record_data(url, donnees)
+function record_data(url)
 {
 	var path_manage_script = url;
     new Ajax.Request(path_manage_script,
 	{
 		method:'post',
-		parameters: {
-						data : donnees
-					},
 		onSuccess: function(response){
 			eval("result = "+response.responseText);
 			if(result.status == 1){
-				//window.location.assign("tmp/export_reports_maarch.csv");	
 				window.location.assign("index.php?page=export&display=true&origin=graph");		
 			} else {
 				console.log(result.response);

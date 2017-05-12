@@ -294,8 +294,9 @@ if($has_data)
 	}
 	elseif($report_type == 'array')
 	{
-		$data2 = urlencode(json_encode($data));
-		$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
+
+		$_SESSION['export_data_stat'] = $data;
+		$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \")' style='float:right;'/>";
 		echo $form;
 		
 		$graph->show_stats_array($title, $data);
