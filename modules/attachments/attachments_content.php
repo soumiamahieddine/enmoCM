@@ -1934,7 +1934,7 @@ $content .= '</div>';
                     $content .= ', \'add\'';
                 }
             }
-            $content .= ')"/>';
+            $content .= ');simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetTemporarySaved&mode=add\')"/>';
 
             $content .= '&nbsp;';
             $content .= '&nbsp;';
