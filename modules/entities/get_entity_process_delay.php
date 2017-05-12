@@ -213,7 +213,7 @@ elseif($report_type == 'array')
 {
     $data = array();
 }
-$has_data = false;
+$has_data = true;
 
 //Utilisation de la clause de sécurité de Maarch
 
@@ -261,10 +261,6 @@ for($i=0; $i<$totalEntities;$i++)
             elseif($report_type == 'array')
             {
                 array_push($data, array('LABEL' => $db->show_string($entities[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,0)));
-            }
-            if($tmp / $nbDoc > 0)
-            {
-                $has_data = true;
             }
         }
         else

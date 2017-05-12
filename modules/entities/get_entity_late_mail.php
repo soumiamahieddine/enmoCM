@@ -233,7 +233,7 @@ elseif($report_type == 'array')
 {
     $data = array();
 }
-$has_data = false;
+$has_data = true;
 
 //Utilisation de la clause de sécurité de Maarch
 
@@ -270,10 +270,6 @@ for($i=0; $i<$totalEntities;$i++)
             {
                 array_push($data, array('LABEL' => $entities[$i]['LABEL'], 'VALUE' => $res->total ));
                 array_push($totalCourrier, $res->total);
-            }
-            if($res->total > 0)
-            {
-                $has_data = true;
             }
         }
         else
