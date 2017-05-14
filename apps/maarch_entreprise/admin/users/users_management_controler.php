@@ -912,7 +912,14 @@ function validate_user_submit()
     }
     for ($i=0;$i<count($entitiesUserCheck);$i++) {
         if (!in_array($entitiesUserCheck[$i]['ENTITY_ID'], $newUserEntitiesList)) {
-            $query = "SELECT count(distinct(r.res_id)) FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE ((dest_user = ? and item_id = ?) OR (item_id = ? AND difflist_type = 'entity_id' AND process_comment is null) OR (item_id = ? AND difflist_type = 'VISA_CIRCUIT' AND process_date is null)) AND closing_date is null AND confidentiality = 'Y' AND destination = ?";
+            $query = "SELECT count(distinct(r.res_id)) 
+                        FROM res_view_letterbox r 
+                        INNER JOIN listinstance l ON r.res_id = l.res_id WHERE (
+                        (dest_user = ? and item_id = ?) OR 
+                        (item_id = ? AND difflist_type = 'entity_id' AND (process_comment is null or process_comment = '')) OR 
+                        (item_id = ? AND difflist_type = 'VISA_CIRCUIT' AND process_date is null)
+                        ) 
+                        AND closing_date is null AND confidentiality = 'Y' AND destination = ?";
             $arrayPDO = array($_REQUEST['user_id'],$_REQUEST['user_id'],$_REQUEST['user_id'],$_REQUEST['user_id'],$entitiesUserCheck[$i]['ENTITY_ID']);
             $stmt =  $db->query($query, $arrayPDO);
             $res = $stmt->fetchObject();   
