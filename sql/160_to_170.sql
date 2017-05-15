@@ -5,7 +5,7 @@
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
-CREATE FUNCTION order_alphanum(text) RETURNS text AS $$
+CREATE OR REPLACE FUNCTION order_alphanum(text) RETURNS text AS $$
   SELECT regexp_replace(regexp_replace(regexp_replace(regexp_replace($1,
     E'(^|\\D)(\\d{1,3}($|\\D))', E'\\1000\\2', 'g'),
       E'(^|\\D)(\\d{4,6}($|\\D))', E'\\1000\\2', 'g'),
@@ -97,8 +97,6 @@ CREATE TABLE tags_entities
 WITH (
   OIDS=FALSE
 );
-
-
 
 DROP TABLE IF EXISTS seda;
 

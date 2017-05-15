@@ -136,19 +136,9 @@ function viewArchiveUnit($archiveUnit, $archiveUnitChildren = false)
     $frm_str .= '<td><input type="text" id="archiveIdentifier" name="archiveIdentifier" value="'.$archiveUnit->id. '" disabled></td></tr>';
 
     if ($archiveUnit->management) {
-        $durationUnit = substr($archiveUnit->management->appraisalRule->rule->value, -1);
-        $duration = substr($archiveUnit->management->appraisalRule->rule->value, 1, -1);
-
-        if ($durationUnit == "Y") {
-            $durationUnit = _YEARS;
-        } elseif ($durationUnit == "M") {
-            $durationUnit = _MONTHS;
-        } else {
-            $durationUnit = _DAYS;
-        }
         
         $frm_str .='<tr class="col"><td><b>'._APPRAISAL_RULE.':</b></td>';
-        $frm_str .= '<td><input type="text" id="rule" name="rule" value="'.$duration." ".$durationUnit. '" disabled></td>';
+        $frm_str .= '<td><input type="text" id="rule" name="rule" value="'.$archiveUnit->management->appraisalRule->rule->value. '" disabled></td>';
         $frm_str .='<td><b>'._APPRAISAL_FINAL_DISPOSITION.':</b></td>';
 
         if ($archiveUnit->management->appraisalRule->finalAction == 'Destroy') {

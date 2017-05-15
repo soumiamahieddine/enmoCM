@@ -14,7 +14,11 @@ if(isset($_REQUEST['arguments']) && !empty($_REQUEST['arguments']))
 $content = '';
 $content .='<div id="params">';
 	$content .='<form id="report_by_period_form" name="report_by_period_form" method="get" action="">';
-        $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'._RESPONSE_RATE_BY_ENTITIES.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /><label for="report_graph"> ' . _GRAPH . ' </label><input type="radio" name="form_report" id="report_array" value="array" /><label for="report_array"> '. _ARRAY . '</label>)</span></div>';
+  if($core_tools->test_service('graphics_reports', 'reports', false) == 1 && $_SESSION['user']['UserId'] != 'superadmin'){
+  $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'._RESPONSE_RATE_BY_ENTITIES.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_array" value="array" checked="checked" /><label for="report_array"> '. _ARRAY . '</label>)</span></div>';  
+  }else{
+  $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'._RESPONSE_RATE_BY_ENTITIES.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /><label for="report_graph"> ' . _GRAPH . ' </label><input type="radio" name="form_report" id="report_array" value="array" /><label for="report_array"> '. _ARRAY . '</label>)</span></div>';    
+  }
 	$content .='<br/>';
         $content .='<input type="hidden" name="id_report" id="id_report" value="'.$id.'" />';
 	$content .='<table style="width:600px;border: solid 1px #009DC5;margin:auto;" >';
@@ -80,6 +84,8 @@ $content .='<div id="params">';
             $content .= $entities[$i]['LABEL']."</option>";
           }             
           $content.='</select>';
+            $content .='<input type="checkbox" title="'._INCLUDE_SUB_ENTITIES.'" name="sub_entities" id="sub_entities" />'; 
+            $content .= '<script>titleWithTooltipster("sub_entities");</script>';         
             $js .= 'new Chosen($(\'entities_chosen\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
             $content.= '<br/><br/>';
             $status_obj = new manage_status();

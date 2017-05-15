@@ -81,65 +81,61 @@ var SignatureBookComponent = (function () {
     SignatureBookComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.prepareSignatureBook();
+        this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
         this.route.params.subscribe(function (params) {
             _this.resId = +params['resId'];
             _this.basketId = params['basketId'];
             lockDocument(_this.resId);
             setInterval(function () { lockDocument(_this.resId); }, 50000);
-            _this.http.get('index.php?display=true&page=initializeJsGlobalConfig')
+            _this.http.get(_this.coreUrl + 'rest/' + _this.basketId + '/signatureBook/' + _this.resId)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
-                _this.coreUrl = data.coreurl;
-                _this.http.get(_this.coreUrl + 'rest/' + _this.basketId + '/signatureBook/' + _this.resId)
-                    .map(function (res) { return res.json(); })
-                    .subscribe(function (data) {
-                    if (data.error) {
-                        location.hash = "";
-                        location.search = "";
-                        return;
+                if (data.error) {
+                    location.hash = "";
+                    location.search = "";
+                    return;
+                }
+                _this.signatureBook = data;
+                _this.headerTab = 1;
+                _this.leftSelectedThumbnail = 0;
+                _this.rightSelectedThumbnail = 0;
+                _this.leftViewerLink = "";
+                _this.rightViewerLink = "";
+                _this.showLeftPanel = true;
+                _this.showRightPanel = true;
+                _this.showResLeftPanel = true;
+                _this.showTopLeftPanel = false;
+                _this.showTopRightPanel = false;
+                _this.showAttachmentPanel = false;
+                _this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + _this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
+                _this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + _this.resId + "&collId=letterbox_coll&visaStep=true";
+                _this.histViewerLink = "index.php?display=true&page=show_history_tab&resId=" + _this.resId + "&collId=letterbox_coll";
+                _this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + _this.resId;
+                _this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + _this.resId + "&noModification=true&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
+                _this.leftContentWidth = "44%";
+                _this.rightContentWidth = "44%";
+                if (_this.signatureBook.documents[0]) {
+                    _this.leftViewerLink = _this.signatureBook.documents[0].viewerLink;
+                    if (_this.signatureBook.documents[0].category_id == "outgoing") {
+                        _this.headerTab = 3;
                     }
-                    _this.signatureBook = data;
-                    _this.headerTab = 1;
-                    _this.leftSelectedThumbnail = 0;
-                    _this.rightSelectedThumbnail = 0;
-                    _this.leftViewerLink = "";
-                    _this.rightViewerLink = "";
-                    _this.showLeftPanel = true;
-                    _this.showRightPanel = true;
-                    _this.showResLeftPanel = true;
-                    _this.showTopLeftPanel = false;
-                    _this.showTopRightPanel = false;
-                    _this.showAttachmentPanel = false;
-                    _this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + _this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
-                    _this.visaViewerLink = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + _this.resId + "&collId=letterbox_coll&visaStep=true";
-                    _this.histViewerLink = "index.php?display=true&page=show_history_tab&resId=" + _this.resId + "&collId=letterbox_coll";
-                    _this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + _this.resId;
-                    _this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + _this.resId + "&noModification=true&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
-                    _this.leftContentWidth = "44%";
-                    _this.rightContentWidth = "44%";
-                    if (_this.signatureBook.documents[0]) {
-                        _this.leftViewerLink = _this.signatureBook.documents[0].viewerLink;
-                        if (_this.signatureBook.documents[0].category_id == "outgoing") {
-                            _this.headerTab = 3;
-                        }
-                    }
-                    if (_this.signatureBook.attachments[0]) {
-                        _this.rightViewerLink = _this.signatureBook.attachments[0].viewerLink;
-                    }
-                    _this.displayPanel("RESLEFT");
-                    _this.loading = false;
-                    setTimeout(function () {
-                        $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
-                        $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
-                        $j(".pjSign").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
-                        $j("#resListContent").scrollTop(0);
-                        $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
-                        $j("#obsVersion").tooltipster({
-                            interactive: true
-                        });
-                    }, 0);
-                });
+                }
+                if (_this.signatureBook.attachments[0]) {
+                    _this.rightViewerLink = _this.signatureBook.attachments[0].viewerLink;
+                }
+                _this.displayPanel("RESLEFT");
+                _this.loading = false;
+                setTimeout(function () {
+                    $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
+                    $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
+                    $j(".pjSign").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
+                    $j("#resListContent").scrollTop(0);
+                    $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
+                    $j("#obsVersion").tooltipster({
+                        interactive: true
+                    });
+                }, 0);
             });
         });
     };
@@ -168,6 +164,7 @@ var SignatureBookComponent = (function () {
                 }
             }
         }
+        unlockDocument(this.resId);
         if (idToGo >= 0) {
             $j("#send").removeAttr("disabled");
             $j("#send").css("opacity", "1");
@@ -443,7 +440,7 @@ var SignatureBookComponent = (function () {
 }());
 SignatureBookComponent = __decorate([
     core_1.Component({
-        templateUrl: signatureBookView,
+        templateUrl: angularGlobals["signature-bookView"],
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
 ], SignatureBookComponent);
