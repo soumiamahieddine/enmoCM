@@ -185,7 +185,7 @@
             </div>
             <div class="modal-body">
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#mailSign" aria-controls="mailSign" role="tab" data-toggle="tab">Signatures de mail</a></li>
+                    <li role="presentation" class="active"><a href="#mailSign" aria-controls="mailSign" role="tab" data-toggle="tab">Signatures de courriel</a></li>
                     <li role="presentation"><a href="#signatureBookSign" aria-controls="signatureBookSign" role="tab" data-toggle="tab">Signatures de parapheur</a></li>
                 </ul>
                 <div class="tab-content">
@@ -208,7 +208,7 @@
                                     <button type="button" class="form-control btn btn-sm btn-primary" (click)="updateEmailSignature()" [disabled]="!emailSignatureForm.form.valid" title="Modifier la signature de mail"><i class="fa fa-pencil"></i></button>
                                 </div>
                                 <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
-                                    <button type="button" class="form-control btn btn-sm btn-danger"  (click)="deleteEmailSignature()" title="Supprimer la signature de mail"><i class="fa fa-trash"></i></button>
+                                    <button type="button" class="form-control btn btn-sm btn-danger"  (click)="deleteEmailSignature()" title="Supprimer la signature de courriel"><i class="fa fa-trash"></i></button>
                                 </div>
                             </div>
                             <div class="row" style="margin-top:5px;">
