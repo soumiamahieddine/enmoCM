@@ -8,7 +8,6 @@
 	</CONFIG>
 	<TABLENAME>
 		<fold_folders>folders</fold_folders>
-		<fold_folders_out>folders_out</fold_folders_out>
 		<fold_foldertypes>foldertypes</fold_foldertypes>
 		<fold_foldertypes_doctypes>foldertypes_doctypes</fold_foldertypes_doctypes>
 		<fold_foldertypes_indexes>foldertypes_indexes</fold_foldertypes_indexes>

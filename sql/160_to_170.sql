@@ -273,3 +273,54 @@ TRUNCATE TABLE user_signatures;
 INSERT INTO user_signatures (user_id, signature_label, signature_path, signature_file_name) SELECT user_id, '', signature_path, signature_file_name FROM users WHERE signature_path is not null and signature_file_name is not null;
 
 UPDATE parameters SET param_value_int = '170' WHERE id = 'database_version';
+
+/** DELETES OLD TABLES **/
+DROP TABLE IF EXISTS adr_business;
+DROP TABLE IF EXISTS adr_log;
+DROP TABLE IF EXISTS adr_rm;
+DROP TABLE IF EXISTS ar_boxes;
+DROP TABLE IF EXISTS ar_containers;
+DROP TABLE IF EXISTS ar_containers_types;
+DROP TABLE IF EXISTS ar_deposits;
+DROP TABLE IF EXISTS ar_header;
+DROP TABLE IF EXISTS ar_natures;
+DROP TABLE IF EXISTS ar_positions;
+DROP TABLE IF EXISTS ar_sites;
+DROP TABLE IF EXISTS ext_docserver;
+DROP TABLE IF EXISTS folders_out;
+DROP TABLE IF EXISTS fulltext;
+DROP TABLE IF EXISTS groupsecurity;
+DROP TABLE IF EXISTS invoice_types;
+DROP VIEW  IF EXISTS res_view_log;
+DROP TABLE IF EXISTS res_log;
+DROP TABLE IF EXISTS resgroup_content;
+DROP TABLE IF EXISTS resgroups;
+
+DROP TABLE IF EXISTS rm_access_restriction_rules CASCADE;
+DROP VIEW  IF EXISTS rm_documents_view;
+DROP TABLE IF EXISTS rm_addresses CASCADE;
+DROP TABLE IF EXISTS rm_agreements CASCADE;
+DROP TABLE IF EXISTS rm_appraisal_rules CASCADE;
+DROP TABLE IF EXISTS rm_comments CASCADE; 
+DROP VIEW  IF EXISTS rm_ios_view;
+DROP TABLE IF EXISTS rm_contacts CASCADE;
+DROP TABLE IF EXISTS rm_content_descriptions CASCADE;
+DROP TABLE IF EXISTS rm_custodial_history CASCADE;
+DROP TABLE IF EXISTS rm_documents CASCADE;
+DROP TABLE IF EXISTS rm_entities CASCADE;
+DROP VIEW  IF EXISTS rm_ref_organizations CASCADE;
+DROP TABLE IF EXISTS rm_io_archives_relations CASCADE;
+DROP TABLE IF EXISTS rm_ios CASCADE;
+DROP TABLE IF EXISTS rm_items CASCADE;
+DROP TABLE IF EXISTS rm_keywords CASCADE;
+DROP TABLE IF EXISTS rm_organizations CASCADE;
+DROP TABLE IF EXISTS rm_schedule CASCADE;
+
+DROP TABLE IF EXISTS rp_history;
+
+DROP VIEW IF EXISTS res_view_apa;
+DROP VIEW IF EXISTS rm_ref_addresses CASCADE;
+DROP VIEW IF EXISTS rm_ref_contacts;
+
+
+

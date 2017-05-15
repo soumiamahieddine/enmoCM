@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ArchiveTransfer xmlns="fr:gouv:culture:archivesdefrance:seda:v2.0">
+    <Date>2017-04-26T12:16:09+02:00</Date>
+    <MessageIdentifier>aarc-20170426-121609</MessageIdentifier>
+    <ArchivalAgreement>MAARCH_LES_BAINS_ACTES</ArchivalAgreement>
+    <CodeListVersions>
+  <ReplyCodeListVersion>""</ReplyCodeListVersion>
+  <MessageDigestAlgorithmCodeListVersion>""</MessageDigestAlgorithmCodeListVersion>
+  <MimeTypeCodeListVersion>""</MimeTypeCodeListVersion>
+  <EncodingCodeListVersion>""</EncodingCodeListVersion>
+  <FileFormatCodeListVersion>""</FileFormatCodeListVersion>
+  <CompressionAlgorithmCodeListVersion>""</CompressionAlgorithmCodeListVersion>
+  <DataObjectVersionCodeListVersion>""</DataObjectVersionCodeListVersion>
+  <StorageRuleCodeListVersion>""</StorageRuleCodeListVersion>
+  <AppraisalRuleCodeListVersion>""</AppraisalRuleCodeListVersion>
+  <AccessRuleCodeListVersion>""</AccessRuleCodeListVersion>
+  <DisseminationRuleCodeListVersion>""</DisseminationRuleCodeListVersion>
+  <ReuseRuleCodeListVersion>""</ReuseRuleCodeListVersion>
+  <ClassificationRuleCodeListVersion>""</ClassificationRuleCodeListVersion>
+  <AuthorizationReasonCodeListVersion>""</AuthorizationReasonCodeListVersion>
+  <RelationshipCodeListVersion>""</RelationshipCodeListVersion>
+</CodeListVersions>
+<DataObjectPackage>
+    <BinaryDataObject id="doc_776">
+        <Uri>/opt/maarch/new_docservers/MaarchCourrierGit/manual/2017/04/0001/0071_1895695655.pdf</Uri>
+        <MessageDigest algorithm="xxx">c525c961625ad85c26d5023729a44b4f4eaeb07be87863cd4a2e5d3dbbc212b6</MessageDigest>
+        <Size>111108</Size>
+        <FormatIdentification>
+            </FormatIdentification>
+        </BinaryDataObject><BinaryDataObject id="doc_675">
+        <Uri>/opt/maarch/new_docservers/MaarchCourrierGit/manual/2017/03/0001/0825_940772907.pdf</Uri>
+        <MessageDigest algorithm="xxx">f7ce4502755502566340ba67b44b3f9a088d900cd778eb1364c43d8ad3299804</MessageDigest>
+        <Size>63590</Size>
+        <FormatIdentification>
+            </FormatIdentification>
+        </BinaryDataObject><BinaryDataObject id="doc_attachment_74">
+        <Uri>/opt/maarch/new_docservers/MaarchCourrierGit/manual/2017/03/0001/0834_2104239302.pdf</Uri>
+        <MessageDigest algorithm="xxx">ddfca087b3e0d6caf1526bc057cdb95688add301224c78cdd0d34f334b3f7f1b</MessageDigest>
+        <Size>78879</Size>
+        <FormatIdentification>
+            </FormatIdentification>
+        </BinaryDataObject><BinaryDataObject id="doc_102">
+        <Uri>/opt/maarch/new_docservers/MaarchCourrierGit/manual/2017/02/0001/0004.pdf</Uri>
+        <MessageDigest algorithm="xxx">544e17e1159e5c224b59fcfe2d5782f6daee757fd75041c4829968dbc5c236e2</MessageDigest>
+        <Size>170173</Size>
+        <FormatIdentification>
+            </FormatIdentification>
+        </BinaryDataObject>
+    <DescriptiveMetadata>
+        <ArchiveUnit id="arch_59007369749e4">
+    <Management>
+        <AppraisalRule>
+            <Rule>P10Y</Rule>
+<FinalAction>Destroy</FinalAction>
+        </AppraisalRule>
+        </Management>
+    <Content>
+        <DescriptionLevel>File</DescriptionLevel>
+        <Title>kqlkdj qlkjd qldkjqldkjqld</Title>
+        <OriginatingSystemId>776</OriginatingSystemId>
+        <DocumentType>Contestation financière</DocumentType>
+        <Keyword>
+            <KeywordType>corpname</KeywordType>
+        </Keyword>
+        <Coverage>
+            </Coverage>
+        <Addressee>
+            <Corpname>MAARCH</Corpname>
+<Identifier>1</Identifier>
+        </Addressee>
+        <SentDate>2017-04-26T00:00:00+02:00</SentDate>
+        <ReceivedDate>2017-04-26T12:16:09+02:00</ReceivedDate>
+        <EndDate>2017-07-25T23:59:59+02:00</EndDate>
+        </Content>
+    <DataObjectReference>
+        <DataObjectReferenceId>doc_776</DataObjectReferenceId>
+        </DataObjectReference>
+</ArchiveUnit><ArchiveUnit id="arch_59007369785cd">
+    <Management>
+        <AppraisalRule>
+            <Rule>P10Y</Rule>
+<FinalAction>Destroy</FinalAction>
+        </AppraisalRule>
+        </Management>
+    <Content>
+        <DescriptionLevel>File</DescriptionLevel>
+        <Title>test M2</Title>
+        <OriginatingSystemId>675</OriginatingSystemId>
+        <DocumentType>Abonnements – documentation – archives</DocumentType>
+        <Keyword>
+            <KeywordContent>MAARCH</KeywordContent>
+            <KeywordType>corpname</KeywordType>
+        </Keyword>
+        <Coverage>
+            </Coverage>
+        <Addressee>
+            <Corpname>DGSDGA:Direction Générale Adjointe</Corpname>
+<Identifier>org_987654321_Versant</Identifier>
+        </Addressee>
+        <SentDate>2017-03-09T00:00:00+01:00</SentDate>
+        <ReceivedDate>2017-03-21T00:00:00+01:00</ReceivedDate>
+        <EndDate>2017-05-03T23:59:59+02:00</EndDate>
+        </Content>
+    <DataObjectReference>
+        <DataObjectReferenceId>doc_675</DataObjectReferenceId>
+        </DataObjectReference>
+</ArchiveUnit><ArchiveUnit id="arch_5900736978c3b">
+    <Content>
+        <DescriptionLevel>Item</DescriptionLevel>
+        <Title>test M2</Title>
+        <OriginatingSystemId>74</OriginatingSystemId>
+        <DocumentType>Attachment</DocumentType>
+        <Coverage>
+            </Coverage>
+        <RelatedObjectReference>
+            <Reference>
+                <RepositoryArchiveUnitPID>59007369785cd</RepositoryArchiveUnitPID>
+            </Reference>
+            </RelatedObjectReference>
+        </Content>
+    <DataObjectReference>
+        <DataObjectReferenceId>doc_attachment_74</DataObjectReferenceId>
+        </DataObjectReference>
+</ArchiveUnit><ArchiveUnit id="arch_590073697aed4">
+    <Management>
+        <AppraisalRule>
+            <Rule>P10Y</Rule>
+<FinalAction>Destroy</FinalAction>
+        </AppraisalRule>
+        </Management>
+    <Content>
+        <DescriptionLevel>File</DescriptionLevel>
+        <Title>test 3</Title>
+        <OriginatingSystemId>102</OriginatingSystemId>
+        <DocumentType>Abonnements – documentation – archives</DocumentType>
+        <Keyword>
+            <KeywordContent>MAARCH</KeywordContent>
+            <KeywordType>corpname</KeywordType>
+        </Keyword>
+        <Coverage>
+            </Coverage>
+        <Addressee>
+            <Corpname>DGSDGA:Direction Générale Adjointe</Corpname>
+<Identifier>org_987654321_Versant</Identifier>
+        </Addressee>
+        <SentDate>2017-02-01T00:00:00+01:00</SentDate>
+        <ReceivedDate>2017-02-21T00:00:00+01:00</ReceivedDate>
+        <EndDate>2017-04-04T23:59:59+02:00</EndDate>
+        </Content>
+    <DataObjectReference>
+        <DataObjectReferenceId>doc_102</DataObjectReferenceId>
+        </DataObjectReference>
+</ArchiveUnit>
+</DescriptiveMetadata>
+    <ManagementMetadata>
+    </ManagementMetadata>
+</DataObjectPackage>
+    <ArchivalAgency>
+        <Identifier>org_123456789_Archives</Identifier>
+</ArchivalAgency>
+    <TransferringAgency>
+        <Identifier>org_987654321_Versant</Identifier>
+</TransferringAgency>
+</ArchiveTransfer>
