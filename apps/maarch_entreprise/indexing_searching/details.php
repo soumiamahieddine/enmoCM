@@ -245,9 +245,9 @@ if (isset($_POST['submit_index_doc'])) {
         if (! empty($_POST['thesaurus'])) {
             $thesaurusList = implode('__',$_POST['thesaurus']);
         }else{
-	       $thesaurusList = '';
+               $thesaurusList = '';
         }
-	$thesaurus->updateResThesaurusList($thesaurusList,$s_id);
+        $thesaurus->updateResThesaurusList($thesaurusList,$s_id);
     }
 }
 
@@ -538,11 +538,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 <p id="back_list">
                     <?php
                     if (! isset($_POST['up_res_id']) || ! $_POST['up_res_id']) {
-                        if ($_SESSION['indexation'] == false) {			
-	 		    echo '<a href="#" onclick="document.getElementById(\'ariane\').childNodes[document.getElementById(\'ariane\').childNodes.length-2].click();"><i class="fa fa-arrow-circle-left fa-2x" title="' .  _BACK . '"></i></a>';
+                        if ($_SESSION['indexation'] == false) {                        
+                             echo '<a href="#" onclick="document.getElementById(\'ariane\').childNodes[document.getElementById(\'ariane\').childNodes.length-2].click();"><i class="fa fa-arrow-circle-left fa-2x" title="' .  _BACK . '"></i></a>';
                         }
                     }
-		    
+                    
                     ?>
                 </p>
                 <p id="viewdoc">
@@ -563,7 +563,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 </b>&nbsp;
             </div>
             <br/>
-            <dl id="tabricator1">
+            <div class = " whole-panel" id="tabricator1">
             <?php 
                 if($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
                                 $style = 'visibility:hidden;"';
@@ -572,8 +572,342 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             }
                 ?>
                 <?php $detailsExport .= "<h1><center>"._DETAILS_PRINT." : ".$s_id."</center></h1><hr>";?>
-                <dt class="fa fa-tachometer" style="font-size:2em;padding-left: 15px;<?php if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){echo 'padding-right: 0px;';}else{echo 'padding-right: 15px;';}?>" title="<?php echo _PROPERTIES;?>"> <sup><span style="font-size: 10px;<?php echo $style; ?>" class="nbResZero">0</span></sup></dt>
-                <dd>
+
+
+
+
+  <!-- div class = "detail "> !-->
+
+               <!-- <dt class="fa fa-tachometer" style="font-size:2em;padding-left: 15px; !--> <?php// if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){echo 'padding-right: 0px;';}else{echo 'padding-right: 15px;';}?> <!--" title="<?php// echo _PROPERTIES;?> "> <sup><span style="font-size: 10px;<?php// echo $style; ?>" class="nbResZero">0</span></sup></dt> !-->
+                <div class="fa fa-tachometer detailsTab func" style="font-size:2em;padding-left: 15px;<?php if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){echo 'padding-right: 0px;';}else{echo 'padding-right: 15px;';}?>" title="<?php echo _PROPERTIES;?>"> <sup><span style="font-size: 10px;<?php echo $style; ?>" class="nbResZero">0</span></sup></div>
+               
+             <?php
+                                //SERVICE TO VIEW TECHNICAL INDEX
+                                if ($viewTechnicalInfos) {
+                                    $technicalInfo_frame = '';
+                                    
+                                $pathScriptTab = $_SESSION['config']['businessappurl']
+                                        . 'index.php?display=true&page=show_technicalInfo_tab';
+                                    
+                                    $technicalInfo_frame .= '<div class="fa fa-cogs technical-infos func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></div>';
+                                                
+                                    echo $technicalInfo_frame;
+                                }
+                                
+
+                                
+                                $diffList_frame = '';
+                                $diffList_frame .= '<div class="fa fa-gear diffusion-list func " style="font-size:2em;padding-left: 15px;';
+                                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                        $diffList_frame .=  'padding-right: 0px;';
+                                    }else{
+                                        $diffList_frame .=  'padding-right: 15px;';
+                                    }
+                                    $pathScriptTab = 'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true&category='.$category.'&roles='.urlencode($roles_str).$onlyCC;    
+                                    $diffList_frame .= '" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
+
+                                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                            $style = 'visibility:hidden;"';
+                                        }else{
+                                            $style = 'display:none;"';
+                                        }
+
+                                    //$diffList_frame .=$style.' class="nbResZero">0</span></sup></dt>';
+                                    $diffList_frame .=$style.' class="nbResZero">0</span></sup></div>';
+                                echo $diffList_frame;
+                                
+                                    
+
+                                if ($core->test_service('print_folder_doc', 'visa', false))
+                                {
+                                    $printFolder_frame = '';
+                                    require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
+                                        . "class" . DIRECTORY_SEPARATOR
+                                        . "class_modules_tools.php";
+                
+                                    $pathScriptTab = $_SESSION['config']['businessappurl']
+                                        . 'index.php?display=true&page=show_printFolder_tab&module=visa&resId='
+                                        . $s_id . '&collId=' . $coll_id . '&table=' . $table;
+                                    //$printFolder_frame .= '<dt class="fa fa-print" style="font-size:2em;padding-left: 15px;';
+                                    $printFolder_frame .= '<div class="fa fa-print print-folder func" style="font-size:2em;padding-left: 15px;';
+                                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                            $printFolder_frame .=  'padding-right: 0px;';
+                                        }else{
+                                            $printFolder_frame .=  'padding-right: 15px;';
+                                        }
+                                    $printFolder_frame .= '" title="'._PRINTFOLDER.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
+                                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                            $style = 'visibility:hidden;"';
+                                        }else{
+                                            $style = 'display:none;"';
+                                        }
+                                        
+                                    // $printFolder_frame .= $style.'class="nbResZero">0</span></sup></dt>';
+                                    $printFolder_frame .= $style.'class="nbResZero">0</span></sup></div>';
+                                
+                                    
+                                    echo $printFolder_frame;
+                                }
+                                
+                                
+
+                                if ($core->is_module_loaded('visa')) {
+                                    $visa_frame = '';
+                                     $pathScriptTab = 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&destination='.$destination.'&fromDetail=true';
+                                    $visa_frame .= '<div id="visa_tab " class="fa fa-certificate visa-circuit func" style="font-size:2em;padding-left: 15px;';
+                                    $visa_frame .='padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');hideMainDivDetails(\'home-panel\',true);return false;"> <sup id="visa_tab_badge"></sup></div>';
+                                    // $visa_frame .= '<div id="page_circuit" style="overflow-x: hidden;">';
+                                    // $visa_frame .= '<h2>'._VISA_WORKFLOW.'</h2>';
+                                    //$visa_frame .= '<iframe src="" name="visa_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="visa_iframe" style="height:95%;"></iframe>';        
+                                    // $visa_frame .='</div>';
+                                    
+                                    //LOAD TOOLBAR BADGE
+                                    // $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=visa&page=load_toolbar_visa&resId='.$s_id.'&collId='.$coll_id;
+                                    // $visa_frame .='<script>loadToolbarBadge(\'visa_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    
+                                    echo $visa_frame;
+                                        
+                                }
+                                
+                                
+
+                                if ($core->is_module_loaded('avis')) {
+                                    $avis_frame = '';
+                                    $pathScriptTab = 'index.php?display=true&page=show_avis_tab&module=avis&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true';
+                                    $avis_frame .= '<div id="avis_tab" class="fa fa-check-square opinion-circuit func" style="font-size:2em;padding-left: 15px;';
+                                    $avis_frame .= 'padding-right: 15px;" title="'._AVIS_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;"> <sup id="avis_tab_badge"></sup></div><div id="page_circuit_avis" style="overflow-x: hidden;">';
+                                    //$avis_frame .= '<h2>'._AVIS_WORKFLOW.'</h2>';
+                        
+                                    //$avis_frame .= '<iframe src="" name="avis_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="avis_iframe" style="height:95%;"></iframe>';
+                                // $avis_frame .= '</div>';
+                                    
+                                    //LOAD TOOLBAR BADGE
+                                    // $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=avis&page=load_toolbar_avis&resId='.$s_id.'&collId='.$coll_id;
+                                    // $avis_frame .='<script>loadToolbarBadge(\'avis_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    
+                                    echo $avis_frame;
+                            
+                                }                
+                                    if ($core->is_module_loaded('attachments')){
+                                    $attachments_frame = '';           
+                                // $extraParam = '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder';
+                                    $pathScriptTab = 'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId='
+                                         . $s_id . '&collId=' . $coll_id.'&fromDetail=attachments'.$extraParam;
+                                    
+                                    $attachments_frame .= '<div class="fa fa-paperclip attached-files func" id="attachments_tab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._ATTACHMENTS .'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;"> <sup id="attachments_tab_badge"></sup></div>';
+                                    //$attachments_frame .= '<div id="other_attachments">';
+                                // $attachments_frame .= '<iframe src="" name="attachments_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="attachments_iframe" style="height:100%;"></iframe>';
+                                    //$responses_frame .= '</div>';
+                                    //$detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
+                                // $detailsExport .= "<br><br><br>";
+                                    
+                                    //LOAD TOOLBAR BADGE
+                                    //$toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=load_toolbar_attachments&resId='.$s_id.'&collId='.$coll_id;
+                                // $attachments_frame .='<script>loadToolbarBadge(\'attachments_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    
+                                    echo $attachments_frame;
+                                }
+
+                            
+
+                                
+                        if ($core->is_module_loaded('attachments')){
+                                    $responses_frame = '';
+                                    // $extraParam = '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail';
+                                     $pathScriptTab =  'index.php?display=true&page=show_attachments_details_tab&module=attachments&fromDetail=response&resId='
+                                     . $s_id . '&collId=' . $coll_id.$extraParam;
+                                    $responses_frame .= '<div id="responses_tab" class="fa fa-mail-reply answers-done func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DONE_ANSWERS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;"> <sup id="responses_tab_badge"></sup></div>';
+                                    // $responses_frame .= '<div id="page_rep">';
+                                    // $responses_frame .= '<iframe src="" name="responses_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="responses_iframe" style="height:100%;"></iframe>';
+                                    // $responses_frame .= '</div>';
+
+                                    //LOAD TOOLBAR BADGE
+                                // $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=load_toolbar_attachments&responses&resId='.$s_id.'&collId='.$coll_id;
+                                // $responses_frame .='<script>loadToolbarBadge(\'responses_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    
+                                    echo $responses_frame;
+                                }                    
+
+                                if ($viewDocHistory) {
+                                    $history_frame = '';
+                                    
+                                    $pathScriptTab = 'index.php?display=true&page=show_history_tab&resId='
+                                    . $s_id . '&collId=' . $coll_id;
+                                    //$history_frame .= '<dt class="fa fa-line-chart" style="font-size:2em;padding-left: 15px;';
+                                    $history_frame .= '<div class="fa fa-line-chart history func" style="font-size:2em;padding-left: 15px;';
+                                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                        $history_frame .=  'padding-right: 0px;';
+                                    }else{
+                                        $history_frame .=  'padding-right: 15px;';
+                                    }
+                                    $history_frame .= '" title="'. _DOC_HISTORY . '" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
+                                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                            $style .= 'visibility:hidden;"';
+                                        }else{
+                                            $style .= 'display:none;"';
+                                        }
+                                    //$history_frame .= $style.' class="nbResZero">0</span></sup></dt>';
+                                    $history_frame .= $style.' class="nbResZero">0</span></sup></div>';
+                                    // $history_frame .= '<div>';
+                                    // $history_frame .= '<iframe src="" name="history_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="history_iframe" style="height:100%;"></iframe>';   
+
+                                    // $history_frame .= '</div>';
+                                    
+                                    echo $history_frame;
+                                }
+                                
+                                
+
+                                if ($core->is_module_loaded('notes')) {
+                                    $note = '';
+                                    $pathScriptTab = 'index.php?display=true&module=notes&page=notes&identifier='
+                                   . $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=full';
+                                    $note .= '<div id="notes_tab" class="fa fa-pencil notes func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'. _NOTES.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;"> <sup id="notes_tab_badge"></sup></div>';
+                                    // $note .='<div>';
+                                    // $note .= '<iframe src="" name="note_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="note_iframe" style="height:100%;"></iframe>';   
+                                    // $note .= '</div>';
+                                    
+                                    //LOAD TOOLBAR BADGE
+                                    // $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=notes&page=load_toolbar_notes&resId='.$s_id.'&collId='.$coll_id;
+                                    // $note .='<script>loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    
+                                    echo $note;
+                                }
+                                
+                                
+                                
+
+                            
+                                //CASES TAB
+                                if ($core->is_module_loaded('cases') == true){   
+                                    $case_frame = '';
+                                    $pathScriptTab = 'index.php?display=true&page=show_case_tab&module=cases&collId=' . $coll_id . '&resId='.$s_id;
+                                    $case_frame .= '<div id="cases_tab" class="fa fa-suitcase matter func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="' . _CASE . '" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;"> <sup id="cases_tab_badge"></sup></div>';
+                                    // $case_frame .= '<div>';
+                                    // $case_frame .= '<iframe src="" name="cases_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="cases_iframe" style="height:100%;"></iframe>';   
+                                    // $case_frame .= '</div>';
+                                    
+                                    //LOAD TOOLBAR BADGE
+                                    // $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$s_id.'&collId='.$coll_id;
+                                    // $case_frame .='<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    
+                                    echo $case_frame;
+                        
+                                }
+                                
+                                
+                                
+
+                                
+                                
+                                //SENDMAILS TAB         
+                                if ($core->test_service('sendmail', 'sendmail', false) === true) {
+                                    $sendmail = '';
+                                     $pathScriptTab = 'index.php?display=true&module=sendmail&page=sendmail&identifier='. $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium';    
+                                    
+                                    $sendmail .= '<div id="sendmail_tab" class="fa fa-envelope email func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._SENDED_EMAILS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;"> <sup id="sendmail_tab_badge"></sup></div>';
+                                    // $sendmail .= '<div>';           
+                                    // $sendmail .= '<iframe src="" name="sendmail_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="sendmail_iframe" style="height:100%;"></iframe>';
+                                    // $sendmail .= '</div>';
+                                    
+                                    //LOAD TOOLBAR BADGE
+                                    // $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=sendmail&page=load_toolbar_sendmail&resId='.$s_id.'&collId='.$coll_id;
+                                    // $sendmail .='<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    
+                                    echo $sendmail;
+
+                                }
+                                
+                            
+                                    /// LINKS
+                                        if ($core->test_service('view_version_letterbox', 'apps', false)) {
+                                    //VERSIONS TAB
+                                    $version = '';
+                                    $versionTable = $security->retrieve_version_table_from_coll_id(
+                                        $coll_id
+                                    );
+                                    $selectVersions = "SELECT res_id FROM "
+                                        . $versionTable . " WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
+
+                                    $stmt = $db->query($selectVersions, array($s_id));
+                                    $nb_versions_for_title = $stmt->rowCount();
+                                    $lineLastVersion = $stmt->fetchObject();
+                                    $lastVersion = $lineLastVersion->res_id;
+                                    if ($lastVersion <> '') {
+                                        $objectId = $lastVersion;
+                                        $objectTable = $versionTable;
+                                    } else {
+                                        $objectTable = $security->retrieve_table_from_coll(
+                                            $coll_id
+                                        );
+                                        $objectId = $s_id;
+                                        $_SESSION['cm']['objectId4List'] = $s_id;
+                                    }
+                                    if ($nb_versions_for_title == 0) {
+                                        $extend_title_for_versions = '0';
+                                        $class="nbResZero";
+                                        if($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                            $style = 'visibility:hidden;font-size: 10px;';
+                                        }else{
+                                            $style = 'display:none;font-size: 10px;';
+                                        }
+                                        
+                                        $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
+                                    } else {
+                                        $extend_title_for_versions = $nb_versions_for_title;
+                                        $class="nbRes";
+                                        $style = 'font-size: 10px;';
+                                        //$style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                                    }
+                                    $_SESSION['cm']['resMaster'] = '';
+                                    
+                                    $pathScriptTab = 'index.php?display=true&page=show_versions_tab&collId=' . $coll_id . '&resId='.$s_id.'&objectTable='.$objectTable;
+                                    //$version .= '<dt  class="fa fa-code-fork" style="font-size:2em;padding-left: 15px;';
+                                    $version .= '<div  class="fa fa-code-fork versions func" style="font-size:2em;padding-left: 15px;';
+                                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                        $version .=  'padding-right: 0px;';
+                                    }else{
+                                        $version .=  'padding-right: 15px;';
+                                    }
+                                    $version .= '"title="'. _VERSIONS .'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;">';
+                                    $version .= ' <sup><span id="nbVersions" ';
+                                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                            $style .= 'visibility:hidden;"';
+                                        }else{
+                                            $style .= 'display:none;"';
+                                        }
+                                    $version .= 'class="'.$class.'" style="'.$style.'">' . $extend_title_for_versions . '</span></sup>';
+                                    //$version .= '</dt>';
+                                    $version .= '</div>';
+                                    // $version .= '<div>';
+                                    // $version .= '<iframe src="" name="versions_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="versions_iframe" style="height:100%;"></iframe>';
+                                    // $version .= '</div>';
+                                    echo $version;
+                                }
+                                
+                                //LINKS TAB
+                                $Links = '';
+
+                                $pathScriptTab = 'index.php?display=true&page=show_links_tab';  
+                                
+                                $Links .= '<div id="links_tab" class="fa fa-link links func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._LINK_TAB.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');return false;"> <sup id="links_tab_badge"></sup>';
+                                $Links .= '</div>';
+
+                                // $Links .= '<div>';
+                                // $Links .= '<iframe src="" name="links_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="links_iframe" style="height:100%;"></iframe>';
+                                // $Links .= '</div>';
+                                
+                                //LOAD TOOLBAR BADGE
+                                // $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=load_toolbar_links&resId='.$s_id.'&collId='.$coll_id;
+                                // $Links .='<script>loadToolbarBadge(\'links_tab\',\''.$toolbarBagde_script.'\');</script>';
+
+                                echo $Links;
+                 
+                 
+                 
+                 ?>
+               
+                <div class="detailsDisplayDiv" id = "home-panel">
                     
                     <br/>
                 <form method="post" name="index_doc" id="index_doc" action="index.php?page=details&dir=indexing_searching&id=<?php functions::xecho($s_id);?>">
@@ -665,23 +999,23 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 }
                                 ?>
                                 </th>
-                            <?php			
+                            <?php                        
                             $detailsExport .= "<td align='left' width='200px'>"; ?>
                             <td align="left" width="200px">
-                            <?php									
+                            <?php                                                                        
                                 $detailsExport .= $data[$key]['label'];
                                 echo $data[$key]['label'];
-                            ?>						
+                            ?>                                                
                             </td>
-                            <?php			
+                            <?php                        
                             $detailsExport .=  "</td>";
-                            $detailsExport .=  "<td>";			
+                            $detailsExport .=  "<td>";                        
                             ?>
-                            <td>			
+                            <td>                        
                                 <?php
                                 $detailsExport .=  $data[$key]['show_value'];
                             if (!isset($data[$key]['readonly']) || $data[$key]['readonly'] == true)
-                            {			
+                            {                        
                                 if($key == 'is_multicontacts') {
                                     if($data[$key]['show_value'] == 'Y'){
                                     ?>
@@ -710,22 +1044,22 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     }
                                 }
                                 elseif ($data[$key]['display'] == 'textarea')
-								
+                                                                
                                 {
                                     echo '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" style="width: 200px; max-width: 200px;">'
                                         .$data[$key]['show_value']
-                                        .'</textarea>';								
+                                        .'</textarea>';                                                                
                                 } else if ($data[$key]['field_type'] == 'radio') {
                                     for($k=0; $k<count($data[$key]['radio']);$k++) {
                                         ?><input name ="<?php functions::xecho($key);?>" <?php if ($data[$key]['value'] ==$data[$key]['radio'][$k]['ID']){ echo 'checked';}?> type="radio" id="<?php functions::xecho($key) .'_' . $data[$key]['radio'][$k]['ID'];?>" value="<?php functions::xecho($data[$key]['radio'][$k]['ID']);?>" disabled ><?php functions::xecho($data[$key]['radio'][$k]['LABEL']);
                                     }
                                 }
-                                else				
+                                else                                
                                 {
                                     ?>
                                     <input type="text" name="<?php functions::xecho($key);?>" id="<?php functions::xecho($key);?>" value="<?php functions::xecho($data[$key]['show_value']);?>" readonly="readonly" class="readonly" size="40" title="<?php functions::xecho($data[$key]['show_value']);?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" />
                                     <?php
-                                    if (isset($data[$key]['addon']))				
+                                    if (isset($data[$key]['addon']))                                
                                     {
                                         $frm_str .= $data[$key]['addon'];
                                     }
@@ -736,8 +1070,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 if ($data[$key]['field_type'] == 'textfield')
                                 {
                                     ?>
-									
-									
+                                                                        
+                                                                        
                                     <input type="text" name="<?php functions::xecho($key);?>" id="<?php functions::xecho($key);?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php echo $data[$key]['show_value'];?>" alt="<?php echo $data[$key]['show_value'];?>" />
                                     <?php
                                 }
@@ -749,16 +1083,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 }
                                 else if ($data[$key]['field_type'] == 'date')
                                 {
-								
-								
+                                                                
+                                                                
                                     ?>
                                     <input type="text" name="<?php functions::xecho($key);?>" id="<?php functions::xecho($key);?>" value="<?php functions::xecho($data[$key]['show_value']);?>" size="40"  title="<?php functions::xecho($data[$key]['show_value']);?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" onclick="showCalender(this);" />
                                     
-									
-									
-									
-									
-									<?php
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+                                                                        <?php
                                 }
                                 else if ($data[$key]['field_type'] == 'select')
                                 {
@@ -1023,7 +1357,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
                                     include_once('modules/tags/templates/details/index.php');
                             }
-
+                    }
                             if ($core->is_module_loaded('thesaurus') && ($core->test_service('thesaurus_view', 'thesaurus', false) == 1))   
                             {  
                                 require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
@@ -1108,388 +1442,421 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         </div>
                         <?php  } ?>
                     </div>
-							</form><br><br>
-         
-                    <?php
-                    if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
-                            include_once('modules/tags/templates/details/index.php');
-                    }
-        }
-		
-        ?>
-                </dd>
-                <?php
-                //SERVICE TO VIEW TECHNICAL INDEX
-                if ($viewTechnicalInfos) {
-                    $technicalInfo_frame = '';
-                    
-                    $pathScriptTab = $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&page=show_technicalInfo_tab';;    
-                    
-                    $technicalInfo_frame .= '<dt class="fa fa-cogs" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'technicalInfo_iframe\',\''.$pathScriptTab.'\');return false;"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>';
-                    $technicalInfo_frame .= '<dd>';
-                    $technicalInfo_frame .= '<iframe src="" name="technicalInfo_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="technicalInfo_iframe" style="height:100%;"></iframe>';	
-                    $technicalInfo_frame .= '</dd>';
+                                                        </form><br><br>
+
+
+
+
+
+
+<!--                                    IFRAME                                             !-->      
+                    <?php 
+                        $technicalInfo_frame = '';
+                        $technicalInfo_frame .= '<div>';
+                    $technicalInfo_frame .= '<iframe src="" name="uniqueDetailsIframe" width="100%" align="left" scrolling="yes" frameborder="0" id="uniqueDetailsIframe" style="height:100%;"></iframe>';        
+                    $technicalInfo_frame .= '</div>';
                     
                     echo $technicalInfo_frame;
-                }
+
+                    ?>
+
                 
-                //$core->execute_app_services($_SESSION['app_services'], 'details.php');
-                $detailsExport .= "<h2>"._NOTES."</h2>";
-                $detailsExport .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
-                $detailsExport .= "<tr height='130px'>";
-                $detailsExport .= "<td width='15%'>";
-                $detailsExport .= "<h3>"._NOTES_1."</h3>";
-                $detailsExport .= "</td>";
-                $detailsExport .= "<td width='85%'>";
-                $detailsExport .= "&nbsp;";
-                $detailsExport .= "</td>";
-                $detailsExport .= "</tr>";
-                $detailsExport .= "<tr height='130px'>";
-                $detailsExport .= "<td width='15%'>";
-                $detailsExport .= "<h3>"._NOTES_2."</h3>";
-                $detailsExport .= "</td>";
-                $detailsExport .= "<td width='85%'>";
-                $detailsExport .= "&nbsp;";
-                $detailsExport .= "</td>";
-                $detailsExport .= "</tr>";
-                $detailsExport .= "<tr height='130px'>";
-                $detailsExport .= "<td width='15%'>";
-                $detailsExport .= "<h3>"._NOTES_3."</h3>";
-                $detailsExport .= "</td>";
-                $detailsExport .= "<td width='85%'>";
-                $detailsExport .= "&nbsp;";
-                $detailsExport .= "</td>";
-                $detailsExport .= "</tr>";
-                $detailsExport .= "</table>";
-                if ($core->is_module_loaded('entities'))
-                {
-                    require_once('modules/entities/class/class_manage_listdiff.php');
-                    $diff_list = new diffusion_list();
-                    $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id, false, $coll_id);
-                    $_SESSION['details']['difflist_type'] = $diff_list->get_difflist_type($_SESSION['details']['diff_list']['difflist_type']);
-                    $roles = $diff_list->list_difflist_roles();
-                    json_encode($roles);
-                    $roles_str = json_encode($roles);
+
+                </div>
+                <?php 
+                // //SERVICE TO VIEW TECHNICAL INDEX
+                // if ($viewTechnicalInfos) {
+                //     $technicalInfo_frame = '';
+                    
+                //     $pathScriptTab = $_SESSION['config']['businessappurl']
+                //         . 'index.php?display=true&page=show_technicalInfo_tab';;    
+                    
+                //     //$technicalInfo_frame .= '<dt class="fa fa-cogs" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'technicalInfo_iframe\',\''.$pathScriptTab.'\');return false;"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>';
+                //     $technicalInfo_frame .= '<div class="fa fa-cogs technical-infos func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'technicalInfo_iframe\',\''.$pathScriptTab.'\');return false;"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></div>';
+                //     $technicalInfo_frame .= '<div>';
+                //     $technicalInfo_frame .= '<iframe src="" name="technicalInfo_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="technicalInfo_iframe" style="height:100%;"></iframe>';        
+                //     $technicalInfo_frame .= '</div>';
+                    
+                //     echo $technicalInfo_frame;
+                // }
+                
+                // //$core->execute_app_services($_SESSION['app_services'], 'details.php');
+                // $detailsExport .= "<h2>"._NOTES."</h2>";
+                // $detailsExport .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
+                // $detailsExport .= "<tr height='130px'>";
+                // $detailsExport .= "<td width='15%'>";
+                // $detailsExport .= "<h3>"._NOTES_1."</h3>";
+                // $detailsExport .= "</td>";
+                // $detailsExport .= "<td width='85%'>";
+                // $detailsExport .= "&nbsp;";
+                // $detailsExport .= "</td>";
+                // $detailsExport .= "</tr>";
+                // $detailsExport .= "<tr height='130px'>";
+                // $detailsExport .= "<td width='15%'>";
+                // $detailsExport .= "<h3>"._NOTES_2."</h3>";
+                // $detailsExport .= "</td>";
+                // $detailsExport .= "<td width='85%'>";
+                // $detailsExport .= "&nbsp;";
+                // $detailsExport .= "</td>";
+                // $detailsExport .= "</tr>";
+                // $detailsExport .= "<tr height='130px'>";
+                // $detailsExport .= "<td width='15%'>";
+                // $detailsExport .= "<h3>"._NOTES_3."</h3>";
+                // $detailsExport .= "</td>";
+                // $detailsExport .= "<td width='85%'>";
+                // $detailsExport .= "&nbsp;";
+                // $detailsExport .= "</td>";
+                // $detailsExport .= "</tr>";
+                // $detailsExport .= "</table>";
+                // if ($core->is_module_loaded('entities'))
+                // {
+                //     require_once('modules/entities/class/class_manage_listdiff.php');
+                //     $diff_list = new diffusion_list();
+                //     $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id, false, $coll_id);
+                //     $_SESSION['details']['difflist_type'] = $diff_list->get_difflist_type($_SESSION['details']['diff_list']['difflist_type']);
+                //     $roles = $diff_list->list_difflist_roles();
+                //     json_encode($roles);
+                //     $roles_str = json_encode($roles);
                             
-                    $diffList_frame = '';
-                    $category = $data['category_id']['value'];
-                    $detailsExport .= "<h2>"._DIFF_LIST."</h2>";
+                //     $diffList_frame = '';
+                //     $category = $data['category_id']['value'];
+                //     $detailsExport .= "<h2>"._DIFF_LIST."</h2>";
                    
-                    $onlyCC = '';
-                    if($core->test_service('add_copy_in_indexing_validation', 'entities', false) && $_SESSION['user']['UserId'] != 'superadmin'){
-                        $onlyCC = '&only_cc';
-                    }
-                    $pathScriptTab = $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true&category='.$category.'&roles='.urlencode($roles_str).$onlyCC;    
+                //     $onlyCC = '';
+                //     if($core->test_service('add_copy_in_indexing_validation', 'entities', false) && $_SESSION['user']['UserId'] != 'superadmin'){
+                //         $onlyCC = '&only_cc';
+                //     }
+                //     $pathScriptTab = $_SESSION['config']['businessappurl']
+                //         . 'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true&category='.$category.'&roles='.urlencode($roles_str).$onlyCC;    
                     
-                    $diffList_frame .= '<dt class="fa fa-gear" style="font-size:2em;padding-left: 15px;';
-                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                        $diffList_frame .=  'padding-right: 0px;';
-                    }else{
-                        $diffList_frame .=  'padding-right: 15px;';
-                    }
-                    $diffList_frame .= '" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'diffList_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
+                //    // $diffList_frame .= '<dt class="fa fa-gear" style="font-size:2em;padding-left: 15px;';
+                //     $diffList_frame .= '<div class="fa fa-gear diffusion-list func " style="font-size:2em;padding-left: 15px;';
+                //     if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                //         $diffList_frame .=  'padding-right: 0px;';
+                //     }else{
+                //         $diffList_frame .=  'padding-right: 15px;';
+                //     }
+                //     $diffList_frame .= '" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'diffList_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
 
-                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                            $style = 'visibility:hidden;"';
-                        }else{
-                            $style = 'display:none;"';
-                        }
+                //         if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                //             $style = 'visibility:hidden;"';
+                //         }else{
+                //             $style = 'display:none;"';
+                //         }
 
-                    $diffList_frame .=$style.' class="nbResZero">0</span></sup></dt>';
-                    $diffList_frame .= '<dd>'; 
-                    $diffList_frame .= '<iframe src="" name="diffList_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="diffList_iframe" style="height:100%;"></iframe>';
-                    $diffList_frame .='</dd>';
+                //     //$diffList_frame .=$style.' class="nbResZero">0</span></sup></dt>';
+                //     $diffList_frame .=$style.' class="nbResZero">0</span></sup></div>';
+                //     $diffList_frame .= '<div>'; 
+                //     $diffList_frame .= '<iframe src="" name="diffList_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="diffList_iframe" style="height:100%;"></iframe>';
+                //     $diffList_frame .='</div>';
                     
-                    echo $diffList_frame;
-                }
+                //     echo $diffList_frame;
+                // }
                 
-                //PRINT FOLDER TAB
-                if ($core->test_service('print_folder_doc', 'visa', false))
-                {
-                    $printFolder_frame = '';
-                    require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
-                        . "class" . DIRECTORY_SEPARATOR
-                        . "class_modules_tools.php";
+                // //PRINT FOLDER TAB
+                // if ($core->test_service('print_folder_doc', 'visa', false))
+                // {
+                //     $printFolder_frame = '';
+                //     require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
+                //         . "class" . DIRECTORY_SEPARATOR
+                //         . "class_modules_tools.php";
   
-                    $pathScriptTab = $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&page=show_printFolder_tab&module=visa&resId='
-                        . $s_id . '&collId=' . $coll_id . '&table=' . $table;
-                    $printFolder_frame .= '<dt class="fa fa-print" style="font-size:2em;padding-left: 15px;';
-                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                            $printFolder_frame .=  'padding-right: 0px;';
-                        }else{
-                            $printFolder_frame .=  'padding-right: 15px;';
-                        }
-                    $printFolder_frame .= '" title="'._PRINTFOLDER.'" onclick="loadSpecificTab(\'printFolder_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
-                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                            $style = 'visibility:hidden;"';
-                        }else{
-                            $style = 'display:none;"';
-                        }
+                //     $pathScriptTab = $_SESSION['config']['businessappurl']
+                //         . 'index.php?display=true&page=show_printFolder_tab&module=visa&resId='
+                //         . $s_id . '&collId=' . $coll_id . '&table=' . $table;
+                //     //$printFolder_frame .= '<dt class="fa fa-print" style="font-size:2em;padding-left: 15px;';
+                //     $printFolder_frame .= '<div class="fa fa-print print-folder func" style="font-size:2em;padding-left: 15px;';
+                //         if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                //             $printFolder_frame .=  'padding-right: 0px;';
+                //         }else{
+                //             $printFolder_frame .=  'padding-right: 15px;';
+                //         }
+                //     $printFolder_frame .= '" title="'._PRINTFOLDER.'" onclick="loadSpecificTab(\'printFolder_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
+                //         if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                //             $style = 'visibility:hidden;"';
+                //         }else{
+                //             $style = 'display:none;"';
+                //         }
                         
-                        $printFolder_frame .= $style.'class="nbResZero">0</span></sup></dt>';
-                    $printFolder_frame .= '<dd>';
-                    $printFolder_frame .= '<iframe src="" name="printFolder_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="printFolder_iframe" style="height:100%;"></iframe>';	
-                    $printFolder_frame .= '</dd>';
+                //     // $printFolder_frame .= $style.'class="nbResZero">0</span></sup></dt>';
+                //     $printFolder_frame .= $style.'class="nbResZero">0</span></sup></div>';
+                //     $printFolder_frame .= '<div>';
+                //     $printFolder_frame .= '<iframe src="" name="printFolder_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="printFolder_iframe" style="height:100%;"></iframe>';        
+                //     $printFolder_frame .= '</div>';
                     
-                    echo $printFolder_frame;
-                }
-		
-                //VISA TAB
-                if ($core->is_module_loaded('visa')) {
-                    $visa_frame = '';
-                    $pathScriptTab = $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&destination='.$destination.'&fromDetail=true';
-                    $visa_frame .= '<dt id="visa_tab" class="fa fa-certificate" style="font-size:2em;padding-left: 15px;';
-
-                    $visa_frame .='padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'visa_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="visa_tab_badge"></sup></dt><dd id="page_circuit" style="overflow-x: hidden;">';
-                    $visa_frame .= '<h2>'._VISA_WORKFLOW.'</h2>';
-		            $visa_frame .= '<iframe src="" name="visa_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="visa_iframe" style="height:95%;"></iframe>';	
-                    $visa_frame .='</dd>';
+                //     echo $printFolder_frame;
+                // }
+                
+                // //VISA TAB
+                // if ($core->is_module_loaded('visa')) {
+                //     $visa_frame = '';
+                //     $pathScriptTab = $_SESSION['config']['businessappurl']
+                //         . 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&destination='.$destination.'&fromDetail=true';
+                //    // $visa_frame .= '<dt id="visa_tab" class="fa fa-certificate" style="font-size:2em;padding-left: 15px;';
+                //     $visa_frame .= '<div id="visa_tab " class="fa fa-certificate visa-circuit func" style="font-size:2em;padding-left: 15px;';
+                //     //$visa_frame .='padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'visa_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="visa_tab_badge"></sup></dt><dd id="page_circuit" style="overflow-x: hidden;">';
+                //     $visa_frame .='padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'visa_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="visa_tab_badge"></sup></div><dd id="page_circuit" style="overflow-x: hidden;">';
+                //     $visa_frame .= '<h2>'._VISA_WORKFLOW.'</h2>';
+                //             $visa_frame .= '<iframe src="" name="visa_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="visa_iframe" style="height:95%;"></iframe>';        
+                //     $visa_frame .='</div>';
                     
-                    //LOAD TOOLBAR BADGE
-                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=visa&page=load_toolbar_visa&resId='.$s_id.'&collId='.$coll_id;
-                    $visa_frame .='<script>loadToolbarBadge(\'visa_tab\',\''.$toolbarBagde_script.'\');</script>';
+                //     //LOAD TOOLBAR BADGE
+                //     $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=visa&page=load_toolbar_visa&resId='.$s_id.'&collId='.$coll_id;
+                //     $visa_frame .='<script>loadToolbarBadge(\'visa_tab\',\''.$toolbarBagde_script.'\');</script>';
                     
-                    echo $visa_frame;
-			
-                }
-		
-                //AVIS TAB
-                if ($core->is_module_loaded('avis')) {
-                    $avis_frame = '';
-                    $pathScriptTab = $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&page=show_avis_tab&module=avis&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true';
-                    $avis_frame .= '<dt id="avis_tab" class="fa fa-check-square" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._AVIS_WORKFLOW.'" onclick="loadSpecificTab(\'avis_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="avis_tab_badge"></sup></dt><dd id="page_circuit_avis" style="overflow-x: hidden;">';
-                    $avis_frame .= '<h2>'._AVIS_WORKFLOW.'</h2>';
+                //     echo $visa_frame;
+                        
+                // }
+                
+                // //AVIS TAB
+                // if ($core->is_module_loaded('avis')) {
+                //     $avis_frame = '';
+                //     $pathScriptTab = $_SESSION['config']['businessappurl']
+                //         . 'index.php?display=true&page=show_avis_tab&module=avis&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true';
+                //     //$avis_frame .= '<dt id="avis_tab" class="fa fa-check-square" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._AVIS_WORKFLOW.'" onclick="loadSpecificTab(\'avis_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="avis_tab_badge"></sup></dt><dd id="page_circuit_avis" style="overflow-x: hidden;">';
+                //     $avis_frame .= '<div id="avis_tab" class="fa fa-check-square opinion-circuit func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._AVIS_WORKFLOW.'" onclick="loadSpecificTab(\'avis_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="avis_tab_badge"></sup></div><dd id="page_circuit_avis" style="overflow-x: hidden;">';
+                //     $avis_frame .= '<h2>'._AVIS_WORKFLOW.'</h2>';
          
-                    $avis_frame .= '<iframe src="" name="avis_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="avis_iframe" style="height:95%;"></iframe>';
-                    $avis_frame .= '</dd>';
+                //     $avis_frame .= '<iframe src="" name="avis_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="avis_iframe" style="height:95%;"></iframe>';
+                //     $avis_frame .= '</div>';
                     
-                    //LOAD TOOLBAR BADGE
-                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=avis&page=load_toolbar_avis&resId='.$s_id.'&collId='.$coll_id;
-                    $avis_frame .='<script>loadToolbarBadge(\'avis_tab\',\''.$toolbarBagde_script.'\');</script>';
+                //     //LOAD TOOLBAR BADGE
+                //     $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=avis&page=load_toolbar_avis&resId='.$s_id.'&collId='.$coll_id;
+                //     $avis_frame .='<script>loadToolbarBadge(\'avis_tab\',\''.$toolbarBagde_script.'\');</script>';
                     
-                    echo $avis_frame;
+                //     echo $avis_frame;
             
-                }
+                // }
                 
-                //ATTACHMENTS TAB
-                if ($core->is_module_loaded('attachments'))
-                {
-                    $attachments_frame = '';           
-                    $extraParam = '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder';
-                    $pathScriptTab = $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId='
-                        . $s_id . '&collId=' . $coll_id.'&fromDetail=attachments'.$extraParam;
+                // //ATTACHMENTS TAB
+                // if ($core->is_module_loaded('attachments'))
+                // {
+                //     $attachments_frame = '';           
+                //     $extraParam = '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder';
+                //     $pathScriptTab = $_SESSION['config']['businessappurl']
+                //         . 'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId='
+                //         . $s_id . '&collId=' . $coll_id.'&fromDetail=attachments'.$extraParam;
                     
-                    $attachments_frame .= '<dt class="fa fa-paperclip" id="attachments_tab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._ATTACHMENTS .'" onclick="loadSpecificTab(\'attachments_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="attachments_tab_badge"></sup></dt>';
-                    $attachments_frame .= '<dd id="other_attachments">';
-                    $attachments_frame .= '<iframe src="" name="attachments_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="attachments_iframe" style="height:100%;"></iframe>';
-                    $responses_frame .= '</dd>';
-                    $detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
-                    $detailsExport .= "<br><br><br>";
+                //     //$attachments_frame .= '<dt class="fa fa-paperclip" id="attachments_tab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._ATTACHMENTS .'" onclick="loadSpecificTab(\'attachments_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="attachments_tab_badge"></sup></dt>';
+                //     $attachments_frame .= '<div class="fa fa-paperclip attached-files func" id="attachments_tab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._ATTACHMENTS .'" onclick="loadSpecificTab(\'attachments_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="attachments_tab_badge"></sup></div>';
+                //     $attachments_frame .= '<dd id="other_attachments">';
+                //     $attachments_frame .= '<iframe src="" name="attachments_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="attachments_iframe" style="height:100%;"></iframe>';
+                //     $responses_frame .= '</div>';
+                //     $detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
+                //     $detailsExport .= "<br><br><br>";
                     
-                    //LOAD TOOLBAR BADGE
-                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=load_toolbar_attachments&resId='.$s_id.'&collId='.$coll_id;
-                    $attachments_frame .='<script>loadToolbarBadge(\'attachments_tab\',\''.$toolbarBagde_script.'\');</script>';
+                //     //LOAD TOOLBAR BADGE
+                //     $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=load_toolbar_attachments&resId='.$s_id.'&collId='.$coll_id;
+                //     $attachments_frame .='<script>loadToolbarBadge(\'attachments_tab\',\''.$toolbarBagde_script.'\');</script>';
                     
-                    echo $attachments_frame;
-                }
+                //     echo $attachments_frame;
+                // }
                 
-                //RESPONSES TAB
-                if ($core->is_module_loaded('attachments'))
-                {
-                    $responses_frame = '';
-                    $extraParam = '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail';
-                    $pathScriptTab = $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&page=show_attachments_details_tab&module=attachments&fromDetail=response&resId='
-                            . $s_id . '&collId=' . $coll_id.$extraParam;
-                    $responses_frame .= '<dt id="responses_tab" class="fa fa-mail-reply" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DONE_ANSWERS.'" onclick="loadSpecificTab(\'responses_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="responses_tab_badge"></sup></dt>';
-                    $responses_frame .= '<dd id="page_rep">';
-                    $responses_frame .= '<iframe src="" name="responses_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="responses_iframe" style="height:100%;"></iframe>';
-                    $responses_frame .= '</dd>';
+                // //RESPONSES TAB
+                // if ($core->is_module_loaded('attachments'))
+                // {
+                //     $responses_frame = '';
+                //     $extraParam = '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail';
+                //     $pathScriptTab = $_SESSION['config']['businessappurl']
+                //             . 'index.php?display=true&page=show_attachments_details_tab&module=attachments&fromDetail=response&resId='
+                //             . $s_id . '&collId=' . $coll_id.$extraParam;
+                //     //$responses_frame .= '<dt id="responses_tab" class="fa fa-mail-reply" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DONE_ANSWERS.'" onclick="loadSpecificTab(\'responses_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="responses_tab_badge"></sup></dt>';
+                //     $responses_frame .= '<div id="responses_tab" class="fa fa-mail-reply answers-done func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DONE_ANSWERS.'" onclick="loadSpecificTab(\'responses_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="responses_tab_badge"></sup></div>';
+                //     $responses_frame .= '<dd id="page_rep">';
+                //     $responses_frame .= '<iframe src="" name="responses_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="responses_iframe" style="height:100%;"></iframe>';
+                //     $responses_frame .= '</div>';
 
-                    //LOAD TOOLBAR BADGE
-                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=load_toolbar_attachments&responses&resId='.$s_id.'&collId='.$coll_id;
-                    $responses_frame .='<script>loadToolbarBadge(\'responses_tab\',\''.$toolbarBagde_script.'\');</script>';
+                //     //LOAD TOOLBAR BADGE
+                //     $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=load_toolbar_attachments&responses&resId='.$s_id.'&collId='.$coll_id;
+                //     $responses_frame .='<script>loadToolbarBadge(\'responses_tab\',\''.$toolbarBagde_script.'\');</script>';
                     
-                    echo $responses_frame;
-                }
-                //HISTORY TAB
-                if ($viewDocHistory) {
-                    $history_frame = '';
+                //     echo $responses_frame;
+                // }
+                // //HISTORY TAB
+                // if ($viewDocHistory) {
+                //     $history_frame = '';
                        
-                    $pathScriptTab = $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&page=show_history_tab&resId='
-                        . $s_id . '&collId=' . $coll_id;
-                    $history_frame .= '<dt class="fa fa-line-chart" style="font-size:2em;padding-left: 15px;';
-                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                        $history_frame .=  'padding-right: 0px;';
-                    }else{
-                        $history_frame .=  'padding-right: 15px;';
-                    }
-                    $history_frame .= '" title="'. _DOC_HISTORY . '" onclick="loadSpecificTab(\'history_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
-                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                            $style .= 'visibility:hidden;"';
-                        }else{
-                            $style .= 'display:none;"';
-                        }
-                    $history_frame .= $style.' class="nbResZero">0</span></sup></dt>';
-                    $history_frame .= '<dd>';
-                    $history_frame .= '<iframe src="" name="history_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="history_iframe" style="height:100%;"></iframe>';   
+                //     $pathScriptTab = $_SESSION['config']['businessappurl']
+                //         . 'index.php?display=true&page=show_history_tab&resId='
+                //         . $s_id . '&collId=' . $coll_id;
+                //     //$history_frame .= '<dt class="fa fa-line-chart" style="font-size:2em;padding-left: 15px;';
+                //     $history_frame .= '<div class="fa fa-line-chart history func" style="font-size:2em;padding-left: 15px;';
+                //     if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                //         $history_frame .=  'padding-right: 0px;';
+                //     }else{
+                //         $history_frame .=  'padding-right: 15px;';
+                //     }
+                //     $history_frame .= '" title="'. _DOC_HISTORY . '" onclick="loadSpecificTab(\'history_iframe\',\''.$pathScriptTab.'\');return false;"> <sup><span style="font-size: 10px;';
+                //     if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                //             $style .= 'visibility:hidden;"';
+                //         }else{
+                //             $style .= 'display:none;"';
+                //         }
+                //     //$history_frame .= $style.' class="nbResZero">0</span></sup></dt>';
+                //     $history_frame .= $style.' class="nbResZero">0</span></sup></div>';
+                //     $history_frame .= '<div>';
+                //     $history_frame .= '<iframe src="" name="history_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="history_iframe" style="height:100%;"></iframe>';   
 
-                    $history_frame .= '</dd>';
+                //     $history_frame .= '</div>';
                     
-                    echo $history_frame;
-                }
+                //     echo $history_frame;
+                // }
                 
-                //NOTES TAB
-                if ($core->is_module_loaded('notes')) {
-                    $note = '';
-                    $pathScriptTab = $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&module=notes&page=notes&identifier='
-                        . $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=full';
-                    $note .= '<dt id="notes_tab" class="fa fa-pencil" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'. _NOTES.'" onclick="loadSpecificTab(\'note_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="notes_tab_badge"></sup></dt>';
-                    $note .='<dd>';
-                    $note .= '<iframe src="" name="note_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="note_iframe" style="height:100%;"></iframe>';   
-                    $note .= '</dd>';
+                // //NOTES TAB
+                // if ($core->is_module_loaded('notes')) {
+                //     $note = '';
+                //     $pathScriptTab = $_SESSION['config']['businessappurl']
+                //         . 'index.php?display=true&module=notes&page=notes&identifier='
+                //         . $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=full';
+                //     //$note .= '<dt id="notes_tab" class="fa fa-pencil" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'. _NOTES.'" onclick="loadSpecificTab(\'note_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="notes_tab_badge"></sup></dt>';
+                //     $note .= '<div id="notes_tab" class="fa fa-pencil notes func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'. _NOTES.'" onclick="loadSpecificTab(\'note_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="notes_tab_badge"></sup></div>';
+                //     $note .='<div>';
+                //     $note .= '<iframe src="" name="note_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="note_iframe" style="height:100%;"></iframe>';   
+                //     $note .= '</div>';
                     
-                    //LOAD TOOLBAR BADGE
-                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=notes&page=load_toolbar_notes&resId='.$s_id.'&collId='.$coll_id;
-                    $note .='<script>loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');</script>';
+                //     //LOAD TOOLBAR BADGE
+                //     $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=notes&page=load_toolbar_notes&resId='.$s_id.'&collId='.$coll_id;
+                //     $note .='<script>loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');</script>';
                     
-                    echo $note;
-                }
+                //     echo $note;
+                // }
                 
-                //CASES TAB
-                if ($core->is_module_loaded('cases') == true)
-                {   
-                    $case_frame = '';
-                    $pathScriptTab = $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&page=show_case_tab&module=cases&collId=' . $coll_id . '&resId='.$s_id;
-                    $case_frame .= '<dt id="cases_tab" class="fa fa-suitcase" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="' . _CASE . '" onclick="loadSpecificTab(\'cases_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="cases_tab_badge"></sup></dt>';
-                    $case_frame .= '<dd>';
-                    $case_frame .= '<iframe src="" name="cases_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="cases_iframe" style="height:100%;"></iframe>';   
-                    $case_frame .= '</dd>';
+                // //CASES TAB
+                // if ($core->is_module_loaded('cases') == true)
+                // {   
+                //     $case_frame = '';
+                //     $pathScriptTab = $_SESSION['config']['businessappurl']
+                //     . 'index.php?display=true&page=show_case_tab&module=cases&collId=' . $coll_id . '&resId='.$s_id;
+                //     //$case_frame .= '<dt id="cases_tab" class="fa fa-suitcase" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="' . _CASE . '" onclick="loadSpecificTab(\'cases_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="cases_tab_badge"></sup></dt>';
+                //     $case_frame .= '<div id="cases_tab" class="fa fa-suitcase matter func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="' . _CASE . '" onclick="loadSpecificTab(\'cases_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="cases_tab_badge"></sup></div>';
+                //     $case_frame .= '<div>';
+                //     $case_frame .= '<iframe src="" name="cases_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="cases_iframe" style="height:100%;"></iframe>';   
+                //     $case_frame .= '</div>';
                     
-                    //LOAD TOOLBAR BADGE
-                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$s_id.'&collId='.$coll_id;
-                    $case_frame .='<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
+                //     //LOAD TOOLBAR BADGE
+                //     $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$s_id.'&collId='.$coll_id;
+                //     $case_frame .='<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
                     
-                    echo $case_frame;
+                //     echo $case_frame;
           
-                }
-				
-                //SENDMAILS TAB         
-                if ($core->test_service('sendmail', 'sendmail', false) === true) {
-                    $sendmail = '';
-                    $pathScriptTab = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=sendmail&page=sendmail&identifier='. $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium';    
+                // }
+                                
+                // //SENDMAILS TAB         
+                // if ($core->test_service('sendmail', 'sendmail', false) === true) {
+                //     $sendmail = '';
+                //     $pathScriptTab = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=sendmail&page=sendmail&identifier='. $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium';    
                     
-                    $sendmail .= '<dt id="sendmail_tab" class="fa fa-envelope" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._SENDED_EMAILS.'" onclick="loadSpecificTab(\'sendmail_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="sendmail_tab_badge"></sup></dt>';
-                    $sendmail .= '<dd>';           
-                    $sendmail .= '<iframe src="" name="sendmail_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="sendmail_iframe" style="height:100%;"></iframe>';
-                    $sendmail .= '</dd>';
+                //     //$sendmail .= '<dt id="sendmail_tab" class="fa fa-envelope" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._SENDED_EMAILS.'" onclick="loadSpecificTab(\'sendmail_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="sendmail_tab_badge"></sup></dt>';
+                //     $sendmail .= '<div id="sendmail_tab" class="fa fa-envelope email func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._SENDED_EMAILS.'" onclick="loadSpecificTab(\'sendmail_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="sendmail_tab_badge"></sup></div>';
+                //     $sendmail .= '<div>';           
+                //     $sendmail .= '<iframe src="" name="sendmail_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="sendmail_iframe" style="height:100%;"></iframe>';
+                //     $sendmail .= '</div>';
                     
-                    //LOAD TOOLBAR BADGE
-                    $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=sendmail&page=load_toolbar_sendmail&resId='.$s_id.'&collId='.$coll_id;
-                    $sendmail .='<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
+                //     //LOAD TOOLBAR BADGE
+                //     $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=sendmail&page=load_toolbar_sendmail&resId='.$s_id.'&collId='.$coll_id;
+                //     $sendmail .='<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
                     
-                    echo $sendmail;
+                //     echo $sendmail;
 
-                }
+                // }
                 
-                if ($core->test_service('view_version_letterbox', 'apps', false)) {
-                    //VERSIONS TAB
-                    $version = '';
-                    $versionTable = $security->retrieve_version_table_from_coll_id(
-                        $coll_id
-                    );
-                    $selectVersions = "SELECT res_id FROM "
-                        . $versionTable . " WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
+                // if ($core->test_service('view_version_letterbox', 'apps', false)) {
+                //     //VERSIONS TAB
+                //     $version = '';
+                //     $versionTable = $security->retrieve_version_table_from_coll_id(
+                //         $coll_id
+                //     );
+                //     $selectVersions = "SELECT res_id FROM "
+                //         . $versionTable . " WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
 
-                    $stmt = $db->query($selectVersions, array($s_id));
-                    $nb_versions_for_title = $stmt->rowCount();
-                    $lineLastVersion = $stmt->fetchObject();
-                    $lastVersion = $lineLastVersion->res_id;
-                    if ($lastVersion <> '') {
-                        $objectId = $lastVersion;
-                        $objectTable = $versionTable;
-                    } else {
-                        $objectTable = $security->retrieve_table_from_coll(
-                            $coll_id
-                        );
-                        $objectId = $s_id;
-                        $_SESSION['cm']['objectId4List'] = $s_id;
-                    }
-                    if ($nb_versions_for_title == 0) {
-                        $extend_title_for_versions = '0';
-                        $class="nbResZero";
-                        if($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                            $style = 'visibility:hidden;font-size: 10px;';
-                        }else{
-                            $style = 'display:none;font-size: 10px;';
-                        }
+                //     $stmt = $db->query($selectVersions, array($s_id));
+                //     $nb_versions_for_title = $stmt->rowCount();
+                //     $lineLastVersion = $stmt->fetchObject();
+                //     $lastVersion = $lineLastVersion->res_id;
+                //     if ($lastVersion <> '') {
+                //         $objectId = $lastVersion;
+                //         $objectTable = $versionTable;
+                //     } else {
+                //         $objectTable = $security->retrieve_table_from_coll(
+                //             $coll_id
+                //         );
+                //         $objectId = $s_id;
+                //         $_SESSION['cm']['objectId4List'] = $s_id;
+                //     }
+                //     if ($nb_versions_for_title == 0) {
+                //         $extend_title_for_versions = '0';
+                //         $class="nbResZero";
+                //         if($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                //             $style = 'visibility:hidden;font-size: 10px;';
+                //         }else{
+                //             $style = 'display:none;font-size: 10px;';
+                //         }
                         
-                        $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
-                    } else {
-                        $extend_title_for_versions = $nb_versions_for_title;
-                        $class="nbRes";
-                        $style = 'font-size: 10px;';
-                        //$style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
-                    }
-                    $_SESSION['cm']['resMaster'] = '';
+                //         $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
+                //     } else {
+                //         $extend_title_for_versions = $nb_versions_for_title;
+                //         $class="nbRes";
+                //         $style = 'font-size: 10px;';
+                //         //$style2 = 'font-size:2em;padding-left: 15px;padding-right: 15px;';
+                //     }
+                //     $_SESSION['cm']['resMaster'] = '';
                     
-                    $pathScriptTab = $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&page=show_versions_tab&collId=' . $coll_id . '&resId='.$s_id.'&objectTable='.$objectTable;
-                    $version .= '<dt  class="fa fa-code-fork" style="font-size:2em;padding-left: 15px;';
-                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                        $version .=  'padding-right: 0px;';
-                    }else{
-                        $version .=  'padding-right: 15px;';
-                    }
-                    $version .= '"title="'. _VERSIONS .'" onclick="loadSpecificTab(\'versions_iframe\',\''.$pathScriptTab.'\');return false;">';
-                    $version .= ' <sup><span id="nbVersions" ';
-                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                            $style .= 'visibility:hidden;"';
-                        }else{
-                            $style .= 'display:none;"';
-                        }
-                    $version .= 'class="'.$class.'" style="'.$style.'">' . $extend_title_for_versions . '</span></sup>';
-                    $version .= '</dt>';
-                    $version .= '<dd>';
-                    $version .= '<iframe src="" name="versions_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="versions_iframe" style="height:100%;"></iframe>';
-                    $version .= '</dd>';
-                    echo $version;
-                } 
+                //     $pathScriptTab = $_SESSION['config']['businessappurl']
+                //         . 'index.php?display=true&page=show_versions_tab&collId=' . $coll_id . '&resId='.$s_id.'&objectTable='.$objectTable;
+                //     //$version .= '<dt  class="fa fa-code-fork" style="font-size:2em;padding-left: 15px;';
+                //     $version .= '<div  class="fa fa-code-fork versions func" style="font-size:2em;padding-left: 15px;';
+                //     if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                //         $version .=  'padding-right: 0px;';
+                //     }else{
+                //         $version .=  'padding-right: 15px;';
+                //     }
+                //     $version .= '"title="'. _VERSIONS .'" onclick="loadSpecificTab(\'versions_iframe\',\''.$pathScriptTab.'\');return false;">';
+                //     $version .= ' <sup><span id="nbVersions" ';
+                //     if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                //             $style .= 'visibility:hidden;"';
+                //         }else{
+                //             $style .= 'display:none;"';
+                //         }
+                //     $version .= 'class="'.$class.'" style="'.$style.'">' . $extend_title_for_versions . '</span></sup>';
+                //     //$version .= '</dt>';
+                //     $version .= '</div>';
+                //     $version .= '<div>';
+                //     $version .= '<iframe src="" name="versions_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="versions_iframe" style="height:100%;"></iframe>';
+                //     $version .= '</div>';
+                //     echo $version;
+               // } 
     
                 //LINKS TAB
-                $Links = '';
+               /* $Links = '';
 
                 $pathScriptTab = $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=show_links_tab';  
-                $Links .= '<dt id="links_tab" class="fa fa-link" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._LINK_TAB.'" onclick="loadSpecificTab(\'links_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="links_tab_badge"></sup>';
-                $Links .= '</dt>';
-                $Links .= '<dd>';
+                /*$Links .= '<dt id="links_tab" class="fa fa-link" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._LINK_TAB.'" onclick="loadSpecificTab(\'links_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="links_tab_badge"></sup>';
+                $Links .= '</dt>';*/
+              /*  $Links .= '<div id="links_tab" class="fa fa-link links func" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._LINK_TAB.'" onclick="loadSpecificTab(\'links_iframe\',\''.$pathScriptTab.'\');return false;"> <sup id="links_tab_badge"></sup>';
+                $Links .= '</div>';
+
+                $Links .= '<div>';
                 $Links .= '<iframe src="" name="links_iframe" width="100%" align="left" scrolling="yes" frameborder="0" id="links_iframe" style="height:100%;"></iframe>';
-                $Links .= '</dd>';
+                $Links .= '</div>';
                 
                 //LOAD TOOLBAR BADGE
                 $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=load_toolbar_links&resId='.$s_id.'&collId='.$coll_id;
                 $Links .='<script>loadToolbarBadge(\'links_tab\',\''.$toolbarBagde_script.'\');</script>';
 
-                echo $Links;
-                ?>
+                echo $Links;*/
+                ?> 
             </dl>
+
+        </div>
     <?php
 }
 ?> 
+
 </div>
 </div>
 <?php
 //INITIALIZE INDEX TABS
-echo '<script type="text/javascript">var tabricator1 = new Tabricator(\'tabricator1\', \'DT\');</script>';
+//echo '<script type="text/javascript">var tabricator1 = new Tabricator(\'tabricator1\', \'DT\');</script>';
 
 //OUTGOING CREATION MODE
 if($_SESSION['indexation'] == true && $category == 'outgoing'){
@@ -1506,5 +1873,4 @@ if($_SESSION['indexation'] == true && $category == 'outgoing'){
 $detailsExport .= "</body></html>";
 $_SESSION['doc_convert'] = array();
 $_SESSION['doc_convert']['details_result'] = $detailsExport;
-
 $_SESSION['info'] = '';

@@ -1051,13 +1051,9 @@ function test_form()
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
-<<<<<<< HEAD
     if ($j('#divList')[0]) {
         $j('#divList')[0].style.display = 'block';
-=======
-    if ($j('#divList')) {
-        $j('#divList').css("display", "block");
->>>>>>> develop
+
     }
     if(id_mod == undefined || id_mod=='')
     {
@@ -3168,7 +3164,6 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
                 document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
             }
             document.getElementById('show_tab').innerHTML = answer.responseText;
-<<<<<<< HEAD
             /*if (response.status == 0) {
                 console.log(response);
             } else if (response.status == 1){
@@ -3177,10 +3172,7 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
       //  }
    // });
 
-=======
-        }
-    });
->>>>>>> develop
+
 }
 
 function loadSpecificTab(id_iframe,pathScriptTab){
