@@ -1197,7 +1197,7 @@ if (!defined("_FOR_YEAR")) define("_FOR_YEAR", "pour l'année");
 if (!defined("_FOR_MONTH")) define("_FOR_MONTH", "pour le mois de");
 if (!defined("_N_DAYS")) define("_N_DAYS","NB JOURS");
 if (!defined("_INCLUDE_SUB_ENTITIES")) define("_INCLUDE_SUB_ENTITIES","Inclure les sous-entités");
-if (!defined("_GRAPHICS_REPORTS")) define("_GRAPHICS_REPORTS","Désactiver l'affichage graphique");
+if (!defined("_GRAPHICS_REPORTS")) define("_GRAPHICS_REPORTS","Activer l'affichage graphique");
 
 /******************** Specific ************/
 if (!defined("_PROJECT")) define("_PROJECT", "Dossier");
