@@ -41,7 +41,8 @@ var SignatureBookComponent = (function () {
             documents: [],
             attachments: [],
             //histories               : [],
-            resList: []
+            resList: [],
+            lang: {}
         };
         this.rightSelectedThumbnail = 0;
         this.leftSelectedThumbnail = 0;

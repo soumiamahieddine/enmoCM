@@ -1043,7 +1043,7 @@ if (!defined("_CONFIRM_CREATE_CONTACT")) define("_CONFIRM_CREATE_CONTACT"," Do y
 if (!defined("_CONFIRM_EDIT_CONTACT")) define("_CONFIRM_EDIT_CONTACT","Do you confirm the validation of your contact ? ?");
 if (!defined("_CONTACTS_CONFIRMATION_MODIFICATION")) define("_CONTACTS_CONFIRMATION_MODIFICATION","Confirmation of the modification");
 
-if (!defined("_CREATE_BY")) define("_CREATE_BY","created by");
+if (!defined("_CREATE_BY")) define("_CREATE_BY","Created by");
 if (!defined("_SOCIETY_SHORT")) define("_SOCIETY_SHORT","Companie acronym");
 if (!defined("_CHOOSE_CONTACT_TYPES")) define("_CHOOSE_CONTACT_TYPES","Choose the contact type");
 if (!defined("_ORGANISM")) define("_ORGANISM","Organization");

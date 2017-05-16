@@ -37,7 +37,8 @@ export class SignatureBookComponent implements OnInit {
         documents               : [],
         attachments             : [],
         //histories               : [],
-        resList                 : []
+        resList                 : [],
+        lang                    : {}
     };
 
     rightSelectedThumbnail      : number    = 0;
