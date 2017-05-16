@@ -17,7 +17,9 @@ var ProfileComponent = (function () {
         var _this = this;
         this.http = http;
         this.zone = zone;
-        this.user = {};
+        this.user = {
+            lang: {}
+        };
         this.passwordModel = {
             currentPassword: "",
             newPassword: "",

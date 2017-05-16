@@ -8,7 +8,7 @@
 */
 
 /**
-* @brief USer Model
+* @brief User Model
 * @author dev@maarch.org
 * @ingroup core
 */

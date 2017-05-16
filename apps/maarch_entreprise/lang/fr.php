@@ -349,16 +349,12 @@ if (!defined("_CHOOSE_PRIMARY_GROUP")) define("_CHOOSE_PRIMARY_GROUP", "Choisir 
 if (!defined("_USER_BELONGS_NO_GROUP")) define("_USER_BELONGS_NO_GROUP", "L'utilisateur n'appartient à aucun groupe");
 if (!defined("_USER_BELONGS_NO_ENTITY")) define("_USER_BELONGS_NO_ENTITY", "L'utilisateur n'appartient à aucune  entité");
 if (!defined("_CHOOSE_ONE_GROUP")) define("_CHOOSE_ONE_GROUP", "Choisissez au moins un groupe");
-if (!defined("_PRIMARY_GROUP")) define("_PRIMARY_GROUP", "Groupe primaire");
 if (!defined("_CHOOSE_GROUP")) define("_CHOOSE_GROUP", "Choisissez un groupe");
 if (!defined("_ROLE")) define("_ROLE", "Rôle");
 
 if (!defined("_THE_PSW")) define("_THE_PSW", "Le mot de passe");
 if (!defined("_THE_PSW_VALIDATION")) define("_THE_PSW_VALIDATION", "La validation du mot de passe");
 if (!defined("_MODIFICATION_PSW_SNTE")) define("_MODIFICATION_PSW_SNTE", "Pour modifier votre mot de passe, vous devez confirmer celui-ci.");
-if (!defined("_CURRENT_PSW")) define("_CURRENT_PSW", "Mot de passe actuel");
-if (!defined("_NEW_PSW")) define("_NEW_PSW", "Nouveau mot de passe");
-if (!defined("_REENTER_PSW")) define("_REENTER_PSW", "Retaper le mot de passe");
 if (!defined("_USER_ACCESS_DEPARTMENT")) define("_USER_ACCESS_DEPARTMENT", "L'utilisateur a accès aux services suivants");
 if (!defined("_FIRST_PSW")) define("_FIRST_PSW", "Le premier mot de passe ");
 if (!defined("_SECOND_PSW")) define("_SECOND_PSW", "Le deuxième mot de passe ");
@@ -1837,6 +1833,32 @@ if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Règle de retention")
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Tout désélectionner");
 
 /***** Profile *****/
+if (!defined('_MANAGE_SIGNATURES'))
+    define('_MANAGE_SIGNATURES', 'Gérer mes signatures');
+if (!defined('_MY_GROUPS'))
+    define('_MY_GROUPS', 'Mes Groupes');
+if (!defined('_PRIMARY_GROUP'))
+    define('_PRIMARY_GROUP', 'Groupe primaire');
+if (!defined('_SECONDARY_GROUP'))
+    define('_SECONDARY_GROUP', 'Groupe secondaire');
+if (!defined('_MY_ENTITIES'))
+    define('_MY_ENTITIES', 'Mes Entités');
+if (!defined('_PRIMARY_ENTITY'))
+    define('_PRIMARY_ENTITY', 'Entité primaire');
+if (!defined('_SECONDARY_ENTITY'))
+    define('_SECONDARY_ENTITY', 'Entité secondaire');
+if (!defined('_MY_INFORMATIONS'))
+    define('_MY_INFORMATIONS', 'Mes Informations');
+if (!defined('_DIGITAL_FINGERPRINT'))
+    define('_DIGITAL_FINGERPRINT', 'Empreinte Numérique');
+if (!defined('_UPDATE_PSW'))
+    define('_UPDATE_PSW', 'Modifier votre mot de passe');
+if (!defined('_CURRENT_PSW'))
+    define('_CURRENT_PSW', 'Mot de passe actuel');
+if (!defined('_NEW_PSW'))
+    define('_NEW_PSW', 'Nouveau mot de passe');
+if (!defined('_REENTER_PSW'))
+    define('_REENTER_PSW', 'Retaper le mot de passe');
 if (!defined('_UPDATED_PROFILE'))
     define('_UPDATED_PROFILE', 'Votre profil a bien été modifié');
 
@@ -1849,13 +1871,31 @@ if (!defined('_EMPTY_PSW_FORM'))
 if (!defined('_UPDATED_PASSWORD'))
     define('_UPDATED_PASSWORD', 'Votre mot de passe a bien été modifié');
 
+if (!defined('_SB_SIGNATURES'))
+    define('_SB_SIGNATURES', 'Signatures de parapheur');
 if (!defined('_NEW_SIGNATURE'))
     define('_NEW_SIGNATURE', 'Nouvelle signature ajoutée');
 if (!defined('_UPDATED_SIGNATURE'))
     define('_UPDATED_SIGNATURE', 'Signature modifiée');
 if (!defined('_DELETED_SIGNATURE'))
     define('_DELETED_SIGNATURE', 'Signature supprimée');
+if (!defined('_DEFINE_NEW_SIGNATURE'))
+    define('_DEFINE_NEW_SIGNATURE', 'Nouvelle signature');
+if (!defined('_SIGNATURE_LABEL'))
+    define('_SIGNATURE_LABEL', 'Label de la signature');
+if (!defined('_UPDATE_SIGNATURE'))
+    define('_UPDATE_SIGNATURE', 'Modifier la signature');
+if (!defined('_DELETE_SIGNATURE'))
+    define('_DELETE_SIGNATURE', 'Supprimer la signature');
+if (!defined('_CLICK_ON'))
+    define('_CLICK_ON', 'Cliquez sur');
+if (!defined('_TO_ADD_SIGNATURE'))
+    define('_TO_ADD_SIGNATURE', 'pour ajouter une signature');
+if (!defined('_TO_UPDATE_SIGNATURE'))
+    define('_TO_UPDATE_SIGNATURE', 'pour modifier la signature téléchargée');
 
+if (!defined('_EMAIL_SIGNATURES'))
+    define('_EMAIL_SIGNATURES', 'Signatures de mail');
 if (!defined('_EMPTY_EMAIL_SIGNATURE_FORM'))
     define('_EMPTY_EMAIL_SIGNATURE_FORM', 'Le formulaire de signature de mail n\'est pas complet');
 if (!defined('_NEW_EMAIL_SIGNATURE'))
