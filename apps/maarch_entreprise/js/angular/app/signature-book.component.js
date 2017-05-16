@@ -299,7 +299,12 @@ var SignatureBookComponent = (function () {
     SignatureBookComponent.prototype.delAttachment = function (attachment) {
         var _this = this;
         if (attachment.canDelete) {
-            var r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+            if (this.signatureBook.attachments.length <= 1) {
+                var r = confirm('Attention, ceci est votre dernière pièce jointe pour ce courrier, voulez-vous vraiment la supprimer ?');
+            }
+            else {
+                var r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+            }
             if (r) {
                 var resId;
                 if (attachment.res_id == 0) {
