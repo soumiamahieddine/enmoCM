@@ -34,10 +34,12 @@ $doc['nature_id'] = $_SESSION['mail_natures'][$doc['nature_id']];
 $stmt2 = $dbDatasource->query("SELECT * FROM entities WHERE entity_id = ? ", array($doc['initiator']));
 $initiator = $stmt2->fetch(PDO::FETCH_ASSOC);
 
-for ($i=0;$i<count($initiator);$i++) {
-    $doc['initiator_'.$i] = $initiator[$i];
+if (!empty($initiator)) {
+    foreach ($initiator as $column => $value) {
+        
+        $doc['initiator_'.$column] = $value;
+    }
 }
-
 $datasources['res_letterbox'][] = $doc;
 
 
