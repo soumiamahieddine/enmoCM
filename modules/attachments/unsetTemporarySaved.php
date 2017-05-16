@@ -40,5 +40,5 @@
     	$tableName = "res_version_attachments";
     }
 
-    $db->query("DELETE FROM ".$tableName." WHERE res_id = ? and status = 'TMP' and typist = ?", array($_SESSION['attachmentInfo']['inProgressResId'], $_SESSION['user']['UserId']));
+    $db->query("DELETE FROM ".$tableName." WHERE res_id_master = ? and status = 'TMP' and typist = ?", [$_SESSION['doc_id'], $_SESSION['user']['UserId']]);
     unset($_SESSION['attachmentInfo']);

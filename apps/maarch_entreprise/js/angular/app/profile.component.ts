@@ -20,7 +20,9 @@ export class ProfileComponent implements OnInit {
 
     coreUrl                     : string;
 
-    user                        : any       = {};
+    user                        : any       = {
+        lang                    : {}
+    };
     passwordModel               : any       = {
         currentPassword         : "",
         newPassword             : "",
@@ -58,6 +60,7 @@ export class ProfileComponent implements OnInit {
         $j('#menunav').hide();
         $j('#divList').remove();
         $j('#magicContactsTable').remove();
+        $j('#manageBasketsOrderTable').remove();
         $j('#container').width("99%");
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();
@@ -418,6 +421,6 @@ export class ProfileComponent implements OnInit {
 
     absenceModal() {
         createModal(this.user.absence, 'modal_redirect', 'auto', '950px');
-        autocomplete(15, 'index.php?display=true&module=basket&page=autocomplete_users_list');
+        autocomplete(this.user.countBasketsForAbsence, 'index.php?display=true&module=basket&page=autocomplete_users_list');
     }
 }

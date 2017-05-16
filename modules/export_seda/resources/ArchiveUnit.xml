@@ -76,8 +76,7 @@
         </Keyword>
         <?merge .content.originatingAgency.bool() ?>
         <OriginatingAgency>
-            <?merge .content.originatingAgency $organization ?>
-            <?xinclude /resources/Organization.xml ?>
+            <Identifier><?merge .content.originatingAgency.identifier.value ?></Identifier>
         </OriginatingAgency>
         <?merge .content.submissionAgency.bool() ?>
         <SubmissionAgency>

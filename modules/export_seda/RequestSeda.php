@@ -297,6 +297,21 @@ class RequestSeda
 		return true;
 	}
 
+	public function updateStatusLetterbox($resId,$status) {
+        $queryParams = [];
+        $queryParams[] = $status;
+        $queryParams[] = $resId;
+
+        try {
+            $query = "UPDATE res_letterbox SET status = ? WHERE res_id = ?";
+
+            $smtp = $this->db->query($query,$queryParams);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
 	public function deleteSeda($messageId)
 	{
 		$queryParams = [];

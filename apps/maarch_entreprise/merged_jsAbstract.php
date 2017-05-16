@@ -47,14 +47,11 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/controls.js');
 
 		//TODO clean
-		include('apps/maarch_entreprise/js/search_adv.js');
 		readfile('apps/maarch_entreprise/js/chosen.proto.min.js');
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
-		readfile('apps/maarch_entreprise/js/event.simulate.js');
-		readfile('apps/maarch_entreprise/js/keypress.js');
+		readfile('apps/maarch_entreprise/js/event.simulate.js'); // Works with chosen proto
+//		readfile('apps/maarch_entreprise/js/keypress.js'); // TODO Remove after test
 		readfile('apps/maarch_entreprise/js/tabricator.js');
-		readfile('apps/maarch_entreprise/js/maarch.js');
-		readfile('apps/maarch_entreprise/js/accounting.min.js');
 
 		//Dependencies
 		readfile('node_modules/jquery/dist/jquery.min.js');
@@ -67,8 +64,8 @@ class MergedJsAbstract {
 		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
 
 		//Mobile
-		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe.min.js');
-		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe-ui-default.min.js');
+		readfile('node_modules/photoswipe/dist/photoswipe.min.js');
+		readfile('node_modules/photoswipe/dist/photoswipe-ui-default.min.js');
 
 		//Maarch
 		include('apps/maarch_entreprise/js/functions.js');

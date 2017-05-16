@@ -23,7 +23,7 @@ export class SafeUrlPipe implements PipeTransform {
 }
 
 @Component({
-  templateUrl: angularGlobals.signatureBookView,
+  templateUrl: angularGlobals["signature-bookView"],
 })
 export class SignatureBookComponent implements OnInit {
 
@@ -176,6 +176,7 @@ export class SignatureBookComponent implements OnInit {
             }
         }
 
+        unlockDocument(this.resId);
         if (idToGo >= 0) {
             $j("#send").removeAttr("disabled");
             $j("#send").css("opacity", "1");

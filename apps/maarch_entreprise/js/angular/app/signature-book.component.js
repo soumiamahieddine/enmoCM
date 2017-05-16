@@ -164,6 +164,7 @@ var SignatureBookComponent = (function () {
                 }
             }
         }
+        unlockDocument(this.resId);
         if (idToGo >= 0) {
             $j("#send").removeAttr("disabled");
             $j("#send").css("opacity", "1");
@@ -439,7 +440,7 @@ var SignatureBookComponent = (function () {
 }());
 SignatureBookComponent = __decorate([
     core_1.Component({
-        templateUrl: angularGlobals.signatureBookView,
+        templateUrl: angularGlobals["signature-bookView"],
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
 ], SignatureBookComponent);

@@ -97,7 +97,7 @@ $app = new \Slim\App([
 ]);
 
 //Initialize
-$app->get('/initialize', \Core\Controllers\CoreController::class . ':initialize');
+$app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize');
 
 //status
 $app->get('/status', \Core\Controllers\StatusController::class . ':getList');

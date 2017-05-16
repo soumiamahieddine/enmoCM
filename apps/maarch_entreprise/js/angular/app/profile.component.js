@@ -17,7 +17,9 @@ var ProfileComponent = (function () {
         var _this = this;
         this.http = http;
         this.zone = zone;
-        this.user = {};
+        this.user = {
+            lang: {}
+        };
         this.passwordModel = {
             currentPassword: "",
             newPassword: "",
@@ -50,6 +52,7 @@ var ProfileComponent = (function () {
         $j('#menunav').hide();
         $j('#divList').remove();
         $j('#magicContactsTable').remove();
+        $j('#manageBasketsOrderTable').remove();
         $j('#container').width("99%");
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();
@@ -392,7 +395,7 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.absenceModal = function () {
         createModal(this.user.absence, 'modal_redirect', 'auto', '950px');
-        autocomplete(15, 'index.php?display=true&module=basket&page=autocomplete_users_list');
+        autocomplete(this.user.countBasketsForAbsence, 'index.php?display=true&module=basket&page=autocomplete_users_list');
     };
     return ProfileComponent;
 }());
