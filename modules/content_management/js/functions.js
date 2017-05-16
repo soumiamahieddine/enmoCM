@@ -203,7 +203,7 @@ function showDiv(divName, spanNb, divCreate, path_manage_script)
 }
 
 function checkEditingDoc(userId) {
-    if($j('add')){
+    if($j('#add').length){
         var target = $j('#add');
     }else{
         var target = $j('#edit');
@@ -231,8 +231,8 @@ function checkEditingDoc(userId) {
                 target.val('Valider');
 
                 //UNLOCK EDIT BUTTON TRANSMISSION
-                $j(".transmissionEdit").css({"opacity":"1"});
-                $j(".transmissionEdit").prop('disabled', false);
+                $j(".transmissionEdit, #edit").css({"opacity":"1"});
+                $j(".transmissionEdit, #edit").prop('disabled', false);
 
                 //END OF CHECKING APPLET
                 console.log('clearInterval');
@@ -246,8 +246,8 @@ function checkEditingDoc(userId) {
                 target.val('Edition en cours ...');
 
                 //LOCK EDIT BUTTON TRANSMISSION
-                $j(".transmissionEdit").css({"opacity":"0.5"});
-                $j(".transmissionEdit").prop('disabled', true);
+                $j(".transmissionEdit, #edit").css({"opacity":"0.5"});
+                $j(".transmissionEdit, #edit").prop('disabled', true);
 
             }
        },
