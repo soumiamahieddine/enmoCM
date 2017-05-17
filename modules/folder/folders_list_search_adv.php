@@ -176,7 +176,7 @@ if($_GET['order_field'] != NULL){
             }
         }
         
-        //Initialiser le tableau de paramètres
+        //Initialiser le tableau de paramï¿½tres
         $paramsTab = array();
         $paramsTab['bool_modeReturn'] = false;                                          //Desactivation du mode return (vs echo)
         $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_FOLDER;        //Titre de la page
@@ -214,14 +214,11 @@ if($_GET['order_field'] != NULL){
 ?>
 
 <script type="text/javascript">
-    $$('#container')[0].setAttribute('style', 'width: 90%; min-width: 1000px;');
-    $$('#content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');
+    $j('#container').attr('style', 'width: 90%; min-width: 1000px;');
+    $j('#content').attr('style', 'width: auto; min-width: 1000px;');
 
-    if ($$('#inner_content')[0]) {
-        $$('#inner_content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');
-    };
-    //$$('table#extended_list')[0].setAttribute('style', 'width: 100%; min-width: 900px; margin: 0;');
-    
-    // liste condensée
-    $$('table.listing')[0].setAttribute('style', 'width: 100%; min-width: 900px;');
+    if ($j('#inner_content')) {
+        $j('#inner_content').attr('style', 'width: auto; min-width: 1000px;');
+    }
+    $j('table.listing').attr('style', 'width: 100%; min-width: 900px;');
 </script>
