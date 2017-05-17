@@ -70,14 +70,9 @@ class core_tools extends functions
         $_SESSION['tablename']['authors']            = (string) $TABLENAME->authors;
         $_SESSION['tablename']['docservers']         = (string) $TABLENAME->docservers;
         $_SESSION['tablename']['doctypes']           = (string) $TABLENAME->doctypes;
-        $_SESSION['tablename']['ext_docserver']      = (string) $TABLENAME->extdocserver;
-        $_SESSION['tablename']['fulltext']           = (string) $TABLENAME->fulltext;
-        $_SESSION['tablename']['groupsecurity']      = (string) $TABLENAME->groupsecurity;
         $_SESSION['tablename']['history']            = (string) $TABLENAME->history;
         $_SESSION['tablename']['history_batch']      = (string) $TABLENAME->history_batch;
         $_SESSION['tablename']['param']              = (string) $TABLENAME->param;
-        $_SESSION['tablename']['resgroups']          = (string) $TABLENAME->resgroups;
-        $_SESSION['tablename']['resgroup_content']   = (string) $TABLENAME->resgroup_content;
         $_SESSION['tablename']['security']           = (string) $TABLENAME->security;
         $_SESSION['tablename']['status']             = (string) $TABLENAME->status;
         $_SESSION['tablename']['usergroups']         = (string) $TABLENAME->usergroups;

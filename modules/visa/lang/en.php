@@ -153,3 +153,27 @@ if (!defined("_SIGN_IN_PROGRESS"))
 if (!defined("_DOCUMENTS_LIST_WITH_SIGNATORY"))
     define("_DOCUMENTS_LIST_WITH_SIGNATORY", "Documents list with signatory");
 
+/***** Signature Book *****/
+if (!defined('_DEFINE_MAIL'))
+    define('_DEFINE_MAIL', 'Mail');
+if (!defined('_PROGRESSION'))
+    define('_PROGRESSION', 'Progression');
+if (!defined('_ACCESS_TO_DETAILS'))
+    define('_ACCESS_TO_DETAILS', 'Access to details');
+if (!defined('_SB_INCOMING_MAIL_ATTACHMENTS'))
+    define('_SB_INCOMING_MAIL_ATTACHMENTS', 'incoming mail attachment(s)');
+if (!defined('_DOWNLOAD_ATTACHMENT'))
+    define('_DOWNLOAD_ATTACHMENT', 'Download the attachment');
+if (!defined('_DEFINE_FOR'))
+    define('_DEFINE_FOR', 'For');
+if (!defined('_CHRONO'))
+    define('_CHRONO', 'Chrono');
+if (!defined('_DRAFT'))
+    define('_DRAFT', 'Draft');
+if (!defined('_UPDATE_ATTACHMENT'))
+    define('_UPDATE_ATTACHMENT', 'Update the attachment');
+if (!defined('_DELETE_ATTACHMENT'))
+    define('_DELETE_ATTACHMENT', 'Delete the attachment');
+if (!defined('_DISPLAY_ATTACHMENTS'))
+    define('_DISPLAY_ATTACHMENTS', 'Display attachments list');
+/***** Signature Book *****/

@@ -32,9 +32,6 @@
 if (! defined('FOLD_FOLDERS_TABLE')) {
     define('FOLD_FOLDERS_TABLE', 'folders');
 }
-if (! defined('FOLD_FOLDERS_OUT_TABLE')) {
-    define('FOLD_FOLDERS_OUT_TABLE', 'folders_out');
-}
 if (! defined('FOLD_FOLDERTYPES_TABLE')) {
     define('FOLD_FOLDERTYPES_TABLE', 'foldertypes');
 }

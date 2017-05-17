@@ -15,6 +15,8 @@
 
 namespace Core\Controllers;
 
+use Baskets\Models\BasketsModel;
+use Core\Models\LangModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -37,7 +39,8 @@ class UserController
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $user['groups'] = UserModel::getGroupsById(['userId' => $_SESSION['user']['UserId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
-        
+        $user['lang'] = LangModel::getProfileLang();
+
         $basket = new \basket();
         $user['absence'] = $basket->redirect_my_baskets_list($_SESSION['user']['baskets'], count($_SESSION['user']['baskets']), $_SESSION['user']['UserId'], 'listingbasket specsmall');
         $user['countBasketsForAbsence'] = count($_SESSION['user']['baskets']);

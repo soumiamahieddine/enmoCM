@@ -252,7 +252,7 @@ while ($queryResult=$stmt1->fetchObject()) {
 				/*$command = "convert -thumbnail 400x600 -background white -alpha remove " . escapeshellarg($pathToFile) . "[0] "
 					. escapeshellarg($outputPathFile);*/
 				/* convert all pdf pages to img, without resize, low quality */
-				$command = "convert -density 100x100 -quality 65 -background white -alpha remove " . escapeshellarg($pathToFile) . " ". escapeshellarg($outputPathFile);
+				$command = "convert -density 100x100 -thumbnail 400x600 -quality 65 -background white -alpha remove " . escapeshellarg($pathToFile) . " ". escapeshellarg($outputPathFile);
 			} else {
 				$posPoint = strpos($pathToFile, '.');
 				$extension = substr($pathToFile, $posPoint);

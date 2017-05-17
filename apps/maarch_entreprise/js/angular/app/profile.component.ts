@@ -20,7 +20,9 @@ export class ProfileComponent implements OnInit {
 
     coreUrl                     : string;
 
-    user                        : any       = {};
+    user                        : any       = {
+        lang                    : {}
+    };
     passwordModel               : any       = {
         currentPassword         : "",
         newPassword             : "",

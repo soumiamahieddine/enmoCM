@@ -47,9 +47,6 @@ if (!defined('_DOCSERVER_TYPES_TABLE_NAME')) {
 if (! defined('_DOCSERVER_LOCATIONS_TABLE_NAME')) {
     define('_DOCSERVER_LOCATIONS_TABLE_NAME', 'docserver_locations');
 }
-if (! defined('EXT_DOCSERVER_TABLE')) {
-    define('EXT_DOCSERVER_TABLE', 'ext_docserver');
-}
 if (! defined('_LC_CYCLE_STEPS_TABLE_NAME')) {
     define('_LC_CYCLE_STEPS_TABLE_NAME', 'lc_cycle_steps');
 }
@@ -62,12 +59,6 @@ if (! defined('DOCTYPES_TABLE')) {
 if (! defined('DOCTYPES_INDEXES_TABLE')) {
     define('DOCTYPES_INDEXES_TABLE', 'doctypes_indexes');
 }
-if (! defined('FULLTEXT_TABLE')) {
-    define('FULLTEXT_TABLE', 'fulltext');
-}
-if (! defined('GROUPSECURITY_TABLE')) {
-    define('GROUPSECURITY_TABLE', 'groupsecurity');
-}
 if (! defined('HISTORY_TABLE')) {
     define('HISTORY_TABLE', 'history');
 }
@@ -79,12 +70,6 @@ if (! defined('PARAM_TABLE')) {
 }
 if (! defined('SAVED_QUERIES')) {
     define('SAVED_QUERIES', 'saved_queries');
-}
-if (! defined('RESGROUP_CONTENT_TABLE')) {
-    define('RESGROUP_CONTENT_TABLE', 'resgroup_content');
-}
-if (! defined('RESGROUPS_TABLE')) {
-    define('RESGROUPS_TABLE', 'resgroups');
 }
 if (! defined('SECURITY_TABLE')) {
     define('SECURITY_TABLE', 'security');
