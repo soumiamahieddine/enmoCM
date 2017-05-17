@@ -61,6 +61,7 @@
 
     <validationRule name="admin_ajax_search" extends="standardForm" mode="error">
       <parameter name="what" type="string" />
+      <parameter name="idContact" type="integer" />
     </validationRule>
 
     <validationRule name="contact_id" extends="standardForm" mode="error">
