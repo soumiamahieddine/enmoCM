@@ -29,16 +29,18 @@
 * @ingroup apps
 */
 
-    $core = new core_tools();
-    $core->test_user();
+$core = new core_tools();
+$core->test_user();
 
-    $db = new Database();
+$db = new Database();
 
-    if ($_REQUEST['mode'] == 'add') {
-    	$tableName = "res_attachments";
-    } else if($_REQUEST['mode'] == 'edit'){
-    	$tableName = "res_version_attachments";
-    }
+if ($_REQUEST['mode'] == 'add') {
+    $tableName = "res_attachments";
+} else if($_REQUEST['mode'] == 'edit'){
+    $tableName = "res_version_attachments";
+}
 
-    $db->query("DELETE FROM ".$tableName." WHERE res_id_master = ? and status = 'TMP' and typist = ?", [$_SESSION['doc_id'], $_SESSION['user']['UserId']]);
-    unset($_SESSION['attachmentInfo']);
+$db->query("DELETE FROM ".$tableName." WHERE res_id_master = ? and status = 'TMP' and typist = ?", [$_SESSION['doc_id'], $_SESSION['user']['UserId']]);
+unset($_SESSION['attachmentInfo']);
+
+unset($_SESSION['AttachmentContact']);

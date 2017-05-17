@@ -101,6 +101,7 @@ $default_year = date('Y');
 $where_date = '';
 $arrayPDO = array();
 $date_title = '';
+$has_data = true;
 
 if($period_type == 'period_year')
 {
@@ -256,7 +257,6 @@ else
 		{
 			$data = array();
 		}
-		$has_data = false;
 
 		$totalDocTypes = count($doctypes);
 
@@ -290,10 +290,6 @@ else
 				elseif($report_type == 'array')
 				{
 					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => functions::show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,0)));
-				}
-				if($tmp / $nbDoc > 0)
-				{
-					$has_data = true;
 				}
 			}
 			else
@@ -347,7 +343,7 @@ else
 
 		
 
-		if ( $has_data)
+		if ($has_data)
 		{
 			if($report_type == 'graph')
 			{
@@ -429,10 +425,6 @@ else
 					{
 						array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)round($tmp / $nbDoc,0)));
 					}
-					if($tmp / $nbDoc > 0)
-					{
-						$has_data = true;
-					}
 				}
 				else
 				{
@@ -505,7 +497,6 @@ else
 					{
 						array_push($data, array('LABEL' => $i, 'VALUE' => (string) $tmp / $nbDoc));
 					}
-					$has_data = true;
 				}
 				else
 				{
@@ -594,9 +585,7 @@ else
 		}
 		else if($id_report == 'mail_typology')
 		{
-			$has_data = false;
-			//$title = _MAIL_TYPOLOGY_REPORT.' '.$date_title ;
-			
+
 			if (!$_REQUEST['doctypes_chosen']){
 		    	$stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' order by description");
 			}else{
@@ -639,10 +628,6 @@ else
 					array_push($totalCourrier, $res->total);
 				}
 
-				if($res->total > 0)
-				{
-					$has_data = true;
-				}
 				$totalDocTypes=$z++;
 			}
 
@@ -706,8 +691,7 @@ else
 		}
 		else if($id_report == 'mail_vol_by_cat')
 		{
-			$has_data = false;
-			//$title = _MAIL_VOL_BY_CAT_REPORT.' '.$date_title ;
+
 			if($report_type == 'graph')
 			{
 				$vol_an = array();
@@ -741,10 +725,6 @@ else
 						array_push($totalCourrier, $res->total);
 					}
 
-					if($res->total > 0)
-					{
-						$has_data = true;
-					}
 				}
 			}
 

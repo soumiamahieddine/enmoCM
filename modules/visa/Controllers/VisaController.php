@@ -15,6 +15,7 @@ namespace Visa\Controllers;
 
 use Attachments\Models\AttachmentsModel;
 use Core\Models\UserModel;
+use Core\Models\LangModel;
 use Baskets\Models\BasketsModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -128,6 +129,7 @@ class VisaController
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = \VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
         $datas['canSign']       = $coreTools->test_service('sign_document', 'visa', false);
+        $datas['lang']          = LangModel::getSignatureBookLang();
 
 
         return $response->withJson($datas);
