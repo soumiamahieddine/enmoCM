@@ -13,7 +13,7 @@
             <where_clause>enabled = 'Y'</where_clause>
             <order>order by lastname</order>
         </table>
-        <only_detail>true</only_detail> <!-- if true, field appear only in detail page and research.  Display in all page otherwise.
+        <only_detail>true</only_detail> if true, field appear only in detail page and research.  Display in all page otherwise.
         <default_value></default_value>
     </INDEX>
 -->
