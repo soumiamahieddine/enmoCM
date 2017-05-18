@@ -100,7 +100,7 @@
             <label>_SVA</label>
             <process_mode>SVA</process_mode>
         </type>
-        <type show="true" with_chrono="false" icon="VR" sign="false">
+        <type show="true" with_chrono="false" icon="VR" sign="true">
             <id>svr</id>
             <label>_SVR</label>
             <process_mode>SVR</process_mode>
