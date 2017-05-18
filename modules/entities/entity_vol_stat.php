@@ -123,7 +123,7 @@ $content .='<div id="params">';
         $content .='</td>';
         $content .='</tr>';
         $content .='<tr>';
-        $content .='<td style="text-align:center;"><input type="button" id="validate" name="validate" value="'._VALIDATE.'" class="button" onclick="valid_report_by_period(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=get_entity_late_mail\');" /></td>';
+        $content .='<td style="text-align:center;"><input type="button" id="validate" name="validate" value="'._VALIDATE.'" class="button" onclick="valid_report_by_period(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=get_entity_vol\');" /></td>';
         $content .='</tr>';
        $content .='</table>';
   $content .='</form>';
