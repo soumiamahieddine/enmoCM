@@ -285,11 +285,11 @@ else
 				if ($nbDoc == 0) $nbDoc = 1;
 				if($report_type == 'graph')
 				{
-					array_push($val_an, (string)round($tmp / $nbDoc,0));
+					array_push($val_an, (string)round($tmp / $nbDoc, 1));
 				}
 				elseif($report_type == 'array')
 				{
-					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => functions::show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,0)));
+					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => functions::show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc, 1)));
 				}
 			}
 			else
@@ -419,11 +419,11 @@ else
 					if ($nbDoc == 0) $nbDoc = 1;
 					if($report_type == 'graph')
 					{
-						array_push($val_an, (string)round($tmp / $nbDoc,0));
+						array_push($val_an, (string)round($tmp / $nbDoc, 1));
 					}
 					elseif($report_type == 'array')
 					{
-						array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)round($tmp / $nbDoc,0)));
+						array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)round($tmp / $nbDoc, 1)));
 					}
 				}
 				else

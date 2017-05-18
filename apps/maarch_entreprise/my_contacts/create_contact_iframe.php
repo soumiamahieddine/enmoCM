@@ -81,7 +81,7 @@ if (isset($_GET['created']) && $_GET['created'] <> '') {
 }
 ?>
 	<br/>
-	<hr>
+	<br/>
 	<br/>
 <?php
 $contact->formcontact("add", "", false, true);

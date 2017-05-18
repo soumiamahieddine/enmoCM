@@ -60,54 +60,6 @@ class VisaController
             $actionsData[] = ['value' => $value['VALUE'], 'label' => $value['LABEL']];
         }
 
-
-        //		$history = \HistoryModel::getByIdForActions([
-        //			'id'      => $resId,
-        //			'select'  => ['event_date', 'info', 'firstname', 'lastname'],
-        //			'orderBy' => ['event_date DESC']
-        //		]);
-
-        $resList = BasketsModel::getResListById(
-            [
-            'basketId' => $basketId,
-            'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname'],
-            'order_by'  => ['order_alphanum(alt_identifier) DESC'],    
-            ]
-        );
-
-        $attachmentTypes = AttachmentsModel::getAttachmentsTypesByXML();
-
-        $resListIndex = 0;
-        foreach ($resList as $key => $value) {
-            if ($value['res_id'] == $resId){
-                $resListIndex = $key;
-            }
-            if (!empty($value['contact_id'])) {
-                $resList[$key]['sender'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['contact_id'], 'addressId' => $value['address_id']]);
-            } else {
-                $resList[$key]['sender'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
-            }
-            $attachmentsInResList = \ResModel::getAvailableLinkedAttachmentsNotIn(
-                [
-                'resIdMaster' => $value['res_id'],
-                'notIn'       => ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'],
-                'select'      => ['status', 'attachment_type']
-                ]
-            );
-            $allSigned = !empty($attachmentsInResList);
-            foreach ($attachmentsInResList as $value2) {
-                if ($attachmentTypes[$value2['attachment_type']]['sign'] && ($value2['status'] == 'TRA' || $value2['status'] == 'A_TRA')) {
-                    $allSigned = false;
-                }
-            }
-            $resList[$key]['creation_date'] = date(DATE_ATOM, strtotime($resList[$key]['creation_date']));
-            $resList[$key]['process_limit_date'] = date(DATE_ATOM, strtotime($resList[$key]['process_limit_date']));
-            $resList[$key]['allSigned'] = $allSigned;
-            $resList[$key]['priorityColor'] = $_SESSION['mail_priorities_color'][$value['priority']]; //TODO No Session
-            $resList[$key]['priorityLabel'] = $_SESSION['mail_priorities'][$value['priority']]; //TODO No Session
-            unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
-        }
-
         $actionLabel = (_ID_TO_DISPLAY == 'res_id' ? $documents[0]['res_id'] : $documents[0]['alt_id']);
         $actionLabel .= " : {$documents[0]['title']}";
         $currentAction = [
@@ -121,9 +73,8 @@ class VisaController
         $datas['attachments']   = $this->getAttachmentsForSignatureBook(['resId' => $resId]);
         $datas['documents']     = $documents;
         $datas['currentAction'] = $currentAction;
-        //		$datas['histories'] 	= $history;
-        $datas['resList']       = $resList;
-        $datas['resListIndex']  = $resListIndex;
+        $datas['resList']       = [];
+//        $datas['resListIndex']  = $resListIndex;
         $datas['nbNotes']       = \NotesModel::countForCurrentUserByResId(['resId' => $resId]);
         $datas['signatures']    = UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
@@ -379,6 +330,50 @@ class VisaController
         }
 
         return array_values($attachments);
+    }
+
+    public function getResList(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $basketId = $aArgs['basketId'];
+
+        $resList = BasketsModel::getResListById(
+            [
+                'basketId' => $basketId,
+                'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname'],
+                'order_by'  => ['order_alphanum(alt_identifier) DESC'],
+            ]
+        );
+
+        $attachmentTypes = AttachmentsModel::getAttachmentsTypesByXML();
+
+        foreach ($resList as $key => $value) {
+            if (!empty($value['contact_id'])) {
+                $resList[$key]['sender'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['contact_id'], 'addressId' => $value['address_id']]);
+            } else {
+                $resList[$key]['sender'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
+            }
+            $attachmentsInResList = \ResModel::getAvailableLinkedAttachmentsNotIn(
+                [
+                    'resIdMaster' => $value['res_id'],
+                    'notIn'       => ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'],
+                    'select'      => ['status', 'attachment_type']
+                ]
+            );
+            $allSigned = !empty($attachmentsInResList);
+            foreach ($attachmentsInResList as $value2) {
+                if ($attachmentTypes[$value2['attachment_type']]['sign'] && ($value2['status'] == 'TRA' || $value2['status'] == 'A_TRA')) {
+                    $allSigned = false;
+                }
+            }
+            $resList[$key]['creation_date'] = date(DATE_ATOM, strtotime($resList[$key]['creation_date']));
+            $resList[$key]['process_limit_date'] = date(DATE_ATOM, strtotime($resList[$key]['process_limit_date']));
+            $resList[$key]['allSigned'] = $allSigned;
+            $resList[$key]['priorityColor'] = $_SESSION['mail_priorities_color'][$value['priority']]; //TODO No Session
+            $resList[$key]['priorityLabel'] = $_SESSION['mail_priorities'][$value['priority']]; //TODO No Session
+            unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
+        }
+
+        return $response->withJson(['resList' => $resList]);
     }
 
 }

@@ -86,17 +86,17 @@ $stmt = $db->query($query, array($_GET['contactid']));
 $line = $stmt->fetchObject();
 
 $_SESSION['m_admin']['contact'] = array();
-$_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
-$_SESSION['m_admin']['contact']['TITLE'] = $request->show_string($line->title);
-$_SESSION['m_admin']['contact']['LASTNAME'] = $request->show_string($line->lastname);
-$_SESSION['m_admin']['contact']['FIRSTNAME'] = $request->show_string($line->firstname);
-$_SESSION['m_admin']['contact']['SOCIETY'] = $request->show_string($line->society);
-$_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = $request->show_string($line->society_short);
-$_SESSION['m_admin']['contact']['FUNCTION'] = $request->show_string($line->function);
-$_SESSION['m_admin']['contact']['OTHER_DATA'] = $request->show_string($line->other_data);
+$_SESSION['m_admin']['contact']['ID']                  = $line->contact_id;
+$_SESSION['m_admin']['contact']['TITLE']               = $request->show_string($line->title);
+$_SESSION['m_admin']['contact']['LASTNAME']            = $request->show_string($line->lastname);
+$_SESSION['m_admin']['contact']['FIRSTNAME']           = $request->show_string($line->firstname);
+$_SESSION['m_admin']['contact']['SOCIETY']             = $request->show_string($line->society);
+$_SESSION['m_admin']['contact']['SOCIETY_SHORT']       = $request->show_string($line->society_short);
+$_SESSION['m_admin']['contact']['FUNCTION']            = $request->show_string($line->function);
+$_SESSION['m_admin']['contact']['OTHER_DATA']          = $request->show_string($line->other_data);
 $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $request->show_string($line->is_corporate_person);
-$_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
-$_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
+$_SESSION['m_admin']['contact']['CONTACT_TYPE']        = $line->contact_type;
+$_SESSION['m_admin']['contact']['OWNER']               = $line->user_id;
 
 if (isset($_GET['mode']) && $_GET['mode'] <> '') {
 	$mode = $_GET['mode'];
@@ -130,35 +130,34 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
 	$line = $stmt->fetchObject();
 
 	$_SESSION['m_admin']['address'] = array();
-	$_SESSION['m_admin']['address']['ID'] = $line->id;
-	$_SESSION['m_admin']['address']['CONTACT_ID'] = $line->contact_id;
-	$_SESSION['m_admin']['address']['TITLE'] = $request->show_string($line->title);
-	$_SESSION['m_admin']['address']['LASTNAME'] = $request->show_string($line->lastname);
-	$_SESSION['m_admin']['address']['FIRSTNAME'] = $request->show_string($line->firstname);
-	$_SESSION['m_admin']['address']['FUNCTION'] = $request->show_string($line->function);
-	$_SESSION['m_admin']['address']['OTHER_DATA'] = $request->show_string($line->other_data);
-	$_SESSION['m_admin']['address']['OWNER'] = $line->user_id;
-	$_SESSION['m_admin']['address']['DEPARTEMENT'] = $request->show_string($line->departement);
+	$_SESSION['m_admin']['address']['ID']                 = $line->id;
+	$_SESSION['m_admin']['address']['CONTACT_ID']         = $line->contact_id;
+	$_SESSION['m_admin']['address']['TITLE']              = $request->show_string($line->title);
+	$_SESSION['m_admin']['address']['LASTNAME']           = $request->show_string($line->lastname);
+	$_SESSION['m_admin']['address']['FIRSTNAME']          = $request->show_string($line->firstname);
+	$_SESSION['m_admin']['address']['FUNCTION']           = $request->show_string($line->function);
+	$_SESSION['m_admin']['address']['OTHER_DATA']         = $request->show_string($line->other_data);
+	$_SESSION['m_admin']['address']['OWNER']              = $line->user_id;
+	$_SESSION['m_admin']['address']['DEPARTEMENT']        = $request->show_string($line->departement);
 	$_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $line->contact_purpose_id;
-	$_SESSION['m_admin']['address']['OCCUPANCY'] = $request->show_string($line->occupancy);
-	$_SESSION['m_admin']['address']['ADD_NUM'] = $request->show_string($line->address_num);
-	$_SESSION['m_admin']['address']['ADD_STREET'] = $request->show_string($line->address_street);
-	$_SESSION['m_admin']['address']['ADD_COMP'] = $request->show_string($line->address_complement);
-	$_SESSION['m_admin']['address']['ADD_TOWN'] = $request->show_string($line->address_town);
-	$_SESSION['m_admin']['address']['ADD_CP'] = $request->show_string($line->address_postal_code);
-	$_SESSION['m_admin']['address']['ADD_COUNTRY'] = $request->show_string($line->address_country);
-	$_SESSION['m_admin']['address']['PHONE'] = $request->show_string($line->phone);
-	$_SESSION['m_admin']['address']['MAIL'] = $request->show_string($line->email);
-	$_SESSION['m_admin']['address']['WEBSITE'] = $request->show_string($line->website);
-	$_SESSION['m_admin']['address']['IS_PRIVATE'] = $request->show_string($line->is_private);
-	$_SESSION['m_admin']['address']['SALUTATION_HEADER'] = $request->show_string($line->salutation_header);
-	$_SESSION['m_admin']['address']['SALUTATION_FOOTER'] = $request->show_string($line->salutation_footer);
+	$_SESSION['m_admin']['address']['OCCUPANCY']          = $request->show_string($line->occupancy);
+	$_SESSION['m_admin']['address']['ADD_NUM']            = $request->show_string($line->address_num);
+	$_SESSION['m_admin']['address']['ADD_STREET']         = $request->show_string($line->address_street);
+	$_SESSION['m_admin']['address']['ADD_COMP']           = $request->show_string($line->address_complement);
+	$_SESSION['m_admin']['address']['ADD_TOWN']           = $request->show_string($line->address_town);
+	$_SESSION['m_admin']['address']['ADD_CP']             = $request->show_string($line->address_postal_code);
+	$_SESSION['m_admin']['address']['ADD_COUNTRY']        = $request->show_string($line->address_country);
+	$_SESSION['m_admin']['address']['PHONE']              = $request->show_string($line->phone);
+	$_SESSION['m_admin']['address']['MAIL']               = $request->show_string($line->email);
+	$_SESSION['m_admin']['address']['WEBSITE']            = $request->show_string($line->website);
+	$_SESSION['m_admin']['address']['IS_PRIVATE']         = $request->show_string($line->is_private);
+	$_SESSION['m_admin']['address']['SALUTATION_HEADER']  = $request->show_string($line->salutation_header);
+	$_SESSION['m_admin']['address']['SALUTATION_FOOTER']  = $request->show_string($line->salutation_footer);
 
 	$core_tools2->load_js();
 	?>
 	    <div id="inner_content" class="clearfix" align="center" style="padding:0px;width:100% !important;">
 	    	<div class="block">
-	    	<!--<h2><?php echo _CONTACT_CARD;?></h2>-->
 	<?php
 		$contact->get_contact_form();
 		$contact->get_address_form();
