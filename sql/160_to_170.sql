@@ -268,11 +268,15 @@ ALTER TABLE users ADD ra_expiration_date timestamp without time zone;
 DELETE FROM usergroups_services where service_id = 'view_full_history';
 INSERT INTO usergroups_services SELECT group_id, 'view_full_history' FROM usergroups_services WHERE service_id = 'view_doc_history';
 
+/** Add new service by default for view graphic in report **/
+DELETE FROM usergroups_services where service_id = 'graphics_reports';
+INSERT INTO usergroups_services SELECT group_id, 'graphics_reports' FROM usergroups;
+
 /** Migrate signatures to the new table **/
 TRUNCATE TABLE user_signatures;
 INSERT INTO user_signatures (user_id, signature_label, signature_path, signature_file_name) SELECT user_id, '', signature_path, signature_file_name FROM users WHERE signature_path is not null and signature_file_name is not null;
 
-UPDATE parameters SET param_value_int = '170' WHERE id = 'database_version';
+UPDATE parameters SET param_value_int = '1706' WHERE id = 'database_version';
 
 /** DELETES OLD TABLES **/
 DROP TABLE IF EXISTS adr_business;
@@ -321,6 +325,3 @@ DROP TABLE IF EXISTS rp_history;
 DROP VIEW IF EXISTS res_view_apa;
 DROP VIEW IF EXISTS rm_ref_addresses CASCADE;
 DROP VIEW IF EXISTS rm_ref_contacts;
-
-
-
