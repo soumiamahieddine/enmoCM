@@ -62,6 +62,9 @@
                     </div>
                 </div>
             </div>
+            <div *ngIf="signatureBook.resList.length == 0" style="position: absolute;top: 48%; left: 3%">
+                <i class="fa fa-spinner fa-spin fa-4x"></i>
+            </div>
         </div>
         <div *ngIf="showLeftPanel" class="contentLeft" [ngStyle]="{'width': leftContentWidth}" id="contentLeft">
             <div *ngIf="showLeftPanel && showRightPanel" class="hideresListContent" (click)="displayPanel('RESLEFT')">
