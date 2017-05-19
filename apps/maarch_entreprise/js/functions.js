@@ -161,146 +161,142 @@ function deletePriority(rowToDelete) {
     }
 }
 
-function repost(php_file,update_divs,fields,action,timeout)
-    {
-        //alert('php file : '+php_file);
-        var event_count = 0;
+function repost(php_file,update_divs,fields,action,timeout) {
+    var event_count = 0;
 
-        //Observe fields
-        for (var i = 0; i < fields.length; ++i) {
-
-            $(fields[i]).observe(action,send);
-        }
-
-        function send(event)
-        {
-            params = '';
-            event_count++;
-
-            for (var i = 0; i < fields.length; ++i)
-            {
-                params += $(fields[i]).serialize()+'&';
-            }
-
-            setTimeout(function() {
-                event_count--;
-
-                if(event_count == 0)
-                    new Ajax.Request(php_file,
-                      {
-                        method:'post',
-                        onSuccess: function(transport){
-
-                        var response = transport.responseText;
-                        var reponse_div = new Element("div");
-                        reponse_div.innerHTML = response;
-                        var replace_div = reponse_div.select('div');
-
-                        for (var i = 0; i < replace_div.length; ++i)
-                            for(var j = 0; j < update_divs.length; ++j)
-                            {
-                                if(replace_div[i].id == update_divs[j])
-                                    $(update_divs[j]).replace(replace_div[i]);
-                            }
-                        },
-                        onFailure: function(){ alert('Something went wrong...'); },
-                        parameters: params
-                      });
-            }, timeout);
-        }
+    //Observe fields
+    for (var i = 0; i < fields.length; ++i) {
+        $(fields[i]).observe(action,send);
     }
 
-
-    /**
-    * List used for autocompletion
-    *
-    */
-    var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv)
+    function send(event)
     {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv
-            });
-    };
+        var params = '';
+        event_count++;
 
-    /**
-    * List used for autocompletion and set id in hidden input
-    *
-    */
-    var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                afterUpdateElement: function (text, li){
-                    $(new_value).value = li.id;
-                }
-            });
-    };
+        for (var i = 0; i < fields.length; ++i)
+        {
+            params += $(fields[i]).serialize()+'&';
+        }
 
-    var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                afterUpdateElement: function (text, li){
-                    var str = li.id;
-                    var res = str.split(",");
-                    $(new_value).value = res[1];
-                    $(actual_value).value = res[0];
-                    $('country').value = 'FRANCE';
-                }
-            });
-    };
+        setTimeout(function() {
+            event_count--;
 
-    var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                afterUpdateElement: function (text, li){
-                    var str = li.id;
-                    var res = str.split(",");
-                    $(new_value).value = res[0];
-                    $(actual_value).value = res[1];
-                    $('country').value = 'FRANCE';
-                }
-            });
-    };
+            if(event_count == 0)
+                new Ajax.Request(php_file,
+                  {
+                    method:'post',
+                    onSuccess: function(transport){
 
-    var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                callback: function (element, entry){
-					return entry + "&"+previous_name+"=" + $(previous_field).value; 
-			    },
-                afterUpdateElement: function (text, li){
-                    $(new_value).value = li.id;
-                }
-            });
-    };
+                    var response = transport.responseText;
+                    var reponse_div = new Element("div");
+                    reponse_div.innerHTML = response;
+                    var replace_div = reponse_div.select('div');
+
+                    for (var i = 0; i < replace_div.length; ++i)
+                        for(var j = 0; j < update_divs.length; ++j)
+                        {
+                            if(replace_div[i].id == update_divs[j])
+                                $(update_divs[j]).replace(replace_div[i]);
+                        }
+                    },
+                    onFailure: function(){ alert('Something went wrong...'); },
+                    parameters: params
+                  });
+        }, timeout);
+    }
+}
+
+/**
+* List used for autocompletion
+*
+*/
+var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv
+        });
+};
+
+/**
+* List used for autocompletion and set id in hidden input
+*
+*/
+var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            afterUpdateElement: function (text, li){
+                $(new_value).value = li.id;
+            }
+        });
+};
+
+var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            afterUpdateElement: function (text, li){
+                var str = li.id;
+                var res = str.split(",");
+                $(new_value).value = res[1];
+                $(actual_value).value = res[0];
+                $('country').value = 'FRANCE';
+            }
+        });
+};
+
+var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            afterUpdateElement: function (text, li){
+                var str = li.id;
+                var res = str.split(",");
+                $(new_value).value = res[0];
+                $(actual_value).value = res[1];
+                $('country').value = 'FRANCE';
+            }
+        });
+};
+
+var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            callback: function (element, entry){
+                return entry + "&"+previous_name+"=" + $(previous_field).value;
+            },
+            afterUpdateElement: function (text, li){
+                $(new_value).value = li.id;
+            }
+        });
+};
 
 
 /*********** Init vars for the calendar ****************/
