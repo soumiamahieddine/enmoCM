@@ -1,6 +1,5 @@
 var BootstrapTree = {
     init: function(tree) {
-        console.log('INIT');
         tree.find('li')
             .children('ul')
             .parent()
@@ -25,7 +24,6 @@ var BootstrapTree = {
     },
 
     addNode: function(parent, element) {
-        console.log('ADD NODE');
         if (!element || !parent) {
             return;
         }
@@ -45,9 +43,7 @@ var BootstrapTree = {
     },
 
     removeNode: function(element) {
-        console.log('REMOVE NODE');
         if (element.prop("tagName") != 'LI') {
-            //console.log("log");
             return;
         }
 
@@ -69,24 +65,19 @@ var BootstrapTree = {
     },
 
     openNode: function(element) {
-        //console.log("OPEN ELEMENT:"+element);
         element.parents('li').find('i.fa-plus-square:first').click();
     },
 
     toggleNode: function(event) {
         var children = $j(this).closest('li.parent_li').find(' > ul > li');
-        //console.log(children);
         if (children.is(':visible')) {
-            console.log("VISIBLE");
             children.hide('fast');
             $j(this).parent().find(' > i').addClass('fa-plus-square').removeClass('fa-minus-square');
-            //console.log('THIS.PARENT:'+$j(this).parent());
         }
         else {
             console.log("INVISIBLE");
             children.show('fast');
             $j(this).parent().find(' > i').addClass('fa-minus-square').removeClass('fa-plus-square');
-            //console.log('THIS.PARENT:'+$j(this).parent());
         }
         event.stopPropagation();
         $j('.tree').find('.hideTreeElement').css('display', 'none');
