@@ -3124,6 +3124,21 @@ function loadSpecificTab(id_iframe,pathScriptTab){
     document.getElementById(id_iframe).src = pathScriptTab;
 }
 
+function tabClicked (TabId,toHide){
+    var doc = $j("#home-panel");
+    if (toHide) {
+        doc.css("display","none");  
+         $j("#uniqueDetailsDiv").css("display","");
+    } else {
+        $j("#uniqueDetailsDiv").css("display","none");
+        doc.css("display","");
+    } 
+                
+    $j(".DetailsTabFunc").removeClass("TabSelected");
+    $j("#"+TabId).addClass("TabSelected");
+
+}
+
 
 //LOAD BADGES TOOLBAR
 function loadToolbarBadge(targetTab,path_manage_script){

@@ -186,82 +186,91 @@ function valid_histfolder(url)
  **/
 function get_folder_index(url, foldertype, id_div)
 {
-	if(url && foldertype)
-	{
-		new Ajax.Request(url,
-		{
-			method:'post',
-			parameters: {
+
+	if(url && foldertype) {		
+		$j.ajax({
+			url: url,
+			type: 'POST',
+			data: { 
 				foldertype_id : foldertype
-					},
-					onSuccess: function(answer){
-						var div_to_fill = $(id_div);
-					//	console.log(div_to_fill);
-						if(div_to_fill)
-						{
-							div_to_fill.innerHTML = answer.responseText;
-						}
-					}
-		});
+			},
+			success: function (answer) {
+				var div_to_fill = $j('#'+id_div);
+				if(div_to_fill) {						
+					div_to_fill.html ( answer);
+				}
+			},
+			error: function (error) {
+				alert(error);
+			}
+  		});
+
 	}
 }
 
 function search_change_coll(url, id_coll)
 {
-	if(url && id_coll)
-	{
-		var search_div = $('folder_search_div');
-		if(search_div)
-		{
-			search_div.style.display = 'block';
-		}
 
-		var indexes_div = $('opt_indexes');
-		if(indexes_div);
-		{
-			indexes_div.innerHTML = '';
-		}
-		new Ajax.Request(url,
-		{
-			method:'post',
-			parameters: {
+    if(url && id_coll)
+    {
+        var search_div = $j('#folder_search_div');
+        if(search_div)
+        {
+            search_div.css("display","block");
+        }
+
+        var indexes_div = $j('#opt_indexes');
+        if(indexes_div);
+        {
+            indexes_div.html('');
+        }
+    
+        $j.ajax({
+			url: url,
+			type: 'POST',
+			data: {
 				coll_id : id_coll
-					},
-					onSuccess: function(answer){
-						var select_item = $('foldertype_id');
-						if(select_item)
-						{
-							select_item.update(answer.responseText);
-						}
-					}
-		});
-	}
+			},
+			success: function (answer) {
+				var select_item = $j('#foldertype_id');
+				if(select_item) {
+					select_item.html(answer);
+				}
+			},
+			error: function (error) {
+				alert(error);
+			}
+
+    	});
+    }
 }
 
 function get_ft_opt_index(url)
 {
-	if(url)
-    {
-        new Ajax.Request(url,
-        {
-            method:'post',
-            parameters: {},
-                    onSuccess: function(answer){
-                        var div_to_fill = $('opt_index');
-                    //  console.log(div_to_fill);
-                        if(div_to_fill)
-                        {
-                            div_to_fill.innerHTML = answer.responseText;
-                        }
-                    }
-        });
+	if(url) {		 
+		$j.ajax({
+			url: url,
+			type: 'POST',
+			data: {},
+			success: function (answer) {
+				var div_to_fill = $j('#opt_index');
+				if(div_to_fill) {
+					div_to_fill.html(answer);
+				}
+			},
+			error: function (error) {
+				alert(error);
+			}
+
+		});
     }
 }
 
 function checkSubFolder(folderId)
 {
-	if (folderId == "")
-		$('folder_dest_div').style.display = "";
-	else
-		$('folder_dest_div').style.display = "none";
+	if (folderId == "") {
+		$j('#folder_dest_div').css("display","");
+	} else {
+		$j('#folder_dest_div').css("display","none");
+	}
 }
