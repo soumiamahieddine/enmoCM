@@ -174,3 +174,28 @@ if (!defined("_SIGN_IN_PROGRESS"))
 
 if (!defined("_DOCUMENTS_LIST_WITH_SIGNATORY"))
     define("_DOCUMENTS_LIST_WITH_SIGNATORY", "Liste des documents avec signataire");
+
+/***** Signature Book *****/
+if (!defined('_DEFINE_MAIL'))
+    define('_DEFINE_MAIL', 'Courrier');
+if (!defined('_PROGRESSION'))
+    define('_PROGRESSION', 'Avancement');
+if (!defined('_ACCESS_TO_DETAILS'))
+    define('_ACCESS_TO_DETAILS', 'Accédez à la fiche détaillée');
+if (!defined('_SB_INCOMING_MAIL_ATTACHMENTS'))
+    define('_SB_INCOMING_MAIL_ATTACHMENTS', 'pièce(s) complémentaire(s)');
+if (!defined('_DOWNLOAD_ATTACHMENT'))
+    define('_DOWNLOAD_ATTACHMENT', 'Télécharger la pièce jointe');
+if (!defined('_DEFINE_FOR'))
+    define('_DEFINE_FOR', 'Pour');
+if (!defined('_CHRONO'))
+    define('_CHRONO', 'Chrono');
+if (!defined('_DRAFT'))
+    define('_DRAFT', 'Brouillon');
+if (!defined('_UPDATE_ATTACHMENT'))
+    define('_UPDATE_ATTACHMENT', 'Modifier la pièce jointe');
+if (!defined('_DELETE_ATTACHMENT'))
+    define('_DELETE_ATTACHMENT', 'Supprimer la pièce jointe');
+if (!defined('_DISPLAY_ATTACHMENTS'))
+    define('_DISPLAY_ATTACHMENTS', 'Afficher la liste des pièces jointes');
+/***** Signature Book *****/

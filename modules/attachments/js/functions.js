@@ -5,7 +5,14 @@ function defineBackDate() {
 	delay = $('withDelay').value
 	date1.setDate(date1.getDate() + Number(delay));
 	var str_date = date1.toLocaleDateString();
-	str_date = str_date.replace(/\//g, '-');
+    var t = str_date.split('/');
+    if(t[1].length == 1){
+        t[1] = '0'+t[1];
+    }
+    if(t[0].length == 1){
+        t[0] = '0'+t[0];
+    }
+    str_date = t.join('-');
 	return str_date;
 }
 
@@ -161,7 +168,7 @@ function hideInput(currentValue, editDate) {
 function addNewTransmission(prePath, docId, canCreateContact, langString, user) {
   var size = $j('#transmission')[0].childElementCount;
   
-  var extra_js = '$("add").value="Edition en cours ...";setInterval(function(){checkEditingDoc("'+user+'")},500);$("add").disabled="disabled";$("add").style.opacity="0.5";';
+  var extra_js = '$("add").value="Edition en cours ...";editingDoc("'+user+'");$("add").disabled="disabled";$("add").style.opacity="0.5";';
 
   if ($('newTransmissionButton' + size).style.opacity == 1) {
 
@@ -234,7 +241,7 @@ function addNewTransmission(prePath, docId, canCreateContact, langString, user) 
                     "<input type='hidden' id='transmissionContactidAttach" + size + "' name='transmissionContactidAttach" + size + "' value='' onchange='saveContactToSession(\"" + size + "\", \"" + prePath + "\")' />" +
                     "<input type='hidden' id='transmissionAddressidAttach" + size + "' name='transmissionAddressidAttach" + size + "' value='' />" +
                     "<p><div style='float: left;display: none;margin-bottom: 5px' id='paraEdit" + size + "'>" +
-                      "<input type='button' style='margin-top: 0' value='" + "Editer" + "' name='transmissionEdit" + size + "' id='transmissionEdit" + size + "' class='button' " +
+                      "<input type='button' style='margin-top: 0' value='" + "Editer" + "' name='transmissionEdit" + size + "' id='transmissionEdit" + size + "' class='button transmissionEdit' " +
                         "onclick='showAppletLauncher(\"" + prePath + "index.php?display=true&module=content_management&page=applet_modal_launcher&transmissionNumber=" + size + "&objectType=transmission&objectId=\"+$(\"transmissionTemplate" + size + "\").value+\"&attachType=transmission&objectTable=res_letterbox&contactId=\"+$(\"contactidAttach\").value+\"&addressId=\"+$(\"addressidAttach\").value+\"&chronoAttachment=\"+$(\"transmissionChrono" + size + "\").value+\"&titleAttachment=\"+$(\"transmissionTitle" + size + "\").value+\"&back_date=\"+$(\"transmissionBackDate" + size + "\").value+\"&resMaster=" + docId + "\", \"100px\", \"500px\");" +
                         "hideEditAndAddButton(paraEdit" + size + ");"+ extra_js +"' />" +
                       "<span style='display: none' id='divOr" + size + "'>" +

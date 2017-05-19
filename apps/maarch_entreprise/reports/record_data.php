@@ -24,19 +24,15 @@
     $core_tools = new core_tools();
     $core_tools->test_user();
     $core_tools->test_service('reports', 'reports');
-    
-    if (isset($_POST["data"])) {
+
+    if (isset($_SESSION['export_data_stat'])) {
         try {
             $functions = new functions();
-            $_POST['data'] = urldecode($_POST['data']);
-            
-            $data = json_decode($_POST['data']);
-            //var_dump($data);
+
             $_SESSION['export']['filename'] = 'export_reports_maarch.csv';
-            $contenu = '';
             $fp = fopen('apps/maarch_entreprise/tmp/export_reports_maarch.csv', 'w');
             
-            $data_to_array = $functions->object2array($data);
+            $data_to_array = $_SESSION['export_data_stat'];
             
             foreach ($data_to_array as $line) {
                 //conversion en UTF-8

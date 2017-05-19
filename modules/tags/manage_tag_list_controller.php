@@ -1,36 +1,13 @@
 <?php
-/*
-*    Copyright 2008,2012 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 /**
-* Module : Tags
-* 
-* This module is used to store ressources with any keywords
-* V: 1.0
-*
-* @file
-* @author Loic Vinet
-* @date $date$
-* @version $Revision$
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   manage_tag_list_controller
+* @author  dev <dev@maarch.org>
+* @ingroup tags
 */
-
-
 
 core_tools::load_lang();
 $core_tools = new core_tools();
@@ -42,19 +19,17 @@ if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
     $mode = $_REQUEST['mode'];
 }
 
-
-
 try{
-    require_once 'core/class/ActionControler.php';
-    require_once 'core/class/ObjectControlerAbstract.php';
-    require_once 'core/class/ObjectControlerIF.php';
-    require_once 'modules/tags/class/TagControler.php' ;
-	require_once 'modules/tags/class/Tag.php' ;
-	include_once 'modules/tags/route.php' ;
+    include_once 'core/class/ActionControler.php';
+    include_once 'core/class/ObjectControlerAbstract.php';
+    include_once 'core/class/ObjectControlerIF.php';
+    include_once 'modules/tags/class/TagControler.php' ;
+    include_once 'modules/tags/class/Tag.php' ;
+    include_once 'modules/tags/route.php' ;
     
     if ($mode == 'list') {
-        require_once 'core/class/class_request.php' ;
-        require_once 'apps' . DIRECTORY_SEPARATOR
+        include_once 'core/class/class_request.php' ;
+        include_once 'apps' . DIRECTORY_SEPARATOR
                      . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
                      . 'class' . DIRECTORY_SEPARATOR . 'class_list_show.php' ;
     }
@@ -83,36 +58,36 @@ if (isset($_REQUEST['tag_submit'])) {
     // Display to do
 
     $state = true;
-	    
+        
     switch ($mode) {
-        case 'up' :
-            display_up($tag_id);
-         	
-            $_SESSION['service_tag'] = 'tag_init';
-            core_tools::execute_modules_services(
-                $_SESSION['modules_services'], 'event_init', 'include'
-            );
-            location_bar_management($mode);
-            break;
-        case 'add' :
-            display_add();
-            $_SESSION['service_tag'] = 'tag_init';
-            core_tools::execute_modules_services(
-                $_SESSION['modules_services'], 'tag_init', 'include'
-            );
-            location_bar_management($mode);
-            break;
-        case 'del' :
-            display_del($tag_id);
-            break;
-        case 'list' :
-            $tagslist = display_list();
-            location_bar_management($mode);
-           // print_r($tagslist); exit();
-            break;
+    case 'up' :
+        display_up($tag_id);
+        
+        $_SESSION['service_tag'] = 'tag_init';
+        core_tools::execute_modules_services(
+            $_SESSION['modules_services'], 'event_init', 'include'
+        );
+        location_bar_management($mode);
+        break;
+    case 'add' :
+        display_add();
+        $_SESSION['service_tag'] = 'tag_init';
+        core_tools::execute_modules_services(
+            $_SESSION['modules_services'], 'tag_init', 'include'
+        );
+        location_bar_management($mode);
+        break;
+    case 'del' :
+        display_del($tag_id);
+        break;
+    case 'list' :
+        $tagslist = display_list();
+        location_bar_management($mode);
+        // print_r($tagslist); exit();
+        break;
     }
-	
-    include('manage_tag_list.php');
+
+    include 'manage_tag_list.php';
 }
 
 /**
@@ -123,10 +98,10 @@ function location_bar_management($mode)
     $pageLabels = array('add'  => _ADDITION,
                     'up'   => _MODIFICATION,
                     'list' => _MANAGE_TAGS
-               );
+                );
     $pageIds = array('add' => 'tags_add',
-                  'up' => 'tags_up',
-                  'list' => 'tags_list'
+                    'up' => 'tags_up',
+                    'list' => 'tags_list'
             );
     $init = false;
     if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
@@ -136,12 +111,13 @@ function location_bar_management($mode)
     $level = '';
     if (isset($_REQUEST['level'])
         && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3
-            || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)) {
+        || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+    ) {
         $level = $_REQUEST['level'];
     }
 
     $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page='
-               . 'manage_tag_list_controller&module=tags&mode=' . $mode ;
+                . 'manage_tag_list_controller&module=tags&mode=' . $mode ;
     $pageLabel = $pageLabels[$mode];
     $pageId = $pageIds[$mode];
     $ct = new core_tools();
@@ -169,11 +145,11 @@ function display_up($tag_id)
         $_SESSION['m_admin']['tag']['tag_count'] = (string) $tagCtrl->countdocs(
             $tag->tag_id
         );
-    }	
- 	//récupération de l'ensemble des tags dans un tableau
-   	$all_tags = array();
-	$all_tags = $tagCtrl->get_all_tags();
-	$_SESSION['tmp_all_tags'] = $all_tags;
+    }
+    //récupération de l'ensemble des tags dans un tableau
+    $all_tags = array();
+    $all_tags = $tagCtrl->get_all_tags();
+    $_SESSION['tmp_all_tags'] = $all_tags;
 }
 
 /**
@@ -181,27 +157,28 @@ function display_up($tag_id)
  */
 function display_add()
 {
-	
-	require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+
+    include_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     ."class_security.php";
-	
+
     if (!isset($_SESSION['m_admin']['init'])) {
         init_session();
     }
-	
-	//Recuperation du nombre de documents taggués
-	$sec = new Security();
-	$arrayColl = $sec->retrieve_insert_collections();
-	$_SESSION['m_admin']['tags']['coll_id'] = $arrayColl;
-	//var_dump($arrayColl); exit();
+
+    //Recuperation du nombre de documents taggués
+    $sec = new Security();
+    $arrayColl = $sec->retrieve_insert_collections();
+    $_SESSION['m_admin']['tags']['coll_id'] = $arrayColl;
+    //var_dump($arrayColl); exit();
     return $state;
-	
+
 }
 
 /**
  * Initialize session parameters for list display
  */
-function display_list() {
+function display_list() 
+{
     $_SESSION['m_admin'] = array();
     $list = new list_show();
     $func = new functions();
@@ -211,10 +188,10 @@ function display_list() {
     array_push(
         $select[TAGS], 'tag_id', 'tag_label'
     );
-    if($_SESSION['user']['UserId'] == 'superadmin'){
+    if ($_SESSION['user']['UserId'] == 'superadmin') {
         $where = '';
         $where_what = array();
-    }else{
+    } else {
         $where = 'entity_id_owner = ? OR entity_id_owner IS NULL';
         $where_what = array($_SESSION['user']['primaryentity']['id']);   
     }
@@ -224,19 +201,23 @@ function display_list() {
         $what = $_REQUEST['what'];
 
     }
+
     if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-        $where .= "";
+        $where .= " (tag_label ilike ? ) ";
+        $where_what[] = $what.'%';
+
     } else {
-        $where .= "";
+        $where .= " (tag_label like ? ) ";
+        $where_what[] = $what.'%';
     }
 
     // Checking order and order_field values
-    $order = 'desc';
+    $order = 'asc';
     if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
         $order = trim($_REQUEST['order']);
     }
 
-    $field = 'tag_id';
+    $field = 'tag_label';
     if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
         $field = trim($_REQUEST['order_field']);
     }
@@ -247,22 +228,21 @@ function display_list() {
         $select, $where, $where_what, $orderstr, $_SESSION['config']['databasetype'], 
         "default", false, "", "", "", true, false, false
     );
-	//$request->show();
-	
+
     for ($i=0;$i<count($tab);$i++) {
         foreach ($tab[$i] as &$item) {
             switch ($item['column']) {
-                 case 'tag_id':
-                    format_item(
-                        $item, _ID, '10', 'left', 'left', 'bottom', true
-                    );
-                    break;
-                
-                case 'tag_label':
-                    format_item(
-                        $item, _NAME_TAGS, '70', 'left', 'left', 'bottom', true
-                    );
-                    break;
+            case 'tag_id':
+                format_item(
+                    $item, _ID, '10', 'left', 'left', 'bottom', true
+                );
+                break;
+            
+            case 'tag_label':
+                format_item(
+                    $item, _NAME_TAGS, '70', 'left', 'left', 'bottom', true
+                );
+                break;
             }
         }
     }
@@ -294,14 +274,15 @@ function display_list() {
  * Delete given tag if exists and initialize session parameters
  * @param string $statusId
  */
-function display_del($tag_id) {
-	
-	if (!$_SESSION['m_admin']['tags']['coll_id']){
-		$_SESSION['m_admin']['tags']['coll_id'] = 'letterbox_coll';
-	}
+function display_del($tag_id)
+{
 
-	$coll_id = $_SESSION['m_admin']['tags']['coll_id'];
-	
+    if (!$_SESSION['m_admin']['tags']['coll_id']) {
+        $_SESSION['m_admin']['tags']['coll_id'] = 'letterbox_coll';
+    }
+
+    $coll_id = $_SESSION['m_admin']['tags']['coll_id'];
+
     $tagCtrl = new tag_controler();
     if (isset($tag_id)) {
         // Deletion
@@ -362,50 +343,50 @@ function format_item(
  * Validate a submit (add or up),
  * up to saving object
  */
-function validate_tag_submit() {
+function validate_tag_submit()
+{
 
-  	$pageName = 'manage_tag_list_controller';
-	$func = new functions();
-	$mode = 'up';
-        $mode = $_REQUEST['mode'];
-        $tagObj = new tag_controler();
+    $pageName = 'manage_tag_list_controller';
+    $func = new functions();
+    $mode = 'up';
+    $mode = $_REQUEST['mode'];
+    $tagObj = new tag_controler();
     
-	if ($_REQUEST['collection'])
-	{
-		$coll_id = $_REQUEST['collection'];		
-	}
-	else{
-		$coll_id = "letterbox_coll";
-	}
-	if ($_REQUEST['tag_label'])
-	{
-  	  $new_tag_label = trim($func->protect_string_db($_REQUEST['tag_label']));
-	}
-	//$_SESSION['m_admin']['tag']['tag_label'] = $_REQUEST['tag_label_id'];
-	
-	$params = array();
-	array_push($params, $new_tag_label);
-	array_push($params, $coll_id);
-	
-	var_dump($new_tag_label);
-	if ($new_tag_label == '' || !$new_tag_label || empty($new_tag_label))
-	{
-		$_SESSION['error'] = _TAG_LABEL_IS_EMPTY;
-    	header(
-              'location: ' . $_SESSION['config']['businessappurl']
+    if ($_REQUEST['collection']) {
+
+        $coll_id = $_REQUEST['collection'];
+    
+    } else {
+        $coll_id = "letterbox_coll";
+    }
+    if ($_REQUEST['tag_label']) {
+
+        $new_tag_label = trim($func->protect_string_db($_REQUEST['tag_label']));
+    }
+    //$_SESSION['m_admin']['tag']['tag_label'] = $_REQUEST['tag_label_id'];
+
+    $params = array();
+    array_push($params, $new_tag_label);
+    array_push($params, $coll_id);
+
+    var_dump($new_tag_label);
+    if ($new_tag_label == '' || !$new_tag_label || empty($new_tag_label)) {
+        $_SESSION['error'] = _TAG_LABEL_IS_EMPTY;
+        header(
+            'location: ' . $_SESSION['config']['businessappurl']
             . 'index.php?page=' . $pageName . '&mode='.$mode.'&id='
             . $tag->tag_idl . '&module=tags'
         );
-		exit();
-	}
+        exit();
+    }
 
     $func->wash(
-            $new_tag_label, 'no', _NAME_TAGS, 'yes', 0, 50
-        );
+        $new_tag_label, 'no', _NAME_TAGS, 'yes', 0, 50
+    );
     
-    if($_SESSION['error'] <> ''){
+    if ($_SESSION['error'] <> '') {
         header(
-              'location: ' . $_SESSION['config']['businessappurl']
+            'location: ' . $_SESSION['config']['businessappurl']
             . 'index.php?page=' . $pageName . '&mode='.$mode.'&id='
             . $tag->tag_id . '&module=tags'
         );
@@ -417,40 +398,39 @@ function validate_tag_submit() {
     
     $tag = $tagObj->store($_SESSION['m_admin']['tag']['tag_id'], $mode, $params);
     
-  	
     switch ($mode) {
-        case 'up':
-            if ($_SESSION['error'] == "")
-                $_SESSION['info'] = _TAG_UPDATED . ' : ' . str_replace("''", "'", $new_tag_label) . ' (ID : ' . $_SESSION['m_admin']['tag']['tag_id'] . ')';
+    case 'up':
+        if ($_SESSION['error'] == "")
+            $_SESSION['info'] = _TAG_UPDATED . ' : ' . str_replace("''", "'", $new_tag_label) . ' (ID : ' . $_SESSION['m_admin']['tag']['tag_id'] . ')';
 
-            if (!empty($_SESSION['m_admin']['tag']['dddtag_label'])) {
-                header(
-                        'location: ' . $_SESSION['config']['businessappurl']
-                        . 'index.php?page=' . $pageName . '&mode=up&id='
-                        . $tag->tag_id . '&module=tags'
-                );
-            } else {
-                header(
-                        'location: ' . $_SESSION['config']['businessappurl']
-                        . 'index.php?page=' . $pageName . '&mode=list&module='
-                        . 'tags&order=' . $status['order'] . '&order_field='
-                        . $status['order_field'] . '&start=' . $status['start']
-                        . '&what=' . $status['what']
-                );
-            }
-            exit();
-        case 'add':
-            if (empty($_SESSION['error'])) {
-                $_SESSION['info'] = _TAG_ADDED . ' : ' . str_replace("''", "'", $new_tag_label);
-            }
+        if (!empty($_SESSION['m_admin']['tag']['dddtag_label'])) {
             header(
-                    'location: ' . $_SESSION['config']['businessappurl']
-                    . 'index.php?page=' . $pageName . '&mode=list&module='
-                    . 'tags&order=' . $status['order'] . '&order_field='
-                    . $status['order_field'] . '&start=' . $status['start']
-                    . '&what=' . $status['what']
+                'location: ' . $_SESSION['config']['businessappurl']
+                . 'index.php?page=' . $pageName . '&mode=up&id='
+                . $tag->tag_id . '&module=tags'
             );
-            exit();
+        } else {
+            header(
+                'location: ' . $_SESSION['config']['businessappurl']
+                . 'index.php?page=' . $pageName . '&mode=list&module='
+                . 'tags&order=' . $status['order'] . '&order_field='
+                . $status['order_field'] . '&start=' . $status['start']
+                . '&what=' . $status['what']
+            );
+        }
+        exit();
+    case 'add':
+        if (empty($_SESSION['error'])) {
+            $_SESSION['info'] = _TAG_ADDED . ' : ' . str_replace("''", "'", $new_tag_label);
+        }
+        header(
+            'location: ' . $_SESSION['config']['businessappurl']
+            . 'index.php?page=' . $pageName . '&mode=list&module='
+            . 'tags&order=' . $status['order'] . '&order_field='
+            . $status['order_field'] . '&start=' . $status['start']
+            . '&what=' . $status['what']
+        );
+        exit();
     }
 }
 

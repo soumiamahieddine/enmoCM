@@ -13,12 +13,18 @@
 * @ingroup basket
 */
 
+namespace Baskets\Models;
+
+use Core\Models\UserModel;
+
 require_once 'apps/maarch_entreprise/services/Table.php';
 require_once 'core/class/SecurityControler.php';
 
-class BasketsModelAbstract extends Apps_Table_Service {
+class BasketsModelAbstract extends \Apps_Table_Service
+{
 
-    public static function getResListById(array $aArgs = []) {
+    public static function getResListById(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['basketId']);
         static::checkString($aArgs, ['basketId']);
 
@@ -36,7 +42,7 @@ class BasketsModelAbstract extends Apps_Table_Service {
             return [];
         }
 
-        $sec = new SecurityControler();
+        $sec = new \SecurityControler();
         $where = $sec->process_security_where_clause($aBasket[0]['basket_clause'], $_SESSION['user']['UserId'], false);
 
         $aResList = static::select(
@@ -51,7 +57,8 @@ class BasketsModelAbstract extends Apps_Table_Service {
         return $aResList;
     }
 
-    public static function getActionByActionId(array $aArgs = []) {
+    public static function getActionByActionId(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['actionId']);
         static::checkNumeric($aArgs, ['actionId']);
 
@@ -68,7 +75,8 @@ class BasketsModelAbstract extends Apps_Table_Service {
         return $aAction[0];
     }
 
-    public static function getActionIdById(array $aArgs = []) {
+    public static function getActionIdById(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['basketId']);
         static::checkString($aArgs, ['basketId']);
 
@@ -87,6 +95,48 @@ class BasketsModelAbstract extends Apps_Table_Service {
         }
 
         return $aAction[0]['id_action'];
+    }
+
+    public static function getBasketsByUserId(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+        $rawUserGroups = UserModel::getGroupsById(['userId' => $aArgs['userId']]);
+        $userGroups = [];
+        foreach ($rawUserGroups as $value) {
+            $userGroups[] = $value['group_id'];
+        }
+
+        $aRawBaskets = static::select(
+            [
+                'select'    => ['DISTINCT basket_id'],
+                'table'     => ['groupbasket'],
+                'where'     => ['group_id in (?)'],
+                'data'      => [$userGroups]
+            ]
+        );
+
+        $basketIds = [];
+        foreach ($aRawBaskets as $value) {
+            $basketIds[] = $value['basket_id'];
+        }
+
+        $aBaskets = static::select(
+            [
+                'select'    => ['basket_id','basket_name'],
+                'table'     => ['baskets'],
+                'where'     => ['basket_id in (?)'],
+                'data'      => [$basketIds],
+                'order_by'  => 'basket_order, basket_name'
+            ]
+        );
+
+        if (empty($aBaskets)) {
+            return '';
+        }
+
+        return $aBaskets;
     }
 
 }

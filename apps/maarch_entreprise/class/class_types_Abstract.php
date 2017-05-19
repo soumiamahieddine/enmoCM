@@ -987,13 +987,14 @@ abstract class types_Abstract extends database
                         );
                     }
                     $indexes[$col] = array(
-                        'label' => $label,
-                        'type' => (string) $item->type,
-                        'img' => $img,
-                        'type_field' => 'select',
-                        'values' => $values,
+                        'label'         => $label,
+                        'type'          => (string) $item->type,
+                        'img'           => $img,
+                        'type_field'    => 'select',
+                        'values'        => $values,
                         'default_value' => $default,
-						'origin' => 'document'
+                        'origin'        => 'document',
+                        'only_detail'   => $item->only_detail
                     );
                 } else if (isset($item->table)) {
                     $values = array();
@@ -1024,39 +1025,40 @@ abstract class types_Abstract extends database
                          );
                     }
                     $indexes[$col] = array(
-                        'label' => $label,
-                        'type' => (string) $item->type,
-                        'img' => $img,
-                        'type_field' => 'select',
-                        'values' => $values,
+                        'label'         => $label,
+                        'type'          => (string) $item->type,
+                        'img'           => $img,
+                        'type_field'    => 'select',
+                        'values'        => $values,
                         'default_value' => $default,
-						'origin' => 'document'
+                        'origin'        => 'document',
+                        'only_detail'   => $item->only_detail
                     );
                 } else {
                     $indexes[$col] = array(
-                        'label' => $label,
-                        'type' => (string) $item->type,
-                        'img' => $img,
-                        'type_field' => 'input',
+                        'label'         => $label,
+                        'type'          => (string) $item->type,
+                        'img'           => $img,
+                        'type_field'    => 'input',
                         'default_value' => $default,
-						'origin' => 'document'
+                        'origin'        => 'document',
+                        'only_detail'   => $item->only_detail
                     );
                 }
             }
         }
-        //print_r($indexes);
+
         foreach(array_keys($indexes) as $key) {
             if (is_array($indexes[$key])) {
-                //print_r($indexes[$key]);
-                $indexes[$key]['label'] = functions::xssafe($indexes[$key]['label']);
-                $indexes[$key]['type'] = functions::xssafe($indexes[$key]['type']);
-                $indexes[$key]['img'] = functions::xssafe($indexes[$key]['img']);
-                $indexes[$key]['type_field'] = functions::xssafe($indexes[$key]['type_field']);
+                $indexes[$key]['label']         = functions::xssafe($indexes[$key]['label']);
+                $indexes[$key]['type']          = functions::xssafe($indexes[$key]['type']);
+                $indexes[$key]['img']           = functions::xssafe($indexes[$key]['img']);
+                $indexes[$key]['type_field']    = functions::xssafe($indexes[$key]['type_field']);
                 $indexes[$key]['default_value'] = functions::xssafe($indexes[$key]['default_value']);
-                $indexes[$key]['origin'] = functions::xssafe($indexes[$key]['origin']);
+                $indexes[$key]['origin']        = functions::xssafe($indexes[$key]['origin']);
+                $indexes[$key]['only_detail']   = functions::xssafe($indexes[$key]['only_detail']);
                 if (is_array($indexes[$key]['values'])) {
                     for ($cpt=0;$cpt<count($indexes[$key]['values']);$cpt++) {
-                        //print_r($indexes[$key]['values'][$cpt]);
                         $indexes[$key]['values'][$cpt]['id'] = functions::xssafe($indexes[$key]['values'][$cpt]['id']);
                         $indexes[$key]['values'][$cpt]['label'] = functions::xssafe($indexes[$key]['values'][$cpt]['label']);
                     }

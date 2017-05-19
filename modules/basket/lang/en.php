@@ -179,8 +179,6 @@ if (!defined("_WELCOME_DIFF_LIST"))
     define("_WELCOME_DIFF_LIST", "Welcome to the tool of mail diffusion");
 if (!defined("_START_DIFF_EXPLANATION"))
     define("_START_DIFF_EXPLANATION", "To start the diffusion, use the navigation by department or by user above");
-if (!defined("_CLICK_ON"))
-    define("_CLICK_ON", "Click on");
 if (!defined("_ADD_USER_TO_LIST_EXPLANATION"))
     define("_ADD_USER_TO_LIST_EXPLANATION", "To add an user on the diffusion list");
 if (!defined("_REMOVE_USER_FROM_LIST_EXPLANATION"))
@@ -273,8 +271,6 @@ if (!defined("_MISSING_CHOOSE"))
     define("_MISSING_CHOOSE"," Do you want to continue ?");
 if (!defined("_CHOOSE_PERSON_TO_REDIRECT"))
     define("_CHOOSE_PERSON_TO_REDIRECT", "Choose the person toward who you would like to redirect this mail in the list below");
-if (!defined("_CLICK_ON_THE_LINE_OR_ICON"))
-    define("_CLICK_ON_THE_LINE_OR_ICON", "You only have to click on the lign or on the icon");
 if (!defined("_TO_SELECT_USER"))
     define("_TO_SELECT_USER", "to select an user");
 if (!defined("_DIFFUSION_DISTRIBUTION"))

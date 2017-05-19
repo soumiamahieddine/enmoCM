@@ -3,22 +3,26 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 declare function $j(selector: any) : any;
-declare var tinymce : any;
-declare var Prototype : any;
 declare function disablePrototypeJS(method: string, plugins: any) : any;
 declare function createModal(a: string, b: string, c: string, d: string) : any;
 declare function autocomplete(a: number, b: string) : any;
 
+declare var tinymce : any;
+declare var Prototype : any;
+declare var angularGlobals : any;
+
 
 @Component({
-    templateUrl : 'js/angular/app/Views/profile.component.html',
-    styleUrls   : ['css/bootstrap.min.css','js/angular/app/Css/profile.component.css']
+    templateUrl : angularGlobals.profileView,
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'js/angular/app/Css/profile.component.css']
 })
 export class ProfileComponent implements OnInit {
 
     coreUrl                     : string;
 
-    user                        : any       = {};
+    user                        : any       = {
+        lang                    : {}
+    };
     passwordModel               : any       = {
         currentPassword         : "",
         newPassword             : "",
@@ -56,6 +60,7 @@ export class ProfileComponent implements OnInit {
         $j('#menunav').hide();
         $j('#divList').remove();
         $j('#magicContactsTable').remove();
+        $j('#manageBasketsOrderTable').remove();
         $j('#container').width("99%");
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();
@@ -69,16 +74,20 @@ export class ProfileComponent implements OnInit {
         }
 
         //LOAD EDITOR TINYMCE for MAIL SIGN
-        tinymce.baseURL = "tools/tiny_mce";
+        tinymce.baseURL = "../../node_modules/tinymce";
         tinymce.suffix = '.min';
         tinymce.init({
             selector: "textarea#emailSignature",
             statusbar : false,
             language : "fr_FR",
+            language_url: "tools/tinymce/langs/fr_FR.js",
             height : "200",
             plugins: [
-                "textcolor bdesk_photo"
+                "textcolor"
             ],
+            external_plugins: {
+                'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
+            },
             menubar: false,
             toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor",
             theme_buttons1_add : "fontselect,fontsizeselect",
@@ -102,21 +111,17 @@ export class ProfileComponent implements OnInit {
 
     ngOnInit(): void {
         this.prepareProfile();
+        this.updateBreadcrumb(angularGlobals.applicationName);
+        this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
-        this.http.get('index.php?display=true&page=initializeJsGlobalConfig')
+        this.http.get(this.coreUrl + 'rest/user/profile')
             .map(res => res.json())
             .subscribe((data) => {
-                this.coreUrl = data.coreurl;
-                this.updateBreadcrumb(data.applicationName);
-                this.http.get(this.coreUrl + 'rest/user/profile')
-                    .map(res => res.json())
-                    .subscribe((data) => {
-                        this.user = data;
+                this.user = data;
 
-                        this.loading = false;
-                    });
+                this.loading = false;
             });
     }
 
@@ -190,6 +195,11 @@ export class ProfileComponent implements OnInit {
     }
 
     getAbsenceInfos() {
+        this.http.get(this.coreUrl + 'rest/currentUser/baskets/absence')
+            .map(res => res.json())
+            .subscribe((data) => {
+                this.loading = false;
+            });
     }
 
     updatePassword() {
@@ -411,6 +421,6 @@ export class ProfileComponent implements OnInit {
 
     absenceModal() {
         createModal(this.user.absence, 'modal_redirect', 'auto', '950px');
-        autocomplete(15, 'index.php?display=true&module=basket&page=autocomplete_users_list');
+        autocomplete(this.user.countBasketsForAbsence, 'index.php?display=true&module=basket&page=autocomplete_users_list');
     }
 }

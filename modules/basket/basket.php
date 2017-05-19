@@ -55,7 +55,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
  $func = new functions();
 
  ?>
-<table width="100%">
+<table width="100%" id="manageBasketsOrderTable">
     <tr>
         <td align="left">
             <input class="button" type="button" value="<?php echo _MANAGE_BASKET_ORDER;

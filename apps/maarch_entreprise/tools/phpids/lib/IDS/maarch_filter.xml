@@ -59,7 +59,7 @@
         </tags>
         <impact>5</impact>
     </filter>
-    <filter>
+<!--     <filter>
         <id>7</id>
         <rule><![CDATA[(?:[=(].+\?.+:)|(?:with\([^)]*\)\))|(?:\.\s*source\W)]]></rule>
         <description>Detects JavaScript with(), ternary operators and XML predicate attacks</description>
@@ -68,7 +68,7 @@
             <tag>csrf</tag>
         </tags>
         <impact>5</impact>
-    </filter>
+    </filter> -->
     <!--<filter>
         <id>8</id>
         <rule><![CDATA[(?:\/\w*\s*\)\s*\()|(?:\([\w\s]+\([\w\s]+\)[\w\s]+\))|(?:(?<!(?:mozilla\/\d\.\d\s))\([^)[]+\[[^\]]+\][^)]*\))|(?:[^\s!][{([][^({[]+[{([][^}\])]+[}\])][\s+",\d]*[}\])])|(?:"\)?\]\W*\[)|(?:=\s*[^\s:;]+\s*[{([][^}\])]+[}\])];)]]></rule>
@@ -79,7 +79,7 @@
         </tags>
         <impact>5</impact>
     </filter>-->
-    <filter>
+<!--     <filter>
         <id>9</id>
         <rule><![CDATA[(?:\\u00[a-f0-9]{2})|(?:\\x0*[a-f0-9]{2})]]></rule>
         <description>Detects the IE octal, hex and unicode entities</description>
@@ -88,7 +88,7 @@
             <tag>csrf</tag>
         </tags>
         <impact>2</impact>
-    </filter>
+    </filter> -->
     <filter>
         <id>10</id>
         <rule><![CDATA[(?:(?:\/|\\)?\.+(\/|\\)(?:\.+)?)|(?:\w+\.exe\??\s)|(?:;\s*\w+\s*\/[\w*-]+\/)|(?:\d\.\dx\|)|(?:%(?:c0\.|af\.|5c\.))|(?:\/(?:%2e){2})]]></rule>

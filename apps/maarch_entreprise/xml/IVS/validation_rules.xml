@@ -61,6 +61,7 @@
 
     <validationRule name="admin_ajax_search" extends="standardForm" mode="error">
       <parameter name="what" type="string" />
+      <parameter name="idContact" type="integer" />
     </validationRule>
 
     <validationRule name="contact_id" extends="standardForm" mode="error">
@@ -298,6 +299,7 @@
       <parameter name="delete" type="string" />
       <parameter name="new_contact_id_reaffect" type="integer" />
       <parameter name="new_contact_reaffect" type="string" />
+      <parameter name="mycontact" type="YN" />
     </validationRule>
 
     <validationRule name="contactAddressUp" extends="standardForm" mode="error">

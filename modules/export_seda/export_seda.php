@@ -69,7 +69,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
     //Information n Archive
     if (!$_SESSION['error']) {
-        foreach ($messageObject->dataObjectPackage->descriptiveMetadata->archiveUnit as $archiveUnit) {
+        foreach ($messageObject->dataObjectPackage->descriptiveMetadata as $archiveUnit) {
             $frm_str .= viewArchiveUnit($archiveUnit);
         }
 
@@ -89,7 +89,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $config = parse_ini_file(__DIR__.'/config.ini');
     $urlSAE = $config['urlSAE'];
 
-    $frm_str .='<div align="center"  name="validSeda" id="validSeda" style="display: none ">"'.$urlSAE.'"<span name="nameSAE"></span><br><input type="button" class="button" name="validateMessage" id="validateMessage" value="'._VALIDATE.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_validate_message&reference='.$messageObject->messageIdentifier->value.'\',\'validateMessage\');"/></div>';
+    $frm_str .='<div align="center"  name="validSeda" id="validSeda" style="display: none "><a href="'.$urlSAE.'">'._URLSAE.'</a><span name="nameSAE"></span><br><input type="button" class="button" name="validateMessage" id="validateMessage" value="'._VALIDATE.'" onclick="actionSeda(\''.$path_to_script.'&page=Ajax_validate_message&reference='.$messageObject->messageIdentifier->value.'\',\'validateMessage\');"/></div>';
     $frm_str .='<hr />';
     $frm_str .='<div align="center">';
     $frm_str .='<input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
@@ -119,11 +119,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status)
 
     // ensuite il y a aura une suppression logique des documents et des contacts (si plus de courriers associés)
 
-    return array('result' => $result, 'history_msg' => '');
+    //return array('result' => $result, 'history_msg' => '');
 }
 
 function viewArchiveUnit($archiveUnit, $archiveUnitChildren = false) 
 {
+    $frm_str = '';
     if (!$archiveUnitChildren) {
         $frm_str .= '<h3 class="title">'._INFORMATION_ARCHIVE. ' "'. $archiveUnit->content->title[0].'"</h3>';
     } else {
@@ -135,23 +136,51 @@ function viewArchiveUnit($archiveUnit, $archiveUnitChildren = false)
     $frm_str .= '<td><input type="text" id="archiveIdentifier" name="archiveIdentifier" value="'.$archiveUnit->id. '" disabled></td></tr>';
 
     if ($archiveUnit->management) {
-        $frm_str .='<tr class="col"><td><b>'._RETENTION_RULE.':</b></td>';
+        
+        $frm_str .='<tr class="col"><td><b>'._APPRAISAL_RULE.':</b></td>';
         $frm_str .= '<td><input type="text" id="rule" name="rule" value="'.$archiveUnit->management->appraisalRule->rule->value. '" disabled></td>';
-        $frm_str .='<td><b>'._RETENTION_FINAL_DISPOSITION.':</b></td>';
-        $frm_str .= '<td><input type="text" id="finalAction" name="finalAction" value="'.$archiveUnit->management->appraisalRule->finalAction. '" disabled></td>';
+        $frm_str .='<td><b>'._APPRAISAL_FINAL_DISPOSITION.':</b></td>';
+
+        if ($archiveUnit->management->appraisalRule->finalAction == 'Destroy') {
+            $frm_str .= '<td><input type="text" id="finalAction" name="finalAction" value="'._DESTROY. '" disabled></td>';
+        } else {
+            $frm_str .= '<td><input type="text" id="finalAction" name="finalAction" value="'._KEEP. '" disabled></td>';
+        }
         $frm_str .= '</tr>';
     }
 
     $frm_str .= '<tr class="col"><td><b>'._DESCRIPTION_LEVEL.':</b></td>';
-    $frm_str .= '<td><input type="text" id="descriptionLevel" name="descriptionLevel" value="'.$archiveUnit->content->descriptionLevel. '" disabled></td>';
+
+    if ($archiveUnit->content->descriptionLevel == "File") {
+        $frm_str .= '<td><input type="text" id="descriptionLevel" name="descriptionLevel" value="'._FILE. '" disabled></td>';
+    }elseif ($archiveUnit->content->descriptionLevel == "Item") {
+        $frm_str .= '<td><input type="text" id="descriptionLevel" name="descriptionLevel" value="'._ITEM. '" disabled></td>';
+    }else {
+        $frm_str .= '<td><input type="text" id="descriptionLevel" name="descriptionLevel" value="'.$archiveUnit->content->descriptionLevel. '" disabled></td>';
+    }
+    
     $frm_str .= '<td><b>'._DOCUMENT_TYPE.':</b></td>';
-    $frm_str .= '<td><input type="text" id="documentType" name="documentType" value="'.$archiveUnit->content->documentType. '" disabled></td></tr>';
-    $frm_str .= '<tr class="col"><td><b>'._RECEIVED_DATE.':</b></td>';
-    $frm_str .= '<td><input type="text" id="receivedDate" name="receivedDate" value="'.$archiveUnit->content->receivedDate. '" disabled></td>';
-    $frm_str .= '<td><b>'._SENT_DATE.':</b></td>';
-    $frm_str .= '<td><input type="text" id="sentDate" name="sentDate" value="'.$archiveUnit->content->sentDate. '" disabled></td></tr>';
-    $frm_str .= '<tr class="col"><td><b>'._END_DATE.':</b></td>';
-    $frm_str .= '<td><input type="text" id="endDate" name="endDate" value="'.$archiveUnit->content->endDate. '" disabled></td></tr>';
+
+    if ($archiveUnit->content->documentType == "Reply") {
+        $frm_str .= '<td><input type="text" id="documentType" name="documentType" value="'._REPLY. '" disabled></td></tr>';
+    }elseif ($archiveUnit->content->documentType == "Attachment") {
+        $frm_str .= '<td><input type="text" id="documentType" name="documentType" value="'._ATTACHMENT. '" disabled></td></tr>';
+    } else {
+        $frm_str .= '<td><input type="text" id="documentType" name="documentType" value="'.$archiveUnit->content->documentType. '" disabled></td></tr>';
+    }
+
+    
+    
+    if ($archiveUnit->content->receivedDate) {
+        $frm_str .= '<tr class="col"><td><b>'._RECEIVED_DATE.':</b></td>';
+        $frm_str .= '<td><input type="text" id="receivedDate" name="receivedDate" value="'.$archiveUnit->content->receivedDate. '" disabled></td>';
+    }
+    
+    if ($archiveUnit->content->sentDate) {
+        $frm_str .= '<td><b>'._SENT_DATE.':</b></td>';
+        $frm_str .= '<td><input type="text" id="sentDate" name="sentDate" value="'.$archiveUnit->content->sentDate. '" disabled></td></tr>';
+    }
+    
     $frm_str .= '</tr></tbody></table>';
 
     if ($archiveUnit->archiveUnit) {

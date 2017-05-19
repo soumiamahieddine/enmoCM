@@ -16,9 +16,9 @@ require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPAR
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_lists.php";
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_request.php';
 
-$func = new functions();
+$func  = new functions();
 $list2 = new lists(); 
-$db = new Database();
+$db    = new Database();
 
 if(isset($_GET['id']))
 {
@@ -60,21 +60,22 @@ $query = "SELECT * FROM ".$_SESSION['tablename']['contacts_v2']." WHERE contact_
 $stmt = $db->query($query, array($_SESSION['contact']['current_contact_id']));
 $line = $stmt->fetchObject();
 
-$_SESSION['m_admin']['contact'] = array();
-$_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
-$_SESSION['m_admin']['contact']['TITLE'] = $request->show_string($line->title);
-$_SESSION['m_admin']['contact']['LASTNAME'] = $request->show_string($line->lastname);
-$_SESSION['m_admin']['contact']['FIRSTNAME'] = $request->show_string($line->firstname);
-$_SESSION['m_admin']['contact']['SOCIETY'] = $request->show_string($line->society);
-$_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = $request->show_string($line->society_short);
-$_SESSION['m_admin']['contact']['FUNCTION'] = $request->show_string($line->function);
-$_SESSION['m_admin']['contact']['OTHER_DATA'] = $request->show_string($line->other_data);
+$_SESSION['m_admin']['contact']                        = array();
+$_SESSION['m_admin']['contact']['ID']                  = $line->contact_id;
+$_SESSION['m_admin']['contact']['TITLE']               = $request->show_string($line->title);
+$_SESSION['m_admin']['contact']['LASTNAME']            = $request->show_string($line->lastname);
+$_SESSION['m_admin']['contact']['FIRSTNAME']           = $request->show_string($line->firstname);
+$_SESSION['m_admin']['contact']['SOCIETY']             = $request->show_string($line->society);
+$_SESSION['m_admin']['contact']['SOCIETY_SHORT']       = $request->show_string($line->society_short);
+$_SESSION['m_admin']['contact']['FUNCTION']            = $request->show_string($line->function);
+$_SESSION['m_admin']['contact']['OTHER_DATA']          = $request->show_string($line->other_data);
 $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $request->show_string($line->is_corporate_person);
-$_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
-$_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
+$_SESSION['m_admin']['contact']['CONTACT_TYPE']        = $line->contact_type;
+$_SESSION['m_admin']['contact']['OWNER']               = $line->user_id;
 ?>
 	<h1><i class="fa fa-users fa-2x"></i>&nbsp;<?php echo _VIEW_CONTACT;?></h1>
-	<div id="test" class="clearfix" align="center">
+	<br>
+	<div id="test" class="clearfix block" align="center">
 <?php
 		$contact->get_contact_form();
 ?>
@@ -85,4 +86,5 @@ $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
 
 $mode = 'view';
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/admin/contacts/contact_addresses/contact_addresses.php';
-?> </div>
+?> 
+</div>

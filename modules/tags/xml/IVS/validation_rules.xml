@@ -28,6 +28,7 @@
 
 	<validationRule name="templates_tag_ui" extends="standardForm" mode="error">
 		<parameter name="p_res_id" type="integer" />
+		<parameter name="opt" type="string" />
 	</validationRule>
 
 </validationRules>

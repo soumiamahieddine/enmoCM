@@ -53,7 +53,7 @@ if (!isset($_REQUEST['letters'])) {
     /***********************************************************/
 }
 
-?><div id="divList" class="block" name="divList"><?php
+?><div id="divList" name="divList"><?php
 
 $contact = new contacts_v2();
 if ($from_iframe) {

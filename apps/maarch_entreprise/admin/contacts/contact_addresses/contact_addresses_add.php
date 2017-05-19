@@ -77,6 +77,10 @@ if(isset($_GET['mycontact']) && $_GET['mycontact'] <> ''){
 } else {
 	$admin = true;
 }
-
-$contact->formaddress("add", "", $admin);
 ?>
+<br>
+<div class="block">
+<?php
+    $contact->formaddress("add", "", $admin);
+?>
+</div>
