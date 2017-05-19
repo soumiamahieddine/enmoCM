@@ -1606,7 +1606,7 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
             success: function(answer){
                 eval("response = " + answer);
 
-                if(response.status == 0 ) {
+                if(response$j.ajax.status == 0 ) {
                     var page_result = response.page_result;
 
                     if(response.action_status != '' && response.action_status != 'NONE') {
@@ -3438,6 +3438,84 @@ function resetSelect(id) {
     $j('#'+id).val("");
     Event.fire($(id), "chosen:updated");
 }
+
+function getChildrenHtml (branch_id){
+    var minus;
+    if($j('#'+branch_id+' i').first().prop('class')=='fa fa-minus-square'||$j('#'+branch_id+' i').first().prop('class')=='fa fa-minus-square fa-plus-square')
+    {
+        minus =true;
+    }
+    else{
+        minus=false;
+    }
+    $j.ajax({
+        url: 'index.php?display=true&module=entities&page=get_tree_childs', 
+        type: 'POST',
+        data: {branch_id : branch_id},
+        success: function(result){            
+            //$j('#'+branch_id).append(result);
+            //$j('#'+branch_id+' span').first().html(result);
+            var branch = $j('#'+branch_id);
+
+            //1
+            //$j('#'+branch_id+' i').first().prop('class','fa fa-plus-square');
+            console.log('--1--'+$j('#'+branch_id+' i').first().prop('class'));
+            console.log('#'+branch_id);
+            if(minus){
+                //$j('#'+branch_id+' > span').next().html(result);
+                console.log('TRUE');
+                BootstrapTree.removeSons($j('#'+branch_id+' > ul'));
+                $j('#'+branch_id+' i').first().prop('class','fa fa-plus-square');
+            }
+            else{
+                console.log('FALSE');
+                //$j('#'+branch_id+' > span').next().html('<ul></ul>');
+                BootstrapTree.addNode($j('#'+branch_id),$j(result));
+                BootstrapTree.init($j('#divTree'));
+                console.log('changement en moins sur:'+$j('#'+branch_id+' i').first());
+                $j('#'+branch_id+' i').first().prop('class','fa fa-minus-square');
+                //$j('#'+branch_id).parent().parent().prop('class','fa fa-minus-square');
+            }
+
+            //setTimeout(function(){
+            //console.log('--2--'+$j('#'+branch_id+' i').prop('class'));
+            /*if($j('#'+branch_id+' i').first().prop('class')=='fa fa-minus-square'){
+                console.log('RENTRE :');
+                //2
+                console.log('--3--'+$j('#'+branch_id+' i').first().prop('class'));
+                $j('#'+branch_id+' > span').next().html(result);
+                //BootstrapTree.addNode($j('#'+branch_id),$j(result));
+                
+                //$j('#'+branch_id+' i').first().prop('class','fa fa-minus-square');
+            }
+            else if($j('#'+branch_id+' i').first().prop('class')=='fa fa-plus-square'){
+                console.log('REMOVE')
+                //BootstrapTree.removeNode($j(result));                    
+                //BootstrapTree.init($j('#divTree'));
+                //$j('#'+branch_id+' i').first().prop('class','fa fa-plus-square');
+            }*/
+            //BootstrapTree.init($j('#divTree'));
+            //},5000);
+            //3
+            /*console.log('--4--'+$j('#'+branch_id+' i').prop('class'));
+            
+            if($j('#'+branch_id+' i').first().prop('class')=='fa fa-minus-square'){
+                console.log('RENTRE :');
+                //2
+                console.log('--3--'+$j('#'+branch_id+' i').first().prop('class'));
+                BootstrapTree.addNode($j('#'+branch_id),$j(result));
+                //BootstrapTree.init($j('#divTree'));
+                //$j('#'+branch_id+' i').first().prop('class','fa fa-minus-square');
+            }
+            else if($j('#'+branch_id+' i').first().prop('class')=='fa fa-plus-square'){
+                console.log('REMOVE')
+                BootstrapTree.removeNode($j(result));                    
+                //BootstrapTree.init($j('#divTree'));
+                //$j('#'+branch_id+' i').first().prop('class','fa fa-plus-square');
+            }*/
+            }
+        });
+    }
 
 // Exemple appel service
 // function testService(){
