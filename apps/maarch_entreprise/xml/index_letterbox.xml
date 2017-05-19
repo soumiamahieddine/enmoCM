@@ -22,14 +22,6 @@
         <label>PO#</label>
         <type>string</type>
         <img>arrow-right</img>
-         <table>
-            <table_name>doctypes</table_name>
-            <foreign_key>type_id</foreign_key>
-            <foreign_label>description</foreign_label>
-            <where_clause>enabled = 'Y'</where_clause>
-            <order>order by description</order>
-        </table>
-        <default_value></default_value>
     </INDEX>
     <INDEX>
         <column>custom_t2</column>
