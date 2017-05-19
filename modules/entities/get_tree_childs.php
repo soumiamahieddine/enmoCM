@@ -9,7 +9,7 @@ if (isset($_POST['branch_id'])) {
     $children = array();
     $db = new Database();
     
-    $stmt = $db->query("select u.user_id, u.lastname, u.firstname, u.enabled, ue.entity_id as entity_id from " . ENT_USERS_ENTITIES 
+    $stmt = $db->query("select distinct u.user_id, u.lastname, u.firstname, u.enabled, ue.entity_id as entity_id from " . ENT_USERS_ENTITIES 
         . " ue," . ENT_ENTITIES . " e, " . $_SESSION['tablename']['users'] 
         . " u where e.parent_entity_id = ?" 
         . " and e.parent_entity_id = ue.entity_id and u.user_id = ue.user_id and u.status <> 'DEL' order by u.lastname, u.firstname",array($_POST['branch_id']));
@@ -118,7 +118,7 @@ if (isset($_POST['branch_id'])) {
                 // saut de 2 indices pour eviter doublons
                 echo '<li id="'.$children[$i]['id'].'"> <span class="user"><i class="" ></i>'.addslashes($children[$i]['label_value']).'</span>'.
                 '</li>';
-                $i+=2;
+                //$i+=2;
             }
             else{
                 echo '<li id="'.$children[$i]['id'].'"> <span class="node"><i class="fa" onclick="getChildrenHtml(\''.$children[$i]['id'].'\')"></i>'.addslashes($children[$i]['label_value']).'</span>'.
