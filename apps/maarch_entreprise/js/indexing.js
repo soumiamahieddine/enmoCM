@@ -925,30 +925,6 @@ function process_category(category, display_value_tr, params_cat)
 var contact_autocompleter;
 
 /**
- * Launch the Ajax autocomplete object to activate autocompletion on contacts
- *
- * @param path_script String Path to the Ajax script
- **/
-function launch_autocompleter_contacts(path_script, id_text, id_div, cat_id)
-{
-    var input  = id_text || 'contact';
-    var div    = id_div  || 'show_contacts';
-    
-    var params = get_contacts_params();
-    
-    if (contact_autocompleter && contact_autocompleter.element == $$('#' + input)[0])
-        contact_autocompleter.options.defaultParams = params;
-    else if(path_script)
-        contact_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
-            method:'get',
-            paramName:'Input',
-            parameters: params,
-            minChars: 2
-        });
-    else return false;
-}
-
-/**
  * Launch the Ajax autocomplete object to activate autocompletion on contacts en put address_id and contact_id in an hidden input
  *
  * @param path_script String Path to the Ajax script
@@ -960,7 +936,7 @@ function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, 
     
     var params = get_contacts_params();
 
-    if (contact_autocompleter && contact_autocompleter.element == $$('#' + input)[0])
+    if (contact_autocompleter && contact_autocompleter.element == $j('#' + input)[0])
         contact_autocompleter.options.defaultParams = params;
     else if(path_script)
         contact_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
@@ -991,9 +967,7 @@ function launch_autocompleter2_contacts_v2(path_script, id_text, id_div, cat_id,
     var input  = id_text || 'contact';
     var div    = id_div  || 'show_contacts';
     
-    // var params = get_contacts_params();
-    
-    if (contact_autocompleter && contact_autocompleter.element == $$('#' + input)[0])
+    if (contact_autocompleter && contact_autocompleter.element == $j('#' + input)[0])
         contact_autocompleter.options.defaultParams = params;
     else if(path_script)
         contact_autocompleter = new Ajax.Autocompleter2(input, div, path_script, {
@@ -1008,11 +982,13 @@ function launch_autocompleter2_contacts_v2(path_script, id_text, id_div, cat_id,
                 parent.$(address_id).value = res[1];
                 if (path_script2 && res[1]) {
                     getDepartment(path_script2, res[1]);
-                };
+                }
                 
             }
         });
-    else return false;
+    else {
+        return false;
+    }
 }
 
 function getDepartment(path_script, address_id) {
@@ -1029,24 +1005,6 @@ function getDepartment(path_script, address_id) {
             }
         }
     });
-}
-
-function launch_autocompleter_choose_contact(path_script, id_text, id_div, cat_id, contact_id){
-    var input  = id_text || 'contact';
-    var div    = id_div  || 'show_contacts';
-    
-    // var params = get_contacts_params();
-
-    contact_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
-        method:'get',
-        paramName:'what',
-        // parameters: params,
-        minChars: 2,
-        afterUpdateElement: function (text, li){
-            $(contact_id).value = li.id;
-        }
-    });
-
 }
 
 function putInSessionContact(path_script){
@@ -1170,126 +1128,6 @@ function update_contact_autocompleter()
         }
         contact_autocompleter.options.defaultParams = new_param;
     }
-}
-
-/**
- * Open in a popup the contact or user card
- *
- * @param path_contact_card String Path to the contact card
- * @param path_user_card String Path to the user card
- **/
-function open_contact_card(path_contact_card,path_user_card,mode)
-{
-    if (mode == '') {
-        mode = 'view';
-    }
-	
-	if($('email')){
-		var contact_value = $('email').value;
-	}else{
-		var contact_value = $('contact').value;
-	}
-    var arr = get_checked_values('type_contact');
-    var contact_id = contact_value.substring(contact_value.indexOf('(')+1, contact_value.indexOf(')'));
-    if (arr.length == 0) {
-        //~ if (console != null) {
-            //~ console.log('Erreur launch_autocompleter_contacts, no items checked');
-        //~ } else {
-            //~ alert('Erreur launch_autocompleter_contacts, no items checked');
-        //~ }
-        window.open(path_contact_card+'&id='+contact_id, 'contact_info', 'height=600, width=600,scrollbars=yes,resizable=yes');
-    } else {
-        if (arr[0] == 'internal') {
-            window.open(path_user_card+'&id='+contact_id, 'contact_info', 'height=450, width=600,scrollbars=no,resizable=yes');
-        } else if(arr[0] == 'external' || arr[0] == 'multi_external') {
-            window.open(path_contact_card+'&mode='+mode+'&id='+contact_id, 'contact_info', 'height=600, width=600,scrollbars=yes,resizable=yes');
-        }
-    }
-}
-
-function create_contact(path_create, id_action)
-{
-    /*if ($('type_contact_external')) {
-        $('type_contact_external').checked = true;
-        $('type_contact_external').onclick();
-    }*/
-
-    
-    var contact_frm = $('indexingfrmcontact');
-    var contact_type = get_contact_type($('category_id').value);
-    if (contact_frm) {
-        var corporate = 'Y' ;
-        if ($('is_corporate_N').checked == true) {
-            corporate = 'N' ;
-        }
-        var private = 'Y' ;
-        if ($('is_private_N').checked == true) {
-            private = 'N' ;
-        }
-        var title_val = $('title').value;
-        var society_val = $('society').value;
-        var phone_val = $('phone').value;
-        var mail_val = $('mail').value;
-        var num_val =  $('num').value;
-        var street_val = $('street').value;
-        var add_comp_val = $('add_comp').value;
-        var cp_val = $('cp').value;
-        var town_val = $('town').value;
-        var country_val = $('country').value;
-        var comp_data_val = $('comp_data').value;
-        var lastname_val = $('lastname').value;
-        var firstname_val = $('firstname').value;
-        var func_val = $('function').value;
-
-        new Ajax.Request(path_create,
-        {
-            method:'post',
-            asynchronous:false,
-            parameters: {
-                is_corporate : corporate,
-                is_private : private,
-                title : title_val,
-                society : society_val,
-                phone : phone_val,
-                mail : mail_val,
-                num : num_val,
-                street : street_val,
-                add_comp : add_comp_val,
-                cp : cp_val,
-                town : town_val,
-                country : country_val,
-                comp_data : comp_data_val,
-                lastname : lastname_val,
-                firstname : firstname_val,
-                func : func_val,
-                contactType : contact_type
-                },
-                    onSuccess: function(answer){
-                    eval("response = "+answer.responseText);
-                    //alert(answer.responseText);
-                    if (response.status == 0 ) {
-						if($('type_multi_contact_external').checked == true){
-							var contact = $('email');
-						}else{
-							var contact = $('contact');
-						}
-						
-                        if (contact) {
-                            contact.value = response.value;
-                            //$('contact_card').style.visibility = 'visible';
-                            new Effect.toggle('create_contact_div', 'blind', {delay:0.2});
-                            clear_form('indexingfrmcontact');
-                        }
-                    } else {
-                        try{
-                            $('frm_error_'+id_action).innerHTML = response.error_txt;
-                            }
-                        catch(e){}
-                    }
-                }
-        });
-    }
-
 }
 
 /**
@@ -1763,7 +1601,7 @@ function hideSelectFile(){
     } else {
         // $('choose_file_div').style.display='block';
         window.frames["choose_file"].$('with_file').click(); 
-    };
+    }
 }
 
 function affiche_chrono(){
@@ -1811,33 +1649,6 @@ function affiche_chrono(){
         $('chrono_display').setStyle({display: 'none'});
         $('chrono_display').value='';
         $('chrono').value='';
-    }
-}
-
-function affiche_get_chrono(){
-    
-    var type_id = document.getElementById('attachment_types').options[document.getElementById('attachment_types').selectedIndex];
-
-    if (type_id.getAttribute('get_chrono') == 'true') {      
-        $('get_chrono_label').setStyle({display: 'inline'});
-        $('get_chrono_display').setStyle({display: 'inline'});
-            new Ajax.Request('index.php?display=true&module=attachments&page=get_other_chrono_attachment',
-                {
-                    method:'post',
-                    parameters:
-                    {
-                        type_id : type_id
-                    },
-                     onSuccess: function(answer){
-                        eval("response = "+answer.responseText);
-                        $('get_chrono_display').innerHTML=response.chronoList;
-                    }
-                });
-    } else {
-        $('get_chrono_label').setStyle({display: 'none'});
-        $('get_chrono_display').setStyle({display: 'none'});
-        $('get_chrono_display').value='';
-        $('get_chrono').value='';
     }
 }
 

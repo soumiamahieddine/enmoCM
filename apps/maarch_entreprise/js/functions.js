@@ -1017,7 +1017,7 @@ function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
     Event.observe(layer, 'mousewheel', function(event){Event.stop(event);}.bindAsEventListener(), true);
     Event.observe(layer, 'DOMMouseScroll', function(event){Event.stop(event);}.bindAsEventListener(), false);
     $(id_mod).focus();
-    $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";})
+    $j("input[type='button']").prop("disabled", false).css("opacity", "1");
 }
 
 function test_form()
@@ -1232,10 +1232,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
             },
             onCreate: function(answer) {
                 //show loading image in toolbar
-                $$("input[type='button']").each(function(v) {
-                    v.setAttribute("disabled","disabled");
-                    v.style.opacity = "0.5";
-                });
+                $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
             },
             onSuccess: function(answer){
                 eval('response='+answer.responseText);
@@ -1266,7 +1263,8 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                     try {
                         $('frm_error_'+id_action).innerHTML = response.error_txt;
                         alert($('frm_error_'+id_action).innerHTML);
-                        $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";});
+                        $j("input[type='button']").prop("disabled", false).css("opacity", "1");
+
                     } catch(e){
 
                     }
@@ -1474,7 +1472,8 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
             },
             beforeSend: function() {
                 //show loading image in toolbar
-                $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";});
+                $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
+
             },
             success: function(answer){
                 eval("response = " + answer);
@@ -1561,9 +1560,7 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                               },
                 onCreate: function(answer) {
                     //show loading image in toolbar
-                    $$("input[type='button']").each(function(v) {
-                        v.setAttribute("disabled","disabled");v.style.opacity="0.5";
-                    });
+                    $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
                 },
                 onSuccess: function(answer){
                     eval('response='+answer.responseText);
@@ -1588,12 +1585,8 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                     {
                         try{
                             $('frm_error').innerHTML = response.error_txt;
-                            $$("input[type='button']").each(function(v) {
-                                v.setAttribute("disabled","disabled");
-                                v.style.opacity="0.5";
-                            });
-                            }
-                        catch(e){}
+                            $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
+                        } catch(e) {}
                     }
                 },
                 onFailure: function(){
@@ -3118,7 +3111,7 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
             document.getElementById('show_tab').style.display='block';
             document.getElementById('show_tab').setAttribute('module',module);
             
-            $$("span[class='tab_module']").each(function(v) {v.innerHTML = '<i class="fa fa-plus-square-o"></i>';})
+            $j("span[class='tab_module']").each(function(i, e) {e.innerHTML = '<i class="fa fa-plus-square-o"></i>';})
             if(document.getElementById(module+'_tab') != undefined ){
                 document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
             }
