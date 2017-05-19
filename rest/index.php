@@ -150,4 +150,7 @@ $app->post('/parameters', \Core\Controllers\ParametersController::class . ':crea
 $app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':update');
 $app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
 
+//priorities
+$app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':deletePriority');
+$app->put('/priorities',\Core\Controllers\PrioritiesController::class . ':updatePriorities');
 $app->run();
