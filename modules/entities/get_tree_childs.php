@@ -17,7 +17,7 @@ if (isset($_POST['branch_id'])) {
         while ($res = $stmt->fetchObject()) {
             $canhavechildren = 'canhavechildren:false, ';
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
-                //Condition qui vérifie si l'utilisateur est actif ou pas. Si pas actif, il est affiché en rouge 
+                //Condition qui vï¿½rifie si l'utilisateur est actif ou pas. Si pas actif, il est affichï¿½ en rouge 
                 if($res->enabled == 'N'){
                     $labelValue = '<span class="entity_tree_element_ok">' . functions::show_string('<a style="color:red;" href="index.php?page=users_management_controler&mode=up&admin=users&id='
                             . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>';
@@ -95,22 +95,42 @@ if (isset($_POST['branch_id'])) {
         }
     }
     if (count($children) > 0) {
-        echo '[';
+        /*echo '[';
         for ($i=0;$i< count($children)-1;$i++) {
             echo "{id:'" . $children[$i]['id'] . "', " 
                 . $children[$i]['canhavechildren'] . "txt:'" 
                 . addslashes($children[$i]['label_value']) 
                 . "', is_entity : ".$children[$i]['is_entity']."},";
         }
-        // affichage du derniere élément
+        // affichage du derniere ï¿½lï¿½ment
         echo "{id:'" . $children[$i]['id'] . "', " 
             . $children[$i]['canhavechildren'] . "txt:'" 
             . addslashes($children[$i]['label_value']) 
             . "', is_entity : " . $children[$i]['is_entity']."}";
-        echo ']';
+        echo ']';*/
+        echo '<ul>';
+        for ($i=0;$i< count($children);$i++) {
+            //var_dump($i.': '.$children[$i]['id'].' '.$children[$i]['is_entity']);
+            /*echo '<li id="'.$children[$i]['id'].'"> <span class="node"><i class="fa" onclick="getChildrenHtml(\''.$children[$i]['id'].'\')"></i>'.addslashes($children[$i]['label_value']).'</span>'.
+            '<ul></ul>'.
+            '</li>';*/
+            if($children[$i]['is_entity']=='false'){
+                // saut de 2 indices pour eviter doublons
+                echo '<li id="'.$children[$i]['id'].'"> <span class="user"><i class="" ></i>'.addslashes($children[$i]['label_value']).'</span>'.
+                '</li>';
+                $i+=2;
+            }
+            else{
+                echo '<li id="'.$children[$i]['id'].'"> <span class="node"><i class="fa" onclick="getChildrenHtml(\''.$children[$i]['id'].'\')"></i>'.addslashes($children[$i]['label_value']).'</span>'.
+                '<ul></ul>'.
+                '</li>';
+            }
+        }
+        echo '</ul>';
+
     } else {
-        echo "[{id:'no_user_" . functions::xssafe($_POST['branch_id']) 
+        echo null;/*"[{id:'no_user_" . functions::xssafe($_POST['branch_id']) 
             . "', canhavechildren:false, txt:'<em>(" 
-            . addslashes(_NO_USER) . ")</em>', is_entity : false}]";
+            . addslashes(_NO_USER) . ")</em>', is_entity : false}]";*/
     }
 }

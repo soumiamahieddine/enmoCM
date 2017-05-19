@@ -68,7 +68,7 @@ if (count($_SESSION['tree_entities']) < 1) {
         $level1 = array();
         while ($res = $stmt->fetchObject()) {
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
-                $labelValue = '<span class="entity_tree_element_ok"><a href="index.php?page=entity_up&module=entities&id=' 
+                $labelValue = '<span class="entity_tree_element_ok"><i class="fa"></i><a href="index.php?page=entity_up&module=entities&id=' 
                             . $res->entity_id . '" target="_top">' . functions::show_string($res->entity_label, true) . '</a></span>';
             } else {
                 $labelValue = '<small><i>' . functions::show_string($res->entity_label, true) . '</i></small>';
@@ -88,8 +88,8 @@ if (count($_SESSION['tree_entities']) < 1) {
         for ($i=0;$i<count($_SESSION['tree_entities']);$i++) {
             if ($_SESSION['tree_entities'][$i]['ID'] == $_SESSION['entities_chosen_tree']) {
                 if (!is_integer(array_search("'" . $_SESSION['tree_entities'][$i]['ID'] . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
-                    $label = $_SESSION['tree_entities'][$i]['ID'] . ' - <span class="entity_tree_element_ok"><a href="index.php?page=entity_up&module=entities&id=' 
-                                . $_SESSION['tree_entities'][$i]['ID'] . '" target="_top">' . $ent->show_string($_SESSION['tree_entities'][$i]['LABEL'], true) . '</a></span>';
+                    $label = $_SESSION['tree_entities'][$i]['ID'] . ' - <a href="index.php?page=entity_up&module=entities&id=' 
+                                . $_SESSION['tree_entities'][$i]['ID'] . '" target="_top">' . $ent->show_string($_SESSION['tree_entities'][$i]['LABEL'], true) . '</a>';
                 } else {
                     $label = "<b>" . $_SESSION['tree_entities'][$i]['ID'] . ' - '  
                         . $_SESSION['tree_entities'][$i]['LABEL'] . "</b>";
@@ -124,79 +124,48 @@ if (count($_SESSION['tree_entities']) < 1) {
             );
         }
         ?>
-        <script type="text/javascript">
-            function funcOpen (branch, response) {
-                // Ici tu peux traiter le retour et retourner true si
-                // tu veux ins�rer les enfants, false si tu veux pas
-                return true;
-            }
+        <?php 
+            /* for ($i=0; $i < count($level1)-1;$i++){
+                    echo '<li id="'.$level1[$i]['id'].'"><span onclick="getChildrenHtml('.$level1[$i]['id'].')"><i class="fa"></i></span>'.addslashes($level1[$i]['id'].' - '.$level1[$i]['label_value']).'</li>';
+            }*/
+            
+            /*$j.ajax({
 
-            var tree = null;
-            function TafelTreeInit () {
-                var struct = [
-                                {
-                                'id':'<?php echo $_SESSION['entities_chosen_tree'] ;?>',
-                                'txt':'<?php echo addslashes($label);?>',
-                                'items':[
-                                <?php
-                                $ent2 = new entity();
-                                for ($i=0; $i < count($level1)-1;$i++) {
-                                    if ($level1[$i]['is_entity']) {
-                                        $canhavechildren = '\'canhavechildren\' : true,';
-                                    } else {
-                                        $canhavechildren = '\'canhavechildren\' : false,';
-                                    }
-                                    ?>
-                                    {
-                                        'id':'<?php
-                                        if ($level1[$i]['is_entity']) {
-                                            echo $level1[$i]['id'];
-                                        } else {
-                                            echo $level1[$i]['id'].'_'.$_SESSION['entities_chosen_tree'];
-                                        }
-                                        ?>',
-                                        <?php echo $canhavechildren;?>
-                                        'txt':'<?php echo addslashes($level1[$i]['id'].' - '.$level1[$i]['label_value']);?>',
-                                        'is_entity' : true
-                                    },
-                                    <?php
-                                } // fin for($i=0; $i < count($level1)-1;$i++)
-                                if ($level1[$i]['is_entity']) {
-                                    $canhavechildren = '\'canhavechildren\' : true,';
-                                } else {
-                                    $canhavechildren = '\'canhavechildren\' : false,';
-                                }
-                                ?>
-                                {
-                                    'id':'<?php 
-                                    if ($level1[$i]['is_entity']) {
-                                        echo $level1[$i]['id'];
-                                    } else {
-                                        echo $level1[$i]['id'].'_'.$_SESSION['entities_chosen_tree'];
-                                    }
-                                    ?>',
-                                    <?php echo $canhavechildren;?>
-                                    'txt':'<?php echo addslashes($level1[$i]['id'].' - '.$level1[$i]['label_value']);?>',
-                                    'is_entity' : true
-                                }
-                                        ]
-                                }
-                            ];
-                tree = new TafelTree('trees_div', struct, {
-                    'generate' : true,
-                    'imgBase' : '<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>imgs/',
-                    'defaultImg' : 'user.gif',
-                    'defaultImgOpen' : 'folderopen.gif',
-                    'defaultImgClose' : 'folder.gif',
-                    'onOpenPopulate' : [funcOpen, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=entities&page=get_tree_childs']
-                });
-            }
-
-            function effet () {
-                var branch = tree.getBranchById('child1');
-                branch.refreshChildren();
-            }
-        </script>
+            });*/                
+         ?>
+        
+        <div class="tree" id='divTree'>
+            <ul>
+                <li id='VILLE'>
+                    <span class="root">
+                                <i class="fa" onClick="getChildrenHtml('VILLE')"></i>                                
+                                <?php echo $label;?>
+                    </span>
+                    <ul></ul>
+                </li>
+                        <!--<li>li1
+                            <span>
+                                <i class="fa" ></i>                                
+                            </span>
+                            <ul >                                
+                                    <li>sli1</li>
+                                    <li>sli1</li>
+                                    <li>sli2</li>
+                            </ul>
+                        </li>
+                            
+                        <li>li2</li>
+                        <li>li3</li>-->
+            </ul>
+        </div>
+                <script type="text/javascript">
+                
+                var tree = $j('#divTree');
+                BootstrapTree.init(tree);                   
+                    
+                    /*BootstrapTree.addRoot(tree);
+                    BootstrapTree.addNode(r1);*/
+                </script>   
         <div id="trees_div"></div>
         <?php
     } else {
