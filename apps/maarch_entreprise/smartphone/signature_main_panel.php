@@ -126,9 +126,7 @@ $subject = $res->subject;
            <span class="action_but_sign stampBut" data-action="stampBut" id="stampBut"><i class="fa fa-certificate fa-2x" aria-hidden="true"></i></span>-->
            <span class="action_but_sign clearBut disabled_but" data-action="clearBut" id="clearBut"><i class="fa fa-eraser fa-2x" aria-hidden="true"></i>Effacer</span>
            <!-- <span class="action_but_sign addBut" data-action="addBut"><i class="fa fa-bookmark fa-2x" aria-hidden="true"></i>Ajouter</span> -->
-          <span class="action_but_sign saveBut disabled_but" data-action="saveBut" id="saveBut"><img src="<?php
-            functions::xecho($_SESSION['config']['businessappurl'])
-            ?>smartphone/img/sign.png" />Signer <span id="loading_sign" style="display:none;"><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></span></span>
+          <span class="action_but_sign saveBut disabled_but" data-action="saveBut" id="saveBut"><i class="fa fa-certificate fa-2x" aria-hidden="true"></i>Signer <span id="loading_sign" style="display:none;"><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></span></span>
         </div>
     </div>  
 

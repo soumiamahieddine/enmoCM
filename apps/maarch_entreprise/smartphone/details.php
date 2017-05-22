@@ -173,6 +173,10 @@ if (isset($_REQUEST['res_id_master'])){
     $infos_attach = $ac->getAttachmentInfos($att_id);
     $pdf_id = $ac->getCorrespondingPdf($att_id);
     //echo "pdf : ".$pdf_id;
+
+    $path = $tnl->getPathTnl($s_id, $coll_id);
+    if (!is_file($path)) $path=$tnl->generateTnl($s_id, $coll_id);
+
     $path = $tnl->getPathTnl($pdf_id, $coll_id, 'res_attachments');
     $getAttach = "&res_id_attach=".$pdf_id;
 
@@ -180,7 +184,7 @@ if (isset($_REQUEST['res_id_master'])){
 }
 else{
     $path = $tnl->getPathTnl($s_id, $coll_id);
-    if (!is_file($path)) $path=$tnl->generateTnl($pdf_id, $coll_id);
+    if (!is_file($path)) $path=$tnl->generateTnl($s_id, $coll_id);
 }
 ?>
 <div id="details" title="Détails" class="panel">
@@ -208,7 +212,6 @@ else{
 		}
 		?>
 	
-	<br />
     <hr/>
     <?php
     if($core->is_module_loaded('notes')) {
@@ -234,6 +237,7 @@ else{
     }
     if ($_SESSION['current_basket']['id'] == "EsigBasket" && $infos_attach['attachment_type'] != 'signed_response'){
         ?>
+            
         <a href="signature_main_panel.php?id=<?php functions::xecho($s_id);?>&collId=<?php
                     functions::xecho($_SESSION['collection_id_choice']);
         ?>&tableName=<?php
@@ -241,10 +245,11 @@ else{
         ?>&res_id_attach=<?php
             functions::xecho($att_id);
         ?>">
-            <span class="bubble"><img src="<?php
-            functions::xecho($_SESSION['config']['businessappurl'])
-            ?>smartphone/img/sign.png" alt="Signer" style="height:22px;"/></span>
+            <span class="bubble"><i class="fa fa-certificate fa-2x mCdarkGrey" aria-hidden="true"></i></span>
         </a>
+
+        <span class="bubble" style="cursor: pointer" onclick="switchFrame('<?php functions::xecho($_SESSION['config']['businessappurl'].'index.php?page=doc_thumb_frame&body_loaded&module=thumbnails'); ?>',<?php functions::xecho($s_id); ?>,<?php functions::xecho($pdf_id); ?>);"><i class="fa fa-retweet fa-2x mCdarkGrey"></i></span>
+        <input type="hidden" id="type_doc_show" value="attach" />
         <?php
     }
     ?>
