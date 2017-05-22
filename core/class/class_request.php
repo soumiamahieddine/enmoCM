@@ -30,7 +30,7 @@
 */
 
 require_once 'core/class/class_db_pdo.php';
-
+require_once 'core/class/class_db.php';
 /**
 * @brief   Contains all the function to build a SQL query (select, insert and update)
 *
