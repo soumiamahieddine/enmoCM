@@ -573,22 +573,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             ?>
                 <?php $detailsExport .= "<h1><center>"._DETAILS_PRINT." : ".$s_id."</center></h1><hr>";?>
 
-                <div class="fa fa-tachometer detailsTab DetailsTabFunc TabSelected  " id="DetailstachometerTab" style="font-size:2em;padding-left: 15px;<?php if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){echo 'padding-right: 0px;';}else{echo 'padding-right: 15px;';}?>" title="<?php echo _PROPERTIES;?>" onclick="tabClicked('DetailstachometerTab',false);"
-                                   
-                                   > <sup><span style="font-size: 10px;<?php echo $style; ?>" class="nbResZero">0</span></sup></div>
+                <div class="fa fa-tachometer detailsTab DetailsTabFunc TabSelected  " id="DetailstachometerTab" style="font-size:2em;padding-left: 15px;<?php if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){echo 'padding-right: 0px;';}else{echo 'padding-right: 15px;';}?>" title="<?php echo _PROPERTIES;?>" onclick="tabClicked('DetailstachometerTab',false);">
+                <sup><span style="font-size: 10px;<?php echo $style; ?>" class="nbResZero">0</span></sup></div>
                
              <?php
                                 //SERVICE TO VIEW TECHNICAL INDEX
                                 if ($viewTechnicalInfos) {
-                                    $uniqueString = '';
-                                    
+                                $uniqueString = '';                                    
                                 $pathScriptTab = 'index.php?display=true&page=show_technicalInfo_tab';
-                                    
-                                    $uniqueString .= '<div class="fa fa-cogs DetailsTabFunc" id="DetailsCogdTab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsCogdTab\',true);"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></div>';
-                                                
+                                $uniqueString .= '<div class="fa fa-cogs DetailsTabFunc" id="DetailsCogdTab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsCogdTab\',true);"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></div>';
                                 }
-                           
-                                //$diffList_frame = '';
                                 $uniqueString .= '<div class="fa fa-gear DetailsTabFunc" id="DetailsGearTab" " style="font-size:2em;padding-left: 15px;';
                                 if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
                                         $uniqueString .=  'padding-right: 0px;';
@@ -602,9 +596,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     $roles = $diff_list->list_difflist_roles();
                                     json_encode($roles);
                                     $roles_str = json_encode($roles);
-                                            
                                     $category = $data['category_id']['value'];
-
                                     $pathScriptTab = 'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true&category='.$category.'&roles='.urlencode($roles_str).$onlyCC;    
                                     $uniqueString .= '" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsGearTab\',true);"> <sup><span style="font-size: 10px;';
                                         if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
@@ -613,10 +605,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                             $style = 'display:none;"';
                                         }
                                     $uniqueString .=$style.' class="nbResZero">0</span></sup></div>';
-                                
 
-                                if ($core->test_service('print_folder_doc', 'visa', false))
-                                {
+                                if ($core->test_service('print_folder_doc', 'visa', false)) {
                                         require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
                                         . "class" . DIRECTORY_SEPARATOR
                                         . "class_modules_tools.php";
@@ -625,36 +615,30 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                         . 'index.php?display=true&page=show_printFolder_tab&module=visa&resId='
                                         . $s_id . '&collId=' . $coll_id . '&table=' . $table;
                                         $uniqueString .= '<div class="fa fa-print DetailsTabFunc" id="DetailsPrintTab" style="font-size:2em;padding-left: 15px;';
-                                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
                                             $uniqueString .=  'padding-right: 0px;';
-                                        }else{
+                                        }else {
                                             $uniqueString .=  'padding-right: 15px;';
                                         }
                                         $uniqueString .= '" title="'._PRINTFOLDER.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsPrintTab\',true);"> <sup><span style="font-size: 10px;';
-                                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
                                             $style = 'visibility:hidden;"';
-                                        }else{
+                                        }else {
                                             $style = 'display:none;"';
                                         }
-                                        
                                         $uniqueString .= $style.'class="nbResZero">0</span></sup></div>';
                                 }
                                 
-                                
-
                                 if ($core->is_module_loaded('visa')) {
                                     $pathScriptTab = 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&destination='.$destination.'&fromDetail=true';
                                     $uniqueString .= '<div id="visa_tab" class="fa fa-certificate DetailsTabFunc " style="font-size:2em;padding-left: 15px;';
                                     $uniqueString .='padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'visa_tab\',true);"> <sup id="visa_tab_badge"></sup></div>';
-                                                                       
                                     //LOAD TOOLBAR BADGE
                                     $toolbarBagde_script = 'index.php?display=true&module=visa&page=load_toolbar_visa&resId='.$s_id.'&collId='.$coll_id;
                                     $uniqueString .='<script>loadToolbarBadge(\'visa_tab\',\''.$toolbarBagde_script.'\');</script>';
                                     }
                                 
-                                
-
-                                if ($core->is_module_loaded('avis')) {
+                                    if ($core->is_module_loaded('avis')) {
                                     $pathScriptTab = 'index.php?display=true&page=show_avis_tab&module=avis&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true';
                                     $uniqueString .= '<div id="avis_tab" class="fa fa-check-square DetailsTabFunc " style="font-size:2em;padding-left: 15px;';
                                     $uniqueString .= 'padding-right: 15px;" title="'._AVIS_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'avis_tab\',true);"> <sup id="avis_tab_badge"></sup></div><div id="page_circuit_avis" style="overflow-x: hidden;">';
@@ -663,173 +647,138 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     //LOAD TOOLBAR BADGE
                                     $toolbarBagde_script = 'index.php?display=true&module=avis&page=load_toolbar_avis&resId='.$s_id.'&collId='.$coll_id;
                                     $uniqueString .='<script>loadToolbarBadge(\'avis_tab\',\''.$toolbarBagde_script.'\');</script>';
-                                    
-                                   // echo $uniqueString;
-                            
-                                }                
-                                    if ($core->is_module_loaded('attachments')){
-                                    //$attachments_frame = '';           
-                                 $extraParam = '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder';
+                                    }       
+
+                                    if ($core->is_module_loaded('attachments')) {
+                                    $extraParam = '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder';
                                     $pathScriptTab = 'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId='
-                                         . $s_id . '&collId=' . $coll_id.'&fromDetail=attachments'.$extraParam;
-                                    
+                                    . $s_id . '&collId=' . $coll_id.'&fromDetail=attachments'.$extraParam;
                                     $uniqueString .= '<div class="fa fa-paperclip DetailsTabFunc " id="attachments_tab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._ATTACHMENTS .'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'attachments_tab\',true);"> <sup id="attachments_tab_badge"></sup></div>';
-                                         
                                     //LOAD TOOLBAR BADGE
                                     $toolbarBagde_script = 'index.php?display=true&module=attachments&page=load_toolbar_attachments&resId='.$s_id.'&collId='.$coll_id;
-                                $uniqueString .='<script>loadToolbarBadge(\'attachments_tab\',\''.$toolbarBagde_script.'\');</script>';
-                                    
-                                }
-
-                            
-
-                                
-                        if ($core->is_module_loaded('attachments')){
-                                    //$responses_frame = '';
-                                     $extraParam = '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail';
-                                     $pathScriptTab =  'index.php?display=true&page=show_attachments_details_tab&module=attachments&fromDetail=response&resId='
-                                     . $s_id . '&collId=' . $coll_id.$extraParam;
-                                    $uniqueString .= '<div id="responses_tab" class="fa fa-mail-reply  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DONE_ANSWERS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'responses_tab\',true);"> <sup id="responses_tab_badge"></sup></div>';
-                                   
-                                    //LOAD TOOLBAR BADGE
-                                $toolbarBagde_script = 'index.php?display=true&module=attachments&page=load_toolbar_attachments&responses&resId='.$s_id.'&collId='.$coll_id;
-                                $uniqueString .='<script>loadToolbarBadge(\'responses_tab\',\''.$toolbarBagde_script.'\');</script>';
-                                    
-                                }                    
-
-                                if ($viewDocHistory) {
-                                    //$history_frame = '';
-                                    
-                                    $pathScriptTab = 'index.php?display=true&page=show_history_tab&resId='
-                                    . $s_id . '&collId=' . $coll_id;
-                                    $uniqueString .= '<div class="fa fa-line-chart  DetailsTabFunc" id="DetailsLineChartTab" style="font-size:2em;padding-left: 15px;';
-                                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                                        $uniqueString .=  'padding-right: 0px;';
-                                    }else{
-                                        $uniqueString .=  'padding-right: 15px;';
+                                    $uniqueString .='<script>loadToolbarBadge(\'attachments_tab\',\''.$toolbarBagde_script.'\');</script>';
                                     }
-                                    $uniqueString .= '" title="'. _DOC_HISTORY . '" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsLineChartTab\',true);"> <sup><span style="font-size: 10px;';
-                                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                                            $style .= 'visibility:hidden;"';
-                                        }else{
-                                            $style .= 'display:none;"';
+
+                                    if ($core->is_module_loaded('attachments')) {
+                                            $extraParam = '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail';
+                                            $pathScriptTab =  'index.php?display=true&page=show_attachments_details_tab&module=attachments&fromDetail=response&resId='
+                                            . $s_id . '&collId=' . $coll_id.$extraParam;
+                                            $uniqueString .= '<div id="responses_tab" class="fa fa-mail-reply  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DONE_ANSWERS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'responses_tab\',true);"> <sup id="responses_tab_badge"></sup></div>';
+                                            //LOAD TOOLBAR BADGE
+                                            $toolbarBagde_script = 'index.php?display=true&module=attachments&page=load_toolbar_attachments&responses&resId='.$s_id.'&collId='.$coll_id;
+                                            $uniqueString .='<script>loadToolbarBadge(\'responses_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    }                    
+
+                                    if ($viewDocHistory) {
+                                    
+                                        $pathScriptTab = 'index.php?display=true&page=show_history_tab&resId='
+                                        . $s_id . '&collId=' . $coll_id;
+                                        $uniqueString .= '<div class="fa fa-line-chart  DetailsTabFunc" id="DetailsLineChartTab" style="font-size:2em;padding-left: 15px;';
+                                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
+                                            $uniqueString .=  'padding-right: 0px;';
+                                        } else {
+                                            $uniqueString .=  'padding-right: 15px;';
                                         }
-                                    $uniqueString .= $style.' class="nbResZero">0</span></sup></div>';
-                                }
+                                        $uniqueString .= '" title="'. _DOC_HISTORY . '" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsLineChartTab\',true);"> <sup><span style="font-size: 10px;';
+                                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
+                                                $style .= 'visibility:hidden;"';
+                                            } else {
+                                                $style .= 'display:none;"';
+                                            }
+                                        $uniqueString .= $style.' class="nbResZero">0</span></sup></div>';
+                                    }
                                 
-                                
-
-                                if ($core->is_module_loaded('notes')) {
-                                   // $note = '';
-                                    $pathScriptTab = 'index.php?display=true&module=notes&page=notes&identifier='
-                                   . $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=full';
-                                    $uniqueString .= '<div id="notes_tab" class="fa fa-pencil  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'. _NOTES.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');;tabClicked(\'notes_tab\',true);"> <sup id="notes_tab_badge"></sup></div>';
-                                    //LOAD TOOLBAR BADGE
-                                    $toolbarBagde_script = 'index.php?display=true&module=notes&page=load_toolbar_notes&resId='.$s_id.'&collId='.$coll_id;
-                                    $uniqueString .='<script>loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    if ($core->is_module_loaded('notes')) {
+                                    // $note = '';
+                                        $pathScriptTab = 'index.php?display=true&module=notes&page=notes&identifier='
+                                    . $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=full';
+                                        $uniqueString .= '<div id="notes_tab" class="fa fa-pencil  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'. _NOTES.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');;tabClicked(\'notes_tab\',true);"> <sup id="notes_tab_badge"></sup></div>';
+                                        //LOAD TOOLBAR BADGE
+                                        $toolbarBagde_script = 'index.php?display=true&module=notes&page=load_toolbar_notes&resId='.$s_id.'&collId='.$coll_id;
+                                        $uniqueString .='<script>loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                        }
                                     
-                                }
-                                
-                               
-                                //CASES TAB
-                                if ($core->is_module_loaded('cases') == true){   
-                                    //$case_frame = '';
-                                    $pathScriptTab = 'index.php?display=true&page=show_case_tab&module=cases&collId=' . $coll_id . '&resId='.$s_id;
-                                    $uniqueString .= '<div id="cases_tab" class="fa fa-suitcase  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="' . _CASE . '" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'cases_tab\',true);"> <sup id="cases_tab_badge"></sup></div>';
-                                    //LOAD TOOLBAR BADGE
-                                    $toolbarBagde_script = 'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$s_id.'&collId='.$coll_id;
-                                    $uniqueString .='<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    //CASES TAB
+                                    if ($core->is_module_loaded('cases') == true){   
+                                        $pathScriptTab = 'index.php?display=true&page=show_case_tab&module=cases&collId=' . $coll_id . '&resId='.$s_id;
+                                        $uniqueString .= '<div id="cases_tab" class="fa fa-suitcase  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="' . _CASE . '" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'cases_tab\',true);"> <sup id="cases_tab_badge"></sup></div>';
+                                        //LOAD TOOLBAR BADGE
+                                        $toolbarBagde_script = 'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$s_id.'&collId='.$coll_id;
+                                        $uniqueString .='<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                        }
                                     
-                        
-                                }
-                                
-                                //SENDMAILS TAB         
-                                if ($core->test_service('sendmail', 'sendmail', false) === true) {
-                                    //$sendmail = '';
-                                     $pathScriptTab = 'index.php?display=true&module=sendmail&page=sendmail&identifier='. $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium';    
-                                    
-                                    $uniqueString .= '<div id="sendmail_tab" class="fa fa-envelope  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._SENDED_EMAILS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'sendmail_tab\',true);"> <sup id="sendmail_tab_badge"></sup></div>';
-                                    //LOAD TOOLBAR BADGE
-                                    $toolbarBagde_script =  'index.php?display=true&module=uniqueString&page=load_toolbar_sendmail&resId='.$s_id.'&collId='.$coll_id;
-                                    $uniqueString .='<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
-                                    
-
-                                }
-                                
+                                    //SENDMAILS TAB         
+                                    if ($core->test_service('sendmail', 'sendmail', false) === true) {
+                                        $pathScriptTab = 'index.php?display=true&module=sendmail&page=sendmail&identifier='. $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium';    
+                                        $uniqueString .= '<div id="sendmail_tab" class="fa fa-envelope  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._SENDED_EMAILS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'sendmail_tab\',true);"> <sup id="sendmail_tab_badge"></sup></div>';
+                                        //LOAD TOOLBAR BADGE
+                                        $toolbarBagde_script =  'index.php?display=true&module=uniqueString&page=load_toolbar_sendmail&resId='.$s_id.'&collId='.$coll_id;
+                                        $uniqueString .='<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    }
                                     /// LINKS
-                                        if ($core->test_service('view_version_letterbox', 'apps', false)) {
-                                    //VERSIONS TAB
-                                    $versionTable = $security->retrieve_version_table_from_coll_id(
-                                        $coll_id
-                                    );
-                                    $selectVersions = "SELECT res_id FROM "
-                                        . $versionTable . " WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
-
-                                    $stmt = $db->query($selectVersions, array($s_id));
-                                    $nb_versions_for_title = $stmt->rowCount();
-                                    $lineLastVersion = $stmt->fetchObject();
-                                    $lastVersion = $lineLastVersion->res_id;
-                                    if ($lastVersion <> '') {
-                                        $objectId = $lastVersion;
-                                        $objectTable = $versionTable;
-                                    } else {
-                                        $objectTable = $security->retrieve_table_from_coll(
+                                    if ($core->test_service('view_version_letterbox', 'apps', false)) {
+                                        //VERSIONS TAB
+                                        $versionTable = $security->retrieve_version_table_from_coll_id(
                                             $coll_id
                                         );
-                                        $objectId = $s_id;
-                                        $_SESSION['cm']['objectId4List'] = $s_id;
-                                    }
-                                    if ($nb_versions_for_title == 0) {
-                                        $extend_title_for_versions = '0';
-                                        $class="nbResZero";
-                                        if($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                                            $style = 'visibility:hidden;font-size: 10px;';
-                                        }else{
-                                            $style = 'display:none;font-size: 10px;';
+                                        $selectVersions = "SELECT res_id FROM ". $versionTable . " WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
+
+                                        $stmt = $db->query($selectVersions, array($s_id));
+                                        $nb_versions_for_title = $stmt->rowCount();
+                                        $lineLastVersion = $stmt->fetchObject();
+                                        $lastVersion = $lineLastVersion->res_id;
+                                        if ($lastVersion <> '') {
+                                            $objectId = $lastVersion;
+                                            $objectTable = $versionTable;
+                                        } else {
+                                            $objectTable = $security->retrieve_table_from_coll(
+                                                $coll_id
+                                            );
+                                            $objectId = $s_id;
+                                            $_SESSION['cm']['objectId4List'] = $s_id;
                                         }
+                                        if ($nb_versions_for_title == 0) {
+                                            $extend_title_for_versions = '0';
+                                            $class="nbResZero";
+                                            if($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                                $style = 'visibility:hidden;font-size: 10px;';
+                                            }else{
+                                                $style = 'display:none;font-size: 10px;';
+                                            }
+                                            $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
+                                        } else {
+                                            $extend_title_for_versions = $nb_versions_for_title;
+                                            $class="nbRes";
+                                            $style = 'font-size: 10px;';
+                                        }
+                                        $_SESSION['cm']['resMaster'] = '';
                                         
-                                        $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
-                                    } else {
-                                        $extend_title_for_versions = $nb_versions_for_title;
-                                        $class="nbRes";
-                                        $style = 'font-size: 10px;';
-                                    }
-                                    $_SESSION['cm']['resMaster'] = '';
-                                    
-                                    $pathScriptTab = 'index.php?display=true&page=show_versions_tab&collId=' . $coll_id . '&resId='.$s_id.'&objectTable='.$objectTable;
-                                    $uniqueString .= '<div  class="fa fa-code-fork  DetailsTabFunc" id="DetailsCodeForkTab" style="font-size:2em;padding-left: 15px;';
-                                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                                        $uniqueString .=  'padding-right: 0px;';
-                                    }else{
-                                        $uniqueString .=  'padding-right: 15px;';
-                                    }
-                                    $uniqueString .= '"title="'. _VERSIONS .'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsCodeForkTab\',true);">';
-                                    $uniqueString .= ' <sup><span id="nbVersions" ';
-                                    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
-                                            $style .= 'visibility:hidden;"';
+                                        $pathScriptTab = 'index.php?display=true&page=show_versions_tab&collId=' . $coll_id . '&resId='.$s_id.'&objectTable='.$objectTable;
+                                        $uniqueString .= '<div  class="fa fa-code-fork  DetailsTabFunc" id="DetailsCodeForkTab" style="font-size:2em;padding-left: 15px;';
+                                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                            $uniqueString .=  'padding-right: 0px;';
                                         }else{
-                                            $style .= 'display:none;"';
+                                            $uniqueString .=  'padding-right: 15px;';
                                         }
-                                    $uniqueString .= 'class="'.$class.'" style="'.$style.'">' . $extend_title_for_versions . '</span></sup>';
-                                    $uniqueString.='</div>';
-                                }
-                                
-                                //LINKS TAB
-                               // $Links = '';
+                                        $uniqueString .= '"title="'. _VERSIONS .'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsCodeForkTab\',true);">';
+                                        $uniqueString .= ' <sup><span id="nbVersions" ';
+                                        if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
+                                                $style .= 'visibility:hidden;"';
+                                            }else{
+                                                $style .= 'display:none;"';
+                                            }
+                                        $uniqueString .= 'class="'.$class.'" style="'.$style.'">' . $extend_title_for_versions . '</span></sup>';
+                                        $uniqueString.='</div>';
+                                    }   
+                                    //LINKS TAB
+                                    $pathScriptTab = 'index.php?display=true&page=show_links_tab';  
+                                    $uniqueString .= '<div id="links_tab" class="fa fa-link  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._LINK_TAB.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'links_tab\',true);"> <sup id="links_tab_badge"></sup>';
+                                    $uniqueString .= '</div>';
 
-                                $pathScriptTab = 'index.php?display=true&page=show_links_tab';  
-                                
-                                $uniqueString .= '<div id="links_tab" class="fa fa-link  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._LINK_TAB.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'links_tab\',true);"> <sup id="links_tab_badge"></sup>';
-                                $uniqueString .= '</div>';
-
-                                //LOAD TOOLBAR BADGE
-                                 $toolbarBagde_script = 'index.php?display=true&page=load_toolbar_links&resId='.$s_id.'&collId='.$coll_id;
-                                 $uniqueString .='<script>loadToolbarBadge(\'links_tab\',\''.$toolbarBagde_script.'\');</script>';
-
-                                echo $uniqueString;
-                 
-                 
-                 
+                                    //LOAD TOOLBAR BADGE
+                                    $toolbarBagde_script = 'index.php?display=true&page=load_toolbar_links&resId='.$s_id.'&collId='.$coll_id;
+                                    $uniqueString .='<script>loadToolbarBadge(\'links_tab\',\''.$toolbarBagde_script.'\');</script>';
+                                    echo $uniqueString;
                  ?>
                
                 <div class="detailsDisplayDiv" id = "home-panel">
@@ -1365,19 +1314,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     
                 </div>
                 <?php 
-                        $technicalInfo_frame = '';
-                        $technicalInfo_frame .= '<div class="detailsDisplayDiv" id="uniqueDetailsDiv">';
+                    $technicalInfo_frame = '<div class="detailsDisplayDiv" id="uniqueDetailsDiv">';
                     $technicalInfo_frame .= '<iframe src="" name="uniqueDetailsIframe" width="100%" align="left" scrolling="yes" frameborder="0" id="uniqueDetailsIframe" style="height:100%;"></iframe>';        
                     $technicalInfo_frame .= '</div>';
-                    
                     echo $technicalInfo_frame;
 
                     ?>
                 <?php 
                 ?> 
             </dl>
-
-        </div>
+       </div>
     <?php
 }
 ?> 
@@ -1397,7 +1343,6 @@ if($_SESSION['indexation'] == true && $category == 'outgoing'){
         //launch outgoing_mail creation
         echo '<script type="text/javascript">document.getElementById(\'responses_tab\').click();showAttachmentsForm(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create&cat=outgoing\',\'98%\',\'auto\');</script>';
     }
-    
 }
 $detailsExport .= "</body></html>";
 $_SESSION['doc_convert'] = array();
