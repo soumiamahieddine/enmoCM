@@ -62,8 +62,7 @@ var BootstrapTree = {
     //enleve les enfant de l' <ul> passée en paramètre
     removeSons: function(ulElement){
 	    ulElement.find('li').hide('slow');
-        setTimeout(function(){
-            
+        setTimeout(function(){            
             ulElement.children().remove();
         },500);
     },
@@ -79,7 +78,6 @@ var BootstrapTree = {
             $j(this).parent().find(' > i').addClass('fa-plus-square').removeClass('fa-minus-square');
         }
         else {
-            children.show('fast');
             $j(this).parent().find(' > i').addClass('fa-minus-square').removeClass('fa-plus-square');
         }
         event.stopPropagation();

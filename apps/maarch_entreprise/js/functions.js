@@ -3186,16 +3186,18 @@ function getChildrenHtml (branch_id){
         type: 'POST',
         data: {branch_id : branch_id},
         success: function(result){
-            var branch = $j('#'+branch_id);
-            if(minus){
-                BootstrapTree.removeSons($j('#'+branch_id+' > ul'));
-                $j('#'+branch_id+' i').first().prop('class','fa fa-plus-square');
-            }
-            else{
-                BootstrapTree.addNode($j('#'+branch_id),$j(result));
-                BootstrapTree.init($j('#divTree'));
-                $j('#'+branch_id+' i').first().prop('class','fa fa-minus-square');
-            }
+                var branch = $j('#'+branch_id);
+                if(minus){
+                    BootstrapTree.removeSons($j('#'+branch_id+' > ul'));
+                    $j('#'+branch_id+' i').first().prop('class','fa fa-plus-square');
+                }
+                else{
+                    BootstrapTree.addNode($j('#'+branch_id),$j(result));
+                    BootstrapTree.init($j('#divTree'));
+                    $j('#'+branch_id+' > ul').first().find('li').hide();
+                    $j('#'+branch_id+' > ul').first().find('li').show('slow');
+                    $j('#'+branch_id+' i').first().prop('class','fa fa-minus-square');
+                }
             }
         });
     }
