@@ -22,6 +22,15 @@
             {
                 if(childs[i].id=='action_'+id_action){
                     childs[i].style.display = 'block';
+                    
+                    if($j("#"+id_action+"_entities_chosen_chosen")){
+                        $j("#"+id_action+"_entities_chosen_chosen").width('95%');
+                    } 
+
+                    if($j("#"+id_action+"_usersentities_chosen_chosen")){
+                        $j("#"+id_action+"_usersentities_chosen_chosen").width('95%');
+                    }
+
                 }
                 else
                 {
