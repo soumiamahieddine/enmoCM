@@ -94,6 +94,7 @@ if (count($_SESSION['tree_entities']) < 1) {
                     $label = "<b>" . $_SESSION['tree_entities'][$i]['ID'] . ' - '  
                         . $_SESSION['tree_entities'][$i]['LABEL'] . "</b>";
                 }
+                $valId=$_SESSION['tree_entities'][$i]['ID'];
             }
         }
         $stmt = $db->query("select u.user_id, u.lastname, u.firstname, u.enabled, ue.entity_id as entity_id from  " 
@@ -124,47 +125,22 @@ if (count($_SESSION['tree_entities']) < 1) {
             );
         }
         ?>
-        <?php 
-            /* for ($i=0; $i < count($level1)-1;$i++){
-                    echo '<li id="'.$level1[$i]['id'].'"><span onclick="getChildrenHtml('.$level1[$i]['id'].')"><i class="fa"></i></span>'.addslashes($level1[$i]['id'].' - '.$level1[$i]['label_value']).'</li>';
-            }*/
-            
-            /*$j.ajax({
-
-            });*/                
-         ?>
-        
         <div class="tree" id='divTree'>
             <ul>
-                <li id='VILLE'>
+                <li id=<?php echo "'".$valId."'"; ?> >
                     <span class="root">
-                                <i class="fa" onClick="getChildrenHtml('VILLE')"></i>                                
+                                <i class="fa" onClick=<?php echo "getChildrenHtml('".$valId."')"?>></i>                                
                                 <?php echo $label;?>
+                                
                     </span>
                     <ul></ul>
                 </li>
-                        <!--<li>li1
-                            <span>
-                                <i class="fa" ></i>                                
-                            </span>
-                            <ul >                                
-                                    <li>sli1</li>
-                                    <li>sli1</li>
-                                    <li>sli2</li>
-                            </ul>
-                        </li>
-                            
-                        <li>li2</li>
-                        <li>li3</li>-->
             </ul>
         </div>
                 <script type="text/javascript">
                 
                 var tree = $j('#divTree');
-                BootstrapTree.init(tree);                   
-                    
-                    /*BootstrapTree.addRoot(tree);
-                    BootstrapTree.addNode(r1);*/
+                BootstrapTree.init(tree);
                 </script>   
         <div id="trees_div"></div>
         <?php
