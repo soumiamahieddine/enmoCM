@@ -3,32 +3,24 @@
 
  function show_config_action( id_action, inside_scrollbox, show_when_disabled)
  {
-    //var div_to_show = $('action_'+id_action);
-    var chkbox = $('checkbox_'+id_action)
+    var chkbox = $j('#checkbox_'+id_action)
 
-    if(chkbox && (chkbox.disabled == false || show_when_disabled == true) )
+    if(chkbox && (chkbox.prop('disabled') == false || show_when_disabled == true) )
     {
-        var main_div = $('config_actions');
+        var main_div = $j('#config_actions')[0];
 
-        if(main_div != null)
-        {
-            if(inside_scrollbox == false)
-            {
-                var childs = main_div.childNodes;
-            }
-            else
-            {
-                var childs = main_div.firstChild.childNodes;
-            }
-            if(chkbox && chkbox.disabled == true && show_when_disabled == true)
-            {
-                var actions_uses = $(id_action+'_actions_uses');
+        if(main_div != null){
+          
+            var childs = main_div.childNodes;
+    
+            if(chkbox && chkbox.disabled == true && show_when_disabled == true){
+                var actions_uses = $j('#'+id_action+'_actions_uses')[0];
                 actions_uses.style.display = 'none';
             }
-            for(i=0; i < childs.length; i++)
+
+            for(i=0; i < childs.length-1; i++)
             {
-                if(childs[i].id=='action_'+id_action)
-                {
+                if(childs[i].id=='action_'+id_action){
                     childs[i].style.display = 'block';
                 }
                 else
@@ -56,32 +48,39 @@
  function manage_actions(id, inside_scrollbox, path_manage_script)
  {
     var hide_other_actions = false;
-    new Ajax.Request(path_manage_script,
-    {
-        method:'post',
-        parameters: { id_action : id},
-        onSuccess: function(answer)
+    
+    $j.ajax({
+        url: path_manage_script,
+        type: 'POST',
+        data: {
+           id_action : id
+        },
+        success:function(answer)
         {
+            eval('response='+answer);            
 
-            eval('response='+answer.responseText);
             if(response.status == 1 )
             {
                 hide_other_actions = true;
             }
-            var elem = $('allowed_basket_actions').getElementsByTagName('input');
+             
+            var elem = $j('#allowed_basket_actions')[0].getElementsByTagName('input');
+            
             for(var i=0; i < elem.length; i++)
             {
+
                 var id_action = elem[i].id.substring(9);
-                var label_action = $('label_'+id_action);
-                var param_action = $('link_'+id_action);
+                var label_action = $j('#label_'+id_action);
+                var param_action = $j('#link_'+id_action);
+
                 if(label_action)
                 {
-                    label_action.style.fontWeight='normal';
-                    label_action.style.fontStyle='normal';
+                    label_action.css('fontWeight','normal');
+                    label_action.css('fontStyle','normal');
                 }
                 if(param_action)
                 {
-                    param_action.style.display='inline';
+                    param_action.css('display','inline');
                 }
                 if(hide_other_actions)
                 {
@@ -91,7 +90,7 @@
                         elem[i].disabled = true;
                         if(label_action)
                         {
-                            label_action.style.fontWeight='bold';
+                            label_action.css('fontWeight','bold');
                         }
                     }
                     else
@@ -99,11 +98,11 @@
                         elem[i].disabled = true;
                         if(label_action)
                         {
-                            label_action.style.fontStyle='italic';
+                            label_action.css('fontStyle','italic');
                         }
                         if(param_action)
                         {
-                            param_action.style.display="none";
+                            param_action.css('display','none');
                         }
                     }
                 }
@@ -115,7 +114,7 @@
                         elem[i].disabled = true;
                         if(label_action)
                         {
-                            label_action.style.fontWeight='bold';
+                            label_action.css('fontWeight','bold');
                         }
                     }
                     else
@@ -126,24 +125,20 @@
                 }
             }
         },
-        onFailure: function(){}
+        error: function (error) {
+            alert(error);
+        }
+
     });
-
-
-    var main_div = $('config_actions');
+        
+    var main_div = $j('#config_actions')[0];
     if(main_div != null)
-    {
-        if(inside_scrollbox == false)
+    {  
+        var childs = main_div.childNodes;
+
+        for(i=0; i < childs.length-1; i++)
         {
-            var childs = main_div.childNodes;
-        }
-        else
-        {
-            var childs = main_div.firstChild.childNodes;
-        }
-        for(i=0; i < childs.length; i++)
-        {
-            childs[i].style.display = 'none';
+            childs[i].style.display ='none';
         }
     }
  }
