@@ -1,7 +1,6 @@
 
 function fill_report_result(url_report)
 {
-//	alert(url_report);
 	if(url_report)
 	{
 		var fct_args  = '';
@@ -16,7 +15,6 @@ function fill_report_result(url_report)
 				fct_args += tmp2[0]+'#'+tmp2[1]+'$$';
 			}
 		}
-		//console.log(fct_args);
 		$j.ajax(
 		{
 			url : url_report,

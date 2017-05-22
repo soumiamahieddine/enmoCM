@@ -1,33 +1,11 @@
 <?php
-
-/*
-*   Copyright 2008-2016 Maarch
-*
-*   This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 /**
-* @brief  Contains the controler of template object 
-* (create, save, modify, etc...)
-* 
-* 
-* @file
-* @author Laurent Giovannoni
-* @date $date$
-* @version $Revision$
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   templates_controler_Abstract
+* @author  dev <dev@maarch.org>
 * @ingroup templates
 */
 
@@ -36,11 +14,11 @@ $_ENV['DEBUG'] = false;
 
 // Loads the required class
 try {
-    require_once ('modules/templates/class/templates.php');
-    require_once ('modules/templates/templates_tables_definition.php');
-    require_once ('core/class/ObjectControlerAbstract.php');
-    require_once ('core/class/ObjectControlerIF.php');
-    require_once ('core/class/SecurityControler.php');
+    include_once 'modules/templates/class/templates.php';
+    include_once 'modules/templates/templates_tables_definition.php';
+    include_once 'core/class/ObjectControlerAbstract.php';
+    include_once 'core/class/ObjectControlerIF.php';
+    include_once 'core/class/SecurityControler.php';
 } catch (Exception $e) {
     functions::xecho($e->getMessage()) . ' // ';
 }
@@ -171,21 +149,12 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         $sec = new SecurityControler();
         $error = '';
 
-
-        // $template->template_label = $f->protect_string_db(
-        //     $f->wash($template->template_label, 'no', _TEMPLATE_LABEL.' ', 'yes', 0, 255)
-        // );
-        // $template->template_comment = $f->protect_string_db(
-        //     $f->wash($template->template_comment, 'no', _TEMPLATE_COMMENT.' ', 'yes', 0, 255)
-        // );
-
-
         $template->template_label = $f->wash($template->template_label, 'no', _TEMPLATE_LABEL.' ', 'yes', 0, 255);
         $template->template_comment = $f->wash($template->template_comment, 'no', _TEMPLATE_COMMENT.' ', 'yes', 0, 255);
 
         
-        $template->template_content = str_replace(';', '###', $template->template_content);        
-        $template->template_content = str_replace('--', '___', $template->template_content); 
+        $template->template_content = str_replace(';', '###', $template->template_content);
+        $template->template_content = str_replace('--', '___', $template->template_content);
         $allowedTags = '<html><head><body><title>'; //Structure
         $allowedTags .= '<h1><h2><h3><h4><h5><h6><b><i><tt><u><strike><blockquote><pre><blink><font><big><small><sup><sub><strong><em>'; // Text formatting
         $allowedTags .='<p><br><hr><center><div><span>'; // Text position
@@ -220,10 +189,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             );
         } else {
             if ($template->template_type == 'OFFICE') {
-                if (
-                    $mode == 'add' 
-                    && !$_SESSION['m_admin']['templates']['applet']
-                ) {
+                if ($mode == 'add' && !$_SESSION['m_admin']['templates']['applet']) {
                     $return = array(
                         'status' => 'ko', 
                         'value' => $template, 
@@ -231,8 +197,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
                     );
                     return $return;
                 }
-                if (
-                    ($mode == 'up' || $mode == 'add') 
+                if (($mode == 'up' || $mode == 'add') 
                     && $_SESSION['m_admin']['templates']['applet']
                 ) {
                     $storeInfos = array();
@@ -389,7 +354,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             'value' => $template->template_id,
         );
         if ($_SESSION['history']['templatedel'] == 'true') {
-            require_once('core/class/class_history.php');
+            include_once 'core/class/class_history.php';
             $history = new history();
             $history->add(
                 _TEMPLATES_TABLE_NAME, $template->template_id, 'DEL', 'templatedel',
@@ -452,7 +417,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
     */
     public function templateExists($template_id) 
     {
-        if (!isset ($template_id) || empty ($template_id)) {
+        if (!isset($template_id) || empty($template_id)) {
             return false;
         }
         $db = new Database();
@@ -571,9 +536,10 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
     public function getAllTemplatesForProcess($entityId) 
     {
         $db = new Database();
-        $stmt = $db->query('select * from ' . _TEMPLATES_TABLE_NAME . ' t, ' . _TEMPLATES_ASSOCIATION_TABLE_NAME . ' ta '
-                . 'where t.template_id = ta.template_id and ta.what = ? and ta.value_field = ? ORDER BY t.template_label',
-                ['destination', $entityId]
+        $stmt = $db->query(
+            'select * from ' . _TEMPLATES_TABLE_NAME . ' t, ' . _TEMPLATES_ASSOCIATION_TABLE_NAME . ' ta '
+            . 'where t.template_id = ta.template_id and ta.what = ? and ta.value_field = ? ORDER BY t.template_label',
+            ['destination', $entityId]
         );
         $templates = [];
         while ($res = $stmt->fetchObject()) {
@@ -592,17 +558,17 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
     
     public function updateTemplateEntityAssociation($templateId)
     {
-		
         $db = new Database();
-        $db->query("delete from " . _TEMPLATES_ASSOCIATION_TABLE_NAME 
+        $db->query(
+            "delete from " . _TEMPLATES_ASSOCIATION_TABLE_NAME 
             . " where template_id = ? and what = 'destination' ", array($templateId)
         );
        
         for ($i=0;$i<count($_SESSION['m_admin']['templatesEntitiesSelected']);$i++) {
-            $db->query("insert into " . _TEMPLATES_ASSOCIATION_TABLE_NAME 
+            $db->query(
+                "insert into " . _TEMPLATES_ASSOCIATION_TABLE_NAME 
                 . " (template_id, what, value_field, maarch_module) VALUES (?, 'destination', ? , 'entities')", 
                 array($templateId, $_SESSION['m_admin']['templatesEntitiesSelected'][$i])
-                
             ); 
         }
     }
@@ -615,7 +581,8 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             return $items;
         }
         if (empty($field)) {
-            $stmt = $db->query("select distinct what from " 
+            $stmt = $db->query(
+                "select distinct what from " 
                 . _TEMPLATES_ASSOCIATION_TABLE_NAME
                 . " where template_id = ? ", array($templateId)
             );
@@ -623,10 +590,11 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
                 $items[$res->what] = array();
             }
             foreach (array_keys($items) as $key) {
-                $stmt = $db->query("select value_field from " 
+                $stmt = $db->query(
+                    "select value_field from " 
                     . _TEMPLATES_ASSOCIATION_TABLE_NAME 
                     . " where template_id = ? and what = ? ", array($templateId, $key)
-                    );
+                );
                 $items[$key] = array();
                 while ($res = $stmt->fetchObject()) {
                     array_push($items[$key], $res->value_field);
@@ -634,7 +602,8 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             }
         } else {
             $items[$field] = array();
-            $stmt = $db->query("select value_field from " 
+            $stmt = $db->query(
+                "select value_field from " 
                 . _TEMPLATES_ASSOCIATION_TABLE_NAME 
                 . " where template_id = ? and what = ? ", array($templateId, $field)
             );
@@ -676,9 +645,9 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         $datasources = array();
         //Browse all files of the style template dir
         $xmlcontent = simplexml_load_file($configXml);
-        foreach($xmlcontent->datasource as $datasource) {
+        foreach ($xmlcontent->datasource as $datasource) {
             //<id> <label> <script>    
-            if(@constant((string) $datasource->label)) {
+            if (@constant((string) $datasource->label)) {
                 $label = constant((string)$datasource->label);
             } else {
                 $label = (string) $datasource->label;
@@ -742,17 +711,19 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
     }
     
     //returns file ext
-    function extractFileExt($sFullPath) {
+    function extractFileExt($sFullPath)
+    {
         $sName = $sFullPath;
         if (strpos($sName, '.')==0) {
             $ExtractFileExt = '';
         } else {
-            $ExtractFileExt = explode ('.', $sName);
+            $ExtractFileExt = explode('.', $sName);
         }
         return end($ExtractFileExt);
     }
     
-    function storeTemplateFile() {
+    function storeTemplateFile()
+    {
         if (!$_SESSION['m_admin']['templates']['applet']) {
             $tmpFileName = 'cm_tmp_file_' . $_SESSION['user']['UserId']
                 . '_' . rand() . '.' 
@@ -762,11 +733,8 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
                     )
                 );
             $tmpFilePath = $_SESSION['config']['tmppath'] . $tmpFileName;
-            if (!copy(
-                    $_SESSION['m_admin']['templates']['current_style'],
-                    $tmpFilePath
-                )
-            ) {
+            if (!copy($_SESSION['m_admin']['templates']['current_style'], $tmpFilePath)) {
+
                 $_SESSION['error'] = _PB_TO_COPY_STYLE_ON_TMP . ' ' . $tmpFilePath;
                 return false;
             } else {
@@ -800,12 +768,8 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
                     'templates',
                     $fileTemplateInfos
                 );
-                if (!file_exists(
-                        $storeInfos['path_template']
-                        .  str_replace("#", DIRECTORY_SEPARATOR, $storeInfos['destination_dir'])
-                        . $storeInfos['file_destination_name']
-                    )
-                ) {
+                if (!file_exists($storeInfos['path_template'] . str_replace("#", DIRECTORY_SEPARATOR, $storeInfos['destination_dir']) . $storeInfos['file_destination_name'])) {
+
                     $_SESSION['error'] = $storeInfos['error'];
                     return false;
                 }
@@ -831,7 +795,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             $fileNameOnTmp = $_SESSION['config']['tmppath'] . 'tmp_template_' . $_SESSION['user']['UserId']
             . '_' . rand() . '.' . $fileExtension;
             $handle = fopen($fileNameOnTmp, 'w');
-            if (fwrite($handle, $templateObj->template_content) === FALSE) {
+            if (fwrite($handle, $templateObj->template_content) === false) {
                 return false;
             }
             fclose($handle);
@@ -841,7 +805,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             $fileNameOnTmp = $_SESSION['config']['tmppath'] . 'tmp_template_' . $_SESSION['user']['UserId']
             . '_' . rand() . '.' . $fileExtension;
             $handle = fopen($fileNameOnTmp, 'w');
-            if (fwrite($handle, $templateObj->template_content) === FALSE) {
+            if (fwrite($handle, $templateObj->template_content) === false) {
                 return false;
             }
             fclose($handle);
@@ -853,7 +817,8 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             $stmt = $dbTemplate->query($query);
             $resDs = $stmt->fetchObject();
             $pathToDs = $resDs->path_template;
-            $pathToTemplateOnDs = $pathToDs . str_replace(
+            $pathToTemplateOnDs = $pathToDs
+                . str_replace(
                     "#", 
                     DIRECTORY_SEPARATOR, 
                     $templateObj->template_path
@@ -870,13 +835,14 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             $xmlfile = 'modules/templates/xml/datasources.xml';
             $xmlfileCustom = $_SESSION['config']['corepath'] 
             . 'custom/' . $_SESSION['custom_override_id'] . '/' . $xmlfile;
-             if (file_exists($xmlfileCustom)) {
+            
+            if (file_exists($xmlfileCustom)) {
                 $xmlfile = $xmlfileCustom;
             }
             $fulllist = array();
             $fulllist = $this->getTemplatesDatasources($xmlfile);
             foreach ($fulllist as $ds) {
-                if ($datasourceId == $ds['id']){
+                if ($datasourceId == $ds['id']) {
                     return (object)$ds;
                 }
             }
@@ -884,7 +850,8 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         return null;
     }
     
-    protected function getBaseDatasources() {
+    protected function getBaseDatasources()
+    {
         $datasources = array();
         
         // Date and time
@@ -893,32 +860,32 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         $datasources['datetime'][0]['timestamp'] = time();
         
         // Session
-        if(isset($_SESSION)) {
+        if (isset($_SESSION)) {
             // Config (!!! database)
-            if(count($_SESSION['config']) > 0) {
+            if (count($_SESSION['config']) > 0) {
                 $datasources['config'][0] = $_SESSION['config'];
                 $datasources['config'][0]['linktoapp'] = $_SESSION['config']['businessappurl']."index.php";
             }
             
             // Current basket
-            if(count($_SESSION['current_basket']) > 0) {
-                foreach($_SESSION['current_basket'] as $name => $value) {
-                    if(!is_array($value)) {
+            if (count($_SESSION['current_basket']) > 0) {
+                foreach ($_SESSION['current_basket'] as $name => $value) {
+                    if (!is_array($value)) {
                         $datasources['basket'][0][$name] = $value;
                     }
                 }
             }
             
             // User
-            if(count($_SESSION['user']) > 0) {
-                foreach($_SESSION['user'] as $name => $value) {
-                    if(!is_array($value)) {
+            if (count($_SESSION['user']) > 0) {
+                foreach ($_SESSION['user'] as $name => $value) {
+                    if (!is_array($value)) {
                         $datasources['user'][0][strtolower($name)] = $value;
                     }
                 }
-                if(count($_SESSION['user']['entities']) > 0) {
-                    foreach($_SESSION['user']['entities'] as $entity) {
-                        if($entity['ENTITY_ID'] === $_SESSION['user']['primaryentity']['id']) {
+                if (count($_SESSION['user']['entities']) > 0) {
+                    foreach ($_SESSION['user']['entities'] as $entity) {
+                        if ($entity['ENTITY_ID'] === $_SESSION['user']['primaryentity']['id']) {
                             $datasources['user'][0]['entity'] = $_SESSION['user']['entities'][0]['ENTITY_LABEL'];
                             $datasources['user'][0]['role'] = $_SESSION['user']['entities'][0]['ROLE'];
                         }
@@ -927,7 +894,6 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             }
             
         }
-    
         return $datasources;
     }
     
@@ -941,8 +907,8 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
     */
     public function merge($templateId, $params=array(), $outputType) 
     {
-        require_once 'core/class/class_functions.php';
-        require_once 'modules/templates/templates_tables_definition.php';
+        include_once 'core/class/class_functions.php';
+        include_once 'modules/templates/templates_tables_definition.php';
         include_once 'apps/maarch_entreprise/tools/tbs/tbs_class_php5.php';
         include_once 'apps/maarch_entreprise/tools/tbs/tbs_plugin_opentbs.php';
 
@@ -953,19 +919,19 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         
         $datasources = $this->getBaseDatasources();
         // Make params array for datasrouce script
-        foreach($params as $paramName => $paramValue) {
+        foreach ($params as $paramName => $paramValue) {
             $$paramName = $paramValue;
         }
         //Retrieve script for datasources
         $datasourceObj = $this->getDatasourceScript($templateObj->template_datasource);
-        if($datasourceObj->script) {
-            require $datasourceObj->script;
+        if ($datasourceObj->script) {
+            include $datasourceObj->script;
         }
         
         // Merge with TBS
         $TBS = new clsTinyButStrong;
         $TBS->NoErr = true;
-        if($templateObj->template_type == 'OFFICE') {
+        if ($templateObj->template_type == 'OFFICE') {
             $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
             $TBS->LoadTemplate($pathToTemplate, OPENTBS_ALREADY_UTF8);
         } else {
@@ -974,7 +940,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         
         foreach ($datasources as $name => $datasource) {
             // Scalar values or arrays ?
-            if(!is_array($datasource)) {
+            if (!is_array($datasource)) {
                 $TBS->MergeField($name, $datasource);
             } else {
                 $TBS->MergeBlock($name, 'array', $datasource);
@@ -989,7 +955,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
 
             foreach ($datasources as $name => $datasource) {
                 // Scalar values or arrays ?
-                if(!is_array($datasource)) {
+                if (!is_array($datasource)) {
                     $TBS->MergeField($name, $datasource);
                 } else {
                     $TBS->MergeBlock($name, 'array', $datasource);
@@ -1000,7 +966,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
                 $TBS->LoadTemplate('#word/footer1.xml');
                 foreach ($datasources as $name => $datasource) {
                     // Scalar values or arrays ?
-                    if(!is_array($datasource)) {
+                    if (!is_array($datasource)) {
                         $TBS->MergeField($name, $datasource);
                     } else {
                         $TBS->MergeBlock($name, 'array', $datasource);
@@ -1013,7 +979,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
 
         switch($outputType) {
         case 'content':
-            if($templateObj->template_type == 'OFFICE') {
+            if ($templateObj->template_type == 'OFFICE') {
                 $TBS->Show(OPENTBS_STRING);
             } else {
                 $TBS->Show(TBS_NOTHING);
@@ -1027,7 +993,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
             . '_' . rand() . '.' . $fileExtension;
             $myFile = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
-            if($templateObj->template_type == 'OFFICE') {
+            if ($templateObj->template_type == 'OFFICE') {
                 $TBS->Show(OPENTBS_FILE, $myFile);
             } else {
                 $TBS->Show(TBS_NOTHING);

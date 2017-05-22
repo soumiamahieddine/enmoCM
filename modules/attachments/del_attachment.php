@@ -156,18 +156,6 @@ if ($stmt->rowCount() > 0) {
 		var document_type = '<?php functions::xecho($info_doc['attachment_type']); ?>';
 		var is_version = '<?php functions::xecho($is_version); ?>';
 
-		if(window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc)) {
-			var tab = window.parent.top.document.getElementById('tabricatorRight');
-			if(document_type == 'signed_response'){
-				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).innerHTML = "<?php echo $attach_type; ?><sup><span class=\"\" style=\"\" id=\"\"></span></sup>";
-				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).setAttribute('onclick','updateFunctionModifRep(\'<?php echo $document_id; ?>\', '+num_rep+', '+is_version+')');
-				window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc).id = 'ans_'+num_rep+'_<?php echo $document_id; ?>';
-
-			}else{
-				tab.removeChild(window.parent.top.document.getElementById('ans_'+num_rep+'_'+res_id_doc));
-			}
-
-		}
 		if(window.parent.top.document.getElementById('content_'+num_rep+'_'+res_id_doc)) {
 			var tab = window.parent.top.document.getElementById('tabricatorRight');
 			
@@ -184,26 +172,6 @@ if ($stmt->rowCount() > 0) {
 			
 		}
 
-		if (window.parent.top.document.getElementById("sign_link")){
-			window.parent.top.document.getElementById("sign_link").style.display = '';
-			window.parent.top.document.getElementById("sign_link").setAttribute('onclick','signFile(<?php echo $document_id; ?>,'+is_version+',2);');	
-			window.parent.top.document.getElementById("sign_link").style.color = '#666';
-			window.parent.top.document.getElementById("sign_link_img").src = 'static.php?filename=sign.png';
-			window.parent.top.document.getElementById("sign_link_img").title= 'Signer ces projets de réponse (sans certificat)';
-			window.parent.top.document.getElementById("sign_link_img").style.cursor = 'pointer';
-			window.parent.top.document.getElementById("sign_link").removeAttribute('disabled');
-			window.parent.top.document.getElementById("sign_link").removeAttribute('href');
-		}
-
-		if (window.parent.top.document.getElementById("update_rep_link")) {
-			window.parent.top.document.getElementById("update_rep_link").style.display = '';
-			console.log("is_version = "+is_version);
-			/*if (is_version == 2) document.getElementById("update_rep_link").style.display = 'none';
-			else */if (is_version != 1) window.parent.top.document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id=<?php echo $document_id; ?>&relation=1&fromDetail=\',\'98%\',\'auto\');');	
-			else window.parent.top.document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id=<?php echo $document_id; ?>&relation=2&fromDetail=\',\'98%\',\'auto\');');	
-			
-		}
-		
 	}
 	
 	var eleframe1 =  parent.document.getElementsByName('list_attach');
