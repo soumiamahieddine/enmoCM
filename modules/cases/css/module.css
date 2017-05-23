@@ -1,1 +1,43 @@
-/* menu */
+/* menu */
+.whole-panel {
+    background: #009DC5;
+    border: 1px solid #000;
+    height: 650px;
+    min-width: 995px;
+    margin: 0 auto 1em;
+    padding: 5px 0 0 5px;
+    display: block;
+}
+
+.detailsCasesButton {
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.detailsCasesClicked {
+    background: #fff;
+    margin-top: 0;
+    margin-bottom: -3px;
+    padding-bottom: 5px;
+    position: relative;
+    z-index: 1;
+}
+
+.detailsCasesIframe {
+    background: #fff;
+    border-top: 1px solid #666;
+    clear: both;
+    margin: 0 0 0 -5px;
+    overflow: auto;
+    padding: 5px;
+    height: 92%;
+    width: auto;
+}
