@@ -121,6 +121,7 @@ $app->post('/attachments', \Attachments\Controllers\AttachmentsController::class
 
 //visa
 $app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
+$app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
 $app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
 $app->get('/signatureBook/{resId}/attachments', \Visa\Controllers\VisaController::class . ':getAttachmentsById');
 $app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\VisaController::class . ':getIncomingMailAndAttachmentsById');

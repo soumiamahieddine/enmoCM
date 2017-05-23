@@ -1,5 +1,4 @@
 <?php
-
 /*
 *   Copyright 2008-2017 Maarch
 *
@@ -19,24 +18,20 @@
 *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once __DIR__ . '/DOMTemplateProcessor.php';
+require_once 'vendor/autoload.php';
+//require_once 'core/Controllers/ResController.php';
+require_once __DIR__.'/RequestSeda.php';
+require_once __DIR__.'/ArchiveTransfer.php';
 require_once __DIR__ . '/AbstractMessage.php';
 
-class Acknowledgement {
-
-	public function __construct()
-	{
-	}
-
-	public function send($data, $resIds)
-	{
-	    $abstractMessage = new AbstractMessage();
-        $abstractMessage->saveXml($data,"Acknowledgement", ".txt");
-
-		foreach ($resIds as $resId) {
-            $abstractMessage->addAttachment($data->messageIdentifier->value, $resId, $data->messageIdentifier->value.".txt", "txt", "Accusé de reception",1);
-        }
-	}
-
-
+$status = 0;
+$error = $content = '';
+if ($_REQUEST['reference']) {
+    $abstractMessage = new AbstractMessage();
+    $res = $abstractMessage->changeStatus($_REQUEST['reference'],'SEND_SEDA');
+} else {
+    $status = 1;
 }
+
+echo "{status : " . $status . ", content : '" . addslashes($content) . "', error : '" . addslashes($error) . "'}";
+exit ();

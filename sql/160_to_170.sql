@@ -154,14 +154,18 @@ ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_final_disposition;
 ALTER TABLE doctypes ADD COLUMN retention_final_disposition character varying(255) NOT NULL DEFAULT 'destruction';
 
 ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_rule;
-ALTER TABLE doctypes ADD COLUMN retention_rule character varying(15) NOT NULL DEFAULT 'P10Y';
+ALTER TABLE doctypes ADD COLUMN retention_rule character varying(15) NOT NULL DEFAULT 'compta_3_03';
 
+ALTER TABLE doctypes DROP COLUMN IF EXISTS duration_current_use;
+ALTER TABLE doctypes ADD COLUMN duration_current_use integer DEFAULT '12';
 
 ALTER TABLE entities DROP COLUMN IF EXISTS archival_agency;
-ALTER TABLE entities ADD COLUMN archival_agency character varying(255);
+ALTER TABLE entities ADD COLUMN archival_agency character varying(255) DEFAULT 'org_123456789_Archives';
 
 ALTER TABLE entities DROP COLUMN IF EXISTS archival_agreement;
-ALTER TABLE entities ADD COLUMN archival_agreement character varying(255);
+ALTER TABLE entities ADD COLUMN archival_agreement character varying(255) DEFAULT 'MAARCH_LES_BAINS_ACTES';
+
+UPDATE entities SET business_id = 'org_987654321_Versant';
 
 DELETE FROM docservers where docserver_id = 'FASTHD_ATTACH';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 

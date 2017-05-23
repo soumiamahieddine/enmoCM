@@ -1828,7 +1828,7 @@ if (!defined("_FINAL_DISPOSITION")) define("_FINAL_DISPOSITION","Sort final");
 if (!defined("_CHOOSE_FINAL_DISPOSITION")) define("_CHOOSE_FINAL_DISPOSITION","Choix du sort final");
 if (!defined("_DESTROY")) define("_DESTROY","Destruction");
 if (!defined("_KEEP")) define("_KEEP","Conservation");
-if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Règle de retention");
+if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Règle de conservation");
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Tout désélectionner");
 

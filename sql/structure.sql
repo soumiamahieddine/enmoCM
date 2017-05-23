@@ -113,6 +113,7 @@ CREATE TABLE doctypes
   secondary_retention  character varying(50) DEFAULT NULL,
   retention_final_disposition character varying(255) NOT NULL DEFAULT 'destruction'::character varying,
   retention_rule character varying(15) NOT NULL DEFAULT 'P10Y'::character varying,
+  duration_current_use integer,
   CONSTRAINT doctypes_pkey PRIMARY KEY (type_id)
 )
 WITH (OIDS=FALSE);

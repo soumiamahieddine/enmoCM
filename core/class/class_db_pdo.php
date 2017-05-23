@@ -22,6 +22,9 @@
  * 
  * @package Core
  */
+
+require_once 'class_functions.php';
+
 class Database extends functions
 {
     /**

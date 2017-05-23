@@ -1595,28 +1595,30 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
 {
     if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
               && tablename != '' &&  id_coll != '')
-        {
-            new Ajax.Request(path_manage_script,
-            {
-                method:'post',
-                asynchronous : false,
-                parameters: { values : res_id_values,
-                              mode : mode_req,
-                              req : 'change_status',
-                              table : tablename,
-                              coll_id : id_coll,
-                              new_status : status
-                              },
-                onSuccess: function(answer){
-                    eval('response='+answer.responseText);
-                    if(response.status == 0 ) {
+    {
+
+        $j.ajax({
+            cache    : false,
+            url      : path_manage_script,
+            type     : 'POST',
+            dataType : 'json',
+            data: { values : res_id_values,
+                    mode : mode_req,
+                    req : 'change_status',
+                    table : tablename,
+                    coll_id : id_coll,
+                    new_status : status,
+                  },
+            success: function(answer) {
+
+                setTimeout(function(){
+                    if(answer.status == 0 ) {
                         actions_status.values = [];
                         // Status changed
                     } else {
                         try{
-                            //$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
-                            $('frm_error').innerHTML = response.error_txt;
-                            }
+                            $('frm_error').innerHTML = answer.error_txt;
+                        }
                         catch(e){}
                     }
                     if(page != '' && page != NaN && page && page != null ) {
@@ -1648,12 +1650,11 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                     }
                     
                     do_nothing = false;
-                },
-                onFailure: function(){
-                }
-            });
-        }
-        return true;
+                }, 200);
+            }
+        });
+    }
+    return true;
 }
 /***********************************************************************/
 
