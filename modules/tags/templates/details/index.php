@@ -35,14 +35,13 @@ include_once 'modules/tags/templates/init.php';
 
 
 
-if (!$core_tools)
-{
-	$core_tools = new core_tools();
+if (!$core_tools) {
+    $core_tools = new core_tools();
 }
 
 $_SESSION['tagsuser'] = array();
 $tags = new tag_controler();
-$tags->load_sessiontag($s_id,$coll_id);	
+$tags->load_sessiontag($s_id, $coll_id);
 //--------------------------------------
 $frm_str .= '<tr><th class="picto" align="left">';
 $frm_str .= '<i class="fa fa-tags fa-2x"></i></th>';
@@ -52,23 +51,21 @@ $frm_str .= '<td align="left" width="200px">'._TAGS.'</td>';
 
 
 $frm_str .= '<td colspan="6">';
-if ($modify_doc)
-{
-	$modify_keyword = true;
+if ($modify_doc) {
+    $modify_keyword = true;
 }
 $tag_customsize = '950px';
 $tag_customcols = '120';
-include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS		
+include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS
 
 $frm_str .= '</td></tr><style>#tag_userform_chosen{width:auto;}</style>';
 
 
 
-if (!$modify_doc){
-	$rttagfinaldetail = $route_tag_ui_script_without_modif;
-}
-else{
-	$rttagfinaldetail = $route_tag_ui_script;
+if (!$modify_doc) {
+    $rttagfinaldetail = $route_tag_ui_script_without_modif;
+} else {
+    $rttagfinaldetail = $route_tag_ui_script;
 }
 $frm_str .= '<input type="hidden" id="new_tag_label" name="new_tag_label"/>';
 $frm_str .= '<script type="text/javascript">load_tags('.$rttagfinaldetail.', \''.$s_id.'\', \''.$coll_id.'\');';
@@ -79,4 +76,3 @@ if ($core_tools->test_service('create_tag', 'tags', false) == 1) {
 $frm_str .= '</script>';
 
 echo $frm_str;
-?>
