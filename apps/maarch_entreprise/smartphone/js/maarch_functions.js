@@ -262,8 +262,11 @@ function clean(){
     if(document.getElementById('notes')){
         document.getElementById('notes').parentNode.removeChild(document.getElementById('notes'));
     }
-    else if(document.getElementById('load_user_signatures')){ 
-           document.getElementById('load_user_signatures').parentNode.removeChild(document.getElementById('load_user_signatures'));
+    else if(document.getElementById('signature_recap')){ 
+           document.getElementById('signature_recap').parentNode.removeChild(document.getElementById('signature_recap'));
+    }
+    else if(document.getElementById('sign_main_panel')){ 
+           document.getElementById('sign_main_panel').parentNode.removeChild(document.getElementById('sign_main_panel'));
     }
     else if(document.getElementById('sign_main_panel')){ 
            document.getElementById('sign_main_panel').parentNode.removeChild(document.getElementById('sign_main_panel'));
@@ -330,7 +333,35 @@ function replaceFrameResize(){
     ifrm.setAttribute("id", "ifrm");
     ifrm.setAttribute("scrolling", "no");
     
-    ifrm.style.height = window.innerHeight - 100 + "px";
+    ifrm.style.height = window.innerHeight - 120 + "px";
+    ifrm.style.width = window.innerWidth - 5 + "px";
+    frameThumb.appendChild(ifrm);
+    frameThumb.removeChild(cur_frm);
+  }
+}
+
+function switchFrame(path, res_id, id_ans){
+  var frameThumb = document.getElementById('frameThumb');
+  if (frameThumb){
+    var cur_frm = document.getElementById('ifrm');
+
+    var cur_show = document.getElementById('type_doc_show').value;
+    if (cur_show == 'attach'){
+      var link = path+'&res_id='+res_id+'&coll_id=letterbox_coll';
+      document.getElementById('type_doc_show').value = 'doc';
+    }
+    else{
+      var link = path+'&res_id='+res_id+'&coll_id=letterbox_coll&res_id_attach='+id_ans;
+      document.getElementById('type_doc_show').value = 'attach';
+    }
+    
+    var ifrm = document.createElement("IFRAME");
+    ifrm.setAttribute("src", link);
+    ifrm.setAttribute("frameborder", "0");
+    ifrm.setAttribute("id", "ifrm");
+    ifrm.setAttribute("scrolling", "no");
+    
+    ifrm.style.height = window.innerHeight - 120 + "px";
     ifrm.style.width = window.innerWidth - 5 + "px";
     frameThumb.appendChild(ifrm);
     frameThumb.removeChild(cur_frm);

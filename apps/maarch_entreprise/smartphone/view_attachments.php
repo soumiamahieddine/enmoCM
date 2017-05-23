@@ -17,7 +17,7 @@ $_SESSION['doc_id'] = $s_id;
 
 
 $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
-$whereRequest = " res_id_master = $s_id and attachment_type <> 'simple_attachement' and attachment_type <> 'converted_pdf' and status <> 'SIGN'";
+$whereRequest = " res_id_master = $s_id and attachment_type <> 'simple_attachement' and attachment_type <> 'converted_pdf' and status <> 'SIGN' and status <> 'DEL'";
 $basket_label = _RESPONSE_PROJECTS;
 $view = 'res_view_attachments';
 

@@ -256,11 +256,11 @@ for($i=0; $i<$totalEntities;$i++)
             if ($nbDoc == 0) $nbDoc = 1;
             if($report_type == 'graph')
             {
-                array_push($val_an, (string)round($tmp / $nbDoc,0));
+                array_push($val_an, (string)round($tmp / $nbDoc, 1));
             }
             elseif($report_type == 'array')
             {
-                array_push($data, array('LABEL' => $db->show_string($entities[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,0)));
+                array_push($data, array('LABEL' => $db->show_string($entities[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc, 1)));
             }
         }
         else
