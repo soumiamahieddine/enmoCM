@@ -47,8 +47,7 @@ include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/chosen.min.css';
 readfile('node_modules/tooltipster/dist/css/tooltipster.bundle.min.css');
 readfile('node_modules/photoswipe/dist/photoswipe.css');
 readfile('node_modules/photoswipe/dist/default-skin/default-skin.css');
-
-include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/photoswipe_custom.css';
+readfile('apps/maarch_entreprise/css/photoswipe_custom.css');
 
 ob_end_flush();
 

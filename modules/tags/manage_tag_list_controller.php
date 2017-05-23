@@ -130,18 +130,18 @@ function location_bar_management($mode)
  */
 function display_up($tag_id)
 {
-    $func = new functions();
+    $func    = new functions();
     $tagCtrl = new tag_controler;
-    $state = true;
-    $tag = $tagCtrl->get_by_id($tag_id);
+    $state   = true;
+    $tag     = $tagCtrl->get_by_id($tag_id);
     if (empty($tag)) {
         $state = false;
     } else {
         //put_in_session('tag', $tag->getArray());
-        $_SESSION['m_admin']['tag']['tag_id'] = $tag->tag_id;
+        $_SESSION['m_admin']['tag']['tag_id']    = $tag->tag_id;
         $_SESSION['m_admin']['tag']['tag_label'] = $tag->tag_label;
-        $_SESSION['m_admin']['tag']['tag_coll'] = $tag->coll_id;
-        $_SESSION['m_admin']['tag']['entities'] = $tag->entities;
+        $_SESSION['m_admin']['tag']['tag_coll']  = $tag->coll_id;
+        $_SESSION['m_admin']['tag']['entities']  = $tag->entities;
         $_SESSION['m_admin']['tag']['tag_count'] = (string) $tagCtrl->countdocs(
             $tag->tag_id
         );
@@ -181,7 +181,7 @@ function display_list()
 {
     $_SESSION['m_admin'] = array();
     $list = new list_show();
-    $func = new functions();
+
     init_session();
 
     $select[TAGS] = array();
@@ -196,10 +196,13 @@ function display_list()
         $where_what = array($_SESSION['user']['primaryentity']['id']);   
     }
     $what = '';
-    //var_dump($_REQUEST['what']);exit;
+
     if (isset($_REQUEST['what'])) {
         $what = $_REQUEST['what'];
+    }
 
+    if(!empty($where)){
+        $where .= " and ";
     }
 
     if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
@@ -223,7 +226,7 @@ function display_list()
     }
 
     $orderstr = $list->define_order($order, $field);
-    $request = new request();
+    $request  = new request();
     $tab = $request->PDOselect(
         $select, $where, $where_what, $orderstr, $_SESSION['config']['databasetype'], 
         "default", false, "", "", "", true, false, false
@@ -324,14 +327,14 @@ function format_item(
     &$item, $label, $size, $labelAlign, $align, $valign, $show, $order = true
 ) {
     $func = new functions();
-    $item['value'] = $func->show_string($item['value']);
+    $item['value']         = $func->show_string($item['value']);
     $item[$item['column']] = $item['value'];
-    $item['label'] = $label;
-    $item['size'] = $size;
-    $item['label_align'] = $labelAlign;
-    $item['align'] = $align;
-    $item['valign'] = $valign;
-    $item['show'] = $show;
+    $item['label']         = $label;
+    $item['size']          = $size;
+    $item['label_align']   = $labelAlign;
+    $item['align']         = $align;
+    $item['valign']        = $valign;
+    $item['show']          = $show;
     if ($order) {
         $item['order'] = $item['value'];
     } else {
@@ -347,10 +350,10 @@ function validate_tag_submit()
 {
 
     $pageName = 'manage_tag_list_controller';
-    $func = new functions();
-    $mode = 'up';
-    $mode = $_REQUEST['mode'];
-    $tagObj = new tag_controler();
+    $func     = new functions();
+    $mode     = 'up';
+    $mode     = $_REQUEST['mode'];
+    $tagObj   = new tag_controler();
     
     if ($_REQUEST['collection']) {
 
@@ -460,5 +463,4 @@ function put_in_session($type, $hashable, $showString = true)
             $_SESSION['m_admin'][$type][$key]=$value;
         }
     }
-    //print_r($_SESSION['m_admin']);
 }

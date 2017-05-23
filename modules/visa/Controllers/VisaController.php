@@ -336,7 +336,7 @@ class VisaController
         return array_values($attachments);
     }
 
-    public function getResList(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getDetailledResList(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         $basketId = $aArgs['basketId'];
 
@@ -376,6 +376,21 @@ class VisaController
             $resList[$key]['priorityLabel'] = $_SESSION['mail_priorities'][$value['priority']]; //TODO No Session
             unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
         }
+
+        return $response->withJson(['resList' => $resList]);
+    }
+
+    public function getResList(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $basketId = $aArgs['basketId'];
+
+        $resList = BasketsModel::getResListById(
+            [
+                'basketId' => $basketId,
+                'select'  => ['res_id'],
+                'order_by'  => ['order_alphanum(alt_identifier) DESC'],
+            ]
+        );
 
         return $response->withJson(['resList' => $resList]);
     }
