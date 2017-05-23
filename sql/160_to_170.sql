@@ -1,7 +1,7 @@
 -- *************************************************************************--
 --                                                                          --
 --                                                                          --
---        THIS SCRIPT IS USE TO PASS FROM MAARCH 1.6 TO MAARCH 1.7          --
+-- Model migration script - 1.6 to 17.06          --
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
@@ -288,7 +288,7 @@ DROP TABLE IF EXISTS adr_log;
 DROP TABLE IF EXISTS adr_rm;
 DROP TABLE IF EXISTS ar_boxes;
 DROP TABLE IF EXISTS ar_containers;
-DROP TABLE IF EXISTS ar_containers_types;
+DROP TABLE IF EXISTS ar_container_types;
 DROP TABLE IF EXISTS ar_deposits;
 DROP TABLE IF EXISTS ar_header;
 DROP TABLE IF EXISTS ar_natures;
