@@ -3162,7 +3162,7 @@ function resetSelect(id) {
     Event.fire($(id), "chosen:updated");
 }
 
-function getChildrenHtml (branch_id){
+function getChildrenHtml (branch_id, treeDiv, path_manage_script){
     var minus;
     if($j('#'+branch_id+' i').first().prop('class')=='fa fa-minus-square'||$j('#'+branch_id+' i').first().prop('class')=='fa fa-minus-square fa-plus-square')
     {
@@ -3172,7 +3172,7 @@ function getChildrenHtml (branch_id){
         minus=false;
     }
     $j.ajax({
-        url: 'index.php?display=true&module=entities&page=get_tree_childs', 
+        url: path_manage_script, 
         type: 'POST',
         data: {branch_id : branch_id},
         success: function(result){
@@ -3184,7 +3184,7 @@ function getChildrenHtml (branch_id){
                 else{
                     if(result!=''){
                         BootstrapTree.addNode($j('#'+branch_id),$j(result));
-                        BootstrapTree.init($j('#divTree'));
+                        BootstrapTree.init($j('#'+treeDiv));
                         $j('#'+branch_id+' > ul').first().find('li').hide();
                         $j('#'+branch_id+' > ul').first().find('li').show('fast');
                         $j('#'+branch_id+' i').first().prop('class','fa fa-minus-square');

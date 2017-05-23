@@ -129,7 +129,7 @@ if (count($_SESSION['tree_entities']) < 1) {
             <ul>
                 <li id=<?php echo "'".$valId."'"; ?> >
                     <span class="root">
-                                <i class="fa" onClick=<?php echo "getChildrenHtml('".$valId."')"?>></i>                                
+                                <i class="fa" onClick=<?php echo "getChildrenHtml('".$valId."','divTree','index.php?display=true&module=entities&page=get_tree_childs')"?>></i>                                
                                 <?php echo $label;?>
                                 
                     </span>

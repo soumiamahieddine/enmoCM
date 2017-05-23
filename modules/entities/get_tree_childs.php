@@ -104,7 +104,7 @@ if (isset($_POST['branch_id'])) {
                 '</li>';
             }
             else{
-                echo '<li id="'.$children[$i]['id'].'"> <span class="node"><i class="fa" onclick="getChildrenHtml(\''.$children[$i]['id'].'\')"></i>'.addslashes($children[$i]['label_value']).'</span>'.
+                echo '<li id="'.$children[$i]['id'].'"> <span class="node"><i class="fa" onclick="getChildrenHtml(\''.$children[$i]['id'].'\',\'divTree\',\'index.php?display=true&module=entities&page=get_tree_childs\')"></i>'.addslashes($children[$i]['label_value']).'</span>'.
                 '<ul></ul>'.
                 '</li>';
             }
