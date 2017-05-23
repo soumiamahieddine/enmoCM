@@ -1,49 +1,3 @@
-/**
- * Fill the Folder field in indexing page (basing on the subfolder field value)
- *
- * @param path_to_script String Path to the Ajax script
- **/
-function fill_folder(path_to_script)
-{
-	var subfolder_value = $('subfolder').value;
-	var subfolder_id = subfolder_value.substring(subfolder_value.indexOf('(')+1, subfolder_value.indexOf(')'));
-	//console.log(subfolder_id);
-	if(path_to_script)
-	{
-		new Ajax.Request(path_to_script,
-		{
-			method:'post',
-			parameters:
-			{
-				id_subfolder : subfolder_id
-			},
-			 onSuccess: function(answer){
-				eval("response = "+answer.responseText);
-				//alert(answer.responseText);
-				if(response.status == 0 )
-				{
-					$('folder').value = response.value;
-				}
-				else
-				{
-					if(console)
-					{
-						console.log('Erreur Ajax');
-					}
-				}
-			}
-		});
-	}
-	else
-	{
-		if(console)
-		{
-			console.log('Error fill_folder ');
-		}
-	}
-}
-
-
 function valid_viewfolder(url)
 {
 	var type_choice = '';
@@ -106,71 +60,6 @@ function valid_viewfolder(url)
 				date_fin : datefin
 						},
 		        onSuccess: function(answer){
-			//	alert(answer.responseText);
-				var div_to_fill = $('result_folderviewstat');
-				div_to_fill.innerHTML = answer.responseText;
-			}
-		});
-	}
-}
-
-function valid_histfolder(url)
-{
-	var type_choice = '';
-	var action_id = '';
-	var datestart = '';
-	var datefin = '';
-	var error = '';
-	var input = $('folder_id');
-	var period_item = $('period');
-	var action_item = $('action');
-	if(input)
-	{
-		id_folder = input.value;
-	}
-
-	if(period_item && period_item.checked)
-	{
-		type_choice = 'period';
-		var datestart_item = $('datestart');
-		if(datestart_item)
-		{
-			datestart = datestart_item.value;
-		}
-		var datefin_item = $('datefin');
-		if(datefin_item)
-		{
-			datefin = datefin_item.value;
-		}
-	}
-	else if(action_item && action_item.checked)
-	{
-		type_choice = 'action';
-		var actions_list = $('action_id');
-		//console.log(actions_list);
-		if(actions_list)
-		{
-			action_id =  actions_list.options[actions_list.selectedIndex].value;
-		}
-	}
-	else
-	{
-		error = 'empty_type_choice';
-	}
-	if(type_choice  != '' && url && error == '' )
-	{
-		new Ajax.Request(url,
-		{
-		    method:'post',
-		    parameters: {
-				type_report : type_choice,
-				date_start : datestart,
-				date_fin : datefin,
-				id_action : action_id,
-				folder_id : id_folder
-						},
-		        onSuccess: function(answer){
-			//	alert(answer.responseText);
 				var div_to_fill = $('result_folderviewstat');
 				div_to_fill.innerHTML = answer.responseText;
 			}
@@ -193,15 +82,15 @@ function get_folder_index(url, foldertype, id_div)
 			method:'post',
 			parameters: {
 				foldertype_id : foldertype
-					},
-					onSuccess: function(answer){
-						var div_to_fill = $(id_div);
-					//	console.log(div_to_fill);
-						if(div_to_fill)
-						{
-							div_to_fill.innerHTML = answer.responseText;
-						}
-					}
+			},
+			onSuccess: function(answer){
+				var div_to_fill = $(id_div);
+
+				if(div_to_fill)
+				{
+					div_to_fill.innerHTML = answer.responseText;
+				}
+			}
 		});
 	}
 }
@@ -240,20 +129,18 @@ function search_change_coll(url, id_coll)
 
 function get_ft_opt_index(url)
 {
-	if(url)
-    {
+	if(url) {
         new Ajax.Request(url,
         {
             method:'post',
             parameters: {},
-                    onSuccess: function(answer){
-                        var div_to_fill = $('opt_index');
-                    //  console.log(div_to_fill);
-                        if(div_to_fill)
-                        {
-                            div_to_fill.innerHTML = answer.responseText;
-                        }
-                    }
+			onSuccess: function(answer){
+				var div_to_fill = $('opt_index');
+				if(div_to_fill)
+				{
+					div_to_fill.innerHTML = answer.responseText;
+				}
+			}
         });
     }
 }

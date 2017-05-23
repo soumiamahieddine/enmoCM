@@ -1,24 +1,21 @@
 function showFileplanForm (path, extraValues, width, height) {
     
     if(typeof(width)==='undefined'){
-        var width = '500px';
+        width = '500px';
     }
     if(typeof(height)==='undefined'){
-        var height = '230px';
-    } 
+        height = '230px';
+    }
     if ($('divList')) {
         $('divList').style.display = 'none';
     }
     new Ajax.Request(path,
     {
         method:'post',
-        parameters: { url : path,
-                      'values[]': extraValues
-                    }, 
-        onLoading: function(answer) {
-            //show loading
-            // $('loading').style.display='block';
-        },  
+        parameters: {
+            url : path,
+            'values[]': extraValues
+        },
         onSuccess: function(answer) {
             eval("response = "+answer.responseText);
             if(response.status == 0){
@@ -28,7 +25,6 @@ function showFileplanForm (path, extraValues, width, height) {
             } else {
                 window.top.$('main_error').innerHTML = response.error;
             }
-            // $('loading').style.display='none';
         }
     });
 }
@@ -41,9 +37,6 @@ function validFileplanForm(path, form_id) {
 		method:'post',
 		parameters: Form.serialize(form_id),
 		encoding: 'UTF-8',
-		onLoading: function(answer) {
-			// $('loading').style.display='inline';
-		},
 		onSuccess: function(answer) {
 			eval("response = "+answer.responseText);
 			if(response.status == 0){
@@ -51,7 +44,6 @@ function validFileplanForm(path, form_id) {
 			} else {
 				alert(response.error);
 			}
-			// $('loading').style.display='none';
 		}
 	});
 }
@@ -63,9 +55,6 @@ function execFileplanScript(path) {
         method:'post',
         parameters: { url : path
                     },   
-        onLoading: function(answer) {
-            // $('loading').style.display='block';
-        },                        
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
             if(response.status == 0){
@@ -73,7 +62,6 @@ function execFileplanScript(path) {
             } else {
                 window.top.$('main_error').innerHTML = response.error;
             }
-            // $('loading').style.display='none';
         }
     });
 }
@@ -81,7 +69,7 @@ function execFileplanScript(path) {
 function planIsChecked(idForm, fieldName) {
 
     if(typeof(fieldName)==='undefined'){
-        var fieldName = 'field[]';
+        fieldName = 'field[]';
     }
     var count = 0;
     var thisForm =  document.getElementById(idForm);
@@ -90,7 +78,6 @@ function planIsChecked(idForm, fieldName) {
             if(thisForm.elements[i].checked == true) count ++;
         }
     }
-    // alert(count);
     var oneIsChecked = (count > 0) ? true: false;
 
     return oneIsChecked;
@@ -99,9 +86,8 @@ function planIsChecked(idForm, fieldName) {
 function getFieldsCheckedValues(idForm, fieldName) {
 
     if(typeof(fieldName)==='undefined'){
-        var fieldName = 'field[]';
+        fieldName = 'field[]';
     }
-    // var checkedValues = '';
     var checkedValues = [];
     
     var thisForm =  document.getElementById(idForm);
@@ -109,17 +95,14 @@ function getFieldsCheckedValues(idForm, fieldName) {
         if (thisForm.elements[i].type == 'checkbox' && thisForm.elements[i].name == fieldName) {
             if(thisForm.elements[i].checked == true) 
                 checkedValues.push(thisForm.elements[i].value);
-                // checkedValues += thisForm.elements[i].value + ',';
         }
     }
-    // alert(checkedValues);
     return checkedValues;
 }
 
 function showFileplanList(path, idForm, width, height, error) {
 
     var isChecked = planIsChecked(idForm);
-    // alert(isChecked);
     if(isChecked == true) {
         
         var checkedValues = getFieldsCheckedValues(idForm);
@@ -140,9 +123,10 @@ function loadFileplanList(idField, idList, path) {
     new Ajax.Request(path,
     {
         method:'post',
-        parameters: { url : path,
-                      param: fieldValue,
-                    },   
+        parameters: {
+            url : path,
+            param: fieldValue
+        },
         onLoading: function(answer) {
             //show loading
             $('loadingFileplan').style.display='block';

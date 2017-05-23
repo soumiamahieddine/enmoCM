@@ -71,7 +71,8 @@
 
 .tree .root{
     color: white;
-    background-color: #45a469
+    background-color: #45a469;
+    padding: 10px 8px;
 }
 
 .tree .node{

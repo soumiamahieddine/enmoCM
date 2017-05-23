@@ -43,9 +43,9 @@
 .m-signature-pad--body {
   position: absolute;
   left: 120px;
-  right: 20px;
-  top: 20px;
-  bottom: 60px;
+  right: 5px;
+  top: 5px;
+  bottom: 45px;
   border: 1px solid #f4f4f4;
 }
 
@@ -63,8 +63,8 @@
 .m-signature-pad--left {
   position: absolute;
   left: 0px;
-  top: 20px;
-  bottom: 60px;
+  top: 5px;
+  bottom: 50px;
   width: 120px;
 }
 
@@ -101,7 +101,7 @@
   position: absolute;
   left: 20px;
   right: 20px;
-  bottom: 20px;
+  bottom: 5px;
   height: 40px;
 }
 

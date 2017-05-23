@@ -139,8 +139,8 @@ if (count($_SESSION['tree_entities']) < 1) {
         </div>
                 <script type="text/javascript">
                 
-                var tree = $j('#divTree');
-                BootstrapTree.init(tree);
+                    var tree = $j('#divTree');
+                    BootstrapTree.init(tree);
                 </script>   
         <div id="trees_div"></div>
         <?php

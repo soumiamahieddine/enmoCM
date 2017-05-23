@@ -61,7 +61,7 @@ var BootstrapTree = {
     },
     //enleve les enfant de l' <ul> passée en paramètre
     removeSons: function(ulElement){
-	    ulElement.find('li').hide('slow');
+	    ulElement.find('li').hide('fast');
         setTimeout(function(){            
             ulElement.children().remove();
         },500);
