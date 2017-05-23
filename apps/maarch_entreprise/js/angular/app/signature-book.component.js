@@ -219,7 +219,7 @@ var SignatureBookComponent = (function () {
                 this.rightContentWidth = "44%";
                 this.leftContentWidth = "44%";
                 if (this.signatureBook.resList.length == 0) {
-                    this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList')
+                    this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList/details')
                         .map(function (res) { return res.json(); })
                         .subscribe(function (data) {
                         _this.signatureBook.resList = data.resList;

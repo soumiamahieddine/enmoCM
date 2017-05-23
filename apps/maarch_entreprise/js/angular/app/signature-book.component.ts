@@ -228,7 +228,7 @@ export class SignatureBookComponent implements OnInit {
                 this.rightContentWidth = "44%";
                 this.leftContentWidth = "44%";
                 if (this.signatureBook.resList.length == 0) {
-                    this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList')
+                    this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList/details')
                         .map(res => res.json())
                         .subscribe((data) => {
                             this.signatureBook.resList = data.resList;
