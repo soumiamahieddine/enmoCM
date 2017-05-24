@@ -194,7 +194,11 @@ export class SignatureBookComponent implements OnInit {
 
     changeRightViewer(index: number) {
         this.showAttachmentPanel = false;
-        this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
+        if (this.signatureBook.attachments[index]) {
+            this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
+        } else {
+            this.rightViewerLink = "";
+        }
         this.rightSelectedThumbnail = index;
     }
 

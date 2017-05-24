@@ -74,7 +74,6 @@ class VisaController
         $datas['documents']     = $documents;
         $datas['currentAction'] = $currentAction;
         $datas['resList']       = [];
-//        $datas['resListIndex']  = $resListIndex;
         $datas['nbNotes']       = \NotesModel::countForCurrentUserByResId(['resId' => $resId]);
         $datas['signatures']    = UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
@@ -348,6 +347,77 @@ class VisaController
             ]
         );
 
+        $resListForAttachments = [];
+        $resListForRequest = [];
+        foreach ($resList as $key => $value) {
+            $resListForAttachments[$value['res_id']] = null;
+            $resListForRequest[] = $value['res_id'];
+        }
+
+        $attachmentsInResList = AttachmentsModel::getAttachmentsWithOptions(
+            [
+                'select'    => ['res_id_master', 'status', 'attachment_type'],
+                'where'     => ['res_id_master in (?)', "attachment_type not in ('incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response')", "status not in ('DEL', 'TMP', 'OBS')"],
+                'data'      => [$resListForRequest]
+            ]
+        );
+
+        $attachmentTypes = AttachmentsModel::getAttachmentsTypesByXML();
+        foreach ($attachmentsInResList as $value) {
+            if ($resListForAttachments[$value['res_id_master']] === null) {
+                $resListForAttachments[$value['res_id_master']] = true;
+            }
+            if ($attachmentTypes[$value['attachment_type']]['sign'] && ($value['status'] == 'TRA' || $value['status'] == 'A_TRA')) {
+                $resListForAttachments[$value['res_id_master']] = false;
+            }
+        }
+
+        foreach ($resList as $key => $value) {
+            if (!empty($value['contact_id'])) {
+                $resList[$key]['sender'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['contact_id'], 'addressId' => $value['address_id']]);
+            } else {
+                $resList[$key]['sender'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
+            }
+
+            $resList[$key]['creation_date'] = date(DATE_ATOM, strtotime($resList[$key]['creation_date']));
+            $resList[$key]['process_limit_date'] = date(DATE_ATOM, strtotime($resList[$key]['process_limit_date']));
+            $resList[$key]['allSigned'] = ($resListForAttachments[$value['res_id']] === null ? false : $resListForAttachments[$value['res_id']]);
+            $resList[$key]['priorityColor'] = $_SESSION['mail_priorities_color'][$value['priority']]; //TODO No Session
+            $resList[$key]['priorityLabel'] = $_SESSION['mail_priorities'][$value['priority']]; //TODO No Session
+            unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
+        }
+
+        return $response->withJson(['resList' => $resList]);
+    }
+
+    public function getResList(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $basketId = $aArgs['basketId'];
+
+        $resList = BasketsModel::getResListById(
+            [
+                'basketId' => $basketId,
+                'select'  => ['res_id'],
+                'order_by'  => ['order_alphanum(alt_identifier) DESC'],
+            ]
+        );
+
+        return $response->withJson(['resList' => $resList]);
+    }
+
+    // TODO Remove after test
+    public function getDetailledResListTmp(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $basketId = $aArgs['basketId'];
+
+        $resList = BasketsModel::getResListById(
+            [
+                'basketId' => $basketId,
+                'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname'],
+                'order_by'  => ['order_alphanum(alt_identifier) DESC'],
+            ]
+        );
+
         $attachmentTypes = AttachmentsModel::getAttachmentsTypesByXML();
 
         foreach ($resList as $key => $value) {
@@ -376,21 +446,6 @@ class VisaController
             $resList[$key]['priorityLabel'] = $_SESSION['mail_priorities'][$value['priority']]; //TODO No Session
             unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
         }
-
-        return $response->withJson(['resList' => $resList]);
-    }
-
-    public function getResList(RequestInterface $request, ResponseInterface $response, $aArgs)
-    {
-        $basketId = $aArgs['basketId'];
-
-        $resList = BasketsModel::getResListById(
-            [
-                'basketId' => $basketId,
-                'select'  => ['res_id'],
-                'order_by'  => ['order_alphanum(alt_identifier) DESC'],
-            ]
-        );
 
         return $response->withJson(['resList' => $resList]);
     }
