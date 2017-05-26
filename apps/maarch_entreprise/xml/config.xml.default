@@ -4,8 +4,8 @@
         <databaseserver>127.0.0.1</databaseserver>
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <databasename>maarch_entreprise</databasename>
-        <databaseuser>postgres</databaseuser>
+        <databasename>maarchcourrier</databasename>
+        <databaseuser>maarch</databaseuser>
         <databasepassword>maarch</databasepassword>
         <databasesearchlimit>500</databasesearchlimit>
         <nblinetoshow>10</nblinetoshow>
