@@ -1,14 +1,16 @@
+NOTA : this document is still in work in progress
+
 # Contributing to Maarch
 
 :+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
 
-The following is a set of guidelines for contributing to Maarch and its packages, which are hosted in the [Maarch Organization](https://labs.maarch.org/maarch/MaarchCourrier/) on Maarch GitLab.
-These are just guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
+The following is a set of guidelines for contributing to Maarch and its packages, which are hosted in the [Maarch Organization](https://labs.maarch.org/maarch/MaarchCourrier/) on Maarch GitLab. 
+Use your best judgment, and feel free to propose changes to this document in a merge request.
 
 #### Table Of Contents
 
 [What should I know before I get started?](#what-should-i-know-before-i-get-started)
-  * [Code of Conduct](#code-of-conduct)
+  * [ Contributor Agreement ](#contributor-agreement)
   * [About Maarch](#about-maarch)
 
 [How Can I Contribute?](#how-can-i-contribute)
@@ -25,18 +27,15 @@ These are just guidelines, not rules. Use your best judgment, and feel free to p
 
 ## What should I know before I get started?
 
-### Code of Conduct
+###  Contributor Agreement 
 
-This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.md).
-By participating, you are expected to uphold this code.
+Anyone wishing to contribute to Maarch Courrier must read & sign our [Contributor License Agreement](CLA.md). The Maarch team is legally prevented from accepting any merge requests 
+from users who have not signed the CLA first.
 
-### About Maarch
+### About Maarch Courrier
 
-Maarch is a professional DMS that natively answers a vast majority of the needs for operational document management. It is released under the terms of the open source license GPLv3, because archiving and document management need open solutions. One of the consequence is that Maarch software is affordable for any kind of organisation.
-
-However, Maarch has been designed by consultants in electronic archiving and automatic documents production. As such, it offers all guarantee of stability and scalability one can wait from this kind of solution. Particular care has been taken to assure the best performances on standard hardware.
-
-Maarch proposes a global architecture and all tools to acquire, manage and preserve production document flows.
+Maarch Courrier is a professional DMS that natively answers a vast majority of the needs for operational document management. 
+It is released under the terms of the free and open source license GNU/GPLv3. One of the consequence is that Maarch software is affordable for any kind of organisation.
 
 ## How Can I Contribute?
 
