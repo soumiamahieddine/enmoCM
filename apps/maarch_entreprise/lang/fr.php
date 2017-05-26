@@ -234,7 +234,7 @@ if (!defined("_CHARACTER")) define("_CHARACTER", "caractère");
 if (!defined("_CHARACTERS")) define("_CHARACTERS", "caractères");
 if (!defined("MUST_BE_LESS_THAN")) define("MUST_BE_LESS_THAN", "ne doit pas faire plus de");
 if (!defined("_WRONG_FORMAT")) define("_WRONG_FORMAT", "n'est pas dans le bon format");
-if (!defined("_WELCOME")) define("_WELCOME", "Bienvenue sur Maarch !");
+if (!defined("_WELCOME")) define("_WELCOME", "Bienvenue sur Maarch Courrier !");
 if (!defined("_WELCOME_TITLE")) define("_WELCOME_TITLE", "Accueil");
 if (!defined("_HELP")) define("_HELP", "Aide");
 if (!defined("_SEARCH_ADV_SHORT")) define("_SEARCH_ADV_SHORT", "Recherche Avancée");
