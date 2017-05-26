@@ -14,7 +14,7 @@
         <adminmail>dev@maarch.org</adminmail>
         <adminname>maarch</adminname>
         <debug>false</debug>
-        <applicationname>MAARCH 1.6</applicationname>
+        <applicationname>MAARCH 17.06</applicationname>
         <defaultPage>welcome</defaultPage>
         <exportdirectory></exportdirectory>
         <CookieTime>20</CookieTime> <!-- minutes -->
