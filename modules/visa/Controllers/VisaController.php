@@ -379,7 +379,7 @@ class VisaController
             }
 
             $resList[$key]['creation_date'] = date(DATE_ATOM, strtotime($resList[$key]['creation_date']));
-            $resList[$key]['process_limit_date'] = date(DATE_ATOM, strtotime($resList[$key]['process_limit_date']));
+            $resList[$key]['process_limit_date'] = (empty($resList[$key]['process_limit_date']) ? null : date(DATE_ATOM, strtotime($resList[$key]['process_limit_date'])));
             $resList[$key]['allSigned'] = ($resListForAttachments[$value['res_id']] === null ? false : $resListForAttachments[$value['res_id']]);
             $resList[$key]['priorityColor'] = $_SESSION['mail_priorities_color'][$value['priority']]; //TODO No Session
             $resList[$key]['priorityLabel'] = $_SESSION['mail_priorities'][$value['priority']]; //TODO No Session
