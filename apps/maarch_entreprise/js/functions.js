@@ -2953,6 +2953,23 @@ function loadAddressAttached(contact_id, select){
     });
 }
 
+function loadDiffListHistory(listinstance_history_id)
+{
+    new Effect.toggle('diffListHistory_'+listinstance_history_id, 'appear' , {delay:0.2});
+
+    var path_manage_script = 'index.php?module=entities&page=loadDiffListHistory&display=true';
+
+    new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { listinstance_history_id : listinstance_history_id},
+            onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                $('divDiffListHistory_'+listinstance_history_id).innerHTML = response.toShow;
+            }
+        });
+}
+
 function saveSizeInBytes() {
     if(!isNaN($('size_limit_number').value)) {
         if($('size_format').value == "MB") {
