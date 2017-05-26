@@ -1602,15 +1602,15 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (909, '[REJET] Erreur affectation', 'Erreur affectation', 'Ce courrier ne semble pas concerner mon service', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (910, '[REJET] Anomalie de numérisation', 'Anomalie de numérisation', 'Le courrier présente des anomalies de numérisation', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 --
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1000, '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '<h2>Ville de Maarch-les-Bains</h2>
-<p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
+INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1000, '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '<h2>Ville de Maarch-les-Bains  - [user.entity_label]</h2>
+<p><em>[user.adrs_1]</em><br /><em>[user.adrs_2]</em><br /><em>[user.zipcode] [user.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
 <p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui ne rel&egrave###ve pas de sa comp&eacute###tence.</p>
 <p>Votre demande concerne [res_letterbox.subject].</p>
 <p>Cette demande a &eacute###t&eacute### transmise &agrave### (veuillez renseigner le nom de l''AUTORITE COMPETENTE).</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
 --
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1020, '[MAIL] AR TYPE dans le cas d’une décision implicite de rejet', '[MAIL] AR TYPE dans le cas d’une décision implicite de rejet', '<h2>Ville de Maarch-les-Bains</h2>
-<p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
+INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1020, '[MAIL] AR TYPE dans le cas d’une décision implicite de rejet', '[MAIL] AR TYPE dans le cas d’une décision implicite de rejet', '<h2>Ville de Maarch-les-Bains - [user.entity_label]</h2>
+<p><em>[user.adrs_1]</em><br /><em>[user.adrs_2]</em><br /><em>[user.zipcode] [user.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
 <p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui rel&egrave###ve de sa comp&eacute###tence.</p>
 <p>Votre demande concerne : [res_letterbox.subject].</p>
@@ -1627,8 +1627,8 @@ INSERT INTO templates  (template_id, template_label, template_comment, template_
 <p>Toutefois, si vous souhaitez en cas de rejet du recours gracieux ou du recours hi&eacute###rarchique former un recours contentieux, ce recours gracieux ou hi&eacute###rarchique devra avoir &eacute###t&eacute### introduit dans le d&eacute###lai sus-indiqu&eacute### du recours contentieux.</p>
 <p>Vous conserverez ainsi la possibilit&eacute### de former un recours contentieux, dans un d&eacute###lai de deux mois &agrave### compter de la d&eacute###cision intervenue sur ledit recours gracieux ou hi&eacute###rarchique.</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
 --
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1010, '[MAIL] AR TYPE dans le cas d’une décision implicite d’acceptation', '[MAIL] AR TYPE dans le cas d’une décision implicite d’acceptation', '<h2>Ville de Maarch-les-Bains</h2>
-<p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
+INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1010, '[MAIL] AR TYPE dans le cas d’une décision implicite d’acceptation', '[MAIL] AR TYPE dans le cas d’une décision implicite d’acceptation', '<h2>Ville de Maarch-les-Bains - [user.entity_label]</h2>
+<p><em>[user.adrs_1]</em><br /><em>[user.adrs_2]</em><br /><em>[user.zipcode] [user.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
 <p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui rel&egrave###ve de sa comp&eacute###tence.</p>
 <p>Votre demande concerne [res_letterbox.subject].</p>
@@ -1639,8 +1639,8 @@ INSERT INTO templates  (template_id, template_label, template_comment, template_
 <p>Le cas &eacute###ch&eacute###ant, le d&eacute###lai de d&eacute###cision implicite d''acceptation ne d&eacute###butera qu''''apr&egrave###s la production des pi&egrave###ces demand&eacute###es.</p>
 <p>En cas de d&eacute###cision implicite d''''acceptation vous avez la possibilit&eacute### de demander au service charg&eacute### du dossier une attestation conform&eacute###ment aux dispositions de l''article 22 de la loi n&deg### 2000-321 du 12 avril 2000 relative aux droits des citoyens dans leurs relations avec les administrations modifi&eacute###e.</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
 --
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1030, '[MAIL] AR TYPE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', '[MAIL] AR TYPE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', '<h2>Ville de Maarch-les-Bains</h2>
-<p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
+INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1030, '[MAIL] AR TYPE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', '[MAIL] AR TYPE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', '<h2>Ville de Maarch-les-Bains - [user.entity_label]</h2>
+<p><em>[user.adrs_1]</em><br /><em>[user.adrs_2]</em><br /><em>[user.zipcode] [user.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
 <p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui rel&egrave###ve de sa comp&eacute###tence.</p>
 <p>Votre demande concerne [res_letterbox.subject].</p>
