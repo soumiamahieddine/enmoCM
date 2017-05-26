@@ -1649,7 +1649,12 @@ INSERT INTO templates  (template_id, template_label, template_comment, template_
 <p>Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute### du dossier par t&eacute###l&eacute###phone [users.phone] ou par messagerie [users.mail].</p>', 'HTML', NULL, NULL, 'TXT: document_texte', 'letterbox_attachment', 'sendmail', 'all');
 ------------
 Select setval('templates_seq', (select max(template_id)+1 from templates), false);
-
+------------
+-- User signature for ppetit
+------------
+TRUNCATE TABLE user_signatures;
+INSERT INTO user_signatures (id, user_id, signature_label, signature_path, signature_file_name, fingerprint) VALUES (2, 'ppetit', 'Signature de Patricia Petit', '0000#', 'ppetit.jpeg', NULL);
+Select setval('user_signatures_seq', (select max(id)+1 from user_signatures), false);
 ------------
 --NOTIFICATIONS
 ------------
