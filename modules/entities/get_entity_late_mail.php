@@ -1,22 +1,13 @@
 <?php
 
-/*
-*    Copyright 2008,20015 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   get_entity_vol
+* @author  dev <dev@maarch.org>
+* @ingroup entities
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
@@ -31,9 +22,9 @@ $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 
 $graph = new graphics();
-$req = new request();
-$db = new Database();
-$sec = new security();
+$req   = new request();
+$db    = new Database();
+$sec   = new security();
 
 $entities_chosen = explode("#", $_POST['entities_chosen']);
 if($_REQUEST['sub_entities'] == 'true'){
