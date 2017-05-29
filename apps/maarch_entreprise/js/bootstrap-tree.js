@@ -24,13 +24,15 @@ var BootstrapTree = {
     },
 
     addNode: function(parent, element, opened, closed) {
+
         if (!element || !parent) {
             return;
         }
+
         var ul = parent.find('> ul');
         if (ul.length == 0) {
             ul = $j('<ul/>').appendTo(parent);
-            
+
             parent.addClass('parent_li')
               .find('span:first')
               .find('.fa:first')
@@ -42,6 +44,7 @@ var BootstrapTree = {
     },
 
     removeNode: function(element) {
+
         if (element.prop("tagName") != 'LI') {
             return;
         }
@@ -58,9 +61,10 @@ var BootstrapTree = {
 
         this.openNode(li);
     },
+    
     //enleve les enfant de l' <ul> passée en paramètre
     removeSons: function(ulElement){
-	    ulElement.find('li').hide('fast');
+            ulElement.find('li').hide('fast');
         setTimeout(function(){            
             ulElement.children().remove();
         },500);
@@ -70,14 +74,15 @@ var BootstrapTree = {
         element.parents('li').find('i.'+closed+':first').click();
     },
 
-    toggleNode: function(event) {
+    toggleNode: function(event) { 
         var children = $j(this).closest('li.parent_li').find(' > ul > li');
         if (children.is(':visible')) {
             children.hide('fast');
-            $j(this).parent().find(' > i').prop('class',closed);
+            $j(this).parent().find(' > i').addClass('fa-plus-square').removeClass('fa-minus-square');
         }
         else {
-            $j(this).parent().find(' > i').prop('class',closed);
+            children.show('fast');
+            $j(this).parent().find(' > i').addClass('fa-minus-square').removeClass('fa-plus-square');
         }
         event.stopPropagation();
         $j('.tree').find('.hideTreeElement').css('display', 'none');

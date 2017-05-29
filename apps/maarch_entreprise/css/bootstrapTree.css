@@ -76,18 +76,23 @@
     color:#000
 }*/
 
+.tree .parent_li .node {
+    background-color: #3d80ab ;
+}
+
+
 .tree .root{
     color: white;
     background-color: #45a469;
     padding: 8px 8px;
 }
 
-.tree .node{
+.tree .node, .tree .node span{
     color: white;
-    background-color: #3d80ab
+    background-color: #3d80ab;
 }
 
-.tree .user{
+.tree .user, .tree .user span{
     color: white;
     background-color: #52b7d4;
 }

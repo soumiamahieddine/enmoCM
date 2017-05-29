@@ -126,16 +126,6 @@ if (count($_SESSION['tree_entities']) < 1) {
         }
         ?>
         <div class="tree" id='divTree'>
-            <!--<ul>
-                <li>li1
-                    <span><i class="fa"></i></span>
-                    <ul>
-                        <li>sli1</li>
-                        <li>sli2</li>
-                    </ul>
-                </li>
-                <li>li2</li>
-            </ul>-->
             <ul>
                 <li id=<?php echo "'".$valId."'"; ?> >
                     <span class="root">
@@ -149,9 +139,7 @@ if (count($_SESSION['tree_entities']) < 1) {
                 <script type="text/javascript">
                 
                     var tree = $j('#divTree');
-                    BootstrapTree.init(tree);
-                    //tree.EasyTree();
-                    //BootstrapTree.init(tree,'fa fa-minus-square','fa fa-plus-square');
+                    BootstrapTree.init(tree);                    
                 </script>   
         <div id="trees_div"></div>
         <?php
