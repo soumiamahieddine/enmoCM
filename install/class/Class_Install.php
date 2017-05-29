@@ -1167,7 +1167,7 @@ class Install extends functions
     }
 
     private function setLog4php(){
-        $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/log4php.xml.default');
+        $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/log4php.default.xml');
         $LOG4PHP = $xmlconfig->log4php;
         $appender = $xmlconfig->appender;
         $param = $appender->param;
