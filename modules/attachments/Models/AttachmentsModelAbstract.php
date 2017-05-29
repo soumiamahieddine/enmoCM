@@ -37,4 +37,25 @@ class AttachmentsModelAbstract extends \Apps_Table_Service
 
         return $attachmentTypes;
     }
+
+    public static function getAttachmentsWithOptions(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['where', 'data']);
+        static::checkArray($aArgs, ['where', 'data']);
+
+
+        $select = [
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['res_view_attachments'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data'],
+        ];
+        if (!empty($aArgs['orderBy'])) {
+            $select['order_by'] = $aArgs['orderBy'];
+        }
+
+        $aReturn = static::select($select);
+
+        return $aReturn;
+    }
 }

@@ -163,7 +163,7 @@ class Core_LogsAbstract_Service extends Core_Abstract_Service {
         return 'apps'
             . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
             . DIRECTORY_SEPARATOR . 'xml'
-            . DIRECTORY_SEPARATOR . 'log4php.default.xml';
+            . DIRECTORY_SEPARATOR . 'log4php.xml.default';
 	}
 
 	protected static function format_message(array &$aArgs) {

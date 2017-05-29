@@ -107,6 +107,8 @@ class Install extends functions
         return '<img src="img/orange_light.png"  width="20px"/>';
     }
 
+    
+
     public function checkAllNeededPrerequisites()
     {
         if (!$this->isPhpVersion()) {
@@ -119,6 +121,9 @@ class Install extends functions
             return false;
         }
         if (!$this->isMaarchPathWritable()) {
+            return false;
+        }
+        if (!$this->isDependenciesExist()) {
             return false;
         }
         if (!$this->isPhpRequirements('gd')) {
@@ -145,9 +150,9 @@ class Install extends functions
         if (!$this->isIniShortOpenTagRequirements()) {
             return false;
         }
-        if (!$this->isIniMagicQuotesGpcRequirements()) {
-            return false;
-        }
+        // if (!$this->isIniMagicQuotesGpcRequirements()) {
+        //     return false;
+        // }
         
         if (DIRECTORY_SEPARATOR != '/' && !$this->isPhpRequirements('fileinfo')){
             return false;
@@ -229,14 +234,14 @@ class Install extends functions
         }
     }
 
-    public function isIniMagicQuotesGpcRequirements()
-    {
-        if (strtoupper(ini_get('magic_quotes_gpc')) ==  'ON') {
-            return false;
-        } else {
-            return true;
-        }
-    }
+    // public function isIniMagicQuotesGpcRequirements()
+    // {
+    //     if (strtoupper(ini_get('magic_quotes_gpc')) ==  'ON') {
+    //         return false;
+    //     } else {
+    //         return true;
+    //     }
+    // }
 
     public function getProgress(
         $stepNb,
@@ -1162,7 +1167,7 @@ class Install extends functions
     }
 
     private function setLog4php(){
-        $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/log4php.default.xml');
+        $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/log4php.xml.default');
         $LOG4PHP = $xmlconfig->log4php;
         $appender = $xmlconfig->appender;
         $param = $appender->param;
@@ -2052,6 +2057,19 @@ class Install extends functions
             $error .= _THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
         } else {
             return true;
+        }
+    }
+
+    /**
+     * test if vendor and node_modules exist
+     * @return boolean or error message
+     */
+    public function isDependenciesExist()
+    {
+        if (file_exists('vendor/') && file_exists('node_modules/')) {
+            return true;
+        } else {
+            return false;
         }
     }
 

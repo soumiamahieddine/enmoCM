@@ -175,9 +175,9 @@ switch ($mode) {
             if ($core_tools->test_service('notes_restriction', 'notes', false)) {
                 if (!empty($_SESSION['user']['entities'])) {
                     foreach ($_SESSION['user']['entities'] as $tmpEntity) {
-                        if($tmpEntity['ENTITY_ID'] == $_SESSION['user']['primaryentity']['id']){
+                        //if($tmpEntity['ENTITY_ID'] == $_SESSION['user']['primaryentity']['id']){
                             $entitiesForRestriction[] = $tmpEntity['ENTITY_ID'];
-                        }
+                        //}
                     }
                 }
             }

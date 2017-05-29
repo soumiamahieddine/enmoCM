@@ -776,7 +776,7 @@ INSERT INTO listmodels (coll_id, object_id, object_type, "sequence", item_id, it
 DELETE FROM entities WHERE entity_id = 'COR';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('COR', 'Correspondants Archive', 'Correspondants Archive', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', 'COU', 'Service');
 DELETE FROM listmodels WHERE object_id = 'COR' AND object_type = 'entity_id';
-INSERT INTO listmodels (coll_id, object_id, object_type, "sequence", item_id, item_type, item_mode, listmodel_type, description) VALUES ('letterbox_coll', 'COR', 'entity_id', 0, '', 'user_id', 'dest', 'DOC', 'Correspondants Archive');
+INSERT INTO listmodels (coll_id, object_id, object_type, "sequence", item_id, item_type, item_mode, listmodel_type, description) VALUES ('letterbox_coll', 'COR', 'entity_id', 0, 'ggrand', 'user_id', 'dest', 'DOC', 'Correspondants Archive');
 DELETE FROM entities WHERE entity_id = 'PSF';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PSF', 'Pôle des Services Fonctionnels', 'Services Fonctionnels', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', 'DSG', 'Service');
 DELETE FROM listmodels WHERE object_id = 'PSF' AND object_type = 'entity_id';
@@ -889,7 +889,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'AckArcBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'AckArcBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'AckArcBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('AckArcBasket', 'Courriers archivés', 'Courriers archivés et acceptés dans le SAE', 'status=''REPLY_SEDA''', 'letterbox_coll', 'Y', 'N', 'Y',200);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('AckArcBasket', 'Courriers archivés', 'Courriers archivés', 'status=''REPLY_SEDA''', 'letterbox_coll', 'Y', 'N', 'Y',200);
 
 -- Create GROUPBASKET
 TRUNCATE TABLE groupbasket;
@@ -989,10 +989,11 @@ INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, i
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OFFLINE', 'Off line tape', 'Y', 'Y', 1000, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OAIS_SAFE', 'Distant backup OAIS store', 'Y', 'Y', 20, 'Y', 'ZIP', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('TNL', 'Thumbnails', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_AI', 'FASTHD', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/ai/', NULL, NULL, NULL, '2011-01-07 13:43:48.696644', NULL, 'letterbox_coll', 11, 'NANTERRE', 1);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TNL', 'TNL', 'Server for thumbnails of documents', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_mlb/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'letterbox_coll', 11, 'NANTERRE', 3);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 71511, '/opt/maarch/docservers/templates/', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_MAN', 'FASTHD', 'Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1290730, '/opt/maarch/docservers/manual/', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'letterbox_coll', 10, 'NANTERRE', 2);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_AI', 'FASTHD', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, '/home/maarch/docservers/maarchcourrier/ai/', NULL, NULL, NULL, '2011-01-07 13:43:48.696644', NULL, 'letterbox_coll', 11, 'NANTERRE', 1);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TNL', 'TNL', 'Server for thumbnails of documents', 'N', 'Y', 50000000000, 0, '/home/maarch/docservers/maarchcourrier/thumbnails_mlb/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'letterbox_coll', 11, 'NANTERRE', 3);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 71511, '/home/maarch/docservers/maarchcourrier/templates/', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_MAN', 'FASTHD', 'Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1290730, '/home/maarch/docservers/maarchcourrier/manual/', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'letterbox_coll', 10, 'NANTERRE', 2);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_ATTACH', 'FASTHD', 'Fast internal disc bay for attachments', 'N', 'Y', 50000000000, 1, '/home/maarch/docservers/maarchcourrier/manual_attachments/', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'attachments_coll', 2, 'NANTERRE', 3);
 ------------
 --SUPERADMIN USER
 ------------
@@ -1022,9 +1023,9 @@ INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society,
 Select setval('contact_v2_id_seq', (select max(contact_id)+1 from contacts_v2), false);
 -- Default adresses
 TRUNCATE TABLE contact_addresses;
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (1, 1, 1, '', 'Jean-Louis', 'ERCOLANI', 'title1', 'Président', '', '11', 'Boulevard du Sud-Est', '92000', 'NANTERRE', 'Nanterre', '', '', 'jeanlouis.ercolani@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (2, 1, 2, '', 'Karim', 'SY', 'title1', 'Administrateur', '', '', 'Sacré Coeur 3', 'Villa 9653 4ème phase', 'DAKAR', '', 'SENEGAL', '', 'karim.sy@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (3, 1, 1, '', 'Laurent', 'GIOVANNONI', 'title1', 'Directeur Général', NULL, '11', 'Boulevard du Sud-Est', '92000', 'NANTERRE', 'Nanterre', 'FRANCE', '', 'laurent.giovannoni@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (1, 1, 1, '', 'Jean-Louis', 'ERCOLANI',  'title1', 'Président',        '', '11', 'Boulevard du Sud-Est', '',               'NANTERRE', '92000', 'FRANCE', '', 'jeanlouis.ercolani@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (2, 1, 2, '', 'Karim',      'SY',        'title1', 'Administrateur',   '', '',   'Sacré Coeur 3', 'Villa 9653 4ème phase', 'DAKAR',    '',      'SENEGAL','', 'karim.sy@maarch.org',           'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (3, 1, 1, '', 'Laurent',    'GIOVANNONI','title1', 'Directeur Général','', '11', 'Boulevard du Sud-Est', '',               'NANTERRE', '92000', 'FRANCE', '', 'laurent.giovannoni@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
 Select setval('contact_addresses_id_seq', (select max(id)+1 from contact_addresses), false);
 ------------
 --STATUS-
@@ -1051,7 +1052,7 @@ INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename,
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('TMP', 'PJ brouillon', 'Y', 'N', 'fm-letter-cou', 'apps', 'N', 'N');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('EXP_SEDA', 'A archiver', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SEND_SEDA ', 'Courrier envoyé au système d''archivage', 'Y', 'N', 'fm-letter-status-inprogress', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ACK_SEDA ', 'Accusé de reception reçu', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ACK_SEDA ', 'Accusé de réception reçu', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('REPLY_SEDA', 'Courrier archivé', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
 ------------
 --PARAMETERS
@@ -1105,8 +1106,9 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (417, '', 'Envoyer l''AR', 'SVX', 'N', 'N', 'Y', 'send_to_contact_with_mandatory_attachment', 'Y', 'apps', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (500, '', 'Transférer au système d''archivage', 'SEND_SEDA', 'N', 'N', 'Y', 'export_seda', 'Y', 'export_seda', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (501, '', 'Valider la réception du courrier par le système d''archivage', 'ACK_SEDA', 'N', 'N', 'Y', 'ack_seda', 'Y', 'apps', 'N', NULL);
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (502, '', 'Valider l''archivage du courrier', 'REPLY_SEDA', 'N', 'N', 'Y', 'reply_seda', 'Y', 'apps', 'N', NULL);
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (503, '', 'Supprimer courrier', 'DEL', 'N', 'N', 'Y', 'del_seda', 'Y', 'apps', 'N', NULL);
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (502, '', 'Valider l''archivage du courrier', 'REPLY_SEDA', 'N', 'N', 'Y', 'check_reply', 'Y', 'apps', 'N', NULL);
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (503, '', 'Supprimer courrier', 'DEL', 'N', 'N', 'Y', 'purge_letter', 'Y', 'apps', 'N', NULL);
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (504, '', 'Remise à zéro du courrier', 'RESET', 'N', 'N', 'Y', 'reset_letter', 'Y', 'apps', 'N', NULL);
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);
 ------------
 -- BANNETTE SECONDAIRE POUR LE GROUPE DES SUPERVISEURS DE COURRIER
@@ -1211,10 +1213,10 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'ELU', 'DdeAvisBasket', 'N', 'N', 'Y');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (500, '', 'ARCHIVISTE', 'ToArcBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (501, '', 'ARCHIVISTE', 'SentArcBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (502, '', 'ARCHIVISTE', 'AckArcBasket', 'Y', 'N', 'N');
-------------
---GROUPBASKET_REDIRECT
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (501, '', 'ARCHIVISTE', 'ToArcBasket', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (502, '', 'ARCHIVISTE', 'SentArcBasket', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (503, '', 'ARCHIVISTE', 'AckArcBasket', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (504, '', 'ARCHIVISTE', 'AckArcBasket', 'Y', 'N', 'N');
 ------------
 TRUNCATE TABLE groupbasket_redirect;
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('COURRIER', 'IndexingBasket', 112, '', 'ALL_ENTITIES', 'ENTITY');
@@ -1289,6 +1291,7 @@ INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, fol
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (28, 'LP', 1, 23, 'LaPoste', NULL, NULL, NULL, 'superadmin', 'FOLDNEW', 2, '2012-03-02 18:33:17.705', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2012-03-02 18:33:17.705');
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (29, 'PSF', 1, 0, 'POLE SERVICES FONCTIONNELS', NULL, NULL, NULL, 'superadmin', 'FOLDNEW', 1, '2012-03-02 18:32:07.22', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2012-03-02 18:32:07.22');
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (30, 'PSF - BUDGET', 1, 29, 'BUDGET', NULL, NULL, NULL, 'superadmin', 'FOLDNEW', 2, '2012-03-02 18:32:07.22', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2012-03-02 18:32:07.22');
+Select setval('folders_system_id_seq', (select max(folders_system_id)+1 from folders), false);
 ------------
 --KEYWORDS / TAGS
 ------------
@@ -1306,6 +1309,7 @@ INSERT INTO tags  (tag_label, coll_id, entity_id_owner) VALUES ('BUDGET', 'lette
 INSERT INTO tags  (tag_label, coll_id, entity_id_owner) VALUES ('QUARTIERS', 'letterbox_coll', NULL);
 INSERT INTO tags  (tag_label, coll_id, entity_id_owner) VALUES ('LITTORAL', 'letterbox_coll', NULL);
 INSERT INTO tags  (tag_label, coll_id, entity_id_owner) VALUES ('SPORT', 'letterbox_coll', NULL);
+Select setval('tag_id_seq', (select max(tag_id)+1 from tags), false);
 ------------
 --TEMPLATES
 ------------
@@ -1444,11 +1448,11 @@ VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><f
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (7, '[notification courrier] Diffusion de courrier', '[notification] Diffusion de courrier à traiter', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
+VALUES (7, '[notification courrier] Diffusion de courrier', '[notification] Diffusion de courrier présent dans les bannettes', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p> </p>
 <p><font face="arial,helvetica,sans-serif" size="2"> </font></p>
 <p> </p>
-<p><font face="arial,helvetica,sans-serif" size="2">Voici la liste des nouveaux courriers qui vous ont été envoyés :</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">Voici la liste des nouveaux courriers présents dans cette bannette :</font></p>
 <p> </p>
 <table style="border: 1pt solid #000000### width: 1582px### height: 77px###" border="1" cellspacing="1" cellpadding="5" frame="box">
 <tbody>
@@ -1601,15 +1605,15 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (909, '[REJET] Erreur affectation', 'Erreur affectation', 'Ce courrier ne semble pas concerner mon service', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (910, '[REJET] Anomalie de numérisation', 'Anomalie de numérisation', 'Le courrier présente des anomalies de numérisation', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 --
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1000, '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '<h2>Ville de Maarch-les-Bains</h2>
-<p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
+INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1000, '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '<h2>Ville de Maarch-les-Bains  - [user.entity_label]</h2>
+<p><em>[user.adrs_1]</em><br /><em>[user.adrs_2]</em><br /><em>[user.zipcode] [user.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
 <p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui ne rel&egrave###ve pas de sa comp&eacute###tence.</p>
 <p>Votre demande concerne [res_letterbox.subject].</p>
 <p>Cette demande a &eacute###t&eacute### transmise &agrave### (veuillez renseigner le nom de l''AUTORITE COMPETENTE).</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
 --
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1020, '[MAIL] AR TYPE dans le cas d’une décision implicite de rejet', '[MAIL] AR TYPE dans le cas d’une décision implicite de rejet', '<h2>Ville de Maarch-les-Bains</h2>
-<p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
+INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1020, '[MAIL] AR TYPE dans le cas d’une décision implicite de rejet', '[MAIL] AR TYPE dans le cas d’une décision implicite de rejet', '<h2>Ville de Maarch-les-Bains - [user.entity_label]</h2>
+<p><em>[user.adrs_1]</em><br /><em>[user.adrs_2]</em><br /><em>[user.zipcode] [user.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
 <p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui rel&egrave###ve de sa comp&eacute###tence.</p>
 <p>Votre demande concerne : [res_letterbox.subject].</p>
@@ -1626,8 +1630,8 @@ INSERT INTO templates  (template_id, template_label, template_comment, template_
 <p>Toutefois, si vous souhaitez en cas de rejet du recours gracieux ou du recours hi&eacute###rarchique former un recours contentieux, ce recours gracieux ou hi&eacute###rarchique devra avoir &eacute###t&eacute### introduit dans le d&eacute###lai sus-indiqu&eacute### du recours contentieux.</p>
 <p>Vous conserverez ainsi la possibilit&eacute### de former un recours contentieux, dans un d&eacute###lai de deux mois &agrave### compter de la d&eacute###cision intervenue sur ledit recours gracieux ou hi&eacute###rarchique.</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
 --
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1010, '[MAIL] AR TYPE dans le cas d’une décision implicite d’acceptation', '[MAIL] AR TYPE dans le cas d’une décision implicite d’acceptation', '<h2>Ville de Maarch-les-Bains</h2>
-<p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
+INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1010, '[MAIL] AR TYPE dans le cas d’une décision implicite d’acceptation', '[MAIL] AR TYPE dans le cas d’une décision implicite d’acceptation', '<h2>Ville de Maarch-les-Bains - [user.entity_label]</h2>
+<p><em>[user.adrs_1]</em><br /><em>[user.adrs_2]</em><br /><em>[user.zipcode] [user.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
 <p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui rel&egrave###ve de sa comp&eacute###tence.</p>
 <p>Votre demande concerne [res_letterbox.subject].</p>
@@ -1638,8 +1642,8 @@ INSERT INTO templates  (template_id, template_label, template_comment, template_
 <p>Le cas &eacute###ch&eacute###ant, le d&eacute###lai de d&eacute###cision implicite d''acceptation ne d&eacute###butera qu''''apr&egrave###s la production des pi&egrave###ces demand&eacute###es.</p>
 <p>En cas de d&eacute###cision implicite d''''acceptation vous avez la possibilit&eacute### de demander au service charg&eacute### du dossier une attestation conform&eacute###ment aux dispositions de l''article 22 de la loi n&deg### 2000-321 du 12 avril 2000 relative aux droits des citoyens dans leurs relations avec les administrations modifi&eacute###e.</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
 --
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1030, '[MAIL] AR TYPE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', '[MAIL] AR TYPE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', '<h2>Ville de Maarch-les-Bains</h2>
-<p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
+INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1030, '[MAIL] AR TYPE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', '[MAIL] AR TYPE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', '<h2>Ville de Maarch-les-Bains - [user.entity_label]</h2>
+<p><em>[user.adrs_1]</em><br /><em>[user.adrs_2]</em><br /><em>[user.zipcode] [user.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
 <p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui rel&egrave###ve de sa comp&eacute###tence.</p>
 <p>Votre demande concerne [res_letterbox.subject].</p>
@@ -1648,6 +1652,26 @@ INSERT INTO templates  (template_id, template_label, template_comment, template_
 <p>Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute### du dossier par t&eacute###l&eacute###phone [users.phone] ou par messagerie [users.mail].</p>', 'HTML', NULL, NULL, 'TXT: document_texte', 'letterbox_attachment', 'sendmail', 'all');
 ------------
 Select setval('templates_seq', (select max(template_id)+1 from templates), false);
+------------
+-- User signature for ppetit
+------------
+TRUNCATE TABLE user_signatures;
+INSERT INTO user_signatures (id, user_id, signature_label, signature_path, signature_file_name, fingerprint) VALUES (2, 'ppetit', 'Signature de Patricia Petit', '0000#', 'ppetit.jpeg', NULL);
+Select setval('user_signatures_seq', (select max(id)+1 from user_signatures), false);
+------------
+--NOTIFICATIONS
+------------
+TRUNCATE TABLE notifications;
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, rss_url_template) VALUES (1, 'USERS', '[administration] Actions sur les utilisateurs de l''application', 'users%', 'EMAIL', 2, 'user', 'superadmin', '', '', 'http://localhost/maarch_entreprise');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) VALUES (2, 'RET2', '2ie alerte sur courriers en retard', 'alert2', 'EMAIL', 5, '', 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) VALUES (3, 'RET1', '1ère alerte sur courriers en retard', 'alert1', 'EMAIL', 6, '', 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) VALUES (4, 'BASKETS', 'Notification de bannettes', '', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) VALUES (5, 'ANC', 'Nouvelle annotation sur courrier en copie', 'noteadd', 'EMAIL', 8, '', 'copy_list', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) VALUES (6, 'AND', 'Nouvelle annotation sur courrier destinataire', 'noteadd', 'EMAIL', 8, '', 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) VALUES (7, 'RED', 'Redirection de courrier', '1', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
+------------
+Select setval('notifications_seq', (select max(notification_sid)+1 from notifications), false);
+
 ------------
 --TEMPLATES_ASSOCIATION
 ------------
@@ -1666,120 +1690,13 @@ Select setval('templates_association_seq', (select max(system_id)+1 from templat
 UPDATE entities SET business_id = 'org_987654321_Versant';
 UPDATE entities SET archival_agency = 'org_123456789_Archives';
 UPDATE entities SET archival_agreement = 'MAARCH_LES_BAINS_ACTES';
+UPDATE entities SET business_id = 'org_987654321_DGS_SF' WHERE entity_id = 'COU';
 
 UPDATE doctypes SET retention_final_disposition = 'destruction';
 UPDATE doctypes SET retention_rule = 'compta_3_03';
 UPDATE doctypes SET duration_current_use = 12;
 
---EXPORT SEDA DATAS
-DELETE FROM USERGROUPS WHERE GROUP_ID = 'ARCHIVISTE';
-INSERT INTO USERGROUPS VALUES ('ARCHIVISTE', 'Archiviste', 'N', 'N', 'N', 'N', 'N', 'Y');
 
-DELETE FROM USERGROUPS_SERVICES WHERE GROUP_ID = 'ARCHIVISTE';
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'add_thesaurus_to_res');
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'adv_search_mlb');
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'export_seda_view');
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'fileplan');
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'my_contacts_menu');
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'put_doc_in_fileplan');
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'sendmail');
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'tag_view');
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'view_baskets');
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'view_doc_history');
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'view_technical_infos');
-INSERT INTO USERGROUPS_SERVICES (group_id, service_id) Values ('ARCHIVISTE', 'avis_documents');
-
-DELETE FROM SECURITY WHERE GROUP_ID = 'ARCHIVISTE';
-INSERT INTO SECURITY (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) 
-VALUES ('ARCHIVISTE', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 24, NULL, NULL, 'DOC');
-
-DELETE FROM USERS WHERE USER_ID = 'aarc';
-INSERT INTO USERS (user_id, password, firstname, lastname, mail, enabled, change_password, status, loginmode) 
-VALUES ('aarc', '65d1d802c2c5e7e9035c5cef3cfc0902b6d0b591bfa85977055290736bbfcdd7e19cb7cfc9f980d0c815bbf7fe329a4efd8da880515ba520b22c0aa3a96514cc', 'Alfred', 'ARC', 'info@maarch.org', 'Y', 'N', 'OK', 'standard');
-
-DELETE FROM USERS_ENTITIES WHERE USER_ID = 'aarc';
-INSERT INTO USERS_ENTITIES (user_id, entity_id, user_role, primary_entity) 
-VALUES ('aarc', 'VILLE', '', 'Y');
-
-DELETE FROM USERGROUP_CONTENT WHERE USER_ID = 'aarc';
-INSERT INTO USERGROUP_CONTENT (user_id, group_id, primary_group, role) 
-VALUES ('aarc', 'ARCHIVISTE', 'Y','');
-
-DELETE FROM STATUS WHERE ID = 'EXP_SEDA';
-INSERT INTO STATUS (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) 
-VALUES ('EXP_SEDA', 'A archiver', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
-
-DELETE FROM STATUS WHERE ID = 'SEND_SEDA ';
-INSERT INTO STATUS (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified)
-VALUES ('SEND_SEDA ', 'Courrier envoyé au système d''archivage', 'Y', 'N', 'fm-letter-status-inprogress', 'apps', 'Y', 'Y');
-
-DELETE FROM STATUS WHERE ID = 'ACK_SEDA ';
-INSERT INTO STATUS (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified)
-VALUES ('ACK_SEDA ', 'Accusé de reception reçu', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
-
-DELETE FROM STATUS WHERE ID = 'REPLY_SEDA';
-INSERT INTO STATUS (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified)
-VALUES ('REPLY_SEDA', 'Courrier archivé', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
-
-DELETE FROM ACTIONS WHERE id = 500;
-INSERT INTO ACTIONS (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) 
-VALUES (418, '', 'Transférer au système d''archivage', 'SEND_SEDA', 'N', 'N', 'Y', 'export_seda', 'Y', 'export_seda', 'N', NULL);
-
-DELETE FROM ACTIONS WHERE id = 501;
-INSERT INTO ACTIONS (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) 
-VALUES (501, '', 'Valider la réception du courrier par le système d''archivage', 'ACK_SEDA', 'N', 'N', 'Y', 'ack_seda', 'Y', 'apps', 'N', NULL);
-
-DELETE FROM ACTIONS WHERE id = 502;
-INSERT INTO ACTIONS (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id)
-VALUES (502, '', 'Valider l''archivage du courrier', 'REPLY_SEDA', 'N', 'N', 'Y', 'reply_seda', 'Y', 'apps', 'N', NULL);
-
-DELETE FROM ACTIONS WHERE id = 503;
-INSERT INTO ACTIONS (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id)
-VALUES (503, '', 'Supprimer courrier', 'DEL', 'N', 'N', 'Y', 'del_seda', 'Y', 'apps', 'N', NULL);
-
-
-DELETE FROM BASKETS WHERE BASKET_ID = 'CourriersAArchiver';
-INSERT INTO BASKETS (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) 
-VALUES ('CourriersAArchiver', 'Courriers à archiver', 'Courriers à archiver', 'status = ''EXP_SEDA'' OR status = ''END'' OR status = ''SEND_SEDA''''', 'letterbox_coll', 'Y', 'N', 'Y',300);
-
-DELETE FROM BASKETS WHERE BASKET_ID = 'CourriersEnvoyesArchives';
-INSERT INTO BASKETS (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order)
-VALUES ('CourriersEnvoyesArchives', 'Courriers envoyés aux archives', 'Courriers envoyés aux archives', 'status = ''ACK_SEDA''', 'letterbox_coll', 'Y', 'N', 'Y',300);
-
-DELETE FROM BASKETS WHERE BASKET_ID = 'CourriersArchives';
-INSERT INTO BASKETS (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order)
-VALUES ('CourriersArchives', 'Courriers archivés', 'Courriers archivés', 'status = ''REPLY_SEDA''', 'letterbox_coll', 'Y', 'N', 'Y',300);
-
-DELETE FROM GROUPBASKET WHERE BASKET_ID = 'CourriersAArchiver';
-INSERT INTO GROUPBASKET (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert, list_lock_clause, sublist_lock_clause) 
-VALUES ('ARCHIVISTE', 'CourriersAArchiver', 1, NULL, NULL, 'list_with_attachments','N', 'N', 'N', NULL, NULL);
-
-DELETE FROM GROUPBASKET WHERE BASKET_ID = 'CourriersEnvoyesArchives';
-INSERT INTO GROUPBASKET (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert, list_lock_clause, sublist_lock_clause)
-VALUES ('ARCHIVISTE', 'CourriersEnvoyesArchives', 1, NULL, NULL, 'list_with_attachments','N', 'N', 'N', NULL, NULL);
-
-DELETE FROM GROUPBASKET WHERE BASKET_ID = 'CourriersArchives';
-INSERT INTO GROUPBASKET (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert, list_lock_clause, sublist_lock_clause)
-VALUES ('ARCHIVISTE', 'CourriersArchives', 1, NULL, NULL, 'list_with_attachments','N', 'N', 'N', NULL, NULL);
-
-DELETE FROM ACTIONS_GROUPBASKETS WHERE id_action = 418;
-INSERT INTO ACTIONS_GROUPBASKETS (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
-VALUES (418, '', 'ARCHIVISTE', 'CourriersAArchiver', 'Y', 'N', 'N');
-
-DELETE FROM ACTIONS_GROUPBASKETS WHERE id_action = 419;
-INSERT INTO ACTIONS_GROUPBASKETS (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list)
-VALUES (419, '', 'ARCHIVISTE', 'CourriersEnvoyesArchives', 'Y', 'N', 'N');
-
-DELETE FROM ACTIONS_GROUPBASKETS WHERE id_action = 420;
-INSERT INTO ACTIONS_GROUPBASKETS (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list)
-VALUES (420, '', 'ARCHIVISTE', 'CourriersArchives', 'Y', 'N', 'N');
-
-DELETE FROM ACTIONS_GROUPBASKETS WHERE id_action = 421;
-INSERT INTO ACTIONS_GROUPBASKETS (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
-VALUES (421, '', 'RESP_COURRIER', 'MyBasket', 'N', 'Y', 'N');
-
-INSERT INTO ACTIONS_GROUPBASKETS (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
-VALUES (421, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 
 --Inscrire ici les clauses de conversion spécifiques en cas de reprise
 --Update res_letterbox set status='VAL' where res_id=108;
