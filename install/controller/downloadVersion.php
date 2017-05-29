@@ -46,7 +46,8 @@ if (empty($finalVersionPath)) {
     echo '{"status":1, "message" : "' . _VERSION_NOT_EXTRACTED . ' (1)"}';
     exit();
 } else {
-    //Ds_washTmp($versionPath);
+    include_once 'core/docservers_tools.php';
+    Ds_washTmp($finalVersionPath . '/install');
     unlink($versionFile);
     echo '{"status":0, "finalVersionPath" : "' . $finalVersionPath . '"}';
 }
