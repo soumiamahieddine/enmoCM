@@ -237,9 +237,10 @@ function downloadMaarchDependencies() {
         dataType : 'json',
         success : function(answer) {
             console.log(answer);
+            window.location.reload();
         }
     })
-    window.location.reload();
+   
 }
 
 /* download version */
