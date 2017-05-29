@@ -11,27 +11,6 @@ $core = new core_tools();
 $core->load_lang();
 ?>
 <div id="info" title="Nous Contacter" class="panel">
-    <div class="dis">
-        <p id="logo" align="center">
-            <img src="<?php
-            functions::xecho($_SESSION['config']['businessappurl'])
-            ?>smartphone/img/logo_docimsol.png" alt="Maarch" />
-        </p>
-        <fieldset>
-            <div class="row">
-                <table align="center">
-                    <tr><td colspan="2" align="left"><b>Document Image Solutions</b></td></tr>
-                    <tr><td colspan="2" align="left"><b>2 Terrasses Claude Shannon</b></td></tr>
-                    <tr><td colspan="2" align="left"><b>64210 Bidart</b></td></tr>
-                    <tr><td align="left"><a href="mailto:contact@docimsol.com">contact@docimsol.com</a></td></tr>
-                    <tr><td colspan="2" align="left"><a href="tel: +33 5 59 23 73 21">tel : +33 5 59 23 73 21</a></td></tr>
-                    <tr><td><br></td></tr>
-                    <tr><td colspan="2" align="center"><b>Site officiel :</b></td></tr>
-                    <tr><td colspan="2" align="center"><a href="http://wwww.docimsol.eu/">http://www.docimsol.eu/</a></td></tr>
-                </table>
-            </div>
-        </fieldset>
-    </div>
     <div class="edissyum">
         <p id="logo" align="center">
             <img src="<?php
