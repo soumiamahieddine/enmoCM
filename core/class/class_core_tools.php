@@ -2397,6 +2397,7 @@ class core_tools extends functions
             || (preg_match('/ipad/i',$user_agent))
             || (preg_match('/ipod/i',$user_agent)||preg_match('/iphone/i',$user_agent))
             || (preg_match('/android/i',$user_agent))
+            || (preg_match('/mozilla/i',$user_agent))
             || (preg_match('/opera mini/i',$user_agent))
             || (preg_match('/blackberry/i',$user_agent))
             || (preg_match('/(pre\/|palm os|palm|hiptop|avantgo|plucker|xiino|blazer|elaine)/i',$user_agent))
@@ -2439,8 +2440,6 @@ class core_tools extends functions
                 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>js/scriptaculous.js"></script>
                 <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/signature_pad/js/signature_pad.js" type="text/javascript"></script>
 
-                <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/swiper/dist/js/swiper.min.js" type="text/javascript"></script>
-
                 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
                 <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/fingerprintjs2/fingerprint2.js" type="text/javascript"></script>
                 <?php
@@ -2464,7 +2463,6 @@ class core_tools extends functions
             . 'css/font-awesome/css/font-maarch.css'; ?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css';?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/iui.css';?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'tools/swiper/dist/css/swiper.min.css';?>" media="screen" />
 
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/t/maarch/maarch-theme.css';?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'tools/signature_pad/css/signature-pad.css';?>" media="screen" />

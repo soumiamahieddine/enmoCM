@@ -68,34 +68,13 @@
   width: 120px;
 }
 
-/*swiper*/
-.swiper-container {
-    width: 100px;
-    height: 100%;
-    margin: 5px auto;
-    background: #f4f4f4;
+#list_tnl_sign{
+  width: 100px;
+  height: 100%;
+  margin: 5px auto;
+  background: #f4f4f4;
+  overflow: auto;
 }
-.swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    background: #fff;
-    width: 100px;
-    height: 15%;
-    /* Center slide text vertically */
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    align-items: center;
-}
-/**************************/
 
 .m-signature-pad--footer {
   position: absolute;
