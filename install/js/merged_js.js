@@ -228,6 +228,20 @@ function checkLanguage(
     });
 }
 
+/* download dependencies */
+function downloadMaarchDependencies() {
+    $('.wait').css('display','block');
+    $.ajax({
+        url : 'controller/getDependencies.php',
+        type : 'GET',
+        dataType : 'json',
+        success : function(answer) {
+            console.log(answer);
+        }
+    })
+    window.location.reload();
+}
+
 
 /* ajax.js */
 function ajax(
