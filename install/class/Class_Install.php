@@ -71,7 +71,7 @@ class Install extends functions
         return $langList;
     }
 
-    private function loadLang()
+    public function loadLang()
     {
         if (!isset($_SESSION['lang'])) {
             $this->lang = 'en';

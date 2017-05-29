@@ -88,7 +88,7 @@ if (!defined('_PHP_VERSION')) {
     define('_PHP_VERSION', "Version de PHP (5.5 ou sup.)");
 }
 if (!defined('_MAARCH_DEPENDENCIES')) {
-    define('_MAARCH_DEPENDENCIES', "Dépendances Maarch (Voir prérequis wiki)");
+    define('_MAARCH_DEPENDENCIES', "Dépendances Maarch");
 }
 if (!defined('_MAARCH_PATH_RIGHTS')) {
     define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'écriture du répertoire racine de Maarch");
@@ -418,3 +418,18 @@ if (!defined('_SMTP_DOMAINS')) {
     define('_SMTP_DOMAINS', "Domaines");
 }
 
+if (!defined('_DEPENDENCIES_NOT_DOWNLOADED')) {
+    define('_DEPENDENCIES_NOT_DOWNLOADED', "dépendances non téléchargées, récupérez les via la procédure wiki");
+}
+
+if (!defined('_DEPENDENCIES_NOT_EXTRACTED')) {
+    define('_DEPENDENCIES_NOT_EXTRACTED', "dépendances non extraites, récupérez les via la procédure wiki");
+}
+
+if (!defined('_DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD')) {
+    define('_DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD', "Cliquez ici pour les déployer automatiquement (internet requis)");
+}
+
+if (!defined('_DEPENDENCIES_ON_WIKI')) {
+    define('_DEPENDENCIES_ON_WIKI', "Ou suivez la procédure sur notre wiki");
+}

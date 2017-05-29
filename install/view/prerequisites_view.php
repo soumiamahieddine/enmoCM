@@ -73,13 +73,25 @@
                     </td>
                 </tr>
                  <tr>
-                    <td class="voyantPrerequisites">
+                    <td id="maarchDependenciesLight" class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isDependenciesExist()
                         );?>
                     </td>
-                    <td>
-                        <?php echo _MAARCH_DEPENDENCIES .'<A style=\'color: #800000; font-family:verdana;\' href=\'http://wiki.maarch.org/Maarch_Courrier/latest/fr/Install/Prerequis\' target=\"_blank\"> pre-requis</A>';?>
+                    <td id="maarchDependenciesContent" name="maarchDependenciesContent">
+                    <i class="fa fa-spinner" aria-hidden="true"></i>
+                        <?php if($Class_Install->isDependenciesExist()){
+                        echo _MAARCH_DEPENDENCIES;
+                        } else {
+                        echo _MAARCH_DEPENDENCIES . '<br />'
+                            . '<a style=\'color: #800000; font-family:verdana;\' href="#" onclick="downloadMaarchDependencies()">'
+                            . _DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD . '</a><br />'
+                            . '<a style=\'color: #102155; font-family:verdana;\' href=\'http://wiki.maarch.org/Maarch_Courrier/1.5/fr/Install/Debian-Ubuntu/latest#T.C3.A9l.C3.A9chargement_et_installation_de_Maarch_Courrier_depuis_les_d.C3.A9p.C3.B4ts_GIT\' target=\"_blank\"> ' . _DEPENDENCIES_ON_WIKI  . '</a>';
+                        }
+                        ?>
+                        <div align="center">
+                            <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
+                        </div>
                     </td>
                 </tr>
                 <tr>
