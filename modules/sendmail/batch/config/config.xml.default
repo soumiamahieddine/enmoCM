@@ -2,11 +2,11 @@
 <ROOT>
     <CONFIG>
         <Lang>fr</Lang> <!-- fr, en-->
-        <MaarchDirectory>/var/www/html/maarch/</MaarchDirectory>
+        <MaarchDirectory>/var/www/MaarchCourrier/</MaarchDirectory>
         <MaarchUrl>http://localhost/maarch/</MaarchUrl>
         <MaarchApps>maarch_entreprise</MaarchApps>
 		<CustomId></CustomId>
-        <TmpDirectory>/var/www/html/maarch/modules/sendmail/batch/tmp/</TmpDirectory>
+        <TmpDirectory>/var/www/MaarchCourrier/modules/sendmail/batch/tmp/</TmpDirectory>
         <debugmode>
             <dontflag_mail>true</dontflag_mail>
             <verbose_mode>false</verbose_mode>
@@ -27,8 +27,8 @@
         <databaseserver>127.0.0.1</databaseserver>
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <databasename>maarch</databasename>
-        <databaseuser>postgres</databaseuser>
+        <databasename>maarchcourrier</databasename>
+        <databaseuser>maarch</databaseuser>
         <databasepassword>maarch</databasepassword>
     </CONFIG_BASE>
     <MAILER>
@@ -50,6 +50,6 @@
         <enabled>true</enabled>
         <Log4PhpLogger>loggerTechnique</Log4PhpLogger>
         <Log4PhpBusinessCode>sendmail</Log4PhpBusinessCode>
-        <Log4PhpConfigPath>/var/www/html/maarch/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
+        <Log4PhpConfigPath>/var/www/MaarchCourrier/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
     </LOG4PHP>
 </ROOT>
