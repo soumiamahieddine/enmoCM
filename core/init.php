@@ -65,7 +65,9 @@ if (isset($_SESSION['custom_override_id'])
     );
 }
 
-require_once 'vendor/autoload.php';
+if(file_exists('installed.lck')) {
+    require_once 'vendor/autoload.php';
+}
 
 
 /**

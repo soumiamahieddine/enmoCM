@@ -72,6 +72,16 @@
                         <?php echo _MAARCH_PATH_RIGHTS;?>
                     </td>
                 </tr>
+                 <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isDependenciesExist()
+                        );?>
+                    </td>
+                    <td>
+                        <?php echo _MAARCH_DEPENDENCIES .'<A style=\'color: #800000; font-family:verdana;\' href=\'http://wiki.maarch.org/Maarch_Courrier/latest/fr/Install/Prerequis\' target=\"_blank\"> pre-requis</A>';?>
+                    </td>
+                </tr>
                 <tr>
                     <td>&nbsp;
 
@@ -109,19 +119,6 @@
                     </td>
                     <td>
                         <?php echo _GD;?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="voyantPrerequisites">
-                        <?php echo $Class_Install->checkPrerequisites(
-                            $Class_Install->isPhpRequirements(
-                                'svn'
-                            ),
-                            true
-                        );?>
-                    </td>
-                    <td>
-                        <?php echo _SVN;?>
                     </td>
                 </tr>
                 <tr>
@@ -321,16 +318,6 @@
                     </td>
                     <td>
                         <?php echo _SHORT_OPEN_TAGS;?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="voyantPrerequisites">
-                        <?php echo $Class_Install->checkPrerequisites(
-                            $Class_Install->isIniMagicQuotesGpcRequirements()
-                        );?>
-                    </td>
-                    <td>
-                        <?php echo _MAGIC_QUOTES_GPC;?>
                     </td>
                 </tr>
             </table>

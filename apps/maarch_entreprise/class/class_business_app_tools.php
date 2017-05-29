@@ -34,7 +34,7 @@ class business_app_tools extends business_app_tools_Abstract
 {
     // custom
 
-    // Méthode surchargé pour spm car impossible de surchargé ce fichier dans le custom
+    // Méthode surchargé chez client car impossible de surcharger ce fichier dans le custom
     protected function _loadEntrepriseVar()
     {
         $core = new core_tools();

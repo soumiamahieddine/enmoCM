@@ -1,40 +1,18 @@
 <?php
-/*
-*
-*   Copyright 2012-2016 Maarch
-*
-*   This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   class_modules_tools_Abstract
+* @author  dev <dev@maarch.org>
+* @ingroup sendmail
 */
 
-/**
- * @brief    modules tools Class for sendmail,
- *           contains all the functions to handle sendmail
- *
- * @file     class_modules_tools.php
- * @author   <dev@maarch.org>
- * @date     $date$
- * @version  $Revision$
- * @ingroup  sendmail
- */
-
-// Loads the required class
 try {
-    require_once("core/class/class_db.php");
-    require_once ("core/class/class_security.php");
-    require_once("modules/sendmail/sendmail_tables.php");
+    include_once "core/class/class_db.php";
+    include_once "core/class/class_security.php";
+    include_once "modules/sendmail/sendmail_tables.php";
 } catch (Exception $e){
     functions::xecho($e->getMessage()).' // ';
 }
@@ -46,7 +24,8 @@ abstract class SendmailAbstract extends Database
      * Build Maarch module tables into sessions vars with a xml configuration
      * file
      */
-    public function build_modules_tables() {
+    public function build_modules_tables()
+    {
         if (file_exists(
             $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
             . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . "modules"
@@ -74,11 +53,11 @@ abstract class SendmailAbstract extends Database
 
         //Status
         $_SESSION['sendmail']['status'] = array();
-        if (count($xmlconfig->STATUS ) > 0) {
-            foreach($xmlconfig->STATUS as $status) {
-                foreach($status->STS as $STS) {
+        if (count($xmlconfig->STATUS) > 0) {
+            foreach ($xmlconfig->STATUS as $status) {
+                foreach ($status->STS as $STS) {
                     $label = (string)$STS->LABEL;
-                    if (!empty($label) && defined($label) && constant($label) <> NULL) {
+                    if (!empty($label) && defined($label) && constant($label) <> null) {
                         $label = constant($label);
                     }
                     $_SESSION['sendmail']['status'][(string)$STS->ID]['id'] = (string)$STS->ID;
@@ -95,11 +74,12 @@ abstract class SendmailAbstract extends Database
         $_SESSION['history']['maildel'] = (string) $hist->maildel;
     }
 
-    public function countUserEmails($id, $coll_id, $owner=false) {
+    public function countUserEmails($id, $coll_id, $owner=false)
+    {
         $nbr = 0;
         $db = new Database();
         $arrayPDO = array();
-        if ( $owner=== true) {
+        if ($owner=== true) {
             $where = " and user_id = :user_id ";
             $arrayPDO = array(":user_id" => $_SESSION['user']['UserId']);
         } else {
@@ -108,7 +88,8 @@ abstract class SendmailAbstract extends Database
 
         $arrayPDO = array_merge($arrayPDO, array(":res_id" => $id));
         $arrayPDO = array_merge($arrayPDO, array(":coll_id" => $coll_id));
-        $stmt = $db->query("select email_id from "
+        $stmt = $db->query(
+            "select email_id from "
             . EMAILS_TABLE
             . " where res_id = :res_id and coll_id = :coll_id ".$where,
             $arrayPDO
@@ -119,12 +100,13 @@ abstract class SendmailAbstract extends Database
         return $nbr;
     }
 
-    public function CheckEmailAdress($adress) {
+    public function CheckEmailAdress($adress)
+    {
         $error = '';
         if (!empty($adress)) {
 
             $adressArray = explode(',', trim($adress));
-            for($i=0; $i < count($adressArray); $i++) {
+            for ($i=0; $i < count($adressArray); $i++) {
                 if (!empty($adressArray[$i])) {
                     $this->wash($adressArray[$i], 'mail', _EMAIL.": ".$adressArray[$i], 'yes', 0, 255);
                     if (!empty($_SESSION['error'])) {
@@ -137,15 +119,18 @@ abstract class SendmailAbstract extends Database
         return $error;
     }
 
-    public function haveJoinedFiles($id) {
+    public function haveJoinedFiles($id)
+    {
 
         $db = new Database();
-        $stmt = $db->query("select email_id from "
+        $stmt = $db->query(
+            "select email_id from "
             . EMAILS_TABLE
             . " where email_id = ? and (is_res_master_attached ='Y' or"
             . " res_attachment_id_list <> '' or"
             . " res_version_id_list <> '' or"
-            . " note_id_list <> '')", array($id ));
+            . " note_id_list <> '')", array($id )
+        );
         // $db->show();
         if ($stmt->rowCount() > 0)
             return true;
@@ -153,11 +138,12 @@ abstract class SendmailAbstract extends Database
             return false;
     }
 
-    public function getJoinedFiles($coll_id, $table, $id, $from_res_attachment=false) {
+    public function getJoinedFiles($coll_id, $table, $id, $from_res_attachment=false)
+    {
         $joinedFiles = array();
         $db = new Database();
         if ($from_res_attachment === false) {
-            require_once('core/class/class_security.php');
+            include_once 'core/class/class_security.php';
             $sec = new security();
             $versionTable = $sec->retrieve_version_table_from_coll_id(
                 $coll_id
@@ -165,19 +151,21 @@ abstract class SendmailAbstract extends Database
 
             //Have version table
             if ($versionTable <> '') {
-                $stmt = $db->query("select res_id from "
-                    . $versionTable . " where res_id_master = ? and status <> 'DEL' order by res_id desc", array($id));
+                $stmt = $db->query(
+                    "select res_id from "
+                    . $versionTable . " where res_id_master = ? and status <> 'DEL' order by res_id desc", array($id)
+                );
                 $line = $stmt->fetchObject();
                 $lastVersion = $line->res_id;
                 //Have new version
                 if ($lastVersion <> '') {
                     $stmt = $db->query(
                         "select res_id, description, subject, title, format, filesize, relation from "
-                        . $versionTable . " where res_id = ? and status <> 'DEL'",array($lastVersion)
+                        . $versionTable . " where res_id = ? and status <> 'DEL'", array($lastVersion)
                     );
                     // $db->show();
                     //Get infos
-                    while($res = $stmt->fetchObject()) {
+                    while ($res = $stmt->fetchObject()) {
                         $label = '';
                         //Tile, or subject or description
                         if (strlen(trim($res->title)) > 0)
@@ -187,7 +175,8 @@ abstract class SendmailAbstract extends Database
                         elseif (strlen(trim($res->description)) > 0)
                             $label = $res->description;
 
-                        array_push($joinedFiles,
+                        array_push(
+                            $joinedFiles,
                             array('id' => $res->res_id, //ID
                                 'label' => $this->show_string($label), //Label
                                 'format' => $res->format, //Format
@@ -205,7 +194,7 @@ abstract class SendmailAbstract extends Database
                 . $table . " where res_id = ? and status <> 'DEL'", array($id )
             );
         } else {
-            require_once 'modules/attachments/attachments_tables.php';
+            include_once 'modules/attachments/attachments_tables.php';
             $stmt = $db->query(
                 "SELECT rva.res_id, rva.description, rva.subject, rva.title, rva.format, rva.filesize, rva.res_id_master, rva.attachment_type, rva.identifier, cv2.society, cv2.firstname, cv2.lastname, rva.filename, rva.path
                 FROM res_view_attachments rva LEFT JOIN contacts_v2 cv2 ON rva.dest_contact_id = cv2.contact_id WHERE rva.res_id_master = ? and rva.coll_id = ? and rva.status <> 'DEL' and rva.status <> 'OBS' and rva.attachment_type NOT IN ('converted_pdf','print_folder') ORDER BY rva.attachment_type, rva.description",
@@ -214,7 +203,7 @@ abstract class SendmailAbstract extends Database
         }
         // $db->show();
 
-        while($res = $stmt->fetchObject()) {
+        while ($res = $stmt->fetchObject()) {
 
             //check converted_pdf
             $pathConvert = $res->path;
@@ -236,7 +225,8 @@ abstract class SendmailAbstract extends Database
             elseif (strlen(trim($res->description)) > 0)
                 $label = $res->description;
 
-            array_push($joinedFiles,
+            array_push(
+                $joinedFiles,
                 array('id' => $res->res_id, //ID
                     'label' => $this->show_string($label), //Label
                     'format' => $res->format, //Format
@@ -256,7 +246,8 @@ abstract class SendmailAbstract extends Database
         return $joinedFiles;
     }
 
-    public function rawToHtml($text) {
+    public function rawToHtml($text)
+    {
         //...
         $text = str_replace("\r\n", PHP_EOL, $text);
         $text = str_replace("\r", PHP_EOL, $text);
@@ -267,7 +258,8 @@ abstract class SendmailAbstract extends Database
         return $text;
     }
 
-    public function htmlToRaw($text) {
+    public function htmlToRaw($text)
+    {
         //
         $text = str_replace("<br>", "\n", $text);
         $text = str_replace("<br/>", "\n", $text);
@@ -277,7 +269,8 @@ abstract class SendmailAbstract extends Database
         return $text;
     }
 
-    public function cleanHtml($htmlContent){
+    public function cleanHtml($htmlContent)
+    {
 
         $htmlContent = str_replace(';', '###', $htmlContent);
         $htmlContent = str_replace('--', '___', $htmlContent);
@@ -294,22 +287,27 @@ abstract class SendmailAbstract extends Database
         return $htmlContent;
     }
 
-    public function getEmail($id, $owner=true) {
+    public function getEmail($id, $owner=true)
+    {
         $email = array();
         if (!empty($id)) {
             $db = new Database();
-            if ( $owner=== true) {
+            if ($owner=== true) {
 
                 $where = " and user_id = ? ";
                 $arrayPDO = array($_SESSION['user']['UserId']);
-                $stmt = $db->query("select * from "
+                $stmt = $db->query(
+                    "select * from "
                     . EMAILS_TABLE
-                    . " where email_id = ? " . $where, array( $id, $_SESSION['user']['UserId']));
+                    . " where email_id = ? " . $where, array( $id, $_SESSION['user']['UserId'])
+                );
             } else {
                 $where = "";
-                $stmt = $db->query("select * from "
+                $stmt = $db->query(
+                    "select * from "
                     . EMAILS_TABLE
-                    . " where email_id = ? " . $where, array($id));
+                    . " where email_id = ? " . $where, array($id)
+                );
             }
 
             if ($stmt->rowCount() > 0) {
@@ -358,14 +356,15 @@ abstract class SendmailAbstract extends Database
         return $email;
     }
 
-    public function updateAdressInputField($ajaxPath, $adressArray, $inputField, $readOnly=false) {
+    public function updateAdressInputField($ajaxPath, $adressArray, $inputField, $readOnly=false)
+    {
         $content = '';
         //Init with loading div
         $content .= '<div id="loading_'.$inputField.'" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></i></div>';
         // $content .=  print_r($adressArray, true);
         //Get info from session array and display tag
         if (isset($adressArray[$inputField]) && count($adressArray[$inputField]) > 0) {
-            foreach($adressArray[$inputField] as $key => $adress)	{
+            foreach ($adressArray[$inputField] as $key => $adress) {
                 if (!empty($adress)) {
                     $content .= '<div class="email_element" id="'.$key.'_'.$adress.'">'.$adress;
                     if ($readOnly === false) {
@@ -382,7 +381,8 @@ abstract class SendmailAbstract extends Database
         return $content;
     }
 
-    public function getResource($collectionArray, $coll_id, $res_id) {
+    public function getResource($collectionArray, $coll_id, $res_id)
+    {
         $viewResourceArr = array();
 
         for ($i=0;$i<count($collectionArray);$i++) {
@@ -399,8 +399,8 @@ abstract class SendmailAbstract extends Database
 
         if (!empty($res_id) && !empty($table) && !empty($adrTable)) {
             //docserver
-            require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-                . 'docservers_controler.php');
+            include_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+                . 'docservers_controler.php';
             $docserverControler = new docservers_controler();
             $docserverLocation = array();
             // echo '--> '.$coll_id.'/'.$res_id.'/'.$table.'/'.$adrTable.PHP_EOL;
@@ -423,7 +423,8 @@ abstract class SendmailAbstract extends Database
             $db = new Database();
             $stmt = $db->query(
                 "select res_id, description, subject, title, format, filesize from "
-                . $table . " where res_id = ? and status <> 'DEL'", array($res_id));
+                . $table . " where res_id = ? and status <> 'DEL'", array($res_id)
+            );
             $res = $stmt->fetchObject();
             $label = '';
             //Tile, or subject or description
@@ -443,11 +444,12 @@ abstract class SendmailAbstract extends Database
         return $viewResourceArr;
     }
 
-    public function getAttachment($coll_id, $res_id_master, $res_attachment) {
+    public function getAttachment($coll_id, $res_id_master, $res_attachment)
+    {
 
-        require_once 'modules/attachments/attachments_tables.php';
-        require_once 'core/core_tables.php';
-        require_once 'core/docservers_tools.php';
+        include_once 'modules/attachments/attachments_tables.php';
+        include_once 'core/core_tables.php';
+        include_once 'core/docservers_tools.php';
 
         $viewAttachmentArr = array();
 
@@ -536,7 +538,8 @@ abstract class SendmailAbstract extends Database
         return $viewAttachmentArr;
     }
 
-    public function getVersion($collectionArray, $coll_id, $res_id_master, $res_version) {
+    public function getVersion($collectionArray, $coll_id, $res_id_master, $res_version)
+    {
 
         $viewVersionArr = array();
 
@@ -556,7 +559,8 @@ abstract class SendmailAbstract extends Database
         //Have version table
         if ($versionTable <> '') {
             $db = new Database();
-            $stmt = $db->query("select res_id, description, subject, title, docserver_id, "
+            $stmt = $db->query(
+                "select res_id, description, subject, title, docserver_id, "
                 . "path, filename,format, filesize, relation from "
                 . $versionTable . " where res_id = ? and res_id_master = ? and status <> 'DEL'",
                 array($res_version, $res_id_master)
@@ -575,8 +579,8 @@ abstract class SendmailAbstract extends Database
                     $label = $line->description;
 
                 //Get file from docserver
-                require_once 'core/core_tables.php';
-                require_once 'core/docservers_tools.php';
+                include_once 'core/core_tables.php';
+                include_once 'core/docservers_tools.php';
 
                 $docserver = $line->docserver_id;
                 $path = $line->path;
@@ -659,7 +663,8 @@ abstract class SendmailAbstract extends Database
         return $viewVersionArr;
     }
 
-    public function createFilename($label, $extension){
+    public function createFilename($label, $extension)
+    {
         $search = array (
             utf8_decode('@[éèêë]@i'), utf8_decode('@[ÊË]@i'), utf8_decode('@[àâä]@i'), utf8_decode('@[ÂÄ]@i'),
             utf8_decode('@[îï]@i'), utf8_decode('@[ÎÏ]@i'), utf8_decode('@[ûùü]@i'), utf8_decode('@[ÛÜ]@i'),
@@ -667,14 +672,14 @@ abstract class SendmailAbstract extends Database
 
         $replace = array ('e', 'E','a', 'A','i', 'I', 'u', 'U', 'o', 'O','c','_');
 
-        $filename = preg_replace($search, $replace, utf8_decode($label.".".$extension));
-        // $filename = preg_replace("/[^a-z0-9_-s.]/i","_", $label.".".$extension);
+        $filename = preg_replace($search, $replace, utf8_decode(substr($label, 0, 30).".".$extension));
 
-        return (substr($filename, 0, 30));
+        return $filename;
     }
 
-    public function createNotesFile($coll_id, $id, $notesArray) {
-        require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+    public function createNotesFile($coll_id, $id, $notesArray)
+    {
+        include_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
             . "class" . DIRECTORY_SEPARATOR
             . "class_modules_tools.php";
         $notes_tools = new notes();
@@ -713,14 +718,15 @@ abstract class SendmailAbstract extends Database
             $content .= "<h2>"._NOTES."</h2>";
             $content .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
 
-            for($i=0; $i < count($notesArray); $i++) {
-                $stmt = $db->query("select n.date_note, n.note_text, u.lastname, "
+            for ($i=0; $i < count($notesArray); $i++) {
+                $stmt = $db->query(
+                    "select n.date_note, n.note_text, u.lastname, "
                     . "u.firstname from " . NOTES_TABLE . " n inner join ". USERS_TABLE
                     . " u on n.user_id  = u.user_id where n.id = ? and identifier = ? and coll_id = ? order by date_note desc",
                     array($notesArray[$i], $id, $coll_id)
                 );
 
-                if($stmt->rowCount() > 0) {
+                if ($stmt->rowCount() > 0) {
 
                     $line = $stmt->fetchObject();
 
@@ -743,7 +749,7 @@ abstract class SendmailAbstract extends Database
             $content .= "</table>";
             $content .= "</body></html>";
             //Write file
-            $inF = fopen($filePathOnTmp,"w");
+            $inF = fopen($filePathOnTmp, "w");
             fwrite($inF, $content);
             fclose($inF);
 
@@ -769,13 +775,16 @@ abstract class SendmailAbstract extends Database
         }
     }
 
-    public function getAttachedEntitiesMails($user_id="") {
+    public function getAttachedEntitiesMails($user_id="")
+    {
         $db = new Database;
         $arrayEntitiesMails = array();
 
         if ($user_id <> "") {
-            $stmt = $db->query("SELECT e.short_label, e.email, e.entity_id FROM users_entities ue, entities e
-                                WHERE ue.user_id = ? and ue.entity_id = e.entity_id and enabled = 'Y' order by e.short_label", array($user_id));
+            $stmt = $db->query(
+                "SELECT e.short_label, e.email, e.entity_id FROM users_entities ue, entities e "
+                . "WHERE ue.user_id = ? and ue.entity_id = e.entity_id and enabled = 'Y' order by e.short_label", array($user_id)
+            );
         } else {
             $stmt = $db->query("SELECT short_label, email, entity_id FROM entities WHERE enabled = 'Y'");
         }
@@ -802,8 +811,7 @@ abstract class SendmailAbstract extends Database
                 . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
                 . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml';
             $getXml = true;
-        } else if (file_exists($_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
-            . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml')) {
+        } else if (file_exists($_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml')) {
             $path = $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
                 . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml';
             $getXml = true;
@@ -813,14 +821,15 @@ abstract class SendmailAbstract extends Database
             $xml = simplexml_load_file($path);
 
             if ($xml <> false) {
-                require_once("modules/entities/class/class_manage_entities.php");
+                include_once "modules/entities/class/class_manage_entities.php" ;
                 $entities = new entity();
 
                 foreach ($xml->externalEntityMail as $EntityMail) {
                     $shortLabelEntity = $entities->getentityshortlabel((string)$EntityMail->targetEntityId);
                     if (!in_array((string)$EntityMail->targetEntityId.",".(string)$EntityMail->EntityMail, array_keys($arrayEntitiesMails))
                         && (in_array((string)$EntityMail->targetEntityId, $userEntities) || (string)$EntityMail->targetEntityId == "")
-                        && (string)$EntityMail->EntityMail <> "") {
+                        && (string)$EntityMail->EntityMail <> ""
+                    ) {
                         if ((string)$EntityMail->targetEntityId<>"") {
                             $EntityName = $shortLabelEntity;
                         } else {
@@ -836,7 +845,8 @@ abstract class SendmailAbstract extends Database
         return $arrayEntitiesMails;
     }
 
-    public function checkAttachedEntitiesMails(){
+    public function checkAttachedEntitiesMails()
+    {
         $db = new Database;
         $core_tools = new core_tools();
 
@@ -855,7 +865,8 @@ abstract class SendmailAbstract extends Database
         return $entitiesMails;
     }
 
-    public function explodeSenderEmail($senderEmail){
+    public function explodeSenderEmail($senderEmail)
+    {
         if (strpos($senderEmail, ",") === false) {
             return $senderEmail;
         } else {

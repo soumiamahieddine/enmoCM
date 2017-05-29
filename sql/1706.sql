@@ -1,7 +1,7 @@
 -- *************************************************************************--
 --                                                                          --
 --                                                                          --
---        THIS SCRIPT IS USE TO PASS FROM MAARCH 1.6 TO MAARCH 1.7          --
+-- Model migration script - 1.6 to 17.06          --
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
@@ -154,14 +154,18 @@ ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_final_disposition;
 ALTER TABLE doctypes ADD COLUMN retention_final_disposition character varying(255) NOT NULL DEFAULT 'destruction';
 
 ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_rule;
-ALTER TABLE doctypes ADD COLUMN retention_rule character varying(15) NOT NULL DEFAULT 'P10Y';
+ALTER TABLE doctypes ADD COLUMN retention_rule character varying(15) NOT NULL DEFAULT 'compta_3_03';
 
+ALTER TABLE doctypes DROP COLUMN IF EXISTS duration_current_use;
+ALTER TABLE doctypes ADD COLUMN duration_current_use integer DEFAULT '12';
 
 ALTER TABLE entities DROP COLUMN IF EXISTS archival_agency;
-ALTER TABLE entities ADD COLUMN archival_agency character varying(255);
+ALTER TABLE entities ADD COLUMN archival_agency character varying(255) DEFAULT 'org_123456789_Archives';
 
 ALTER TABLE entities DROP COLUMN IF EXISTS archival_agreement;
-ALTER TABLE entities ADD COLUMN archival_agreement character varying(255);
+ALTER TABLE entities ADD COLUMN archival_agreement character varying(255) DEFAULT 'MAARCH_LES_BAINS_ACTES';
+
+UPDATE entities SET business_id = 'org_987654321_Versant';
 
 DELETE FROM docservers where docserver_id = 'FASTHD_ATTACH';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
@@ -278,13 +282,17 @@ INSERT INTO user_signatures (user_id, signature_label, signature_path, signature
 
 UPDATE parameters SET param_value_int = '1706' WHERE id = 'database_version';
 
+/** ADD NEW COLUMN FOR ORDER RES IN BASKETS **/
+ALTER TABLE baskets DROP COLUMN IF EXISTS basket_res_order;
+ALTER TABLE baskets ADD COLUMN basket_res_order character varying(255);
+
 /** DELETES OLD TABLES **/
 DROP TABLE IF EXISTS adr_business;
 DROP TABLE IF EXISTS adr_log;
 DROP TABLE IF EXISTS adr_rm;
 DROP TABLE IF EXISTS ar_boxes;
 DROP TABLE IF EXISTS ar_containers;
-DROP TABLE IF EXISTS ar_containers_types;
+DROP TABLE IF EXISTS ar_container_types;
 DROP TABLE IF EXISTS ar_deposits;
 DROP TABLE IF EXISTS ar_header;
 DROP TABLE IF EXISTS ar_natures;
