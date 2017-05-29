@@ -79,7 +79,6 @@
                         );?>
                     </td>
                     <td id="maarchDependenciesContent" name="maarchDependenciesContent">
-                    <i class="fa fa-spinner" aria-hidden="true"></i>
                         <?php if($Class_Install->isDependenciesExist()){
                         echo _MAARCH_DEPENDENCIES;
                         } else {
