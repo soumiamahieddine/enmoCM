@@ -439,7 +439,7 @@ class history
             $configFileLog4PHP = "apps"
                 . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
                 . DIRECTORY_SEPARATOR . "xml"
-                . DIRECTORY_SEPARATOR . "log4php.xml.default";
+                . DIRECTORY_SEPARATOR . "log4php.default.xml";
         }
 
         Logger::configure(

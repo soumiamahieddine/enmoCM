@@ -71,7 +71,7 @@ if (!defined('_PREREQUISITES_HEAD')) {
 }
 
 if (!defined('_PREREQUISITES_EXP')) {
-    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Courrier/latest/fr/Install/Prerequis' target=\"_blank\"> pre-requis</A> pour les détails");
+    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Courrier/1.5/fr/Install/Prerequis' target=\"_blank\"> pre-requis</A> pour les détails");
 }
 if (!defined('_ACTIVATED')) {
     define('_ACTIVATED', "Conforme");
@@ -85,10 +85,7 @@ if (!defined('_GENERAL')) {
     define('_GENERAL', "Général");
 }
 if (!defined('_PHP_VERSION')) {
-    define('_PHP_VERSION', "Version de PHP (5.5 ou sup.)");
-}
-if (!defined('_MAARCH_DEPENDENCIES')) {
-    define('_MAARCH_DEPENDENCIES', "Dépendances Maarch (Voir prérequis wiki)");
+    define('_PHP_VERSION', "Version de PHP (5.3 ou sup.)");
 }
 if (!defined('_MAARCH_PATH_RIGHTS')) {
     define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'écriture du répertoire racine de Maarch");
@@ -101,6 +98,9 @@ if (!defined('_PGSQL')) {
 }
 if (!defined('_GD')) {
     define('_GD', "Librairie gd");
+}
+if (!defined('_SVN')) {
+    define('_SVN', "librairie svn");
 }
 if (!defined('_IMAP')) {
     define('_IMAP', "librairie imap");
@@ -139,10 +139,13 @@ if (!defined('_ERROR_REPORTING')) {
         define('_ERROR_REPORTING', "error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED");
 }
 if (!defined('_DISPLAY_ERRORS')) {
-    define('_DISPLAY_ERRORS', "display_errors=On");
+    define('_DISPLAY_ERRORS', "display_errors (On)");
 }
 if (!defined('_SHORT_OPEN_TAGS')) {
-    define('_SHORT_OPEN_TAGS', "short_open_tags=On");
+    define('_SHORT_OPEN_TAGS', "short_open_tags (On)");
+}
+if (!defined('_MAGIC_QUOTES_GPC')) {
+    define('_MAGIC_QUOTES_GPC', "magic_quotes_gpc (Off)");
 }
 
 if (!defined('_MUST_FIX')) {
