@@ -81,28 +81,22 @@ $subject = $res->subject;
         <?php
         }
         ?>-->
-            <div class="swiper-container">
-                <div class="swiper-wrapper">
-                        <?php
-                        if (count($_SESSION['user']['pathToSignature']) > 0){
-                            foreach ($_SESSION['user']['pathToSignature'] as $key=>$sign) {
-                                $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
-                                                . '_' . rand() . '.' . strtolower(pathinfo($sign,PATHINFO_EXTENSION));
-                                $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+            
+            <div id="list_tnl_sign">
+            <?php
+                if (count($_SESSION['user']['pathToSignature']) > 0){
+                    foreach ($_SESSION['user']['pathToSignature'] as $key=>$sign) {
+                        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
+                                        . '_' . rand() . '.' . strtolower(pathinfo($sign,PATHINFO_EXTENSION));
+                        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
 
-                                if (copy($sign, $filePathOnTmp)) {
-                                    $_SESSION['tab_copy_sign'][$key] = $_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp;
-                                    echo '<div class="swiper-slide"><img src="'.$_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp.'" alt="signature" style="width:99px;" onclick="loadImgSign(this);"/></div>';
-                                       
-                                }
-                        ?>
-                        <?php
+                        if (copy($sign, $filePathOnTmp)) {
+                            $_SESSION['tab_copy_sign'][$key] = $_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp;
+                            echo '<img src="'.$_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp.'" alt="signature" style="width:99px;background:#FFF;" onclick="loadImgSign(this);"/>';
                         }
                     }
-                    ?>
-                </div>
-                <!-- Add Scrollbar -->
-                <div class="swiper-scrollbar"></div>
+                }
+            ?>
             </div>
         </div>
         
