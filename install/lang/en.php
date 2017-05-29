@@ -18,7 +18,7 @@ if (!defined('_DESC_INSTALL')) {
                     <br />
                     Maarch is a full free software for Document Management, Content Management, Mail Management, Colaborative and legal archiving/record management capabilities. It allows to follow multichannel administrative information (postals mails, mails, forms, phones calls) and classify the documents to find effectively in time. The software offers supports tools for writing and to validate outgoing mails. Maarch Courrier is distributed under GPL v3 licence : there is no licence cost, but professional services offered by Maarch and its partner global network.<br />
                     <br />
-                    Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com/en' target\"_blank\"> www.maarch.com</A> for more information on Maarch Professional Services.
+                    Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com' target\"_blank\"> www.maarch.com</A> for more information on Maarch Professional Services.
 					<br>
 					<br><b>Important : we are looking for english speaking partners to promote Maarch around the world. Don't hesitate to contact us directly at info@maarch.org for a win-win partnership !");
 }
@@ -131,7 +131,7 @@ if (!defined('_PHP_VERSION')) {
     define('_PHP_VERSION', "Version of PHP (>=5.5)");
 }
 if (!defined('_MAARCH_DEPENDENCIES')) {
-    define('_MAARCH_DEPENDENCIES', "Dependencies Maarch (See prérequis wiki)");
+    define('_MAARCH_DEPENDENCIES', "Dependencies Maarch");
 }
 if (!defined('_MAARCH_PATH_RIGHTS')) {
     define('_MAARCH_PATH_RIGHTS', "Rights to Maarch root directory (read/write)");
@@ -409,5 +409,25 @@ if (!defined('_SMTP')) {
 
 if (!defined('_SMTP_INFO')) {
     define('_SMTP_INFO', "SMTP's Configuration");
+}
+
+if (!defined('_SMTP_DOMAINS')) {
+    define('_SMTP_DOMAINS', "Domains");
+}
+
+if (!defined('_DEPENDENCIES_NOT_DOWNLOADED')) {
+    define('_DEPENDENCIES_NOT_DOWNLOADED', "dependencies not downloaded, retrieve it via wiki documentation");
+}
+
+if (!defined('_DEPENDENCIES_NOT_EXTRACTED')) {
+    define('_DEPENDENCIES_NOT_EXTRACTED', "dependencies not extracted, retrieve it via wiki documentation");
+}
+
+if (!defined('_DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD')) {
+    define('_DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD', "Click here to deploy automatically (internet required)");
+}
+
+if (!defined('_DEPENDENCIES_ON_WIKI')) {
+    define('_DEPENDENCIES_ON_WIKI', "Or follow the wiki documentation");
 }
 

@@ -228,6 +228,38 @@ function checkLanguage(
     });
 }
 
+/* download dependencies */
+function downloadMaarchDependencies() {
+    $('.wait').css('display','block');
+    $.ajax({
+        url : 'controller/getDependencies.php',
+        type : 'GET',
+        dataType : 'json',
+        success : function(answer) {
+            console.log(answer);
+        }
+    })
+    window.location.reload();
+}
+
+/* download version */
+function downloadVersion(version) {
+    $('.wait').css('display','block');
+    $('.downloadVersionBtn').css('display','none');
+    $.ajax({
+        url : 'controller/downloadVersion.php',
+        type : 'GET',
+        dataType : 'json',
+        data: {
+            version : version
+        },
+        success : function(answer) {
+            console.log(answer);
+            $('.wait').css('display','none');
+            $('.ajaxReturn_downloadVersion').css('display','block');
+        }
+    })
+}
 
 /* ajax.js */
 function ajax(
