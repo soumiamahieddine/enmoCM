@@ -2397,7 +2397,6 @@ class core_tools extends functions
             || (preg_match('/ipad/i',$user_agent))
             || (preg_match('/ipod/i',$user_agent)||preg_match('/iphone/i',$user_agent))
             || (preg_match('/android/i',$user_agent))
-            || (preg_match('/mozilla/i',$user_agent))
             || (preg_match('/opera mini/i',$user_agent))
             || (preg_match('/blackberry/i',$user_agent))
             || (preg_match('/(pre\/|palm os|palm|hiptop|avantgo|plucker|xiino|blazer|elaine)/i',$user_agent))
