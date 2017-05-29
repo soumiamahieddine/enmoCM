@@ -10,7 +10,7 @@ $dependPath = 'dependencies';
 if(!file_exists('dependencies.tar.gz')) {
     file_put_contents(
         'dependencies.tar.gz', 
-        fopen("https://labs.maarch.org/maarch/LibsExtMaarchCourrier/repository/archive.tar.gz?ref=master", 'r')
+        fopen("https://labs.maarch.org/maarch/LibsExtMaarchCourrier/repository/archive.tar.gz?ref=v17.06", 'r')
     );
 }
 
