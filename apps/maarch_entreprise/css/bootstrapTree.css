@@ -48,9 +48,16 @@
     border:1px solid #dadada;
     border-radius:5px;
     display:inline-block;
-    padding:3px 8px;
+    padding:3px 5px;
     text-decoration:none;
     max-width : 440px;
+}
+
+.tree li span .icon {
+    width: 10px;
+    height: 10px;
+    padding:0 5px;
+    border: none;
 }
 
 .tree li.parent_li i {
@@ -72,7 +79,7 @@
 .tree .root{
     color: white;
     background-color: #45a469;
-    padding: 10px 8px;
+    padding: 8px 8px;
 }
 
 .tree .node{

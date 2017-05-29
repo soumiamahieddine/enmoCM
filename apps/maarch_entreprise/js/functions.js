@@ -3162,14 +3162,15 @@ function resetSelect(id) {
     Event.fire($(id), "chosen:updated");
 }
 
-function getChildrenHtml (branch_id, treeDiv, path_manage_script){
+function getChildrenHtml (branch_id, treeDiv, path_manage_script, opened, closed){
     var minus;
-    if($j('#'+branch_id+' i').first().prop('class')=='fa fa-minus-square'||$j('#'+branch_id+' i').first().prop('class')=='fa fa-minus-square fa-plus-square')
+    if($j('#'+branch_id+' i').first().prop('class')==closed)
     {
-        minus =true;
+        minus=false;
     }
     else{
-        minus=false;
+        minus =true;
+        
     }
     $j.ajax({
         url: path_manage_script, 
@@ -3179,18 +3180,18 @@ function getChildrenHtml (branch_id, treeDiv, path_manage_script){
                 var branch = $j('#'+branch_id);
                 if(minus){
                     BootstrapTree.removeSons($j('#'+branch_id+' > ul'));
-                    $j('#'+branch_id+' i').first().prop('class','fa fa-plus-square');
+                    $j('#'+branch_id+' i').first().prop('class',closed);
                 }
                 else{
                     if(result!=''){
-                        BootstrapTree.addNode($j('#'+branch_id),$j(result));
-                        BootstrapTree.init($j('#'+treeDiv));
+                        BootstrapTree.addNode($j('#'+branch_id),$j(result), opened, closed);
+                        BootstrapTree.init($j('#'+treeDiv),opened,closed);
                         $j('#'+branch_id+' > ul').first().find('li').hide();
                         $j('#'+branch_id+' > ul').first().find('li').show('fast');
-                        $j('#'+branch_id+' i').first().prop('class','fa fa-minus-square');
+                        $j('#'+branch_id+' i').first().prop('class',opened);
                     }
                     else{
-                        $j('#'+branch_id+' i').first().prop('class','');
+                        $j('#'+branch_id+' i').first().prop('class','emptyNode');
                     }
                 }
             }

@@ -1,5 +1,5 @@
 var BootstrapTree = {
-    init: function(tree) {
+    init: function(tree, opened, closed) {
         tree.find('li')
             .children('ul')
             .parent()
@@ -8,7 +8,7 @@ var BootstrapTree = {
             .find('i:first')
             .on('click', BootstrapTree.toggleNode);
 
-        $j('.parent_li').find('span:first').find('.fa:first').addClass('fa-plus-square');
+        $j('.parent_li').find('span:first').find('.fa:first').addClass(closed);
         $j('.parent_li').find(' > ul > li').hide();
     },
 
@@ -23,19 +23,18 @@ var BootstrapTree = {
         ul.appendTo(tree);
     },
 
-    addNode: function(parent, element) {
+    addNode: function(parent, element, opened, closed) {
         if (!element || !parent) {
             return;
         }
-
         var ul = parent.find('> ul');
         if (ul.length == 0) {
             ul = $j('<ul/>').appendTo(parent);
-
+            
             parent.addClass('parent_li')
               .find('span:first')
               .find('.fa:first')
-              .addClass('fa-minus-square')
+              .prop('class',opened)
               .on('click', BootstrapTree.toggleNode);
         }
         //this.openNode(ul);
@@ -68,17 +67,17 @@ var BootstrapTree = {
     },
 
     openNode: function(element) {
-        element.parents('li').find('i.fa-plus-square:first').click();
+        element.parents('li').find('i.'+closed+':first').click();
     },
 
     toggleNode: function(event) {
         var children = $j(this).closest('li.parent_li').find(' > ul > li');
         if (children.is(':visible')) {
             children.hide('fast');
-            $j(this).parent().find(' > i').addClass('fa-plus-square').removeClass('fa-minus-square');
+            $j(this).parent().find(' > i').prop('class',closed);
         }
         else {
-            $j(this).parent().find(' > i').addClass('fa-minus-square').removeClass('fa-plus-square');
+            $j(this).parent().find(' > i').prop('class',closed);
         }
         event.stopPropagation();
         $j('.tree').find('.hideTreeElement').css('display', 'none');

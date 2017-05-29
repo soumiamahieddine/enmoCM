@@ -74,7 +74,9 @@ class MergedJsAbstract {
 //		include('apps/maarch_entreprise/js/RSVP.js');
 //		include('apps/maarch_entreprise/js/render.js');
 //		include('apps/maarch_entreprise/js/jio.js');
+		echo "\n";
 		readfile('apps/maarch_entreprise/js/bootstrap-tree.js');
+
 		
         echo "\n";
 	}

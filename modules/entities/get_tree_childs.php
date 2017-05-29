@@ -100,11 +100,11 @@ if (isset($_POST['branch_id'])) {
         echo '<ul>';
         for ($i=0;$i< count($children);$i++) {
             if($children[$i]['is_entity']=='false'){
-                echo '<li id="'.$children[$i]['id'].'"> <span class="user"><i class="fa fa-user" ></i>'.addslashes($children[$i]['label_value']).'</span>'.
+                echo '<li id="'.$children[$i]['id'].'"> <span class="user"><i class="fa fa-user" ></i>'.$children[$i]['label_value'].'</span>'.
                 '</li>';
             }
             else{
-                echo '<li id="'.$children[$i]['id'].'"> <span class="node"><i class="fa" onclick="getChildrenHtml(\''.$children[$i]['id'].'\',\'divTree\',\'index.php?display=true&module=entities&page=get_tree_childs\')"></i>'.addslashes($children[$i]['label_value']).'</span>'.
+                echo '<li id="'.$children[$i]['id'].'"> <span class="node"><span class=icon><i class="fa" onclick="getChildrenHtml(\''.$children[$i]['id'].'\',\'divTree\',\'index.php?display=true&module=entities&page=get_tree_childs\',\'fa fa-minus-square\',\'fa fa-plus-square\')"></i></span>'.$children[$i]['label_value'].'</span>'.
                 '<ul></ul>'.
                 '</li>';
             }
