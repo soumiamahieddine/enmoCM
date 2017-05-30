@@ -47,8 +47,8 @@ if (empty($finalVersionPath)) {
 
 if (!$Class_Install->copy_dir(
         $finalVersionPath . DIRECTORY_SEPARATOR,
-        '/opt/maarch/test' . DIRECTORY_SEPARATOR
-        //$_SESSION['config']['corepath']
+        //'/opt/maarch/test' . DIRECTORY_SEPARATOR
+        $_SESSION['config']['corepath']
     )
 ) {
     $return['status'] = 0;
@@ -60,8 +60,7 @@ if (!$Class_Install->copy_dir(
     exit;
 } else {
     include_once 'core/docservers_tools.php';
-    Ds_washTmp($finalVersionPath . '/install');
-    unlink($versionFile);
+    Ds_washTmp($versionPath);
     echo '{"status":1}';
     exit;
 }
