@@ -10,35 +10,63 @@
 * @brief class of install tools
 *
 * @file
-* @author Arnaud Veber
+* @author Laurent Giovannoni
 * @date $date$
 * @version $Revision$
 * @ingroup install
 */
 ?>
+<script>
+    function launchProcess(
+        myVar
+    )
+    {
+        $(document).ready(function() {
+            var oneIsEmpty = false;
+            if (myVar.length < 1) {
+                var oneIsEmpty = true;
+            }
+
+            if (oneIsEmpty) {
+                $('#ajaxReturn_ko').html('<?php echo _MUST_CHOOSE_VERSION;?>');
+                $('#ajaxReturn_button').css('display', 'block');
+                return;
+            }
+            $('#ajaxReturn_ko').html('');
+
+            ajax(
+                'downloadVersion',
+                'myVar|'+myVar,
+                'ajaxReturn',
+                'false'
+            );
+
+        });
+    }
+</script>
 <div class="ajaxReturn_testConnect">
     <div class="blockWrapper">
         <div class="titleBlock">
             <h2 onClick="slide('database');" style="cursor: pointer;">
-                <?php echo _UPDATE_DEPLOY_INFOS;?>
+                <?php echo _LAST_RELEASE_INFOS;?>
             </h2>
         </div>
         <div class="contentBlock" id="database">
             <p>
                 <h6>
-                    <?php echo _UPDATE_DEPLOY_DETAILS;?>
+                    <?php echo _LAST_RELEASE_DETAILS;?>
                 </h6>
                 <form>
                     <table>
                         <tr>
                             <td>
-                                <?php echo _UPDATE_DEPLOY_VERSION;?>
+                                <?php echo _LAST_RELEASE_VERSION;?>
                             </td>
                             <td>
                                 :
                             </td>
                             <td>
-                                <input type="text" id="url" name="version" value="17.06-RC.05.29"/>
+                                <input type="text" id="version" name="version" value="17.06-RC.05.29"/>
                             </td>
                         </tr>
                         <tr>
@@ -52,12 +80,8 @@
                             <td>
                                 <input
                                   type="button"
-                                  name="Submit" class="submitBtn"  value="<?php echo _DOWNLOAD_VERSION;?>"
-                                  onClick="
-                                    downloadVersion(
-                                      $('#url').val()
-                                    );
-                                  "
+                                  name="Submit" id="ajaxReturn_button"  value="<?php echo _DOWNLOAD_VERSION;?>"
+                                  onClick="$(this).css('display', 'none');launchProcess($('#version').val());"
                                 />
                             </td>
                         </tr>
@@ -78,12 +102,12 @@
         <p>
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
-                    <a href="#" onClick="goTo('index.php?step=update_download');">
+                    <a href="#" onClick="goTo('index.php?step=update_backup');">
                         <?php echo _PREVIOUS_INSTALL;?>
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
-                    <a href="#" onClick="goTo('index.php?step=update_end');" class="ajaxReturn_downloadVersion" id="ajaxReturn_ok" style="display: none;">
+                    <a href="#" onClick="goTo('index.php?step=update_deploy');" class="ajaxReturn" id="ajaxReturn_ok" style="display: none;">
                         <?php echo _NEXT_INSTALL;?>
                     </a>
                 </div>

@@ -14,14 +14,14 @@ $listLang = $Class_Install->loadLang();
 
 //retrieve required dependencies for Maarch labs
 $dependPath = 'dependencies';
-if(!file_exists('dependencies.tar')) {
+if(!file_exists('dependencies.zip')) {
     file_put_contents(
-        'dependencies.tar', 
-        fopen("https://labs.maarch.org/maarch/LibsExtMaarchCourrier/repository/archive.tar?ref=v17.06", 'r')
+        'dependencies.zip', 
+        fopen("https://labs.maarch.org/maarch/LibsExtMaarchCourrier/repository/archive.zip?ref=v17.06", 'r')
     );
 }
 
-if (!file_exists('dependencies.tar')) {
+if (!file_exists('dependencies.zip')) {
     echo '{"status":1, "' . _DEPENDENCIES_NOT_DOWNLOADED . '"}';
     exit();
 }
@@ -31,7 +31,7 @@ if (!is_dir($dependPath)) {
     mkdir($dependPath, 0770);
 }
 
-$phar = new PharData('dependencies.tar');
+$phar = new PharData('dependencies.zip');
 $phar->extractTo($dependPath, null, true);
 
 $fileTab = scandir($dependPath);
@@ -47,18 +47,18 @@ for ($n = 0; $n < count($fileTab); $n++) {
     }
 }
 
-if (empty($finalDependPath)) {
-    echo '{"status":1, "message" : "' . _DEPENDENCIES_NOT_EXTRACTED . ' (1)"}';
-    exit();
-}
+if (!$Class_Install->copy_dir(
+        $finalDependPath . DIRECTORY_SEPARATOR,
+        $_SESSION['config']['corepath']
+    )
+) {
+    $return['status'] = 0;
+    $return['text'] = _CAN_NOT_COPY_TO . ':' . $_SESSION['config']['corepath'];
 
-$dependFile = $finalDependPath . '/MaarchCourrierDependencies.tar';
-if (file_exists($dependFile)) {
-    $phar = new PharData($dependFile);
-    $phar->extractTo('.', null, true);
-} else {
-    echo '{"status":1, "message" : "2 ' . _DEPENDENCIES_NOT_EXTRACTED . ' (2)"}';
-    exit();
+    $jsonReturn = json_encode($return);
+
+    echo $jsonReturn;
+    exit;
 }
 
 if (!file_exists('vendor/') && !file_exists('node_modules/')) {
@@ -66,7 +66,7 @@ if (!file_exists('vendor/') && !file_exists('node_modules/')) {
 } else {
     include_once 'core/docservers_tools.php';
     Ds_washTmp($dependPath);
-    unlink('dependencies.tar');
+    unlink('dependencies.zip');
     echo '{"status":0}';
 }
 
