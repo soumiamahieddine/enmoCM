@@ -203,14 +203,14 @@ if (!defined('_DOCSERVER_ROOT')) {
 if (!defined('_CREATE_DOCSERVERS')) {
     define('_CREATE_DOCSERVERS', "Validate");
 }
-if (!defined('_MUST_CHOOSE_DOCSERVERS_ROOT')) {
-    define('_MUST_CHOOSE_DOCSERVERS_ROOT', "You must choose the docservers root directory");
+if (!defined('_MUST_CHOOSE_PATH_ROOT')) {
+    define('_MUST_CHOOSE_PATH_ROOT', "You must choose the path root directory");
 }
-if (!defined('_PATH_OF_DOCSERVER_UNAPPROACHABLE')) {
-    define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', "Path of docserver is unapproachable");
+if (!defined('_PATH_UNAPPROACHABLE')) {
+    define('_PATH_UNAPPROACHABLE', "Path is unapproachable");
 }
-if (!defined('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
-    define('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "The docservers does not have the adequate rights");
+if (!defined('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
+    define('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "The path does not have the adequate rights");
 }
 
 //DATABASE

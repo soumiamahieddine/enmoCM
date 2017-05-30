@@ -28,18 +28,13 @@
 * @ingroup install
 */
 
+//MODEL
+    include_once '../../core/init.php';
+
 //CONTROLLER
+    if (!isset($_REQUEST['languageSelect']) || empty($_REQUEST['languageSelect'])) {
+        header("Location: ../error.php?error=badForm"); exit;
+    }
 
-    //TITLE
-        $shortTitle = _UPDATE_WELCOME;
-        $longTitle = _UPDATE_WELCOME;
-
-    //ALLOWED SQL
-        $listSql = $Class_Install->getDataList();
-
-    //PROGRESS
-        $stepNb = 2;
-        $stepNbTotal = 6;
-
-//VIEW
-    $view = 'update';
+    $_SESSION['lang'] = $_REQUEST['languageSelect'];
+    header("Location: ../index.php?step=update_welcome");

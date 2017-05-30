@@ -19,12 +19,12 @@
 //CONTROLLER
 
     //TITLE
-        $shortTitle = _UPDATE_DEPLOY;
-        $longTitle = _UPDATE_DEPLOY;
+        $shortTitle = _UPDATE_DOWNLOAD;
+        $longTitle = _UPDATE_DOWNLOAD;
 
     //PROGRESS
-        $stepNb = 5;
+        $stepNb = 4;
         $stepNbTotal = 6;
 
 //VIEW
-    $view = 'update_deploy';
+    $view = 'update_download';

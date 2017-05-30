@@ -163,14 +163,14 @@ if (!defined('_DOCSERVER_ROOT')) {
 if (!defined('_CREATE_DOCSERVERS')) {
     define('_CREATE_DOCSERVERS', "Enregistrer");
 }
-if (!defined('_MUST_CHOOSE_DOCSERVERS_ROOT')) {
-    define('_MUST_CHOOSE_DOCSERVERS_ROOT', "Vous devez choisir le dossier racine de vos docservers");
+if (!defined('_MUST_CHOOSE_PATH_ROOT')) {
+    define('_MUST_CHOOSE_PATH_ROOT', "Vous devez choisir le dossier racine");
 }
-if (!defined('_PATH_OF_DOCSERVER_UNAPPROACHABLE')) {
-    define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', "Le dossier racine n'est pas accessible");
+if (!defined('_PATH_UNAPPROACHABLE')) {
+    define('_PATH_UNAPPROACHABLE', "Le dossier racine n'est pas accessible");
 }
-if (!defined('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
-    define('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Le docservers n'a pas les droits appropriés");
+if (!defined('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
+    define('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Le dossier n'a pas les droits appropriés");
 }
 
 //DATABASE

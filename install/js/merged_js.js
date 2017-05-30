@@ -232,7 +232,7 @@ function checkLanguage(
 function downloadMaarchDependencies() {
     $('.wait').css('display','block');
     $.ajax({
-        url : 'controller/getDependencies.php',
+        url : 'scripts/getDependencies.php',
         type : 'GET',
         dataType : 'json',
         success : function(answer) {
@@ -243,12 +243,36 @@ function downloadMaarchDependencies() {
    
 }
 
+/* backup version */
+function backupVersion(path) {
+    $('.wait').css('display','block');
+    //$('.submitBtn').css('display','none');
+    $.ajax({
+        url : 'scripts/backupVersion.php',
+        type : 'GET',
+        dataType : 'json',
+        data: {
+            path : path
+        },
+        success : function(answer) {
+            console.log(answer);
+            $('.wait').css('display','none');
+            $('.ajaxReturn_ok').css('display','block');
+        },
+        error : function(answer) {
+            console.log(answer);
+            $('.wait').css('display','none');
+            $('.ajaxReturn_ko').css('display','block');
+        }
+    })
+}
+
 /* download version */
 function downloadVersion(version) {
     $('.wait').css('display','block');
-    $('.downloadVersionBtn').css('display','none');
+    $('.submitBtn').css('display','none');
     $.ajax({
-        url : 'controller/downloadVersion.php',
+        url : 'scripts/downloadVersion.php',
         type : 'GET',
         dataType : 'json',
         data: {
@@ -257,7 +281,7 @@ function downloadVersion(version) {
         success : function(answer) {
             console.log(answer);
             $('.wait').css('display','none');
-            $('.ajaxReturn_downloadVersion').css('display','block');
+            $('.ajaxReturn_ok').css('display','block');
         }
     })
 }
@@ -270,6 +294,9 @@ function ajax(
     top
 )
 {
+    if ($('.wait')) {
+        $('.wait').css('display','block');
+    }
     var ajaxUrl  = url;
 
     var parametersTemp = parameters.split('|');
@@ -307,11 +334,17 @@ function ajax(
     $(document).ready( function() {
         $.getJSON('ajax.php?script='+ajaxUrl, ajaxParameters, function(data){
             if (data.status == 1) {
-                retour_ok.html(data.text);
+                //retour_ok.html(data.text);
+                retour_ok.css('display', 'block');
                 retour_ko.html('');
                 slide(divRetour);
             } else {
+                $('#'+divRetour+'_button').css('display', 'block');
                 retour_ko.html(data.text);
+
+            }
+            if ($('.wait')) {
+                $('.wait').css('display','none');
             }
         });
     });

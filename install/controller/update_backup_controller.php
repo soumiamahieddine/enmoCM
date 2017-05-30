@@ -19,12 +19,15 @@
 //CONTROLLER
 
     //TITLE
-        $shortTitle = _UPDATE_DEPLOY;
-        $longTitle = _UPDATE_DEPLOY;
+        $shortTitle = _UPDATE_BACKUP;
+        $longTitle = _UPDATE_BACKUP;
+
+    //ALLOWED SQL
+        //$listSql = $Class_Install->getDataList();
 
     //PROGRESS
-        $stepNb = 5;
+        $stepNb = 3;
         $stepNbTotal = 6;
 
 //VIEW
-    $view = 'update_deploy';
+    $view = 'update_backup';

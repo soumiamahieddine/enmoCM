@@ -1,24 +1,46 @@
 <?php
-require_once '../../core/init.php';
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+*
+*/
+
+require_once 'core/init.php';
 require_once 'install/class/Class_Install.php';
 
 $Class_Install = new Install();
 $listLang = $Class_Install->loadLang();
 
-$version = $_REQUEST['version'];
+if (!empty($_REQUEST['myVar'])) {
+    $version = $_REQUEST['myVar'];
+} else {
+    $return['status'] = 0;
+    $return['text'] = _VERSION_EMPTY;
+
+    $jsonReturn = json_encode($return);
+
+    echo $jsonReturn;
+    exit;
+}
 //retrieve required sources for Maarch labs
 $versionPath = $version;
 $versionFile = $version . '.tar.gz';
-if(!file_exists($dependPath)) {
+if(!file_exists($versionFile)) {
     file_put_contents(
-        $versionFile , 
+        $versionFile, 
         fopen("https://labs.maarch.org/maarch/MaarchCourrier/repository/archive.tar.gz?ref=" . $version, 'r')
     );
 }
 
 if (!file_exists($versionFile)) {
-    echo '{"status":1, "' . _VERSION_NOT_DOWNLOADED . '"}';
-    exit();
+    $return['status'] = 0;
+    $return['text'] = _VERSION_NOT_DOWNLOADED;
+
+    $jsonReturn = json_encode($return);
+
+    echo $jsonReturn;
+    exit;
 }
 
 umask(0022);
@@ -31,7 +53,7 @@ $phar->extractTo($versionPath, null, true);
 
 $fileTab = scandir($versionPath);
 $nbFiles = count($fileTab);
-for ($n = 0; $n < count($fileTab); $n++) {
+for ($n = 0;$n < count($fileTab);$n++) {
     $currentFileName = array();
     if (
         $fileTab[$n] <> '.' 
@@ -43,12 +65,18 @@ for ($n = 0; $n < count($fileTab); $n++) {
 }
 
 if (empty($finalVersionPath)) {
-    echo '{"status":1, "message" : "' . _VERSION_NOT_EXTRACTED . ' (1)"}';
-    exit();
+    $return['status'] = 0;
+    $return['text'] = _VERSION_NOT_EXTRACTED;
+
+    $jsonReturn = json_encode($return);
+
+    echo $jsonReturn;
+    exit;
 } else {
     include_once 'core/docservers_tools.php';
     Ds_washTmp($finalVersionPath . '/install');
-    unlink($versionFile);
-    echo '{"status":0, "finalVersionPath" : "' . $finalVersionPath . '"}';
+    //unlink($versionFile);
+    echo '{"status":1}';
+    exit;
 }
 exit;
