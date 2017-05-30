@@ -231,6 +231,7 @@ function checkLanguage(
 /* download dependencies */
 function downloadMaarchDependencies() {
     $('.wait').css('display','block');
+    $('#divDownDepend').css('display','none');
     $.ajax({
         url : 'scripts/getDependencies.php',
         type : 'GET',
