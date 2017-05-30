@@ -52,7 +52,7 @@ if (empty($finalDependPath)) {
     exit();
 }
 
-$dependFile = $finalDependPath . '/MaarchCourrierDependencies.tar.gz';
+$dependFile = $finalDependPath . '/MaarchCourrierDependencies.zip';
 if (file_exists($dependFile)) {
     $phar = new PharData($dependFile);
     $phar->extractTo('.', null, true);
@@ -66,7 +66,7 @@ if (!file_exists('vendor/') && !file_exists('node_modules/')) {
 } else {
     include_once 'core/docservers_tools.php';
     Ds_washTmp($dependPath);
-    unlink('dependencies.tar.gz');
+    unlink('dependencies.zip');
     echo '{"status":0}';
 }
 
