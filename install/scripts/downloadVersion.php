@@ -25,11 +25,11 @@ if (!empty($_REQUEST['myVar'])) {
 }
 //retrieve required sources for Maarch labs
 $versionPath = $version;
-$versionFile = $version . '.tar.gz';
+$versionFile = $version . '.zip';
 if(!file_exists($versionFile)) {
     file_put_contents(
         $versionFile, 
-        fopen("https://labs.maarch.org/maarch/MaarchCourrier/repository/archive.tar.gz?ref=" . $version, 'r')
+        fopen("https://labs.maarch.org/maarch/MaarchCourrier/repository/archive.zip?ref=" . $version, 'r')
     );
 }
 
