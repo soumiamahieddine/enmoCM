@@ -14,14 +14,14 @@ $listLang = $Class_Install->loadLang();
 
 //retrieve required dependencies for Maarch labs
 $dependPath = 'dependencies';
-if(!file_exists('dependencies.tar.gz')) {
+if(!file_exists('dependencies.zip')) {
     file_put_contents(
-        'dependencies.tar.gz', 
-        fopen("https://labs.maarch.org/maarch/LibsExtMaarchCourrier/repository/archive.tar.gz?ref=v17.06", 'r')
+        'dependencies.zip', 
+        fopen("https://labs.maarch.org/maarch/LibsExtMaarchCourrier/repository/archive.zip?ref=v17.06", 'r')
     );
 }
 
-if (!file_exists('dependencies.tar.gz')) {
+if (!file_exists('dependencies.zip')) {
     echo '{"status":1, "' . _DEPENDENCIES_NOT_DOWNLOADED . '"}';
     exit();
 }
@@ -31,7 +31,7 @@ if (!is_dir($dependPath)) {
     mkdir($dependPath, 0770);
 }
 
-$phar = new PharData('dependencies.tar.gz');
+$phar = new PharData('dependencies.zip');
 $phar->extractTo($dependPath, null, true);
 
 $fileTab = scandir($dependPath);
