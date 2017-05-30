@@ -14,14 +14,14 @@ $listLang = $Class_Install->loadLang();
 
 //retrieve required dependencies for Maarch labs
 $dependPath = 'dependencies';
-if(!file_exists('dependencies.zip')) {
+if(!file_exists('dependencies.tar')) {
     file_put_contents(
-        'dependencies.zip', 
-        fopen("https://labs.maarch.org/maarch/LibsExtMaarchCourrier/repository/archive.zip?ref=v17.06", 'r')
+        'dependencies.tar', 
+        fopen("https://labs.maarch.org/maarch/LibsExtMaarchCourrier/repository/archive.tar?ref=v17.06", 'r')
     );
 }
 
-if (!file_exists('dependencies.zip')) {
+if (!file_exists('dependencies.tar')) {
     echo '{"status":1, "' . _DEPENDENCIES_NOT_DOWNLOADED . '"}';
     exit();
 }
@@ -31,7 +31,7 @@ if (!is_dir($dependPath)) {
     mkdir($dependPath, 0770);
 }
 
-$phar = new PharData('dependencies.zip');
+$phar = new PharData('dependencies.tar');
 $phar->extractTo($dependPath, null, true);
 
 $fileTab = scandir($dependPath);
@@ -52,7 +52,7 @@ if (empty($finalDependPath)) {
     exit();
 }
 
-$dependFile = $finalDependPath . '/MaarchCourrierDependencies.zip';
+$dependFile = $finalDependPath . '/MaarchCourrierDependencies.tar';
 if (file_exists($dependFile)) {
     $phar = new PharData($dependFile);
     $phar->extractTo('.', null, true);
@@ -66,7 +66,7 @@ if (!file_exists('vendor/') && !file_exists('node_modules/')) {
 } else {
     include_once 'core/docservers_tools.php';
     Ds_washTmp($dependPath);
-    unlink('dependencies.zip');
+    unlink('dependencies.tar');
     echo '{"status":0}';
 }
 
