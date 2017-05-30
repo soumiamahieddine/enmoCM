@@ -23,7 +23,7 @@
         $longTitle = _UPDATE_DOWNLOAD;
 
     //PROGRESS
-        $stepNb = 4;
+        $stepNb = 3;
         $stepNbTotal = 6;
 
 //VIEW
