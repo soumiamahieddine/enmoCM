@@ -433,3 +433,11 @@ if (!defined('_DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD')) {
 if (!defined('_DEPENDENCIES_ON_WIKI')) {
     define('_DEPENDENCIES_ON_WIKI', "Ou suivez la procédure sur notre wiki");
 }
+
+if (!defined('_ZIP')) {
+    define('_ZIP', "librairie zip");
+}
+
+if (!defined('_INSTALL_ZIP_LIB_FIRST')) {
+    define('_INSTALL_ZIP_LIB_FIRST', "Installez la librairie zip pour déployer automatiquement les dépendances");
+}

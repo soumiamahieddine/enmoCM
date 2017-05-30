@@ -8,6 +8,7 @@
 
 require_once 'core/init.php';
 require_once 'install/class/Class_Install.php';
+include_once 'core/docservers_tools.php';
 
 $Class_Install = new Install();
 $listLang = $Class_Install->loadLang();
@@ -24,7 +25,11 @@ if (!empty($_REQUEST['myVar'])) {
     exit;
 }
 //retrieve required sources for Maarch labs
-$versionPath = $version;
+$versionPath = 'NEW_VERSION';
+if (is_dir($versionPath)) {
+    Ds_washTmp($versionPath);
+}
+
 $versionFile = $version . '.zip';
 if(!file_exists($versionFile)) {
     file_put_contents(
@@ -48,8 +53,21 @@ if (!is_dir($versionPath)) {
     mkdir($versionPath, 0770);
 }
 
-$phar = new PharData($versionFile);
-$phar->extractTo($versionPath, null, true);
+$zip = new ZipArchive;
+if ($zip->open($versionFile) === TRUE) {
+    $zip->extractTo($versionPath);
+    $zip->close();
+} else {
+    $return['status'] = 0;
+    $return['text'] = _CANNOT_EXTRACT;
+
+    $jsonReturn = json_encode($return);
+
+    echo $jsonReturn;
+    exit;
+}
+//$phar = new PharData($versionFile);
+//$phar->extractTo($versionPath, null, true);
 
 $fileTab = scandir($versionPath);
 $nbFiles = count($fileTab);
@@ -73,9 +91,8 @@ if (empty($finalVersionPath)) {
     echo $jsonReturn;
     exit;
 } else {
-    include_once 'core/docservers_tools.php';
     Ds_washTmp($finalVersionPath . '/install');
-    //unlink($versionFile);
+    unlink($versionFile);
     echo '{"status":1}';
     exit;
 }

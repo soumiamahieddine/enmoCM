@@ -60,27 +60,6 @@
                         <?php echo _MAARCH_PATH_RIGHTS;?>
                     </td>
                 </tr>
-                 <tr>
-                    <td id="maarchDependenciesLight" class="voyantPrerequisites">
-                        <?php echo $Class_Install->checkPrerequisites(
-                            $Class_Install->isDependenciesExist()
-                        );?>
-                    </td>
-                    <td id="maarchDependenciesContent" name="maarchDependenciesContent">
-                        <?php if($Class_Install->isDependenciesExist()){
-                        echo _MAARCH_DEPENDENCIES;
-                        } else {
-                        echo _MAARCH_DEPENDENCIES . '<br /><div id="divDownDepend" name="divDownDepend">'
-                            . '<a style=\'color: #800000; font-family:verdana;\' href="#" onclick="downloadMaarchDependencies()">'
-                            . _DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD . '</a><br />'
-                            . '<a style=\'color: #102155; font-family:verdana;\' href=\'http://wiki.maarch.org/Maarch_Courrier/1.5/fr/Install/Debian-Ubuntu/latest#T.C3.A9l.C3.A9chargement_et_installation_de_Maarch_Courrier_depuis_les_d.C3.A9p.C3.B4ts_GIT\' target=\"_blank\"> ' . _DEPENDENCIES_ON_WIKI  . '</a></div>';
-                        }
-                        ?>
-                        <div align="center">
-                            <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
-                        </div>
-                    </td>
-                </tr>
                 <tr>
                     <td>&nbsp;
 
@@ -179,6 +158,45 @@
                     </td>
                     <td>
                         <?php echo _XMLRPC;?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isPhpRequirements(
+                                'zip'
+                            )
+                        );?>
+                    </td>
+                    <td>
+                        <?php echo _ZIP;?>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="maarchDependenciesLight" class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isDependenciesExist()
+                        );?>
+                    </td>
+                    <td id="maarchDependenciesContent" name="maarchDependenciesContent">
+                        <?php if($Class_Install->isDependenciesExist()){
+                        echo _MAARCH_DEPENDENCIES;
+                        } else {
+                            if ($Class_Install->isPhpRequirements('zip')) {
+                                echo _MAARCH_DEPENDENCIES . '<br /><div id="divDownDepend" name="divDownDepend">'
+                                    . '<a style=\'color: #800000; font-family:verdana;\' href="#" onclick="downloadMaarchDependencies()">'
+                                    . _DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD . '</a><br />'
+                                    . '<a style=\'color: #102155; font-family:verdana;\' href=\'http://wiki.maarch.org/Maarch_Courrier/1.5/fr/Install/Debian-Ubuntu/latest#T.C3.A9l.C3.A9chargement_et_installation_de_Maarch_Courrier_depuis_les_d.C3.A9p.C3.B4ts_GIT\' target=\"_blank\"> ' . _DEPENDENCIES_ON_WIKI  . '</a></div>';
+                            } else {
+                                echo _MAARCH_DEPENDENCIES . '<br /><div id="divDownDepend" name="divDownDepend">'
+                                    . _INSTALL_ZIP_LIB_FIRST . '<br />'
+                                    . '<a style=\'color: #102155; font-family:verdana;\' href=\'http://wiki.maarch.org/Maarch_Courrier/1.5/fr/Install/Debian-Ubuntu/latest#T.C3.A9l.C3.A9chargement_et_installation_de_Maarch_Courrier_depuis_les_d.C3.A9p.C3.B4ts_GIT\' target=\"_blank\"> ' . _DEPENDENCIES_ON_WIKI  . '</a></div>';
+                            }
+                        }
+                        ?>
+                        <div align="center">
+                            <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
+                        </div>
                     </td>
                 </tr>
                 <!--<tr>

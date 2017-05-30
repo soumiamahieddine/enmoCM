@@ -31,8 +31,22 @@ if (!is_dir($dependPath)) {
     mkdir($dependPath, 0770);
 }
 
-$phar = new PharData('dependencies.zip');
-$phar->extractTo($dependPath, null, true);
+$zip = new ZipArchive;
+if ($zip->open('dependencies.zip') === TRUE) {
+    $zip->extractTo($dependPath);
+    $zip->close();
+} else {
+    $return['status'] = 0;
+    $return['text'] = _CANNOT_EXTRACT;
+
+    $jsonReturn = json_encode($return);
+
+    echo $jsonReturn;
+    exit;
+}
+//exit;
+//$phar = new PharData('dependencies.zip');
+//$phar->extractTo($dependPath, null, true);
 
 $fileTab = scandir($dependPath);
 $nbFiles = count($fileTab);
