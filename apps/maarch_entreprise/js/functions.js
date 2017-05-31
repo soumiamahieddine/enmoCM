@@ -3147,14 +3147,14 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
     $j.ajax({
         url:'index.php?display=true&page=display_tab',
         type: 'POST',
-        //dataType : 'JSON',
+        //dataType : '',
         data: {
             resId : resId,
             collId : collId,
             titleTab : titleTab,
             pathScriptTab : pathScriptTab
             },
-        onSuccess: function(answer){
+        success: function(answer){
             //console.log(answer.responseText);
             document.getElementById('show_tab').style.display='block';
             document.getElementById('show_tab').setAttribute('module',module);
@@ -3163,7 +3163,7 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
             if(document.getElementById(module+'_tab') != undefined ){
                 document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
             }
-            document.getElementById('show_tab').innerHTML = answer.responseText;
+            document.getElementById('show_tab').innerHTML = answer;
         }
     });
 }
