@@ -219,17 +219,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
             $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
         );
-
+        //echo "HELLO";
         //diffusion list in this basket ?
         if($_SESSION['current_basket']['difflist_type'] == 'entity_id'){
             $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
-            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $(\'category_id\').value);';
+            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $j(\'#category_id\').val());';
+            
         }else if($_SESSION['current_basket']['difflist_type'] == 'type_id'){
             $target_model = 'document.getElementById(\'type_id\').options[document.getElementById(\'type_id\').selectedIndex]';
-            $func_load_listdiff_by_type = 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value);';
+            $func_load_listdiff_by_type = 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $j(\'#category_id\').val());';
         }else{
             $target_model = 'document.getElementById(\'destination\').options[document.getElementById(\'destination\').selectedIndex]';
-            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $(\'category_id\').value);';
+            $func_load_listdiff_by_entity = 'change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\', \'\', $j(\'#category_id\').val());';
         }
 
         //LOADING LISTMODEL
@@ -321,7 +322,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' 
         . functions::xssafe($res_id) . '}, onSuccess: function(answer){window.location.href=\'' 
         . $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets=' 
-        . $_SESSION['current_basket']['id'] . '\';} });$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"'
+        . $_SESSION['current_basket']['id'] . '\';} });$j(\'#baskets\').css(\'visibility\',\'visible\');destroyModal(\'modal_'.$id_action.'\');reinit();"'
         .' class="fa fa-times-circle fa-2x closeModale" title="'._CLOSE.'"/>';
     $frm_str .='</i>';
     
@@ -382,7 +383,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str.='</select></td>';
     $frm_str .= '<td><span class="red_asterisk" id="category_id_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frm_str .= '</tr>';
-    $frm_str .= '<script>new Chosen($(\'category_id\'),{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+    $frm_str .= '<script>new Chosen($j(\'#category_id\')[0],{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
     
     /*** Doctype ***/
     $frm_str .= '<tr id="type_id_tr" style="display:'.$display_value.';">';
@@ -434,7 +435,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='</select>';
     $frm_str .= '<td><span class="red_asterisk" id="type_id_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frm_str .= '</tr>';
-    $frm_str .= '<script>new Chosen($(\'type_id\'),{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+    $frm_str .= '<script>new Chosen($j(\'#type_id\')[0],{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
     
     /*** Priority ***/
     $frm_str .= '<tr id="priority_tr" style="display:'.$display_value.';">';
@@ -461,7 +462,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
               $frm_str .='</select></td>';
               $frm_str .= '<td><span class="red_asterisk" id="priority_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
-    $frm_str .= '<script>new Chosen($(\'priority\'),{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+    $frm_str .= '<script>new Chosen($j(\'#priority\')[0],{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
 
     /*** Confidentiality ***/
     $frm_str .= '<tr id="confidentiality_tr" style="display:' . $display_value
@@ -608,17 +609,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='<td class="indexing_field">';
     if($data['type_contact'] == 'internal'){
         //$frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;color:#009DC5;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
-
-        $frm_str .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
-
+        //MODIF:
+        $frm_str .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\', \'#666\');$j(\'#type_contact_external_icon\').css(\'color\', \'#009DC5\');$j(\'#type_multi_contact_external_icon\').css(\'color\', \'#666\');"></i>';
     }elseif ($data['type_contact'] == 'external') {
         //$frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
-
-        $frm_str .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
-
+        //MODIF:
+        $frm_str .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\', \'#666\');$j(\'#type_contact_external_icon\').css(\'color\', \'#009DC5\');$j(\'#type_multi_contact_external_icon\').css(\'color\', \'#666\');"></i>';
     }
                    
-    $frm_str .=' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;" id="type_multi_contact_external_icon" onclick="$$(\'#type_multi_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#009DC5\'});"></i>';
+    $frm_str .=' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#009DC5\');"></i>';
     
     $frm_str .='<span style="position:relative;"><input type="text" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\',\''.$path_check_date_link.'\');}"';
     if(isset($data['contact']) && !empty($data['contact']))
@@ -673,9 +672,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //$frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
-    $frm_str .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$$(\'#type_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#009DC5\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+    $frm_str .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#009DC5\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#666\');"></i>';
 
-    $frm_str .=' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_multi_contact_external_icon" onclick="$$(\'#type_multi_contact_external\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#666\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#009DC5\'});"></i>';
+    $frm_str .=' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#009DC5\');"></i>';
 
     $frm_str .='<span style="position:relative;"><input type="text" name="email" id="email" onblur="clear_error(\'frm_error_' . $id_action . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
     $frm_str .= '<div id="multiContactList" class="autocomplete" style="left:0px;width:100%;top:17px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete_multi" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
@@ -732,7 +731,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</select></td>';
             $frm_str .= '<td><span class="red_asterisk" id="nature_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
       $frm_str .= '</tr>';
-      $frm_str .= '<script>new Chosen($(\'nature_id\'),{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+      $frm_str .= '<script>new Chosen($j(\'#nature_id\')[0],{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
 
     /*** Recommande ***/
     $frm_str .= '<tr id="reference_number_tr" style="display:none;">';
@@ -793,7 +792,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<div id="diff_list_div" class="scroll_div" style="width:420px; max-width: 420px;"></div>';
             $frm_str .= '</td>';
             $frm_str .= '</tr>';
-            $frm_str .= '<script>new Chosen($(\'destination\'),{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+            $frm_str .= '<script>new Chosen($j(\'#destination\')[0],{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
     }
 
     /*** Process limit date ***/
@@ -891,7 +890,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
             . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frm_str .= '</tr>';
-        $frm_str .= '<script>new Chosen($(\'status\'),{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+        $frm_str .= '<script>new Chosen($j(\'#status\')[0],{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
     }
 
     $frm_str .= '</table>';
@@ -970,7 +969,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             }
         $frm_str .= '</tr>';
         $frm_str .= '<tr id="parentFolderTr" style="display: none"><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
-        $frm_str .= '<script>new Chosen($(\'folder\'),{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+        $frm_str .= '<script>new Chosen($j(\'#folder\')[0],{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
     }
 
     /*** Thesaurus ***/
@@ -1011,7 +1010,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</optgroup>';
             $frm_str .= '</select></td><td style="width:5%;"><i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
         $frm_str .= '</tr>';
-        $frm_str .= '<script>new Chosen($(\'thesaurus\'),{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+        $frm_str .= '<script>new Chosen($j(\'#thesaurus\')[0],{width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
         $frm_str .= '<style>#thesaurus_chosen{width:100% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
 
         /*****************/
@@ -1160,7 +1159,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
 
     /*** Extra javascript ***/
-    $frm_str .= '<script type="text/javascript">$(\'validright\').style.display=\'block\';displayFatherFolder(\'folder\');window.scrollTo(0,0);';
+    $frm_str .= '<script type="text/javascript">$j(\'#validright\').css(\'display\',\'block\');displayFatherFolder(\'folder\');window.scrollTo(0,0);';
             
     $frm_str .='init_validation(\''.$_SESSION['config']['businessappurl'] 
         . 'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \''
@@ -1168,8 +1167,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . $_SESSION['config']['businessappurl'] 
         . 'index.php?display=true&dir=indexing_searching&page=change_category\',  \''
         . $_SESSION['config']['businessappurl']
-        . 'index.php?display=true&page=get_content_js\');$(\'baskets\').style.visibility=\'hidden\';var item = $(\'valid_div\'); if(item){item.style.display=\'block\';}';
-    $frm_str .='var type_id = $(\'type_id\');change_category_actions(\'' 
+        . 'index.php?display=true&page=get_content_js\');$j(\'#baskets\').css(\'visibility\',\'hidden\');var item = $j(\'#valid_div\'); if(item){item.css(\'display\',\'block\');}';
+    $frm_str .='var type_id = $j(\'#type_id\')[0];change_category_actions(\'' 
         . $_SESSION['config']['businessappurl'] 
         . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
         . '&resId=' . $res_id . '&collId=' . $coll_id . '\',\''.$res_id.'\',\''.$coll_id.'\',document.getElementById(\'category_id\').options[document.getElementById(\'category_id\').selectedIndex].value);';
@@ -1184,39 +1183,39 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='change_entity(\''.$data['destination'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
             if(!$load_listmodel)
             {
-                $frm_str .= ',\'false\',$(\'category_id\').value);';
+                $frm_str .= ',\'false\',$j(\'#category_id\').val());';
             }else{
-                $frm_str .= ',\'true\',$(\'category_id\').value);';
+                $frm_str .= ',\'true\',$j(\'#category_id\').val());';
             }
 
         }else if($_SESSION['current_basket']['difflist_type'] == 'type_id'){
             if(!$load_listmodel){
                 $frm_str .='change_entity(\''.$data['destination'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
-                $frm_str .= ',\'false\',$(\'category_id\').value);';     
+                $frm_str .= ',\'false\',$j(\'#category_id\').val());';     
             }else{
-                $frm_str .= 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $(\'category_id\').value);';
-                $frm_str .= '$(\'diff_list_tr\').style.display=\''.$display_value.'\';';
+                $frm_str .= 'load_listmodel('.$target_model.', \'diff_list_div\', \'indexing\', $j(\'#category_id\').val());';
+                $frm_str .= '$j(\'#diff_list_tr\').css(\'display\',\''.$display_value.'\');';
             }  
         }else{
             $frm_str .='change_entity(\''.$data['destination'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
             if(!$load_listmodel)
             {
-                $frm_str .= ',\'false\',$(\'category_id\').value);';
+                $frm_str .= ',\'false\',$j(\'#category_id\').val());';
             }else{
-                $frm_str .= ',\'true\',$(\'category_id\').value);';
+                $frm_str .= ',\'true\',$j(\'#category_id\').val());';
             }
         }
     }
     if ($data['confidentiality'] == 'Y') {
-        $frm_str .='$(\'confidential\').checked=true;';
+        $frm_str .='$j(\'#confidential\').prop("checked",true);';
     } else if ($data['confidentiality'] == 'N') {           
-        $frm_str .='$(\'no_confidential\').checked=true;';
+        $frm_str .='$j(\'#no_confidential\').prop("checked",true);';
     }
 
     if ($data['type_contact'] == 'internal') {
-        $frm_str .='$(\'type_contact_internal\').checked=true;';
+        $frm_str .='$j(\'#type_contact_internal\').prop("checked",true);';
     } else if ($data['type_contact'] == 'external') {           
-        $frm_str .='$(\'type_contact_external\').checked=true;';
+        $frm_str .='$j(\'#type_contact_external\').prop("checked",true);';
     }
     //Path to actual script
     $path_to_script = $_SESSION['config']['businessappurl']
