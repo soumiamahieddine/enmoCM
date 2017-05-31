@@ -31,14 +31,29 @@ $doc['category_id'] = html_entity_decode($_SESSION['coll_categories']['letterbox
 
 $doc['nature_id'] = $_SESSION['mail_natures'][$doc['nature_id']];
 
+
+//INITIATOR INFO OF DOCUMENT
 $stmt2 = $dbDatasource->query("SELECT * FROM entities WHERE entity_id = ? ", array($doc['initiator']));
 $initiator = $stmt2->fetch(PDO::FETCH_ASSOC);
 
-for ($i=0;$i<count($initiator);$i++) {
-    $doc['initiator_'.$i] = $initiator[$i];
+if (!empty($initiator)) {
+    foreach ($initiator as $column => $value) {
+        
+        $doc['initiator_'.$column] = $value;
+    }
 }
 
 $datasources['res_letterbox'][] = $doc;
+
+//COMPLEMENTARY CURRENT USER INFO
+$stmt2 = $dbDatasource->query("SELECT * FROM entities WHERE entity_id = ? ", array($_SESSION['user']['primaryentity']['id']));
+$dest = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+if (!empty($dest)) {
+    foreach ($dest as $column => $value) {     
+        $datasources['user'][0][$column] = $value;
+    }
+}
 
 
 //multicontact
@@ -194,7 +209,7 @@ while ($avis = $stmt->fetchObject()) {
             $datasources['avis'][0]['firstname'.$i] = $avisContact->firstname;
             $datasources['avis'][0]['lastname'.$i] = $avisContact->lastname;
             $datasources['avis'][0]['entity'.$i] = str_replace($avisEntity->entity_id . ': ', '', $avisEntity->entity_label);
-            if($avisContent){
+            if ($avisContent) {
                 $datasources['avis'][0]['note'.$i] = $avisContent->note_text;
                 $datasources['avis'][0]['date_note'.$i] = $avisContent->note_text;
             }
@@ -210,7 +225,7 @@ if (isset($_SESSION['transmissionContacts'])) {
 
     if (isset($_SESSION['upfileTransmissionNumber']) && $_SESSION['transmissionContacts'][$_SESSION['upfileTransmissionNumber']]) {
         $curNb = $_SESSION['upfileTransmissionNumber'];
-        foreach($_SESSION['transmissionContacts'][$curNb] as $key => $value) {
+        foreach ($_SESSION['transmissionContacts'][$curNb] as $key => $value) {
             if ($key == 'title')
                 $datasources['transmissions'][0]['currentContact_' . $key] = $contacts->get_civility_contact($value);
             else
@@ -219,7 +234,7 @@ if (isset($_SESSION['transmissionContacts'])) {
     }
 
     for ($nb = 1; $_SESSION['transmissionContacts'][$nb]; $nb++) {
-        foreach($_SESSION['transmissionContacts'][$nb] as $key => $value) {
+        foreach ($_SESSION['transmissionContacts'][$nb] as $key => $value) {
             if ($key == 'title')
                 $datasources['transmissions'][0][$key . $nb] = $contacts->get_civility_contact($value);
             else
@@ -230,7 +245,7 @@ if (isset($_SESSION['transmissionContacts'])) {
 
 $img_file_name = $_SESSION['config']['tmppath'].$_SESSION['user']['UserId'].time().rand()."_barcode_attachment.png";
 
-require_once('apps/maarch_entreprise/tools/pdfb/barcode/pi_barcode.php');
+require_once 'apps/maarch_entreprise/tools/pdfb/barcode/pi_barcode.php';
 $objCode = new pi_barcode();
 
 $objCode->setCode($chronoAttachment);

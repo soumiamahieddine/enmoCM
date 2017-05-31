@@ -179,8 +179,6 @@ if (!defined("_WELCOME_DIFF_LIST"))
     define("_WELCOME_DIFF_LIST", "Bienvenue dans l'outil de diffusion de courrier");
 if (!defined("_START_DIFF_EXPLANATION"))
     define("_START_DIFF_EXPLANATION", "Pour demarrer la diffusion, utilisez la navigation par service ou par utilisateur ci-dessus");
-if (!defined("_CLICK_ON"))
-    define("_CLICK_ON", "cliquez sur");
 if (!defined("_ADD_USER_TO_LIST_EXPLANATION"))
     define("_ADD_USER_TO_LIST_EXPLANATION", "Pour ajouter un utilisateur à la liste de diffusion");
 if (!defined("_REMOVE_USER_FROM_LIST_EXPLANATION"))
@@ -273,8 +271,6 @@ if (!defined("_MISSING_CHOOSE"))
     define("_MISSING_CHOOSE","Souhaitez-vous continuer?");
 if (!defined("_CHOOSE_PERSON_TO_REDIRECT"))
     define("_CHOOSE_PERSON_TO_REDIRECT", "Choisissez la personne vers qui vous souhaitez rediriger ce courrier dans la liste ci-dessus");
-if (!defined("_CLICK_ON_THE_LINE_OR_ICON"))
-    define("_CLICK_ON_THE_LINE_OR_ICON", "Il vous suffit de cliquer sur la ligne ou sur l'icône");
 if (!defined("_TO_SELECT_USER"))
     define("_TO_SELECT_USER", "pour sélectionner un utilisateur");
 if (!defined("_DIFFUSION_DISTRIBUTION"))

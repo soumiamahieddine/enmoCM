@@ -19,7 +19,7 @@ body > *:not(.toolbar) {
     margin: 0;
     padding: 0;
     left: 0;
-    top: 45px;
+    top: 40px;
     width: 100%;
     height: auto;
     min-height: 415px;
@@ -56,7 +56,7 @@ body > .toolbar {
     border-bottom: 1px solid #2d3642;
     border-top: 1px solid #6d84a2;
     padding: 0 10px 10px 10px;
-    height: 45px;
+    height: 40px;
 }
 
 .toolbar > h1 {
@@ -65,8 +65,8 @@ body > .toolbar {
     left: 50%;
     margin: 1px 0 0 -75px;
     padding-top: 10px;
-    height: 45px;
-    font-size: 20px;
+    height: 40px;
+    font-size: 18px;
     width: 150px;
     font-weight: bold;
     text-shadow: rgba(0, 0, 0, 0.4) 0px -1px 0;

@@ -23,7 +23,7 @@
 
 <!-- tinyMCE -->
 <script type="text/javascript">
-    tinymce.baseURL = "tools/tiny_mce";
+    tinymce.baseURL = "../../node_modules/tinymce";
     tinymce.suffix = '.min';
     tinymce.init({
 
@@ -31,13 +31,14 @@
         statusbar : false,
 
         language : "fr_FR",
+        language_url: "tools/tinymce/langs/fr_FR.js",
         height : "300",
         plugins: [
                  "advlist autolink link lists charmap print preview hr",
                  "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",
                  "save table contextmenu directionality paste textcolor"
         ],
-        toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | preview fullpage | forecolor backcolor", 
+        toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | preview fullpage | forecolor backcolor",
 
     });
 

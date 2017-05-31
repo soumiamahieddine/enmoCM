@@ -2,9 +2,16 @@
 <Acknowledgement xmlns="fr:gouv:culture:archivesdefrance:seda:v2.0">
 	<?merge Acknowledgement.comment ?><Comment><?merge .value ?></Comment>
 	<Date><?merge Acknowledgement.date ?></Date>
-	<MessagIdentifier><?merge Acknowledgement.messageIdentifier ?></MessagIdentifier>
+	<?merge Acknowledgement.messageIdentifier $messageIdentifier ?><?xinclude /resources/MessageIdentifier.xml ?>
+	<?merge Acknowledgement.signature.bool() ?>
 	<Signature><?merge Acknowledgement.signature ?></Signature>
-	<MessageReceivedIdentifier><?merge Acknowledgement.messageReceivedIdentifier ?></MessageReceivedIdentifier>
-	<Sender><?merge Acknowledgement.sender ?></Sender>
-	<Receiver><?merge Acknowledgement.receiver ?></Receiver>
+	<?merge Acknowledgement.messageReceivedIdentifier $messageReceivedIdentifier ?><?xinclude /resources/MessageReceivedIdentifier.xml ?>
+	<Sender>
+		<?merge Acknowledgement.sender $organization ?>
+		<?xinclude /resources/Organization.xml ?>
+	</Sender>
+	<Receiver>
+		<?merge Acknowledgement.receiver $organization ?>
+		<?xinclude /resources/Organization.xml ?>
+	</Receiver>
 </Acknowledgement>

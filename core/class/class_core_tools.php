@@ -70,14 +70,9 @@ class core_tools extends functions
         $_SESSION['tablename']['authors']            = (string) $TABLENAME->authors;
         $_SESSION['tablename']['docservers']         = (string) $TABLENAME->docservers;
         $_SESSION['tablename']['doctypes']           = (string) $TABLENAME->doctypes;
-        $_SESSION['tablename']['ext_docserver']      = (string) $TABLENAME->extdocserver;
-        $_SESSION['tablename']['fulltext']           = (string) $TABLENAME->fulltext;
-        $_SESSION['tablename']['groupsecurity']      = (string) $TABLENAME->groupsecurity;
         $_SESSION['tablename']['history']            = (string) $TABLENAME->history;
         $_SESSION['tablename']['history_batch']      = (string) $TABLENAME->history_batch;
         $_SESSION['tablename']['param']              = (string) $TABLENAME->param;
-        $_SESSION['tablename']['resgroups']          = (string) $TABLENAME->resgroups;
-        $_SESSION['tablename']['resgroup_content']   = (string) $TABLENAME->resgroup_content;
         $_SESSION['tablename']['security']           = (string) $TABLENAME->security;
         $_SESSION['tablename']['status']             = (string) $TABLENAME->status;
         $_SESSION['tablename']['usergroups']         = (string) $TABLENAME->usergroups;
@@ -1562,20 +1557,9 @@ class core_tools extends functions
     private function load_css()
     {
         ?>
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
-            . 'css/font-awesome/css/font-awesome.css';?>" media="screen" />
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
-            . 'css/font-awesome/css/font-maarch.css';?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php';?>" media="screen" />
-        <!--[if lt  IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie';?>" media="screen" />  <![endif]-->
-        <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7';?>" media="screen" />  <![endif]-->
-        <!--[if IE 8.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie8';?>" media="screen" />  <![endif]-->
-        <!--[if gte IE 9.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie9';?>" media="screen" />  <![endif]-->
-
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
-            . 'tools/PhotoSwipe/photoswipe.css'; ?>" media="screen" />
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
-            . 'tools/PhotoSwipe/default-skin/default-skin.css'; ?>" media="screen" />
+        <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" media="screen" />
+        <link rel="stylesheet" href="css/font-awesome/css/font-maarch.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="merged_css.php" media="screen" />
         <?php
     }
 
@@ -1585,9 +1569,6 @@ class core_tools extends functions
     public function load_js()
     {
         ?>
-        <!--<script type="text/javascript" >
-            var app_path = '<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=';
-        </script>-->
         <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>merged_js.php"></script>
         <?php
 
@@ -2458,8 +2439,6 @@ class core_tools extends functions
                 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>js/scriptaculous.js"></script>
                 <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/signature_pad/js/signature_pad.js" type="text/javascript"></script>
 
-                <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/swiper/dist/js/swiper.min.js" type="text/javascript"></script>
-
                 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
                 <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/fingerprintjs2/fingerprint2.js" type="text/javascript"></script>
                 <?php
@@ -2483,7 +2462,6 @@ class core_tools extends functions
             . 'css/font-awesome/css/font-maarch.css'; ?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css';?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/iui.css';?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'tools/swiper/dist/css/swiper.min.css';?>" media="screen" />
 
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/t/maarch/maarch-theme.css';?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'tools/signature_pad/css/signature-pad.css';?>" media="screen" />

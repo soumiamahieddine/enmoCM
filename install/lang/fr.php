@@ -71,7 +71,7 @@ if (!defined('_PREREQUISITES_HEAD')) {
 }
 
 if (!defined('_PREREQUISITES_EXP')) {
-    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Courrier/1.5/fr/Install/Prerequis' target=\"_blank\"> pre-requis</A> pour les détails");
+    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Courrier/latest/fr/Install/Prerequis' target=\"_blank\"> pre-requis</A> pour les détails");
 }
 if (!defined('_ACTIVATED')) {
     define('_ACTIVATED', "Conforme");
@@ -85,7 +85,10 @@ if (!defined('_GENERAL')) {
     define('_GENERAL', "Général");
 }
 if (!defined('_PHP_VERSION')) {
-    define('_PHP_VERSION', "Version de PHP (5.3 ou sup.)");
+    define('_PHP_VERSION', "Version de PHP (5.5 ou sup.)");
+}
+if (!defined('_MAARCH_DEPENDENCIES')) {
+    define('_MAARCH_DEPENDENCIES', "Dépendances Maarch");
 }
 if (!defined('_MAARCH_PATH_RIGHTS')) {
     define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'écriture du répertoire racine de Maarch");
@@ -98,9 +101,6 @@ if (!defined('_PGSQL')) {
 }
 if (!defined('_GD')) {
     define('_GD', "Librairie gd");
-}
-if (!defined('_SVN')) {
-    define('_SVN', "librairie svn");
 }
 if (!defined('_IMAP')) {
     define('_IMAP', "librairie imap");
@@ -139,13 +139,10 @@ if (!defined('_ERROR_REPORTING')) {
         define('_ERROR_REPORTING', "error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED");
 }
 if (!defined('_DISPLAY_ERRORS')) {
-    define('_DISPLAY_ERRORS', "display_errors (On)");
+    define('_DISPLAY_ERRORS', "display_errors=On");
 }
 if (!defined('_SHORT_OPEN_TAGS')) {
-    define('_SHORT_OPEN_TAGS', "short_open_tags (On)");
-}
-if (!defined('_MAGIC_QUOTES_GPC')) {
-    define('_MAGIC_QUOTES_GPC', "magic_quotes_gpc (Off)");
+    define('_SHORT_OPEN_TAGS', "short_open_tags=On");
 }
 
 if (!defined('_MUST_FIX')) {
@@ -166,14 +163,14 @@ if (!defined('_DOCSERVER_ROOT')) {
 if (!defined('_CREATE_DOCSERVERS')) {
     define('_CREATE_DOCSERVERS', "Enregistrer");
 }
-if (!defined('_MUST_CHOOSE_DOCSERVERS_ROOT')) {
-    define('_MUST_CHOOSE_DOCSERVERS_ROOT', "Vous devez choisir le dossier racine de vos docservers");
+if (!defined('_MUST_CHOOSE_PATH_ROOT')) {
+    define('_MUST_CHOOSE_PATH_ROOT', "Vous devez choisir le dossier racine");
 }
-if (!defined('_PATH_OF_DOCSERVER_UNAPPROACHABLE')) {
-    define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', "Le dossier racine n'est pas accessible");
+if (!defined('_PATH_UNAPPROACHABLE')) {
+    define('_PATH_UNAPPROACHABLE', "Le dossier racine n'est pas accessible");
 }
-if (!defined('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
-    define('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Le docservers n'a pas les droits appropriés");
+if (!defined('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
+    define('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Le dossier n'a pas les droits appropriés");
 }
 
 //DATABASE
@@ -421,3 +418,26 @@ if (!defined('_SMTP_DOMAINS')) {
     define('_SMTP_DOMAINS', "Domaines");
 }
 
+if (!defined('_DEPENDENCIES_NOT_DOWNLOADED')) {
+    define('_DEPENDENCIES_NOT_DOWNLOADED', "dépendances non téléchargées, récupérez les via la procédure wiki");
+}
+
+if (!defined('_DEPENDENCIES_NOT_EXTRACTED')) {
+    define('_DEPENDENCIES_NOT_EXTRACTED', "dépendances non extraites, récupérez les via la procédure wiki");
+}
+
+if (!defined('_DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD')) {
+    define('_DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD', "Cliquez ici pour les déployer automatiquement (internet requis)");
+}
+
+if (!defined('_DEPENDENCIES_ON_WIKI')) {
+    define('_DEPENDENCIES_ON_WIKI', "Ou suivez la procédure sur notre wiki");
+}
+
+if (!defined('_ZIP')) {
+    define('_ZIP', "librairie zip");
+}
+
+if (!defined('_INSTALL_ZIP_LIB_FIRST')) {
+    define('_INSTALL_ZIP_LIB_FIRST', "Installez la librairie zip pour déployer automatiquement les dépendances");
+}

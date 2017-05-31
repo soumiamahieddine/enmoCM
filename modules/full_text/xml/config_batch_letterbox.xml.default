@@ -2,18 +2,18 @@
 <ROOT>
   <CONFIG>
     <CONFIG_NAME>letterbox</CONFIG_NAME> <!-- usefull for multi customs -->
-    <MAARCH_DIRECTORY>/var/www/html/maarch/</MAARCH_DIRECTORY> <!-- Path to full text module -->
-    <INDEX_FILE_DIRECTORY>/opt/maarch/docservers/indexes/letterbox_coll/</INDEX_FILE_DIRECTORY> <!-- Path to the indexes dir of the collection -->
+    <MAARCH_DIRECTORY>/var/www/MaarchCourrier/</MAARCH_DIRECTORY> <!-- Path to full text module -->
+    <INDEX_FILE_DIRECTORY>/home/maarch/docservers/maarchcourrier/indexes/letterbox_coll/</INDEX_FILE_DIRECTORY> <!-- Path to the indexes dir of the collection -->
     <TABLE_NAME>res_letterbox</TABLE_NAME>  
     <FULLTEXT_COLUMN_NAME>fulltext_result</FULLTEXT_COLUMN_NAME> <!-- Null or 0 = to do, 1 = OK, else KO -->
-    <MAARCH_TOOLS_PATH>/var/www/html/maarch/apps/maarch_entreprise/tools/</MAARCH_TOOLS_PATH>
+    <MAARCH_TOOLS_PATH>/var/www/MaarchCourrier/apps/maarch_entreprise/tools/</MAARCH_TOOLS_PATH>
     <MAX_BATCH_SIZE>500</MAX_BATCH_SIZE>
   </CONFIG>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <databasename>maarch</databasename>
+        <databasename>maarchcourrier</databasename>
         <databaseuser>maarch</databaseuser>
         <databasepassword>maarch</databasepassword>
     </CONFIG_BASE>
@@ -21,6 +21,6 @@
         <enabled>true</enabled>
         <Log4PhpLogger>loggerTechnique</Log4PhpLogger>
         <Log4PhpBusinessCode>full_text</Log4PhpBusinessCode>
-        <Log4PhpConfigPath>/var/www/html/maarch/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
+        <Log4PhpConfigPath>/var/www/MaarchCourrier/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
     </LOG4PHP>
 </ROOT>

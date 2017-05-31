@@ -122,9 +122,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
     require_once('modules/notes/class/notes_controler.php');
     $note = new notes_controler();
-
-
-    $db = new Database();
     
     $formValues = array();
     for($i=0; $i<count($values_form); $i++) {
@@ -134,7 +131,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $formValues[$id] = $value;
     }
     
-    $db = new Database();
     $_SESSION['action_error'] = '';
     $result = '';
     $coll_id = $_SESSION['current_basket']['coll_id'];

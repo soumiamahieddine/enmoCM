@@ -427,7 +427,7 @@ for ($i=0;$i<$tabI;$i++) {
                 } else {
                     $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
                 }
-                $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
+                $res_status = $status_obj->get_status_data($tab[$i][$j]['value'], $extension_icon);
                 $statusCmp = $tab[$i][$j]['value'];
                 $img_class = substr($res_status['IMG_SRC'], 0, 2);
                 if (!isset($res_status['IMG_SRC']) ||  empty($res_status['IMG_SRC'])) {
@@ -541,7 +541,7 @@ $paramsTab['bool_showIconDocument'] = true;                                     
 $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
 $paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id']
             .$urlParameters;                                                        //Parametres d'url supplementaires
-$paramsTab['filters'] = array('entity', 'entity_subentities', 'category');          //Filtres    
+$paramsTab['filters'] = array('entity', 'entity_subentities', 'category', 'priority', 'identifier');          //Filtres    
 if (count($template_list) > 0 ) {                                                   //Templates
     $paramsTab['templates'] = array();
     $paramsTab['templates'] = $template_list;
@@ -601,10 +601,7 @@ $status = 0;
 $content = $list->showList($tab, $paramsTab, $listKey, $_SESSION['current_basket']);
 // $debug = $list->debug(false);
 
-$content .= "<script>$$('#container')[0].setAttribute('style', 'width: 90%; min-width: 1000px;');".
-                    "$$('#content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');".
-                    "$$('#inner_content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');".
-                    // "$$('table#extended_list')[0].setAttribute('style', 'width: 100%; min-width: 900px; margin: 0;');".
-            "</script>";
+$content .= '<script>$j(\'#container\').attr(\'style\', \'width: 90%; min-width: 1000px;\');$j(\'#content\').attr(\'style\', \'width: auto; min-width: 1000px;\');';
+$content .= '$j(\'#inner_content\').attr(\'style\', \'width: auto; min-width: 1000px;\');</script>';
 
 echo "{'status' : " . $status . ", 'content' : '" . addslashes($debug.$content) . "', 'error' : '" . addslashes(functions::xssafe($error)) . "'}";

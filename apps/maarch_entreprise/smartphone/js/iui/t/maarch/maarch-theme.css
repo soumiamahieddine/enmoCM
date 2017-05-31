@@ -30,7 +30,7 @@ body > .toolbar {
     -moz-border-image: url(blueButton.png) 0 5 0 5;
 }
 
-#backButton {
+#backButton, #backButtonRecap {
     padding-left: 25px;
     padding-right: 10px;
     background: url(backIcon.png);
@@ -317,13 +317,13 @@ a, a:link, a:visited, a:hover{
 
 /************************************************************************************************/
 /* Modification de la font correspondant au bouton retour  */
-#backButton{
+#backButton,#backButtonRecap{
     font-size:10px;
 }
-#backButton:hover,
-#backButton:active,
-#backButton:focus,
-#backButton:link{
+#backButton:hover,#backButtonRecap:hover,
+#backButton:active,#backButtonRecap:active,
+#backButton:focus,#backButtonRecap:focus,
+#backButton:link,#backButtonRecap:link{
     color:#666!important;
 }
 
@@ -377,10 +377,10 @@ a, a:link, a:visited, a:hover{
 }
 
 /************************************************************************************************/
-/* Rajout des informations Edissyum dans la page info.php */
+/* Rajout des informations Edissyum et DIS dans la page info.php */
 
 .maarch{
-    width:50%;
+    width:33%;
     float:right!important;
 }
 .edissyum fieldset{
@@ -389,12 +389,13 @@ a, a:link, a:visited, a:hover{
     padding-bottom:100px;
 }
 .maarch #logo,
-.edissyum #logo{
+.edissyum #logo,
+.dis #logo{
     float:none;
     margin-bottom: 30px;
 }
 .edissyum{
-    width:50%;
+    width:33%;
     float:left!important;
     border-radius:0!important;
 }
@@ -402,21 +403,42 @@ a, a:link, a:visited, a:hover{
 .edissyum a:hover{
     color:#78B51B;
 }
+
+.dis{
+    width:33%;
+    float:left!important;
+    border-radius:0!important;
+}
+.dis fieldset{
+    border-right: 1px solid black;
+    border-radius:0!important;
+    padding-bottom:100px;
+}
+
 #info hr{
     display: none;
 }
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {  /* Smartphone */
     .maarch,
-    .edissyum{
+    .edissyum,
+    .dis{
         width:100%;
+    }
+    .dis fieldset{
+        border:0;
+        padding-bottom: 0;
     }
     .edissyum fieldset{
         border:0;
         padding-bottom: 0;
     }
     .maarch > fieldset > .row > table > tbody > tr > td,
-    .edissyum > fieldset > .row > table > tbody > tr > td{
+    .edissyum > fieldset > .row > table > tbody > tr > td,
+    .dis > fieldset > .row > table > tbody > tr > td{
         text-align: center;
+    }
+    .dis{
+        margin-bottom: 20px;
     }
     .edissyum{
         margin-bottom: 20px;
@@ -497,4 +519,11 @@ a, a:link, a:visited, a:hover{
     color: red;
     text-align: center;
     font-size: 20px;
+}
+
+#backButtonRecap {
+    display: none;
+    right: auto;
+    max-width: 55px;
+    border-width: 0 8px 0 14px;
 }

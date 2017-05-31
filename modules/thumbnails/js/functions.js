@@ -7,8 +7,6 @@ function showThumb(divName, resId, collId)
         parameters: { resId : resId, collId : collId},
         onSuccess: function(answer) {
             eval("response = "+answer.responseText);
-            //console.log(response.toShow);
-            //console.log("divname " + divName+resId);
             $(divName+resId).innerHTML = response.toShow;
         }
     });*/

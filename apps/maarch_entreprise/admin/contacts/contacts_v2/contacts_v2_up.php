@@ -48,17 +48,15 @@ require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 
 $func = new functions();
 
-if(isset($_GET['id']))
-{
+if(isset($_GET['id'])) {
     $id = addslashes($func->wash($_GET['id'], "alphanum", _CONTACT));
     $_SESSION['contact']['current_contact_id'] = $id;
 }else if ($_SESSION['contact']['current_contact_id'] <> ''){
 	$id = $_SESSION['contact']['current_contact_id'];
-}
-else
-{
+} else {
     $id = "";
 }
+
  /****************Management of the location bar  ************/
 $init = false;
 if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
@@ -70,11 +68,12 @@ if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] =
 {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_up';
+$page_path  = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_up';
 $page_label = _MODIFICATION;
-$page_id = "contacts_v2_up";
+$page_id    = "contacts_v2_up";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
+
 if (isset($_REQUEST['fromContactTree'])) {
     $_SESSION['fromContactTree'] = 'yes';
 }
@@ -82,13 +81,10 @@ $contact = new contacts_v2();
 $contact->formcontact("up",$id);
 
 // GESTION DES ADDRESSES
-echo '<div class="block">';
+echo '<div>';
 echo '<h2><i class="fa fa-home fa-2x"></i> &nbsp;' . _MANAGE_CONTACT_ADDRESSES_IMG . '</h2>';
-require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
-    . "class_request.php";
-require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
-    . "class_list_show.php";
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_request.php";
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_list_show.php";
 $func = new functions();
 
 $select['view_contacts'] = array();
@@ -122,11 +118,7 @@ if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) 
         $where .= " or " . implode(' OR ', $sql_purpose) . " ";
         $where .= " or " . implode(' OR ', $sql_society) . ") ";
     }
-
 }
-
-// var_dump($arrayPDO);
-// var_dump($where);
 
 $list = new list_show();
 $order = 'asc';
@@ -148,59 +140,59 @@ for ($i = 0; $i < count($tab); $i ++) {
     for ($j = 0; $j < count($tab[$i]); $j ++) {
         foreach (array_keys($tab[$i][$j]) as $value) {
             if ($tab[$i][$j][$value] == "id") {
-                $tab[$i][$j]["id"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"] = _ID;
-                $tab[$i][$j]["size"] = "30";
+                $tab[$i][$j]["id"]          = $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]       = _ID;
+                $tab[$i][$j]["size"]        = "30";
                 $tab[$i][$j]["label_align"] = "left";
-                $tab[$i][$j]["align"] = "left";
-                $tab[$i][$j]["valign"] = "bottom";
-                $tab[$i][$j]["show"] = false;
-                $tab[$i][$j]["order"] = 'id';
+                $tab[$i][$j]["align"]       = "left";
+                $tab[$i][$j]["valign"]      = "bottom";
+                $tab[$i][$j]["show"]        = false;
+                $tab[$i][$j]["order"]       = 'id';
             }
             if ($tab[$i][$j][$value] == "contact_id") {
-                $tab[$i][$j]["contact_id"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"] = _CONTACT_ID;
-                $tab[$i][$j]["size"] = "30";
+                $tab[$i][$j]["contact_id"]  = $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]       = _CONTACT_ID;
+                $tab[$i][$j]["size"]        = "30";
                 $tab[$i][$j]["label_align"] = "left";
-                $tab[$i][$j]["align"] = "left";
-                $tab[$i][$j]["valign"] = "bottom";
-                $tab[$i][$j]["show"] = false;
-                $tab[$i][$j]["order"] = 'contact_id';
+                $tab[$i][$j]["align"]       = "left";
+                $tab[$i][$j]["valign"]      = "bottom";
+                $tab[$i][$j]["show"]        = false;
+                $tab[$i][$j]["order"]       = 'contact_id';
             }
             if ($tab[$i][$j][$value] == "contact_purpose_id") {
-                $tab[$i][$j]["value"]= $contact->get_label_contact($tab[$i][$j]['value'], $_SESSION['tablename']['contact_purposes']);
+                $tab[$i][$j]["value"]              = $contact->get_label_contact($tab[$i][$j]['value'], $_SESSION['tablename']['contact_purposes']);
                 $tab[$i][$j]["contact_purpose_id"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"] = _CONTACT_PURPOSE;
-                $tab[$i][$j]["size"] = "20";
-                $tab[$i][$j]["label_align"] = "left";
-                $tab[$i][$j]["align"] = "left";
-                $tab[$i][$j]["valign"] = "bottom";
-                $tab[$i][$j]["show"] = true;
-                $tab[$i][$j]["order"] = 'contact_purpose_id';
+                $tab[$i][$j]["label"]              = _CONTACT_PURPOSE;
+                $tab[$i][$j]["size"]               = "20";
+                $tab[$i][$j]["label_align"]        = "left";
+                $tab[$i][$j]["align"]              = "left";
+                $tab[$i][$j]["valign"]             = "bottom";
+                $tab[$i][$j]["show"]               = true;
+                $tab[$i][$j]["order"]              = 'contact_purpose_id';
             }
             if ($tab[$i][$j][$value] == "departement") {
                 $tab[$i][$j]['value'] = $request->show_string(
                     $tab[$i][$j]['value']
                 );
                 $tab[$i][$j]["departement"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"] = _SERVICE;
-                $tab[$i][$j]["size"] = "20";
+                $tab[$i][$j]["label"]       = _SERVICE;
+                $tab[$i][$j]["size"]        = "20";
                 $tab[$i][$j]["label_align"] = "left";
-                $tab[$i][$j]["align"] = "left";
-                $tab[$i][$j]["valign"] = "bottom";
-                $tab[$i][$j]["show"] = true;
-                $tab[$i][$j]["order"] = 'departement';
+                $tab[$i][$j]["align"]       = "left";
+                $tab[$i][$j]["valign"]      = "bottom";
+                $tab[$i][$j]["show"]        = true;
+                $tab[$i][$j]["order"]       = 'departement';
             }
 
             if($tab[$i][$j][$value]=="lastname")
             {
-                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]["lastname"]=$tab[$i][$j]['value'];
-                $tab[$i][$j]["label"]=_LASTNAME;
-                $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="left";
-                $tab[$i][$j]["align"]="left";
-                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]['value']       =$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["lastname"]    =$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]       =_LASTNAME;
+                $tab[$i][$j]["size"]        ="15";
+                $tab[$i][$j]["label_align"] ="left";
+                $tab[$i][$j]["align"]       ="left";
+                $tab[$i][$j]["valign"]      ="bottom";
                 if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
                     $tab[$i][$j]["show"]=true;
                 } else {
@@ -210,12 +202,12 @@ for ($i = 0; $i < count($tab); $i ++) {
             }
             if($tab[$i][$j][$value]=="firstname")
             {
-                $tab[$i][$j]["firstname"]= $request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]["label"]=_FIRSTNAME;
-                $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="center";
-                $tab[$i][$j]["align"]="center";
-                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["firstname"]   = $request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["label"]       =_FIRSTNAME;
+                $tab[$i][$j]["size"]        ="15";
+                $tab[$i][$j]["label_align"] ="center";
+                $tab[$i][$j]["align"]       ="center";
+                $tab[$i][$j]["valign"]      ="bottom";
                 if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
                     $tab[$i][$j]["show"]=true;
                 } else {
@@ -225,13 +217,13 @@ for ($i = 0; $i < count($tab); $i ++) {
             }
             if($tab[$i][$j][$value]=="function")
             {
-                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]["function"]=$tab[$i][$j]['value'];
-                $tab[$i][$j]["label"]=_FUNCTION;
-                $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="left";
-                $tab[$i][$j]["align"]="left";
-                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]['value']       =$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["function"]    =$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]       =_FUNCTION;
+                $tab[$i][$j]["size"]        ="15";
+                $tab[$i][$j]["label_align"] ="left";
+                $tab[$i][$j]["align"]       ="left";
+                $tab[$i][$j]["valign"]      ="bottom";
                 if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
                     $tab[$i][$j]["show"]=true;
                 } else {
@@ -246,13 +238,13 @@ for ($i = 0; $i < count($tab); $i ++) {
             }
             if($tab[$i][$j][$value]=="address_street")
             {
-                $tab[$i][$j]['value'] = $address_num . " " . $request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]["address_street"]= $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"]= _ADDRESS;
-                $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="left";
-                $tab[$i][$j]["align"]="left";
-                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]['value']          = $address_num . " " . $request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["address_street"] = $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]          = _ADDRESS;
+                $tab[$i][$j]["size"]           ="15";
+                $tab[$i][$j]["label_align"]    ="left";
+                $tab[$i][$j]["align"]          ="left";
+                $tab[$i][$j]["valign"]         ="bottom";
                 if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
                     $tab[$i][$j]["show"]=false;
                 } else {
@@ -262,13 +254,13 @@ for ($i = 0; $i < count($tab); $i ++) {
             }
             if($tab[$i][$j][$value]=="address_postal_code")
             {
-                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]["address_postal_code"]=$tab[$i][$j]['value'];
-                $tab[$i][$j]["label"]=_POSTAL_CODE;
-                $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="left";
-                $tab[$i][$j]["align"]="left";
-                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]['value']               =$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["address_postal_code"] =$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]               =_POSTAL_CODE;
+                $tab[$i][$j]["size"]                ="15";
+                $tab[$i][$j]["label_align"]         ="left";
+                $tab[$i][$j]["align"]               ="left";
+                $tab[$i][$j]["valign"]              ="bottom";
                if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
                     $tab[$i][$j]["show"]=false;
                 } else {
@@ -279,54 +271,55 @@ for ($i = 0; $i < count($tab); $i ++) {
 
             if($tab[$i][$j][$value]=="address_town")
             {
-                $tab[$i][$j]["address_town"]= $request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]["label"]=_TOWN;
-                $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="center";
-                $tab[$i][$j]["align"]="center";
-                $tab[$i][$j]["valign"]="bottom";
-                $tab[$i][$j]["show"]=true;
-                $tab[$i][$j]["order"]= "address_town";
+                $tab[$i][$j]["address_town"] = $request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["label"]        =_TOWN;
+                $tab[$i][$j]["size"]         ="15";
+                $tab[$i][$j]["label_align"]  ="center";
+                $tab[$i][$j]["align"]        ="center";
+                $tab[$i][$j]["valign"]       ="bottom";
+                $tab[$i][$j]["show"]         =true;
+                $tab[$i][$j]["order"]        = "address_town";
             }
             if($tab[$i][$j][$value]=="phone")
             {
-                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]["phone"]=$tab[$i][$j]['value'];
-                $tab[$i][$j]["label"]=_PHONE;
-                $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="left";
-                $tab[$i][$j]["align"]="left";
-                $tab[$i][$j]["valign"]="bottom";
-                $tab[$i][$j]["show"]=true;
-                $tab[$i][$j]["order"]= "phone";
+                $tab[$i][$j]['value']       =$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["phone"]       =$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]       =_PHONE;
+                $tab[$i][$j]["size"]        ="15";
+                $tab[$i][$j]["label_align"] ="left";
+                $tab[$i][$j]["align"]       ="left";
+                $tab[$i][$j]["valign"]      ="bottom";
+                $tab[$i][$j]["show"]        =true;
+                $tab[$i][$j]["order"]       = "phone";
             }
             if($tab[$i][$j][$value]=="email")
             {
-                $tab[$i][$j]["email"]= $request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]["label"]=_MAIL;
-                $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="center";
-                $tab[$i][$j]["align"]="center";
-                $tab[$i][$j]["valign"]="bottom";
-                $tab[$i][$j]["show"]=true;
-                $tab[$i][$j]["order"]= "email";
+                $tab[$i][$j]["email"]       = $request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["label"]       =_MAIL;
+                $tab[$i][$j]["size"]        ="15";
+                $tab[$i][$j]["label_align"] ="center";
+                $tab[$i][$j]["align"]       ="center";
+                $tab[$i][$j]["valign"]      ="bottom";
+                $tab[$i][$j]["show"]        =true;
+                $tab[$i][$j]["order"]       = "email";
             }
             if($tab[$i][$j][$value]=="enabled")
             {
-                $tab[$i][$j]["enabled"]= $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"]=_STATUS;
-                $tab[$i][$j]["size"]="5";
-                $tab[$i][$j]["label_align"]="center";
-                $tab[$i][$j]["align"]="center";
-                $tab[$i][$j]["valign"]="bottom";
-                $tab[$i][$j]["show"]=true;
-                $tab[$i][$j]["order"]= "enabled";
+                $tab[$i][$j]["enabled"]     = $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]       =_STATUS;
+                $tab[$i][$j]["size"]        ="5";
+                $tab[$i][$j]["label_align"] ="center";
+                $tab[$i][$j]["align"]       ="center";
+                $tab[$i][$j]["valign"]      ="bottom";
+                $tab[$i][$j]["show"]        =true;
+                $tab[$i][$j]["order"]       = "enabled";
             }
         }
     }
 }
-$pageName = "contact_addresses";
-$pageNameUp = "contact_addresses_up";
+
+$pageName    = "contact_addresses";
+$pageNameUp  = "contact_addresses_up";
 $pageNameAdd = "contact_addresses_add";
 $pageNameVal = "";
 $pageNameBan = "";
@@ -361,4 +354,3 @@ $list->admin_list(
 
 $_SESSION['m_admin']['address'] = array();
 echo '</div>';
-?>

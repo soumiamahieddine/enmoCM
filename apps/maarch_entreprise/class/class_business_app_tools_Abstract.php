@@ -626,7 +626,7 @@ abstract class business_app_tools_Abstract extends Database
             if (($_SESSION['maarch_entreprise']['xml_versionbase'] <> $_SESSION['maarch_entreprise']['database_version'])
                 || ($_SESSION['maarch_entreprise']['database_version'] == 'none')
             ) {
-                $_SESSION['error'] .= _VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH;
+                $_SESSION['error'] .= _VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH. "(".$_SESSION['maarch_entreprise']['xml_versionbase']."/".$_SESSION['maarch_entreprise']['database_version'].")";
             }
         }
     }

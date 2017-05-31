@@ -40,7 +40,7 @@
             }
 
             if (oneIsEmpty) {
-                $('#ajaxReturn_createDocservers_ko').html('<?php echo _MUST_CHOOSE_DOCSERVERS_ROOT;?>');
+                $('#ajaxReturn_createDocservers_ko').html('<?php echo _MUST_CHOOSE_PATH_ROOT;?>');
                 $('#ajaxReturn_createDocservers_button').css('display', 'block');
                 return;
             }
