@@ -15,6 +15,25 @@
 * @version $Revision$
 * @ingroup install
 */
+
+
+//retrives tags
+$client = new \Gitlab\Client('https://labs.maarch.org/api/v4/');
+//$client->authenticate('aSecretToken', \Gitlab\Client::AUTH_URL_TOKEN);
+
+// $project = $client->api('projects')->show('12');
+// var_dump($project);
+
+$tags = $client->api('tags')->all('12');
+//var_dump($tags);
+
+//retrieve current version
+$db = new Database();
+$query = "select param_value_int, param_value_string from parameters where id = 'database_version'";
+$stmt = $db->query($query, []);
+$currentVersion = $stmt->fetchObject();
+// var_dump($currentVersion);
+
 ?>
 <script>
     function launchProcess(
@@ -60,13 +79,49 @@
                     <table>
                         <tr>
                             <td>
-                                <?php echo _LAST_RELEASE_VERSION;?>
+                                <?php echo _YOUR_VERSION;?>
                             </td>
                             <td>
                                 :
                             </td>
                             <td>
-                                <input type="text" id="version" name="version" value="17.06-RC.05.29"/>
+                                <?php echo _BRANCH_VERSION . ':' . $currentVersion->param_value_int 
+                                    . ' ' . _TAG_VERSION . ':' . $currentVersion->param_value_string;?>
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <?php echo _CHOOSE_VERSION_TO_UPDATE;?>
+                            </td>
+                            <td>
+                                :
+                            </td>
+                            <td>
+                                <?php
+                                if (count($tags)>0) {
+                                    ?>
+                                    <select id="version" id="name">
+                                        <option value="default">Select a version</option>
+                                        <?php
+                                        foreach ($tags as $key => $value) {
+                                            echo $tags[$key]['name'] . '<br />';
+                                            echo '<option ';
+                                            echo 'value="' . $tags[$key]['name'] . '"';
+                                            echo '>';
+                                                echo $tags[$key]['name'];
+                                            echo '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                    <?php
+                                } else {
+                                    ?>
+                                    No version available for update
+                                    <?php
+                                }
+                                ?>
+                                
                             </td>
                         </tr>
                         <tr>
