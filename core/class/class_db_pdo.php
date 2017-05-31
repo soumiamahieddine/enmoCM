@@ -22,6 +22,9 @@
  * 
  * @package Core
  */
+
+require_once 'class_functions.php';
+
 class Database extends functions
 {
     /**
@@ -346,6 +349,9 @@ class Database extends functions
                         $_SESSION['error'] .= $PDOException->getTraceAsString();
                         //echo $queryString;
                         //var_export($parameters);
+                        $file = fopen('queries_error.log', a);
+                        fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
+                        fclose($file);
                     }
                     throw $PDOException;
                 }

@@ -20,13 +20,16 @@
  */
 
 
-if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.6");
+if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v17.06");
 
 //if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
 if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "res_id"); // value res_id || chrono_number
 /************** Administration **************/
 if (!defined("_SVR")) define("_SVR", "SVR");
 if (!defined("_SVA")) define("_SVA", "SVA");
+if (!defined("_ADDED")) define("_ADDED", "added");
+if (!defined("_UPDATED")) define("_UPDATED", "updated");
+if (!defined("_DELETED")) define("_DELETED", "deleted");
 if (!defined("_PLEASE_CHOOSE_AN_ATTACHMENT")) define("_PLEASE_CHOOSE_AN_ATTACHMENT", "Please add an attachment.");
 if (!defined("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT")) define("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT", "Please add an attachment before sending this mail to the contact.");
 if (!defined("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT")) define("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT", "Send to the contact with a mandatory attachment");
@@ -118,7 +121,9 @@ if (!defined("_INFOS_ACTIONS"))    define("_INFOS_ACTIONS", "You have to choose 
 if (!defined("_SAVE_CONFIRM"))    define("_SAVE_CONFIRM", "Record confirmation");
 if (!defined("_SAVED_ALREADY_EXIST"))    define("_SAVED_ALREADY_EXIST", "Recording already exists");
 if (!defined("_OK_FOR_CONFIRM"))    define("_OK_FOR_CONFIRM", "Do you confirm the recording?");
-+if (!defined("_TRACE_ACT"))    define("_TRACE_ACT", "Follow the history is incorrect ");
+if (!defined("_TRACE_ACT"))    define("_TRACE_ACT", "Follow the history is incorrect ");
+if (!defined("_INCLUDE_SUB_ENTITIES")) define("_INCLUDE_SUB_ENTITIES","Include sub-entities");
+if (!defined("_GRAPHICS_REPORTS")) define("_GRAPHICS_REPORTS","Graphics mode enabled");
 
 /************** Forms And lists **************/
 if (!defined("_ID"))    define("_ID", "ID");
@@ -150,6 +155,12 @@ if (!defined("_WARNING_MESSAGE_DEL_GROUP"))
     define("_WARNING_MESSAGE_DEL_GROUP", "Warning :<br>There are users associated to this group. Choose a replacement group:");
 if (!defined("_WARNING_MESSAGE_DEL_USER"))
     define("_WARNING_MESSAGE_DEL_USER", "Warning :<br> There are diffusion lists associated to this user. Choose a replacement user:");
+if (!defined("_INFO_MESSAGE_UPDATE_USER"))
+    define("_INFO_MESSAGE_UPDATE_USER", "In order to keep confidentiality of documents in progress of current user's entity, you can replace him with another user");
+if (!defined("_WARNING_MESSAGE_UPDATE_USER"))
+    define("_WARNING_MESSAGE_UPDATE_USER", "If you choose \"NO REPLACEMENT\" and current user is in dest, he can't be removed !");
+if (!defined("_MESSAGE_REAFFECT_USER_LISTMODEL"))
+    define("_MESSAGE_REAFFECT_USER_LISTMODEL", "Include user reassignment in list models");
 if (!defined("_USERS_IN_GROUPS"))
     define("_USERS_IN_GROUPS", "Users in the group");
 if (!defined("_LISTE_DIFFUSION_IN_USER")) define("_LISTE_DIFFUSION_IN_USER", "Diffusion list(s) for the user");
@@ -182,9 +193,10 @@ if (!defined("_QUALIFY"))    define("_QUALIFY", "Qualify - title");
 
 
 /************** Messages pop up **************/
-if (!defined("_REALLY_SUSPEND")) define("_REALLY_SUSPEND", "Do you really want to suspend ? ");
-if (!defined("_REALLY_AUTHORIZE")) define("_REALLY_AUTHORIZE", "Do you really want to authorize? ");
-if (!defined("_REALLY_DELETE")) define("_REALLY_DELETE", "Do you really want to deleted ? ");
+if (!defined("_REALLY_SUSPEND")) define("_REALLY_SUSPEND", "Do you really want to suspend ");
+if (!defined("_REALLY_AUTHORIZE")) define("_REALLY_AUTHORIZE", "Do you really want to authorize ");
+if (!defined("_REALLY_DELETE")) define("_REALLY_DELETE", "Do you really want to deleted ");
+if (!defined("_REALLY_CONTINUE")) define("_REALLY_CONTINUE", "Really continue ");
 if (!defined("_DEFINITIVE_ACTION")) define("_DEFINITIVE_ACTION", "This action is definitive");
 if (!defined("_AND")) define("_AND", " and ");
 if (!defined("_PLEASE_CHECK_LISTDIFF")) define("_PLEASE_CHECK_LISTDIFF", " is on the diffusion list(s). Please change the recipient in the diffusion list(s) of");
@@ -338,16 +350,12 @@ if (!defined("_CHOOSE_PRIMARY_GROUP")) define("_CHOOSE_PRIMARY_GROUP", "Choose a
 if (!defined("_USER_BELONGS_NO_GROUP")) define("_USER_BELONGS_NO_GROUP", "The user doesn't belong to any group");
 if (!defined("_USER_BELONGS_NO_ENTITY")) define("_USER_BELONGS_NO_ENTITY", "The user doesn't belong to any department");
 if (!defined("_CHOOSE_ONE_GROUP")) define("_CHOOSE_ONE_GROUP", "Choose one group at least");
-if (!defined("_PRIMARY_GROUP")) define("_PRIMARY_GROUP", "Primary group");
 if (!defined("_CHOOSE_GROUP")) define("_CHOOSE_GROUP", "Choose a group");
 if (!defined("_ROLE")) define("_ROLE", "Role");
 
 if (!defined("_THE_PSW")) define("_THE_PSW", "The password");
 if (!defined("_THE_PSW_VALIDATION")) define("_THE_PSW_VALIDATION", "The password validation");
 if (!defined("_MODIFICATION_PSW_SNTE")) define("_MODIFICATION_PSW_SNTE", "To modify your password, please confirm it.");
-if (!defined("_CURRENT_PSW")) define("_CURRENT_PSW", "Current password");
-if (!defined("_NEW_PSW")) define("_NEW_PSW", "New password");
-if (!defined("_REENTER_PSW")) define("_REENTER_PSW", "Enter the password again");
 if (!defined("_USER_ACCESS_DEPARTMENT")) define("_USER_ACCESS_DEPARTMENT", "The user has access to the following departments");
 if (!defined("_FIRST_PSW")) define("_FIRST_PSW", "The new password ");
 if (!defined("_SECOND_PSW")) define("_SECOND_PSW", "The second password ");
@@ -561,9 +569,6 @@ if (!defined("_EXPORT_RIGHT")) define("_EXPORT_RIGHT", "Export rights");
 if (!defined("_USER_NO_GROUP")) define("_USER_NO_GROUP", "You don't belong to any group");
 if (!defined("_SUSPENDED_ACCOUNT")) define("_SUSPENDED_ACCOUNT", "Your user account has been suspended");
 if (!defined("_BAD_LOGIN_OR_PSW")) define("_BAD_LOGIN_OR_PSW", "Wrong user name or wrong password");
-if (!defined("_WRONG_PSW")) define("_WRONG_PSW", "Wrong current password");
-if (!defined("_WRONG_SECOND_PSW")) define("_WRONG_SECOND_PSW", "The second password isn't equivalent to the first password !");
-if (!defined("_EMPTY_PSW")) define("_EMPTY_PSW", "The current password is empty");
 if (!defined("_AUTORIZED_USER")) define("_AUTORIZED_USER", "Authorized user");
 if (!defined("_SUSPENDED_USER")) define("_SUSPENDED_USER", "Suspended user");
 if (!defined("_DELETED_USER")) define("_DELETED_USER", "Deleted user");
@@ -1039,7 +1044,7 @@ if (!defined("_CONFIRM_CREATE_CONTACT")) define("_CONFIRM_CREATE_CONTACT"," Do y
 if (!defined("_CONFIRM_EDIT_CONTACT")) define("_CONFIRM_EDIT_CONTACT","Do you confirm the validation of your contact ? ?");
 if (!defined("_CONTACTS_CONFIRMATION_MODIFICATION")) define("_CONTACTS_CONFIRMATION_MODIFICATION","Confirmation of the modification");
 
-if (!defined("_CREATE_BY")) define("_CREATE_BY","created by");
+if (!defined("_CREATE_BY")) define("_CREATE_BY","Created by");
 if (!defined("_SOCIETY_SHORT")) define("_SOCIETY_SHORT","Companie acronym");
 if (!defined("_CHOOSE_CONTACT_TYPES")) define("_CHOOSE_CONTACT_TYPES","Choose the contact type");
 if (!defined("_ORGANISM")) define("_ORGANISM","Organization");
@@ -1769,8 +1774,6 @@ if (!defined("_SIGNATORY_GROUP")) define("_SIGNATORY_GROUP", "Signatory group");
 if (!defined("_FORMAT_PHONE")) define("_FORMAT_PHONE", "Phone format : 06 01 02 03 04");
 
 if (!defined("_SIGNATURE")) define("_SIGNATURE","Signature");
-if (!defined("_NEW_EMAIL_SIGNATURE"))
-    define("_NEW_EMAIL_SIGNATURE","New email signature");
 
 // Actions parapheur
 if (!defined("_SEND_MAIL"))    define("_SEND_MAIL", "Folder sent by email");
@@ -1819,4 +1822,80 @@ if (!defined("_DESTROY")) define("_DESTROY","Destroy");
 if (!defined("_KEEP")) define("_KEEP","Keep");
 if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Retention rule");
 
+if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Duration current use");
+
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Unselect all");
+
+/***** Profile *****/
+if (!defined('_MANAGE_SIGNATURES'))
+    define('_MANAGE_SIGNATURES', 'Manage my signatures');
+if (!defined('_MY_GROUPS'))
+    define('_MY_GROUPS', 'My Groups');
+if (!defined('_PRIMARY_GROUP'))
+    define('_PRIMARY_GROUP', 'Primary group');
+if (!defined('_SECONDARY_GROUP'))
+    define('_SECONDARY_GROUP', 'Secondary group');
+if (!defined('_MY_ENTITIES'))
+    define('_MY_ENTITIES', 'My Entities');
+if (!defined('_PRIMARY_ENTITY'))
+    define('_PRIMARY_ENTITY', 'Primary entity');
+if (!defined('_SECONDARY_ENTITY'))
+    define('_SECONDARY_ENTITY', 'Secondary entity');
+if (!defined('_MY_INFORMATIONS'))
+    define('_MY_INFORMATIONS', 'My Informations');
+if (!defined('_DIGITAL_FINGERPRINT'))
+    define('_DIGITAL_FINGERPRINT', 'Digital fingerprint');
+if (!defined('_CHANGE_PSW'))
+    define('_CHANGE_PSW', 'Change your password');
+if (!defined('_CURRENT_PSW'))
+    define('_CURRENT_PSW', 'Current password');
+if (!defined('_NEW_PSW'))
+    define('_NEW_PSW', 'New password');
+if (!defined('_REENTER_PSW'))
+    define('_REENTER_PSW', 'Enter the password again');
+if (!defined('_UPDATED_PROFILE'))
+    define('_UPDATED_PROFILE', 'Your profile has been updated');
+
+if (!defined('_WRONG_PSW'))
+    define('_WRONG_PSW', 'Wrong password');
+if (!defined('_WRONG_SECOND_PSW'))
+    define('_WRONG_SECOND_PSW', 'The second password isn\'t equivalent to the first password !');
+if (!defined('_EMPTY_PSW_FORM'))
+    define('_EMPTY_PSW_FORM', 'Password form is not complete');
+if (!defined('_UPDATED_PASSWORD'))
+    define('_UPDATED_PASSWORD', 'Your password has been updated');
+
+if (!defined('_SB_SIGNATURES'))
+    define('_SB_SIGNATURES', 'Signature Book signatures');
+if (!defined('_NEW_SIGNATURE'))
+    define('_NEW_SIGNATURE', 'New signature added');
+if (!defined('_UPDATED_SIGNATURE'))
+    define('_UPDATED_SIGNATURE', 'Signature updated');
+if (!defined('_DELETED_SIGNATURE'))
+    define('_DELETED_SIGNATURE', 'Signature deleted');
+if (!defined('_DEFINE_NEW_SIGNATURE'))
+    define('_DEFINE_NEW_SIGNATURE', 'New signature');
+if (!defined('_SIGNATURE_LABEL'))
+    define('_SIGNATURE_LABEL', 'Signature label');
+if (!defined('_UPDATE_SIGNATURE'))
+    define('_UPDATE_SIGNATURE', 'Update signature');
+if (!defined('_DELETE_SIGNATURE'))
+    define('_DELETE_SIGNATURE', 'Delete signature');
+if (!defined('_CLICK_ON'))
+    define('_CLICK_ON', 'Click on');
+if (!defined('_TO_ADD_SIGNATURE'))
+    define('_TO_ADD_SIGNATURE', 'to add a signature');
+if (!defined('_TO_UPDATE_SIGNATURE'))
+    define('_TO_UPDATE_SIGNATURE', 'to change uploaded image');
+
+if (!defined('_EMAIL_SIGNATURES'))
+    define('_EMAIL_SIGNATURES', 'Email signatures');
+if (!defined('_EMPTY_EMAIL_SIGNATURE_FORM'))
+    define('_EMPTY_EMAIL_SIGNATURE_FORM', 'Mail signature form is imcomplete');
+if (!defined('_NEW_EMAIL_SIGNATURE'))
+    define('_NEW_EMAIL_SIGNATURE', 'New email signature added');
+if (!defined('_UPDATED_EMAIL_SIGNATURE'))
+    define('_UPDATED_EMAIL_SIGNATURE', 'Mail signature updated');
+if (!defined('_DELETED_EMAIL_SIGNATURE'))
+    define('_DELETED_EMAIL_SIGNATURE', 'Mail signature deleted');
+/***** Profile *****/

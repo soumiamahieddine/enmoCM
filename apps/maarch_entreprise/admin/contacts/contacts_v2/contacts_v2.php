@@ -63,9 +63,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['fromContactTree']);
 ?>
-<table>
-</table>
-<table width="100%">
+<table width="100%" id="magicContactsTable">
     <tr>
         <?php if ($admin->test_admin('admin_contacts', 'apps', false)) { ?>
         <td width="33%">

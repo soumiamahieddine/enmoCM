@@ -680,7 +680,12 @@ abstract class basket_Abstract extends Database
                 }
                 if ($noFilterOnCat || $categoryIdForActions != '') {
                     // If in mode "PAGE_USE", testing the action where clause on the res_id before adding the action
-                    if (strtoupper($mode) == 'PAGE_USE' && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y' && $testWhere) {
+                    if (
+                        strtoupper($mode) == 'PAGE_USE' 
+                        && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y' 
+                        && $testWhere && strtoupper($resId) != 'NONE'
+                        && ($_SESSION['current_basket']['actions'][$i]['id'] <> 'IndexingBasket')
+                    ) {
                         $where = ' where res_id = ' . $resId;
                         if (!empty($_SESSION['current_basket']['actions'][$i]['WHERE'])) {
                             $where = $where . ' and ' . $_SESSION['current_basket']['actions'][$i]['WHERE'];

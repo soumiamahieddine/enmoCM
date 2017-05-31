@@ -842,12 +842,44 @@ function updatePage(page, fromPage)
 		else
 			backButton.style.display = "none";
 	}
+	if (page.id == 'signature_recap'){
+		/* Si on est dans le panneau récapitulatif, on remplace le bouton retour par un autre */
+		var cur_basket = $("current_basket").value;
+		backButton.href='view_baskets.php?baskets='+cur_basket;
+		backButton.setAttribute('onclick','');
+		backButton.setAttribute('id','backButtonRecap');
+	}
+	else{
+		/* Si on est dans un autre panneau et qu'il y a une présence du bouton retour remplacé précédemment, on le remplace de nouveau pour remettre l'initial */
+		var backButtonRecap = $("backButtonRecap");
+		if (backButtonRecap)
+		{
+			var prevPage = $(pageHistory[pageHistory.length-2]);
+			if (prevPage && !page.getAttribute("hideBackButton"))
+			{
+				backButtonRecap.style.display = "inline";
+				backButtonRecap.innerHTML = prevPage.title ? prevPage.title : "Back";
+				var bbClass = prevPage.getAttribute("bbclass");
+				backButtonRecap.className = (bbClass) ? 'button ' + bbClass : 'button';
+				backButtonRecap.id = 'backButton';
+				backButtonRecap.href='#';
+				backButtonRecap.setAttribute('onclick','clean()');
+			}
+			else
+				backButtonRecap.style.display = "none";
+		}
+	}
 
 	if (page.id == 'sign_main_panel'){
-		/*forceLandscape = true;
-		forceOrientLandscape();*/
-		//if (document.body.getAttribute("orient") == portraitVal) alert("Passez en orientation paysage pour signer");
+		document.getElementsByClassName('toolbar')[0].style.display='none';
+		document.getElementsByClassName('toolbar')[0].style.height='0px';
+		document.getElementById('sign_main_panel').style.top='0px';
+		document.getElementById('sign_main_panel').style.height='100%';
 		loadSignPad();
+	}
+	else{
+		document.getElementsByClassName('toolbar')[0].style.display='block';
+		document.getElementsByClassName('toolbar')[0].style.height='40px';
 	}
 	if (page.id == 'details'){
 		if ($("ifrm")){
@@ -861,11 +893,69 @@ function updatePage(page, fromPage)
 	} 
 	if (page.id == 'list_ans'){
 		if (fromPage.id == 'signature_recap'){
+			var pageIDnew;
+			var pageNew;
 			document.getElementById('signature_recap').parentNode.removeChild(document.getElementById('signature_recap'));
-			if (document.getElementById('check_id_user')) document.getElementById('check_id_user').parentNode.removeChild(document.getElementById('check_id_user'));
-			if (document.getElementById('load_user_signatures')) document.getElementById('load_user_signatures').parentNode.removeChild(document.getElementById('load_user_signatures'));
+			pageHistory.pop();
+			pageIDnew = pageHistory.pop();  // pop/get parent
+			pageNew = $(pageIDnew);
+			if (document.getElementById('check_id_user')){
+				document.getElementById('check_id_user').parentNode.removeChild(document.getElementById('check_id_user'));
+				pageIDnew = pageHistory.pop();  // pop/get parent
+				pageNew = $(pageIDnew);
+			}
+			if (document.getElementById('load_user_signatures')){
+				document.getElementById('load_user_signatures').parentNode.removeChild(document.getElementById('load_user_signatures'));
+				pageIDnew = pageHistory.pop();  // pop/get parent
+				pageNew = $(pageIDnew);
+			}
 			document.getElementById('sign_main_panel').parentNode.removeChild(document.getElementById('sign_main_panel'));
+			pageHistory.pop();
+			pageIDnew = pageHistory.pop();  // pop/get parent
+			pageNew = $(pageIDnew);
 			document.getElementById('details').parentNode.removeChild(document.getElementById('details'));
+			pageHistory.pop();
+			pageIDnew = pageHistory.pop();  // pop/get parent
+			pageNew = $(pageIDnew);
+
+			iui.showPage(pageNew, true);
+		}			
+	}
+	if (page.id == 'list'){
+		if (fromPage.id == 'signature_recap'){
+			var pageIDnew;
+			var pageNew;
+			document.getElementById('signature_recap').parentNode.removeChild(document.getElementById('signature_recap'));
+			pageHistory.pop();
+
+			pageIDnew = pageHistory.pop();  // pop/get parent
+			pageNew = $(pageIDnew);
+
+			if (document.getElementById('check_id_user')){
+				document.getElementById('check_id_user').parentNode.removeChild(document.getElementById('check_id_user'));
+				pageIDnew = pageHistory.pop();  // pop/get parent
+				pageNew = $(pageIDnew);
+			}
+			if (document.getElementById('load_user_signatures')){
+				document.getElementById('load_user_signatures').parentNode.removeChild(document.getElementById('load_user_signatures'));
+				pageIDnew = pageHistory.pop();  // pop/get parent
+				pageNew = $(pageIDnew);
+			} 
+			
+			document.getElementById('sign_main_panel').parentNode.removeChild(document.getElementById('sign_main_panel'));
+			pageIDnew = pageHistory.pop();  // pop/get parent
+			pageNew = $(pageIDnew);
+
+			document.getElementById('details').parentNode.removeChild(document.getElementById('details'));
+			pageIDnew = pageHistory.pop();  // pop/get parent
+			pageNew = $(pageIDnew);
+
+			document.getElementById('list_ans').parentNode.removeChild(document.getElementById('list_ans'));
+			pageIDnew = pageHistory.pop();  // pop/get parent
+			pageNew = $(pageIDnew);
+
+			iui.showPage(pageNew, true);
+
 		}			
 	}
 	iui.busy = false;

@@ -1,8 +1,8 @@
 <?php
 $confirm = false;
 $etapes = array('form');
-$frm_width='355px';
-$frm_height = 'auto';
+$frm_width='400px';
+$frm_height = '90%';
 require("modules/entities/entities_tables.php");
 require_once("modules/entities/class/EntityControler.php");
 require_once('modules/entities/class/class_manage_entities.php');
@@ -148,8 +148,8 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
         $frm_str .= '<input type="hidden" name="note_content_to_dep" id="note_content_to_dep" />';
                 $frm_str .='<p>';
                     $frm_str .= '<b>'._REDIRECT_TO_OTHER_DEP.' :</b><br/>';
-                    $frm_str .= '<select name="department" id="department" onchange="change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\', \'diff_list_div_redirect\', \'redirect\');" style="float:left;">';
-                        $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
+                    $frm_str .= '<select name="department" id="department" data-placeholder="'._CHOOSE_DEPARTMENT.'" onchange="change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\', \'diff_list_div_redirect\', \'redirect\');" style="float:left;">';
+                        $frm_str .='<option value=""></option>';
                        /*for($i=0; $i < count($services); $i++)
                        {
                             $frm_str .='<option value="'.$services[$i]['ID'].'" >'.$db->show_string($services[$i]['LABEL']).'</option>';
@@ -169,6 +169,7 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
                             }
                         }
                     $frm_str .='</select>';
+                    $frm_str .='<script>new Chosen($(\'department\'),{width: "80%", disable_search_threshold: 10, search_contains: true,allow_single_deselect: true});</script>';
                     $frm_str .=' <input type="button" style="float:right;margin:0px;" name="redirect_dep" value="'._REDIRECT.'" id="redirect_dep" class="button" onclick="valid_action_form( \'frm_redirect_dep\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$values_str.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');" />';
                     $frm_str .='<div style="clear:both;"></div>';
                 $frm_str .= '<div id="diff_list_div_redirect" class="scroll_div" style="height:auto;"></div>';
@@ -185,13 +186,14 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
                 $frm_str .= '<input type="hidden" name="note_content_to_user" id="note_content_to_user" value="" />';
                 $frm_str .='<p>';
                     $frm_str .='<label><b>'._REDIRECT_TO_USER.' :</b></label>';
-                    $frm_str .='<select name="user" id="user" style="float:left;">';
-                        $frm_str .='<option value="">'._CHOOSE_USER2.'</option>';
+                    $frm_str .='<select name="user" id="user" style="float:left;" data-placeholder="'._CHOOSE_USER2.'">';
+                        $frm_str .='<option value=""></option>';
                         for($i=0; $i < count($users); $i++)
                        {
                         $frm_str .='<option value="'.$users[$i]['ID'].'">'.$users[$i]['NOM'].' '.$users[$i]['PRENOM'].'</option>';
                        }
                     $frm_str .='</select>';
+                    $frm_str .='<script>new Chosen($(\'user\'),{width: "80%", disable_search_threshold: 10, search_contains: true,allow_single_deselect: true});</script>';
                     $frm_str .=' <input type="button" style="float:right;margin:0px;" name="redirect_user" id="redirect_user" value="'
                         ._REDIRECT
                         . '" class="button" onclick="valid_action_form( \'frm_redirect_user\', \''

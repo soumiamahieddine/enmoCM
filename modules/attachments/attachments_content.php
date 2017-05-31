@@ -752,10 +752,10 @@ if (isset($_POST['add']) && $_POST['add']) {
                             $js .= "window.parent.top.location.href = 'index.php?page=view_baskets&module=basket&baskets=MyBasket&resid=".$_SESSION['doc_id']."&directLinkToAction';";
                     }
                     else {
-                        if($attachment_types == 'response_project' || $attachment_types == 'signed_response' || $attachment_types == 'aihp'){
+                        if($attachment_types == 'response_project' || $attachment_types == 'outgoing_mail' || $attachment_types == 'signed_response' || $attachment_types == 'aihp'){
                             $js .= 'loadSpecificTab(\'responses_iframe\',\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&view_only=true&load&fromDetail=response&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp\');';
                         }else{
-                            $js .= 'loadSpecificTab(\'attachments_iframe\',\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId=100&collId=letterbox_coll&fromDetail=attachments&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp\');';
+                            $js .= 'loadSpecificTab(\'attachments_iframe\',\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId='.$_SESSION['doc_id'].'&collId=letterbox_coll&fromDetail=attachments&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp\');';
                         }
                         
                     }
@@ -1219,6 +1219,7 @@ if (isset($_POST['add']) && $_POST['add']) {
             $OriginalHash = $res->fingerprint;
 
             if ($_SESSION['upfile']['upAttachment'] && $OriginalHash <> $NewHash) {
+                $_SESSION['upfile']['upAttachment'] = false;
                 $fileInfos = array(
                     "tmpDir"      => $_SESSION['config']['tmppath'],
                     "size"        => $_SESSION['upfile']['size'],
@@ -1875,7 +1876,7 @@ if(!isset($_REQUEST['id'])) {
         . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');$(\'add\').value=\'Edition en cours ...\';setInterval(function() {checkEditingDoc(\''.$_SESSION['user']['UserId'].'\')}, 500);$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';this.hide();"/>';*/
     $content .= '" name="edit" id="edit" style="display:none;margin-top: 0" class="button" '
         . 'onclick="showAppletLauncher(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_modal_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&attachType=\'+$(\'attachment_types\').value+\'&objectTable=' . $objectTable . '&contactId=\'+$(\'contactidAttach\').value+\'&addressId=\'+$(\'addressidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&titleAttachment=\'+cleanTitle($(\'title\').value)+\'&back_date=\'+$(\'back_date\').value+\'&resMaster=' . $_SESSION['doc_id']
-        . '\', \'100px\', \'500px\');$(\'add\').value=\'Edition en cours ...\';setInterval(function() {checkEditingDoc(\''.$_SESSION['user']['UserId'].'\')}, 500);$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';this.hide();"/>';
+        . '\', \'100px\', \'500px\');$(\'add\').value=\'Edition en cours ...\';editingDoc(\''.$_SESSION['user']['UserId'].'\');$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';this.hide();"/>';
     $content .= '<span style="display: none" id="divOr0">&nbsp;ou&nbsp;</span>';
     $content .= '</div>';
 
@@ -1909,7 +1910,7 @@ $content .= '</div>';
                     .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');$(\'edit\').value=\'Edition en cours ...\';setInterval(function() {checkEditingDoc(\''.$_SESSION['user']['UserId'].'\')}, 500);$(\'edit\').disabled=\'disabled\';$(\'edit\').style.opacity=\'0.5\';this.hide();"/>';*/
                 $content .= '" name="editModel" id="editModel" class="button" onclick="$(\'hiddenValidateStatus\').value=\'2\';$(\'edit\').style.visibility=\'visible\';showAppletLauncher(\''
                     . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_modal_launcher&objectType=attachmentUpVersion&objectId='.$_REQUEST['id'].'&contactId=\'+$(\'contactidAttach\').value+\'&addressId=\'+$(\'addressidAttach\').value+\'&titleAttachment=\'+cleanTitle($(\'title\').value)+\'&back_date=\'+$(\'back_date\').value+\'&objectTable=res_view_attachments&resMaster='.$_SESSION['doc_id']
-                    .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');$(\'edit\').value=\'Edition en cours ...\';setInterval(function() {checkEditingDoc(\''.$_SESSION['user']['UserId'].'\')}, 500);$(\'edit\').disabled=\'disabled\';$(\'edit\').style.opacity=\'0.5\';this.hide();"/>';
+                    .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');$(\'edit\').value=\'Edition en cours ...\';editingDoc(\''.$_SESSION['user']['UserId'].'\');$(\'edit\').disabled=\'disabled\';$(\'edit\').style.opacity=\'0.5\';this.hide();"/>';
             } /*else {
                                     $content .= '" name="edit" id="edit" style="display:none" class="button" '
                                                 .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
@@ -1933,7 +1934,11 @@ $content .= '</div>';
                     $content .= ', \'add\'';
                 }
             }
-            $content .= ')"/>';
+            if (isset($_REQUEST['id'])) {
+                $content .= ');simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetTemporarySaved&mode=edit\')"/>';
+            } else {
+                $content .= ');simpleAjax(\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetTemporarySaved&mode=add\')"/>';
+            }
 
             $content .= '&nbsp;';
             $content .= '&nbsp;';

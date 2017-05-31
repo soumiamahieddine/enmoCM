@@ -106,13 +106,13 @@ if (!defined("_TAG_SEARCH"))
 if (!defined("_TAGNONE"))
     define("_TAGNONE", "Aucun");
 if (!defined("_ALL_TAG_DELETED_FOR_RES_ID"))
-    define("_ALL_TAG_DELETED_FOR_RES_ID", "Tous les ".strtolower(_TAGS_DEFAULT)." sont supprimé pour la ressource");
+    define("_ALL_TAG_DELETED_FOR_RES_ID", "Tous les ".strtolower(_TAGS_DEFAULT)." sont supprimés pour la ressource");
 if (!defined("_TAGCLICKTODEL"))
     define("_TAGCLICKTODEL", "supprimer");
 if (!defined("_NAME_TAGS"))
     define("_NAME_TAGS", "Nom du ".strtolower(_TAG_DEFAULT));
 if (!defined("_PRIVATE_TAGS"))
-    define("_PRIVATE_TAGS", "Restreindre les ".strtolower(_TAGS_DEFAULT)." à l'entité de l'utilisateur (Niveau direction)");
+    define("_PRIVATE_TAGS", "Lier les ".strtolower(_TAGS_DEFAULT)." à l'entité de l'utilisateur (Niveau direction)");
 if (!defined("_PRIVATE_TAGS_DESC"))
     define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les ".strtolower(_TAGS_DEFAULT)." qui ont été restreints à sa direction (l'ajout / modification associera le mot clé automatiquement à sa direction).");
 if (!defined("_ADD_TAG_CONFIRM"))

@@ -21,10 +21,10 @@
 
 if (!empty($_REQUEST['cookies'])) {
     $_SESSION['clientSideCookies'] = $_REQUEST['cookies'];
-    echo "{status : '0'}";
+    echo '{"status" : 0}';
 } else {
     $_SESSION['clientSideCookies'] = false;
-    echo "{status : '1'}";
+    echo '{"status" : 1}';
 }
 
 exit;

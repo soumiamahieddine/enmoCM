@@ -61,6 +61,7 @@
 
     <validationRule name="admin_ajax_search" extends="standardForm" mode="error">
       <parameter name="what" type="string" />
+      <parameter name="idContact" type="integer" />
     </validationRule>
 
     <validationRule name="contact_id" extends="standardForm" mode="error">
@@ -98,6 +99,7 @@
       <parameter name="mandatory_fields" type="identifier" />
       <parameter name="retention_final_disposition" type="string" />
       <parameter name="retention_rule" type="identifier" />
+      <parameter name="duration_current_use" type="integer" />
     </validationRule>
 
     <validationRule name="admin_docserver_location" extends="standardForm" mode="error">
@@ -298,6 +300,7 @@
       <parameter name="delete" type="string" />
       <parameter name="new_contact_id_reaffect" type="integer" />
       <parameter name="new_contact_reaffect" type="string" />
+      <parameter name="mycontact" type="YN" />
     </validationRule>
 
     <validationRule name="contactAddressUp" extends="standardForm" mode="error">

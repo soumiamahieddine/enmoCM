@@ -68,7 +68,10 @@ $_SESSION['doc_id'] = $res_id_master;
 $db = new Database();
 $stmt = $db->query("SELECT * from res_view_attachments WHERE res_id = ? AND status <> 'SIGN' AND attachment_type IN ('response_project','outgoing_mail','sva') ORDER BY relation desc", array($res_id_attach));
 
-$codeSession = $_SESSION['user']['code_session'];
+if ($_SESSION['modules_loaded']['visa']['confirm_sign_by_email'] == 'true') {
+    $codeSession = $_SESSION['user']['code_session'];
+}
+
 
 while($line = $stmt->fetchObject()){
 	$objectId = $line->res_id;
@@ -112,11 +115,22 @@ while($line = $stmt->fetchObject()){
 	$fileExtension = "pdf";
 	
 	
-	if (empty($codeSession)) $statusSign = 'TMP';
-	include 'modules/visa/save_attach_res_from_cm.php';	
+	
+    if ($_SESSION['modules_loaded']['visa']['confirm_sign_by_email'] == 'true') {
+        if (empty($codeSession)) {
+            $statusSign = 'TMP';
+            include 'modules/visa/save_attach_res_from_cm.php'; 
+        }
+    } else {
+        include 'modules/visa/save_attach_res_from_cm.php'; 
+    }
 }
-if (empty($codeSession)) echo "{status:0}";
-else echo "{status:1}";
+
+if ($_SESSION['modules_loaded']['visa']['confirm_sign_by_email'] == 'true') {
+    if (empty($codeSession)) echo "{status:0}";
+    else echo "{status:1}";
+} else {
+    echo "{status:1}";
+}
 
 exit;
-?>

@@ -55,7 +55,7 @@
         <?merge .content.title ?><Title><?merge . ?></Title>
         <?merge .content.filePlanPosition ?><FilePlanPosition schemeID="[?merge .schemeID @schemeID ?]" schemeName="[?merge .schemeName @schemeName ?]" schemeAgencyID="[?merge .schemeAgencyID @schemeAgencyID ?]" schemeAgencyName="[?merge .schemeAgencyName @schemeAgencyName ?]" schemeVersionID="[?merge .schemeVersionID @schemeVersionID ?]" schemeDataURI="[?merge .schemeDataURI @schemeDataURI ?]" schemeURI="[?merge .schemeURI @schemeURI ?]"><?merge .value ?></FilePlanPosition>
         <?merge .originatingSystemId ?><OriginatingSystemId><?merge .content.originatingSystemId ?></OriginatingSystemId>
-        <OriginatingAgencyArchiveIdentifier><?merge .content.originatingAgencyArchiveIdentifier ?></OriginatingAgencyArchiveIdentifier>
+        <OriginatingAgencyArchiveUnitIdentifier><?merge .content.originatingAgencyArchiveUnitIdentifier ?></OriginatingAgencyArchiveUnitIdentifier>
         <?merge .content.description.bool() ?><Description><?merge .content.description ?></Description>
         <?merge .content.custodialHistory.bool() ?>
         <CustodialHistory>
@@ -74,15 +74,9 @@
             <KeywordReference schemeID="[?merge .keywordReference.schemeID @schemeID ?]" schemeName="[?merge .keywordReference.schemeName @schemeName ?]" schemeAgencyID="[?merge .keywordReference.schemeAgencyID @schemeAgencyID ?]" schemeAgencyName="[?merge .keywordReference.schemeAgencyName @schemeAgencyName ?]" schemeVersionID="[?merge .keywordReference.schemeVersionID @schemeVersionID ?]" schemeDataURI="[?merge .keywordReference.schemeDataURI @schemeDataURI ?]" schemeURI="[?merge .keywordReference.schemeURI @schemeURI ?]"><?merge .keywordReference.value ?></KeywordReference>
             <KeywordType listVersionID="[?merge .keywordType.listVersionID @listVersionID ?]"><?merge .keywordType ?></KeywordType>
         </Keyword>
-        <Coverage>
-            <SpatialCoverage><?merge .content.spatialCoverage ?></SpatialCoverage>
-            <TemporalCoverage><?merge .content.temporalCoverage ?></TemporalCoverage>
-            <JuridicationalCoverage><?merge .content.juridictionalCoverage ?></JuridicationalCoverage>
-        </Coverage>
         <?merge .content.originatingAgency.bool() ?>
         <OriginatingAgency>
-            <?merge .content.originatingAgency $organization ?>
-            <?xinclude /resources/Organization.xml ?>
+            <Identifier><?merge .content.originatingAgency.identifier.value ?></Identifier>
         </OriginatingAgency>
         <?merge .content.submissionAgency.bool() ?>
         <SubmissionAgency>
@@ -113,9 +107,9 @@
         <?merge .content.relatedObjectReference.bool() ?>
         <RelatedObjectReference>
             <?merge .content.relatedObjectReference.references ?>
-            <Reference>
-                <RepositoryArchiveUnitPID><?merge .repositoryArchiveUnitPID ?></RepositoryArchiveUnitPID>
-            </Reference>
+            <References>
+                <ArchiveUnitRefId><?merge .archiveUnitRefId ?></ArchiveUnitRefId>
+            </References>
         </RelatedObjectReference>
         <CreatedDate><?merge .content.createdDate ?></CreatedDate>
         <TransactedDate><?merge .content.transactedDate ?></TransactedDate>
@@ -133,9 +127,7 @@
             <EventDetail><?merge .eventDetail ?></EventDetail>
         </Event> 
     </Content>
-    <?merge .archiveUnit $archiveUnitChildren?>
-    <?merge .archiveUnit.bool() ?>
-    <?xinclude /resources/ArchiveUnitChildren.xml ?>
+    <?merge .archiveUnit /resources/ArchiveUnit.xml?>
     <?merge .dataObjectReference.bool() ?>
     <DataObjectReference>
         <?merge .dataObjectReference.dataObjectReferenceId.bool() ?>

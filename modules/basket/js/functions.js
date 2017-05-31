@@ -1,10 +1,7 @@
 
-//document.write('<script type="text/javascript" src="js/scrollbox.js"></script>');
-
  function show_config_action( id_action, inside_scrollbox, show_when_disabled)
  {
-    //var div_to_show = $('action_'+id_action);
-    var chkbox = $('checkbox_'+id_action)
+    var chkbox = $('checkbox_'+id_action);
 
     if(chkbox && (chkbox.disabled == false || show_when_disabled == true) )
     {
@@ -25,7 +22,7 @@
                 var actions_uses = $(id_action+'_actions_uses');
                 actions_uses.style.display = 'none';
             }
-            for(i=0; i < childs.length; i++)
+            for(var i=0; i < childs.length; i++)
             {
                 if(childs[i].id=='action_'+id_action)
                 {
@@ -41,17 +38,6 @@
 
 
  }
-
- function check_this_box( id_box)
- {
-    var to_check = $(id_box);
-
-    if(to_check && to_check.disabled == false)
-    {
-        to_check.checked = 'checked';
-    }
- }
-
 
  function manage_actions(id, inside_scrollbox, path_manage_script)
  {
@@ -141,7 +127,7 @@
         {
             var childs = main_div.firstChild.childNodes;
         }
-        for(i=0; i < childs.length; i++)
+        for(var i=0; i < childs.length; i++)
         {
             childs[i].style.display = 'none';
         }
@@ -179,7 +165,6 @@ function check_form_baskets(id_form)
                 {
                     if(reg_user.test(elems[i].value))
                     {
-                        //return 1; // Ok
                         found = true;
                     }
                     else
@@ -216,7 +201,6 @@ function check_form_baskets(id_form)
 function check_form_baskets_secondary(id_form)
 {
     var form = $(id_form);
-    var reg_user = new RegExp("^.+, .+ (.+)$");
     if (typeof(form) != 'undefined') {
         var found = false;
         var elems = document.getElementsByTagName('INPUT');
@@ -246,7 +230,6 @@ function check_form_baskets_secondary(id_form)
 function valid_actions_param(id_form)
 {
     var frm = $(id_form);
-    //var reg_chosen = new RegExp("_chosen$");
     var selects = frm.getElementsByTagName('select'); //Array
     for(var i=0; i< selects.length;i++)
     {
@@ -254,39 +237,6 @@ function valid_actions_param(id_form)
         {
             selectall_ext(selects[i].id);
         }
-    }
-}
-
-function moveInWF(way, collId, resId, role, userId)
-{
-    if (way != '' && collId != '' &&  resId != '' && role != '' && userId != '') {
-        //~ console.log(way);
-        //~ console.log(collId);
-        //~ console.log(resId);
-        //~ console.log(role);
-        //~ console.log(userId);
-        new Ajax.Request(
-            'index.php?display=true&module=basket&page=ajaxMoveInWF&display=true',
-            {
-                method:'post',
-                asynchronous : false,
-                parameters: {
-                    way : way,
-                    collId : collId,
-                    resId : resId,
-                    role : role,
-                    userId : userId
-                },
-                onSuccess: function(answer) {
-                    eval('response=' + answer.responseText);
-                    if (response.status > 0) {
-                        window.alert(response.error_txt);
-                     } else {
-                         //$('send').click();
-                     }
-                }
-            }
-        );  
     }
 }
 
@@ -328,7 +278,7 @@ function unlockDocument(resId){
     });
 }
 
-function islockForSignatureBook(resId, basketId){
+function islockForSignatureBook(resId, basketId, prodmode){
     $j.ajax({
         url: 'index.php?display=true&dir=actions&page=docLocker',
         type : 'POST',
@@ -343,7 +293,11 @@ function islockForSignatureBook(resId, basketId){
             if (response.lock) {
                 alert("Courrier verouillé par " + response.lockBy);
             } else {
-                location.href = "#/" + basketId + "/signatureBook/" + resId;
+                if (prodmode) {
+                    triggerAngular(true, "#/" + basketId + "/signatureBook/" + resId);
+                } else {
+                    triggerAngular(false, "#/" + basketId + "/signatureBook/" + resId);
+                }
             }
         }
     });

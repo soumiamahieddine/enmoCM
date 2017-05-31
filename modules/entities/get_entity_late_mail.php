@@ -1,22 +1,13 @@
 <?php
 
-/*
-*    Copyright 2008,20015 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   get_entity_vol
+* @author  dev <dev@maarch.org>
+* @ingroup entities
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
@@ -25,20 +16,30 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manag
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_graphics.php");
 require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'entities_tables.php');
+require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities_Abstract.php');
 
 $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 
 $graph = new graphics();
-$req = new request();
-$db = new Database();
-$sec = new security();
+$req   = new request();
+$db    = new Database();
+$sec   = new security();
 
-
-//var_dump($_POST['entities_chosen']);
 $entities_chosen = explode("#", $_POST['entities_chosen']);
+if($_REQUEST['sub_entities'] == 'true'){
+	$sub_entities = [];
+	foreach($entities_chosen as $value){
+		$sub_entities[] = users_entities_Abstract::getEntityChildren($value);
+	}
+	$sub_entities1 = "'";
+	for( $i=0; $i< count($sub_entities ); $i++){
+		$sub_entities1 .= implode("','",$sub_entities[$i]);
+		$sub_entities1 .= "','";
+	}
+	$sub_entities1 = substr($sub_entities1, 0, -2);
+}
 $entities_chosen = "'" . join("','", $entities_chosen) . "'";
-
 $status_chosen = '';
 $where_status = '';
 if (!empty($_POST['status_chosen'])) {
@@ -55,15 +56,15 @@ if (!empty($_POST['priority_chosen'])  || $_POST['priority_chosen'] === "0") {
     $where_priority = ' AND priority in (' . $priority_chosen . ') ';
 }
 
-$period_type = $_REQUEST['period_type'];
-$status_obj = new manage_status();
-$ind_coll = $sec->get_ind_collection('letterbox_coll');
-$table = $_SESSION['collections'][$ind_coll]['table'];
-$view = $_SESSION['collections'][$ind_coll]['view'];
+$period_type   = $_REQUEST['period_type'];
+$status_obj    = new manage_status();
+$ind_coll      = $sec->get_ind_collection('letterbox_coll');
+$table         = $_SESSION['collections'][$ind_coll]['table'];
+$view          = $_SESSION['collections'][$ind_coll]['view'];
 $search_status = $status_obj->get_searchable_status();
-$default_year = date('Y');
-$report_type = $_REQUEST['report_type'];
-$core_tools = new core_tools();
+$default_year  = date('Y');
+$report_type   = $_REQUEST['report_type'];
+$core_tools    = new core_tools();
 $core_tools->load_lang();
 
 //$title = _ENTITY_LATE_MAIL.' '.$date_title ;
@@ -72,6 +73,8 @@ $db = new Database();
 //Récupération de l'ensemble des types de documents
 if (!$_REQUEST['entities_chosen']){
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+}elseif($_REQUEST['sub_entities'] == 'true'){
+    $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") or entity_id IN (".$sub_entities1.") order by short_label");
 }else{
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label");
 }
@@ -221,7 +224,7 @@ elseif($report_type == 'array')
 {
     $data = array();
 }
-$has_data = false;
+$has_data = true;
 
 //Utilisation de la clause de sécurité de Maarch
 
@@ -233,7 +236,7 @@ if ($where_clause)
 $totalCourrier=array();
 $totalEntities = count($entities);
 
-for($i=0; $i<count($entities);$i++)
+for($i=0; $i<$totalEntities;$i++)
 {
     $valid = true;
 
@@ -241,7 +244,7 @@ for($i=0; $i<count($entities);$i++)
     {
 
         $stmt = $db->query("SELECT count(res_id) AS total FROM ".$view
-                    ." WHERE destination = ? and status not in ('DEL','BAD') and date(process_limit_date) <= date(now()) and closing_date is null".$where_date." ".$where_status." ".$where_priority,array($entities[$i]['ID']));
+                    ." WHERE destination = ? and status not in ('DEL','BAD') and date(process_limit_date) <= date(now()) and closing_date is null".$where_date." ".$where_status." ".$where_priority . $where_clause,array($entities[$i]['ID']));
         //$db->show();
 
         if( $stmt->rowCount() > 0)
@@ -258,10 +261,6 @@ for($i=0; $i<count($entities);$i++)
             {
                 array_push($data, array('LABEL' => $entities[$i]['LABEL'], 'VALUE' => $res->total ));
                 array_push($totalCourrier, $res->total);
-            }
-            if($res->total > 0)
-            {
-                $has_data = true;
             }
         }
         else
@@ -320,8 +319,8 @@ if ($has_data) {
         exit;
     } elseif($report_type == 'array') {
 	
-		$data2 = urlencode(json_encode($data));
-		$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
+		$_SESSION['export_data_stat'] = $data;
+		$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \")' style='float:right;'/>";
 		echo $form;
 		
         $graph->show_stats_array($title, $data);

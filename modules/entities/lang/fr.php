@@ -21,7 +21,7 @@
 
 /*************************** Entites management *****************/
 if (!defined("_ADD_ENTITY"))
-    define("_ADD_ENTITY","Entité ajoutée");
+    define("_ADD_ENTITY", "Entité ajoutée");
 if (!defined("_ENTITY_ADDITION"))
     define("_ENTITY_ADDITION", "Ajout d'une entité");
 if (!defined("_ENTITY_MODIFICATION"))
@@ -199,7 +199,9 @@ if (!defined("_THERE_ARE_NOW"))
 if (!defined("_DOC_IN_THE_DEPARTMENT"))
     define("_DOC_IN_THE_DEPARTMENT", "document(s) associé(s) à l'entité");
 if (!defined("_DEL_AND_REAFFECT"))
-    define("_DEL_AND_REAFFECT", "Supprimer et réaffecter");
+    define("_DEL_AND_REAFFECT", "Supprimer ET réaffecter");
+if (!defined("_NO_REAFFECT"))
+    define("_NO_REAFFECT", "Ne pas réaffecter");
 if (!defined("_THE_ENTITY"))
     define("_THE_ENTITY", "L'entité");
 if (!defined("_USERS_LINKED_TO"))
@@ -251,11 +253,11 @@ if (!defined("_CHOOSE_REPLACEMENT_DEPARTMENT"))
 if (!defined("_ENTITY_VOL_STAT"))
     define("_ENTITY_VOL_STAT", "Volume des courriers par entité");
 if (!defined("_ENTITY_VOL_STAT_DESC"))
-    define("_ENTITY_VOL_STAT_DESC", "Volume des courriers par entité");
+    define("_ENTITY_VOL_STAT_DESC", "Permet d'afficher le nombre de courriers enregistrés par service.");
 if (!defined("_NO_DATA_MESSAGE"))
     define("_NO_DATA_MESSAGE", "Pas assez de données");
 if (!defined("_MAIL_VOL_BY_ENT_REPORT"))
-    define("_MAIL_VOL_BY_ENT_REPORT", "Volume de courrier par service");
+    define("_MAIL_VOL_BY_ENT_REPORT", "Volume de courriers par service");
 if (!defined("_WRONG_DATE_FORMAT"))
     define("_WRONG_DATE_FORMAT", "Format de date incorrect");
 if (!defined("_ENTITY_PROCESS_DELAY"))
@@ -263,7 +265,7 @@ if (!defined("_ENTITY_PROCESS_DELAY"))
 if (!defined("_ENTITY_PROCESS_DELAY_DESC"))
     define("_ENTITY_PROCESS_DELAY_DESC", "Permet d'afficher le délai (en jour) de la création jusqu'à la clôture d'un courrier.");
 if (!defined("_ENTITY_LATE_MAIL"))
-    define("_ENTITY_LATE_MAIL", "Volume de courrier en retard par entité");
+    define("_ENTITY_LATE_MAIL", "Volume de courriers en retard par entité");
 if (!defined("_ENTITY_LATE_MAIL_DESC"))
     define("_ENTITY_LATE_MAIL_DESC", "Permet d'afficher le nombre de courriers qui n'ont pas été cloturés et dont la date limite de traitement a été dépassée.");
 
