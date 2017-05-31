@@ -12,6 +12,6 @@
     "require": {
         "slim/slim": "^3",
         "respect/validation": "^1.1",
-	"guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0"
     }
 }

@@ -159,4 +159,12 @@ $app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class .
 //priorities
 $app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':deletePriority');
 $app->put('/priorities',\Core\Controllers\PrioritiesController::class . ':updatePriorities');
+
+//actions
+$app->get('/actions', \Core\Controllers\ActionsController::class . ':getList');
+$app->get('/actions/{id}', \Core\Controllers\ActionsController::class . ':getById');
+$app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
+$app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
+$app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');
+
 $app->run();
