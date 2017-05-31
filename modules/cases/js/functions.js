@@ -20,7 +20,7 @@ function unlink_case(path_manage_script,case_id,res_id){
 	});
 }
 
-function tabClickedCases (TabId,Iframe){
+function tabClickedCases(TabId, Iframe) {
     $j(".detailsCasesIframe").css("display","none");    
 	$j("#"+Iframe).css("display","");
     $j(".detailsCasesButton").removeClass("detailsCasesClicked");

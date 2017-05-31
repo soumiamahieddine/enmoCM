@@ -21,7 +21,7 @@
 
 
 
-if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.7");
+if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v17.06");
 
 //if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
 if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "chrono_number"); // value res_id || chrono_number
@@ -234,7 +234,7 @@ if (!defined("_CHARACTER")) define("_CHARACTER", "caractère");
 if (!defined("_CHARACTERS")) define("_CHARACTERS", "caractères");
 if (!defined("MUST_BE_LESS_THAN")) define("MUST_BE_LESS_THAN", "ne doit pas faire plus de");
 if (!defined("_WRONG_FORMAT")) define("_WRONG_FORMAT", "n'est pas dans le bon format");
-if (!defined("_WELCOME")) define("_WELCOME", "Bienvenue sur Maarch !");
+if (!defined("_WELCOME")) define("_WELCOME", "Bienvenue sur Maarch Courrier !");
 if (!defined("_WELCOME_TITLE")) define("_WELCOME_TITLE", "Accueil");
 if (!defined("_HELP")) define("_HELP", "Aide");
 if (!defined("_SEARCH_ADV_SHORT")) define("_SEARCH_ADV_SHORT", "Recherche Avancée");
@@ -753,6 +753,7 @@ if (!defined("_DEPARTMENT_EXP")) define("_DEPARTMENT_EXP", "Service expéditeur"
 if (!defined("_INCOMING")) define("_INCOMING", "Courrier Arrivée");
 if (!defined("_OUTGOING")) define("_OUTGOING", "Courrier Départ");
 if (!defined("_INTERNAL")) define("_INTERNAL", "Courrier Interne");
+
 if (!defined("_GED_DOC")) define("_GED_DOC", "Document GED");
 if (!defined("_MARKET_DOCUMENT")) define("_MARKET_DOCUMENT", "Document de Sous-dossier");
 if (!defined("_EMPTY")) define("_EMPTY", "Vide");
@@ -1138,7 +1139,7 @@ if (!defined("_ANSWER_TYPES_DONE")) define("_ANSWER_TYPES_DONE", "Type(s) de ré
 if (!defined("_CLOSING_DATE")) define("_CLOSING_DATE", "Date de clôture");
 if (!defined("_FULLTEXT")) define("_FULLTEXT", "Plein texte");
 if (!defined("_FULLTEXT_HELP")) define("_FULLTEXT_HELP", "Recherche dans le contenu des courriers");
-if (!defined("_FULLTEXT_ERROR")) define("_FULLTEXT_ERROR", "Entrées invalides pour la recherche plein texte. Si vous avez mis le signe "*", il doit y avoir au moins 3 caractères devant, et pas de signes comme ,':!+");
+if (!defined("_FULLTEXT_ERROR")) define("_FULLTEXT_ERROR", "Entrées invalides pour la recherche plein texte. Si vous avez mis le signe \"*\", il doit y avoir au moins 3 caractères devant, et pas de signes comme ,':!+");
 if (!defined("_FILE_NOT_SEND")) define("_FILE_NOT_SEND", "Le fichier n'a pas été envoyé");
 if (!defined("_TRY_AGAIN")) define("_TRY_AGAIN", "Veuillez réessayer");
 if (!defined("_INDEX_UPDATED")) define("_INDEX_UPDATED", "Index mis à jour");
@@ -1822,13 +1823,15 @@ if (!defined("_CAS_SAML_NOT_SUPPORTED"))    define("_CAS_SAML_NOT_SUPPORTED", "L
 if (!defined("_PROTOCOL_NOT_SUPPORTED"))    define("_PROTOCOL_NOT_SUPPORTED", "Ce protocol du CAS n est pas prise en compte.");
 if (!defined("_USER_NOT_EXIST"))    define("_USER_NOT_EXIST", "Cet utilisateur n existe pas dans l application.");
 if (!defined("_VISIBLE_BY"))    define("_VISIBLE_BY", "Visible par");
+if (!defined("_TRACE_ACT"))    define("_TRACE_ACT", "Tracer l'action est incorrecte");
 
 // SEDA
 if (!defined("_FINAL_DISPOSITION")) define("_FINAL_DISPOSITION","Sort final");
 if (!defined("_CHOOSE_FINAL_DISPOSITION")) define("_CHOOSE_FINAL_DISPOSITION","Choix du sort final");
 if (!defined("_DESTROY")) define("_DESTROY","Destruction");
 if (!defined("_KEEP")) define("_KEEP","Conservation");
-if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Règle de retention");
+if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Règle de conservation");
+if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Durée de conservation");
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Tout désélectionner");
 

@@ -30,7 +30,7 @@
 
 $_REQUEST['docserverRoot'] = str_replace("/", DIRECTORY_SEPARATOR, $_REQUEST['docserverRoot']);
 
-$checkDocserverRoot = $Class_Install->checkDocserverRoot(
+$checkDocserverRoot = $Class_Install->checkPathRoot(
     $_REQUEST['docserverRoot']
 );
 

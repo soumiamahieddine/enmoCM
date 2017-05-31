@@ -20,7 +20,7 @@
  */
 
 
-if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.7");
+if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v17.06");
 
 //if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
 if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "res_id"); // value res_id || chrono_number
@@ -121,6 +121,7 @@ if (!defined("_INFOS_ACTIONS"))    define("_INFOS_ACTIONS", "You have to choose 
 if (!defined("_SAVE_CONFIRM"))    define("_SAVE_CONFIRM", "Record confirmation");
 if (!defined("_SAVED_ALREADY_EXIST"))    define("_SAVED_ALREADY_EXIST", "Recording already exists");
 if (!defined("_OK_FOR_CONFIRM"))    define("_OK_FOR_CONFIRM", "Do you confirm the recording?");
+if (!defined("_TRACE_ACT"))    define("_TRACE_ACT", "Follow the history is incorrect ");
 if (!defined("_INCLUDE_SUB_ENTITIES")) define("_INCLUDE_SUB_ENTITIES","Include sub-entities");
 if (!defined("_GRAPHICS_REPORTS")) define("_GRAPHICS_REPORTS","Graphics mode enabled");
 
@@ -1820,6 +1821,8 @@ if (!defined("_CHOOSE_FINAL_DISPOSITION")) define("_CHOOSE_FINAL_DISPOSITION","c
 if (!defined("_DESTROY")) define("_DESTROY","Destroy");
 if (!defined("_KEEP")) define("_KEEP","Keep");
 if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Retention rule");
+
+if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Duration current use");
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Unselect all");
 

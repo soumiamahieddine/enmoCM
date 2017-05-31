@@ -1,11 +1,11 @@
 function showNotesForm(path, width, height) {
     
     if(typeof(width)==='undefined'){
-        var width = '800';
+        width = '800';
     }
     
     if(typeof(height)==='undefined'){
-        var height = '480';
+        height = '480';
     }  
     
     new Ajax.Request(path,
@@ -27,7 +27,7 @@ function showNotesForm(path, width, height) {
     });
 }
 
-function validNotesForm (path, form_id) {
+function validNotesForm(path, form_id) {
 
     new Ajax.Request(path,
     {

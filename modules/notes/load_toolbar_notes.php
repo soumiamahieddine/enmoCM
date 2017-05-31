@@ -46,5 +46,8 @@ if($_SESSION['req'] == 'details'){
     }
 }
       
+//echo '{status : 0, nav : "'.$nav.'",content : "", error : "", exec_js : "'.addslashes($js).'"}';
+//echo "{status : 0, nav : '".$nav."',content : '', error : '', exec_js : '".addslashes($js)."'}";
+//echo '{"status" : 0, "nav" : "'.$nav.'","content" : "", "error" : "", "exec_js" : "'.addslashes($js).'"}';
 echo "{status : 0, nav : '".$nav."',content : '', error : '', exec_js : '".addslashes($js)."'}";
 exit ();

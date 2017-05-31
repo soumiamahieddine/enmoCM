@@ -277,7 +277,13 @@ function getTemplatesForSelect(path_to_script, attachment_type, selectToChange)
 }
 
 function showAttachmentsForm(path, width, height) {
-    
+    if(typeof(width)==='undefined'){
+        width = '800';
+    }
+
+    if(typeof(height)==='undefined'){
+        height = '480';
+    }
     new Ajax.Request(path,
     {
         method:'post',
@@ -373,6 +379,13 @@ function ValidAttachmentsForm(path, form_id, fromAngular) {
 }
 
 function modifyAttachmentsForm(path, width, height) {
+    if(typeof(width)==='undefined'){
+        width = '800';
+    }
+
+    if(typeof(height)==='undefined'){
+        height = '480';
+    }
 
     new Ajax.Request(path,
     {

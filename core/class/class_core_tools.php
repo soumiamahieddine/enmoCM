@@ -2439,8 +2439,6 @@ class core_tools extends functions
                 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>js/scriptaculous.js"></script>
                 <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/signature_pad/js/signature_pad.js" type="text/javascript"></script>
 
-                <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/swiper/dist/js/swiper.min.js" type="text/javascript"></script>
-
                 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
                 <script src="<?php  echo $_SESSION['config']['businessappurl'];?>tools/fingerprintjs2/fingerprint2.js" type="text/javascript"></script>
                 <?php
@@ -2464,7 +2462,6 @@ class core_tools extends functions
             . 'css/font-awesome/css/font-maarch.css'; ?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css';?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/iui.css';?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'tools/swiper/dist/css/swiper.min.css';?>" media="screen" />
 
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/t/maarch/maarch-theme.css';?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'tools/signature_pad/css/signature-pad.css';?>" media="screen" />
