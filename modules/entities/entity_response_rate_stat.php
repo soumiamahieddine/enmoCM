@@ -87,6 +87,7 @@ $content .='<div id="params">';
             $content .='<input type="checkbox" title="'._INCLUDE_SUB_ENTITIES.'" name="sub_entities" id="sub_entities" />'; 
             $content .= '<script>titleWithTooltipster("sub_entities");</script>';         
             $js .= '$j("#entities_chosen").chosen({width: "95%", disable_search_threshold: 10, search_contains: true});';
+
             $content.= '<br/><br/>';
             $status_obj = new manage_status();
             $status = $status_obj->get_searchable_status();

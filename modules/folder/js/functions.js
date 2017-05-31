@@ -70,6 +70,7 @@ function valid_viewfolder(url)
 			},
 			error: function (error) {
 				alert(error);
+
 			}
 		});
 	}
@@ -100,6 +101,7 @@ function get_folder_index(url, foldertype, id_div)
 				alert(error);
 			}
   		});
+
 	}
 }
 
@@ -162,6 +164,7 @@ function get_ft_opt_index(url)
 
 		});
 
+
     }
 }
 
@@ -185,6 +188,5 @@ function tabClick (TabId){
 
     $j(".frame-targ").css('display','none');
     $j('#frame-'+TabId).css('display','block');
-
 
 }

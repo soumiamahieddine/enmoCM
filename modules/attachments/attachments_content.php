@@ -756,6 +756,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                             $js .= 'loadSpecificTab(\'uniqueDetailsIframe\',\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&view_only=true&load&fromDetail=response&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp\');';
                         }else{
                             $js .= 'loadSpecificTab(\'uniqueDetailsIframe\',\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId='.$_SESSION['doc_id'].'&collId=letterbox_coll&fromDetail=attachments&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp\');';
+
                         }
                         
                     }

@@ -333,6 +333,5 @@ $time = $core_tools->get_session_time_expire();
 </div>
 </div> 
 <script type="text/javascript">$j('select').chosen({width: "226px", disable_search_threshold: 10,search_contains: true});</script>
-
 </body>
 </html>

@@ -611,7 +611,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='<td class="indexing_field">';
     if($data['type_contact'] == 'internal'){
         //$frm_str .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;color:#009DC5;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
-
         //MODIF:
         $frm_str .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\', \'#666\');$j(\'#type_contact_external_icon\').css(\'color\', \'#009DC5\');$j(\'#type_multi_contact_external_icon\').css(\'color\', \'#666\');"></i>';
     }elseif ($data['type_contact'] == 'external') {
@@ -735,6 +734,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<td><span class="red_asterisk" id="nature_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
       $frm_str .= '</tr>';
       $frm_str .= '<script>$j("#nature_id").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+
 
     /*** Recommande ***/
     $frm_str .= '<tr id="reference_number_tr" style="display:none;">';
@@ -897,6 +897,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<script>$j("#status").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
 
 
+
     $frm_str .= '</table>';
 
     $frm_str .= '</div>';
@@ -1016,7 +1017,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</select></td><td style="width:5%;"><i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
         $frm_str .= '</tr>';
         $frm_str .= '<script>$j("#thesaurus").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
-
         $frm_str .= '<style>#thesaurus_chosen{width:100% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
 
         /*****************/

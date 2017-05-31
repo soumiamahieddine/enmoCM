@@ -111,8 +111,25 @@ $app->get('/docserver', \Core\Controllers\DocserverController::class . ':getList
 $app->get('/docserver/{id}', \Core\Controllers\DocserverController::class . ':getById');
 
 //docserverType
-$app->get('/docserverType', \Core\Controllers\DocserverTypeController::class . ':getList');
-$app->get('/docserverType/{id}', \Core\Controllers\DocserverTypeController::class . ':getById');
+$app->get('/docserverType', \core\Controllers\DocserverTypeController::class . ':getList');
+$app->get('/docserverType/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
+
+
+/**
+*
+*
+*
+*
+*
+*
+*
+**/
+//admin_reports
+$app->get('/report/groups', \Core\Controllers\AdminReportsController::class . ':getList');
+$app->get('/report/groups/{id}', \Core\Controllers\AdminReportsController::class . ':getReportsTypesByXML');
+$app->put('/report/groups/{id}', \Core\Controllers\AdminReportsController::class . ':update');
+
+
 
 //attachments
 $app->get('/attachments', \Attachments\Controllers\AttachmentsController::class . ':getList');

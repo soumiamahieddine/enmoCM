@@ -4,6 +4,7 @@ function showNotesForm(path, width, height) {
         var width = '800';
     }   
 
+
     if(typeof(height)==='undefined'){
         height = '480';
     }  
@@ -26,7 +27,6 @@ function showNotesForm(path, width, height) {
 
     });
 }
-
 
 function validNotesForm(path, form_id) {
 

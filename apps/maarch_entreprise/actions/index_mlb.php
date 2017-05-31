@@ -447,8 +447,8 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<td><span class="red_asterisk" id="type_id_mandatory" '
             . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
-
  $frmStr .= '<script>$j("#type_id").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+
 
     
     /*** Priority ***/
@@ -476,6 +476,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
      $frmStr .= '<script>$j("#priority").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+
     /*** Confidentiality ***/
     $frmStr .= '<tr id="confidentiality_tr" style="display:' . $displayValue
             . ';">';
@@ -698,7 +699,6 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<td><span class="red_asterisk" id="nature_id_mandatory" '
             . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
-
     $frmStr .= '<script>$j("#nature_id").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
     /****** RECOMMANDE ******/
     $frmStr .= '<tr id="reference_number_tr" style="display:none;">';
@@ -765,6 +765,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $frmStr .= '</td>';
         $frmStr .= '</tr>';
         $frmStr .= '<script>$j("#destination").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+
     }
     
     /*** Process limit date ***/
@@ -821,6 +822,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
        $frmStr .= '<script>$j("#status").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+
     $frmStr .= '</table>';
     
     $frmStr .= '</div>';
@@ -887,6 +889,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $frmStr .= '</tr>';
         $frmStr .= '<tr id="parentFolderTr" style="display: none;text-align:center;"><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
        $frmStr .= '<script>$j("#folder").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+
     }
     
     /*** Thesaurus ***/
