@@ -13,14 +13,9 @@
         <authors>authors</authors>
         <docservers>docservers</docservers>
         <doctypes>doctypes</doctypes>
-        <extdocserver>ext_docserver</extdocserver>
-        <fulltext>fulltext</fulltext>
-        <groupsecurity>groupsecurity</groupsecurity>
         <history>history</history>
         <history_batch>history_batch</history_batch>
         <param>parameters</param>
-        <resgroups>resgroups</resgroups>
-        <resgroupcontent>resgroup_content</resgroupcontent>
         <security>security</security>
         <status>status</status>
         <usergroups>usergroups</usergroups>

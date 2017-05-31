@@ -47,23 +47,23 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
 	$tableName = 'res_view_attachments';
 	if (isset($_REQUEST['isOutgoing'])) {
             if (isset($_REQUEST['isVersion'])) {
-                $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type from "
+                $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                     . $tableName
                     . " where attachment_type = ? and res_id_version = ?", ['outgoing_mail', $objectId]);
 
             } else {
-                $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from "
+                $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                     . $tableName
                     . " where attachment_type = ? and res_id = ?", ['outgoing_mail', $objectId]);
             }
 	} else {
         if (isset($_REQUEST['isVersion'])) {
-            $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type from "
+            $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                 . $tableName
                 . " where attachment_type NOT IN ('converted_pdf','print_folder') and res_id_version = ?", array($objectId));
 
         } else {
-            $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from "
+            $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                 . $tableName
                 . " where (attachment_type NOT IN ('converted_pdf','print_folder')) and res_id = ?", array($objectId));
         }
@@ -80,7 +80,10 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
 		$_SESSION['visa']['last_resId_signed']['title'] = $line->title;
 		$_SESSION['visa']['last_resId_signed']['identifier'] = $line->identifier;
 		$_SESSION['visa']['last_resId_signed']['type_id'] = $line->type_id;
-		
+		$_SESSION['visa']['last_resId_signed']['dest_contact'] = $line->dest_contact_id;
+		$_SESSION['visa']['last_resId_signed']['dest_address'] = $line->dest_address_id;
+		$_SESSION['visa']['last_resId_signed']['dest_user'] = $line->dest_user;
+
 		include 'modules/visa/retrieve_attachment_from_cm.php';
 		
 		

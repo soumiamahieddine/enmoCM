@@ -68,7 +68,7 @@ $res = $res_db->fetchObject();
 $subject = $res->subject;
 //echo "<pre>".print_r($_SESSION,true)."</pre>";
 ?>
-<div id="sign_main_panel" title="<?php functions::xecho($subject);?>" class="panel" style="height:90%;"> 
+<div id="sign_main_panel" title="<?php functions::xecho($subject);?>" class="panel" style="height:100%;"> 
     <input type="hidden" value="<?php functions::xecho($s_id)?>" id="res_id_master" name="res_id_master" />
     <input type="hidden" value="<?php functions::xecho($att_id)?>" id="res_id_attach" name="res_id_attach" />
     <p id="info_landscape">Passez en mode paysage</p>
@@ -81,28 +81,22 @@ $subject = $res->subject;
         <?php
         }
         ?>-->
-            <div class="swiper-container">
-                <div class="swiper-wrapper">
-                        <?php
-                        if (count($_SESSION['user']['pathToSignature']) > 0){
-                            foreach ($_SESSION['user']['pathToSignature'] as $key=>$sign) {
-                                $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
-                                                . '_' . rand() . '.' . strtolower(pathinfo($sign,PATHINFO_EXTENSION));
-                                $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+            
+            <div id="list_tnl_sign">
+            <?php
+                if (count($_SESSION['user']['pathToSignature']) > 0){
+                    foreach ($_SESSION['user']['pathToSignature'] as $key=>$sign) {
+                        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
+                                        . '_' . rand() . '.' . strtolower(pathinfo($sign,PATHINFO_EXTENSION));
+                        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
 
-                                if (copy($sign, $filePathOnTmp)) {
-                                    $_SESSION['tab_copy_sign'][$key] = $_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp;
-                                    echo '<div class="swiper-slide"><img src="'.$_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp.'" alt="signature" style="width:100px;" onclick="loadImgSign(this);"/></div>';
-                                       
-                                }
-                        ?>
-                        <?php
+                        if (copy($sign, $filePathOnTmp)) {
+                            $_SESSION['tab_copy_sign'][$key] = $_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp;
+                            echo '<img src="'.$_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp.'" alt="signature" style="width:99px;background:#FFF;" onclick="loadImgSign(this);"/>';
                         }
                     }
-                    ?>
-                </div>
-                <!-- Add Scrollbar -->
-                <div class="swiper-scrollbar"></div>
+                }
+            ?>
             </div>
         </div>
         
@@ -126,9 +120,7 @@ $subject = $res->subject;
            <span class="action_but_sign stampBut" data-action="stampBut" id="stampBut"><i class="fa fa-certificate fa-2x" aria-hidden="true"></i></span>-->
            <span class="action_but_sign clearBut disabled_but" data-action="clearBut" id="clearBut"><i class="fa fa-eraser fa-2x" aria-hidden="true"></i>Effacer</span>
            <!-- <span class="action_but_sign addBut" data-action="addBut"><i class="fa fa-bookmark fa-2x" aria-hidden="true"></i>Ajouter</span> -->
-          <span class="action_but_sign saveBut disabled_but" data-action="saveBut" id="saveBut"><img src="<?php
-            functions::xecho($_SESSION['config']['businessappurl'])
-            ?>smartphone/img/sign.png" />Signer <span id="loading_sign" style="display:none;"><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></span></span>
+          <span class="action_but_sign saveBut disabled_but" data-action="saveBut" id="saveBut"><i class="fa fa-hand-o-up fa-2x" aria-hidden="true"></i>Signer <span id="loading_sign" style="display:none;"><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></span></span>
         </div>
     </div>  
 

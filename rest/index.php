@@ -96,6 +96,9 @@ $app = new \Slim\App([
     ]
 ]);
 
+//Initialize
+$app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize');
+
 //status
 $app->get('/status', \Core\Controllers\StatusController::class . ':getList');
 $app->get('/status/{id}', \Core\Controllers\StatusController::class . ':getById');
@@ -116,7 +119,9 @@ $app->get('/attachments', \Attachments\Controllers\AttachmentsController::class 
 $app->get('/attachments/{id}', \Attachments\Controllers\AttachmentsController::class . ':getById');
 $app->post('/attachments', \Attachments\Controllers\AttachmentsController::class . ':create');
 
-//basket
+//visa
+$app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
+$app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
 $app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
 $app->get('/signatureBook/{resId}/attachments', \Visa\Controllers\VisaController::class . ':getAttachmentsById');
 $app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\VisaController::class . ':getIncomingMailAndAttachmentsById');

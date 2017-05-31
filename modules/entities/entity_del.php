@@ -87,11 +87,9 @@ if(isset($_REQUEST['valid']))
             $db = new Database();
             if(isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['table']))
             {
-                if ($_SESSION['collections'][$i]['view'] == 'rm_documents_view') {
-                    $stmt = $db->query("UPDATE rm_organizations SET entity_id = ? WHERE entity_id = ?", array($_REQUEST['doc_entity_id'],$s_id));
-                } else {
-                    $stmt = $db->query("UPDATE ".$_SESSION['collections'][$i]['table']." SET destination = ? WHERE destination = ? AND status <> 'DEL'", array($_REQUEST['doc_entity_id'],$s_id));
-                }
+                
+                $stmt = $db->query("UPDATE ".$_SESSION['collections'][$i]['table']." SET destination = ? WHERE destination = ? AND status <> 'DEL'", array($_REQUEST['doc_entity_id'],$s_id));
+
                 //$db->show();
             }
         }

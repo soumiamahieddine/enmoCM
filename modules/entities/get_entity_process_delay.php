@@ -9,12 +9,24 @@ $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 
 $graph = new graphics();
-$req = new request();
-$sec = new security();
-$db = new Database();
+$req   = new request();
+$sec   = new security();
+$db    = new Database();
 
 //var_dump($_POST['entities_chosen']);
 $entities_chosen = explode("#", $_POST['entities_chosen']);
+if($_REQUEST['sub_entities'] == 'true'){
+	$sub_entities = [];
+	foreach($entities_chosen as $value){
+		$sub_entities[] = users_entities_Abstract::getEntityChildren($value);
+	}
+	$sub_entities1 = "'";
+	for( $i=0; $i< count($sub_entities ); $i++){
+		$sub_entities1 .= implode("','",$sub_entities[$i]);
+		$sub_entities1 .= "','";
+	}
+	$sub_entities1 = substr($sub_entities1, 0, -2);
+}
 $entities_chosen = "'" . join("','", $entities_chosen) . "'";
 
 $status_chosen = '';
@@ -34,20 +46,22 @@ if (!empty($_POST['priority_chosen']) || $_POST['priority_chosen'] === "0") {
     $where_priority = ' AND priority in (' . $priority_chosen . ') ';
 }
 
-$period_type = $_REQUEST['period_type'];
-$status_obj = new manage_status();
-$ind_coll = $sec->get_ind_collection('letterbox_coll');
-$table = $_SESSION['collections'][$ind_coll]['table'];
-$view = $_SESSION['collections'][$ind_coll]['view'];
+$period_type   = $_REQUEST['period_type'];
+$status_obj    = new manage_status();
+$ind_coll      = $sec->get_ind_collection('letterbox_coll');
+$table         = $_SESSION['collections'][$ind_coll]['table'];
+$view          = $_SESSION['collections'][$ind_coll]['view'];
 $search_status = $status_obj->get_searchable_status();
-$default_year = date('Y');
-$report_type = $_REQUEST['report_type'];
-$core_tools = new core_tools();
+$default_year  = date('Y');
+$report_type   = $_REQUEST['report_type'];
+$core_tools    = new core_tools();
 $core_tools->load_lang();
 
 //Récupération de l'ensemble des types de documents
 if (!$_REQUEST['entities_chosen']){
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+}elseif($_REQUEST['sub_entities'] == 'true'){
+	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") or entity_id IN (".$sub_entities1.") order by short_label",array());
 }else{
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label",array());
 }
@@ -147,7 +161,6 @@ else if($period_type == 'custom_period')
 		exit();
 	}
 	
-	
 	if( preg_match($_ENV['date_pattern'],$_REQUEST['date_start'])==false  && $_REQUEST['date_start'] <> ''  )
 	{
 		
@@ -188,7 +201,6 @@ else
 	exit();
 }
 
-
 //$title = _ENTITY_PROCESS_DELAY.' '.$date_title ;
 $db = new Database();
 
@@ -201,18 +213,18 @@ elseif($report_type == 'array')
 {
     $data = array();
 }
-$has_data = false;
+$has_data = true;
 
 //Utilisation de la clause de sécurité de Maarch
 
 $where_clause = $sec->get_where_clause_from_coll_id('letterbox_coll');
-//var_dump($where_clause);
+
 if ($where_clause)
     $where_clause = " and ".$where_clause;
 	
 $totalEntities = count($entities);
 	
-for($i=0; $i<count($entities);$i++)
+for($i=0; $i<$totalEntities;$i++)
 {
     //Permet d'afficher ou non les entités dont le nombre de courrier est égal à 0
 	$valid = true;
@@ -244,15 +256,11 @@ for($i=0; $i<count($entities);$i++)
             if ($nbDoc == 0) $nbDoc = 1;
             if($report_type == 'graph')
             {
-                array_push($val_an, (string)round($tmp / $nbDoc,0));
+                array_push($val_an, (string)round($tmp / $nbDoc, 1));
             }
             elseif($report_type == 'array')
             {
-                array_push($data, array('LABEL' => $db->show_string($entities[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,0)));
-            }
-            if($tmp / $nbDoc > 0)
-            {
-                $has_data = true;
+                array_push($data, array('LABEL' => $db->show_string($entities[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc, 1)));
             }
         }
         else
@@ -281,14 +289,10 @@ if($report_type == 'graph')
     }
 
     $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=300&title=".$title."&labelY="._N_DAYS;
-    for($i=0;$i<count($_SESSION['labels1']);$i++)
-    {
-        //$src1 .= "&labels[]=".$_SESSION['labels1'][$i];
-    }
+
     $_SESSION['GRAPH']['VALUES']='';
     for($i=0;$i<count($val_an);$i++)
     {
-        //$src1 .= "&values[]=".$val_an[$i];
         $_SESSION['GRAPH']['VALUES'][$i]=$val_an[$i];
     }
 }
@@ -297,30 +301,20 @@ elseif($report_type == 'array')
     array_unshift($data, array('LABEL' => _DOCTYPE, 'VALUE' => _PROCESS_DELAY));
 }
 
-if ( $has_data)
-{
-    if($report_type == 'graph')
-    {
-        $labels1 = "'".implode("','", $_SESSION['labels1'])."'";
-        echo "{label: [".$labels1."] ".
-            ", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
-            ", title: '".addslashes($title)."'}";
-        exit;
-     }
-    elseif($report_type == 'array')
-    {
-		$data2 = urlencode(json_encode($data));
-		$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
-		echo $form;
-		
-        $graph->show_stats_array($title, $data);
-    }
+if($report_type == 'graph') {
+    $labels1 = "'".implode("','", $_SESSION['labels1'])."'";
+    echo "{label: [".$labels1."] ".
+        ", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
+        ", title: '".addslashes($title)."'}";
+    exit;
+
+} elseif($report_type == 'array') {
+	$_SESSION['export_data_stat'] = $data;
+	$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \")' style='float:right;'/>";
+	echo $form;
+	
+    $graph->show_stats_array($title, $data);
 }
-else
-{
-    $error = _NO_DATA_MESSAGE;
-    echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
-}
+
 exit();
 
-?>

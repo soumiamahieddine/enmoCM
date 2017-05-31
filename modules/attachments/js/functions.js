@@ -1,8 +1,7 @@
 // Date + 60 jours, utile pour les transmissions
 function defineBackDate() {
-	var delay;
 	var date1 = new Date();
-	delay = $('withDelay').value
+	var delay = $j('#withDelay')[0].value;
 	date1.setDate(date1.getDate() + Number(delay));
 	var str_date = date1.toLocaleDateString();
     var t = str_date.split('/');
@@ -168,14 +167,13 @@ function hideInput(currentValue, editDate) {
 function addNewTransmission(prePath, docId, canCreateContact, langString, user) {
   var size = $j('#transmission')[0].childElementCount;
   
-  var extra_js = '$("add").value="Edition en cours ...";setInterval(function(){checkEditingDoc("'+user+'")},500);$("add").disabled="disabled";$("add").style.opacity="0.5";';
+  var extra_js = '$("add").value="Edition en cours ...";editingDoc("'+user+'");$("add").disabled="disabled";$("add").style.opacity="0.5";';
 
   if ($('newTransmissionButton' + size).style.opacity == 1) {
 
     var div = document.createElement('div');
     $('transmission').appendChild(div);
     size = $('transmission').childElementCount;
-    //var lang = langString.split("#");
 
     $('newTransmissionButton' + (size - 1)).style.display = "none";
     $("divOr" + (size - 1)).style.display = "none";
@@ -241,7 +239,7 @@ function addNewTransmission(prePath, docId, canCreateContact, langString, user) 
                     "<input type='hidden' id='transmissionContactidAttach" + size + "' name='transmissionContactidAttach" + size + "' value='' onchange='saveContactToSession(\"" + size + "\", \"" + prePath + "\")' />" +
                     "<input type='hidden' id='transmissionAddressidAttach" + size + "' name='transmissionAddressidAttach" + size + "' value='' />" +
                     "<p><div style='float: left;display: none;margin-bottom: 5px' id='paraEdit" + size + "'>" +
-                      "<input type='button' style='margin-top: 0' value='" + "Editer" + "' name='transmissionEdit" + size + "' id='transmissionEdit" + size + "' class='button' " +
+                      "<input type='button' style='margin-top: 0' value='" + "Editer" + "' name='transmissionEdit" + size + "' id='transmissionEdit" + size + "' class='button transmissionEdit' " +
                         "onclick='showAppletLauncher(\"" + prePath + "index.php?display=true&module=content_management&page=applet_modal_launcher&transmissionNumber=" + size + "&objectType=transmission&objectId=\"+$(\"transmissionTemplate" + size + "\").value+\"&attachType=transmission&objectTable=res_letterbox&contactId=\"+$(\"contactidAttach\").value+\"&addressId=\"+$(\"addressidAttach\").value+\"&chronoAttachment=\"+$(\"transmissionChrono" + size + "\").value+\"&titleAttachment=\"+$(\"transmissionTitle" + size + "\").value+\"&back_date=\"+$(\"transmissionBackDate" + size + "\").value+\"&resMaster=" + docId + "\", \"100px\", \"500px\");" +
                         "hideEditAndAddButton(paraEdit" + size + ");"+ extra_js +"' />" +
                       "<span style='display: none' id='divOr" + size + "'>" +
@@ -272,70 +270,26 @@ function getTemplatesForSelect(path_to_script, attachment_type, selectToChange)
     {
       method:'post',
       parameters: {attachment_type: attachment_type},
-      onSuccess: function(answer){
+      onSuccess: function(answer) {
         $(selectToChange).innerHTML = answer.responseText;
       }
     });
 }
 
-function hide_index(mode_hide, display_val)
-{
-	var tr_link = $('attach_link_tr');
-	var tr_title = $('attach_title_tr');
-	var indexes = $('indexing_fields');
-	var comp_index = $('comp_indexes');
-	if(mode_hide == true)
-	{
-		if(tr_link && display_val)
-		{
-			Element.setStyle(tr_link, {display : display_val});
-			Element.setStyle(tr_title, {display : display_val});
-		}
-		if(indexes)
-		{
-			Element.setStyle(indexes, {display : 'none'});
-		}
-		if(comp_index)
-		{
-			Element.setStyle(comp_index, {display : 'none'});
-		}
-		//show link and hide index
-	}
-	else
-	{
-		if(tr_link && display_val)
-		{
-			Element.setStyle(tr_link, {display : 'none'});
-			Element.setStyle(tr_title, {display : 'none'});
-		}
-		if(indexes)
-		{
-			Element.setStyle(indexes, {display : display_val});
-
-		}
-		if(comp_index)
-		{
-			Element.setStyle(comp_index, {display : 'block'});
-		}
-		//hide link and show index
-	}
-}
-
 function showAttachmentsForm(path, width, height) {
-    
     if(typeof(width)==='undefined'){
-        var width = '800';
-    }
-    
-    if(typeof(height)==='undefined'){
-        var height = '480';
+        width = '800';
     }
 
+    if(typeof(height)==='undefined'){
+        height = '480';
+    }
     new Ajax.Request(path,
     {
         method:'post',
-        parameters: { url : path
-                    },
+        parameters: {
+            url : path
+        },
         onSuccess: function(answer) {
             eval("response = "+answer.responseText);
 
@@ -350,7 +304,7 @@ function showAttachmentsForm(path, width, height) {
 }
 
 function get_num_rep(res_id){
-	trig_elements = document.getElementsByClassName('trig');
+	var trig_elements = document.getElementsByClassName('trig');
 	for (i=0; i<trig_elements.length; i++){
 		var id = trig_elements[i].id;
 		var splitted_id = id.split("_");
@@ -360,7 +314,6 @@ function get_num_rep(res_id){
 }
 function ValidAttachmentsForm(path, form_id, fromAngular) {
 
-    //console.log(Form.serialize(form_id));
     new Ajax.Request(path,
     {
         asynchronous: false,
@@ -416,18 +369,6 @@ function ValidAttachmentsForm(path, form_id, fromAngular) {
                             $('viewframevalidRep' + num_rep + '_' + rep_id).src = $('viewframevalidRep' + num_rep + '_' + rep_id).src;
                     }
 
-                    if ($('ans_' + num_rep + '_' + rep_id)) {
-                        $('ans_' + num_rep + '_' + rep_id).innerHTML = response.title;
-                        if (response.isVersion) {
-                            $('ans_' + num_rep + '_' + rep_id).setAttribute('onclick', 'updateFunctionModifRep(\'' + response.majFrameId + '\', ' + num_rep + ', ' + response.isVersion + ');');
-                            $('ans_' + num_rep + '_' + rep_id).id = 'ans_' + num_rep + '_' + response.majFrameId;
-                        }
-                    }
-
-                    if ($('cur_idAffich')) {
-                        console.log('test refresh');
-                        loadNewId2('index.php?display=true&module=visa&page=update_visaPage', res_id_master, $('coll_id').value);
-                    }
                     eval(response.exec_js);
                 }
             } else {
@@ -438,14 +379,13 @@ function ValidAttachmentsForm(path, form_id, fromAngular) {
 }
 
 function modifyAttachmentsForm(path, width, height) {
-
     if(typeof(width)==='undefined'){
-        var width = '800';
+        width = '800';
     }
-    
+
     if(typeof(height)==='undefined'){
-        var height = '480';
-    }  
+        height = '480';
+    }
 
     new Ajax.Request(path,
     {
@@ -467,8 +407,6 @@ function modifyAttachmentsForm(path, width, height) {
 
 function setFinalVersion(path) {  
 
-var check = $('final').value;
-
     new Ajax.Request(path,
     {
         asynchronous:false,
@@ -486,8 +424,8 @@ var check = $('final').value;
 }
 
 function loadSelectedContact() {
-    ContactAndAddress = $('selectContactIdRes').value;
-    value = ContactAndAddress.split("#");  
+    var ContactAndAddress = $('selectContactIdRes').value;
+    var value = ContactAndAddress.split("#");
     $('contactidAttach').value=value[0];
     $('addressidAttach').value=value[1];
     $('contact_attach').value=value[2];
@@ -557,10 +495,8 @@ function setButtonStyle(radioButton, fileFormat, statusValidateButton) {
     }
 }
 
-
 function cleanTitle(str) {
     //permet de supprimer les # dans le titre qui bloque l'ouverture de l'applet java
     var res = str.replace(/#/g, " ");
     return(res);
 }
-

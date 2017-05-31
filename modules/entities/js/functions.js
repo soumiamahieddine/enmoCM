@@ -303,16 +303,8 @@ function validate_difflist_type() {
   
 }
 
-function saveListDiff(
-    mode,
-    table, 
-    collId, 
-    resId,
-    userId,
-    concatList,
-    onlyCC
-) {    console.log('test save_list_diff');
 
+function saveListDiff(mode, table, collId, resId, userId, concatList, onlyCC) {
     new Ajax.Request(
         'index.php?display=true&module=entities&page=save_list_diff',
         {
@@ -328,9 +320,7 @@ function saveListDiff(
             },
             onSuccess: function(answer){
                 eval("response = "+answer.responseText);
-                //alert(answer.responseText);
                 if (response.status == 0) {
-                    //alert(window.opener.document);
                     var div_diff_list_message = $('div_diff_list_message');
                     if (div_diff_list_message != null) {
                         div_diff_list_message.innerHTML = response.div_content;

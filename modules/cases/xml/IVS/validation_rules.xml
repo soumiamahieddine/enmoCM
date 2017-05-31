@@ -23,6 +23,7 @@
     <validationRule name="cases_list" extends="standardForm" mode="error">
     	<parameter name="module" type="identifier" />
         <parameter name="origin" type="string" />
+        <parameter name="baskets" type="string" />
         <parameter name="template" type="identifier" />
 		<parameter name="url" type="url" />
     </validationRule>

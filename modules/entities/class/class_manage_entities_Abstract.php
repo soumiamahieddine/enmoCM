@@ -1413,11 +1413,9 @@ abstract class entity_Abstract extends functions
                 //if(!$this->test_column($_SESSION['collections'][$i]['view'], 'destination')) continue;
                 
                 $db = new Database();
-                if ($_SESSION['collections'][$i]['view'] == 'rm_documents_view') {
-                    $stmt = $db->query("select res_id from ".$_SESSION['collections'][$i]['view']." where originating_agency_entity_id = ?",array($s_id));
-                } else {
-                    $stmt = $db->query("select res_id from ".$_SESSION['collections'][$i]['view']." where destination = ?",array($s_id));
-                }
+                
+                $stmt = $db->query("select res_id from ".$_SESSION['collections'][$i]['view']." where destination = ?",array($s_id));
+                
                 //$this->show();
                 if($stmt->rowCount() > 0)
                 {

@@ -10,7 +10,8 @@ declare function valid_action_form(a1: string, a2: string, a3: string, a4: numbe
 declare function $j(selector: string) : any;
 declare function showAttachmentsForm(path: string) : void;
 declare function modifyAttachmentsForm(path: string, width: string, height: string) : void;
-declare var signatureBookView : string;
+
+declare var angularGlobals : any;
 
 
 @Pipe({ name: 'safeUrl' })
@@ -22,7 +23,7 @@ export class SafeUrlPipe implements PipeTransform {
 }
 
 @Component({
-  templateUrl: signatureBookView,
+  templateUrl: angularGlobals["signature-bookView"],
 })
 export class SignatureBookComponent implements OnInit {
 
@@ -36,7 +37,9 @@ export class SignatureBookComponent implements OnInit {
         documents               : [],
         attachments             : [],
         //histories               : [],
-        resList                 : []
+        resList                 : [],
+        resListIndex            : 0,
+        lang                    : {}
     };
 
     rightSelectedThumbnail      : number    = 0;
@@ -81,72 +84,69 @@ export class SignatureBookComponent implements OnInit {
         $j('#container').width("99%");
     }
 
-    ngOnInit(): void {
+    ngOnInit() : void {
         this.prepareSignatureBook();
+        this.coreUrl = angularGlobals.coreUrl;
+
         this.loading = true;
+
         this.route.params.subscribe(params => {
             this.resId      = +params['resId'];
             this.basketId   = params['basketId'];
 
             lockDocument(this.resId);
             setInterval(() => {lockDocument(this.resId)}, 50000);
-            this.http.get('index.php?display=true&page=initializeJsGlobalConfig')
+            this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
                 .map(res => res.json())
                 .subscribe((data) => {
-                    this.coreUrl = data.coreurl;
-                    this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
-                        .map(res => res.json())
-                        .subscribe((data) => {
-                            if (data.error) {
-                                location.hash = "";
-                                location.search = "";
-                                return;
-                            }
-                            this.signatureBook = data;
+                    if (data.error) {
+                        location.hash = "";
+                        location.search = "";
+                        return;
+                    }
+                    this.signatureBook = data;
 
-                            this.headerTab              = 1;
-                            this.leftSelectedThumbnail  = 0;
-                            this.rightSelectedThumbnail = 0;
-                            this.leftViewerLink         = "";
-                            this.rightViewerLink        = "";
-                            this.showLeftPanel          = true;
-                            this.showRightPanel         = true;
-                            this.showResLeftPanel       = true;
-                            this.showTopLeftPanel       = false;
-                            this.showTopRightPanel      = false;
-                            this.showAttachmentPanel    = false;
-                            this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
-                            this.visaViewerLink  = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
-                            this.histViewerLink  = "index.php?display=true&page=show_history_tab&resId=" + this.resId + "&collId=letterbox_coll";
-                            this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
-                            this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + this.resId + "&noModification=true&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
+                    this.headerTab              = 1;
+                    this.leftSelectedThumbnail  = 0;
+                    this.rightSelectedThumbnail = 0;
+                    this.leftViewerLink         = "";
+                    this.rightViewerLink        = "";
+                    this.showLeftPanel          = true;
+                    this.showRightPanel         = true;
+                    this.showResLeftPanel       = true;
+                    this.showTopLeftPanel       = false;
+                    this.showTopRightPanel      = false;
+                    this.showAttachmentPanel    = false;
+                    this.notesViewerLink = "index.php?display=true&module=notes&page=notes&identifier=" + this.resId + "&origin=document&coll_id=letterbox_coll&load&size=full";
+                    this.visaViewerLink  = "index.php?display=true&page=show_visa_tab&module=visa&resId=" + this.resId + "&collId=letterbox_coll&visaStep=true";
+                    this.histViewerLink  = "index.php?display=true&page=show_history_tab&resId=" + this.resId + "&collId=letterbox_coll";
+                    this.linksViewerLink = "index.php?display=true&page=show_links_tab&id=" + this.resId;
+                    this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + this.resId + "&noModification=true&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
 
-                            this.leftContentWidth  = "44%";
-                            this.rightContentWidth = "44%";
-                            if (this.signatureBook.documents[0]) {
-                                this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
-                                if (this.signatureBook.documents[0].category_id == "outgoing") {
-                                    this.headerTab = 3;
-                                }
-                            }
-                            if (this.signatureBook.attachments[0]) {
-                                this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
-                            }
+                    this.leftContentWidth  = "44%";
+                    this.rightContentWidth = "44%";
+                    if (this.signatureBook.documents[0]) {
+                        this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
+                        if (this.signatureBook.documents[0].category_id == "outgoing") {
+                            this.headerTab = 3;
+                        }
+                    }
+                    if (this.signatureBook.attachments[0]) {
+                        this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
+                    }
 
-                            this.displayPanel("RESLEFT");
-                            this.loading = false;
+                    this.displayPanel("RESLEFT");
+                    this.loading = false;
 
-                            setTimeout(() => {
-                                $j("#resListContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
-                                $j("#rightPanelContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
-                                $j(".pjSign").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
-                                $j("#resListContent").scrollTop(0);
-                                $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
-                                $j("#obsVersion").tooltipster({
-                                    interactive: true
-                                });
-                            }, 0);
-                        });
+                    setTimeout(() => {
+                        $j("#rightPanelContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
+                        $j(".pjSign").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
+                        if ($j(".tooltipstered").length == 0) {
+                            $j("#obsVersion").tooltipster({
+                                interactive: true
+                            });
+                        }
+                    }, 0);
                 });
         });
     }
@@ -177,6 +177,7 @@ export class SignatureBookComponent implements OnInit {
             }
         }
 
+        unlockDocument(this.resId);
         if (idToGo >= 0) {
             $j("#send").removeAttr("disabled");
             $j("#send").css("opacity", "1");
@@ -193,7 +194,11 @@ export class SignatureBookComponent implements OnInit {
 
     changeRightViewer(index: number) {
         this.showAttachmentPanel = false;
-        this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
+        if (this.signatureBook.attachments[index]) {
+            this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
+        } else {
+            this.rightViewerLink = "";
+        }
         this.rightSelectedThumbnail = index;
     }
 
@@ -226,6 +231,23 @@ export class SignatureBookComponent implements OnInit {
             } else {
                 this.rightContentWidth = "44%";
                 this.leftContentWidth = "44%";
+                if (this.signatureBook.resList.length == 0 || this.signatureBook.resList[0].allSigned == null) {
+                    this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList/details')
+                        .map(res => res.json())
+                        .subscribe((data) => {
+                            this.signatureBook.resList = data.resList;
+                            this.signatureBook.resList.forEach((value: any, index: number) => {
+                                if (value.res_id == this.resId) {
+                                    this.signatureBook.resListIndex = index;
+                                }
+                            });
+                            setTimeout(() => {
+                                $j("#resListContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
+                                $j("#resListContent").scrollTop(0);
+                                $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
+                            }, 0);
+                        });
+                }
             }
         } else if (panel == "MIDDLE") {
             this.showRightPanel = !this.showRightPanel;
@@ -309,7 +331,11 @@ export class SignatureBookComponent implements OnInit {
 
     delAttachment(attachment: any) {
         if (attachment.canDelete) {
-            let r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+            if (this.signatureBook.attachments.length <= 1) {
+                var r = confirm('Attention, ceci est votre dernière pièce jointe pour ce courrier, voulez-vous vraiment la supprimer ?');
+            } else {
+                var r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+            }
             if (r) {
                 var resId: number;
                 if (attachment.res_id == 0) {
@@ -367,7 +393,9 @@ export class SignatureBookComponent implements OnInit {
                                 allSigned = false;
                             }
                         });
-                        this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = allSigned;
+                        if (this.signatureBook.resList.length > 0) {
+                            this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = allSigned;
+                        }
                     } else {
                         alert(data.error);
                     }
@@ -401,7 +429,9 @@ export class SignatureBookComponent implements OnInit {
                     this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                     this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
                     this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;
-                    this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
+                    if (this.signatureBook.resList.length > 0) {
+                        this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
+                    }
                 } else {
                     alert(data.error);
                 }
@@ -443,18 +473,39 @@ export class SignatureBookComponent implements OnInit {
         if ($j("#signatureBookActions option:selected")[0].value != "") {
             unlockDocument(this.resId);
 
-            valid_action_form(
-                'empty',
-                'index.php?display=true&page=manage_action&module=core',
-                this.signatureBook.currentAction.id,
-                this.resId,
-                'res_letterbox',
-                'null',
-                'letterbox_coll',
-                'page',
-                false,
-                [$j("#signatureBookActions option:selected")[0].value]
-            );
+            if (this.signatureBook.resList.length == 0) {
+                this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList')
+                    .map(res => res.json())
+                    .subscribe((data) => {
+                        this.signatureBook.resList = data.resList;
+
+                        valid_action_form(
+                            'empty',
+                            'index.php?display=true&page=manage_action&module=core',
+                            this.signatureBook.currentAction.id,
+                            this.resId,
+                            'res_letterbox',
+                            'null',
+                            'letterbox_coll',
+                            'page',
+                            false,
+                            [$j("#signatureBookActions option:selected")[0].value]
+                        );
+                    });
+            } else {
+                valid_action_form(
+                    'empty',
+                    'index.php?display=true&page=manage_action&module=core',
+                    this.signatureBook.currentAction.id,
+                    this.resId,
+                    'res_letterbox',
+                    'null',
+                    'letterbox_coll',
+                    'page',
+                    false,
+                    [$j("#signatureBookActions option:selected")[0].value]
+                );
+            }
         } else {
             alert("Aucune action choisie");
         }

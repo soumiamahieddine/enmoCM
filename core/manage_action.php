@@ -140,8 +140,7 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
         exit();
     }
 }
-elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values'])&& $_POST['values'] != 'none#' && !empty($_POST['new_status']) && !empty($_POST['table']))
-{
+elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values']) && !empty($_POST['new_status']) && !empty($_POST['table'])){
     $stmt = $db->query("select id from status where id = ?", array($_POST['new_status']));
     $lineStatus = $stmt->fetchObject();
     if ($lineStatus->id <> '') {
@@ -150,7 +149,7 @@ elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values'])&& $_PO
         for ($i=0; $i<count($arr_id );$i++) {
             $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
             $result .= $arr_id[$i].'#';
-            if (trim($_POST['new_status']) <> '') {
+            if (trim($_POST['new_status']) <> '' && is_numeric($arr_id[$i])) {
                 if ($_POST['table'] == 'folders') {
                     $query_str = "update " . $_POST['table'] 
                         .  " set status = ? where folders_system_id = ?";
@@ -166,10 +165,10 @@ elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values'])&& $_PO
                 }
             }
         }
-        echo "{status : 0, error_txt : '".addslashes(_STATUS_UPDATED.' : '.functions::xssafe($_POST['new_status']))."'}";
+        echo json_encode(['status' => 0, 'error_txt' => _STATUS_UPDATED.' : '.functions::xssafe($_POST['new_status']) ]);
         exit();
     } else {
-        echo "{status : 0, error_txt : '".addslashes(_STATUS_NOT_EXISTS.' : '.functions::xssafe($_POST['new_status']))."'}";
+        echo json_encode(['status' => 0, 'error_txt' => _STATUS_NOT_EXISTS.' : '.functions::xssafe($_POST['new_status']) ]);
         exit();
     }
 }

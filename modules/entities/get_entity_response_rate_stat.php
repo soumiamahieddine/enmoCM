@@ -1,4 +1,5 @@
 <?php
+
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
@@ -8,14 +9,24 @@ require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'entit
 
 $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
-
 $graph = new graphics();
-$req = new request();
-$db = new Database();
-$sec = new security();
+$req   = new request();
+$db    = new Database();
+$sec   = new security();
 
-//var_dump($_POST['entities_chosen']);
 $entities_chosen = explode("#", $_POST['entities_chosen']);
+if($_REQUEST['sub_entities'] == 'true'){
+	$sub_entities = [];
+	foreach($entities_chosen as $value){
+		$sub_entities[] = users_entities_Abstract::getEntityChildren($value);
+	}
+	$sub_entities1 = "'";
+	for( $i=0; $i< count($sub_entities ); $i++){
+		$sub_entities1 .= implode("','",$sub_entities[$i]);
+		$sub_entities1 .= "','";
+	}
+	$sub_entities1 = substr($sub_entities1, 0, -2);
+}
 $entities_chosen = "'" . join("','", $entities_chosen) . "'";
 
 $status_chosen = '';
@@ -34,24 +45,24 @@ if (!empty($_POST['priority_chosen'])  || $_POST['priority_chosen'] === "0") {
     $where_priority = ' AND priority in (' . $priority_chosen . ') ';
 }
 
-
-$period_type = $_REQUEST['period_type'];
-$status_obj = new manage_status();
-$ind_coll = $sec->get_ind_collection('letterbox_coll');
-$table = $_SESSION['collections'][$ind_coll]['table'];
-$view = $_SESSION['collections'][$ind_coll]['view'];
+$period_type   = $_REQUEST['period_type'];
+$status_obj    = new manage_status();
+$ind_coll      = $sec->get_ind_collection('letterbox_coll');
+$table         = $_SESSION['collections'][$ind_coll]['table'];
+$view          = $_SESSION['collections'][$ind_coll]['view'];
 $search_status = $status_obj->get_searchable_status();
-$default_year = date('Y');
-$report_type = $_REQUEST['report_type'];
-$core_tools = new core_tools();
+$default_year  = date('Y');
+$report_type   = $_REQUEST['report_type'];
+$core_tools    = new core_tools();
 $core_tools->load_lang();
 
-
-//Récupération de l'ensemble des types de documents
+//Récupération de l'ensemble des entités
 if (!$_REQUEST['entities_chosen']){
 	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+}elseif($_REQUEST['sub_entities'] == 'true'){
+	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") or entity_id IN (".$sub_entities1.") order by short_label",array());
 }else{
-	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label",array());
+	$stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label",array());	
 }
 
 $entities = array();
@@ -60,9 +71,7 @@ while($res = $stmt->fetchObject())
     array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
 }
 
-
 $status = array();
-
 
 if($period_type == 'period_year')
 {
@@ -194,9 +203,8 @@ else
 }
 
 $has_data = false;
-//$title = _RESPONSE_RATE_BY_ENTITIES.' '.$date_title ;
-$db = new Database();
 
+$db = new Database();
 
 if($report_type == 'graph')
 {
@@ -217,7 +225,7 @@ if ($where_clause)
 $totalCourrier = [];
 $totalEntities = count($entities);	
 	
-for($i=0; $i<count($entities); $i++)
+for($i=0; $i<$totalEntities; $i++)
 {
 	//NB RES INCOMING
 	$stmt = $db->query("select count(res_id) as nb_res_incoming from ".$view." where destination = ? and status not in ('DEL','BAD') AND admission_date is not null AND category_id = 'incoming'".$where_date." ".$where_status." ".$where_priority . $where_clause,array($entities[$i]['ID']));
@@ -231,7 +239,7 @@ for($i=0; $i<count($entities); $i++)
         
 	//RESPONSE RATE
 	if($nbResIncoming > 0){
-		$responseRate = number_format(($nbResponseIncoming * 100) / $nbResIncoming,1);
+		$responseRate = (string) round(($nbResponseIncoming * 100) / $nbResIncoming, 1);
 	}else{
 		$responseRate = 0;
 	}
@@ -242,8 +250,8 @@ for($i=0; $i<count($entities); $i++)
 
 	if($report_type == 'graph')
 	{
-			array_push($_SESSION['labels1'], addslashes(utf8_decode($db->wash_html($entities[$i]['LABEL'], 'NO_ACCENT'))));
-			array_push($vol_an, $responseRate);
+		array_push($_SESSION['labels1'], addslashes(utf8_decode($db->wash_html($entities[$i]['LABEL'], 'NO_ACCENT'))));
+		array_push($vol_an, $responseRate);
 	}
 	elseif($report_type == 'array')
 	{
@@ -265,7 +273,6 @@ if($report_type == 'graph')
 	$_SESSION['GRAPH']['VALUES']='';
 	for($i=0;$i<count($vol_an);$i++)
 	{
-		//$src1 .= "&values[]=".$vol_an[$i];
 		$_SESSION['GRAPH']['VALUES'][$i]=$vol_an[$i];
 	}
 }
@@ -274,13 +281,11 @@ elseif($report_type == 'array')
 	array_unshift($data, array('LABEL' => _ENTITY, 'VALUE' => _RESPONSE_RATE . ' (en %)'));
 }
 
-
 if($has_data)
 {
 	if($report_type == 'graph')
 	{
 		$labels1 = "'".implode("','", $_SESSION['labels1'])."'";
-		//var_dump($labels1);
 
 		echo "{label: [".utf8_encode($labels1)."] ".
 			", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
@@ -289,10 +294,10 @@ if($has_data)
 	}
 	elseif($report_type == 'array')
 	{
-		$data2 = urlencode(json_encode($data));
-		$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
+
+		$_SESSION['export_data_stat'] = $data;
+		$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \")' style='float:right;'/>";
 		echo $form;
-		
 		
 		$graph->show_stats_array($title, $data);
 	}
@@ -303,5 +308,3 @@ else
     echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 }
 exit();
-
-?>

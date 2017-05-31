@@ -345,9 +345,9 @@ abstract class admin_basket_Abstract extends Database
                               <?php } ?>  
 
                                 <p style="text-align:center;">
-                                    <i class="fa fa-search fa-2x" id="is_visible_only_on_search_icon" title="<?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?>" style="<?php echo $css; ?>" onclick="$$('#is_visible_only_on_search')[0].click();"></i>
+                                    <i class="fa fa-search fa-2x" id="is_visible_only_on_search_icon" title="<?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?>" style="<?php echo $css; ?>" onclick="$j('#is_visible_only_on_search').click();"></i>
                                      <?php if ($core_tools->is_module_loaded('folder')) { ?>
-                                    <i class="fa fa-folder-o fa-2x" id="is_folder_basket_icon" title="<?php echo _IS_FOLDER_BASKET;?>" style="<?php echo $css2; ?>" onclick="$$('#is_folder_basket')[0].click();"></i>
+                                    <i class="fa fa-folder-o fa-2x" id="is_folder_basket_icon" title="<?php echo _IS_FOLDER_BASKET;?>" style="<?php echo $css2; ?>" onclick="$j('#is_folder_basket').click();"></i>
                                 <?php } ?>
                                 <?php if ($core_tools->is_module_loaded('notifications')) { 
                                     if ($_SESSION['m_admin']['basket']['flag_notif'] === 'Y'){
@@ -355,7 +355,7 @@ abstract class admin_basket_Abstract extends Database
                                     }else{
                                         $css2='color:rgb(102, 102, 102);cursor:pointer;';
                                     }?>
-                                    <i class="fa fa-bell-o fa-2x" id="flag_notif_icon" title="<?php echo _ACTIVATE_NOTIFICATION;?>" style="<?php echo $css2; ?>" onclick="$$('#flag_notif')[0].click();"></i>
+                                    <i class="fa fa-bell-o fa-2x" id="flag_notif_icon" title="<?php echo _ACTIVATE_NOTIFICATION;?>" style="<?php echo $css2; ?>" onclick="$j('#flag_notif').click();"></i>
                                 <?php } ?>
                                 </p>
                                 <p class="buttons" style="text-align:center;">

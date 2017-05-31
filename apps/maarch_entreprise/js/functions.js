@@ -3,19 +3,25 @@ var chronoExpiration;
 
 page_result_final = '';
 
-var profileView = "Views/profile.component.html";
-var signatureBookView = "Views/signature-book.component.html";
+var angularGlobals = {};
 function triggerAngular(prodmode, locationToGo) {
+    var views = [
+        'profile',
+        'signature-book'
+    ];
+
     $j.ajax({
-        url      : 'index.php?display=true&page=initializeJsGlobalConfig',
-        type     : 'GET',
+        url      : '../../rest/initialize',
+        type     : 'POST',
         dataType : 'json',
+        data: {
+            views  : views
+        },
         success: function(answer) {
 
-            profileView = answer.profileView;
-            signatureBookView = answer.signatureBookView;
+            angularGlobals = answer;
             if (prodmode) {
-                $j('#inner_content').html('<div><i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i></div>');
+                $j('#maarchDependenciesContent').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
 
                 var head = document.getElementsByTagName('head')[0];
                 var script = document.createElement('script');
@@ -33,7 +39,6 @@ function triggerAngular(prodmode, locationToGo) {
             }
         }
     });
-
 }
 
 function changeLocationToAngular(locationToGo) {
@@ -156,73 +161,67 @@ function deletePriority(rowToDelete) {
     }
 }
 
-function hideOtherDiv(theDiv)
-{
-    var DivTable = ["create_contact_div","history_div", "notes_div", "emails_div", "diff_list_div", "versions_div", "links_div", "list_answers_div", "cases_div", "diff_list_history_div", "visa_div", "avis_div", "print_fold_div"];
-    var DivStatusTable = ["divStatus_create_contact_div","divStatus_history_div", "divStatus_notes_div", "divStatus_emails_div", "divStatus_diff_list_div", "divStatus_versions_div", "divStatus_links_div", "divStatus_done_answers_div", "divStatus_cases_div", "divStatus_diff_list_history_div", "divStatus_visa_div", "divStatus_avis_div", "divStatus_print_fold_div"];
+function repost(php_file,update_divs,fields,action,timeout) {
+    var event_count = 0;
 
-    for(var i = 0; i < DivTable.length; i++){
-        if($(DivTable[i]) && $(DivStatusTable[i]) && DivTable[i] != theDiv && $(DivTable[i]).style.display != 'none'){
-            // new Effect.toggle(DivTable[i], 'blind', {delay:0});
-            $(DivTable[i]).style.display="none";
-            if (DivTable[i] == 'list_answers_div' && $("done_answers_div")) {
-                new Effect.toggle('done_answers_div', 'blind', {delay:0});
-            }
-            // console.log(DivStatusTable[i]);
-            $(DivStatusTable[i]).innerHTML = '<i class="fa fa-plus-square-o"></i>';
+    //Observe fields
+    for (var i = 0; i < fields.length; ++i) {
+        $(fields[i]).observe(action,send);
+    }
+
+    function send(event)
+    {
+        var params = '';
+        event_count++;
+
+        for (var i = 0; i < fields.length; ++i)
+        {
+            params += $(fields[i]).serialize()+'&';
         }
+
+        setTimeout(function() {
+            event_count--;
+
+            if(event_count == 0)
+                new Ajax.Request(php_file,
+                  {
+                    method:'post',
+                    onSuccess: function(transport){
+
+                    var response = transport.responseText;
+                    var reponse_div = new Element("div");
+                    reponse_div.innerHTML = response;
+                    var replace_div = reponse_div.select('div');
+
+                    for (var i = 0; i < replace_div.length; ++i)
+                        for(var j = 0; j < update_divs.length; ++j)
+                        {
+                            if(replace_div[i].id == update_divs[j])
+                                $(update_divs[j]).replace(replace_div[i]);
+                        }
+                    },
+                    onFailure: function(){ alert('Something went wrong...'); },
+                    parameters: params
+                  });
+        }, timeout);
     }
 }
 
-function repost(php_file,update_divs,fields,action,timeout)
-    {
-        //alert('php file : '+php_file);
-        var event_count = 0;
-
-        //Observe fields
-        for (var i = 0; i < fields.length; ++i) {
-
-            $(fields[i]).observe(action,send);
-        }
-
-        function send(event)
+/**
+* List used for autocompletion
+*
+*/
+var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
         {
-            params = '';
-            event_count++;
-
-            for (var i = 0; i < fields.length; ++i)
-            {
-                params += $(fields[i]).serialize()+'&';
-            }
-
-            setTimeout(function() {
-                event_count--;
-
-                if(event_count == 0)
-                    new Ajax.Request(php_file,
-                      {
-                        method:'post',
-                        onSuccess: function(transport){
-
-                        var response = transport.responseText;
-                        var reponse_div = new Element("div");
-                        reponse_div.innerHTML = response;
-                        var replace_div = reponse_div.select('div');
-
-                        for (var i = 0; i < replace_div.length; ++i)
-                            for(var j = 0; j < update_divs.length; ++j)
-                            {
-                                if(replace_div[i].id == update_divs[j])
-                                    $(update_divs[j]).replace(replace_div[i]);
-                            }
-                        },
-                        onFailure: function(){ alert('Something went wrong...'); },
-                        parameters: params
-                      });
-            }, timeout);
-        }
-    }
-
+            paramName: paramNameSrv,
+            minChars: minCharsSrv
+        });
+};
 
     /**
     * List used for autocompletion
@@ -243,24 +242,25 @@ function repost(php_file,update_divs,fields,action,timeout)
             });
     };
 
-    var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                afterUpdateElement: function (text, li){
-                    var str = li.id;
-                    var res = str.split(",");
-                    $(new_value).value = res[1];
-                    $(actual_value).value = res[0];
-                    $('country').value = 'FRANCE';
-                }
-            });
-    };
+var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            afterUpdateElement: function (text, li){
+                var str = li.id;
+                var res = str.split(",");
+                $(new_value).value = res[1];
+                $(actual_value).value = res[0];
+                $('country').value = 'FRANCE';
+            }
+        });
+};
+
 
     var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
     {
@@ -298,7 +298,6 @@ function repost(php_file,update_divs,fields,action,timeout)
                 }
             });
     };
-
 
 /*********** Init vars for the calendar ****************/
     var allMonth=[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -793,98 +792,6 @@ var BrowserDetect = {
 
 BrowserDetect.init();
 
-/**
-* Resize frames in a modal
-*
-* @param  id_modal String Modal identifier
-* @param  id_frame String Frame identifier of the frame to resize
-* @param  resize_width Integer New width
-* @param  resize_height Integer New Height
-*/
-function resize_frame_process(id_modal, id_frame, resize_width, resize_height)
-{
-    var modal = $(id_modal);
-    if (modal) {
-        if ($('divList')) {
-            $('divList').style.display = 'none';
-        }
-        //console.log('modal width '+newwidth);
-        var frame2 = $(id_frame);
-        var windowHeigth = document.body.clientHeight;
-        var windowWidth = document.body.clientWidth;
-        if(!windowWidth) {
-            windowSize = getWindowSize();
-            windowWidth = windowSize[0];
-            windowHeigth = windowSize[1];
-        }
-        //alert('window size:' + windowWidth + ' x ' + windowHeigth);
-        
-        modal.style.width = windowWidth - 30 + 'px';
-        //alert('modal width:' + modal.getWidth());
-        //alert('modal height:' + modal.getHeight());
-        
-        var newwidth = modal.getWidth();
-        var newheight = modal.getHeight();
-        newheight = newheight - 120;
-        
-        if (resize_width == true && frame2 != null) {         
-            navName = BrowserDetect.browser;
-            navVersion = BrowserDetect.version;
-
-            if (id_frame == 'file_iframe') {
-                if (navName == 'Explorer') {
-                    if (navVersion < 7) {
-                        newwidth = (windowWidth - 800) - 10;
-                    } else {
-                        newwidth = (windowWidth - 520) - 10;
-                    }
-                } else if (navName == 'Firefox' || navName == 'Mozilla') {
-                     newwidth = (windowWidth - 550) - 10;
-                } else {
-                    newwidth = (windowWidth - 550) - 10;
-                }
-            } else if (id_frame == 'viewframe') {
-                if (navName == 'Explorer') {
-                    if (navVersion < 7) {
-                        newwidth = (windowWidth - 390);
-                    } else {
-                        newwidth = (windowWidth - 390);
-                    }
-
-                } else if (navName == 'Firefox') {
-                    newwidth = (windowWidth - 360);
-                } else {
-                    newwidth = (windowWidth - 360);
-                }
-            } else if (id_frame == 'viewframevalid') {
-                if (navName == 'Explorer') {
-                    newwidth = (windowWidth - 520) - 10;
-                } else if (navName == 'Firefox') {
-                    newwidth = (windowWidth - 550) - 10;
-                } else {
-                    newwidth = (windowWidth - 550) - 10;
-                }
-            } else {
-                newwidth = (windowWidth - 600);
-            }
-            frame2.style.width =  newwidth + "px";
-            if ($('validright')) {
-                $('validright').style.display = "block";
-                $('validright').style.width =  (newwidth - 3) + "px";
-                $('validright').style.display = "block";
-            }
-            if ($('validleftprocess')) {
-                $('validleftprocess').style.display = "block";
-            }
-            //alert('frame width:' + frame2.getWidth());
-        }
-        if (resize_height == true && frame2 != null) {
-            frame2.style.height = newheight + "px";
-            //alert('frame height:' + frame2.getHeight());
-        }
-    }
-}
-
 function resize_frame_contact(mode) {
     var width = $(parent.document.documentElement).getWidth();
     if( width < 1200) {
@@ -1107,7 +1014,7 @@ function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
     Event.observe(layer, 'mousewheel', function(event){Event.stop(event);}.bindAsEventListener(), true);
     Event.observe(layer, 'DOMMouseScroll', function(event){Event.stop(event);}.bindAsEventListener(), false);
     $(id_mod).focus();
-    $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";})
+    $j("input[type='button']").prop("disabled", false).css("opacity", "1");
 }
 
 function test_form()
@@ -1141,8 +1048,8 @@ function test_form()
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
-    if ($('divList')) {
-        $('divList').style.display = 'block';
+    if ($j('#divList')) {
+        $j('#divList').css("display", "block");
     }
     if(id_mod == undefined || id_mod=='')
     {
@@ -1157,26 +1064,9 @@ function destroyModal(id_mod){
     {
         isAlreadyClick = false;
     }
-    document.getElementsByTagName('body')[0].removeChild($(id_mod));
-    document.getElementsByTagName('body')[0].removeChild($(id_layer));
-    $$("input[type='button']").each(function(v) {v.disabled = false;v.style.opacity="1";})
-    /*if($('send_action')){
-        $('send_action').disabled = false;
-        $('send_action').style.opacity = "1";
-        $('send_action').value = "Valider";
-    }else if($('send')){
-        $('send').disabled = false;
-        $('send').style.opacity = "1";
-        $('send').value = "Valider";
-    }else if($('send_mass')){
-        $('send_mass').disabled = false;
-        $('send_mass').style.opacity = "1";
-        $('send_mass').value = "Valider";
-    }else if($('submit')){
-        $('submit').disabled = false;
-        $('submit').style.opacity = "1";
-        $('send_mass').value = "Valider";
-    }*/
+    document.getElementsByTagName('body')[0].removeChild($j("#" + id_mod)[0]);
+    document.getElementsByTagName('body')[0].removeChild($j("#" + id_layer)[0]);
+    $j("input[type='button']").prop("disabled", false).css("opacity", "1")
 }
 
 /**
@@ -1208,22 +1098,6 @@ function get_z_indexes()
         return {layer : max_layer, modal : max_modal};
     }
 }
-
-/**
- * Calculs the scroll X and Y of the window
- *
- * @return array The ScrollX and the ScrollY of the window
- */
- function getScrollXY(){
-    if (window.top.scrollX || window.top.scrollY){
-        var scrollX = window.scrollX;
-        var scrollY = window.scrollY;
-    }else{
-        var scrollX = document.body.scrollLeft;
-        var scrollY = document.body.scrollTop;
-    }
-    return [scrollX,scrollY];
- }
 
 /***********************************************************************/
 
@@ -1258,8 +1132,6 @@ function end_actions()
             req_action = req_action.replace('to_define', res_ids);
             do_nothing = true;
         }
-        //console.log('end_action : '+req_action);
-        //alert('end_action : '+req_action);
         try{
             eval(req_action);
         }
@@ -1357,10 +1229,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
             },
             onCreate: function(answer) {
                 //show loading image in toolbar
-                $$("input[type='button']").each(function(v) {
-                    v.setAttribute("disabled","disabled");
-                    v.style.opacity = "0.5";
-                });
+                $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
             },
             onSuccess: function(answer){
                 eval('response='+answer.responseText);
@@ -1391,7 +1260,8 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                     try {
                         $('frm_error_'+id_action).innerHTML = response.error_txt;
                         alert($('frm_error_'+id_action).innerHTML);
-                        $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";});
+                        $j("input[type='button']").prop("disabled", false).css("opacity", "1");
+
                     } catch(e){
 
                     }
@@ -1599,7 +1469,8 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
             },
             beforeSend: function() {
                 //show loading image in toolbar
-                $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";});
+                $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
+
             },
             success: function(answer){
                 eval("response = " + answer);
@@ -1686,26 +1557,7 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                               },
                 onCreate: function(answer) {
                     //show loading image in toolbar
-                    $$("input[type='button']").each(function(v) {
-                        v.setAttribute("disabled","disabled");v.style.opacity="0.5";
-                    });
-                    /*if($('send_action')){
-                        $('send_action').disabled=true;
-                        $('send_action').style.opacity="0.5";
-                        $('send_action').value="traitement...";
-                    }else if($('send')){
-                        $('send').disabled=true;
-                        $('send').style.opacity="0.5";
-                        $('send').value="traitement...";
-                    }else if($('submit')){
-                        $('submit').disabled=true;
-                        $('submit').style.opacity="0.5";
-                        $('submit').value="traitement...";
-                    }else if($('redirect_dep')){
-                        $('redirect_dep').disabled=true;
-                        $('redirect_dep').style.opacity="0.5";
-                        $('redirect_dep').value="traitement...";
-                    }*/
+                    $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
                 },
                 onSuccess: function(answer){
                     eval('response='+answer.responseText);
@@ -1730,12 +1582,8 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                     {
                         try{
                             $('frm_error').innerHTML = response.error_txt;
-                            $$("input[type='button']").each(function(v) {
-                                v.setAttribute("disabled","disabled");
-                                v.style.opacity="0.5";
-                            });
-                            }
-                        catch(e){}
+                            $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
+                        } catch(e) {}
                     }
                 },
                 onFailure: function(){
@@ -1748,28 +1596,30 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
 {
     if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
               && tablename != '' &&  id_coll != '')
-        {
-            new Ajax.Request(path_manage_script,
-            {
-                method:'post',
-                asynchronous : false,
-                parameters: { values : res_id_values,
-                              mode : mode_req,
-                              req : 'change_status',
-                              table : tablename,
-                              coll_id : id_coll,
-                              new_status : status
-                              },
-                onSuccess: function(answer){
-                    eval('response='+answer.responseText);
-                    if(response.status == 0 ) {
+    {
+
+        $j.ajax({
+            cache    : false,
+            url      : path_manage_script,
+            type     : 'POST',
+            dataType : 'json',
+            data: { values : res_id_values,
+                    mode : mode_req,
+                    req : 'change_status',
+                    table : tablename,
+                    coll_id : id_coll,
+                    new_status : status,
+                  },
+            success: function(answer) {
+
+                setTimeout(function(){
+                    if(answer.status == 0 ) {
                         actions_status.values = [];
                         // Status changed
                     } else {
                         try{
-                            //$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
-                            $('frm_error').innerHTML = response.error_txt;
-                            }
+                            $('frm_error').innerHTML = answer.error_txt;
+                        }
                         catch(e){}
                     }
                     if(page != '' && page != NaN && page && page != null ) {
@@ -1801,12 +1651,11 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                     }
                     
                     do_nothing = false;
-                },
-                onFailure: function(){
-                }
-            });
-        }
-        return true;
+                }, 200);
+            }
+        });
+    }
+    return true;
 }
 /***********************************************************************/
 
@@ -1822,34 +1671,6 @@ function remove_tag(node){
     if(!node.data.replace(/\s/g,''))
         node.parentNode.removeChild(node);
 }
-
-/**
- * Clean an xml doc
- *
- * @param xml XML Object Xml string to clean
- */
-function clean_xml_doc(xml)
-{
-    // TO DO : remove comment, do not work yet
-    if(xml)
-    {
-        var nodes=xml.getElementsByTagName('*');
-        for(var i=0;i<nodes.length;i++){
-            a=nodes[i].previousSibling;
-            if(a && (a.nodeType==3 || a.nodeName=='#comment'))
-                remove_tag(a);
-            b=nodes[i].nextSibling;
-            if(b && (b.nodeType==3 || b.nodeName=='#comment'))
-                remove_tag(b);
-            c=nodes[i];
-        }
-
-    }
-    return xml;
-}
-
-
-/***********************************************************************/
 
 /**
  * Resize the current window
@@ -2156,7 +1977,6 @@ function valid_report_by_period(url)
     var year = '';
     var month = '';
 
-     
     if ($j('#entities_chosen').length){
         var entities_chosen=[];
         $j("select#entities_chosen option:selected").each(function(key, entity) {
@@ -2211,6 +2031,10 @@ function valid_report_by_period(url)
     var period_custom = $('custom_period');
     var period_year = $('period_by_year');
     var period_month = $('period_by_month');
+    var sub_entities = '';
+    if($j('#sub_entities')[0]){   
+        sub_entities = $j('#sub_entities')[0].checked;   
+    }
     if(period_custom && period_custom.checked)
     {
         type_period = 'custom_period';
@@ -2260,6 +2084,7 @@ function valid_report_by_period(url)
                 the_year : year,
                 the_month : month,
                 entities_chosen : entities_chosen_list,
+                sub_entities : sub_entities,
                 status_chosen : status_chosen_list,
                 priority_chosen : priority_chosen_list,
                 doctypes_chosen : doctypes_chosen_list,
@@ -2479,10 +2304,6 @@ function change_doctype_details(doctype_id, url, error_empty_type)
         catch(e){}
     }
 }
-function unmark_empty_process(id)
-{
-    $(id).checked=false;
-}
 
 function updateContent(url,id_div_to_update, onComplete_callback)
 {
@@ -2541,14 +2362,6 @@ function unCheckAll(){
     )
 }
 
-function reverseCheck() {
-    $$('input[type=checkbox]').without($('all')).each(
-        function(e) {
-            e.checked = !e.checked;
-        }
-    )
-}
-
 function show_attach(state) {
     if (state == 'true') {
         //console.log('true');
@@ -2598,18 +2411,17 @@ function addLinks(path_manage_script, child, parent, action, tableHist) {
 function stockCheckbox(url,value){
     if(value != ''){
         new Ajax.Request(url,
-    
-    {
-        method:'post',
-        parameters: { courrier_purpose : value},
-        onSuccess: function(answer){
-          
-            monTableauJS =  JSON.parse(answer.responseText);
+            {
+                method:'post',
+                parameters: { courrier_purpose : value},
+                onSuccess: function(answer){
+
+                    monTableauJS =  JSON.parse(answer.responseText);
 
 
-        }
-    })
-    };
+                }
+            })
+    }
 
 }
 
@@ -2631,27 +2443,6 @@ function cleanSessionBasket(url,value){
     };
 
 }
-
-
-function showVille(url,value){
-    //fait appel à l'ajax cleanSessionBasket du module basket pour vider la $_SESSION['basket_used']
-    if(value != ''){
-        new Ajax.Request(url,
-    
-    {
-        method:'post',
-        parameters: { courrier_purpose : value},
-        onSuccess: function(answer){
-            eval("response = "+answer.responseText);
-            //monTableauJS =  JSON.parse(answer.responseText);
-
-
-        }
-    })
-    }
-
-}
-
 
 function loadRepList(id, option)
 {
@@ -2679,14 +2470,6 @@ function loadRepList(id, option)
         });
     }
 
-}
-
-function checkBeforeOpenBlank (url, value)
-{
-    if (value != '') {
-        //console.log('value : '+value);
-        window.open(url);
-    }
 }
 
 function previsualiseAdminRead(e, json){
@@ -2806,23 +2589,6 @@ function loadDocList(id)
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
             $('divDocList_'+id).innerHTML = response.toShow;
-        }
-    });
-}
-
-function loadDeleteContactDiv(id, society, lastnameFirstname)
-{
-    new Effect.toggle('deleteContactDiv_'+id, 'appear' , {delay:0.2});
-    //new Effect.toggle('docList_'+id, 'blind' , {delay:0.2});
-    var path_manage_script = 'index.php?admin=contacts&page=ajaxLoadDeleteContactDiv&display=true';
-
-    new Ajax.Request(path_manage_script,
-    {
-        method:'post',
-        parameters: { contact_id : id, society_label : society, name : lastnameFirstname},
-        onSuccess: function(answer){
-            eval("response = "+answer.responseText);
-            $('divDeleteContact_'+id).innerHTML = response.toShow;
         }
     });
 }
@@ -3025,23 +2791,6 @@ function CheckUncheckAll(id)
     }
 }
 
-function convertAmount(currency, amount)
-{
-    if (currency == 'EUR') {
-        return accounting.formatMoney(amount, '€', 2, '.', ',');
-    } else if  (currency == 'USD') {
-        return accounting.formatMoney(amount, '$', 2, '.', ',');
-    } else if  (currency == 'JPY') {
-        return accounting.formatMoney(amount, '¥', 2, '.', ',');
-    } else if  (currency == 'GBP') {
-        return accounting.formatMoney(amount, '£', 2, '.', ',');
-    }else if  (currency == 'XOF') {
-        return accounting.formatMoney(amount, 'F', 2, '.', ',');
-    } else {
-        return accounting.formatMoney(amount, '', 2, '', '.');
-    }
-}
-
 function loadDiffList(id)
 {
     new Effect.toggle('diffList_' + id, 'appear', {delay: 0.2});
@@ -3127,23 +2876,6 @@ function loadNoteList(id)
     });
 }
 
-function loadDiffListHistory(listinstance_history_id)
-{
-    new Effect.toggle('diffListHistory_'+listinstance_history_id, 'appear' , {delay:0.2});
-
-    var path_manage_script = 'index.php?module=entities&page=loadDiffListHistory&display=true';
-
-    new Ajax.Request(path_manage_script,
-    {
-        method:'post',
-        parameters: { listinstance_history_id : listinstance_history_id},
-        onSuccess: function(answer){
-            eval("response = "+answer.responseText);
-            $('divDiffListHistory_'+listinstance_history_id).innerHTML = response.toShow;
-        }
-    });
-}
-
 function showPreviousAttachments(path_manage_script, id){
     new Effect.toggle('attachList_'+id, 'appear' , {delay:0.2});
 
@@ -3222,6 +2954,23 @@ function loadAddressAttached(contact_id, select){
     });
 }
 
+function loadDiffListHistory(listinstance_history_id)
+{
+    new Effect.toggle('diffListHistory_'+listinstance_history_id, 'appear' , {delay:0.2});
+
+    var path_manage_script = 'index.php?module=entities&page=loadDiffListHistory&display=true';
+
+    new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { listinstance_history_id : listinstance_history_id},
+            onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                $('divDiffListHistory_'+listinstance_history_id).innerHTML = response.toShow;
+            }
+        });
+}
+
 function saveSizeInBytes() {
     if(!isNaN($('size_limit_number').value)) {
         if($('size_format').value == "MB") {
@@ -3293,7 +3042,6 @@ function checkOthersDuplicate(id_form,checkbox_name,radio_name) {
     
 }
 function linkDuplicate(id_form) {
-    console.log(id_form);
     elem = document.forms[id_form];
     var slave = [];
     var address_del = [];
@@ -3378,16 +3126,11 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
             document.getElementById('show_tab').style.display='block';
             document.getElementById('show_tab').setAttribute('module',module);
             
-            $$("span[class='tab_module']").each(function(v) {v.innerHTML = '<i class="fa fa-plus-square-o"></i>';})
+            $j("span[class='tab_module']").each(function(i, e) {e.innerHTML = '<i class="fa fa-plus-square-o"></i>';})
             if(document.getElementById(module+'_tab') != undefined ){
                 document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
             }
             document.getElementById('show_tab').innerHTML = answer.responseText;
-            /*if (response.status == 0) {
-                console.log(response);
-            } else if (response.status == 1){
-                alert('Erreur!');
-            }*/
         }
     });
 }
@@ -3395,7 +3138,6 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
 function loadSpecificTab(id_iframe,pathScriptTab){
     document.getElementById(id_iframe).src = pathScriptTab;
 }
-
 
 //LOAD BADGES TOOLBAR
 function loadToolbarBadge(targetTab,path_manage_script){
@@ -3437,12 +3179,481 @@ function resetSelect(id) {
     Event.fire($(id), "chosen:updated");
 }
 
-// Exemple appel service
-// function testService(){
-//     $j.ajax({
-//         url: globalConfig.coreurl+'rest.php?module=core&service=Core_Session_Service&method=getUserEntitiesLst', 
-//         success: function(result){
-//             console.log(result);
-//         }
-//     });
-// }
+function titleWithTooltipster(id){
+    $j(document).ready(function() {
+        $j('#'+id).tooltipster({delay :0});
+    });
+}
+
+/** Advanced Search **/
+
+/**
+ * Fills inputs fields of text type in the search form whith value
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_input_text(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        tmp_elem.value = values[key];
+    }
+}
+
+/**
+ * Fills date range in the search form whith value
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_date_range(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        tmp_elem.value = values[key][0];
+    }
+}
+
+/**
+ * Selects items in a mutiple list (html select object with multiple) in the search form
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_select_multiple(values)
+{
+    for( var key in values)
+    {
+        if(key.indexOf('_chosen') >= 0)
+        {
+            var available = key.substring(0, key.length -7)+'_available';
+            var available_list = $(available);
+            for(var j=0; j <values[key].length;j++)
+            {
+                for(var i=0; i<available_list.options.length;i++)
+                {
+                    if(values[key][j] == available_list.options[i].value)
+                    {
+                        available_list.options[i].selected='selected';
+                    }
+                }
+            }
+            Move_ext(available, key);
+        }
+        if(key.indexOf('_targetlist') >= 0)
+        {
+            var available = key.substring(0, key.length -7)+'_sourcelist';
+            var available_list = $(available);
+            for(var j=0; j <values[key].length;j++)
+            {
+                if (available_list) {
+                    for(var i=0; i<available_list.options.length;i++)
+                    {
+                        if(values[key][j] == available_list.options[i].value)
+                        {
+                            available_list.options[i].selected='selected';
+                        }
+                    }
+                }
+            }
+            if (available) {
+                Move_ext(available, key);
+            }
+        }
+    }
+}
+
+/**
+ * Selects an item in a simple list (html select object) in the search form
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_select_simple(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        for(var j=0; j <values[key].length;j++)
+        {
+            for(var i=0; i<tmp_elem.options.length;i++)
+            {
+                if(values[key][j] == tmp_elem.options[i].value)
+                {
+                    tmp_elem.options[i].selected='selected';
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Load a query in the Advanced Search page
+ *
+ * @param valeurs Array Values of the search criteria which must be displayed
+ * @param loaded_query Array Values of the search criteria
+ * @param id_form String Search form identifier
+ * @param ie_browser Bool Browser is internet explorer or not
+ * @param error_ie_txt String Error message specific to ie browser
+ **/
+function load_query(valeurs, loaded_query, id_form, ie_browser, error_ie_txt)
+{
+    for( var critere in loaded_query)
+    {
+        if(valeurs[critere] != undefined) // in the valeurs array
+        {
+            add_criteria('option_'+critere, id_form, ie_browser, error_ie_txt);
+        }
+        eval("processingFunction=fill_field_"+loaded_query[critere]['type']);
+        if (typeof(processingFunction) == 'function') // test if the funtion exists
+        {
+            processingFunction(loaded_query[critere]['fields'] );
+        }
+    }
+}
+
+/**
+ * Adds criteria in the search form
+ *
+ * @param elem_comp String Identifier of the option of the criteria list to displays in the search form
+ * @param id_form String Search form identifier
+ * @param ie_browser Bool Is the browser internet explorer or not
+ * @param error_txt_ie String Error message specific to ie browser
+ **/
+function add_criteria(elem_comp, id_form, ie_browser, error_txt_ie)
+{
+    // Takes the id of the chosen option which must be one of the valeurs array
+    var elem = elem_comp.substring(7, elem_comp.length);
+    var form = window.$(id_form);
+    var valeur = valeurs[elem];
+    if (ie_browser) {
+        var div_node = $j('#search_parameters_'+elem);
+    }
+    if (typeof(valeur) != 'undefined') {
+        if (ie_browser == true  && typeof(div_node) != 'undefined' && div_node != null) {
+            alert(error_txt_ie);
+        } else {
+            var node = document.createElement('div');
+            node.setAttribute('id', 'search_parameters_' + elem);
+            var tmp = '<table width="100%" border="0"><tr><td width="30%">';
+            tmp += '<i class="fa fa-angle-right"></i> ' + valeur['label'];
+            tmp += '</td><td>';
+            tmp += valeur['value'];
+            tmp += '</td><td width="30px">';
+            tmp += '<a href="#" onclick="delete_criteria(\'' + elem + '\', \'';
+            tmp += id_form + '\');return false;">';
+            tmp += '<i class="fa fa-remove fa-2x"></i></a>';
+            tmp += '</td></tr></table>';
+            // Loading content in the page
+            node.innerHTML = tmp;
+            form.appendChild(node);
+            var label = $(elem_comp);
+            label.parentNode.selectedIndex = 0;
+            label.style.display = 'none';
+        }
+    }
+}
+
+/**
+ * Deletes a criteria in the search form
+ *
+ * @param elem_comp String Identifier of the option of the criteria list to delete in the search form
+ * @param id_form String Search form identifier
+ **/
+function delete_criteria(id_elem, id_form)
+{
+    var form = $(id_form);
+    var tmp = (id_elem.indexOf('option_') >= 0) ? id_elem : 'option_' + id_elem;
+    var label =  $(tmp);
+    label.style.display = '';
+//  label.disabled = !label.disabled;
+    tmp = (id_elem.indexOf('option_') >= 0) ? id_elem.substring(7, id_elem.length) : id_elem;
+    //form.removeChild($('search_parameters_'+tmp));
+    $('search_parameters_'+tmp).parentElement.removeChild( $('search_parameters_'+tmp));
+}
+
+/**
+ * Validates the search form, selects all list options ending with _chosen (type select_multiple) to avoid missing elements
+ *
+ * @param id_form String Search form identifier
+ **/
+function valid_search_form(id_form)
+{
+    var frm = $(id_form);
+    var selects = frm.getElementsByTagName('select'); //Array
+    for (var i=0; i< selects.length;i++) {
+        if (selects[i].multiple && (selects[i].id.indexOf('_chosen') >= 0
+            || selects[i].id.indexOf('_targetlist') >= 0)
+        ) {
+            selectall_ext(selects[i].id);
+        }
+    }
+}
+
+/**
+ * Clears the search form : delete all optional criteria in the form
+ *
+ * @param id_form String Search form identifier
+ * @param id_list String Criteria list identifier
+ **/
+function clear_search_form(id_form, id_list)
+{
+    var list = $(id_list);
+    for (var i=0; i <list.options.length; i++) {
+        if (list.options[i].style.display == 'none') {
+            delete_criteria(list.options[i].id, id_form);
+        }
+    }
+    var elems = document.getElementsByTagName('INPUT');
+    for (var i=0; i<elems.length;i++) {
+        if(elems[i].type == 'text') {
+            elems[i].value ='';
+        }
+    }
+    var lists = document.getElementsByTagName('SELECT');
+    for (var i=0; i<lists.length;i++) {
+        lists[i].selectedIndex =0;
+    }
+    var copie_false = $('copies_false');
+    if (copie_false) {
+        copie_false.checked = true;
+    }
+}
+
+/**
+ * Clears the queries list : remove an option in this list
+ *
+ * @param item_value String Identifier of the item to remove
+ **/
+function clear_q_list(item_value)
+{
+    var query = $('query');
+
+    if (item_value && item_value != '' && query) {
+        var item = $('query_' + item_value);
+        if (item) {
+            query.removeChild(item);
+        }
+    }
+    if (query && query.options.length > 1) {
+        var q_list = $('default_query');
+        if (q_list) {
+            q_list.selected = 'selected';
+        }
+        var del_button = $('del_query');
+        if (del_button) {
+            del_button.style.display = 'none';
+        }
+    } else {
+        var div_query = $('div_query');
+        if (div_query) {
+            div_query .style.display = 'none';
+        }
+    }
+}
+
+/**
+ * Load a saved query in the Advanced Search page (using Ajax)
+ *
+ * @param id_query String Identifier of the saved query to load
+ * @param id_form_to_load String Identifier of the search form
+ * @param sql_error_txt String SQL error message
+ * @param server_error_txt String Server error message
+ * @param manage_script String Ajax script
+ **/
+function load_query_db(id_query, id_list, id_form_to_load, sql_error_txt, server_error_txt, manage_script)
+{
+    if (id_query != '') {
+        new Ajax.Request(
+            manage_script,
+            {
+                method:'post',
+                parameters: {
+                    id : id_query,
+                    action : 'load'
+                },
+                onSuccess: function(answer){
+                    eval("response = " + answer.responseText + ';');
+                    if (response.status == 0) {
+                        clear_search_form(id_form_to_load, id_list);
+                        //Clears the search form
+                        if (response.query instanceof Object
+                            && response.query != {}) {
+                            load_query(valeurs, response.query, id_form_to_load);
+                        }
+                        $j("#del_query").css("display", "inline");
+                        $j("#query_" + id_query)[0].selected = true;
+                    } else if(response.status == 2) {
+                        $('error').update(sql_error_txt);
+                    } else {
+                        $('error').update(server_error_txt);
+                    }
+                },
+                onFailure: function(){
+                    $('error').update(server_error_txt);
+                }
+            });
+    }
+}
+
+/**
+ * Delete a saved query in the database (using Ajax)
+ *
+ * @param id_query String Identifier of the saved query to delete
+ * @param id_list String Identifier of the queries list
+ * @param id_form_to_load String Identifier of the search form
+ * @param sql_error_txt String SQL error message
+ * @param server_error_txt String Server error message
+ * @param path_script String Ajax script
+ **/
+function del_query_db( id_query, id_list, id_form_to_load, sql_error_txt, server_error_txt, path_script)
+{
+    if (id_query != '') {
+        var query_object = new Ajax.Request(
+            path_script,
+            {
+                method:'post',
+                parameters: {
+                    id : id_query.value,
+                    action : "delete"
+                },
+                onSuccess: function(answer){
+
+                    eval("response = "+answer.responseText+';');
+                    if (response.status == 0) {
+                        clear_search_form(id_form_to_load,id_list); //Clears search form
+                        clear_q_list(id_query.value);
+                    } else if(response.status == 2) {
+                        $('error').update(sql_error_txt);
+                    } else {
+                        $('error').update(server_error_txt);
+                    }
+                },
+                onFailure: function(){
+                    $('error').update(server_error_txt);
+                }
+            });
+    }
+}
+
+/** Old MaarchJs **/
+
+// Fonction pour gérer les changements dynamiques de sous-menu.
+// Prend en variable le numéro du sous-menu à afficher.
+
+function ChangeH2(objet){
+    if(objet.getElementsByTagName('img')[0].src.indexOf("plus")>-1){
+        objet.getElementsByTagName('img')[0].src="img/moins.png";
+        objet.getElementsByTagName('span')[0].firstChild.nodeValue=" ";
+    }else{
+        objet.getElementsByTagName('img')[0].src="img/plus.png";
+        objet.getElementsByTagName('span')[0].firstChild.nodeValue=" ";
+    }
+}
+
+function Change2H2(objet){
+    if(objet.getElementsByTagName('img')[0].src.indexOf("folderopen")>-1){
+        objet.getElementsByTagName('img')[0].src="img/folder.gif";
+        objet.getElementsByTagName('span')[0].firstChild.nodeValue=" ";
+    }else{
+        objet.getElementsByTagName('img')[0].src="img/folderopen.gif";
+        objet.getElementsByTagName('span')[0].firstChild.nodeValue=" ";
+    }
+}
+
+var initialized = 0;
+var etat = new Array();
+
+function reinit()
+{
+    initialized = 0;
+    etat = new Array();
+}
+
+function initialise(){
+    for (var i=0;i<500;i++){
+        etat[i] = new Array();
+        etat[i]["h2"] = document.getElementById('h2'+i);
+        etat[i]["desc"] = document.getElementById('desc'+i);
+        etat[i]["etat"] = 0;
+    }
+    initialized = 1;
+}
+
+function ferme(id){
+    Effect.SlideUp(etat[id]["desc"]);
+    ChangeH2(etat[id]["h2"]);
+    etat[id]["etat"] = 0;
+}
+
+function ouvre(id){
+    Effect.SlideDown(etat[id]["desc"]);
+    ChangeH2(etat[id]["h2"]);
+    etat[id]["etat"] = 1;
+}
+
+function ferme2(id){
+    Effect.SlideUp(etat[id]["desc"]);
+    Change2H2(etat[id]["h2"]);
+    etat[id]["etat"] = 0;
+}
+
+function ouvre2(id){
+    Effect.SlideDown(etat[id]["desc"]);
+    Change2H2(etat[id]["h2"]);
+    etat[id]["etat"] = 1;
+}
+
+function ferme3(id){
+    Effect.SlideUp(etat[id]["desc"]);
+    etat[id]["etat"] = 0;
+}
+
+function ouvre3(id){
+    Effect.SlideDown(etat[id]["desc"]);
+    etat[id]["etat"] = 1;
+}
+
+function change(id){
+    if (!initialized ){
+        initialise()
+    }
+    // alert(etat[id]["etat"]);
+    if (etat[id]["etat"]){
+        ferme(id);
+    }else{
+        for (var i=0;i<etat.length;i++){
+            if (etat[i]["etat"]){
+                ferme(i);
+            }
+        }
+        ouvre(id);
+    }
+}
+
+function change2(id){
+    if (!initialized){
+        initialise()
+    }
+    if (etat[id]["etat"]){
+        ferme2(id);
+    }else{
+        ouvre2(id);
+    }
+}
+
+function change3(id){
+    if (!initialized ){
+        initialise()
+    }
+    // alert(etat[id]["etat"]);
+    if (etat[id]["etat"]){
+        ferme3(id);
+    }else{
+        for (var i=0;i<etat.length;i++){
+            if (etat[i]["etat"]){
+                ferme3(i);
+            }
+        }
+        ouvre3(id);
+    }
+}
