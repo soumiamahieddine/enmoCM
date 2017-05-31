@@ -21,7 +21,7 @@ function triggerAngular(prodmode, locationToGo) {
 
             angularGlobals = answer;
             if (prodmode) {
-                $j('#inner_content').html('<div><i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i></div>');
+                $j('#maarchDependenciesContent').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
 
                 var head = document.getElementsByTagName('head')[0];
                 var script = document.createElement('script');
@@ -161,146 +161,142 @@ function deletePriority(rowToDelete) {
     }
 }
 
-function repost(php_file,update_divs,fields,action,timeout)
-    {
-        //alert('php file : '+php_file);
-        var event_count = 0;
+function repost(php_file,update_divs,fields,action,timeout) {
+    var event_count = 0;
 
-        //Observe fields
-        for (var i = 0; i < fields.length; ++i) {
-
-            $(fields[i]).observe(action,send);
-        }
-
-        function send(event)
-        {
-            params = '';
-            event_count++;
-
-            for (var i = 0; i < fields.length; ++i)
-            {
-                params += $(fields[i]).serialize()+'&';
-            }
-
-            setTimeout(function() {
-                event_count--;
-
-                if(event_count == 0)
-                    new Ajax.Request(php_file,
-                      {
-                        method:'post',
-                        onSuccess: function(transport){
-
-                        var response = transport.responseText;
-                        var reponse_div = new Element("div");
-                        reponse_div.innerHTML = response;
-                        var replace_div = reponse_div.select('div');
-
-                        for (var i = 0; i < replace_div.length; ++i)
-                            for(var j = 0; j < update_divs.length; ++j)
-                            {
-                                if(replace_div[i].id == update_divs[j])
-                                    $(update_divs[j]).replace(replace_div[i]);
-                            }
-                        },
-                        onFailure: function(){ alert('Something went wrong...'); },
-                        parameters: params
-                      });
-            }, timeout);
-        }
+    //Observe fields
+    for (var i = 0; i < fields.length; ++i) {
+        $(fields[i]).observe(action,send);
     }
 
-
-    /**
-    * List used for autocompletion
-    *
-    */
-    var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv)
+    function send(event)
     {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv
-            });
-    };
+        var params = '';
+        event_count++;
 
-    /**
-    * List used for autocompletion and set id in hidden input
-    *
-    */
-    var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                afterUpdateElement: function (text, li){
-                    $(new_value).value = li.id;
-                }
-            });
-    };
+        for (var i = 0; i < fields.length; ++i)
+        {
+            params += $(fields[i]).serialize()+'&';
+        }
 
-    var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                afterUpdateElement: function (text, li){
-                    var str = li.id;
-                    var res = str.split(",");
-                    $(new_value).value = res[1];
-                    $(actual_value).value = res[0];
-                    $('country').value = 'FRANCE';
-                }
-            });
-    };
+        setTimeout(function() {
+            event_count--;
 
-    var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                afterUpdateElement: function (text, li){
-                    var str = li.id;
-                    var res = str.split(",");
-                    $(new_value).value = res[0];
-                    $(actual_value).value = res[1];
-                    $('country').value = 'FRANCE';
-                }
-            });
-    };
+            if(event_count == 0)
+                new Ajax.Request(php_file,
+                  {
+                    method:'post',
+                    onSuccess: function(transport){
 
-    var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                callback: function (element, entry){
-					return entry + "&"+previous_name+"=" + $(previous_field).value; 
-			    },
-                afterUpdateElement: function (text, li){
-                    $(new_value).value = li.id;
-                }
-            });
-    };
+                    var response = transport.responseText;
+                    var reponse_div = new Element("div");
+                    reponse_div.innerHTML = response;
+                    var replace_div = reponse_div.select('div');
+
+                    for (var i = 0; i < replace_div.length; ++i)
+                        for(var j = 0; j < update_divs.length; ++j)
+                        {
+                            if(replace_div[i].id == update_divs[j])
+                                $(update_divs[j]).replace(replace_div[i]);
+                        }
+                    },
+                    onFailure: function(){ alert('Something went wrong...'); },
+                    parameters: params
+                  });
+        }, timeout);
+    }
+}
+
+/**
+* List used for autocompletion
+*
+*/
+var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv
+        });
+};
+
+/**
+* List used for autocompletion and set id in hidden input
+*
+*/
+var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            afterUpdateElement: function (text, li){
+                $(new_value).value = li.id;
+            }
+        });
+};
+
+var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            afterUpdateElement: function (text, li){
+                var str = li.id;
+                var res = str.split(",");
+                $(new_value).value = res[1];
+                $(actual_value).value = res[0];
+                $('country').value = 'FRANCE';
+            }
+        });
+};
+
+var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            afterUpdateElement: function (text, li){
+                var str = li.id;
+                var res = str.split(",");
+                $(new_value).value = res[0];
+                $(actual_value).value = res[1];
+                $('country').value = 'FRANCE';
+            }
+        });
+};
+
+var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            callback: function (element, entry){
+                return entry + "&"+previous_name+"=" + $(previous_field).value;
+            },
+            afterUpdateElement: function (text, li){
+                $(new_value).value = li.id;
+            }
+        });
+};
 
 
 /*********** Init vars for the calendar ****************/
@@ -1017,7 +1013,7 @@ function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
     Event.observe(layer, 'mousewheel', function(event){Event.stop(event);}.bindAsEventListener(), true);
     Event.observe(layer, 'DOMMouseScroll', function(event){Event.stop(event);}.bindAsEventListener(), false);
     $(id_mod).focus();
-    $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";})
+    $j("input[type='button']").prop("disabled", false).css("opacity", "1");
 }
 
 function test_form()
@@ -1232,10 +1228,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
             },
             onCreate: function(answer) {
                 //show loading image in toolbar
-                $$("input[type='button']").each(function(v) {
-                    v.setAttribute("disabled","disabled");
-                    v.style.opacity = "0.5";
-                });
+                $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
             },
             onSuccess: function(answer){
                 eval('response='+answer.responseText);
@@ -1266,7 +1259,8 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                     try {
                         $('frm_error_'+id_action).innerHTML = response.error_txt;
                         alert($('frm_error_'+id_action).innerHTML);
-                        $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";});
+                        $j("input[type='button']").prop("disabled", false).css("opacity", "1");
+
                     } catch(e){
 
                     }
@@ -1474,7 +1468,8 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
             },
             beforeSend: function() {
                 //show loading image in toolbar
-                $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";});
+                $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
+
             },
             success: function(answer){
                 eval("response = " + answer);
@@ -1561,9 +1556,7 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                               },
                 onCreate: function(answer) {
                     //show loading image in toolbar
-                    $$("input[type='button']").each(function(v) {
-                        v.setAttribute("disabled","disabled");v.style.opacity="0.5";
-                    });
+                    $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
                 },
                 onSuccess: function(answer){
                     eval('response='+answer.responseText);
@@ -1588,12 +1581,8 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                     {
                         try{
                             $('frm_error').innerHTML = response.error_txt;
-                            $$("input[type='button']").each(function(v) {
-                                v.setAttribute("disabled","disabled");
-                                v.style.opacity="0.5";
-                            });
-                            }
-                        catch(e){}
+                            $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
+                        } catch(e) {}
                     }
                 },
                 onFailure: function(){
@@ -1606,28 +1595,30 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
 {
     if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
               && tablename != '' &&  id_coll != '')
-        {
-            new Ajax.Request(path_manage_script,
-            {
-                method:'post',
-                asynchronous : false,
-                parameters: { values : res_id_values,
-                              mode : mode_req,
-                              req : 'change_status',
-                              table : tablename,
-                              coll_id : id_coll,
-                              new_status : status
-                              },
-                onSuccess: function(answer){
-                    eval('response='+answer.responseText);
-                    if(response.status == 0 ) {
+    {
+
+        $j.ajax({
+            cache    : false,
+            url      : path_manage_script,
+            type     : 'POST',
+            dataType : 'json',
+            data: { values : res_id_values,
+                    mode : mode_req,
+                    req : 'change_status',
+                    table : tablename,
+                    coll_id : id_coll,
+                    new_status : status,
+                  },
+            success: function(answer) {
+
+                setTimeout(function(){
+                    if(answer.status == 0 ) {
                         actions_status.values = [];
                         // Status changed
                     } else {
                         try{
-                            //$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
-                            $('frm_error').innerHTML = response.error_txt;
-                            }
+                            $('frm_error').innerHTML = answer.error_txt;
+                        }
                         catch(e){}
                     }
                     if(page != '' && page != NaN && page && page != null ) {
@@ -1659,12 +1650,11 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                     }
                     
                     do_nothing = false;
-                },
-                onFailure: function(){
-                }
-            });
-        }
-        return true;
+                }, 200);
+            }
+        });
+    }
+    return true;
 }
 /***********************************************************************/
 
@@ -2963,6 +2953,23 @@ function loadAddressAttached(contact_id, select){
     });
 }
 
+function loadDiffListHistory(listinstance_history_id)
+{
+    new Effect.toggle('diffListHistory_'+listinstance_history_id, 'appear' , {delay:0.2});
+
+    var path_manage_script = 'index.php?module=entities&page=loadDiffListHistory&display=true';
+
+    new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { listinstance_history_id : listinstance_history_id},
+            onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                $('divDiffListHistory_'+listinstance_history_id).innerHTML = response.toShow;
+            }
+        });
+}
+
 function saveSizeInBytes() {
     if(!isNaN($('size_limit_number').value)) {
         if($('size_format').value == "MB") {
@@ -3118,7 +3125,7 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
             document.getElementById('show_tab').style.display='block';
             document.getElementById('show_tab').setAttribute('module',module);
             
-            $$("span[class='tab_module']").each(function(v) {v.innerHTML = '<i class="fa fa-plus-square-o"></i>';})
+            $j("span[class='tab_module']").each(function(i, e) {e.innerHTML = '<i class="fa fa-plus-square-o"></i>';})
             if(document.getElementById(module+'_tab') != undefined ){
                 document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
             }
@@ -3130,7 +3137,6 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
 function loadSpecificTab(id_iframe,pathScriptTab){
     document.getElementById(id_iframe).src = pathScriptTab;
 }
-
 
 //LOAD BADGES TOOLBAR
 function loadToolbarBadge(targetTab,path_manage_script){
@@ -3181,6 +3187,105 @@ function titleWithTooltipster(id){
 /** Advanced Search **/
 
 /**
+ * Fills inputs fields of text type in the search form whith value
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_input_text(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        tmp_elem.value = values[key];
+    }
+}
+
+/**
+ * Fills date range in the search form whith value
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_date_range(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        tmp_elem.value = values[key][0];
+    }
+}
+
+/**
+ * Selects items in a mutiple list (html select object with multiple) in the search form
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_select_multiple(values)
+{
+    for( var key in values)
+    {
+        if(key.indexOf('_chosen') >= 0)
+        {
+            var available = key.substring(0, key.length -7)+'_available';
+            var available_list = $(available);
+            for(var j=0; j <values[key].length;j++)
+            {
+                for(var i=0; i<available_list.options.length;i++)
+                {
+                    if(values[key][j] == available_list.options[i].value)
+                    {
+                        available_list.options[i].selected='selected';
+                    }
+                }
+            }
+            Move_ext(available, key);
+        }
+        if(key.indexOf('_targetlist') >= 0)
+        {
+            var available = key.substring(0, key.length -7)+'_sourcelist';
+            var available_list = $(available);
+            for(var j=0; j <values[key].length;j++)
+            {
+                if (available_list) {
+                    for(var i=0; i<available_list.options.length;i++)
+                    {
+                        if(values[key][j] == available_list.options[i].value)
+                        {
+                            available_list.options[i].selected='selected';
+                        }
+                    }
+                }
+            }
+            if (available) {
+                Move_ext(available, key);
+            }
+        }
+    }
+}
+
+/**
+ * Selects an item in a simple list (html select object) in the search form
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_select_simple(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        for(var j=0; j <values[key].length;j++)
+        {
+            for(var i=0; i<tmp_elem.options.length;i++)
+            {
+                if(values[key][j] == tmp_elem.options[i].value)
+                {
+                    tmp_elem.options[i].selected='selected';
+                }
+            }
+        }
+    }
+}
+
+/**
  * Load a query in the Advanced Search page
  *
  * @param valeurs Array Values of the search criteria which must be displayed
@@ -3220,11 +3325,10 @@ function add_criteria(elem_comp, id_form, ie_browser, error_txt_ie)
     var form = window.$(id_form);
     var valeur = valeurs[elem];
     if (ie_browser) {
-        var div_node = $('search_parameters_'+elem);
+        var div_node = $j('#search_parameters_'+elem);
     }
     if (typeof(valeur) != 'undefined') {
-        if (ie_browser == true  && typeof(div_node) != 'undefined'
-            && div_node != null) {
+        if (ie_browser == true  && typeof(div_node) != 'undefined' && div_node != null) {
             alert(error_txt_ie);
         } else {
             var node = document.createElement('div');
@@ -3244,11 +3348,7 @@ function add_criteria(elem_comp, id_form, ie_browser, error_txt_ie)
             var label = $(elem_comp);
             label.parentNode.selectedIndex = 0;
             label.style.display = 'none';
-            //  label.disabled = !label.disabled;
         }
-    } else {
-        //Error if the valeur array has no key 'id'
-        //alert('Error with Javascript Search Adv ');
     }
 }
 
@@ -3362,7 +3462,7 @@ function clear_q_list(item_value)
 function load_query_db(id_query, id_list, id_form_to_load, sql_error_txt, server_error_txt, manage_script)
 {
     if (id_query != '') {
-        var query_object = new Ajax.Request(
+        new Ajax.Request(
             manage_script,
             {
                 method:'post',
@@ -3379,9 +3479,8 @@ function load_query_db(id_query, id_list, id_form_to_load, sql_error_txt, server
                             && response.query != {}) {
                             load_query(valeurs, response.query, id_form_to_load);
                         }
-                        var del_button = $('del_query');
-                        del_button.style.display = 'inline';
-                        $('query_' + id_query).selected = "selected";
+                        $j("#del_query").css("display", "inline");
+                        $j("#query_" + id_query)[0].selected = true;
                     } else if(response.status == 2) {
                         $('error').update(sql_error_txt);
                     } else {

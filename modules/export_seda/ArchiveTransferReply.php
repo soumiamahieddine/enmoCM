@@ -19,47 +19,50 @@
 *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'core/class/class_request.php';
+require_once __DIR__ . '/DOMTemplateProcessor.php';
 
-class ArchiveTransfertReply {
+class ArchiveTransferReply {
 
-	public function __construct() 
-	{
-		$this->db = new Database();
-	}
+    public function __construct()
+    {
+    }
 
-	public function receive($fileName) {
+    public function send($data, $resIds)
+    {
+        //$xml = simplexml_load_file($fileName);
+        $messageObject = new stdClass();
 
-		$xml = simplexml_load_file($fileName);
+        if ($data->comments) {
+            $messageObject->comment = [];
+            if (is_array($data->comments)) {
+                foreach ($data->comments as $comment) {
+                    $messageObject->comment[] = $comment;
+                }
+            } else {
+                $messageObject->comment[] = $data->comments;
+            }
+        }
 
-		$message = new stdClass();
-		$message->reference = $xml->MessageRequestIdentifier;
-		$message->status = "receive";
-		$message->replyCode = $xml->DataObjectPackage->ReplyCode;
-		$message->operationDate = (string) $xml->DataObjectPackage->GrantDate;
-		$message->replyReference = (string) $xml->MessageIdentifier;
-		$message->comment = $xml->comment;
+        $messageObject->date = $data->date;
+        $messageObject->messageIdentifier =  new stdClass();
+        $messageObject->messageIdentifier->value = $data->reference;
 
-		$this->updateMessage($message);
-	}
+        $messageObject->messageReceivedIdentifier =  new stdClass();
+        $messageObject->messageReceivedIdentifier->value = $data->requestReference;
 
-	private function updateMessage($message) 
-	{
-		$queryParams = [];
+        $messageObject->sender = new stdClass();
+        $messageObject->sender->identifier = new stdClass();
+        $messageObject->sender->identifier->value = $data->senderOrgRegNumber;
 
-		try {
-			$query = ("UPDATE seda SET status = ?, reply_code = ?, operation_date = ?, reply_reference = ?  WHERE reference = ?");
+        $messageObject->receiver = new stdClass();
+        $messageObject->receiver->identifier = new stdClass();
+        $messageObject->receiver->identifier->value = $data->recipientOrgRegNumber;
 
-			$queryParams[] = $message->status; 
-			$queryParams[] = $message->replyCode;
-			$queryParams[] = $message->operationDate; 
-			$queryParams[] = $message->replyReference; 
-			$queryParams[] = $message->reference;
+        $this->saveXml($messageObject);
 
-			$this->db->query($query,$queryParams);
+        foreach ($resIds as $resId) {
+            $this->addAttachment($messageObject->messageIdentifier->value, $resId, $messageObject->messageIdentifier->value.".txt", "txt", "Accusé de reception");
+        }
+    }
 
-		} catch (Exception $e) {
-			var_dump($e);
-		}
-	}
 }

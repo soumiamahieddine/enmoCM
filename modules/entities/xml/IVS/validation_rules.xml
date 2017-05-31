@@ -59,7 +59,7 @@
 		<parameter name="adrs1" type="string" />
 		<parameter name="adrs2" type="string" />
 		<parameter name="adrs3" type="string" />
-		<parameter name="zcode" type="integer" />
+		<parameter name="zcode" type="identifier" />
 		<parameter name="business" type="string" />
 		<parameter name="city" type="string" />
 		<parameter name="country" type="string" />

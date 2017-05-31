@@ -3,7 +3,7 @@
 	<MaarchCapture>
 		<testIt>false</testIt>
 		<specific>
-			<pathToMaarchCapture>/produit/maarch/maarch_scripts/maarch_capture/</pathToMaarchCapture>
+			<pathToMaarchCapture>/opt/maarch/maarch_capture/</pathToMaarchCapture>
 		</specific>
 	</MaarchCapture>
 	<notifications_sendmail>

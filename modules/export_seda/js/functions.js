@@ -1,6 +1,7 @@
 function actionSeda($path,$type) {
     if ($type == 'zip') {
         window.open($path);
+        $("validSend").style.display = 'block';
     } else {
     	new Ajax.Request($path,
             {
@@ -11,7 +12,9 @@ function actionSeda($path,$type) {
                     eval("response = "+answer.responseText);
                     if(response.status == 0){
                         if ($type != "validateMessage") {
-                            $("validSeda").style.display = 'block';
+                            $("valid").style.display = 'block';
+                            $("validSend").style.display = 'none';
+                            $("cancel").style.display = 'none';
                             $("sendMessage").style.display = 'none';
 
                             alert(response.content);
@@ -19,11 +22,28 @@ function actionSeda($path,$type) {
                             $("cancel").click();
                             location.reload();
                         }
-                        
                     } else {
                         alert(response.error);
                     }
                 }
             });
     }
+}
+
+function actionValidation($path,$type) {
+    new Ajax.Request($path,
+        {
+            method:'post',
+            parameters: { url : $path},
+            onSuccess: function(answer) {
+                eval("response = "+answer.responseText);
+                if(response.status == 0){
+                    alert(response.content);
+                } else {
+                    alert(response.error);
+                }
+                $("cancel").click();
+                location.reload();
+            }
+        });
 }

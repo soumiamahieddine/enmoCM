@@ -53,7 +53,6 @@ class thumbnails
 		$db = new Database();
 		$query = "select priority_number, docserver_id from docservers where is_readonly = 'N' and "
 	   . " enabled = 'Y' and coll_id = ? and docserver_type_id = 'TNL' order by priority_number";
-
 		$stmt1 = $db->query($query, array($coll_id));
 
 		if($res = $stmt1->fetchObject()){
@@ -63,13 +62,13 @@ class thumbnails
 		}
 
 		$docServers = "select docserver_id, path_template, device_label from docservers";
+		
 		$stmt1 = $db->query($docServers,array());
 		while ($queryResult = $stmt1->fetchObject()) {
 		  $pathToDocServer[$queryResult->docserver_id] = $queryResult->path_template;
 		}
-
 		$pathOutput = $pathToDocServer[(string)$docserverId];
-
+		if (!$table_name) $table_name = 'res_letterbox';
 		$queryMakeThumbnails = "select docserver_id, path, filename, format from ". $table_name . " where res_id = ? ";
 		$stmt1 = $db->query($queryMakeThumbnails, array($res_id));
 
@@ -77,6 +76,7 @@ class thumbnails
 			$fileFormat = $queryResult->format;
 			$path= $queryResult->path;
 			$filename= $queryResult->filename;
+
 			$pathToFile = $pathToDocServer[$queryResult->docserver_id] 
 			. str_replace("#", DIRECTORY_SEPARATOR, $path)
         	. $queryResult->filename;
@@ -119,6 +119,7 @@ class thumbnails
 					. escapeshellarg($outputPathFile);
 				}
 			}
+			echo $command;
 			exec($command.' 2>&1', $output, $result);
 			if($result > 0)
 			{

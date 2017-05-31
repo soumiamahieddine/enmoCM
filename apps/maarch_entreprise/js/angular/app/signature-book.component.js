@@ -131,9 +131,11 @@ var SignatureBookComponent = (function () {
                 setTimeout(function () {
                     $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                     $j(".pjSign").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
-                    $j("#obsVersion").tooltipster({
-                        interactive: true
-                    });
+                    if ($j(".tooltipstered").length == 0) {
+                        $j("#obsVersion").tooltipster({
+                            interactive: true
+                        });
+                    }
                 }, 0);
             });
         });
@@ -179,7 +181,12 @@ var SignatureBookComponent = (function () {
     };
     SignatureBookComponent.prototype.changeRightViewer = function (index) {
         this.showAttachmentPanel = false;
-        this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
+        if (this.signatureBook.attachments[index]) {
+            this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
+        }
+        else {
+            this.rightViewerLink = "";
+        }
         this.rightSelectedThumbnail = index;
     };
     SignatureBookComponent.prototype.changeLeftViewer = function (index) {
@@ -216,8 +223,8 @@ var SignatureBookComponent = (function () {
             else {
                 this.rightContentWidth = "44%";
                 this.leftContentWidth = "44%";
-                if (this.signatureBook.resList.length == 0) {
-                    this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList')
+                if (this.signatureBook.resList.length == 0 || this.signatureBook.resList[0].allSigned == null) {
+                    this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList/details')
                         .map(function (res) { return res.json(); })
                         .subscribe(function (data) {
                         _this.signatureBook.resList = data.resList;
@@ -464,6 +471,9 @@ var SignatureBookComponent = (function () {
                     _this.signatureBook.resList = data.resList;
                     valid_action_form('empty', 'index.php?display=true&page=manage_action&module=core', _this.signatureBook.currentAction.id, _this.resId, 'res_letterbox', 'null', 'letterbox_coll', 'page', false, [$j("#signatureBookActions option:selected")[0].value]);
                 });
+            }
+            else {
+                valid_action_form('empty', 'index.php?display=true&page=manage_action&module=core', this.signatureBook.currentAction.id, this.resId, 'res_letterbox', 'null', 'letterbox_coll', 'page', false, [$j("#signatureBookActions option:selected")[0].value]);
             }
         }
         else {
