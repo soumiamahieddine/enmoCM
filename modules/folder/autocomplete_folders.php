@@ -67,7 +67,6 @@ $select = array();
 		$order = 'order by folders_system_id, folder_name';
 
 	}else{
-	
 		$stmt = $db->query("SELECT doctypes_first_level_id FROM doctypes");
 		$doctypes_1 = '';
 		$arrayPDO = array();
@@ -103,13 +102,9 @@ $select = array();
 $res = $req->PDOselect($select, $where, $arrayPDO, $order, $_SESSION['config']['databasetype'], 11,false,"","","", false);
 
 //Autocompletion output
-echo "<ul>\n";
-for($i=0; $i< min(count($res), 10)  ;$i++) {
-	echo "<li>".$req->show_string($res[$i][0]['value']).', '.$req->show_string($res[$i][1]['value']).' ('.$res[$i][2]['value'].")</li>\n";
+$arrayDossier = array();
+for($i=0; $i< count($res)  ;$i++) {
+	array_push($arrayDossier,htmlspecialchars_decode($res[$i][0]['value'].', '.$res[$i][1]['value'].' ('.$res[$i][2]['value'].')',ENT_QUOTES));
 }
 
-//Show only ten item
-if(count($res) == 11) {
-		echo "<li>...</li>\n";
-}
-echo "</ul>";
+echo json_encode($arrayDossier, JSON_UNESCAPED_UNICODE);
