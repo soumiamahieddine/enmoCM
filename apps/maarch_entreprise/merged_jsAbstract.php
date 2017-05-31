@@ -47,7 +47,6 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/controls.js');
 
 		//TODO clean
-		readfile('apps/maarch_entreprise/js/chosen.proto.min.js');
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
 		readfile('apps/maarch_entreprise/js/event.simulate.js'); // Works with chosen proto
 //		readfile('apps/maarch_entreprise/js/keypress.js'); // TODO Remove after test
@@ -62,6 +61,7 @@ class MergedJsAbstract {
 		readfile('node_modules/tinymce/tinymce.min.js');
 		readfile('node_modules/jquery.nicescroll/jquery.nicescroll.min.js');
 		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
+		readfile('apps/maarch_entreprise/js/chosen.jquery.min.js');
 
 		//Mobile
 		readfile('node_modules/photoswipe/dist/photoswipe.min.js');

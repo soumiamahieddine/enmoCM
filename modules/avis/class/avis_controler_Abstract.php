@@ -78,7 +78,7 @@ abstract class avis_controler_Abstract
             }
             $str .= '</select>';
             $str .= '<script>';
-            $str .= 'new Chosen($(\'avisUserList\'),{width: "250px", disable_search_threshold: 10});';
+            $str .= '$j("#avisUserList").chosen({width: "250px", disable_search_threshold: 10});';
             $str .= '</script>';
 
             include_once "modules/entities/class/class_manage_listdiff.php";
@@ -94,7 +94,7 @@ abstract class avis_controler_Abstract
             $str .= '</select>';
 
             $str .= '<script>';
-            $str .= 'new Chosen($(\'modelList\'),{width: "250px;", disable_search_threshold: 10});';
+            $str .= '$j("#modelList").chosen({width: "250px", disable_search_threshold: 10});';
             $str .= '</script>';
             $str .= '<br/><br/>';
         }

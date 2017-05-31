@@ -231,7 +231,9 @@ abstract class lists_Abstract extends Database
                             .$this->divListId.'\', '.$this->modeReturn.');">'
                             .'<option value="none" style="text-align:center;"></option>'
                             .$options.'</select>';
-                $filters .= '<script>new Chosen($(\'entity_id\'),{width:"300px",allow_single_deselect: true});</script>';
+                //$filters .= '<script>new c($(\'entity_id\'),{width:"300px",allow_single_deselect: true});</script>';
+                $filters .= '<script> $j("#entity_id").chosen({width:"300px",allow_single_deselect: true});</script>';
+
             break;
 
             case 'entity_subentities':
@@ -353,7 +355,8 @@ abstract class lists_Abstract extends Database
                     }
                 }
                 $filters .='</select>&nbsp;';
-                $filters .= '<script>new Chosen($(\'category_id_list\'),{width:"150px",allow_single_deselect: true});</script>';
+                //$filters .= '<script>new c($(\'category_id_list\'),{width:"150px",allow_single_deselect: true});</script>';
+                $filters .= '<script> $j("#category_id").chosen({width:"150px",allow_single_deselect: true});</script>';
             break;
 
             case 'priority':
@@ -371,7 +374,9 @@ abstract class lists_Abstract extends Database
                     
                 }
                 $filters .='</select>&nbsp;';
-                $filters .= '<script>new Chosen($(\'priority_id_list\'),{width:"150px",allow_single_deselect: true});</script>';
+                //$filters .= '<script>new c($(\'priority_id_list\'),{width:"150px",allow_single_deselect: true});</script>';
+                $filters .= '<script> $j("#priority_id_list").chosen({width:"150px",allow_single_deselect: true});</script>';
+                
             break;
             
             case 'isViewed':
@@ -387,7 +392,8 @@ abstract class lists_Abstract extends Database
                     $filters .='<option value="'.$key.'" '.$selected.'>'.$value.'</option>';
                 }
                 $filters .='</select>&nbsp;';
-                $filters .= '<script>new Chosen($(\'isViewed\'),{width: "150px", disable_search: true,allow_single_deselect: true});</script>';
+                //$filters .= '<script>new c($(\'isViewed\'),{width: "150px", disable_search: true,allow_single_deselect: true});</script>';
+                $filters .= '<script> $j("#isViewed").chosen({width:"150px", disable_search: true, allow_single_deselect: true});</script>';
             break;
             
             case 'folder':
@@ -447,7 +453,8 @@ abstract class lists_Abstract extends Database
 
                     }
                     $filters .='</select>&nbsp;';
-                    $filters .= '<script>new Chosen($(\'contact_id_list\'),{width: "150px",max_shown_results: "10"});</script>';
+                    //$filters .= '<script>new c($(\'contact_id_list\'),{width: "150px",max_shown_results: "10"});</script>';
+                    $filters .= '<script> $j("#contact_id_list").chosen({width:"150px",max_shown_results: "10"});</script>';
 
 
 
@@ -548,7 +555,7 @@ abstract class lists_Abstract extends Database
 
                 }
                 $filters .='</select>&nbsp;';
-                $filters .= '<script>new Chosen($(\'subjectFilters\'),{width: "150px",max_shown_results: "10"});</script>';
+                $filters .= '<script> $j("#subjectFilters").chosen({width:"150px",max_shown_results: "10"});</script>';
                 /*$subject = '['._SUBJECT.']';
                 $filters .='<input type="text" name="subject" id="subject" placeholder="'.$subject.'" size="40" '
                             .'onChange="myFunction(), loadList(\''.$this->link
@@ -2440,7 +2447,8 @@ abstract class lists_Abstract extends Database
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
             $linesDropdownList .= '</select>';
-            $linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new Chosen($(\'nbLines\'),{width: "auto", disable_search: true});}</script>';
+            //$linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new c($(\'nbLines\'),{width: "auto", disable_search: true});}</script>';
+            $linesDropdownList .= '<script> $j("#nbLines").chosen({width: "auto", disable_search: true});</script>';
         }
         
         //If there are more than 1 page, pagination
@@ -2617,7 +2625,8 @@ abstract class lists_Abstract extends Database
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
             $linesDropdownList .= '</select>';
-            $linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new Chosen($(\'nbLines\'),{width: "auto", disable_search: true});}</script>';
+            //$linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new c($(\'nbLines\'),{width: "auto", disable_search: true});}</script>';
+            $linesDropdownList .= '<script> $j("#nbLines").chosen({width: "auto", disable_search: true});</script>';
         }
         
         //If there are more than 1 page, pagination
@@ -2773,7 +2782,8 @@ abstract class lists_Abstract extends Database
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
             $linesDropdownList .= '</select>';
-            $linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new Chosen($(\'nbLines\'),{width: "auto"});}</script>';
+            //$linesDropdownList .= '<script>if(!$(\'nbLines_chosen\')){new c($(\'nbLines\'),{width: "auto"});}</script>';
+            $linesDropdownList .= '<script> $j("#nbLines").chosen({width: "auto"});</script>';
             $linesDropdownList .= '</form>' ;
         }
         

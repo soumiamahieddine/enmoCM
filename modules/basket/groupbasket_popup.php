@@ -333,8 +333,8 @@ $time = $core_tools->get_session_time_expire();
             </p>
     </form>
 </div>
-</div>
-<script type="text/javascript">$j('select').each(function(i, element) { new Chosen(element,{width: "226px", disable_search_threshold: 10,search_contains: true}); });</script>
+</div> 
+<script type="text/javascript">$j('select').chosen({width: "226px", disable_search_threshold: 10,search_contains: true});</script>
 
 </body>
 </html>

@@ -1235,7 +1235,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 $thesaurusListRes = array();
 
                                 $thesaurusListRes = $thesaurus->getThesaursusListRes($s_id);
-
+                                    
                                 echo '<tr id="thesaurus_tr_label" >';
                                 echo '<th align="left" class="picto" ><i class="fa fa-bookmark fa-2x" title="' . _THESAURUS . '"></i></th>';
                                 echo '<td style="font-weight:bold;width:200px;">'._THESAURUS.'</td>';
@@ -1263,7 +1263,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 echo '<div onClick="$(\'return_previsualise_thes\').style.display=\'none\';" id="return_previsualise_thes" style="cursor: pointer; display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; color: #4f4b47; text-shadow: -1px -1px 0px rgba(255,255,255,0.2);background:#FFF18F;border-radius:5px;overflow:auto;">\';
                                                 <input type="hidden" id="identifierDetailFrame" value="" />
                                             </div>';
-                                echo '<script>new Chosen($(\'thesaurus\'),{width: "95%", disable_search_threshold: 10});</script>';
+                                echo '<script>$j("#thesaurus").chosen({width: "95%", disable_search_threshold:10}); </script>';                               
                                 echo '<style>#thesaurus_chosen .chosen-drop{display:none;}</style>';
 
                             }

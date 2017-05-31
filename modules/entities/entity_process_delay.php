@@ -86,7 +86,7 @@ $content .='<div id="params">';
           $content.='</select>';
             $content .='<input type="checkbox" title="'._INCLUDE_SUB_ENTITIES.'" name="sub_entities" id="sub_entities" />'; 
             $content .= '<script>titleWithTooltipster("sub_entities");</script>';         
-            $js .= 'new Chosen($(\'entities_chosen\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
+            $js .= '$j("#entities_chosen").chosen({width: "95%", disable_search_threshold: 10, search_contains: true});';
             $content.= '<br/><br/>';
             $status_obj = new manage_status();
             $status = $status_obj->get_searchable_status();
@@ -98,7 +98,7 @@ $content .='<div id="params">';
                 $content.=$status[$i]['LABEL']."</option>"; 
             }
             $content.='</select>';
-            $js .= 'new Chosen($(\'status_chosen\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
+            $js .= '$j("#status_chosen").chosen({width: "95%", disable_search_threshold: 10, search_contains: true});';
             $content.= '<br/><br/>';
             $content.='<select name="priority_chosen" data-placeholder="'._PRIORITY.'" id="priority_chosen" size="10" multiple="multiple">';
             foreach(array_keys($_SESSION['mail_priorities']) as $priority)
@@ -108,7 +108,7 @@ $content .='<div id="params">';
                 $content.=$_SESSION['mail_priorities'][$priority]."</option>"; 
             }
             $content.='</select>';
-            $js .= 'new Chosen($(\'priority_chosen\'),{width: "95%", disable_search_threshold: 10, search_contains: true});';
+            $js .= '$j("#priority_chosen").chosen({width: "95%", disable_search_threshold: 10, search_contains: true});';
           $content.='</p>'; 
         $content .='</td>';
         $content .='</tr>';
