@@ -1510,7 +1510,7 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
             success: function(answer){
                 eval("response = " + answer);
 
-                if(response$j.ajax.status == 0 ) {
+                if(response.status == 0 ) {
                     var page_result = response.page_result;
 
                     if(response.action_status != '' && response.action_status != 'NONE') {
