@@ -24,7 +24,7 @@ if (isset($_REQUEST['arguments']) && !empty($_REQUEST['arguments'])) {
 $content = '';
 $content .='<div id="params">';
   $content .='<form id="report_by_period_form" name="report_by_period_form" method="get" action="">';
-        if($core_tools->test_service('graphics_reports', 'reports', false) == 1 && $_SESSION['user']['UserId'] != 'superadmin'){
+        if(!$core_tools->test_service('graphics_reports', 'reports', false)){
         $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'._MAIL_VOL_BY_ENT_REPORT.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_array" value="array" checked="checked"/><label for="report_array"> '. _ARRAY . '</label>)</span></div>';       
          }else{
         $content .='<div id="statLabel" style="font-weight:bold;text-align:center;text-transform:uppercase;">'._MAIL_VOL_BY_ENT_REPORT.' <span style="font-weight: initial;">(<input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /><label for="report_graph"> ' . _GRAPH . ' </label><input type="radio" name="form_report" id="report_array" value="array" /><label for="report_array"> '. _ARRAY . '</label>)</span></div>';
@@ -123,7 +123,7 @@ $content .='<div id="params">';
         $content .='</td>';
         $content .='</tr>';
         $content .='<tr>';
-        $content .='<td style="text-align:center;"><input type="button" id="validate" name="validate" value="'._VALIDATE.'" class="button" onclick="valid_report_by_period(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=get_entity_late_mail\');" /></td>';
+        $content .='<td style="text-align:center;"><input type="button" id="validate" name="validate" value="'._VALIDATE.'" class="button" onclick="valid_report_by_period(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=get_entity_vol\');" /></td>';
         $content .='</tr>';
        $content .='</table>';
   $content .='</form>';

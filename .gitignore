@@ -11,3 +11,4 @@ apps/maarch_entreprise/xml/log4php.xml
 xdelete.sh
 core/Test/build/
 apps/maarch_entreprise/tmp/*
+/nbproject/private/

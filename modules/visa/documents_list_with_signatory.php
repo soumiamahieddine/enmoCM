@@ -601,10 +601,7 @@ $status = 0;
 $content = $list->showList($tab, $paramsTab, $listKey, $_SESSION['current_basket']);
 // $debug = $list->debug(false);
 
-$content .= "<script>$$('#container')[0].setAttribute('style', 'width: 90%; min-width: 1000px;');".
-                    "$$('#content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');".
-                    "$$('#inner_content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');".
-                    // "$$('table#extended_list')[0].setAttribute('style', 'width: 100%; min-width: 900px; margin: 0;');".
-            "</script>";
+$content .= '<script>$j(\'#container\').attr(\'style\', \'width: 90%; min-width: 1000px;\');$j(\'#content\').attr(\'style\', \'width: auto; min-width: 1000px;\');';
+$content .= '$j(\'#inner_content\').attr(\'style\', \'width: auto; min-width: 1000px;\');</script>';
 
 echo "{'status' : " . $status . ", 'content' : '" . addslashes($debug.$content) . "', 'error' : '" . addslashes(functions::xssafe($error)) . "'}";

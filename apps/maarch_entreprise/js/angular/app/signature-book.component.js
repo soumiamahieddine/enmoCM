@@ -41,7 +41,9 @@ var SignatureBookComponent = (function () {
             documents: [],
             attachments: [],
             //histories               : [],
-            resList: []
+            resList: [],
+            resListIndex: 0,
+            lang: {}
         };
         this.rightSelectedThumbnail = 0;
         this.leftSelectedThumbnail = 0;
@@ -127,14 +129,13 @@ var SignatureBookComponent = (function () {
                 _this.displayPanel("RESLEFT");
                 _this.loading = false;
                 setTimeout(function () {
-                    $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                     $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                     $j(".pjSign").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
-                    $j("#resListContent").scrollTop(0);
-                    $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
-                    $j("#obsVersion").tooltipster({
-                        interactive: true
-                    });
+                    if ($j(".tooltipstered").length == 0) {
+                        $j("#obsVersion").tooltipster({
+                            interactive: true
+                        });
+                    }
                 }, 0);
             });
         });
@@ -180,7 +181,12 @@ var SignatureBookComponent = (function () {
     };
     SignatureBookComponent.prototype.changeRightViewer = function (index) {
         this.showAttachmentPanel = false;
-        this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
+        if (this.signatureBook.attachments[index]) {
+            this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
+        }
+        else {
+            this.rightViewerLink = "";
+        }
         this.rightSelectedThumbnail = index;
     };
     SignatureBookComponent.prototype.changeLeftViewer = function (index) {
@@ -188,6 +194,7 @@ var SignatureBookComponent = (function () {
         this.leftSelectedThumbnail = index;
     };
     SignatureBookComponent.prototype.displayPanel = function (panel) {
+        var _this = this;
         if (panel == "TOPRIGHT") {
             this.showTopRightPanel = !this.showTopRightPanel;
         }
@@ -216,6 +223,23 @@ var SignatureBookComponent = (function () {
             else {
                 this.rightContentWidth = "44%";
                 this.leftContentWidth = "44%";
+                if (this.signatureBook.resList.length == 0 || this.signatureBook.resList[0].allSigned == null) {
+                    this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList/details')
+                        .map(function (res) { return res.json(); })
+                        .subscribe(function (data) {
+                        _this.signatureBook.resList = data.resList;
+                        _this.signatureBook.resList.forEach(function (value, index) {
+                            if (value.res_id == _this.resId) {
+                                _this.signatureBook.resListIndex = index;
+                            }
+                        });
+                        setTimeout(function () {
+                            $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
+                            $j("#resListContent").scrollTop(0);
+                            $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
+                        }, 0);
+                    });
+                }
             }
         }
         else if (panel == "MIDDLE") {
@@ -298,7 +322,12 @@ var SignatureBookComponent = (function () {
     SignatureBookComponent.prototype.delAttachment = function (attachment) {
         var _this = this;
         if (attachment.canDelete) {
-            var r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+            if (this.signatureBook.attachments.length <= 1) {
+                var r = confirm('Attention, ceci est votre dernière pièce jointe pour ce courrier, voulez-vous vraiment la supprimer ?');
+            }
+            else {
+                var r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
+            }
             if (r) {
                 var resId;
                 if (attachment.res_id == 0) {
@@ -357,7 +386,9 @@ var SignatureBookComponent = (function () {
                             allSigned = false;
                         }
                     });
-                    _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = allSigned;
+                    if (_this.signatureBook.resList.length > 0) {
+                        _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = allSigned;
+                    }
                 }
                 else {
                     alert(data.error);
@@ -390,7 +421,9 @@ var SignatureBookComponent = (function () {
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].viewerLink = _this.rightViewerLink;
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].status = 'A_TRA';
                 _this.signatureBook.attachments[_this.rightSelectedThumbnail].idToDl = resId;
-                _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = false;
+                if (_this.signatureBook.resList.length > 0) {
+                    _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = false;
+                }
             }
             else {
                 alert(data.error);
@@ -428,9 +461,20 @@ var SignatureBookComponent = (function () {
         });
     };
     SignatureBookComponent.prototype.validForm = function () {
+        var _this = this;
         if ($j("#signatureBookActions option:selected")[0].value != "") {
             unlockDocument(this.resId);
-            valid_action_form('empty', 'index.php?display=true&page=manage_action&module=core', this.signatureBook.currentAction.id, this.resId, 'res_letterbox', 'null', 'letterbox_coll', 'page', false, [$j("#signatureBookActions option:selected")[0].value]);
+            if (this.signatureBook.resList.length == 0) {
+                this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList')
+                    .map(function (res) { return res.json(); })
+                    .subscribe(function (data) {
+                    _this.signatureBook.resList = data.resList;
+                    valid_action_form('empty', 'index.php?display=true&page=manage_action&module=core', _this.signatureBook.currentAction.id, _this.resId, 'res_letterbox', 'null', 'letterbox_coll', 'page', false, [$j("#signatureBookActions option:selected")[0].value]);
+                });
+            }
+            else {
+                valid_action_form('empty', 'index.php?display=true&page=manage_action&module=core', this.signatureBook.currentAction.id, this.resId, 'res_letterbox', 'null', 'letterbox_coll', 'page', false, [$j("#signatureBookActions option:selected")[0].value]);
+            }
         }
         else {
             alert("Aucune action choisie");

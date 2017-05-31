@@ -83,6 +83,7 @@ abstract class types_Abstract extends database
                 );
                 $_SESSION['m_admin']['doctypes']['RETENTION_RULE'] = $line->retention_rule;
                 $_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'] = $line->retention_final_disposition;
+                $_SESSION['m_admin']['doctypes']['_DURATION_CURRENT_USE'] = $line->duration_current_use;
                 $_SESSION['m_admin']['doctypes']['SUB_FOLDER'] = $line->doctypes_second_level_id;
                 $_SESSION['m_admin']['doctypes']['VALIDATE'] = $line->enabled;
                 $_SESSION['m_admin']['doctypes']['TABLE'] = $line->coll_id;
@@ -192,37 +193,47 @@ abstract class types_Abstract extends database
                 <?php
             }
              ?>
-             </select>
-             </p>
-             <p>
+            </select>
+            </p>
+            <p>
                 <label for="retention_final_disposition"><?php echo _FINAL_DISPOSITION;?> : </label>
                 <select name="retention_final_disposition" id="retention_final_disposition">
                     <option value =""><?php echo _CHOOSE_FINAL_DISPOSITION ?></option>
                     <?php if (!$_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION']) { ?>
                     <option value="<?php echo _DESTROY ?>"><?php echo _DESTROY ?></option>
                     <option value="<?php echo _KEEP ?>"><?php echo _KEEP ?></option>
-                    <?php } else { 
+                    <?php } else {
                         if ($_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'] == strtolower(_DESTROY)) { ?>
                             <option value="<?php echo _DESTROY ?>" selected="selected" ><?php echo _DESTROY ?></option>
                             <option value="<?php echo _KEEP ?>"><?php echo _KEEP ?></option>
-                     <?php } else { ?>
+                    <?php } else { ?>
                             <option value="<?php echo _DESTROY ?>"><?php echo _DESTROY ?></option>
                             <option value="<?php echo _KEEP ?>" selected="selected"><?php echo _KEEP ?></option>
                     <?php }
                     } ?>
                 </select>
-             </p>
-             <p>
+            </p>
+            <p>
                 <label for="retention_rule"><?php echo _RETENTION_RULE;?> : </label>
                 <?php if ($_SESSION['m_admin']['doctypes']['RETENTION_RULE']) {
                     ?>
-                   <input type="text" name="retention_rule" value="<?php echo $_SESSION['m_admin']['doctypes']['RETENTION_RULE'] ?>"> 
+                   <input type="text" name="retention_rule" value="<?php echo $_SESSION['m_admin']['doctypes']['RETENTION_RULE'] ?>">
                 <?php } else { ?>
-                    <input type="text" name="retention_rule"> 
+                    <input type="text" name="retention_rule">
                 <?php } ?>
-                
-             </p>
-             <?php
+
+            </p>
+            <p>
+                <label for="duration_current_use"><?php echo _DURATION_CURRENT_USE;?> : </label>
+                <?php if ($_SESSION['m_admin']['doctypes']['date_current_use']) {
+                    ?>
+                    <input type="number" name="duration_current_use" value="<?php echo $_SESSION['m_admin']['doctypes']['duration_current_use'] ?>" min="0" step="1">
+                <?php } else { ?>
+                    <input type="number" name="duration_current_use" min="0" step="1"> <?php echo _MONTH;?>
+                <?php } ?>
+
+            </p>
+            <?php
             if ($mode == "up") {
                 ?>
                 <p>
@@ -987,13 +998,14 @@ abstract class types_Abstract extends database
                         );
                     }
                     $indexes[$col] = array(
-                        'label' => $label,
-                        'type' => (string) $item->type,
-                        'img' => $img,
-                        'type_field' => 'select',
-                        'values' => $values,
+                        'label'         => $label,
+                        'type'          => (string) $item->type,
+                        'img'           => $img,
+                        'type_field'    => 'select',
+                        'values'        => $values,
                         'default_value' => $default,
-						'origin' => 'document'
+                        'origin'        => 'document',
+                        'only_detail'   => $item->only_detail
                     );
                 } else if (isset($item->table)) {
                     $values = array();
@@ -1024,39 +1036,40 @@ abstract class types_Abstract extends database
                          );
                     }
                     $indexes[$col] = array(
-                        'label' => $label,
-                        'type' => (string) $item->type,
-                        'img' => $img,
-                        'type_field' => 'select',
-                        'values' => $values,
+                        'label'         => $label,
+                        'type'          => (string) $item->type,
+                        'img'           => $img,
+                        'type_field'    => 'select',
+                        'values'        => $values,
                         'default_value' => $default,
-						'origin' => 'document'
+                        'origin'        => 'document',
+                        'only_detail'   => $item->only_detail
                     );
                 } else {
                     $indexes[$col] = array(
-                        'label' => $label,
-                        'type' => (string) $item->type,
-                        'img' => $img,
-                        'type_field' => 'input',
+                        'label'         => $label,
+                        'type'          => (string) $item->type,
+                        'img'           => $img,
+                        'type_field'    => 'input',
                         'default_value' => $default,
-						'origin' => 'document'
+                        'origin'        => 'document',
+                        'only_detail'   => $item->only_detail
                     );
                 }
             }
         }
-        //print_r($indexes);
+
         foreach(array_keys($indexes) as $key) {
             if (is_array($indexes[$key])) {
-                //print_r($indexes[$key]);
-                $indexes[$key]['label'] = functions::xssafe($indexes[$key]['label']);
-                $indexes[$key]['type'] = functions::xssafe($indexes[$key]['type']);
-                $indexes[$key]['img'] = functions::xssafe($indexes[$key]['img']);
-                $indexes[$key]['type_field'] = functions::xssafe($indexes[$key]['type_field']);
+                $indexes[$key]['label']         = functions::xssafe($indexes[$key]['label']);
+                $indexes[$key]['type']          = functions::xssafe($indexes[$key]['type']);
+                $indexes[$key]['img']           = functions::xssafe($indexes[$key]['img']);
+                $indexes[$key]['type_field']    = functions::xssafe($indexes[$key]['type_field']);
                 $indexes[$key]['default_value'] = functions::xssafe($indexes[$key]['default_value']);
-                $indexes[$key]['origin'] = functions::xssafe($indexes[$key]['origin']);
+                $indexes[$key]['origin']        = functions::xssafe($indexes[$key]['origin']);
+                $indexes[$key]['only_detail']   = functions::xssafe($indexes[$key]['only_detail']);
                 if (is_array($indexes[$key]['values'])) {
                     for ($cpt=0;$cpt<count($indexes[$key]['values']);$cpt++) {
-                        //print_r($indexes[$key]['values'][$cpt]);
                         $indexes[$key]['values'][$cpt]['id'] = functions::xssafe($indexes[$key]['values'][$cpt]['id']);
                         $indexes[$key]['values'][$cpt]['label'] = functions::xssafe($indexes[$key]['values'][$cpt]['label']);
                     }

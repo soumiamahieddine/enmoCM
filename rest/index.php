@@ -119,7 +119,9 @@ $app->get('/attachments', \Attachments\Controllers\AttachmentsController::class 
 $app->get('/attachments/{id}', \Attachments\Controllers\AttachmentsController::class . ':getById');
 $app->post('/attachments', \Attachments\Controllers\AttachmentsController::class . ':create');
 
-//basket
+//visa
+$app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
+$app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
 $app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
 $app->get('/signatureBook/{resId}/attachments', \Visa\Controllers\VisaController::class . ':getAttachmentsById');
 $app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\VisaController::class . ':getIncomingMailAndAttachmentsById');
@@ -146,5 +148,23 @@ $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::clas
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 //$app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
+
+//parameters
+$app->get('/parameters', \Core\Controllers\ParametersController::class . ':getList');
+$app->get('/parameters/{id}', \Core\Controllers\ParametersController::class . ':getById');
+$app->post('/parameters', \Core\Controllers\ParametersController::class . ':create');
+$app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':update');
+$app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
+
+//priorities
+$app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':deletePriority');
+$app->put('/priorities',\Core\Controllers\PrioritiesController::class . ':updatePriorities');
+
+//actions
+$app->get('/actions', \Core\Controllers\ActionsController::class . ':getList');
+$app->get('/actions/{id}', \Core\Controllers\ActionsController::class . ':getById');
+$app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
+$app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
+$app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');
 
 $app->run();

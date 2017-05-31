@@ -162,6 +162,7 @@ function get_ft_opt_index(url)
 			}
 
 		});
+
     }
 }
 
@@ -173,5 +174,16 @@ function checkSubFolder(folderId)
 	else{
 	$j('#folder_dest_div').css("display","none");
 	}
+
+
+function tabClick (TabId){
+        
+    var AllTab = $j(".folder-tab");        
+    AllTab.removeClass("folder-tab-open")        
+    var doc = $j("#"+TabId);        
+    doc.addClass("folder-tab-open");
+
+    $j(".frame-targ").css('display','none');
+    $j('#frame-'+TabId).css('display','block');
 
 }

@@ -115,7 +115,8 @@ class resources_controler
                 $data, 
                 $storeResult['docserver_id'],
                 $status,
-                $fileFormat
+                $fileFormat,
+                $table
             );
             unlink($Fnm);
             //var_dump($data);exit;
@@ -156,7 +157,7 @@ class resources_controler
         }
     }
 
-    private function prepareStorage($data, $docserverId, $status, $fileFormat)
+    private function prepareStorage($data, $docserverId, $status, $fileFormat, $table)
     {
         $statusFound = false;
         $typistFound = false;
@@ -165,6 +166,7 @@ class resources_controler
         $userPrimaryEntity = false;
         $destinationFound = false;
         $initiatorFound = false;
+        $attachmentTypeFound = false;
         $db = new Database();
         for ($i=0;$i<count($data);$i++) {
             if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
@@ -216,6 +218,9 @@ class resources_controler
                         }
                         
                 }
+            }
+            if (strtoupper($data[$i]['column']) == strtoupper('attachment_type')) {
+                $attachmentTypeFound = true;
             }
         }
         if (!$typistFound && !$toAddressFound) {
@@ -307,7 +312,19 @@ class resources_controler
                     )
                 );
             }
-        }    
+        }
+
+        if (!$attachmentTypeFound && $table == 'res_attachments') {
+            array_push(
+                $data,
+                array(
+                    'column' => 'attachment_type',
+                    'value' => 'simple_attachment',
+                    'type' => 'string',
+                )
+            );
+        } 
+
         array_push(
             $data,
             array(

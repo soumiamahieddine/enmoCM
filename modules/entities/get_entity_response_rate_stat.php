@@ -239,7 +239,7 @@ for($i=0; $i<$totalEntities; $i++)
         
 	//RESPONSE RATE
 	if($nbResIncoming > 0){
-		$responseRate = number_format(($nbResponseIncoming * 100) / $nbResIncoming,1);
+		$responseRate = (string) round(($nbResponseIncoming * 100) / $nbResIncoming, 1);
 	}else{
 		$responseRate = 0;
 	}

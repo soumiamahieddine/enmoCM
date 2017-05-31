@@ -3,8 +3,9 @@ function showNotesForm(path, width, height) {
     if(typeof(width)==='undefined'){
         var width = '800';
     }   
+
     if(typeof(height)==='undefined'){
-        var height = '480';
+        height = '480';
     }  
 
     $j.ajax({
@@ -26,14 +27,17 @@ function showNotesForm(path, width, height) {
     });
 }
 
-function validNotesForm (path, form_id) {
-     
-   $j.ajax({
-        url: path,
-        type: 'POST',
-        data : Form.serialize(form_id),
-        success: function (answer) {
-            eval("response = "+answer);
+
+function validNotesForm(path, form_id) {
+
+    new Ajax.Request(path,
+    {
+        asynchronous:false,
+        method:'post',
+        parameters: Form.serialize(form_id),
+        encoding: 'UTF-8',                       
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
             if(response.status == 0){
                 if (typeof window.parent['angularSignatureBookComponent'] != "undefined") {
                     window.parent.angularSignatureBookComponent.componentAfterNotes();

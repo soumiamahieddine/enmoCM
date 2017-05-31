@@ -98,7 +98,15 @@ if ($core->service_is_enabled('param_mlb_doctypes')) {
 }
 $mandatory_indexes = $type->get_mandatory_indexes($_REQUEST['type_id'], $coll_id);
 $indexes = $type->get_indexes($_REQUEST['type_id'], $coll_id);
-//var_dump($coll_id);exit;
+
+if(is_array($indexes)){
+    foreach ($indexes as $key => $value) {
+        if(filter_var($value['only_detail'], FILTER_VALIDATE_BOOLEAN)){
+            unset($indexes[$key]);
+        }
+    }
+}
+
 $opt_indexes = '';
 if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
     $browser_ie = true;

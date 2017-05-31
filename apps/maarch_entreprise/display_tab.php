@@ -1,10 +1,10 @@
 <?php
 if(isset($_REQUEST["titleTab"])){
     $titleTab = $_REQUEST["titleTab"];
-    $res_id = $_REQUEST["resId"];
-    $coll_id = $_REQUEST["collId"];
-    $script = $_REQUEST["pathScriptTab"];
-}else{
+    $res_id   = $_REQUEST["resId"];
+    $coll_id  = $_REQUEST["collId"];
+    $script   = $_REQUEST["pathScriptTab"];
+} else {
     echo 'NO TAB FOUND!';
     exit();
 }

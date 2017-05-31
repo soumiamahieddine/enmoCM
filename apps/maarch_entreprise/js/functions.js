@@ -21,7 +21,7 @@ function triggerAngular(prodmode, locationToGo) {
 
             angularGlobals = answer;
             if (prodmode) {
-                $j('#inner_content').html('<div><i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i></div>');
+                $j('#maarchDependenciesContent').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
 
                 var head = document.getElementsByTagName('head')[0];
                 var script = document.createElement('script');
@@ -52,20 +52,34 @@ function capitalizeFirstLetter(theString)
 
 function whatIsTheDivStatus(theDiv, divStatus)
 {
-    if ($(theDiv).style.display == 'none') {
+    /*if ($(theDiv).style.display == 'none') {
         $(divStatus).innerHTML = '<i class="fa fa-minus-square-o"></i>';
     } else {
         $(divStatus).innerHTML = '<i class="fa fa-plus-square-o"></i>';
+    }
+    $j.ajax
+    */    
+    if ($j('#'+theDiv).css('display') == 'none') {
+        $j('#'+divStatus).html('<i class="fa fa-minus-square-o"></i>');
+    } else {
+        $j('#'+divStatus).html('<i class="fa fa-plus-square-o"></i>');
     }
 }
 
 
 function resetInlineDisplay(theDiv)
 {
+    /*setTimeout(function() {
+        if ($(theDiv).style.display == '')
+            $(theDiv).style.display = 'inline';
+    }, 250);*/
+    
     setTimeout(function() {
         if ($(theDiv).style.display == '')
             $(theDiv).style.display = 'inline';
     }, 250);
+
+
 }
 
 function changeSignatureForProfil(selected, mailSignaturesJS)
@@ -112,7 +126,14 @@ function deleteSignature(mailSignaturesJS)
     }
 }
 
+/*if ($j('#'+theDiv).css('display') == 'none') {
+        $j('#'+divStatus).html('<i class="fa fa-minus-square-o"></i>');
+    } else {
+        $j('#'+divStatus).html('<i class="fa fa-plus-square-o"></i>');
+    }*/
+
 function addNewRowPriority(buttonRow) {
+    console.log("PRIORITE")
     var index = buttonRow.rowIndex;
     var indexDiff = index - $("priorityAddField").rowIndex;
 
@@ -125,6 +146,20 @@ function addNewRowPriority(buttonRow) {
                             "<td align='left'><input name='priority_new" + indexDiff + "' id='priority_new" + indexDiff + "' size='6' value='*'></td>" +
                             "<td align='left'><select name='working_new" + indexDiff + "' id='working_new" + indexDiff + "'><option value='true'>Jours ouvrés</option><option value='false' >Jours calendaires</option></select></td>";
     }
+    /*
+    console.log("PRIORITE")
+    var index = buttonRow.rowIndex;
+    var indexDiff = index - $("priorityAddField").rowIndex;
+
+    if ($j('#priorityAddField').css('display') == "none") {
+        $j('#priorityAddField').css('display') = "";
+        $j("#minusButton").css('display') = "";
+    } else {
+        var newRow = $("prioritiesTable").insertRow(index);
+        newRow.innerHTML = "<td align='left'><input name='label_new" + indexDiff + "' id='label_new" + indexDiff + "' placeholder='Nom priorité' size='18'> <input style='background:none;border:none;width:45px;' name='color_new" + indexDiff + "' id='color_new" + indexDiff + "' type='color' value=''></td>" +
+                            "<td align='left'><input name='priority_new" + indexDiff + "' id='priority_new" + indexDiff + "' size='6' value='*'></td>" +
+                            "<td align='left'><select name='working_new" + indexDiff + "' id='working_new" + indexDiff + "'><option value='true'>Jours ouvrés</option><option value='false' >Jours calendaires</option></select></td>";
+    }*/
 
 }
 
@@ -161,74 +196,70 @@ function deletePriority(rowToDelete) {
     }
 }
 
-function repost(php_file,update_divs,fields,action,timeout)
-    {
-        //alert('php file : '+php_file);
-        var event_count = 0;
+function repost(php_file,update_divs,fields,action,timeout) {
+    var event_count = 0;
 
-        //Observe fields
-        for (var i = 0; i < fields.length; ++i) {
-
-            $(fields[i]).observe(action,send);
-        }
-
-        function send(event)
-        {
-            params = '';
-            event_count++;
-
-            for (var i = 0; i < fields.length; ++i)
-            {
-                params += $(fields[i]).serialize()+'&';
-            }
-
-            setTimeout(function() {
-                event_count--;
-
-                if(event_count == 0)
-                    new Ajax.Request(php_file,
-                      {
-                        method:'post',
-                        onSuccess: function(transport){
-
-                        var response = transport.responseText;
-                        var reponse_div = new Element("div");
-                        reponse_div.innerHTML = response;
-                        var replace_div = reponse_div.select('div');
-
-                        for (var i = 0; i < replace_div.length; ++i)
-                            for(var j = 0; j < update_divs.length; ++j)
-                            {
-                                if(replace_div[i].id == update_divs[j])
-                                    $(update_divs[j]).replace(replace_div[i]);
-                            }
-                        },
-                        onFailure: function(){ alert('Something went wrong...'); },
-                        parameters: params
-                      });
-            }, timeout);
-        }
+    //Observe fields
+    for (var i = 0; i < fields.length; ++i) {
+        $(fields[i]).observe(action,send);
     }
 
+    function send(event)
+    {
+        var params = '';
+        event_count++;
+
+        for (var i = 0; i < fields.length; ++i)
+        {
+            params += $(fields[i]).serialize()+'&';
+        }
+
+        setTimeout(function() {
+            event_count--;
+
+            if(event_count == 0)
+                new Ajax.Request(php_file,
+                  {
+                    method:'post',
+                    onSuccess: function(transport){
+
+                    var response = transport.responseText;
+                    var reponse_div = new Element("div");
+                    reponse_div.innerHTML = response;
+                    var replace_div = reponse_div.select('div');
+
+                    for (var i = 0; i < replace_div.length; ++i)
+                        for(var j = 0; j < update_divs.length; ++j)
+                        {
+                            if(replace_div[i].id == update_divs[j])
+                                $(update_divs[j]).replace(replace_div[i]);
+                        }
+                    },
+                    onFailure: function(){ alert('Something went wrong...'); },
+                    parameters: params
+                  });
+        }, timeout);
+    }
+}
+
+/**
+* List used for autocompletion
+*
+*/
+var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv
+        });
+};
 
     /**
     * List used for autocompletion
-    *
-    */
-    var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv
-            });
-    };
-
-    /**
-    * List used for autocompletion and set id in hidden input
     *
     */
     var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
@@ -241,29 +272,30 @@ function repost(php_file,update_divs,fields,action,timeout)
                 paramName: paramNameSrv,
                 minChars: minCharsSrv,
                 afterUpdateElement: function (text, li){
-                    $(new_value).value = li.id;
+                    $j('#'+new_value).value = li.id; 
                 }
             });
     };
 
-    var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                afterUpdateElement: function (text, li){
-                    var str = li.id;
-                    var res = str.split(",");
-                    $(new_value).value = res[1];
-                    $(actual_value).value = res[0];
-                    $('country').value = 'FRANCE';
-                }
-            });
-    };
+var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            afterUpdateElement: function (text, li){
+                var str = li.id;
+                var res = str.split(",");
+                $(new_value).value = res[1];
+                $(actual_value).value = res[0];
+                $('country').value = 'FRANCE';
+            }
+        });
+};
+
 
     var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
     {
@@ -277,9 +309,9 @@ function repost(php_file,update_divs,fields,action,timeout)
                 afterUpdateElement: function (text, li){
                     var str = li.id;
                     var res = str.split(",");
-                    $(new_value).value = res[0];
-                    $(actual_value).value = res[1];
-                    $('country').value = 'FRANCE';
+                    $j("#"+new_value).value = res[0];
+                    $j("#"+actual_value).value = res[1];
+                    $j('#country').value = 'FRANCE';
                 }
             });
     };
@@ -294,14 +326,13 @@ function repost(php_file,update_divs,fields,action,timeout)
                 paramName: paramNameSrv,
                 minChars: minCharsSrv,
                 callback: function (element, entry){
-					return entry + "&"+previous_name+"=" + $(previous_field).value; 
-			    },
+                    return entry + "&"+previous_name+"=" + $j("#"+previous_field).value; 
+                },
                 afterUpdateElement: function (text, li){
-                    $(new_value).value = li.id;
+                    $j("#"+new_value).value = li.id;
                 }
             });
     };
-
 
 /*********** Init vars for the calendar ****************/
     var allMonth=[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -423,7 +454,7 @@ function repost(php_file,update_divs,fields,action,timeout)
 
     }
     function showCalender(ele) {
-        if($('basis')) { removeCalender() }
+        if($j('#basis')[0]) { removeCalender() }
         else {
             target=$(ele.id.replace(/for_/,''));
             var basis=ele.parentNode.insertBefore(document.createElement('div'),ele);
@@ -530,10 +561,10 @@ function repost(php_file,update_divs,fields,action,timeout)
 
     function ShowHideMenu(menu,onouoff) {
         if (typeof($) == 'function') {
-            monmenu = $(menu);
-            mondivmenu = $("menu");
-            monadmin = $("admin");
-            monhelp = $("aide");
+            monmenu = $j("#"+menu)[0];
+            mondivmenu = $j("#menu")[0];
+            monadmin = $j("#admin")[0];
+            monhelp = $j("#aide")[0];
         }
         else if(document.all) {
             monmenu = document.all[menu];
@@ -571,6 +602,7 @@ function repost(php_file,update_divs,fields,action,timeout)
             }
         }
     }
+
 
 
 /****************************************/
@@ -1017,7 +1049,7 @@ function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
     Event.observe(layer, 'mousewheel', function(event){Event.stop(event);}.bindAsEventListener(), true);
     Event.observe(layer, 'DOMMouseScroll', function(event){Event.stop(event);}.bindAsEventListener(), false);
     $(id_mod).focus();
-    $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";})
+    $j("input[type='button']").prop("disabled", false).css("opacity", "1");
 }
 
 function test_form()
@@ -1051,9 +1083,9 @@ function test_form()
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
-    if ($j('#divList')[0]) {
-        $j('#divList')[0].style.display = 'block';
 
+    if ($j('#divList')) {
+        $j('#divList').css('display','block');
     }
     if(id_mod == undefined || id_mod=='')
     {
@@ -1070,7 +1102,7 @@ function destroyModal(id_mod){
     }
     document.getElementsByTagName('body')[0].removeChild($j("#" + id_mod)[0]);
     document.getElementsByTagName('body')[0].removeChild($j("#" + id_layer)[0]);
-    $j("input[type='button']").prop("disabled", false).css("opacity", "1")
+    $j("input[type='button']").prop("disabled", false).css("opacity", "1");
 }
 
 /**
@@ -1203,7 +1235,6 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 {
     var frm_values;
     var chosen_action_id;
-
     if (typeof advancedMode !== "undefined") {
         frm_values = "so#use#less"; // Sert juste a remplir frm_values pour manage_actions
         chosen_action_id = advancedMode[0];
@@ -1233,10 +1264,8 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
             },
             onCreate: function(answer) {
                 //show loading image in toolbar
-                $$("input[type='button']").each(function(v) {
-                    v.setAttribute("disabled","disabled");
-                    v.style.opacity = "0.5";
-                });
+
+                $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
             },
             onSuccess: function(answer){
                 eval('response='+answer.responseText);
@@ -1267,7 +1296,8 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                     try {
                         $('frm_error_'+id_action).innerHTML = response.error_txt;
                         alert($('frm_error_'+id_action).innerHTML);
-                        $$("input[type='button']").each(function(v) {v.removeAttribute('disabled');v.style.opacity="1";});
+                        $j("input[type='button']").prop("disabled", false).css("opacity", "1");
+
                     } catch(e){
 
                     }
@@ -1475,12 +1505,13 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
             },
             beforeSend: function() {
                 //show loading image in toolbar
-                $$("input[type='button']").each(function(v) {v.setAttribute("disabled","disabled");v.style.opacity="0.5";});
+                $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
+
             },
             success: function(answer){
                 eval("response = " + answer);
 
-                if(response.status == 0 ) {
+                if(response$j.ajax.status == 0 ) {
                     var page_result = response.page_result;
 
                     if(response.action_status != '' && response.action_status != 'NONE') {
@@ -1562,9 +1593,7 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                               },
                 onCreate: function(answer) {
                     //show loading image in toolbar
-                    $$("input[type='button']").each(function(v) {
-                        v.setAttribute("disabled","disabled");v.style.opacity="0.5";
-                    });
+                    $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
                 },
                 onSuccess: function(answer){
                     eval('response='+answer.responseText);
@@ -1589,12 +1618,8 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                     {
                         try{
                             $('frm_error').innerHTML = response.error_txt;
-                            $$("input[type='button']").each(function(v) {
-                                v.setAttribute("disabled","disabled");
-                                v.style.opacity="0.5";
-                            });
-                            }
-                        catch(e){}
+                            $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
+                        } catch(e) {}
                     }
                 },
                 onFailure: function(){
@@ -1607,28 +1632,30 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
 {
     if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
               && tablename != '' &&  id_coll != '')
-        {
-            new Ajax.Request(path_manage_script,
-            {
-                method:'post',
-                asynchronous : false,
-                parameters: { values : res_id_values,
-                              mode : mode_req,
-                              req : 'change_status',
-                              table : tablename,
-                              coll_id : id_coll,
-                              new_status : status
-                              },
-                onSuccess: function(answer){
-                    eval('response='+answer.responseText);
-                    if(response.status == 0 ) {
+    {
+
+        $j.ajax({
+            cache    : false,
+            url      : path_manage_script,
+            type     : 'POST',
+            dataType : 'json',
+            data: { values : res_id_values,
+                    mode : mode_req,
+                    req : 'change_status',
+                    table : tablename,
+                    coll_id : id_coll,
+                    new_status : status,
+                  },
+            success: function(answer) {
+
+                setTimeout(function(){
+                    if(answer.status == 0 ) {
                         actions_status.values = [];
                         // Status changed
                     } else {
                         try{
-                            //$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
-                            $('frm_error').innerHTML = response.error_txt;
-                            }
+                            $('frm_error').innerHTML = answer.error_txt;
+                        }
                         catch(e){}
                     }
                     if(page != '' && page != NaN && page && page != null ) {
@@ -1660,12 +1687,11 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                     }
                     
                     do_nothing = false;
-                },
-                onFailure: function(){
-                }
-            });
-        }
-        return true;
+                }, 200);
+            }
+        });
+    }
+    return true;
 }
 /***********************************************************************/
 
@@ -1977,7 +2003,7 @@ function valid_userlogs(url)
                 user : user_id_val
                         },
                 onSuccess: function(answer){
-            //  alert(answer.responseText);
+                //alert(answer.responseText);
                 var div_to_fill = $('result_userlogsstat');
                 if(div_to_fill)
                 {
@@ -2916,20 +2942,19 @@ function showPreviousAttachments(path_manage_script, id){
 }
 
 function affiche_reference(){
-    
     var nature = document.getElementById('nature_id').options[document.getElementById('nature_id').selectedIndex];
 
-    if (nature.getAttribute('with_reference') == 'true') {      
-        $('reference_number_tr').setStyle({display: 'table-row'});
+    if (nature.getAttribute('with_reference') == 'true') {
+        $j('#reference_number_tr').css('display','table-row');
     } else {
-        $('reference_number_tr').setStyle({display: 'none'});
-        $('reference_number').value='';
+        $j('#reference_number_tr').css('display','none');
+        $j('#reference_number').val('');
     }
 }
 
 function erase_contact_external_id(id, erase_id){
-    if($(id).value == ''){
-        $(erase_id).value = '';
+    if($j('#'+id).val() == ''){
+        $j('#'+erase_id).val('');
     }
 }
 
@@ -2977,6 +3002,23 @@ function loadAddressAttached(contact_id, select){
             $('selectContactAddress_'+select).innerHTML = answer.responseText;
         }
     });
+}
+
+function loadDiffListHistory(listinstance_history_id)
+{
+    new Effect.toggle('diffListHistory_'+listinstance_history_id, 'appear' , {delay:0.2});
+
+    var path_manage_script = 'index.php?module=entities&page=loadDiffListHistory&display=true';
+
+    new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { listinstance_history_id : listinstance_history_id},
+            onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                $('divDiffListHistory_'+listinstance_history_id).innerHTML = response.toShow;
+            }
+        });
 }
 
 function saveSizeInBytes() {
@@ -3143,35 +3185,7 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
             document.getElementById('show_tab').innerHTML = answer;
         }
     });
-  
-  
-    /*new Ajax.Request(path_manage_script,
-    {
-        method:'post',
-        parameters: {
-            resId : resId,
-            collId : collId,
-            titleTab : titleTab,
-            pathScriptTab : pathScriptTab
-            },
-        onSuccess: function(answer){
-            //console.log(answer.responseText);
-            document.getElementById('show_tab').style.display='block';
-            document.getElementById('show_tab').setAttribute('module',module);
-            
-            $$("span[class='tab_module']").each(function(v) {v.innerHTML = '<i class="fa fa-plus-square-o"></i>';})
-            if(document.getElementById(module+'_tab') != undefined ){
-                document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
-            }
-            document.getElementById('show_tab').innerHTML = answer.responseText;
-            /*if (response.status == 0) {
-                console.log(response);
-            } else if (response.status == 1){
-                alert('Erreur!');
-            }*/
-      //  }
-   // });
-
+ 
 
 }
 
@@ -3179,28 +3193,30 @@ function loadSpecificTab(id_iframe,pathScriptTab){
     document.getElementById(id_iframe).src = pathScriptTab;
 }
 
-
 //LOAD BADGES TOOLBAR
 function loadToolbarBadge(targetTab,path_manage_script){
-    new Ajax.Request(path_manage_script,
-    {
-        asynchronous : false,
-        method:'post',
-        parameters: {
+    
+   $j.ajax({
+        url: path_manage_script,
+        type : 'POST',
+        //dataType: 'JSON',
+        data: {
             targetTab : targetTab
         },
-        onSuccess: function(answer){
-            eval("response = "+answer.responseText);
-            if (response.status == 0) {
+        success: function(answer){
+            eval("response = "+answer);
+            if(response.status==0){            
                 if(response.nav != ''){
-                    document.getElementById(response.nav).style.paddingRight = "0px";
+                    $j('#'+response.nav).css('paddingRight','0px');
                 }
-                eval(response.exec_js);
-            } else if (response.status == 1){
-                alert('Erreur!');
+            eval(response.exec_js);
             }
+        },
+        error: function(error)
+        {
+            alert(error);
         }
-    });
+    })
 }
 
 var disablePrototypeJS = function (method, pluginsToDisable) {
@@ -3220,6 +3236,52 @@ function resetSelect(id) {
     Event.fire($(id), "chosen:updated");
 }
 
+function getChildrenHtml (branch_id, treeDiv, path_manage_script, opened, closed){
+    var minus;
+    if($j('#'+branch_id+' i').first().prop('class')==closed)
+    {
+        minus=false;
+    }
+    else{
+        minus =true;
+        
+    }
+    $j.ajax({
+        url: path_manage_script, 
+        type: 'POST',
+        data: {branch_id : branch_id},
+        success: function(result){
+                var branch = $j('#'+branch_id);
+                if(minus){
+                    BootstrapTree.removeSons($j('#'+branch_id+' > ul'));
+                    $j('#'+branch_id+' i').first().prop('class',closed);
+                }
+                else{
+                    if(result!=''){
+                        BootstrapTree.addNode($j('#'+branch_id),$j(result), opened, closed);
+                        BootstrapTree.init($j('#'+treeDiv),opened,closed);
+                        $j('#'+branch_id+' > ul').first().find('li').hide();
+                        $j('#'+branch_id+' > ul').first().find('li').show('fast');
+                        $j('#'+branch_id+' i').first().prop('class',opened);
+                    }
+                    else{
+                        $j('#'+branch_id+' i').first().prop('class','emptyNode');
+                    }
+                }
+            }
+        });
+    }
+
+// Exemple appel service
+// function testService(){
+//     $j.ajax({
+//         url: globalConfig.coreurl+'rest.php?module=core&service=Core_Session_Service&method=getUserEntitiesLst', 
+//         success: function(result){
+//             console.log(result);
+//         }
+//     });
+// }
+
 function titleWithTooltipster(id){
     $j(document).ready(function() {
         $j('#'+id).tooltipster({delay :0});
@@ -3227,6 +3289,105 @@ function titleWithTooltipster(id){
 }
 
 /** Advanced Search **/
+
+/**
+ * Fills inputs fields of text type in the search form whith value
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_input_text(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        tmp_elem.value = values[key];
+    }
+}
+
+/**
+ * Fills date range in the search form whith value
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_date_range(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        tmp_elem.value = values[key][0];
+    }
+}
+
+/**
+ * Selects items in a mutiple list (html select object with multiple) in the search form
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_select_multiple(values)
+{
+    for( var key in values)
+    {
+        if(key.indexOf('_chosen') >= 0)
+        {
+            var available = key.substring(0, key.length -7)+'_available';
+            var available_list = $(available);
+            for(var j=0; j <values[key].length;j++)
+            {
+                for(var i=0; i<available_list.options.length;i++)
+                {
+                    if(values[key][j] == available_list.options[i].value)
+                    {
+                        available_list.options[i].selected='selected';
+                    }
+                }
+            }
+            Move_ext(available, key);
+        }
+        if(key.indexOf('_targetlist') >= 0)
+        {
+            var available = key.substring(0, key.length -7)+'_sourcelist';
+            var available_list = $(available);
+            for(var j=0; j <values[key].length;j++)
+            {
+                if (available_list) {
+                    for(var i=0; i<available_list.options.length;i++)
+                    {
+                        if(values[key][j] == available_list.options[i].value)
+                        {
+                            available_list.options[i].selected='selected';
+                        }
+                    }
+                }
+            }
+            if (available) {
+                Move_ext(available, key);
+            }
+        }
+    }
+}
+
+/**
+ * Selects an item in a simple list (html select object) in the search form
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_select_simple(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        for(var j=0; j <values[key].length;j++)
+        {
+            for(var i=0; i<tmp_elem.options.length;i++)
+            {
+                if(values[key][j] == tmp_elem.options[i].value)
+                {
+                    tmp_elem.options[i].selected='selected';
+                }
+            }
+        }
+    }
+}
 
 /**
  * Load a query in the Advanced Search page
@@ -3268,11 +3429,10 @@ function add_criteria(elem_comp, id_form, ie_browser, error_txt_ie)
     var form = window.$(id_form);
     var valeur = valeurs[elem];
     if (ie_browser) {
-        var div_node = $('search_parameters_'+elem);
+        var div_node = $j('#search_parameters_'+elem);
     }
     if (typeof(valeur) != 'undefined') {
-        if (ie_browser == true  && typeof(div_node) != 'undefined'
-            && div_node != null) {
+        if (ie_browser == true  && typeof(div_node) != 'undefined' && div_node != null) {
             alert(error_txt_ie);
         } else {
             var node = document.createElement('div');
@@ -3292,11 +3452,7 @@ function add_criteria(elem_comp, id_form, ie_browser, error_txt_ie)
             var label = $(elem_comp);
             label.parentNode.selectedIndex = 0;
             label.style.display = 'none';
-            //  label.disabled = !label.disabled;
         }
-    } else {
-        //Error if the valeur array has no key 'id'
-        //alert('Error with Javascript Search Adv ');
     }
 }
 
@@ -3410,7 +3566,7 @@ function clear_q_list(item_value)
 function load_query_db(id_query, id_list, id_form_to_load, sql_error_txt, server_error_txt, manage_script)
 {
     if (id_query != '') {
-        var query_object = new Ajax.Request(
+        new Ajax.Request(
             manage_script,
             {
                 method:'post',
@@ -3427,9 +3583,8 @@ function load_query_db(id_query, id_list, id_form_to_load, sql_error_txt, server
                             && response.query != {}) {
                             load_query(valeurs, response.query, id_form_to_load);
                         }
-                        var del_button = $('del_query');
-                        del_button.style.display = 'inline';
-                        $('query_' + id_query).selected = "selected";
+                        $j("#del_query").css("display", "inline");
+                        $j("#query_" + id_query)[0].selected = true;
                     } else if(response.status == 2) {
                         $('error').update(sql_error_txt);
                     } else {
