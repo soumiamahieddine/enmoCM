@@ -361,5 +361,3 @@ function slide(
         $('#'+idDiv).slideToggle('slow');
     })
 }
-
-
