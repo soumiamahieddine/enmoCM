@@ -28,41 +28,13 @@
 * @ingroup install
 */
 
-$_REQUEST['docserverRoot'] = str_replace("/", DIRECTORY_SEPARATOR, $_REQUEST['docserverRoot']);
+//MODEL
+    include_once '../../core/init.php';
 
-$checkDocserverRoot = $Class_Install->checkPathRoot(
-    $_REQUEST['docserverRoot']
-);
+//CONTROLLER
+    if (!isset($_REQUEST['languageSelect']) || empty($_REQUEST['languageSelect'])) {
+        header("Location: ../error.php?error=badForm"); exit;
+    }
 
-if ($checkDocserverRoot !== true) {
-    $return['status'] = 0;
-    $return['text'] = $checkDocserverRoot;
-
-    $jsonReturn = json_encode($return);
-
-    echo $jsonReturn;
-    exit;
-}
-
-if (!$Class_Install->createDocservers($_REQUEST['docserverRoot'])) {
-    $return['status'] = 0;
-    $return['text'] = _CAN_NOT_CREATE_SUB_DOCSERVERS;
-
-    $jsonReturn = json_encode($return);
-
-    echo $jsonReturn;
-    exit;
-}
-
-$updateDocserversDB = $Class_Install->updateDocserversDB(
-    $_REQUEST['docserverRoot']
-);
-$Class_Install->updateDocserverForXml($_REQUEST['docserverRoot']);
-
-$return['status'] = 1;
-$return['text'] = '';
-
-$jsonReturn = json_encode($return);
-
-echo $jsonReturn;
-exit;
+    $_SESSION['lang'] = $_REQUEST['languageSelect'];
+    header("Location: ../index.php?step=update_welcome");

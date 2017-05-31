@@ -21,7 +21,7 @@ function triggerAngular(prodmode, locationToGo) {
 
             angularGlobals = answer;
             if (prodmode) {
-                $j('#inner_content').html('<div><i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i></div>');
+                $j('#maarchDependenciesContent').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
 
                 var head = document.getElementsByTagName('head')[0];
                 var script = document.createElement('script');

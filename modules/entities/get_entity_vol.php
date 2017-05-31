@@ -1,4 +1,5 @@
 <?php
+
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -15,16 +16,29 @@ require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manag
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php";
 require_once 'modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_graphics.php";
 require_once 'modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'entities_tables.php';
+require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities_Abstract.php');
 
 $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 
 $graph = new graphics();
-$req = new request();
-$db = new Database();
-$sec = new security();
+$req   = new request();
+$db    = new Database();
+$sec   = new security();
 
 $entities_chosen = explode("#", $_POST['entities_chosen']);
+if($_REQUEST['sub_entities'] == 'true'){
+    $sub_entities = [];
+    foreach($entities_chosen as $value){
+        $sub_entities[] = users_entities_Abstract::getEntityChildren($value);
+    }
+    $sub_entities1 = "'";
+    for( $i=0; $i< count($sub_entities ); $i++){
+        $sub_entities1 .= implode("','",$sub_entities[$i]);
+        $sub_entities1 .= "','";
+    }
+    $sub_entities1 = substr($sub_entities1, 0, -2);
+}
 $entities_chosen = "'" . join("','", $entities_chosen) . "'";
 
 $status_chosen = '';
@@ -66,6 +80,8 @@ $str_status = preg_replace('/,$/', ')', $str_status);
 //Récupération de l'ensemble des types de documents
 if (!$_REQUEST['entities_chosen']) {
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+}elseif($_REQUEST['sub_entities'] == 'true'){
+    $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") or entity_id IN (".$sub_entities1.") order by short_label");
 } else {
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label",array());
 }
@@ -215,7 +231,7 @@ $totalCourrier=array();
 $totalEntities = count($entities);
 
 for ($i=0; $i<$totalEntities;$i++) {
-    $stmt = $db->query("select count(*) as total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where destination = ? and ".$view.".status not in ('DEL','BAD') ".$where_date." ".$where_status." ".$where_priority . $where_clause." ", array($entities[$i]['ID']));
+    $stmt = $db->query("select count(*) as total from ".$view." where destination = ? and ".$view.".status not in ('DEL','BAD') ".$where_date." ".$where_status." ".$where_priority . $where_clause." ", array($entities[$i]['ID']));
     //$db->show();
     $res = $stmt->fetchObject();
         

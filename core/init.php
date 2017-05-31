@@ -6,6 +6,7 @@ $sessionName = str_replace("\\","/", dirname(__file__));
 $sessionName = str_replace($_SERVER['DOCUMENT_ROOT'], '', $sessionName);
 $sessionName = str_replace("/", '', $sessionName);
 $sessionName = str_replace('core', '', $sessionName);
+$sessionName = str_replace(".", '', $sessionName);
 if ($sessionName == '') {
     $sessionName = 'maarch';
 }

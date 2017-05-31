@@ -549,15 +549,6 @@ function loadSignPad(){
       }
   });
 
-
-  var swiper = new Swiper('.swiper-container', {
-        scrollbar: '.swiper-scrollbar',
-        scrollbarHide: true,
-        slidesPerView: 'auto',
-        direction: 'vertical',
-        spaceBetween: 10,
-        grabCursor: true
-    });
 }
 
 function loadDeviceInfos() {
