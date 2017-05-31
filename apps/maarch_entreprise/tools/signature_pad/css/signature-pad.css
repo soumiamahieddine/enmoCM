@@ -2,7 +2,7 @@
   position: absolute;
   font-size: 10px;
   width: 100%;
-  height: 95%;
+  height: 99%;
   /*top: 50%;*/
   /*left: 3%;*/
   /*margin-left: -350px;
@@ -13,7 +13,7 @@
   border-radius: 4px;
 }
 
-.m-signature-pad:before, .m-signature-pad:after {
+/*.m-signature-pad:before, .m-signature-pad:after {
 	position: absolute;
   z-index: -1;
   content: "";
@@ -38,14 +38,14 @@
 	-ms-transform: skew(3deg) rotate(3deg);
 	-o-transform: skew(3deg) rotate(3deg);
 	transform: skew(3deg) rotate(3deg);
-}
+}*/
 
 .m-signature-pad--body {
   position: absolute;
   left: 120px;
-  right: 20px;
-  top: 20px;
-  bottom: 60px;
+  right: 5px;
+  top: 5px;
+  bottom: 45px;
   border: 1px solid #f4f4f4;
 }
 
@@ -63,46 +63,25 @@
 .m-signature-pad--left {
   position: absolute;
   left: 0px;
-  top: 20px;
-  bottom: 60px;
+  top: 5px;
+  bottom: 50px;
   width: 120px;
 }
 
-/*swiper*/
-.swiper-container {
-    width: 100px;
-    height: 100%;
-    margin: 5px auto;
-    background: #f4f4f4;
+#list_tnl_sign{
+  width: 100px;
+  height: 100%;
+  margin: 5px auto;
+  background: #f4f4f4;
+  overflow: auto;
 }
-.swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    background: #fff;
-    width: 100px;
-    height: 15%;
-    /* Center slide text vertically */
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    align-items: center;
-}
-/**************************/
 
 .m-signature-pad--footer {
   position: absolute;
   left: 20px;
   right: 20px;
-  bottom: 20px;
-  height: 40px;
+  bottom: 5px;
+  height: 30px;
 }
 
 .m-signature-pad--footer

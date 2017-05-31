@@ -162,6 +162,11 @@
     </FORMAT>
     <FORMAT>
         <name>TXT</name>
+        <mime>application/xml</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>TXT</name>
         <mime>application/octet-stream</mime>
         <index_frame_show>true</index_frame_show>
     </FORMAT>

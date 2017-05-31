@@ -11,13 +11,6 @@ var addEmailAdress = function (idField, idList, theUrlToListScript, paramNameSrv
          });
  };
 
-/*
-function addTemplateToEmail(modele){
-    $(body_from_html).value = modele + '<br>';
-    tinyMCE.execCommand('mceInsertContent',false,modele);  
-}
-*/
-
 function addTemplateToEmail(templateMails, path){
 
     new Ajax.Request(path,
@@ -30,18 +23,9 @@ function addTemplateToEmail(templateMails, path){
             eval("response = " + answer.responseText);
             if (response.status == 0) {
                 var strContent = response.content;
-                //var strContentReplace = strContent.replace(reg, '\n') + '<p></p>';
-                //var strContentReplace = strContent.replace(/\\n/g, '<p>') + '<p><p>';
                 var strContentReplace = strContent.replace(/\\n/g, '');
-                //tinyMCE.execCommand('mceInsertContent',false,strContentReplace); 
                 tinyMCE.execCommand('mceSetContent',false,strContentReplace);
             } 
-
-            /*
-            else {
-                window.top.$('main_error').innerHTML = response.error;
-            }
-            */
         }
     });
 }
@@ -66,15 +50,15 @@ function changeSignature(selected, mailSignaturesJS){
 function showEmailForm(path, width, height, iframe_container_id) {
     
     if(typeof(width)==='undefined'){
-        var width = '820px';
+        width = '820px';
     }
     
     if(typeof(height)==='undefined'){
-        var height = '545px';
+        height = '545px';
     }  
 	
     if(typeof(iframe_container_id)==='undefined'){
-        var iframe_container_id = '';
+        iframe_container_id = '';
     }  
     new Ajax.Request(path,
     {
@@ -121,7 +105,6 @@ function updateAdress(path, action, adress, target, array_index, email_format_te
                     alert(response.error);
                     eval(response.exec_js);
                 }
-                // $('loading_' + target).style.display='none';
             }
         });
     } else {
@@ -132,7 +115,7 @@ function updateAdress(path, action, adress, target, array_index, email_format_te
     }
 }
 
-function validEmailForm (path, form_id) {
+function validEmailForm(path, form_id) {
 
     var attachments = $j("#joined_files input.check");
 
@@ -173,24 +156,20 @@ function validEmailForm (path, form_id) {
     });
 }
 
-function validEmailFormForSendToContact (path, form_id, path2, status) {
-    // var content = tinyMCE.get('body_from_html').getContent(); // 
-    // alert(content);
+function validEmailFormForSendToContact(path, form_id, path2, status) {
     tinyMCE.triggerSave();
     new Ajax.Request(path,
     {
         asynchronous:false,
         method:'post',
-        // parameters: Form.serialize(form_id)+ '&body_from_html=' + content,   
-        parameters: Form.serialize(form_id),   
+        parameters: Form.serialize(form_id),
         encoding: 'UTF-8',                       
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
             if(response.status == 0){
                 eval(response.exec_js);
-                changeStatusForActionSendToContact(path2, status)
-                window.parent.destroyModal('form_email'); 
-
+                changeStatusForActionSendToContact(path2, status);
+                window.parent.destroyModal('form_email');
             } else {
                 alert(response.error);
                 eval(response.exec_js);
@@ -207,16 +186,14 @@ function validEmailFormForSendToContact (path, form_id, path2, status) {
         parameters: {status : status},   
         encoding: 'UTF-8',                       
         onSuccess : function(){
-                  //window.top.location.reload();
-                  parent.document.getElementById('storage').click();
-              }
+          parent.document.getElementById('storage').click();
+        }
     });
  }
 
 function extractEmailAdress(field, item) {
     var fullAdress = item.innerHTML;
-    var email = fullAdress.match(/\(([^)]+)\)/)[1];
-    field.value = email;
+    field.value = fullAdress.match(/\(([^)]+)\)/)[1];
 }
 
 function validateEmail(email) { 

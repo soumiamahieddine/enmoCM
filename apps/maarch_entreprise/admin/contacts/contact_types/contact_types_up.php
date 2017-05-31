@@ -32,6 +32,7 @@ require "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_history.php";
 $core = new core_tools();
 $core->test_admin('admin_contacts', 'apps');
+$core->load_lang();
 
 $mode = "";
 if (isset($_GET['id']) && ! empty($_GET['id'])) {

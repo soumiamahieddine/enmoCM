@@ -31,7 +31,7 @@ class BasketsModelAbstract extends \Apps_Table_Service
 
         $aBasket = static::select(
             [
-            'select'    => ['basket_clause'],
+            'select'    => ['basket_clause', 'basket_res_order'],
             'table'     => ['baskets'],
             'where'     => ['basket_id = ?'],
             'data'      => [$aArgs['basketId']]
@@ -50,7 +50,7 @@ class BasketsModelAbstract extends \Apps_Table_Service
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_view_letterbox'],
             'where'     => [$where],
-            'order_by'  => empty($aArgs['order_by']) ? ['creation_date DESC'] : $aArgs['order_by'],
+            'order_by'  => empty($aBasket[0]['basket_res_order']) ? ['creation_date DESC'] : $aBasket[0]['basket_res_order'],
             ]
         );
 

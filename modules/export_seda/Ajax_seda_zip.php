@@ -19,13 +19,14 @@
 */
 
 	require_once __DIR__.'/Zip.php';
+    require_once __DIR__ . '/RequestSeda.php';
 
 	$status = 0;
 	$error = $content = '';
 	if ($_REQUEST['reference']) {
 		$extract = new Extract();
 		$zipfile = $extract->exportZip($_REQUEST['reference']);
-		$status = $extract->download($zipfile);
+		$extract->download($zipfile);
 	} else {
 		$status = 1;
 	}
@@ -59,16 +60,17 @@ class Extract
         return $zipfile;
 	}
 
-	public function download($full_path) {
-		$file_name = basename($full_path);
-		
-		header('Content-Description: File Transfer');
-		header('Content-Type: application/octet-stream');
-		header('Content-Tranfer-Encoding: fichier');
-		header('Content-Length: '.filesize($full_path));
-		header('Content-Type: application/force-download');
-		header('Content-Disposition: attachment; filename="'.$file_name.'"');
+	public function download($full_path)
+    {
+        $file_name = basename($full_path);
 
-		readfile($full_path);
-	}
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Tranfer-Encoding: fichier');
+        header('Content-Length: ' . filesize($full_path));
+        header('Content-Type: application/force-download');
+        header('Content-Disposition: attachment; filename="' . $file_name . '"');
+
+        readfile($full_path);
+    }
 }

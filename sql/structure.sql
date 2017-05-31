@@ -113,6 +113,7 @@ CREATE TABLE doctypes
   secondary_retention  character varying(50) DEFAULT NULL,
   retention_final_disposition character varying(255) NOT NULL DEFAULT 'destruction'::character varying,
   retention_rule character varying(15) NOT NULL DEFAULT 'P10Y'::character varying,
+  duration_current_use integer,
   CONSTRAINT doctypes_pkey PRIMARY KEY (type_id)
 )
 WITH (OIDS=FALSE);
@@ -520,6 +521,7 @@ CREATE TABLE baskets
   is_folder_basket character (1) NOT NULL default 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   basket_order integer,
+  basket_res_order character varying(255),
   flag_notif character varying(1),
   except_notif text,
   CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id)
