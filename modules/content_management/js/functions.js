@@ -1,3 +1,9 @@
+var editing;
+function editingDoc(user){
+
+    editing = setInterval(function() {checkEditingDoc('user')}, 500);
+
+}
 //load applet in a modal
 function loadApplet(url, value)
 {
@@ -52,6 +58,7 @@ function sendAppletMsg(theMsg)
 //destroy the modal of the applet and launch an ajax script
 function endOfApplet(objectType, theMsg)
 {
+    console.log('endOfAppletendOfAppletendOfApplet');
     if (window.opener.$('add')) {
         window.opener.$('add').setStyle({display: 'inline'});
     } else if (window.opener.$('edit')) {
@@ -196,30 +203,59 @@ function showDiv(divName, spanNb, divCreate, path_manage_script)
 }
 
 function checkEditingDoc(userId) {
-    if($('add')){
-        var target = $('add');
+    if($j('#add').length){
+        var target = $j('#add');
     }else{
-        var target = $('edit');
+        var target = $j('#edit');
     }
-    var path_manage_script = "index.php?display=true&page=checkEditingDoc&module=content_management";
-    new Ajax.Request(path_manage_script,
-    {
-        method:'post',
-            onSuccess: function(answer){
-            eval("response = "+answer.responseText);
+    //LOCK VALIDATE BUTTON
+    target.prop('disabled', true);
+    target.css({"opacity":"0.5"});
+    target.val('Edition en cours ...');
 
-            if(response.status == 0) {
+    //LOCK EDIT BUTTON TRANSMISSION
+    $j(".transmissionEdit").css({"opacity":"0.5"});
+    $j(".transmissionEdit").prop('disabled', true);
+
+    $j.ajax({
+       url : 'index.php?display=true&page=checkEditingDoc&module=content_management',
+       type : 'POST',
+       dataType : 'JSON',
+       success : function(response){
+            if (response.status == 0) {
                 console.log('no lck found!');
-                target.removeAttribute('disabled');
-                target.style.opacity='1';
-                target.value='Valider';
+
+                //UNLOCK VALIDATE BUTTON
+                target.prop('disabled', false);
+                target.css({"opacity":"1"});
+                target.val('Valider');
+
+                //UNLOCK EDIT BUTTON TRANSMISSION
+                $j(".transmissionEdit, #edit").css({"opacity":"1"});
+                $j(".transmissionEdit, #edit").prop('disabled', false);
+
+                //END OF CHECKING APPLET
+                console.log('clearInterval');
+                clearInterval(editing);
             } else {
                 console.log('lck found! Editing in progress !');
-                target.disabled='disabled';
-                target.style.opacity='0.5';
-                target.value='Edition en cours ...';
+
+                //LOCK VALIDATE BUTTON
+                target.prop('disabled', true);
+                target.css({"opacity":"0.5"});
+                target.val('Edition en cours ...');
+
+                //LOCK EDIT BUTTON TRANSMISSION
+                $j(".transmissionEdit, #edit").css({"opacity":"0.5"});
+                $j(".transmissionEdit, #edit").prop('disabled', true);
+
             }
-        }
+       },
+       error : function(error){
+           console.log(error);
+           //alert(error);
+       }
+
     });
 
 }

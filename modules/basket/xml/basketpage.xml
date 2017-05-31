@@ -51,6 +51,16 @@
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </BASKETPAGE>
+    <BASKETPAGE>
+        <ID>list_with_signatory</ID>
+        <LABEL>_DOCUMENTS_LIST_WITH_SIGNATORY</LABEL>
+        <NAME>documents_list_with_signatory</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>visa</MODULE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </BASKETPAGE>
     <!-- folders lists -->
     <BASKETPAGE>
         <ID>list_folders</ID>

@@ -39,35 +39,49 @@ class MergedJsAbstract {
 	}
 
 	public function merge_lib() {
-		readfile('apps/maarch_entreprise/js/accounting.min.js');
-		include('apps/maarch_entreprise/js/functions.js');
 		readfile('apps/maarch_entreprise/js/prototype.js');
+
+		//scriptaculous (prototype)
 		readfile('apps/maarch_entreprise/js/scriptaculous.js');
-		readfile('apps/maarch_entreprise/js/jquery.min.js');
-		readfile('apps/maarch_entreprise/js/jquery.nicescroll.min.js');
-		readfile('apps/maarch_entreprise/js/tooltipster/dist/js/tooltipster.bundle.min.js');
-		include('apps/maarch_entreprise/js/indexing.js');
-		readfile('apps/maarch_entreprise/js/scrollbox.js');
 		readfile('apps/maarch_entreprise/js/effects.js');
 		readfile('apps/maarch_entreprise/js/controls.js');
-		readfile('apps/maarch_entreprise/js/tabricator.js');
-		include('apps/maarch_entreprise/js/search_adv.js');
-		readfile('apps/maarch_entreprise/js/maarch.js');
-		readfile('apps/maarch_entreprise/js/keypress.js');
-		readfile('apps/maarch_entreprise/js/Chart.js');
+
+		//TODO clean
 		readfile('apps/maarch_entreprise/js/chosen.proto.min.js');
-		readfile('apps/maarch_entreprise/js/event.simulate.js');
+		readfile('apps/maarch_entreprise/js/scrollbox.js');
+		readfile('apps/maarch_entreprise/js/event.simulate.js'); // Works with chosen proto
+//		readfile('apps/maarch_entreprise/js/keypress.js'); // TODO Remove after test
+		readfile('apps/maarch_entreprise/js/tabricator.js');
+
+		//Dependencies
+		readfile('node_modules/jquery/dist/jquery.min.js');
+		readfile('node_modules/core-js/client/shim.js');
+		readfile('node_modules/zone.js/dist/zone.min.js');
+		readfile('node_modules/bootstrap/dist/js/bootstrap.min.js');
+		readfile('node_modules/chart.js/Chart.min.js');
+		readfile('node_modules/tinymce/tinymce.min.js');
+		readfile('node_modules/jquery.nicescroll/jquery.nicescroll.min.js');
+		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
+
+		//Mobile
+		readfile('node_modules/photoswipe/dist/photoswipe.min.js');
+		readfile('node_modules/photoswipe/dist/photoswipe-ui-default.min.js');
+
+		//Maarch
+		include('apps/maarch_entreprise/js/functions.js');
+		include('apps/maarch_entreprise/js/indexing.js');
+		include('apps/maarch_entreprise/js/jquery.typeahead.js');
 //		include('apps/maarch_entreprise/js/RSVP.js');
 //		include('apps/maarch_entreprise/js/render.js');
 //		include('apps/maarch_entreprise/js/jio.js');
-		readfile('node_modules/core-js/client/shim.js');
-		readfile('node_modules/zone.js/dist/zone.min.js');
-		readfile('node_modules/systemjs/dist/system.src.js');
-		readfile('apps/maarch_entreprise/js/angular/systemjs.config.js');
 
-		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe.min.js');
-		readfile('apps/maarch_entreprise/tools/PhotoSwipe/photoswipe-ui-default.min.js');
+		echo "\n";
+
+		readfile('apps/maarch_entreprise/js/bootstrap-tree.js');
+
+		
         echo "\n";
+
 	}
 
 	public function merge_module() {

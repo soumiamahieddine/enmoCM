@@ -384,17 +384,17 @@ abstract class contacts_v2_Abstract extends Database
             {
                 $_SESSION['m_admin']['contact'] = array();
                 $line = $stmt->fetchObject();
-                $_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
-                $_SESSION['m_admin']['contact']['TITLE'] = functions::show_string($line->title);
-                $_SESSION['m_admin']['contact']['LASTNAME'] = functions::show_string($line->lastname);
-                $_SESSION['m_admin']['contact']['FIRSTNAME'] = functions::show_string($line->firstname);
-                $_SESSION['m_admin']['contact']['SOCIETY'] = functions::show_string($line->society);
-                $_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = functions::show_string($line->society_short);
-                $_SESSION['m_admin']['contact']['FUNCTION'] = functions::show_string($line->function);
-                $_SESSION['m_admin']['contact']['OTHER_DATA'] = functions::show_string($line->other_data);
+                $_SESSION['m_admin']['contact']['ID']                  = $line->contact_id;
+                $_SESSION['m_admin']['contact']['TITLE']               = functions::show_string($line->title);
+                $_SESSION['m_admin']['contact']['LASTNAME']            = functions::show_string($line->lastname);
+                $_SESSION['m_admin']['contact']['FIRSTNAME']           = functions::show_string($line->firstname);
+                $_SESSION['m_admin']['contact']['SOCIETY']             = functions::show_string($line->society);
+                $_SESSION['m_admin']['contact']['SOCIETY_SHORT']       = functions::show_string($line->society_short);
+                $_SESSION['m_admin']['contact']['FUNCTION']            = functions::show_string($line->function);
+                $_SESSION['m_admin']['contact']['OTHER_DATA']          = functions::show_string($line->other_data);
                 $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = functions::show_string($line->is_corporate_person);
-                $_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
-                $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
+                $_SESSION['m_admin']['contact']['CONTACT_TYPE']        = $line->contact_type;
+                $_SESSION['m_admin']['contact']['OWNER']               = $line->user_id;
                 if($admin && !empty($_SESSION['m_admin']['contact']['OWNER']))
                 {
                     $stmt = $db->query("SELECT lastname, firstname FROM ".$_SESSION['tablename']['users']." WHERE user_id = ?",
@@ -483,8 +483,8 @@ abstract class contacts_v2_Abstract extends Database
                     <tr>
                         <td>&nbsp;</td>
                         <td class="indexing_field">
-                            <input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onclick="javascript:show_admin_contacts( true, '<?php functions::xecho($display_value);?>');setContactType('corporate', '<?php echo ($can_add_contact);?>')" id="corpo_yes"><span onclick="$('corpo_yes').click();" onmouseover="this.style.cursor='pointer';"><?php echo _IS_CORPORATE_PERSON;?></span>
-                            <input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false, '<?php functions::xecho($display_value);?>');setContactType('no_corporate', '<?php echo ($can_add_contact);?>')" id="corpo_no"><span onclick="$('corpo_no').click();" onmouseover="this.style.cursor='pointer';"><?php echo _INDIVIDUAL;?></span>
+                            <input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onclick="javascript:show_admin_contacts( true, '<?php functions::xecho($display_value);?>');setContactType('corporate', '<?php echo ($can_add_contact);?>')" id="corpo_yes"><span onclick="$j('#corpo_yes').click();" onmouseover="this.style.cursor='pointer';"><?php echo _IS_CORPORATE_PERSON;?></span>
+                            <input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false, '<?php functions::xecho($display_value);?>');setContactType('no_corporate', '<?php echo ($can_add_contact);?>')" id="corpo_no"><span onclick="$j('#corpo_no').click();" onmouseover="this.style.cursor='pointer';"><?php echo _INDIVIDUAL;?></span>
                         </td>
                         <td>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </td>
                         <td>&nbsp;</td>
@@ -596,7 +596,7 @@ abstract class contacts_v2_Abstract extends Database
                         <em style="display:none">(<?php echo _YOU_SHOULD_ADD_AN_ADDRESS;?>)</em>
                     <p>
 
-                        <input class="button" type="submit" name="Submit" onclick='$("frmcontact").submit();this.disabled="disabled";this.style.opacity="0.5";' value="<?php echo _VALIDATE;?>" />
+                        <input class="button" type="submit" name="Submit" onclick='$j("#frmcontact").submit();this.disabled="disabled";this.style.opacity="0.5";' value="<?php echo _VALIDATE;?>" />
 
                     <?php
                     $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2';
@@ -740,15 +740,15 @@ abstract class contacts_v2_Abstract extends Database
     */
     public function delcontact($id, $admin = true)
     {
-        $db = new Database();
+        $db            = new Database();
         $element_found = false;
-        $nb_docs = 0;
-        $tables = array();
+        $nb_docs       = 0;
+        $tables        = array();
         $_SESSION['m_admin']['contact'] = array();
-        $order = $_REQUEST['order'];
+        $order       = $_REQUEST['order'];
         $order_field = $_REQUEST['order_field'];
-        $start = $_REQUEST['start'];
-        $what = $_REQUEST['what'];
+        $start       = $_REQUEST['start'];
+        $what        = $_REQUEST['what'];
         $path_contacts = $_SESSION['config']['businessappurl']."index.php?page=contacts_v2&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
         if(!$admin)
         {
@@ -757,13 +757,12 @@ abstract class contacts_v2_Abstract extends Database
         
         if(!empty($id))
         {
-            $stmt = $db->query("SELECT res_id FROM ".$_SESSION['collections'][0]['view'] 
-                . " WHERE exp_contact_id = ? or dest_contact_id = ?",
+            $stmt = $db->query("SELECT res_id FROM ".$_SESSION['collections'][0]['view']." WHERE (exp_contact_id = ? or dest_contact_id = ?) and status <> 'DEL'",
                 array($id, $id));
             if($stmt->rowCount() > 0)$nb_docs = $nb_docs + $stmt->rowCount();
 
-                $stmt = $db->query("SELECT contact_id FROM contacts_res WHERE contact_id = ?", array($id));
-                if($stmt->rowCount() > 0)$nb_docs = $nb_docs + $stmt->rowCount();
+            $stmt = $db->query("SELECT DISTINCT cr.contact_id FROM contacts_res cr LEFT JOIN res_letterbox rl ON rl.res_id = cr.res_id WHERE rl.status <> 'DEL' AND cr.contact_id = ?", array($id));
+            if($stmt->rowCount() > 0)$nb_docs = $nb_docs + $stmt->rowCount();
                          
             if ($nb_docs == 0)
             {
@@ -967,29 +966,29 @@ abstract class contacts_v2_Abstract extends Database
                 if (!isset($_SESSION['address_up_error'])) {
                     $_SESSION['m_admin']['address'] = array();
                     $line = $stmt->fetchObject();
-                    $_SESSION['m_admin']['address']['ID'] = $line->id;
-                    $_SESSION['m_admin']['address']['CONTACT_ID'] = $line->contact_id;
-                    $_SESSION['m_admin']['address']['TITLE'] = functions::show_string($line->title);
-                    $_SESSION['m_admin']['address']['LASTNAME'] = functions::show_string($line->lastname);
-                    $_SESSION['m_admin']['address']['FIRSTNAME'] = functions::show_string($line->firstname);
-                    $_SESSION['m_admin']['address']['FUNCTION'] = functions::show_string($line->function);
-                    $_SESSION['m_admin']['address']['OTHER_DATA'] = functions::show_string($line->other_data);
-                    $_SESSION['m_admin']['address']['OWNER'] = $line->user_id;
-                    $_SESSION['m_admin']['address']['DEPARTEMENT'] = functions::show_string($line->departement);
+                    $_SESSION['m_admin']['address']['ID']                 = $line->id;
+                    $_SESSION['m_admin']['address']['CONTACT_ID']         = $line->contact_id;
+                    $_SESSION['m_admin']['address']['TITLE']              = functions::show_string($line->title);
+                    $_SESSION['m_admin']['address']['LASTNAME']           = functions::show_string($line->lastname);
+                    $_SESSION['m_admin']['address']['FIRSTNAME']          = functions::show_string($line->firstname);
+                    $_SESSION['m_admin']['address']['FUNCTION']           = functions::show_string($line->function);
+                    $_SESSION['m_admin']['address']['OTHER_DATA']         = functions::show_string($line->other_data);
+                    $_SESSION['m_admin']['address']['OWNER']              = $line->user_id;
+                    $_SESSION['m_admin']['address']['DEPARTEMENT']        = functions::show_string($line->departement);
                     $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $line->contact_purpose_id;
-                    $_SESSION['m_admin']['address']['OCCUPANCY'] = functions::show_string($line->occupancy);
-                    $_SESSION['m_admin']['address']['ADD_NUM'] = functions::show_string($line->address_num);
-                    $_SESSION['m_admin']['address']['ADD_STREET'] = functions::show_string($line->address_street);
-                    $_SESSION['m_admin']['address']['ADD_COMP'] = functions::show_string($line->address_complement);
-                    $_SESSION['m_admin']['address']['ADD_TOWN'] = functions::show_string($line->address_town);
-                    $_SESSION['m_admin']['address']['ADD_CP'] = functions::show_string($line->address_postal_code);
-                    $_SESSION['m_admin']['address']['ADD_COUNTRY'] = functions::show_string($line->address_country);
-                    $_SESSION['m_admin']['address']['PHONE'] = functions::show_string($line->phone);
-                    $_SESSION['m_admin']['address']['MAIL'] = functions::show_string($line->email);
-                    $_SESSION['m_admin']['address']['WEBSITE'] = functions::show_string($line->website);
-                    $_SESSION['m_admin']['address']['IS_PRIVATE'] = functions::show_string($line->is_private);
-                    $_SESSION['m_admin']['address']['SALUTATION_HEADER'] = functions::show_string($line->salutation_header);
-                    $_SESSION['m_admin']['address']['SALUTATION_FOOTER'] = functions::show_string($line->salutation_footer);
+                    $_SESSION['m_admin']['address']['OCCUPANCY']          = functions::show_string($line->occupancy);
+                    $_SESSION['m_admin']['address']['ADD_NUM']            = functions::show_string($line->address_num);
+                    $_SESSION['m_admin']['address']['ADD_STREET']         = functions::show_string($line->address_street);
+                    $_SESSION['m_admin']['address']['ADD_COMP']           = functions::show_string($line->address_complement);
+                    $_SESSION['m_admin']['address']['ADD_TOWN']           = functions::show_string($line->address_town);
+                    $_SESSION['m_admin']['address']['ADD_CP']             = functions::show_string($line->address_postal_code);
+                    $_SESSION['m_admin']['address']['ADD_COUNTRY']        = functions::show_string($line->address_country);
+                    $_SESSION['m_admin']['address']['PHONE']              = functions::show_string($line->phone);
+                    $_SESSION['m_admin']['address']['MAIL']               = functions::show_string($line->email);
+                    $_SESSION['m_admin']['address']['WEBSITE']            = functions::show_string($line->website);
+                    $_SESSION['m_admin']['address']['IS_PRIVATE']         = functions::show_string($line->is_private);
+                    $_SESSION['m_admin']['address']['SALUTATION_HEADER']  = functions::show_string($line->salutation_header);
+                    $_SESSION['m_admin']['address']['SALUTATION_FOOTER']  = functions::show_string($line->salutation_footer);
                 } else {
                     unset($_SESSION['address_up_error']);
                 }
@@ -1132,7 +1131,7 @@ abstract class contacts_v2_Abstract extends Database
                             </td>
                             <td>
 
-                                <input class="<?php echo $fieldAddressClass;?>" name="new_id" id="new_id" onfocus="$('rule_purpose').style.display='table-row'" onblur="purposeCheck();$('rule_purpose').style.display='none'";
+                                <input class="<?php echo $fieldAddressClass;?>" name="new_id" id="new_id" onfocus="$j('#rule_purpose').css('display','table-row')" onblur="purposeCheck();$j('#rule_purpose')$j('#rule_purpose').css('display','none')";
                                     <?php if(isset($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']) && $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] <> '')
                                         {
                                             echo 'value="'.functions::xssafe($this->get_label_contact($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'],$_SESSION['tablename']['contact_purposes'])).'"';
@@ -1169,7 +1168,7 @@ abstract class contacts_v2_Abstract extends Database
                         <tr id="departement_p">
                             <td><label for="departement"><?php echo _SERVICE;?>&nbsp;: </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="departement" type="text" onfocus="$('rule_departement').style.display='table-row'" onblur="$('rule_departement').style.display='none';" id="departement" value="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']));} ?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="departement" type="text" onfocus="$j('#rule_departement').style.display='table-row'" onblur="$j('#rule_departement').style.display='none';" id="departement" value="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']));} ?>"/>
                                 <span class="blue_asterisk" style="visibility:visible;">*</span>
                             </td>
                         </tr>
@@ -1200,7 +1199,7 @@ abstract class contacts_v2_Abstract extends Database
                         <tr id="lastname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ functions::xecho($display_value);}?>">
                             <td><label for="lastname"><?php echo _LASTNAME;?> : </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="lastname" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$('rule_lastname').style.display='table-row'" onblur="$('rule_lastname').style.display='none';" id="lastname" value="<?php if(isset($_SESSION['m_admin']['address']['LASTNAME'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['LASTNAME']));} ?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="lastname" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$j('#rule_lastname').css('display','table-row')" onblur="$j('#rule_lastname').css('display','none');" id="lastname" value="<?php if(isset($_SESSION['m_admin']['address']['LASTNAME'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['LASTNAME']));} ?>"/>
                             </td>
                         </tr>
                         <tr style="display:none;" id="rule_lastname">
@@ -1275,7 +1274,7 @@ abstract class contacts_v2_Abstract extends Database
                         <tr>
                             <td><label for="country"><?php echo _COUNTRY;?> : </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="country" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$('rule_country').style.display='table-row'" onblur="$('rule_country').style.display='none';" id="country" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COUNTRY'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_COUNTRY'])); }?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="country" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$j('#rule_country').css('display','table-row')" onblur="$j('#rule_country').css('display','none');" id="country" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COUNTRY'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['ADD_COUNTRY'])); }?>"/>
                                 <span class="blue_asterisk" style="visibility:visible;">*</span>
                             </td>
                         </tr>
@@ -1286,7 +1285,7 @@ abstract class contacts_v2_Abstract extends Database
                         <tr >
                             <td><label for="phone"><?php echo _PHONE;?>&nbsp;: </label></td>
                             <td>
-                                <input class="<?php echo $fieldAddressClass;?>" name="phone" type="text" onfocus="$('rule_phone').style.display='table-row'" onblur="$('rule_phone').style.display='none';" id="phone" value="<?php if(isset($_SESSION['m_admin']['address']['PHONE'])){functions::xecho($func->show_str($_SESSION['m_admin']['address']['PHONE']));} ?>"/>
+                                <input class="<?php echo $fieldAddressClass;?>" name="phone" type="text" onfocus="$j('#rule_phone').css('display','table-row')" onblur="$j('#rule_phone').css('display','none');" id="phone" value="<?php if(isset($_SESSION['m_admin']['address']['PHONE'])){functions::xecho($func->show_str($_SESSION['m_admin']['address']['PHONE']));} ?>"/>
                                 <span class="blue_asterisk" style="visibility:visible;">*</span>
                             </td>
                         </tr>
@@ -1879,13 +1878,13 @@ abstract class contacts_v2_Abstract extends Database
                 $stmt = $db->query("SELECT id FROM ".$_SESSION['tablename']['contact_addresses']
                     . " WHERE contact_purpose_id = ?", array($id));
             } else if ($mode == 'contact_address'){
-                $stmt = $db->query("SELECT address_id FROM mlb_coll_ext WHERE address_id = ?", array($id));
+                $stmt = $db->query("SELECT mlb.address_id FROM mlb_coll_ext mlb LEFT JOIN res_letterbox rl ON rl.res_id = mlb.res_id WHERE rl.status <> 'DEL' AND mlb.address_id = ?", array($id));
             }
             
             if($stmt->rowCount() > 0)$nb_elements = $nb_elements + $stmt->rowCount();
 
             if ($mode == 'contact_address'){
-                $stmt = $db->query("SELECT address_id FROM contacts_res WHERE address_id = ?", array($id));
+                $stmt = $db->query("SELECT DISTINCT cr.address_id FROM contacts_res cr LEFT JOIN res_letterbox rl ON rl.res_id = cr.res_id WHERE rl.status <> 'DEL' AND cr.address_id = ?", array($id));
                 if($stmt->rowCount() > 0)$nb_elements = $nb_elements + $stmt->rowCount();
             }
                 ?>

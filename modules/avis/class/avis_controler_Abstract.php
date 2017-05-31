@@ -132,6 +132,7 @@ abstract class avis_controler_Abstract
                                 $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delAvisUser(this.parentElement.parentElement);" title="' . _DELETE . '"></i>';
                                 $disabled = '';
                             } else {
+                                $dropZone = '';
                                 $modif = 'false';
                                 $del_vis = '';
                                 $disabled = ' disabled="disabled"';
@@ -251,11 +252,11 @@ abstract class avis_controler_Abstract
         $db = new Database();
 
         if ($group_id <> null) {
-            $stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id,entities.entity_id from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and 
+            $stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id,entities.entity_id from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and users.status <> 'DEL' and 
                 users_entities.primary_entity = 'Y' and users.user_id = usergroup_content.user_id AND entities.entity_id = users_entities.entity_id AND group_id IN 
                 (SELECT group_id FROM usergroups_services WHERE service_id = ? AND group_id = ?)  order by users.lastname", array('avis_documents', $group_id));
         } else {
-            $stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id,entities.entity_id from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and 
+            $stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id,entities.entity_id from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and users.status <> 'DEL' and 
                 users_entities.primary_entity = 'Y' and users.user_id = usergroup_content.user_id AND entities.entity_id = users_entities.entity_id AND group_id IN 
                 (SELECT group_id FROM usergroups_services WHERE service_id = ?)  
                 order by users.lastname", array('avis_documents'));

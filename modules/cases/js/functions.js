@@ -19,3 +19,15 @@ function unlink_case(path_manage_script,case_id,res_id){
 		}
 	});
 }
+
+function tabClickCases (TabId){
+ 
+    var AllTab = $j(".tab-trig");
+    AllTab.removeClass("tab-trig-open");        
+    var doc = $j("#"+TabId);        
+    doc.addClass("tab-trig-open");
+
+    $j(".frame-targ").css('display','none');
+    $j('#frame-'+TabId).css('display','block');
+
+}

@@ -24,109 +24,34 @@ header('Content-type: text/css; charset=utf-8');
 
 ob_start("compress");
 
-if (isset($_GET['ie']) && file_exists('apps/' . $_SESSION['config']['app_id'] . '/css/style_ie.css')) {
-    include 'apps/' . $_SESSION['config']['app_id'] . '/css/style_ie.css';
-    foreach (array_keys($_SESSION['modules_loaded']) as $value) {
-        if (file_exists(
-            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
-            . 'modules' . DIRECTORY_SEPARATOR
-            . $_SESSION['modules_loaded'][$value]['name']
-            . DIRECTORY_SEPARATOR . "css" . DIRECTORY_SEPARATOR
-            . "module.css"
-        ) || file_exists(
-            $_SESSION['config']['corepath'] . 'modules'
-            . DIRECTORY_SEPARATOR
-            . $_SESSION['modules_loaded'][$value]['name']
-            . DIRECTORY_SEPARATOR . "css" . DIRECTORY_SEPARATOR
-            . "module.css"
-        )
-        ) {
-            echo 'modules/' . $_SESSION['modules_loaded'][$value]['name']
-                . '/css/module.css';
-            include 'modules/' . $_SESSION['modules_loaded'][$value]['name']
-                . '/css/module.css';
-        }
-    }
-} else if (isset($_GET['ie7']) && file_exists('apps/' . $_SESSION['config']['app_id'] . '/css/style_ie7.css')) {
-    include 'apps/' . $_SESSION['config']['app_id'] . '/css/style_ie7.css';
-    foreach (array_keys($_SESSION['modules_loaded']) as $value) {
-        if (file_exists(
-            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
-            . DIRECTORY_SEPARATOR . $_SESSION['modules_loaded'][$value]['name']
-            . DIRECTORY_SEPARATOR . "css" . DIRECTORY_SEPARATOR
-            . "module_IE7.css"
-        ) || file_exists(
-            $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR
-            . $_SESSION['modules_loaded'][$value]['name'] . DIRECTORY_SEPARATOR
-            . "css" . DIRECTORY_SEPARATOR . "module_IE7.css"
-        )
-        ) {
-            include 'modules/' . $_SESSION['modules_loaded'][$value]['name']
-                . '/css/module_IE7.css';
-        }
-    }
-} else if (isset($_GET['ie8']) && file_exists('apps/' . $_SESSION['config']['app_id'] . '/css/style_ie8.css')) {
-    include 'apps/' . $_SESSION['config']['app_id'] . '/css/style_ie8.css';
-    foreach (array_keys($_SESSION['modules_loaded']) as $value) {
-        if (file_exists(
-            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
-            . DIRECTORY_SEPARATOR . $_SESSION['modules_loaded'][$value]['name']
-            . DIRECTORY_SEPARATOR . "css" . DIRECTORY_SEPARATOR
-            . "module_IE8.css"
-        ) || file_exists(
-            $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR
-            . $_SESSION['modules_loaded'][$value]['name'] . DIRECTORY_SEPARATOR
-            . "css" . DIRECTORY_SEPARATOR . "module_IE8.css"
-        )
-        ) {
-            include 'modules/' . $_SESSION['modules_loaded'][$value]['name']
-                . '/css/module_IE8.css';
-        }
-    }
-} else if (isset($_GET['ie9']) && file_exists('apps/' . $_SESSION['config']['app_id'] . '/css/style_ie9.css')) {
-    include 'apps/' . $_SESSION['config']['app_id'] . '/css/style_ie9.css';
-    foreach (array_keys($_SESSION['modules_loaded']) as $value) {
-        if (file_exists(
-            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
-            . DIRECTORY_SEPARATOR . $_SESSION['modules_loaded'][$value]['name']
-            . DIRECTORY_SEPARATOR . "css" . DIRECTORY_SEPARATOR
-            . "module_IE9.css"
-        ) || file_exists(
-            $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR
-            . $_SESSION['modules_loaded'][$value]['name'] . DIRECTORY_SEPARATOR
-            . "css" . DIRECTORY_SEPARATOR . "module_IE9.css"
-        )
-        ) {
-            include 'modules/' . $_SESSION['modules_loaded'][$value]['name']
-                . '/css/module_IE9.css';
-        }
-    }
-} else {
-    include 'apps/' . $_SESSION['config']['app_id'] . '/css/styles.css';
-    foreach (array_keys($_SESSION['modules_loaded']) as $value) {
-        if (file_exists(
-            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
-            . DIRECTORY_SEPARATOR . $_SESSION['modules_loaded'][$value]['name']
-            . DIRECTORY_SEPARATOR . "css" . DIRECTORY_SEPARATOR . "module.css"
-        ) || file_exists(
-            $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR
-            . $_SESSION['modules_loaded'][$value]['name'] . DIRECTORY_SEPARATOR
-            . "css" . DIRECTORY_SEPARATOR . "module.css"
-        )
-        ) {
-            include 'modules/' . $_SESSION['modules_loaded'][$value]['name']
-                . '/css/module.css';
-        }
+include 'apps/' . $_SESSION['config']['app_id'] . '/css/styles.css';
+foreach (array_keys($_SESSION['modules_loaded']) as $value) {
+    if (file_exists(
+        $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+        . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+        . DIRECTORY_SEPARATOR . $_SESSION['modules_loaded'][$value]['name']
+        . DIRECTORY_SEPARATOR . "css" . DIRECTORY_SEPARATOR . "module.css"
+    ) || file_exists(
+        $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR
+        . $_SESSION['modules_loaded'][$value]['name'] . DIRECTORY_SEPARATOR
+        . "css" . DIRECTORY_SEPARATOR . "module.css"
+    )
+    ) {
+        include 'modules/' . $_SESSION['modules_loaded'][$value]['name']
+            . '/css/module.css';
     }
 }
+
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/doctype_levels.css';
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/chosen.min.css';
-//include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/bootstrap.min.css';
-include_once 'apps/' . $_SESSION['config']['app_id'] . '/js/tooltipster/dist/css/tooltipster.bundle.min.css';
+include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/bootstrapTree.css';
+include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/jquery.typeahead.css';
+
+readfile('node_modules/tooltipster/dist/css/tooltipster.bundle.min.css');
+readfile('node_modules/photoswipe/dist/photoswipe.css');
+readfile('node_modules/photoswipe/dist/default-skin/default-skin.css');
+readfile('apps/maarch_entreprise/css/photoswipe_custom.css');
+
+
 ob_end_flush();
 

@@ -1,21 +1,9 @@
 <?php
-/*
-*   Copyright 2008-2012 Maarch
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 *
-*   This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -71,7 +59,7 @@ class Install extends functions
         return $langList;
     }
 
-    private function loadLang()
+    public function loadLang()
     {
         if (!isset($_SESSION['lang'])) {
             $this->lang = 'en';
@@ -107,6 +95,8 @@ class Install extends functions
         return '<img src="img/orange_light.png"  width="20px"/>';
     }
 
+    
+
     public function checkAllNeededPrerequisites()
     {
         if (!$this->isPhpVersion()) {
@@ -119,6 +109,9 @@ class Install extends functions
             return false;
         }
         if (!$this->isMaarchPathWritable()) {
+            return false;
+        }
+        if (!$this->isDependenciesExist()) {
             return false;
         }
         if (!$this->isPhpRequirements('gd')) {
@@ -145,9 +138,9 @@ class Install extends functions
         if (!$this->isIniShortOpenTagRequirements()) {
             return false;
         }
-        if (!$this->isIniMagicQuotesGpcRequirements()) {
-            return false;
-        }
+        // if (!$this->isIniMagicQuotesGpcRequirements()) {
+        //     return false;
+        // }
         
         if (DIRECTORY_SEPARATOR != '/' && !$this->isPhpRequirements('fileinfo')){
             return false;
@@ -229,14 +222,14 @@ class Install extends functions
         }
     }
 
-    public function isIniMagicQuotesGpcRequirements()
-    {
-        if (strtoupper(ini_get('magic_quotes_gpc')) ==  'ON') {
-            return false;
-        } else {
-            return true;
-        }
-    }
+    // public function isIniMagicQuotesGpcRequirements()
+    // {
+    //     if (strtoupper(ini_get('magic_quotes_gpc')) ==  'ON') {
+    //         return false;
+    //     } else {
+    //         return true;
+    //     }
+    // }
 
     public function getProgress(
         $stepNb,
@@ -913,11 +906,6 @@ class Install extends functions
             exit;
         }
 
-        if (!$this->setSvnUpdateAll()) {
-            return false;
-            exit;
-        }
-
         return true;
 
     }
@@ -1054,11 +1042,6 @@ class Install extends functions
             exit;
         }
 
-        if (!$this->setSvnUpdateAll()) {
-            return false;
-            exit;
-        }
-
        /*if (!$this->setDatasourcesXsd()) {
             return false;
             exit;
@@ -1071,32 +1054,6 @@ class Install extends functions
         exec('chmod -R 770 *');
         return true;
 
-    }
-
-    private function setSvnUpdateAll(){
-        $res = '#!/bin/bash';
-        $res .= "\n";
-        $res .= "svn up ".realpath('.')."/.";
-        $res .= "\n";
-        $res .= "svn up ".realpath('.')."/apps/maarch_entreprise/*";
-        $res .= "\n";
-        $res .= "svn up ".realpath('.')."/core/*";
-        $res .= "\n";
-        $res .= "svn up ".realpath('.')."/modules/*";
-        $res .= "\n";
-
-            $fp = @fopen(realpath('.')."/svnupdateall.sh", "w+");
-        if (!$fp) {
-            var_dump("false error dans setScript_full_text()");
-            return false;
-            exit;
-        }
-        $write = fwrite($fp,$res);
-        if (!$write) {
-            return false;
-            exit;
-        }
-        return true;
     }
 
     private function setConfigCron()
@@ -2056,19 +2013,32 @@ class Install extends functions
     }
 
     /**
-     * test if docserver path is read/write
-     * @param $docserverPath string path to the docserver
+     * test if vendor and node_modules exist
      * @return boolean or error message
      */
-    public function checkDocserverRoot($docserverPath)
+    public function isDependenciesExist()
     {
-        if (!is_dir($docserverPath)) {
-            $error .= _PATH_OF_DOCSERVER_UNAPPROACHABLE;
+        if (file_exists('vendor/') && file_exists('node_modules/')) {
+            return true;
         } else {
-            if (!is_writable($docserverPath)
-                || !is_readable($docserverPath)
+            return false;
+        }
+    }
+
+    /**
+     * test if path is read/write
+     * @param $path string path
+     * @return boolean or error message
+     */
+    public function checkPathRoot($path)
+    {
+        if (!is_dir($path)) {
+            $error .= _PATH_UNAPPROACHABLE;
+        } else {
+            if (!is_writable($path)
+                || !is_readable($path)
             ) {
-                $error .= _THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
+                $error .= _THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
             }
         }
         if ($error <> '') {
@@ -2076,6 +2046,22 @@ class Install extends functions
         } else {
             return true;
         }
+    }
+
+    /**
+     * create the path
+     * @param $path string path
+     * @return boolean
+     */
+    public function createPath($path)
+    {
+        if (!is_dir($path)) {
+            if (!mkdir($path)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -2128,7 +2114,7 @@ class Install extends functions
         $dir2copy = 'install' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . '0000'. DIRECTORY_SEPARATOR;
         $dir_paste = $docserverPath . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . '0000' . DIRECTORY_SEPARATOR;
         
-        copy_dir($dir2copy,$dir_paste);
+        $this->copy_dir($dir2copy,$dir_paste);
 
         return true;
     }
@@ -2166,33 +2152,34 @@ class Install extends functions
         $query = "UPDATE users SET password=? WHERE user_id='superadmin'";
         $db->query($query, array($sec->getPasswordHash($newPass)));
     }
-}
 
-function copy_dir($dir2copy,$dir_paste)
-{
-    // On vérifie si $dir2copy est un dossier
-    if (is_dir($dir2copy))
+    public function copy_dir($dir2copy,$dir_paste)
     {
-
-        // Si oui, on l'ouvre
-        if ($dh = opendir($dir2copy))
+        // On vérifie si $dir2copy est un dossier
+        if (is_dir($dir2copy))
         {
 
-            // On liste les dossiers et fichiers de $dir2copy
-            while (($file = readdir($dh)) !== false)
+            // Si oui, on l'ouvre
+            if ($dh = opendir($dir2copy))
             {
-                // Si le dossier dans lequel on veut coller n'existe pas, on le cree
-                if (!is_dir($dir_paste)) mkdir ($dir_paste, 0777);
 
-                // S'il s'agit d'un dossier, on relance la fonction recursive
-                if(is_dir($dir2copy.$file) && $file != '..' && $file != '.') copy_dir ( $dir2copy.$file.'/' , $dir_paste.$file.'/' );
+                // On liste les dossiers et fichiers de $dir2copy
+                while (($file = readdir($dh)) !== false)
+                {
+                    // Si le dossier dans lequel on veut coller n'existe pas, on le cree
+                    if (!is_dir($dir_paste)) mkdir ($dir_paste, 0777);
 
-                // S'il sagit d'un fichier, on le copue simplement
-                elseif($file != '..' && $file != '.') copy ( $dir2copy.$file , $dir_paste.$file );
+                    // S'il s'agit d'un dossier, on relance la fonction recursive
+                    if(is_dir($dir2copy.$file) && $file != '..' && $file != '.') $this->copy_dir ( $dir2copy.$file.'/' , $dir_paste.$file.'/' );
+
+                    // S'il sagit d'un fichier, on le copue simplement
+                    elseif($file != '..' && $file != '.') copy ( $dir2copy.$file , $dir_paste.$file );
+                }
+
+                // On ferme $dir2copy
+                closedir($dh);
             }
-
-            // On ferme $dir2copy
-            closedir($dh);
         }
+        return true;
     }
 }

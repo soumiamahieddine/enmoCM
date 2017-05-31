@@ -233,7 +233,7 @@ if (isset($_GET['body_loaded'])){
 }
 else{
 ?>
-<body style="background: url('static.php?filename=loading_big.gif') no-repeat fixed center;" onload="$('maarch_body').style.background='f2f2f2';$('maarch_body').style.backgroundImage='';$('maarch_body').style.backgroundUrl='';$('maarch_content').style.display='block';session_expirate(<?php echo $time;?>, '<?php
+<body style="background: url('static.php?filename=loading_big.gif') no-repeat fixed center;" onload="$j('#maarch_body').css('background','f2f2f2');$j('#maarch_body').css('backgroundImage','');$j('#maarch_body').css('backgroundUrl', '');$j('#maarch_content').css('display','block');session_expirate(<?php echo $time;?>, '<?php
     echo $_SESSION['config']['businessappurl'];
     ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
     <div id ="maarch_content" style="display:none;">
@@ -247,38 +247,29 @@ else{
                 
                 //document.cookie = "maarch_cookie_1=thefirstcookie";
                 //document.cookie = "maarch_cookie_2=thesecondcookie";
-                //console.log(document.cookie);
                 return document.cookie;
             }
 
             var theCookies;
-            //theCookies = getCookies().split(";");
             theCookies = getCookies();
             
             
             if (theCookies != undefined) {
                 var path_manage_script = '<?php echo $_SESSION["config"]["businessappurl"];?>' + 'index.php?display=true&page=setProxyCookies';
 
-                new Ajax.Request(path_manage_script,
+                $j.ajax(
                 {
-                    method:'post',
-                    parameters: {
+                    url: path_manage_script,
+                    type:'POST',
+                    dataType:'json',
+                    data: {
                         cookies : theCookies
                     },
-                    onSuccess: function(answer)
+                    success: function(answer)
                     {
-                        eval('response = ' + answer.responseText);
-                        //console.log(response);
-                        if (response.status == '0') {
-                            //console.log('OK !!! COOKIES FROM PROXY SET');
-                        } else {
-                            //console.log('KO... COOKIES FROM PROXY NOT SET');
-                        }
-                        
+
                     }
                 });
-            } else {
-                //console.log('no completements cookies');
             }
         </script>
         <?php
@@ -334,9 +325,9 @@ if (file_exists($path)) {
             if(isset($_SESSION['error']) && $_SESSION['error'] <> '') {
                 ?>
                 <script>
-                    var main_error = $('main_error_popup');
+                    var main_error = $j('#main_error_popup');
                     if (main_error != null) {
-                        main_error.style.display = 'table-cell';
+                        main_error.css({"display":"table-cell"})
                         Element.hide.delay(10, 'main_error_popup');
                     }
                 </script>
@@ -346,9 +337,9 @@ if (file_exists($path)) {
             if(isset($_SESSION['info']) && $_SESSION['info'] <> '') {
                 ?>
                 <script>
-                    var main_info = $('main_info');
+                    var main_info = $j('#main_info');
                     if (main_info != null) {
-                        main_info.style.display = 'table-cell';
+                        main_info.css({"display":"table-cell"})
                         Element.hide.delay(10, 'main_info');
                     }
                 </script>
@@ -389,13 +380,15 @@ if (file_exists($path)) {
 <?php
 if (PROD_MODE) {
 ?>
-    <script src="js/angular/main.bundle.min.js"></script>
+<!--    <script src="js/angular/main.bundle.min.js"></script>-->
 <?php
 } else {
     ?>
-    <script>
-        System.import('js/angular/main.js').catch(function(err){ console.error(err); });
-    </script>
+    <script src="../../node_modules/systemjs/dist/system.src.js"></script>
+    <script src="js/angular/systemjs.config.js"></script>
+<!--    <script>-->
+<!--        System.import('js/angular/main.js').catch(function(err){ console.error(err); });-->
+<!--    </script>-->
     <?php
 }
 ?>

@@ -3,14 +3,14 @@ Maarch Courrier : Gestionnaire Électronique de Courrier
 
 **/!\ Version de développement**
 
-Dernière version stable V1.6 : http://wiki.maarch.org/Maarch_Courrier
-Démonstration en ligne : http://demo.maarch.org/gec/
+Dernière version stable V17.06 : http://wiki.maarch.org/Maarch_Courrier
+Démonstration en ligne : http://demo.maarchcourrier.com/
 
 ## Requis techniques
 
 * Apache2.x
 * PostgreSQL 9.x
-* PHP 5.6 ou plus, MaarchCourrier 1.6 est compatible avec php7 !
+* PHP 5.6 ou plus, MaarchCourrier 17.06 est compatible avec php7 !
    * Extensions : php_xsl, php_xmlrpc, php_gettext, php_gd, php_pgsql, php_mbstring, php_pdo_pgsql, php5-mcrypt, php_imap, php_soap
    * Spécifique Windows : php php_pdo_pgsql.dll, php php_fileinfo.dll
    * Bibliothèques pear/SOAP (pour php < 7.0), pear/CLITools

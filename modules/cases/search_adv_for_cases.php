@@ -546,15 +546,26 @@ function del_query_confirm()
 </script>
 <div id="case_div" style="display:none;">
     <div id="inner_content">
-        <dl id="tabricator2">
+        <div class="frame-trig">
         <?php
         if($_GET['searched_item'] <> 'case')
         {
             if($core->test_service('add_cases', 'cases', false) == 1)
             {
                 ?>
-                <dt><?php echo _CREATE_NEW_CASE;?></dt>
-                <dd>
+                <div id="create-new-case" class="tab-trig tab-trig-open" onclick="tabClickCases('create-new-case')"><?php echo _CREATE_NEW_CASE;?></div>
+                 <?php
+                if($_GET['searched_item']=="res_id" || $_GET['searched_item']=="res_id_in_process")
+                    $title_search = _SEARCH_A_CASE;
+
+                elseif($_GET['searched_item']=="case")
+                    $title_search = _SEARCH_A_RES;
+
+                else
+                    $title_search = _ERROR
+                ?>
+                <div id="title-search" class="tab-trig" onclick="tabClickCases('title-search')" ><?php functions::xecho($title_search );?></div>
+                <div id="frame-create-new-case" class="frame-targ">
                     <h4><p align="center"><i class="fa fa-plus fa-2x"></i> <?php echo _CREATE_NEW_CASE;?><p></h4>
                     <p class="error"><?php if (isset($_SESSION['cases_error'])){ echo $_SESSION['cases_error'];}$_SESSION['cases_error'] = "";?></p>
                     <div class="blank_space">&nbsp;</div>
@@ -593,26 +604,14 @@ function del_query_confirm()
                             </table>
                         </div>
                     </form>
-                </dd>
+                </div>
                 <?php
             }
         }
         ?>
 <!-- ##########################-->
 
-        <?php
-        if($_GET['searched_item']=="res_id" || $_GET['searched_item']=="res_id_in_process")
-            $title_search = _SEARCH_A_CASE;
-
-        elseif($_GET['searched_item']=="case")
-            $title_search = _SEARCH_A_RES;
-
-        else
-            $title_search = _ERROR
-        ?>
-
-            <dt><?php functions::xecho($title_search );?></dt>
-            <dd>
+            <div id="frame-title-search" class="frame-targ frame-targ-none">
                 <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php functions::xecho($title_search );?></h4></p>
                 <!-- <hr/> -->
                 <br/>
@@ -795,7 +794,7 @@ function del_query_confirm()
         load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $ieBrowser;?>', '<?php echo _ERROR_IE_SEARCH;?>');
         </script>
 
-    </dd>
+    </div>
 </dl>
 </div>
 <!-- <div align="center"><input type="button" class="button" name="close" id="close" value="<?php echo _CLOSE_WINDOW;?>" onclick="self.close();" /></div> -->
@@ -803,7 +802,7 @@ function del_query_confirm()
 
 <script type="text/javascript">
  var item  = $('case_div');
-  var tabricator1 = new Tabricator('tabricator2', 'DT');
+  //var tabricator1 = new Tabricator('tabricator2', 'DT');
   if(item)
     {
      item.style.display='block';

@@ -113,10 +113,22 @@ class LinkController
                                 $delChild = $key;
                             }
                         $return .= '<td align="right">';
-                
-                        $return .= '<div align="center" class="iconDoc"><a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$infos['res_id'].'" target="_blank" title="'._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i>';
-                            
-                      
+            			 if ($core->is_module_loaded('thumbnails') === true){
+                                        require_once "modules" . DIRECTORY_SEPARATOR . "thumbnails" . DIRECTORY_SEPARATOR
+                                        . "class" . DIRECTORY_SEPARATOR
+                                        . "class_modules_tools.php";
+                                                    
+                                        $tnl = new thumbnails();
+                                        $path = $tnl->getPathTnl($key, 'letterbox_coll');
+					if (is_file($path)) {
+                                            $return .= '<div align="center" class="iconDoc"><a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$infos['res_id'].'" target="_blank" title="'._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span><img src="index.php?page=doc_thumb&module=thumbnails&res_id='.$key.'&coll_id=letterbox_coll&display=true"></span></a></div>';
+                                        
+                                        }else{
+                                            $return .= '<div align="center" class="iconDoc"><a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$infos['res_id'].'" target="_blank" title="'._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span id="no_doc"></span></a></div>';
+                                        
+                                        }
+                                        
+                                    }
                         $return .= '</td>';
                             $return .= '<td align="right">';
                                 $return .= '<span onclick="';

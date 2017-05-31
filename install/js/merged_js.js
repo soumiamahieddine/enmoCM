@@ -228,6 +228,64 @@ function checkLanguage(
     });
 }
 
+/* download dependencies */
+function downloadMaarchDependencies() {
+    $('.wait').css('display','block');
+    $('#divDownDepend').css('display','none');
+    $.ajax({
+        url : 'scripts/getDependencies.php',
+        type : 'GET',
+        dataType : 'json',
+        success : function(answer) {
+            console.log(answer);
+            window.location.reload();
+        }
+    })
+   
+}
+
+/* backup version */
+function backupVersion(path) {
+    $('.wait').css('display','block');
+    //$('.submitBtn').css('display','none');
+    $.ajax({
+        url : 'scripts/backupVersion.php',
+        type : 'GET',
+        dataType : 'json',
+        data: {
+            path : path
+        },
+        success : function(answer) {
+            console.log(answer);
+            $('.wait').css('display','none');
+            $('.ajaxReturn_ok').css('display','block');
+        },
+        error : function(answer) {
+            console.log(answer);
+            $('.wait').css('display','none');
+            $('.ajaxReturn_ko').css('display','block');
+        }
+    })
+}
+
+/* download version */
+function downloadVersion(version) {
+    $('.wait').css('display','block');
+    $('.submitBtn').css('display','none');
+    $.ajax({
+        url : 'scripts/downloadVersion.php',
+        type : 'GET',
+        dataType : 'json',
+        data: {
+            version : version
+        },
+        success : function(answer) {
+            console.log(answer);
+            $('.wait').css('display','none');
+            $('.ajaxReturn_ok').css('display','block');
+        }
+    })
+}
 
 /* ajax.js */
 function ajax(
@@ -237,6 +295,9 @@ function ajax(
     top
 )
 {
+    if ($('.wait')) {
+        $('.wait').css('display','block');
+    }
     var ajaxUrl  = url;
 
     var parametersTemp = parameters.split('|');
@@ -274,11 +335,17 @@ function ajax(
     $(document).ready( function() {
         $.getJSON('ajax.php?script='+ajaxUrl, ajaxParameters, function(data){
             if (data.status == 1) {
-                retour_ok.html(data.text);
+                //retour_ok.html(data.text);
+                retour_ok.css('display', 'block');
                 retour_ko.html('');
                 slide(divRetour);
             } else {
+                $('#'+divRetour+'_button').css('display', 'block');
                 retour_ko.html(data.text);
+
+            }
+            if ($('.wait')) {
+                $('.wait').css('display','none');
             }
         });
     });
@@ -294,5 +361,3 @@ function slide(
         $('#'+idDiv).slideToggle('slow');
     })
 }
-
-

@@ -33,9 +33,7 @@ if (isset($_REQUEST['template_content']) && !empty($_REQUEST['template_content']
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="<?php echo $_SESSION['config']['lang'] ?>" />
     <link rel="stylesheet" type="text/css" href="<?php functions::xecho($_SESSION['config']['css']);?>" media="screen" />
-    <!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php functions::xecho($_SESSION['config']['css_IE']);?>" media="screen" />  <![endif]-->
-    <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php functions::xecho($_SESSION['config']['css_IE7']);?>" media="screen" />  <![endif]-->
-    <script type="text/javascript" src="js/functions.js"></script>
+    <script type="text/javascript" src="../../node_modules/tinymce/tinymce.min.js"></script>
     <?php
     $_SESSION['mode_editor'] = false;
     include('modules/templates/load_editor.php');

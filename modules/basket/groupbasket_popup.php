@@ -239,7 +239,7 @@ $time = $core_tools->get_session_time_expire();
                         echo '<li style="margin-top:5px;"><i style="font-weight:bold;font-style: italic;">'.ucfirst($module_name).'</i><ul>';
                         foreach ($actions_ids as $key => $action_id) {
                             ?>
-                            <li><input type="checkbox"  name="actions[]" value="<?php functions::xecho($action_id['ID']);?>" class="check group_action" id="checkbox_<?php functions::xecho($action_id['ID']); ?>" onclick="$$('#action_<?php functions::xecho($action_id['ID']); ?>_page_use')[0].click();show_config_action(<?php functions::xecho($action_id['ID']);?>, true, <?php if(!empty($action_id['ID'])){ echo 'true';}else{ echo 'false';}?>);" <?php
+                            <li><input type="checkbox"  name="actions[]" value="<?php functions::xecho($action_id['ID']);?>" class="check group_action" id="checkbox_<?php functions::xecho($action_id['ID']); ?>" onclick="$j('#action_<?php functions::xecho($action_id['ID']); ?>_page_use').click();show_config_action(<?php functions::xecho($action_id['ID']);?>, true, <?php if(!empty($action_id['ID'])){ echo 'true';}else{ echo 'false';}?>);" <?php
                         if (isset($action_id['ID'])
                             && $bask->is_action_defined_for_the_group(
                                 $action_id['ID'],
@@ -319,12 +319,9 @@ $time = $core_tools->get_session_time_expire();
                 <?php
                 /*}*/ ?></div><?php
         }
-        $core_tools->load_js();
 
         ?>  </div>
             <script type="text/javascript">
-                sb = new ScrollBox(document.getElementById('allowed_basket_actions'), {auto_hide: true});
-                sb2 = new ScrollBox(document.getElementById('config_actions'), {auto_hide: true});
                manage_actions('<?php if(isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'])){ echo $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'];}?>', true, '<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=check_action";?>');
             </script>
             <p>&nbsp;</p>
@@ -335,7 +332,7 @@ $time = $core_tools->get_session_time_expire();
     </form>
 </div>
 </div>
-<script type="text/javascript">$$('select').each(function(element) { new Chosen(element,{width: "226px", disable_search_threshold: 10,search_contains: true}); });</script>
+<script type="text/javascript">$j('select').each(function(i, element) { new Chosen(element,{width: "226px", disable_search_threshold: 10,search_contains: true}); });</script>
 
 </body>
 </html>

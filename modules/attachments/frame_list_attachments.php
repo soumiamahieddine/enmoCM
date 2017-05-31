@@ -121,6 +121,9 @@ if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parame
 if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
 if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
 if (isset($_REQUEST['template_selected']) && !empty($_REQUEST['template_selected'])) $parameters .= '&template_selected='.$_REQUEST['template_selected'];
+if (!empty($_REQUEST['noModification'])) {
+	$parameters .= '&noModification=true';
+}
 
 
 //test si le paramètre attach_type existe
@@ -370,6 +373,9 @@ if (isset($_REQUEST['load'])) {
     $paramsTab['listCss'] = 'listing largerList spec';                                                       //CSS
     $paramsTab['urlParameters'] =  'display=true'.$parameters;            //Parametres supplémentaires
     $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
+    if (!empty($_REQUEST['noModification'])) {
+        $paramsTab['noModification'] = true;
+    }
     if ($useTemplate && count($template_list) >0 ) {                                    //Templates
         $paramsTab['templates'] = array();
         $paramsTab['templates'] = $template_list;

@@ -12,6 +12,9 @@
 * @author dev@maarch.org
 * @ingroup export_seda
 */
+require_once __DIR__ . '/Acknowledgement.php';
+require_once __DIR__ . '/RequestSeda.php';
+require_once __DIR__ . '/AbstractMessage.php';
 
 $status = 0;
 $error = $content = '';
@@ -28,7 +31,6 @@ if ($_REQUEST['reference']) {
     $status = 1;
 }
 
-    
     echo "{status : " . $status . ", content : '" . addslashes($content) . "', error : '" . addslashes($error) . "'}";
     exit ();
 
@@ -39,13 +41,15 @@ class TransferToSAE
 
     public function __construct()
     {
-        $config = parse_ini_file(__DIR__.'/config.ini');
-        $this->token = $config['token'];
-        $this->SAE = $config['urlSAE'];
+        $xml = simplexml_load_file(__DIR__.DIRECTORY_SEPARATOR. 'xml' . DIRECTORY_SEPARATOR . "config.xml");
+        //$config = parse_ini_file(__DIR__.'/config.ini');
+        $this->token = (string) $xml->CONFIG->token;
+        $this->SAE = (string) $xml->CONFIG->urlSAEService. "/medona/Archivetransfer";
     }
 
     public function send($reference)
     {
+        $abstractMessage = new AbstractMessage();
         $res = [];
         $res['status'] = 0;
         $res['content'] = _RECEIVED_MESSAGE;
@@ -55,7 +59,6 @@ class TransferToSAE
         $messageFile = $reference.".xml";
 
         $files = scandir($messageDirectory);
-        $attachments = [];
         foreach ($files as $file) {
             if ($file != $messageFile && $file != ".." && $file != ".") {
                 $attachment = new stdClass;
@@ -77,11 +80,9 @@ class TransferToSAE
             'content-type:application/json'
         ];
 
-        $token = explode("LAABS-AUTH=", $this->token);
-        if (count($token) != 0) {
-            $urlencode = urlencode($token[1]);
-            $this->token = "LAABS-AUTH=". $urlencode;
-        }
+        $tokenEncode = urlencode($this->token);
+        $this->token = "LAABS-AUTH=". $tokenEncode;
+
 
         try {
             $curl = curl_init();
@@ -93,15 +94,19 @@ class TransferToSAE
             curl_setopt($curl, CURLOPT_COOKIE, $this->token);
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
             //curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($post));
-            
-            $return = json_decode(curl_exec($curl));
-            
-            
-            if (!$return) {
+
+            $data = json_decode(curl_exec($curl));
+
+            if (!$data) {
                 $res['status'] = 1;
                 $res['error'] = _ERROR_MESSAGE;
             } else {
-                $res['content'] .= $return->reference;
+                $abstractMessage->changeStatus($reference, 'SEND_SEDA');
+                $acknowledgement = new Acknowledgement();
+                $resIds = explode(',',$_REQUEST['resIds']);
+                $acknowledgement->send($data, $resIds);
+                $abstractMessage->changeStatus($reference, 'ACK_SEDA');
+                $res['content'] .= $reference;
             }
 
             curl_close($curl);

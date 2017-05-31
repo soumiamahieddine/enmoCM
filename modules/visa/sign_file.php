@@ -21,38 +21,49 @@ $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 
-if (!isset($_SESSION['user']['pathToSignature'][0]) ||$_SESSION['user']['pathToSignature'][0] == '') {
-    $_SESSION['error'] = _IMG_SIGN_MISSING;
-	echo "{\"status\":1, \"error\" : \"". _IMG_SIGN_MISSING ."\"}";
-	exit;
-}
-
 if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
+	$db = new Database();
+
 	if (!empty($_REQUEST['resIdMaster'])) {
 		$objectResIdMaster = $_REQUEST['resIdMaster'];
 	}
+	if (!empty($_REQUEST['signatureId'])) {
+		$stmt = $db->query('select signature_path, signature_file_name FROM user_signatures WHERE id = ?', [$_REQUEST['signatureId']]);
+
+		$signature = $stmt->fetchObject();
+		if (empty($signature)) {
+			$_SESSION['error'] = _IMG_SIGN_MISSING;
+			echo "{\"status\":1, \"error\" : \"". _IMG_SIGN_MISSING ."\"}";
+			exit;
+		}
+
+		$docserver = \Core\Models\DocserverModel::getByTypeId(['docserver_type_id' => 'TEMPLATES', 'select' => ['path_template']]);
+		$pathToWantedSignature = $docserver[0]['path_template'] . str_replace('#', '/', $signature->signature_path) . $signature->signature_file_name;
+	} else {
+		$pathToWantedSignature = $_SESSION['user']['pathToSignature'][0];
+	}
+
 	$objectId = $_REQUEST['id'];
 	$tableName = 'res_view_attachments';
-	$db = new Database();
 	if (isset($_REQUEST['isOutgoing'])) {
             if (isset($_REQUEST['isVersion'])) {
-                $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type from "
+                $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                     . $tableName
                     . " where attachment_type = ? and res_id_version = ?", ['outgoing_mail', $objectId]);
 
             } else {
-                $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from "
+                $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                     . $tableName
                     . " where attachment_type = ? and res_id = ?", ['outgoing_mail', $objectId]);
             }
 	} else {
         if (isset($_REQUEST['isVersion'])) {
-            $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type from "
+            $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                 . $tableName
                 . " where attachment_type NOT IN ('converted_pdf','print_folder') and res_id_version = ?", array($objectId));
 
         } else {
-            $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type from "
+            $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                 . $tableName
                 . " where (attachment_type NOT IN ('converted_pdf','print_folder')) and res_id = ?", array($objectId));
         }
@@ -69,7 +80,10 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
 		$_SESSION['visa']['last_resId_signed']['title'] = $line->title;
 		$_SESSION['visa']['last_resId_signed']['identifier'] = $line->identifier;
 		$_SESSION['visa']['last_resId_signed']['type_id'] = $line->type_id;
-		
+		$_SESSION['visa']['last_resId_signed']['dest_contact'] = $line->dest_contact_id;
+		$_SESSION['visa']['last_resId_signed']['dest_address'] = $line->dest_address_id;
+		$_SESSION['visa']['last_resId_signed']['dest_user'] = $line->dest_user;
+
 		include 'modules/visa/retrieve_attachment_from_cm.php';
 		
 		
@@ -81,7 +95,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
 		$cmd = "java -jar " 
 			. escapeshellarg($_SESSION['config']['corepath'] . "modules/visa/dist/SignPdf.jar") . " " 
 			. escapeshellarg($fileOnDs) . " " 
-			. escapeshellarg($_SESSION['user']['pathToSignature'][0]) . " " 
+			. escapeshellarg($pathToWantedSignature) . " "
 			. escapeshellarg($_SESSION['modules_loaded']['visa']['width_blocsign']) . " " 
 			. escapeshellarg($_SESSION['modules_loaded']['visa']['height_blocsign']) . " " 
 			. escapeshellarg($_SESSION['config']['tmppath']);

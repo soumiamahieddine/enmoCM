@@ -54,10 +54,18 @@ if (! empty($_SESSION['error'])) {
     exit();
 } else {
 
-    $stmt = $db->query(
-        "SELECT coll_id, res_id_master 
-            FROM res_view_attachments 
-            WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc",array($sId,$sId,$_REQUEST['res_id_master']));
+    if (!empty($_REQUEST['isVersion'])) {
+        if ($_REQUEST['isVersion'] == 'false') {
+            $stmt = $db->query("SELECT coll_id, res_id_master FROM res_attachments WHERE res_id = ? AND res_id_master = ?", [$sId, $_REQUEST['res_id_master']]);
+        } else {
+            $stmt = $db->query("SELECT coll_id, res_id_master FROM res_version_attachments WHERE res_id = ? AND res_id_master = ?", [$sId, $_REQUEST['res_id_master']]);
+        }
+    } else {
+        $stmt = $db->query(
+            "SELECT coll_id, res_id_master
+                FROM res_view_attachments
+                WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc", [$sId,$sId,$_REQUEST['res_id_master']]);
+    }
     $res = $stmt->fetchObject();
     $collId = $res->coll_id;
     $resIdMaster = $res->res_id_master;
@@ -95,12 +103,19 @@ if (! empty($_SESSION['error'])) {
         );
         exit();
     } else {
-        $stmt = $db->query(
-            "SELECT docserver_id, path, filename, format, title 
-                FROM res_view_attachments 
-                WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc", array($sId,$sId,$_REQUEST['res_id_master'])
-        );
-
+        if (!empty($_REQUEST['isVersion'])) {
+            if ($_REQUEST['isVersion'] == 'false') {
+                $stmt = $db->query("SELECT docserver_id, path, filename, format, title FROM res_attachments WHERE res_id = ? AND res_id_master = ?", [$sId, $_REQUEST['res_id_master']]);
+            } else {
+                $stmt = $db->query("SELECT docserver_id, path, filename, format, title FROM res_version_attachments WHERE res_id = ? AND res_id_master = ?", [$sId, $_REQUEST['res_id_master']]);
+            }
+        } else {
+            $stmt = $db->query(
+                "SELECT docserver_id, path, filename, format, title
+                    FROM res_view_attachments
+                    WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc", array($sId,$sId,$_REQUEST['res_id_master'])
+            );
+        }
         if ($stmt->rowCount() == 0) {
             $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS;
             header(
