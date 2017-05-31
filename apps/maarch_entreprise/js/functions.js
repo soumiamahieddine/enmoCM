@@ -2953,6 +2953,23 @@ function loadAddressAttached(contact_id, select){
     });
 }
 
+function loadDiffListHistory(listinstance_history_id)
+{
+    new Effect.toggle('diffListHistory_'+listinstance_history_id, 'appear' , {delay:0.2});
+
+    var path_manage_script = 'index.php?module=entities&page=loadDiffListHistory&display=true';
+
+    new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { listinstance_history_id : listinstance_history_id},
+            onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                $('divDiffListHistory_'+listinstance_history_id).innerHTML = response.toShow;
+            }
+        });
+}
+
 function saveSizeInBytes() {
     if(!isNaN($('size_limit_number').value)) {
         if($('size_format').value == "MB") {
@@ -3121,7 +3138,6 @@ function loadSpecificTab(id_iframe,pathScriptTab){
     document.getElementById(id_iframe).src = pathScriptTab;
 }
 
-
 //LOAD BADGES TOOLBAR
 function loadToolbarBadge(targetTab,path_manage_script){
     new Ajax.Request(path_manage_script,
@@ -3171,6 +3187,105 @@ function titleWithTooltipster(id){
 /** Advanced Search **/
 
 /**
+ * Fills inputs fields of text type in the search form whith value
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_input_text(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        tmp_elem.value = values[key];
+    }
+}
+
+/**
+ * Fills date range in the search form whith value
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_date_range(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        tmp_elem.value = values[key][0];
+    }
+}
+
+/**
+ * Selects items in a mutiple list (html select object with multiple) in the search form
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_select_multiple(values)
+{
+    for( var key in values)
+    {
+        if(key.indexOf('_chosen') >= 0)
+        {
+            var available = key.substring(0, key.length -7)+'_available';
+            var available_list = $(available);
+            for(var j=0; j <values[key].length;j++)
+            {
+                for(var i=0; i<available_list.options.length;i++)
+                {
+                    if(values[key][j] == available_list.options[i].value)
+                    {
+                        available_list.options[i].selected='selected';
+                    }
+                }
+            }
+            Move_ext(available, key);
+        }
+        if(key.indexOf('_targetlist') >= 0)
+        {
+            var available = key.substring(0, key.length -7)+'_sourcelist';
+            var available_list = $(available);
+            for(var j=0; j <values[key].length;j++)
+            {
+                if (available_list) {
+                    for(var i=0; i<available_list.options.length;i++)
+                    {
+                        if(values[key][j] == available_list.options[i].value)
+                        {
+                            available_list.options[i].selected='selected';
+                        }
+                    }
+                }
+            }
+            if (available) {
+                Move_ext(available, key);
+            }
+        }
+    }
+}
+
+/**
+ * Selects an item in a simple list (html select object) in the search form
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_select_simple(values)
+{
+    for( var key in values)
+    {
+        var tmp_elem = $(key);
+        for(var j=0; j <values[key].length;j++)
+        {
+            for(var i=0; i<tmp_elem.options.length;i++)
+            {
+                if(values[key][j] == tmp_elem.options[i].value)
+                {
+                    tmp_elem.options[i].selected='selected';
+                }
+            }
+        }
+    }
+}
+
+/**
  * Load a query in the Advanced Search page
  *
  * @param valeurs Array Values of the search criteria which must be displayed
@@ -3210,11 +3325,10 @@ function add_criteria(elem_comp, id_form, ie_browser, error_txt_ie)
     var form = window.$(id_form);
     var valeur = valeurs[elem];
     if (ie_browser) {
-        var div_node = $('search_parameters_'+elem);
+        var div_node = $j('#search_parameters_'+elem);
     }
     if (typeof(valeur) != 'undefined') {
-        if (ie_browser == true  && typeof(div_node) != 'undefined'
-            && div_node != null) {
+        if (ie_browser == true  && typeof(div_node) != 'undefined' && div_node != null) {
             alert(error_txt_ie);
         } else {
             var node = document.createElement('div');
@@ -3234,11 +3348,7 @@ function add_criteria(elem_comp, id_form, ie_browser, error_txt_ie)
             var label = $(elem_comp);
             label.parentNode.selectedIndex = 0;
             label.style.display = 'none';
-            //  label.disabled = !label.disabled;
         }
-    } else {
-        //Error if the valeur array has no key 'id'
-        //alert('Error with Javascript Search Adv ');
     }
 }
 
@@ -3352,7 +3462,7 @@ function clear_q_list(item_value)
 function load_query_db(id_query, id_list, id_form_to_load, sql_error_txt, server_error_txt, manage_script)
 {
     if (id_query != '') {
-        var query_object = new Ajax.Request(
+        new Ajax.Request(
             manage_script,
             {
                 method:'post',
@@ -3369,9 +3479,8 @@ function load_query_db(id_query, id_list, id_form_to_load, sql_error_txt, server
                             && response.query != {}) {
                             load_query(valeurs, response.query, id_form_to_load);
                         }
-                        var del_button = $('del_query');
-                        del_button.style.display = 'inline';
-                        $('query_' + id_query).selected = "selected";
+                        $j("#del_query").css("display", "inline");
+                        $j("#query_" + id_query)[0].selected = true;
                     } else if(response.status == 2) {
                         $('error').update(sql_error_txt);
                     } else {

@@ -194,7 +194,11 @@ export class SignatureBookComponent implements OnInit {
 
     changeRightViewer(index: number) {
         this.showAttachmentPanel = false;
-        this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
+        if (this.signatureBook.attachments[index]) {
+            this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
+        } else {
+            this.rightViewerLink = "";
+        }
         this.rightSelectedThumbnail = index;
     }
 
@@ -227,7 +231,7 @@ export class SignatureBookComponent implements OnInit {
             } else {
                 this.rightContentWidth = "44%";
                 this.leftContentWidth = "44%";
-                if (this.signatureBook.resList.length == 0) {
+                if (this.signatureBook.resList.length == 0 || this.signatureBook.resList[0].allSigned == null) {
                     this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList/details')
                         .map(res => res.json())
                         .subscribe((data) => {
@@ -488,6 +492,19 @@ export class SignatureBookComponent implements OnInit {
                             [$j("#signatureBookActions option:selected")[0].value]
                         );
                     });
+            } else {
+                valid_action_form(
+                    'empty',
+                    'index.php?display=true&page=manage_action&module=core',
+                    this.signatureBook.currentAction.id,
+                    this.resId,
+                    'res_letterbox',
+                    'null',
+                    'letterbox_coll',
+                    'page',
+                    false,
+                    [$j("#signatureBookActions option:selected")[0].value]
+                );
             }
         } else {
             alert("Aucune action choisie");

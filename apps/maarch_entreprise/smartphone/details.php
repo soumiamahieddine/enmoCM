@@ -237,7 +237,6 @@ else{
     }
     if ($_SESSION['current_basket']['id'] == "EsigBasket" && $infos_attach['attachment_type'] != 'signed_response'){
         ?>
-            
         <a href="signature_main_panel.php?id=<?php functions::xecho($s_id);?>&collId=<?php
                     functions::xecho($_SESSION['collection_id_choice']);
         ?>&tableName=<?php
@@ -245,10 +244,10 @@ else{
         ?>&res_id_attach=<?php
             functions::xecho($att_id);
         ?>">
-            <span class="bubble"><i class="fa fa-certificate fa-2x mCdarkGrey" aria-hidden="true"></i></span>
+            <span class="bubble" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-hand-o-up fa-2x mCdarkGrey" aria-hidden="true"></i></span>
         </a>
 
-        <span class="bubble" style="cursor: pointer" onclick="switchFrame('<?php functions::xecho($_SESSION['config']['businessappurl'].'index.php?page=doc_thumb_frame&body_loaded&module=thumbnails'); ?>',<?php functions::xecho($s_id); ?>,<?php functions::xecho($pdf_id); ?>);"><i class="fa fa-retweet fa-2x mCdarkGrey"></i></span>
+        <span class="bubble" style="cursor: pointer;margin-right: 5px;" onclick="switchFrame('<?php functions::xecho($_SESSION['config']['businessappurl'].'index.php?page=doc_thumb_frame&body_loaded&module=thumbnails'); ?>',<?php functions::xecho($s_id); ?>,<?php functions::xecho($pdf_id); ?>);"><i class="fa fa-retweet fa-2x mCdarkGrey"></i></span>
         <input type="hidden" id="type_doc_show" value="attach" />
         <?php
     }

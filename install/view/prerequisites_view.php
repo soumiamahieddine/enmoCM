@@ -103,19 +103,6 @@
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isPhpRequirements(
-                                'svn'
-                            ),
-                            true
-                        );?>
-                    </td>
-                    <td>
-                        <?php echo _SVN;?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="voyantPrerequisites">
-                        <?php echo $Class_Install->checkPrerequisites(
-                            $Class_Install->isPhpRequirements(
                                 'imap'
                             ),
                             true
@@ -360,16 +347,6 @@
                     </td>
                     <td>
                         <?php echo _SHORT_OPEN_TAGS;?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="voyantPrerequisites">
-                        <?php echo $Class_Install->checkPrerequisites(
-                            $Class_Install->isIniMagicQuotesGpcRequirements()
-                        );?>
-                    </td>
-                    <td>
-                        <?php echo _MAGIC_QUOTES_GPC;?>
                     </td>
                 </tr>
             </table>
